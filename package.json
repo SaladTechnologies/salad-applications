@@ -1,0 +1,18 @@
+{
+  "name": "@saladtech/salad-applications",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "lerna run build",
+    "clean": "lerna run clean",
+    "lint": "lerna run lint",
+    "test": "lerna run test"
+  },
+  "dependencies": {
+    "@types/node": "^11.9.5",
+    "lerna": "^3.13.1",
+    "typescript": "^3.3.3333"
+  }
+}

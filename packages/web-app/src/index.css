@@ -1,0 +1,43 @@
+/* body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+} */
+
+/* code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+} */
+
+@font-face {
+  font-family: 'sharpGroteskBook19';
+  src: url('https://s3.us-east-2.amazonaws.com/salad-ui-assets/fonts/SharpGroteskBook19.otf');
+}
+
+@font-face {
+  font-family: 'sharpGroteskBook25';
+  src: url('https://s3.us-east-2.amazonaws.com/salad-ui-assets/fonts/SharpGroteskBook25.otf');
+}
+
+@font-face {
+  font-family: 'SharpGroteskLight05';
+  src: url('https://s3.us-east-2.amazonaws.com/salad-ui-assets/fonts/SharpGroteskLight05.otf');
+}
+
+@font-face {
+  font-family: 'sharpGroteskLight09';
+  src: url('https://s3.us-east-2.amazonaws.com/salad-ui-assets/fonts/SharpGroteskLight09.otf');
+}
+
+@font-face {
+  font-family: 'sharpGroteskLight25';
+  src: url('https://s3.us-east-2.amazonaws.com/salad-ui-assets/fonts/SharpGroteskLight25.otf');
+}
+
+@font-face {
+  font-family: 'sharpGroteskMedium25';
+  src: url('https://s3.us-east-2.amazonaws.com/salad-ui-assets/fonts/SharpGroteskMedium25.otf');
+}

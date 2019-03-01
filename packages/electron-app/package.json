@@ -1,0 +1,19 @@
+{
+  "name": "@saladtech/electron-app",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "Salad Technology <dev@salad.io>",
+  "homepage": "https://www.salad.io/",
+  "license": "UNLICENSE",
+  "main": "lib/electron-app.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  }
+}

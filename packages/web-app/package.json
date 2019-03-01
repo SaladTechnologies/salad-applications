@@ -1,0 +1,72 @@
+{
+  "name": "@saladtech/web-app",
+  "version": "0.1.0",
+  "author": "Salad Technology <dev@salad.io>",
+  "homepage": "https://www.salad.io/",
+  "license": "UNLICENSE",
+  "main": "lib/web-app.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "storybook": "start-storybook -p 9001 -c .storybook"
+  },
+  "dependencies": {
+    "@babel/core": "^7.2.2",
+    "@fortawesome/fontawesome-svg-core": "^1.2.14",
+    "@fortawesome/free-solid-svg-icons": "^5.7.1",
+    "@fortawesome/react-fontawesome": "^0.1.4",
+    "@storybook/addon-actions": "^4.1.11",
+    "@storybook/addon-console": "^1.1.0",
+    "@storybook/addon-knobs": "^4.1.11",
+    "@storybook/addon-links": "^4.1.11",
+    "@storybook/addon-notes": "^4.1.11",
+    "@storybook/addons": "^4.1.11",
+    "@storybook/react": "^4.1.11",
+    "@types/auth0-js": "^8.11.11",
+    "@types/axios": "^0.14.0",
+    "@types/classnames": "^2.2.7",
+    "@types/jest": "24.0.0",
+    "@types/lorem-ipsum": "^1.0.2",
+    "@types/node": "10.12.21",
+    "@types/react": "16.8.1",
+    "@types/react-custom-scrollbars": "^4.0.5",
+    "@types/react-dom": "16.0.11",
+    "@types/react-jss": "^8.6.1",
+    "@types/react-router-dom": "^4.3.1",
+    "@types/storybook__addon-actions": "^3.4.1",
+    "@types/storybook__addon-knobs": "^4.0.0",
+    "@types/storybook__react": "^4.0.0",
+    "auth0-js": "^9.10.0",
+    "axios": "^0.18.0",
+    "babel-loader": "^8.0.5",
+    "bulma": "^0.7.4",
+    "classnames": "^2.2.6",
+    "lorem-ipsum": "^1.0.6",
+    "mobx": "^5.9.0",
+    "mobx-react": "^5.4.3",
+    "mobx-react-devtools": "^6.0.3",
+    "mobx-react-router": "^4.0.5",
+    "react": "^16.7.0",
+    "react-custom-scrollbars": "^4.2.1",
+    "react-dom": "^16.7.0",
+    "react-hint": "^3.2.0",
+    "react-jss": "10.0.0-alpha.10",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.1.5"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
