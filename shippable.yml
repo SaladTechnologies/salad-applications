@@ -1,0 +1,12 @@
+language: node_js
+
+node_js:
+  - 10.15.0
+
+build:
+  cache: true
+  cache_dir_list:
+    - $SHIPPABLE_BUILD_DIR/node_modules
+  ci:
+    - shippable_retry yarn install
+    - yarn build
