@@ -1,0 +1,20 @@
+language: node_js
+
+node_js:
+  - 10.15.0
+
+integrations:
+  generic:
+    - integrationName: aws-kvp-secrets
+
+build:
+  cache: true
+  cache_dir_list:
+    - $SHIPPABLE_BUILD_DIR/node_modules
+  ci:
+    - shippable_retry yarn install
+    - yarn build
+  on_success:
+    - BUILD_ARTIFACTS="s3://salad-web-builds/$BUILD_NUMBER"
+    - aws s3 sync $SHIPPABLE_BUILD_DIR/packages/web-app/build $BUILD_ARTIFACTS --region "us-east-2"
+    - shipctl put_resource_state_multi "web-app-build" "BUILD_ARTIFACTS=$BUILD_ARTIFACTS COMMIT_ID=$COMMIT BUILD_ID=$COMMIT PR_BUILD=$IS_PULL_REQUEST"
