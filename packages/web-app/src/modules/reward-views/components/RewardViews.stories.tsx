@@ -1,10 +1,10 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import { RewardSummary } from './components/RewardSummary'
-import demoImage from '../../../.storybook/assets/itunes-app-store-card.png'
+import { RewardSummary } from './RewardSummary'
+import demoImage from '../../../../.storybook/assets/itunes-app-store-card.png'
 import { action } from '@storybook/addon-actions'
-import { RewardList } from './components/RewardList'
-import { Reward } from '../reward/models/Reward'
+import { RewardList } from './RewardList'
+import { Reward } from '../../reward/models/Reward'
 
 const generateRewards = (count: number): Reward[] => {
   let result = new Array<Reward>(count)

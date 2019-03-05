@@ -5,6 +5,7 @@ import { LoginContainer } from './modules/onboarding-views/LoginContainer'
 import { HomePage } from './modules/home-views/HomePage'
 import { getStore } from './Store'
 import DevTools from 'mobx-react-devtools'
+import { LoadingPage } from './components/LoadingPage'
 
 class App extends Component {
   store = getStore()
@@ -19,7 +20,7 @@ class App extends Component {
           {!isAuth && <Route exact path="/" component={LoginContainer} />}
           {isAuth && <Route path="/" render={() => <HomePage />} />}
           <Route exact path="/auth/callback" component={CallbackContainer} />
-          <Route render={() => <div> Sorry, this page does not exist. </div>} />
+          <Route render={() => <LoadingPage text="Page Not Found" />} />
         </Switch>
         <DevTools />
       </div>

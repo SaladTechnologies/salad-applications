@@ -18,6 +18,7 @@ export class AuthStore {
       domain: Config.auth0Domain,
       clientID: Config.auth0ClientId,
       redirectUri: redirect,
+      audience: 'https://api.salad.io/core/master',
       responseType: 'token id_token',
       scope: 'openid profile email',
     })
@@ -42,7 +43,7 @@ export class AuthStore {
           return reject(err)
         }
         runInAction(() => {
-          this.authToken = authResult.idToken
+          this.authToken = authResult.accessToken
           this.authProfile = authResult.idTokenPayload
           this.expiresAt = authResult.expiresIn ? authResult.expiresIn * 1000 + new Date().getTime() : 0
           this.axios.defaults.headers.common['Authorization'] = `Bearer ${this.authToken}`
