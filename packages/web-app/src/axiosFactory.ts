@@ -6,15 +6,5 @@ export const createClient = (): AxiosInstance => {
     baseURL: Config.baseAPIUrl,
   })
 
-  //   c.interceptors.request.use(req => {
-  //     if (req.baseURL === '')
-  //       return {
-  //         headers: {},
-  //         method: req.method,
-  //         url: '',
-  //       }
-  //     return req
-  //   })
-
   return c
 }

@@ -5,6 +5,8 @@ import classnames from 'classnames'
 import { BottomBarContainer } from './BottomBarContainer'
 import { ExperienceBarContainer, SlicedVeggieContainer } from '../xp-views'
 import { RewardListContainer } from '../reward-views'
+import { RefreshService } from '../data-refresh'
+import { getStore } from '../../Store'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -36,6 +38,22 @@ const styles = (theme: SaladTheme) => ({
 })
 
 class _HomePage extends Component<WithStyles<typeof styles>> {
+  refreshService: RefreshService
+
+  constructor(props: any) {
+    super(props)
+    let store = getStore()
+    this.refreshService = new RefreshService(store)
+  }
+
+  componentDidMount() {
+    this.refreshService.start()
+  }
+
+  componentWillUnmount() {
+    this.refreshService.stop()
+  }
+
   render() {
     const { classes } = this.props
     return (

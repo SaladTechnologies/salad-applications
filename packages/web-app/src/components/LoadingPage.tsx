@@ -34,15 +34,15 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   text?: string
-  onDidMount?: () => void
+  onDidMount?: Promise<void>
 }
 
 class _LoadingPage extends Component<Props> {
-  componentDidMount() {
+  async componentDidMount() {
     const { onDidMount } = this.props
 
     if (onDidMount) {
-      onDidMount()
+      return onDidMount
     }
   }
 

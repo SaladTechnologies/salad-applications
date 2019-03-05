@@ -9,24 +9,28 @@ export interface ProcessEnv {
 }
 
 const numberOrDefault = (name: string, defaultValue: number): number => {
-  if (window.config === undefined) return defaultValue
-
-  let v = Number(window.config[name])
+  let v = Number(process.env[name])
 
   if (isNaN(v)) return defaultValue
 
   return v
 }
 
-const stringOrDefault = (name: string, defaultValue: string): string => {
-  if (window.config === undefined) return defaultValue
+const requiredString = (name: string) => {
+  let v = process.env[name]
 
-  let v = window.config[name]
-
-  if (!v) return defaultValue
+  if (!v) throw Error(`Unable to find env variable ${name}`)
 
   return v
 }
+
+// const stringOrDefault = (name: string, defaultValue: string): string => {
+//   let v = process.env[name]
+
+//   if (!v) return defaultValue
+
+//   return v
+// }
 
 export const convertHours = (hours: number): number => hours * 3.6e6
 export const convertMinutes = (hours: number): number => hours * 60000
@@ -36,7 +40,10 @@ class Config {
 
   public readonly rewardsRefreshRate: number = numberOrDefault('REWARD_REFRESH_RATE', convertMinutes(5))
 
-  public readonly baseAPIUrl: string = stringOrDefault('BASE_API_URL', '')
+  public readonly baseAPIUrl: string = requiredString('REACT_APP_API_URL')
+
+  public readonly auth0Domain: string = requiredString('REACT_APP_AUTH0_DOMAIN')
+  public readonly auth0ClientId: string = requiredString('REACT_APP_AUTH0_CLIENT_ID')
 }
 
 const instance = new Config()

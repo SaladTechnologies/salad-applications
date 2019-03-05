@@ -1,19 +1,22 @@
-import { action } from 'mobx'
+import { action, runInAction } from 'mobx'
 import { AxiosInstance } from 'axios'
-import { WebAuth, Auth0DecodedHash } from 'auth0-js'
+import { WebAuth } from 'auth0-js'
 import { RootStore } from '../../Store'
+import { Config } from '../../config'
 
 export class AuthStore {
   public authToken?: string = undefined
   public webAuth: WebAuth
   public authProfile: any
+  public expiresAt: number = 0
+  public loginError: boolean = false
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     let redirect = `${window.location.href}auth/callback`
-    console.log('redirect url')
+    console.log('redirect' + redirect)
     this.webAuth = new WebAuth({
-      domain: 'appfiber.auth0.com',
-      clientID: '6Knyi-gk0JeQxwS02p_rDO7w6MtIEf0U',
+      domain: Config.auth0Domain,
+      clientID: Config.auth0ClientId,
       redirectUri: redirect,
       responseType: 'token id_token',
       scope: 'openid profile email',
@@ -21,36 +24,34 @@ export class AuthStore {
   }
 
   isAuthenticated(): boolean {
-    return this.authToken !== undefined
+    return this.authToken !== undefined && new Date().getTime() < this.expiresAt
   }
 
   @action
   signIn() {
+    this.loginError = false
     this.webAuth.authorize()
   }
 
   @action
-  handleAuthentication() {
-    return new Promise((resolve, reject) => {
+  handleAuthentication = () => {
+    return new Promise<void>((resolve, reject) => {
       this.webAuth.parseHash((err, authResult) => {
-        if (err) return reject(err)
-        if (!authResult || !authResult.idToken) {
+        if (err || !authResult || !authResult.idToken) {
+          this.loginError = true
           return reject(err)
         }
-
-        this.handleAuthResult(authResult)
-
-        resolve()
+        runInAction(() => {
+          this.authToken = authResult.idToken
+          this.authProfile = authResult.idTokenPayload
+          this.expiresAt = authResult.expiresIn ? authResult.expiresIn * 1000 + new Date().getTime() : 0
+          this.axios.defaults.headers.common['Authorization'] = `Bearer ${this.authToken}`
+          this.loginError = false
+          this.store.routing.push('/')
+          resolve()
+        })
       })
     })
-  }
-
-  @action
-  handleAuthResult(authResult: Auth0DecodedHash) {
-    this.authToken = authResult.idToken
-    this.authProfile = authResult.idTokenPayload
-    this.axios.defaults.headers.common['Authorization'] = `Bearer ${this.authToken}`
-    this.store.routing.push('/')
   }
 
   @action
