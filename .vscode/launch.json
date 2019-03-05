@@ -8,6 +8,7 @@
       "name": "Debug Chrome",
       "type": "chrome",
       "request": "launch",
+      "runtimeArgs": ["--disable-web-security"],
       "url": "http://localhost:3000",
       "webRoot": "${workspaceRoot}/src",
       "sourceMapPathOverrides": {
