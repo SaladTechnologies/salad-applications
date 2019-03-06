@@ -45,6 +45,7 @@ export class RootStore {
       const data = response.data
       this.xp.updateXp(data.xp)
       this.balance.update(data.currentBalance, data.earningVelocity)
+      this.rewards.selectReward(data.currentReward.rewardId)
       console.log(response.data)
     } catch (error) {
       console.error(error)

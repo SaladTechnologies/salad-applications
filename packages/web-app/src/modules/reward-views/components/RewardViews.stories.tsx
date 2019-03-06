@@ -5,23 +5,32 @@ import demoImage from '../../../../.storybook/assets/itunes-app-store-card.png'
 import { action } from '@storybook/addon-actions'
 import { RewardList } from './RewardList'
 import { Reward } from '../../reward/models/Reward'
+import { RewardFilterPage } from './RewardFilterPage'
+import { SearchBar } from './SearchBar'
+import { FilterList } from './FilterList'
+import { FilterItem } from '../../reward/models/FilterItem'
+import { SelectedReward } from './SelectedReward'
 
 const generateRewards = (count: number): Reward[] => {
   let result = new Array<Reward>(count)
 
-  for (var i = 20; i > 0; i--) {
+  for (var i = count - 1; i >= 0; i--) {
     result[i] = {
-      id: i,
+      id: String(i),
       name: `$${i}.00 Salad Gift Card`,
       price: i,
       redeemable: i < count / 2,
       imageSrc: demoImage,
+      filter: 'Game',
       remainingTimeLabel: '2 days',
+      percentUnlocked: 0.5,
     }
   }
 
   return result
 }
+
+const getFilters = [new FilterItem('Games', true), new FilterItem('Loot', false), new FilterItem('Money', true)]
 
 storiesOf('Modules/Reward', module)
   .add('Reward Summary', () => {
@@ -50,12 +59,59 @@ storiesOf('Modules/Reward', module)
       </div>
     )
   })
+  .add('Selected Reward', () => {
+    let rewards = generateRewards(1)
+    let reward = rewards[0]
+    console.log(reward)
+    return (
+      <div>
+        <SelectedReward reward={reward} />
+        <SelectedReward reward={undefined} />
+      </div>
+    )
+  })
   .add('Reward List', () => {
     let rewards = generateRewards(20)
 
     return (
       <div style={{ width: '100vw', height: '100vh' }}>
         <RewardList rewards={rewards} />
+      </div>
+    )
+  })
+  .add('Reward Filter Page', () => {
+    let textEntered = (x: string) => {
+      console.log('Text changed:' + x)
+    }
+
+    let filterToggle = (x: string) => {
+      console.log('Filter toggle ' + x)
+    }
+
+    return (
+      <div style={{ backgroundColor: '#092234' }}>
+        <RewardFilterPage searchText={''} filters={getFilters} onTextEntered={textEntered} onToggle={filterToggle} />
+      </div>
+    )
+  })
+  .add('Filter List', () => {
+    return (
+      <div style={{ backgroundColor: '#092234' }}>
+        <FilterList filters={getFilters} onToggle={x => console.log(x)} />
+      </div>
+    )
+  })
+  .add('Search Bar', () => {
+    let textEntered = (x: string) => {
+      console.log('Text changed:' + x)
+    }
+
+    return (
+      <div style={{ backgroundColor: '#092234' }}>
+        With placeholder
+        <SearchBar text={''} onTextEntered={textEntered} />
+        With text
+        <SearchBar text={'hello world'} onTextEntered={textEntered} />
       </div>
     )
   })

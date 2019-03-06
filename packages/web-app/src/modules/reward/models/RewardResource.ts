@@ -1,7 +1,8 @@
 export interface RewardResource {
-  rewardId: number
+  rewardId: string
   name: string
   price: number
+  filter: string
   detailsCard: string
   imageLink: string
   selected: boolean

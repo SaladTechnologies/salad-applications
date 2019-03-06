@@ -5,9 +5,11 @@ export const rewardFromResource = (r: RewardResource): Reward => ({
   id: r.rewardId,
   name: r.name,
   price: r.price,
+  filter: r.filter.toLowerCase(),
   redeemable: false,
   imageSrc: r.imageLink,
   remainingTimeLabel: '',
+  percentUnlocked: 0,
 })
 
 export const getTimeRemainingText = (reward: Reward, currentBalance: number, earningRate: number): string => {

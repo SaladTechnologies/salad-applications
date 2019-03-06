@@ -7,7 +7,9 @@ import classnames from 'classnames'
 const gridSize = 1
 
 const styles = (theme: SaladTheme) => ({
-  container: {},
+  container: {
+    whiteSpace: 'nowrap',
+  },
   slice: {
     display: 'inline-block',
     width: `.875rem`,
