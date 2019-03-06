@@ -2,6 +2,7 @@ export interface Reward {
   id: number
   name: string
   price: number
+  filter: string
   redeemable: boolean
   // detailsCard: string
   imageSrc: string

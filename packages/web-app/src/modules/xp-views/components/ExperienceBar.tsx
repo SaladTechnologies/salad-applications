@@ -12,6 +12,7 @@ const styles = (theme: SaladTheme) => ({
     padding: '.5rem',
     display: 'flex',
     width: '8rem',
+    marginRight: '-5rem',
   },
   innerContainer: {
     display: 'flex',

@@ -4,7 +4,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 import { BottomBarContainer } from './BottomBarContainer'
 import { ExperienceBarContainer, SlicedVeggieContainer } from '../xp-views'
-import { RewardListContainer } from '../reward-views'
+import { RewardListContainer, RewardFilterContainer } from '../reward-views'
 import { RefreshService } from '../data-refresh'
 import { getStore } from '../../Store'
 
@@ -31,6 +31,7 @@ const styles = (theme: SaladTheme) => ({
   mainColumn: {
     display: 'flex',
     overflow: 'hidden',
+    border: '2px solid red',
   },
   footer: {
     flex: 'none',
@@ -64,13 +65,17 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
 
         <div className={classes.main}>
           <div style={{ flexGrow: 1 }} className={'columns is-mobile'}>
-            <div className={classnames(classes.mainColumn, 'column')}>
-              <ExperienceBarContainer />
+            <div className={'column columns is-mobile'}>
+              <div className={classnames(classes.mainColumn, 'column is-narrow')}>
+                <ExperienceBarContainer />
+              </div>
+              <div className={classnames(classes.mainColumn, 'column')}>
+                <SlicedVeggieContainer />
+              </div>
             </div>
+
             <div className={classnames(classes.mainColumn, 'column')}>
-              <SlicedVeggieContainer />
-            </div>
-            <div className={classnames(classes.mainColumn, 'column')}>
+              <RewardFilterContainer />
               <RewardListContainer />
             </div>
           </div>

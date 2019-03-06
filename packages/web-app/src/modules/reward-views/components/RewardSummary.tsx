@@ -12,12 +12,11 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
     position: 'relative',
     cursor: 'pointer',
-    width: '540px',
+    width: '475px',
   },
   lock: {
     position: 'absolute',
-    color: theme.lightGreen,
-    left: '.5rem',
+    right: '.5rem',
     top: '.5rem',
   },
   imageContainer: {
@@ -94,12 +93,6 @@ class _RewardSummary extends Component<Props> {
 
     return (
       <div className={classnames(classes.container, 'is-unselectable')} onClick={this.handleClick}>
-        {/* Padlock */}
-        <div className={classes.lock}>
-          {redeemable && <FontAwesomeIcon icon={faLockOpen} />}
-          {!redeemable && <FontAwesomeIcon icon={faLock} />}
-        </div>
-
         {/* Image */}
         <AngledPanel className={classes.imageContainer} leftSide={AngleDirection.Right}>
           <img className={classes.image} src={imageSrc} />
@@ -112,6 +105,12 @@ class _RewardSummary extends Component<Props> {
             [classes.notRedeemable]: !redeemable,
           })}
         >
+          {/* Padlock */}
+          <div className={classes.lock}>
+            {redeemable && <FontAwesomeIcon icon={faLockOpen} />}
+            {!redeemable && <FontAwesomeIcon icon={faLock} />}
+          </div>
+
           <div className={classnames(classes.priceText)}>
             ${price ? price.toFixed(2) : '0.00'} {this.timeRemainingText()}
           </div>

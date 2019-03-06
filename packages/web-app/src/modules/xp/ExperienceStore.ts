@@ -36,8 +36,6 @@ export class ExperienceStore {
 
   @action
   updateXp(newXp: number) {
-    //TODO: Fix this
-    // this.currentXp = newXp
-    this.currentXp = this.currentXp + 1
+    this.currentXp = newXp
   }
 }
