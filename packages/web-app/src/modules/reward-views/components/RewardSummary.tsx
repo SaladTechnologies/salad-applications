@@ -17,11 +17,11 @@ const styles = (theme: SaladTheme) => ({
   lock: {
     position: 'absolute',
     right: '.5rem',
-    top: '.5rem',
+    top: '.2rem',
   },
   imageContainer: {
     display: 'inline-block',
-    backgroundColor: 'lightgrey',
+    backgroundColor: theme.offWhite,
     width: '115px',
   },
   image: {
@@ -107,8 +107,8 @@ class _RewardSummary extends Component<Props> {
         >
           {/* Padlock */}
           <div className={classes.lock}>
-            {redeemable && <FontAwesomeIcon icon={faLockOpen} />}
-            {!redeemable && <FontAwesomeIcon icon={faLock} />}
+            {redeemable && <FontAwesomeIcon size="sm" icon={faLockOpen} />}
+            {!redeemable && <FontAwesomeIcon size="sm" icon={faLock} />}
           </div>
 
           <div className={classnames(classes.priceText)}>

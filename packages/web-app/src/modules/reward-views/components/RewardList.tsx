@@ -4,12 +4,23 @@ import { SaladTheme } from '../../../SaladTheme'
 import { Reward } from '../../reward/models/Reward'
 import Scrollbars from 'react-custom-scrollbars'
 import { RewardListItem } from './RewardListItem'
+import { Fade } from '../../../components/Fade'
 
 const styles = (theme: SaladTheme) => ({
   container: {
     width: '32rem',
     height: '100%',
     display: 'inline-block',
+    marginLeft: '3.5rem',
+    position: 'relative',
+  },
+  topFade: {
+    height: '3rem',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
   },
   item: {
     padding: '.25rem 0',
@@ -47,6 +58,7 @@ class _RewardList extends Component<Props> {
 
     return (
       <div className={classes.container}>
+        <Fade className={classes.topFade} direction="down" />
         <Scrollbars
           renderTrackHorizontal={renderTrack}
           renderTrackVertical={renderTrack}

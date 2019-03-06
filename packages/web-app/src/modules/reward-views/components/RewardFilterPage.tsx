@@ -9,6 +9,7 @@ import { FilterItem } from '../../reward/models/FilterItem'
 const styles = (theme: SaladTheme) => ({
   container: {
     // display: 'flex',
+    paddingTop: '2rem',
   },
   searchBar: {
     paddingBottom: '1rem',

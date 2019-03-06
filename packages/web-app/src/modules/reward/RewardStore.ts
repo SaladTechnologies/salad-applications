@@ -11,16 +11,35 @@ export class RewardStore {
   private rewards: Reward[] = []
 
   @observable
+  private selectedRewardId?: string
+
+  @observable
   public filters: FilterItem[] = []
 
   @observable
   public filterText?: string
 
-  @computed get currentRewards(): Reward[] {
+  @computed get selectedReward(): Reward | undefined {
+    return this.allRewards.find(x => {
+      return x.id === this.selectedRewardId
+    })
+  }
+
+  @computed get allRewards(): Reward[] {
     let currentBalance = this.store.balance.currentBalance
     let earningRate = this.store.balance.currentEarningRate
 
-    let rewardList = this.rewards
+    return this.rewards.map(r => {
+      var clone: Reward = { ...r }
+      clone.redeemable = r.price < currentBalance
+      clone.remainingTimeLabel = getTimeRemainingText(r, currentBalance, earningRate)
+      clone.percentUnlocked = Math.min(1, Math.max(0, currentBalance / r.price))
+      return clone
+    })
+  }
+
+  @computed get filteredRewards(): Reward[] {
+    let rewardList = this.allRewards
 
     let all = this.filters.every(x => !x.checked)
 
@@ -37,12 +56,7 @@ export class RewardStore {
       rewardList = rewardList.filter(r => r.name.toLowerCase().indexOf(text) !== -1)
     }
 
-    return rewardList.map(r => {
-      var clone: Reward = { ...r }
-      clone.redeemable = r.price < currentBalance
-      clone.remainingTimeLabel = getTimeRemainingText(r, currentBalance, earningRate)
-      return clone
-    })
+    return rewardList
   }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
@@ -92,5 +106,12 @@ export class RewardStore {
         this.filters.push(new FilterItem(x.toLowerCase(), false))
       }
     })
+  }
+
+  @action
+  selectReward = (rewardId: string) => {
+    //TODO: Add api call to set reward
+
+    this.selectedRewardId = rewardId
   }
 }

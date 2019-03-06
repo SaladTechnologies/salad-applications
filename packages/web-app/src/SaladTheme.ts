@@ -23,6 +23,7 @@ export interface SaladTheme {
   doubleLarge: string
   tripleLarge: string
   xLarge: string
+  xxLarge: string
 }
 
 export const DefaultTheme = {
@@ -50,4 +51,5 @@ export const DefaultTheme = {
   doubleLarge: '2.5rem',
   tripleLarge: '2.625rem',
   xLarge: '3rem',
+  xxLarge: '5rem',
 }

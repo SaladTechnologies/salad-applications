@@ -4,7 +4,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 import { BottomBarContainer } from './BottomBarContainer'
 import { ExperienceBarContainer, SlicedVeggieContainer } from '../xp-views'
-import { RewardListContainer, RewardFilterContainer } from '../reward-views'
+import { RewardListContainer, RewardFilterContainer, SelectedRewardContainer } from '../reward-views'
 import { RefreshService } from '../data-refresh'
 import { getStore } from '../../Store'
 
@@ -22,7 +22,6 @@ const styles = (theme: SaladTheme) => ({
   },
   header: {
     flex: 'none',
-    backgroundColor: 'blue',
   },
   main: {
     flex: 'auto',
@@ -31,7 +30,6 @@ const styles = (theme: SaladTheme) => ({
   mainColumn: {
     display: 'flex',
     overflow: 'hidden',
-    border: '2px solid red',
   },
   footer: {
     flex: 'none',
@@ -75,8 +73,13 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
             </div>
 
             <div className={classnames(classes.mainColumn, 'column')}>
-              <RewardFilterContainer />
-              <RewardListContainer />
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <SelectedRewardContainer />
+                <div style={{ display: 'flex', flex: 1, flexDirection: 'row' }}>
+                  <RewardFilterContainer />
+                  <RewardListContainer />
+                </div>
+              </div>
             </div>
           </div>
         </div>

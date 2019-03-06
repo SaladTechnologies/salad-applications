@@ -25,6 +25,7 @@ const styles = (theme: SaladTheme) => ({
   filterText: {
     paddingLeft: '.25rem',
     textTransform: 'capitalize',
+    cursor: 'pointer',
   },
 })
 
@@ -58,7 +59,14 @@ class _FilterList extends Component<Props> {
                       this.handleToggle(x.name)
                     }}
                   />
-                  <p className={classes.filterText}>{x.name}</p>
+                  <p
+                    className={classes.filterText}
+                    onClick={() => {
+                      this.handleToggle(x.name)
+                    }}
+                  >
+                    {x.name}
+                  </p>
                 </div>
               )}
             </Observer>

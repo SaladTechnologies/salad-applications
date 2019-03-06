@@ -9,19 +9,21 @@ import { RewardFilterPage } from './RewardFilterPage'
 import { SearchBar } from './SearchBar'
 import { FilterList } from './FilterList'
 import { FilterItem } from '../../reward/models/FilterItem'
+import { SelectedReward } from './SelectedReward'
 
 const generateRewards = (count: number): Reward[] => {
   let result = new Array<Reward>(count)
 
-  for (var i = 20; i > 0; i--) {
+  for (var i = count - 1; i >= 0; i--) {
     result[i] = {
-      id: i,
+      id: String(i),
       name: `$${i}.00 Salad Gift Card`,
       price: i,
       redeemable: i < count / 2,
       imageSrc: demoImage,
       filter: 'Game',
       remainingTimeLabel: '2 days',
+      percentUnlocked: 0.5,
     }
   }
 
@@ -54,6 +56,17 @@ storiesOf('Modules/Reward', module)
             onClick={action('Clicked')}
           />
         </div>
+      </div>
+    )
+  })
+  .add('Selected Reward', () => {
+    let rewards = generateRewards(1)
+    let reward = rewards[0]
+    console.log(reward)
+    return (
+      <div>
+        <SelectedReward reward={reward} />
+        <SelectedReward reward={undefined} />
       </div>
     )
   })
