@@ -4,7 +4,7 @@ import { SaladTheme } from '../../../SaladTheme'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
-import { AngledPanel, AngleDirection } from '../../../components/AngledPanel'
+import { AngledPanel, AngleDirection } from '../../../components'
 import { Reward } from '../../reward/models/Reward'
 
 const styles = (theme: SaladTheme) => ({

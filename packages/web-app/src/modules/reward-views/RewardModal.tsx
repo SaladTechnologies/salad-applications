@@ -1,5 +1,5 @@
 import React from 'react'
-import { ModalPage } from '../../components/ModalPage'
+import { ModalPage } from '../../components'
 import { RewardDetailsContainer } from './RewardDetailsContainer'
 import { connect, MapStoreToProps } from '../../connect'
 

@@ -4,7 +4,7 @@ import { SaladTheme } from '../../../SaladTheme'
 import { Reward } from '../../reward/models/Reward'
 import Scrollbars from 'react-custom-scrollbars'
 import { RewardListItem } from './RewardListItem'
-import { Fade } from '../../../components/Fade'
+import { Fade } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {

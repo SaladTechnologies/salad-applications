@@ -1,10 +1,10 @@
 import React, { CSSProperties, Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
-import { Machine } from '../../machine/Machine'
+import { Machine } from '../../machine/models'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretDown, faCaretRight } from '@fortawesome/free-solid-svg-icons'
-import { InfoButton } from '../../../components/InfoButton'
+import { InfoButton } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {

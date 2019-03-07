@@ -3,9 +3,9 @@ import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretLeft } from '@fortawesome/free-solid-svg-icons'
-import { VerticalProgress } from '../../../components/VerticalProgress'
-import { Level } from '../../xp/models/Level'
 import classnames from 'classnames'
+import { VerticalProgress } from '../../../components'
+import { Level } from '../../xp/models/Level'
 
 const styles = (theme: SaladTheme) => ({
   container: {

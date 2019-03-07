@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { SaladTheme } from '../../../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
-import { AngledButton } from '../../../components/AngledButton'
-import { AngleDirection } from '../../../components/AngledPanel'
-import { Fade } from '../../../components/Fade'
+import { AngledButton } from '../../../components'
+import { AngleDirection } from '../../../components'
+import { Fade } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {

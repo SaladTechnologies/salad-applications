@@ -7,7 +7,7 @@ import { RewardListContainer, RewardFilterContainer, SelectedRewardContainer } f
 import { RefreshService } from '../data-refresh'
 import { getStore } from '../../Store'
 import { BottomBarContainer } from './BottomBarContainer'
-import { RewardModal } from '../reward-views/RewardModal'
+import { RewardModal } from '../reward-views'
 
 const styles = (theme: SaladTheme) => ({
   container: {

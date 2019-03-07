@@ -4,9 +4,9 @@ import { SaladTheme } from '../../../SaladTheme'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
-import { AngledPanel, AngleDirection } from '../../../components/AngledPanel'
+import { AngledPanel, AngleDirection } from '../../../components'
 import { Reward } from '../../reward/models/Reward'
-import { ProgressBar } from '../../../components/ProgressBar'
+import { ProgressBar } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {

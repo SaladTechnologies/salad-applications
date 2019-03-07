@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Route, Switch } from 'react-router'
-import { CallbackContainer } from './modules/onboarding-views/CallbackContainer'
-import { LoginContainer } from './modules/onboarding-views/LoginContainer'
-import { HomePage } from './modules/home-views/HomePage'
+import { CallbackContainer } from './modules/onboarding-views'
+import { LoginContainer } from './modules/onboarding-views'
+import { HomePage } from './modules/home-views'
 import { getStore } from './Store'
 import DevTools from 'mobx-react-devtools'
-import { LoadingPage } from './components/LoadingPage'
+import { LoadingPage } from './components'
 
 class App extends Component {
   store = getStore()
