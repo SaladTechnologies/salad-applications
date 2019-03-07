@@ -44,6 +44,18 @@ const styles = (theme: SaladTheme) => ({
       transparent calc(50% + 0.81px), 
       transparent 100%)`,
   },
+  disclaimer: {
+    color: theme.lightGreen,
+    fontFamily: 'sharpGroteskBook19',
+    fontSize: theme.small,
+    padding: '.25rem 1.5rem 3rem 0',
+  },
+  notFoundTitle: {
+    color: theme.lightGreen,
+    fontFamily: 'SharpGroteskLight09',
+    fontSize: theme.xLarge,
+    padding: '3rem 0',
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -75,6 +87,7 @@ class _RewardList extends Component<Props> {
           renderThumbHorizontal={renderThumb}
           renderThumbVertical={renderThumb}
         >
+          {rewards && rewards.length === 0 && <div className={classes.notFoundTitle}>No Rewards Found...</div>}
           {rewards &&
             rewards.map((r, _) => (
               <div key={r.id} className={classes.item}>
@@ -86,6 +99,12 @@ class _RewardList extends Component<Props> {
                 />
               </div>
             ))}
+          <div className={classes.disclaimer}>
+            [SUPPLIER DISCLAIMER] The merchants represented are not sponsors of the rewards or otherwise affiliated with
+            Salad Technologies, Inc.. the logos and other identifying marks attached are trademarks of and owned by each
+            represented company and/or its affiliates. Please visit each company's website for additional terms and
+            conditions.
+          </div>
         </Scrollbars>
       </div>
     )
