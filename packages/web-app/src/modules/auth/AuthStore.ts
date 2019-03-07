@@ -1,14 +1,19 @@
-import { action, runInAction } from 'mobx'
+import { action, runInAction, observable } from 'mobx'
 import { AxiosInstance } from 'axios'
 import { WebAuth } from 'auth0-js'
 import { RootStore } from '../../Store'
 import { Config } from '../../config'
 
 export class AuthStore {
+  @observable
   public authToken?: string = undefined
   public webAuth: WebAuth
   public authProfile: any
+
+  @observable
   public expiresAt: number = 0
+
+  @observable
   public loginError: boolean = false
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {

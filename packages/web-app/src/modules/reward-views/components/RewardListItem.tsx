@@ -11,7 +11,7 @@ export class RewardListItem extends Component<Props> {
   render() {
     const { reward, onClick } = this.props
 
-    if (reward === undefined) return <div />
+    if (reward === undefined) return null
 
     return (
       <RewardSummary
@@ -21,6 +21,7 @@ export class RewardListItem extends Component<Props> {
         imageSrc={reward.imageSrc}
         onClick={onClick}
         timeRemaining={reward.remainingTimeLabel}
+        color={reward.color}
       />
     )
   }

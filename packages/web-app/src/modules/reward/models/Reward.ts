@@ -4,7 +4,7 @@ export interface Reward {
   price: number
   filter: string
   redeemable: boolean
-  // detailsCard: string
+  details: string
   imageSrc: string
   /** How much of the reward has already been unlocked (0-1) */
   percentUnlocked: number
@@ -12,7 +12,7 @@ export interface Reward {
   // percentageHeight: number
   remainingTimeLabel: string
   // remainingTime: number
-  // color: string
+  color: string
   // rewardType: number
   // initialModal: number
 }

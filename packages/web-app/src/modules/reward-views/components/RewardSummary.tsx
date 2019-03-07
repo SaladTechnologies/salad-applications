@@ -21,8 +21,7 @@ const styles = (theme: SaladTheme) => ({
   },
   imageContainer: {
     display: 'inline-block',
-    backgroundColor: theme.offWhite,
-    width: '115px',
+    width: '120px',
   },
   image: {
     height: '100%',
@@ -64,6 +63,7 @@ interface Props extends WithStyles<typeof styles> {
   redeemable?: boolean
   timeRemaining?: string
   imageSrc?: string
+  color?: string
   onClick?: () => void
 }
 
@@ -89,12 +89,16 @@ class _RewardSummary extends Component<Props> {
     }
   }
   render() {
-    const { name, price, redeemable, imageSrc, classes } = this.props
+    const { name, color, price, redeemable, imageSrc, classes } = this.props
 
     return (
       <div className={classnames(classes.container, 'is-unselectable')} onClick={this.handleClick}>
         {/* Image */}
-        <AngledPanel className={classes.imageContainer} leftSide={AngleDirection.Right}>
+        <AngledPanel
+          style={{ backgroundColor: color }}
+          className={classes.imageContainer}
+          leftSide={AngleDirection.Right}
+        >
           <img className={classes.image} src={imageSrc} />
         </AngledPanel>
 

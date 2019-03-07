@@ -2,11 +2,12 @@ import React, { Component } from 'react'
 import { SaladTheme } from '../../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
-import { BottomBarContainer } from './BottomBarContainer'
 import { ExperienceBarContainer, SlicedVeggieContainer } from '../xp-views'
 import { RewardListContainer, RewardFilterContainer, SelectedRewardContainer } from '../reward-views'
 import { RefreshService } from '../data-refresh'
 import { getStore } from '../../Store'
+import { BottomBarContainer } from './BottomBarContainer'
+import { RewardModal } from '../reward-views/RewardModal'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -57,6 +58,7 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
     const { classes } = this.props
     return (
       <div className={classes.container}>
+        <RewardModal />
         <div className={classes.header}>
           <div style={{ height: '50px' }} />
         </div>

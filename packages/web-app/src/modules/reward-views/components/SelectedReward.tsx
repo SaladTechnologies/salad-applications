@@ -31,7 +31,6 @@ const styles = (theme: SaladTheme) => ({
   },
   imageContainer: {
     display: 'inline-block',
-    backgroundColor: theme.offWhite,
     width: '190px',
   },
   image: {
@@ -113,7 +112,11 @@ class _SelectedReward extends Component<Props> {
         <div className={classes.choppingTitle}>Chopping Salad For:</div>
         <div className={classnames(classes.cardContainer, 'is-unselectable')}>
           {/* Image */}
-          <AngledPanel className={classes.imageContainer} leftSide={AngleDirection.Right}>
+          <AngledPanel
+            style={{ backgroundColor: reward && reward.color }}
+            className={classes.imageContainer}
+            leftSide={AngleDirection.Right}
+          >
             {reward && <img className={classes.image} src={reward.imageSrc} />}
           </AngledPanel>
 
@@ -131,7 +134,7 @@ class _SelectedReward extends Component<Props> {
             </div>
 
             <div className={classnames(classes.priceText)}>
-              {reward && `${reward.price.toFixed(2)} ${this.timeRemainingText()}`}
+              {reward && `$${reward.price.toFixed(2)} ${this.timeRemainingText()}`}
             </div>
             <div className={classnames(classes.nameText)}>{reward ? reward.name : 'Unavailable'}</div>
           </div>

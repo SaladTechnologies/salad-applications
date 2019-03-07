@@ -48,13 +48,23 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   rewards?: Reward[]
+  onRewardClick?: (reward: Reward) => void
 }
 
 class _RewardList extends Component<Props> {
+  handleClick = (reward: Reward) => {
+    const { onRewardClick } = this.props
+
+    if (onRewardClick) {
+      onRewardClick(reward)
+    }
+  }
+
   render() {
     const { rewards, classes } = this.props
 
     const renderTrack = (props: any) => <div {...props} className={classes.scrollTrack} />
+    const renderThumb = (props: any) => <div {...props} className={classes.scrollThumb} />
 
     return (
       <div className={classes.container}>
@@ -62,13 +72,18 @@ class _RewardList extends Component<Props> {
         <Scrollbars
           renderTrackHorizontal={renderTrack}
           renderTrackVertical={renderTrack}
-          renderThumbHorizontal={props => <div {...props} className={classes.scrollThumb} />}
-          renderThumbVertical={props => <div {...props} className={classes.scrollThumb} />}
+          renderThumbHorizontal={renderThumb}
+          renderThumbVertical={renderThumb}
         >
           {rewards &&
             rewards.map((r, _) => (
               <div key={r.id} className={classes.item}>
-                <RewardListItem reward={r} />
+                <RewardListItem
+                  reward={r}
+                  onClick={() => {
+                    this.handleClick(r)
+                  }}
+                />
               </div>
             ))}
         </Scrollbars>

@@ -44,7 +44,6 @@ class _FilterList extends Component<Props> {
   }
   render() {
     const { filters, classes } = this.props
-    console.log(filters)
     return (
       <div className={classnames(classes.container, 'is-unselectable')}>
         <div className={classes.title}>FILTERS:</div>

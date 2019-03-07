@@ -4,6 +4,9 @@ import { SaladTheme } from '../SaladTheme'
 import classNames from 'classnames'
 
 const styles = (theme: SaladTheme) => ({
+  container: {
+    pointerEvents: 'none',
+  },
   upGradient: {
     background: `linear-gradient(transparent, ${theme.appBackgroundColor})`,
   },
@@ -24,7 +27,7 @@ class _Fade extends Component<Props> {
     return (
       <div
         style={style}
-        className={classNames(className, {
+        className={classNames(className, classes.container, {
           [classes.upGradient]: direction === 'up',
           [classes.downGradient]: direction === 'down',
         })}
