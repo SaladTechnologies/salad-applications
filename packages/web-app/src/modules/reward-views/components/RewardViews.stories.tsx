@@ -10,6 +10,7 @@ import { SearchBar } from './SearchBar'
 import { FilterList } from './FilterList'
 import { FilterItem } from '../../reward/models/FilterItem'
 import { SelectedReward } from './SelectedReward'
+import { RewardDetails } from './RewardDetails'
 
 const generateRewards = (count: number): Reward[] => {
   let result = new Array<Reward>(count)
@@ -18,12 +19,14 @@ const generateRewards = (count: number): Reward[] => {
     result[i] = {
       id: String(i),
       name: `$${i}.00 Salad Gift Card`,
+      details: 'Here are some details! And some more details! Lots and lots of details!!!',
       price: i,
       redeemable: i < count / 2,
       imageSrc: demoImage,
       filter: 'Game',
       remainingTimeLabel: '2 days',
       percentUnlocked: 0.5,
+      color: 'red',
     }
   }
 
@@ -60,13 +63,19 @@ storiesOf('Modules/Reward', module)
     )
   })
   .add('Selected Reward', () => {
-    let rewards = generateRewards(1)
-    let reward = rewards[0]
-    console.log(reward)
+    let reward = generateRewards(1)[0]
     return (
       <div>
         <SelectedReward reward={reward} />
         <SelectedReward reward={undefined} />
+      </div>
+    )
+  })
+  .add('Reward Details', () => {
+    let reward = generateRewards(1)[0]
+    return (
+      <div>
+        <RewardDetails reward={reward} />
       </div>
     )
   })
@@ -75,36 +84,31 @@ storiesOf('Modules/Reward', module)
 
     return (
       <div style={{ width: '100vw', height: '100vh' }}>
-        <RewardList rewards={rewards} />
+        <RewardList rewards={rewards} onRewardClick={action('reward click')} />
       </div>
     )
   })
   .add('Reward Filter Page', () => {
-    let textEntered = (x: string) => {
-      console.log('Text changed:' + x)
-    }
-
-    let filterToggle = (x: string) => {
-      console.log('Filter toggle ' + x)
-    }
-
     return (
       <div style={{ backgroundColor: '#092234' }}>
-        <RewardFilterPage searchText={''} filters={getFilters} onTextEntered={textEntered} onToggle={filterToggle} />
+        <RewardFilterPage
+          searchText={''}
+          filters={getFilters}
+          onTextEntered={action('text entered')}
+          onToggle={action('toggle')}
+        />
       </div>
     )
   })
   .add('Filter List', () => {
     return (
       <div style={{ backgroundColor: '#092234' }}>
-        <FilterList filters={getFilters} onToggle={x => console.log(x)} />
+        <FilterList filters={getFilters} onToggle={action('toggle')} />
       </div>
     )
   })
   .add('Search Bar', () => {
-    let textEntered = (x: string) => {
-      console.log('Text changed:' + x)
-    }
+    let textEntered = action('text entered')
 
     return (
       <div style={{ backgroundColor: '#092234' }}>

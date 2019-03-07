@@ -4,8 +4,10 @@ import { Reward } from './models/Reward'
 export const rewardFromResource = (r: RewardResource): Reward => ({
   id: r.rewardId,
   name: r.name,
+  details: r.detailsCard,
   price: r.price,
   filter: r.filter.toLowerCase(),
+  color: r.color,
   redeemable: false,
   imageSrc: r.imageLink,
   remainingTimeLabel: '',

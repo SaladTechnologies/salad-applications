@@ -45,6 +45,7 @@
     "@types/storybook__addon-actions": "^3.4.2",
     "@types/storybook__addon-knobs": "^4.0.1",
     "@types/storybook__react": "^4.0.1",
+    "@types/uuid": "^3.4.4",
     "auth0-js": "^9.10.0",
     "axios": "^0.18.0",
     "babel-loader": "^8.0.5",
@@ -62,7 +63,8 @@
     "react-jss": "10.0.0-alpha.10",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "2.1.5"
+    "react-scripts": "2.1.5",
+    "uuid": "^3.3.2"
   },
   "browserslist": [
     ">0.2%",
