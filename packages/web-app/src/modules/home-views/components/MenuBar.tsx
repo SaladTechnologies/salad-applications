@@ -8,7 +8,6 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'nowrap',
-    backgroundColor: theme.appBackgroundColor,
     padding: '0 1rem',
   },
   supportButton: {

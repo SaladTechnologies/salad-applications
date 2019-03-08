@@ -9,7 +9,6 @@ const styles = (theme: SaladTheme) => ({
     width: (props: Props) => (props.width ? props.width : '20rem'),
     padding: '1rem',
     overflow: 'hidden',
-    position: 'absolute',
     zIndex: 9999,
     pointerEvents: 'none',
   },
@@ -32,11 +31,12 @@ interface Props extends WithStyles<typeof styles> {
   width?: string
 }
 
-const _ToolTip = ({ text, title, classes }: Props) => (
+const _Tooltip: React.StatelessComponent<Props> = ({ text, title, classes, children }) => (
   <div className={classes.container}>
     {title && <div className={classes.title}>{title}</div>}
     <div className={classes.text}>{text}</div>
+    {children}
   </div>
 )
 
-export const ToolTip = withStyles(styles)(_ToolTip)
+export const Tooltip = withStyles(styles)(_Tooltip)

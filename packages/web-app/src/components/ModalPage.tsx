@@ -30,8 +30,6 @@ class _ModalPage extends Component<Props> {
 
     let tar = (e.target as any) as { id: string }
 
-    console.log(tar.id)
-
     if (onCloseClicked && tar.id === bgId) {
       onCloseClicked()
     }

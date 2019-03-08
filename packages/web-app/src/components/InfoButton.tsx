@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { ToolTip } from './Tooltip'
+import { Tooltip } from './Tooltip'
 import { faInfo } from '@fortawesome/free-solid-svg-icons'
 // @ts-ignore
 import ReactHintFactory from 'react-hint'
@@ -28,7 +28,7 @@ class _InfoButton extends Component<Props> {
         <span className={classes.infoButton} data-rh="machine-sync-tooltip">
           <FontAwesomeIcon icon={faInfo} />
         </span>
-        <ReactHint autoPosition events onRenderContent={() => <ToolTip width={'14rem'} text={text} />} />
+        <ReactHint autoPosition events onRenderContent={() => <Tooltip width={'14rem'} text={text} />} />
       </span>
     )
   }

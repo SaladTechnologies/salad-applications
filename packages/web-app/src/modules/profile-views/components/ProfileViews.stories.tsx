@@ -4,6 +4,8 @@ import { AccountModalPage } from './AccountModalPage'
 import { action } from '@storybook/addon-actions'
 import { Profile } from '../../profile/models'
 import { ProfileMenuItem } from './ProfileMenuItem'
+import { ProfileMenuTooltip } from './ProfileMenuTooltip'
+import { SettingsModalPage } from './SettingsModalPage'
 
 const profile: Profile = {
   id: '1234',
@@ -13,12 +15,14 @@ const profile: Profile = {
 
 storiesOf('Modules/Profile', module)
   .add('Account Modal', () => {
-    return (
-      <div>
-        <AccountModalPage profile={profile} onCloseClicked={action('close')} onLogout={action('logout')} />
-      </div>
-    )
+    return <AccountModalPage profile={profile} onCloseClicked={action('close')} onLogout={action('logout')} />
   })
   .add('Profile Menu Item', () => {
     return <ProfileMenuItem profile={profile} xp={1234} />
+  })
+  .add('Profile Menu Tooltip', () => {
+    return <ProfileMenuTooltip profile={profile} xp={1234} />
+  })
+  .add('Settings Modal', () => {
+    return <SettingsModalPage onCloseClicked={action('close')} onSendBug={action('new bug')} />
   })

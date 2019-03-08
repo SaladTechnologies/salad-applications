@@ -8,6 +8,7 @@ import DevTools from 'mobx-react-devtools'
 import { LoadingPage } from './components'
 import { RewardDetailsModalContainer } from './modules/reward-views/RewardDetailsModalContainer'
 import { AccountModalContainer } from './modules/profile-views'
+import { SettingsModalContainer } from './modules/profile-views/SettingsModalContainer'
 
 class App extends Component {
   store = getStore()
@@ -31,6 +32,7 @@ class App extends Component {
               <Route path="/" render={() => <HomePage />} />
               <Route exact path="/rewards/:id" component={RewardDetailsModalContainer} />
               <Route exact path="/profile" component={AccountModalContainer} />
+              <Route exact path="/settings" component={SettingsModalContainer} />
             </div>
           )}
 

@@ -29,13 +29,14 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   src?: string
+  dataRh?: string
 }
 
 class _ProfileImage extends Component<Props> {
   render() {
     const { src, classes } = this.props
     return (
-      <div className={classNames('is-unselectable', classes.container)}>
+      <div data-rh={'profile-image'} className={classNames('is-unselectable', classes.container)}>
         {src ? <img className={classes.img} src={src} /> : <div className={classes.fallbackText}>Alpha Release</div>}
       </div>
     )

@@ -33,7 +33,7 @@ class _ProfileSummaryTitle extends Component<Props> {
     const { profile, xp, classes, className, xpClassName } = this.props
     return (
       <div className={classnames(className, classes.container)}>
-        <div className={classes.username}>{profile && profile.username}</div>
+        <div className={classes.username}>{profile ? profile.username : 'Unknown User'}</div>
         <div className={classnames(classes.xp, xpClassName)}>{xp !== undefined ? xp : '-'} XP</div>
       </div>
     )
