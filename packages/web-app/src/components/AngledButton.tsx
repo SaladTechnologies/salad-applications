@@ -1,5 +1,4 @@
 import React, { ReactNode, Component } from 'react'
-// @ts-ignore
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
 import { AngledPanel, AngleDirection } from './AngledPanel'

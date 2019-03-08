@@ -34,7 +34,7 @@ export class AuthStore {
   }
 
   @action
-  signIn() {
+  signIn = () => {
     this.loginError = false
     this.webAuth.authorize()
   }
@@ -61,10 +61,15 @@ export class AuthStore {
   }
 
   @action
-  signOut() {
+  signOut = () => {
+    let redirect = window.location.origin
+    this.webAuth.logout({
+      clientID: Config.auth0ClientId,
+      returnTo: redirect,
+    })
     this.authToken = undefined
 
     //Switch back to the main page
-    this.store.routing.push('/')
+    // this.store.routing.push('/')
   }
 }

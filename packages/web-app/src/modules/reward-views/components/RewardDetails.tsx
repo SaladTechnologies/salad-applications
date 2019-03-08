@@ -18,6 +18,9 @@ const styles = (theme: SaladTheme) => ({
     right: '.5rem',
     top: '.5rem',
     cursor: 'pointer',
+    '&:hover': {
+      opacity: 0.7,
+    },
   },
   imageContainer: {
     height: '12rem',

@@ -12,7 +12,7 @@ const styles = (theme: SaladTheme) => ({
     left: 0,
     right: 0,
     zIndex: 5000,
-    backgroundColor: 'rgba(0, 0, 0, .7)',
+    backgroundColor: 'rgba(0, 0, 0, .9)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

@@ -117,33 +117,10 @@ export class RewardStore {
     this.selectedRewardId = data.currentReward.rewardId
   }
 
-  // @action
-  // selectReward = (rewardId: string) => {
-  //   //TODO: Add api call to set reward
-  //   let a = this.store.machine.installId
-  //   const request = {
-  //     macAddress: a,
-  //     rewardId: rewardId,
-  //   }
-
-  //   try {
-  //     this.axios.post('select-reward', request).then(_ => {
-  //       runInAction(() => {
-  //         this.selectedRewardId = rewardId
-  //         console.log('set reward success')
-  //       })
-  //     })
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }
-
   @action
   selectReward = async (rewardId: string) => {
-    //TODO: Add api call to set reward
-    let a = this.store.machine.installId
     const request = {
-      macAddress: a,
+      macAddress: this.store.machine.installId,
       rewardId: rewardId,
     }
 
