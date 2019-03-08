@@ -20,13 +20,8 @@ export class RewardStore {
   @observable
   public filterText?: string
 
-  @observable
-  public currentRewardDetails?: Reward
-
   @computed get selectedReward(): Reward | undefined {
-    return this.allRewards.find(x => {
-      return x.id === this.selectedRewardId
-    })
+    return this.getReward(this.selectedRewardId)
   }
 
   @computed get allRewards(): Reward[] {
@@ -64,6 +59,12 @@ export class RewardStore {
   }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
+
+  getReward = (id?: string): Reward | undefined => {
+    if (id === undefined) return undefined
+    let a = this.allRewards.find(x => x.id === id)
+    return a
+  }
 
   @action
   refreshRewards = async () => {
@@ -114,7 +115,7 @@ export class RewardStore {
 
   @action
   loadDataRefresh = (data: DataResource) => {
-    this.selectedRewardId = data.currentReward.rewardId
+    this.selectedRewardId = String(data.currentReward.rewardId)
   }
 
   @action
@@ -140,14 +141,14 @@ export class RewardStore {
     //TODO: Add api call to redeem
   }
 
-  @action
-  selectCurrentReward = (reward: Reward) => {
-    this.currentRewardDetails = reward
-    this.store.routing.push('/reward')
-  }
+  // @action
+  // selectCurrentReward = (reward: Reward) => {
+  //   this.currentRewardDetails = reward
+  //   this.store.routing.push('/reward')
+  // }
 
-  @action
-  clearCurrentReward = () => {
-    this.store.routing.goBack()
-  }
+  // @action
+  // clearCurrentReward = () => {
+  //   this.store.routing.goBack()
+  // }
 }

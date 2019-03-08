@@ -1,9 +1,12 @@
-import { connect, MapStoreToProps } from '../../connect'
+import { connect } from '../../connect'
 import { MenuBar, MenuItem } from './components/MenuBar'
+import { RootStore } from '../../Store'
 
-const mapStoreToProps: MapStoreToProps = store => {
-  //TODO
-  const menuItems: MenuItem[] = [] // [new MenuItem('Account', () => store.ui.showModal(<AccountModalContainer />))]
+const mapStoreToProps = (store: RootStore) => {
+  const menuItems: MenuItem[] = [
+    new MenuItem('Account', () => store.routing.push('/profile')),
+    new MenuItem('Settings', () => store.routing.push('/settings')),
+  ]
   return {
     menuItems: menuItems,
   }

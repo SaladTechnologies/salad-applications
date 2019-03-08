@@ -1,9 +1,11 @@
-import { connect, MapStoreToProps } from '../../connect'
+import { connect } from '../../connect'
 import { RewardList } from './components/RewardList'
+import { Reward } from '../reward/models'
+import { RootStore } from '../../Store'
 
-const mapStoreToProps: MapStoreToProps = store => ({
+const mapStoreToProps = (store: RootStore) => ({
   rewards: store.rewards.filteredRewards,
-  onRewardClick: store.rewards.selectCurrentReward,
+  onRewardClick: (r: Reward) => store.routing.push(`/rewards/${r.id}`),
 })
 
 export const RewardListContainer = connect(

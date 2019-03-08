@@ -1,7 +1,8 @@
 import { ExperienceBar } from './components/ExperienceBar'
-import { connect, MapStoreToProps } from '../../connect'
+import { connect } from '../../connect'
+import { RootStore } from '../../Store'
 
-const mapStoreToProps: MapStoreToProps = store => ({
+const mapStoreToProps = (store: RootStore) => ({
   currentXp: store.xp.currentXp,
   levels: store.xp.levels,
 })

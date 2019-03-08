@@ -2,16 +2,17 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import { RootStore, getStore } from './Store'
 
-export type MapStoreToProps = (store: RootStore) => {}
-
-export const connect = (mapStoreToProps: MapStoreToProps, WrappedComponent: React.ComponentType) => {
+export const connect = <T extends {}>(
+  mapStoreToProps: (store: RootStore, ownProps?: any) => T,
+  WrappedComponent: React.ComponentType<T>,
+) => {
   @observer
-  class ConnectedComponent extends React.Component {
+  class ConnectedComponent extends React.Component<T> {
     public static displayName = `connect(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`
     render() {
       const store = getStore()
-      const props = mapStoreToProps(store)
-      return <WrappedComponent {...props} />
+      const nextProps = mapStoreToProps(store, this.props)
+      return <WrappedComponent {...nextProps} />
     }
   }
   return ConnectedComponent

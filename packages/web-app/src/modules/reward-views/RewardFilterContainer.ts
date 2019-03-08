@@ -1,7 +1,8 @@
-import { connect, MapStoreToProps } from '../../connect'
+import { connect } from '../../connect'
 import { RewardFilterPage } from './components/RewardFilterPage'
+import { RootStore } from '../../Store'
 
-const mapStoreToProps: MapStoreToProps = store => ({
+const mapStoreToProps = (store: RootStore) => ({
   searchText: store.rewards.filterText,
   filters: store.rewards.filters,
   onTextEntered: store.rewards.updateFilterText,

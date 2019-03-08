@@ -1,5 +1,5 @@
 import { BottomBar } from './components/BottomBar'
-import { connect, MapStoreToProps } from '../../connect'
+import { connect } from '../../connect'
 
 const handleDiscord = () => {
   openLink('https://discord.gg/xcvmgQk')
@@ -13,7 +13,7 @@ const openLink = (url: string) => {
   window.open(url, '_blank')
 }
 
-const mapStoreToProps: MapStoreToProps = store => ({
+const mapStoreToProps = () => ({
   onDiscordClick: handleDiscord,
   onSupportClick: handleSupport,
 })

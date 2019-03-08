@@ -1,10 +1,10 @@
-import { connect, MapStoreToProps } from '../../connect'
+import { connect } from '../../connect'
 import { AccountModalPage } from './components/AccountModalPage'
+import { RootStore } from '../../Store'
 
-const mapStoreToProps: MapStoreToProps = store => ({
+const mapStoreToProps = (store: RootStore) => ({
   profile: store.profile.profile,
-  //TODO
-  // onCloseClicked: store.ui.hideModal,
+  onCloseClicked: () => store.routing.goBack(),
   onLogout: store.auth.signOut,
 })
 

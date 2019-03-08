@@ -10,7 +10,7 @@ import { SearchBar } from './SearchBar'
 import { FilterList } from './FilterList'
 import { FilterItem } from '../../reward/models/FilterItem'
 import { SelectedReward } from './SelectedReward'
-import { RewardDetails } from './RewardDetails'
+import { RewardDetailsModal } from './RewardDetailsModal'
 
 const generateRewards = (count: number): Reward[] => {
   let result = new Array<Reward>(count)
@@ -71,11 +71,11 @@ storiesOf('Modules/Reward', module)
       </div>
     )
   })
-  .add('Reward Details', () => {
+  .add('Reward Details Modal', () => {
     let reward = generateRewards(1)[0]
     return (
       <div>
-        <RewardDetails reward={reward} />
+        <RewardDetailsModal reward={reward} />
       </div>
     )
   })

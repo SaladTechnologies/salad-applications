@@ -108,9 +108,9 @@ class _SelectedReward extends Component<Props> {
     let redeemable = reward && reward.redeemable
 
     return (
-      <div className={classes.container}>
+      <div className={classnames(classes.container, 'is-unselectable')}>
         <div className={classes.choppingTitle}>Chopping Salad For:</div>
-        <div className={classnames(classes.cardContainer, 'is-unselectable')}>
+        <div className={classes.cardContainer}>
           {/* Image */}
           <AngledPanel className={classes.imageContainer} leftSide={AngleDirection.Right}>
             {reward && (

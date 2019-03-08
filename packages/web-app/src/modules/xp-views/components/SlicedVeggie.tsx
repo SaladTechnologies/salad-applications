@@ -42,7 +42,7 @@ class _SlicedVeggie extends Component<Props> {
     const positions = this.getColumnPositions(percent)
 
     return (
-      <div className={classnames(classes.container)}>
+      <div className={classnames(classes.container, 'is-unselectable')}>
         {positions.map((pos, i) => {
           return (
             <div className={classnames(classes.slice)} key={i}>

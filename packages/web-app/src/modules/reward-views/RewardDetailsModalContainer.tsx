@@ -1,14 +1,16 @@
-import { connect, MapStoreToProps } from '../../connect'
-import { RewardDetails } from './components/RewardDetails'
+import { connect } from '../../connect'
+import { RewardDetailsModal } from './components/RewardDetailsModal'
+import { RootStore } from '../../Store'
+import { RouteComponentProps } from 'react-router-dom'
 
-const mapStoreToProps: MapStoreToProps = store => ({
-  reward: store.rewards.currentRewardDetails,
-  onClickClose: store.rewards.clearCurrentReward,
+const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ id: string }>) => ({
+  reward: store.rewards.getReward(props.match.params.id),
+  onClickClose: () => store.routing.goBack(),
   onRedeem: store.rewards.redeemReward,
   onSelect: store.rewards.selectTargetReward,
 })
 
 export const RewardDetailsModalContainer = connect(
   mapStoreToProps,
-  RewardDetails,
+  RewardDetailsModal,
 )

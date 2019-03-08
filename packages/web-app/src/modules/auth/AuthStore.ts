@@ -34,7 +34,7 @@ export class AuthStore {
   }
 
   @action
-  signIn = () => {
+  signIn = async () => {
     this.loginError = false
     this.webAuth.authorize()
   }

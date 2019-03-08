@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { SaladTheme } from '../../../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
-import { Modal } from '../../../components'
+import { Modal, ModalPage } from '../../../components'
 import { Profile } from '../../profile/models'
 import classnames from 'classnames'
 
@@ -67,27 +67,29 @@ class _AccountModalPage extends Component<Props> {
   render() {
     const { profile, onCloseClicked, classes } = this.props
     return (
-      <Modal onCloseClicked={onCloseClicked}>
-        <div className={classes.contentContainer}>
-          <div className={classes.title}>{profile ? profile.username : 'Unknown User'}</div>
-          <div className={classes.description}>
-            Login with your Salad username to chop Salad on another machine under the same account. In the future you
-            can use the following links to access and explore your chef account.
+      <ModalPage onCloseClicked={onCloseClicked}>
+        <Modal onCloseClicked={onCloseClicked}>
+          <div className={classes.contentContainer}>
+            <div className={classes.title}>{profile ? profile.username : 'Unknown User'}</div>
+            <div className={classes.description}>
+              Login with your Salad username to chop Salad on another machine under the same account. In the future you
+              can use the following links to access and explore your chef account.
+            </div>
           </div>
-        </div>
-        <div className={classes.detailsContainer}>
-          <div className={classnames(classes.lineBreak, classes.detailButton)}>EDIT USERNAME, AVATAR, PASSWORD</div>
-          <div className={classnames(classes.lineBreak, classes.detailButton)}>
-            SEE YOUR EARNING HISTORY FOR THIS MACHINE
+          <div className={classes.detailsContainer}>
+            <div className={classnames(classes.lineBreak, classes.detailButton)}>EDIT USERNAME, AVATAR, PASSWORD</div>
+            <div className={classnames(classes.lineBreak, classes.detailButton)}>
+              SEE YOUR EARNING HISTORY FOR THIS MACHINE
+            </div>
+            <div className={classes.detailButton}>SEE YOUR REWARD PAYOUT STATUS & HISTORY</div>
           </div>
-          <div className={classes.detailButton}>SEE YOUR REWARD PAYOUT STATUS & HISTORY</div>
-        </div>
-        <div>
-          <div className={classes.logoutButton} onClick={this.handleLogout}>
-            LOG OUT
+          <div>
+            <div className={classes.logoutButton} onClick={this.handleLogout}>
+              LOG OUT
+            </div>
           </div>
-        </div>
-      </Modal>
+        </Modal>
+      </ModalPage>
     )
   }
 }

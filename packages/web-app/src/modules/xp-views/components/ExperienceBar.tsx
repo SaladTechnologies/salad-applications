@@ -79,7 +79,7 @@ class _ExperienceBar extends Component<Props> {
     currentLevels = currentLevels.slice(0, Math.min(3, currentLevels.length))
 
     return (
-      <div className={classes.container}>
+      <div className={classnames(classes.container, 'is-unselectable')}>
         <div className={classes.innerContainer}>
           {currentLevels &&
             currentLevels.map((level, i) => {
