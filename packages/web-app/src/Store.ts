@@ -8,6 +8,7 @@ import { RewardStore } from './modules/reward'
 import { BalanceStore } from './modules/balance'
 import { MachineStore } from './modules/machine'
 import { ProfileStore } from './modules/profile'
+import { UIStore } from './UIStore'
 
 //Forces all changes to state to be from an action
 configure({ enforceActions: 'always' })
@@ -31,6 +32,7 @@ export class RootStore {
   public readonly balance: BalanceStore
   public readonly machine: MachineStore
   public readonly profile: ProfileStore
+  public readonly ui: UIStore
 
   constructor(private readonly axios: AxiosInstance) {
     this.auth = new AuthStore(this, axios)
@@ -40,6 +42,7 @@ export class RootStore {
     this.balance = new BalanceStore()
     this.machine = new MachineStore()
     this.profile = new ProfileStore()
+    this.ui = new UIStore(this)
   }
 
   refreshData = async () => {

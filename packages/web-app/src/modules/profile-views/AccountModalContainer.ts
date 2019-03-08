@@ -4,7 +4,7 @@ import { RootStore } from '../../Store'
 
 const mapStoreToProps = (store: RootStore) => ({
   profile: store.profile.profile,
-  onCloseClicked: () => store.routing.goBack(),
+  onCloseClicked: () => store.ui.hideModal(),
   onLogout: store.auth.signOut,
 })
 

@@ -5,7 +5,7 @@ import { RouteComponentProps } from 'react-router-dom'
 
 const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ id: string }>) => ({
   reward: store.rewards.getReward(props.match.params.id),
-  onClickClose: () => store.routing.goBack(),
+  onClickClose: store.ui.hideModal,
   onRedeem: store.rewards.redeemReward,
   onSelect: store.rewards.selectTargetReward,
 })

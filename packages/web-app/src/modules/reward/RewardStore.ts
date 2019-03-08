@@ -140,15 +140,4 @@ export class RewardStore {
   redeemReward = (rewardId: string) => {
     //TODO: Add api call to redeem
   }
-
-  // @action
-  // selectCurrentReward = (reward: Reward) => {
-  //   this.currentRewardDetails = reward
-  //   this.store.routing.push('/reward')
-  // }
-
-  // @action
-  // clearCurrentReward = () => {
-  //   this.store.routing.goBack()
-  // }
 }
