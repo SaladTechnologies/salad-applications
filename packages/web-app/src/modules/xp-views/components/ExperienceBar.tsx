@@ -3,9 +3,9 @@ import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretLeft } from '@fortawesome/free-solid-svg-icons'
-import { VerticalProgress } from '../../../components/VerticalProgress'
-import { Level } from '../../xp/models/Level'
 import classnames from 'classnames'
+import { VerticalProgress } from '../../../components'
+import { Level } from '../../xp/models/Level'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -79,7 +79,7 @@ class _ExperienceBar extends Component<Props> {
     currentLevels = currentLevels.slice(0, Math.min(3, currentLevels.length))
 
     return (
-      <div className={classes.container}>
+      <div className={classnames(classes.container, 'is-unselectable')}>
         <div className={classes.innerContainer}>
           {currentLevels &&
             currentLevels.map((level, i) => {

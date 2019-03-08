@@ -1,7 +1,8 @@
-import { connect, MapStoreToProps } from '../../connect'
+import { connect } from '../../connect'
 import { SelectedReward } from './components/SelectedReward'
+import { RootStore } from '../../Store'
 
-const mapStoreToProps: MapStoreToProps = store => ({
+const mapStoreToProps = (store: RootStore) => ({
   reward: store.rewards.selectedReward,
 })
 

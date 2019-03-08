@@ -1,19 +1,24 @@
-import React, { Component } from 'react'
 import { BottomBar } from './components/BottomBar'
+import { connect } from '../../connect'
 
-export class BottomBarContainer extends Component {
-  handleDiscord = () => {
-    this.openLink('https://discord.gg/xcvmgQk')
-  }
-
-  handleSupport = () => {
-    this.openLink('https://salad.zendesk.com')
-  }
-
-  openLink = (url: string) => {
-    window.open(url, '_blank')
-  }
-  render() {
-    return <BottomBar onDiscordClick={this.handleDiscord} onSupportClick={this.handleSupport} />
-  }
+const handleDiscord = () => {
+  openLink('https://discord.gg/xcvmgQk')
 }
+
+const handleSupport = () => {
+  openLink('https://salad.zendesk.com')
+}
+
+const openLink = (url: string) => {
+  window.open(url, '_blank')
+}
+
+const mapStoreToProps = () => ({
+  onDiscordClick: handleDiscord,
+  onSupportClick: handleSupport,
+})
+
+export const BottomBarContainer = connect(
+  mapStoreToProps,
+  BottomBar,
+)

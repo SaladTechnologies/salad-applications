@@ -4,7 +4,7 @@ import { SaladTheme } from '../../../SaladTheme'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
-import { AngledPanel, AngleDirection } from '../../../components/AngledPanel'
+import { AngledPanel, AngleDirection } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -90,16 +90,13 @@ class _RewardSummary extends Component<Props> {
   }
   render() {
     const { name, color, price, redeemable, imageSrc, classes } = this.props
-
+    console.log(name + '-' + color)
     return (
       <div className={classnames(classes.container, 'is-unselectable')} onClick={this.handleClick}>
         {/* Image */}
-        <AngledPanel
-          style={{ backgroundColor: color }}
-          className={classes.imageContainer}
-          leftSide={AngleDirection.Right}
-        >
-          <img className={classes.image} src={imageSrc} />
+        <AngledPanel className={classes.imageContainer} leftSide={AngleDirection.Right}>
+          {/* TODO the color is not working here for some reason */}
+          <img className={classes.image} src={imageSrc} draggable={false} style={{ background: color }} />
         </AngledPanel>
 
         {/* Right side panel */}

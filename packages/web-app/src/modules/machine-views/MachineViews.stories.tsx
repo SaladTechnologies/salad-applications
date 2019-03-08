@@ -1,7 +1,7 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { MachineSummaryView } from './components/MachineSummaryView'
-import { Machine } from '../machine/Machine'
+import { Machine } from '../machine/models/Machine'
 
 const getMachines = (num: number): Machine[] => {
   let array: Machine[] = new Array()

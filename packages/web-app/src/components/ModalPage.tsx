@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { SaladTheme } from '../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
 import classNames from 'classnames'
-import { ReactNode } from 'react'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -12,7 +11,7 @@ const styles = (theme: SaladTheme) => ({
     left: 0,
     right: 0,
     zIndex: 5000,
-    backgroundColor: 'rgba(0, 0, 0, .7)',
+    backgroundColor: 'rgba(0, 0, 0, .9)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -20,8 +19,6 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  content?: ReactNode
-  visible?: boolean
   onCloseClicked?: () => void
 }
 
@@ -33,19 +30,17 @@ class _ModalPage extends Component<Props> {
 
     let tar = (e.target as any) as { id: string }
 
-    console.log(tar.id)
-
     if (onCloseClicked && tar.id === bgId) {
       onCloseClicked()
     }
   }
   render() {
-    const { visible, classes, content } = this.props
-    return visible ? (
+    const { classes, children } = this.props
+    return (
       <div id={bgId} className={classNames(classes.container)} onClick={this.handleClose}>
-        {content}
+        {children}
       </div>
-    ) : null
+    )
   }
 }
 

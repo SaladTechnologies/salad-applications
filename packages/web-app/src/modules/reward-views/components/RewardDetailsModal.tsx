@@ -4,7 +4,7 @@ import { SaladTheme } from '../../../SaladTheme'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
-import { AngledPanel, AngleDirection } from '../../../components/AngledPanel'
+import { AngledPanel, AngleDirection, ModalPage } from '../../../components'
 import { Reward } from '../../reward/models/Reward'
 
 const styles = (theme: SaladTheme) => ({
@@ -18,6 +18,9 @@ const styles = (theme: SaladTheme) => ({
     right: '.5rem',
     top: '.5rem',
     cursor: 'pointer',
+    '&:hover': {
+      opacity: 0.7,
+    },
   },
   imageContainer: {
     height: '12rem',
@@ -80,7 +83,7 @@ interface Props extends WithStyles<typeof styles> {
   onSelect?: (rewardId: string) => Promise<void>
 }
 
-class _RewardDetails extends Component<Props> {
+class _RewardDetailsModal extends Component<Props> {
   timeRemainingText() {
     const { reward } = this.props
 
@@ -131,44 +134,46 @@ class _RewardDetails extends Component<Props> {
     const { reward, classes } = this.props
 
     return (
-      <div className={classnames(classes.container, 'is-unselectable')}>
-        {/* Image */}
-        <AngledPanel
-          style={{ backgroundColor: reward ? reward.color : 'white' }}
-          className={classes.imageContainer}
-          leftSide={AngleDirection.Right}
-        >
-          {reward && <img className={classes.image} src={reward.imageSrc} />}
-        </AngledPanel>
-
-        {/* Right side panel */}
-        <div className={classnames(classes.rightContainer)}>
-          <div style={{ flex: '1' }}>
-            {/* Padlock */}
-            <div className={classes.lock} onClick={this.handleClose}>
-              <FontAwesomeIcon icon={faTimes} />
-            </div>
-
-            <div className={classnames(classes.priceText)}>
-              {reward && `$${reward.price.toFixed(2)} ${this.timeRemainingText()}`}
-            </div>
-            <div className={classnames(classes.nameText)}>{reward ? reward.name : 'Unavailable'}</div>
-            <div className={classnames(classes.details)}>{reward && reward.details}</div>
-          </div>
-          <div className={classes.buttonContainer}>
-            {reward && reward.redeemable && (
-              <div className={classes.button} onClick={this.handleRedeem}>
-                Redeem
-              </div>
+      <ModalPage onCloseClicked={this.handleClose}>
+        <div className={classnames(classes.container, 'is-unselectable')}>
+          <AngledPanel className={classes.imageContainer} leftSide={AngleDirection.Right}>
+            {reward && (
+              <img
+                className={classes.image}
+                src={reward.imageSrc}
+                draggable={false}
+                style={{ background: reward ? reward.color : 'white' }}
+              />
             )}
-            <div className={classes.button} onClick={this.handleSelect}>
-              Select as reward
+          </AngledPanel>
+
+          <div className={classnames(classes.rightContainer)}>
+            <div style={{ flex: '1' }}>
+              <div className={classes.lock} onClick={this.handleClose}>
+                <FontAwesomeIcon icon={faTimes} />
+              </div>
+
+              <div className={classnames(classes.priceText)}>
+                {reward && reward.price && `$${reward.price.toFixed(2)} ${this.timeRemainingText()}`}
+              </div>
+              <div className={classnames(classes.nameText)}>{reward ? reward.name : 'Unavailable'}</div>
+              <div className={classnames(classes.details)}>{reward && reward.details}</div>
+            </div>
+            <div className={classes.buttonContainer}>
+              {reward && reward.redeemable && (
+                <div className={classes.button} onClick={this.handleRedeem}>
+                  Redeem
+                </div>
+              )}
+              <div className={classes.button} onClick={this.handleSelect}>
+                Select as reward
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </ModalPage>
     )
   }
 }
 
-export const RewardDetails = withStyles(styles)(_RewardDetails)
+export const RewardDetailsModal = withStyles(styles)(_RewardDetailsModal)

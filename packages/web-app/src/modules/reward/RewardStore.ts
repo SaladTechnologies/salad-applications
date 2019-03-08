@@ -20,13 +20,8 @@ export class RewardStore {
   @observable
   public filterText?: string
 
-  @observable
-  public currentRewardDetails?: Reward
-
   @computed get selectedReward(): Reward | undefined {
-    return this.allRewards.find(x => {
-      return x.id === this.selectedRewardId
-    })
+    return this.getReward(this.selectedRewardId)
   }
 
   @computed get allRewards(): Reward[] {
@@ -64,6 +59,12 @@ export class RewardStore {
   }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
+
+  getReward = (id?: string): Reward | undefined => {
+    if (id === undefined) return undefined
+    let a = this.allRewards.find(x => x.id === id)
+    return a
+  }
 
   @action
   refreshRewards = async () => {
@@ -114,36 +115,13 @@ export class RewardStore {
 
   @action
   loadDataRefresh = (data: DataResource) => {
-    this.selectedRewardId = data.currentReward.rewardId
+    this.selectedRewardId = String(data.currentReward.rewardId)
   }
 
-  // @action
-  // selectReward = (rewardId: string) => {
-  //   //TODO: Add api call to set reward
-  //   let a = this.store.machine.installId
-  //   const request = {
-  //     macAddress: a,
-  //     rewardId: rewardId,
-  //   }
-
-  //   try {
-  //     this.axios.post('select-reward', request).then(_ => {
-  //       runInAction(() => {
-  //         this.selectedRewardId = rewardId
-  //         console.log('set reward success')
-  //       })
-  //     })
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }
-
   @action
-  selectReward = async (rewardId: string) => {
-    //TODO: Add api call to set reward
-    let a = this.store.machine.installId
+  selectTargetReward = async (rewardId: string) => {
     const request = {
-      macAddress: a,
+      macAddress: this.store.machine.installId,
       rewardId: rewardId,
     }
 
@@ -161,15 +139,5 @@ export class RewardStore {
   @action
   redeemReward = (rewardId: string) => {
     //TODO: Add api call to redeem
-  }
-
-  @action
-  showDetailModal = (reward: Reward) => {
-    this.currentRewardDetails = reward
-  }
-
-  @action
-  hideDetailModal = () => {
-    this.currentRewardDetails = undefined
   }
 }

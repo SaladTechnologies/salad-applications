@@ -2,7 +2,7 @@ import { RewardResource } from './models/RewardResource'
 import { Reward } from './models/Reward'
 
 export const rewardFromResource = (r: RewardResource): Reward => ({
-  id: r.rewardId,
+  id: String(r.rewardId),
   name: r.name,
   details: r.detailsCard,
   price: r.price,

@@ -3,7 +3,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import classnames from 'classnames'
 import { FilterItem } from '../../reward/models/FilterItem'
-import { Checkbox } from '../../../components/Checkbox'
+import { Checkbox } from '../../../components'
 import { Observer, observer } from 'mobx-react'
 
 const styles = (theme: SaladTheme) => ({

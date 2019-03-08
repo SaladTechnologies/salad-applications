@@ -4,7 +4,8 @@ import { SaladTheme } from '../../../SaladTheme'
 import { Reward } from '../../reward/models/Reward'
 import Scrollbars from 'react-custom-scrollbars'
 import { RewardListItem } from './RewardListItem'
-import { Fade } from '../../../components/Fade'
+import { Fade } from '../../../components'
+import classnames from 'classnames'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -79,7 +80,7 @@ class _RewardList extends Component<Props> {
     const renderThumb = (props: any) => <div {...props} className={classes.scrollThumb} />
 
     return (
-      <div className={classes.container}>
+      <div className={classnames('is-unselectable', classes.container)}>
         <Fade className={classes.topFade} direction="down" />
         <Scrollbars
           renderTrackHorizontal={renderTrack}

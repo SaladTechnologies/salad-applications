@@ -4,9 +4,9 @@ import { SaladTheme } from '../../../SaladTheme'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
-import { AngledPanel, AngleDirection } from '../../../components/AngledPanel'
+import { AngledPanel, AngleDirection } from '../../../components'
 import { Reward } from '../../reward/models/Reward'
-import { ProgressBar } from '../../../components/ProgressBar'
+import { ProgressBar } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -108,16 +108,19 @@ class _SelectedReward extends Component<Props> {
     let redeemable = reward && reward.redeemable
 
     return (
-      <div className={classes.container}>
+      <div className={classnames(classes.container, 'is-unselectable')}>
         <div className={classes.choppingTitle}>Chopping Salad For:</div>
-        <div className={classnames(classes.cardContainer, 'is-unselectable')}>
+        <div className={classes.cardContainer}>
           {/* Image */}
-          <AngledPanel
-            style={{ backgroundColor: reward && reward.color }}
-            className={classes.imageContainer}
-            leftSide={AngleDirection.Right}
-          >
-            {reward && <img className={classes.image} src={reward.imageSrc} />}
+          <AngledPanel className={classes.imageContainer} leftSide={AngleDirection.Right}>
+            {reward && (
+              <img
+                className={classes.image}
+                src={reward.imageSrc}
+                draggable={false}
+                style={{ background: reward ? reward.color : 'white' }}
+              />
+            )}
           </AngledPanel>
 
           {/* Right side panel */}

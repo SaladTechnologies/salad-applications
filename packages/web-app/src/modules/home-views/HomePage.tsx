@@ -7,7 +7,8 @@ import { RewardListContainer, RewardFilterContainer, SelectedRewardContainer } f
 import { RefreshService } from '../data-refresh'
 import { getStore } from '../../Store'
 import { BottomBarContainer } from './BottomBarContainer'
-import { RewardModal } from '../reward-views/RewardModal'
+import { MenuBarContainer } from './MenuBarContainer'
+import { ProfileMenuItemContainer } from '../profile-views'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -22,6 +23,8 @@ const styles = (theme: SaladTheme) => ({
     flexDirection: 'column',
   },
   header: {
+    display: 'flex',
+    flexDirection: 'row',
     flex: 'none',
   },
   main: {
@@ -58,9 +61,9 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
     const { classes } = this.props
     return (
       <div className={classes.container}>
-        <RewardModal />
         <div className={classes.header}>
-          <div style={{ height: '50px' }} />
+          <ProfileMenuItemContainer />
+          <MenuBarContainer />
         </div>
 
         <div className={classes.main}>

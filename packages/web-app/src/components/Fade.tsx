@@ -7,6 +7,9 @@ const styles = (theme: SaladTheme) => ({
   container: {
     pointerEvents: 'none',
   },
+  childContainer: {
+    pointerEvents: 'auto',
+  },
   upGradient: {
     background: `linear-gradient(transparent, ${theme.appBackgroundColor})`,
   },
@@ -27,12 +30,12 @@ class _Fade extends Component<Props> {
     return (
       <div
         style={style}
-        className={classNames(className, classes.container, {
+        className={classNames('is-unselectable', className, classes.container, {
           [classes.upGradient]: direction === 'up',
           [classes.downGradient]: direction === 'down',
         })}
       >
-        {children}
+        <div className={classes.childContainer}>{children}</div>
       </div>
     )
   }
