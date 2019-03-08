@@ -3,7 +3,8 @@ import { AccountModalPage } from './components/AccountModalPage'
 
 const mapStoreToProps: MapStoreToProps = store => ({
   profile: store.profile.profile,
-  onCloseClicked: store.profile.hideAccountModal,
+  //TODO
+  // onCloseClicked: store.ui.hideModal,
   onLogout: store.auth.signOut,
 })
 

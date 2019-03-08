@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { SaladTheme } from '../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
 import classNames from 'classnames'
-import { ReactNode } from 'react'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -20,8 +19,6 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  content?: ReactNode
-  visible?: boolean
   onCloseClicked?: () => void
 }
 
@@ -40,12 +37,12 @@ class _ModalPage extends Component<Props> {
     }
   }
   render() {
-    const { visible, classes, content } = this.props
-    return visible ? (
+    const { classes, children } = this.props
+    return (
       <div id={bgId} className={classNames(classes.container)} onClick={this.handleClose}>
-        {content}
+        {children}
       </div>
-    ) : null
+    )
   }
 }
 

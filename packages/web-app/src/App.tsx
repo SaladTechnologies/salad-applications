@@ -6,6 +6,7 @@ import { HomePage } from './modules/home-views'
 import { getStore } from './Store'
 import DevTools from 'mobx-react-devtools'
 import { LoadingPage } from './components'
+import { RewardDetailsModalContainer } from './modules/reward-views/RewardDetailsModalContainer'
 
 class App extends Component {
   store = getStore()
@@ -18,7 +19,12 @@ class App extends Component {
       <div>
         <Switch>
           {!isAuth && <Route exact path="/" component={LoginContainer} />}
-          {isAuth && <Route path="/" render={() => <HomePage />} />}
+          {isAuth && (
+            <div>
+              <Route path="/" render={() => <HomePage />} />
+              <Route path="/reward" component={() => <RewardDetailsModalContainer />} />
+            </div>
+          )}
           <Route exact path="/auth/callback" component={CallbackContainer} />
           <Route render={() => <LoadingPage text="Page Not Found" />} />
         </Switch>

@@ -1,1 +1,1 @@
-export * from './AccountModal'
+export * from './AccountModalContainer'

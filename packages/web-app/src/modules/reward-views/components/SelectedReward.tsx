@@ -112,12 +112,15 @@ class _SelectedReward extends Component<Props> {
         <div className={classes.choppingTitle}>Chopping Salad For:</div>
         <div className={classnames(classes.cardContainer, 'is-unselectable')}>
           {/* Image */}
-          <AngledPanel
-            style={{ backgroundColor: reward && reward.color }}
-            className={classes.imageContainer}
-            leftSide={AngleDirection.Right}
-          >
-            {reward && <img className={classes.image} src={reward.imageSrc} />}
+          <AngledPanel className={classes.imageContainer} leftSide={AngleDirection.Right}>
+            {reward && (
+              <img
+                className={classes.image}
+                src={reward.imageSrc}
+                draggable={false}
+                style={{ background: reward ? reward.color : 'white' }}
+              />
+            )}
           </AngledPanel>
 
           {/* Right side panel */}

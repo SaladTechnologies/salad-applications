@@ -118,7 +118,7 @@ export class RewardStore {
   }
 
   @action
-  selectReward = async (rewardId: string) => {
+  selectTargetReward = async (rewardId: string) => {
     const request = {
       macAddress: this.store.machine.installId,
       rewardId: rewardId,
@@ -141,12 +141,13 @@ export class RewardStore {
   }
 
   @action
-  showDetailModal = (reward: Reward) => {
+  selectCurrentReward = (reward: Reward) => {
     this.currentRewardDetails = reward
+    this.store.routing.push('/reward')
   }
 
   @action
-  hideDetailModal = () => {
-    this.currentRewardDetails = undefined
+  clearCurrentReward = () => {
+    this.store.routing.goBack()
   }
 }

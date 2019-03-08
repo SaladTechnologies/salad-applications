@@ -7,8 +7,6 @@ import { RewardListContainer, RewardFilterContainer, SelectedRewardContainer } f
 import { RefreshService } from '../data-refresh'
 import { getStore } from '../../Store'
 import { BottomBarContainer } from './BottomBarContainer'
-import { RewardModal } from '../reward-views'
-import { AccountModal } from '../profile-views'
 import { MenuBarContainer } from './MenuBarContainer'
 
 const styles = (theme: SaladTheme) => ({
@@ -60,8 +58,6 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
     const { classes } = this.props
     return (
       <div className={classes.container}>
-        <AccountModal />
-        <RewardModal />
         <div className={classes.header}>
           <MenuBarContainer />
         </div>

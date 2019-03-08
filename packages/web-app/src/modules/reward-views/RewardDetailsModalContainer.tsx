@@ -3,12 +3,12 @@ import { RewardDetails } from './components/RewardDetails'
 
 const mapStoreToProps: MapStoreToProps = store => ({
   reward: store.rewards.currentRewardDetails,
-  onClickClose: store.rewards.hideDetailModal,
+  onClickClose: store.rewards.clearCurrentReward,
   onRedeem: store.rewards.redeemReward,
-  onSelect: store.rewards.selectReward,
+  onSelect: store.rewards.selectTargetReward,
 })
 
-export const RewardDetailsContainer = connect(
+export const RewardDetailsModalContainer = connect(
   mapStoreToProps,
   RewardDetails,
 )
