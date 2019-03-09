@@ -9,6 +9,7 @@ import { getStore } from '../../Store'
 import { BottomBarContainer } from './BottomBarContainer'
 import { MenuBarContainer } from './MenuBarContainer'
 import { ProfileMenuItemContainer } from '../profile-views'
+import { StartButtonContainer } from '../machine-views'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -63,7 +64,12 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
       <div className={classes.container}>
         <div className={classes.header}>
           <ProfileMenuItemContainer />
-          <MenuBarContainer />
+          <div style={{ flexGrow: 1 }}>
+            <MenuBarContainer />
+          </div>
+          <div>
+            <StartButtonContainer />
+          </div>
         </div>
 
         <div className={classes.main}>

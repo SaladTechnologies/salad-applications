@@ -1,6 +1,6 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import { AngledPanel, AngleDirection } from './AngledPanel'
+import { AngledPanel } from './AngledPanel'
 
 const style = {
   width: 200,
@@ -13,37 +13,37 @@ storiesOf('Components/Angled Panel', module)
   .add('with angled sides', () => (
     <div>
       Left Side
-      <AngledPanel style={style} leftSide={AngleDirection.None} />
-      <AngledPanel style={style} leftSide={AngleDirection.Left} />
-      <AngledPanel style={style} leftSide={AngleDirection.Right} />
+      <AngledPanel style={style} leftSide={'none'} />
+      <AngledPanel style={style} leftSide={'left'} />
+      <AngledPanel style={style} leftSide={'right'} />
       Right Side
-      <AngledPanel style={style} rightSide={AngleDirection.None} />
-      <AngledPanel style={style} rightSide={AngleDirection.Left} />
-      <AngledPanel style={style} rightSide={AngleDirection.Right} />
+      <AngledPanel style={style} rightSide={'none'} />
+      <AngledPanel style={style} rightSide={'left'} />
+      <AngledPanel style={style} rightSide={'right'} />
       Both Sides
-      <AngledPanel style={style} leftSide={AngleDirection.None} rightSide={AngleDirection.None} />
-      <AngledPanel style={style} leftSide={AngleDirection.Left} rightSide={AngleDirection.Left} />
-      <AngledPanel style={style} leftSide={AngleDirection.Right} rightSide={AngleDirection.Right} />
-      <AngledPanel style={style} leftSide={AngleDirection.Left} rightSide={AngleDirection.Right} />
-      <AngledPanel style={style} leftSide={AngleDirection.Right} rightSide={AngleDirection.Left} />
+      <AngledPanel style={style} leftSide={'none'} rightSide={'none'} />
+      <AngledPanel style={style} leftSide={'left'} rightSide={'left'} />
+      <AngledPanel style={style} leftSide={'right'} rightSide={'right'} />
+      <AngledPanel style={style} leftSide={'left'} rightSide={'right'} />
+      <AngledPanel style={style} leftSide={'right'} rightSide={'left'} />
     </div>
   ))
   .add('with different heights', () => (
     <div>
       <AngledPanel
         style={{ width: 200, height: 20, margin: 10, backgroundColor: 'blue' }}
-        leftSide={AngleDirection.Right}
-        rightSide={AngleDirection.Right}
+        leftSide={'right'}
+        rightSide={'right'}
       />
       <AngledPanel
         style={{ width: 200, height: 50, margin: 10, backgroundColor: 'blue' }}
-        leftSide={AngleDirection.Right}
-        rightSide={AngleDirection.Right}
+        leftSide={'right'}
+        rightSide={'right'}
       />
       <AngledPanel
         style={{ width: 200, height: 100, margin: 10, backgroundColor: 'blue' }}
-        leftSide={AngleDirection.Right}
-        rightSide={AngleDirection.Right}
+        leftSide={'right'}
+        rightSide={'right'}
       />
     </div>
   ))
@@ -51,23 +51,23 @@ storiesOf('Components/Angled Panel', module)
     <div>
       <AngledPanel
         style={{ width: 100, height: 20, margin: 10, backgroundColor: 'blue' }}
-        leftSide={AngleDirection.Right}
-        rightSide={AngleDirection.Right}
+        leftSide={'right'}
+        rightSide={'right'}
       />
       <AngledPanel
         style={{ width: 200, height: 20, margin: 10, backgroundColor: 'blue' }}
-        leftSide={AngleDirection.Right}
-        rightSide={AngleDirection.Right}
+        leftSide={'right'}
+        rightSide={'right'}
       />
       <AngledPanel
         style={{ width: 300, height: 20, margin: 10, backgroundColor: 'blue' }}
-        leftSide={AngleDirection.Right}
-        rightSide={AngleDirection.Right}
+        leftSide={'right'}
+        rightSide={'right'}
       />
     </div>
   ))
   .add('with content', () => (
-    <AngledPanel style={style} rightSide={AngleDirection.Left}>
+    <AngledPanel style={style} rightSide={'left'}>
       <p>Hello World</p>
     </AngledPanel>
   ))

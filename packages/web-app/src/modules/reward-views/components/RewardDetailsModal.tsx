@@ -4,7 +4,7 @@ import { SaladTheme } from '../../../SaladTheme'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
-import { AngledPanel, AngleDirection, ModalPage } from '../../../components'
+import { AngledPanel, ModalPage } from '../../../components'
 import { Reward } from '../../reward/models/Reward'
 
 const styles = (theme: SaladTheme) => ({
@@ -136,7 +136,7 @@ class _RewardDetailsModal extends Component<Props> {
     return (
       <ModalPage onCloseClicked={this.handleClose}>
         <div className={classnames(classes.container, 'is-unselectable')}>
-          <AngledPanel className={classes.imageContainer} leftSide={AngleDirection.Right}>
+          <AngledPanel className={classes.imageContainer} leftSide={'right'}>
             {reward && (
               <img
                 className={classes.image}

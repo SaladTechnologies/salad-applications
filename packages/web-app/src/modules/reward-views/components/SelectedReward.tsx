@@ -4,7 +4,7 @@ import { SaladTheme } from '../../../SaladTheme'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
-import { AngledPanel, AngleDirection } from '../../../components'
+import { AngledPanel } from '../../../components'
 import { Reward } from '../../reward/models/Reward'
 import { ProgressBar } from '../../../components'
 
@@ -112,7 +112,7 @@ class _SelectedReward extends Component<Props> {
         <div className={classes.choppingTitle}>Chopping Salad For:</div>
         <div className={classes.cardContainer}>
           {/* Image */}
-          <AngledPanel className={classes.imageContainer} leftSide={AngleDirection.Right}>
+          <AngledPanel className={classes.imageContainer} leftSide={'right'}>
             {reward && (
               <img
                 className={classes.image}
