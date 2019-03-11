@@ -88,6 +88,7 @@ class _RewardList extends Component<Props> {
           renderThumbHorizontal={renderThumb}
           renderThumbVertical={renderThumb}
         >
+          <div style={{ height: '2rem' }} />
           {rewards && rewards.length === 0 && <div className={classes.notFoundTitle}>No Rewards Found...</div>}
           {rewards &&
             rewards.map((r, _) => (
@@ -106,6 +107,7 @@ class _RewardList extends Component<Props> {
             represented company and/or its affiliates. Please visit each company's website for additional terms and
             conditions.
           </div>
+          <div style={{ height: '3rem' }} />
         </Scrollbars>
       </div>
     )

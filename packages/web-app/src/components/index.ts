@@ -1,5 +1,6 @@
 export * from './AngledButton'
 export * from './AngledPanel'
+export * from './Button'
 export * from './Checkbox'
 export * from './Fade'
 export * from './InfoButton'
