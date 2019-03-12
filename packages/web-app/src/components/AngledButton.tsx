@@ -59,8 +59,8 @@ class _AngledButton extends Component<Props> {
         <AngledPanel
           {...rest}
           className={classnames(classes.angledPanel, {
-            [classes.leftPadding]: this.props.leftSide && this.props.leftSide !== AngleDirection.None,
-            [classes.rightPadding]: this.props.rightSide && this.props.rightSide !== AngleDirection.None,
+            [classes.leftPadding]: this.props.leftSide && this.props.leftSide !== 'none',
+            [classes.rightPadding]: this.props.rightSide && this.props.rightSide !== 'none',
           })}
         >
           {children}

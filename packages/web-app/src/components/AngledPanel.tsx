@@ -2,11 +2,7 @@ import React, { CSSProperties, ReactNode, Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import classNames from 'classnames'
 
-export enum AngleDirection {
-  None = 'none',
-  Left = 'left',
-  Right = 'right',
-}
+export type AngleDirection = 'none' | 'left' | 'right'
 
 const styles = () => ({
   container: {
@@ -51,6 +47,7 @@ interface AngledComponentProps extends WithStyles<typeof styles> {
   children?: ReactNode
   height: number
   width: number
+  onClick?: () => void
   refCallback: (details: Element | null) => void
 }
 
@@ -58,8 +55,8 @@ interface AngledComponentProps extends WithStyles<typeof styles> {
  * Private component that actually renders the angled component.
  * @param param0 The props
  */
-const _AngledComponent = ({ refCallback, style, className, classes, children }: AngledComponentProps) => (
-  <div ref={refCallback} style={style} className={classNames(classes.container, className)}>
+const _AngledComponent = ({ refCallback, style, className, classes, children, onClick }: AngledComponentProps) => (
+  <div ref={refCallback} style={style} className={classNames(classes.container, className)} onClick={onClick}>
     {children}
   </div>
 )
@@ -73,6 +70,7 @@ interface AngledPanelProps {
   leftSide?: AngleDirection
   rightSide?: AngleDirection
   style?: CSSProperties
+  onClick?: () => void
   children?: ReactNode
   className?: string
 }

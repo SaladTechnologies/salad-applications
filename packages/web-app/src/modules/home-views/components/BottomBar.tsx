@@ -3,7 +3,6 @@ import { SaladTheme } from '../../../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 import { AngledButton } from '../../../components'
-import { AngleDirection } from '../../../components'
 import { Fade } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
@@ -35,15 +34,10 @@ class _BottomBar extends Component<Props> {
     const { onDiscordClick, onSupportClick, classes } = this.props
     return (
       <Fade direction="up" className={classnames(classes.container)}>
-        <AngledButton
-          className={classes.supportButton}
-          leftSide={AngleDirection.Right}
-          rightSide={AngleDirection.Right}
-          onClick={onSupportClick}
-        >
+        <AngledButton className={classes.supportButton} leftSide={'right'} rightSide={'right'} onClick={onSupportClick}>
           Salad Support
         </AngledButton>
-        <AngledButton leftSide={AngleDirection.Right} onClick={onDiscordClick}>
+        <AngledButton leftSide={'right'} onClick={onDiscordClick}>
           Discord
         </AngledButton>
       </Fade>

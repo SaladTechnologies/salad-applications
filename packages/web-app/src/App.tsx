@@ -38,7 +38,7 @@ class App extends Component {
 
           <Route render={() => <LoadingPage text="Page Not Found" />} />
         </Switch>
-        <DevTools />
+        <DevTools position={{ left: 0, bottom: 0 }} />
       </div>
     )
   }

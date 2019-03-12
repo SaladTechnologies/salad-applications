@@ -95,7 +95,4 @@ class _MachineSummary extends Component<Props, State> {
   }
 }
 
-/**
- * A simple panel with the ability to render angled edges
- */
 export const MachineSummaryView = withStyles(styles)(_MachineSummary)
