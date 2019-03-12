@@ -20,7 +20,7 @@ interface FormTypes {
   code?: string
 }
 
-class _ReferralEntry extends Component<Props> {
+class _ReferralEntryPage extends Component<Props> {
   onSubmit = (values: {}) => {
     const { onSubmitCode } = this.props
     let v = values as FormTypes
@@ -77,4 +77,4 @@ class _ReferralEntry extends Component<Props> {
   }
 }
 
-export const ReferralEntry = withStyles(styles)(_ReferralEntry)
+export const ReferralEntryPage = withStyles(styles)(_ReferralEntryPage)

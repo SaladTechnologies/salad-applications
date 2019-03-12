@@ -13,11 +13,14 @@ const styles = (theme: SaladTheme) => ({
     bottom: 0,
     left: 0,
     right: 0,
-    padding: '1.5rem',
+    padding: '2rem',
     display: 'flex',
     flex: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'stretch',
+  },
+  logo: {
+    paddingBottom: '2rem',
   },
   column: {
     flex: 1,
@@ -66,7 +69,7 @@ class _OnboardingPage extends Component<Props> {
     return (
       <div className={classnames(classes.container, 'is-unselectable')}>
         <div className={classnames(classes.contentContainer, classes.column)}>
-          <img src={logo} />
+          <img className={classes.logo} src={logo} />
           {title && <div className={classes.title}>{title}</div>}
           {subtitle && <div className={classes.subtitle}>{subtitle}</div>}
           <div className={classes.childrenContainer}>{children}</div>

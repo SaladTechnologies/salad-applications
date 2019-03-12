@@ -3,7 +3,8 @@ import { storiesOf } from '@storybook/react'
 import { OnboardingPage } from './OnboardingPage'
 import howItWorks from '../assets/Home - How it Works.svg'
 import { action } from '@storybook/addon-actions'
-import { ReferralEntry } from './ReferralEntry'
+import { ReferralEntryPage } from './ReferralEntryPage'
+import { WelcomePage } from './WelcomePage'
 
 storiesOf('Modules/Onboarding', module)
   .add('Onboarding Page', () => {
@@ -41,6 +42,9 @@ storiesOf('Modules/Onboarding', module)
       />
     )
   })
-  .add('Referral Entry', () => {
-    return <ReferralEntry onSubmitCode={action('submit')} onNext={action('next')} />
+  .add('Referral Entry Page', () => {
+    return <ReferralEntryPage onSubmitCode={action('submit')} onNext={action('next')} />
+  })
+  .add('Welcome Page Entry', () => {
+    return <WelcomePage onNext={action('login')} />
   })
