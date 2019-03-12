@@ -42,5 +42,5 @@ storiesOf('Modules/Onboarding', module)
     )
   })
   .add('Referral Entry', () => {
-    return <ReferralEntry onBack={action('back')} onNext={action('next')} />
+    return <ReferralEntry onSubmitCode={action('submit')} onNext={action('next')} />
   })

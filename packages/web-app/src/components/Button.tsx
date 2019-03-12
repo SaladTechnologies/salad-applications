@@ -6,6 +6,7 @@ import classnames from 'classnames'
 const styles = (theme: SaladTheme) => ({
   button: {
     display: 'inline-block',
+    // height: '31px',
     backgroundColor: 'transparent',
     '&:focus': {
       outline: 0,
@@ -13,7 +14,7 @@ const styles = (theme: SaladTheme) => ({
     border: `1px solid ${theme.offWhite}`,
     padding: '.5rem',
     textAlign: 'center',
-
+    textTransform: 'capitalize',
     userSelect: 'none',
     color: theme.offWhite,
     fontSize: '.625rem',
@@ -31,6 +32,7 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
+  type?: string
   disabled?: boolean
   children?: ReactNode
   className?: string
@@ -46,9 +48,10 @@ class _Button extends Component<Props> {
   }
 
   render() {
-    const { className, classes, disabled, children } = this.props
+    const { className, type, classes, disabled, children } = this.props
     return (
-      <div
+      <button
+        type={type}
         className={classnames(classes.button, className, {
           [classes.disabled]: disabled,
           [classes.enabled]: !disabled,
@@ -56,7 +59,7 @@ class _Button extends Component<Props> {
         onClick={this.handleClick}
       >
         {children}
-      </div>
+      </button>
     )
   }
 }
