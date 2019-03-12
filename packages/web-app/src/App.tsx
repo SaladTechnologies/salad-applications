@@ -1,30 +1,34 @@
 import React, { Component } from 'react'
 import { Route, Switch } from 'react-router'
-import { CallbackContainer } from './modules/onboarding-views'
-import { LoginContainer } from './modules/onboarding-views'
+import { CallbackContainer, ReferralEntryContainer, WelcomePageContainer } from './modules/onboarding-views'
 import { HomePage } from './modules/home-views'
 import { getStore } from './Store'
 import DevTools from 'mobx-react-devtools'
 import { LoadingPage } from './components'
-import { RewardDetailsModalContainer } from './modules/reward-views/RewardDetailsModalContainer'
+import { RewardDetailsModalContainer } from './modules/reward-views'
 import { AccountModalContainer } from './modules/profile-views'
-import { SettingsModalContainer } from './modules/profile-views/SettingsModalContainer'
+import { SettingsModalContainer } from './modules/profile-views'
 
 class App extends Component {
   store = getStore()
 
   render() {
-    let loc = this.store.routing.location.pathname
     let isAuth = this.store.auth.isAuthenticated()
-    console.log(`Location=${loc}, Auth=${isAuth}`)
+    //TODO: Figure out how to determine this
+    let isOnboarding = false
     return (
       <div>
         <Switch>
           {!isAuth && (
             <div>
               <Route path="/auth/callback" component={CallbackContainer} />
-              <Route exact path="/" component={LoginContainer} />
+              <Route exact path="/" component={WelcomePageContainer} />
               {/* <Redirect to="/" /> */}
+            </div>
+          )}
+          {isOnboarding && (
+            <div>
+              <Route path="/" component={ReferralEntryContainer} />
             </div>
           )}
           {isAuth && (

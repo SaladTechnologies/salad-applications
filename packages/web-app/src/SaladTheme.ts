@@ -35,10 +35,10 @@ export const DefaultTheme = {
   mediumGreen: '#53A626',
   green: '#B2D530',
   darkBlue: '#0A2133',
-  red: '#DE302A',
+  red: '#EF502A',
   blueFont: '#092335',
   neonGreen: '#71bf51',
-  offWhite: '#d6e9c9',
+  offWhite: '#DBF1C1',
   lightGrey: '#778899',
   //Font sizes
   xxSmall: '.375rem',

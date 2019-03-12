@@ -90,7 +90,6 @@ class _RewardSummary extends Component<Props> {
   }
   render() {
     const { name, color, price, redeemable, imageSrc, classes } = this.props
-    console.log(name + '-' + color)
     return (
       <div className={classnames(classes.container, 'is-unselectable')} onClick={this.handleClick}>
         {/* Image */}
