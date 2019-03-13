@@ -28,6 +28,8 @@ class App extends Component {
           )}
           {isOnboarding && (
             <div>
+              {/* Add logic to determine which page to show */}
+              {/* Add other onboarding pages */}
               <Route path="/" component={ReferralEntryContainer} />
             </div>
           )}

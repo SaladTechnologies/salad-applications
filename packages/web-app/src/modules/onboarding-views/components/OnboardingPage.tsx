@@ -24,6 +24,7 @@ const styles = (theme: SaladTheme) => ({
   },
   column: {
     flex: 1,
+    flexShrink: 0,
   },
   contentContainer: {
     color: theme.offWhite,
@@ -36,6 +37,7 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    // overflowY: 'scroll',
   },
   childrenContainer: {
     flexGrow: 2,
@@ -56,15 +58,17 @@ interface Props extends WithStyles<typeof styles> {
   title?: string
   subtitle?: string
   image?: string
+  rightContent?: React.ReactNode
   hasBack?: boolean
   nextText?: string
+
   onBack?: () => void
   onNext?: () => void
 }
 
 class _OnboardingPage extends Component<Props> {
   render() {
-    const { title, nextText, onNext, hasBack, subtitle, onBack, image, classes, children } = this.props
+    const { title, nextText, onNext, hasBack, subtitle, onBack, image, rightContent, classes, children } = this.props
 
     return (
       <div className={classnames(classes.container, 'is-unselectable')}>
@@ -84,7 +88,10 @@ class _OnboardingPage extends Component<Props> {
             </Button>
           </div>
         </div>
-        <div className={classnames(classes.imageContainer, classes.column)}>{image && <img src={image} />}</div>
+        <div className={classnames(classes.imageContainer, classes.column)}>
+          {rightContent}
+          {!rightContent && image && <img src={image} />}
+        </div>
       </div>
     )
   }

@@ -2,9 +2,8 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import { Reward } from '../../reward/models/Reward'
-import Scrollbars from 'react-custom-scrollbars'
 import { RewardListItem } from './RewardListItem'
-import { Fade } from '../../../components'
+import { Fade, Scrollbar } from '../../../components'
 import classnames from 'classnames'
 
 const styles = (theme: SaladTheme) => ({
@@ -76,18 +75,10 @@ class _RewardList extends Component<Props> {
   render() {
     const { rewards, classes } = this.props
 
-    const renderTrack = (props: any) => <div {...props} className={classes.scrollTrack} />
-    const renderThumb = (props: any) => <div {...props} className={classes.scrollThumb} />
-
     return (
       <div className={classnames('is-unselectable', classes.container)}>
         <Fade className={classes.topFade} direction="down" />
-        <Scrollbars
-          renderTrackHorizontal={renderTrack}
-          renderTrackVertical={renderTrack}
-          renderThumbHorizontal={renderThumb}
-          renderThumbVertical={renderThumb}
-        >
+        <Scrollbar scrollBottom={50} scrollTop={50}>
           <div style={{ height: '2rem' }} />
           {rewards && rewards.length === 0 && <div className={classes.notFoundTitle}>No Rewards Found...</div>}
           {rewards &&
@@ -108,7 +99,7 @@ class _RewardList extends Component<Props> {
             conditions.
           </div>
           <div style={{ height: '3rem' }} />
-        </Scrollbars>
+        </Scrollbar>
       </div>
     )
   }
