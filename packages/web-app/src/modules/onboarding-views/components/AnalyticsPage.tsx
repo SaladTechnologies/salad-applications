@@ -10,24 +10,47 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  onNext?: () => void
-  onToggleAnalytics?: () => void
-  analyticsEnabled?: boolean
+  onNext?: (agree: boolean) => void
 }
 
-class _AnalyticsPage extends Component<Props> {
+interface State {
+  agree: boolean
+}
+
+class _AnalyticsPage extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      agree: true,
+    }
+  }
+
+  toggleAgree = () => {
+    this.setState({
+      agree: !this.state.agree,
+    })
+  }
+
+  handleNext = () => {
+    const { onNext } = this.props
+    const { agree } = this.state
+
+    if (onNext) {
+      onNext(agree)
+    }
+  }
   render() {
-    const { onToggleAnalytics, analyticsEnabled, onNext } = this.props
+    const { agree } = this.state
     return (
       <OnboardingPage
         title={'App usage information'}
         subtitle={'Help the Salad Chefs improve the experience by sharing how you use Salad.'}
         image={image}
         nextText={'Next'}
-        onNext={onNext}
+        onNext={this.handleNext}
       >
         <div>
-          <Checkbox checked={analyticsEnabled} onClick={onToggleAnalytics} text={'Share app usage with Salad'} />
+          <Checkbox checked={agree} onClick={this.toggleAgree} text={'Share app usage with Salad'} />
         </div>
       </OnboardingPage>
     )

@@ -1,13 +1,8 @@
-import { action, observable } from 'mobx'
+import { action } from 'mobx'
 import { RootStore } from './Store'
 
 export class UIStore {
-  @observable
-  public onboarding: Onboarding = new Onboarding()
-
-  constructor(private readonly store: RootStore) {
-    // this.onboarding
-  }
+  constructor(private readonly store: RootStore) {}
 
   @action
   showModal = (url: string) => {
@@ -17,12 +12,5 @@ export class UIStore {
   @action
   hideModal = () => {
     this.store.routing.replace('/')
-  }
-}
-
-export class Onboarding {
-  @action
-  nextPage = () => {
-    console.log('next page')
   }
 }

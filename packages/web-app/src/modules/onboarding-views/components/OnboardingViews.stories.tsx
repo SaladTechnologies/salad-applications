@@ -66,5 +66,5 @@ storiesOf('Modules|Onboarding/Pages', module)
     return <TermsPage onAgree={action('agree')} />
   })
   .add('Analytics Page', () => {
-    return <AnalyticsPage onNext={action('next')} onToggleAnalytics={action('toggle story ')} analyticsEnabled={true} />
+    return <AnalyticsPage onNext={action('next')} />
   })

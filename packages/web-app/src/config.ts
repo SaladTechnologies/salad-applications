@@ -44,6 +44,9 @@ class Config {
 
   public readonly auth0Domain: string = requiredString('REACT_APP_AUTH0_DOMAIN')
   public readonly auth0ClientId: string = requiredString('REACT_APP_AUTH0_CLIENT_ID')
+
+  /** The current version of the terms of service */
+  public readonly termsVersion: string = requiredString('REACT_APP_TERMS_VERSION')
 }
 
 const instance = new Config()
