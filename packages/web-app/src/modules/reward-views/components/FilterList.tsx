@@ -17,15 +17,8 @@ const styles = (theme: SaladTheme) => ({
     fontSize: theme.medium,
     paddingBottom: '.25rem',
   },
-  filterItem: {
-    display: 'flex',
-    alignItems: 'center',
-    color: theme.offWhite,
-  },
   filterText: {
-    paddingLeft: '.25rem',
     textTransform: 'capitalize',
-    cursor: 'pointer',
   },
 })
 
@@ -51,22 +44,14 @@ class _FilterList extends Component<Props> {
           filters.map(x => (
             <Observer key={x.name}>
               {() => (
-                <div className={classes.filterItem}>
-                  <Checkbox
-                    checked={x.checked}
-                    onClick={() => {
-                      this.handleToggle(x.name)
-                    }}
-                  />
-                  <p
-                    className={classes.filterText}
-                    onClick={() => {
-                      this.handleToggle(x.name)
-                    }}
-                  >
-                    {x.name}
-                  </p>
-                </div>
+                <Checkbox
+                  textClassName={classes.filterText}
+                  checked={x.checked}
+                  text={x.name}
+                  onClick={() => {
+                    this.handleToggle(x.name)
+                  }}
+                />
               )}
             </Observer>
           ))}

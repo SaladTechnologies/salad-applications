@@ -63,6 +63,7 @@
     "react-final-form": "^4.1.0",
     "react-hint": "^3.2.0",
     "react-jss": "10.0.0-alpha.10",
+    "react-markdown": "^4.0.6",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.5",

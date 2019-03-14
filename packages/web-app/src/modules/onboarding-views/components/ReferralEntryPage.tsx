@@ -35,7 +35,6 @@ class _ReferralEntryPage extends Component<Props> {
     }
     //TODO: Check code length
 
-    console.log(errors)
     return errors
   }
   render() {
@@ -45,7 +44,7 @@ class _ReferralEntryPage extends Component<Props> {
         title={'Referral Code Entry'}
         subtitle={'Referred by a friend? Enter your code below so you can earn your referral bonus!'}
         image={image}
-        nextText={'Do this later'}
+        nextText={'Next'}
         onNext={onNext}
       >
         <Form

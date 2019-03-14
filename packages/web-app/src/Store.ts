@@ -43,9 +43,9 @@ export class RootStore {
     this.rewards = new RewardStore(this, axios)
     this.balance = new BalanceStore()
     this.machine = new MachineStore()
-    this.profile = new ProfileStore()
+    this.profile = new ProfileStore(this)
     this.ui = new UIStore(this)
-    this.referral = new ReferralStore(axios)
+    this.referral = new ReferralStore()
   }
 
   refreshData = async () => {
