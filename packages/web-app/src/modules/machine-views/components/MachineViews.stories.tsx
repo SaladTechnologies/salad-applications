@@ -41,13 +41,10 @@ storiesOf('Modules/Machine', module)
           <StartButton startEnabled={true} isRunning={true} balance={balance} rate={rate} onClick={action('click)')} />
         </div>
         <div style={style}>
-          <StartButton
-            startEnabled={false}
-            isRunning={false}
-            balance={balance}
-            rate={rate}
-            onClick={action('click)')}
-          />
+          <StartButton startEnabled={false} isRunning={false} balance={balance} rate={0} onClick={action('click)')} />
+        </div>
+        <div style={style}>
+          <StartButton balance={undefined} rate={undefined} onClick={action('click)')} />
         </div>
       </div>
     )

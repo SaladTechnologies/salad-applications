@@ -9,6 +9,7 @@ const styles = (theme: SaladTheme) => ({
     flexDirection: 'row',
     flexWrap: 'nowrap',
     padding: '0 1rem',
+    userSelect: 'none',
   },
   supportButton: {
     color: theme.neonGreen,
@@ -32,7 +33,7 @@ class _MenuBar extends Component<Props> {
   render() {
     const { menuItems, classes } = this.props
     return (
-      <div className={classnames('is-unselectable', classes.container)}>
+      <div className={classnames(classes.container)}>
         {menuItems &&
           menuItems.map(x => (
             <div key={x.name} className={classes.supportButton} onClick={() => x.onClick()}>

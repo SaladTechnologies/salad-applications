@@ -35,8 +35,36 @@ const generateRewards = (count: number): Reward[] => {
 
 const getFilters = [new FilterItem('Games', true), new FilterItem('Loot', false), new FilterItem('Money', true)]
 
-storiesOf('Modules/Reward', module)
-  .add('Reward Summary', () => {
+storiesOf('Modules|Reward/Reward Details Modal', module)
+  .add('redeemable ', () => {
+    let reward = generateRewards(2)[0]
+    return (
+      <div>
+        <RewardDetailsModal
+          reward={reward}
+          onSelect={action('select')}
+          onClickClose={action('close')}
+          onRedeem={action('redeem')}
+        />
+      </div>
+    )
+  })
+  .add('not redeemable ', () => {
+    let reward = generateRewards(2)[1]
+    return (
+      <div>
+        <RewardDetailsModal
+          reward={reward}
+          onSelect={action('select')}
+          onClickClose={action('close')}
+          onRedeem={action('redeem')}
+        />
+      </div>
+    )
+  })
+
+storiesOf('Modules|Reward/Reward Summary', module)
+  .add('with images', () => {
     const frameStyle = { paddingBottom: '.5rem' }
     return (
       <div>
@@ -46,6 +74,7 @@ storiesOf('Modules/Reward', module)
             price={20}
             redeemable={true}
             imageSrc={demoImage}
+            color="red"
             onClick={action('Clicked')}
           />
         </div>
@@ -56,12 +85,55 @@ storiesOf('Modules/Reward', module)
             redeemable={false}
             timeRemaining={'3 weeks'}
             imageSrc={demoImage}
+            color="red"
+            onClick={action('Clicked')}
+          />
+        </div>
+        <div style={frameStyle}>
+          <RewardSummary
+            name="Razer Blackwidow Ultimate Keyboard 2018"
+            price={999.99}
+            redeemable={false}
+            timeRemaining={'3 weeks'}
+            imageSrc={demoImage}
+            color="red"
             onClick={action('Clicked')}
           />
         </div>
       </div>
     )
   })
+  .add('without image', () => {
+    const frameStyle = { paddingBottom: '.5rem', color: 'white' }
+    return (
+      <div>
+        <div style={frameStyle}>
+          No color set
+          <RewardSummary
+            name="Razer Blackwidow Ultimate Keyboard 2018"
+            price={999.99}
+            redeemable={false}
+            timeRemaining={'3 weeks'}
+            // imageSrc={demoImage}
+            onClick={action('Clicked')}
+          />
+        </div>
+        <div style={frameStyle}>
+          With color set
+          <RewardSummary
+            name="Razer Blackwidow Ultimate Keyboard 2018"
+            price={999.99}
+            redeemable={false}
+            timeRemaining={'3 weeks'}
+            color="purple"
+            onClick={action('Clicked')}
+          />
+        </div>
+      </div>
+    )
+  })
+
+storiesOf('Modules|Reward', module)
   .add('Selected Reward', () => {
     let reward = generateRewards(1)[0]
     return (
@@ -71,19 +143,11 @@ storiesOf('Modules/Reward', module)
       </div>
     )
   })
-  .add('Reward Details Modal', () => {
-    let reward = generateRewards(1)[0]
-    return (
-      <div>
-        <RewardDetailsModal reward={reward} />
-      </div>
-    )
-  })
   .add('Reward List', () => {
     let rewards = generateRewards(20)
 
     return (
-      <div style={{ width: '100vw', height: '100vh' }}>
+      <div style={{ width: '100vw', height: '100vh', display: 'flex' }}>
         <RewardList rewards={rewards} onRewardClick={action('reward click')} />
       </div>
     )

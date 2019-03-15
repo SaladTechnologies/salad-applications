@@ -10,6 +10,7 @@ const styles = (theme: SaladTheme) => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
+    userSelect: 'none',
   },
   title: {
     color: theme.offWhite,
@@ -38,7 +39,7 @@ class _FilterList extends Component<Props> {
   render() {
     const { filters, classes } = this.props
     return (
-      <div className={classnames(classes.container, 'is-unselectable')}>
+      <div className={classnames(classes.container)}>
         <div className={classes.title}>FILTERS:</div>
         {filters &&
           filters.map(x => (

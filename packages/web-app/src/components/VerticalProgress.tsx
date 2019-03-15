@@ -7,7 +7,6 @@ const styles = (theme: SaladTheme) => ({
   container: {
     position: 'relative',
     backgroundColor: 'lightGrey',
-    height: 'auto',
     width: '1rem',
   },
   bar: {

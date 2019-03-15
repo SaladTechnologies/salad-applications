@@ -9,10 +9,10 @@ import classnames from 'classnames'
 const styles = (theme: SaladTheme) => ({
   container: {
     width: '32rem',
-    height: '100%',
     display: 'inline-block',
     marginLeft: '3.5rem',
     position: 'relative',
+    userSelect: 'none',
   },
   topFade: {
     height: '3rem',
@@ -76,7 +76,7 @@ class _RewardList extends Component<Props> {
     const { rewards, classes } = this.props
 
     return (
-      <div className={classnames('is-unselectable', classes.container)}>
+      <div className={classnames(classes.container)}>
         <Fade className={classes.topFade} direction="down" />
         <Scrollbar scrollBottom={50} scrollTop={50}>
           <div style={{ height: '2rem' }} />

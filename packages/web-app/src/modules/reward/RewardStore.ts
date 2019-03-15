@@ -130,6 +130,8 @@ export class RewardStore {
       runInAction(() => {
         this.selectedRewardId = rewardId
         console.log('set reward success')
+
+        this.store.routing.push('/')
       })
     } catch (error) {
       console.error(error)

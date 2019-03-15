@@ -8,8 +8,8 @@ import { FilterItem } from '../../reward/models/FilterItem'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    // display: 'flex',
     paddingTop: '2rem',
+    userSelect: 'none',
   },
   searchBar: {
     paddingBottom: '1rem',
@@ -28,7 +28,7 @@ class _RewardFilterPage extends Component<Props> {
     const { onToggle, filters, searchText, onTextEntered, classes } = this.props
 
     return (
-      <div className={classnames(classes.container, 'is-unselectable')}>
+      <div className={classnames(classes.container)}>
         <SearchBar className={classes.searchBar} text={searchText} onTextEntered={onTextEntered} />
         <FilterList filters={filters} onToggle={onToggle} />
       </div>

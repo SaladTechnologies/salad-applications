@@ -10,10 +10,10 @@ import { BottomBarContainer } from './BottomBarContainer'
 import { MenuBarContainer } from './MenuBarContainer'
 import { ProfileMenuItemContainer } from '../profile-views'
 import { StartButtonContainer } from '../machine-views'
+import { Fade } from '../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    backgroundColor: theme.appBackgroundColor,
     bottom: 0,
     left: 0,
     right: 0,
@@ -26,15 +26,29 @@ const styles = (theme: SaladTheme) => ({
   header: {
     display: 'flex',
     flexDirection: 'row',
-    flex: 'none',
+    flexWrap: 'nowrap',
+    zIndex: 2000,
+  },
+  headerFade: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '100px',
+    zIndex: 1000,
   },
   main: {
-    flex: 'auto',
     display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    justifyContent: 'center',
+    alignItems: 'stretch',
+    flex: 1,
   },
-  mainColumn: {
+  mainColumn: {},
+  verticalLayout: {
     display: 'flex',
-    overflow: 'hidden',
+    flexDirection: 'column',
   },
   footer: {
     flex: 'none',
@@ -62,6 +76,7 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
     const { classes } = this.props
     return (
       <div className={classes.container}>
+        <Fade className={classnames(classes.headerFade)} direction="down" />
         <div className={classes.header}>
           <ProfileMenuItemContainer />
           <div style={{ flexGrow: 1 }}>
@@ -73,23 +88,26 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
         </div>
 
         <div className={classes.main}>
-          <div style={{ flexGrow: 1 }} className={'columns is-mobile'}>
-            <div className={'column columns is-mobile'}>
-              <div className={classnames(classes.mainColumn, 'column is-narrow')}>
-                <ExperienceBarContainer />
-              </div>
-              <div className={classnames(classes.mainColumn, 'column')}>
-                <SlicedVeggieContainer />
-              </div>
-            </div>
+          <div className={classnames(classes.mainColumn, classes.verticalLayout)}>
+            <ExperienceBarContainer />
+          </div>
+          <div className={classnames(classes.mainColumn)}>
+            <SlicedVeggieContainer />
+          </div>
 
-            <div className={classnames(classes.mainColumn, 'column')}>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <SelectedRewardContainer />
-                <div style={{ display: 'flex', flex: 1, flexDirection: 'row' }}>
-                  <RewardFilterContainer />
-                  <RewardListContainer />
-                </div>
+          <div className={classnames(classes.mainColumn, classes.verticalLayout)}>
+            <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
+              <SelectedRewardContainer />
+              <div
+                style={{
+                  display: 'flex',
+                  flex: 1,
+                  justifyContent: 'stretch',
+                  flexDirection: 'row',
+                }}
+              >
+                <RewardFilterContainer />
+                <RewardListContainer />
               </div>
             </div>
           </div>

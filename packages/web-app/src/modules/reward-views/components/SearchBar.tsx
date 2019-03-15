@@ -7,7 +7,9 @@ import classnames from 'classnames'
 import { ChangeEvent } from 'react'
 
 const styles = (theme: SaladTheme) => ({
-  container: {},
+  container: {
+    userSelect: 'none',
+  },
   innerContainer: {
     display: 'inline-flex',
     borderBottom: `2px solid ${theme.offWhite}`,
@@ -50,8 +52,8 @@ class _SearchBar extends Component<Props> {
     const { text, className, classes } = this.props
 
     return (
-      <div className={classnames(classes.container, className, 'is-unselectable')}>
-        <div className={classnames(classes.innerContainer, 'is-unselectable')}>
+      <div className={classnames(classes.container, className)}>
+        <div className={classnames(classes.innerContainer)}>
           <FontAwesomeIcon className={classes.icon} icon={faSearch} />
           <input
             className={classes.textInput}

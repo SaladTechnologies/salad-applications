@@ -8,13 +8,13 @@ const borderWidth = 2
 const glowWidth = 4
 
 const styles = (theme: SaladTheme) => ({
-  container: {
+  container: (props: Props) => ({
     display: 'inline-block',
-    border: `${borderWidth}px solid ${theme.offWhite}`,
+    border: `${borderWidth}px solid ${props.dark ? theme.darkBlue : theme.offWhite}`,
     position: 'relative',
     padding: `${borderWidth * 2}px`,
     margin: `${glowWidth * 2}px`,
-  },
+  }),
   animation: {
     '&::before, &:after': {
       position: 'absolute',
@@ -47,6 +47,7 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
+  dark?: boolean
   animating?: boolean
   className?: string
   onClick?: ((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void) | undefined

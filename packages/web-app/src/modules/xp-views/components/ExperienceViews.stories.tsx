@@ -21,23 +21,14 @@ storiesOf('Modules/XP', module)
       <div
         style={{
           backgroundColor: '#092234',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          top: 0,
-          overflow: 'auto',
-          position: 'absolute',
+          width: '10rem',
+          height: '20rem',
+          position: 'relative',
           display: 'flex',
           flexDirection: 'column',
         }}
       >
-        <div style={{ flex: 'auto', display: 'flex' }}>
-          <div style={{ flexGrow: 1 }} className={'columns is-mobile'}>
-            <div style={{ display: 'flex' }} className="column">
-              <ExperienceBar currentXp={xp} levels={levels} />
-            </div>
-          </div>
-        </div>
+        <ExperienceBar currentXp={xp} levels={levels} />
       </div>
     )
   })

@@ -26,6 +26,7 @@ const styles = (theme: SaladTheme) => ({
   },
   text: {
     padding: '1rem',
+    textAlign: 'center',
     color: theme.offWhite,
     fontSize: theme.large,
     fontFamily: 'SharpGroteskLight25',
@@ -50,10 +51,8 @@ class _LoadingPage extends Component<Props> {
     const { text, classes } = this.props
     return (
       <div className={classes.container}>
-        <div className={classes.logo}>
-          <img src={logo} />
-        </div>
-        <div className={classNames(classes.text, 'has-text-centered')}>
+        <img className={classes.logo} src={logo} />
+        <div className={classNames(classes.text)}>
           <p>{text === undefined ? 'Loading...' : text}</p>
         </div>
       </div>

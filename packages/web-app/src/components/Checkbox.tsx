@@ -74,11 +74,13 @@ class _Checkbox extends Component<Props> {
     }
   }
   render() {
-    const { textClassName, text, errorText, checked, classes, onClick, ...input } = this.props
+    const { textClassName, text, errorText, checked, classes, onChange, ...input } = this.props
     return (
       <div className={classes.container}>
         <label className={classes.checkboxContainer}>
-          <input className={classes.hidden} {...input} type="checkbox" />
+          {onChange && (
+            <input onChange={onChange} checked={checked} className={classes.hidden} {...input} type="checkbox" />
+          )}
           <div className={classes.checkBox} onClick={this.handleClick}>
             {checked && <FontAwesomeIcon size="xs" className={classes.checkmark} icon={faCheck} />}
           </div>
