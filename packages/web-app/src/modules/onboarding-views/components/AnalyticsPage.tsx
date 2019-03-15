@@ -11,6 +11,7 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   onNext?: (agree: boolean) => void
+  submitting?: boolean
 }
 
 interface State {
@@ -40,12 +41,14 @@ class _AnalyticsPage extends Component<Props, State> {
     }
   }
   render() {
+    const { submitting } = this.props
     const { agree } = this.state
     return (
       <OnboardingPage
         title={'App usage information'}
         subtitle={'Help the Salad Chefs improve the experience by sharing how you use Salad.'}
         image={image}
+        nextSubmitting={submitting}
         nextText={'Next'}
         onNext={this.handleNext}
       >

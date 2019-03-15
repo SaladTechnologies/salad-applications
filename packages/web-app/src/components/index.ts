@@ -1,5 +1,7 @@
 export * from './AngledButton'
 export * from './AngledPanel'
+export * from './AnimatedBorder'
+export * from './AnimatedSwitch'
 export * from './Button'
 export * from './Checkbox'
 export * from './Fade'

@@ -17,6 +17,7 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   onAgree?: () => void
+  submitting?: boolean
 }
 
 interface FormFields {
@@ -51,12 +52,13 @@ class _TermsPage extends Component<Props> {
   }
 
   render() {
-    const { classes } = this.props
+    const { submitting, classes } = this.props
     return (
       <OnboardingPage
         title={'Legal time!'}
         subtitle={'By agreeing to these terms you sign away your first born & 10% of all future income.'}
         image={image}
+        nextSubmitting={submitting}
         rightContent={
           <Scrollbar>
             <ReactMarkdown className={classes.textContainer} source={termsContent} />

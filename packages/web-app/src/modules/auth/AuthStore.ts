@@ -11,6 +11,9 @@ export class AuthStore {
   public authProfile: any
 
   @observable
+  public isLoading: boolean = false
+
+  @observable
   public expiresAt: number = 0
 
   @observable
@@ -35,15 +38,18 @@ export class AuthStore {
   @action
   signIn = async () => {
     this.loginError = false
+    this.isLoading = true
     this.webAuth.authorize()
   }
 
   @action
   handleAuthentication = () => {
+    this.isLoading = true
     return new Promise<void>((resolve, reject) => {
       this.webAuth.parseHash((err, authResult) => {
         if (err || !authResult || !authResult.idToken) {
           this.loginError = true
+          this.isLoading = false
           return reject(err)
         }
         runInAction(() => {
@@ -52,6 +58,7 @@ export class AuthStore {
           this.expiresAt = authResult.expiresIn ? authResult.expiresIn * 1000 + new Date().getTime() : 0
           this.axios.defaults.headers.common['Authorization'] = `Bearer ${this.authToken}`
           this.loginError = false
+          this.isLoading = false
           this.store.routing.push('/')
           resolve()
         })
