@@ -2,17 +2,13 @@ import React, { ReactNode, Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
 import classnames from 'classnames'
+import { AnimatedBorder } from './AnimatedBorder'
 
 const styles = (theme: SaladTheme) => ({
   button: {
-    display: 'inline-block',
-    // height: '31px',
+    display: 'block',
     backgroundColor: 'transparent',
-    '&:focus': {
-      outline: 0,
-    },
-    border: `1px solid ${theme.offWhite}`,
-    padding: '.5rem',
+    border: 'none',
     textAlign: 'center',
     textTransform: 'capitalize',
     userSelect: 'none',
@@ -20,7 +16,15 @@ const styles = (theme: SaladTheme) => ({
     fontSize: '.625rem',
     fontFamily: 'sharpGroteskLight25',
     '&:hover': {
-      opacity: 0.9,
+      opacity: 0.8,
+    },
+    '&:focus': {
+      outline: 0,
+    },
+  },
+  border: {
+    '&:hover': {
+      opacity: 0.8,
     },
   },
   enabled: {
@@ -34,6 +38,7 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   type?: string
   disabled?: boolean
+  loading?: boolean
   children?: ReactNode
   className?: string
   onClick?: () => void
@@ -48,18 +53,27 @@ class _Button extends Component<Props> {
   }
 
   render() {
-    const { className, type, classes, disabled, children } = this.props
+    const { loading, className, type, classes, disabled, children } = this.props
     return (
-      <button
-        type={type}
-        className={classnames(classes.button, className, {
+      <AnimatedBorder
+        className={classnames(classes.border, {
           [classes.disabled]: disabled,
           [classes.enabled]: !disabled,
         })}
+        animating={loading}
         onClick={this.handleClick}
       >
-        {children}
-      </button>
+        <button
+          type={type}
+          className={classnames(classes.button, className, {
+            [classes.disabled]: disabled,
+            [classes.enabled]: !disabled,
+          })}
+          onClick={this.handleClick}
+        >
+          {children}
+        </button>
+      </AnimatedBorder>
     )
   }
 }
