@@ -16,6 +16,7 @@ import { AccountModalContainer } from './modules/profile-views'
 import { SettingsModalContainer } from './modules/profile-views'
 import { Config } from './config'
 import { Profile } from './modules/profile/models'
+import { AnimatedSwitch } from './components/AnimatedSwitch'
 
 class App extends Component {
   store = getStore()
@@ -45,12 +46,12 @@ class App extends Component {
             </div>
           )}
           {isOnboarding && (
-            <Switch>
+            <AnimatedSwitch>
               <Route exact path="/onboarding/referral-code" component={ReferralEntryContainer} />
               <Route exact path="/onboarding/terms" component={TermsPageContainer} />
               <Route exact path="/onboarding/analytics" component={AnalyticsPageContainer} />
               {profile && this.getOnboardingRedirect(profile)}
-            </Switch>
+            </AnimatedSwitch>
           )}
           {isAuth && (
             <div>
