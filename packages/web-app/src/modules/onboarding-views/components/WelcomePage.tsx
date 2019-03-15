@@ -10,17 +10,18 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   onNext?: () => void
-  onSubmitCode?: (code: string) => void
+  submitting?: boolean
 }
 
 class _WelcomePage extends Component<Props> {
   render() {
-    const { onNext } = this.props
+    const { submitting, onNext } = this.props
     return (
       <OnboardingPage
         title={'Welcome to Salad'}
         subtitle={'The only place you can earn amazing rewards for doing nothing!'}
         image={image}
+        nextSubmitting={submitting}
         nextText={'Login'}
         onNext={onNext}
       />

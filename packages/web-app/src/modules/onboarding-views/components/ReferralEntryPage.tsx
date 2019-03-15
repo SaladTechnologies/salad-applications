@@ -14,6 +14,7 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   onNext?: () => void
   onSubmitCode?: (code: string) => void
+  submitting?: boolean
 }
 
 interface FormTypes {
@@ -38,30 +39,31 @@ class _ReferralEntryPage extends Component<Props> {
     return errors
   }
   render() {
-    const { onNext } = this.props
+    const { submitting, onNext } = this.props
     return (
       <OnboardingPage
         title={'Referral Code Entry'}
         subtitle={'Referred by a friend? Enter your code below so you can earn your referral bonus!'}
         image={image}
         nextText={'Next'}
+        nextSubmitting={submitting}
         onNext={onNext}
       >
         <Form
           onSubmit={this.onSubmit}
           validate={this.validate}
-          render={({ handleSubmit, submitting }) => {
+          render={({ handleSubmit }) => {
             return (
               <form onSubmit={handleSubmit}>
                 <Field name="code">
                   {({ input, meta }) => (
-                    <div style={{ display: 'inline-flex', alignItems: 'flex-start', paddingTop: '1rem' }}>
+                    <div style={{ display: 'inline-flex', alignItems: 'center', paddingTop: '1rem' }}>
                       <TextField
                         {...input}
                         placeholder="Referral code"
                         errorText={meta.error && meta.touched && meta.error}
                       />
-                      <Button type="submit" disabled={submitting}>
+                      <Button type="submit" loading={submitting} disabled={submitting}>
                         Submit
                       </Button>
                     </div>

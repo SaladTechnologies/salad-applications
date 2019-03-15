@@ -69,16 +69,16 @@ interface Props extends WithStyles<typeof styles> {
 class _Checkbox extends Component<Props> {
   handleClick = () => {
     const { onClick } = this.props
-    if (onClick != null) {
+    if (onClick) {
       onClick()
     }
   }
   render() {
-    const { textClassName, text, errorText, checked, classes, ...input } = this.props
+    const { textClassName, text, errorText, checked, classes, onClick, ...input } = this.props
     return (
       <div className={classes.container}>
         <label className={classes.checkboxContainer}>
-          <input checked={checked} className={classes.hidden} {...input} type="checkbox" />
+          <input className={classes.hidden} {...input} type="checkbox" />
           <div className={classes.checkBox} onClick={this.handleClick}>
             {checked && <FontAwesomeIcon size="xs" className={classes.checkmark} icon={faCheck} />}
           </div>

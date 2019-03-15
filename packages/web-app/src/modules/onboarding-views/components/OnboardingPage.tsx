@@ -61,6 +61,7 @@ interface Props extends WithStyles<typeof styles> {
   rightContent?: React.ReactNode
   hasBack?: boolean
   nextText?: string
+  nextSubmitting?: boolean
 
   onBack?: () => void
   onNext?: () => void
@@ -68,7 +69,19 @@ interface Props extends WithStyles<typeof styles> {
 
 class _OnboardingPage extends Component<Props> {
   render() {
-    const { title, nextText, onNext, hasBack, subtitle, onBack, image, rightContent, classes, children } = this.props
+    const {
+      title,
+      nextText,
+      onNext,
+      nextSubmitting,
+      hasBack,
+      subtitle,
+      onBack,
+      image,
+      rightContent,
+      classes,
+      children,
+    } = this.props
 
     return (
       <div className={classnames(classes.container, 'is-unselectable')}>
@@ -83,7 +96,7 @@ class _OnboardingPage extends Component<Props> {
                 Back
               </Button>
             )}
-            <Button className={classes.nextButton} onClick={onNext}>
+            <Button className={classes.nextButton} onClick={onNext} loading={nextSubmitting}>
               {nextText ? nextText : 'Next'}
             </Button>
           </div>

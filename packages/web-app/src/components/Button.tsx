@@ -46,19 +46,20 @@ interface Props extends WithStyles<typeof styles> {
 
 class _Button extends Component<Props> {
   handleClick = () => {
-    const { disabled, onClick } = this.props
-    if (!disabled && onClick != null) {
+    const { loading, disabled, onClick } = this.props
+    if (loading !== true && !disabled && onClick != null) {
       onClick()
     }
   }
 
   render() {
     const { loading, className, type, classes, disabled, children } = this.props
+    let enabled = !loading && !disabled
     return (
       <AnimatedBorder
         className={classnames(classes.border, {
-          [classes.disabled]: disabled,
-          [classes.enabled]: !disabled,
+          [classes.disabled]: !enabled,
+          [classes.enabled]: enabled,
         })}
         animating={loading}
         onClick={this.handleClick}
@@ -66,8 +67,8 @@ class _Button extends Component<Props> {
         <button
           type={type}
           className={classnames(classes.button, className, {
-            [classes.disabled]: disabled,
-            [classes.enabled]: !disabled,
+            [classes.disabled]: !enabled,
+            [classes.enabled]: enabled,
           })}
           onClick={this.handleClick}
         >

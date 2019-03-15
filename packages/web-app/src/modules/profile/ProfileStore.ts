@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx'
+import { observable, action, flow } from 'mobx'
 import { Profile } from './models'
 import { Config } from '../../config'
 import { RootStore } from '../../Store'
@@ -16,84 +16,84 @@ export class ProfileStore {
   }
 
   @observable
-  public isLoading: boolean = false
+  public isUpdating: boolean = false
 
   constructor(private readonly store: RootStore) {}
 
-  @action
-  agreeToTerms = async () => {
+  @action.bound
+  agreeToTerms = flow(function*(this: ProfileStore) {
     if (this.currentProfile === undefined) return
 
     console.log('Accepted TOS')
 
-    this.isLoading = true
+    this.isUpdating = true
 
-    // await this.sleep(5000)
+    yield this.sleep(1000)
 
     //TODO: Make this an API call with the terms version, then replace this.profile with the returned profile
     this.currentProfile.termsOfService = Config.termsVersion
 
-    this.isLoading = false
+    this.isUpdating = false
 
     this.store.routing.replace('/')
-  }
+  })
 
-  @action
-  setAnalyticsOption = async (agree: boolean) => {
+  @action.bound
+  setAnalyticsOption = flow(function*(this: ProfileStore, agree: boolean) {
     if (this.currentProfile === undefined) return
 
     console.log('Updating analytics to ' + agree)
 
-    this.isLoading = true
+    this.isUpdating = true
 
-    // await this.sleep(5000)
+    yield this.sleep(1000)
 
     //TODO: Make this an API call with the new option, then replace this.profile with the returned profile
     this.currentProfile.trackUsage = agree
 
-    this.isLoading = false
+    this.isUpdating = false
 
     this.store.routing.replace('/')
-  }
+  })
 
-  @action
-  submitReferralCode = async (code: string) => {
+  @action.bound
+  submitReferralCode = flow(function*(this: ProfileStore, code: string) {
     if (this.currentProfile === undefined) return
 
-    this.isLoading = true
+    this.isUpdating = true
 
-    // await this.sleep(5000)
+    yield this.sleep(1000)
 
     console.log('Sending referral code ' + code)
 
     this.currentProfile.referred = true
 
-    this.isLoading = false
+    this.isUpdating = false
 
     this.store.routing.replace('/')
-  }
+  })
 
-  sleep = (ms: number) => {
-    return new Promise(resolve => setTimeout(resolve, ms))
-  }
-
-  @action
-  skipReferral = async () => {
+  @action.bound
+  skipReferral = flow(function*(this: ProfileStore) {
     if (this.currentProfile === undefined) return
 
     console.log('Skipping referral')
 
-    this.isLoading = true
+    this.isUpdating = true
 
-    // await this.sleep(5000)
+    yield this.sleep(1000)
 
     if (this.currentProfile.referred === undefined) {
       //TODO: Make this an API call with the new option, then replace this.profile with the returned profile
       this.currentProfile.referred = false
     }
 
-    this.isLoading = false
+    this.isUpdating = false
 
     this.store.routing.replace('/')
+  })
+
+  sleep = (ms: number) => {
+    return new Promise(resolve => setTimeout(resolve, ms))
   }
 }
