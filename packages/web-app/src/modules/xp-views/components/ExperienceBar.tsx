@@ -9,11 +9,13 @@ import { Level } from '../../xp/models/Level'
 
 const styles = (theme: SaladTheme) => ({
   container: {
+    flex: 1, //Makes the bar grow to fit it's parent
     padding: '.5rem',
     display: 'flex',
     width: '8rem',
     marginRight: '-5rem',
     zIndex: 2000,
+    userSelect: 'none',
   },
   innerContainer: {
     display: 'flex',
@@ -35,6 +37,8 @@ const styles = (theme: SaladTheme) => ({
     float: 'left',
     marginLeft: '.4rem',
     marginTop: '-.5rem',
+    display: 'flex',
+    flexDirection: 'row',
   },
   levelText: {
     padding: '.2rem 0',
@@ -79,7 +83,7 @@ class _ExperienceBar extends Component<Props> {
     currentLevels = currentLevels.slice(0, Math.min(3, currentLevels.length))
 
     return (
-      <div className={classnames(classes.container, 'is-unselectable')}>
+      <div className={classnames(classes.container)}>
         <div className={classes.innerContainer}>
           {currentLevels &&
             currentLevels.map((level, i) => {
@@ -104,12 +108,9 @@ class _ExperienceBar extends Component<Props> {
                   style={{ color: level.color, flexGrow: heightFlex }}
                 >
                   {i === 0 && <div className={classes.currentProgress}>{`${progress.toFixed(0)}%`}</div>}
-                  <div className={classnames(classes.levelLabel, 'columns is-mobile')}>
-                    <FontAwesomeIcon
-                      className={classnames(classes.levelArrow, 'column is-narrow')}
-                      icon={faCaretLeft}
-                    />
-                    <div className={classnames(classes.levelText, 'column')}>
+                  <div className={classnames(classes.levelLabel)}>
+                    <FontAwesomeIcon className={classnames(classes.levelArrow)} icon={faCaretLeft} />
+                    <div className={classnames(classes.levelText)}>
                       {i !== 0 && <div className={classes.levelTitle}>{level.title}</div>}
                       <div className={classes.levelSubtitle}>{`${level.maxXp} xp`}</div>
                     </div>

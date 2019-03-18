@@ -12,6 +12,7 @@ const styles = (theme: SaladTheme) => ({
     width: '25rem',
     padding: '1rem .5rem',
     position: 'relative',
+    userSelect: 'none',
   },
   closeButton: {
     color: theme.darkBlue,
@@ -41,7 +42,7 @@ class _Modal extends Component<Props> {
   render() {
     const { classes, children } = this.props
     return (
-      <div className={classNames('is-unselectable', classes.container)}>
+      <div className={classNames(classes.container)}>
         <div className={classes.closeButton} onClick={this.handleClose}>
           <FontAwesomeIcon icon={faTimes} />
         </div>

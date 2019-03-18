@@ -13,6 +13,7 @@ const styles = (theme: SaladTheme) => ({
     position: 'relative',
     cursor: 'pointer',
     width: '475px',
+    userSelect: 'none',
   },
   lock: {
     position: 'absolute',
@@ -22,6 +23,7 @@ const styles = (theme: SaladTheme) => ({
   imageContainer: {
     display: 'inline-block',
     width: '120px',
+    backgroundColor: (props: Props) => props.color || theme.lightGreen,
   },
   image: {
     height: '100%',
@@ -29,10 +31,12 @@ const styles = (theme: SaladTheme) => ({
   },
   rightContainer: {
     width: '22rem',
-    padding: '.5rem',
+    padding: '1rem .5rem',
     overflow: 'hidden',
     marginLeft: '.5rem',
-    display: 'inline-block',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
   redeemable: {
     backgroundColor: theme.lightGreen,
@@ -48,7 +52,7 @@ const styles = (theme: SaladTheme) => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    marginTop: '-.5rem',
+    marginTop: '-.25rem',
   },
   priceText: {
     fontSize: theme.small,
@@ -89,13 +93,13 @@ class _RewardSummary extends Component<Props> {
     }
   }
   render() {
-    const { name, color, price, redeemable, imageSrc, classes } = this.props
+    const { name, price, redeemable, imageSrc, classes } = this.props
     return (
-      <div className={classnames(classes.container, 'is-unselectable')} onClick={this.handleClick}>
+      <div className={classnames(classes.container)} onClick={this.handleClick}>
         {/* Image */}
         <AngledPanel className={classes.imageContainer} leftSide={'right'}>
           {/* TODO the color is not working here for some reason */}
-          <img className={classes.image} src={imageSrc} draggable={false} style={{ background: color }} />
+          <img className={classes.image} src={imageSrc} draggable={false} />
         </AngledPanel>
 
         {/* Right side panel */}

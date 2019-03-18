@@ -11,6 +11,7 @@ import { ProgressBar } from '../../../components'
 const styles = (theme: SaladTheme) => ({
   container: {
     width: '790px',
+    userSelect: 'none',
   },
   choppingTitle: {
     fontFamily: 'sharpGroteskBook25',
@@ -32,6 +33,7 @@ const styles = (theme: SaladTheme) => ({
   imageContainer: {
     display: 'inline-block',
     width: '190px',
+    backgroundColor: (props: Props) => (props.reward && props.reward.color) || theme.lightGreen,
   },
   image: {
     height: '100%',
@@ -42,7 +44,9 @@ const styles = (theme: SaladTheme) => ({
     padding: '.5rem',
     overflow: 'hidden',
     marginLeft: '.5rem',
-    display: 'inline-block',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
   redeemable: {
     backgroundColor: theme.lightGreen,
@@ -58,7 +62,6 @@ const styles = (theme: SaladTheme) => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    marginTop: '-.5rem',
   },
   priceText: {
     fontSize: theme.medium,
@@ -108,19 +111,12 @@ class _SelectedReward extends Component<Props> {
     let redeemable = reward && reward.redeemable
 
     return (
-      <div className={classnames(classes.container, 'is-unselectable')}>
+      <div className={classnames(classes.container)}>
         <div className={classes.choppingTitle}>Chopping Salad For:</div>
         <div className={classes.cardContainer}>
           {/* Image */}
           <AngledPanel className={classes.imageContainer} leftSide={'right'}>
-            {reward && (
-              <img
-                className={classes.image}
-                src={reward.imageSrc}
-                draggable={false}
-                style={{ background: reward ? reward.color : 'white' }}
-              />
-            )}
+            {reward && <img className={classes.image} src={reward.imageSrc} draggable={false} />}
           </AngledPanel>
 
           {/* Right side panel */}

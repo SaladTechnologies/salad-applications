@@ -1,3 +1,10 @@
+html {
+  background-color: #092234;
+}
+body {
+  overflow: hidden;
+}
+
 @font-face {
   font-family: 'sharpGroteskBook19';
   src: url('https://s3.us-east-2.amazonaws.com/salad-ui-assets/fonts/SharpGroteskBook19.otf');

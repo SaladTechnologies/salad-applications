@@ -11,6 +11,7 @@ const styles = (theme: SaladTheme) => ({
   container: {
     display: 'inline-flex',
     flexDirection: 'row',
+    userSelect: 'none',
   },
   title: {
     width: '275px',

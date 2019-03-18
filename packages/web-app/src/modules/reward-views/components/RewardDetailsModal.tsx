@@ -4,7 +4,7 @@ import { SaladTheme } from '../../../SaladTheme'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
-import { AngledPanel, ModalPage } from '../../../components'
+import { AngledPanel, ModalPage, Button } from '../../../components'
 import { Reward } from '../../reward/models/Reward'
 
 const styles = (theme: SaladTheme) => ({
@@ -12,6 +12,7 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
     position: 'relative',
     width: '790px',
+    userSelect: 'none',
   },
   lock: {
     position: 'absolute',
@@ -26,6 +27,7 @@ const styles = (theme: SaladTheme) => ({
     height: '12rem',
     display: 'inline-block',
     width: '290px',
+    backgroundColor: (props: Props) => (props.reward && props.reward.color) || theme.lightGreen,
   },
   image: {
     height: '100%',
@@ -38,8 +40,8 @@ const styles = (theme: SaladTheme) => ({
     marginLeft: '.5rem',
     display: 'inline-flex',
     flexDirection: 'column',
-    backgroundColor: theme.lightGreen,
-    color: theme.blueFont,
+    backgroundColor: (props: Props) => (props.reward && props.reward.redeemable ? theme.lightGreen : theme.darkGreen),
+    color: (props: Props) => (props.reward && props.reward.redeemable ? theme.blueFont : theme.lightGreen),
   },
   nameText: {
     fontSize: theme.xLarge,
@@ -47,8 +49,6 @@ const styles = (theme: SaladTheme) => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    marginTop: '-.75rem',
-    marginBottom: '-1rem',
   },
   details: {
     fontFamily: 'sharpGroteskBook19',
@@ -64,23 +64,13 @@ const styles = (theme: SaladTheme) => ({
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
-  button: {
-    border: `1px solid ${theme.blueFont}`,
-    color: theme.blueFont,
-    padding: '.25rem 1rem',
-    margin: '0 .25rem',
-    fontSize: theme.small,
-    fontFamily: 'SharpGroteskLight25',
-    textTransform: 'uppercase',
-    cursor: 'pointer',
-  },
 })
 
 interface Props extends WithStyles<typeof styles> {
   reward?: Reward
   onClickClose?: () => void
   onRedeem?: (rewardId: string) => void
-  onSelect?: (rewardId: string) => Promise<void>
+  onSelect?: (rewardId: string) => void
 }
 
 class _RewardDetailsModal extends Component<Props> {
@@ -118,15 +108,11 @@ class _RewardDetailsModal extends Component<Props> {
     }
   }
 
-  handleSelect = async () => {
-    const { onSelect, onClickClose, reward } = this.props
+  handleSelect = () => {
+    const { onSelect, reward } = this.props
 
     if (onSelect && reward) {
-      await onSelect(reward.id)
-    }
-
-    if (onClickClose) {
-      onClickClose()
+      onSelect(reward.id)
     }
   }
 
@@ -135,16 +121,9 @@ class _RewardDetailsModal extends Component<Props> {
 
     return (
       <ModalPage onCloseClicked={this.handleClose}>
-        <div className={classnames(classes.container, 'is-unselectable')}>
+        <div className={classnames(classes.container)}>
           <AngledPanel className={classes.imageContainer} leftSide={'right'}>
-            {reward && (
-              <img
-                className={classes.image}
-                src={reward.imageSrc}
-                draggable={false}
-                style={{ background: reward ? reward.color : 'white' }}
-              />
-            )}
+            {reward && <img className={classes.image} src={reward.imageSrc} draggable={false} />}
           </AngledPanel>
 
           <div className={classnames(classes.rightContainer)}>
@@ -154,20 +133,18 @@ class _RewardDetailsModal extends Component<Props> {
               </div>
 
               <div className={classnames(classes.priceText)}>
-                {reward && reward.price && `$${reward.price.toFixed(2)} ${this.timeRemainingText()}`}
+                {reward && `$${reward.price.toFixed(2)} ${this.timeRemainingText()}`}
               </div>
               <div className={classnames(classes.nameText)}>{reward ? reward.name : 'Unavailable'}</div>
               <div className={classnames(classes.details)}>{reward && reward.details}</div>
             </div>
             <div className={classes.buttonContainer}>
-              {reward && reward.redeemable && (
-                <div className={classes.button} onClick={this.handleRedeem}>
-                  Redeem
-                </div>
-              )}
-              <div className={classes.button} onClick={this.handleSelect}>
-                Select as reward
-              </div>
+              <Button dark={reward && reward.redeemable} onClick={this.handleRedeem}>
+                REDEEM
+              </Button>
+              <Button dark={reward && reward.redeemable} onClick={this.handleSelect}>
+                SELECT AS REWARD
+              </Button>
             </div>
           </div>
         </div>

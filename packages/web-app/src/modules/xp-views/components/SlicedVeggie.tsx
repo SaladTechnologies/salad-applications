@@ -9,6 +9,7 @@ const gridSize = 1
 const styles = (theme: SaladTheme) => ({
   container: {
     whiteSpace: 'nowrap',
+    userSelect: 'none',
   },
   slice: {
     display: 'inline-block',
@@ -42,7 +43,7 @@ class _SlicedVeggie extends Component<Props> {
     const positions = this.getColumnPositions(percent)
 
     return (
-      <div className={classnames(classes.container, 'is-unselectable')}>
+      <div className={classnames(classes.container)}>
         {positions.map((pos, i) => {
           return (
             <div className={classnames(classes.slice)} key={i}>

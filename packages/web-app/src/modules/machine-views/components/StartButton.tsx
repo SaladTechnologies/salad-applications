@@ -17,6 +17,7 @@ const styles = (theme: SaladTheme) => ({
     borderBottomStyle: 'solid',
     whiteSpace: 'noWrap',
     position: 'relative',
+    userSelect: 'none',
   },
   button: {
     backgroundColor: theme.lightGreen,
@@ -45,6 +46,7 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
     textAlign: 'right',
     flexDirection: 'column',
+    justifyContent: 'center',
     alignItems: 'flex-end',
     padding: '.5rem 1rem',
     whiteSpace: 'noWrap',
@@ -64,8 +66,8 @@ const styles = (theme: SaladTheme) => ({
     fontFamily: 'SharpGroteskLight09',
     color: theme.lightGreen,
     fontSize: theme.xLarge,
-    marginTop: '-.5rem',
-    marginBottom: '-.75rem',
+    marginTop: '-.25rem',
+    marginBottom: '-.5rem',
   },
   rateText: {
     fontFamily: 'sharpGroteskBook25',
@@ -90,7 +92,7 @@ class _StartButton extends Component<Props> {
   render() {
     const { balance, rate, isRunning, startEnabled, classes } = this.props
     return (
-      <AngledPanel leftSide="left" className={classnames(classes.container, 'is-unselectable')}>
+      <AngledPanel leftSide="left" className={classnames(classes.container)}>
         <AngledPanel
           leftSide="left"
           rightSide="left"
@@ -101,8 +103,8 @@ class _StartButton extends Component<Props> {
         </AngledPanel>
         <div className={classes.textContainer}>
           <div className={classes.title}>Current balance</div>
-          <div className={classes.balanceText}>${balance && balance.toFixed(5)} USD</div>
-          <div className={classes.rateText}>${rate && rate.toFixed(5)}/HOUR</div>
+          <div className={classes.balanceText}>${balance ? balance.toFixed(5) : 0} USD</div>
+          <div className={classes.rateText}>${rate ? rate.toFixed(5) : 0}/HOUR</div>
         </div>
       </AngledPanel>
     )
