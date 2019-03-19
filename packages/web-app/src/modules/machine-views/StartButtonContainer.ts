@@ -3,8 +3,8 @@ import { RootStore } from '../../Store'
 import { StartButton } from './components/StartButton'
 
 const mapStoreToProps = (store: RootStore) => ({
-  balance: 100,
-  rate: 1,
+  balance: store.balance.currentBalance,
+  rate: store.balance.currentEarningRate,
   onClick: () => console.log('Start button clicked'),
   isRunning: false,
   startEnabled: false,

@@ -1,8 +1,9 @@
 import { RewardResource } from '../../reward/models/RewardResource'
+import { ReferralResource } from '../../referral/models/ReferralResource'
 
 export interface DataResource {
   xp: number
-  // activeReferrals?: Referral[]
+  activeReferrals: ReferralResource[]
   // availableReferrals: number
   currentBalance: number
   earningVelocity: number

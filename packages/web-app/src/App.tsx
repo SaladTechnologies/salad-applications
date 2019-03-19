@@ -17,6 +17,7 @@ import { SettingsModalContainer } from './modules/profile-views'
 import { Config } from './config'
 import { Profile } from './modules/profile/models'
 import { AnimatedSwitch } from './components/AnimatedSwitch'
+import { NewReferralModalContainer } from './modules/referral-views'
 
 class App extends Component {
   store = getStore()
@@ -55,10 +56,11 @@ class App extends Component {
           )}
           {isAuth && (
             <div>
-              <Route exact path="/" render={() => <HomePage />} />
+              <Route path="/" render={() => <HomePage />} />
               <Route exact path="/rewards/:id" component={RewardDetailsModalContainer} />
               <Route exact path="/profile" component={AccountModalContainer} />
               <Route exact path="/settings" component={SettingsModalContainer} />
+              <Route exact path="/new-referral" component={NewReferralModalContainer} />
             </div>
           )}
 

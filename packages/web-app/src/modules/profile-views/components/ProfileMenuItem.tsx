@@ -4,7 +4,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import { Profile } from '../../profile/models'
 import { ProfileImage } from '../../../components'
 import { ProfileSummaryTitle } from './ProfileSummaryTitle'
-import { TooltipAnchor } from '../../ToolTipManager'
+import { TooltipAnchor } from '../../../ToolTipManager'
 import { ProfileMenuTooltip } from './ProfileMenuTooltip'
 
 const styles = (theme: SaladTheme) => ({
