@@ -9,7 +9,7 @@ import { BalanceStore } from './modules/balance'
 import { MachineStore } from './modules/machine'
 import { ProfileStore } from './modules/profile'
 import { UIStore } from './UIStore'
-import { ReferralStore } from './modules/referrals/ReferralStore'
+import { ReferralStore } from './modules/referral'
 
 //Forces all changes to state to be from an action
 configure({ enforceActions: 'always' })
@@ -45,7 +45,7 @@ export class RootStore {
     this.machine = new MachineStore()
     this.profile = new ProfileStore(this)
     this.ui = new UIStore(this)
-    this.referral = new ReferralStore()
+    this.referral = new ReferralStore(this, axios)
   }
 
   refreshData = async () => {
@@ -58,6 +58,7 @@ export class RootStore {
       this.xp.updateXp(data.xp)
       this.balance.update(data.currentBalance, data.earningVelocity)
       this.rewards.loadDataRefresh(data)
+      this.referral.loadDataRefresh(data)
       console.log(response.data)
     } catch (error) {
       console.error(error)

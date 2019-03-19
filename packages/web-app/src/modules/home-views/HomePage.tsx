@@ -11,6 +11,7 @@ import { MenuBarContainer } from './MenuBarContainer'
 import { ProfileMenuItemContainer } from '../profile-views'
 import { StartButtonContainer } from '../machine-views'
 import { Fade } from '../../components'
+import { ReferralListContainer } from '../referral-views'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -45,10 +46,15 @@ const styles = (theme: SaladTheme) => ({
     alignItems: 'stretch',
     flex: 1,
   },
-  mainColumn: {},
+  mainColumn: {
+    // border: '1px solid red',
+  },
   verticalLayout: {
     display: 'flex',
     flexDirection: 'column',
+  },
+  rightColumn: {
+    paddingBottom: '2rem',
   },
   footer: {
     flex: 'none',
@@ -88,13 +94,17 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
         </div>
 
         <div className={classes.main}>
+          {/* XP bar */}
           <div className={classnames(classes.mainColumn, classes.verticalLayout)}>
             <ExperienceBarContainer />
           </div>
+
+          {/* Veggie column */}
           <div className={classnames(classes.mainColumn)}>
             <SlicedVeggieContainer />
           </div>
 
+          {/* Rewards column */}
           <div className={classnames(classes.mainColumn, classes.verticalLayout)}>
             <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
               <SelectedRewardContainer />
@@ -109,6 +119,13 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
                 <RewardFilterContainer />
                 <RewardListContainer />
               </div>
+            </div>
+          </div>
+
+          {/* Right column */}
+          <div className={classnames(classes.mainColumn, classes.rightColumn, classes.verticalLayout)}>
+            <div style={{ zIndex: 2000, marginTop: 'auto' }}>
+              <ReferralListContainer />
             </div>
           </div>
         </div>

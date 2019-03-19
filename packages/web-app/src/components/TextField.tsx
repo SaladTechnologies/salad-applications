@@ -8,25 +8,29 @@ const styles = (theme: SaladTheme) => ({
     display: 'inline-block',
     padding: '0 .5rem',
   },
-  text: {
-    backgroundColor: 'transparent',
-    border: `1px solid ${theme.offWhite}`,
-    padding: '.5rem',
-    color: theme.offWhite,
-    fontSize: '.625rem',
-    fontFamily: 'sharpGroteskLight25',
-    '&::placeholder': {
-      opacity: 0.5,
-      color: theme.offWhite,
-    },
-    '&:focus': {
-      outlineColor: theme.neonGreen,
-    },
+  text: (props: Props) => {
+    const c = props.dark ? theme.darkBlue : theme.offWhite
+
+    return {
+      backgroundColor: 'transparent',
+      border: `1px solid ${c}`,
+      padding: '.5rem',
+      color: c,
+      fontSize: '.625rem',
+      fontFamily: 'sharpGroteskLight25',
+      '&::placeholder': {
+        opacity: 0.5,
+        color: c,
+      },
+      '&:focus': {
+        outlineColor: theme.neonGreen,
+      },
+    }
   },
   errorBorder: {
-    borderColor: theme.red,
+    borderColor: `${theme.red} !important`,
     '&:focus': {
-      outlineColor: theme.red,
+      outlineColor: `${theme.red} !important`,
     },
   },
   errorText: {
@@ -44,13 +48,13 @@ interface Props extends WithStyles<typeof styles> {
   onChange?: (event: React.ChangeEvent<any>) => void
   onFocus?: (event?: React.FocusEvent<any>) => void
   value?: any
-  checked?: boolean
+  dark?: boolean
   errorText?: string
 }
 
 class _TextField extends Component<Props> {
   render() {
-    const { errorText, classes, ...input } = this.props
+    const { errorText, classes, dark, ...input } = this.props
     return (
       <div className={classes.container}>
         <input className={classnames(classes.text, { [classes.errorBorder]: errorText })} {...input} type="text" />

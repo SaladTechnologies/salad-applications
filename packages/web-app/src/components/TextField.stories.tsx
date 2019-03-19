@@ -4,11 +4,38 @@ import { TextField } from './TextField'
 
 storiesOf('Components/Text Field', module)
   .add('blank', () => {
-    return <TextField />
+    return (
+      <div>
+        <div style={{ padding: '1rem' }}>
+          <TextField />
+        </div>
+        <div style={{ backgroundColor: '#B2D530', padding: '1rem' }}>
+          <TextField dark />
+        </div>
+      </div>
+    )
   })
   .add('with placeholder', () => {
-    return <TextField placeholder="Hello world" />
+    return (
+      <div>
+        <div style={{ padding: '1rem' }}>
+          <TextField placeholder="Hello world" />
+        </div>
+        <div style={{ backgroundColor: '#B2D530', padding: '1rem' }}>
+          <TextField placeholder="Hello world" dark />
+        </div>
+      </div>
+    )
   })
   .add('with error', () => {
-    return <TextField errorText="Required field" />
+    return (
+      <div>
+        <div style={{ padding: '1rem' }}>
+          <TextField errorText="Required field" />
+        </div>
+        <div style={{ backgroundColor: '#B2D530', padding: '1rem' }}>
+          <TextField errorText="Required field" dark />
+        </div>
+      </div>
+    )
   })
