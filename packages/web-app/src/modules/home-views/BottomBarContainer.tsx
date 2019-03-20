@@ -1,12 +1,13 @@
 import { BottomBar } from './components/BottomBar'
 import { connect } from '../../connect'
+import { Config } from '../../config'
 
 const handleDiscord = () => {
-  openLink('https://discord.gg/xcvmgQk')
+  openLink(Config.discordUrl)
 }
 
 const handleSupport = () => {
-  openLink('https://salad.zendesk.com')
+  openLink(Config.supportUrl)
 }
 
 const openLink = (url: string) => {

@@ -16,6 +16,19 @@ const numberOrDefault = (name: string, defaultValue: number): number => {
   return v
 }
 
+const optionalBool = (name: string): boolean => {
+  let v = process.env[name]
+
+  switch (v) {
+    case 'true':
+    case '1':
+    case 'yes':
+      return true
+    default:
+      return false
+  }
+}
+
 const requiredString = (name: string) => {
   let v = process.env[name]
 
@@ -45,6 +58,11 @@ class Config {
 
   /** The current version of the terms of service */
   public readonly termsVersion: string = requiredString('REACT_APP_TERMS_VERSION')
+
+  public readonly devTools: boolean = optionalBool('REACT_APP_DEV_TOOLS')
+
+  public readonly supportUrl: string = requiredString('REACT_APP_SUPPORT_URL')
+  public readonly discordUrl: string = requiredString('REACT_APP_DISCORD_URL')
 }
 
 const instance = new Config()
