@@ -4,7 +4,7 @@ import { RootStore } from '../../Store'
 
 const mapStoreToProps = (store: RootStore) => ({
   searchText: store.rewards.filterText,
-  filters: store.rewards.filters,
+  filters: store.rewards.currentFilters,
   onTextEntered: store.rewards.updateFilterText,
   onToggle: store.rewards.toggleFilter,
 })

@@ -4,7 +4,7 @@ import { RewardsResource } from './models/RewardsResource'
 import { AxiosInstance } from 'axios'
 import { rewardFromResource, getTimeRemainingText } from './utils'
 import { RootStore } from '../../Store'
-import { FilterItem } from './models/FilterItem'
+import { FilterItem, NameFilter } from './models/FilterItem'
 import { DataResource } from '../data-refresh/models/DataResource'
 
 export class RewardStore {
@@ -15,13 +15,21 @@ export class RewardStore {
   private selectedRewardId?: string
 
   @observable
-  public filters: FilterItem[] = []
+  private filters: FilterItem[] = []
 
   @observable
   public filterText?: string
 
   @computed get selectedReward(): Reward | undefined {
     return this.getReward(this.selectedRewardId)
+  }
+
+  @computed get currentFilters(): FilterItem[] {
+    return this.filters.sort((a, b) => {
+      if (a.name < b.name) return -1
+      if (a.name > b.name) return 1
+      return 0
+    })
   }
 
   @computed get allRewards(): Reward[] {
@@ -44,7 +52,7 @@ export class RewardStore {
 
     if (!all) {
       rewardList = rewardList.filter(r => {
-        let filter = this.filters.find(x => x.name === r.filter)
+        let filter = this.filters.find(x => x.checkReward(r))
 
         return !filter || filter.checked
       })
@@ -108,7 +116,7 @@ export class RewardStore {
 
     currentFilters.forEach(x => {
       if (!this.filters.some(f => f.name === x)) {
-        this.filters.push(new FilterItem(x.toLowerCase(), false))
+        this.filters.push(new NameFilter(x.toLowerCase(), false))
       }
     })
   }
