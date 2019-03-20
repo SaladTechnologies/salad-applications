@@ -72,7 +72,6 @@ class _Button extends Component<Props> {
             [classes.disabled]: !enabled,
             [classes.enabled]: enabled,
           })}
-          onClick={this.handleClick}
         >
           {children}
         </button>

@@ -1,6 +1,6 @@
-import { action, runInAction, observable } from 'mobx'
+import { action, runInAction, observable, flow } from 'mobx'
 import { AxiosInstance } from 'axios'
-import { WebAuth } from 'auth0-js'
+import { WebAuth, Auth0DecodedHash } from 'auth0-js'
 import { RootStore } from '../../Store'
 import { Config } from '../../config'
 
@@ -42,29 +42,40 @@ export class AuthStore {
     this.webAuth.authorize()
   }
 
-  @action
-  handleAuthentication = () => {
+  @action.bound
+  handleAuthentication = flow(function*(this: AuthStore) {
     this.isLoading = true
-    return new Promise<void>((resolve, reject) => {
+
+    try {
+      let authResult = yield this.parseToken()
+      this.authToken = authResult.accessToken
+      this.authProfile = authResult.idTokenPayload
+      this.expiresAt = authResult.expiresIn ? authResult.expiresIn * 1000 + new Date().getTime() : 0
+      this.axios.defaults.headers.common['Authorization'] = `Bearer ${this.authToken}`
+
+      yield this.store.profile.loadProfile()
+
+      this.loginError = false
+      this.isLoading = false
+      this.store.routing.push('/')
+    } catch (error) {
+      this.loginError = true
+      this.isLoading = false
+    }
+  })
+
+  /** Parse the auth0 token out the the url */
+  parseToken = (): Promise<Auth0DecodedHash> =>
+    new Promise<Auth0DecodedHash>((resolve, reject) => {
       this.webAuth.parseHash((err, authResult) => {
         if (err || !authResult || !authResult.idToken) {
-          this.loginError = true
-          this.isLoading = false
           return reject(err)
         }
         runInAction(() => {
-          this.authToken = authResult.accessToken
-          this.authProfile = authResult.idTokenPayload
-          this.expiresAt = authResult.expiresIn ? authResult.expiresIn * 1000 + new Date().getTime() : 0
-          this.axios.defaults.headers.common['Authorization'] = `Bearer ${this.authToken}`
-          this.loginError = false
-          this.isLoading = false
-          this.store.routing.push('/')
-          resolve()
+          resolve(authResult)
         })
       })
     })
-  }
 
   @action
   signOut = () => {

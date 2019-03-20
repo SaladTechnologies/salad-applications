@@ -24,13 +24,9 @@ const requiredString = (name: string) => {
   return v
 }
 
-// const stringOrDefault = (name: string, defaultValue: string): string => {
-//   let v = process.env[name]
-
-//   if (!v) return defaultValue
-
-//   return v
-// }
+const optionalString = (name: string): string | undefined => {
+  return process.env[name]
+}
 
 export const convertHours = (hours: number): number => hours * 3.6e6
 export const convertMinutes = (hours: number): number => hours * 60000
@@ -44,6 +40,8 @@ class Config {
 
   public readonly auth0Domain: string = requiredString('REACT_APP_AUTH0_DOMAIN')
   public readonly auth0ClientId: string = requiredString('REACT_APP_AUTH0_CLIENT_ID')
+
+  public readonly mixpanelToken?: string = optionalString('REACT_APP_MIXPANEL_TOKEN')
 
   /** The current version of the terms of service */
   public readonly termsVersion: string = requiredString('REACT_APP_TERMS_VERSION')
