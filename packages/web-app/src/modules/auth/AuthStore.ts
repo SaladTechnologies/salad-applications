@@ -20,7 +20,7 @@ export class AuthStore {
   public loginError: boolean = false
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
-    let redirect = `${window.location.href.split('?')[0]}auth/callback`
+    let redirect = `${window.location.origin}/auth/callback`
     this.webAuth = new WebAuth({
       domain: Config.auth0Domain,
       clientID: Config.auth0ClientId,

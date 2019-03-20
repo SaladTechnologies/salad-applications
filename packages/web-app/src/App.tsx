@@ -46,6 +46,7 @@ class App extends Component {
             <div>
               <Route path="/auth/callback" component={CallbackContainer} />
               <Route exact path="/" component={WelcomePageContainer} />
+              <Redirect to="/" />
             </div>
           )}
           {isOnboarding && (
@@ -68,7 +69,7 @@ class App extends Component {
 
           <Route render={() => <LoadingPage text="Page Not Found" />} />
         </Switch>
-        <DevTools position={{ left: 0, bottom: 0 }} />
+        {Config.devTools && <DevTools position={{ left: 0, bottom: 0 }} />}
       </div>
     )
   }
