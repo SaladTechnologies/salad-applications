@@ -6,6 +6,7 @@ import { Profile } from '../../profile/models'
 import { ProfileMenuItem } from './ProfileMenuItem'
 import { ProfileMenuTooltip } from './ProfileMenuTooltip'
 import { SettingsModalPage } from './SettingsModalPage'
+import { UserStatsSummary } from './UserStatsSummary'
 
 const profile: Profile = {
   id: '1234',
@@ -29,4 +30,7 @@ storiesOf('Modules/Profile', module)
   })
   .add('Settings Modal', () => {
     return <SettingsModalPage onCloseClicked={action('close')} onSendBug={action('new bug')} />
+  })
+  .add('User Stats', () => {
+    return <UserStatsSummary lifetimeEarning={123} referralCount={42} machineCount={5} />
   })

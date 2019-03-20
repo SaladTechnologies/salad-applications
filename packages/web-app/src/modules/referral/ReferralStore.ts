@@ -12,6 +12,9 @@ export class ReferralStore {
   @observable
   public isSending: boolean = false
 
+  @observable
+  public totalCount: number = 0
+
   @computed get activeReferrals(): Referral[] {
     return this.referrals
   }
@@ -20,6 +23,7 @@ export class ReferralStore {
   @action
   loadDataRefresh = (data: DataResource) => {
     this.referrals = data.activeReferrals.map(referralFromResource)
+    this.totalCount = data.totalReferrals
   }
 
   @action.bound

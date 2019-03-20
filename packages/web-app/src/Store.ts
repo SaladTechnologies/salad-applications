@@ -59,9 +59,10 @@ export class RootStore {
       const response = await this.axios.get<DataResource>('get-state')
       const data = response.data
       this.xp.updateXp(data.xp)
-      this.balance.update(data.currentBalance, data.earningVelocity)
+      this.balance.loadDataRefresh(data)
       this.rewards.loadDataRefresh(data)
       this.referral.loadDataRefresh(data)
+      this.machine.loadDataRefresh(data)
       console.log(response.data)
     } catch (error) {
       console.error(error)
