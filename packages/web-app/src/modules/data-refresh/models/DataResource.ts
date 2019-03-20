@@ -9,9 +9,9 @@ export interface DataResource {
   earningVelocity: number
   currentReward: RewardResource
 
-  // lifetimeBalance: number
-  // machines?: Machine[]
-  // totalReferrals: number
+  lifetimeBalance: number
+  machines: any[]
+  totalReferrals: number
   // currentlyMining?: boolean
   // calculatedCurrentBalance?: number
   // xpBoost: number

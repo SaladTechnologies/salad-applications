@@ -1,11 +1,14 @@
 import { action, observable, runInAction } from 'mobx'
-import { ReactNode } from 'react'
 import uuidv1 from 'uuid/v1'
 import * as Storage from '../../Storage'
+import { DataResource } from '../data-refresh/models'
 
 export class MachineStore {
   @observable
   public installId?: string
+
+  @observable
+  public machineCount: number = 0
 
   constructor() {
     runInAction(() => {
@@ -14,12 +17,7 @@ export class MachineStore {
   }
 
   @action
-  showModal = (modal: ReactNode) => {
-    // this.modal = modal
-  }
-
-  @action
-  clearModal = () => {
-    // this.modal = undefined
+  loadDataRefresh = (data: DataResource) => {
+    this.machineCount = data.machines.length
   }
 }

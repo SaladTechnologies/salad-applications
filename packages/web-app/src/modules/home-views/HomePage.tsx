@@ -8,7 +8,7 @@ import { RefreshService } from '../data-refresh'
 import { getStore } from '../../Store'
 import { BottomBarContainer } from './BottomBarContainer'
 import { MenuBarContainer } from './MenuBarContainer'
-import { ProfileMenuItemContainer } from '../profile-views'
+import { ProfileMenuItemContainer, UserStatsSummaryContainer } from '../profile-views'
 import { StartButtonContainer } from '../machine-views'
 import { Fade } from '../../components'
 import { ReferralListContainer } from '../referral-views'
@@ -54,7 +54,7 @@ const styles = (theme: SaladTheme) => ({
     flexDirection: 'column',
   },
   rightColumn: {
-    paddingBottom: '2rem',
+    padding: '2rem 0',
   },
   footer: {
     flex: 'none',
@@ -124,6 +124,7 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
 
           {/* Right column */}
           <div className={classnames(classes.mainColumn, classes.rightColumn, classes.verticalLayout)}>
+            <UserStatsSummaryContainer />
             <div style={{ zIndex: 2000, marginTop: 'auto' }}>
               <ReferralListContainer />
             </div>
