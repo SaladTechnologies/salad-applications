@@ -10,7 +10,7 @@ const glowWidth = 4
 const styles = (theme: SaladTheme) => ({
   container: (props: Props) => ({
     display: 'inline-block',
-    border: `${borderWidth}px solid ${props.dark ? theme.darkBlue : theme.offWhite}`,
+    border: `${borderWidth}px solid ${props.dark ? theme.darkBlue : theme.lightGreen}`,
     position: 'relative',
     padding: `${borderWidth * 2}px`,
     margin: `${glowWidth * 2}px`,
@@ -24,7 +24,7 @@ const styles = (theme: SaladTheme) => ({
       right: 0,
       content: '""',
       margin: `${-glowWidth * 2}px`,
-      boxShadow: `inset 0 0 ${glowWidth}px 2px ${theme.neonGreen}`,
+      boxShadow: `inset 0 0 ${glowWidth}px 2px ${theme.mediumGreen}`,
       animation: `$borderAnim ${animationTime}s linear infinite`,
     },
 

@@ -50,7 +50,7 @@ const styles = (theme: SaladTheme) => ({
     fontSize: theme.xSmall,
   },
   levelSubtitle: {
-    color: theme.offWhite,
+    color: theme.lightGreen,
     fontSize: theme.xxSmall,
     paddingTop: '.1rem',
   },

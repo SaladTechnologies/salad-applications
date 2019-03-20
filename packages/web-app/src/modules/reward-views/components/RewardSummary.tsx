@@ -23,7 +23,7 @@ const styles = (theme: SaladTheme) => ({
   imageContainer: {
     display: 'inline-block',
     width: '120px',
-    backgroundColor: (props: Props) => props.color || theme.lightGreen,
+    backgroundColor: (props: Props) => props.color || theme.green,
   },
   image: {
     height: '100%',
@@ -39,12 +39,12 @@ const styles = (theme: SaladTheme) => ({
     justifyContent: 'center',
   },
   redeemable: {
-    backgroundColor: theme.lightGreen,
-    color: theme.blueFont,
+    backgroundColor: theme.green,
+    color: theme.darkBlue,
   },
   notRedeemable: {
     backgroundColor: theme.darkGreen,
-    color: theme.lightGreen,
+    color: theme.green,
   },
   nameText: {
     fontSize: theme.xLarge,

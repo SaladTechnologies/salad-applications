@@ -4,8 +4,8 @@ import { SaladTheme } from '../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    backgroundColor: theme.lightGreen,
-    color: theme.blueFont,
+    backgroundColor: theme.green,
+    color: theme.darkBlue,
     width: (props: Props) => (props.width ? props.width : '20rem'),
     padding: '1rem',
     overflow: 'hidden',

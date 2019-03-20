@@ -6,7 +6,7 @@ import classNames from 'classnames'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    backgroundColor: theme.appBackgroundColor,
+    backgroundColor: theme.darkBlue,
     bottom: 0,
     left: 0,
     right: 0,
@@ -27,7 +27,7 @@ const styles = (theme: SaladTheme) => ({
   text: {
     padding: '1rem',
     textAlign: 'center',
-    color: theme.offWhite,
+    color: theme.lightGreen,
     fontSize: theme.large,
     fontFamily: 'SharpGroteskLight25',
   },

@@ -21,33 +21,6 @@ const styles = (theme: SaladTheme) => ({
     fontFamily: 'sharpGroteskBook19',
     fontSize: theme.small,
   },
-  detailsContainer: {
-    color: theme.lightGrey,
-    textAlign: 'center',
-    fontFamily: 'sharpGroteskBook19',
-    fontSize: theme.small,
-    padding: '2rem 0',
-  },
-  detailButton: {
-    cursor: 'not-allowed',
-  },
-  lineBreak: {
-    borderBottom: `solid 0.5px ${theme.lightGrey}`,
-    padding: '.25rem 0',
-  },
-  logoutButton: {
-    display: 'inline-block',
-    padding: '.25rem 1rem',
-    backgroundColor: theme.darkBlue,
-    color: theme.lightGreen,
-    marginLeft: '1rem',
-    fontFamily: 'sharpGroteskLight25',
-    fontSize: theme.small,
-    cursor: 'pointer',
-    '&:hover': {
-      opacity: 0.8,
-    },
-  },
 })
 
 interface Props extends WithStyles<typeof styles> {

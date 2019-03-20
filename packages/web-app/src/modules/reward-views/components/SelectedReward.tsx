@@ -33,7 +33,7 @@ const styles = (theme: SaladTheme) => ({
   imageContainer: {
     display: 'inline-block',
     width: '190px',
-    backgroundColor: (props: Props) => (props.reward && props.reward.color) || theme.lightGreen,
+    backgroundColor: (props: Props) => (props.reward && props.reward.color) || theme.green,
   },
   image: {
     height: '100%',
@@ -49,12 +49,12 @@ const styles = (theme: SaladTheme) => ({
     justifyContent: 'center',
   },
   redeemable: {
-    backgroundColor: theme.lightGreen,
-    color: theme.blueFont,
+    backgroundColor: theme.green,
+    color: theme.darkBlue,
   },
   notRedeemable: {
     backgroundColor: theme.darkGreen,
-    color: theme.lightGreen,
+    color: theme.green,
   },
   nameText: {
     fontSize: theme.xxLarge,
@@ -77,8 +77,8 @@ const styles = (theme: SaladTheme) => ({
     height: '0.5rem',
   },
   progressBar: {
-    backgroundColor: theme.lightGreen,
-    boxShadow: `0px 0px 10px 0px ${theme.lightGreen}`,
+    backgroundColor: theme.green,
+    boxShadow: `0px 0px 10px 0px ${theme.green}`,
   },
 })
 

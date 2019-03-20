@@ -24,7 +24,7 @@ const styles = (theme: SaladTheme) => ({
     fontSize: theme.small,
   },
   detailsContainer: {
-    color: theme.lightGrey,
+    color: 'lightGrey',
     textAlign: 'center',
     fontFamily: 'sharpGroteskBook19',
     fontSize: theme.small,
@@ -34,14 +34,14 @@ const styles = (theme: SaladTheme) => ({
     cursor: 'not-allowed',
   },
   lineBreak: {
-    borderBottom: `solid 0.5px ${theme.lightGrey}`,
+    borderBottom: `solid 0.5px lightGrey`,
     padding: '.25rem 0',
   },
   logoutButton: {
     display: 'inline-block',
     padding: '.25rem 1rem',
     backgroundColor: theme.darkBlue,
-    color: theme.lightGreen,
+    color: theme.green,
     marginLeft: '1rem',
     fontFamily: 'sharpGroteskLight25',
     fontSize: theme.small,

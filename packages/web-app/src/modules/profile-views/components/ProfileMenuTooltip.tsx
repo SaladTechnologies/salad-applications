@@ -7,8 +7,8 @@ import { ProfileSummaryTitle } from './ProfileSummaryTitle'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    backgroundColor: theme.lightGreen,
-    color: theme.blueFont,
+    backgroundColor: theme.green,
+    color: theme.darkBlue,
     width: '25rem',
     paddingTop: '5px',
     pointerEvents: 'none',

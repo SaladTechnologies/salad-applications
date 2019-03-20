@@ -7,7 +7,7 @@ import { Button } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    backgroundColor: theme.appBackgroundColor,
+    backgroundColor: theme.darkBlue,
     position: 'absolute',
     top: 0,
     bottom: 0,
@@ -28,7 +28,7 @@ const styles = (theme: SaladTheme) => ({
     flexShrink: 0,
   },
   contentContainer: {
-    color: theme.offWhite,
+    color: theme.lightGreen,
     fontFamily: 'SharpGroteskLight09',
     display: 'flex',
     flexDirection: 'column',

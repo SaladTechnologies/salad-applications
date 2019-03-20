@@ -1,17 +1,12 @@
 export interface SaladTheme {
   //Colors
-  appBackgroundColor: string
-  greenBackgroundColor: string
-  lightGreen: string
+  darkBlue: string
   darkGreen: string
   mediumGreen: string
   green: string
-  darkBlue: string
+  lightGreen: string
+
   red: string
-  blueFont: string
-  neonGreen: string
-  offWhite: string
-  lightGrey: string
   //Font sizes
   xxSmall: string
   xSmall: string
@@ -26,20 +21,15 @@ export interface SaladTheme {
   xxLarge: string
 }
 
-export const DefaultTheme = {
+export const DefaultTheme: SaladTheme = {
   //Colors
-  appBackgroundColor: '#092234',
-  greenBackgroundColor: '#354B39',
-  lightGreen: '#B2D530',
+  darkBlue: '#0A2133',
   darkGreen: '#1F4F22',
   mediumGreen: '#53A626',
   green: '#B2D530',
-  darkBlue: '#0A2133',
+  lightGreen: '#DBF1C1',
+
   red: '#EF502A',
-  blueFont: '#092335',
-  neonGreen: '#71bf51',
-  offWhite: '#DBF1C1',
-  lightGrey: '#778899',
   //Font sizes
   xxSmall: '.375rem',
   xSmall: '.5rem',

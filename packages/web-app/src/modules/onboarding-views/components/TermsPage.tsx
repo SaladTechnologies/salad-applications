@@ -11,7 +11,7 @@ const termsContent = require('../assets/terms.md')
 
 const styles = (theme: SaladTheme) => ({
   textContainer: {
-    color: theme.offWhite,
+    color: theme.lightGreen,
   },
 })
 

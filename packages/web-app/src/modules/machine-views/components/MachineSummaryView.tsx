@@ -14,10 +14,10 @@ const styles = (theme: SaladTheme) => ({
     fontFamily: 'SharpGroteskLight25',
     fontSize: theme.small,
     letterSpacing: '1.9px',
-    color: theme.offWhite,
+    color: theme.lightGreen,
   },
   caretButton: {
-    color: theme.offWhite,
+    color: theme.lightGreen,
     padding: '.5rem .5rem .5rem 1rem',
     display: 'inline-block',
     width: '.5rem',
@@ -26,7 +26,7 @@ const styles = (theme: SaladTheme) => ({
   machine: {
     padding: '0.25em',
     height: '100%',
-    color: theme.lightGreen,
+    color: theme.green,
     overflowX: 'hidden',
     textOverflow: 'ellipsis',
   },

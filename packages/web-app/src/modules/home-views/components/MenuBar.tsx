@@ -12,7 +12,7 @@ const styles = (theme: SaladTheme) => ({
     userSelect: 'none',
   },
   supportButton: {
-    color: theme.neonGreen,
+    color: theme.mediumGreen,
     padding: '.5rem 1rem',
     fontFamily: 'sharpGroteskLight25',
     fontSize: theme.small,

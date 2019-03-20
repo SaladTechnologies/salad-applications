@@ -27,7 +27,7 @@ const styles = (theme: SaladTheme) => ({
     height: '12rem',
     display: 'inline-block',
     width: '290px',
-    backgroundColor: (props: Props) => (props.reward && props.reward.color) || theme.lightGreen,
+    backgroundColor: (props: Props) => (props.reward && props.reward.color) || theme.green,
   },
   image: {
     height: '100%',
@@ -40,8 +40,8 @@ const styles = (theme: SaladTheme) => ({
     marginLeft: '.5rem',
     display: 'inline-flex',
     flexDirection: 'column',
-    backgroundColor: (props: Props) => (props.reward && props.reward.redeemable ? theme.lightGreen : theme.darkGreen),
-    color: (props: Props) => (props.reward && props.reward.redeemable ? theme.blueFont : theme.lightGreen),
+    backgroundColor: (props: Props) => (props.reward && props.reward.redeemable ? theme.green : theme.darkGreen),
+    color: (props: Props) => (props.reward && props.reward.redeemable ? theme.darkBlue : theme.green),
   },
   nameText: {
     fontSize: theme.xLarge,

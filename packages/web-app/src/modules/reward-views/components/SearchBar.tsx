@@ -12,13 +12,13 @@ const styles = (theme: SaladTheme) => ({
   },
   innerContainer: {
     display: 'inline-flex',
-    borderBottom: `2px solid ${theme.offWhite}`,
+    borderBottom: `2px solid ${theme.lightGreen}`,
     paddingBottom: '.25rem',
     flexWrap: 'nowrap',
   },
   icon: {
     marginRight: '.5rem',
-    color: theme.offWhite,
+    color: theme.lightGreen,
   },
   textInput: {
     fontFamily: 'sharpGroteskLight25',
@@ -27,10 +27,10 @@ const styles = (theme: SaladTheme) => ({
     border: 'none',
     outline: 'none',
     userSelect: 'none',
-    color: theme.offWhite,
+    color: theme.lightGreen,
     '&::placeholder': {
       opacity: 0.5,
-      color: theme.offWhite,
+      color: theme.lightGreen,
     },
   },
 })

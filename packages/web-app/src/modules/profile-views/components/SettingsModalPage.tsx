@@ -6,7 +6,7 @@ import classnames from 'classnames'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    color: theme.lightGrey,
+    color: 'lightGrey',
     // textAlign: 'center',
     fontFamily: 'sharpGroteskBook19',
     fontSize: theme.small,
@@ -30,13 +30,13 @@ const styles = (theme: SaladTheme) => ({
     padding: '1rem 0',
   },
   lineBreak: {
-    borderBottom: `solid 0.5px ${theme.lightGrey}`,
+    borderBottom: `solid 0.5px lightGrey`,
   },
   bugButton: {
     display: 'inline-block',
     padding: '.25rem 1rem',
     backgroundColor: theme.darkBlue,
-    color: theme.lightGreen,
+    color: theme.green,
     marginLeft: '1rem',
     fontFamily: 'sharpGroteskLight25',
     fontSize: theme.small,

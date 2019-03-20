@@ -26,7 +26,7 @@ const styles = (theme: SaladTheme) => ({
     padding: '.25rem 0',
   },
   scrollThumb: {
-    backgroundColor: theme.offWhite,
+    backgroundColor: theme.lightGreen,
     cursor: 'pointer',
   },
   scrollTrack: {
@@ -39,19 +39,19 @@ const styles = (theme: SaladTheme) => ({
     background: `linear-gradient(to right, 
       transparent 0%, 
       transparent calc(50% - 0.81px), 
-      ${theme.offWhite} calc(50% - 0.8px), 
-      ${theme.offWhite} calc(50% + 0.8px), 
+      ${theme.lightGreen} calc(50% - 0.8px), 
+      ${theme.lightGreen} calc(50% + 0.8px), 
       transparent calc(50% + 0.81px), 
       transparent 100%)`,
   },
   disclaimer: {
-    color: theme.lightGreen,
+    color: theme.green,
     fontFamily: 'sharpGroteskBook19',
     fontSize: theme.small,
     padding: '.25rem 1.5rem 3rem 0',
   },
   notFoundTitle: {
-    color: theme.lightGreen,
+    color: theme.green,
     fontFamily: 'SharpGroteskLight09',
     fontSize: theme.xLarge,
     padding: '3rem 0',

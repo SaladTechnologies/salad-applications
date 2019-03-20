@@ -16,10 +16,10 @@ const styles = (theme: SaladTheme) => ({
   title: {
     width: '275px',
     paddingLeft: '21px',
-    color: theme.lightGreen,
+    color: theme.green,
   },
   xp: {
-    color: theme.neonGreen,
+    color: theme.mediumGreen,
   },
   tooltip: {
     top: `-${107 / 2}px`,

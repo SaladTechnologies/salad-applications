@@ -12,7 +12,7 @@ const styles = (theme: SaladTheme) => ({
     textAlign: 'center',
     textTransform: 'capitalize',
     userSelect: 'none',
-    color: (props: Props) => (props.dark ? theme.blueFont : theme.offWhite),
+    color: (props: Props) => (props.dark ? theme.darkBlue : theme.lightGreen),
     fontSize: '.625rem',
     fontFamily: 'sharpGroteskLight25',
     '&:hover': {

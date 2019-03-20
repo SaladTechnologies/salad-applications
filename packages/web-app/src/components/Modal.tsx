@@ -8,7 +8,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    backgroundColor: theme.lightGreen,
+    backgroundColor: theme.green,
     width: '25rem',
     padding: '1rem .5rem',
     position: 'relative',
