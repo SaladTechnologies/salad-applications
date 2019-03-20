@@ -13,7 +13,6 @@ export class AnalyticsStore {
     const token = Config.mixpanelToken
     if (token) {
       mixpanel.init(token)
-      mixpanel.opt_in_tracking()
       this.started = true
     } else {
       console.log('No mixpanel token found. Skipping...')
@@ -22,7 +21,7 @@ export class AnalyticsStore {
 
   public disable = () => {
     //TODO: disable any analytics
-    mixpanel.opt_out_tracking()
+    this.started = false
   }
 
   public track = (event: string, properties?: { [key: string]: any }) => {
