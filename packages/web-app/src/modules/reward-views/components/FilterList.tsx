@@ -13,7 +13,7 @@ const styles = (theme: SaladTheme) => ({
     userSelect: 'none',
   },
   title: {
-    color: theme.offWhite,
+    color: theme.lightGreen,
     fontFamily: 'sharpGroteskBook25',
     fontSize: theme.medium,
     paddingBottom: '.25rem',

@@ -6,7 +6,7 @@ import Scrollbars from 'react-custom-scrollbars'
 const styles = (theme: SaladTheme) => ({
   container: {},
   scrollThumb: {
-    backgroundColor: theme.offWhite,
+    backgroundColor: theme.lightGreen,
     cursor: 'pointer',
   },
   scrollTrack: {
@@ -19,8 +19,8 @@ const styles = (theme: SaladTheme) => ({
     background: `linear-gradient(to right, 
       transparent 0%, 
       transparent calc(50% - 0.81px), 
-      ${theme.offWhite} calc(50% - 0.8px), 
-      ${theme.offWhite} calc(50% + 0.8px), 
+      ${theme.lightGreen} calc(50% - 0.8px), 
+      ${theme.lightGreen} calc(50% + 0.8px), 
       transparent calc(50% + 0.81px), 
       transparent 100%)`,
   },

@@ -11,10 +11,10 @@ const styles = (theme: SaladTheme) => ({
     pointerEvents: 'auto',
   },
   upGradient: {
-    background: `linear-gradient(transparent, ${theme.appBackgroundColor})`,
+    background: `linear-gradient(transparent, ${theme.darkBlue})`,
   },
   downGradient: {
-    background: `linear-gradient(${theme.appBackgroundColor}, transparent)`,
+    background: `linear-gradient(${theme.darkBlue}, transparent)`,
   },
 })
 

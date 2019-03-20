@@ -11,12 +11,12 @@ const styles = (theme: SaladTheme) => ({
   container: {
     fontFamily: 'sharpGroteskLight25',
     fontSize: theme.small,
-    color: theme.offWhite,
+    color: theme.lightGreen,
     userSelect: 'none',
     padding: '.25rem 0rem',
   },
   borderPanel: {
-    backgroundColor: theme.offWhite,
+    backgroundColor: theme.lightGreen,
     position: 'relative',
     width: '16rem',
     height: '3.5rem',
@@ -33,7 +33,7 @@ const styles = (theme: SaladTheme) => ({
     bottom: borderWidth,
     right: borderWidth,
     left: borderWidth * 2,
-    backgroundColor: theme.appBackgroundColor,
+    backgroundColor: theme.darkBlue,
     paddingLeft: '2rem',
     paddingRight: '1.5rem',
     display: 'flex',

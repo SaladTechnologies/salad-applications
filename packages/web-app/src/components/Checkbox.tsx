@@ -14,14 +14,14 @@ const styles = (theme: SaladTheme) => ({
   checkboxContainer: {
     display: 'flex',
     alignItems: 'center',
-    color: theme.offWhite,
+    color: theme.lightGreen,
     height: '1.5rem',
   },
   checkBox: {
     width: '1rem',
     height: '1rem',
     borderWidth: '1px',
-    borderColor: theme.offWhite,
+    borderColor: theme.lightGreen,
     borderStyle: 'solid',
     display: 'flex',
     alignItems: 'center',
@@ -29,7 +29,7 @@ const styles = (theme: SaladTheme) => ({
     cursor: 'pointer',
   },
   checkmark: {
-    color: theme.offWhite,
+    color: theme.lightGreen,
     position: 'absolute',
   },
   hidden: {

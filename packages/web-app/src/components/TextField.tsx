@@ -9,7 +9,7 @@ const styles = (theme: SaladTheme) => ({
     padding: '0 .5rem',
   },
   text: (props: Props) => {
-    const c = props.dark ? theme.darkBlue : theme.offWhite
+    const c = props.dark ? theme.darkBlue : theme.lightGreen
 
     return {
       backgroundColor: 'transparent',
@@ -23,7 +23,7 @@ const styles = (theme: SaladTheme) => ({
         color: c,
       },
       '&:focus': {
-        outlineColor: theme.neonGreen,
+        outlineColor: theme.mediumGreen,
       },
     }
   },

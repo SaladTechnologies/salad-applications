@@ -11,7 +11,7 @@ const styles = (theme: SaladTheme) => ({
   container: {
     width: `${width}px`,
     height: `${height}px`,
-    backgroundColor: theme.lightGreen,
+    backgroundColor: theme.green,
     clipPath: `polygon(0 0, 100% 0, 100% ${100 * (dy / height)}%, 0% 100%)`,
     userSelect: 'none',
   },

@@ -15,7 +15,7 @@ const elementStyles = (theme: SaladTheme) => ({
     color: theme.mediumGreen,
   },
   value: {
-    color: theme.offWhite,
+    color: theme.lightGreen,
   },
 })
 
