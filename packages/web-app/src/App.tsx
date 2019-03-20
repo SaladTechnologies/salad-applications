@@ -32,6 +32,8 @@ class App extends Component {
   render() {
     let isAuth = this.store.auth.isAuthenticated()
     let profile = this.store.profile.currentProfile
+    let loc = this.store.routing.location.pathname
+    this.store.analytics.track('PAGE_VIEW', { page: loc })
     let isOnboarding =
       profile &&
       (profile.termsOfService !== Config.termsVersion ||

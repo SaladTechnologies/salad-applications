@@ -10,6 +10,7 @@ import { MachineStore } from './modules/machine'
 import { ProfileStore } from './modules/profile'
 import { UIStore } from './UIStore'
 import { ReferralStore } from './modules/referral'
+import { AnalyticsStore } from './modules/analytics'
 
 //Forces all changes to state to be from an action
 configure({ enforceActions: 'always' })
@@ -27,6 +28,7 @@ export const getStore = (): RootStore => sharedStore
 
 export class RootStore {
   public readonly auth: AuthStore
+  public readonly analytics: AnalyticsStore
   public readonly routing: RouterStore
   public readonly xp: ExperienceStore
   public readonly rewards: RewardStore
@@ -38,6 +40,7 @@ export class RootStore {
 
   constructor(private readonly axios: AxiosInstance) {
     this.auth = new AuthStore(this, axios)
+    this.analytics = new AnalyticsStore()
     this.routing = new RouterStore()
     this.xp = new ExperienceStore()
     this.rewards = new RewardStore(this, axios)

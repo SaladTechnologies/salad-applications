@@ -5,20 +5,38 @@ import { RootStore } from '../../Store'
 
 export class ProfileStore {
   @observable
-  public currentProfile?: Profile = {
-    id: '1234567',
-    username: 'saladchef',
-    email: 'dev@salad.io',
-    termsOfService: undefined,
-    referred: undefined,
-    trackUsage: undefined,
-    tutorialComplete: false,
-  }
+  public currentProfile?: Profile
 
   @observable
   public isUpdating: boolean = false
 
   constructor(private readonly store: RootStore) {}
+
+  @action.bound
+  loadProfile = flow(function*(this: ProfileStore) {
+    console.log('Loading the user profile')
+
+    this.isUpdating = true
+
+    //TODO: Change this to an api call for GET /profile
+    yield this.sleep(1000)
+
+    this.currentProfile = {
+      id: '1234567',
+      username: 'saladchef',
+      email: 'dev@salad.io',
+      termsOfService: undefined,
+      referred: undefined,
+      trackUsage: undefined,
+      tutorialComplete: false,
+    }
+
+    if (this.currentProfile.trackUsage) {
+      this.store.analytics.start()
+    }
+
+    this.isUpdating = false
+  })
 
   @action.bound
   agreeToTerms = flow(function*(this: ProfileStore) {
@@ -50,6 +68,12 @@ export class ProfileStore {
 
     //TODO: Make this an API call with the new option, then replace this.profile with the returned profile
     this.currentProfile.trackUsage = agree
+
+    if (this.currentProfile.trackUsage) {
+      this.store.analytics.start()
+    } else if (this.currentProfile.trackUsage === false) {
+      this.store.analytics.disable
+    }
 
     this.isUpdating = false
 
