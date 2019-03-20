@@ -14,6 +14,7 @@ export class AnalyticsStore {
     if (token) {
       mixpanel.init(token)
       this.started = true
+      console.log('Started mixpanel.')
     } else {
       console.log('No mixpanel token found. Skipping...')
     }
