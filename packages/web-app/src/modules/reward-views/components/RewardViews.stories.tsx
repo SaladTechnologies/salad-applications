@@ -8,7 +8,7 @@ import { Reward } from '../../reward/models/Reward'
 import { RewardFilterPage } from './RewardFilterPage'
 import { SearchBar } from './SearchBar'
 import { FilterList } from './FilterList'
-import { FilterItem } from '../../reward/models/FilterItem'
+import { NameFilter } from '../../reward/models/FilterItem'
 import { SelectedReward } from './SelectedReward'
 import { RewardDetailsModal } from './RewardDetailsModal'
 
@@ -33,7 +33,7 @@ const generateRewards = (count: number): Reward[] => {
   return result
 }
 
-const getFilters = [new FilterItem('Games', true), new FilterItem('Loot', false), new FilterItem('Money', true)]
+const getFilters = [new NameFilter('Games', true), new NameFilter('Loot', false), new NameFilter('Money', true)]
 
 storiesOf('Modules|Reward/Reward Details Modal', module)
   .add('redeemable ', () => {
