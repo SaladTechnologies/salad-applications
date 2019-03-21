@@ -12,6 +12,7 @@ export const rewardFromResource = (r: RewardResource): Reward => ({
   imageSrc: r.imageLink,
   remainingTimeLabel: '',
   percentUnlocked: 0,
+  modalId: String(r.initialModal),
 })
 
 export const getTimeRemainingText = (reward: Reward, currentBalance: number, earningRate: number): string => {

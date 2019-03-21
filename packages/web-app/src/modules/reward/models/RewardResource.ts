@@ -11,5 +11,5 @@ export interface RewardResource {
   remainingTime: number
   color: string
   rewardType: number
-  initialModal: number
+  initialModal: string
 }

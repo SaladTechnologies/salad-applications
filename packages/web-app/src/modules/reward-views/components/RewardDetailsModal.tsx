@@ -139,9 +139,11 @@ class _RewardDetailsModal extends Component<Props> {
               <div className={classnames(classes.details)}>{reward && reward.details}</div>
             </div>
             <div className={classes.buttonContainer}>
-              <Button dark={reward && reward.redeemable} onClick={this.handleRedeem}>
-                REDEEM
-              </Button>
+              {reward && reward.redeemable && (
+                <Button dark onClick={this.handleRedeem}>
+                  REDEEM
+                </Button>
+              )}
               <Button dark={reward && reward.redeemable} onClick={this.handleSelect}>
                 SELECT AS REWARD
               </Button>

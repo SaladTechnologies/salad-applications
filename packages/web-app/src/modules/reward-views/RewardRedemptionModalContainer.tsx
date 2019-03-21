@@ -1,16 +1,18 @@
 import { connect } from '../../connect'
-import { RewardDetailsModal } from './components/RewardDetailsModal'
+import { RewardRedemptionModal } from './components/RewardRedemptionModal'
 import { RootStore } from '../../Store'
 import { RouteComponentProps } from 'react-router-dom'
 
 const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ id: string }>) => ({
   reward: store.rewards.getReward(props.match.params.id),
+  details: store.rewards.getRewardDetails(props.match.params.id),
   onClickClose: store.ui.hideModal,
-  onRedeem: (rewardId: string) => store.ui.showModal(`/rewards/${rewardId}/redeem`),
-  onSelect: store.rewards.selectTargetReward,
+  onRedeem: store.rewards.redeemReward,
+  submitting: store.rewards.isRedeeming,
+  onClickDone: store.ui.hideModal,
 })
 
-export const RewardDetailsModalContainer = connect(
+export const RewardRedemptionModalContainer = connect(
   mapStoreToProps,
-  RewardDetailsModal,
+  RewardRedemptionModal,
 )
