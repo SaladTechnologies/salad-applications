@@ -7,21 +7,20 @@ import classnames from 'classnames'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    display: 'block',
     padding: '0 .5rem',
     userSelect: 'none',
   },
   checkboxContainer: {
     display: 'flex',
     alignItems: 'center',
-    color: theme.lightGreen,
-    height: '1.5rem',
+    color: (props: Props) => (props.dark ? theme.darkBlue : theme.lightGreen),
   },
   checkBox: {
     width: '1rem',
     height: '1rem',
+    flex: 'none',
     borderWidth: '1px',
-    borderColor: theme.lightGreen,
+    borderColor: (props: Props) => (props.dark ? theme.darkBlue : theme.lightGreen),
     borderStyle: 'solid',
     display: 'flex',
     alignItems: 'center',
@@ -29,7 +28,7 @@ const styles = (theme: SaladTheme) => ({
     cursor: 'pointer',
   },
   checkmark: {
-    color: theme.lightGreen,
+    color: (props: Props) => (props.dark ? theme.darkBlue : theme.lightGreen),
     position: 'absolute',
   },
   hidden: {
@@ -43,6 +42,7 @@ const styles = (theme: SaladTheme) => ({
     paddingLeft: '.25rem',
     fontFamily: 'sharpGroteskBook19',
     cursor: 'pointer',
+    margin: 0,
   },
   errorText: {
     margin: '.25rem',
@@ -54,6 +54,7 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   name?: string
+  dark?: boolean
   placeholder?: string
   onBlur?: (event?: React.FocusEvent<any>) => void
   onChange?: (event: React.ChangeEvent<any>) => void
@@ -74,7 +75,7 @@ class _Checkbox extends Component<Props> {
     }
   }
   render() {
-    const { textClassName, text, errorText, checked, classes, onChange, ...input } = this.props
+    const { textClassName, text, dark, errorText, checked, classes, onChange, ...input } = this.props
     return (
       <div className={classes.container}>
         <label className={classes.checkboxContainer}>

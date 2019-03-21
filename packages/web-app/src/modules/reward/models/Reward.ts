@@ -14,5 +14,6 @@ export interface Reward {
   // remainingTime: number
   color: string
   // rewardType: number
-  // initialModal: number
+  /** Id of the redemption modal */
+  modalId: string
 }

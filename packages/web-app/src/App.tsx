@@ -11,7 +11,12 @@ import { HomePage } from './modules/home-views'
 import { getStore } from './Store'
 import DevTools from 'mobx-react-devtools'
 import { LoadingPage } from './components'
-import { RewardDetailsModalContainer } from './modules/reward-views'
+import {
+  RewardDetailsModalContainer,
+  RewardRedemptionModalContainer,
+  RedemptionCompleteModalContainer,
+  RedemptionErrorModalContainer,
+} from './modules/reward-views'
 import { AccountModalContainer } from './modules/profile-views'
 import { SettingsModalContainer } from './modules/profile-views'
 import { Config } from './config'
@@ -43,11 +48,11 @@ class App extends Component {
       <div>
         <Switch>
           {!isAuth && (
-            <div>
-              <Route path="/auth/callback" component={CallbackContainer} />
+            <Switch>
+              <Route exact path="/auth/callback" component={CallbackContainer} />
               <Route exact path="/" component={WelcomePageContainer} />
               <Redirect to="/" />
-            </div>
+            </Switch>
           )}
           {isOnboarding && (
             <AnimatedSwitch>
@@ -61,6 +66,9 @@ class App extends Component {
             <div>
               <Route path="/" render={() => <HomePage />} />
               <Route exact path="/rewards/:id" component={RewardDetailsModalContainer} />
+              <Route exact path="/rewards/:id/redeem" component={RewardRedemptionModalContainer} />
+              <Route exact path="/rewards/:id/redeem-complete" component={RedemptionCompleteModalContainer} />
+              <Route exact path="/rewards/:id/redeem-error" component={RedemptionErrorModalContainer} />
               <Route exact path="/profile" component={AccountModalContainer} />
               <Route exact path="/settings" component={SettingsModalContainer} />
               <Route exact path="/new-referral" component={NewReferralModalContainer} />

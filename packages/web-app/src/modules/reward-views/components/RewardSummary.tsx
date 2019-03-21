@@ -98,7 +98,6 @@ class _RewardSummary extends Component<Props> {
       <div className={classnames(classes.container)} onClick={this.handleClick}>
         {/* Image */}
         <AngledPanel className={classes.imageContainer} leftSide={'right'}>
-          {/* TODO the color is not working here for some reason */}
           <img className={classes.image} src={imageSrc} draggable={false} />
         </AngledPanel>
 

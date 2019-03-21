@@ -1,4 +1,4 @@
-import { action, observable, runInAction, computed } from 'mobx'
+import { action, observable, runInAction, computed, flow } from 'mobx'
 import { Reward } from './models/Reward'
 import { RewardsResource } from './models/RewardsResource'
 import { AxiosInstance } from 'axios'
@@ -6,6 +6,7 @@ import { rewardFromResource, getTimeRemainingText } from './utils'
 import { RootStore } from '../../Store'
 import { FilterItem, NameFilter } from './models/FilterItem'
 import { DataResource } from '../data-refresh/models/DataResource'
+import { RewardDetails } from './models/RewardDetails'
 
 export class RewardStore {
   @observable
@@ -15,10 +16,16 @@ export class RewardStore {
   private selectedRewardId?: string
 
   @observable
+  private rewardDetails = new Map<string, RewardDetails>()
+
+  @observable
   private filters: FilterItem[] = []
 
   @observable
   public filterText?: string
+
+  @observable
+  public isRedeeming: boolean = false
 
   @computed get selectedReward(): Reward | undefined {
     return this.getReward(this.selectedRewardId)
@@ -38,7 +45,7 @@ export class RewardStore {
 
     return this.rewards.map(r => {
       var clone: Reward = { ...r }
-      clone.redeemable = r.price < currentBalance
+      clone.redeemable = r.price <= currentBalance
       clone.remainingTimeLabel = getTimeRemainingText(r, currentBalance, earningRate)
       clone.percentUnlocked = Math.min(1, Math.max(0, currentBalance / r.price))
       return clone
@@ -66,6 +73,22 @@ export class RewardStore {
     return rewardList
   }
 
+  getRewardDetails = (id?: string): RewardDetails | undefined => {
+    if (id === undefined) return undefined
+    let details = this.rewardDetails.get(id)
+
+    runInAction(() => {
+      if (details === undefined) {
+        details = observable(new RewardDetails(id))
+        details.setLoading(true)
+        this.rewardDetails.set(id, details)
+        this.loadRewardDetails(details)
+      }
+    })
+
+    return details
+  }
+
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   getReward = (id?: string): Reward | undefined => {
@@ -81,6 +104,7 @@ export class RewardStore {
       runInAction(() => {
         if (response.data.rewards == undefined) return
         this.rewards = response.data.rewards.map(rewardFromResource).sort((a, b) => b.price - a.price)
+        // this.rewardDetails = new Map(this.rewards.map((x): [string, RewardDetails] => [x.id, new RewardDetails(x.id)]))
         this.updateFilters()
       })
     } catch (error) {
@@ -126,6 +150,30 @@ export class RewardStore {
     this.selectedRewardId = String(data.currentReward.rewardId)
   }
 
+  @action.bound
+  loadRewardDetails = flow(function*(this: RewardStore, details: RewardDetails) {
+    console.log('Loading the user profile')
+
+    details.setLoading(true)
+
+    let reward = this.getReward(details.id)
+
+    if (reward === undefined) {
+      throw new Error('Unable to find reward ' + details.id)
+    }
+
+    const req = {
+      rewardId: details.id,
+      initialModal: reward.modalId,
+    }
+
+    let res = yield this.axios.post('redeem-reward', req)
+
+    details.content = res.data.content
+
+    details.setLoading(false)
+  })
+
   @action
   selectTargetReward = async (rewardId: string) => {
     const request = {
@@ -146,8 +194,28 @@ export class RewardStore {
     }
   }
 
-  @action
-  redeemReward = (rewardId: string) => {
-    //TODO: Add api call to redeem
-  }
+  @action.bound
+  redeemReward = flow(function*(this: RewardStore, rewardId: string, email: string) {
+    this.isRedeeming = true
+
+    const req = {
+      rewardId: rewardId,
+      formValues: {
+        emailInput: email,
+        checkbox: true,
+      },
+    }
+
+    try {
+      let res = yield this.axios.post('/redeem-reward/1/', req)
+      this.store.ui.showModal(`/rewards/${rewardId}/redeem-complete`)
+      this.store.refreshData()
+      console.log(res)
+    } catch (err) {
+      this.store.ui.showModal(`/rewards/${rewardId}/redeem-error`)
+      console.error(err)
+    } finally {
+      this.isRedeeming = false
+    }
+  })
 }

@@ -11,6 +11,10 @@ import { FilterList } from './FilterList'
 import { NameFilter } from '../../reward/models/FilterItem'
 import { SelectedReward } from './SelectedReward'
 import { RewardDetailsModal } from './RewardDetailsModal'
+import { RewardRedemptionModal } from './RewardRedemptionModal'
+import { RewardDetails, ModalContent, ContentType, StyleType } from '../../reward/models/RewardDetails'
+import { RedemptionCompleteModal } from './RedemptionCompleteModal'
+import { RedemptionErrorModal } from './RedemptionErrorModal'
 
 const generateRewards = (count: number): Reward[] => {
   let result = new Array<Reward>(count)
@@ -27,6 +31,7 @@ const generateRewards = (count: number): Reward[] => {
       remainingTimeLabel: '2 days',
       percentUnlocked: 0.5,
       color: 'red',
+      modalId: '1',
     }
   }
 
@@ -132,6 +137,82 @@ storiesOf('Modules|Reward/Reward Summary', module)
       </div>
     )
   })
+
+storiesOf('Modules|Reward/Reward Redemption', module)
+  .add('loading', () => {
+    let reward = generateRewards(2)[0]
+    let details = new RewardDetails(reward.id)
+    details.setLoading(true)
+    return <RewardRedemptionModal reward={reward} details={details} />
+  })
+  .add('missing details', () => {
+    let reward = generateRewards(2)[0]
+    return <RewardRedemptionModal reward={reward} />
+  })
+  .add('plain text', () => {
+    let reward = generateRewards(2)[0]
+    let details = new RewardDetails(reward.id)
+    details.content = [
+      new ModalContent({ id: '1', value: 'Header text', type: ContentType.plainText, style: StyleType.header }),
+      new ModalContent({ id: '2', value: 'Title text', type: ContentType.plainText, style: StyleType.title }),
+      new ModalContent({
+        id: '3',
+        value: 'Description text',
+        type: ContentType.plainText,
+        style: StyleType.description,
+      }),
+    ]
+    return <RewardRedemptionModal reward={reward} details={details} />
+  })
+  .add('text input', () => {
+    let reward = generateRewards(2)[0]
+    let details = new RewardDetails(reward.id)
+    details.content = [
+      new ModalContent({ id: '2', label: 'Email', value: 'user@salad.io', type: ContentType.emailInput }),
+    ]
+    return <RewardRedemptionModal reward={reward} details={details} />
+  })
+  .add('checkbox', () => {
+    let reward = generateRewards(2)[0]
+    let details = new RewardDetails(reward.id)
+    details.content = [
+      new ModalContent({ id: '1', label: 'Check 1', type: ContentType.checkbox }),
+      new ModalContent({ id: '2', label: 'Check 2', type: ContentType.checkbox }),
+    ]
+    return <RewardRedemptionModal reward={reward} details={details} />
+  })
+  .add('done button', () => {
+    let reward = generateRewards(2)[0]
+    let details = new RewardDetails(reward.id)
+    details.content = [new ModalContent({ id: '1', type: ContentType.buttonAction })]
+    return <RewardRedemptionModal reward={reward} details={details} />
+  })
+  .add('example', () => {
+    let reward = generateRewards(2)[0]
+    let details = new RewardDetails(reward.id)
+    details.content = [
+      new ModalContent({
+        id: '1',
+        value: 'Here is a super cool reward',
+        type: ContentType.plainText,
+        style: StyleType.header,
+      }),
+      new ModalContent({ id: '2', value: '$1M/yr Salary!', type: ContentType.plainText, style: StyleType.title }),
+      new ModalContent({
+        id: '3',
+        value: 'Simply join the salad team and get what you deserve.',
+        type: ContentType.plainText,
+        style: StyleType.description,
+      }),
+      new ModalContent({ id: '4', label: 'Email', value: 'user@salad.io', type: ContentType.emailInput }),
+      new ModalContent({ id: '5', label: 'Check 1', type: ContentType.checkbox }),
+      new ModalContent({ id: '6', label: 'Check 1', type: ContentType.checkbox }),
+      new ModalContent({ id: '7', type: ContentType.buttonAction }),
+    ]
+    return <RewardRedemptionModal reward={reward} details={details} onRedeem={action('redeem')} />
+  })
+  .add('completed', () => <RedemptionCompleteModal onCloseClicked={action('close')} />)
+  .add('error', () => <RedemptionErrorModal onCloseClicked={action('close')} />)
 
 storiesOf('Modules|Reward', module)
   .add('Selected Reward', () => {
