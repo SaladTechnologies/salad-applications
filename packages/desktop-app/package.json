@@ -1,0 +1,41 @@
+{
+  "name": "@saladtech/desktop-app",
+  "version": "0.2.0",
+  "description": "> TODO: description",
+  "author": "Salad Technology <dev@salad.io>",
+  "homepage": "https://www.salad.io/",
+  "license": "UNLICENSE",
+  "main": "lib/desktop-app.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "prestart": "yarn run build",
+    "start": "electron ./dist/main.js",
+    "build": "webpack --config webpack.config.js",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "dev": "electron-builder start"
+  },
+  "devDependencies": {
+    "@types/electron": "^1.6.10",
+    "@types/node": "^11.11.5",
+    "electron": "^4.1.1",
+    "electron-builder": "^20.39.0",
+    "electron-reload": "^1.4.0",
+    "ts-loader": "^5.3.3",
+    "tslint": "^5.14.0",
+    "tslint-config-standard": "^8.0.1",
+    "tslint-loader": "^3.5.4",
+    "typescript": "^3.3.4000",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  },
+  "dependencies": {
+    "systeminformation": "^4.1.3"
+  }
+}

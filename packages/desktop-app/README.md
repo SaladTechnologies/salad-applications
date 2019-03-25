@@ -1,11 +1,11 @@
-# `electron-app`
+# `desktop-app`
 
 > TODO: description
 
 ## Usage
 
 ```
-const electronApp = require('electron-app');
+const electronApp = require('desktop-app');
 
 // TODO: DEMONSTRATE API
 ```

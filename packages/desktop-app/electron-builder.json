@@ -1,0 +1,48 @@
+{
+  "productName": "Salad",
+  "appId": "salad-technologies-desktop-app",
+  "directories": {
+    "output": "release"
+  },
+  "nsis": {
+    "installerIcon": "src/favicon.ico",
+    "uninstallerIcon": "src/favicon.ico",
+    "oneClick": "false",
+    "license": "LICENSE.md",
+    "runAfterFinish": true,
+    "allowToChangeInstallationDirectory": "true"
+  },
+  "files": [
+    "**/*",
+    "!*.ts",
+    "!*.code-workspace",
+    "!LICENSE.md",
+    "!package.json",
+    "!package-lock.json",
+    "!src/",
+    "!e2e/",
+    "!hooks/",
+    "!.angular-cli.json",
+    "!_config.yml",
+    "!karma.conf.js",
+    "!tsconfig.json",
+    "!tslint.json",
+    "!win-unpacked",
+    "!*.exe",
+    "mining",
+    "callback/*"
+  ],
+  "win": {
+    "icon": "dist/favicon.ico",
+    "extraFiles": ["mining", "dist/preload.js"],
+    "target": ["nsis"]
+  },
+  "mac": {
+    "icon": "dist",
+    "target": ["dmg"]
+  },
+  "linux": {
+    "icon": "dist",
+    "target": ["AppImage"]
+  }
+}

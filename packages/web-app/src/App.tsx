@@ -34,6 +34,15 @@ class App extends Component {
     throw Error('Unable to locate a valid onboarding page')
   }
 
+  componentDidMount = () => {
+    if (!this.store.native.isNative) {
+      console.log('Running in web env')
+      return
+    }
+    console.log('Running in native env')
+    this.store.native.loadMachineInfo()
+  }
+
   render() {
     let isAuth = this.store.auth.isAuthenticated()
     let profile = this.store.profile.currentProfile

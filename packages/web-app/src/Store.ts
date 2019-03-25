@@ -11,6 +11,7 @@ import { ProfileStore } from './modules/profile'
 import { UIStore } from './UIStore'
 import { ReferralStore } from './modules/referral'
 import { AnalyticsStore } from './modules/analytics'
+import { NativeStore } from './NativeStore'
 
 //Forces all changes to state to be from an action
 configure({ enforceActions: 'always' })
@@ -37,6 +38,7 @@ export class RootStore {
   public readonly profile: ProfileStore
   public readonly ui: UIStore
   public readonly referral: ReferralStore
+  public readonly native: NativeStore
 
   constructor(private readonly axios: AxiosInstance) {
     this.auth = new AuthStore(this, axios)
@@ -49,6 +51,7 @@ export class RootStore {
     this.profile = new ProfileStore(this)
     this.ui = new UIStore(this)
     this.referral = new ReferralStore(this, axios)
+    this.native = new NativeStore()
   }
 
   refreshData = async () => {

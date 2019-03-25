@@ -17,7 +17,6 @@
     "noEmit": true,
     "jsx": "preserve",
     "experimentalDecorators": true
-    // "pretty": true
   },
   "include": ["src", ".storybook/ThemeDecorator.tsx", "electron-starter.js"]
 }
