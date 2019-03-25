@@ -44,6 +44,20 @@ function onReady() {
       })
     })
   })
+
+  bridge.on('minimize-window', () => {
+    mainWindow.minimize()
+  })
+  bridge.on('maximize-window', () => {
+    if (!mainWindow.isMaximized()) {
+      mainWindow.maximize()
+    } else {
+      mainWindow.unmaximize()
+    }
+  })
+  bridge.on('close-window', () => {
+    mainWindow.close()
+  })
 }
 
 app.on('ready', () => onReady())

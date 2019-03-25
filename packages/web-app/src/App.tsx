@@ -23,6 +23,7 @@ import { Config } from './config'
 import { Profile } from './modules/profile/models'
 import { AnimatedSwitch } from './components/AnimatedSwitch'
 import { NewReferralModalContainer } from './modules/referral-views'
+import { TitlebarContainer } from './modules/home-views'
 
 class App extends Component {
   store = getStore()
@@ -44,6 +45,7 @@ class App extends Component {
   }
 
   render() {
+    let isElectron = true // this.store.native.isNative
     let isAuth = this.store.auth.isAuthenticated()
     let profile = this.store.profile.currentProfile
     let loc = this.store.routing.location.pathname
@@ -55,38 +57,41 @@ class App extends Component {
         profile.referred === undefined)
     return (
       <div>
-        <Switch>
-          {!isAuth && (
-            <Switch>
-              <Route exact path="/auth/callback" component={CallbackContainer} />
-              <Route exact path="/" component={WelcomePageContainer} />
-              <Redirect to="/" />
-            </Switch>
-          )}
-          {isOnboarding && (
-            <AnimatedSwitch>
-              <Route exact path="/onboarding/referral-code" component={ReferralEntryContainer} />
-              <Route exact path="/onboarding/terms" component={TermsPageContainer} />
-              <Route exact path="/onboarding/analytics" component={AnalyticsPageContainer} />
-              {profile && this.getOnboardingRedirect(profile)}
-            </AnimatedSwitch>
-          )}
-          {isAuth && (
-            <div>
-              <Route path="/" render={() => <HomePage />} />
-              <Route exact path="/rewards/:id" component={RewardDetailsModalContainer} />
-              <Route exact path="/rewards/:id/redeem" component={RewardRedemptionModalContainer} />
-              <Route exact path="/rewards/:id/redeem-complete" component={RedemptionCompleteModalContainer} />
-              <Route exact path="/rewards/:id/redeem-error" component={RedemptionErrorModalContainer} />
-              <Route exact path="/profile" component={AccountModalContainer} />
-              <Route exact path="/settings" component={SettingsModalContainer} />
-              <Route exact path="/new-referral" component={NewReferralModalContainer} />
-            </div>
-          )}
+        {isElectron && <TitlebarContainer />}
+        <div style={{ top: isElectron ? '2rem' : 0, left: 0, right: 0, bottom: 0, position: 'absolute' }}>
+          <Switch>
+            {!isAuth && (
+              <Switch>
+                <Route exact path="/auth/callback" component={CallbackContainer} />
+                <Route exact path="/" component={WelcomePageContainer} />
+                <Redirect to="/" />
+              </Switch>
+            )}
+            {isOnboarding && (
+              <AnimatedSwitch>
+                <Route exact path="/onboarding/referral-code" component={ReferralEntryContainer} />
+                <Route exact path="/onboarding/terms" component={TermsPageContainer} />
+                <Route exact path="/onboarding/analytics" component={AnalyticsPageContainer} />
+                {profile && this.getOnboardingRedirect(profile)}
+              </AnimatedSwitch>
+            )}
+            {isAuth && (
+              <div>
+                <Route path="/" render={() => <HomePage />} />
+                <Route exact path="/rewards/:id" component={RewardDetailsModalContainer} />
+                <Route exact path="/rewards/:id/redeem" component={RewardRedemptionModalContainer} />
+                <Route exact path="/rewards/:id/redeem-complete" component={RedemptionCompleteModalContainer} />
+                <Route exact path="/rewards/:id/redeem-error" component={RedemptionErrorModalContainer} />
+                <Route exact path="/profile" component={AccountModalContainer} />
+                <Route exact path="/settings" component={SettingsModalContainer} />
+                <Route exact path="/new-referral" component={NewReferralModalContainer} />
+              </div>
+            )}
 
-          <Route render={() => <LoadingPage text="Page Not Found" />} />
-        </Switch>
-        {Config.devTools && <DevTools position={{ left: 0, bottom: 0 }} />}
+            <Route render={() => <LoadingPage text="Page Not Found" />} />
+          </Switch>
+          {Config.devTools && <DevTools position={{ left: 0, bottom: 0 }} />}
+        </div>
       </div>
     )
   }
