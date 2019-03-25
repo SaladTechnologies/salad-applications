@@ -4,22 +4,15 @@
   "description": "> TODO: description",
   "author": "Salad Technology <dev@salad.io>",
   "homepage": "https://www.salad.io/",
-  "license": "UNLICENSE",
-  "main": "lib/desktop-app.js",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
+  "license": "Unlicense",
+  "main": "dist/main.js",
   "files": [
     "lib"
   ],
   "scripts": {
-    "prestart": "yarn run build",
-    "start": "electron ./dist/main.js",
+    "start": "yarn build && electron ./dist/main.js",
     "build": "webpack --config webpack.config.js",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
-    "dev": "electron-builder start"
+    "dist": "yarn build && electron-builder"
   },
   "devDependencies": {
     "@types/electron": "^1.6.10",

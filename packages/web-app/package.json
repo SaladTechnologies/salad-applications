@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "author": "Salad Technology <dev@salad.io>",
   "homepage": "https://www.salad.io/",
-  "license": "UNLICENSE",
+  "license": "Unlicense",
   "main": "lib/web-app.js",
   "directories": {
     "lib": "lib",

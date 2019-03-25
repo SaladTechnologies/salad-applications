@@ -45,7 +45,7 @@ class App extends Component {
   }
 
   render() {
-    let isElectron = true // this.store.native.isNative
+    let isElectron = this.store.native.isNative
     let isAuth = this.store.auth.isAuthenticated()
     let profile = this.store.profile.currentProfile
     let loc = this.store.routing.location.pathname
