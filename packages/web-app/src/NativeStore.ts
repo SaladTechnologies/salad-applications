@@ -1,6 +1,9 @@
 import { action } from 'mobx'
 
 const getMachineInfo = 'get-machine-info'
+const minimize = 'minimize-window'
+const maximize = 'maximize-window'
+const close = 'close-window'
 
 declare global {
   interface Window {
@@ -39,5 +42,20 @@ export class NativeStore {
   @action
   loadMachineInfo = () => {
     this.send(getMachineInfo)
+  }
+
+  @action
+  minimizeWindow = () => {
+    this.send(minimize)
+  }
+
+  @action
+  maximizeWindow = () => {
+    this.send(maximize)
+  }
+
+  @action
+  closeWindow = () => {
+    this.send(close)
   }
 }

@@ -9,11 +9,12 @@ let mainWindow: Electron.BrowserWindow
 
 function onReady() {
   mainWindow = new BrowserWindow({
+    title: 'Daniel',
     minWidth: 1216,
     minHeight: 766,
     center: true,
     backgroundColor: theme.darkBlue,
-    icon: './src/favicon.ico',
+    icon: './assets/favicon.ico',
     frame: false,
     webPreferences: {
       nodeIntegration: false,
@@ -43,6 +44,20 @@ function onReady() {
         })
       })
     })
+  })
+
+  bridge.on('minimize-window', () => {
+    mainWindow.minimize()
+  })
+  bridge.on('maximize-window', () => {
+    if (!mainWindow.isMaximized()) {
+      mainWindow.maximize()
+    } else {
+      mainWindow.unmaximize()
+    }
+  })
+  bridge.on('close-window', () => {
+    mainWindow.close()
   })
 }
 
