@@ -41,17 +41,17 @@ export class RootStore {
   public readonly native: NativeStore
 
   constructor(private readonly axios: AxiosInstance) {
+    this.native = new NativeStore()
     this.auth = new AuthStore(this, axios)
     this.analytics = new AnalyticsStore()
     this.routing = new RouterStore()
     this.xp = new ExperienceStore()
     this.rewards = new RewardStore(this, axios)
-    this.balance = new BalanceStore()
+    this.balance = new BalanceStore(this)
     this.machine = new MachineStore()
     this.profile = new ProfileStore(this)
     this.ui = new UIStore(this)
     this.referral = new ReferralStore(this, axios)
-    this.native = new NativeStore()
   }
 
   refreshData = async () => {

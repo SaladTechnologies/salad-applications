@@ -1,3 +1,5 @@
+import { convertMinutes, convertSeconds } from './utils'
+
 declare global {
   interface Window {
     config: ProcessEnv
@@ -41,13 +43,12 @@ const optionalString = (name: string): string | undefined => {
   return process.env[name]
 }
 
-export const convertHours = (hours: number): number => hours * 3.6e6
-export const convertMinutes = (hours: number): number => hours * 60000
-
 class Config {
   public readonly dataRefreshRate: number = numberOrDefault('APP_REFRESH_RATE', convertMinutes(5))
 
   public readonly rewardsRefreshRate: number = numberOrDefault('REWARD_REFRESH_RATE', convertMinutes(5))
+
+  public readonly balanceEstimateRate: number = numberOrDefault('BALANCE_ESTIMATE_RATE', convertSeconds(1))
 
   public readonly baseAPIUrl: string = requiredString('REACT_APP_API_URL')
 
