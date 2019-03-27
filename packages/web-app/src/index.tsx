@@ -14,13 +14,10 @@ import { createClient } from './axiosFactory'
 import * as Sentry from '@sentry/browser'
 import { Config } from './config'
 
-if (Config.sentryDSN) {
-  Sentry.init({
-    dsn: Config.sentryDSN,
-  })
-} else {
-  console.log('Skipping sentry')
-}
+Sentry.init({
+  dsn: Config.sentryDSN,
+  release: `web-app@${Config.appVersion}`,
+})
 
 const client = createClient()
 const rootStore = createStore(client)
