@@ -1,0 +1,6 @@
+POOL: eth-us-east1.nanopool.org:9999, WALLET: 0x6ff85749ffac2d3a36efa2bc916305433fa93731.Salad/notinuse@slalad.io, PSW: x, WORKER: , ESM: 0, ALLPOOLS: 0
+POOL: eth-eu1.nanopool.org:9999, WALLET: 0x6ff85749ffac2d3a36efa2bc916305433fa93731.Salad/notinuse@slalad.io, PSW: x, WORKER: , ESM: 0, ALLPOOLS: 0
+POOL: eth-eu2.nanopool.org:9999, WALLET: 0x6ff85749ffac2d3a36efa2bc916305433fa93731.Salad/notinuse@slalad.io, PSW: x, WORKER: , ESM: 0, ALLPOOLS: 0
+POOL: eth-asia1.nanopool.org:9999, WALLET: 0x6ff85749ffac2d3a36efa2bc916305433fa93731.Salad/notinuse@slalad.io, PSW: x, WORKER: , ESM: 0, ALLPOOLS: 0
+POOL: eth-jp1.nanopool.org:9999, WALLET: 0x6ff85749ffac2d3a36efa2bc916305433fa93731.Salad/notinuse@slalad.io, PSW: x, WORKER: , ESM: 0, ALLPOOLS: 0
+POOL: eth-au1.nanopool.org:9999, WALLET: 0x6ff85749ffac2d3a36efa2bc916305433fa93731.Salad/notinuse@slalad.io, PSW: x, WORKER: , ESM: 0, ALLPOOLS: 0
