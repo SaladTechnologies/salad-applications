@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
-import image from '../assets/Home - How it Works.svg'
+import image from '../assets/Referrals.svg'
 import { OnboardingPage } from '../../../components'
 import { Form, Field } from 'react-final-form'
 import { Button } from '../../../components'
@@ -42,12 +42,13 @@ class _ReferralEntryPage extends Component<Props> {
     const { submitting, onNext } = this.props
     return (
       <OnboardingPage
-        title={'Referral Code Entry'}
-        subtitle={'Referred by a friend? Enter your code below so you can earn your referral bonus!'}
+        title={'Referral Entry'}
+        subtitle={'Referred by a friend? Enter your code below so you can both earn your referral bonus!'}
         image={image}
-        nextText={'Next'}
+        nextText={'Skip'}
         nextSubmitting={submitting}
         onNext={onNext}
+        fullHeightImg
       >
         <Form
           onSubmit={this.onSubmit}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
-import image from '../assets/Home - How it Works.svg'
+import image from '../assets/User-Data.svg'
 import { OnboardingPage } from '../../../components'
 import { Checkbox } from '../../../components'
 
@@ -45,15 +45,15 @@ class _AnalyticsPage extends Component<Props, State> {
     const { agree } = this.state
     return (
       <OnboardingPage
-        title={'App usage information'}
-        subtitle={'Help the Salad Chefs improve the experience by sharing how you use Salad.'}
+        title={'Making Salad Better'}
+        subtitle={'We want Salad to be the best experience for you, so your input helps make things better.'}
         image={image}
         nextSubmitting={submitting}
         nextText={'Next'}
         onNext={this.handleNext}
       >
         <div>
-          <Checkbox checked={agree} onClick={this.toggleAgree} text={'Share app usage with Salad'} />
+          <Checkbox checked={agree} onClick={this.toggleAgree} text={'Allow analytics data to help Salad'} />
         </div>
       </OnboardingPage>
     )

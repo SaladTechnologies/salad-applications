@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
-import image from '../assets/Home - How it Works.svg'
+import image from '../assets/Welcome.svg'
 import { OnboardingPage } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
@@ -19,11 +19,14 @@ class _WelcomePage extends Component<Props> {
     return (
       <OnboardingPage
         title={'Welcome to Salad'}
-        subtitle={'The only place you can earn amazing rewards for doing nothing!'}
+        subtitle={`Your computer does the work, and you get paid. 
+        You can earn great look like Steam credit, gift cards, game 
+        codes and more. Just let Salad run when you're not using your rig.`}
         image={image}
         nextSubmitting={submitting}
         nextText={'Login'}
         onNext={onNext}
+        fullHeightImg
       />
     )
   }

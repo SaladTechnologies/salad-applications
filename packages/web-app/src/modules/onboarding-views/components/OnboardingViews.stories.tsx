@@ -6,7 +6,7 @@ import { WelcomePage } from './WelcomePage'
 import { TermsPage } from './TermsPage'
 import { AnalyticsPage } from './AnalyticsPage'
 
-storiesOf('Modules|Onboarding/Pages', module)
+storiesOf('Modules/Onboarding', module)
   .add('Referral Entry Page', () => {
     return <ReferralEntryPage onSubmitCode={action('submit')} onNext={action('next')} />
   })
