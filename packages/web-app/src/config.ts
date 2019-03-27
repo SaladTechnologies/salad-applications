@@ -44,6 +44,8 @@ const optionalString = (name: string): string | undefined => {
 }
 
 class Config {
+  public readonly appVersion: string = requiredString('REACT_APP_VERSION')
+
   public readonly dataRefreshRate: number = numberOrDefault('REACT_APP_APP_REFRESH_RATE', convertMinutes(5))
 
   public readonly rewardsRefreshRate: number = numberOrDefault('REACT_APP_REWARD_REFRESH_RATE', convertMinutes(5))
@@ -58,6 +60,8 @@ class Config {
 
   public readonly mixpanelToken?: string = optionalString('REACT_APP_MIXPANEL_TOKEN')
 
+  public readonly sentryDSN?: string = optionalString('REACT_APP_SENTRY_DSN')
+
   /** The current version of the terms of service */
   public readonly termsVersion: string = requiredString('REACT_APP_TERMS_VERSION')
 
@@ -65,6 +69,7 @@ class Config {
 
   public readonly supportUrl: string = requiredString('REACT_APP_SUPPORT_URL')
   public readonly discordUrl: string = requiredString('REACT_APP_DISCORD_URL')
+  public readonly releaseNotesUrl: string = requiredString('REACT_APP_RELEASES_URL')
 }
 
 const instance = new Config()

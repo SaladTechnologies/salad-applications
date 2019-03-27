@@ -7,7 +7,14 @@ import { Titlebar } from './Titlebar'
 
 storiesOf('Modules/Home', module)
   .add('Bottom Bar', () => {
-    return <BottomBar onDiscordClick={action('discord')} onSupportClick={action('support')} />
+    return (
+      <BottomBar
+        version={'1.2.3'}
+        onVersionClick={action('version')}
+        onDiscordClick={action('discord')}
+        onSupportClick={action('support')}
+      />
+    )
   })
   .add('Menu Bar', () => {
     const items: MenuItem[] = [new MenuItem('Account', action('account')), new MenuItem('Settings', action('settings'))]

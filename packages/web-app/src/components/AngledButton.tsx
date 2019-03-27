@@ -21,17 +21,17 @@ const styles = (theme: SaladTheme) => ({
     userSelect: 'none',
     color: theme.mediumGreen,
     backgroundColor: theme.darkGreen,
-    fontSize: '.625rem',
+    fontSize: theme.small,
     fontFamily: 'sharpGroteskMedium25',
     '&:hover': {
       opacity: 0.7,
     },
   },
   leftPadding: {
-    paddingLeft: '1.25rem',
+    paddingLeft: '1.75rem',
   },
   rightPadding: {
-    paddingRight: '1.25rem',
+    paddingRight: '1.75rem',
   },
 })
 
