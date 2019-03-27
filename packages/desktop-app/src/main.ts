@@ -7,6 +7,8 @@ import { Config } from './config'
 import { Ethminer } from './Ethminer'
 import { MachineInfo } from './models/MachineInfo'
 
+const runStatus = 'run-status'
+
 let mainWindow: Electron.BrowserWindow
 let machineInfo: MachineInfo
 let ethminer = new Ethminer()
@@ -32,9 +34,9 @@ const getMachineInfo = () =>
 
 const onReady = () => {
   mainWindow = new BrowserWindow({
-    title: 'Daniel',
-    minWidth: 1216,
-    minHeight: 766,
+    title: 'Salad',
+    minWidth: 1400,
+    minHeight: 760,
     center: true,
     backgroundColor: theme.darkBlue,
     icon: './assets/favicon.ico',
@@ -89,21 +91,24 @@ const onReady = () => {
     mainWindow.close()
   })
 
-  bridge.on('start', () => {
+  bridge.on('start-salad', () => {
     console.log('Starting salad')
 
     if (machineInfo) {
       ethminer.start(machineInfo)
+      bridge.send(runStatus, true)
     } else {
       getMachineInfo().then(info => {
         ethminer.start(info)
+        bridge.send(runStatus, true)
       })
     }
   })
 
-  bridge.on('stop', () => {
+  bridge.on('stop-salad', () => {
     console.log('Stopping salad')
     ethminer.stop()
+    bridge.send(runStatus, false)
   })
 }
 

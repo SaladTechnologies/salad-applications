@@ -5,9 +5,9 @@ import { StartButton } from './components/StartButton'
 const mapStoreToProps = (store: RootStore) => ({
   balance: store.balance.currentBalance,
   rate: store.balance.currentEarningRate,
-  onClick: () => console.log('Start button clicked'),
-  isRunning: false,
-  startEnabled: false,
+  onClick: store.native.toggleRunning,
+  isRunning: store.native.isRunning,
+  startEnabled: store.native.isNative, //TODO: Add in check for a valid GPU
 })
 
 export const StartButtonContainer = connect(
