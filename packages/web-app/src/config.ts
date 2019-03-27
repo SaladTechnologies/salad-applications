@@ -1,4 +1,4 @@
-import { convertMinutes, convertSeconds } from './utils'
+import { convertMinutes, convertSeconds, convertHours } from './utils'
 
 declare global {
   interface Window {
@@ -44,16 +44,17 @@ const optionalString = (name: string): string | undefined => {
 }
 
 class Config {
-  public readonly dataRefreshRate: number = numberOrDefault('APP_REFRESH_RATE', convertMinutes(5))
+  public readonly dataRefreshRate: number = numberOrDefault('REACT_APP_APP_REFRESH_RATE', convertMinutes(5))
 
-  public readonly rewardsRefreshRate: number = numberOrDefault('REWARD_REFRESH_RATE', convertMinutes(5))
+  public readonly rewardsRefreshRate: number = numberOrDefault('REACT_APP_REWARD_REFRESH_RATE', convertMinutes(5))
 
-  public readonly balanceEstimateRate: number = numberOrDefault('BALANCE_ESTIMATE_RATE', convertSeconds(1))
+  public readonly balanceEstimateRate: number = numberOrDefault('REACT_APP_BALANCE_ESTIMATE_RATE', convertSeconds(1))
 
   public readonly baseAPIUrl: string = requiredString('REACT_APP_API_URL')
 
   public readonly auth0Domain: string = requiredString('REACT_APP_AUTH0_DOMAIN')
   public readonly auth0ClientId: string = requiredString('REACT_APP_AUTH0_CLIENT_ID')
+  public readonly authRefreshRate: number = numberOrDefault('REACT_APP_AUTH_REFRESH_RATE', convertHours(4))
 
   public readonly mixpanelToken?: string = optionalString('REACT_APP_MIXPANEL_TOKEN')
 
