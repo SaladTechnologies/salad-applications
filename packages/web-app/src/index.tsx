@@ -11,6 +11,13 @@ import { syncHistoryWithStore } from 'mobx-react-router'
 import { ThemeProvider } from 'react-jss'
 import { DefaultTheme } from './SaladTheme'
 import { createClient } from './axiosFactory'
+import * as Sentry from '@sentry/browser'
+import { Config } from './config'
+
+Sentry.init({
+  dsn: Config.sentryDSN,
+  release: `web-app@${Config.appVersion}`,
+})
 
 const client = createClient()
 const rootStore = createStore(client)

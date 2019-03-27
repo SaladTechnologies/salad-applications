@@ -5,6 +5,8 @@ import { RootStore } from '../../Store'
 import { Config } from '../../config'
 
 export class AuthStore {
+  private refreshTimer?: NodeJS.Timeout
+
   @observable
   public authToken?: string = undefined
   public webAuth: WebAuth
@@ -48,10 +50,8 @@ export class AuthStore {
 
     try {
       let authResult = yield this.parseToken()
-      this.authToken = authResult.accessToken
-      this.authProfile = authResult.idTokenPayload
-      this.expiresAt = authResult.expiresIn ? authResult.expiresIn * 1000 + new Date().getTime() : 0
-      this.axios.defaults.headers.common['Authorization'] = `Bearer ${this.authToken}`
+
+      this.processAuthResult(authResult)
 
       yield this.store.profile.loadProfile()
 
@@ -63,6 +63,15 @@ export class AuthStore {
       this.isLoading = false
     }
   })
+
+  @action
+  processAuthResult = (authResult: Auth0DecodedHash) => {
+    this.authToken = authResult.accessToken
+    this.authProfile = authResult.idTokenPayload
+    this.expiresAt = authResult.expiresIn ? authResult.expiresIn * 1000 + new Date().getTime() : 0
+    this.axios.defaults.headers.common['Authorization'] = `Bearer ${this.authToken}`
+    this.startRefreshTimer()
+  }
 
   /** Parse the auth0 token out the the url */
   parseToken = (): Promise<Auth0DecodedHash> =>
@@ -87,6 +96,20 @@ export class AuthStore {
     this.authToken = undefined
 
     //Switch back to the main page
-    // this.store.routing.push('/')
+    this.store.routing.replace('/')
+  }
+
+  startRefreshTimer = () => {
+    if (this.refreshTimer) clearInterval(this.refreshTimer)
+
+    this.refreshTimer = setTimeout(() => {
+      this.webAuth.checkSession({}, (err, result) => {
+        if (err) {
+          console.log(err)
+        } else {
+          this.processAuthResult(result)
+        }
+      })
+    }, Config.authRefreshRate)
   }
 }

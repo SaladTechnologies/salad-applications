@@ -14,9 +14,17 @@ const styles = (theme: SaladTheme) => ({
     right: 0,
     zIndex: 1000,
     display: 'flex',
+    flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
     flexWrap: 'nowrap',
+  },
+  versionText: {
+    color: theme.lightGreen,
+    display: 'inline-block',
+    fontFamily: 'sharpGroteskMedium25',
+    fontSize: theme.small,
+    cursor: 'pointer',
   },
   //Any subsequent buttons
   supportButton: {
@@ -25,15 +33,27 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
+  version?: string
+  onVersionClick?: () => void
   onDiscordClick?: () => void
   onSupportClick?: () => void
 }
 
 class _BottomBar extends Component<Props> {
+  handleVersionClick = () => {
+    const { onVersionClick } = this.props
+
+    if (onVersionClick) onVersionClick()
+  }
   render() {
-    const { onDiscordClick, onSupportClick, classes } = this.props
+    const { version, onDiscordClick, onSupportClick, classes } = this.props
     return (
       <Fade direction="up" className={classnames(classes.container)}>
+        {version && (
+          <div className={classes.versionText} onClick={this.handleVersionClick}>
+            v{version}
+          </div>
+        )}
         <AngledButton className={classes.supportButton} leftSide={'right'} rightSide={'right'} onClick={onSupportClick}>
           Salad Support
         </AngledButton>
