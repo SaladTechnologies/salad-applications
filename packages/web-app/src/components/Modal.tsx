@@ -40,12 +40,14 @@ class _Modal extends Component<Props> {
     }
   }
   render() {
-    const { classes, children } = this.props
+    const { onCloseClicked, classes, children } = this.props
     return (
       <div className={classNames(classes.container)}>
-        <div className={classes.closeButton} onClick={this.handleClose}>
-          <FontAwesomeIcon icon={faTimes} />
-        </div>
+        {onCloseClicked && (
+          <div className={classes.closeButton} onClick={this.handleClose}>
+            <FontAwesomeIcon icon={faTimes} />
+          </div>
+        )}
         {children}
       </div>
     )

@@ -24,6 +24,9 @@ export class NativeStore {
   private callbacks = new Map<string, Function>()
 
   @observable
+  public isOnline: boolean = false
+
+  @observable
   public isRunning: boolean = false
 
   get isNative(): boolean {
@@ -31,6 +34,11 @@ export class NativeStore {
   }
 
   constructor() {
+    window.addEventListener('online', () => this.setOnlineStatus(true))
+    window.addEventListener('offline', () => this.setOnlineStatus(false))
+    this.setOnlineStatus(navigator.onLine)
+    console.log('Added online listeners')
+
     if (this.isNative) {
       window.salad.onNative = this.onNative
 
@@ -67,6 +75,12 @@ export class NativeStore {
       return
     }
     window.salad.dispatch(type, payload)
+  }
+
+  @action
+  setOnlineStatus = (status: boolean) => {
+    console.log('Online status updated: ' + status)
+    this.isOnline = status
   }
 
   @action
