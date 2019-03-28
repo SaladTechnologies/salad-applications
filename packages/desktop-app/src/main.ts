@@ -9,9 +9,13 @@ import { MachineInfo } from './models/MachineInfo'
 
 const runStatus = 'run-status'
 
-let mainWindow: Electron.BrowserWindow
+let mainWindow: BrowserWindow
+let onlineStatusWindow: BrowserWindow
+let offlineWindow: BrowserWindow
+
 let machineInfo: MachineInfo
 let ethminer = new Ethminer()
+let onlineStatus = false
 
 const getMachineInfo = () =>
   new Promise<MachineInfo>((resolve, reject) => {
@@ -32,7 +36,44 @@ const getMachineInfo = () =>
       .catch(() => reject())
   })
 
-const onReady = () => {
+const createOfflineWindow = () => {
+  if (offlineWindow) {
+    console.log('Offline window already created. Skipping...')
+    return
+  }
+
+  if (mainWindow) {
+    console.log('Main window already being show. No need for an offline window. Skipping...')
+    return
+  }
+
+  offlineWindow = new BrowserWindow({
+    title: 'Salad',
+    width: 300,
+    height: 350,
+    center: true,
+    icon: './assets/favicon.ico',
+    backgroundColor: theme.darkBlue,
+    frame: false,
+    resizable: false,
+  })
+
+  offlineWindow.loadURL(`file://${__dirname}/offline.html`)
+
+  offlineWindow.on('close', () => {
+    console.log('offline window close')
+  })
+}
+
+const createMainWindow = () => {
+  if (mainWindow) {
+    mainWindow.show()
+    console.log('Main window already created. Skipping...')
+    return
+  }
+
+  let maximized = false
+
   mainWindow = new BrowserWindow({
     title: 'Salad',
     minWidth: 1400,
@@ -41,6 +82,7 @@ const onReady = () => {
     backgroundColor: theme.darkBlue,
     icon: './assets/favicon.ico',
     frame: false,
+    show: false,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: false,
@@ -52,9 +94,15 @@ const onReady = () => {
   mainWindow.loadURL(Config.appUrl)
   mainWindow.on('close', () => app.quit())
   mainWindow.once('ready-to-show', () => {
+    console.log('ready to show main window')
     //Pre-fetch the machine info
     getMachineInfo()
     mainWindow.show()
+
+    if (offlineWindow) {
+      console.log('Closing offline')
+      offlineWindow.destroy()
+    }
   })
 
   //Create the bridge to listen to messages from the web-app
@@ -77,18 +125,24 @@ const onReady = () => {
 
   bridge.on('minimize-window', () => {
     mainWindow.minimize()
+    console.log('Minimizing window')
   })
 
   bridge.on('maximize-window', () => {
-    if (!mainWindow.isMaximized()) {
+    if (!maximized) {
       mainWindow.maximize()
+      maximized = true
+      console.log('Maximizing window')
     } else {
       mainWindow.unmaximize()
+      maximized = false
+      console.log('Unmaximizing window')
     }
   })
 
   bridge.on('close-window', () => {
-    mainWindow.close()
+    console.log('Closing main window')
+    app.quit()
   })
 
   bridge.on('start-salad', () => {
@@ -109,6 +163,25 @@ const onReady = () => {
     console.log('Stopping salad')
     ethminer.stop()
     bridge.send(runStatus, false)
+  })
+}
+
+const onReady = () => {
+  //Create a window to check the online status
+  onlineStatusWindow = new BrowserWindow({ width: 0, height: 0, show: false })
+  onlineStatusWindow.loadURL(`file://${__dirname}/online-status.html`)
+
+  ipcMain.on('online-status-changed', (_: any, status: boolean) => {
+    onlineStatus = status //TODO: Fix this
+    // onlineStatus = false
+    console.log('Online status updated: ' + status)
+
+    //If we are online, show the main app
+    if (onlineStatus) {
+      createMainWindow()
+    } else {
+      createOfflineWindow()
+    }
   })
 }
 
