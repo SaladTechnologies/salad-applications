@@ -7,7 +7,7 @@ import {
   TermsPageContainer,
   AnalyticsPageContainer,
 } from './modules/onboarding-views'
-import { HomePage } from './modules/home-views'
+import { HomePage, OfflineModalContainer } from './modules/home-views'
 import { getStore } from './Store'
 import DevTools from 'mobx-react-devtools'
 import { LoadingPage } from './components'
@@ -57,6 +57,7 @@ class App extends Component {
         profile.referred === undefined)
     return (
       <div>
+        <OfflineModalContainer />
         {isElectron && <TitlebarContainer />}
         <div style={{ top: isElectron ? '2rem' : 0, left: 0, right: 0, bottom: 0, position: 'absolute' }}>
           <Switch>

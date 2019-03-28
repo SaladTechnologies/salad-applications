@@ -4,6 +4,7 @@ import { action } from '@storybook/addon-actions'
 import { BottomBar } from './BottomBar'
 import { MenuBar, MenuItem } from './MenuBar'
 import { Titlebar } from './Titlebar'
+import { OfflineModal } from './OfflineModal'
 
 storiesOf('Modules/Home', module)
   .add('Bottom Bar', () => {
@@ -22,4 +23,7 @@ storiesOf('Modules/Home', module)
   })
   .add('Title Bar', () => {
     return <Titlebar />
+  })
+  .add('Offline Modal', () => {
+    return <OfflineModal />
   })
