@@ -7,7 +7,7 @@ const mapStoreToProps = (store: RootStore) => ({
   rate: store.balance.currentEarningRate,
   onClick: store.native.toggleRunning,
   isRunning: store.native.isRunning,
-  startEnabled: store.native.isNative, //TODO: Add in check for a valid GPU
+  startEnabled: store.native.isNative && store.native.isCompatible,
 })
 
 export const StartButtonContainer = connect(

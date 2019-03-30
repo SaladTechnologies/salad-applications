@@ -11,7 +11,7 @@ import { ProfileStore } from './modules/profile'
 import { UIStore } from './UIStore'
 import { ReferralStore } from './modules/referral'
 import { AnalyticsStore } from './modules/analytics'
-import { NativeStore } from './NativeStore'
+import { NativeStore } from './modules/machine/NativeStore'
 
 //Forces all changes to state to be from an action
 configure({ enforceActions: 'always' })
@@ -41,14 +41,14 @@ export class RootStore {
   public readonly native: NativeStore
 
   constructor(private readonly axios: AxiosInstance) {
-    this.native = new NativeStore()
-    this.auth = new AuthStore(this, axios)
     this.analytics = new AnalyticsStore()
     this.routing = new RouterStore()
     this.xp = new ExperienceStore()
+    this.machine = new MachineStore()
+    this.native = new NativeStore(this)
+    this.auth = new AuthStore(this, axios)
     this.rewards = new RewardStore(this, axios)
     this.balance = new BalanceStore(this)
-    this.machine = new MachineStore()
     this.profile = new ProfileStore(this)
     this.ui = new UIStore(this)
     this.referral = new ReferralStore(this, axios)

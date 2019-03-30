@@ -90,7 +90,9 @@ const createMainWindow = () => {
     },
   })
 
-  mainWindow.webContents.openDevTools()
+  if (Config.devTools) {
+    mainWindow.webContents.openDevTools()
+  }
   mainWindow.loadURL(Config.appUrl)
   mainWindow.on('close', () => app.quit())
   mainWindow.once('ready-to-show', () => {
