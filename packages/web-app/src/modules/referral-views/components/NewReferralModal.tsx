@@ -59,16 +59,11 @@ class _NewReferralModal extends Component<Props> {
       <ModalPage onCloseClicked={onCloseClicked}>
         <Modal onCloseClicked={onCloseClicked}>
           <div className={classes.contentContainer}>
-            <div className={classes.title}>$5.00 Bonus by referring a friend!</div>
+            <div className={classes.title}>$5 Refer a Friend Bonus!</div>
             <p className={classes.description}>
-              Be wise in your candidate, as you only get the bonus after your friend hits 720 XP. If their GPU doesn't
-              have 4GB+ VRAM, or they don't have enough idle time to run the app, you might miss out. The longer they’re
-              chopping salad, the faster you’ll get your bonus.
-            </p>
-            <p className={classes.description}>
-              Once referred, your friend has 7 days to get choppin' - so be sure to bug them to hit that XP total. Don't
-              forget to mention that they'll get a $5.00 alpha tester bonus upon reaching 720 XP as well! Just so make
-              sure your selection is a fit for Salad, and you're good to go!
+              Be wise in your referral, as you only get the bonus after your friend hits 720 XP. If their GPU isn't
+              supported or they don’t run the app you’ll miss out. The more they’re chopping Salad, the faster you’ll
+              get your bonus. Don’t forget to mention that they’ll get a $5 bonus upon reaching 720 XP as well!
             </p>
           </div>
 

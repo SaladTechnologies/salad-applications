@@ -94,8 +94,8 @@ class _RewardList extends Component<Props> {
             ))}
           <div className={classes.disclaimer}>
             [SUPPLIER DISCLAIMER] The merchants represented are not sponsors of the rewards or otherwise affiliated with
-            Salad Technologies, Inc.. the logos and other identifying marks attached are trademarks of and owned by each
-            represented company and/or its affiliates. Please visit each company's website for additional terms and
+            Salad Technologies, Inc. The logos and other identifying marks attached are trademarks of, and owned by,
+            each represented company and/or its affiliates. Please visit each company's website for additional terms and
             conditions.
           </div>
           <div style={{ height: '3rem' }} />
