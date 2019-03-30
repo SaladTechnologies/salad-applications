@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import image from '../assets/Home - How it Works.svg'
-import { OnboardingPage } from './OnboardingPage'
+import { OnboardingPage } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {},

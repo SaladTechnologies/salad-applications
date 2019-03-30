@@ -4,6 +4,7 @@ import { MachineSummaryView } from './MachineSummaryView'
 import { Machine } from '../../machine/models/Machine'
 import { StartButton } from './StartButton'
 import { action } from '@storybook/addon-actions'
+import { CompatibilityCheckPage } from './CompatibilityCheckPage'
 
 const getMachines = (num: number): Machine[] => {
   let array: Machine[] = new Array()
@@ -17,7 +18,19 @@ const getMachines = (num: number): Machine[] => {
   return array
 }
 
-storiesOf('Modules/Machine', module)
+storiesOf('Modules|Machine/Compatibility Check', module)
+  .add('is checking', () => <CompatibilityCheckPage isChecking />)
+  .add('invalid gpus', () => (
+    <CompatibilityCheckPage
+      onNext={action('next')}
+      validGPUs={false}
+      validOS={true}
+      gpuList={['Intel(R) UHD Graphics 630', 'NVIDIA GeForce GTX 1060 with Max-Q']}
+    />
+  ))
+  .add('invalid os', () => <CompatibilityCheckPage onNext={action('next')} validGPUs={true} validOS={false} />)
+
+storiesOf('Modules|Machine', module)
   .add('Summary View', () => (
     <div
       style={{
@@ -27,7 +40,6 @@ storiesOf('Modules/Machine', module)
       <MachineSummaryView machines={getMachines(3)} />
     </div>
   ))
-
   .add('Start Button', () => {
     const style = { padding: '1rem' }
     let balance = 12345.6789999999999999999999

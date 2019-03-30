@@ -12,7 +12,7 @@ export class MachineStore {
 
   constructor() {
     runInAction(() => {
-      this.installId = Storage.getOrDefault('INSTALL_ID', uuidv1())
+      this.installId = Storage.getOrSetDefault('INSTALL_ID', uuidv1())
     })
   }
 

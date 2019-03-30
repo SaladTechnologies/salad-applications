@@ -1,4 +1,7 @@
-import { action, observable } from 'mobx'
+import { action, observable, computed, runInAction, flow } from 'mobx'
+import { RootStore } from '../../Store'
+import * as Storage from '../../Storage'
+import { MachineInfo } from './models'
 
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
@@ -8,6 +11,8 @@ const maximize = 'maximize-window'
 const close = 'close-window'
 const start = 'start-salad'
 const stop = 'stop-salad'
+
+const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
 
 declare global {
   interface Window {
@@ -29,15 +34,49 @@ export class NativeStore {
   @observable
   public isRunning: boolean = false
 
+  @observable
+  public skippedCompatCheck: boolean = false
+
+  @observable
+  public loadingMachineInfo: boolean = false
+
+  @observable
+  public validOperatingSystem: boolean = false
+
+  @observable
+  public validGPUs: boolean = false
+
+  @observable
+  public machineInfo?: MachineInfo
+
+  @computed
   get isNative(): boolean {
     return window.salad && window.salad.platform === 'electron'
   }
 
-  constructor() {
+  @computed
+  get isCompatible(): boolean {
+    return this.validOperatingSystem && this.validGPUs
+  }
+
+  @computed
+  get gpuNames(): string[] | undefined {
+    if (this.machineInfo === undefined) return this.machineInfo
+
+    return this.machineInfo.gpus.map(x => x.model)
+  }
+
+  constructor(private readonly store: RootStore) {
     window.addEventListener('online', () => this.setOnlineStatus(true))
     window.addEventListener('offline', () => this.setOnlineStatus(false))
     this.setOnlineStatus(navigator.onLine)
     console.log('Added online listeners')
+
+    runInAction(() => {
+      this.skippedCompatCheck = Storage.getOrSetDefault(compatibilityKey, 'false') === 'true'
+    })
+
+    console.log('Initial compat check: ' + this.skippedCompatCheck)
 
     if (this.isNative) {
       window.salad.onNative = this.onNative
@@ -47,9 +86,8 @@ export class NativeStore {
         this.setRunStatus(status)
       })
 
-      //TODO: Set some machine info in there
-      this.on(setMachineInfo, () => {
-        console.log('Received machine info')
+      this.on(setMachineInfo, (info: MachineInfo) => {
+        this.setMachineInfo(info)
       })
     }
   }
@@ -90,6 +128,11 @@ export class NativeStore {
 
   @action
   loadMachineInfo = () => {
+    if (this.machineInfo) {
+      console.log('Machine info already loaded. Skipping...')
+      return
+    }
+    this.loadingMachineInfo = true
     this.send(getMachineInfo)
   }
 
@@ -125,5 +168,43 @@ export class NativeStore {
     } else {
       this.send(start)
     }
+  }
+
+  @action.bound
+  setMachineInfo = flow(function*(this: NativeStore, info: MachineInfo) {
+    console.log('Received machine info')
+    if (this.machineInfo) {
+      console.log('Already receved machine info. Skipping...')
+      return
+    }
+
+    this.machineInfo = info
+
+    //TODO: Fire off the API call to get the earning rate/GPU and determine if this machine is valid
+    yield this.sleep(5000)
+
+    this.validGPUs = true
+
+    this.validOperatingSystem =
+      info.os.platform === 'win32' && (info.os.release.startsWith('10.') || info.os.release.startsWith('6.1'))
+
+    this.skippedCompatCheck = this.validOperatingSystem && this.validGPUs
+
+    this.loadingMachineInfo = false
+  })
+
+  @action
+  skipCompatibility = () => {
+    console.log('Updating compatibility check')
+
+    this.skippedCompatCheck = true
+
+    Storage.setItem(compatibilityKey, 'true')
+
+    this.store.routing.replace('/')
+  }
+
+  sleep = (ms: number) => {
+    return new Promise(resolve => setTimeout(resolve, ms))
   }
 }

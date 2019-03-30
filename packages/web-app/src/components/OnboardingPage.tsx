@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
+import { SaladTheme } from '../SaladTheme'
 import classnames from 'classnames'
-import logo from '../assets/SaladLockup-BlueBg.svg'
-import { Button } from '../../../components'
+import logo from './assets/SaladLockup-BlueBg.svg'
+import { Button } from '.'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -33,12 +33,12 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
+    minWidth: 0,
   },
   imageContainer: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    // overflowY: 'scroll',
   },
   childrenContainer: {
     flexGrow: 2,

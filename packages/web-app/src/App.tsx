@@ -24,6 +24,7 @@ import { Profile } from './modules/profile/models'
 import { AnimatedSwitch } from './components/AnimatedSwitch'
 import { NewReferralModalContainer } from './modules/referral-views'
 import { TitlebarContainer } from './modules/home-views'
+import { CompatibilityCheckPageContainer } from './modules/machine-views'
 
 class App extends Component {
   store = getStore()
@@ -49,6 +50,7 @@ class App extends Component {
     let isAuth = this.store.auth.isAuthenticated()
     let profile = this.store.profile.currentProfile
     let loc = this.store.routing.location.pathname
+    let showCompatibilityPage = !this.store.native.skippedCompatCheck || !this.store.native.isCompatible
     this.store.analytics.track('PAGE_VIEW', { page: loc })
     let isOnboarding =
       profile &&
@@ -76,6 +78,7 @@ class App extends Component {
                 {profile && this.getOnboardingRedirect(profile)}
               </AnimatedSwitch>
             )}
+            {isElectron && showCompatibilityPage && <CompatibilityCheckPageContainer />}
             {isAuth && (
               <div>
                 <Route path="/" render={() => <HomePage />} />
