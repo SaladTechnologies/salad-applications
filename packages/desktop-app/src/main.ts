@@ -6,6 +6,7 @@ import { SaladBridge } from './SaladBridge'
 import { Config } from './config'
 import { Ethminer } from './Ethminer'
 import { MachineInfo } from './models/MachineInfo'
+import { autoUpdater } from 'electron-updater'
 
 const runStatus = 'run-status'
 
@@ -16,6 +17,7 @@ let offlineWindow: BrowserWindow
 let machineInfo: MachineInfo
 let ethminer = new Ethminer()
 let onlineStatus = false
+let updateChecked = false
 
 const getMachineInfo = () =>
   new Promise<MachineInfo>((resolve, reject) => {
@@ -181,6 +183,13 @@ const onReady = () => {
     //If we are online, show the main app
     if (onlineStatus) {
       createMainWindow()
+
+      //When we are online, check for updates
+      if (!updateChecked) {
+        updateChecked = true
+        console.log('Checking for updates...')
+        autoUpdater.checkForUpdatesAndNotify()
+      }
     } else {
       createOfflineWindow()
     }

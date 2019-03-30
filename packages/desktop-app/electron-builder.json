@@ -14,7 +14,11 @@
   "files": ["asssets/*", "dist/*"],
   "win": {
     "icon": "assets/favicon.ico",
-    "target": ["nsis"]
+    "target": ["nsis"],
+    "publish": {
+      "provider": "s3",
+      "bucket": "salad-app-releases"
+    }
   },
   "mac": {
     "icon": "dist",
