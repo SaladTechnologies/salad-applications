@@ -26,14 +26,15 @@ export class ProfileStore {
 
       this.currentProfile = profile
 
-      if (this.currentProfile.trackUsage) {
-        this.store.analytics.start()
+      if (profile.trackUsage === true) {
+        this.store.analytics.start(profile)
       }
     } catch (err) {
       //TODO: Catch any error and show the error page
       this.store.routing.replace('/profile-error')
     } finally {
       this.isUpdating = false
+      this.store.routing.replace('/')
     }
   })
 
@@ -53,9 +54,6 @@ export class ProfileStore {
       let profile = profileFromResource(res.data)
 
       this.currentProfile = profile
-    } catch (err) {
-      //TODO
-      throw err
     } finally {
       this.isUpdating = false
 
@@ -79,17 +77,14 @@ export class ProfileStore {
       let profile = profileFromResource(res.data)
 
       this.currentProfile = profile
-    } catch (err) {
-      //TODO
-      throw err
-    } finally {
+
       //Start or stop analytics
       if (this.currentProfile.trackUsage) {
-        this.store.analytics.start()
+        this.store.analytics.start(this.currentProfile)
       } else if (this.currentProfile.trackUsage === false) {
         this.store.analytics.disable()
       }
-
+    } finally {
       this.isUpdating = false
 
       this.store.routing.replace('/')

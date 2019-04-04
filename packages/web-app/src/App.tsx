@@ -55,7 +55,7 @@ class App extends Component {
     let isOnboarding =
       profile &&
       (profile.termsOfService !== Config.termsVersion ||
-        !profile.trackUsage === undefined ||
+        profile.trackUsage === undefined ||
         profile.referred === undefined)
     return (
       <div>
