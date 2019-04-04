@@ -2,6 +2,8 @@ import { observable, action, flow } from 'mobx'
 import { Profile } from './models'
 import { Config } from '../../config'
 import { RootStore } from '../../Store'
+import { AxiosInstance } from 'axios'
+import { profileFromResource } from './utils'
 
 export class ProfileStore {
   @observable
@@ -10,32 +12,29 @@ export class ProfileStore {
   @observable
   public isUpdating: boolean = false
 
-  constructor(private readonly store: RootStore) {}
+  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   @action.bound
   loadProfile = flow(function*(this: ProfileStore) {
     console.log('Loading the user profile')
 
     this.isUpdating = true
+    try {
+      let res = yield this.axios.get('get-profile')
 
-    //TODO: Change this to an api call for GET /profile
-    yield this.sleep(1000)
+      let profile = profileFromResource(res.data)
 
-    this.currentProfile = {
-      id: '1234567',
-      username: 'saladchef',
-      email: 'dev@salad.io',
-      termsOfService: undefined,
-      referred: undefined,
-      trackUsage: undefined,
-      tutorialComplete: false,
+      this.currentProfile = profile
+
+      if (this.currentProfile.trackUsage) {
+        this.store.analytics.start()
+      }
+    } catch (err) {
+      //TODO: Catch any error and show the error page
+      this.store.routing.replace('/profile-error')
+    } finally {
+      this.isUpdating = false
     }
-
-    if (this.currentProfile.trackUsage) {
-      this.store.analytics.start()
-    }
-
-    this.isUpdating = false
   })
 
   @action.bound
@@ -46,14 +45,22 @@ export class ProfileStore {
 
     this.isUpdating = true
 
-    yield this.sleep(1000)
+    try {
+      let res = yield this.axios.post('update-profile', {
+        termsOfService: Config.termsVersion,
+      })
 
-    //TODO: Make this an API call with the terms version, then replace this.profile with the returned profile
-    this.currentProfile.termsOfService = Config.termsVersion
+      let profile = profileFromResource(res.data)
 
-    this.isUpdating = false
+      this.currentProfile = profile
+    } catch (err) {
+      //TODO
+      throw err
+    } finally {
+      this.isUpdating = false
 
-    this.store.routing.replace('/')
+      this.store.routing.replace('/')
+    }
   })
 
   @action.bound
@@ -64,20 +71,29 @@ export class ProfileStore {
 
     this.isUpdating = true
 
-    yield this.sleep(1000)
+    try {
+      let res = yield this.axios.post('update-profile', {
+        trackUsage: agree,
+      })
 
-    //TODO: Make this an API call with the new option, then replace this.profile with the returned profile
-    this.currentProfile.trackUsage = agree
+      let profile = profileFromResource(res.data)
 
-    if (this.currentProfile.trackUsage) {
-      this.store.analytics.start()
-    } else if (this.currentProfile.trackUsage === false) {
-      this.store.analytics.disable
+      this.currentProfile = profile
+    } catch (err) {
+      //TODO
+      throw err
+    } finally {
+      //Start or stop analytics
+      if (this.currentProfile.trackUsage) {
+        this.store.analytics.start()
+      } else if (this.currentProfile.trackUsage === false) {
+        this.store.analytics.disable()
+      }
+
+      this.isUpdating = false
+
+      this.store.routing.replace('/')
     }
-
-    this.isUpdating = false
-
-    this.store.routing.replace('/')
   })
 
   @action.bound
@@ -86,6 +102,7 @@ export class ProfileStore {
 
     this.isUpdating = true
 
+    //TODO: Figure out what API to call to redeem a referral code
     yield this.sleep(1000)
 
     console.log('Sending referral code ' + code)
@@ -105,6 +122,7 @@ export class ProfileStore {
 
     this.isUpdating = true
 
+    //TODO: Need an API to set the profile.redeem to false
     yield this.sleep(1000)
 
     if (this.currentProfile.referred === undefined) {
