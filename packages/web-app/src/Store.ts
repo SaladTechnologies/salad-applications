@@ -49,7 +49,7 @@ export class RootStore {
     this.auth = new AuthStore(this, axios)
     this.rewards = new RewardStore(this, axios)
     this.balance = new BalanceStore(this)
-    this.profile = new ProfileStore(this)
+    this.profile = new ProfileStore(this, axios)
     this.ui = new UIStore(this)
     this.referral = new ReferralStore(this, axios)
   }
