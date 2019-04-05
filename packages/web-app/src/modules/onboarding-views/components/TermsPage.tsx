@@ -6,12 +6,14 @@ import { OnboardingPage } from '../../../components'
 import { Form, Field } from 'react-final-form'
 import { Checkbox, Scrollbar } from '../../../components'
 import ReactMarkdown from 'react-markdown'
-
-const termsContent = require('../assets/terms.md')
+import { terms } from '../assets/terms'
 
 const styles = (theme: SaladTheme) => ({
   textContainer: {
     color: theme.lightGreen,
+    fontFamily: 'sharpGroteskLight25',
+    fontSize: theme.small,
+    padding: '0 5rem',
   },
 })
 
@@ -55,13 +57,13 @@ class _TermsPage extends Component<Props> {
     const { submitting, classes } = this.props
     return (
       <OnboardingPage
-        title={'Legal time!'}
-        subtitle={'By agreeing to these terms you sign away your first born & 10% of all future income.'}
+        title={'A couple boxes to check'}
+        subtitle={`Before you can get Salad running, we need you to confirm that you agree to some terms. Typical stuff.`}
         image={image}
         nextSubmitting={submitting}
         rightContent={
           <Scrollbar>
-            <ReactMarkdown className={classes.textContainer} source={termsContent} />
+            <ReactMarkdown className={classes.textContainer} source={terms} />
           </Scrollbar>
         }
         nextText={'Agree'}
@@ -78,7 +80,7 @@ class _TermsPage extends Component<Props> {
                   {({ input, meta }) => (
                     <Checkbox
                       {...input}
-                      text="I am at least 18 years old"
+                      text="I am at least 13 years old"
                       errorText={meta.error && meta.touched && meta.error}
                     />
                   )}

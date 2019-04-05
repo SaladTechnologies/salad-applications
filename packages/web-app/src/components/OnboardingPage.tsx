@@ -13,7 +13,6 @@ const styles = (theme: SaladTheme) => ({
     bottom: 0,
     left: 0,
     right: 0,
-    padding: '2rem',
     display: 'flex',
     flex: 'row',
     justifyContent: 'space-evenly',
@@ -29,26 +28,42 @@ const styles = (theme: SaladTheme) => ({
   },
   contentContainer: {
     color: theme.lightGreen,
-    fontFamily: 'SharpGroteskLight09',
     display: 'flex',
+    padding: '4rem',
     flexDirection: 'column',
     alignItems: 'flex-start',
+    flex: '1 1 0',
+    flexBasis: 0,
     minWidth: 0,
   },
   imageContainer: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: (props: Props) => (props.fullHeightImg ? 'stretch' : 'center'),
+    flex: '1 1 0',
+    flexBasis: 0,
+    minWidth: 0,
+    overflow: 'hidden',
+  },
+  image: {
+    objectFit: 'cover',
   },
   childrenContainer: {
+    paddingTop: '2rem',
     flexGrow: 2,
     alignSelf: 'stretch',
   },
   title: {
+    paddingTop: '2rem',
+    fontFamily: 'SharpGroteskLight09',
     fontSize: theme.xxLarge,
+    lineHeight: '54px',
   },
   subtitle: {
-    fontSize: theme.xLarge,
+    fontFamily: 'sharpGroteskLight25',
+    fontSize: '18px',
+    lineHeight: '32px',
+    paddingTop: '3rem',
   },
   nextButton: {
     margin: '0 .5rem',
@@ -63,7 +78,7 @@ interface Props extends WithStyles<typeof styles> {
   hasBack?: boolean
   nextText?: string
   nextSubmitting?: boolean
-
+  fullHeightImg?: boolean
   onBack?: () => void
   onNext?: () => void
 }
@@ -104,7 +119,7 @@ class _OnboardingPage extends Component<Props> {
         </div>
         <div className={classnames(classes.imageContainer, classes.column)}>
           {rightContent}
-          {!rightContent && image && <img src={image} />}
+          {!rightContent && image && <img className={classes.image} src={image} />}
         </div>
       </div>
     )
