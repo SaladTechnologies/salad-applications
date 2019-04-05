@@ -111,7 +111,7 @@ class _CompatibilityCheckPage extends Component<Props> {
       )
     }
 
-    throw Error('Unknown state')
+    return null
   }
 }
 

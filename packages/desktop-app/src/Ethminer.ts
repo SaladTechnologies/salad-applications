@@ -6,7 +6,7 @@ export class Ethminer {
   isRunning = false
   processName: string = ''
 
-  start = (machineInfo: MachineInfo) => {
+  start = (machineInfo: MachineInfo, id: string) => {
     if (this.childProcess || this.isRunning) {
       console.log('Ethminer already running and cannot be started again.')
       return
@@ -17,8 +17,8 @@ export class Ethminer {
     let cuda = machineInfo.gpus.some(x => x.vendor.toLocaleLowerCase().includes('nvidia'))
 
     console.log('cuda: ' + cuda)
+    console.log('machineId: ' + id)
 
-    let id = 'daniel'
     let platform = cuda ? '-U' : '-G'
     this.processName = cuda ? 'ethminer_cuda.exe' : 'ethminer.exe'
     let cmd = `cd dist && cd ethminer && ${

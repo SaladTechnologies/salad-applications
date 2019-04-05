@@ -23,11 +23,10 @@ const getMachineInfo = () =>
   new Promise<MachineInfo>((resolve, reject) => {
     si.graphics()
       .then(graphics => {
-        si.system().then(net => {
-          console.log(net)
+        si.system().then(sys => {
           si.osInfo().then(os => {
-            //TODO: Figure out what mac/UUID we are going to use
             machineInfo = {
+              system: sys,
               os: os,
               gpus: graphics.controllers,
             }
@@ -149,15 +148,15 @@ const createMainWindow = () => {
     app.quit()
   })
 
-  bridge.on('start-salad', () => {
+  bridge.on('start-salad', (id: string) => {
     console.log('Starting salad')
 
     if (machineInfo) {
-      ethminer.start(machineInfo)
+      ethminer.start(machineInfo, id)
       bridge.send(runStatus, true)
     } else {
       getMachineInfo().then(info => {
-        ethminer.start(info)
+        ethminer.start(info, id)
         bridge.send(runStatus, true)
       })
     }
@@ -216,6 +215,7 @@ app.on('window-all-closed', () => {
 
 const cleanExit = () => {
   console.log('clean-exit')
+  ethminer.stop()
   process.exit()
 }
 process.on('SIGINT', cleanExit) // catch ctrl-c

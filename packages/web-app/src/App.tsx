@@ -50,7 +50,7 @@ class App extends Component {
     let isAuth = this.store.auth.isAuthenticated()
     let profile = this.store.profile.currentProfile
     let loc = this.store.routing.location.pathname
-    let showCompatibilityPage = !this.store.native.skippedCompatCheck || !this.store.native.isCompatible
+    let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
     this.store.analytics.track('PAGE_VIEW', { page: loc })
     let isOnboarding =
       profile &&

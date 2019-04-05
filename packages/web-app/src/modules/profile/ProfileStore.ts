@@ -29,6 +29,8 @@ export class ProfileStore {
       if (profile.trackUsage === true) {
         this.store.analytics.start(profile)
       }
+
+      yield this.store.native.registerMachine()
     } catch (err) {
       //TODO: Catch any error and show the error page
       this.store.routing.replace('/profile-error')
