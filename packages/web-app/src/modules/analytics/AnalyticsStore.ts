@@ -1,6 +1,7 @@
 import mixpanel from 'mixpanel-browser'
 import { Config } from '../../config'
 import { Profile } from '../profile/models'
+import * as Sentry from '@sentry/browser'
 
 export class AnalyticsStore {
   private started = false
@@ -23,6 +24,14 @@ export class AnalyticsStore {
 
       mixpanel.identify(profile.id)
 
+      Sentry.configureScope(scope => {
+        scope.setUser({
+          id: profile.id,
+          email: profile.email,
+          username: profile.username,
+        })
+      })
+
       this.started = true
 
       this.track('LOGIN')
@@ -41,5 +50,9 @@ export class AnalyticsStore {
   public track = (event: string, properties?: { [key: string]: any }) => {
     if (!this.started) return
     mixpanel.track(event, properties)
+  }
+
+  public captureException = (err: Error) => {
+    Sentry.captureException(err)
   }
 }

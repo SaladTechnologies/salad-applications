@@ -1,6 +1,8 @@
-import { action, observable, computed } from 'mobx'
+import { action, observable, computed, flow } from 'mobx'
 import { Level } from './models/Level'
 import { defaultLevels } from './models/defaultLevels'
+import { AxiosInstance } from 'axios'
+import { RootStore } from '../../Store'
 
 export class ExperienceStore {
   @observable
@@ -26,7 +28,7 @@ export class ExperienceStore {
     return delta / totalRange
   }
 
-  constructor() {
+  constructor(private readonly store: RootStore, readonly axios: AxiosInstance) {
     this.loadInitialLevels()
   }
 
@@ -38,4 +40,19 @@ export class ExperienceStore {
   updateXp(newXp: number) {
     this.currentXp = newXp
   }
+
+  @action.bound
+  refreshXp = flow(function*(this: ExperienceStore) {
+    try {
+      let res = yield this.axios.get('get-xp')
+
+      let newXp = res.data.xp
+
+      this.updateXp(newXp)
+
+      console.log('XP:' + newXp)
+    } catch (err) {
+      this.store.analytics.captureException(err)
+    }
+  })
 }
