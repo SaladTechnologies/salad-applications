@@ -43,7 +43,7 @@ export class RootStore {
   constructor(private readonly axios: AxiosInstance) {
     this.analytics = new AnalyticsStore()
     this.routing = new RouterStore()
-    this.xp = new ExperienceStore()
+    this.xp = new ExperienceStore(axios)
     this.machine = new MachineStore()
     this.native = new NativeStore(this, axios)
     this.auth = new AuthStore(this, axios)

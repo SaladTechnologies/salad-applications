@@ -4,6 +4,7 @@ import { RootStore } from '../../Store'
 export class RefreshService {
   private dataTimer?: NodeJS.Timeout
   private rewardsTimer?: NodeJS.Timeout
+  private xpTimer?: NodeJS.Timeout
 
   constructor(private store: RootStore) {}
 
@@ -19,6 +20,10 @@ export class RefreshService {
       this.store.rewards.refreshRewards()
     }, Config.rewardsRefreshRate)
 
+    this.xpTimer = setInterval(() => {
+      this.store.xp.refreshXp()
+    }, Config.xpRefreshRate)
+
     //Do the initial data pull
     this.store.refreshData()
     this.store.rewards.refreshRewards()
@@ -28,5 +33,6 @@ export class RefreshService {
 
     if (this.dataTimer) clearInterval(this.dataTimer)
     if (this.rewardsTimer) clearInterval(this.rewardsTimer)
+    if (this.xpTimer) clearInterval(this.xpTimer)
   }
 }
