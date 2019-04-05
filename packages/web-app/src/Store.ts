@@ -45,7 +45,7 @@ export class RootStore {
     this.routing = new RouterStore()
     this.xp = new ExperienceStore()
     this.machine = new MachineStore()
-    this.native = new NativeStore(this)
+    this.native = new NativeStore(this, axios)
     this.auth = new AuthStore(this, axios)
     this.rewards = new RewardStore(this, axios)
     this.balance = new BalanceStore(this)

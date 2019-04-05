@@ -177,7 +177,7 @@ export class RewardStore {
   @action
   selectTargetReward = async (rewardId: string) => {
     const request = {
-      macAddress: this.store.machine.installId,
+      macAddress: this.store.native.machineId,
       rewardId: rewardId,
     }
 
