@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { DefaultTheme as theme } from './SaladTheme'
 import * as path from 'path'
 import * as si from 'systeminformation'
@@ -183,6 +183,12 @@ const createMainWindow = () => {
     console.log('Stopping salad')
     ethminer.stop()
     bridge.send(runStatus, false)
+  })
+
+  mainWindow.webContents.on('new-window', (e: Electron.Event, url: string) => {
+    console.log(`opening new window at ${url}`)
+    e.preventDefault()
+    shell.openExternal(url)
   })
 }
 

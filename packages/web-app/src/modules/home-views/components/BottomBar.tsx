@@ -25,6 +25,7 @@ const styles = (theme: SaladTheme) => ({
     fontFamily: 'sharpGroteskMedium25',
     fontSize: theme.small,
     cursor: 'pointer',
+    userSelect: 'none',
   },
   //Any subsequent buttons
   supportButton: {

@@ -53,7 +53,7 @@ class _AngledButton extends Component<Props> {
   }
 
   render() {
-    const { className, classes, children, ...rest } = this.props
+    const { className, classes, children, onClick, ...rest } = this.props
     return (
       <button className={classnames(classes.button, className)} onClick={this.handleClick}>
         <AngledPanel
