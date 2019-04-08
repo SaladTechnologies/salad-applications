@@ -7,6 +7,10 @@ import { Config } from './config'
 import { Ethminer } from './Ethminer'
 import { MachineInfo } from './models/MachineInfo'
 import { autoUpdater } from 'electron-updater'
+import { Logger } from './Logger'
+
+//Overrides the console.log behavior
+Logger.connect()
 
 const runStatus = 'run-status'
 
@@ -246,4 +250,4 @@ const cleanExit = () => {
 
 process.on('SIGINT', cleanExit) // catch ctrl-c
 process.on('SIGTERM', cleanExit) // catch kill
-console.log(`Electron Version ${app.getVersion()}`)
+console.log(`Running ${app.getName()} ${app.getVersion()}`)

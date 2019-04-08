@@ -1,5 +1,6 @@
 {
   "productName": "Salad",
+  "appId": "salad-technologies-desktop-app",
   "directories": {
     "output": "release"
   },
@@ -11,7 +12,7 @@
     "runAfterFinish": true,
     "allowToChangeInstallationDirectory": "true"
   },
-  "files": ["asssets/*", "dist/*"],
+  "files": ["assets/*", "dist/*"],
   "win": {
     "icon": "assets/favicon.ico",
     "target": ["nsis"],

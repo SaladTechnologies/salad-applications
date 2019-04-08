@@ -1,5 +1,5 @@
 {
-  "name": "@saladtech/desktop-app",
+  "name": "salad",
   "version": "0.2.0",
   "description": "> TODO: description",
   "author": "Salad Technology <dev@salad.io>",
@@ -29,6 +29,8 @@
     "webpack-cli": "^3.3.0"
   },
   "dependencies": {
+    "electron-log": "^3.0.5",
+    "electron-updater": "^4.0.6",
     "systeminformation": "^4.1.3"
   }
 }
