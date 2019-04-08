@@ -37,6 +37,23 @@ const getMachineInfo = () =>
       .catch(() => reject())
   })
 
+/** Ensure only 1 instance of the app ever run */
+const checkForMultipleInstance = () => {
+  const gotTheLock = app.requestSingleInstanceLock()
+
+  if (!gotTheLock) {
+    app.quit()
+  } else {
+    app.on('second-instance', () => {
+      // Someone tried to run a second instance, we should focus our window.
+      if (mainWindow) {
+        if (mainWindow.isMinimized()) mainWindow.restore()
+        mainWindow.focus()
+      }
+    })
+  }
+}
+
 const createOfflineWindow = () => {
   if (offlineWindow) {
     console.log('Offline window already created. Skipping...')
@@ -195,6 +212,8 @@ const onReady = () => {
   })
 }
 
+checkForMultipleInstance()
+
 app.on('ready', () => onReady())
 app.on('will-quit', () => {
   console.log('will quit')
@@ -218,7 +237,7 @@ const cleanExit = () => {
   ethminer.stop()
   process.exit()
 }
+
 process.on('SIGINT', cleanExit) // catch ctrl-c
 process.on('SIGTERM', cleanExit) // catch kill
-
 console.log(`Electron Version ${app.getVersion()}`)
