@@ -3,8 +3,23 @@
   <body>
     <script>
       const { ipcRenderer } = require('electron')
+      const isOnline = require('is-online')
+      let online = undefined
+
       const updateOnlineStatus = () => {
-        ipcRenderer.send('online-status-changed', navigator.onLine)
+        console.log('Checking online status')
+        isOnline({ timeout: 1000 }).then(newStatus => {
+          //Changed to the online status
+          if (newStatus !== online) {
+            ipcRenderer.send('online-status-changed', newStatus)
+            online = newStatus
+          }
+          if (!newStatus) {
+            setTimeout(() => {
+              updateOnlineStatus()
+            }, 1000)
+          }
+        })
       }
 
       window.addEventListener('online', updateOnlineStatus)

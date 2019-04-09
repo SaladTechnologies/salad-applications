@@ -31,10 +31,13 @@ const optionalBool = (name: string): boolean => {
   }
 }
 
-const requiredString = (name: string) => {
+const requiredString = (name: string, defaultValue?: string): string => {
   let v = process.env[name]
 
-  if (!v) throw Error(`Unable to find env variable ${name}`)
+  if (!v) {
+    if (defaultValue) return defaultValue
+    else throw Error(`Unable to find env variable ${name}`)
+  }
 
   return v
 }

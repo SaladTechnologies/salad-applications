@@ -35,7 +35,7 @@ export class NativeStore {
   private runningHeartbeat?: NodeJS.Timeout
 
   @observable
-  public isOnline: boolean = false
+  public isOnline: boolean = true
 
   @observable
   public isRunning: boolean = false
@@ -80,9 +80,9 @@ export class NativeStore {
   }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
-    window.addEventListener('online', () => this.setOnlineStatus(true))
-    window.addEventListener('offline', () => this.setOnlineStatus(false))
-    this.setOnlineStatus(navigator.onLine)
+    //Starts the timer to check for online/offline status
+    setInterval(this.checkOnlineStatus, 5000)
+    this.checkOnlineStatus()
 
     runInAction(() => {
       this.skippedCompatCheck = Storage.getOrSetDefault(compatibilityKey, 'false') === 'true'
@@ -143,11 +143,18 @@ export class NativeStore {
     window.salad.dispatch(type, payload)
   }
 
-  @action
-  private setOnlineStatus = (status: boolean) => {
-    console.log('Online status updated: ' + status)
-    this.isOnline = status
-  }
+  @action.bound
+  private checkOnlineStatus = flow(function*(this: NativeStore) {
+    console.log('Checking online status')
+
+    try {
+      yield this.axios.get('/')
+      this.isOnline = true
+    } catch (err) {
+      console.error(err)
+      this.isOnline = false
+    }
+  })
 
   @action
   setRunStatus = (status: boolean) => {
