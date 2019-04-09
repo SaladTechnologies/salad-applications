@@ -1,8 +1,8 @@
 {
   "name": "salad",
   "version": "0.2.0-master",
-  "description": "> TODO: description",
-  "author": "Salad Technology <dev@salad.io>",
+  "description": "Salad Technologies Desktop Application",
+  "author": "Salad Technologies <dev@salad.io>",
   "homepage": "https://www.salad.io/",
   "license": "Unlicense",
   "main": "dist/main.js",
