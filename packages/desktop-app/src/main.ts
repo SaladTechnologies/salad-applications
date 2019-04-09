@@ -85,6 +85,7 @@ const createOfflineWindow = () => {
 
   offlineWindow.on('close', () => {
     console.log('offline window close')
+    app.quit()
   })
 }
 
