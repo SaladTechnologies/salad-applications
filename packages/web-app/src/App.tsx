@@ -24,7 +24,7 @@ import { Profile } from './modules/profile/models'
 import { AnimatedSwitch } from './components/AnimatedSwitch'
 import { NewReferralModalContainer } from './modules/referral-views'
 import { TitlebarContainer } from './modules/home-views'
-import { CompatibilityCheckPageContainer } from './modules/machine-views'
+import { CompatibilityCheckPageContainer, CudaErrorContainer, UnknownErrorContainer } from './modules/machine-views'
 
 class App extends Component {
   store = getStore()
@@ -82,6 +82,8 @@ class App extends Component {
             {isAuth && (
               <div>
                 <Route path="/" render={() => <HomePage />} />
+                <Route exact path="/errors/cuda" component={CudaErrorContainer} />
+                <Route exact path="/errors/unknown" component={UnknownErrorContainer} />
                 <Route exact path="/rewards/:id" component={RewardDetailsModalContainer} />
                 <Route exact path="/rewards/:id/redeem" component={RewardRedemptionModalContainer} />
                 <Route exact path="/rewards/:id/redeem-complete" component={RedemptionCompleteModalContainer} />

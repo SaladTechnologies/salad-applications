@@ -9,6 +9,7 @@ import { Config } from '../../config'
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
 const runStatus = 'run-status'
+const runError = 'run-error'
 const minimize = 'minimize-window'
 const maximize = 'maximize-window'
 const close = 'close-window'
@@ -99,6 +100,18 @@ export class NativeStore {
 
       this.on(setMachineInfo, (info: MachineInfo) => {
         this.setMachineInfo(info)
+      })
+
+      this.on(runError, (errorCode: number) => {
+        console.log('Error code: ' + errorCode)
+
+        store.analytics.captureException(new Error(`Received error code ${errorCode} from native`))
+
+        if (errorCode === 8675309) {
+          store.ui.showModal('errors/cuda')
+        } else {
+          store.ui.showModal('errors/unknown')
+        }
       })
     }
   }

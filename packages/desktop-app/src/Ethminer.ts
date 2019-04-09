@@ -2,9 +2,22 @@ import { spawn, ChildProcess, exec } from 'child_process'
 import { MachineInfo } from './models/MachineInfo'
 
 export class Ethminer {
-  childProcess?: ChildProcess
-  isRunning = false
-  processName: string = ''
+  private childProcess?: ChildProcess
+  private isRunning = false
+  private processName: string = ''
+
+  public onError?: (errorCode: number) => void
+
+  private checkForErrors = (message: string) => {
+    if (!this.onError) {
+      console.warn('No error handler detected. Skipping...')
+      return
+    }
+
+    if (message.includes('CUDA error: Insufficient CUDA driver: 9')) {
+      this.onError(8675309)
+    }
+  }
 
   start = (machineInfo: MachineInfo, id: string) => {
     if (this.childProcess || this.isRunning) {
@@ -34,12 +47,14 @@ export class Ethminer {
     if (ls.stdout) {
       ls.stdout.on('data', data => {
         console.log('stdout: ' + data)
+        this.checkForErrors(data)
       })
     }
 
     if (ls.stderr) {
       ls.stderr.on('data', data => {
-        console.log('stderr: ' + data)
+        console.error('stderr: ' + data)
+        this.checkForErrors(data)
       })
     }
 
@@ -48,7 +63,7 @@ export class Ethminer {
     })
 
     ls.on('error', err => {
-      console.log('error: ' + err)
+      console.error('error: ' + err)
     })
 
     ls.on('exit', msg => {

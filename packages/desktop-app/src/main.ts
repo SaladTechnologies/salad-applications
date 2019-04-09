@@ -13,6 +13,7 @@ import { Logger } from './Logger'
 Logger.connect()
 
 const runStatus = 'run-status'
+const runError = 'run-error'
 
 let mainWindow: BrowserWindow
 let onlineStatusWindow: BrowserWindow
@@ -189,6 +190,11 @@ const createMainWindow = () => {
     bridge.send(runStatus, false)
   })
 
+  //Listen for ethminer errors
+  ethminer.onError = (code: number) => {
+    bridge.send(runError, code)
+  }
+
   mainWindow.webContents.on('new-window', (e: Electron.Event, url: string) => {
     console.log(`opening new window at ${url}`)
     e.preventDefault()
@@ -256,3 +262,4 @@ const cleanExit = () => {
 process.on('SIGINT', cleanExit) // catch ctrl-c
 process.on('SIGTERM', cleanExit) // catch kill
 console.log(`Running ${app.getName()} ${app.getVersion()}`)
+console.log(`New version: 'Added ethminer errors'`)
