@@ -16,6 +16,7 @@
   "win": {
     "icon": "assets/favicon.ico",
     "target": ["nsis"],
+    "extraFiles": ["assets/*", "dist/ethminer/*"],
     "publish": {
       "provider": "s3",
       "bucket": "salad-app-releases"

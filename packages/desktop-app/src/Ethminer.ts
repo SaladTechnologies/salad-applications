@@ -39,7 +39,7 @@ export class Ethminer {
 
     if (ls.stderr) {
       ls.stderr.on('data', data => {
-        console.log('stdout: ' + data)
+        console.log('stderr: ' + data)
       })
     }
 

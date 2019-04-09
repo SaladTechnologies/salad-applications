@@ -1,6 +1,6 @@
 {
   "name": "salad",
-  "version": "0.2.0",
+  "version": "0.2.0-master",
   "description": "> TODO: description",
   "author": "Salad Technology <dev@salad.io>",
   "homepage": "https://www.salad.io/",
@@ -12,7 +12,8 @@
   "scripts": {
     "start": "yarn build && electron ./dist/main.js",
     "build": "webpack --config webpack.config.js",
-    "dist": "yarn build && electron-builder"
+    "dist": "yarn build && electron-builder",
+    "release": "electron-builder --publish always"
   },
   "devDependencies": {
     "@types/electron": "^1.6.10",

@@ -196,26 +196,31 @@ const createMainWindow = () => {
   })
 }
 
+const checkForUpdates = () => {
+  //When we are online, check for updates
+  if (updateChecked) {
+    console.log('Already checked for updates. Skipping')
+    return
+  }
+  updateChecked = true
+  console.log('Checking for updates...')
+  autoUpdater.checkForUpdatesAndNotify()
+}
+
 const onReady = () => {
   //Create a window to check the online status
   onlineStatusWindow = new BrowserWindow({ width: 0, height: 0, show: false })
   onlineStatusWindow.loadURL(`file://${__dirname}/online-status.html`)
 
   ipcMain.on('online-status-changed', (_: any, status: boolean) => {
-    onlineStatus = status //TODO: Fix this
-    // onlineStatus = false
+    onlineStatus = status
     console.log('Online status updated: ' + status)
 
     //If we are online, show the main app
     if (onlineStatus) {
       createMainWindow()
 
-      //When we are online, check for updates
-      if (!updateChecked) {
-        updateChecked = true
-        console.log('Checking for updates...')
-        autoUpdater.checkForUpdatesAndNotify()
-      }
+      checkForUpdates()
     } else {
       createOfflineWindow()
     }
