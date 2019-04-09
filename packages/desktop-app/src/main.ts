@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { DefaultTheme as theme } from './SaladTheme'
 import * as path from 'path'
 import * as si from 'systeminformation'
+import { getMac } from './getMac'
 import { SaladBridge } from './SaladBridge'
 import { Config } from './config'
 import { Ethminer } from './Ethminer'
@@ -30,12 +31,16 @@ const getMachineInfo = () =>
       .then(graphics => {
         si.system().then(sys => {
           si.osInfo().then(os => {
-            machineInfo = {
-              system: sys,
-              os: os,
-              gpus: graphics.controllers,
-            }
-            resolve(machineInfo)
+            getMac().then(mac => {
+              console.log(mac)
+              machineInfo = {
+                macAddress: mac,
+                system: sys,
+                os: os,
+                gpus: graphics.controllers,
+              }
+              resolve(machineInfo)
+            })
           })
         })
       })
@@ -100,11 +105,11 @@ const createMainWindow = () => {
 
   mainWindow = new BrowserWindow({
     title: 'Salad',
-    minWidth: 1400,
-    minHeight: 760,
+    minWidth: 1216,
+    minHeight: 766,
     center: true,
     backgroundColor: theme.darkBlue,
-    icon: './assets/favicon.ico',
+    icon: '../assets/favicon.ico',
     frame: false,
     show: false,
     webPreferences: {
@@ -211,6 +216,30 @@ const checkForUpdates = () => {
   }
   updateChecked = true
   console.log('Checking for updates...')
+
+  autoUpdater.on('checking-for-update', () => {
+    console.log('Checking for update...')
+  })
+  autoUpdater.on('update-available', info => {
+    console.log('Update available.' + info)
+  })
+  autoUpdater.on('update-not-available', info => {
+    console.log('Update not available.' + info)
+  })
+  autoUpdater.on('error', err => {
+    console.log('Error in auto-updater. ' + err)
+  })
+  autoUpdater.on('download-progress', progressObj => {
+    let log_message = 'Download speed: ' + progressObj.bytesPerSecond
+    log_message = log_message + ' - Downloaded ' + progressObj.percent + '%'
+    log_message = log_message + ' (' + progressObj.transferred + '/' + progressObj.total + ')'
+    console.log(log_message)
+  })
+  autoUpdater.on('update-downloaded', info => {
+    console.log('Update downloaded.' + info)
+  })
+
+  autoUpdater.logger = Logger.log
   autoUpdater.checkForUpdatesAndNotify()
 }
 
@@ -263,4 +292,3 @@ const cleanExit = () => {
 process.on('SIGINT', cleanExit) // catch ctrl-c
 process.on('SIGTERM', cleanExit) // catch kill
 console.log(`Running ${app.getName()} ${app.getVersion()}`)
-console.log(`New version: 'Added ethminer errors'`)

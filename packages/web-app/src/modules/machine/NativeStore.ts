@@ -68,7 +68,7 @@ export class NativeStore {
   @computed
   get machineId(): string {
     return this.machineInfo !== undefined
-      ? this.machineInfo.system.uuid.substr(0, 15) //TODO: Remove the substring once we update the db scheme
+      ? this.machineInfo.macAddress
       : Storage.getOrSetDefaultCallback('INSTALL_ID', uuidv1).substr(0, 15) //TODO: Remove the substring once we update the db scheme
   }
 

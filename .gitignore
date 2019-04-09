@@ -5,3 +5,5 @@ packages/*/lib
 packages/desktop-app/dist/main\.js
 
 **/release/*
+
+packages/desktop-app/yarn-error\.log
