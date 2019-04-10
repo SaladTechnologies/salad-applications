@@ -2,7 +2,7 @@ export interface ProfileResource {
   userId: string
   isReferred: string
   termsOfService: string
-  trackUsage?: number
+  trackUsage: string
   tutorialComplete: number
   whatsNewVersion: string
   profileData: {

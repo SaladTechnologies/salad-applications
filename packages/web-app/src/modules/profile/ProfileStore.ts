@@ -5,6 +5,9 @@ import { RootStore } from '../../Store'
 import { AxiosInstance } from 'axios'
 import { profileFromResource } from './utils'
 
+/** Data analytics setting indicating the user does not want to be tracked */
+const OPT_OUT = 'OPT_OUT'
+
 export class ProfileStore {
   @observable
   public currentProfile?: Profile
@@ -12,13 +15,21 @@ export class ProfileStore {
   @observable
   public isUpdating: boolean = false
 
+  @computed get needsAnalyticsOnboarding(): boolean {
+    return (
+      this.currentProfile !== undefined &&
+      this.currentProfile.trackUsage !== Config.dataTrackingVersion &&
+      this.currentProfile.trackUsage !== OPT_OUT
+    )
+  }
+
   @computed
   public get isOnboarding(): boolean {
     return (
       this.currentProfile !== undefined &&
       (this.currentProfile.termsOfService !== Config.termsVersion ||
         this.currentProfile.whatsNewVersion !== Config.whatsNewVersion ||
-        this.currentProfile.trackUsage === undefined ||
+        this.needsAnalyticsOnboarding ||
         this.currentProfile.referred === undefined)
     )
   }
@@ -37,7 +48,7 @@ export class ProfileStore {
 
       this.currentProfile = profile
 
-      if (profile.trackUsage === true) {
+      if (profile.trackUsage === Config.dataTrackingVersion) {
         this.store.analytics.start(profile)
       }
 
@@ -81,9 +92,11 @@ export class ProfileStore {
 
     this.isUpdating = true
 
+    let newStatus = agree ? Config.dataTrackingVersion : OPT_OUT
+
     try {
       let res = yield this.axios.post('update-profile', {
-        trackUsage: agree,
+        trackUsage: newStatus,
       })
 
       let profile = profileFromResource(res.data)
@@ -91,11 +104,13 @@ export class ProfileStore {
       this.currentProfile = profile
 
       //Start or stop analytics
-      if (this.currentProfile.trackUsage) {
+      if (this.currentProfile.trackUsage === Config.dataTrackingVersion) {
         this.store.analytics.start(this.currentProfile)
-      } else if (this.currentProfile.trackUsage === false) {
+      } else if (this.currentProfile.trackUsage === OPT_OUT) {
         this.store.analytics.disable()
       }
+    } catch (err) {
+      this.store.analytics.captureException(err)
     } finally {
       this.isUpdating = false
 

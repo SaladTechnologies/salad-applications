@@ -21,7 +21,6 @@ import {
 import { AccountModalContainer } from './modules/profile-views'
 import { SettingsModalContainer } from './modules/profile-views'
 import { Config } from './config'
-import { Profile } from './modules/profile/models'
 import { AnimatedSwitch } from './components/AnimatedSwitch'
 import { NewReferralModalContainer } from './modules/referral-views'
 import { CompatibilityCheckPageContainer, CudaErrorContainer, UnknownErrorContainer } from './modules/machine-views'
@@ -29,10 +28,13 @@ import { CompatibilityCheckPageContainer, CudaErrorContainer, UnknownErrorContai
 class App extends Component {
   store = getStore()
 
-  getOnboardingRedirect = (profile: Profile) => {
+  getOnboardingRedirect = () => {
+    let profile = this.store.profile.currentProfile
+    if (profile === undefined) return null
+
     if (profile.termsOfService !== Config.termsVersion) return <Redirect to="/onboarding/terms" />
     if (profile.whatsNewVersion !== Config.whatsNewVersion) return <Redirect to="/onboarding/whats-new" />
-    if (profile.trackUsage === undefined) return <Redirect to="/onboarding/analytics" />
+    if (this.store.profile.needsAnalyticsOnboarding) return <Redirect to="/onboarding/analytics" />
     if (profile.referred === undefined) return <Redirect to="/onboarding/referral-code" />
     throw Error('Unable to locate a valid onboarding page')
   }
@@ -49,7 +51,6 @@ class App extends Component {
   render() {
     let isElectron = this.store.native.isNative
     let isAuth = this.store.auth.isAuthenticated()
-    let profile = this.store.profile.currentProfile
     let loc = this.store.routing.location.pathname
     let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
     this.store.analytics.track('PAGE_VIEW', { page: loc })
@@ -75,7 +76,7 @@ class App extends Component {
                 <Route exact path="/onboarding/terms" component={TermsPageContainer} />
                 <Route exact path="/onboarding/analytics" component={AnalyticsPageContainer} />
                 <Route exact path="/onboarding/whats-new" component={WhatsNewPageContainer} /> TODO: Whats new page
-                {profile && this.getOnboardingRedirect(profile)}
+                {this.getOnboardingRedirect()}
               </AnimatedSwitch>
             )}
             {isElectron && showCompatibilityPage && <CompatibilityCheckPageContainer />}
