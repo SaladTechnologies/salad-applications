@@ -5,6 +5,7 @@ import { MachineInfo } from './models'
 import { AxiosInstance } from 'axios'
 import uuidv1 from 'uuid/v1'
 import { Config } from '../../config'
+import { GPUDetailsResource } from './models/GPUDetailsResource'
 
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
@@ -273,10 +274,22 @@ export class NativeStore {
 
     this.machineInfo = info
 
-    //TODO: Fire off the API call to get the earning rate/GPU and determine if this machine is valid
-    yield this.sleep(2000)
+    let req = {
+      gpuNames: this.gpuNames,
+    }
 
-    this.validGPUs = true
+    try {
+      let res = yield this.axios.post('/check-gpu', req)
+
+      console.log(res)
+
+      let gpuList: GPUDetailsResource[] = res.data.gpuList
+
+      //Ensure that at least 1 gpu is eligible
+      this.validGPUs = gpuList.some(x => x.isEligible)
+    } catch (err) {
+      this.validGPUs = false
+    }
 
     this.validOperatingSystem =
       info.os.platform === 'win32' && (info.os.release.startsWith('10.') || info.os.release.startsWith('6.1'))
