@@ -61,6 +61,7 @@ const styles = (theme: SaladTheme) => ({
     fontFamily: 'SharpGroteskLight25',
     fontSize: theme.small,
     textTransform: 'uppercase',
+    letterSpacing: '1px',
   },
   balanceText: {
     fontFamily: 'SharpGroteskLight09',
@@ -72,6 +73,7 @@ const styles = (theme: SaladTheme) => ({
   rateText: {
     fontFamily: 'sharpGroteskBook25',
     fontSize: theme.small,
+    letterSpacing: '1px',
   },
 })
 

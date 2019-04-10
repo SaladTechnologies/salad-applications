@@ -43,7 +43,6 @@ class _ProfileMenuTooltip extends Component<Props> {
             <li>Spending time chopping Salad (+1 XP/Min)</li>
             <li>Referring Friends (+500XP)</li>
             <li>Adding Another Salad-Chopping Machine (+500XP)</li>
-            <li>Saving Salad Balance (+1% speed bonus per $1.00 in Balance) [Coming Soon!] </li>
           </ul>
         </div>
       </div>
