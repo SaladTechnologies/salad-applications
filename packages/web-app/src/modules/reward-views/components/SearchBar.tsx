@@ -15,10 +15,12 @@ const styles = (theme: SaladTheme) => ({
     borderBottom: `2px solid ${theme.lightGreen}`,
     paddingBottom: '.25rem',
     flexWrap: 'nowrap',
+    alignItems: 'baseline',
   },
   icon: {
     marginRight: '.5rem',
     color: theme.lightGreen,
+    height: '9px',
   },
   textInput: {
     fontFamily: 'sharpGroteskLight25',
@@ -26,7 +28,9 @@ const styles = (theme: SaladTheme) => ({
     background: 'transparent',
     border: 'none',
     outline: 'none',
+    letterSpacing: '1px',
     userSelect: 'none',
+    width: '136px', //This is used to drive the width of the entire search bar
     color: theme.lightGreen,
     '&::placeholder': {
       opacity: 0.5,
@@ -59,7 +63,7 @@ class _SearchBar extends Component<Props> {
             className={classes.textInput}
             type="text"
             value={text}
-            placeholder="SEARCH REWARDS"
+            placeholder="SEARCH"
             onChange={this.handleTextEntry}
           />
         </div>

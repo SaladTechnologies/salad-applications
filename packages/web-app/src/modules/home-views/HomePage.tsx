@@ -63,7 +63,7 @@ const styles = (theme: SaladTheme) => ({
     marginRight: 'auto',
   },
   rightColumn: {
-    padding: '2rem 1rem',
+    padding: '2rem 0rem',
     marginLeft: 'auto',
   },
   footer: {
@@ -115,19 +115,17 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
 
             {/* Rewards column */}
             <div className={classnames(classes.mainColumn, classes.verticalLayout)}>
-              <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
-                <SelectedRewardContainer />
-                <div
-                  style={{
-                    display: 'flex',
-                    flex: 1,
-                    justifyContent: 'stretch',
-                    flexDirection: 'row',
-                  }}
-                >
-                  <RewardFilterContainer />
-                  <RewardListContainer />
-                </div>
+              <SelectedRewardContainer />
+              <div
+                style={{
+                  display: 'flex',
+                  flex: 1,
+                  justifyContent: 'stretch',
+                  flexDirection: 'row',
+                }}
+              >
+                <RewardFilterContainer />
+                <RewardListContainer />
               </div>
             </div>
 

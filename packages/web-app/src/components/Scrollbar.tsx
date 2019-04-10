@@ -8,6 +8,7 @@ const styles = (theme: SaladTheme) => ({
   scrollThumb: {
     backgroundColor: theme.lightGreen,
     cursor: 'pointer',
+    zIndex: 3001,
   },
   scrollTrack: {
     margin: '.25rem',
@@ -16,6 +17,7 @@ const styles = (theme: SaladTheme) => ({
     top: (props: Props) => props.scrollTop || 0,
     width: '.5rem !important',
     padding: '-5px',
+    zIndex: 3000,
     background: `linear-gradient(to right, 
       transparent 0%, 
       transparent calc(50% - 0.81px), 

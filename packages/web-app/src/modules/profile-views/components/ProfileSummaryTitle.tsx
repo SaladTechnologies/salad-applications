@@ -18,6 +18,7 @@ const styles = (theme: SaladTheme) => ({
   xp: {
     fontFamily: 'sharpGroteskLight25',
     fontSize: theme.small,
+    letterSpacing: '1px',
   },
 })
 
