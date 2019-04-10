@@ -42,19 +42,20 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'nowrap',
-    justifyContent: 'center',
     alignItems: 'stretch',
     flex: 1,
   },
-  mainColumn: {
-    // border: '1px solid red',
-  },
+  mainColumn: {},
   verticalLayout: {
     display: 'flex',
     flexDirection: 'column',
   },
+  veggieColumn: {
+    marginRight: 'auto',
+  },
   rightColumn: {
-    padding: '2rem 0',
+    padding: '2rem 1rem',
+    marginLeft: 'auto',
   },
   footer: {
     flex: 'none',
@@ -100,7 +101,7 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
           </div>
 
           {/* Veggie column */}
-          <div className={classnames(classes.mainColumn)}>
+          <div className={classnames(classes.mainColumn, classes.veggieColumn)}>
             <SlicedVeggieContainer />
           </div>
 
