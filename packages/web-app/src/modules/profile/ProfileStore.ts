@@ -1,4 +1,4 @@
-import { observable, action, flow } from 'mobx'
+import { observable, action, flow, computed } from 'mobx'
 import { Profile } from './models'
 import { Config } from '../../config'
 import { RootStore } from '../../Store'
@@ -11,6 +11,17 @@ export class ProfileStore {
 
   @observable
   public isUpdating: boolean = false
+
+  @computed
+  public get isOnboarding(): boolean {
+    return (
+      this.currentProfile !== undefined &&
+      (this.currentProfile.termsOfService !== Config.termsVersion ||
+        this.currentProfile.whatsNewVersion !== Config.whatsNewVersion ||
+        this.currentProfile.trackUsage === undefined ||
+        this.currentProfile.referred === undefined)
+    )
+  }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
@@ -32,7 +43,6 @@ export class ProfileStore {
 
       yield this.store.native.registerMachine()
     } catch (err) {
-      //TODO: Catch any error and show the error page
       this.store.routing.replace('/profile-error')
     } finally {
       this.isUpdating = false
@@ -119,17 +129,39 @@ export class ProfileStore {
 
     this.isUpdating = true
 
-    //TODO: Need an API to set the profile.redeem to false
-    yield this.sleep(1000)
+    //For now we are not going to save the skipped state. We will show the referral
+    //entry page each time that the user opens the app until the server disallows this (currently 7 days)
+    yield this.sleep(500)
 
     if (this.currentProfile.referred === undefined) {
-      //TODO: Make this an API call with the new option, then replace this.profile with the returned profile
+      //Make this an API call with the new option, then replace this.profile with the returned profile
       this.currentProfile.referred = false
     }
 
     this.isUpdating = false
 
     this.store.routing.replace('/')
+  })
+
+  @action.bound
+  closeWhatsNew = flow(function*(this: ProfileStore) {
+    if (this.currentProfile === undefined) return
+
+    this.isUpdating = true
+
+    try {
+      let res = yield this.axios.post('update-profile', {
+        whatsNewVersion: Config.whatsNewVersion,
+      })
+
+      let profile = profileFromResource(res.data)
+
+      this.currentProfile = profile
+    } finally {
+      this.isUpdating = false
+
+      this.store.routing.replace('/')
+    }
   })
 
   sleep = (ms: number) => {

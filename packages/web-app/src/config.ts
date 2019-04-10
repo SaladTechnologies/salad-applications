@@ -72,6 +72,7 @@ class Config {
 
   /** The current version of the terms of service */
   public readonly termsVersion: string = requiredString('REACT_APP_TERMS_VERSION')
+  public readonly whatsNewVersion: string = requiredString('REACT_APP_WHATS_NEW_VERSION')
 
   public readonly devTools: boolean = optionalBool('REACT_APP_DEV_TOOLS')
 

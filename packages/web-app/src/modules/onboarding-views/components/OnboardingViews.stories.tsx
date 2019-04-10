@@ -5,6 +5,7 @@ import { ReferralEntryPage } from './ReferralEntryPage'
 import { WelcomePage } from './WelcomePage'
 import { TermsPage } from './TermsPage'
 import { AnalyticsPage } from './AnalyticsPage'
+import { WhatsNewPage } from './WhatsNewPage'
 
 storiesOf('Modules/Onboarding', module)
   .add('Referral Entry Page', () => {
@@ -15,6 +16,9 @@ storiesOf('Modules/Onboarding', module)
   })
   .add('Terms Page', () => {
     return <TermsPage onAgree={action('agree')} />
+  })
+  .add(`What's New Page`, () => {
+    return <WhatsNewPage onNext={action('ok')} />
   })
   .add('Analytics Page', () => {
     return <AnalyticsPage onNext={action('next')} />
