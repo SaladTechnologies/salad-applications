@@ -247,7 +247,7 @@ storiesOf('Modules|Reward', module)
   })
   .add('Filter List', () => {
     return (
-      <div style={{ backgroundColor: '#092234' }}>
+      <div>
         <FilterList filters={getFilters} onToggle={action('toggle')} />
       </div>
     )
@@ -256,7 +256,7 @@ storiesOf('Modules|Reward', module)
     let textEntered = action('text entered')
 
     return (
-      <div style={{ backgroundColor: '#092234' }}>
+      <div>
         With placeholder
         <SearchBar text={''} onTextEntered={textEntered} />
         With text

@@ -10,20 +10,24 @@ import { ProgressBar } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    width: '790px',
+    // width: '551px',
     userSelect: 'none',
+    display: 'inline-block',
   },
   choppingTitle: {
     fontFamily: 'sharpGroteskBook25',
     color: theme.mediumGreen,
     textTransform: 'uppercase',
-    paddingLeft: '12.5rem',
+    paddingLeft: '145px',
     paddingBottom: '.25rem',
+    letterSpacing: '1px',
+    fontSize: '10px',
   },
   cardContainer: {
-    height: '9rem',
     display: 'flex',
+    height: '100px',
     position: 'relative',
+    justifyContent: 'flex-start',
   },
   lock: {
     position: 'absolute',
@@ -32,15 +36,15 @@ const styles = (theme: SaladTheme) => ({
   },
   imageContainer: {
     display: 'inline-block',
-    width: '190px',
-    backgroundColor: (props: Props) => (props.reward && props.reward.color) || theme.green,
+    width: '135.56px',
+    backgroundColor: (props: Props) => (props.reward && props.reward.color) || 'transparent',
   },
   image: {
     height: '100%',
     width: 'auto',
   },
   rightContainer: {
-    width: '37rem',
+    width: '410px',
     padding: '.5rem',
     overflow: 'hidden',
     marginLeft: '.5rem',
@@ -57,14 +61,15 @@ const styles = (theme: SaladTheme) => ({
     color: theme.green,
   },
   nameText: {
-    fontSize: theme.xxLarge,
+    fontSize: '54px',
     fontFamily: 'SharpGroteskLight09',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    paddingTop: '.5rem',
   },
   priceText: {
-    fontSize: theme.medium,
+    fontSize: '10px',
     fontFamily: 'SharpGroteskLight25',
     whiteSpace: 'pre',
   },
@@ -74,7 +79,7 @@ const styles = (theme: SaladTheme) => ({
   progressBackground: {
     borderRadius: 0,
     backgroundColor: theme.darkGreen,
-    height: '0.5rem',
+    height: '4px',
   },
   progressBar: {
     backgroundColor: theme.green,

@@ -7,7 +7,7 @@ import classnames from 'classnames'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    padding: '0.25rem .5rem',
+    padding: '0.25rem 0',
     userSelect: 'none',
   },
   checkboxContainer: {

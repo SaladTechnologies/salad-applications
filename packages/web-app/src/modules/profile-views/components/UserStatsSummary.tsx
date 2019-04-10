@@ -8,7 +8,7 @@ const elementStyles = (theme: SaladTheme) => ({
     textTransform: 'uppercase',
     fontFamily: 'sharpGroteskBook25',
     fontSize: theme.small,
-    padding: '.5rem',
+    padding: '.5rem 1.5rem',
     textAlign: 'right',
   },
   title: {

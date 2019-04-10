@@ -31,7 +31,7 @@ const styles = (theme: SaladTheme) => ({
     position: 'absolute',
     top: borderWidth,
     bottom: borderWidth,
-    right: borderWidth,
+    right: 0,
     left: borderWidth * 2,
     backgroundColor: theme.darkBlue,
     paddingLeft: '2rem',

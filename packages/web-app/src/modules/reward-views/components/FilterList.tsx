@@ -15,11 +15,14 @@ const styles = (theme: SaladTheme) => ({
   title: {
     color: theme.lightGreen,
     fontFamily: 'sharpGroteskBook25',
-    fontSize: theme.medium,
+    fontSize: '12px',
     paddingBottom: '.25rem',
+    letterSpacing: '1px',
   },
   filterText: {
     textTransform: 'capitalize',
+    fontSize: '12px',
+    paddingLeft: '.75rem',
   },
 })
 

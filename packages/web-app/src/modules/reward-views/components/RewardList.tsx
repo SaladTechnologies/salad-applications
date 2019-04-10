@@ -2,15 +2,15 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import { Reward } from '../../reward/models/Reward'
-import { RewardListItem } from './RewardListItem'
+import { RewardSummary } from './RewardSummary'
 import { Fade, Scrollbar } from '../../../components'
 import classnames from 'classnames'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    width: '32rem',
+    width: '24rem',
+    marginLeft: '26px',
     display: 'inline-block',
-    marginLeft: '3.5rem',
     position: 'relative',
     userSelect: 'none',
   },
@@ -78,17 +78,22 @@ class _RewardList extends Component<Props> {
     return (
       <div className={classnames(classes.container)}>
         <Fade className={classes.topFade} direction="down" />
-        <Scrollbar scrollBottom={50} scrollTop={50}>
+        <Scrollbar scrollBottom={30} scrollTop={32}>
           <div style={{ height: '2rem' }} />
           {rewards && rewards.length === 0 && <div className={classes.notFoundTitle}>No Rewards Found...</div>}
           {rewards &&
             rewards.map((r, _) => (
               <div key={r.id} className={classes.item}>
-                <RewardListItem
-                  reward={r}
+                <RewardSummary
+                  name={r.name}
+                  price={r.price}
+                  redeemable={r.redeemable}
+                  imageSrc={r.imageSrc}
                   onClick={() => {
                     this.handleClick(r)
                   }}
+                  timeRemaining={r.remainingTimeLabel}
+                  color={r.color}
                 />
               </div>
             ))}

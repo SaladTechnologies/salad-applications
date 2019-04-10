@@ -60,7 +60,6 @@ class App extends Component {
       <div>
         <OfflineModalContainer />
         {showPlainTitle && <PlainTitlebarContainer />}
-        {/* <div style={{ top: '0', left: 0, right: 0, bottom: 0, position: 'absolute' }}> */}
         <div style={{ top: showPlainTitle ? '2rem' : 0, left: 0, right: 0, bottom: 0, position: 'absolute' }}>
           <Switch>
             {!isAuth && (

@@ -8,32 +8,34 @@ import { AngledPanel } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    height: '5.5rem',
+    height: '60px',
+    flex: '0 0',
     display: 'flex',
     position: 'relative',
     cursor: 'pointer',
-    width: '475px',
+    width: '360px',
     userSelect: 'none',
   },
   lock: {
     position: 'absolute',
     right: '.5rem',
     top: '.2rem',
+    height: '8px',
   },
   imageContainer: {
     display: 'inline-block',
-    width: '120px',
-    backgroundColor: (props: Props) => props.color || theme.green,
+    width: '82px',
+    backgroundColor: (props: Props) => props.color || 'transparent',
   },
   image: {
     height: '100%',
-    width: 'auto',
+    width: '82px',
   },
   rightContainer: {
     width: '22rem',
-    padding: '1rem .5rem',
+    padding: '6px',
     overflow: 'hidden',
-    marginLeft: '.5rem',
+    marginLeft: '2.67px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -47,17 +49,21 @@ const styles = (theme: SaladTheme) => ({
     color: theme.green,
   },
   nameText: {
-    fontSize: theme.xLarge,
+    fontSize: '36px',
+    lineHeight: '36px',
     fontFamily: 'SharpGroteskLight09',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    marginTop: '-.25rem',
+    marginTop: '.25rem',
   },
   priceText: {
-    fontSize: theme.small,
+    fontSize: '8px',
+    lineHeight: '6px',
+    letterSpacing: '1px',
     fontFamily: 'SharpGroteskLight25',
     whiteSpace: 'pre',
+    textTransform: 'uppercase',
   },
 })
 
