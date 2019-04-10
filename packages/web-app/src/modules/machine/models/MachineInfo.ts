@@ -4,6 +4,7 @@ import { SystemData } from './SystemData'
 
 export interface MachineInfo {
   macAddress: string
+  version: string
   system: SystemData
   os: OperatingSystem
   gpus: GPUDevice[]
