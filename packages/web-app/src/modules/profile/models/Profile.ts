@@ -3,6 +3,7 @@ export interface Profile {
   username: string
   email: string
   termsOfService?: string
+  whatsNewVersion?: string
   referred?: boolean
   trackUsage?: boolean
   tutorialComplete: boolean

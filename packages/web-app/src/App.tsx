@@ -6,6 +6,7 @@ import {
   WelcomePageContainer,
   TermsPageContainer,
   AnalyticsPageContainer,
+  WhatsNewPageContainer,
 } from './modules/onboarding-views'
 import { HomePage, OfflineModalContainer } from './modules/home-views'
 import { getStore } from './Store'
@@ -31,6 +32,7 @@ class App extends Component {
 
   getOnboardingRedirect = (profile: Profile) => {
     if (profile.termsOfService !== Config.termsVersion) return <Redirect to="/onboarding/terms" />
+    if (profile.whatsNewVersion !== Config.whatsNewVersion) return <Redirect to="/onboarding/whats-new" />
     if (profile.trackUsage === undefined) return <Redirect to="/onboarding/analytics" />
     if (profile.referred === undefined) return <Redirect to="/onboarding/referral-code" />
     throw Error('Unable to locate a valid onboarding page')
@@ -52,11 +54,8 @@ class App extends Component {
     let loc = this.store.routing.location.pathname
     let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
     this.store.analytics.track('PAGE_VIEW', { page: loc })
-    let isOnboarding =
-      profile &&
-      (profile.termsOfService !== Config.termsVersion ||
-        profile.trackUsage === undefined ||
-        profile.referred === undefined)
+    let isOnboarding = this.store.profile.isOnboarding
+
     return (
       <div>
         <OfflineModalContainer />
@@ -75,6 +74,7 @@ class App extends Component {
                 <Route exact path="/onboarding/referral-code" component={ReferralEntryContainer} />
                 <Route exact path="/onboarding/terms" component={TermsPageContainer} />
                 <Route exact path="/onboarding/analytics" component={AnalyticsPageContainer} />
+                <Route exact path="/onboarding/whats-new" component={WhatsNewPageContainer} /> TODO: Whats new page
                 {profile && this.getOnboardingRedirect(profile)}
               </AnimatedSwitch>
             )}

@@ -252,7 +252,7 @@ export class NativeStore {
       gpu: this.gpuNames && this.gpuNames.join(), //TODO, change this to be just an array
       gpuDriver: 'undefined',
       macAddress: this.machineId,
-      isAmdGpu: false, //TODO: can this be removed?
+      isAmdGpu: false,
     }
 
     try {
