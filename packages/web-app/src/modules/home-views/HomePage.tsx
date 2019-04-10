@@ -7,11 +7,11 @@ import { RewardListContainer, RewardFilterContainer, SelectedRewardContainer } f
 import { RefreshService } from '../data-refresh'
 import { getStore } from '../../Store'
 import { BottomBarContainer } from './BottomBarContainer'
-import { MenuBarContainer } from './MenuBarContainer'
 import { ProfileMenuItemContainer, UserStatsSummaryContainer } from '../profile-views'
 import { StartButtonContainer } from '../machine-views'
 import { Fade } from '../../components'
 import { ReferralListContainer } from '../referral-views'
+import { MainTitlebarContainer } from './MainTitlebarContainer'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -21,6 +21,15 @@ const styles = (theme: SaladTheme) => ({
     top: 0,
     overflow: 'hidden',
     position: 'absolute',
+    justifyContent: 'stretch',
+    alignItems: 'stretch',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  appContainer: {
+    position: 'relative',
+    overflow: 'hidden',
+    flex: 1,
     display: 'flex',
     flexDirection: 'column',
   },
@@ -83,57 +92,57 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
     const { classes } = this.props
     return (
       <div className={classes.container}>
-        <Fade className={classnames(classes.headerFade)} direction="down" />
-        <div className={classes.header}>
-          <ProfileMenuItemContainer />
-          <div style={{ flexGrow: 1 }}>
-            <MenuBarContainer />
-          </div>
-          <div>
-            <StartButtonContainer />
-          </div>
-        </div>
-
-        <div className={classes.main}>
-          {/* XP bar */}
-          <div className={classnames(classes.mainColumn, classes.verticalLayout)}>
-            <ExperienceBarContainer />
+        <MainTitlebarContainer />
+        <div className={classes.appContainer}>
+          <Fade className={classnames(classes.headerFade)} direction="down" />
+          <div className={classes.header}>
+            <ProfileMenuItemContainer />
+            <div style={{ marginLeft: 'auto', marginTop: '-1px' }}>
+              <StartButtonContainer />
+            </div>
           </div>
 
-          {/* Veggie column */}
-          <div className={classnames(classes.mainColumn, classes.veggieColumn)}>
-            <SlicedVeggieContainer />
-          </div>
+          <div className={classes.main}>
+            {/* XP bar */}
+            <div className={classnames(classes.mainColumn, classes.verticalLayout)}>
+              <ExperienceBarContainer />
+            </div>
 
-          {/* Rewards column */}
-          <div className={classnames(classes.mainColumn, classes.verticalLayout)}>
-            <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
-              <SelectedRewardContainer />
-              <div
-                style={{
-                  display: 'flex',
-                  flex: 1,
-                  justifyContent: 'stretch',
-                  flexDirection: 'row',
-                }}
-              >
-                <RewardFilterContainer />
-                <RewardListContainer />
+            {/* Veggie column */}
+            <div className={classnames(classes.mainColumn, classes.veggieColumn)}>
+              <SlicedVeggieContainer />
+            </div>
+
+            {/* Rewards column */}
+            <div className={classnames(classes.mainColumn, classes.verticalLayout)}>
+              <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
+                <SelectedRewardContainer />
+                <div
+                  style={{
+                    display: 'flex',
+                    flex: 1,
+                    justifyContent: 'stretch',
+                    flexDirection: 'row',
+                  }}
+                >
+                  <RewardFilterContainer />
+                  <RewardListContainer />
+                </div>
+              </div>
+            </div>
+
+            {/* Right column */}
+            <div className={classnames(classes.mainColumn, classes.rightColumn, classes.verticalLayout)}>
+              <UserStatsSummaryContainer />
+              <div style={{ zIndex: 2000, marginTop: 'auto' }}>
+                <ReferralListContainer />
               </div>
             </div>
           </div>
 
-          {/* Right column */}
-          <div className={classnames(classes.mainColumn, classes.rightColumn, classes.verticalLayout)}>
-            <UserStatsSummaryContainer />
-            <div style={{ zIndex: 2000, marginTop: 'auto' }}>
-              <ReferralListContainer />
-            </div>
+          <div className={classes.footer}>
+            <BottomBarContainer />
           </div>
-        </div>
-
-        <div className={classes.footer}>
-          <BottomBarContainer />
         </div>
       </div>
     )

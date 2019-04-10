@@ -8,7 +8,7 @@ import {
   AnalyticsPageContainer,
   WhatsNewPageContainer,
 } from './modules/onboarding-views'
-import { HomePage, OfflineModalContainer } from './modules/home-views'
+import { HomePage, OfflineModalContainer, PlainTitlebarContainer } from './modules/home-views'
 import { getStore } from './Store'
 import DevTools from 'mobx-react-devtools'
 import { LoadingPage } from './components'
@@ -24,7 +24,6 @@ import { Config } from './config'
 import { Profile } from './modules/profile/models'
 import { AnimatedSwitch } from './components/AnimatedSwitch'
 import { NewReferralModalContainer } from './modules/referral-views'
-import { TitlebarContainer } from './modules/home-views'
 import { CompatibilityCheckPageContainer, CudaErrorContainer, UnknownErrorContainer } from './modules/machine-views'
 
 class App extends Component {
@@ -55,12 +54,14 @@ class App extends Component {
     let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
     this.store.analytics.track('PAGE_VIEW', { page: loc })
     let isOnboarding = this.store.profile.isOnboarding
+    let showPlainTitle = isOnboarding || !isAuth
 
     return (
       <div>
         <OfflineModalContainer />
-        {isElectron && <TitlebarContainer />}
-        <div style={{ top: isElectron ? '2rem' : 0, left: 0, right: 0, bottom: 0, position: 'absolute' }}>
+        {showPlainTitle && <PlainTitlebarContainer />}
+        {/* <div style={{ top: '0', left: 0, right: 0, bottom: 0, position: 'absolute' }}> */}
+        <div style={{ top: showPlainTitle ? '2rem' : 0, left: 0, right: 0, bottom: 0, position: 'absolute' }}>
           <Switch>
             {!isAuth && (
               <Switch>
