@@ -1,5 +1,5 @@
 import { connect } from '../../connect'
-import { MenuBar, MenuItem } from './components/MenuBar'
+import { Titlebar, MenuItem } from './components/Titlebar'
 import { RootStore } from '../../Store'
 
 const mapStoreToProps = (store: RootStore) => {
@@ -8,11 +8,16 @@ const mapStoreToProps = (store: RootStore) => {
     new MenuItem('Settings', () => store.ui.showModal('/settings')),
   ]
   return {
+    showWindowActions: store.native.isNative,
+    onMinimize: store.native.minimizeWindow,
+    onMaximize: store.native.maximizeWindow,
+    onClose: store.native.closeWindow,
+    bottomBorder: true,
     menuItems: menuItems,
   }
 }
 
-export const MenuBarContainer = connect(
+export const MainTitlebarContainer = connect(
   mapStoreToProps,
-  MenuBar,
+  Titlebar,
 )

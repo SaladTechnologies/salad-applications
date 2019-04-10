@@ -24,7 +24,6 @@ const styles = (theme: SaladTheme) => ({
     fontSize: theme.small,
   },
   detailsContainer: {
-    color: 'lightGrey',
     textAlign: 'center',
     fontFamily: 'sharpGroteskBook19',
     fontSize: theme.small,
@@ -34,7 +33,7 @@ const styles = (theme: SaladTheme) => ({
     cursor: 'not-allowed',
   },
   lineBreak: {
-    borderBottom: `solid 0.5px lightGrey`,
+    borderBottom: `solid 0.5px ${theme.darkBlue}`,
     padding: '.25rem 0',
   },
   logoutButton: {

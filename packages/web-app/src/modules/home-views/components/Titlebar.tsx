@@ -5,6 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinus, faClone, faTimes } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
 
+export class MenuItem {
+  constructor(public readonly name: string, public readonly onClick: () => void) {}
+}
+
 const styles = (theme: SaladTheme) => ({
   container: {
     color: theme.lightGreen,
@@ -17,10 +21,19 @@ const styles = (theme: SaladTheme) => ({
     margin: 0,
     '-webkit-app-region': 'drag',
   },
+  bottomBorder: {
+    borderBottom: `1px solid ${theme.green}`,
+  },
+  leftItems: {
+    marginRight: 'auto',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
   title: {
     fontFamily: 'sharpGroteskBook19',
     fontSize: theme.small,
-    marginRight: 'auto',
+    paddingRight: '1rem',
   },
   buttons: {
     padding: '0 .75rem',
@@ -31,6 +44,15 @@ const styles = (theme: SaladTheme) => ({
       opacity: 0.7,
     },
   },
+  menuItem: {
+    color: theme.mediumGreen,
+    '-webkit-app-region': 'none',
+    padding: '.5rem 1rem',
+    fontFamily: 'sharpGroteskLight25',
+    fontSize: theme.small,
+    letterSpacing: '1.3px',
+    cursor: 'pointer',
+  },
   closeButton: {
     '&:hover': {
       opacity: 1,
@@ -40,9 +62,12 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
+  showWindowActions?: boolean
+  bottomBorder?: boolean
   onMinimize?: () => void
   onMaximize?: () => void
   onClose?: () => void
+  menuItems?: MenuItem[]
 }
 
 class _Titlebar extends Component<Props> {
@@ -65,19 +90,31 @@ class _Titlebar extends Component<Props> {
   }
 
   render() {
-    const { classes } = this.props
+    const { showWindowActions, menuItems, bottomBorder, classes } = this.props
     return (
-      <div className={classes.container}>
-        <div className={classes.title}>Salad</div>
-        <div onClick={this.handleMinimize}>
-          <FontAwesomeIcon size="xs" className={classes.buttons} icon={faMinus} />
+      <div className={classnames(classes.container, { [classes.bottomBorder]: bottomBorder })}>
+        <div className={classes.leftItems}>
+          <div className={classes.title}>Salad</div>
+          {menuItems &&
+            menuItems.map(x => (
+              <div key={x.name} className={classes.menuItem} onClick={() => x.onClick()}>
+                {x.name}
+              </div>
+            ))}
         </div>
-        <div onClick={this.handleMaximize}>
-          <FontAwesomeIcon size="xs" className={classes.buttons} icon={faClone} />
-        </div>
-        <div onClick={this.handleClose}>
-          <FontAwesomeIcon size="xs" className={classnames(classes.closeButton, classes.buttons)} icon={faTimes} />
-        </div>
+        {showWindowActions && (
+          <>
+            <div onClick={this.handleMinimize}>
+              <FontAwesomeIcon size="xs" className={classes.buttons} icon={faMinus} />
+            </div>
+            <div onClick={this.handleMaximize}>
+              <FontAwesomeIcon size="xs" className={classes.buttons} icon={faClone} />
+            </div>
+            <div onClick={this.handleClose}>
+              <FontAwesomeIcon size="xs" className={classnames(classes.closeButton, classes.buttons)} icon={faTimes} />
+            </div>
+          </>
+        )}
       </div>
     )
   }
