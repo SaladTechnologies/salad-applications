@@ -35,6 +35,7 @@ const getMachineInfo = () =>
               console.log(mac)
               machineInfo = {
                 macAddress: mac,
+                version: app.getVersion(),
                 system: sys,
                 os: os,
                 gpus: graphics.controllers,
