@@ -158,6 +158,8 @@ export class ProfileStore {
     //entry page each time that the user opens the app until the server disallows this (currently 7 days)
     yield this.sleep(500)
 
+    this.currentProfile.referred = ReferredStatus.NotReferred
+
     // if (this.currentProfile.referred === undefined) {
     //   //Make this an API call with the new option, then replace this.profile with the returned profile
     //   this.currentProfile.referred = false
