@@ -249,8 +249,8 @@ export class NativeStore {
 
     let deviceInfo = {
       os: `${this.machineInfo.os.distro}-${this.machineInfo.os.release}`,
-      gpu: this.gpuNames && this.gpuNames.join(), //TODO, change this to be just an array
-      gpuDriver: 'undefined',
+      gpus: this.gpuNames,
+      gpuDriver: '0',
       macAddress: this.machineId,
       isAmdGpu: false,
     }

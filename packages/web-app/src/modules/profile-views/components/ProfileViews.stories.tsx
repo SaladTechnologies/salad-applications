@@ -14,7 +14,7 @@ const profile: Profile = {
   email: 'dev@salad.io',
   termsOfService: undefined,
   referred: false,
-  trackUsage: undefined,
+  trackUsageVersion: undefined,
   tutorialComplete: false,
 }
 

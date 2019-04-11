@@ -18,8 +18,8 @@ export class ProfileStore {
   @computed get needsAnalyticsOnboarding(): boolean {
     return (
       this.currentProfile !== undefined &&
-      this.currentProfile.trackUsage !== Config.dataTrackingVersion &&
-      this.currentProfile.trackUsage !== OPT_OUT
+      this.currentProfile.trackUsageVersion !== Config.dataTrackingVersion &&
+      this.currentProfile.trackUsageVersion !== OPT_OUT
     )
   }
 
@@ -48,7 +48,7 @@ export class ProfileStore {
 
       this.currentProfile = profile
 
-      if (profile.trackUsage === Config.dataTrackingVersion) {
+      if (profile.trackUsageVersion === Config.dataTrackingVersion) {
         this.store.analytics.start(profile)
       }
 
@@ -96,7 +96,7 @@ export class ProfileStore {
 
     try {
       let res = yield this.axios.post('update-profile', {
-        trackUsage: newStatus,
+        trackUsageVersion: newStatus,
       })
 
       let profile = profileFromResource(res.data)
@@ -104,9 +104,9 @@ export class ProfileStore {
       this.currentProfile = profile
 
       //Start or stop analytics
-      if (this.currentProfile.trackUsage === Config.dataTrackingVersion) {
+      if (this.currentProfile.trackUsageVersion === Config.dataTrackingVersion) {
         this.store.analytics.start(this.currentProfile)
-      } else if (this.currentProfile.trackUsage === OPT_OUT) {
+      } else if (this.currentProfile.trackUsageVersion === OPT_OUT) {
         this.store.analytics.disable()
       }
     } catch (err) {

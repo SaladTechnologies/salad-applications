@@ -8,6 +8,6 @@ export const profileFromResource = (r: ProfileResource): Profile => ({
   termsOfService: String(r.termsOfService),
   whatsNewVersion: String(r.whatsNewVersion),
   referred: r.isReferred !== undefined ? r.isReferred === '1' : undefined,
-  trackUsage: String(r.trackUsage),
+  trackUsageVersion: String(r.trackUsageVersion),
   tutorialComplete: r.tutorialComplete === 1,
 })
