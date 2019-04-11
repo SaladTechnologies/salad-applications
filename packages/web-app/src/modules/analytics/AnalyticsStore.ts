@@ -53,6 +53,7 @@ export class AnalyticsStore {
   }
 
   public captureException = (err: Error) => {
+    console.error(err)
     Sentry.captureException(err)
   }
 }

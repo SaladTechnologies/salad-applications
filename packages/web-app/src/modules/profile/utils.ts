@@ -8,6 +8,6 @@ export const profileFromResource = (r: ProfileResource): Profile => ({
   termsOfService: String(r.termsOfService),
   whatsNewVersion: String(r.whatsNewVersion),
   referred: r.isReferred !== undefined ? r.isReferred === '1' : undefined,
-  trackUsage: r.trackUsage === 1 ? true : undefined, // TODO: Put this back in once we have undefined as the default r.trackUsage !== undefined ? r.trackUsage === 1 : undefined,
+  trackUsage: String(r.trackUsage),
   tutorialComplete: r.tutorialComplete === 1,
 })

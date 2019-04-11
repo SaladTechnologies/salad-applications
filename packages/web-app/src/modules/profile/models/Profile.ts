@@ -5,6 +5,6 @@ export interface Profile {
   termsOfService?: string
   whatsNewVersion?: string
   referred?: boolean
-  trackUsage?: boolean
+  trackUsage?: string
   tutorialComplete: boolean
 }

@@ -71,6 +71,7 @@ class Config {
   public readonly sentryDSN?: string = optionalString('REACT_APP_SENTRY_DSN')
 
   /** The current version of the terms of service */
+  public readonly dataTrackingVersion: string = requiredString('REACT_APP_DATA_TRACKING_VERSION')
   public readonly termsVersion: string = requiredString('REACT_APP_TERMS_VERSION')
   public readonly whatsNewVersion: string = requiredString('REACT_APP_WHATS_NEW_VERSION')
 
