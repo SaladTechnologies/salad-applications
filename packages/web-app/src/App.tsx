@@ -24,6 +24,7 @@ import { Config } from './config'
 import { AnimatedSwitch } from './components/AnimatedSwitch'
 import { NewReferralModalContainer } from './modules/referral-views'
 import { CompatibilityCheckPageContainer, CudaErrorContainer, UnknownErrorContainer } from './modules/machine-views'
+import { ReferredStatus } from './modules/profile/models'
 
 class App extends Component {
   store = getStore()
@@ -33,9 +34,9 @@ class App extends Component {
     if (profile === undefined) return null
 
     if (profile.termsOfService !== Config.termsVersion) return <Redirect to="/onboarding/terms" />
-    if (profile.whatsNewVersion !== Config.whatsNewVersion) return <Redirect to="/onboarding/whats-new" />
     if (this.store.profile.needsAnalyticsOnboarding) return <Redirect to="/onboarding/analytics" />
-    if (profile.referred === undefined) return <Redirect to="/onboarding/referral-code" />
+    if (profile.referred === ReferredStatus.CanEnter) return <Redirect to="/onboarding/referral-code" />
+    if (profile.whatsNewVersion !== Config.whatsNewVersion) return <Redirect to="/onboarding/whats-new" />
     throw Error('Unable to locate a valid onboarding page')
   }
 
