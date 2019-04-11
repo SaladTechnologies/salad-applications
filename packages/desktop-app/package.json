@@ -13,7 +13,7 @@
     "start": "yarn build && electron ./dist/main.js",
     "build": "webpack --config webpack.config.js",
     "dist": "yarn build && electron-builder",
-    "release": "electron-builder --publish always"
+    "release": "yarn build && electron-builder --publish always"
   },
   "devDependencies": {
     "@types/electron": "^1.6.10",
