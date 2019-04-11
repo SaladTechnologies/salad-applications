@@ -9,6 +9,8 @@ import { profileFromResource } from './utils'
 const OPT_OUT = 'OPT_OUT'
 
 export class ProfileStore {
+  private skippedReferral?: boolean = undefined
+
   @observable
   public currentProfile?: Profile
 
@@ -44,7 +46,7 @@ export class ProfileStore {
     try {
       let res = yield this.axios.get('get-profile')
 
-      let profile = profileFromResource(res.data)
+      let profile = profileFromResource(res.data, this.skippedReferral)
 
       this.currentProfile = profile
 
@@ -74,7 +76,7 @@ export class ProfileStore {
         termsOfService: Config.termsVersion,
       })
 
-      let profile = profileFromResource(res.data)
+      let profile = profileFromResource(res.data, this.skippedReferral)
 
       this.currentProfile = profile
     } finally {
@@ -99,7 +101,7 @@ export class ProfileStore {
         trackUsageVersion: newStatus,
       })
 
-      let profile = profileFromResource(res.data)
+      let profile = profileFromResource(res.data, this.skippedReferral)
 
       this.currentProfile = profile
 
@@ -132,6 +134,7 @@ export class ProfileStore {
       })
 
       this.currentProfile.referred = ReferredStatus.Referred
+      this.skippedReferral = false
 
       this.isUpdating = false
       this.store.routing.replace('/')
@@ -158,6 +161,7 @@ export class ProfileStore {
     //entry page each time that the user opens the app until the server disallows this (currently 7 days)
     yield this.sleep(500)
 
+    this.skippedReferral = true
     this.currentProfile.referred = ReferredStatus.NotReferred
 
     // if (this.currentProfile.referred === undefined) {
@@ -181,7 +185,7 @@ export class ProfileStore {
         whatsNewVersion: Config.whatsNewVersion,
       })
 
-      let profile = profileFromResource(res.data)
+      let profile = profileFromResource(res.data, this.skippedReferral)
 
       this.currentProfile = profile
     } finally {
