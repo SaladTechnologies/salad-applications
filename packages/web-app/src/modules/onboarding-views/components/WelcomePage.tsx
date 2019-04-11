@@ -20,7 +20,7 @@ class _WelcomePage extends Component<Props> {
       <OnboardingPage
         title={'Welcome to Salad'}
         subtitle={`Your computer does the work, and you get paid. 
-        You can earn great look like Steam credit, gift cards, game 
+        You can earn great loot like Steam credit, gift cards, game 
         codes and more. Just let Salad run when you're not using your rig.`}
         image={image}
         nextSubmitting={submitting}
