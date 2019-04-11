@@ -1,5 +1,5 @@
 import { ProfileResource } from './models/ProfileResource'
-import { Profile } from './models/Profile'
+import { Profile, ReferredStatus } from './models/Profile'
 
 export const profileFromResource = (r: ProfileResource): Profile => ({
   id: String(r.userId),
@@ -7,7 +7,25 @@ export const profileFromResource = (r: ProfileResource): Profile => ({
   email: String(r.profileData.email),
   termsOfService: String(r.termsOfService),
   whatsNewVersion: String(r.whatsNewVersion),
-  referred: r.isReferred !== undefined ? r.isReferred === '1' : undefined,
-  trackUsage: String(r.trackUsage),
+  referred: getReferredStatus(r.isReferred),
+  trackUsageVersion: String(r.trackUsageVersion),
   tutorialComplete: r.tutorialComplete === 1,
 })
+
+const getReferredStatus = (isReferred: string): ReferredStatus => {
+  let statusCode = Number(isReferred)
+
+  //If the code is not a number, it is a valid code
+  if (statusCode === NaN) {
+    return ReferredStatus.Referred
+  }
+
+  switch (statusCode) {
+    case 0:
+      return ReferredStatus.CanEnter
+    case 1:
+      return ReferredStatus.Test
+    default:
+      return ReferredStatus.NotReferred
+  }
+}

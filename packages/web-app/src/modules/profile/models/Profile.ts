@@ -4,7 +4,14 @@ export interface Profile {
   email: string
   termsOfService?: string
   whatsNewVersion?: string
-  referred?: boolean
-  trackUsage?: string
+  referred?: ReferredStatus
+  trackUsageVersion?: string
   tutorialComplete: boolean
+}
+
+export enum ReferredStatus {
+  CanEnter, //joined within the last week, could still enter a referral code
+  Test, //Testing state
+  NotReferred, //They didn't enter a code and don't have option anymore
+  Referred,
 }

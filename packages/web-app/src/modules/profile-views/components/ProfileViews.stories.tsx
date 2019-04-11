@@ -13,8 +13,7 @@ const profile: Profile = {
   username: 'Master Chef Bob is World #1 hero',
   email: 'dev@salad.io',
   termsOfService: undefined,
-  referred: false,
-  trackUsage: undefined,
+  trackUsageVersion: undefined,
   tutorialComplete: false,
 }
 

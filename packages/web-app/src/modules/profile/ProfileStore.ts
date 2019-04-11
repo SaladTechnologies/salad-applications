@@ -1,5 +1,5 @@
 import { observable, action, flow, computed } from 'mobx'
-import { Profile } from './models'
+import { Profile, ReferredStatus } from './models'
 import { Config } from '../../config'
 import { RootStore } from '../../Store'
 import { AxiosInstance } from 'axios'
@@ -18,8 +18,8 @@ export class ProfileStore {
   @computed get needsAnalyticsOnboarding(): boolean {
     return (
       this.currentProfile !== undefined &&
-      this.currentProfile.trackUsage !== Config.dataTrackingVersion &&
-      this.currentProfile.trackUsage !== OPT_OUT
+      this.currentProfile.trackUsageVersion !== Config.dataTrackingVersion &&
+      this.currentProfile.trackUsageVersion !== OPT_OUT
     )
   }
 
@@ -30,7 +30,7 @@ export class ProfileStore {
       (this.currentProfile.termsOfService !== Config.termsVersion ||
         this.currentProfile.whatsNewVersion !== Config.whatsNewVersion ||
         this.needsAnalyticsOnboarding ||
-        this.currentProfile.referred === undefined)
+        this.currentProfile.referred === ReferredStatus.CanEnter)
     )
   }
 
@@ -48,7 +48,7 @@ export class ProfileStore {
 
       this.currentProfile = profile
 
-      if (profile.trackUsage === Config.dataTrackingVersion) {
+      if (profile.trackUsageVersion === Config.dataTrackingVersion) {
         this.store.analytics.start(profile)
       }
 
@@ -96,7 +96,7 @@ export class ProfileStore {
 
     try {
       let res = yield this.axios.post('update-profile', {
-        trackUsage: newStatus,
+        trackUsageVersion: newStatus,
       })
 
       let profile = profileFromResource(res.data)
@@ -104,9 +104,9 @@ export class ProfileStore {
       this.currentProfile = profile
 
       //Start or stop analytics
-      if (this.currentProfile.trackUsage === Config.dataTrackingVersion) {
+      if (this.currentProfile.trackUsageVersion === Config.dataTrackingVersion) {
         this.store.analytics.start(this.currentProfile)
-      } else if (this.currentProfile.trackUsage === OPT_OUT) {
+      } else if (this.currentProfile.trackUsageVersion === OPT_OUT) {
         this.store.analytics.disable()
       }
     } catch (err) {
@@ -124,16 +124,26 @@ export class ProfileStore {
 
     this.isUpdating = true
 
-    //TODO: Figure out what API to call to redeem a referral code
-    yield this.sleep(1000)
-
     console.log('Sending referral code ' + code)
 
-    this.currentProfile.referred = true
+    try {
+      yield this.axios.post('consume-referral-code', {
+        code: code,
+      })
 
-    this.isUpdating = false
+      this.currentProfile.referred = ReferredStatus.Referred
 
-    this.store.routing.replace('/')
+      this.isUpdating = false
+      this.store.routing.replace('/')
+    } catch (err) {
+      //TODO: show an error to the user
+      // 200 if the code is successfully consumed
+      // 400 if the entered code does not match any valid, active user or promotional referral code
+      // 409 if the user has already entered a referral code and is trying to do so again
+      // 500 in the event of some other unforeseen error.
+
+      this.isUpdating = false
+    }
   })
 
   @action.bound
@@ -148,10 +158,10 @@ export class ProfileStore {
     //entry page each time that the user opens the app until the server disallows this (currently 7 days)
     yield this.sleep(500)
 
-    if (this.currentProfile.referred === undefined) {
-      //Make this an API call with the new option, then replace this.profile with the returned profile
-      this.currentProfile.referred = false
-    }
+    // if (this.currentProfile.referred === undefined) {
+    //   //Make this an API call with the new option, then replace this.profile with the returned profile
+    //   this.currentProfile.referred = false
+    // }
 
     this.isUpdating = false
 
