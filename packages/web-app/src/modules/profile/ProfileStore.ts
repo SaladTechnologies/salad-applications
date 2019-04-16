@@ -78,6 +78,14 @@ export class ProfileStore {
 
       let profile = profileFromResource(res.data, this.skippedReferral)
 
+      if (profile.termsOfService !== Config.termsVersion) {
+        this.store.analytics.captureException(
+          new Error(
+            `Profile failed to update terms of service. UserId:${this.currentProfile.id}, TOS:${Config.termsVersion}`,
+          ),
+        )
+      }
+
       this.currentProfile = profile
     } finally {
       this.isUpdating = false
