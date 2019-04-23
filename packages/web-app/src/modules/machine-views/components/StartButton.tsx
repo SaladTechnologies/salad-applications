@@ -114,6 +114,7 @@ class _StartButton extends Component<Props> {
         <ReactHint
           autoPosition
           events
+          attribute="data-start-button"
           onRenderContent={() => (
             <div>
               <Tooltip
@@ -133,7 +134,7 @@ class _StartButton extends Component<Props> {
             onClick={this.handleClick}
           >
             {!startEnabled && (
-              <div className={classes.infoCorner} data-rh="tooltip 1">
+              <div data-start-button className={classes.infoCorner}>
                 !!
               </div>
             )}
