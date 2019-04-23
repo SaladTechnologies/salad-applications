@@ -31,7 +31,10 @@ class App extends Component {
 
   getOnboardingRedirect = () => {
     let profile = this.store.profile.currentProfile
-    if (profile === undefined) return null
+    if (profile === undefined) {
+      if (this.store.profile.isLoading) return <Redirect to="/profile-loading" />
+      else return null
+    }
 
     if (profile.termsOfService !== Config.termsVersion) return <Redirect to="/onboarding/terms" />
     if (this.store.profile.needsAnalyticsOnboarding) return <Redirect to="/onboarding/analytics" />
@@ -73,6 +76,7 @@ class App extends Component {
             )}
             {isOnboarding && (
               <AnimatedSwitch>
+                <Route exact path="/profile-loading" render={() => <LoadingPage text="Loading profile" />} />
                 <Route exact path="/onboarding/referral-code" component={ReferralEntryContainer} />
                 <Route exact path="/onboarding/terms" component={TermsPageContainer} />
                 <Route exact path="/onboarding/analytics" component={AnalyticsPageContainer} />

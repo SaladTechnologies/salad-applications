@@ -35,7 +35,6 @@
     "@types/auth0-js": "^8.11.11",
     "@types/axios": "^0.14.0",
     "@types/classnames": "^2.2.7",
-    "@types/jest": "24.0.0",
     "@types/lorem-ipsum": "^1.0.2",
     "@types/mixpanel-browser": "^2.23.0",
     "@types/node": "10.12.21",

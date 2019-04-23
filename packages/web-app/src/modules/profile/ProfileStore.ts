@@ -17,6 +17,9 @@ export class ProfileStore {
   @observable
   public isUpdating: boolean = false
 
+  @observable
+  public isLoading: boolean = false
+
   @computed get needsAnalyticsOnboarding(): boolean {
     return (
       this.currentProfile !== undefined &&
@@ -28,7 +31,7 @@ export class ProfileStore {
   @computed
   public get isOnboarding(): boolean {
     return (
-      this.currentProfile !== undefined &&
+      this.currentProfile === undefined ||
       (this.currentProfile.termsOfService !== Config.termsVersion ||
         this.currentProfile.whatsNewVersion !== Config.whatsNewVersion ||
         this.needsAnalyticsOnboarding ||
@@ -42,7 +45,7 @@ export class ProfileStore {
   loadProfile = flow(function*(this: ProfileStore) {
     console.log('Loading the user profile')
 
-    this.isUpdating = true
+    this.isLoading = true
     try {
       let res = yield this.axios.get('get-profile')
 
@@ -58,7 +61,7 @@ export class ProfileStore {
     } catch (err) {
       this.store.routing.replace('/profile-error')
     } finally {
-      this.isUpdating = false
+      this.isLoading = false
       this.store.routing.replace('/')
     }
   })
