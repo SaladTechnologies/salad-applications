@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
-import { AngledPanel } from '../../../components'
+import { AngledPanel, Tooltip } from '../../../components'
 import classnames from 'classnames'
+// @ts-ignore
+import ReactHintFactory from 'react-hint'
+const ReactHint = ReactHintFactory(React)
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -57,6 +60,16 @@ const styles = (theme: SaladTheme) => ({
     bottom: 0,
     left: 50,
   },
+  infoCorner: {
+    position: 'absolute',
+    top: 0,
+    left: 2,
+    backgroundColor: '#F6931D',
+    height: '25px',
+    width: '29.17px',
+    clipPath: 'polygon(50% 100%, 0 0, 100% 0)',
+    textAlign: 'center',
+  },
   title: {
     fontFamily: 'SharpGroteskLight25',
     fontSize: theme.small,
@@ -74,6 +87,9 @@ const styles = (theme: SaladTheme) => ({
     fontFamily: 'sharpGroteskBook25',
     fontSize: theme.small,
     letterSpacing: '1px',
+  },
+  disableRateText: {
+    color: '#F6931D',
   },
 })
 
@@ -94,21 +110,44 @@ class _StartButton extends Component<Props> {
   render() {
     const { balance, rate, isRunning, startEnabled, classes } = this.props
     return (
-      <AngledPanel leftSide="left" className={classnames(classes.container)}>
-        <AngledPanel
-          leftSide="left"
-          rightSide="left"
-          className={classnames(classes.button, { [classes.disabledButton]: !startEnabled })}
-          onClick={this.handleClick}
-        >
-          <div className={classes.buttonText}>{isRunning ? 'Stop' : 'Start'}</div>
+      <>
+        <ReactHint
+          autoPosition
+          events
+          onRenderContent={() => (
+            <div>
+              <Tooltip
+                title="Incompatible Machine"
+                text="Looks like you're machine doesn't like Salad.
+                 Please check your GPU and Windows version to ensure they
+                  are compatible with Salad."
+              />
+            </div>
+          )}
+        />
+        <AngledPanel leftSide="left" className={classnames(classes.container)}>
+          <AngledPanel
+            leftSide="left"
+            rightSide="left"
+            className={classnames(classes.button, { [classes.disabledButton]: !startEnabled })}
+            onClick={this.handleClick}
+          >
+            {!startEnabled && (
+              <div className={classes.infoCorner} data-rh="tooltip 1">
+                !!
+              </div>
+            )}
+            <div className={classes.buttonText}>{isRunning ? 'Stop' : 'Start'}</div>
+          </AngledPanel>
+          <div className={classes.textContainer}>
+            <div className={classes.title}>Current balance</div>
+            <div className={classes.balanceText}>${balance ? balance.toFixed(5) : 0} USD</div>
+            <div className={classnames(classes.rateText, { [classes.disableRateText]: !startEnabled })}>
+              ${rate ? rate.toFixed(5) : '0.00000'}/HOUR
+            </div>
+          </div>
         </AngledPanel>
-        <div className={classes.textContainer}>
-          <div className={classes.title}>Current balance</div>
-          <div className={classes.balanceText}>${balance ? balance.toFixed(5) : 0} USD</div>
-          <div className={classes.rateText}>${rate ? rate.toFixed(5) : 0}/HOUR</div>
-        </div>
-      </AngledPanel>
+      </>
     )
   }
 }
