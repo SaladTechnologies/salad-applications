@@ -144,7 +144,7 @@ class _StartButton extends Component<Props> {
             <div className={classes.title}>Current balance</div>
             <div className={classes.balanceText}>${balance ? balance.toFixed(5) : 0} USD</div>
             <div className={classnames(classes.rateText, { [classes.disableRateText]: !startEnabled })}>
-              ${rate ? rate.toFixed(5) : '0.00000'}/HOUR
+              ${rate ? (rate * 24).toFixed(3) : '0.000'}/DAY
             </div>
           </div>
         </AngledPanel>
