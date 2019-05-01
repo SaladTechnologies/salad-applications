@@ -1,0 +1,25 @@
+{
+  "name": "@saladtech/salad-bowl",
+  "version": "0.0.1",
+  "main": "index.ts",
+  "directories": {
+    "test": "__tests__"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "start": "nodemon",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/dsarfati/salad-applications/issues"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.11",
+    "ts-node": "^8.1.0"
+  },
+  "dependencies": {
+    "axios": "^0.18.0"
+  }
+}
