@@ -26,6 +26,11 @@ export class ReferralStore {
     this.totalCount = data.totalReferrals
   }
 
+  showNewReferralModal = () => {
+    this.store.ui.showModal(`/new-referral`)
+    this.store.analytics.track('Viewed Referral Creation')
+  }
+
   @action.bound
   sendReferral = flow(function*(this: ReferralStore, email: string) {
     console.log('Sending Referral')
@@ -42,6 +47,7 @@ export class ReferralStore {
       let newReferral: Referral = referralFromResource(res.data)
 
       this.referrals.push(newReferral)
+      this.store.analytics.trackReferralSent()
     } catch (error) {
       console.error(error)
       throw error

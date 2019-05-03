@@ -4,8 +4,8 @@ import { RootStore } from '../../Store'
 
 const mapStoreToProps = (store: RootStore) => {
   const menuItems: MenuItem[] = [
-    new MenuItem('Account', () => store.ui.showModal('/profile')),
-    new MenuItem('Settings', () => store.ui.showModal('/settings')),
+    new MenuItem('Account', store.ui.showProfilePage),
+    new MenuItem('Settings', store.ui.showSettingsPage),
   ]
   return {
     showWindowActions: store.native.isNative,

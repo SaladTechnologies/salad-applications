@@ -53,8 +53,22 @@ export class ProfileStore {
 
       this.currentProfile = profile
 
-      if (profile.trackUsageVersion === Config.dataTrackingVersion) {
-        this.store.analytics.start(profile)
+      let trackUsage = profile.trackUsageVersion === Config.dataTrackingVersion
+
+      this.store.analytics.start(profile, trackUsage)
+
+      if (trackUsage) {
+        if (profile.isNewUser) {
+          this.store.analytics.trackRegistration()
+        }
+        this.store.analytics.trackLogin()
+      }
+
+      //Update the new user flag if this is their first time loggin in
+      if (profile.isNewUser) {
+        yield this.axios.post('update-profile', {
+          isNewUser: false,
+        })
       }
 
       yield this.store.native.registerMachine()
@@ -118,7 +132,7 @@ export class ProfileStore {
 
       //Start or stop analytics
       if (this.currentProfile.trackUsageVersion === Config.dataTrackingVersion) {
-        this.store.analytics.start(this.currentProfile)
+        this.store.analytics.start(this.currentProfile, true)
       } else if (this.currentProfile.trackUsageVersion === OPT_OUT) {
         this.store.analytics.disable()
       }

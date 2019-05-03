@@ -5,6 +5,7 @@ export const profileFromResource = (r: ProfileResource, skippedReferral: boolean
   id: String(r.userId),
   username: String(r.profileData.nickname),
   email: String(r.profileData.email),
+  isNewUser: Boolean(r.isNewUser),
   termsOfService: String(r.termsOfService),
   whatsNewVersion: String(r.whatsNewVersion),
   referred: getReferredStatus(r.isReferred, skippedReferral),

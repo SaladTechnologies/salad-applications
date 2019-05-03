@@ -13,4 +13,13 @@ export class UIStore {
   hideModal = () => {
     this.store.routing.replace('/')
   }
+
+  showProfilePage = () => {
+    this.showModal('/profile')
+    this.store.analytics.track('Viewed Profile')
+  }
+  showSettingsPage = () => {
+    this.showModal('/settings')
+    this.store.analytics.track('Viewed Settings')
+  }
 }
