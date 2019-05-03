@@ -60,12 +60,14 @@ export class AnalyticsStore {
 
   public trackLogin = () => {
     if (!this.started) return
+
     mixpanel.people.increment('Login Count')
     this.track('Login')
   }
 
   public trackRegistration = () => {
     if (!this.started) return
+
     mixpanel.people.set({
       $created: new Date().toISOString(),
     })
@@ -91,6 +93,8 @@ export class AnalyticsStore {
   }
 
   public trackSelectedReward = (id: string, name: string) => {
+    if (!this.started) return
+
     let rewardName = `${id}:${name}`
     this.track('Reward Selected', { Reward: rewardName })
     mixpanel.people.append('Rewards Selected', rewardName)
@@ -101,12 +105,16 @@ export class AnalyticsStore {
   }
 
   public trackRewardView = (id: string, name: string) => {
+    if (!this.started) return
+
     let rewardName = `${id}:${name}`
     this.track('Reward Viewed', { Reward: rewardName })
     mixpanel.people.append('Rewards Viewed', rewardName)
   }
 
   public trackRewardRedeemed = (reward: Reward) => {
+    if (!this.started) return
+
     let rewardName = `${reward.id}:${name}`
     this.track('Reward Redeemed', { Reward: rewardName, Price: reward.price, Tags: reward.filter })
     mixpanel.people.append('Rewards Redeemed', rewardName)
@@ -115,6 +123,8 @@ export class AnalyticsStore {
   }
 
   public trackReferralSent = () => {
+    if (!this.started) return
+
     this.track('Referral Sent')
     mixpanel.people.increment('Referral Sent Count')
     mixpanel.people.set({
@@ -123,6 +133,8 @@ export class AnalyticsStore {
   }
 
   public trackMachineInfo = (machine: MachineInfo) => {
+    if (!this.started) return
+
     mixpanel.people.union({
       'Machine Ids': machine.macAddress,
       GPUs: machine.gpus.map(x => x.model),
@@ -131,6 +143,7 @@ export class AnalyticsStore {
 
   public track = (event: string, properties?: { [key: string]: any }) => {
     if (!this.started) return
+
     mixpanel.track(event, properties)
   }
 
