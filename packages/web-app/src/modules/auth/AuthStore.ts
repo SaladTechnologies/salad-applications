@@ -3,6 +3,9 @@ import { AxiosInstance } from 'axios'
 import { WebAuth, Auth0DecodedHash } from 'auth0-js'
 import { RootStore } from '../../Store'
 import { Config } from '../../config'
+import * as Storage from '../../Storage'
+
+const REMEMBER_ME = 'REMEMBER_ME'
 
 export class AuthStore {
   private refreshTimer?: NodeJS.Timeout
@@ -20,6 +23,10 @@ export class AuthStore {
 
   @observable
   public loginError: boolean = false
+
+  public get hasLoggedIn(): boolean {
+    return Storage.getOrSetDefault(REMEMBER_ME, 'false') === 'true'
+  }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     let redirect = `${window.location.origin}/auth/callback`
@@ -44,6 +51,12 @@ export class AuthStore {
     this.webAuth.authorize()
   }
 
+  checkRememberMe = (): boolean => {
+    if (this.hasLoggedIn) this.signIn()
+
+    return this.hasLoggedIn
+  }
+
   @action.bound
   handleAuthentication = flow(function*(this: AuthStore) {
     this.isLoading = true
@@ -52,6 +65,9 @@ export class AuthStore {
       let authResult = yield this.parseToken()
 
       this.processAuthResult(authResult)
+
+      //Save the flag indicating the user has logged in
+      Storage.setItem(REMEMBER_ME, 'true')
 
       yield this.store.profile.loadProfile()
 
@@ -94,6 +110,8 @@ export class AuthStore {
       returnTo: redirect,
     })
     this.authToken = undefined
+
+    Storage.setItem(REMEMBER_ME, 'false')
 
     //Switch back to the main page
     this.store.routing.replace('/')

@@ -68,7 +68,14 @@ class App extends Component {
             {!isAuth && (
               <Switch>
                 <Route exact path="/auth/callback" component={CallbackContainer} />
-                <Route exact path="/" component={WelcomePageContainer} />
+                <Route
+                  exact
+                  path="/"
+                  render={() => {
+                    if (this.store.auth.checkRememberMe()) return <LoadingPage text="Logging In" />
+                    return <WelcomePageContainer />
+                  }}
+                />
                 <Redirect to="/" />
               </Switch>
             )}
