@@ -9,9 +9,9 @@ export class JobManager {
   private retryTimer: NodeJS.Timeout | undefined
   private statusTimer: NodeJS.Timeout
   private started = false
-  private currentJob: JobResource | undefined
+  private currentJob: ContainerManager | undefined
 
-  constructor(private readonly axios: AxiosInstance, private readonly containerManager: ContainerManager) {}
+  constructor(private readonly axios: AxiosInstance) {}
 
   public start = () => {
     if (this.started) {
@@ -35,12 +35,16 @@ export class JobManager {
       return
     }
 
-    let jobId = this.currentJob.metadata.id
+    let jobId = this.currentJob.job.metadata.id
 
-    let status = this.containerManager.getStatus(jobId)
+    let status = this.currentJob.status
 
     if (status === JobStatus.Completed) {
-      // let result = await this.axios.post(jo)
+      console.log('Sending job results')
+      let result = await this.axios.post('job-result', {
+        id: jobId,
+        metrics: this.currentJob.getMetrics,
+      })
       this.currentJob = undefined
       this.getNewJob()
     } else {
@@ -51,7 +55,6 @@ export class JobManager {
 
         switch (result.data.action) {
           case JobAction.Continue:
-            console.log('Continue running job')
             break
           case JobAction.Abort:
             this.abortJob(jobId)
@@ -79,11 +82,11 @@ export class JobManager {
   }
 
   public runJob = (job: JobResource): void => {
-    console.log('Running job ' + job.metadata.id)
-
-    this.currentJob = job
-
-    this.containerManager.runJob(job)
+    if (this.currentJob) {
+      console.error('A job is already running. Only 1 job is supported at a time.')
+      return
+    }
+    this.currentJob = new ContainerManager(job)
   }
 
   public abortJob = (id: string): void => {
