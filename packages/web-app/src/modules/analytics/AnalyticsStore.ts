@@ -2,49 +2,131 @@ import mixpanel from 'mixpanel-browser'
 import { Config } from '../../config'
 import { Profile } from '../profile/models'
 import * as Sentry from '@sentry/browser'
+import { Reward } from '../reward/models'
+import { MachineInfo } from '../machine/models'
 
 export class AnalyticsStore {
+  private trackUsage = false
   private started = false
 
-  public start = (profile: Profile) => {
-    if (this.started) {
-      console.warn('Analytics already started. Skipping...')
+  public start = (profile: Profile, trackUsage: boolean) => {
+    if (this.started && this.trackUsage === trackUsage) {
+      console.warn('Already started analytics. Skipping...')
       return
     }
 
-    const token = Config.mixpanelToken
-    if (token) {
-      mixpanel.init(token)
-
-      mixpanel.people.set({
-        $email: profile.email,
-        $last_name: profile.username,
-        $last_login: new Date(),
+    this.trackUsage = trackUsage
+    Sentry.configureScope(scope => {
+      scope.setUser({
+        id: profile.id,
+        email: profile.email,
+        username: profile.username,
       })
+    })
 
-      mixpanel.identify(profile.id)
+    if (trackUsage) {
+      const token = Config.mixpanelToken
+      if (token) {
+        let config = {}
 
-      Sentry.configureScope(scope => {
-        scope.setUser({
-          id: profile.id,
-          email: profile.email,
-          username: profile.username,
+        mixpanel.init(token, config)
+
+        mixpanel.people.set({
+          Id: profile.id,
+          $email: profile.email,
+          $last_name: profile.username,
+          $last_login: new Date().toISOString(),
         })
-      })
 
-      this.started = true
+        mixpanel.register({
+          'New User': profile.isNewUser,
+          Version: Config.appVersion,
+        })
 
-      this.track('LOGIN')
-      console.log('Started mixpanel.')
-    } else {
-      console.log('No mixpanel token found. Skipping...')
+        mixpanel.identify(profile.id)
+
+        console.log('Started mixpanel.')
+      } else {
+        console.log('No mixpanel token found. Skipping...')
+      }
     }
+    this.started = true
   }
 
   public disable = () => {
     //TODO: disable any analytics
-    mixpanel.opt_out_tracking()
-    this.started = false
+    if (mixpanel) mixpanel.opt_out_tracking()
+  }
+
+  public trackLogin = () => {
+    if (!this.started) return
+    mixpanel.people.increment('Login Count')
+    this.track('Login')
+  }
+
+  public trackRegistration = () => {
+    if (!this.started) return
+    mixpanel.people.set({
+      $created: new Date().toISOString(),
+    })
+    this.track('Registration')
+  }
+
+  /** Tracks if started or stopped */
+  public trackRunStatus = (started: boolean) => {
+    if (!this.started) return
+
+    if (started) {
+      this.track('Start')
+      mixpanel.people.increment('Start Count')
+      mixpanel.people.set({
+        'Start Last': new Date().toISOString(),
+      })
+    } else {
+      this.track('Stop')
+      mixpanel.people.set({
+        'Stop Last': new Date().toISOString(),
+      })
+    }
+  }
+
+  public trackSelectedReward = (id: string, name: string) => {
+    let rewardName = `${id}:${name}`
+    this.track('Reward Selected', { Reward: rewardName })
+    mixpanel.people.append('Rewards Selected', rewardName)
+    mixpanel.people.set({
+      'Reward Selected': rewardName,
+      'Reward Selected Date': new Date().toISOString(),
+    })
+  }
+
+  public trackRewardView = (id: string, name: string) => {
+    let rewardName = `${id}:${name}`
+    this.track('Reward Viewed', { Reward: rewardName })
+    mixpanel.people.append('Rewards Viewed', rewardName)
+  }
+
+  public trackRewardRedeemed = (reward: Reward) => {
+    let rewardName = `${reward.id}:${name}`
+    this.track('Reward Redeemed', { Reward: rewardName, Price: reward.price, Tags: reward.filter })
+    mixpanel.people.append('Rewards Redeemed', rewardName)
+    mixpanel.people.increment('Rewards Redeemed Count')
+    mixpanel.people.track_charge(reward.price, { Reward: rewardName })
+  }
+
+  public trackReferralSent = () => {
+    this.track('Referral Sent')
+    mixpanel.people.increment('Referral Sent Count')
+    mixpanel.people.set({
+      'Referral Last Sent': new Date().toISOString(),
+    })
+  }
+
+  public trackMachineInfo = (machine: MachineInfo) => {
+    mixpanel.people.union({
+      'Machine Ids': machine.macAddress,
+      GPUs: machine.gpus.map(x => x.model),
+    })
   }
 
   public track = (event: string, properties?: { [key: string]: any }) => {

@@ -1,6 +1,7 @@
 export interface ProfileResource {
   userId: string
   isReferred: string
+  isNewUser: boolean
   termsOfService: string
   trackUsageVersion: string
   tutorialComplete: number

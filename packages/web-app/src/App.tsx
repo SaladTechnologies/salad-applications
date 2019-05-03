@@ -55,9 +55,7 @@ class App extends Component {
   render() {
     let isElectron = this.store.native.isNative
     let isAuth = this.store.auth.isAuthenticated()
-    let loc = this.store.routing.location.pathname
     let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
-    this.store.analytics.track('PAGE_VIEW', { page: loc })
     let isOnboarding = this.store.profile.isOnboarding
     let showPlainTitle = isOnboarding || !isAuth
 

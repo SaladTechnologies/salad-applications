@@ -10,6 +10,7 @@ import { UserStatsSummary } from './UserStatsSummary'
 
 const profile: Profile = {
   id: '1234',
+  isNewUser: false,
   username: 'Master Chef Bob is World #1 hero',
   email: 'dev@salad.io',
   termsOfService: undefined,

@@ -174,6 +174,11 @@ export class RewardStore {
     details.setLoading(false)
   })
 
+  viewReward = (reward: Reward) => {
+    this.store.ui.showModal(`/rewards/${reward.id}`)
+    this.store.analytics.trackRewardView(reward.id, reward.name)
+  }
+
   @action
   selectTargetReward = async (rewardId: string) => {
     const request = {
@@ -186,6 +191,10 @@ export class RewardStore {
       runInAction(() => {
         this.selectedRewardId = rewardId
         console.log('set reward success')
+
+        let reward = this.getReward(rewardId)
+
+        if (reward) this.store.analytics.trackSelectedReward(rewardId, reward.name)
 
         this.store.routing.push('/')
       })
@@ -207,10 +216,11 @@ export class RewardStore {
     }
 
     try {
-      let res = yield this.axios.post('/redeem-reward/1/', req)
+      yield this.axios.post('/redeem-reward/1/', req)
       this.store.ui.showModal(`/rewards/${rewardId}/redeem-complete`)
       this.store.refreshData()
-      console.log(res)
+      let reward = this.getReward(rewardId)
+      if (reward) this.store.analytics.trackRewardRedeemed(reward)
     } catch (err) {
       this.store.ui.showModal(`/rewards/${rewardId}/redeem-error`)
       console.error(err)

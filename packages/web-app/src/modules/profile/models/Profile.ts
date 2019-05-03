@@ -2,6 +2,7 @@ export interface Profile {
   id: string
   username: string
   email: string
+  isNewUser: boolean
   termsOfService?: string
   whatsNewVersion?: string
   referred?: ReferredStatus

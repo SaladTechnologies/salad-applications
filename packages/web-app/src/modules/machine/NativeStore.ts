@@ -215,6 +215,8 @@ export class NativeStore {
     }
 
     this.send(start, this.machineId)
+
+    this.store.analytics.trackRunStatus(true)
   }
 
   @action
@@ -229,6 +231,7 @@ export class NativeStore {
     }
 
     this.send(stop)
+    this.store.analytics.trackRunStatus(false)
   }
 
   @action
@@ -273,6 +276,8 @@ export class NativeStore {
     }
 
     this.machineInfo = info
+
+    this.store.analytics.trackMachineInfo(info)
 
     let req = {
       gpuNames: this.gpuNames,

@@ -4,7 +4,7 @@ import { RootStore } from '../../Store'
 
 const mapStoreToProps = (store: RootStore) => ({
   referrals: store.referral.activeReferrals,
-  onCreateNew: () => store.ui.showModal(`/new-referral`),
+  onCreateNew: store.referral.showNewReferralModal,
 })
 
 export const ReferralListContainer = connect(
