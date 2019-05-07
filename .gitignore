@@ -1,8 +1,8 @@
 node_modules/
 lerna-debug.log
 npm-debug.log
-packages/*/lib
 packages/desktop-app/dist/main\.js
+packages/desktop-app/dist/ethminer/*
 
 **/release/*
 
