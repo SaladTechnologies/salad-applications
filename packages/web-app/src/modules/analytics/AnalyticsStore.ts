@@ -53,6 +53,7 @@ export class AnalyticsStore {
         console.log('Started mixpanel.')
       } else {
         console.log('No mixpanel token found. Skipping...')
+        this.trackUsage = false
       }
     }
     this.started = true

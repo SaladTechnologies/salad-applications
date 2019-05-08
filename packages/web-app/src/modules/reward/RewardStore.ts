@@ -205,6 +205,11 @@ export class RewardStore {
 
   @action.bound
   redeemReward = flow(function*(this: RewardStore, rewardId: string, email: string) {
+    if (this.isRedeeming) {
+      console.log('Already redeeming reward, skipping')
+      return
+    }
+
     this.isRedeeming = true
 
     const req = {
