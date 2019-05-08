@@ -9,6 +9,10 @@ export class AnalyticsStore {
   private trackUsage = false
   private started = false
 
+  public get canTrack(): boolean {
+    return this.started && this.trackUsage
+  }
+
   public start = (profile: Profile, trackUsage: boolean) => {
     if (this.started && this.trackUsage === trackUsage) {
       console.warn('Already started analytics. Skipping...')
@@ -16,6 +20,7 @@ export class AnalyticsStore {
     }
 
     this.trackUsage = trackUsage
+
     Sentry.configureScope(scope => {
       scope.setUser({
         id: profile.id,
@@ -54,19 +59,18 @@ export class AnalyticsStore {
   }
 
   public disable = () => {
-    //TODO: disable any analytics
-    if (mixpanel) mixpanel.opt_out_tracking()
+    if (this.canTrack) mixpanel.opt_out_tracking()
   }
 
   public trackLogin = () => {
-    if (!this.started) return
+    if (!this.canTrack) return
 
     mixpanel.people.increment('Login Count')
     this.track('Login')
   }
 
   public trackRegistration = () => {
-    if (!this.started) return
+    if (!this.canTrack) return
 
     mixpanel.people.set({
       $created: new Date().toISOString(),
@@ -76,7 +80,7 @@ export class AnalyticsStore {
 
   /** Tracks if started or stopped */
   public trackRunStatus = (started: boolean) => {
-    if (!this.started) return
+    if (!this.canTrack) return
 
     if (started) {
       this.track('Start')
@@ -93,7 +97,7 @@ export class AnalyticsStore {
   }
 
   public trackSelectedReward = (id: string, name: string) => {
-    if (!this.started) return
+    if (!this.canTrack) return
 
     let rewardName = `${id}:${name}`
     this.track('Reward Selected', { Reward: rewardName })
@@ -105,7 +109,7 @@ export class AnalyticsStore {
   }
 
   public trackRewardView = (id: string, name: string) => {
-    if (!this.started) return
+    if (!this.canTrack) return
 
     let rewardName = `${id}:${name}`
     this.track('Reward Viewed', { Reward: rewardName })
@@ -113,7 +117,7 @@ export class AnalyticsStore {
   }
 
   public trackRewardRedeemed = (reward: Reward) => {
-    if (!this.started) return
+    if (!this.canTrack) return
 
     let rewardName = `${reward.id}:${name}`
     this.track('Reward Redeemed', { Reward: rewardName, Price: reward.price, Tags: reward.filter })
@@ -123,7 +127,7 @@ export class AnalyticsStore {
   }
 
   public trackReferralSent = () => {
-    if (!this.started) return
+    if (!this.canTrack) return
 
     this.track('Referral Sent')
     mixpanel.people.increment('Referral Sent Count')
@@ -133,7 +137,7 @@ export class AnalyticsStore {
   }
 
   public trackMachineInfo = (machine: MachineInfo) => {
-    if (!this.started) return
+    if (!this.canTrack) return
 
     mixpanel.people.union({
       'Machine Ids': machine.macAddress,
@@ -142,7 +146,7 @@ export class AnalyticsStore {
   }
 
   public track = (event: string, properties?: { [key: string]: any }) => {
-    if (!this.started) return
+    if (!this.canTrack) return
 
     mixpanel.track(event, properties)
   }
