@@ -1,7 +1,6 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-//import { SettingsModalPage } from './NewSettingsModalPage'
-import './../pagedraw/settings.css';
+import './settings.css';
 import Schedules from './assets/Schedules.png';
 import Launch from './assets/LaunchStartup.png'
 import SettingsItem from './assets/Settings_Item.png'
@@ -34,7 +33,7 @@ storiesOf('NewSettingsPage', module)
         <img src={LineButton} className="line-button" width="12" />
         <img src={Salad} className="salad" height="14" />
         <img src={Vector} className="vector-1" width="296.88" />
-        <img src={SaladDescription} className="salad-description" height="32" width="300" />
+        <img src={SaladDescription} className="salad-description" height="30" width="300" />
         <img src={Vector} className="vector-2" width="296.88" />
         <img src={LaunchSalad} className="launch-salad" height="12" width="164" />
         <OffRectangle/>
