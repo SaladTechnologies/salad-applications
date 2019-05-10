@@ -18,6 +18,9 @@ export class ProfileStore {
   public isUpdating: boolean = false
 
   @observable
+  public isFirstLogin: boolean = false
+
+  @observable
   public isLoading: boolean = false
 
   @computed get needsAnalyticsOnboarding(): boolean {
@@ -58,14 +61,13 @@ export class ProfileStore {
       this.store.analytics.start(profile, trackUsage)
 
       if (trackUsage) {
-        if (profile.isNewUser) {
-          this.store.analytics.trackRegistration()
-        }
         this.store.analytics.trackLogin()
       }
 
       //Update the new user flag if this is their first time loggin in
       if (profile.isNewUser) {
+        this.isFirstLogin = true
+
         yield this.axios.post('update-profile', {
           isNewUser: false,
         })
@@ -104,6 +106,8 @@ export class ProfileStore {
       }
 
       this.currentProfile = profile
+    } catch (err) {
+      console.log(err)
     } finally {
       this.isUpdating = false
 
@@ -133,6 +137,10 @@ export class ProfileStore {
       //Start or stop analytics
       if (this.currentProfile.trackUsageVersion === Config.dataTrackingVersion) {
         this.store.analytics.start(this.currentProfile, true)
+        if (this.isFirstLogin) {
+          this.store.analytics.trackRegistration()
+        }
+        this.store.analytics.trackLogin()
       } else if (this.currentProfile.trackUsageVersion === OPT_OUT) {
         this.store.analytics.disable()
       }

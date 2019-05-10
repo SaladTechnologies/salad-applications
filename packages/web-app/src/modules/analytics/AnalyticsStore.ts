@@ -76,6 +76,10 @@ export class AnalyticsStore {
     mixpanel.people.set({
       $created: new Date().toISOString(),
     })
+    mixpanel.register({
+      'New User': true,
+    })
+
     this.track('Registration')
   }
 
