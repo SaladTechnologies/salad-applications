@@ -8,9 +8,9 @@
 
 ## Intro
 
-<!-- <center>
-  <img src="" width="100%" />
-</center> -->
+<center>
+  <img src="https://www.salad.io/wp-content/uploads/2019/05/Salad-Applications-Header.png" width="100%" />
+</center>
 
 Salad allows PC gamers to monetize latent computer time in return for digital goods and physical items - gamers can convert PC idle-time into things they love, like games, gift cards, downloadable content, subscriptions, donations, hardware and more. Most gamers use their computers less than 2 hours per day, but with Salad their PC is value-adding 24/7!
 
@@ -19,8 +19,9 @@ Salad allows PC gamers to monetize latent computer time in return for digital go
 - 🚀[Getting Started](#getting-started)
 - 📒[Projects](#projects)
 - 👥[Community](#community)
+- 👨‍💻[Development scripts](#development-scripts)
 - 👏[Contributing](#contributing)
-  - 👨‍💻[Development scripts](#development-scripts)
+- 🐛[Bug Bounty](#bug-bounty)
 
 ## Getting Started
 
@@ -53,16 +54,7 @@ yarn build
 - Blogging at [Medium](https://medium.com/@saladchefs)
 - Chatting on [Discord](https://discord.gg/xcvmgQk)
 
-## Contributing
-
-We welcome contributions to Storybook!
-
-- 📥 Pull requests and 🌟 Stars are always welcome.
-- Read our [contributing guide](CONTRIBUTING.md) to get started.
-
-- [Talk to us](https://discord.gg/xcvmgQk), we'll find something to suits your skills and learning interest.
-
-### Development scripts
+## Development scripts
 
 Storybook is organized as a monorepo using [Lerna](https://lernajs.io). Useful scripts include:
 
@@ -77,3 +69,16 @@ Storybook is organized as a monorepo using [Lerna](https://lernajs.io). Useful s
 #### `yarn start`
 
 > Starts all projects in development mode - using lerna
+
+## Contributing
+
+We welcome contributions to Storybook!
+
+- 📥 Pull requests and 🌟 Stars are always welcome.
+- Read our [contributing guide](CONTRIBUTING.md) to get started.
+
+- [Talk to us](https://discord.gg/xcvmgQk), we'll find something to suits your skills and learning interest.
+
+## Bug Bounty
+
+Salad is committed to building and protecting the world's most trusted way to monetize idle compute time. If you believe you have discovered a bug or potential security vulnerability, we will gladly compensate you with some 💰💰💰 for disclosing the issue to us. Please submit a GitHub [issue](https://github.com/SaladTechnologies/salad-applications/issues) any details to help us reproduce and squash the bug.

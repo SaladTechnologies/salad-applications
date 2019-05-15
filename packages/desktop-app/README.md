@@ -16,7 +16,7 @@ yarn start
 
 ### Browser Windows
 
-Salad uses multiple Electron `BrowserWindows` to maintaine seperation between foreground and background processes.
+Salad uses multiple Electron `BrowserWindows` to maintain separation between foreground and background processes.
 
 #### Main Window
 
@@ -24,11 +24,11 @@ The main window that displays the web application from [app.salad.io](https://ap
 
 #### Online Status Window
 
-A hidden window that checks the online status of the machine every X sec by pinging different webservices and websites. If the machine is offline, it will open up the `Offline Window`. All content (html, js, css...) is loaded locally.
+A hidden window that checks the online status of the machine every X sec by pinging different web services and websites. If the machine is offline, it will open up the `Offline Window`. All content (html, js, css...) is loaded locally.
 
 #### Offline Window
 
-Modal that lets the user know that they are currenly offline. If the machine goes online, this window will automatically close and show the `Main Window`. All content (html, js, css...) is loaded locally.
+Modal that lets the user know that they are currently offline. If the machine goes online, this window will automatically close and show the `Main Window`. All content (html, js, css...) is loaded locally.
 
 ### Native Integration
 
@@ -38,4 +38,4 @@ The Desktop Application serves the UI from [app.salad.io](https://app.salad.io/)
 
 The Salad Desktop Application includes a wrapper around ethminer, allowing Salad to interface with an Ethereum mining solution that supports both OpenCL- and CUDA-compatible devices. Salad currently only supports Windows environments and will not work in a browser. Ethminer also supports OSX and Linux, so additional platform support is planned for future releases.
 
-In order to run Salad with Ethminer you will need to copy ethminer into the folder at `packages\desktop-app\dist\ethminer` before running the application. Ethminer is available on [GitHub](https://github.com/ethereum-mining/ethminer).
+In order to run Salad with ethminer you will need to copy ethminer into the folder at `packages\desktop-app\dist\ethminer` before running the application. Ethminer is available on [GitHub](https://github.com/ethereum-mining/ethminer).
