@@ -12,6 +12,7 @@ import { StartButtonContainer } from '../machine-views'
 import { Fade } from '../../components'
 import { ReferralListContainer } from '../referral-views'
 import { MainTitlebarContainer } from './MainTitlebarContainer'
+import { NotificationBannerContainer } from './NotificationBannerContainer'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -97,6 +98,9 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
           <Fade className={classnames(classes.headerFade)} direction="down" />
           <div className={classes.header}>
             <ProfileMenuItemContainer />
+            <div style={{ marginLeft: 'auto', marginTop: '-1px' }}>
+              <NotificationBannerContainer />
+            </div>
             <div style={{ marginLeft: 'auto', marginTop: '-1px' }}>
               <StartButtonContainer />
             </div>
