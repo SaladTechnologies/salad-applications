@@ -10,8 +10,8 @@ storiesOf('Modules/Referral', module)
   .add('Referral Item', () => (
     <div>
       <ReferralItem username={'really-long-name@long-domain.io'} />
-      <ReferralItem username={'dev@salad.io'} status="42% to 720xp" />
-      <ReferralItem username={'dev@salad.io'} status="42% to 720xp" balanceReward={5} />
+      <ReferralItem username={'dev@salad.io'} status="42% to 5000xp" />
+      <ReferralItem username={'dev@salad.io'} status="42% to 5000xp" balanceReward={5} />
     </div>
   ))
   .add('Referral List', () => {
