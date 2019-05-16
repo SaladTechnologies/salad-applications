@@ -61,9 +61,9 @@ class _NewReferralModal extends Component<Props> {
           <div className={classes.contentContainer}>
             <div className={classes.title}>$5 Refer a Friend Bonus!</div>
             <p className={classes.description}>
-              Be wise in your referral, as you only get the bonus after your friend hits 720 XP. If their GPU isn't
+              Be wise in your referral, as you only get the bonus after your friend hits 5000 XP. If their GPU isn't
               supported or they don’t run the app you’ll miss out. The more they’re chopping Salad, the faster you’ll
-              get your bonus. Don’t forget to mention that they’ll get a $5 bonus upon reaching 720 XP as well!
+              get your bonus. Don’t forget to mention that they’ll get a $5 bonus upon reaching 5000 XP as well!
             </p>
           </div>
 
