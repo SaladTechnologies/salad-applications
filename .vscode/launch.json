@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug Chrome",
+      "name": "Debug Web App",
       "type": "chrome",
       "request": "launch",
       "runtimeArgs": ["--disable-web-security"],
