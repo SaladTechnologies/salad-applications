@@ -28,6 +28,7 @@ const styles = (theme: SaladTheme) => ({
     height: '100px',
     position: 'relative',
     justifyContent: 'flex-start',
+    cursor: 'pointer',
   },
   lock: {
     position: 'absolute',
@@ -111,10 +112,10 @@ class _SelectedReward extends Component<Props> {
     return ' '
   }
 
-  handleClick = (reward: Reward) => {
-    const { onRewardClick } = this.props
+  handleClick = () => {
+    const { onRewardClick, reward } = this.props
 
-    if (onRewardClick) {
+    if (onRewardClick && reward) {
       onRewardClick(reward)
     }
   }
@@ -127,7 +128,7 @@ class _SelectedReward extends Component<Props> {
     return (
       <div className={classnames(classes.container)}>
         <div className={classes.choppingTitle}>Chopping Salad For:</div>
-        <div className={classes.cardContainer} onClick={reward ? () => this.handleClick(reward) : undefined}>
+        <div className={classes.cardContainer} onClick={this.handleClick}>
           {/* Image */}
           <AngledPanel className={classes.imageContainer} leftSide={'right'}>
             {reward && <img className={classes.image} src={reward.imageSrc} draggable={false} />}
