@@ -88,7 +88,8 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  reward?: Reward
+  reward?: Reward,
+  onRewardClick?: (reward: Reward) => void
 }
 
 class _SelectedReward extends Component<Props> {
@@ -110,6 +111,14 @@ class _SelectedReward extends Component<Props> {
     return ' '
   }
 
+  handleClick = (reward: Reward) => {
+    const { onRewardClick } = this.props
+
+    if (onRewardClick) {
+      onRewardClick(reward)
+    }
+  }
+
   render() {
     const { reward, classes } = this.props
 
@@ -118,7 +127,7 @@ class _SelectedReward extends Component<Props> {
     return (
       <div className={classnames(classes.container)}>
         <div className={classes.choppingTitle}>Chopping Salad For:</div>
-        <div className={classes.cardContainer}>
+        <div className={classes.cardContainer} onClick={reward ? () => this.handleClick(reward) : undefined}>
           {/* Image */}
           <AngledPanel className={classes.imageContainer} leftSide={'right'}>
             {reward && <img className={classes.image} src={reward.imageSrc} draggable={false} />}
