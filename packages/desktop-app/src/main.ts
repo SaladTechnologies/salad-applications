@@ -32,7 +32,7 @@ const getMachineInfo = () =>
         si.system().then(sys => {
           si.osInfo().then(os => {
             getMac().then(mac => {
-              console.log(mac)
+              console.log('[desktop-app][main.ts] mac: ', mac)
               machineInfo = {
                 macAddress: mac,
                 version: app.getVersion(),
