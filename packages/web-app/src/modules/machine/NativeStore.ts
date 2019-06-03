@@ -215,7 +215,9 @@ export class NativeStore {
     }
     this.send(getTasklist)
 
-    this.
+    this.on(setTasklist, (task: Tasklist) => {
+      console.log('[NativeStore] ')
+    })
   }
 
   @action
