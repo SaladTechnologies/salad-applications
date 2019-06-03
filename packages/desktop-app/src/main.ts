@@ -9,9 +9,12 @@ import { Ethminer } from './Ethminer'
 import { MachineInfo } from './models/MachineInfo'
 import { autoUpdater } from 'electron-updater'
 import { Logger } from './Logger'
+//import * as tasklist from 'tasklist'
 
 //Overrides the console.log behavior
 Logger.connect()
+
+const tasklist = require('tasklist')
 
 const runStatus = 'run-status'
 const runError = 'run-error'
@@ -32,7 +35,7 @@ const getMachineInfo = () =>
         si.system().then(sys => {
           si.osInfo().then(os => {
             getMac().then(mac => {
-              console.log('[desktop-app][main.ts] mac: ', mac)
+              console.log(mac)
               machineInfo = {
                 macAddress: mac,
                 version: app.getVersion(),
@@ -64,6 +67,53 @@ const checkForMultipleInstance = () => {
     })
   }
 }
+
+// const getTasklist = () => {
+
+
+  // tasklist().then((task: any) => {
+  //   console.log('=[createMainWindow]=====================')
+
+  /*
+  ipcMain.on('js-dispatch', bridge.receiveMessage)
+
+  //Listen for machine info requests
+  bridge.on('get-machine-info', () => {
+    //Return the cached machine info
+    console.log('[desktop-app][main] machineInfo: ', machineInfo)
+
+    if (machineInfo) {
+      bridge.send('set-machine-info', machineInfo)
+    }
+
+    //Fetch the machine info
+    getMachineInfo().then(info => {
+      machineInfo = info
+      bridge.send('set-machine-info', machineInfo)
+    })
+  })
+  */
+
+
+
+  // type Blacklist = { taskName: string, blacklist: boolean }[]
+  // const blacklist: Blacklist = [
+  //   { taskName: 'steam', blacklist: true },
+  //   { taskName: 'excel', blacklist: true },
+  //   { taskName: 'word', blacklist: true },
+  //   { taskName: 'battle', blacklist: true },
+  // ]
+
+  // task.map((row: any) => {
+  //   blacklist.map((app: any) => {
+  //     if (row.imageName.toLowerCase().includes(app)) {
+  //       console.log('[createMainWindow] row.imageName: ', row.imageName)
+  //     }
+  //   })
+  // })
+  //   console.log('========================================')
+  // })
+//}
 
 const createOfflineWindow = () => {
   if (offlineWindow) {
@@ -144,6 +194,8 @@ const createMainWindow = () => {
   //Listen for machine info requests
   bridge.on('get-machine-info', () => {
     //Return the cached machine info
+    console.log('[desktop-app][main] machineInfo: ', machineInfo)
+
     if (machineInfo) {
       bridge.send('set-machine-info', machineInfo)
     }
@@ -196,6 +248,22 @@ const createMainWindow = () => {
     ethminer.stop()
     bridge.send(runStatus, false)
   })
+
+  //-- Tasklist -------------------------
+  //-------------------------------------
+  tasklist().then((task: any) => {
+    console.log('||||||||||| createMainWindow ||||||||||| tl: ', task)
+    bridge.on('tasklist', () => {
+      if (task) {
+        console.log('[desktop][main][bridge] task: ', task)
+        bridge.send('tasklist', task)
+      }
+    })
+  })
+  //-------------------------------------
+  //-------------------------------------
+
+  console.log('[desktop][main] bridge: ', bridge)
 
   //Listen for ethminer errors
   ethminer.onError = (code: number) => {

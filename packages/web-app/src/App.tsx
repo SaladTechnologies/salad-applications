@@ -25,6 +25,7 @@ import { AnimatedSwitch } from './components/AnimatedSwitch'
 import { NewReferralModalContainer } from './modules/referral-views'
 import { CompatibilityCheckPageContainer, CudaErrorContainer, UnknownErrorContainer } from './modules/machine-views'
 import { ReferredStatus } from './modules/profile/models'
+import { SmartStart } from './modules/smart-start'
 
 class App extends Component {
   store = getStore()
@@ -58,6 +59,7 @@ class App extends Component {
     let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
     let isOnboarding = this.store.profile.isOnboarding
     let showPlainTitle = isOnboarding || !isAuth
+    let isSmartStart = false
 
     return (
       <div>
@@ -102,6 +104,7 @@ class App extends Component {
                 <Route exact path="/profile" component={AccountModalContainer} />
                 <Route exact path="/settings" component={SettingsModalContainer} />
                 <Route exact path="/new-referral" component={NewReferralModalContainer} />
+                <Route exact path='/smart-start' render={() => <SmartStart />} />
               </div>
             )}
 

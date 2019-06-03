@@ -6,6 +6,7 @@ import { AxiosInstance } from 'axios'
 import uuidv1 from 'uuid/v1'
 import { Config } from '../../config'
 import { GPUDetailsResource } from './models/GPUDetailsResource'
+import { Tasklist } from './models/Tasklist'
 
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
@@ -16,6 +17,7 @@ const maximize = 'maximize-window'
 const close = 'close-window'
 const start = 'start-salad'
 const stop = 'stop-salad'
+const tasklist = 'tasklist'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
 
@@ -56,6 +58,9 @@ export class NativeStore {
   @observable
   public machineInfo?: MachineInfo
 
+  @observable
+  public tasklist?: Tasklist[]
+
   @computed
   get isNative(): boolean {
     return window.salad && window.salad.platform === 'electron'
@@ -80,10 +85,19 @@ export class NativeStore {
     return this.machineInfo.gpus.map(x => x.model)
   }
 
+  @computed
+  get currentTasklist(): Tasklist[] | undefined {
+    return this.tasklist
+  }
+
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     //Starts the timer to check for online/offline status
-    setInterval(this.checkOnlineStatus, 5000)
+    setInterval(() => {
+      this.checkOnlineStatus
+      this.tasklistReport
+    }, 5000)
     this.checkOnlineStatus()
+    this.tasklistReport()
 
     runInAction(() => {
       this.skippedCompatCheck = Storage.getOrSetDefault(compatibilityKey, 'false') === 'true'
@@ -146,8 +160,10 @@ export class NativeStore {
 
   @action.bound
   private checkOnlineStatus = flow(function*(this: NativeStore) {
-    console.log('Checking online status')
-
+    console.log('[NativeStore] Checking online status')
+    // console.log('[NativeStore] getTasklist: ', getTasklist)
+    // console.log('[NativeStore] setTasklist: ', setTasklist)
+    // console.log('[NativeStore] tasklist: ', this.tasklist)
     try {
       yield this.axios.get('/')
       this.isOnline = true
@@ -244,6 +260,12 @@ export class NativeStore {
   }
 
   @action.bound
+  tasklistReport = () => {
+    console.log('[NativeStore] tasklist: ', tasklist)
+    this.send(tasklist)
+  }
+
+  @action.bound
   registerMachine = flow(function*(this: NativeStore) {
     if (!this.machineInfo) {
       console.warn('No valid machine info found. Unable to register.')
@@ -271,7 +293,7 @@ export class NativeStore {
   setMachineInfo = flow(function*(this: NativeStore, info: MachineInfo) {
     console.log('Received machine info')
     if (this.machineInfo) {
-      console.log('Already receved machine info. Skipping...')
+      console.log('Already received machine info. Skipping...')
       return
     }
 
@@ -299,7 +321,7 @@ export class NativeStore {
     this.validOperatingSystem =
       info.os.platform === 'win32' && (info.os.release.startsWith('10.') || info.os.release.startsWith('6.1'))
 
-    console.log(`Validing machine. OS:${this.validOperatingSystem}, GPUs ${this.validGPUs}`)
+    console.log(`Validating machine. OS:${this.validOperatingSystem}, GPUs ${this.validGPUs}`)
 
     this.skippedCompatCheck = this.validOperatingSystem && this.validGPUs
 
