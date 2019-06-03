@@ -9,7 +9,6 @@ import { Ethminer } from './Ethminer'
 import { MachineInfo } from './models/MachineInfo'
 import { autoUpdater } from 'electron-updater'
 import { Logger } from './Logger'
-//import * as tasklist from 'tasklist'
 
 //Overrides the console.log behavior
 Logger.connect()
@@ -251,13 +250,10 @@ const createMainWindow = () => {
 
   //-- Tasklist -------------------------
   //-------------------------------------
-  tasklist().then((task: any) => {
-    console.log('||||||||||| createMainWindow ||||||||||| tl: ', task)
-    bridge.on('tasklist', () => {
-      if (task) {
+  bridge.on('get-tasklist', () => {
+    tasklist().then((task: any) => {
         console.log('[desktop][main][bridge] task: ', task)
-        bridge.send('tasklist', task)
-      }
+        bridge.send('set-tasklist', task)
     })
   })
   //-------------------------------------

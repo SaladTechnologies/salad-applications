@@ -17,7 +17,8 @@ const maximize = 'maximize-window'
 const close = 'close-window'
 const start = 'start-salad'
 const stop = 'stop-salad'
-const tasklist = 'tasklist'
+const getTasklist = 'get-tasklist'
+const setTasklist = 'set-tasklist'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
 
@@ -86,18 +87,20 @@ export class NativeStore {
   }
 
   @computed
-  get currentTasklist(): Tasklist[] | undefined {
-    return this.tasklist
+  get osTasklist(): Tasklist[] | undefined {
+    return this.tasklist !== undefined
+      ? this.tasklist
+      : undefined
   }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     //Starts the timer to check for online/offline status
     setInterval(() => {
       this.checkOnlineStatus
-      this.tasklistReport
+      this.checkTasklist
     }, 5000)
     this.checkOnlineStatus()
-    this.tasklistReport()
+    this.checkTasklist()
 
     runInAction(() => {
       this.skippedCompatCheck = Storage.getOrSetDefault(compatibilityKey, 'false') === 'true'
@@ -161,9 +164,6 @@ export class NativeStore {
   @action.bound
   private checkOnlineStatus = flow(function*(this: NativeStore) {
     console.log('[NativeStore] Checking online status')
-    // console.log('[NativeStore] getTasklist: ', getTasklist)
-    // console.log('[NativeStore] setTasklist: ', setTasklist)
-    // console.log('[NativeStore] tasklist: ', this.tasklist)
     try {
       yield this.axios.get('/')
       this.isOnline = true
@@ -202,6 +202,20 @@ export class NativeStore {
     }
     this.loadingMachineInfo = true
     this.send(getMachineInfo)
+  }
+
+  @action
+  getTasklist = () => {
+    // this.on(setMachineInfo, (info: MachineInfo) => {
+    //   this.setMachineInfo(info)
+    // })
+
+    if (!this.osTasklist) {
+      console.log('OS tasklist not available');
+    }
+    this.send(getTasklist)
+
+    this.
   }
 
   @action
@@ -257,12 +271,6 @@ export class NativeStore {
     } else {
       this.start()
     }
-  }
-
-  @action.bound
-  tasklistReport = () => {
-    console.log('[NativeStore] tasklist: ', tasklist)
-    this.send(tasklist)
   }
 
   @action.bound
