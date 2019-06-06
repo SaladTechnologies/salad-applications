@@ -48,20 +48,6 @@ const getMachineInfo = () =>
       .catch(() => reject())
   })
 
-// const getProcesses = () => {
-//   si.processes().then(tasks => {
-//     console.log('[getProcesses][processes] tasks: ', tasks)
-//     return tasks
-//   })
-// }
-
-// const getProcess = (process: string) => {
-//   si.processLoad(process).then(task => {
-//     console.log('[const][getProcess][processLoad] task: ', task)
-//     return task
-//   })
-// }
-
 /** Ensure only 1 instance of the app ever run */
 const checkForMultipleInstance = () => {
   const gotTheLock = app.requestSingleInstanceLock()
@@ -217,9 +203,15 @@ const createMainWindow = () => {
     })
   })
 
-  bridge.on('get-machine-process', (process: string) => {
-    si.processLoad(process).then(process => {
+  bridge.on('get-machine-process', (processName: string) => {
+    si.processLoad(processName).then(process => {
       bridge.send('set-machine-process', process)
+    })
+  })
+
+  bridge.on('get-machine-process-running', (services: string) => {
+    si.services(services).then(process => {
+      bridge.send('set-machine-process-running', process)
     })
   })
 

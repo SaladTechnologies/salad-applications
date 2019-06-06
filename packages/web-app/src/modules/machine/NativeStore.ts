@@ -6,7 +6,7 @@ import { AxiosInstance } from 'axios'
 import uuidv1 from 'uuid/v1'
 import { Config } from '../../config'
 import { GPUDetailsResource } from './models/GPUDetailsResource'
-import { Processes, Process } from './models/Processes'
+import { Processes, Process, Services } from './models/Processes'
 import { Blacklist } from './models/Blacklist'
 
 const getMachineInfo = 'get-machine-info'
@@ -22,6 +22,8 @@ const getMachineProcesses = 'get-machine-processes'
 const setMachineProcesses = 'set-machine-processes'
 const getMachineProcess = 'get-machine-process'
 const setMachineProcess = 'set-machine-process'
+const getMachineProcessRunning = 'get-machine-process-running'
+const setMachineProcessRunning = 'set-machine-process-running'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
 
@@ -65,10 +67,16 @@ export class NativeStore {
   public machineInfo?: MachineInfo
 
   @observable
-  public processes?: Processes[]
+  public processes?: Processes
 
   @observable
   public process?: Process
+
+  @observable
+  public services?: Services[]
+
+  @observable
+  public isProcessRunning?: boolean
 
   @observable
   public blacklist?: Blacklist[]
@@ -97,39 +105,6 @@ export class NativeStore {
     return this.machineInfo.gpus.map(x => x.model)
   }
 
-  // @computed
-  // get hasProcess(): boolean {
-  //   //const hasProcess: boolean = Object.keys(this.process).length
-  //   const hasProcess = this.process ? true : false
-
-  //   console.log('[get hasProcess()] hasProcess: ', hasProcess)
-
-  //   return hasProcess
-  // }
-
-  @computed
-  get getBlacklist(): Blacklist[] | undefined {
-    const blacklist = Storage.getBlacklist(_BLACKLIST)
-
-    if (blacklist) {
-      this.blacklist = blacklist
-      return this.blacklist
-    }
-
-    const list = [
-      { name: 'Steam', enabled: true },
-      { name: 'WINWORD', enabled: true },
-      { name: 'EXCEL', enabled: true },
-      { name: 'Battle.net', enabled: true },
-    ]
-
-    Storage.setBlacklist(_BLACKLIST, list)
-
-    this.blacklist = list
-
-    return this.blacklist
-  }
-
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     //Starts the timer to check for online/offline status
     setInterval(() => {
@@ -155,14 +130,16 @@ export class NativeStore {
         this.setMachineInfo(info)
       })
 
-      this.on(setMachineProcesses, (processes: Processes[]) => {
-        console.log('[constructor][on] setMachineProcesses processes: ', processes)
+      this.on(setMachineProcesses, (processes: Processes) => {
         this.setMachineProcesses(processes)
       })
 
       this.on(setMachineProcess, (process: Process) => {
-        console.log('[constructor][on] setMachineProcess process: ', process)
         this.setMachineProcess(process)
+      })
+
+      this.on(setMachineProcessRunning, (service: Services[]) => {
+        this.setMachineProcessRunning(service)
       })
 
       this.on(runError, (errorCode: number) => {
@@ -305,29 +282,95 @@ export class NativeStore {
   }
 
   @action
+  setProcessRunning = (status: boolean) => {
+    this.isProcessRunning = status
+  }
+
+  @action
   getMachineProcesses = () => {
     this.send(getMachineProcesses)
   }
 
   @action
-  getMachineProcess = (processName: string) => {
+  getMachineProcess = (processName: string | undefined) => {
     this.send(getMachineProcess, processName)
   }
 
   @action
-  setMachineProcesses = (processes: Processes[]) => {
-    if (processes.length) {
+  getMachineProcessRunning = (services: string) => {
+    this.send(getMachineProcessRunning, services)
+  }
+
+  @action
+  setMachineProcesses = (processes: Processes) => {
+    console.log('-[NativeStore][setMachineProcesses] processes: ', processes)
+    console.log('-[NativeStore][setMachineProcesses] processes.all: ', processes.all)
+
+    // Object.keys(processes).map(process => {
+    //   console.log(process)
+    // })
+
+    // processes.map(process => {
+    //   process.name
+    // })
+
+    if (processes.all) {
       this.processes = processes
     }
   }
 
   @action
   setMachineProcess = (process: Process) => {
-    console.log('[NativeStore][setMachineProcess] process: ', process)
+    this.process = undefined
+
     if (process) {
       this.process = process
-      console.log('[NativeStore][setMachineProcess] if process: ', this.process)
+      this.isProcessRunning = true
+      return
     }
+
+    this.isProcessRunning = false
+  }
+
+  @action
+  setMachineProcessRunning = (services: Services[]) => {
+    services.map(service => {
+      if (service.running) {
+        this.isProcessRunning = true
+        return
+      }
+    })
+
+    this.isProcessRunning = false
+  }
+
+  @action
+  getBlacklist = () => {
+    console.log('=[NativeStore] getBlacklist()==========================')
+    const blacklist = Storage.getBlacklist(_BLACKLIST)
+
+    if (blacklist) {
+      this.blacklist = blacklist
+      return this.blacklist
+    }
+
+    const list: Blacklist[] = [
+      { name: 'Steam.exe', enabled: true },
+      { name: 'WINWORD.exe', enabled: true },
+      { name: 'EXCEL.exe', enabled: true },
+      { name: 'Battle.net.exe', enabled: true },
+    ]
+
+    Storage.setBlacklist(_BLACKLIST, list)
+
+    this.blacklist = list
+
+    return this.blacklist
+  }
+
+  @action
+  setBlacklist = (blacklist: Blacklist[]) => {
+    Storage.setBlacklist(_BLACKLIST, blacklist)
   }
 
   @action.bound
