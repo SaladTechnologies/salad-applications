@@ -6,7 +6,8 @@ import { AxiosInstance } from 'axios'
 import uuidv1 from 'uuid/v1'
 import { Config } from '../../config'
 import { GPUDetailsResource } from './models/GPUDetailsResource'
-import { Tasklist } from './models/Tasklist'
+import { Processes, Process } from './models/Processes'
+import { Blacklist } from './models/Blacklist'
 
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
@@ -17,10 +18,14 @@ const maximize = 'maximize-window'
 const close = 'close-window'
 const start = 'start-salad'
 const stop = 'stop-salad'
-const getTasklist = 'get-tasklist'
-const setTasklist = 'set-tasklist'
+const getMachineProcesses = 'get-machine-processes'
+const setMachineProcesses = 'set-machine-processes'
+const getMachineProcess = 'get-machine-process'
+const setMachineProcess = 'set-machine-process'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
+
+const _BLACKLIST = 'BLACKLIST'
 
 declare global {
   interface Window {
@@ -60,7 +65,13 @@ export class NativeStore {
   public machineInfo?: MachineInfo
 
   @observable
-  public tasklist?: Tasklist[]
+  public processes?: Processes[]
+
+  @observable
+  public process?: Process
+
+  @observable
+  public blacklist?: Blacklist[]
 
   @computed
   get isNative(): boolean {
@@ -86,21 +97,45 @@ export class NativeStore {
     return this.machineInfo.gpus.map(x => x.model)
   }
 
+  // @computed
+  // get hasProcess(): boolean {
+  //   //const hasProcess: boolean = Object.keys(this.process).length
+  //   const hasProcess = this.process ? true : false
+
+  //   console.log('[get hasProcess()] hasProcess: ', hasProcess)
+
+  //   return hasProcess
+  // }
+
   @computed
-  get osTasklist(): Tasklist[] | undefined {
-    return this.tasklist !== undefined
-      ? this.tasklist
-      : undefined
+  get getBlacklist(): Blacklist[] | undefined {
+    const blacklist = Storage.getBlacklist(_BLACKLIST)
+
+    if (blacklist) {
+      this.blacklist = blacklist
+      return this.blacklist
+    }
+
+    const list = [
+      { name: 'Steam', enabled: true },
+      { name: 'WINWORD', enabled: true },
+      { name: 'EXCEL', enabled: true },
+      { name: 'Battle.net', enabled: true },
+    ]
+
+    Storage.setBlacklist(_BLACKLIST, list)
+
+    this.blacklist = list
+
+    return this.blacklist
   }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     //Starts the timer to check for online/offline status
     setInterval(() => {
       this.checkOnlineStatus
-      this.checkTasklist
     }, 5000)
     this.checkOnlineStatus()
-    this.checkTasklist()
 
     runInAction(() => {
       this.skippedCompatCheck = Storage.getOrSetDefault(compatibilityKey, 'false') === 'true'
@@ -118,6 +153,16 @@ export class NativeStore {
 
       this.on(setMachineInfo, (info: MachineInfo) => {
         this.setMachineInfo(info)
+      })
+
+      this.on(setMachineProcesses, (processes: Processes[]) => {
+        console.log('[constructor][on] setMachineProcesses processes: ', processes)
+        this.setMachineProcesses(processes)
+      })
+
+      this.on(setMachineProcess, (process: Process) => {
+        console.log('[constructor][on] setMachineProcess process: ', process)
+        this.setMachineProcess(process)
       })
 
       this.on(runError, (errorCode: number) => {
@@ -162,7 +207,7 @@ export class NativeStore {
   }
 
   @action.bound
-  private checkOnlineStatus = flow(function*(this: NativeStore) {
+  private checkOnlineStatus = flow(function* (this: NativeStore) {
     console.log('[NativeStore] Checking online status')
     try {
       yield this.axios.get('/')
@@ -202,22 +247,6 @@ export class NativeStore {
     }
     this.loadingMachineInfo = true
     this.send(getMachineInfo)
-  }
-
-  @action
-  getTasklist = () => {
-    // this.on(setMachineInfo, (info: MachineInfo) => {
-    //   this.setMachineInfo(info)
-    // })
-
-    if (!this.osTasklist) {
-      console.log('OS tasklist not available');
-    }
-    this.send(getTasklist)
-
-    this.on(setTasklist, (task: Tasklist) => {
-      console.log('[NativeStore] ')
-    })
   }
 
   @action
@@ -275,8 +304,34 @@ export class NativeStore {
     }
   }
 
+  @action
+  getMachineProcesses = () => {
+    this.send(getMachineProcesses)
+  }
+
+  @action
+  getMachineProcess = (processName: string) => {
+    this.send(getMachineProcess, processName)
+  }
+
+  @action
+  setMachineProcesses = (processes: Processes[]) => {
+    if (processes.length) {
+      this.processes = processes
+    }
+  }
+
+  @action
+  setMachineProcess = (process: Process) => {
+    console.log('[NativeStore][setMachineProcess] process: ', process)
+    if (process) {
+      this.process = process
+      console.log('[NativeStore][setMachineProcess] if process: ', this.process)
+    }
+  }
+
   @action.bound
-  registerMachine = flow(function*(this: NativeStore) {
+  registerMachine = flow(function* (this: NativeStore) {
     if (!this.machineInfo) {
       console.warn('No valid machine info found. Unable to register.')
       return
@@ -300,7 +355,7 @@ export class NativeStore {
   })
 
   @action.bound
-  setMachineInfo = flow(function*(this: NativeStore, info: MachineInfo) {
+  setMachineInfo = flow(function* (this: NativeStore, info: MachineInfo) {
     console.log('Received machine info')
     if (this.machineInfo) {
       console.log('Already received machine info. Skipping...')
@@ -341,7 +396,7 @@ export class NativeStore {
   })
 
   @action.bound
-  sendRunningStatus = flow(function*(this: NativeStore, status: boolean) {
+  sendRunningStatus = flow(function* (this: NativeStore, status: boolean) {
     console.log('Status MachineId' + this.machineId)
 
     let req = {

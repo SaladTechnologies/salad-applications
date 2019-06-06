@@ -1,3 +1,5 @@
+import { Blacklist } from './modules/machine/models/Blacklist'
+
 export const getFullKey = (key: string) => 'SALAD_' + key.toUpperCase()
 
 export const getItem = (key: string) => localStorage.getItem(getFullKey(key))
@@ -24,4 +26,24 @@ export const getOrSetDefaultCallback = (key: string, fallback: () => string) => 
 
 export const setItem = (key: string, value: string) => {
   localStorage.setItem(getFullKey(key), value)
+}
+
+export const getBlacklist = (key: string) => {
+  const k = getFullKey(key)
+  let blacklist = localStorage.getItem(k)
+
+  console.log('[Storage][setBlacklist] JSON.parse(blacklist): ', blacklist)
+
+  return blacklist 
+    ? JSON.parse(blacklist)
+    : null
+}
+
+export const setBlacklist = (key: string, payload: Blacklist[]) => {
+  const k = getFullKey(key)
+  let blacklist = JSON.stringify(payload)
+
+  console.log('[Storage][setBlacklist] blacklist: ', blacklist)
+
+  localStorage.setItem(k, blacklist)
 }

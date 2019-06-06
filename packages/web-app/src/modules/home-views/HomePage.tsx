@@ -78,6 +78,7 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
   constructor(props: any) {
     super(props)
     let store = getStore()
+    
     this.refreshService = new RefreshService(store)
   }
 

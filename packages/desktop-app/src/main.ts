@@ -13,8 +13,6 @@ import { Logger } from './Logger'
 //Overrides the console.log behavior
 Logger.connect()
 
-const tasklist = require('tasklist')
-
 const runStatus = 'run-status'
 const runError = 'run-error'
 
@@ -50,6 +48,20 @@ const getMachineInfo = () =>
       .catch(() => reject())
   })
 
+// const getProcesses = () => {
+//   si.processes().then(tasks => {
+//     console.log('[getProcesses][processes] tasks: ', tasks)
+//     return tasks
+//   })
+// }
+
+// const getProcess = (process: string) => {
+//   si.processLoad(process).then(task => {
+//     console.log('[const][getProcess][processLoad] task: ', task)
+//     return task
+//   })
+// }
+
 /** Ensure only 1 instance of the app ever run */
 const checkForMultipleInstance = () => {
   const gotTheLock = app.requestSingleInstanceLock()
@@ -66,53 +78,6 @@ const checkForMultipleInstance = () => {
     })
   }
 }
-
-// const getTasklist = () => {
-
-
-  // tasklist().then((task: any) => {
-  //   console.log('=[createMainWindow]=====================')
-
-  /*
-  ipcMain.on('js-dispatch', bridge.receiveMessage)
-
-  //Listen for machine info requests
-  bridge.on('get-machine-info', () => {
-    //Return the cached machine info
-    console.log('[desktop-app][main] machineInfo: ', machineInfo)
-
-    if (machineInfo) {
-      bridge.send('set-machine-info', machineInfo)
-    }
-
-    //Fetch the machine info
-    getMachineInfo().then(info => {
-      machineInfo = info
-      bridge.send('set-machine-info', machineInfo)
-    })
-  })
-  */
-
-
-
-  // type Blacklist = { taskName: string, blacklist: boolean }[]
-  // const blacklist: Blacklist = [
-  //   { taskName: 'steam', blacklist: true },
-  //   { taskName: 'excel', blacklist: true },
-  //   { taskName: 'word', blacklist: true },
-  //   { taskName: 'battle', blacklist: true },
-  // ]
-
-  // task.map((row: any) => {
-  //   blacklist.map((app: any) => {
-  //     if (row.imageName.toLowerCase().includes(app)) {
-  //       console.log('[createMainWindow] row.imageName: ', row.imageName)
-  //     }
-  //   })
-  // })
-  //   console.log('========================================')
-  // })
-//}
 
 const createOfflineWindow = () => {
   if (offlineWindow) {
@@ -193,8 +158,6 @@ const createMainWindow = () => {
   //Listen for machine info requests
   bridge.on('get-machine-info', () => {
     //Return the cached machine info
-    console.log('[desktop-app][main] machineInfo: ', machineInfo)
-
     if (machineInfo) {
       bridge.send('set-machine-info', machineInfo)
     }
@@ -248,18 +211,17 @@ const createMainWindow = () => {
     bridge.send(runStatus, false)
   })
 
-  //-- Tasklist -------------------------
-  //-------------------------------------
-  bridge.on('get-tasklist', () => {
-    tasklist().then((task: any) => {
-        console.log('[desktop][main][bridge] task: ', task)
-        bridge.send('set-tasklist', task)
+  bridge.on('get-machine-processes', () => {
+    si.processes().then(processes => {
+      bridge.send('set-machine-processes', processes)
     })
   })
-  //-------------------------------------
-  //-------------------------------------
 
-  console.log('[desktop][main] bridge: ', bridge)
+  bridge.on('get-machine-process', (process: string) => {
+    si.processLoad(process).then(process => {
+      bridge.send('set-machine-process', process)
+    })
+  })
 
   //Listen for ethminer errors
   ethminer.onError = (code: number) => {

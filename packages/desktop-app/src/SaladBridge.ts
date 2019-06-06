@@ -16,8 +16,6 @@ export class SaladBridge {
   }
 
   send = (type: string, payload?: any) => {
-    console.log('[SaladBridge](send) type: ', type)
-    console.log('[SaladBridge](send) payload: ', payload)
     this.window.webContents.send('native-dispatch', { type: type, payload: payload })
   }
 

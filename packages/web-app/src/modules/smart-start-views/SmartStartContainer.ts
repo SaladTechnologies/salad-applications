@@ -3,7 +3,9 @@ import { SmartStart } from './components/SmartStart'
 import { RootStore } from '../../Store'
 
 const mapStoreToProps = (store: RootStore) => ({
-    tasklist: store
+    processes: store.native.processes,
+    process: store.native.process,
+    blacklist: store.native.blacklist,
     // referrals: store.referral.activeReferrals,
     // onCreateNew: store.referral.showNewReferralModal,
 })

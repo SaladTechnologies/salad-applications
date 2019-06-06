@@ -49,8 +49,19 @@ class App extends Component {
       console.log('Running in web env')
       return
     }
+    
     console.log('Running in native env')
     this.store.native.loadMachineInfo()
+    
+    // Grabs the machine processes list on startup
+    this.store.native.getMachineProcesses()
+
+    setInterval(() => {
+      console.log('=[App]=============================')
+      // TODO: Check blacklist against this.store.native.getMachineProcess(...)
+      this.store.native.getMachineProcess('Steam')
+      console.log('-[App] this.store.native.process: ', this.store.native.process)
+    }, 10000)
   }
 
   render() {
