@@ -32,8 +32,6 @@ export const getBlacklist = (key: string) => {
   const k = getFullKey(key)
   let blacklist = localStorage.getItem(k)
 
-  console.log('[Storage][setBlacklist] JSON.parse(blacklist): ', blacklist)
-
   return blacklist 
     ? JSON.parse(blacklist)
     : null
@@ -42,8 +40,6 @@ export const getBlacklist = (key: string) => {
 export const setBlacklist = (key: string, payload: Blacklist[]) => {
   const k = getFullKey(key)
   let blacklist = JSON.stringify(payload)
-
-  console.log('[Storage][setBlacklist] blacklist: ', blacklist)
 
   localStorage.setItem(k, blacklist)
 }
