@@ -12,6 +12,7 @@ import { UIStore } from './UIStore'
 import { ReferralStore } from './modules/referral'
 import { AnalyticsStore } from './modules/analytics'
 import { NativeStore } from './modules/machine/NativeStore'
+import { SmartStartStore } from './modules/smart-start/SmartStartStore'
 
 //Forces all changes to state to be from an action
 configure({ enforceActions: 'always' })
@@ -39,6 +40,7 @@ export class RootStore {
   public readonly ui: UIStore
   public readonly referral: ReferralStore
   public readonly native: NativeStore
+  public readonly smartstart: SmartStartStore
 
   constructor(private readonly axios: AxiosInstance) {
     this.analytics = new AnalyticsStore()
@@ -52,6 +54,7 @@ export class RootStore {
     this.profile = new ProfileStore(this, axios)
     this.ui = new UIStore(this)
     this.referral = new ReferralStore(this, axios)
+    this.smartstart = new SmartStartStore(this)
   }
 
   refreshData = async () => {

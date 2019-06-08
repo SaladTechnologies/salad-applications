@@ -303,17 +303,6 @@ export class NativeStore {
 
   @action
   setMachineProcesses = (processes: Processes) => {
-    console.log('-[NativeStore][setMachineProcesses] processes: ', processes)
-    console.log('-[NativeStore][setMachineProcesses] processes.all: ', processes.all)
-
-    // Object.keys(processes).map(process => {
-    //   console.log(process)
-    // })
-
-    // processes.map(process => {
-    //   process.name
-    // })
-
     if (processes.all) {
       this.processes = processes
     }
@@ -346,7 +335,6 @@ export class NativeStore {
 
   @action
   getBlacklist = () => {
-    console.log('=[NativeStore] getBlacklist()==========================')
     const blacklist = Storage.getBlacklist(_BLACKLIST)
 
     if (blacklist) {
@@ -355,10 +343,12 @@ export class NativeStore {
     }
 
     const list: Blacklist[] = [
-      { name: 'Steam.exe', enabled: true },
-      { name: 'WINWORD.exe', enabled: true },
-      { name: 'EXCEL.exe', enabled: true },
-      { name: 'Battle.net.exe', enabled: true },
+      { name: 'Battle.net', process: 'Battle.net.exe', enabled: true },
+      { name: 'Epic Games Launcher', process: 'EpicGamesLauncher.exe', enabled: true },
+      { name: 'MS Word', process: 'WINWORD.exe', enabled: true },
+      { name: 'MS Excel', process: 'EXCEL.exe', enabled: true },
+      { name: 'Steam', process: 'Steam.exe', enabled: true },
+      { name: 'Uplay', process: 'upc.exe', enabled: true },
     ]
 
     Storage.setBlacklist(_BLACKLIST, list)

@@ -27,6 +27,10 @@ const styles = (theme: SaladTheme) => ({
   },
 
   detailButton: {
+    color: theme.darkBlue,
+    fontFamily: 'sharpGroteskBook19',
+    fontSize: theme.small,
+    textDecoration: 'none',
     cursor: 'not-allowed',
     padding: '1rem 0',
   },
@@ -67,16 +71,18 @@ class _SettingsModalPage extends Component<Props> {
           <div className={classes.container}>
             <div>SETTINGS (COMING SOON!)</div>
             <br />
-            <NavLink 
-              className={classnames(classes.lineBreak, classes.detailButton)} 
-              style={{ cursor: 'pointer' }} 
-              onClick={onCloseClicked}
-              to={'/smart-start'}
-            >
-              <b>Smart Start: </b>
-              Smartypants Salad will start chopping whenever you’re not using the computer, and automatically stop when
-              you are. Open on boot up, and Salad will launch after booting up your computer.
-            </NavLink>
+            <div className={classnames(classes.lineBreak)}>
+              <NavLink
+                className={classnames(classes.detailButton)}
+                onClick={onCloseClicked}
+                to={'/smart-start'}
+                style={{ display: 'inline-block', cursor: 'pointer' }}
+              >
+                <b>Smart Start: </b>
+                Smartypants Salad will start chopping whenever you’re not using the computer, and automatically stop when
+                you are. Open on boot up, and Salad will launch after booting up your computer.
+              </NavLink>
+            </div>
 
             {/* <div className={classnames(classes.lineBreak, classes.detailButton)} style={{ cursor: 'pointer' }} onClick={onCloseClicked}>
               <b>Smart Start: </b>

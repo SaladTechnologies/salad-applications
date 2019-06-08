@@ -1,0 +1,31 @@
+#SmartStart {
+  .blacklist {
+    width: 50%;
+    margin: auto;
+
+    li {
+      border-bottom: solid 1px lighten(#0A2133, 20);
+      margin: 1rem 0;
+      padding-bottom: 1rem;
+
+      & > label {
+        font-size: 1.25rem;
+        clear: both;
+
+        & > input[type],
+        & > i {
+          float: right;
+        }
+      }
+    }
+  }
+}
+
+.color_white {
+  color: #fff !important;
+}
+
+.list_unstyled {
+  padding-left: 0;
+  list-style: none;
+}
