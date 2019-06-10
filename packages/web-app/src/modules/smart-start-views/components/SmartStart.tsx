@@ -20,10 +20,11 @@ const styles = (theme: SaladTheme) => ({
     fontSize: theme.xLarge,
     marginTop: '0',
     paddingBottom: '0.5rem',
-    marginBottom: '3rem',
+    marginBottom: '2rem',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
+    textIndent: '1rem'
   },
   description: {
     fontFamily: 'sharpGroteskBook19',
@@ -96,6 +97,12 @@ class _SmartStart extends Component<Props> {
         <Overlay onCloseClicked={onCloseClicked}>
           <div id={css.SmartStart}>
             <h1 className={classnames(classes.title, css.color_white)}>Smart Start</h1>
+
+            <p className={classnames(css.beta_copy, css.color_white)}>
+              <strong>BETA FEATURE:</strong> Smart start is a way for Salad users automatically have Salad start and stop based 
+              on the programs running on your computer. Salad will not run while you are using any of the checked programs below. 
+              Send your feedback on this feature to MJ.
+            </p>
 
             {list}
           </div>

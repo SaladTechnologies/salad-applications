@@ -349,6 +349,7 @@ export class NativeStore {
       { name: 'MS Excel', process: 'EXCEL.exe', enabled: true },
       { name: 'Steam', process: 'Steam.exe', enabled: true },
       { name: 'Uplay', process: 'upc.exe', enabled: true },
+      { name: 'Origin', process: 'Origin.exe', enabled: true },
     ]
 
     Storage.setBlacklist(_BLACKLIST, list)
