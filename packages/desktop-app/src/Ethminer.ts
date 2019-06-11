@@ -17,6 +17,10 @@ export class Ethminer {
     if (message.includes('CUDA error: Insufficient CUDA driver: 9')) {
       this.onError(8675309)
     }
+
+    if (message.includes('3221225595')) {
+      this.onError(3221225595)
+    }
   }
 
   start = (machineInfo: MachineInfo, id: string) => {
@@ -67,7 +71,9 @@ export class Ethminer {
     })
 
     ls.on('exit', msg => {
-      console.log('exit: ' + msg)
+      const exit = 'exit: ' + msg
+      console.log(exit)
+      this.checkForErrors(exit)
     })
   }
 
