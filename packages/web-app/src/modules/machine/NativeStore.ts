@@ -392,7 +392,7 @@ export class NativeStore {
   setMachineInfo = flow(function* (this: NativeStore, info: MachineInfo) {
     console.log('Received machine info')
     if (this.machineInfo) {
-      console.log('Already received machine info. Skipping...')
+      console.log('Already receved machine info. Skipping...')
       return
     }
 
@@ -420,7 +420,7 @@ export class NativeStore {
     this.validOperatingSystem =
       info.os.platform === 'win32' && (info.os.release.startsWith('10.') || info.os.release.startsWith('6.1'))
 
-    console.log(`Validating machine. OS:${this.validOperatingSystem}, GPUs ${this.validGPUs}`)
+    console.log(`Validing machine. OS:${this.validOperatingSystem}, GPUs ${this.validGPUs}`)
 
     this.skippedCompatCheck = this.validOperatingSystem && this.validGPUs
 

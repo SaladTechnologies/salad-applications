@@ -84,11 +84,6 @@ class _SettingsModalPage extends Component<Props> {
               </NavLink>
             </div>
 
-            {/* <div className={classnames(classes.lineBreak, classes.detailButton)} style={{ cursor: 'pointer' }} onClick={onCloseClicked}>
-              <b>Smart Start: </b>
-              Smartypants Salad will start chopping whenever you’re not using the computer, and automatically stop when
-              you are. Open on boot up, and Salad will launch after booting up your computer.
-            </div> */}
             <div className={classnames(classes.lineBreak, classes.detailButton)}>
               <b>Battery Saver: </b>Salad won’t chop if your laptop isn’t connected to a power source.
             </div>
