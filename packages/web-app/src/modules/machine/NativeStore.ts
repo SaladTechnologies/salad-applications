@@ -110,8 +110,6 @@ export class NativeStore {
 
         switch(errorCode) {
           case 8675309: 
-            store.ui.showModal('errors/cuda')
-            break
           case 3221225595:
             store.ui.showModal('errors/cuda')
             break
