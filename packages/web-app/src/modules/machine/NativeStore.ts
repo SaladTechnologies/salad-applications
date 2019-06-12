@@ -8,6 +8,7 @@ import { Config } from '../../config'
 import { GPUDetailsResource } from './models/GPUDetailsResource'
 import { Processes, Process, Services } from './models/Processes'
 import { Blacklist } from './models/Blacklist'
+import * as SmartStartStorage from '../smart-start/SmartStartStorage'
 
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
@@ -185,7 +186,7 @@ export class NativeStore {
 
   @action.bound
   private checkOnlineStatus = flow(function* (this: NativeStore) {
-    console.log('[NativeStore] Checking online status')
+    console.log('Checking online status')
     try {
       yield this.axios.get('/')
       this.isOnline = true
@@ -335,7 +336,7 @@ export class NativeStore {
 
   @action
   getBlacklist = () => {
-    const blacklist = Storage.getBlacklist(_BLACKLIST)
+    const blacklist = SmartStartStorage.getBlacklist(_BLACKLIST)
 
     if (blacklist) {
       this.blacklist = blacklist
@@ -352,7 +353,7 @@ export class NativeStore {
       { name: 'Origin', process: 'Origin.exe', enabled: true },
     ]
 
-    Storage.setBlacklist(_BLACKLIST, list)
+    SmartStartStorage.setBlacklist(_BLACKLIST, list)
 
     this.blacklist = list
 
@@ -361,7 +362,7 @@ export class NativeStore {
 
   @action
   setBlacklist = (blacklist: Blacklist[]) => {
-    Storage.setBlacklist(_BLACKLIST, blacklist)
+    SmartStartStorage.setBlacklist(_BLACKLIST, blacklist)
   }
 
   @action.bound
