@@ -148,10 +148,14 @@ export class NativeStore {
 
         store.analytics.captureException(new Error(`Received error code ${errorCode} from native`))
 
-        if (errorCode === 8675309) {
-          store.ui.showModal('errors/cuda')
-        } else {
-          store.ui.showModal('errors/unknown')
+        switch(errorCode) {
+          case 8675309: 
+          case 3221225595:
+            store.ui.showModal('errors/cuda')
+            break
+          default:
+            store.ui.showModal('errors/unknown')
+            break
         }
       })
     }
@@ -165,7 +169,7 @@ export class NativeStore {
       console.log('Received message ' + args.type)
       func(args.payload)
     } else {
-      console.log('Recevied unhandled message type ' + args.type)
+      console.log('Received unhandled message type ' + args.type)
     }
   }
 
@@ -211,7 +215,7 @@ export class NativeStore {
       //Schedule future heartbeats
       this.runningHeartbeat = setInterval(() => {
         this.sendRunningStatus(true)
-      }, Config.statusHearbeatRate)
+      }, Config.statusHeartbeatRate)
     } else {
       this.sendRunningStatus(false)
     }
@@ -393,7 +397,7 @@ export class NativeStore {
   setMachineInfo = flow(function* (this: NativeStore, info: MachineInfo) {
     console.log('Received machine info')
     if (this.machineInfo) {
-      console.log('Already receved machine info. Skipping...')
+      console.log('Already received machine info. Skipping...')
       return
     }
 
@@ -421,7 +425,7 @@ export class NativeStore {
     this.validOperatingSystem =
       info.os.platform === 'win32' && (info.os.release.startsWith('10.') || info.os.release.startsWith('6.1'))
 
-    console.log(`Validing machine. OS:${this.validOperatingSystem}, GPUs ${this.validGPUs}`)
+    console.log(`Validating machine. OS:${this.validOperatingSystem}, GPUs ${this.validGPUs}`)
 
     this.skippedCompatCheck = this.validOperatingSystem && this.validGPUs
 
@@ -432,7 +436,7 @@ export class NativeStore {
 
   @action.bound
   sendRunningStatus = flow(function* (this: NativeStore, status: boolean) {
-    console.log('Status MachineId' + this.machineId)
+    console.log('Status MachineId: ' + this.machineId)
 
     let req = {
       macAddress: this.machineId,

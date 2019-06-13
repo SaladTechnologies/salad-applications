@@ -53,7 +53,7 @@ class Config {
 
   public readonly rewardsRefreshRate: number = numberOrDefault('REACT_APP_REWARD_REFRESH_RATE', convertMinutes(5))
   public readonly xpRefreshRate: number = numberOrDefault('REACT_APP_XP_REFRESH_RATE', convertMinutes(1))
-  public readonly statusHearbeatRate: number = numberOrDefault(
+  public readonly statusHeartbeatRate: number = numberOrDefault(
     'REACT_APP_STATUS_HEARTBEAT_REFRESH_RATE',
     convertMinutes(1),
   )
