@@ -148,14 +148,10 @@ export class NativeStore {
 
         store.analytics.captureException(new Error(`Received error code ${errorCode} from native`))
 
-        switch(errorCode) {
-          case 8675309: 
-          case 3221225595:
-            store.ui.showModal('errors/cuda')
-            break
-          default:
-            store.ui.showModal('errors/unknown')
-            break
+        if (errorCode === 8675309) {
+          store.ui.showModal('errors/cuda')
+        } else {
+          store.ui.showModal('errors/unknown')
         }
       })
     }
@@ -169,7 +165,7 @@ export class NativeStore {
       console.log('Received message ' + args.type)
       func(args.payload)
     } else {
-      console.log('Received unhandled message type ' + args.type)
+      console.log('Recevied unhandled message type ' + args.type)
     }
   }
 
@@ -215,7 +211,7 @@ export class NativeStore {
       //Schedule future heartbeats
       this.runningHeartbeat = setInterval(() => {
         this.sendRunningStatus(true)
-      }, Config.statusHeartbeatRate)
+      }, Config.statusHearbeatRate)
     } else {
       this.sendRunningStatus(false)
     }
@@ -397,7 +393,7 @@ export class NativeStore {
   setMachineInfo = flow(function* (this: NativeStore, info: MachineInfo) {
     console.log('Received machine info')
     if (this.machineInfo) {
-      console.log('Already received machine info. Skipping...')
+      console.log('Already receved machine info. Skipping...')
       return
     }
 
@@ -425,7 +421,7 @@ export class NativeStore {
     this.validOperatingSystem =
       info.os.platform === 'win32' && (info.os.release.startsWith('10.') || info.os.release.startsWith('6.1'))
 
-    console.log(`Validating machine. OS:${this.validOperatingSystem}, GPUs ${this.validGPUs}`)
+    console.log(`Validing machine. OS:${this.validOperatingSystem}, GPUs ${this.validGPUs}`)
 
     this.skippedCompatCheck = this.validOperatingSystem && this.validGPUs
 

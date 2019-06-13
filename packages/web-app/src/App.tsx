@@ -1,9 +1,26 @@
 import React, { Component } from 'react'
-import { OfflineModalContainer, PlainTitlebarContainer } from './modules/home-views'
+import { Route, Switch, Redirect } from 'react-router'
+import {
+  CallbackContainer,
+  ReferralEntryContainer,
+  WelcomePageContainer,
+  TermsPageContainer,
+  AnalyticsPageContainer,
+  WhatsNewPageContainer,
+} from './modules/onboarding-views'
+import { HomePage, OfflineModalContainer, PlainTitlebarContainer } from './modules/home-views'
 import { getStore } from './Store'
 import DevTools from 'mobx-react-devtools'
+import { LoadingPage } from './components'
+import {
+  RewardDetailsModalContainer,
+  RewardRedemptionModalContainer,
+  RedemptionCompleteModalContainer,
+  RedemptionErrorModalContainer,
+} from './modules/reward-views'
+import { AccountModalContainer } from './modules/profile-views'
+import { SettingsModalContainer } from './modules/profile-views'
 import { Config } from './config'
-import Routes from './Routes'
 import { SmartStartContainer } from './modules/smart-start-views'
 
 class App extends Component {
@@ -55,7 +72,9 @@ class App extends Component {
   }
 
   render() {
+    let isElectron = this.store.native.isNative
     let isAuth = this.store.auth.isAuthenticated()
+    let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
     let isOnboarding = this.store.profile.isOnboarding
     let showPlainTitle = isOnboarding || !isAuth
 
@@ -65,8 +84,6 @@ class App extends Component {
         {showPlainTitle && <PlainTitlebarContainer />}
 
         <div style={{ top: showPlainTitle ? '2rem' : 0, left: 0, right: 0, bottom: 0, position: 'absolute' }}>
-          <Routes />
-
 
 
           {Config.devTools && <DevTools position={{ left: 0, bottom: 0 }} />}
