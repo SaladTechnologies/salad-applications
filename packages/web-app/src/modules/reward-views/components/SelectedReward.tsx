@@ -28,6 +28,7 @@ const styles = (theme: SaladTheme) => ({
     height: '100px',
     position: 'relative',
     justifyContent: 'flex-start',
+    cursor: 'pointer',
   },
   lock: {
     position: 'absolute',
@@ -88,7 +89,8 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  reward?: Reward
+  reward?: Reward,
+  onRewardClick?: (reward: Reward) => void
 }
 
 class _SelectedReward extends Component<Props> {
@@ -110,6 +112,14 @@ class _SelectedReward extends Component<Props> {
     return ' '
   }
 
+  handleClick = () => {
+    const { onRewardClick, reward } = this.props
+
+    if (onRewardClick && reward) {
+      onRewardClick(reward)
+    }
+  }
+
   render() {
     const { reward, classes } = this.props
 
@@ -118,7 +128,7 @@ class _SelectedReward extends Component<Props> {
     return (
       <div className={classnames(classes.container)}>
         <div className={classes.choppingTitle}>Chopping Salad For:</div>
-        <div className={classes.cardContainer}>
+        <div className={classes.cardContainer} onClick={this.handleClick}>
           {/* Image */}
           <AngledPanel className={classes.imageContainer} leftSide={'right'}>
             {reward && <img className={classes.image} src={reward.imageSrc} draggable={false} />}
