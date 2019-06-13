@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { NavLink } from 'react-router-dom'
 import { SaladTheme } from '../../../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
 import { Modal, ModalPage } from '../../../components'
@@ -71,7 +70,7 @@ class _SettingsModalPage extends Component<Props> {
           <div className={classes.container}>
             <div>SETTINGS (COMING SOON!)</div>
             <br />
-            <div className={classnames(classes.lineBreak)}>
+            {/* <div className={classnames(classes.lineBreak)}>
               <NavLink
                 className={classnames(classes.detailButton)}
                 onClick={onCloseClicked}
@@ -82,6 +81,16 @@ class _SettingsModalPage extends Component<Props> {
                 Smartypants Salad will start chopping whenever you’re not using the computer, and automatically stop when
                 you are. Open on boot up, and Salad will launch after booting up your computer.
               </NavLink>
+            </div> */}
+
+            <div
+              className={classnames(classes.lineBreak, classes.detailButton)}
+              style={{ display: 'inline-block', cursor: 'pointer' }}
+              onClick={onCloseClicked}
+            >
+              <b>Smart Start: </b>
+              Smartypants Salad will start chopping whenever you’re not using the computer, and automatically stop when
+              you are. Open on boot up, and Salad will launch after booting up your computer.
             </div>
 
             <div className={classnames(classes.lineBreak, classes.detailButton)}>
@@ -97,7 +106,7 @@ class _SettingsModalPage extends Component<Props> {
             </div>
           </div>
         </Modal>
-      </ModalPage>
+      </ModalPage >
     )
   }
 }
