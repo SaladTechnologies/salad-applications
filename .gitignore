@@ -7,3 +7,5 @@ packages/desktop-app/dist/ethminer/*
 **/release/*
 
 packages/desktop-app/yarn-error\.log
+
+notes/*

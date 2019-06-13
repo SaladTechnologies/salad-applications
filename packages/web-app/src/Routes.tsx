@@ -34,6 +34,7 @@ import { SettingsModalContainer } from './modules/profile-views'
 import { AnimatedSwitch } from './components/AnimatedSwitch'
 import { NewReferralModalContainer } from './modules/referral-views'
 import { CompatibilityCheckPageContainer, CudaErrorContainer, UnknownErrorContainer } from './modules/machine-views'
+import { SmartStartContainer } from './modules/smart-start-views'
 
 export default class Routes extends Component {
   store = getStore()
@@ -124,6 +125,7 @@ const Auth = () => {
       <Route exact path="/profile" component={AccountModalContainer} />
       <Route exact path="/settings" component={SettingsModalContainer} />
       <Route exact path="/new-referral" component={NewReferralModalContainer} />
+      <Route exact path="/settings/smart-start" component={SmartStartContainer} />
     </>
   )
 }

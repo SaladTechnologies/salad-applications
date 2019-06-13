@@ -54,6 +54,7 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   onCloseClicked?: () => void
   onSendBug?: () => void
+  onSmartStartClick?: () => void
 }
 
 class _SettingsModalPage extends Component<Props> {
@@ -62,31 +63,27 @@ class _SettingsModalPage extends Component<Props> {
 
     if (onSendBug) onSendBug()
   }
+
+  handleSmartStartClick = () => {
+    const { onSmartStartClick } = this.props
+
+    if (onSmartStartClick) onSmartStartClick()
+  }
+
   render() {
     const { onCloseClicked, classes } = this.props
+
     return (
       <ModalPage onCloseClicked={onCloseClicked}>
         <Modal onCloseClicked={onCloseClicked}>
           <div className={classes.container}>
             <div>SETTINGS (COMING SOON!)</div>
             <br />
-            {/* <div className={classnames(classes.lineBreak)}>
-              <NavLink
-                className={classnames(classes.detailButton)}
-                onClick={onCloseClicked}
-                to={'/smart-start'}
-                style={{ display: 'inline-block', cursor: 'pointer' }}
-              >
-                <b>Smart Start: </b>
-                Smartypants Salad will start chopping whenever you’re not using the computer, and automatically stop when
-                you are. Open on boot up, and Salad will launch after booting up your computer.
-              </NavLink>
-            </div> */}
 
             <div
               className={classnames(classes.lineBreak, classes.detailButton)}
               style={{ display: 'inline-block', cursor: 'pointer' }}
-              onClick={onCloseClicked}
+              onClick={this.handleSmartStartClick}
             >
               <b>Smart Start: </b>
               Smartypants Salad will start chopping whenever you’re not using the computer, and automatically stop when

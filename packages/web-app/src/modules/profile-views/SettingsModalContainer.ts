@@ -10,9 +10,14 @@ const openLink = (url: string) => {
   window.open(url, '_blank')
 }
 
+const handleSmartStartClick = (store: RootStore) => {
+  store.routing.push('/settings/smart-start')
+}
+
 const mapStoreToProps = (store: RootStore) => ({
   onCloseClicked: () => store.ui.hideModal(),
   onSendBug: handleBug,
+  onSmartStartClick: () => handleSmartStartClick(store),
 })
 
 export const SettingsModalContainer = connect(

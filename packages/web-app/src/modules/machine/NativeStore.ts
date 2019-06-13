@@ -148,10 +148,14 @@ export class NativeStore {
 
         store.analytics.captureException(new Error(`Received error code ${errorCode} from native`))
 
-        if (errorCode === 8675309) {
-          store.ui.showModal('errors/cuda')
-        } else {
-          store.ui.showModal('errors/unknown')
+        switch (errorCode) {
+          case 8675309:
+          case 3221225595:
+            store.ui.showModal('errors/cuda')
+            break
+          default:
+            store.ui.showModal('errors/unknown')
+            break
         }
       })
     }
@@ -211,7 +215,7 @@ export class NativeStore {
       //Schedule future heartbeats
       this.runningHeartbeat = setInterval(() => {
         this.sendRunningStatus(true)
-      }, Config.statusHearbeatRate)
+      }, Config.statusHeartbeatRate)
     } else {
       this.sendRunningStatus(false)
     }
