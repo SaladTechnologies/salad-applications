@@ -12,7 +12,7 @@ interface Props extends WithStyles<typeof styles> {
   list: string[]
 }
 
-class CondensedHeader extends Component<Props> {
+class ListUnstyled extends Component<Props> {
   render() {
     const { list, classes } = this.props
 
@@ -28,4 +28,4 @@ class CondensedHeader extends Component<Props> {
   }
 }
 
-export default withStyles(styles)(CondensedHeader)
+export default withStyles(styles)(ListUnstyled)

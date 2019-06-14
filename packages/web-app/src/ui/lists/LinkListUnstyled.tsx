@@ -19,7 +19,7 @@ interface Props extends WithStyles<typeof styles> {
   onListItemClick?: () => void
 }
 
-class CondensedHeader extends Component<Props> {
+class LinkListUnstyled extends Component<Props> {
   store = getStore()
 
   handleListItemClick = (url: string) => {
@@ -45,4 +45,4 @@ class CondensedHeader extends Component<Props> {
   }
 }
 
-export default withStyles(styles)(CondensedHeader)
+export default withStyles(styles)(LinkListUnstyled)
