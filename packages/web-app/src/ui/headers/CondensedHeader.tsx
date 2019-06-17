@@ -11,7 +11,7 @@ interface Props extends WithStyles<typeof styles> {
   value?: string
 }
 
-class CondensedHeader extends Component<Props> {
+class _CondensedHeader extends Component<Props> {
   render() {
     const { value, classes } = this.props
 
@@ -21,4 +21,4 @@ class CondensedHeader extends Component<Props> {
   }
 }
 
-export default withStyles(styles)(CondensedHeader)
+export const CondensedHeader = withStyles(styles)(_CondensedHeader)

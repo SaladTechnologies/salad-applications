@@ -11,7 +11,7 @@ interface Props extends WithStyles<typeof styles> {
   value?: string
 }
 
-class Percentage extends Component<Props> {
+class _Percentage extends Component<Props> {
   render() {
     const { value, classes } = this.props
 
@@ -21,4 +21,4 @@ class Percentage extends Component<Props> {
   }
 }
 
-export default withStyles(styles)(Percentage)
+export const Percentage = withStyles(styles)(_Percentage)

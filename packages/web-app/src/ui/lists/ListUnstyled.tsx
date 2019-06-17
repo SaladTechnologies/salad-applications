@@ -12,7 +12,7 @@ interface Props extends WithStyles<typeof styles> {
   list: string[]
 }
 
-class ListUnstyled extends Component<Props> {
+class _ListUnstyled extends Component<Props> {
   render() {
     const { list, classes } = this.props
 
@@ -28,4 +28,4 @@ class ListUnstyled extends Component<Props> {
   }
 }
 
-export default withStyles(styles)(ListUnstyled)
+export const ListUnstyled = withStyles(styles)(_ListUnstyled)

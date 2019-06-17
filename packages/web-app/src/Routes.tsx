@@ -30,10 +30,12 @@ import {
   RedemptionErrorModalContainer,
 } from './modules/reward-views'
 import { AccountModalContainer } from './modules/profile-views'
-import { SettingsModalContainer } from './modules/profile-views'
 import { AnimatedSwitch } from './components/AnimatedSwitch'
 import { NewReferralModalContainer } from './modules/referral-views'
 import { CompatibilityCheckPageContainer, CudaErrorContainer, UnknownErrorContainer } from './modules/machine-views'
+// Settings Menu
+import { SettingsContainer } from './modules/settings-views'
+// Account Menu
 
 export default class Routes extends Component {
   store = getStore()
@@ -122,8 +124,9 @@ const Auth = () => {
       <Route exact path="/rewards/:id/redeem-complete" component={RedemptionCompleteModalContainer} />
       <Route exact path="/rewards/:id/redeem-error" component={RedemptionErrorModalContainer} />
       <Route exact path="/profile" component={AccountModalContainer} />
-      <Route exact path="/settings" component={SettingsModalContainer} />
       <Route exact path="/new-referral" component={NewReferralModalContainer} />
+
+      <Route path="/settings" component={SettingsContainer} />
     </>
   )
 }

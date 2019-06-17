@@ -11,7 +11,7 @@ interface Props extends WithStyles<typeof styles> {
   value?: string
 }
 
-class MenuBody extends Component<Props> {
+class _MenuBody extends Component<Props> {
   render() {
     const { value, classes } = this.props
 
@@ -21,4 +21,4 @@ class MenuBody extends Component<Props> {
   }
 }
 
-export default withStyles(styles)(MenuBody)
+export const MenuBody = withStyles(styles)(_MenuBody)
