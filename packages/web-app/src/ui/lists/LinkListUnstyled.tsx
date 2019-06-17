@@ -4,45 +4,45 @@ import React, { Component } from 'react'
 import { getStore } from '../../Store'
 
 // Styles
-import { styles } from './ListUnstyled.styles'
+import { styles } from './LinkListUnstyled.styles'
+
+// UI
+import { MenuTitle } from '../index'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 
 interface Props extends WithStyles<typeof styles> {
-  value?: string,
   list: {
     url: string,
     text: string
   }[],
-  onListItemClick?: () => void
+  onListItemClick: (url: string) => any
 }
 
-class LinkListUnstyled extends Component<Props> {
+class _LinkListUnstyled extends Component<Props> {
   store = getStore()
 
-  handleListItemClick = (url: string) => {
-    const { onListItemClick } = this.props
+  // onListItemClick = (url: string) => {
 
-    if (onListItemClick) this.store.routing.push(url)
-  }
+  // }
 
   render() {
-    const { list, classes } = this.props
+    const { list, onListItemClick, classes } = this.props
 
     return (
-      <ul className={classnames(classes.listUnstyled)}>
+      <ul className={classnames('linkListUnstyled', classes.linkListUnstyled)}>
         {list.map((item, index) => {
-          <li key={index}>
-            <span onClick={() => this.handleListItemClick(item.url)}>
-              {item.text}
-            </span>
-          </li>
+          return (
+            <li key={index} className={classnames('linkListItem', classes.linkListItem)} onClick={() => onListItemClick(item.url)}>
+              <MenuTitle value={item.text} />
+            </li>
+          )
         })}
       </ul>
     )
   }
 }
 
-export default withStyles(styles)(LinkListUnstyled)
+export const LinkListUnstyled = withStyles(styles)(_LinkListUnstyled)
