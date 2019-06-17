@@ -11,7 +11,7 @@ interface Props extends WithStyles<typeof styles> {
   value?: string
 }
 
-class Username extends Component<Props> {
+class _Username extends Component<Props> {
   render() {
     const { value, classes } = this.props
 
@@ -21,4 +21,4 @@ class Username extends Component<Props> {
   }
 }
 
-export default withStyles(styles)(Username)
+export const Username = withStyles(styles)(_Username)
