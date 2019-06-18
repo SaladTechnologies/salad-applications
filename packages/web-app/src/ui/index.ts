@@ -1,5 +1,5 @@
 // Body
-export * from './body/MenuBody'
+export * from './body/Body'
 
 // Headers
 export * from './headers/CondensedHeader'
@@ -14,3 +14,4 @@ export * from './percentages/Percentage'
 // Titles
 export * from './titles/MenuTitle'
 export * from './titles/Username'
+export * from './titles/VeggieName'
