@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 // Styles
-import { styles } from './MenuBody.styles'
+import { styles } from './VeggieName.styles'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
@@ -11,14 +11,14 @@ interface Props extends WithStyles<typeof styles> {
   value?: string
 }
 
-class _MenuBody extends Component<Props> {
+class _VeggieName extends Component<Props> {
   render() {
     const { value, classes } = this.props
 
     return (
-      <p className={classnames(classes.menuBody)}>{value}</p>
+      <h6 className={classnames('veggieName', classes.veggieName)}>{value}</h6>
     )
   }
 }
 
-export const MenuBody = withStyles(styles)(_MenuBody)
+export const VeggieName = withStyles(styles)(_VeggieName)

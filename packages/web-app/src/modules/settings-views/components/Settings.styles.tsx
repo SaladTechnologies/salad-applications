@@ -3,27 +3,28 @@ import { SaladTheme } from '../../../SaladTheme'
 
 export const styles = (theme: SaladTheme) => ({
   menu: {
+    position: 'relative',
     width: '30%',
     padding: '1.5rem 2rem'
   },
   menuItems: {
-    '& .menuTitle': {
-      color: theme.lightGreen
-    },
     '& .linkListUnstyled': {
       '& .linkListItem': {
-        '&:hover': {
-          backgroundColor: 'rgba(10, 23, 41, 0.9)',
-        },
-
         '& .menuTitle': {
           color: theme.green,
           display: 'block',
-          padding: `${theme.xSmall} 0`,
+          padding: `${theme.small} 0`,
           cursor: 'pointer',
+
+          '&:hover, &:active, &.active': {
+            color: theme.lightGreen
+          }
         }
       },
-    }
+    },
+    '& hr': {
+      border: `solid 1px ${theme.lightGreen}`
+    },
   },
 
   settings: {
@@ -46,5 +47,14 @@ export const styles = (theme: SaladTheme) => ({
     '&:hover': {
       opacity: 0.8,
     },
+  },
+
+  buttonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    position: 'absolute',
+    right: '2rem',
+    bottom: '1.5rem',
   },
 })
