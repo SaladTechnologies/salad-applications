@@ -3,6 +3,13 @@ import React, { Component } from 'react'
 // Styles
 import { styles } from './WindowsSettings.styles'
 
+// UI
+import {
+  VeggieName,
+  CondensedHeader,
+  Body,
+} from '../../../../ui'
+
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
 
@@ -12,14 +19,17 @@ interface Props extends WithStyles<typeof styles> {
 
 class _WindowsSettings extends Component<Props> {
   render() {
-    console.log('[WindowsSettings] Am I here???')
-
     return (
       <>
-        <b>Windows Settings</b>
-        <p>
-          Coming soon!
-        </p>
+        <header>
+          <VeggieName value="Coming Soon" />
+          <CondensedHeader value="Windows Settings" />
+        </header>
+        <main>
+          <Body>
+            
+          </Body>
+        </main>
       </>
     )
   }
