@@ -5,18 +5,44 @@ import { styles } from './MenuTitle.styles'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
-import classnames from 'classnames'
+import { NavLink } from 'react-router-dom';
 
-interface Props extends WithStyles<typeof styles> {
-  value?: string
+interface Props extends WithStyles<typeof styles> { 
+  path?: string
 }
 
 class _MenuTitle extends Component<Props> {
+  state = {
+    toggle: false
+  }
+
+  toggleActive = () => {
+    this.setState({
+      toggle: !this.state.toggle
+    })
+  }
+
   render() {
-    const { value, classes } = this.props
+    const {
+      path,
+      children,
+      classes
+    } = this.props
+
+    const elements = path 
+      ? (<h5 className={`menuTitle ${classes.menuTitle}`}>
+          <NavLink to={path} activeClassName="active">
+            {children}
+          </NavLink>
+        </h5>)
+      : (<h5 className={`menuTitle ${classes.menuTitle}`}>
+          {children}
+        </h5>)
 
     return (
-      <span className={classnames('menuTitle', classes.menuTitle)}>{value}</span>
+      <>
+        {elements}
+      </>
     )
   }
 }

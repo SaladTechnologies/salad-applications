@@ -11,13 +11,18 @@ export const styles = (theme: SaladTheme) => ({
     '& .linkListUnstyled': {
       '& .linkListItem': {
         '& .menuTitle': {
-          color: theme.green,
-          display: 'block',
-          padding: `${theme.small} 0`,
-          cursor: 'pointer',
+          margin: 0,
+          padding: 0,
 
-          '&:hover, &:active, &.active': {
-            color: theme.lightGreen
+          '& a': {
+            display: 'block',
+            margin: 0,
+            padding: `${theme.small} 0`,
+            cursor: 'pointer',
+
+            '&:hover': {
+              color: theme.lightGreen
+            }
           }
         }
       },
