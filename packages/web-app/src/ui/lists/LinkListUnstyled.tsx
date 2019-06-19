@@ -18,25 +18,31 @@ interface Props extends WithStyles<typeof styles> {
     url: string,
     text: string
   }[],
-  onListItemClick: (url: string) => any
+  onListItemClick: (url: string) => any,
 }
 
 class _LinkListUnstyled extends Component<Props> {
   store = getStore()
 
-  // onListItemClick = (url: string) => {
-
-  // }
-
   render() {
-    const { list, onListItemClick, classes } = this.props
+    const { 
+      list, 
+      onListItemClick, 
+      classes,
+    } = this.props
 
     return (
       <ul className={classnames('linkListUnstyled', classes.linkListUnstyled)}>
         {list.map((item, index) => {
           return (
-            <li key={index} className={classnames('linkListItem', classes.linkListItem)} onClick={() => onListItemClick(item.url)}>
-              <MenuTitle value={item.text} />
+            <li 
+              key={index} 
+              className={classnames('linkListItem', classes.linkListItem)} 
+              onClick={() => onListItemClick(item.url)}
+            >
+              <MenuTitle path={item.url}>
+                {item.text}
+              </MenuTitle>
             </li>
           )
         })}

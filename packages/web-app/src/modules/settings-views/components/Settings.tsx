@@ -57,7 +57,9 @@ class _Settings extends Component<Props> {
   render() {
     type LinkList = { url: string, text: string }
 
-    const { classes } = this.props
+    const { 
+      classes 
+    } = this.props
 
     const menuList: LinkList[] = [
       { url: '/settings/smart-start', text: 'Smart Start' },
