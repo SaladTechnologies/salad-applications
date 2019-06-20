@@ -13,6 +13,8 @@ import { Logger } from './Logger'
 //Overrides the console.log behavior
 Logger.connect()
 
+const AutoLaunch = require('auto-launch')
+
 const runStatus = 'run-status'
 const runError = 'run-error'
 
@@ -103,6 +105,12 @@ const createMainWindow = () => {
   }
 
   let maximized = false
+  const saladAutoLauncher = new AutoLaunch({
+    name: 'Salad',
+    path: 'D:\\Program Files\\Salad\\Salad.exe'
+  })
+
+  console.log('[main] saladAutoLauncher: ', saladAutoLauncher)
 
   mainWindow = new BrowserWindow({
     title: 'Salad',
@@ -195,6 +203,20 @@ const createMainWindow = () => {
     console.log('Stopping salad')
     ethminer.stop()
     bridge.send(runStatus, false)
+  })
+
+  bridge.on('enable-auto-launch', () => {
+    console.log('enable auto launch')
+    saladAutoLauncher.enable().then((response: any) => {
+      console.log('enable-auto-launch promise: ', response)
+    })
+  })
+
+  bridge.on('disable-auto-launch', () => {
+    console.log('disable auto launch')
+    saladAutoLauncher.disable().then((response: any) => {
+      console.log('disable-auto-launch promise: ', response)
+    })
   })
 
   //Listen for ethminer errors

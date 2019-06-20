@@ -16,6 +16,9 @@ const maximize = 'maximize-window'
 const close = 'close-window'
 const start = 'start-salad'
 const stop = 'stop-salad'
+const enableAutoLaunch = 'enable-auto-launch'
+const disableAutoLaunch = 'disable-auto-launch'
+
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
 
@@ -332,6 +335,16 @@ export class NativeStore {
     Storage.setItem(compatibilityKey, 'true')
 
     this.store.routing.replace('/')
+  }
+
+  @action
+  enableAutoLaunch = () => {
+    this.send(enableAutoLaunch)
+  }
+
+  @action
+  disableAutoLaunch = () => {
+    this.send(disableAutoLaunch)
   }
 
   sleep = (ms: number) => {
