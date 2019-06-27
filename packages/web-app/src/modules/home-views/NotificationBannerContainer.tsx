@@ -5,7 +5,7 @@ import { NotificationBanner } from './components/NotificationBanner'
 const mapStoreToProps = () => ({
   now: new Date(),
   startDate: new Date('June 26, 2019 12:00:00 GMT-06:00'),
-  endDate: new Date('June 30, 2019 12:00:00 GMT-06:00'),
+  endDate: new Date('June 30, 2019 23:59:00 GMT-06:00'),
   text: '$100 Prize Referral Contest! See Discord for Deets.',
 })
 
