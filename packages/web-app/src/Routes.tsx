@@ -38,16 +38,15 @@ import { CompatibilityCheckPageContainer, CudaErrorContainer, UnknownErrorContai
 export default class Routes extends Component {
   store = getStore()
 
-  getOnboardingRedirect = () => {
-    console.log('%c [Routes][getOnboardingRedirect] > Onboarding ', 'background-color: yellow; color: black; display: block')
-
+  public getOnboardingRedirect = () => {
     let profile = this.store.profile.currentProfile
 
     if (profile === undefined) {
-      if (this.store.profile.isLoading)
+      if (this.store.profile.isLoading) {
         return <Redirect to="/profile-loading" />
+      }
 
-      return null
+      return
     }
 
     if (profile.termsOfService !== Config.termsVersion) return <Redirect to="/onboarding/terms" />
@@ -60,13 +59,8 @@ export default class Routes extends Component {
   render() {
     let isElectron = this.store.native.isNative
     let isAuth = this.store.auth.isAuth
-    // let isAuth = this.store.auth.isAuthenticated()
     let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
     let isOnboarding = this.store.profile.onboarding
-    // let isOnboarding = this.store.profile.isOnboarding
-
-    console.log('%c [Routes][Render] isAuth: ' + isAuth, 'background: blue; color: white; display: block;')
-    console.log('%c [Routes][Render] isOnboarding: ' + isOnboarding, 'background: blue; color: white; display: block;')
 
     return (
       <Switch>
@@ -75,7 +69,16 @@ export default class Routes extends Component {
         )}
 
         {isOnboarding && (
-          <Onboarding />
+          // When extracted into it's own component, onboarding doesn't load
+          <AnimatedSwitch>
+            <Route exact path="/profile-loading" render={() => <LoadingPage text="Loading profile" />} />
+            <Route exact path="/onboarding/referral-code" component={ReferralEntryContainer} />
+            <Route exact path="/onboarding/terms" component={TermsPageContainer} />
+            <Route exact path="/onboarding/analytics" component={AnalyticsPageContainer} />
+            <Route exact path="/onboarding/whats-new" component={WhatsNewPageContainer} />
+            {/* TODO: Whats new page */}
+            {this.getOnboardingRedirect()}
+          </AnimatedSwitch>
         )}
 
         {isElectron && showCompatibilityPage && (
@@ -93,14 +96,7 @@ export default class Routes extends Component {
 }
 
 const NoAuth = (props: any) => {
-  console.log('%c [Routes] > NoAuth ', 'background-color: salmon; color: black; display: block')
-
   const render = () => {
-    // if (props.store.checkRememberMe()) return <LoadingPage text="Logging In" />
-    // return <WelcomePageContainer />
-
-    // console.log('[Routes] > props.store.welcomePage: ', props.store.welcomePage)
-
     if (!props.store.isLoading)
       return <WelcomePageContainer />
 
@@ -116,25 +112,20 @@ const NoAuth = (props: any) => {
   )
 }
 
-const Onboarding = () => {
-  console.log('%c [Routes] > Onboarding ', 'background-color: yellow; color: black; display: block')
-
-  return (
-    <AnimatedSwitch>
-      <Route exact path="/profile-loading" render={() => <LoadingPage text="Loading profile" />} />
-      <Route exact path="/onboarding/referral-code" component={ReferralEntryContainer} />
-      <Route exact path="/onboarding/terms" component={TermsPageContainer} />
-      <Route exact path="/onboarding/analytics" component={AnalyticsPageContainer} />
-      <Route exact path="/onboarding/whats-new" component={WhatsNewPageContainer} />
-      TODO: Whats new page
-      {Routes.prototype.getOnboardingRedirect}
-    </AnimatedSwitch>
-  )
-}
+// const Onboarding = () => {
+//   return (
+//     <AnimatedSwitch>
+//       <Route exact path="/profile-loading" render={() => <LoadingPage text="Loading profile" />} />
+//       <Route exact path="/onboarding/referral-code" component={ReferralEntryContainer} />
+//       <Route exact path="/onboarding/terms" component={TermsPageContainer} />
+//       <Route exact path="/onboarding/analytics" component={AnalyticsPageContainer} />
+//       <Route exact path="/onboarding/whats-new" component={WhatsNewPageContainer} />
+//       {/* TODO: Whats new page */}
+//     </AnimatedSwitch>
+//   )
+// }
 
 const Auth = () => {
-  console.log('%c [Routes] > Auth ', 'background: green; color: white; display: block;')
-
   return (
     <>
       <Route path="/" render={() => <HomePage />} />

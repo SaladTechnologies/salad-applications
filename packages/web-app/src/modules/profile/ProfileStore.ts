@@ -34,17 +34,6 @@ export class ProfileStore {
     )
   }
 
-  // @computed
-  // public get isOnboarding(): boolean {
-  //   return (
-  //     this.currentProfile === undefined ||
-  //     (this.currentProfile.termsOfService !== Config.termsVersion ||
-  //       this.currentProfile.whatsNewVersion !== Config.whatsNewVersion ||
-  //       this.needsAnalyticsOnboarding ||
-  //       this.currentProfile.referred === ReferredStatus.CanEnter)
-  //   )
-  // }
-
   @computed
   public get isOnboarding(): boolean {
     const onboarding = (
@@ -55,12 +44,7 @@ export class ProfileStore {
         || this.currentProfile.referred === ReferredStatus.CanEnter)
     )
 
-    // return onboarding
-
     this.setOnboarding(onboarding)
-
-    console.log('-- [ProfileStore][isOnboarding] this.onboarding: ', this.onboarding)
-    console.log('-- [ProfileStore][isOnboarding] this.currentProfile: ', this.currentProfile)
 
     return this.onboarding
   }
@@ -76,14 +60,9 @@ export class ProfileStore {
   loadProfile = flow(function* (this: ProfileStore) {
     console.log('Loading the user profile')
 
-    console.log('> [ProfileStore][loadProfile] >>')
-
     this.isLoading = true
     try {
       let res = yield this.axios.get('get-profile')
-
-      console.log('>> [ProfileStore][loadProfile] >>>> res: ', res)
-
       let profile = profileFromResource(res.data, this.skippedReferral)
 
       this.currentProfile = profile
@@ -96,7 +75,7 @@ export class ProfileStore {
         this.store.analytics.trackLogin()
       }
 
-      //Update the new user flag if this is their first time loggin in
+      //Update the new user flag if this is their first time logging in
       if (profile.isNewUser) {
         this.isFirstLogin = true
 
@@ -107,6 +86,7 @@ export class ProfileStore {
 
       yield this.store.native.registerMachine()
     } catch (err) {
+      console.error('Profile error: ', err)
       this.store.routing.replace('/profile-error')
     } finally {
       this.isLoading = false
