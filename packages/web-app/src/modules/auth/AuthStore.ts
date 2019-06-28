@@ -1,15 +1,14 @@
-import { action, runInAction, observable, flow } from 'mobx'
+import { action, observable, flow } from 'mobx'
 import { AxiosInstance } from 'axios'
-import { WebAuth, Auth0DecodedHash } from 'auth0-js'
+import { WebAuth } from 'auth0-js'
 import { RootStore } from '../../Store'
 import { Config } from '../../config'
 import * as Storage from '../../Storage'
 
 const REMEMBER_ME = 'REMEMBER_ME'
+const SALAD_TOKEN = 'TOKEN'
 
 export class AuthStore {
-  private refreshTimer?: NodeJS.Timeout
-
   @observable
   public authToken?: string = undefined
   public webAuth: WebAuth
@@ -24,12 +23,16 @@ export class AuthStore {
   @observable
   public loginError: boolean = false
 
+  @observable
+  public isAuth: boolean = false
+
   public get hasLoggedIn(): boolean {
     return Storage.getOrSetDefault(REMEMBER_ME, 'false') === 'true'
   }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     let redirect = `${window.location.origin}/auth/callback`
+
     this.webAuth = new WebAuth({
       domain: Config.auth0Domain,
       clientID: Config.auth0ClientId,
@@ -40,8 +43,23 @@ export class AuthStore {
     })
   }
 
+  @action
   isAuthenticated(): boolean {
-    return this.authToken !== undefined && new Date().getTime() < this.expiresAt
+    let getToken = Storage.getItem(SALAD_TOKEN)
+    let setToken: { saladToken: string | undefined, expires: number } = { saladToken: undefined, expires: 0 }
+
+    if (getToken) {
+      setToken = this.processSaladToken(getToken)
+    }
+
+    this.isAuth = setToken.saladToken !== undefined
+
+    if (this.isAuth) {
+      // this.store.profile.onboarding = false
+      this.processAuthentication(setToken)
+    }
+
+    return this.isAuth
   }
 
   @action
@@ -58,22 +76,32 @@ export class AuthStore {
   }
 
   @action.bound
-  handleAuthentication = flow(function*(this: AuthStore) {
+  handleAuthentication = flow(function* (this: AuthStore) {
     this.isLoading = true
 
     try {
-      let authResult = yield this.parseToken()
+      // let authResult = yield this.getSaladToken() // yield this.parseToken()
+      yield this.webAuth.parseHash((err, authResult) => {
+        if (authResult) {
+          console.log('>> [AuthStore][handleAuthentication] >>>> authResult: ', authResult)
 
-      this.processAuthResult(authResult)
+          this.axios.post('generate-salad-token', { authToken: authResult.accessToken })
+            .then((response) => {
+              const saladToken = response.data.token
+              console.log('>>> [AuthStore][handleAuthentication][then1] >>>>>> saladToken: ', saladToken)
 
-      //Save the flag indicating the user has logged in
-      Storage.setItem(REMEMBER_ME, 'true')
+              const token = this.processSaladToken(saladToken)
 
-      yield this.store.profile.loadProfile()
-
-      this.loginError = false
-      this.isLoading = false
-      this.store.routing.push('/')
+              this.processAuthentication(token)
+            })
+            .then(() => {
+              console.log('>>> [AuthStore][handleAuthentication][then2] >>>>>>')
+              Storage.setItem(REMEMBER_ME, 'true')
+              this.store.profile.loadProfile()
+                .then(() => { })
+            })
+        }
+      })
     } catch (error) {
       this.loginError = true
       this.isLoading = false
@@ -81,26 +109,48 @@ export class AuthStore {
   })
 
   @action
-  processAuthResult = (authResult: Auth0DecodedHash) => {
-    this.authToken = authResult.accessToken
-    this.authProfile = authResult.idTokenPayload
-    this.expiresAt = authResult.expiresIn ? authResult.expiresIn * 1000 + new Date().getTime() : 0
-    this.axios.defaults.headers.common['Authorization'] = `Bearer ${this.authToken}`
-    this.startRefreshTimer()
+  processAuthentication = (token: { saladToken: string | undefined, expires: number }) => {
+    console.log('# [AuthStore][processAuthentication] # token: ', token)
+    this.authToken = token.saladToken
+    this.expiresAt = token.expires
+    this.axios.defaults.headers.common['Authorization'] = `Bearer ${token.saladToken}`
+
+    if (token.saladToken) {
+      this.isAuth = true
+      this.loginError = false
+      this.isLoading = false
+      // this.store.routing.push('/')
+    }
   }
 
-  /** Parse the auth0 token out the the url */
-  parseToken = (): Promise<Auth0DecodedHash> =>
-    new Promise<Auth0DecodedHash>((resolve, reject) => {
-      this.webAuth.parseHash((err, authResult) => {
-        if (err || !authResult || !authResult.idToken) {
-          return reject(err)
-        }
-        runInAction(() => {
-          resolve(authResult)
-        })
-      })
-    })
+  @action
+  processSaladToken = (saladToken: string): { saladToken: string | undefined, expires: number } => {
+    // Save saladToken in local storage
+    // Base64 encoded, check expiration, client side check
+    // Routes > If going to expire in 7 days, go to Auth0 login page. Else use the token and go straight to dashboard
+    // On logout delete from local storage
+
+    type SaladTokenData = { exp: number, iat: number, scope: string, userId: string }
+
+    const token = Storage.getOrSetDefault(SALAD_TOKEN, saladToken)
+    const Base64Token: string = new Buffer(token, 'base64').toString()
+    const tokenString: string = Base64Token.split('}')[1] + '}'
+    const tokenData: SaladTokenData = JSON.parse(tokenString)
+    const expires = tokenData.exp
+
+    let expiresInDays: Date | number = new Date(expires * 1000)
+    expiresInDays = expiresInDays.getDate()
+
+    if (expiresInDays < 7) {
+      // Routes > If going to expire in 7 days, go to Auth0 login page. Else use the token and go straight to dashboard
+      this.signOut()
+      return { saladToken: undefined, expires: 0 }
+    }
+
+    // this.welcomePage = false
+
+    return { saladToken: token, expires: expires }
+  }
 
   @action
   signOut = () => {
@@ -110,24 +160,12 @@ export class AuthStore {
       returnTo: redirect,
     })
     this.authToken = undefined
+    this.isAuth = false
 
     Storage.setItem(REMEMBER_ME, 'false')
+    Storage.removeItem(SALAD_TOKEN)
 
     //Switch back to the main page
     this.store.routing.replace('/')
-  }
-
-  startRefreshTimer = () => {
-    if (this.refreshTimer) clearInterval(this.refreshTimer)
-
-    this.refreshTimer = setTimeout(() => {
-      this.webAuth.checkSession({}, (err, result) => {
-        if (err) {
-          console.log(err)
-        } else {
-          this.processAuthResult(result)
-        }
-      })
-    }, Config.authRefreshRate)
   }
 }
