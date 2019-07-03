@@ -115,8 +115,8 @@ export class AuthStore {
     const tokenData: SaladTokenData = JSON.parse(tokenString)
     const expires = tokenData.exp
 
-    let expiresInDays: Date | number = new Date(expires * 1000)
-    expiresInDays = expiresInDays.getDate()
+    let expirationDate: any = new Date(expires * 1000)
+    let expiresInDays = Math.floor((expirationDate - Date.now()) / (1000 * 60 * 60 * 24))
 
     if (expiresInDays < 7) {
       this.signOut()
