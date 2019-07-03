@@ -23,6 +23,9 @@ export class ProfileStore {
   @observable
   public isLoading: boolean = false
 
+  @observable
+  public onboarding: boolean = false
+
   @computed get needsAnalyticsOnboarding(): boolean {
     return (
       this.currentProfile !== undefined &&
@@ -33,25 +36,33 @@ export class ProfileStore {
 
   @computed
   public get isOnboarding(): boolean {
-    return (
-      this.currentProfile === undefined ||
-      (this.currentProfile.termsOfService !== Config.termsVersion ||
-        this.currentProfile.whatsNewVersion !== Config.whatsNewVersion ||
-        this.needsAnalyticsOnboarding ||
-        this.currentProfile.referred === ReferredStatus.CanEnter)
+    const onboarding = (
+      this.currentProfile === undefined
+      || (this.currentProfile.termsOfService !== Config.termsVersion
+        || this.currentProfile.whatsNewVersion !== Config.whatsNewVersion
+        || this.needsAnalyticsOnboarding
+        || this.currentProfile.referred === ReferredStatus.CanEnter)
     )
+
+    this.setOnboarding(onboarding)
+
+    return this.onboarding
   }
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
+  @action
+  setOnboarding = (isOnboarding: boolean) => {
+    this.onboarding = isOnboarding
+  }
+
+  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) { }
 
   @action.bound
-  loadProfile = flow(function*(this: ProfileStore) {
+  loadProfile = flow(function* (this: ProfileStore) {
     console.log('Loading the user profile')
 
     this.isLoading = true
     try {
       let res = yield this.axios.get('get-profile')
-
       let profile = profileFromResource(res.data, this.skippedReferral)
 
       this.currentProfile = profile
@@ -64,7 +75,7 @@ export class ProfileStore {
         this.store.analytics.trackLogin()
       }
 
-      //Update the new user flag if this is their first time loggin in
+      //Update the new user flag if this is their first time logging in
       if (profile.isNewUser) {
         this.isFirstLogin = true
 
@@ -75,6 +86,7 @@ export class ProfileStore {
 
       yield this.store.native.registerMachine()
     } catch (err) {
+      console.error('Profile error: ', err)
       this.store.routing.replace('/profile-error')
     } finally {
       this.isLoading = false
@@ -83,7 +95,7 @@ export class ProfileStore {
   })
 
   @action.bound
-  agreeToTerms = flow(function*(this: ProfileStore) {
+  agreeToTerms = flow(function* (this: ProfileStore) {
     if (this.currentProfile === undefined) return
 
     console.log('Accepted TOS')
@@ -116,7 +128,7 @@ export class ProfileStore {
   })
 
   @action.bound
-  setAnalyticsOption = flow(function*(this: ProfileStore, agree: boolean) {
+  setAnalyticsOption = flow(function* (this: ProfileStore, agree: boolean) {
     if (this.currentProfile === undefined) return
 
     console.log('Updating analytics to ' + agree)
@@ -154,7 +166,7 @@ export class ProfileStore {
   })
 
   @action.bound
-  submitReferralCode = flow(function*(this: ProfileStore, code: string) {
+  submitReferralCode = flow(function* (this: ProfileStore, code: string) {
     if (this.currentProfile === undefined) return
 
     this.isUpdating = true
@@ -183,7 +195,7 @@ export class ProfileStore {
   })
 
   @action.bound
-  skipReferral = flow(function*(this: ProfileStore) {
+  skipReferral = flow(function* (this: ProfileStore) {
     if (this.currentProfile === undefined) return
 
     console.log('Skipping referral')
@@ -208,7 +220,7 @@ export class ProfileStore {
   })
 
   @action.bound
-  closeWhatsNew = flow(function*(this: ProfileStore) {
+  closeWhatsNew = flow(function* (this: ProfileStore) {
     if (this.currentProfile === undefined) return
 
     this.isUpdating = true
