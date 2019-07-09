@@ -30,14 +30,14 @@ class _MenuTitle extends Component<Props> {
     } = this.props
 
     const elements = path 
-      ? (<h5 className={`menuTitle ${classes.menuTitle}`}>
+      ? (<label className={`menuTitle ${classes.menuTitle}`}>
           <NavLink to={path} activeClassName="active">
             {children}
           </NavLink>
-        </h5>)
-      : (<h5 className={`menuTitle ${classes.menuTitle}`}>
+        </label>)
+      : (<label className={`menuTitle ${classes.menuTitle}`}>
           {children}
-        </h5>)
+        </label>)
 
     return (
       <>

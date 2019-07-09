@@ -7,30 +7,28 @@ import { styles } from './SmartStart.styles'
 import {
   VeggieName,
   CondensedHeader,
-  Body,
-} from '../../../../ui'
+  AppBody,
+} from '../../../../components'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
 
-interface Props extends WithStyles<typeof styles> {
-
-}
+interface Props extends WithStyles<typeof styles> {}
 
 class _SmartStart extends Component<Props> {
   render() {
     return (
       <>
-        <header>
-          <VeggieName value="Coming Soon" />
-          <CondensedHeader value="Smart Start" />
-        </header>
-        <main>
-          <Body>
+        <div className="header">
+          <VeggieName>Coming Soon</VeggieName>
+          <CondensedHeader>Smart Start</CondensedHeader>
+        </div>
+        <div className="main">
+          <AppBody>
             Smartypants Salad will start chopping whenever you’re not using the computer, and automatically stop when
             you are.Open on boot up, and Salad will launch after booting up your computer.
-          </Body>
-        </main>
+          </AppBody>
+        </div>
       </>
     )
   }

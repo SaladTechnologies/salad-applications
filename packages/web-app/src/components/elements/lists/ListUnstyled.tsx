@@ -1,14 +1,20 @@
 import React, { Component } from 'react'
 
-// Styles
-import { styles } from './ListUnstyled.styles'
+// Theme
+import { SaladTheme } from '../../../SaladTheme'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 
+const styles = (theme: SaladTheme) => ({
+  listUnstyled: {
+    paddingLeft: 0,
+    listStyle: 'none',
+  },
+})
+
 interface Props extends WithStyles<typeof styles> {
-  value?: string,
   list: string[]
 }
 
@@ -19,9 +25,7 @@ class _ListUnstyled extends Component<Props> {
     return (
       <ul className={classnames(classes.listUnstyled)}>
         {list.map((item, index) => {
-          <li key={index}>
-            {item}
-          </li>
+          return <li key={index}>{item}</li>
         })}
       </ul>
     )
