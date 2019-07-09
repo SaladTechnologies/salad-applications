@@ -7,8 +7,8 @@ import { styles } from './WindowsSettings.styles'
 import {
   VeggieName,
   CondensedHeader,
-  Body,
-} from '../../../../ui'
+  AppBody,
+} from '../../../../components'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
@@ -21,15 +21,15 @@ class _WindowsSettings extends Component<Props> {
   render() {
     return (
       <>
-        <header>
-          <VeggieName value="Coming Soon" />
-          <CondensedHeader value="Windows Settings" />
-        </header>
-        <main>
-          <Body>
+        <div className="header">
+          <VeggieName>Coming Soon</VeggieName>
+          <CondensedHeader>Windows Settings</CondensedHeader>
+        </div>
+        <div className="main">
+          <AppBody>
             
-          </Body>
-        </main>
+          </AppBody>
+        </div>
       </>
     )
   }
