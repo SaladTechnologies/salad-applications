@@ -7,30 +7,26 @@ import { styles } from './DesktopNotifications.styles'
 import {
   VeggieName,
   CondensedHeader,
-  Body,
-} from '../../../../ui'
+  AppBody,
+} from '../../../../components'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
 // import classnames from 'classnames'
 
-interface Props extends WithStyles<typeof styles> {
-
-}
+interface Props extends WithStyles<typeof styles> {}
 
 class _DesktopNotifications extends Component<Props> {
   render() {
     return (
       <>
-        <header>
-          <VeggieName value="Coming Soon" />
-          <CondensedHeader value="Desktop Notifications" />
-        </header>
-        <main>
-          <Body>
-            In case there’s some Salad Fixins’ we’ve got to tell you about.
-          </Body>
-        </main>
+        <div className="header">
+          <VeggieName>Coming Soon</VeggieName>
+          <CondensedHeader>Desktop Notifications</CondensedHeader>
+        </div>
+        <div className="main">
+          <AppBody>In case there’s some Salad Fixins’ we’ve got to tell you about.</AppBody>
+        </div>
       </>
     )
   }

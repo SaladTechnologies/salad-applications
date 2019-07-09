@@ -9,7 +9,7 @@ import { styles } from './Settings.styles'
 // UI
 import { 
   LinkListUnstyled
-} from '../../../ui'
+} from '../../../components'
 import { Button } from '../../../components'
 
 // Packages
@@ -70,10 +70,10 @@ class _Settings extends Component<Props> {
 
     return (
       <Overlay>
-        <aside className={classnames(classes.menu, classes.menuItems)}>
-          <nav>
+        <div className={classnames(classes.menu, classes.menuItems)}>
+          <div>
             <LinkListUnstyled list={menuList} onListItemClick={this.handleListItemClick} />
-          </nav>
+          </div>
           <div className={classes.buttonContainer}>
             <Button onClick={this.handleBugClicked}>
               Send bug
@@ -82,14 +82,14 @@ class _Settings extends Component<Props> {
               Close
             </Button>
           </div>
-        </aside>
-        <section className={classnames(classes.settings)}>
+        </div>
+        <div className={classnames(classes.settings)}>
           <Route path="/settings/smart-start" component={SmartStartContainer} />
           <Route path="/settings/battery-saver" component={BatterySaverContainer} />
           <Route path="/settings/desktop-notifications" component={DesktopNotificationsContainer} />
           <Route path="/settings/windows-settings" component={WindowsSettingsContainer} />
           <Route path="/settings/coming-soon" component={ComingSoonContainer} />
-        </section>
+        </div>
       </Overlay>
     )
   }
