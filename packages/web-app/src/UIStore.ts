@@ -19,7 +19,7 @@ export class UIStore {
     this.store.analytics.track('Viewed Profile')
   }
   showSettingsPage = () => {
-    this.showModal('/settings')
+    this.showModal('/settings/windows-settings')
     this.store.analytics.track('Viewed Settings')
   }
 
