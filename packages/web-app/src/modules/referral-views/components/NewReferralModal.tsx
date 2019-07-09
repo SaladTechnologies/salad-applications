@@ -59,12 +59,21 @@ class _NewReferralModal extends Component<Props> {
       <ModalPage onCloseClicked={onCloseClicked}>
         <Modal onCloseClicked={onCloseClicked}>
           <div className={classes.contentContainer}>
-            <div className={classes.title}>$5 Refer a Friend Bonus!</div>
-            <p className={classes.description}>
-              Be wise in your referral, as you only get the bonus after your friend hits 5000 XP. If their GPU isn't
-              supported or they don’t run the app you’ll miss out. The more they’re chopping Salad, the faster you’ll
-              get your bonus. Don’t forget to mention that they’ll get a $5 bonus upon reaching 5000 XP as well!
-            </p>
+            <div className={classes.title}>$5 Referral Bonus!</div>
+            <div className={classes.description}>
+              <p>
+                Earn $5.00 for getting your family & friends into the kitchen. Enter your referral’s email into the box
+                below, and we’ll send them a custom referral code. If they can run Salad, this code will do the
+                following once your referral hits 5000 XP:
+              </p>
+              <p>- Add $5.00 to your balance</p>
+              <p>- Add 500 XP to your account</p>
+              <p>- Add $5.00 to your referral’s balance</p>
+              <p>
+                Please note that you cannot refer the same machine multiple times, so shared computers are not subject
+                to referral bonuses.
+              </p>
+            </div>
           </div>
 
           <Form
