@@ -7,9 +7,7 @@ import { getStore } from '../../../Store'
 import { styles } from './Settings.styles'
 
 // UI
-import { 
-  LinkListUnstyled
-} from '../../../ui'
+import { LinkListUnstyled } from '../../../components'
 import { Button } from '../../../components'
 
 // Packages
@@ -25,10 +23,15 @@ import { ComingSoonContainer } from '../coming-soon-views'
 import { BatterySaverContainer } from '../battery-saver-views'
 import { DesktopNotificationsContainer } from '../desktop-notifications-views'
 
+export class MenuItem {
+  constructor(public readonly url: string, public readonly text: string) {}
+}
+
 interface Props extends WithStyles<typeof styles> {
   onCloseClicked?: () => void
   onSendBug?: () => void
   onListItemClick?: (url: string) => any
+  menuItems?: MenuItem[]
 }
 
 class _Settings extends Component<Props> {
@@ -55,41 +58,24 @@ class _Settings extends Component<Props> {
   }
 
   render() {
-    type LinkList = { url: string, text: string }
-
-    const { 
-      classes 
-    } = this.props
-
-    const menuList: LinkList[] = [
-      { url: '/settings/smart-start', text: 'Smart Start' },
-      { url: '/settings/battery-saver', text: 'Battery Saver' },
-      { url: '/settings/desktop-notifications', text: 'Desktop Notifications' },
-      { url: '/settings/windows-settings', text: 'Windows Settings' },
-    ]
+    const { classes, menuItems } = this.props
 
     return (
       <Overlay>
-        <aside className={classnames(classes.menu, classes.menuItems)}>
-          <nav>
-            <LinkListUnstyled list={menuList} onListItemClick={this.handleListItemClick} />
-          </nav>
+        <div className={classnames(classes.menu, classes.menuItems)}>
+          <div>{menuItems && <LinkListUnstyled list={menuItems} onListItemClick={this.handleListItemClick} />}</div>
           <div className={classes.buttonContainer}>
-            <Button onClick={this.handleBugClicked}>
-              Send bug
-            </Button>
-            <Button onClick={this.handleCloseClicked}>
-              Close
-            </Button>
+            <Button onClick={this.handleBugClicked}>Send bug</Button>
+            <Button onClick={this.handleCloseClicked}>Close</Button>
           </div>
-        </aside>
-        <section className={classnames(classes.settings)}>
+        </div>
+        <div className={classnames(classes.settings)}>
           <Route path="/settings/smart-start" component={SmartStartContainer} />
           <Route path="/settings/battery-saver" component={BatterySaverContainer} />
           <Route path="/settings/desktop-notifications" component={DesktopNotificationsContainer} />
           <Route path="/settings/windows-settings" component={WindowsSettingsContainer} />
           <Route path="/settings/coming-soon" component={ComingSoonContainer} />
-        </section>
+        </div>
       </Overlay>
     )
   }

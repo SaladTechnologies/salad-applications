@@ -1,22 +1,31 @@
 import React, { Component } from 'react'
 
 // Store
-import { getStore } from '../../Store'
+import { getStore } from '../../../Store'
 
-// Styles
-import { styles } from './LinkListUnstyled.styles'
+// Theme
+import { SaladTheme } from '../../../SaladTheme'
 
 // UI
-import { MenuTitle } from '../index'
+import { MenuTitle } from '../../'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 
+const styles = (theme: SaladTheme) => ({
+  linkListUnstyled: {
+    margin: 0,
+    padding: 0,
+    listStyle: 'none',
+  },
+  linkListItem: {},
+})
+
 interface Props extends WithStyles<typeof styles> {
   list: {
     url: string,
-    text: string
+    text: string,
   }[],
   onListItemClick: (url: string) => any,
 }

@@ -3,10 +3,11 @@ import { SaladTheme } from '../../../SaladTheme'
 
 export const styles = (theme: SaladTheme) => ({
   menu: {
+    flex: '0 0 294px', // equates to: 358px total width
     position: 'relative',
-    width: '30%',
     padding: '1.5rem 2rem'
   },
+
   menuItems: {
     '& .linkListUnstyled': {
       '& .linkListItem': {
@@ -36,7 +37,7 @@ export const styles = (theme: SaladTheme) => ({
     backgroundColor: theme.green,
     color: theme.darkBlue,
     order: 1,
-    width: '70%',
+    width: '100%',
     padding: '1.5rem 2rem',
   },
 

@@ -7,8 +7,8 @@ import { styles } from './ComingSoon.styles'
 import {
   VeggieName,
   CondensedHeader,
-  Body,
-} from '../../../../ui'
+  AppBody,
+} from '../../../../components'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
@@ -23,15 +23,13 @@ class _ComingSoon extends Component<Props> {
     return (
       <>
         <header>
-          <VeggieName value="Besides, you look good in a dress. (http://www.rikeripsum.com/#!/)" />
-          <CondensedHeader value="Coming Soon" />
+          <VeggieName>Coming Soon</VeggieName>
+          <CondensedHeader>Coming Soon</CondensedHeader>
         </header>
         <main>
-          <Body>
-            Maybe if we felt any human loss as keenly as we feel one of those close to us, 
-            human history would be far less bloody. And blowing into maximum warp speed, 
-            you appeared for an instant to be in two places at once.
-          </Body>
+          <AppBody>
+            
+          </AppBody>
         </main>
       </>
     )

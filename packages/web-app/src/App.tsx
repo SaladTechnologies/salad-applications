@@ -9,10 +9,16 @@ class App extends Component {
   store = getStore()
 
   componentDidMount = () => {
+    if (this.store.auth.isAuth) {
+      this.store.profile.loadProfile()
+        .then(() => { })
+    }
+
     if (!this.store.native.isNative) {
       console.log('Running in web env')
       return
     }
+
     console.log('Running in native env')
     this.store.native.loadMachineInfo()
   }
