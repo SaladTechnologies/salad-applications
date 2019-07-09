@@ -7,9 +7,7 @@ import { getStore } from '../../../Store'
 import { styles } from './Settings.styles'
 
 // UI
-import { 
-  LinkListUnstyled
-} from '../../../components'
+import { LinkListUnstyled } from '../../../components'
 import { Button } from '../../../components'
 
 // Packages
@@ -25,10 +23,15 @@ import { ComingSoonContainer } from '../coming-soon-views'
 import { BatterySaverContainer } from '../battery-saver-views'
 import { DesktopNotificationsContainer } from '../desktop-notifications-views'
 
+export class MenuItem {
+  constructor(public readonly url: string, public readonly text: string) {}
+}
+
 interface Props extends WithStyles<typeof styles> {
   onCloseClicked?: () => void
   onSendBug?: () => void
   onListItemClick?: (url: string) => any
+  menuItems?: MenuItem[]
 }
 
 class _Settings extends Component<Props> {
@@ -55,32 +58,15 @@ class _Settings extends Component<Props> {
   }
 
   render() {
-    type LinkList = { url: string, text: string }
-
-    const { 
-      classes 
-    } = this.props
-
-    const menuList: LinkList[] = [
-      { url: '/settings/smart-start', text: 'Smart Start' },
-      { url: '/settings/battery-saver', text: 'Battery Saver' },
-      { url: '/settings/desktop-notifications', text: 'Desktop Notifications' },
-      { url: '/settings/windows-settings', text: 'Windows Settings' },
-    ]
+    const { classes, menuItems } = this.props
 
     return (
       <Overlay>
         <div className={classnames(classes.menu, classes.menuItems)}>
-          <div>
-            <LinkListUnstyled list={menuList} onListItemClick={this.handleListItemClick} />
-          </div>
+          <div>{menuItems && <LinkListUnstyled list={menuItems} onListItemClick={this.handleListItemClick} />}</div>
           <div className={classes.buttonContainer}>
-            <Button onClick={this.handleBugClicked}>
-              Send bug
-            </Button>
-            <Button onClick={this.handleCloseClicked}>
-              Close
-            </Button>
+            <Button onClick={this.handleBugClicked}>Send bug</Button>
+            <Button onClick={this.handleCloseClicked}>Close</Button>
           </div>
         </div>
         <div className={classnames(classes.settings)}>

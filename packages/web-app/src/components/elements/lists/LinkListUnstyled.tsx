@@ -25,7 +25,7 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   list: {
     url: string,
-    text: string
+    text: string,
   }[],
   onListItemClick: (url: string) => any,
 }
