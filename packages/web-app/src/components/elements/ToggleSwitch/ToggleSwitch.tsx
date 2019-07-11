@@ -6,22 +6,50 @@ import { styles } from './ToggleSwitch.styles'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
+import classnames from 'classnames'
 
 interface Props extends WithStyles<typeof styles> {
-
+  toggleLeft?: string | 'Off'
+  toggleRight?: string | 'On'
+  toggleOn?: boolean
+  toggleClick?: () => void
 }
 
 class _ToggleSwitch extends Component<Props> {
+  state = {
+    toggled: this.props.toggleOn,
+  }
+
   render() {
-    const {
-      classes
-    } = this.props
+    const { classes, toggleLeft, toggleRight, toggleClick } = this.props
 
     return (
-      <label className={classes.switch}>
-        <input className={classes.input} type="checkbox" />
-        <span className={classes.slider}></span>
-      </label>
+      <>
+        <input
+          id="toggle-on"
+          className={classnames(classes.toggle, 'toggle-left')}
+          name="toggle"
+          value="false"
+          type="radio"
+          defaultChecked={!this.state.toggled}
+          onClick={toggleClick}
+        />
+        <label htmlFor="toggle-on" className={classnames(classes.btn)}>
+          {toggleLeft}
+        </label>
+        <input
+          id="toggle-off"
+          className={classnames(classes.toggle, 'toggle-right')}
+          name="toggle"
+          value="true"
+          type="radio"
+          defaultChecked={this.state.toggled}
+          onClick={toggleClick}
+        />
+        <label htmlFor="toggle-off" className={classnames(classes.btn)}>
+          {toggleRight}
+        </label>
+      </>
     )
   }
 }

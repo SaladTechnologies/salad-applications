@@ -7,52 +7,54 @@ import { styles } from './WindowsSettings.styles'
 import { getStore } from '../../../../Store'
 
 // UI
-import {
-  VeggieName,
-  CondensedHeader,
-  Body,
-} from '../../../../ui'
+import { Username, VeggieName, CondensedHeader, AppBody, ToggleSwitch } from '../../../../components'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
-import { ToggleSwitch } from '../../../../components';
+import classnames from 'classnames'
 
-interface Props extends WithStyles<typeof styles> {
-
-}
+interface Props extends WithStyles<typeof styles> {}
 
 class _WindowsSettings extends Component<Props> {
   store = getStore()
 
-  enableAutoLaunch = () => {
+  toggleAutoLaunch = () => {
+    console.log('[[WindowsSettings] toggleAutoLaunch] this.store.native.autoLaunch: ', this.store.native.autoLaunch)
+    if (this.store.native.autoLaunch) {
+      this.store.native.disableAutoLaunch()
+      return
+    }
+
     this.store.native.enableAutoLaunch()
   }
 
-  disableAutoLaunch = () => {
-    this.store.native.disableAutoLaunch()
-  }
-
   render() {
+    const { classes } = this.props
+
     return (
       <>
-        <header>
-          <VeggieName value="Coming Soon" />
-          <CondensedHeader value="Windows Settings" />
-        </header>
-        <main>
-          <Body>
-            What's a knock-out like you doing in a computer-generated gin joint like this? 
-            I can't. As much as I care about you, my first duty is to the ship.
-          </Body>
-
-          <ToggleSwitch />
-          <br />
-          <br />
-          <br />
-
-          <button onClick={this.enableAutoLaunch}>Enable Autos Launch</button>
-          <button onClick={this.disableAutoLaunch}>Disable Auto Launch</button>
-        </main>
+        <div className="header">
+          <VeggieName>Coming Soon</VeggieName>
+          <CondensedHeader>Windows Settings</CondensedHeader>
+          <hr className={classnames(classes.hr)} />
+        </div>
+        <div className={classnames(classes.main)}>
+          <div className={classnames(classes.toggler)}>
+            <ToggleSwitch
+              toggleLeft="Off"
+              toggleRight="On"
+              toggleOn={this.store.native.autoLaunch}
+              toggleClick={this.toggleAutoLaunch}
+            />
+          </div>
+          <div className={classnames(classes.description)}>
+            <Username blue>Auto Launch</Username>
+            <AppBody>
+              What's a knock-out like you doing in a computer-generated gin joint like this? I can't. As much as I
+              care about you, my first duty is to the ship.
+            </AppBody>
+          </div>
+        </div>
       </>
     )
   }

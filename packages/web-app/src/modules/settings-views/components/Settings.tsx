@@ -52,8 +52,6 @@ class _Settings extends Component<Props> {
   handleListItemClick = (url: string) => {
     const { onListItemClick } = this.props
 
-    console.log('[Settings] handleListItemClick')
-
     if (onListItemClick) onListItemClick(url)
   }
 

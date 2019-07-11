@@ -19,8 +19,8 @@ const stop = 'stop-salad'
 const enableAutoLaunch = 'enable-auto-launch'
 const disableAutoLaunch = 'disable-auto-launch'
 
-
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
+const AUTO_LAUNCH = 'AUTO_LAUNCH'
 
 declare global {
   interface Window {
@@ -59,6 +59,9 @@ export class NativeStore {
   @observable
   public machineInfo?: MachineInfo
 
+  @observable
+  public autoLaunch: boolean = true
+
   @computed
   get isNative(): boolean {
     return window.salad && window.salad.platform === 'electron'
@@ -91,6 +94,9 @@ export class NativeStore {
     runInAction(() => {
       this.skippedCompatCheck = Storage.getOrSetDefault(compatibilityKey, 'false') === 'true'
     })
+
+    // TODO: Put in localstorage checks for auto-launch
+    this.checkAutoLaunch()
 
     console.log('Initial compat check: ' + this.skippedCompatCheck)
 
@@ -152,7 +158,7 @@ export class NativeStore {
   }
 
   @action.bound
-  private checkOnlineStatus = flow(function* (this: NativeStore) {
+  private checkOnlineStatus = flow(function*(this: NativeStore) {
     console.log('Checking online status')
 
     try {
@@ -251,7 +257,7 @@ export class NativeStore {
   }
 
   @action.bound
-  registerMachine = flow(function* (this: NativeStore) {
+  registerMachine = flow(function*(this: NativeStore) {
     if (!this.machineInfo) {
       console.warn('No valid machine info found. Unable to register.')
       return
@@ -275,7 +281,7 @@ export class NativeStore {
   })
 
   @action.bound
-  setMachineInfo = flow(function* (this: NativeStore, info: MachineInfo) {
+  setMachineInfo = flow(function*(this: NativeStore, info: MachineInfo) {
     console.log('Received machine info')
     if (this.machineInfo) {
       console.log('Already received machine info. Skipping...')
@@ -316,7 +322,7 @@ export class NativeStore {
   })
 
   @action.bound
-  sendRunningStatus = flow(function* (this: NativeStore, status: boolean) {
+  sendRunningStatus = flow(function*(this: NativeStore, status: boolean) {
     console.log('Status MachineId: ' + this.machineId)
 
     let req = {
@@ -339,12 +345,39 @@ export class NativeStore {
 
   @action
   enableAutoLaunch = () => {
+    console.log('>>>>>>> [[NativeStore] enableAutoLaunch] <<<<<<<')
+    
+    this.autoLaunch = true
+    Storage.setItem(AUTO_LAUNCH, 'true')
+    
     this.send(enableAutoLaunch)
   }
 
   @action
   disableAutoLaunch = () => {
+    console.log('>>>>>>> [[NativeStore] disableAutoLaunch] <<<<<<<')
+    
+    this.autoLaunch = false
+    Storage.setItem(AUTO_LAUNCH, 'false')
+
     this.send(disableAutoLaunch)
+  }
+
+  @action
+  checkAutoLaunch = () => {
+    console.log('>>>>> [[NativeStore] checkAutoLaunch] <<<<<')
+    console.log('>>>>> [[NativeStore] checkAutoLaunch] this.autoLaunch.toString(): ', this.autoLaunch.toString())
+    console.log(
+      '>>>>> [[NativeStore] checkAutoLaunch] Storage.getOrSetDefault(AUTO_LAUNCH, this.autoLaunch.toString()) === "true": ',
+      Storage.getOrSetDefault(AUTO_LAUNCH, this.autoLaunch.toString()) === 'true',
+    )
+    this.autoLaunch = Storage.getOrSetDefault(AUTO_LAUNCH, this.autoLaunch.toString()) === 'true'
+
+    // if (this.autoLaunch) {
+    //   this.enableAutoLaunch()
+    // } else {
+    //   this.disableAutoLaunch()
+    // }
   }
 
   sleep = (ms: number) => {

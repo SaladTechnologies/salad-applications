@@ -110,7 +110,7 @@ const createMainWindow = () => {
     path: 'D:\\Program Files\\Salad\\Salad.exe'
   })
 
-  console.log('[main] saladAutoLauncher: ', saladAutoLauncher)
+  // console.log('[main] saladAutoLauncher: ', saladAutoLauncher)
 
   mainWindow = new BrowserWindow({
     title: 'Salad',
@@ -206,17 +206,13 @@ const createMainWindow = () => {
   })
 
   bridge.on('enable-auto-launch', () => {
-    console.log('enable auto launch')
-    saladAutoLauncher.enable().then((response: any) => {
-      console.log('enable-auto-launch promise: ', response)
-    })
+    console.log('Enable auto launch')
+    saladAutoLauncher.enable()
   })
 
   bridge.on('disable-auto-launch', () => {
-    console.log('disable auto launch')
-    saladAutoLauncher.disable().then((response: any) => {
-      console.log('disable-auto-launch promise: ', response)
-    })
+    console.log('Disable auto launch')
+    saladAutoLauncher.disable()
   })
 
   //Listen for ethminer errors

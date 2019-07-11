@@ -2,64 +2,70 @@
 import { SaladTheme } from '../../../SaladTheme'
 
 export const styles = (theme: SaladTheme) => ({
-  switch: {
-    position: 'relative',
+  btn: {
+    border: '1px solid ' + theme.lightGreen,
     display: 'inline-block',
-    width: '60px',
-    height: '34px',
-
-    '& .input': {
-      opacity: 0,
-      width: 0,
-      height: 0,
-    },
+    padding: '6px 2px',
+    position: 'relative',
+    textAlign: 'center',
+    transition: 'background 600ms ease, color 600ms ease',
   },
 
-  slider: {
-    position: 'absolute',
-    cursor: 'pointer',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: '#000',
-    transition: '.4s',
+  toggle: {
+    display: 'none',
 
-    '&:before': {
-      position: 'absolute',
-      content: '',
-      height: '26px',
-      width: '26px',
-      left: '4px',
-      bottom: '4px',
-      backgroundColor: 'white',
-      transition: '.4s',
+    '& + label': {
+      color: theme.darkGreen,
+      cursor: 'pointer',
+      minWidth: 50,
+      fontFamily: theme.fontGroteskLight25,
+      fontSize: theme.small,
+      textTransform: 'uppercase',
+      lineHeight: '20px',
+
+      // '&:hover': {
+      //   color: theme.lightGreen
+      // },
+
+      '&:after': {
+        // background: '#1a1a1a',
+        content: '""',
+        width: '100%',
+        height: '100%',
+        position: 'absolute',
+        top: 0,
+        zIndex: -1,
+        transition: 'left 200ms cubic-bezier(0.77, 0, 0.175, 1)'
+      }
     },
 
-    '&.round': {
-      borderRadius: '34px',
+    '&.toggle-left + label': {
+      borderRight: 0,
 
-      '&:before': {
-        borderRadius: '50%',
+      '&:after': {
+        left: '100%',
+      }
+    },
+
+    '&.toggle-right + label': {
+      // marginLeft: '-5px',
+
+      '&:after': {
+        left: '-100%',
+      }
+    },
+
+    '&:checked + label': {
+      background: theme.mediumGreen,
+      color: theme.lightGreen,
+      boxSizing: 'border-box',
+      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+      cursor: 'default',
+      transition: 'color 200ms',
+
+      '&:after': {
+        left: 0,
       }
     }
-  },
-
-  input: {
-    '&:checked': {
-      '&:before': {
-        transform: 'translateX(26px)'
-      },
-
-      '& + .slider': {
-        backgroundColor: '#666',
-      },
-    },
-
-    '&:focus': {
-      '& + .slider': {
-        boxShadow: '0 0 1px #ccc'
-      },
-    },
   },
 })
