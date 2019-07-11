@@ -107,7 +107,6 @@ const createMainWindow = () => {
   let maximized = false
   const saladAutoLauncher = new AutoLaunch({
     name: 'Salad',
-    path: 'D:\\Program Files\\Salad\\Salad.exe'
   })
 
   // console.log('[main] saladAutoLauncher: ', saladAutoLauncher)
