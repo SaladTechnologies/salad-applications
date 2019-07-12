@@ -31,6 +31,24 @@ class _WindowsSettings extends Component<Props> {
   render() {
     const { classes } = this.props
 
+    let toggler =
+      window.salad.apiVersion > 1 ? (
+        <ToggleSwitch
+          toggleLeft="Off"
+          toggleRight="On"
+          toggleOn={this.store.native.autoLaunch}
+          toggleClick={this.toggleAutoLaunch}
+        />
+      ) : (
+        <ToggleSwitch
+          toggleLeft="Off"
+          toggleRight="On"
+          disabled
+          toggleOn={this.store.native.autoLaunch}
+          toggleClick={this.toggleAutoLaunch}
+        />
+      )
+
     return (
       <>
         <div className="header">
@@ -40,12 +58,7 @@ class _WindowsSettings extends Component<Props> {
         </div>
         <div className={classnames(classes.main)}>
           <div className={classnames(classes.toggler)}>
-            <ToggleSwitch
-              toggleLeft="Off"
-              toggleRight="On"
-              toggleOn={this.store.native.autoLaunch}
-              toggleClick={this.toggleAutoLaunch}
-            />
+            {toggler}
           </div>
           <div className={classnames(classes.description)}>
             <Username blue>Auto Launch</Username>

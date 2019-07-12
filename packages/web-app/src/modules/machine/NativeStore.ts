@@ -345,18 +345,14 @@ export class NativeStore {
 
   @action
   enableAutoLaunch = () => {
-    console.log('>>>>>>> [[NativeStore] enableAutoLaunch] <<<<<<<')
-    
     this.autoLaunch = true
     Storage.setItem(AUTO_LAUNCH, 'true')
-    
+
     this.send(enableAutoLaunch)
   }
 
   @action
   disableAutoLaunch = () => {
-    console.log('>>>>>>> [[NativeStore] disableAutoLaunch] <<<<<<<')
-    
     this.autoLaunch = false
     Storage.setItem(AUTO_LAUNCH, 'false')
 
@@ -365,19 +361,13 @@ export class NativeStore {
 
   @action
   checkAutoLaunch = () => {
-    console.log('>>>>> [[NativeStore] checkAutoLaunch] <<<<<')
-    console.log('>>>>> [[NativeStore] checkAutoLaunch] this.autoLaunch.toString(): ', this.autoLaunch.toString())
-    console.log(
-      '>>>>> [[NativeStore] checkAutoLaunch] Storage.getOrSetDefault(AUTO_LAUNCH, this.autoLaunch.toString()) === "true": ',
-      Storage.getOrSetDefault(AUTO_LAUNCH, this.autoLaunch.toString()) === 'true',
-    )
-    this.autoLaunch = Storage.getOrSetDefault(AUTO_LAUNCH, this.autoLaunch.toString()) === 'true'
+    if (window.salad.apiVersion <= 1) {
+      Storage.setItem(AUTO_LAUNCH, 'false')
+      this.autoLaunch = false
+      return
+    }
 
-    // if (this.autoLaunch) {
-    //   this.enableAutoLaunch()
-    // } else {
-    //   this.disableAutoLaunch()
-    // }
+    this.autoLaunch = Storage.getOrSetDefault(AUTO_LAUNCH, this.autoLaunch.toString()) === 'true'
   }
 
   sleep = (ms: number) => {

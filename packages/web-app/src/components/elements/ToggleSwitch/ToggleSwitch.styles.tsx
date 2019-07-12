@@ -23,12 +23,13 @@ export const styles = (theme: SaladTheme) => ({
       textTransform: 'uppercase',
       lineHeight: '20px',
 
-      // '&:hover': {
-      //   color: theme.lightGreen
-      // },
+      '&.disabled': {
+        background: 'rgba(200, 200, 200, .6)',
+        color: '#fff',
+        cursor: 'default',
+      },
 
       '&:after': {
-        // background: '#1a1a1a',
         content: '""',
         width: '100%',
         height: '100%',
@@ -48,8 +49,6 @@ export const styles = (theme: SaladTheme) => ({
     },
 
     '&.toggle-right + label': {
-      // marginLeft: '-5px',
-
       '&:after': {
         left: '-100%',
       }
@@ -58,10 +57,13 @@ export const styles = (theme: SaladTheme) => ({
     '&:checked + label': {
       background: theme.mediumGreen,
       color: theme.lightGreen,
-      boxSizing: 'border-box',
       boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
       cursor: 'default',
       transition: 'color 200ms',
+
+      '&.disabled': {
+        boxShadow: 'none'
+      },
 
       '&:after': {
         left: 0,

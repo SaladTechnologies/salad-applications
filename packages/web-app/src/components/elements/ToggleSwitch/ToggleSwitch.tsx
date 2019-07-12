@@ -13,6 +13,7 @@ interface Props extends WithStyles<typeof styles> {
   toggleRight?: string | 'On'
   toggleOn?: boolean
   toggleClick?: () => void
+  disabled?: boolean
 }
 
 class _ToggleSwitch extends Component<Props> {
@@ -21,32 +22,39 @@ class _ToggleSwitch extends Component<Props> {
   }
 
   render() {
-    const { classes, toggleLeft, toggleRight, toggleClick } = this.props
+    const { 
+      classes, 
+      toggleLeft, 
+      toggleRight, 
+      toggleClick, 
+      disabled } = this.props
 
     return (
       <>
         <input
           id="toggle-on"
-          className={classnames(classes.toggle, 'toggle-left')}
+          className={classnames(classes.toggle, 'toggle-left', disabled && 'disabled')}
           name="toggle"
           value="false"
           type="radio"
           defaultChecked={!this.state.toggled}
           onClick={toggleClick}
+          disabled={disabled}
         />
-        <label htmlFor="toggle-on" className={classnames(classes.btn)}>
+        <label htmlFor="toggle-on" className={classnames(classes.btn, disabled && 'disabled')}>
           {toggleLeft}
         </label>
         <input
           id="toggle-off"
-          className={classnames(classes.toggle, 'toggle-right')}
+          className={classnames(classes.toggle, 'toggle-right', disabled && 'disabled')}
           name="toggle"
           value="true"
           type="radio"
           defaultChecked={this.state.toggled}
           onClick={toggleClick}
+          disabled={disabled}
         />
-        <label htmlFor="toggle-off" className={classnames(classes.btn)}>
+        <label htmlFor="toggle-off" className={classnames(classes.btn, disabled && 'disabled')}>
           {toggleRight}
         </label>
       </>
