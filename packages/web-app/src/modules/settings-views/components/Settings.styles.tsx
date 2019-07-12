@@ -50,6 +50,7 @@ export const styles = (theme: SaladTheme) => ({
     fontFamily: 'sharpGroteskLight25',
     fontSize: theme.small,
     cursor: 'pointer',
+
     '&:hover': {
       opacity: 0.8,
     },
@@ -58,9 +59,29 @@ export const styles = (theme: SaladTheme) => ({
   buttonContainer: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     position: 'absolute',
-    right: '2rem',
     bottom: '1.5rem',
+    left: '1.5rem',
   },
+
+  closeButton: {
+    border: 'solid 3px ' + theme.lightGreen,
+    color: theme.lightGreen,
+    position: 'absolute',
+    top: 30,
+    right: 30,
+    cursor: 'pointer',
+    transition: 'color 200ms',
+    borderRadius: '50%',
+    width: '20px !important',
+    height: 20,
+    padding: 3,
+
+    '&:hover': {
+      border: 'solid 3px ' + theme.darkGreen,
+      color: theme.darkGreen,
+      transition: 'all 200ms ease',
+    }
+  }
 })

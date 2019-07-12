@@ -30,9 +30,10 @@ class _WindowsSettings extends Component<Props> {
 
   render() {
     const { classes } = this.props
+    const apiVersion: boolean = window.salad && window.salad.apiVersion > 1
 
     let toggler =
-      window.salad.apiVersion > 1 ? (
+      apiVersion ? (
         <ToggleSwitch
           toggleLeft="Off"
           toggleRight="On"
@@ -52,16 +53,14 @@ class _WindowsSettings extends Component<Props> {
     return (
       <>
         <div className="header">
-          <VeggieName>Coming Soon</VeggieName>
+          {!apiVersion && <VeggieName>Coming Soon</VeggieName>}
           <CondensedHeader>Windows Settings</CondensedHeader>
           <hr className={classnames(classes.hr)} />
         </div>
         <div className={classnames(classes.main)}>
-          <div className={classnames(classes.toggler)}>
-            {toggler}
-          </div>
+          <div className={classnames(classes.toggler)}>{toggler}</div>
           <div className={classnames(classes.description)}>
-            <Username blue>Auto Launch</Username>
+            <Username blue>Auto Launch {!apiVersion && ('(Coming in v0.2.1)')}</Username>
             <AppBody>
               What's a knock-out like you doing in a computer-generated gin joint like this? I can't. As much as I
               care about you, my first duty is to the ship.

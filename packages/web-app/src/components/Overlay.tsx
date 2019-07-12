@@ -22,7 +22,8 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  onCloseClicked?: () => void
+  onCloseClicked?: () => void,
+  onCloseKeyPress?: (e: any) => void,
 }
 
 class _Overlay extends Component<Props> {

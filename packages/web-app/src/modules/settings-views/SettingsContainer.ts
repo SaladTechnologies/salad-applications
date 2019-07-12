@@ -22,6 +22,7 @@ const mapStoreToProps = (store: RootStore) => {
 
   return {
     onCloseClicked: () => store.ui.hideModal(),
+    onCloseKeyPress: () => store.ui.hideModal(),
     onListItemClick: (url: string) => handleSettingsMenuClick(store, url),
     onSendBug: handleBug,
     menuItems: menuItems,

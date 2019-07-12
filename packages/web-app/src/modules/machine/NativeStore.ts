@@ -95,13 +95,12 @@ export class NativeStore {
       this.skippedCompatCheck = Storage.getOrSetDefault(compatibilityKey, 'false') === 'true'
     })
 
-    // TODO: Put in localstorage checks for auto-launch
-    this.checkAutoLaunch()
-
     console.log('Initial compat check: ' + this.skippedCompatCheck)
 
     if (this.isNative) {
       window.salad.onNative = this.onNative
+
+      this.checkAutoLaunch()
 
       this.on(runStatus, (status: boolean) => {
         console.log('Received run status: ' + status)
@@ -362,7 +361,7 @@ export class NativeStore {
   @action
   checkAutoLaunch = () => {
     if (window.salad.apiVersion <= 1) {
-      Storage.setItem(AUTO_LAUNCH, 'false')
+      // Storage.setItem(AUTO_LAUNCH, 'false')
       this.autoLaunch = false
       return
     }
