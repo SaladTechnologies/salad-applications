@@ -19,6 +19,7 @@ export * from './Tooltip'
 export * from './VerticalProgress'
 
 // Elements
+export * from './elements/ToggleSwitch/ToggleSwitch'
 export * from './elements/lists/LinkListUnstyled'
 export * from './elements/lists/ListUnstyled'
 
