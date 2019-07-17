@@ -60,10 +60,10 @@ class _WindowsSettings extends Component<Props> {
         <div className={classnames(classes.main)}>
           <div className={classnames(classes.toggler)}>{toggler}</div>
           <div className={classnames(classes.description)}>
-            <Username blue>Auto Launch {!apiVersion && ('(Coming in v0.2.1)')}</Username>
+            <Username blue>Auto Launch {!apiVersion && '(Coming in v0.2.1)'}</Username>
             <AppBody>
-              What's a knock-out like you doing in a computer-generated gin joint like this? I can't. As much as I
-              care about you, my first duty is to the ship.
+              Auto Launch opens Salad once you log into Windows, getting the Kitchen warmed up for when you're ready
+              to start chopping.
             </AppBody>
           </div>
         </div>
