@@ -44,6 +44,10 @@ class _Settings extends Component<Props> {
     document.addEventListener('keyup', this.handleCloseKeyPress)
   }
 
+  componentWillUnmount() {
+    document.removeEventListener('keyup', this.handleCloseKeyPress)
+  }
+
   handleBugClicked = () => {
     const { onSendBug } = this.props
 

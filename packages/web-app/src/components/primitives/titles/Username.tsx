@@ -13,10 +13,9 @@ const styles = (theme: SaladTheme) => ({
     fontFamily: theme.fontGroteskLight25,
     fontSize: theme.mediumLarge,
     lineHeight: theme.mediumLarge,
-
-    '&.blue': {
-      color: theme.darkBlue
-    }
+  },
+  blue: {
+    color: theme.darkBlue,
   },
 })
 
@@ -28,7 +27,7 @@ class _Username extends Component<Props> {
   render() {
     const { blue, children, classes } = this.props
 
-    return <label className={classnames(classes.username, blue && 'blue')}>{children}</label>
+    return <label className={classnames(classes.username, {[classes.blue]: blue})}>{children}</label>
   }
 }
 

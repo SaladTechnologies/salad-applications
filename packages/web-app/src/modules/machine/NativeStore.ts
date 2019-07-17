@@ -361,7 +361,6 @@ export class NativeStore {
   @action
   checkAutoLaunch = () => {
     if (window.salad.apiVersion <= 1) {
-      // Storage.setItem(AUTO_LAUNCH, 'false')
       this.autoLaunch = false
       return
     }
