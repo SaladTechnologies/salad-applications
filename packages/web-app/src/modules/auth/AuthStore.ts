@@ -41,7 +41,7 @@ export class AuthStore {
   @action
   isAuthenticated(): boolean {
     let getToken = Storage.getItem(SALAD_TOKEN)
-    let setToken: { saladToken: string | undefined, expires: number } = { saladToken: undefined, expires: 0 }
+    let setToken: { saladToken: string | undefined; expires: number } = { saladToken: undefined, expires: 0 }
 
     if (getToken) {
       setToken = this.processSaladToken(getToken)
@@ -64,23 +64,77 @@ export class AuthStore {
   }
 
   @action.bound
-  handleAuthentication = flow(function* (this: AuthStore) {
+  handleAuthentication = flow(function*(this: AuthStore) {
     this.isLoading = true
 
     try {
       yield this.webAuth.parseHash((err, authResult) => {
         if (authResult) {
-          this.axios.post('generate-salad-token', { authToken: authResult.accessToken })
-            .then((response) => {
-              const saladToken = response.data.token
-              const token = this.processSaladToken(saladToken)
+          // console.log('[[AuthStore] handleAuth] this.store.native.machineId: ', this.store.native.machineId)
+          // console.log('[[AuthStore] handleAuth] this.store.native.machineInfo: ', this.store.native.machineInfo)
+          // console.log(
+          //   '[[AuthStore] handleAuth] this.store.native.machineInfo.system.uuid: ',
+          //   this.store.native.machineInfo && this.store.native.machineInfo.system.uuid,
+          // )
+          // console.log('[[AuthStore] handleAuth] authResult.accessToken: ', authResult.accessToken)
 
-              this.processAuthentication(token)
+          // const data = {
+          //   authToken: authResult.accessToken,
+          //   systemId: this.store.native.machineInfo && this.store.native.machineInfo.system.uuid,
+          // }
+
+          this.axios
+            .post(
+              'login',
+              {
+                authToken: authResult.accessToken,
+                systemId: 'ffd15a2b-ee3a-498e-9975-389d7d46161d', // this.store.native.machineInfo && this.store.native.machineInfo.system.uuid,
+              },
+              {
+                baseURL: 'https://salad-app-production.kyledodson.com/api/v1/',
+              },
+            )
+            .then(response => {
+              console.log('>> v2 Login response: ', response)
             })
-            .then(() => {
-              this.store.profile.loadProfile()
-                .then(() => { })
+            .catch(error => {
+              console.log('>> v2 Login error: ', error)
             })
+            .finally(() => {
+              console.log('>> v2 Login finally')
+            })
+
+          // this.axios({
+          //   method: 'post',
+          //   baseURL: 'https://salad-app-production.kyledodson.com/api/v1/',
+          //   url: 'login',
+          //   headers: { 'content-type': 'application/json' },
+          //   data: {
+          //     authToken: authResult.accessToken,
+          //     systemId: 'ffd15a2b-ee3a-498e-9975-389d7d46161d', // this.store.native.machineInfo && this.store.native.machineInfo.system.uuid,
+          //   },
+          // })
+          //   .then(response => {
+          //     console.log('>> v2 Login response: ', response)
+          //   })
+          //   .catch(error => {
+          //     console.log('>> v2 Login error: ', error)
+          //   })
+          //   .finally(() => {
+          //     console.log('>> v2 Login finally')
+          //   })
+
+          // this.axios
+          //   .post('generate-salad-token', { authToken: authResult.accessToken })
+          //   .then(response => {
+          //     const saladToken = response.data.token
+          //     const token = this.processSaladToken(saladToken)
+
+          //     this.processAuthentication(token)
+          //   })
+          //   .then(() => {
+          //     this.store.profile.loadProfile().then(() => {})
+          //   })
         }
       })
     } catch (error) {
@@ -90,7 +144,7 @@ export class AuthStore {
   })
 
   @action
-  processAuthentication = (token: { saladToken: string | undefined, expires: number }) => {
+  processAuthentication = (token: { saladToken: string | undefined; expires: number }) => {
     this.authToken = token.saladToken
     this.expiresAt = token.expires
     this.axios.defaults.headers.common['Authorization'] = `Bearer ${token.saladToken}`
@@ -106,8 +160,8 @@ export class AuthStore {
   }
 
   @action
-  processSaladToken = (saladToken: string): { saladToken: string | undefined, expires: number } => {
-    type SaladTokenData = { exp: number, iat: number, scope: string, userId: string }
+  processSaladToken = (saladToken: string): { saladToken: string | undefined; expires: number } => {
+    type SaladTokenData = { exp: number; iat: number; scope: string; userId: string }
 
     const token = Storage.getOrSetDefault(SALAD_TOKEN, saladToken)
     const Base64Token: string = new Buffer(token, 'base64').toString()
