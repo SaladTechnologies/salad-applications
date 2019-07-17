@@ -14,15 +14,20 @@ const styles = (theme: SaladTheme) => ({
     fontSize: theme.mediumLarge,
     lineHeight: theme.mediumLarge,
   },
+  blue: {
+    color: theme.darkBlue,
+  },
 })
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  blue?: boolean
+}
 
 class _Username extends Component<Props> {
   render() {
-    const { children, classes } = this.props
+    const { blue, children, classes } = this.props
 
-    return <label className={classnames(classes.username)}>{children}</label>
+    return <label className={classnames(classes.username, {[classes.blue]: blue})}>{children}</label>
   }
 }
 

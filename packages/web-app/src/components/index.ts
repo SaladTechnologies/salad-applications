@@ -20,6 +20,7 @@ export * from './VerticalProgress'
 export * from './ExternalLink'
 
 // Elements
+export * from './elements/ToggleSwitch/ToggleSwitch'
 export * from './elements/lists/LinkListUnstyled'
 export * from './elements/lists/ListUnstyled'
 

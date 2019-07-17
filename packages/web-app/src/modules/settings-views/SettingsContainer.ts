@@ -17,14 +17,12 @@ const handleSettingsMenuClick = (store: RootStore, url: string) => {
 const mapStoreToProps = (store: RootStore) => {
   type LinkList = { url: string, text: string }
   const menuItems: LinkList[] = [
-    { url: '/settings/windows-settings', text: 'Windows Settings' },
-    { url: '/settings/smart-start', text: 'Smart Start' },
-    { url: '/settings/battery-saver', text: 'Battery Saver' },
-    { url: '/settings/desktop-notifications', text: 'Desktop Notifications' },
+    { url: '/settings/windows-settings', text: 'Windows Settings' }
   ]
 
   return {
     onCloseClicked: () => store.ui.hideModal(),
+    onCloseKeyPress: () => store.ui.hideModal(),
     onListItemClick: (url: string) => handleSettingsMenuClick(store, url),
     onSendBug: handleBug,
     menuItems: menuItems,
