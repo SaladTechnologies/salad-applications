@@ -1,13 +1,14 @@
 export interface SaladTheme {
-  //Colors
+  // Colors
   darkBlue: string
   darkGreen: string
   mediumGreen: string
   green: string
   lightGreen: string
-
   red: string
-  //Font sizes
+  orange: string
+
+  // Font sizes
   xxSmall: string
   xSmall: string
   small: string
@@ -19,18 +20,27 @@ export interface SaladTheme {
   tripleLarge: string
   xLarge: string
   xxLarge: string
+
+  // Font Family
+  fontGroteskBook19: string
+  fontGroteskBook25: string
+  fontGroteskLight05: string
+  fontGroteskLight09: string
+  fontGroteskLight25: string
+  fontGroteskMedium25: string
 }
 
 export const DefaultTheme: SaladTheme = {
-  //Colors
+  // Colors
   darkBlue: '#0A2133',
   darkGreen: '#1F4F22',
   mediumGreen: '#53A626',
   green: '#B2D530',
   lightGreen: '#DBF1C1',
-
   red: '#EF502A',
-  //Font sizes
+  orange: '#F5A623',
+
+  // Font sizes
   xxSmall: '.375rem',
   xSmall: '.5rem',
   small: '.75rem',
@@ -42,4 +52,12 @@ export const DefaultTheme: SaladTheme = {
   tripleLarge: '2.625rem',
   xLarge: '3rem',
   xxLarge: '5rem',
+
+  // Font Family
+  fontGroteskBook19: 'sharpGroteskBook19',
+  fontGroteskBook25: 'sharpGroteskBook25',
+  fontGroteskLight05: 'SharpGroteskLight05',
+  fontGroteskLight09: 'SharpGroteskLight09',
+  fontGroteskLight25: 'SharpGroteskLight25',
+  fontGroteskMedium25: 'sharpGroteskMedium25',
 }
