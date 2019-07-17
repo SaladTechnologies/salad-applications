@@ -5,5 +5,9 @@ import { Overlay } from './Overlay'
 
 storiesOf('Components/Overlay', module)
   .add('Overlay', () => {
-    return <Overlay onCloseClicked={action('close')}>Hello!</Overlay>
+    return (
+      <Overlay onCloseClicked={action('close')} onCloseKeyPress={action('close')}>
+        Hello!
+      </Overlay>
+    )
   })

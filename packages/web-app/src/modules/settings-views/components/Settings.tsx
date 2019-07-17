@@ -14,6 +14,8 @@ import { Button } from '../../../components'
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 import { Route } from 'react-router'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
 
 // Components
 import { Overlay } from '../../../components'
@@ -29,6 +31,7 @@ export class MenuItem {
 
 interface Props extends WithStyles<typeof styles> {
   onCloseClicked?: () => void
+  onCloseKeyPress?: () => void
   onSendBug?: () => void
   onListItemClick?: (url: string) => any
   menuItems?: MenuItem[]
@@ -36,6 +39,14 @@ interface Props extends WithStyles<typeof styles> {
 
 class _Settings extends Component<Props> {
   store = getStore()
+
+  componentDidMount() {
+    document.addEventListener('keyup', this.handleCloseKeyPress)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keyup', this.handleCloseKeyPress)
+  }
 
   handleBugClicked = () => {
     const { onSendBug } = this.props
@@ -49,10 +60,15 @@ class _Settings extends Component<Props> {
     if (onCloseClicked) onCloseClicked()
   }
 
+  handleCloseKeyPress = (e: any) => {
+    if(e.key === 'Escape') {
+      const { onCloseKeyPress } = this.props
+      if (onCloseKeyPress) onCloseKeyPress()
+    }
+  }
+
   handleListItemClick = (url: string) => {
     const { onListItemClick } = this.props
-
-    console.log('[Settings] handleListItemClick')
 
     if (onListItemClick) onListItemClick(url)
   }
@@ -63,10 +79,11 @@ class _Settings extends Component<Props> {
     return (
       <Overlay>
         <div className={classnames(classes.menu, classes.menuItems)}>
-          <div>{menuItems && <LinkListUnstyled list={menuItems} onListItemClick={this.handleListItemClick} />}</div>
+          <div>
+            {menuItems && <LinkListUnstyled list={menuItems} onListItemClick={this.handleListItemClick} />}
+          </div>
           <div className={classes.buttonContainer}>
             <Button onClick={this.handleBugClicked}>Send bug</Button>
-            <Button onClick={this.handleCloseClicked}>Close</Button>
           </div>
         </div>
         <div className={classnames(classes.settings)}>
@@ -75,6 +92,11 @@ class _Settings extends Component<Props> {
           <Route path="/settings/desktop-notifications" component={DesktopNotificationsContainer} />
           <Route path="/settings/windows-settings" component={WindowsSettingsContainer} />
           <Route path="/settings/coming-soon" component={ComingSoonContainer} />
+
+          {/* <Button onClick={this.handleCloseClicked}>Close</Button> */}
+          <div onClick={this.handleCloseClicked}>
+            <FontAwesomeIcon className={classes.closeButton} icon={faTimes} />
+          </div>
         </div>
       </Overlay>
     )
