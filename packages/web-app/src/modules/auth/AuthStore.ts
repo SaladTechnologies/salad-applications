@@ -70,60 +70,6 @@ export class AuthStore {
     try {
       yield this.webAuth.parseHash((err, authResult) => {
         if (authResult) {
-          // console.log('[[AuthStore] handleAuth] this.store.native.machineId: ', this.store.native.machineId)
-          // console.log('[[AuthStore] handleAuth] this.store.native.machineInfo: ', this.store.native.machineInfo)
-          // console.log(
-          //   '[[AuthStore] handleAuth] this.store.native.machineInfo.system.uuid: ',
-          //   this.store.native.machineInfo && this.store.native.machineInfo.system.uuid,
-          // )
-          // console.log('[[AuthStore] handleAuth] authResult.accessToken: ', authResult.accessToken)
-
-          // const data = {
-          //   authToken: authResult.accessToken,
-          //   systemId: this.store.native.machineInfo && this.store.native.machineInfo.system.uuid,
-          // }
-
-          this.axios
-            .post(
-              'login',
-              {
-                authToken: authResult.accessToken,
-                systemId: 'ffd15a2b-ee3a-498e-9975-389d7d46161d', // this.store.native.machineInfo && this.store.native.machineInfo.system.uuid,
-              },
-              {
-                baseURL: 'https://salad-app-production.kyledodson.com/api/v1/',
-              },
-            )
-            .then(response => {
-              console.log('>> v2 Login response: ', response)
-            })
-            .catch(error => {
-              console.log('>> v2 Login error: ', error)
-            })
-            .finally(() => {
-              console.log('>> v2 Login finally')
-            })
-
-          // this.axios({
-          //   method: 'post',
-          //   baseURL: 'https://salad-app-production.kyledodson.com/api/v1/',
-          //   url: 'login',
-          //   headers: { 'content-type': 'application/json' },
-          //   data: {
-          //     authToken: authResult.accessToken,
-          //     systemId: 'ffd15a2b-ee3a-498e-9975-389d7d46161d', // this.store.native.machineInfo && this.store.native.machineInfo.system.uuid,
-          //   },
-          // })
-          //   .then(response => {
-          //     console.log('>> v2 Login response: ', response)
-          //   })
-          //   .catch(error => {
-          //     console.log('>> v2 Login error: ', error)
-          //   })
-          //   .finally(() => {
-          //     console.log('>> v2 Login finally')
-          //   })
-
           // this.axios
           //   .post('generate-salad-token', { authToken: authResult.accessToken })
           //   .then(response => {
@@ -135,6 +81,32 @@ export class AuthStore {
           //   .then(() => {
           //     this.store.profile.loadProfile().then(() => {})
           //   })
+
+          this.axios
+            .post(
+              'login',
+              {
+                authToken: authResult.accessToken,
+                systemId: this.store.native.machineInfo
+                  ? this.store.native.machineInfo.system.uuid
+                  : 'ffd15a2b-ee3a-498e-9975-389d7d46161d',
+              },
+              {
+                baseURL: 'https://salad-app-production.kyledodson.com/api/v1/',
+              },
+            )
+            .then(response => {
+              const saladToken = response.data.token
+              const token = this.processSaladToken(saladToken)
+
+              this.processAuthentication(token)
+            })
+            .then(() => {
+              this.store.profile.loadProfile()
+            })
+            .catch(error => {
+              console.log('Login error: ', error)
+            })
         }
       })
     } catch (error) {
@@ -153,9 +125,6 @@ export class AuthStore {
       this.isAuth = true
       this.loginError = false
       this.isLoading = false
-
-      // Uncaught Error: Maximum update depth exceeded.
-      // this.store.routing.push('/')
     }
   }
 
