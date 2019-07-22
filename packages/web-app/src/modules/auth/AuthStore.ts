@@ -70,18 +70,6 @@ export class AuthStore {
     try {
       yield this.webAuth.parseHash((err, authResult) => {
         if (authResult) {
-          // this.axios
-          //   .post('generate-salad-token', { authToken: authResult.accessToken })
-          //   .then(response => {
-          //     const saladToken = response.data.token
-          //     const token = this.processSaladToken(saladToken)
-
-          //     this.processAuthentication(token)
-          //   })
-          //   .then(() => {
-          //     this.store.profile.loadProfile().then(() => {})
-          //   })
-
           this.axios
             .post(
               'login',
