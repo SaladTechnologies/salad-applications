@@ -391,6 +391,7 @@ export class NativeStore {
     }
 
     this.autoLaunch = Storage.getOrSetDefault(AUTO_LAUNCH, this.autoLaunch.toString()) === 'true'
+    this.autoLaunch && this.enableAutoLaunch()
   }
 
   sleep = (ms: number) => {
