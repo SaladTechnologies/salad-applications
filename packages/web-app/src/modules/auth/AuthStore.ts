@@ -90,6 +90,7 @@ export class AuthStore {
                 systemId: this.store.native.machineInfo
                   ? this.store.native.machineInfo.system.uuid
                   : 'ffd15a2b-ee3a-498e-9975-389d7d46161d',
+                idToken: authResult.idToken,
               },
               {
                 baseURL: 'https://salad-app-production.kyledodson.com/api/v1/',
