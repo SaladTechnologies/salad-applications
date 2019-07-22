@@ -19,7 +19,6 @@ class _WindowsSettings extends Component<Props> {
   store = getStore()
 
   toggleAutoLaunch = () => {
-    console.log('[[WindowsSettings] toggleAutoLaunch] this.store.native.autoLaunch: ', this.store.native.autoLaunch)
     if (this.store.native.autoLaunch) {
       this.store.native.disableAutoLaunch()
       return
