@@ -149,7 +149,7 @@ export class NativeStore {
   }
 
   @action.bound
-  private checkOnlineStatus = flow(function* (this: NativeStore) {
+  private checkOnlineStatus = flow(function*(this: NativeStore) {
     console.log('Checking online status')
 
     try {
@@ -248,7 +248,7 @@ export class NativeStore {
   }
 
   @action.bound
-  registerMachine = flow(function* (this: NativeStore) {
+  registerMachine = flow(function*(this: NativeStore) {
     if (!this.machineInfo) {
       console.warn('No valid machine info found. Unable to register.')
       return
@@ -272,7 +272,7 @@ export class NativeStore {
   })
 
   @action.bound
-  setMachineInfo = flow(function* (this: NativeStore, info: MachineInfo) {
+  setMachineInfo = flow(function*(this: NativeStore, info: MachineInfo) {
     console.log('Received machine info')
     if (this.machineInfo) {
       console.log('Already received machine info. Skipping...')
@@ -313,7 +313,7 @@ export class NativeStore {
   })
 
   @action.bound
-  sendRunningStatus = flow(function* (this: NativeStore, status: boolean) {
+  sendRunningStatus = flow(function*(this: NativeStore, status: boolean) {
     console.log('Status MachineId: ' + this.machineId)
 
     let req = {
@@ -321,6 +321,15 @@ export class NativeStore {
       online: status,
     }
     yield this.axios.post('update-worker-status', req)
+
+    let reason = status ? 'heartbeat' : 'offline'
+
+    const data = {
+      online: status,
+      reason: reason,
+    }
+
+    yield this.axios.post(`machines/{machineId}/status`, data, { baseURL: 'https://salad-app-production.kyledodson.com/api/v1/' })
   })
 
   @action
