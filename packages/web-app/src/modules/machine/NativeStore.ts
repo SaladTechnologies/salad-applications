@@ -343,6 +343,13 @@ export class NativeStore {
     this.store.routing.replace('/')
   }
 
+  @action
+  setMachineId = (machineId: string) => {
+    if (this.machineInfo) {
+      this.machineInfo.machineId = machineId
+    }
+  }
+
   sleep = (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
