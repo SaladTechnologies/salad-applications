@@ -117,6 +117,7 @@ const createMainWindow = () => {
       nodeIntegration: false,
       contextIsolation: false,
       preload: path.resolve(__dirname, './preload.js'),
+      webSecurity: false, //-- NOTE: Probably need to remove this!
     },
   })
 
