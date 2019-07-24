@@ -6,6 +6,7 @@ import { Config } from '../../config'
 import * as Storage from '../../Storage'
 
 const SALAD_TOKEN = 'TOKEN'
+const MACHINE_ID = 'MACHINE_ID'
 
 export class AuthStore {
   @observable
@@ -85,8 +86,11 @@ export class AuthStore {
               },
             )
             .then(response => {
+              console.log('[[AuthStore] handleAuthentication] response: ', response)
               const saladToken = response.data.token
               const token = this.processSaladToken(saladToken)
+
+              this.store.native.setMachineId(response.data.machineId)
 
               this.processAuthentication(token)
             })
@@ -149,6 +153,7 @@ export class AuthStore {
     this.isAuth = false
 
     Storage.removeItem(SALAD_TOKEN)
+    Storage.removeItem(MACHINE_ID)
 
     //Switch back to the main page
     this.store.routing.replace('/')

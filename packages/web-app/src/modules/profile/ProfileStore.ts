@@ -36,13 +36,12 @@ export class ProfileStore {
 
   @computed
   public get isOnboarding(): boolean {
-    const onboarding = (
-      this.currentProfile === undefined
-      || (this.currentProfile.termsOfService !== Config.termsVersion
-        || this.currentProfile.whatsNewVersion !== Config.whatsNewVersion
-        || this.needsAnalyticsOnboarding
-        || this.currentProfile.referred === ReferredStatus.CanEnter)
-    )
+    const onboarding =
+      this.currentProfile === undefined ||
+      (this.currentProfile.termsOfService !== Config.termsVersion ||
+        this.currentProfile.whatsNewVersion !== Config.whatsNewVersion ||
+        this.needsAnalyticsOnboarding ||
+        this.currentProfile.referred === ReferredStatus.CanEnter)
 
     this.setOnboarding(onboarding)
 
@@ -54,15 +53,31 @@ export class ProfileStore {
     this.onboarding = isOnboarding
   }
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) { }
+  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   @action.bound
-  loadProfile = flow(function* (this: ProfileStore) {
+  loadProfile = flow(function*(this: ProfileStore) {
     console.log('Loading the user profile')
 
     this.isLoading = true
     try {
-      let res = yield this.axios.get('get-profile')
+      // let res = yield this.axios.get('get-profile')
+      const res = {
+        data: {
+          userId: 'oauth2|twitch|55334502',
+          isReferred: '2',
+          isNewUser: false,
+          termsOfService: '1.0',
+          trackUsageVersion: '1.0',
+          tutorialComplete: 0,
+          whatsNewVersion: '0.2.0',
+          profileData: {
+            email: 'joshua@g33k3d.com',
+            name: 'sathanaiel',
+            nickname: 'joshua',
+          },
+        },
+      }
       let profile = profileFromResource(res.data, this.skippedReferral)
 
       this.currentProfile = profile
@@ -95,7 +110,7 @@ export class ProfileStore {
   })
 
   @action.bound
-  agreeToTerms = flow(function* (this: ProfileStore) {
+  agreeToTerms = flow(function*(this: ProfileStore) {
     if (this.currentProfile === undefined) return
 
     console.log('Accepted TOS')
@@ -128,7 +143,7 @@ export class ProfileStore {
   })
 
   @action.bound
-  setAnalyticsOption = flow(function* (this: ProfileStore, agree: boolean) {
+  setAnalyticsOption = flow(function*(this: ProfileStore, agree: boolean) {
     if (this.currentProfile === undefined) return
 
     console.log('Updating analytics to ' + agree)
@@ -166,7 +181,7 @@ export class ProfileStore {
   })
 
   @action.bound
-  submitReferralCode = flow(function* (this: ProfileStore, code: string) {
+  submitReferralCode = flow(function*(this: ProfileStore, code: string) {
     if (this.currentProfile === undefined) return
 
     this.isUpdating = true
@@ -195,7 +210,7 @@ export class ProfileStore {
   })
 
   @action.bound
-  skipReferral = flow(function* (this: ProfileStore) {
+  skipReferral = flow(function*(this: ProfileStore) {
     if (this.currentProfile === undefined) return
 
     console.log('Skipping referral')
@@ -220,7 +235,7 @@ export class ProfileStore {
   })
 
   @action.bound
-  closeWhatsNew = flow(function* (this: ProfileStore) {
+  closeWhatsNew = flow(function*(this: ProfileStore) {
     if (this.currentProfile === undefined) return
 
     this.isUpdating = true

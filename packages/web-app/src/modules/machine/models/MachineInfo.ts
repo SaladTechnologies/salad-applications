@@ -8,5 +8,4 @@ export interface MachineInfo {
   system: SystemData
   os: OperatingSystem
   gpus: GPUDevice[]
-  machineId?: string
 }

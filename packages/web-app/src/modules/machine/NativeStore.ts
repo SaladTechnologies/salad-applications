@@ -18,6 +18,7 @@ const start = 'start-salad'
 const stop = 'stop-salad'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
+const MACHINE_ID = 'MACHINE_ID'
 
 declare global {
   interface Window {
@@ -316,12 +317,7 @@ export class NativeStore {
   sendRunningStatus = flow(function*(this: NativeStore, status: boolean) {
     console.log('Status MachineId: ' + this.machineId)
 
-    let req = {
-      macAddress: this.machineId,
-      online: status,
-    }
-    yield this.axios.post('update-worker-status', req)
-
+    const machineId = Storage.getItem(MACHINE_ID)
     let reason = status ? 'heartbeat' : 'offline'
 
     const data = {
@@ -329,7 +325,9 @@ export class NativeStore {
       reason: reason,
     }
 
-    yield this.axios.post(`machines/{machineId}/status`, data, { baseURL: 'https://salad-app-production.kyledodson.com/api/v1/' })
+    yield this.axios.post(`machines/${machineId}/status`, data, {
+      baseURL: 'https://salad-app-production.kyledodson.com/api/v1/',
+    })
   })
 
   @action
@@ -345,9 +343,7 @@ export class NativeStore {
 
   @action
   setMachineId = (machineId: string) => {
-    if (this.machineInfo) {
-      this.machineInfo.machineId = machineId
-    }
+    Storage.setItem(MACHINE_ID, machineId)
   }
 
   sleep = (ms: number) => {
