@@ -72,7 +72,7 @@ export class ProfileStore {
           tutorialComplete: 0,
           whatsNewVersion: '0.2.0',
           profileData: {
-            email: 'salad@salad.com',
+            email: 'salad@salad.io',
             name: 'salad',
             nickname: 'salad_test_1',
           },
