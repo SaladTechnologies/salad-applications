@@ -64,7 +64,7 @@ export class ProfileStore {
       // let res = yield this.axios.get('get-profile')
       const res = {
         data: {
-          userId: 'oauth2|twitch|55334502',
+          userId: 'oauth2|twitch|15324532',
           isReferred: '2',
           isNewUser: false,
           termsOfService: '1.0',
@@ -72,9 +72,9 @@ export class ProfileStore {
           tutorialComplete: 0,
           whatsNewVersion: '0.2.0',
           profileData: {
-            email: 'joshua@g33k3d.com',
-            name: 'sathanaiel',
-            nickname: 'joshua',
+            email: 'salad@salad.com',
+            name: 'salad',
+            nickname: 'salad_test_1',
           },
         },
       }
