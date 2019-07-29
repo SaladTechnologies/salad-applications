@@ -149,7 +149,7 @@ export class NativeStore {
   }
 
   @action.bound
-  private checkOnlineStatus = flow(function* (this: NativeStore) {
+  private checkOnlineStatus = flow(function*(this: NativeStore) {
     console.log('Checking online status')
 
     try {
@@ -248,7 +248,7 @@ export class NativeStore {
   }
 
   @action.bound
-  registerMachine = flow(function* (this: NativeStore) {
+  registerMachine = flow(function*(this: NativeStore) {
     if (!this.machineInfo) {
       console.warn('No valid machine info found. Unable to register.')
       return
@@ -267,12 +267,13 @@ export class NativeStore {
       let res = yield this.axios.post('register-machine', deviceInfo)
       console.log(res)
     } catch (err) {
+      this.store.analytics.captureException(new Error(`register-machine error: ${err}`))
       throw err
     }
   })
 
   @action.bound
-  setMachineInfo = flow(function* (this: NativeStore, info: MachineInfo) {
+  setMachineInfo = flow(function*(this: NativeStore, info: MachineInfo) {
     console.log('Received machine info')
     if (this.machineInfo) {
       console.log('Already received machine info. Skipping...')
@@ -313,7 +314,7 @@ export class NativeStore {
   })
 
   @action.bound
-  sendRunningStatus = flow(function* (this: NativeStore, status: boolean) {
+  sendRunningStatus = flow(function*(this: NativeStore, status: boolean) {
     console.log('Status MachineId: ' + this.machineId)
 
     let req = {
