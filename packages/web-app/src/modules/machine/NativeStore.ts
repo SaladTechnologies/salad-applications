@@ -154,7 +154,9 @@ export class NativeStore {
     console.log('Checking online status')
 
     try {
-      yield this.axios.get('/')
+      yield this.axios.get('/', {
+        baseURL: 'https://api.salad.io/core/master/',
+      })
       this.isOnline = true
     } catch (err) {
       console.error(err)
@@ -265,7 +267,9 @@ export class NativeStore {
 
     try {
       console.log('Registering machine with salad')
-      let res = yield this.axios.post('register-machine', deviceInfo)
+      let res = yield this.axios.post('register-machine', deviceInfo, {
+        baseURL: 'https://api.salad.io/core/master/',
+      })
       console.log(res)
     } catch (err) {
       throw err
@@ -289,7 +293,7 @@ export class NativeStore {
     }
 
     try {
-      let res = yield this.axios.post('/check-gpu', req)
+      let res = yield this.axios.post('/check-gpu', req, { baseURL: 'https://api.salad.io/core/master/' })
 
       console.log(res)
 
@@ -317,17 +321,15 @@ export class NativeStore {
   sendRunningStatus = flow(function*(this: NativeStore, status: boolean) {
     console.log('Status MachineId: ' + this.machineId)
 
-    const machineId = Storage.getItem(MACHINE_ID)
-    let reason = status ? 'heartbeat' : 'offline'
+    let machineId = this.machineInfo ? this.machineInfo.machineId : Storage.getItem(MACHINE_ID)
+    let reason = status ? 'heartbeat' : 'userAction'
 
     const data = {
       online: status,
       reason: reason,
     }
 
-    yield this.axios.post(`machines/${machineId}/status`, data, {
-      baseURL: 'https://salad-app-production.kyledodson.com/api/v1/',
-    })
+    yield this.axios.post(`machines/${machineId}/status`, data)
   })
 
   @action
@@ -344,6 +346,9 @@ export class NativeStore {
   @action
   setMachineId = (machineId: string) => {
     Storage.setItem(MACHINE_ID, machineId)
+    if (this.machineInfo) {
+      this.machineInfo.machineId = machineId
+    }
   }
 
   sleep = (ms: number) => {

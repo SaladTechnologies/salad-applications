@@ -59,7 +59,9 @@ export class RootStore {
       return
     }
     try {
-      const response = await this.axios.get<DataResource>('get-state')
+      const response = await this.axios.get<DataResource>('get-state', {
+        baseURL: 'https://api.salad.io/core/master/',
+      })
       const data = response.data
       this.xp.updateXp(data.xp)
       this.balance.loadDataRefresh(data)

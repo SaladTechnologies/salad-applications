@@ -61,7 +61,7 @@ export class ProfileStore {
 
     this.isLoading = true
     try {
-      // let res = yield this.axios.get('get-profile')
+      // let res = yield this.axios.get('get-profile', { baseURL: 'https://api.salad.io/core/master/' })
       const res = {
         data: {
           userId: 'oauth2|twitch|15324532',
@@ -94,9 +94,13 @@ export class ProfileStore {
       if (profile.isNewUser) {
         this.isFirstLogin = true
 
-        yield this.axios.post('update-profile', {
-          isNewUser: false,
-        })
+        yield this.axios.post(
+          'update-profile',
+          {
+            isNewUser: false,
+          },
+          { baseURL: 'https://api.salad.io/core/master/' },
+        )
       }
 
       yield this.store.native.registerMachine()
@@ -118,9 +122,13 @@ export class ProfileStore {
     this.isUpdating = true
 
     try {
-      let res = yield this.axios.post('update-profile', {
-        termsOfService: Config.termsVersion,
-      })
+      let res = yield this.axios.post(
+        'update-profile',
+        {
+          termsOfService: Config.termsVersion,
+        },
+        { baseURL: 'https://api.salad.io/core/master/' },
+      )
 
       let profile = profileFromResource(res.data, this.skippedReferral)
 
@@ -153,9 +161,13 @@ export class ProfileStore {
     let newStatus = agree ? Config.dataTrackingVersion : OPT_OUT
 
     try {
-      let res = yield this.axios.post('update-profile', {
-        trackUsageVersion: newStatus,
-      })
+      let res = yield this.axios.post(
+        'update-profile',
+        {
+          trackUsageVersion: newStatus,
+        },
+        { baseURL: 'https://api.salad.io/core/master/' },
+      )
 
       let profile = profileFromResource(res.data, this.skippedReferral)
 
@@ -189,9 +201,13 @@ export class ProfileStore {
     console.log('Sending referral code ' + code)
 
     try {
-      yield this.axios.post('consume-referral-code', {
-        code: code,
-      })
+      yield this.axios.post(
+        'consume-referral-code',
+        {
+          code: code,
+        },
+        { baseURL: 'https://api.salad.io/core/master/' },
+      )
 
       this.currentProfile.referred = ReferredStatus.Referred
       this.skippedReferral = false
@@ -241,9 +257,13 @@ export class ProfileStore {
     this.isUpdating = true
 
     try {
-      let res = yield this.axios.post('update-profile', {
-        whatsNewVersion: Config.whatsNewVersion,
-      })
+      let res = yield this.axios.post(
+        'update-profile',
+        {
+          whatsNewVersion: Config.whatsNewVersion,
+        },
+        { baseURL: 'https://api.salad.io/core/master/' },
+      )
 
       let profile = profileFromResource(res.data, this.skippedReferral)
 

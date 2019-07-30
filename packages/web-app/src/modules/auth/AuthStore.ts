@@ -71,22 +71,17 @@ export class AuthStore {
     try {
       yield this.webAuth.parseHash((err, authResult) => {
         if (authResult) {
+          const data = {
+            authToken: authResult.accessToken,
+            systemId: this.store.native.machineInfo
+              ? this.store.native.machineInfo.system.uuid
+              : 'ffd15a2b-ee3a-498e-9975-389d7d46161d',
+            idToken: authResult.idToken,
+          }
+
           this.axios
-            .post(
-              'login',
-              {
-                authToken: authResult.accessToken,
-                systemId: this.store.native.machineInfo
-                  ? this.store.native.machineInfo.system.uuid
-                  : 'ffd15a2b-ee3a-498e-9975-389d7d46161d',
-                idToken: authResult.idToken,
-              },
-              {
-                baseURL: 'https://salad-app-production.kyledodson.com/api/v1/',
-              },
-            )
+            .post('login', data)
             .then(response => {
-              console.log('[[AuthStore] handleAuthentication] response: ', response)
               const saladToken = response.data.token
               const token = this.processSaladToken(saladToken)
 
@@ -97,12 +92,11 @@ export class AuthStore {
             .then(() => {
               this.store.profile.loadProfile()
             })
-            .catch(error => {
-              console.log('Login error: ', error)
-            })
         }
       })
     } catch (error) {
+      console.error('Login error: ', error)
+
       this.loginError = true
       this.isLoading = false
     }
