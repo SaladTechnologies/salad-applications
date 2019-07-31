@@ -6,6 +6,7 @@ import { Config } from '../../config'
 import * as Storage from '../../Storage'
 
 const SALAD_TOKEN = 'TOKEN'
+const MACHINE_ID = 'MACHINE_ID'
 
 export class AuthStore {
   @observable
@@ -41,7 +42,7 @@ export class AuthStore {
   @action
   isAuthenticated(): boolean {
     let getToken = Storage.getItem(SALAD_TOKEN)
-    let setToken: { saladToken: string | undefined, expires: number } = { saladToken: undefined, expires: 0 }
+    let setToken: { saladToken: string | undefined; expires: number } = { saladToken: undefined, expires: 0 }
 
     if (getToken) {
       setToken = this.processSaladToken(getToken)
@@ -64,33 +65,45 @@ export class AuthStore {
   }
 
   @action.bound
-  handleAuthentication = flow(function* (this: AuthStore) {
+  handleAuthentication = flow(function*(this: AuthStore) {
     this.isLoading = true
 
     try {
       yield this.webAuth.parseHash((err, authResult) => {
         if (authResult) {
-          this.axios.post('generate-salad-token', { authToken: authResult.accessToken })
-            .then((response) => {
+          const data = {
+            authToken: authResult.accessToken,
+            systemId: this.store.native.machineInfo
+              ? this.store.native.machineInfo.system.uuid
+              : 'ffd15a2b-ee3a-498e-9975-389d7d46161d',
+            idToken: authResult.idToken,
+          }
+
+          this.axios
+            .post('login', data)
+            .then(response => {
               const saladToken = response.data.token
               const token = this.processSaladToken(saladToken)
+
+              this.store.native.setMachineId(response.data.machineId)
 
               this.processAuthentication(token)
             })
             .then(() => {
               this.store.profile.loadProfile()
-                .then(() => { })
             })
         }
       })
     } catch (error) {
+      console.error('Login error: ', error)
+
       this.loginError = true
       this.isLoading = false
     }
   })
 
   @action
-  processAuthentication = (token: { saladToken: string | undefined, expires: number }) => {
+  processAuthentication = (token: { saladToken: string | undefined; expires: number }) => {
     this.authToken = token.saladToken
     this.expiresAt = token.expires
     this.axios.defaults.headers.common['Authorization'] = `Bearer ${token.saladToken}`
@@ -99,15 +112,12 @@ export class AuthStore {
       this.isAuth = true
       this.loginError = false
       this.isLoading = false
-
-      // Uncaught Error: Maximum update depth exceeded.
-      // this.store.routing.push('/')
     }
   }
 
   @action
-  processSaladToken = (saladToken: string): { saladToken: string | undefined, expires: number } => {
-    type SaladTokenData = { exp: number, iat: number, scope: string, userId: string }
+  processSaladToken = (saladToken: string): { saladToken: string | undefined; expires: number } => {
+    type SaladTokenData = { exp: number; iat: number; scope: string; userId: string }
 
     const token = Storage.getOrSetDefault(SALAD_TOKEN, saladToken)
     const Base64Token: string = new Buffer(token, 'base64').toString()
@@ -137,6 +147,7 @@ export class AuthStore {
     this.isAuth = false
 
     Storage.removeItem(SALAD_TOKEN)
+    Storage.removeItem(MACHINE_ID)
 
     //Switch back to the main page
     this.store.routing.replace('/')

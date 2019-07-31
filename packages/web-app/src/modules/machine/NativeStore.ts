@@ -18,6 +18,7 @@ const start = 'start-salad'
 const stop = 'stop-salad'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
+const MACHINE_ID = 'MACHINE_ID'
 
 declare global {
   interface Window {
@@ -149,11 +150,13 @@ export class NativeStore {
   }
 
   @action.bound
-  private checkOnlineStatus = flow(function* (this: NativeStore) {
+  private checkOnlineStatus = flow(function*(this: NativeStore) {
     console.log('Checking online status')
 
     try {
-      yield this.axios.get('/')
+      yield this.axios.get('/', {
+        baseURL: 'https://api.salad.io/core/master/',
+      })
       this.isOnline = true
     } catch (err) {
       console.error(err)
@@ -248,7 +251,7 @@ export class NativeStore {
   }
 
   @action.bound
-  registerMachine = flow(function* (this: NativeStore) {
+  registerMachine = flow(function*(this: NativeStore) {
     if (!this.machineInfo) {
       console.warn('No valid machine info found. Unable to register.')
       return
@@ -264,7 +267,9 @@ export class NativeStore {
 
     try {
       console.log('Registering machine with salad')
-      let res = yield this.axios.post('register-machine', deviceInfo)
+      let res = yield this.axios.post('register-machine', deviceInfo, {
+        baseURL: 'https://api.salad.io/core/master/',
+      })
       console.log(res)
     } catch (err) {
       throw err
@@ -272,7 +277,7 @@ export class NativeStore {
   })
 
   @action.bound
-  setMachineInfo = flow(function* (this: NativeStore, info: MachineInfo) {
+  setMachineInfo = flow(function*(this: NativeStore, info: MachineInfo) {
     console.log('Received machine info')
     if (this.machineInfo) {
       console.log('Already received machine info. Skipping...')
@@ -288,7 +293,7 @@ export class NativeStore {
     }
 
     try {
-      let res = yield this.axios.post('/check-gpu', req)
+      let res = yield this.axios.post('/check-gpu', req, { baseURL: 'https://api.salad.io/core/master/' })
 
       console.log(res)
 
@@ -313,14 +318,18 @@ export class NativeStore {
   })
 
   @action.bound
-  sendRunningStatus = flow(function* (this: NativeStore, status: boolean) {
+  sendRunningStatus = flow(function*(this: NativeStore, status: boolean) {
     console.log('Status MachineId: ' + this.machineId)
 
-    let req = {
-      macAddress: this.machineId,
+    let machineId = this.machineInfo ? this.machineInfo.machineId : Storage.getItem(MACHINE_ID)
+    let reason = status ? 'heartbeat' : 'userAction'
+
+    const data = {
       online: status,
+      reason: reason,
     }
-    yield this.axios.post('update-worker-status', req)
+
+    yield this.axios.post(`machines/${machineId}/status`, data)
   })
 
   @action
@@ -332,6 +341,14 @@ export class NativeStore {
     Storage.setItem(compatibilityKey, 'true')
 
     this.store.routing.replace('/')
+  }
+
+  @action
+  setMachineId = (machineId: string) => {
+    Storage.setItem(MACHINE_ID, machineId)
+    if (this.machineInfo) {
+      this.machineInfo.machineId = machineId
+    }
   }
 
   sleep = (ms: number) => {
