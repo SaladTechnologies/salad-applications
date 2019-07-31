@@ -34,6 +34,7 @@ export class AuthStore {
       clientID: Config.auth0ClientId,
       redirectUri: redirect,
       audience: 'https://api.salad.io/core/master',
+      // audience: 'https://app-api.salad.io/api/v1',
       responseType: 'token id_token',
       scope: 'openid profile email',
     })
@@ -68,16 +69,18 @@ export class AuthStore {
   handleAuthentication = flow(function*(this: AuthStore) {
     this.isLoading = true
 
+    console.log('>> [[AuthStore] handleAuthentication]')
+
     try {
       yield this.webAuth.parseHash((err, authResult) => {
         if (authResult) {
           const data = {
             authToken: authResult.accessToken,
-            systemId: this.store.native.machineInfo
-              ? this.store.native.machineInfo.system.uuid
-              : 'ffd15a2b-ee3a-498e-9975-389d7d46161d',
+            systemId: this.store.native.machineInfo && this.store.native.machineInfo.system.uuid,
             idToken: authResult.idToken,
           }
+
+          console.log('>> [[AuthStore] handleAuthentication] data: ', data)
 
           this.axios
             .post('login', data)

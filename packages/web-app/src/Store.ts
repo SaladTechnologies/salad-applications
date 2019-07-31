@@ -2,7 +2,7 @@ import { AuthStore } from './modules/auth'
 import { configure } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
 import { AxiosInstance } from 'axios'
-import { DataResource } from './modules/data-refresh/models'
+// import { DataResource } from './modules/data-refresh/models'
 import { ExperienceStore } from './modules/xp'
 import { RewardStore } from './modules/reward'
 import { BalanceStore } from './modules/balance'
@@ -48,7 +48,7 @@ export class RootStore {
     this.native = new NativeStore(this, axios)
     this.auth = new AuthStore(this, axios)
     this.rewards = new RewardStore(this, axios)
-    this.balance = new BalanceStore(this)
+    this.balance = new BalanceStore(this, axios)
     this.profile = new ProfileStore(this, axios)
     this.ui = new UIStore(this)
     this.referral = new ReferralStore(this, axios)
@@ -59,17 +59,21 @@ export class RootStore {
       return
     }
     try {
-      const response = await this.axios.get<DataResource>('get-state', {
-        baseURL: 'https://api.salad.io/core/master/',
-      })
-      const data = response.data
-      this.xp.updateXp(data.xp)
-      // this.balance.loadDataRefresh(data)
-      this.balance.loadDataRefresh()
-      this.rewards.loadDataRefresh(data)
-      this.referral.loadDataRefresh(data)
-      this.machine.loadDataRefresh(data)
-      console.log(response.data)
+      let balance = await this.axios.get(`users/${this.native.machineInfo && this.native.machineInfo.machineId}/balance`)
+      // this.balance.loadDataRefresh(balance)
+
+      console.log('[[Store] refreshData] balance: ', balance)
+
+      // const response = await this.axios.get('get-state', {
+      //   baseURL: 'https://api.salad.io/core/master/',
+      // })
+      // const data = response.data
+      // this.xp.updateXp(data.xp)
+      // // this.balance.loadDataRefresh(data)
+      // this.rewards.loadDataRefresh(data)
+      // this.referral.loadDataRefresh(data)
+      // this.machine.loadDataRefresh(data)
+      // console.log(response.data)
     } catch (error) {
       console.error(error)
     }

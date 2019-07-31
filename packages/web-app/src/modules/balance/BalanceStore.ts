@@ -42,18 +42,21 @@ export class BalanceStore {
   //   this.lastUpdateTime = Date.now()
   // }
 
-  @action
+  @action.bound
   loadDataRefresh = flow(function*(this: BalanceStore) {
+    console.log('>>>> [[BalanceStore] loadDataRefresh]')
     try {
       let balance = yield this.axios.get('balance')
 
-      console.log('[[BalanceStore] loadDataRefresh] balance: ', balance)
+      console.log('>>>> [[BalanceStore] loadDataRefresh] balance: ', balance)
 
       this.currentBalance = balance.currentBalance
       this.currentEarningRate = balance.earningVelocity
       this.lifetimeBalance = balance.lifetimeBalance
       this.lastUpdateTime = Date.now()
-    } catch {}
+    } catch(error) {
+      console.error('>>>> [[BalanceStore] loadDataRefresh] error: ', error)
+    }
   })
 
   @action
