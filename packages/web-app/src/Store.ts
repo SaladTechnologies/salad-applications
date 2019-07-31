@@ -62,7 +62,8 @@ export class RootStore {
       const response = await this.axios.get<DataResource>('get-state')
       const data = response.data
       this.xp.updateXp(data.xp)
-      this.balance.loadDataRefresh(data)
+      // this.balance.loadDataRefresh(data)
+      this.balance.loadDataRefresh()
       this.rewards.loadDataRefresh(data)
       this.referral.loadDataRefresh(data)
       this.machine.loadDataRefresh(data)
