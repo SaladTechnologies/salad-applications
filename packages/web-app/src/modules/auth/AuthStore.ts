@@ -6,7 +6,6 @@ import { Config } from '../../config'
 import * as Storage from '../../Storage'
 
 const SALAD_TOKEN = 'TOKEN'
-const MACHINE_ID = 'MACHINE_ID'
 
 export class AuthStore {
   @observable
@@ -41,17 +40,26 @@ export class AuthStore {
 
   @action
   isAuthenticated(): boolean {
-    let getToken = Storage.getItem(SALAD_TOKEN)
-    let setToken: { saladToken: string | undefined; expires: number } = { saladToken: undefined, expires: 0 }
+    console.log('[[AuthStore] isAuthenticated]')
 
-    if (getToken) {
-      setToken = this.processSaladToken(getToken)
-    }
+    // Get Salad token from local storage
+    const saladToken = this.store.token.getToken()
+    // Set token in observable
+    saladToken && this.store.token.setToken(saladToken)
+    // Get token string and expiration
+    let token = this.store.token.getTokenExpiration()
 
-    this.isAuth = setToken.saladToken !== undefined
+    if (token) {
+      if (token.expires < 7) {
+        this.signOut()
+        token = { saladToken: undefined, expires: 0 }
+      }
 
-    if (this.isAuth) {
-      this.processAuthentication(setToken)
+      this.isAuth = token.saladToken !== undefined
+
+      if (this.isAuth) {
+        this.processAuthentication(token)
+      }
     }
 
     return this.isAuth
@@ -67,27 +75,28 @@ export class AuthStore {
   @action.bound
   handleAuthentication = flow(function*(this: AuthStore) {
     this.isLoading = true
+    console.log('[[AuthStore] handleAuthentication]')
 
     try {
       yield this.webAuth.parseHash((err, authResult) => {
         if (authResult) {
+          const systemId = this.store.native.machineInfo ? this.store.native.machineInfo.system.uuid : null
           const data = {
             authToken: authResult.accessToken,
-            systemId: this.store.native.machineInfo
-              ? this.store.native.machineInfo.system.uuid
-              : 'ffd15a2b-ee3a-498e-9975-389d7d46161d',
+            systemId: systemId,
             idToken: authResult.idToken,
           }
 
           this.axios
             .post('login', data)
             .then(response => {
-              const saladToken = response.data.token
-              const token = this.processSaladToken(saladToken)
+              const saladToken: string = response.data.token
+              this.store.token.setToken(saladToken)
+              const token = this.store.token.getTokenExpiration()
 
-              this.store.native.setMachineId(response.data.machineId)
-
-              this.processAuthentication(token)
+              if (token) {
+                this.processAuthentication(token)
+              }
             })
             .then(() => {
               this.store.profile.loadProfile()
@@ -103,7 +112,7 @@ export class AuthStore {
   })
 
   @action
-  processAuthentication = (token: { saladToken: string | undefined; expires: number }) => {
+  processAuthentication = (token: { saladToken: string | undefined, expires: number }) => {
     this.authToken = token.saladToken
     this.expiresAt = token.expires
     this.axios.defaults.headers.common['Authorization'] = `Bearer ${token.saladToken}`
@@ -113,27 +122,6 @@ export class AuthStore {
       this.loginError = false
       this.isLoading = false
     }
-  }
-
-  @action
-  processSaladToken = (saladToken: string): { saladToken: string | undefined; expires: number } => {
-    type SaladTokenData = { exp: number; iat: number; scope: string; userId: string }
-
-    const token = Storage.getOrSetDefault(SALAD_TOKEN, saladToken)
-    const Base64Token: string = new Buffer(token, 'base64').toString()
-    const tokenString: string = Base64Token.split('}')[1] + '}'
-    const tokenData: SaladTokenData = JSON.parse(tokenString)
-    const expires = tokenData.exp
-
-    let expirationDate: any = new Date(expires * 1000)
-    let expiresInDays = Math.floor((expirationDate - Date.now()) / (1000 * 60 * 60 * 24))
-
-    if (expiresInDays < 7) {
-      this.signOut()
-      return { saladToken: undefined, expires: 0 }
-    }
-
-    return { saladToken: token, expires: expires }
   }
 
   @action
@@ -147,7 +135,6 @@ export class AuthStore {
     this.isAuth = false
 
     Storage.removeItem(SALAD_TOKEN)
-    Storage.removeItem(MACHINE_ID)
 
     //Switch back to the main page
     this.store.routing.replace('/')

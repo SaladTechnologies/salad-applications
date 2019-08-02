@@ -18,7 +18,6 @@ const start = 'start-salad'
 const stop = 'stop-salad'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
-const MACHINE_ID = 'MACHINE_ID'
 
 declare global {
   interface Window {
@@ -69,6 +68,9 @@ export class NativeStore {
 
   @computed
   get machineId(): string {
+    // const saladToken = Storage.getItem(SALAD_TOKEN)
+    // const machineId = this.store.auth.
+
     return this.machineInfo !== undefined
       ? this.machineInfo.macAddress
       : Storage.getOrSetDefaultCallback('INSTALL_ID', uuidv1).substr(0, 15) //TODO: Remove the substring once we update the db scheme
@@ -321,7 +323,8 @@ export class NativeStore {
   sendRunningStatus = flow(function*(this: NativeStore, status: boolean) {
     console.log('Status MachineId: ' + this.machineId)
 
-    let machineId = this.machineInfo ? this.machineInfo.machineId : Storage.getItem(MACHINE_ID)
+    // let machineId = this.machineInfo ? this.machineInfo.machineId : Storage.getItem(MACHINE_ID)
+    const machineId = this.store.token.getMachineId
     let reason = status ? 'heartbeat' : 'userAction'
 
     const data = {
@@ -341,14 +344,6 @@ export class NativeStore {
     Storage.setItem(compatibilityKey, 'true')
 
     this.store.routing.replace('/')
-  }
-
-  @action
-  setMachineId = (machineId: string) => {
-    Storage.setItem(MACHINE_ID, machineId)
-    if (this.machineInfo) {
-      this.machineInfo.machineId = machineId
-    }
   }
 
   sleep = (ms: number) => {
