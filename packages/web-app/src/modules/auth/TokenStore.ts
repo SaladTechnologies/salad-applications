@@ -1,28 +1,15 @@
 import { action, observable } from 'mobx'
+import { TokenData } from './models'
 import * as Storage from '../../Storage'
 
 const SALAD_TOKEN = 'TOKEN'
-
-interface TokenData {
-  sub: string
-  iat: number
-  pc: string
-  exp: number
-  iss: string
-  aud: string
-}
-
-interface TokenStringWithExpiration {
-  saladToken: string | undefined
-  expires: number
-}
 
 export class TokenStore {
   @observable
   public saladToken: string = ''
 
   @action
-  getToken = () => this.saladToken || Storage.getItem(SALAD_TOKEN)
+  getToken = () => Storage.getItem(SALAD_TOKEN)
 
   @action
   setToken = (saladToken: string) => {
@@ -31,7 +18,7 @@ export class TokenStore {
   }
 
   @action
-  getTokenData = (): TokenData | null => {
+  getTokenData = (): TokenData => {
     const saladToken = this.saladToken
     const token = saladToken.split('.')[1]
     const Base64Token: string = new Buffer(token, 'base64').toString()
@@ -41,19 +28,13 @@ export class TokenStore {
   }
 
   @action
-  getTokenExpiration = (): TokenStringWithExpiration | null => {
+  getTokenExpiration = (): number => {
     const token = this.getTokenData()
-    let tokenWithExpiration: TokenStringWithExpiration | null = null
+    const expires = token.exp
+    let expirationDate: any = new Date(expires * 1000)
+    let expiresInDays = Math.floor((expirationDate - Date.now()) / (1000 * 60 * 60 * 24))
 
-    if (token) {
-      const expires = token.exp
-      let expirationDate: any = new Date(expires * 1000)
-      let expiresInDays = Math.floor((expirationDate - Date.now()) / (1000 * 60 * 60 * 24))
-
-      tokenWithExpiration = { saladToken: this.saladToken, expires: expiresInDays }
-    }
-
-    return tokenWithExpiration
+    return expiresInDays
   }
 
   @action

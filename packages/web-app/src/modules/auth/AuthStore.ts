@@ -17,9 +17,6 @@ export class AuthStore {
   public isLoading: boolean = false
 
   @observable
-  public expiresAt: number = 0
-
-  @observable
   public loginError: boolean = false
 
   @observable
@@ -40,26 +37,23 @@ export class AuthStore {
 
   @action
   isAuthenticated(): boolean {
-    console.log('[[AuthStore] isAuthenticated]')
-
     // Get Salad token from local storage
     const saladToken = this.store.token.getToken()
-    // Set token in observable
-    saladToken && this.store.token.setToken(saladToken)
-    // Get token string and expiration
-    let token = this.store.token.getTokenExpiration()
 
-    if (token) {
-      if (token.expires < 7) {
+    if (saladToken) {
+      // Set token in observable
+      this.store.token.setToken(saladToken)
+      // Get token string and expiration
+      let expiration = this.store.token.getTokenExpiration()
+
+      if (expiration < 7) {
         this.signOut()
-        token = { saladToken: undefined, expires: 0 }
+        return this.isAuth = false
       }
 
-      this.isAuth = token.saladToken !== undefined
+      // this.isAuth = true
 
-      if (this.isAuth) {
-        this.processAuthentication(token)
-      }
+      this.processAuthentication()
     }
 
     return this.isAuth
@@ -92,11 +86,8 @@ export class AuthStore {
             .then(response => {
               const saladToken: string = response.data.token
               this.store.token.setToken(saladToken)
-              const token = this.store.token.getTokenExpiration()
 
-              if (token) {
-                this.processAuthentication(token)
-              }
+              this.processAuthentication()
             })
             .then(() => {
               this.store.profile.loadProfile()
@@ -112,16 +103,12 @@ export class AuthStore {
   })
 
   @action
-  processAuthentication = (token: { saladToken: string | undefined, expires: number }) => {
-    this.authToken = token.saladToken
-    this.expiresAt = token.expires
-    this.axios.defaults.headers.common['Authorization'] = `Bearer ${token.saladToken}`
+  processAuthentication = () => {
+    this.axios.defaults.headers.common['Authorization'] = `Bearer ${this.store.token.saladToken}`
 
-    if (token.saladToken) {
-      this.isAuth = true
-      this.loginError = false
-      this.isLoading = false
-    }
+    this.isAuth = true
+    this.loginError = false
+    this.isLoading = false
   }
 
   @action
