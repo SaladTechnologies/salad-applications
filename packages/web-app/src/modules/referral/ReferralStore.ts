@@ -42,7 +42,7 @@ export class ReferralStore {
     }
 
     try {
-      let res = yield this.axios.post('refer-user', request)
+      let res = yield this.axios.post('refer-user', request, { baseURL: 'https://api.salad.io/core/master/' })
 
       let newReferral: Referral = referralFromResource(res.data)
 

@@ -1,4 +1,4 @@
-import { AuthStore } from './modules/auth'
+import { AuthStore, TokenStore } from './modules/auth'
 import { configure } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
 import { AxiosInstance } from 'axios'
@@ -12,6 +12,7 @@ import { UIStore } from './UIStore'
 import { ReferralStore } from './modules/referral'
 import { AnalyticsStore } from './modules/analytics'
 import { NativeStore } from './modules/machine/NativeStore'
+
 
 //Forces all changes to state to be from an action
 configure({ enforceActions: 'always' })
@@ -29,6 +30,7 @@ export const getStore = (): RootStore => sharedStore
 
 export class RootStore {
   public readonly auth: AuthStore
+  public readonly token: TokenStore
   public readonly analytics: AnalyticsStore
   public readonly routing: RouterStore
   public readonly xp: ExperienceStore
@@ -47,6 +49,7 @@ export class RootStore {
     this.machine = new MachineStore()
     this.native = new NativeStore(this, axios)
     this.auth = new AuthStore(this, axios)
+    this.token = new TokenStore()
     this.rewards = new RewardStore(this, axios)
     this.balance = new BalanceStore(this)
     this.profile = new ProfileStore(this, axios)
@@ -59,7 +62,9 @@ export class RootStore {
       return
     }
     try {
-      const response = await this.axios.get<DataResource>('get-state')
+      const response = await this.axios.get<DataResource>('get-state', {
+        baseURL: 'https://api.salad.io/core/master/',
+      })
       const data = response.data
       this.xp.updateXp(data.xp)
       this.balance.loadDataRefresh(data)

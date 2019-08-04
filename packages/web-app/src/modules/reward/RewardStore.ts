@@ -100,7 +100,9 @@ export class RewardStore {
   @action
   refreshRewards = async () => {
     try {
-      const response = await this.axios.get<RewardsResource>('get-rewards')
+      const response = await this.axios.get<RewardsResource>('get-rewards', {
+        baseURL: 'https://api.salad.io/core/master/',
+      })
       runInAction(() => {
         if (response.data.rewards == undefined) return
         this.rewards = response.data.rewards.map(rewardFromResource).sort((a, b) => b.price - a.price)
@@ -167,7 +169,7 @@ export class RewardStore {
       initialModal: reward.modalId,
     }
 
-    let res = yield this.axios.post('redeem-reward', req)
+    let res = yield this.axios.post('redeem-reward', req, { baseURL: 'https://api.salad.io/core/master/' })
 
     details.content = res.data.content
 
@@ -187,7 +189,7 @@ export class RewardStore {
     }
 
     try {
-      await this.axios.post('select-reward', request)
+      await this.axios.post('select-reward', request, { baseURL: 'https://api.salad.io/core/master/' })
       runInAction(() => {
         this.selectedRewardId = rewardId
         console.log('set reward success')
@@ -221,7 +223,7 @@ export class RewardStore {
     }
 
     try {
-      yield this.axios.post('/redeem-reward/1/', req)
+      yield this.axios.post('/redeem-reward/1/', req, { baseURL: 'https://api.salad.io/core/master/' })
       this.store.ui.showModal(`/rewards/${rewardId}/redeem-complete`)
       this.store.refreshData()
       let reward = this.getReward(rewardId)

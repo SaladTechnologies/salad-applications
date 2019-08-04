@@ -44,7 +44,7 @@ export class ExperienceStore {
   @action.bound
   refreshXp = flow(function*(this: ExperienceStore) {
     try {
-      let res = yield this.axios.get('get-xp')
+      let res = yield this.axios.get('get-xp', { baseURL: 'https://api.salad.io/core/master/' })
 
       let newXp = res.data.xp
 
