@@ -3,8 +3,7 @@ import { RootStore } from '../../Store'
 import * as Storage from '../../Storage'
 import { MachineInfo } from './models'
 import { AxiosInstance } from 'axios'
-import uuidv1 from 'uuid/v1'
-import { Config } from '../../config'
+// import { Config } from '../../config'
 import { GPUDetailsResource } from './models/GPUDetailsResource'
 
 const getMachineInfo = 'get-machine-info'
@@ -36,8 +35,6 @@ declare global {
 
 export class NativeStore {
   private callbacks = new Map<string, Function>()
-
-  private runningHeartbeat?: NodeJS.Timeout
 
   @observable
   public isOnline: boolean = true
@@ -85,9 +82,7 @@ export class NativeStore {
 
   @computed
   get machineId(): string {
-    return this.machineInfo !== undefined
-      ? this.machineInfo.macAddress
-      : Storage.getOrSetDefaultCallback('INSTALL_ID', uuidv1).substr(0, 15) //TODO: Remove the substring once we update the db scheme
+    return this.store.token.getMachineId()
   }
 
   @computed
@@ -180,7 +175,9 @@ export class NativeStore {
   @action.bound
   private checkOnlineStatus = flow(function*(this: NativeStore) {
     try {
-      yield this.axios.get('/')
+      yield this.axios.get('/', {
+        baseURL: 'https://api.salad.io/core/master/',
+      })
       this.isOnline = true
     } catch (err) {
       console.error(err)
@@ -191,22 +188,6 @@ export class NativeStore {
   @action
   setRunStatus = (status: boolean) => {
     this.isRunning = status
-
-    if (this.runningHeartbeat) {
-      clearInterval(this.runningHeartbeat)
-    }
-
-    if (status) {
-      //Send the initial heartbeat
-      this.sendRunningStatus(true)
-
-      //Schedule future heartbeats
-      this.runningHeartbeat = setInterval(() => {
-        this.sendRunningStatus(true)
-      }, Config.statusHeartbeatRate)
-    } else {
-      this.sendRunningStatus(false)
-    }
   }
 
   @action
@@ -296,7 +277,9 @@ export class NativeStore {
 
     try {
       console.log('Registering machine with salad')
-      let res = yield this.axios.post('register-machine', deviceInfo)
+      let res = yield this.axios.post('register-machine', deviceInfo, {
+        baseURL: 'https://api.salad.io/core/master/',
+      })
       console.log(res)
     } catch (err) {
       this.store.analytics.captureException(new Error(`register-machine error: ${err}`))
@@ -321,7 +304,7 @@ export class NativeStore {
     }
 
     try {
-      let res = yield this.axios.post('/check-gpu', req)
+      let res = yield this.axios.post('/check-gpu', req, { baseURL: 'https://api.salad.io/core/master/' })
 
       console.log(res)
 
@@ -343,17 +326,6 @@ export class NativeStore {
     this.loadingMachineInfo = false
 
     this.store.routing.replace('/')
-  })
-
-  @action.bound
-  sendRunningStatus = flow(function*(this: NativeStore, status: boolean) {
-    console.log('Status MachineId: ' + this.machineId)
-
-    let req = {
-      macAddress: this.machineId,
-      online: status,
-    }
-    yield this.axios.post('update-worker-status', req)
   })
 
   @action
