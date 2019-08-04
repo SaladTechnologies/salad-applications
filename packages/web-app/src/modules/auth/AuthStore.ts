@@ -2,7 +2,7 @@ import { action, observable, flow } from 'mobx'
 import { AxiosInstance } from 'axios'
 import { WebAuth } from 'auth0-js'
 import { RootStore } from '../../Store'
-import uuidv1 from 'uuid/v1'
+import uuidv4 from 'uuid/v4'
 import { Config } from '../../config'
 import * as Storage from '../../Storage'
 
@@ -38,8 +38,8 @@ export class AuthStore {
 
   @action
   isAuthenticated(): boolean {
-    // Get Salad token from local storage
-    const saladToken = this.store.token.getToken()
+    // Get Salad token from memory
+    const saladToken = this.store.token.saladToken
 
     if (saladToken) {
       // Set token in observable
@@ -74,7 +74,7 @@ export class AuthStore {
         if (authResult) {
           const systemId = this.store.native.machineInfo 
             ? this.store.native.machineInfo.system.uuid 
-            : uuidv1()
+            : uuidv4()
 
           const data = {
             authToken: authResult.accessToken,
@@ -121,6 +121,7 @@ export class AuthStore {
     })
     this.authToken = undefined
     this.isAuth = false
+    this.store.token.saladToken = ''
 
     Storage.removeItem(SALAD_TOKEN)
 

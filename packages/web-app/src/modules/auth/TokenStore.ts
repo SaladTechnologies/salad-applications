@@ -8,8 +8,18 @@ export class TokenStore {
   @observable
   public saladToken: string = ''
 
+  constructor() {
+    this.getAndSetToken()
+  }
+
   @action
-  getToken = () => Storage.getItem(SALAD_TOKEN)
+  private getAndSetToken = () => {
+    const saladToken = Storage.getItem(SALAD_TOKEN)
+
+    if (saladToken) {
+      this.saladToken = saladToken
+    }
+  }
 
   @action
   setToken = (saladToken: string) => {
@@ -17,7 +27,6 @@ export class TokenStore {
     this.saladToken = saladToken
   }
 
-  @action
   getTokenData = (): TokenData => {
     const saladToken = this.saladToken
     const token = saladToken.split('.')[1]
@@ -27,7 +36,6 @@ export class TokenStore {
     return tokenData
   }
 
-  @action
   getTokenExpiration = (): number => {
     const token = this.getTokenData()
     const expires = token.exp
@@ -37,7 +45,6 @@ export class TokenStore {
     return expiresInDays
   }
 
-  @action
   getMachineId = () => {
     const token = this.getTokenData()
     return token && token.pc
