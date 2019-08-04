@@ -72,7 +72,7 @@ interface Props extends WithStyles<typeof styles> {
   price?: number
   redeemable?: boolean
   timeRemaining?: string
-  imageSrc?: string
+  image?: string
   color?: string
   onClick?: () => void
 }
@@ -99,12 +99,12 @@ class _RewardSummary extends Component<Props> {
     }
   }
   render() {
-    const { name, price, redeemable, imageSrc, classes } = this.props
+    const { name, price, redeemable, image, classes } = this.props
     return (
       <div className={classnames(classes.container)} onClick={this.handleClick}>
         {/* Image */}
         <AngledPanel className={classes.imageContainer} leftSide={'right'}>
-          <img className={classes.image} src={imageSrc} draggable={false} />
+          <img className={classes.image} src={image} draggable={false} />
         </AngledPanel>
 
         {/* Right side panel */}

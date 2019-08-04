@@ -88,7 +88,7 @@ class _RewardList extends Component<Props> {
                   name={r.name}
                   price={r.price}
                   redeemable={r.redeemable}
-                  imageSrc={r.imageSrc}
+                  image={r.image}
                   onClick={() => {
                     this.handleClick(r)
                   }}

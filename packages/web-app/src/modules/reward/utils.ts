@@ -1,18 +1,26 @@
 import { RewardResource } from './models/RewardResource'
+import { RewardCategory } from './models/RewardCategory'
 import { Reward } from './models/Reward'
 
+//TODO: Do the actual mapping from category to color
+const colorFromCategory = (category: RewardCategory): string => '#B2D530'
+
 export const rewardFromResource = (r: RewardResource): Reward => ({
-  id: String(r.rewardId),
+  //Reward data
+  id: r.id,
   name: r.name,
-  details: r.detailsCard,
+  description: r.description,
   price: r.price,
-  filter: r.filter.toLowerCase(),
-  color: r.color,
+  image: r.image,
+  category: r.category,
+  checkoutTerms: r.checkoutTerms,
+  tags: r.tags.map(x => x.toLowerCase()),
+
+  //Client side
   redeemable: false,
-  imageSrc: r.imageLink,
   remainingTimeLabel: '',
   percentUnlocked: 0,
-  modalId: String(r.initialModal),
+  color: colorFromCategory(r.category),
 })
 
 export const getTimeRemainingText = (reward: Reward, currentBalance: number, earningRate: number): string => {

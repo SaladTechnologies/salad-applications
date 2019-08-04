@@ -125,7 +125,7 @@ export class AnalyticsStore {
     if (!this.canTrack) return
 
     let rewardName = `${reward.id}:${name}`
-    this.track('Reward Redeemed', { Reward: rewardName, Price: reward.price, Tags: reward.filter })
+    this.track('Reward Redeemed', { Reward: rewardName, Price: reward.price, Category: reward.category })
     mixpanel.people.append('Rewards Redeemed', rewardName)
     mixpanel.people.increment('Rewards Redeemed Count')
     mixpanel.people.track_charge(reward.price, { Reward: rewardName })
