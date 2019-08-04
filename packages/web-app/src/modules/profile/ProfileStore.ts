@@ -36,13 +36,12 @@ export class ProfileStore {
 
   @computed
   public get isOnboarding(): boolean {
-    const onboarding = (
-      this.currentProfile === undefined
-      || (this.currentProfile.termsOfService !== Config.termsVersion
-        || this.currentProfile.whatsNewVersion !== Config.whatsNewVersion
-        || this.needsAnalyticsOnboarding
-        || this.currentProfile.referred === ReferredStatus.CanEnter)
-    )
+    const onboarding =
+      this.currentProfile === undefined ||
+      (this.currentProfile.termsOfService !== Config.termsVersion ||
+        this.currentProfile.whatsNewVersion !== Config.whatsNewVersion ||
+        this.needsAnalyticsOnboarding ||
+        this.currentProfile.referred === ReferredStatus.CanEnter)
 
     this.setOnboarding(onboarding)
 
@@ -54,15 +53,31 @@ export class ProfileStore {
     this.onboarding = isOnboarding
   }
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) { }
+  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   @action.bound
-  loadProfile = flow(function* (this: ProfileStore) {
+  loadProfile = flow(function*(this: ProfileStore) {
     console.log('Loading the user profile')
 
     this.isLoading = true
     try {
-      let res = yield this.axios.get('get-profile')
+      // let res = yield this.axios.get('get-profile', { baseURL: 'https://api.salad.io/core/master/' })
+      const res = {
+        data: {
+          userId: 'oauth2|twitch|15324532',
+          isReferred: '2',
+          isNewUser: false,
+          termsOfService: '1.0',
+          trackUsageVersion: '1.0',
+          tutorialComplete: 0,
+          whatsNewVersion: '0.2.0',
+          profileData: {
+            email: 'salad@salad.io',
+            name: 'salad',
+            nickname: 'salad_test_1',
+          },
+        },
+      }
       let profile = profileFromResource(res.data, this.skippedReferral)
 
       this.currentProfile = profile
@@ -79,9 +94,13 @@ export class ProfileStore {
       if (profile.isNewUser) {
         this.isFirstLogin = true
 
-        yield this.axios.post('update-profile', {
-          isNewUser: false,
-        })
+        yield this.axios.post(
+          'update-profile',
+          {
+            isNewUser: false,
+          },
+          { baseURL: 'https://api.salad.io/core/master/' },
+        )
       }
 
       yield this.store.native.registerMachine()
@@ -95,7 +114,7 @@ export class ProfileStore {
   })
 
   @action.bound
-  agreeToTerms = flow(function* (this: ProfileStore) {
+  agreeToTerms = flow(function*(this: ProfileStore) {
     if (this.currentProfile === undefined) return
 
     console.log('Accepted TOS')
@@ -103,9 +122,13 @@ export class ProfileStore {
     this.isUpdating = true
 
     try {
-      let res = yield this.axios.post('update-profile', {
-        termsOfService: Config.termsVersion,
-      })
+      let res = yield this.axios.post(
+        'update-profile',
+        {
+          termsOfService: Config.termsVersion,
+        },
+        { baseURL: 'https://api.salad.io/core/master/' },
+      )
 
       let profile = profileFromResource(res.data, this.skippedReferral)
 
@@ -128,7 +151,7 @@ export class ProfileStore {
   })
 
   @action.bound
-  setAnalyticsOption = flow(function* (this: ProfileStore, agree: boolean) {
+  setAnalyticsOption = flow(function*(this: ProfileStore, agree: boolean) {
     if (this.currentProfile === undefined) return
 
     console.log('Updating analytics to ' + agree)
@@ -138,9 +161,13 @@ export class ProfileStore {
     let newStatus = agree ? Config.dataTrackingVersion : OPT_OUT
 
     try {
-      let res = yield this.axios.post('update-profile', {
-        trackUsageVersion: newStatus,
-      })
+      let res = yield this.axios.post(
+        'update-profile',
+        {
+          trackUsageVersion: newStatus,
+        },
+        { baseURL: 'https://api.salad.io/core/master/' },
+      )
 
       let profile = profileFromResource(res.data, this.skippedReferral)
 
@@ -166,7 +193,7 @@ export class ProfileStore {
   })
 
   @action.bound
-  submitReferralCode = flow(function* (this: ProfileStore, code: string) {
+  submitReferralCode = flow(function*(this: ProfileStore, code: string) {
     if (this.currentProfile === undefined) return
 
     this.isUpdating = true
@@ -174,9 +201,13 @@ export class ProfileStore {
     console.log('Sending referral code ' + code)
 
     try {
-      yield this.axios.post('consume-referral-code', {
-        code: code,
-      })
+      yield this.axios.post(
+        'consume-referral-code',
+        {
+          code: code,
+        },
+        { baseURL: 'https://api.salad.io/core/master/' },
+      )
 
       this.currentProfile.referred = ReferredStatus.Referred
       this.skippedReferral = false
@@ -195,7 +226,7 @@ export class ProfileStore {
   })
 
   @action.bound
-  skipReferral = flow(function* (this: ProfileStore) {
+  skipReferral = flow(function*(this: ProfileStore) {
     if (this.currentProfile === undefined) return
 
     console.log('Skipping referral')
@@ -220,15 +251,19 @@ export class ProfileStore {
   })
 
   @action.bound
-  closeWhatsNew = flow(function* (this: ProfileStore) {
+  closeWhatsNew = flow(function*(this: ProfileStore) {
     if (this.currentProfile === undefined) return
 
     this.isUpdating = true
 
     try {
-      let res = yield this.axios.post('update-profile', {
-        whatsNewVersion: Config.whatsNewVersion,
-      })
+      let res = yield this.axios.post(
+        'update-profile',
+        {
+          whatsNewVersion: Config.whatsNewVersion,
+        },
+        { baseURL: 'https://api.salad.io/core/master/' },
+      )
 
       let profile = profileFromResource(res.data, this.skippedReferral)
 

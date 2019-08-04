@@ -174,7 +174,7 @@ export class RewardStore {
       initialModal: reward.modalId,
     }
 
-    let res = yield this.axios.post('redeem-reward', req)
+    let res = yield this.axios.post('redeem-reward', req, { baseURL: 'https://api.salad.io/core/master/' })
 
     details.content = res.data.content
 
@@ -232,7 +232,7 @@ export class RewardStore {
     }
 
     try {
-      yield this.axios.post('/redeem-reward/1/', req)
+      yield this.axios.post('/redeem-reward/1/', req, { baseURL: 'https://api.salad.io/core/master/' })
       this.store.ui.showModal(`/rewards/${rewardId}/redeem-complete`)
       this.store.refreshData()
       let reward = this.getReward(rewardId)
