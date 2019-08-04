@@ -2,6 +2,7 @@ import { action, observable, flow } from 'mobx'
 import { AxiosInstance } from 'axios'
 import { WebAuth } from 'auth0-js'
 import { RootStore } from '../../Store'
+import uuidv1 from 'uuid/v1'
 import { Config } from '../../config'
 import * as Storage from '../../Storage'
 
@@ -51,8 +52,6 @@ export class AuthStore {
         return this.isAuth = false
       }
 
-      // this.isAuth = true
-
       this.processAuthentication()
     }
 
@@ -69,12 +68,14 @@ export class AuthStore {
   @action.bound
   handleAuthentication = flow(function*(this: AuthStore) {
     this.isLoading = true
-    console.log('[[AuthStore] handleAuthentication]')
 
     try {
       yield this.webAuth.parseHash((err, authResult) => {
         if (authResult) {
-          const systemId = this.store.native.machineInfo ? this.store.native.machineInfo.system.uuid : null
+          const systemId = this.store.native.machineInfo 
+            ? this.store.native.machineInfo.system.uuid 
+            : uuidv1()
+
           const data = {
             authToken: authResult.accessToken,
             systemId: systemId,
