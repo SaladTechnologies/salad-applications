@@ -15,8 +15,11 @@ const maximize = 'maximize-window'
 const close = 'close-window'
 const start = 'start-salad'
 const stop = 'stop-salad'
+const enableAutoLaunch = 'enable-auto-launch'
+const disableAutoLaunch = 'disable-auto-launch'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
+const AUTO_LAUNCH = 'AUTO_LAUNCH'
 
 declare global {
   interface Window {
@@ -53,6 +56,9 @@ export class NativeStore {
   @observable
   public machineInfo?: MachineInfo
 
+  @observable
+  public autoLaunch: boolean = true
+
   @computed
   get isNative(): boolean {
     return window.salad && window.salad.platform === 'electron'
@@ -88,6 +94,8 @@ export class NativeStore {
 
     if (this.isNative) {
       window.salad.onNative = this.onNative
+
+      this.checkAutoLaunch()
 
       this.on(runStatus, (status: boolean) => {
         console.log('Received run status: ' + status)
@@ -304,6 +312,32 @@ export class NativeStore {
     Storage.setItem(compatibilityKey, 'true')
 
     this.store.routing.replace('/')
+  }
+
+  @action
+  enableAutoLaunch = () => {
+    this.autoLaunch = true
+    Storage.setItem(AUTO_LAUNCH, 'true')
+
+    this.send(enableAutoLaunch)
+  }
+
+  @action
+  disableAutoLaunch = () => {
+    this.autoLaunch = false
+    Storage.setItem(AUTO_LAUNCH, 'false')
+
+    this.send(disableAutoLaunch)
+  }
+
+  @action
+  checkAutoLaunch = () => {
+    if (window.salad.apiVersion <= 1) {
+      this.autoLaunch = false
+      return
+    }
+
+    this.autoLaunch = Storage.getOrSetDefault(AUTO_LAUNCH, this.autoLaunch.toString()) === 'true'
   }
 
   sleep = (ms: number) => {

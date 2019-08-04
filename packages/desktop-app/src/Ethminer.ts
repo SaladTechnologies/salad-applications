@@ -14,7 +14,10 @@ export class Ethminer {
       return
     }
 
-    if (message.includes('CUDA error: Insufficient CUDA driver: 9')) {
+    if (
+      message.includes('CUDA error: Insufficient CUDA driver: 9') ||
+      message.includes('CUDA error: Insufficient CUDA driver: 7050')
+    ) {
       this.onError(8675309)
     }
 
