@@ -1,8 +1,8 @@
-import { AuthStore } from './modules/auth'
+import { AuthStore, TokenStore } from './modules/auth'
 import { configure } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
 import { AxiosInstance } from 'axios'
-// import { DataResource } from './modules/data-refresh/models'
+import { DataResource } from './modules/data-refresh/models'
 import { ExperienceStore } from './modules/xp'
 import { RewardStore } from './modules/reward'
 import { BalanceStore } from './modules/balance'
@@ -12,6 +12,7 @@ import { UIStore } from './UIStore'
 import { ReferralStore } from './modules/referral'
 import { AnalyticsStore } from './modules/analytics'
 import { NativeStore } from './modules/machine/NativeStore'
+
 
 //Forces all changes to state to be from an action
 configure({ enforceActions: 'always' })
@@ -29,6 +30,7 @@ export const getStore = (): RootStore => sharedStore
 
 export class RootStore {
   public readonly auth: AuthStore
+  public readonly token: TokenStore
   public readonly analytics: AnalyticsStore
   public readonly routing: RouterStore
   public readonly xp: ExperienceStore
@@ -47,8 +49,9 @@ export class RootStore {
     this.machine = new MachineStore()
     this.native = new NativeStore(this, axios)
     this.auth = new AuthStore(this, axios)
+    this.token = new TokenStore()
     this.rewards = new RewardStore(this, axios)
-    this.balance = new BalanceStore(this, axios)
+    this.balance = new BalanceStore(this)
     this.profile = new ProfileStore(this, axios)
     this.ui = new UIStore(this)
     this.referral = new ReferralStore(this, axios)
@@ -59,21 +62,16 @@ export class RootStore {
       return
     }
     try {
-      let balance = await this.axios.get(`users/${this.native.machineInfo && this.native.machineInfo.machineId}/balance`)
-      // this.balance.loadDataRefresh(balance)
-
-      console.log('[[Store] refreshData] balance: ', balance)
-
-      // const response = await this.axios.get('get-state', {
-      //   baseURL: 'https://api.salad.io/core/master/',
-      // })
-      // const data = response.data
-      // this.xp.updateXp(data.xp)
-      // // this.balance.loadDataRefresh(data)
-      // this.rewards.loadDataRefresh(data)
-      // this.referral.loadDataRefresh(data)
-      // this.machine.loadDataRefresh(data)
-      // console.log(response.data)
+      const response = await this.axios.get<DataResource>('get-state', {
+        baseURL: 'https://api.salad.io/core/master/',
+      })
+      const data = response.data
+      this.xp.updateXp(data.xp)
+      this.balance.loadDataRefresh(data)
+      this.rewards.loadDataRefresh(data)
+      this.referral.loadDataRefresh(data)
+      this.machine.loadDataRefresh(data)
+      console.log(response.data)
     } catch (error) {
       console.error(error)
     }

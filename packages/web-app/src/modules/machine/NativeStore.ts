@@ -3,8 +3,7 @@ import { RootStore } from '../../Store'
 import * as Storage from '../../Storage'
 import { MachineInfo } from './models'
 import { AxiosInstance } from 'axios'
-import uuidv1 from 'uuid/v1'
-import { Config } from '../../config'
+// import { Config } from '../../config'
 import { GPUDetailsResource } from './models/GPUDetailsResource'
 
 const getMachineInfo = 'get-machine-info'
@@ -16,9 +15,11 @@ const maximize = 'maximize-window'
 const close = 'close-window'
 const start = 'start-salad'
 const stop = 'stop-salad'
+const enableAutoLaunch = 'enable-auto-launch'
+const disableAutoLaunch = 'disable-auto-launch'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
-const MACHINE_ID = 'MACHINE_ID'
+const AUTO_LAUNCH = 'AUTO_LAUNCH'
 
 declare global {
   interface Window {
@@ -33,8 +34,6 @@ declare global {
 
 export class NativeStore {
   private callbacks = new Map<string, Function>()
-
-  private runningHeartbeat?: NodeJS.Timeout
 
   @observable
   public isOnline: boolean = true
@@ -57,6 +56,9 @@ export class NativeStore {
   @observable
   public machineInfo?: MachineInfo
 
+  @observable
+  public autoLaunch: boolean = true
+
   @computed
   get isNative(): boolean {
     return window.salad && window.salad.platform === 'electron'
@@ -69,9 +71,7 @@ export class NativeStore {
 
   @computed
   get machineId(): string {
-    return this.machineInfo !== undefined
-      ? this.machineInfo.macAddress
-      : Storage.getOrSetDefaultCallback('INSTALL_ID', uuidv1).substr(0, 15) //TODO: Remove the substring once we update the db scheme
+    return this.store.token.getMachineId()
   }
 
   @computed
@@ -94,6 +94,8 @@ export class NativeStore {
 
     if (this.isNative) {
       window.salad.onNative = this.onNative
+
+      this.checkAutoLaunch()
 
       this.on(runStatus, (status: boolean) => {
         console.log('Received run status: ' + status)
@@ -167,22 +169,6 @@ export class NativeStore {
   @action
   setRunStatus = (status: boolean) => {
     this.isRunning = status
-
-    if (this.runningHeartbeat) {
-      clearInterval(this.runningHeartbeat)
-    }
-
-    if (status) {
-      //Send the initial heartbeat
-      this.sendRunningStatus(true)
-
-      //Schedule future heartbeats
-      this.runningHeartbeat = setInterval(() => {
-        this.sendRunningStatus(true)
-      }, Config.statusHeartbeatRate)
-    } else {
-      this.sendRunningStatus(false)
-    }
   }
 
   @action
@@ -317,21 +303,6 @@ export class NativeStore {
     this.store.routing.replace('/')
   })
 
-  @action.bound
-  sendRunningStatus = flow(function*(this: NativeStore, status: boolean) {
-    console.log('Status MachineId: ' + this.machineId)
-
-    let machineId = this.machineInfo ? this.machineInfo.machineId : Storage.getItem(MACHINE_ID)
-    let reason = status ? 'heartbeat' : 'userAction'
-
-    const data = {
-      online: status,
-      reason: reason,
-    }
-
-    yield this.axios.post(`machines/${machineId}/status`, data)
-  })
-
   @action
   skipCompatibility = () => {
     console.log('Updating compatibility check')
@@ -344,11 +315,30 @@ export class NativeStore {
   }
 
   @action
-  setMachineId = (machineId: string) => {
-    Storage.setItem(MACHINE_ID, machineId)
-    if (this.machineInfo) {
-      this.machineInfo.machineId = machineId
+  enableAutoLaunch = () => {
+    this.autoLaunch = true
+    Storage.setItem(AUTO_LAUNCH, 'true')
+
+    this.send(enableAutoLaunch)
+  }
+
+  @action
+  disableAutoLaunch = () => {
+    this.autoLaunch = false
+    Storage.setItem(AUTO_LAUNCH, 'false')
+
+    this.send(disableAutoLaunch)
+  }
+
+  @action
+  checkAutoLaunch = () => {
+    if (window.salad.apiVersion <= 1) {
+      this.autoLaunch = false
+      return
     }
+
+    this.autoLaunch = Storage.getOrSetDefault(AUTO_LAUNCH, this.autoLaunch.toString()) === 'true'
+    this.autoLaunch && this.enableAutoLaunch()
   }
 
   sleep = (ms: number) => {

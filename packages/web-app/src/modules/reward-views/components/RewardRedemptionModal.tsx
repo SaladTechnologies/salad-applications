@@ -4,11 +4,9 @@ import { SaladTheme } from '../../../SaladTheme'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
-import { AngledPanel, ModalPage, TextField, Button, Checkbox } from '../../../components'
+import { AngledPanel, ModalPage, Checkbox } from '../../../components'
 import { Reward } from '../../reward/models/Reward'
-import { RewardDetails, ContentType, StyleType } from '../../reward/models/RewardDetails'
 import { Form, Field } from 'react-final-form'
-import logo from '../../../components/assets/animated-logo-lg.gif'
 import { observer } from 'mobx-react'
 
 const styles = (theme: SaladTheme) => ({
@@ -79,7 +77,6 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   reward?: Reward
-  details?: RewardDetails
   submitting?: boolean
   onClickClose?: () => void
   onClickDone?: () => void
@@ -116,41 +113,42 @@ class _RewardRedemptionModal extends Component<Props> {
   }
 
   validate = (values: {}) => {
-    const { details } = this.props
+    // TODO:
+    // const { details } = this.props
 
-    let v = values as FormTypes
-    const errors: FormTypes = {}
-    if (v.email === undefined || v.email.length === 0) {
-      errors.email = 'Required'
-    } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v.email)) {
-      errors.email = 'Invalid email'
-    }
+    // let v = values as FormTypes
+    // const errors: FormTypes = {}
+    // if (v.email === undefined || v.email.length === 0) {
+    //   errors.email = 'Required'
+    // } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v.email)) {
+    //   errors.email = 'Invalid email'
+    // }
 
-    if (details && details.content) {
-      details.content.forEach(x => {
-        if (x.type !== ContentType.checkbox) return
+    // if (details && details.content) {
+    //   details.content.forEach(x => {
+    //     if (x.type !== ContentType.checkbox) return
 
-        let checkName = `check${x.id}`
-        let a = !!v[checkName]
+    //     let checkName = `check${x.id}`
+    //     let a = !!v[checkName]
 
-        if (!a) {
-          errors[checkName] = 'Required'
-        }
-      })
-    }
+    //     if (!a) {
+    //       errors[checkName] = 'Required'
+    //     }
+    //   })
+    // }
 
-    return errors
+    // return errors
+    return {}
   }
 
   render() {
-    const { reward, submitting, details, classes } = this.props
+    const { reward, classes } = this.props
 
     return (
       <ModalPage onCloseClicked={this.handleClose}>
-        <div>{details && details.isLoading}</div>
         <div className={classnames(classes.container)}>
           <AngledPanel className={classes.imageContainer} leftSide={'right'}>
-            {reward && <img className={classes.image} src={reward.imageSrc} draggable={false} />}
+            {reward && <img className={classes.image} src={reward.image} draggable={false} />}
           </AngledPanel>
 
           <div className={classnames(classes.rightContainer)}>
@@ -158,95 +156,86 @@ class _RewardRedemptionModal extends Component<Props> {
               <div className={classes.lock} onClick={this.handleClose}>
                 <FontAwesomeIcon icon={faTimes} />
               </div>
-
-              {!details || details.isLoading ? (
-                <div className={classes.logoContainer}>
-                  <img className={classes.logo} src={logo} />
-                </div>
-              ) : (
-                <div className={classnames(classes.contentContainer)}>
-                  <Form
-                    onSubmit={this.onSubmit}
-                    validate={this.validate}
-                    render={({ handleSubmit }) => {
-                      return (
-                        <form onSubmit={handleSubmit}>
-                          {details &&
-                            details.content &&
-                            details.content.map(x => {
-                              switch (x.type) {
-                                case ContentType.plainText:
-                                  return (
-                                    <div
-                                      key={x.id}
-                                      className={classnames({
-                                        [classes.headerContent]: x.style === StyleType.header,
-                                        [classes.titleContent]: x.style === StyleType.title,
-                                        [classes.descriptionContent]: x.style === StyleType.description,
-                                      })}
-                                    >
-                                      {x.value}
-                                    </div>
-                                  )
-                                case ContentType.emailInput:
-                                  return (
-                                    <Field name="email" key={x.id}>
-                                      {({ input, meta }) => (
-                                        <div style={{ display: 'flex', alignItems: 'center', paddingTop: '1rem' }}>
-                                          <div className={classes.contentLabel}>{x.label}</div>
-                                          <TextField
-                                            dark
-                                            {...input}
-                                            placeholder={x.value}
-                                            errorText={meta.error && meta.touched && meta.error}
-                                          />
-                                        </div>
-                                      )}
-                                    </Field>
-                                  )
-                                case ContentType.checkbox:
-                                  return (
-                                    <Field name={'check' + x.id} type="checkbox" key={x.id}>
-                                      {({ input, meta }) => (
-                                        <div style={{ padding: '.25rem 0' }}>
-                                          <Checkbox
-                                            key={x.id}
-                                            {...input}
-                                            text={x.label}
-                                            dark
-                                            errorText={meta.error && meta.touched && meta.error}
-                                          />
-                                        </div>
-                                      )}
-                                    </Field>
-                                  )
-                                case ContentType.buttonAction:
-                                  return (
-                                    <Button key={x.id} type="submit" loading={submitting} disabled={submitting} dark>
-                                      Bombs Away
-                                    </Button>
-                                  )
-                                case ContentType.doneButton:
-                                  return (
-                                    <Button
-                                      key={x.id}
-                                      loading={submitting}
-                                      disabled={submitting}
+              <div className={classnames(classes.contentContainer)}>
+                <Form
+                  onSubmit={this.onSubmit}
+                  validate={this.validate}
+                  render={({ handleSubmit }) => {
+                    return (
+                      <form onSubmit={handleSubmit}>
+                        {reward &&
+                          reward.checkoutTerms.map((term, i) => {
+                            // case ContentType.plainText:
+                            //   return (
+                            //     <div
+                            //       key={x.id}
+                            //       className={classnames({
+                            //         [classes.headerContent]: x.style === StyleType.header,
+                            //         [classes.titleContent]: x.style === StyleType.title,
+                            //         [classes.descriptionContent]: x.style === StyleType.description,
+                            //       })}
+                            //     >
+                            //       {x.value}
+                            //     </div>
+                            //   )
+                            // case ContentType.emailInput:
+                            //   return (
+                            //     <Field name="email" key={x.id}>
+                            //       {({ input, meta }) => (
+                            //         <div style={{ display: 'flex', alignItems: 'center', paddingTop: '1rem' }}>
+                            //           <div className={classes.contentLabel}>{x.label}</div>
+                            //           <TextField
+                            //             dark
+                            //             {...input}
+                            //             placeholder={x.value}
+                            //             errorText={meta.error && meta.touched && meta.error}
+                            //           />
+                            //         </div>
+                            //       )}
+                            //     </Field>
+                            //   )
+                            return (
+                              <Field name={'check' + i} type="checkbox" key={i}>
+                                {({ input, meta }) => (
+                                  <div style={{ padding: '.25rem 0' }}>
+                                    <Checkbox
+                                      key={i}
+                                      {...input}
+                                      text={term}
                                       dark
-                                      onClick={this.handleDone}
-                                    >
-                                      Bombs Away
-                                    </Button>
-                                  )
-                                default:
-                                  throw new Error('Unsupported content type ' + x.type)
-                              }
-                            })}
-                        </form>
-                      )
-                    }}
-                  />
-                </div>
+                                      errorText={meta.error && meta.touched && meta.error}
+                                    />
+                                  </div>
+                                )}
+                              </Field>
+                            )
+                            //   case ContentType.buttonAction:
+                            //     return (
+                            //       <Button key={x.id} type="submit" loading={submitting} disabled={submitting} dark>
+                            //         Bombs Away
+                            //       </Button>
+                            //     )
+                            //   case ContentType.doneButton:
+                            //     return (
+                            //       <Button
+                            //         key={x.id}
+                            //         loading={submitting}
+                            //         disabled={submitting}
+                            //         dark
+                            //         onClick={this.handleDone}
+                            //       >
+                            //         Bombs Away
+                            //       </Button>
+                            //     )
+                            //   default:
+                            //     throw new Error('Unsupported content type ' + x.type)
+                            // }
+                          })}
+                      </form>
+                    )
+                  }}
+                />
+              </div>
               )}
             </div>
           </div>

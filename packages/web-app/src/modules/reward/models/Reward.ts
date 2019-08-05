@@ -1,19 +1,17 @@
+import { RewardCategory } from './RewardCategory'
+
 export interface Reward {
   id: string
   name: string
+  description: string
   price: number
-  filter: string
+  image: string
+  category: RewardCategory
+  checkoutTerms: string[]
+  tags: string[]
   redeemable: boolean
-  details: string
-  imageSrc: string
   /** How much of the reward has already been unlocked (0-1) */
   percentUnlocked: number
-  // selected: boolean
-  // percentageHeight: number
   remainingTimeLabel: string
-  // remainingTime: number
   color: string
-  // rewardType: number
-  /** Id of the redemption modal */
-  modalId: string
 }
