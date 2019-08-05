@@ -2,11 +2,11 @@ import { action, observable, runInAction, computed, flow } from 'mobx'
 import { Reward } from './models/Reward'
 import { RewardsResource } from './models/RewardsResource'
 import { AxiosInstance } from 'axios'
+
 import { rewardFromResource, getTimeRemainingText } from './utils'
 import { RootStore } from '../../Store'
-import { FilterItem, NameFilter } from './models/FilterItem'
+import { FilterItem, TagFilter } from './models/FilterItem'
 import { DataResource } from '../data-refresh/models/DataResource'
-import { RewardDetails } from './models/RewardDetails'
 
 export class RewardStore {
   @observable
@@ -14,9 +14,6 @@ export class RewardStore {
 
   @observable
   private selectedRewardId?: string
-
-  @observable
-  private rewardDetails = new Map<string, RewardDetails>()
 
   @observable
   private filters: FilterItem[] = []
@@ -79,22 +76,6 @@ export class RewardStore {
     return rewardList
   }
 
-  getRewardDetails = (id?: string): RewardDetails | undefined => {
-    if (id === undefined) return undefined
-    let details = this.rewardDetails.get(id)
-
-    runInAction(() => {
-      if (details === undefined) {
-        details = observable(new RewardDetails(id))
-        details.setLoading(true)
-        this.rewardDetails.set(id, details)
-        this.loadRewardDetails(details)
-      }
-    })
-
-    return details
-  }
-
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   getReward = (id?: string): Reward | undefined => {
@@ -107,10 +88,9 @@ export class RewardStore {
   refreshRewards = flow(function*(this: RewardStore) {
     try {
       this.isLoading = true
-      const response = yield this.axios.get<RewardsResource>('get-rewards')
-      if (response.data.rewards == undefined) return
-      this.rewards = response.data.rewards.map(rewardFromResource).sort((a:Reward, b:Reward) => a.price - b.price)
-      // this.rewardDetails = new Map(this.rewards.map((x): [string, RewardDetails] => [x.id, new RewardDetails(x.id)]))
+      const response = yield this.axios.get<RewardsResource[]>('rewards')
+      if (response.data == undefined) return
+      this.rewards = response.data.map(rewardFromResource).sort((a: Reward, b: Reward) => b.price - a.price)
       this.updateFilters()
     } catch (error) {
       console.error(error)
@@ -131,7 +111,6 @@ export class RewardStore {
   @action
   toggleFilter = (filterName: string) => {
     let filter = this.filters.find(x => x.name === filterName)
-    console.log(filter)
     if (filter) {
       filter.checked = !filter.checked
     }
@@ -139,47 +118,24 @@ export class RewardStore {
 
   @action
   updateFilters = () => {
-    let currentFilters = new Set<string>()
-
+    let currentTags = new Set<string>()
     this.rewards.forEach(x => {
-      currentFilters.add(x.filter.toLowerCase())
+      x.tags &&
+        x.tags.forEach(tag => {
+          currentTags.add(tag.toLowerCase())
+        })
     })
-
-    currentFilters.forEach(x => {
+    currentTags.forEach(x => {
       if (!this.filters.some(f => f.name === x)) {
-        this.filters.push(new NameFilter(x.toLowerCase(), false))
+        this.filters.push(new TagFilter(x.toLowerCase(), false))
       }
     })
   }
 
   @action
   loadDataRefresh = (data: DataResource) => {
-    this.selectedRewardId = String(data.currentReward.rewardId)
+    // this.selectedRewardId = String(data.currentReward.rewardId)
   }
-
-  @action.bound
-  loadRewardDetails = flow(function*(this: RewardStore, details: RewardDetails) {
-    console.log('Loading the user profile')
-
-    details.setLoading(true)
-
-    let reward = this.getReward(details.id)
-
-    if (reward === undefined) {
-      throw new Error('Unable to find reward ' + details.id)
-    }
-
-    const req = {
-      rewardId: details.id,
-      initialModal: reward.modalId,
-    }
-
-    let res = yield this.axios.post('redeem-reward', req, { baseURL: 'https://api.salad.io/core/master/' })
-
-    details.content = res.data.content
-
-    details.setLoading(false)
-  })
 
   viewReward = (reward: Reward) => {
     this.store.ui.showModal(`/rewards/${reward.id}`)
