@@ -6,7 +6,6 @@ import classnames from 'classnames'
 const styles = (theme: SaladTheme) => ({
   container: {
     display: 'inline-block',
-    padding: '0 .5rem',
   },
   text: (props: Props) => {
     const c = props.dark ? theme.darkBlue : theme.lightGreen
