@@ -48,8 +48,8 @@ export const convertMinutes = (hours: number): number => hours * 60000
 
 class Config {
   public readonly devTools: boolean = false
-  public readonly appUrl: string = 'http://localhost:3000/'
-  // public readonly appUrl: string = 'https://app.salad.io'
+  // public readonly appUrl: string = 'http://localhost:3000/'
+  public readonly appUrl: string = 'https://app.salad.io'
 }
 
 const instance = new Config()

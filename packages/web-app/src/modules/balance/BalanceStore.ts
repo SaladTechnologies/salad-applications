@@ -1,5 +1,4 @@
 import { action, observable, autorun, flow } from 'mobx'
-// import { DataResource } from '../data-refresh/models'
 import { RootStore } from '../../Store'
 import { Config } from '../../config'
 import { convertHours } from '../../utils'
@@ -34,41 +33,28 @@ export class BalanceStore {
     })
   }
 
-  // @action
-  // loadDataRefresh = (data: DataResource) => {
-  //   this.currentBalance = data.currentBalance
-  //   this.currentEarningRate = data.earningVelocity
-  //   this.lifetimeBalance = data.lifetimeBalance
-  //   this.lastUpdateTime = Date.now()
-  // }
-
   @action.bound
   loadDataRefresh = flow(function*(this: BalanceStore) {
-    console.log('>>>> [[BalanceStore] loadDataRefresh]')
     try {
-      let balance = yield this.axios.get('balance')
+      let balance = yield this.axios.get('profile/balance')
 
-      console.log('>>>> [[BalanceStore] loadDataRefresh] balance: ', balance)
-
-      this.currentBalance = balance.currentBalance
-      this.currentEarningRate = balance.earningVelocity
-      this.lifetimeBalance = balance.lifetimeBalance
+      this.currentBalance = balance.data.currentBalance
+      this.currentEarningRate = balance.data.earningVelocity
+      this.lifetimeBalance = balance.data.lifetimeBalance
       this.lastUpdateTime = Date.now()
     } catch(error) {
-      console.error('>>>> [[BalanceStore] loadDataRefresh] error: ', error)
+      console.error('Balance error: ')
+      console.error(error)
     }
   })
 
   @action
   updateEstimate = () => {
     let curTime = Date.now()
-
     let dt = curTime - this.lastUpdateTime
-
     let dBal = dt * (this.currentEarningRate / convertHours(1))
 
     this.currentBalance += dBal
-
     this.lastUpdateTime = curTime
   }
 }
