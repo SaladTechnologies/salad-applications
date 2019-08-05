@@ -1,9 +1,9 @@
 export enum RewardCategory {
-  GamingGiftcard,
-  Donation,
-  OtherGiftcard,
-  HardwareAndPeripheral,
-  PhysicalGood,
-  Game,
-  Subscription,
+  GamingGiftcard = 'GamingGiftcard',
+  Donation = 'Donation',
+  OtherGiftcard = 'OtherGiftcard',
+  HardwareAndPeripheral = 'HardwareAndPeripheral',
+  PhysicalGood = 'PhysicalGood',
+  Game = 'Game',
+  Subscription = 'Subscription',
 }
