@@ -11,7 +11,7 @@ export const defaultLevels = [
   new Level('spinach', 'Spinach', 5000, 10000, '#53a626'),
   new Level('beet', 'Beet', 1000, 5000, '#c3122e'),
   new Level('cucumber', 'Cucumber', 100, 1000, '#53a626'),
-  new Level('tomato', 'Tomato', 15, 100, '#d04642'),
-  new Level('lettuce', 'Lettuce', 5, 15, '#71bf51'),
-  new Level('carrot', 'Carrot', 0, 5, '#f5a623'),
+  new Level('tomato', 'Tomato', 50, 100, '#d04642'),
+  new Level('lettuce', 'Lettuce', 20, 50, '#71bf51'),
+  new Level('carrot', 'Carrot', 0, 20, '#f5a623'),
 ]
