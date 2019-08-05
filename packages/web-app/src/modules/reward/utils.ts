@@ -2,8 +2,27 @@ import { RewardResource } from './models/RewardResource'
 import { RewardCategory } from './models/RewardCategory'
 import { Reward } from './models/Reward'
 
-//TODO: Do the actual mapping from category to color
-const colorFromCategory = (category: RewardCategory): string => '#B2D530'
+/** Maps from the reward category to color */
+const colorFromCategory = (category: RewardCategory): string => {
+  switch (category) {
+    case RewardCategory.GamingGiftcard:
+      return '#5e4af4'
+    case RewardCategory.Donation:
+      return '#DBF1C1'
+    case RewardCategory.OtherGiftcard:
+      return '#ef3930'
+    case RewardCategory.HardwareAndPeripheral:
+      return '#ffffff'
+    case RewardCategory.PhysicalGood:
+      return '#DBF1C1'
+    case RewardCategory.Game:
+      return '#DBF1C1'
+    case RewardCategory.Subscription:
+      return '#DBF1C1'
+    default:
+      return '#B2D530'
+  }
+}
 
 export const rewardFromResource = (r: RewardResource): Reward => ({
   //Reward data
