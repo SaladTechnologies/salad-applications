@@ -2,7 +2,6 @@ import { AuthStore, TokenStore } from './modules/auth'
 import { configure } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
 import { AxiosInstance } from 'axios'
-import { DataResource } from './modules/data-refresh/models'
 import { ExperienceStore } from './modules/xp'
 import { RewardStore } from './modules/reward'
 import { BalanceStore } from './modules/balance'
@@ -42,7 +41,7 @@ export class RootStore {
   public readonly referral: ReferralStore
   public readonly native: NativeStore
 
-  constructor(private readonly axios: AxiosInstance) {
+  constructor(readonly axios: AxiosInstance) {
     this.analytics = new AnalyticsStore()
     this.routing = new RouterStore()
     this.xp = new ExperienceStore(this, axios)
@@ -51,7 +50,7 @@ export class RootStore {
     this.auth = new AuthStore(this, axios)
     this.token = new TokenStore()
     this.rewards = new RewardStore(this, axios)
-    this.balance = new BalanceStore(this)
+    this.balance = new BalanceStore(this, axios)
     this.profile = new ProfileStore(this, axios)
     this.ui = new UIStore(this)
     this.referral = new ReferralStore(this, axios)
@@ -62,16 +61,14 @@ export class RootStore {
       return
     }
     try {
-      const response = await this.axios.get<DataResource>('get-state', {
-        baseURL: 'https://api.salad.io/core/master/',
-      })
-      const data = response.data
-      this.xp.updateXp(data.xp)
-      this.balance.loadDataRefresh(data)
-      this.rewards.loadDataRefresh(data)
-      this.referral.loadDataRefresh(data)
-      this.machine.loadDataRefresh(data)
-      console.log(response.data)
+      /*
+        TODO:
+          - this.xp.updateXp
+          - this.rewards.loadDataRefresh
+          - this.referral.loadDataRefresh
+          - this.machine.loadDataRefresh
+      */
+      this.balance.loadDataRefresh()
     } catch (error) {
       console.error(error)
     }

@@ -1,8 +1,8 @@
-import { action, observable, autorun } from 'mobx'
-import { DataResource } from '../data-refresh/models'
+import { action, observable, autorun, flow } from 'mobx'
 import { RootStore } from '../../Store'
 import { Config } from '../../config'
 import { convertHours } from '../../utils'
+import { AxiosInstance } from 'axios'
 
 export class BalanceStore {
   private estimateTimer?: NodeJS.Timeout
@@ -18,7 +18,7 @@ export class BalanceStore {
   @observable
   public currentEarningRate: number = 0
 
-  constructor(store: RootStore) {
+  constructor(store: RootStore, private readonly axios: AxiosInstance) {
     autorun(() => {
       if (store.native.isRunning) {
         if (this.estimateTimer) clearInterval(this.estimateTimer)
@@ -33,24 +33,28 @@ export class BalanceStore {
     })
   }
 
-  @action
-  loadDataRefresh = (data: DataResource) => {
-    this.currentBalance = data.currentBalance
-    this.currentEarningRate = data.earningVelocity
-    this.lifetimeBalance = data.lifetimeBalance
-    this.lastUpdateTime = Date.now()
-  }
+  @action.bound
+  loadDataRefresh = flow(function*(this: BalanceStore) {
+    try {
+      let balance = yield this.axios.get('profile/balance')
+
+      this.currentBalance = balance.data.currentBalance
+      this.currentEarningRate = balance.data.earningVelocity
+      this.lifetimeBalance = balance.data.lifetimeBalance
+      this.lastUpdateTime = Date.now()
+    } catch(error) {
+      console.error('Balance error: ')
+      console.error(error)
+    }
+  })
 
   @action
   updateEstimate = () => {
     let curTime = Date.now()
-
     let dt = curTime - this.lastUpdateTime
-
     let dBal = dt * (this.currentEarningRate / convertHours(1))
 
     this.currentBalance += dBal
-
     this.lastUpdateTime = curTime
   }
 }
