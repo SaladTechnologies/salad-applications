@@ -89,7 +89,7 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  reward?: Reward,
+  reward?: Reward
   onRewardClick?: (reward: Reward) => void
 }
 
@@ -131,7 +131,7 @@ class _SelectedReward extends Component<Props> {
         <div className={classes.cardContainer} onClick={this.handleClick}>
           {/* Image */}
           <AngledPanel className={classes.imageContainer} leftSide={'right'}>
-            {reward && <img className={classes.image} src={reward.imageSrc} draggable={false} />}
+            {reward && <img className={classes.image} src={reward.image} draggable={false} />}
           </AngledPanel>
 
           {/* Right side panel */}

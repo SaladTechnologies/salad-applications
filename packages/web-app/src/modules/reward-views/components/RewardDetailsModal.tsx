@@ -123,7 +123,7 @@ class _RewardDetailsModal extends Component<Props> {
       <ModalPage onCloseClicked={this.handleClose}>
         <div className={classnames(classes.container)}>
           <AngledPanel className={classes.imageContainer} leftSide={'right'}>
-            {reward && <img className={classes.image} src={reward.imageSrc} draggable={false} />}
+            {reward && <img className={classes.image} src={reward.image} draggable={false} />}
           </AngledPanel>
 
           <div className={classnames(classes.rightContainer)}>
@@ -136,7 +136,7 @@ class _RewardDetailsModal extends Component<Props> {
                 {reward && `$${reward.price.toFixed(2)} ${this.timeRemainingText()}`}
               </div>
               <div className={classnames(classes.nameText)}>{reward ? reward.name : 'Unavailable'}</div>
-              <div className={classnames(classes.details)}>{reward && reward.details}</div>
+              <div className={classnames(classes.details)}>{reward && reward.description}</div>
             </div>
             <div className={classes.buttonContainer}>
               {reward && reward.redeemable && (
