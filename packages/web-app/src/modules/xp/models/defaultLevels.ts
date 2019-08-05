@@ -13,5 +13,5 @@ export const defaultLevels = [
   new Level('cucumber', 'Cucumber', 100, 1000, '#53a626'),
   new Level('tomato', 'Tomato', 50, 100, '#d04642'),
   new Level('lettuce', 'Lettuce', 20, 50, '#71bf51'),
-  new Level('carrot', 'Carrot', 0, 20, '#f5a623'),
+  new Level('carrot', 'Carrot', -1, 20, '#f5a623'),
 ]
