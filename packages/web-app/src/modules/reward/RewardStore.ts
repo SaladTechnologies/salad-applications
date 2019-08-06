@@ -158,7 +158,7 @@ export class RewardStore {
   }
 
   @action.bound
-  redeemReward = flow(function*(this: RewardStore, rewardId: string, email: string) {
+  redeemReward = flow(function*(this: RewardStore, rewardId: string, email?: string) {
     if (this.isRedeeming) {
       console.log('Already redeeming reward, skipping')
       return
@@ -167,22 +167,28 @@ export class RewardStore {
     this.isRedeeming = true
 
     const req = {
-      rewardId: rewardId,
-      formValues: {
-        emailInput: email,
-        checkbox: true,
-      },
+      giftEmail: email,
     }
 
     try {
-      yield this.axios.post('/redeem-reward/1/', req, { baseURL: 'https://api.salad.io/core/master/' })
+      yield this.axios.post(`/rewards/${rewardId}/redemptions`, req)
+      yield this.store.balance.loadDataRefresh()
       this.store.ui.showModal(`/rewards/${rewardId}/redeem-complete`)
-      this.store.refreshData()
       let reward = this.getReward(rewardId)
       if (reward) this.store.analytics.trackRewardRedeemed(reward)
-    } catch (err) {
+    } catch (error) {
+      // Error 😨
+      if (error.response) {
+        /*
+         * The request was made and the server responded with a
+         * status code that falls out of the range of 2xx
+         */
+        console.log(error.response.data)
+        console.log(error.response.status)
+      }
       this.store.ui.showModal(`/rewards/${rewardId}/redeem-error`)
-      console.error(err)
+      //TODO: Send the error to sentry
+      console.error(error)
     } finally {
       this.isRedeeming = false
     }
