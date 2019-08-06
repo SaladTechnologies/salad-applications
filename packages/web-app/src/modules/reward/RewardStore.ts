@@ -172,7 +172,6 @@ export class RewardStore {
 
     try {
       yield this.axios.post(`/rewards/${rewardId}/redemptions`, req)
-      yield this.store.balance.loadDataRefresh()
       this.store.ui.showModal(`/rewards/${rewardId}/redeem-complete`)
       let reward = this.getReward(rewardId)
       if (reward) this.store.analytics.trackRewardRedeemed(reward)
@@ -190,6 +189,7 @@ export class RewardStore {
       //TODO: Send the error to sentry
       console.error(error)
     } finally {
+      yield this.store.balance.loadDataRefresh()
       this.isRedeeming = false
     }
   })
