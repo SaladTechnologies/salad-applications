@@ -105,6 +105,21 @@ const styles = (theme: SaladTheme) => ({
   disableRateText: {
     color: '#F6931D',
   },
+  '@keyframes animated': {
+    '0%': { 
+      filter: `drop-shadow( -10px 0px 3px ${theme.mediumGreen})`
+     },
+    '100%': { 
+      filter: `drop-shadow( -10px 0px 5px ${theme.darkGreen})`
+     },
+  },
+  runningGlow: {
+    animationName: "$animated",
+    animationDuration:'1s',
+    animationIterationCount: 'infinite',
+    animationDirection: 'alternate'
+    },
+  
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -147,7 +162,8 @@ class _StartButton extends Component<Props> {
             <AngledPanel
               leftSide="left"
               rightSide="left"
-              className={classnames(classes.button, { [classes.disabledButton]: !startEnabled })}
+            className={classnames(classes.button, { 
+              [classes.disabledButton]: !startEnabled})}
               onClick={this.handleClick}
             >
               {!startEnabled && (
@@ -157,6 +173,7 @@ class _StartButton extends Component<Props> {
               )}
               <div className={classes.buttonText}>{isRunning ? 'Stop' : 'Start'}</div>
             </AngledPanel>
+          
             <div className={classes.textContainer}>
               <div className={classes.title}>Current balance</div>
               <div className={classes.balanceText}>${balance ? balance.toFixed(5) : 0} USD</div>
