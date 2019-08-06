@@ -6,8 +6,8 @@ const mapStoreToProps = (store: RootStore) => ({
   balance: store.balance.currentBalance,
   rate: store.balance.currentEarningRate,
   onClick: store.native.toggleRunning,
-  isRunning:true, // store.native.isRunning,
-  startEnabled: true,// store.native.isNative && store.native.isCompatible,
+  isRunning: store.native.isRunning,
+  startEnabled: store.native.isNative && store.native.isCompatible,
 })
 
 export const StartButtonContainer = connect(
