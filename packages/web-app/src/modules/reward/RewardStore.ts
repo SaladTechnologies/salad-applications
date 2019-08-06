@@ -177,7 +177,6 @@ export class RewardStore {
     try {
       yield this.axios.post('/redeem-reward/1/', req, { baseURL: 'https://api.salad.io/core/master/' })
       this.store.ui.showModal(`/rewards/${rewardId}/redeem-complete`)
-      this.store.refreshData()
       let reward = this.getReward(rewardId)
       if (reward) this.store.analytics.trackRewardRedeemed(reward)
     } catch (err) {
