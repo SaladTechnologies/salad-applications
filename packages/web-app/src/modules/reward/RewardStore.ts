@@ -89,7 +89,7 @@ export class RewardStore {
     try {
       this.isLoading = true
       const response = yield this.axios.get<RewardsResource>('get-rewards')
-      this.rewards = response.data.map(rewardFromResource).sort((a: Reward, b: Reward) => b.price - a.price)
+      this.rewards = response.data.map(rewardFromResource).sort((a: Reward, b: Reward) => a.price - b.price)
       if (response.data.rewards == undefined) return
       this.rewards = response.data.rewards.map(rewardFromResource).sort((a:Reward, b:Reward) => a.price - b.price)
       // this.rewardDetails = new Map(this.rewards.map((x): [string, RewardDetails] => [x.id, new RewardDetails(x.id)]))
