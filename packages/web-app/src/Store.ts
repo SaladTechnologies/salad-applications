@@ -55,22 +55,4 @@ export class RootStore {
     this.ui = new UIStore(this)
     this.referral = new ReferralStore(this, axios)
   }
-
-  refreshData = async () => {
-    if (!this.auth.isAuthenticated()) {
-      return
-    }
-    try {
-      /*
-        TODO:
-          - this.xp.updateXp
-          - this.rewards.loadDataRefresh
-          - this.referral.loadDataRefresh
-          - this.machine.loadDataRefresh
-      */
-      this.balance.loadDataRefresh()
-    } catch (error) {
-      console.error(error)
-    }
-  }
 }
