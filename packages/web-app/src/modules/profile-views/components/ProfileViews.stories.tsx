@@ -10,12 +10,15 @@ import { UserStatsSummary } from './UserStatsSummary'
 
 const profile: Profile = {
   id: '1234',
-  isNewUser: false,
+  // isNewUser: false,
   username: 'Master Chef Bob is World #1 hero',
   email: 'dev@salad.io',
-  termsOfService: undefined,
-  trackUsageVersion: undefined,
-  tutorialComplete: false,
+  lastAcceptedTermsOfService: '1.0',
+  lastSeenApplicationVersion: '1.0',
+  lastAcceptedUsageTrackingVersion: '1.0',
+  // termsOfService: undefined,
+  // trackUsageVersion: undefined,
+  // tutorialComplete: false,
 }
 
 storiesOf('Modules/Profile', module)

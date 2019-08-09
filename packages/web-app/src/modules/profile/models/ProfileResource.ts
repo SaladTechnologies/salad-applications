@@ -1,14 +1,12 @@
 export interface ProfileResource {
-  userId: string
-  isReferred: string
-  isNewUser: boolean
-  termsOfService: string
-  trackUsageVersion: string
-  tutorialComplete: number
-  whatsNewVersion: string
-  profileData: {
-    email: string
-    name: string
-    nickname: string
+  id: string
+  auth0Id: string
+  created: string
+  username: string
+  email: string
+  onboarding: {
+    lastAcceptedTermsOfService: string | null | undefined
+    lastSeenApplicationVersion: string | null | undefined
+    lastAcceptedUsageTrackingVersion: string | null | undefined
   }
 }

@@ -300,7 +300,7 @@ export class NativeStore {
 
     this.loadingMachineInfo = false
 
-    this.store.routing.replace('/')
+    // this.store.routing.replace('/')
   })
 
   @action
@@ -311,7 +311,7 @@ export class NativeStore {
 
     Storage.setItem(compatibilityKey, 'true')
 
-    this.store.routing.replace('/')
+    // this.store.routing.replace('/')
   }
 
   @action

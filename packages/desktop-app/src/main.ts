@@ -109,8 +109,6 @@ const createMainWindow = () => {
     name: 'Salad',
   })
 
-  // console.log('[main] saladAutoLauncher: ', saladAutoLauncher)
-
   mainWindow = new BrowserWindow({
     title: 'Salad',
     minWidth: 1216,
@@ -124,6 +122,7 @@ const createMainWindow = () => {
       nodeIntegration: false,
       contextIsolation: false,
       preload: path.resolve(__dirname, './preload.js'),
+      webSecurity: false,
     },
   })
 

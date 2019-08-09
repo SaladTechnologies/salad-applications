@@ -9,9 +9,9 @@ class App extends Component {
   store = getStore()
 
   componentDidMount = () => {
+    console.log('[[App] CDM] this.store.auth.isAuth: ', this.store.auth.isAuth)
     if (this.store.auth.isAuth) {
       this.store.profile.loadProfile()
-        .then(() => { })
     }
 
     if (!this.store.native.isNative) {
