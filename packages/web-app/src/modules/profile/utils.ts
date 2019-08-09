@@ -2,9 +2,7 @@ import { ProfileResource } from './models/ProfileResource'
 import { Profile } from './models/Profile'
 
 export const profileFromResource = (pr: ProfileResource, skippedReferral?: boolean | undefined): Profile => {
-  console.log('[[utils] profileFromResource] pr: ', pr)
-
-  const profile = {
+  return {
     id: pr.id,
     username: pr.username,
     email: pr.email,
@@ -12,6 +10,4 @@ export const profileFromResource = (pr: ProfileResource, skippedReferral?: boole
     lastSeenApplicationVersion: pr.onboarding.lastSeenApplicationVersion,
     lastAcceptedUsageTrackingVersion: pr.onboarding.lastAcceptedUsageTrackingVersion,
   }
-
-  return profile
 }

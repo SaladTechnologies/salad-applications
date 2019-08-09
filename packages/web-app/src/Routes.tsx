@@ -37,16 +37,10 @@ import { CompatibilityCheckPageContainer, CudaErrorContainer, UnknownErrorContai
 import { SettingsContainer } from './modules/settings-views'
 // Account Menu
 
-let onboardingLoadingCount = 0
-let loadingCount = 0
-
 export default class Routes extends Component {
   store = getStore()
 
   public getOnboardingRedirect = () => {
-    onboardingLoadingCount++
-    console.log('[[Routes] getOnboardingRedirect] onboardingLoadingCount: ', onboardingLoadingCount)
-
     let profile = this.store.profile.currentProfile
 
     if (profile === undefined) {
@@ -64,17 +58,10 @@ export default class Routes extends Component {
   }
 
   render() {
-    loadingCount++
-    console.log('[[Routes] getOnboardingRedirect] loadingCount: ', loadingCount)
-
     let isElectron = this.store.native.isNative
     let isAuth = this.store.auth.isAuth
     let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
     let isOnboarding = this.store.profile.onboarding
-
-    console.log('>----------------------------------------')
-    console.log('[[Routes] render] window.location: ', window.location.href)
-    console.log('----------------------------------------<')
 
     return (
       <Switch>
