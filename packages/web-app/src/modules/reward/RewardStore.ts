@@ -1,4 +1,4 @@
-import { action, observable, runInAction, computed, flow } from 'mobx'
+import { action, observable, computed, flow } from 'mobx'
 import { Reward } from './models/Reward'
 import { RewardsResource } from './models/RewardsResource'
 import { AxiosInstance } from 'axios'
@@ -6,7 +6,6 @@ import { AxiosInstance } from 'axios'
 import { rewardFromResource, getTimeRemainingText } from './utils'
 import { RootStore } from '../../Store'
 import { FilterItem, TagFilter } from './models/FilterItem'
-import { DataResource } from '../data-refresh/models/DataResource'
 
 export class RewardStore {
   @observable
@@ -123,39 +122,36 @@ export class RewardStore {
     })
   }
 
-  @action
-  loadDataRefresh = (data: DataResource) => {
-    // this.selectedRewardId = String(data.currentReward.rewardId)
-  }
+  @action.bound
+  loadSelectedReward = flow(function*(this: RewardStore) {
+    var res = yield this.axios.get('profile/selected-reward')
+    this.selectedRewardId = res.data.rewardId
+  })
 
   viewReward = (reward: Reward) => {
     this.store.ui.showModal(`/rewards/${reward.id}`)
     this.store.analytics.trackRewardView(reward.id, reward.name)
   }
 
-  @action
-  selectTargetReward = async (rewardId: string) => {
+  @action.bound
+  selectTargetReward = flow(function*(this: RewardStore, rewardId: string) {
     const request = {
-      macAddress: this.store.native.machineId,
       rewardId: rewardId,
     }
 
     try {
-      await this.axios.post('select-reward', request, { baseURL: 'https://api.salad.io/core/master/' })
-      runInAction(() => {
-        this.selectedRewardId = rewardId
-        console.log('set reward success')
+      var res = yield this.axios.patch('profile/selected-reward', request)
+      this.selectedRewardId = res.data.rewardId
 
-        let reward = this.getReward(rewardId)
+      let reward = this.getReward(rewardId)
 
-        if (reward) this.store.analytics.trackSelectedReward(rewardId, reward.name)
+      if (reward) this.store.analytics.trackSelectedReward(rewardId, reward.name)
 
-        this.store.routing.push('/')
-      })
+      this.store.routing.push('/')
     } catch (error) {
       console.error(error)
     }
-  }
+  })
 
   @action.bound
   redeemReward = flow(function*(this: RewardStore, rewardId: string, email?: string) {
