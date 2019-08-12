@@ -50,7 +50,7 @@
     "@types/uuid": "^3.4.4",
     "auth0-js": "^9.10.0",
     "axios": "^0.18.0",
-    "babel-loader": "^8.0.5",
+    "babel-loader": "8.0.5",
     "classnames": "^2.2.6",
     "final-form": "^4.12.0",
     "lorem-ipsum": "^1.0.6",
