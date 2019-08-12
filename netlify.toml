@@ -18,6 +18,12 @@ ID = "salad-web-app"
   # Default build command.
   command = "yarn build"
 
+# The following redirect proxies API requests to the backend.
+[[redirects]]
+  from = "/api/*"
+  to = "https://app-api.salad.io/api/:splat"
+  status = 200
+
 # The following redirect is intended for use with most SPAs that handle
 # routing internally.
 [[redirects]]
