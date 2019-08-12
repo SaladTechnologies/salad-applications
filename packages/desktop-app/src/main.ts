@@ -111,8 +111,6 @@ const createMainWindow = () => {
     name: 'Salad',
   })
 
-  // console.log('[main] saladAutoLauncher: ', saladAutoLauncher)
-
   mainWindow = new BrowserWindow({
     title: 'Salad',
     minWidth: 1216,

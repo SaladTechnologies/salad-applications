@@ -43,10 +43,10 @@ export class AnalyticsStore {
           $last_login: new Date().toISOString(),
         })
 
-        mixpanel.register({
-          'New User': profile.isNewUser,
-          Version: Config.appVersion,
-        })
+        // mixpanel.register({
+        //   'New User': profile.isNewUser,
+        //   Version: Config.appVersion,
+        // })
 
         mixpanel.identify(profile.id)
 
