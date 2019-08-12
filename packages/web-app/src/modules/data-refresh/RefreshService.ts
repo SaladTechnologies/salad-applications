@@ -4,7 +4,6 @@ import { RootStore } from '../../Store'
 export class RefreshService {
   private dataTimer?: NodeJS.Timeout
   private rewardsTimer?: NodeJS.Timeout
-  private xpTimer?: NodeJS.Timeout
 
   constructor(private store: RootStore) {}
 
@@ -13,26 +12,40 @@ export class RefreshService {
 
     //Start a timer to poll for data
     this.dataTimer = setInterval(() => {
-      this.store.refreshData()
+      this.refreshData()
     }, Config.dataRefreshRate)
 
     this.rewardsTimer = setInterval(() => {
       this.store.rewards.refreshRewards()
     }, Config.rewardsRefreshRate)
 
-    this.xpTimer = setInterval(() => {
-      this.store.xp.refreshXp()
-    }, Config.xpRefreshRate)
-
     //Do the initial data pull
-    this.store.refreshData()
+    this.refreshData()
     this.store.rewards.refreshRewards()
+  }
+
+  refreshData = () => {
+    if (!this.store.auth.isAuthenticated()) {
+      return
+    }
+    try {
+      /*
+        TODO:
+          - this.referral.loadDataRefresh
+          - this.machine.loadDataRefresh
+      */
+
+      this.store.xp.refreshXp()
+      this.store.balance.loadDataRefresh()
+      this.store.rewards.loadSelectedReward()
+    } catch (error) {
+      console.error(error)
+    }
   }
   stop() {
     console.log('Stopping refresh service')
 
     if (this.dataTimer) clearInterval(this.dataTimer)
     if (this.rewardsTimer) clearInterval(this.rewardsTimer)
-    if (this.xpTimer) clearInterval(this.xpTimer)
   }
 }

@@ -31,10 +31,8 @@ class _RedemptionErrorModal extends Component<Props> {
           <div className={classes.contentContainer}>
             <div className={classes.title}>UH OH. SOMETHING WENT WRONG</div>
             <div className={classes.description}>
-              Something went wrong with the creation or delivery of this reward... Don't worry, we're on it! An email
-              has been sent to our support team and someone will be in touch with you soon. If you don't hear anything
-              within the next 24 hours please contact Salad Support. Or if you're really pissed, get in touch with us
-              straight away!
+              Something went wrong with the redeeming the reward... Don't worry, we're on it! Please try again, if the
+              issue persists please reach out to Salad Support.
             </div>
             <Button dark onClick={onCloseClicked}>
               Done

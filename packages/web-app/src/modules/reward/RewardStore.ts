@@ -1,4 +1,4 @@
-import { action, observable, runInAction, computed, flow } from 'mobx'
+import { action, observable, computed, flow } from 'mobx'
 import { Reward } from './models/Reward'
 import { RewardsResource } from './models/RewardsResource'
 import { AxiosInstance } from 'axios'
@@ -6,7 +6,6 @@ import { AxiosInstance } from 'axios'
 import { rewardFromResource, getTimeRemainingText } from './utils'
 import { RootStore } from '../../Store'
 import { FilterItem, TagFilter } from './models/FilterItem'
-import { DataResource } from '../data-refresh/models/DataResource'
 
 export class RewardStore {
   @observable
@@ -83,7 +82,7 @@ export class RewardStore {
     try {
       const response = yield this.axios.get<RewardsResource[]>('rewards')
       if (response.data == undefined) return
-      this.rewards = response.data.map(rewardFromResource).sort((a: Reward, b: Reward) => b.price - a.price)
+      this.rewards = response.data.map(rewardFromResource).sort((a: Reward, b: Reward) => a.price - b.price)
       this.updateFilters()
     } catch (error) {
       console.error(error)
@@ -123,42 +122,39 @@ export class RewardStore {
     })
   }
 
-  @action
-  loadDataRefresh = (data: DataResource) => {
-    // this.selectedRewardId = String(data.currentReward.rewardId)
-  }
+  @action.bound
+  loadSelectedReward = flow(function*(this: RewardStore) {
+    var res = yield this.axios.get('profile/selected-reward')
+    this.selectedRewardId = res.data.rewardId
+  })
 
   viewReward = (reward: Reward) => {
     this.store.ui.showModal(`/rewards/${reward.id}`)
     this.store.analytics.trackRewardView(reward.id, reward.name)
   }
 
-  @action
-  selectTargetReward = async (rewardId: string) => {
+  @action.bound
+  selectTargetReward = flow(function*(this: RewardStore, rewardId: string) {
     const request = {
-      macAddress: this.store.native.machineId,
       rewardId: rewardId,
     }
 
     try {
-      await this.axios.post('select-reward', request, { baseURL: 'https://api.salad.io/core/master/' })
-      runInAction(() => {
-        this.selectedRewardId = rewardId
-        console.log('set reward success')
+      var res = yield this.axios.patch('profile/selected-reward', request)
+      this.selectedRewardId = res.data.rewardId
 
-        let reward = this.getReward(rewardId)
+      let reward = this.getReward(rewardId)
 
-        if (reward) this.store.analytics.trackSelectedReward(rewardId, reward.name)
+      if (reward) this.store.analytics.trackSelectedReward(rewardId, reward.name)
 
-        this.store.routing.push('/')
-      })
+      this.store.routing.push('/')
     } catch (error) {
       console.error(error)
     }
-  }
+  })
 
   @action.bound
-  redeemReward = flow(function*(this: RewardStore, rewardId: string, email: string) {
+  redeemReward = flow(function*(this: RewardStore, rewardId: string, email?: string) {
     if (this.isRedeeming) {
       console.log('Already redeeming reward, skipping')
       return
@@ -167,23 +163,29 @@ export class RewardStore {
     this.isRedeeming = true
 
     const req = {
-      rewardId: rewardId,
-      formValues: {
-        emailInput: email,
-        checkbox: true,
-      },
+      giftEmail: email,
     }
 
     try {
-      yield this.axios.post('/redeem-reward/1/', req, { baseURL: 'https://api.salad.io/core/master/' })
+      yield this.axios.post(`/rewards/${rewardId}/redemptions`, req)
       this.store.ui.showModal(`/rewards/${rewardId}/redeem-complete`)
-      this.store.refreshData()
       let reward = this.getReward(rewardId)
       if (reward) this.store.analytics.trackRewardRedeemed(reward)
-    } catch (err) {
+    } catch (error) {
+      // Error 😨
+      if (error.response) {
+        /*
+         * The request was made and the server responded with a
+         * status code that falls out of the range of 2xx
+         */
+        console.log(error.response.data)
+        console.log(error.response.status)
+      }
       this.store.ui.showModal(`/rewards/${rewardId}/redeem-error`)
-      console.error(err)
+      //TODO: Send the error to sentry
+      console.error(error)
     } finally {
+      yield this.store.balance.loadDataRefresh()
       this.isRedeeming = false
     }
   })
