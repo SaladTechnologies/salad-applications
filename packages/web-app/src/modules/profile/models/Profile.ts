@@ -2,9 +2,9 @@ export interface Profile {
   id: string
   username: string
   email: string
-  lastAcceptedTermsOfService: string | null | undefined
-  lastSeenApplicationVersion: string | null | undefined
-  lastAcceptedUsageTrackingVersion: string | null | undefined
+  lastAcceptedTermsOfService: string | undefined
+  lastSeenApplicationVersion: string | undefined
+  lastAcceptedUsageTrackingVersion: string | undefined
 }
 
 export enum ReferredStatus {

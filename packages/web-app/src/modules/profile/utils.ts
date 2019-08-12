@@ -6,8 +6,8 @@ export const profileFromResource = (pr: ProfileResource, skippedReferral?: boole
     id: pr.id,
     username: pr.username,
     email: pr.email,
-    lastAcceptedTermsOfService: pr.onboarding.lastAcceptedTermsOfService,
-    lastSeenApplicationVersion: pr.onboarding.lastSeenApplicationVersion,
-    lastAcceptedUsageTrackingVersion: pr.onboarding.lastAcceptedUsageTrackingVersion,
+    lastAcceptedTermsOfService: pr.lastAcceptedTermsOfService,
+    lastSeenApplicationVersion: pr.lastSeenApplicationVersion,
+    lastAcceptedUsageTrackingVersion: pr.lastAcceptedUsageTrackingVersion,
   }
 }
