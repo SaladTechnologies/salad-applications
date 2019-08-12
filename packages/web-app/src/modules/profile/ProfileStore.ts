@@ -3,7 +3,6 @@ import { Profile } from './models'
 import { Config } from '../../config'
 import { RootStore } from '../../Store'
 import { AxiosInstance } from 'axios'
-import { ProfileResource } from './models/ProfileResource'
 
 /** Data analytics setting indicating the user does not want to be tracked */
 const OPT_OUT = 'OPT_OUT'
@@ -11,9 +10,6 @@ const OPT_OUT = 'OPT_OUT'
 export class ProfileStore {
   @observable
   public currentProfile?: Profile
-
-  @observable
-  public currentProfileResource?: ProfileResource
 
   @observable
   public isUpdating: boolean = false
