@@ -1,16 +1,13 @@
 import { observable, action, flow, computed } from 'mobx'
-import { Profile, ReferredStatus } from './models'
+import { Profile } from './models'
 import { Config } from '../../config'
 import { RootStore } from '../../Store'
 import { AxiosInstance } from 'axios'
-import { profileFromResource } from './utils'
 
 /** Data analytics setting indicating the user does not want to be tracked */
 const OPT_OUT = 'OPT_OUT'
 
 export class ProfileStore {
-  private skippedReferral?: boolean = undefined
-
   @observable
   public currentProfile?: Profile
 
@@ -29,8 +26,8 @@ export class ProfileStore {
   @computed get needsAnalyticsOnboarding(): boolean {
     return (
       this.currentProfile !== undefined &&
-      this.currentProfile.trackUsageVersion !== Config.dataTrackingVersion &&
-      this.currentProfile.trackUsageVersion !== OPT_OUT
+      this.currentProfile.lastAcceptedUsageTrackingVersion !== Config.dataTrackingVersion &&
+      this.currentProfile.lastAcceptedUsageTrackingVersion !== OPT_OUT
     )
   }
 
@@ -38,10 +35,9 @@ export class ProfileStore {
   public get isOnboarding(): boolean {
     const onboarding =
       this.currentProfile === undefined ||
-      (this.currentProfile.termsOfService !== Config.termsVersion ||
-        this.currentProfile.whatsNewVersion !== Config.whatsNewVersion ||
-        this.needsAnalyticsOnboarding ||
-        this.currentProfile.referred === ReferredStatus.CanEnter)
+      (this.currentProfile.lastAcceptedTermsOfService !== Config.termsVersion ||
+        this.currentProfile.lastSeenApplicationVersion !== Config.whatsNewVersion ||
+        this.needsAnalyticsOnboarding)
 
     this.setOnboarding(onboarding)
 
@@ -61,49 +57,11 @@ export class ProfileStore {
 
     this.isLoading = true
     try {
-      // let res = yield this.axios.get('get-profile', { baseURL: 'https://api.salad.io/core/master/' })
-      const res = {
-        data: {
-          userId: 'oauth2|twitch|15324532',
-          isReferred: '2',
-          isNewUser: false,
-          termsOfService: '1.0',
-          trackUsageVersion: '1.0',
-          tutorialComplete: 0,
-          whatsNewVersion: '0.2.0',
-          profileData: {
-            email: 'salad@salad.io',
-            name: 'salad',
-            nickname: 'salad_test_1',
-          },
-        },
-      }
-      let profile = profileFromResource(res.data, this.skippedReferral)
+      let profile = yield this.axios.get('profile')
+      this.currentProfile = profile.data
 
-      this.currentProfile = profile
-
-      let trackUsage = profile.trackUsageVersion === Config.dataTrackingVersion
-
-      this.store.analytics.start(profile, trackUsage)
-
-      if (trackUsage) {
-        this.store.analytics.trackLogin()
-      }
-
-      //Update the new user flag if this is their first time logging in
-      if (profile.isNewUser) {
-        this.isFirstLogin = true
-
-        yield this.axios.post(
-          'update-profile',
-          {
-            isNewUser: false,
-          },
-          { baseURL: 'https://api.salad.io/core/master/' },
-        )
-      }
-
-      yield this.store.native.registerMachine()
+      // NOTE: Causes multiple loads of T&C. This is being wired up this sprint...
+      // yield this.store.native.registerMachine()
     } catch (err) {
       console.error('Profile error: ', err)
       this.store.routing.replace('/profile-error')
@@ -122,17 +80,12 @@ export class ProfileStore {
     this.isUpdating = true
 
     try {
-      let res = yield this.axios.post(
-        'update-profile',
-        {
-          termsOfService: Config.termsVersion,
-        },
-        { baseURL: 'https://api.salad.io/core/master/' },
-      )
+      let patch = yield this.axios.patch('profile', {
+        lastAcceptedTermsOfService: Config.termsVersion,
+      })
+      let profile = patch.data
 
-      let profile = profileFromResource(res.data, this.skippedReferral)
-
-      if (profile.termsOfService !== Config.termsVersion) {
+      if (profile.lastAcceptedTermsOfService !== String(Config.termsVersion)) {
         this.store.analytics.captureException(
           new Error(
             `Profile failed to update terms of service. UserId:${this.currentProfile.id}, TOS:${Config.termsVersion}`,
@@ -145,7 +98,6 @@ export class ProfileStore {
       console.log(err)
     } finally {
       this.isUpdating = false
-
       this.store.routing.replace('/')
     }
   })
@@ -161,33 +113,26 @@ export class ProfileStore {
     let newStatus = agree ? Config.dataTrackingVersion : OPT_OUT
 
     try {
-      let res = yield this.axios.post(
-        'update-profile',
-        {
-          trackUsageVersion: newStatus,
-        },
-        { baseURL: 'https://api.salad.io/core/master/' },
-      )
-
-      let profile = profileFromResource(res.data, this.skippedReferral)
+      let patch = yield this.axios.patch('profile', {
+        lastAcceptedUsageTrackingVersion: newStatus,
+      })
+      let profile = patch.data
 
       this.currentProfile = profile
 
-      //Start or stop analytics
-      if (this.currentProfile.trackUsageVersion === Config.dataTrackingVersion) {
-        this.store.analytics.start(this.currentProfile, true)
+      if (profile.lastAcceptedUsageTrackingVersion === Config.dataTrackingVersion) {
+        this.store.analytics.start(profile, true)
         if (this.isFirstLogin) {
           this.store.analytics.trackRegistration()
         }
         this.store.analytics.trackLogin()
-      } else if (this.currentProfile.trackUsageVersion === OPT_OUT) {
+      } else if (profile.lastAcceptedUsageTrackingVersion === OPT_OUT) {
         this.store.analytics.disable()
       }
     } catch (err) {
       this.store.analytics.captureException(err)
     } finally {
       this.isUpdating = false
-
       this.store.routing.replace('/')
     }
   })
@@ -208,9 +153,6 @@ export class ProfileStore {
         },
         { baseURL: 'https://api.salad.io/core/master/' },
       )
-
-      this.currentProfile.referred = ReferredStatus.Referred
-      this.skippedReferral = false
 
       this.isUpdating = false
       this.store.routing.replace('/')
@@ -237,16 +179,7 @@ export class ProfileStore {
     //entry page each time that the user opens the app until the server disallows this (currently 7 days)
     yield this.sleep(500)
 
-    this.skippedReferral = true
-    this.currentProfile.referred = ReferredStatus.NotReferred
-
-    // if (this.currentProfile.referred === undefined) {
-    //   //Make this an API call with the new option, then replace this.profile with the returned profile
-    //   this.currentProfile.referred = false
-    // }
-
     this.isUpdating = false
-
     this.store.routing.replace('/')
   })
 
@@ -257,20 +190,14 @@ export class ProfileStore {
     this.isUpdating = true
 
     try {
-      let res = yield this.axios.post(
-        'update-profile',
-        {
-          whatsNewVersion: Config.whatsNewVersion,
-        },
-        { baseURL: 'https://api.salad.io/core/master/' },
-      )
-
-      let profile = profileFromResource(res.data, this.skippedReferral)
+      let patch = yield this.axios.patch('profile', {
+        lastSeenApplicationVersion: Config.whatsNewVersion,
+      })
+      let profile = patch.data
 
       this.currentProfile = profile
     } finally {
       this.isUpdating = false
-
       this.store.routing.replace('/')
     }
   })
