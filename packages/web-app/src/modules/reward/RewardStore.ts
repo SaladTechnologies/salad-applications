@@ -43,7 +43,8 @@ export class RewardStore {
 
   @computed get allRewards(): Reward[] {
     let currentBalance = this.store.balance.currentBalance
-    let earningRate = this.store.balance.currentEarningRate
+    let earnings = this.store.balance.earnings
+    let earningRate = earnings ? earnings.lastDayEarnings : 0
 
     return this.rewards.map(r => {
       var clone: Reward = { ...r }
@@ -198,7 +199,7 @@ export class RewardStore {
       //TODO: Send the error to sentry
       console.error(error)
     } finally {
-      yield this.store.balance.loadDataRefresh()
+      yield this.store.balance.refreshBalance()
       this.isRedeeming = false
     }
   })

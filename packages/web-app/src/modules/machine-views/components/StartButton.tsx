@@ -5,6 +5,7 @@ import { AngledPanel, Tooltip } from '../../../components'
 import classnames from 'classnames'
 // @ts-ignore
 import ReactHintFactory from 'react-hint'
+import { Earnings } from '../../balance/models/Earnings'
 const ReactHint = ReactHintFactory(React)
 
 const styles = (theme: SaladTheme) => ({
@@ -83,10 +84,18 @@ const styles = (theme: SaladTheme) => ({
     marginTop: '-.25rem',
     marginBottom: '-.5rem',
   },
+  rateContainer: {
+    fontFamily: theme.fontGroteskBook25,
+    fontSize: 10,
+    letterSpacing: '1.5px',
+    display: 'flex',
+    flexDirection: 'row',
+    textTransform: 'uppercase',
+    paddingBottom: 2,
+  },
   rateText: {
-    fontFamily: 'sharpGroteskBook25',
-    fontSize: theme.small,
-    letterSpacing: '1px',
+    marginLeft: 2,
+    color: theme.green,
   },
   '@keyframes animated': {
     '0%': {
@@ -102,29 +111,11 @@ const styles = (theme: SaladTheme) => ({
     animationIterationCount: 'infinite',
     animationDirection: 'alternate',
   },
-  disableRateText: {
-    color: '#F6931D',
-  },
-  '@keyframes animated': {
-    '0%': { 
-      filter: `drop-shadow( -10px 0px 3px ${theme.mediumGreen})`
-     },
-    '100%': { 
-      filter: `drop-shadow( -10px 0px 5px ${theme.darkGreen})`
-     },
-  },
-  runningGlow: {
-    animationName: "$animated",
-    animationDuration:'1s',
-    animationIterationCount: 'infinite',
-    animationDirection: 'alternate'
-    },
-  
 })
 
 interface Props extends WithStyles<typeof styles> {
   balance?: number
-  rate?: number
+  earnings?: Earnings
   isRunning?: boolean
   onClick?: () => void
   startEnabled?: boolean
@@ -137,7 +128,7 @@ class _StartButton extends Component<Props> {
     if (onClick && startEnabled) onClick()
   }
   render() {
-    const { balance, rate, isRunning, startEnabled, classes } = this.props
+    const { balance, earnings, isRunning, startEnabled, classes } = this.props
     return (
       <>
         <ReactHint
@@ -154,32 +145,42 @@ class _StartButton extends Component<Props> {
               />
             </div>
           )}
-        /><div className={classnames( {
-          [classes.runningGlow]: isRunning,
-         })}>
-        <AngledPanel leftSide="left" className={classnames(classes.container)}>
-          <AngledPanel
-            leftSide="left"
-            rightSide="left"
-            className={classnames(classes.button, { 
-              [classes.disabledButton]: !startEnabled})}
-            onClick={this.handleClick}
-          >
-            {!startEnabled && (
-              <div data-start-button className={classes.infoCorner}>
-                !!
+        />
+        <div
+          className={classnames({
+            [classes.runningGlow]: isRunning,
+          })}
+        >
+          <AngledPanel leftSide="left" className={classnames(classes.container)}>
+            <AngledPanel
+              leftSide="left"
+              rightSide="left"
+              className={classnames(classes.button, {
+                [classes.disabledButton]: !startEnabled,
+              })}
+              onClick={this.handleClick}
+            >
+              {!startEnabled && (
+                <div data-start-button className={classes.infoCorner}>
+                  !!
+                </div>
+              )}
+              <div className={classes.buttonText}>{isRunning ? 'Stop' : 'Start'}</div>
+            </AngledPanel>
+
+            <div className={classes.textContainer}>
+              <div className={classes.title}>Current balance</div>
+              <div className={classes.balanceText}>${balance ? balance.toFixed(5) : 0} USD</div>
+              <div className={classes.rateContainer}>
+                <div>Last Hour:</div>
+                <div className={classes.rateText}>${earnings ? earnings.lastHourEarnings.toFixed(3) : '0.000'}</div>
+              </div>
+              <div className={classes.rateContainer}>
+                <div>Last Day:</div>
+                <div className={classes.rateText}>${earnings ? earnings.lastDayEarnings.toFixed(3) : '0.000'}</div>
               </div>
             </div>
           </AngledPanel>
-          
-          <div className={classes.textContainer}>
-            <div className={classes.title}>Current balance</div>
-            <div className={classes.balanceText}>${balance ? balance.toFixed(5) : 0} USD</div>
-            <div className={classnames(classes.rateText, { [classes.disableRateText]: !startEnabled })}>
-              ${rate ? (rate * 24).toFixed(3) : '0.000'}/DAY
-            </div>
-          </div>
-        </AngledPanel>
         </div>
       </>
     )
