@@ -1,5 +1,5 @@
 import { AuthStore, TokenStore } from './modules/auth'
-import { configure } from 'mobx'
+import { configure, action } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
 import { AxiosInstance } from 'axios'
 import { ExperienceStore } from './modules/xp'
@@ -11,7 +11,6 @@ import { UIStore } from './UIStore'
 import { ReferralStore } from './modules/referral'
 import { AnalyticsStore } from './modules/analytics'
 import { NativeStore } from './modules/machine/NativeStore'
-
 
 //Forces all changes to state to be from an action
 configure({ enforceActions: 'always' })
@@ -54,5 +53,17 @@ export class RootStore {
     this.profile = new ProfileStore(this, axios)
     this.ui = new UIStore(this)
     this.referral = new ReferralStore(this, axios)
+  }
+
+  @action
+  onLogin = () => {
+    this.profile.loadProfile()
+    this.referral.loadReferralCode()
+  }
+
+  @action
+  onLogout = () => {
+    this.token.saladToken = ''
+    this.referral.referralCode = ''
   }
 }
