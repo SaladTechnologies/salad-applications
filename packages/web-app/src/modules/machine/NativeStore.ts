@@ -66,7 +66,7 @@ export class NativeStore {
 
   @computed
   get isCompatible(): boolean {
-    return this.isNative && this.validOperatingSystem && this.validGPUs
+    return true // TODO: 0.2.1 - this.isNative && this.validOperatingSystem && this.validGPUs
   }
 
   @computed
