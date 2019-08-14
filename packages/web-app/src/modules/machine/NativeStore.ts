@@ -3,7 +3,6 @@ import { RootStore } from '../../Store'
 import * as Storage from '../../Storage'
 import { MachineInfo } from './models'
 import { AxiosInstance } from 'axios'
-// import { Config } from '../../config'
 
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
