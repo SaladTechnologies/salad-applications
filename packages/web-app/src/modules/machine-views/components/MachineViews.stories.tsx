@@ -5,6 +5,7 @@ import { Machine } from '../../machine/models/Machine'
 import { StartButton } from './StartButton'
 import { action } from '@storybook/addon-actions'
 import { CompatibilityCheckPage } from './CompatibilityCheckPage'
+import { Earnings } from '../../balance/models/Earnings'
 
 const getMachines = (num: number): Machine[] => {
   let array: Machine[] = new Array()
@@ -43,24 +44,45 @@ storiesOf('Modules|Machine', module)
   .add('Start Button', () => {
     const style = { padding: '1rem', color: 'white' }
     let balance = 12345.6789999999999999999999
-    let rate = 0.12345678999999999
+    let earning: Earnings = {
+      lastDayEarnings: 0.12345678999999999,
+      lastHourEarnings: 0.12345678999999999,
+    }
     return (
       <div style={{ backgroundColor: '#092234', padding: '1rem' }}>
         <div style={style}>
           Not running
-          <StartButton startEnabled={true} isRunning={false} balance={balance} rate={rate} onClick={action('click)')} />
+          <StartButton
+            startEnabled={true}
+            isRunning={false}
+            balance={balance}
+            earnings={earning}
+            onClick={action('click)')}
+          />
         </div>
         <div style={style}>
           Running
-          <StartButton startEnabled={true} isRunning={true} balance={balance} rate={rate} onClick={action('click)')} />
+          <StartButton
+            startEnabled={true}
+            isRunning={true}
+            balance={balance}
+            earnings={earning}
+            onClick={action('click)')}
+          />
         </div>
         <div style={style}>
           Disabled, 0 rate
-          <StartButton startEnabled={false} isRunning={false} balance={balance} rate={0} onClick={action('click)')} />
+          <StartButton
+            startEnabled={false}
+            isRunning={false}
+            balance={balance}
+            earnings={{ lastDayEarnings: 0, lastHourEarnings: 0 }}
+            onClick={action('click)')}
+          />
         </div>
         <div style={style}>
           Disabled, undefined rate
-          <StartButton balance={undefined} rate={undefined} onClick={action('click)')} />
+          <StartButton balance={undefined} earnings={undefined} onClick={action('click)')} />
         </div>
       </div>
     )
