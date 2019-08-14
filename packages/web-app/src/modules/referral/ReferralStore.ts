@@ -15,6 +15,9 @@ export class ReferralStore {
   @observable
   public totalCount: number = 0
 
+  @observable
+  public referralCode: string = ''
+
   @computed get activeReferrals(): Referral[] {
     return this.referrals
   }
@@ -30,6 +33,18 @@ export class ReferralStore {
     this.store.ui.showModal(`/new-referral`)
     this.store.analytics.track('Viewed Referral Creation')
   }
+
+  @action.bound
+  loadReferralCode = flow(function*(this: ReferralStore) {
+    try {
+      let res = yield this.axios.get('profile/referral-code')
+      this.referralCode = res.data.code
+    } catch (error) {
+      console.error(error)
+      throw error
+    } finally {
+    }
+  })
 
   @action.bound
   sendReferral = flow(function*(this: ReferralStore, email: string) {

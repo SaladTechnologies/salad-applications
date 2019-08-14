@@ -5,6 +5,7 @@ import { Referral } from '../../referral/models'
 import { ReferralList } from './ReferralList'
 import { action } from '@storybook/addon-actions'
 import { NewReferralModal } from './NewReferralModal'
+import { ReferralSummary } from './ReferralSummary'
 
 storiesOf('Modules/Referral', module)
   .add('Referral Item', () => (
@@ -25,6 +26,16 @@ storiesOf('Modules/Referral', module)
     ]
 
     return <ReferralList referrals={referrals} onCreateNew={action('Create new')} />
+  })
+  .add('Referral Summary', () => {
+    return (
+      <ReferralSummary
+        referralCode={'SALAD'}
+        pendingCount={4}
+        completedCount={20}
+        onOpenDetails={action('open details')}
+      />
+    )
   })
   .add('New Referral Modal', () => {
     return <NewReferralModal onCloseClicked={action('close')} onSend={action('send')} />
