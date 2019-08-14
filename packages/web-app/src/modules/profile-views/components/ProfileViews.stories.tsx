@@ -35,5 +35,5 @@ storiesOf('Modules/Profile', module)
     return <SettingsModalPage onCloseClicked={action('close')} onSendBug={action('new bug')} />
   })
   .add('User Stats', () => {
-    return <UserStatsSummary lifetimeEarning={123} referralCount={42} machineCount={5} />
+    return <UserStatsSummary lifetimeEarning={123} machineCount={5} />
   })
