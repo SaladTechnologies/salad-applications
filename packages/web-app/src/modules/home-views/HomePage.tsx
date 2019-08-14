@@ -10,7 +10,7 @@ import { BottomBarContainer } from './BottomBarContainer'
 import { ProfileMenuItemContainer, UserStatsSummaryContainer } from '../profile-views'
 import { StartButtonContainer } from '../machine-views'
 import { Fade } from '../../components'
-import { ReferralListContainer } from '../referral-views'
+import { ReferralSummaryContainer } from '../referral-views'
 import { MainTitlebarContainer } from './MainTitlebarContainer'
 import { NotificationBannerContainer } from './NotificationBannerContainer'
 
@@ -64,7 +64,7 @@ const styles = (theme: SaladTheme) => ({
     marginRight: 'auto',
   },
   rightColumn: {
-    padding: '2rem 0rem',
+    padding: '1rem 1rem 3rem',
     marginLeft: 'auto',
   },
   footer: {
@@ -137,7 +137,7 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
             <div className={classnames(classes.mainColumn, classes.rightColumn, classes.verticalLayout)}>
               <UserStatsSummaryContainer />
               <div style={{ zIndex: 2000, marginTop: 'auto' }}>
-                <ReferralListContainer />
+                <ReferralSummaryContainer />
               </div>
             </div>
           </div>

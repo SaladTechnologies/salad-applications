@@ -49,7 +49,7 @@ export class AuthStore {
 
       if (expiration < 7) {
         this.signOut()
-        return this.isAuth = false
+        return (this.isAuth = false)
       }
 
       this.processAuthentication()
@@ -72,9 +72,7 @@ export class AuthStore {
     try {
       yield this.webAuth.parseHash((err, authResult) => {
         if (authResult) {
-          const systemId = this.store.native.machineInfo 
-            ? this.store.native.machineInfo.system.uuid 
-            : uuidv4()
+          const systemId = this.store.native.machineInfo ? this.store.native.machineInfo.system.uuid : uuidv4()
 
           const data = {
             authToken: authResult.accessToken,
@@ -91,7 +89,7 @@ export class AuthStore {
               this.processAuthentication()
             })
             .then(() => {
-              this.store.profile.loadProfile()
+              this.store.onLogin()
             })
         }
       })
@@ -121,7 +119,7 @@ export class AuthStore {
     })
     this.authToken = undefined
     this.isAuth = false
-    this.store.token.saladToken = ''
+    this.store.onLogout()
 
     Storage.removeItem(SALAD_TOKEN)
 
