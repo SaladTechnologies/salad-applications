@@ -10,7 +10,7 @@ class App extends Component {
 
   componentDidMount = () => {
     if (this.store.auth.isAuth) {
-      this.store.profile.loadProfile()
+      this.store.onLogin()
     }
 
     if (!this.store.native.isNative) {
