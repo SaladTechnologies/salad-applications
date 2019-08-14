@@ -34,13 +34,11 @@ ID = "salad-web-app"
 # Production context: all deploys from the Production branch set in your site's 
 # deploy contexts will inherit these settings.
 [context.production.environment]
-    REACT_APP_API_URL='https://app.salad.io/api/v1/'
     REACT_APP_AUTH0_CLIENT_ID='K8nT8zWF1Dyu9oqLJg5MTkpt9Aug3Ygt'
     REACT_APP_SENTRY_DSN = "https://15f1024783af4b60a295b04ace0bbd2a@sentry.io/1424792"
     REACT_APP_MIXPANEL_TOKEN = "68db9194f229525012624f3cf368921f"
     
 [context.branch-deploy.environment]
-    REACT_APP_API_URL='https://app.salad.io/api/v1/'
     REACT_APP_AUTH0_CLIENT_ID="OJ6ffJ2h4eYZr6HqswGF544WgqDcBn2h"
     
 [context.branch-deploy.environment]
@@ -49,5 +47,4 @@ ID = "salad-web-app"
 # Deploy Preview context: all deploys resulting from a pull/merge request will 
 # inherit these settings.
 [context.deploy-preview.environment]
-    REACT_APP_API_URL='https://app.salad.io/api/v1/'
     REACT_APP_AUTH0_CLIENT_ID="OJ6ffJ2h4eYZr6HqswGF544WgqDcBn2h"
