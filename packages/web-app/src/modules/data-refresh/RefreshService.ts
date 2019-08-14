@@ -36,7 +36,7 @@ export class RefreshService {
       */
 
       this.store.xp.refreshXp()
-      this.store.balance.loadDataRefresh()
+      this.store.balance.refreshBalance()
       this.store.rewards.loadSelectedReward()
     } catch (error) {
       console.error(error)
