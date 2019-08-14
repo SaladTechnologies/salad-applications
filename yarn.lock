@@ -14554,10 +14554,10 @@ symbol.prototype.description@^1.0.0:
   dependencies:
     has-symbols "^1.0.0"
 
-systeminformation@^4.1.3:
-  version "4.1.3"
-  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-4.1.3.tgz#3acb66d44238ce5b2d3ff49a5b95feec0b9dc271"
-  integrity sha512-5GH7f6dfAIvn6a644h/eUNIq5CFOsKHGDIzyGFK+/7+IJNrhSzj24XHeYm3liURG717L/vvJtfVW3YnPDIEHFw==
+systeminformation@^4.14.4:
+  version "4.14.4"
+  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-4.14.4.tgz#0c74d8fa9da614eda382539dd2420e32c58442db"
+  integrity sha512-ib2dodksiiaGOW4rcKvFr5naHkODI9GwQPugLb6FLKppkIsE7rj2dfY2UdMBr7oX0/iZP981hoxmbk2e6zl99Q==
 
 table@^5.0.2:
   version "5.2.3"

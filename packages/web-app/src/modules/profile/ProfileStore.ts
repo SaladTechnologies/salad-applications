@@ -61,7 +61,7 @@ export class ProfileStore {
       this.currentProfile = profile.data
 
       // NOTE: Causes multiple loads of T&C. This is being wired up this sprint...
-      // yield this.store.native.registerMachine()
+      yield this.store.native.registerMachine()
     } catch (err) {
       console.error('Profile error: ', err)
       this.store.routing.replace('/profile-error')

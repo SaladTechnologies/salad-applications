@@ -4,7 +4,6 @@ import * as Storage from '../../Storage'
 import { MachineInfo } from './models'
 import { AxiosInstance } from 'axios'
 // import { Config } from '../../config'
-import { GPUDetailsResource } from './models/GPUDetailsResource'
 
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
@@ -76,9 +75,8 @@ export class NativeStore {
 
   @computed
   get gpuNames(): string[] | undefined {
-    if (this.machineInfo === undefined) return this.machineInfo
-
-    return this.machineInfo.gpus.map(x => x.model)
+    if (this.machineInfo === undefined) return undefined
+    return this.machineInfo.graphics.graphicsControllerData.map(x => x.model)
   }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
@@ -243,19 +241,9 @@ export class NativeStore {
       return
     }
 
-    let deviceInfo = {
-      os: `${this.machineInfo.os.distro}-${this.machineInfo.os.release}`,
-      gpus: this.gpuNames,
-      gpuDriver: '0',
-      macAddress: this.machineId,
-      isAmdGpu: false,
-    }
-
     try {
       console.log('Registering machine with salad')
-      let res = yield this.axios.post('register-machine', deviceInfo, {
-        baseURL: 'https://api.salad.io/core/master/',
-      })
+      let res = yield this.axios.post(`machines/${this.machineId}/data`, this.machineInfo)
       console.log(res)
     } catch (err) {
       throw err
@@ -279,14 +267,14 @@ export class NativeStore {
     }
 
     try {
-      let res = yield this.axios.post('/check-gpu', req, { baseURL: 'https://api.salad.io/core/master/' })
+      let res = yield this.axios.post('check-gpu', req, { baseURL: 'https://api.salad.io/core/master/' })
 
       console.log(res)
 
-      let gpuList: GPUDetailsResource[] = res.data.gpuList
+      let gpuList = res.data.gpuList
 
       //Ensure that at least 1 gpu is eligible
-      this.validGPUs = gpuList.some(x => x.isEligible)
+      this.validGPUs = gpuList.some((x: any) => x.isEligible)
     } catch (err) {
       this.validGPUs = false
     }

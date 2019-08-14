@@ -1,5 +1,5 @@
 import { spawn, ChildProcess, exec } from 'child_process'
-import { MachineInfo } from './models/MachineInfo'
+import { MachineInfo } from './models/machine/MachineInfo'
 
 export class Ethminer {
   private childProcess?: ChildProcess
@@ -34,7 +34,7 @@ export class Ethminer {
 
     this.isRunning = true
 
-    let cuda = machineInfo.gpus.some(x => x.vendor.toLocaleLowerCase().includes('nvidia'))
+    let cuda = machineInfo.graphics.graphicsControllerData.some(x => x.vendor.toLocaleLowerCase().includes('nvidia'))
 
     console.log('cuda: ' + cuda)
     console.log('machineId: ' + id)

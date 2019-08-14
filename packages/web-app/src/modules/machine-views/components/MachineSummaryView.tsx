@@ -1,7 +1,7 @@
 import React, { CSSProperties, Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
-import { Machine } from '../../machine/models'
+import { MachineInfo } from '../../machine/models'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretDown, faCaretRight } from '@fortawesome/free-solid-svg-icons'
 import { InfoButton } from '../../../components'
@@ -45,7 +45,7 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  machines?: Machine[]
+  machines?: MachineInfo[]
   style?: CSSProperties
 }
 
@@ -83,9 +83,9 @@ class _MachineSummary extends Component<Props, State> {
         {open && (
           <div className={classes.machineList}>
             {machines &&
-              machines.map(m => (
-                <div key={m.name} className={classes.machine}>
-                  <span className={classes.machineName}>{m.name}</span>
+              machines.map((m, index) => (
+                <div key={index} className={classes.machine}>
+                  <span className={classes.machineName}>{m.uuid}</span>
                 </div>
               ))}
           </div>
