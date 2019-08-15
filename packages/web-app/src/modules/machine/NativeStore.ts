@@ -246,6 +246,7 @@ export class NativeStore {
       console.log(res)
 
       this.validGPUs = res.data.validGpus
+      this.validOperatingSystem = res.data.validOs
     } catch (err) {
       this.validGPUs = false
       throw err
