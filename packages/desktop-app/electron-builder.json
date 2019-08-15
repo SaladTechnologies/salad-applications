@@ -16,7 +16,6 @@
   "win": {
     "icon": "assets/favicon.ico",
     "target": ["nsis"],
-    "sign": "./sign.js",
     "extraFiles": ["assets/*", "dist/ethminer"],
     "publish": {
       "provider": "s3",
