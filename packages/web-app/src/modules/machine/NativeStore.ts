@@ -242,15 +242,18 @@ export class NativeStore {
 
     try {
       console.log('Registering machine with salad')
-      let res = yield this.axios.post(`machines/${this.machineId}/data`, this.machineInfo)
+      let res: any = yield this.axios.post(`machines/${this.machineId}/data`, this.machineInfo)      
       console.log(res)
+
+      this.validGPUs = res.data.validGpus
     } catch (err) {
+      this.validGPUs = false
       throw err
     }
   })
 
   @action.bound
-  setMachineInfo = flow(function*(this: NativeStore, info: MachineInfo) {
+  setMachineInfo = (info: MachineInfo) => {
     console.log('Received machine info')
     if (this.machineInfo) {
       console.log('Already received machine info. Skipping...')
@@ -260,35 +263,10 @@ export class NativeStore {
     this.machineInfo = info
 
     this.store.analytics.trackMachineInfo(info)
-
-    let req = {
-      gpuNames: this.gpuNames,
-    }
-
-    try {
-      let res = yield this.axios.post('check-gpu', req, { baseURL: 'https://api.salad.io/core/master/' })
-
-      console.log(res)
-
-      let gpuList = res.data.gpuList
-
-      //Ensure that at least 1 gpu is eligible
-      this.validGPUs = gpuList.some((x: any) => x.isEligible)
-    } catch (err) {
-      this.validGPUs = false
-    }
-
-    this.validOperatingSystem =
-      info.os.platform === 'win32' && (info.os.release.startsWith('10.') || info.os.release.startsWith('6.1'))
-
-    console.log(`Validating machine. OS:${this.validOperatingSystem}, GPUs ${this.validGPUs}`)
-
     this.skippedCompatCheck = this.validOperatingSystem && this.validGPUs
-
     this.loadingMachineInfo = false
-
     this.store.routing.replace('/')
-  })
+  }
 
   @action
   skipCompatibility = () => {

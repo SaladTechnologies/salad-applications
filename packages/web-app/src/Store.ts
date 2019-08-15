@@ -1,5 +1,5 @@
 import { AuthStore, TokenStore } from './modules/auth'
-import { configure, action } from 'mobx'
+import { configure, action, flow } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
 import { AxiosInstance } from 'axios'
 import { ExperienceStore } from './modules/xp'
@@ -55,11 +55,12 @@ export class RootStore {
     this.referral = new ReferralStore(this, axios)
   }
 
-  @action
-  onLogin = () => {
-    this.profile.loadProfile()
+  @action.bound
+  onLogin = flow(function*(this: RootStore) {
+    yield this.profile.loadProfile()
     this.referral.loadReferralCode()
-  }
+    yield this.native.registerMachine()
+  })
 
   @action
   onLogout = () => {
