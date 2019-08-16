@@ -258,6 +258,7 @@ export class NativeStore {
       })
       console.log(res)
     } catch (err) {
+      this.store.analytics.captureException(new Error(`register-machine error: ${err}`))
       throw err
     }
   })
@@ -302,6 +303,18 @@ export class NativeStore {
 
     this.store.routing.replace('/')
   })
+
+  @action.bound
+  sendRunningStatus = flow(function*(this: NativeStore, status: boolean) {
+    console.log('Status MachineId: ' + this.machineId)
+
+    let req = {
+      macAddress: this.machineId,
+      online: status,
+    }
+    yield this.axios.post('update-worker-status', req)
+  })
+
 
   @action
   skipCompatibility = () => {
