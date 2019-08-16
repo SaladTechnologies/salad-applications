@@ -12,7 +12,6 @@ const styles = (theme: SaladTheme) => ({
   title: {
     fontFamily: 'SharpGroteskLight09',
     fontSize: theme.xLarge,
-    marginTop: '2rem',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
@@ -55,7 +54,7 @@ export const AntiVirusErrorPage = (props: PageProps) => (
   <ErrorPage title="Antivirus is Blocking Salad" onCloseClicked={props.onCloseClicked}>
     <div>
       Uh oh looks like your anti-virus is blocking our miner from running. If you have Norton or Malwarebytes follow the
-      links below to whitelist Salad. Add something about more guides coming soon.
+      links below to whitelist Salad. More anti-virus guides coming soon!
     </div>
     <div style={{ paddingTop: '1rem' }}>
       <a
