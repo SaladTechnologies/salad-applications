@@ -2,8 +2,6 @@ import { observable, computed, flow, action } from 'mobx'
 import { Referral } from './models'
 import { RootStore } from '../../Store'
 import { AxiosInstance } from 'axios'
-import { DataResource } from '../data-refresh/models'
-import { referralFromResource } from '../data-refresh/utils'
 
 export class ReferralStore {
   @observable
@@ -24,9 +22,10 @@ export class ReferralStore {
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   @action
-  loadDataRefresh = (data: DataResource) => {
-    this.referrals = data.activeReferrals.map(referralFromResource)
-    this.totalCount = data.totalReferrals
+  loadReferrals = () => {
+    // this.referrals = data.activeReferrals.map(referralFromResource)
+    // this.totalCount = data.totalReferrals
+    //TODO: Sort based on the progress
   }
 
   showNewReferralModal = () => {
@@ -57,11 +56,8 @@ export class ReferralStore {
     }
 
     try {
-      let res = yield this.axios.post('refer-user', request, { baseURL: 'https://api.salad.io/core/master/' })
+      yield this.axios.post('profile/referrals', request)
 
-      let newReferral: Referral = referralFromResource(res.data)
-
-      this.referrals.push(newReferral)
       this.store.analytics.trackReferralSent()
     } catch (error) {
       console.error(error)

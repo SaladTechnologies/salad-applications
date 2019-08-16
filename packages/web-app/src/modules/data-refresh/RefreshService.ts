@@ -31,13 +31,13 @@ export class RefreshService {
     try {
       /*
         TODO:
-          - this.referral.loadDataRefresh
           - this.machine.loadDataRefresh
       */
 
       this.store.xp.refreshXp()
       this.store.balance.refreshBalance()
       this.store.rewards.loadSelectedReward()
+      this.store.referral.loadReferrals()
     } catch (error) {
       console.error(error)
     }

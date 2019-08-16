@@ -31,7 +31,6 @@ import {
 } from './modules/reward-views'
 import { AccountModalContainer } from './modules/profile-views'
 import { AnimatedSwitch } from './components/AnimatedSwitch'
-import { NewReferralModalContainer } from './modules/referral-views'
 import { CompatibilityCheckPageContainer, CudaErrorContainer, UnknownErrorContainer } from './modules/machine-views'
 // Settings Menu
 import { SettingsContainer } from './modules/settings-views'
@@ -52,7 +51,8 @@ export default class Routes extends Component {
 
     if (profile.lastAcceptedTermsOfService !== Config.termsVersion) return <Redirect to="/onboarding/terms" />
     else if (this.store.profile.needsAnalyticsOnboarding) return <Redirect to="/onboarding/analytics" />
-    else if (profile.lastSeenApplicationVersion !== Config.whatsNewVersion) return <Redirect to="/onboarding/whats-new" />
+    else if (profile.lastSeenApplicationVersion !== Config.whatsNewVersion)
+      return <Redirect to="/onboarding/whats-new" />
 
     throw Error('Unable to locate a valid onboarding page')
   }
@@ -129,7 +129,6 @@ const Auth = () => {
       <Route exact path="/rewards/:id/redeem-complete" component={RedemptionCompleteModalContainer} />
       <Route exact path="/rewards/:id/redeem-error" component={RedemptionErrorModalContainer} />
       <Route exact path="/profile" component={AccountModalContainer} />
-      <Route exact path="/new-referral" component={NewReferralModalContainer} />
 
       <Route path="/settings" component={SettingsContainer} />
     </>

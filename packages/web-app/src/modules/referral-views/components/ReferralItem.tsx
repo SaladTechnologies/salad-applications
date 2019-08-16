@@ -1,80 +1,57 @@
 import React, { Component } from 'react'
 import { SaladTheme } from '../../../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
-import { currencyFormatter } from '../../../Formatters'
-import { AngledPanel } from '../../../components'
 import classnames from 'classnames'
-
-const borderWidth = 1
+import { Referral } from '../../referral/models'
+import { AppBody, ProgressBar } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    fontFamily: 'sharpGroteskLight25',
-    fontSize: theme.small,
-    color: theme.lightGreen,
     userSelect: 'none',
-    padding: '.25rem 0rem',
+    paddingBottom: '1rem',
   },
-  borderPanel: {
-    backgroundColor: theme.lightGreen,
-    position: 'relative',
-    width: '16rem',
-    height: '3.5rem',
-  },
-  clickable: {
-    cursor: 'pointer',
-    '&:hover': {
-      opacity: 0.7,
-    },
-  },
-  innerPanel: {
-    position: 'absolute',
-    top: borderWidth,
-    bottom: borderWidth,
-    right: 0,
-    left: borderWidth * 2,
-    backgroundColor: theme.darkBlue,
-    paddingLeft: '2rem',
-    paddingRight: '1.5rem',
+  headerContainer: {
     display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
+    flexDirection: 'row',
     alignItems: 'flex-end',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
+  },
+  bonusText: {
+    marginLeft: 'auto',
+  },
+  progressBackground: {
+    borderRadius: 0,
+    backgroundColor: theme.darkGreen,
+    height: '4px',
+  },
+  progressBar: {
+    backgroundColor: theme.lightGreen,
+    boxShadow: `0px 0px 10px 0px ${theme.lightGreen}`,
   },
 })
 
 interface Props extends WithStyles<typeof styles> {
-  key?: string
-  username?: string
-  status?: string
-  balanceReward?: number
-  onClick?: () => void
+  referral?: Referral
 }
 
 class _ReferralItem extends Component<Props> {
-  handleClick = () => {
-    const { onClick } = this.props
-
-    if (onClick) onClick()
-  }
   render() {
-    const { key, onClick, username, status, balanceReward, classes } = this.props
+    const { referral, classes } = this.props
+    if (!referral || !referral.referralDefinition) return null
     return (
-      <div
-        key={key}
-        className={classnames(classes.container, { [classes.clickable]: onClick !== undefined })}
-        onClick={this.handleClick}
-      >
-        <AngledPanel className={classes.borderPanel} leftSide="right">
-          <AngledPanel className={classes.innerPanel} leftSide="right">
-            <div>{username}</div>
-            <div>{status}</div>
-            {balanceReward !== undefined && <div>Reward: {currencyFormatter.format(balanceReward || 0)}</div>}
-          </AngledPanel>
-        </AngledPanel>
+      <div key={referral.refereeId} className={classnames(classes.container)}>
+        <div className={classes.headerContainer}>
+          <AppBody>
+            {referral.percentComplete === 1 ? 'COMPLETED' : `${referral.currentEarned.toFixed(2)} EARNED`}
+          </AppBody>
+          <AppBody className={classes.bonusText}>
+            ${referral.referralDefinition.maximumReferrerBonus.toFixed(2)} BONUS
+          </AppBody>
+        </div>
+        <ProgressBar
+          className={classes.progressBackground}
+          barClassName={classes.progressBar}
+          progress={referral.percentComplete * 100}
+        />
       </div>
     )
   }

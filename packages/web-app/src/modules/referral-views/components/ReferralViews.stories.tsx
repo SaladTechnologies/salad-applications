@@ -4,29 +4,31 @@ import { ReferralItem } from './ReferralItem'
 import { Referral } from '../../referral/models'
 import { ReferralList } from './ReferralList'
 import { action } from '@storybook/addon-actions'
-import { NewReferralModal } from './NewReferralModal'
 import { ReferralSummary } from './ReferralSummary'
+import { ReferralDefinition } from '../../referral/models/ReferralDefinition'
+import { ReferralStats } from './ReferralStats'
+
+const def: ReferralDefinition = new ReferralDefinition({
+  balanceThreshold: 5,
+  bonusRate: 0.5,
+  referrerBonus: 1,
+})
+
+const referrals: Referral[] = [
+  new Referral({ refereeId: 'u-01', referrerId: 'u-99', code: 'ABCDEF', earnedBalance: 1, referralDefinition: def }),
+  new Referral({ refereeId: 'u-02', referrerId: 'u-99', code: 'ABCDEF', earnedBalance: 2, referralDefinition: def }),
+  new Referral({ refereeId: 'u-03', referrerId: 'u-99', code: 'ABCDEF', earnedBalance: 3, referralDefinition: def }),
+  new Referral({ refereeId: 'u-04', referrerId: 'u-99', code: 'ABCDEF', earnedBalance: 4, referralDefinition: def }),
+  new Referral({ refereeId: 'u-05', referrerId: 'u-99', code: 'ABCDEF', earnedBalance: 5, referralDefinition: def }),
+  new Referral({ refereeId: 'u-05', referrerId: 'u-99', code: 'ABCDEF', earnedBalance: 6, referralDefinition: def }),
+]
 
 storiesOf('Modules/Referral', module)
   .add('Referral Item', () => (
     <div>
-      <ReferralItem username={'really-long-name@long-domain.io'} />
-      <ReferralItem username={'dev@salad.io'} status="42% to 5000xp" />
-      <ReferralItem username={'dev@salad.io'} status="42% to 5000xp" balanceReward={5} />
+      <ReferralItem referral={referrals[0]} />
     </div>
   ))
-  .add('Referral List', () => {
-    const referrals: Referral[] = [
-      { id: '1', username: 'dev1@salad.io', status: 'WAITING FOR LOGIN', balanceReward: 5 },
-      { id: '2', username: 'dev2@salad.io', status: 'WAITING FOR LOGIN', balanceReward: 5 },
-      { id: '3', username: 'dev3@salad.io', status: 'WAITING FOR LOGIN', balanceReward: 5 },
-      { id: '4', username: 'dev4@salad.io', status: 'WAITING FOR LOGIN', balanceReward: 5 },
-      { id: '5', username: 'dev5@salad.io', status: 'WAITING FOR LOGIN', balanceReward: 5 },
-      { id: '6', username: 'dev6@salad.io', status: 'WAITING FOR LOGIN', balanceReward: 5 },
-    ]
-
-    return <ReferralList referrals={referrals} onCreateNew={action('Create new')} />
-  })
   .add('Referral Summary', () => {
     return (
       <ReferralSummary
@@ -37,6 +39,19 @@ storiesOf('Modules/Referral', module)
       />
     )
   })
-  .add('New Referral Modal', () => {
-    return <NewReferralModal onCloseClicked={action('close')} onSend={action('send')} />
+  .add('Referral Stats', () => {
+    return (
+      <div style={{ backgroundColor: '#B2D530' }}>
+        <ReferralStats completeCount={48} inProgressCount={4} totalEarned={164.2345} potentialEarned={6.345} />
+      </div>
+    )
+  })
+
+storiesOf('Modules|Referral/Referral List', module)
+  .addDecorator(storyFn => {
+    return <div style={{ backgroundColor: '#B2D530' }}>{storyFn()}</div>
+  })
+  .add('Empty List', () => <ReferralList referrals={[]} />)
+  .add('Referral List', () => {
+    return <ReferralList referrals={referrals} />
   })
