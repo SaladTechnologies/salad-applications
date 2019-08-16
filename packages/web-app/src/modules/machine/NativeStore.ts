@@ -109,10 +109,14 @@ export class NativeStore {
         store.analytics.captureException(new Error(`Received error code ${errorCode} from native`))
 
         switch (errorCode) {
-          case 8675309:
-          case 3221225595:
+          case 8675309: // Tommy Tutone - 867-5309/Jenny: https://youtu.be/6WTdTwcmxyo
             store.ui.showModal('errors/cuda')
             break
+          case 314159265: // Pie!
+            store.ui.showModal('errors/anti-virus')
+            this.stop()
+            break
+          case 9999: // Generic, "WTH happened"
           default:
             store.ui.showModal('errors/unknown')
             break
