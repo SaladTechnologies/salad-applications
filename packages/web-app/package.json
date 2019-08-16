@@ -23,7 +23,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.14",
     "@fortawesome/free-solid-svg-icons": "^5.7.1",
     "@fortawesome/react-fontawesome": "^0.1.4",
-    "@sentry/browser": "^4.6.5",
+    "@sentry/browser": "^5.5.0",
     "@storybook/addon-actions": "^5.0.0",
     "@storybook/addon-backgrounds": "^5.0.0",
     "@storybook/addon-console": "^1.1.0",
