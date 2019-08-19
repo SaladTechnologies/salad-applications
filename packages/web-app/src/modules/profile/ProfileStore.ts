@@ -59,9 +59,6 @@ export class ProfileStore {
     try {
       let profile = yield this.axios.get('profile')
       this.currentProfile = profile.data
-
-      // NOTE: Causes multiple loads of T&C. This is being wired up this sprint...
-      // yield this.store.native.registerMachine()
     } catch (err) {
       console.error('Profile error: ', err)
       this.store.routing.replace('/profile-error')

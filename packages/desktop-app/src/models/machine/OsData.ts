@@ -1,5 +1,5 @@
-/** Taken from OsData of SystemInformation */
-export interface OperatingSystem {
+/** Taken from si.osInfo of SystemInformation */
+export interface OsData {
   platform: string
   distro: string
   release: string
@@ -11,4 +11,5 @@ export interface OperatingSystem {
   logofile: string
   serial: string
   build: string
+  servicepack: string
 }
