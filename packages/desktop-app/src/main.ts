@@ -207,6 +207,14 @@ const createMainWindow = () => {
     e.preventDefault()
     shell.openExternal(url)
   })
+
+  mainWindow.webContents.on('will-navigate', (e: Electron.Event, url: string) => {
+    console.log(`Will nav to ${url}`)
+    if (!url.startsWith('https://login.salad.io/authorize')) {
+      e.preventDefault()
+      shell.openExternal(url)
+    }
+  })
 }
 
 const checkForUpdates = () => {
