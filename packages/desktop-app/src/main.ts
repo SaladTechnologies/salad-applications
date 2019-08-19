@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, shell, Input } from 'electron'
 import { DefaultTheme as theme } from './SaladTheme'
 import * as path from 'path'
 import * as si from 'systeminformation'
@@ -120,11 +120,15 @@ const createMainWindow = () => {
     },
   })
 
-  if (Config.devTools) {
-    mainWindow.webContents.openDevTools()
-  }
   mainWindow.loadURL(Config.appUrl)
   mainWindow.on('close', () => app.quit())
+
+  mainWindow.webContents.on('before-input-event', (_: any, input: Input) => {
+    if (input.type !== 'keyUp' || input.key !== 'F12') return
+    console.log('Key' + input.key)
+    mainWindow.webContents.toggleDevTools()
+  })
+
   mainWindow.once('ready-to-show', () => {
     console.log('ready to show main window')
     //Pre-fetch the machine info
