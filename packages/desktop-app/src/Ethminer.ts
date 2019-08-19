@@ -1,6 +1,11 @@
 import { spawn, ChildProcess, exec } from 'child_process'
 import { MachineInfo } from './models/MachineInfo'
 
+interface Error {
+  error: string
+  code: number
+}
+
 export class Ethminer {
   private childProcess?: ChildProcess
   private isRunning = false
@@ -14,13 +19,21 @@ export class Ethminer {
       return
     }
 
-    if (message.includes('CUDA error: Insufficient CUDA driver: 9')) {
-      this.onError(8675309)
-    }
+    const errors: Error[] = [
+      { error: 'is not recognized as an internal or external command', code: 314159265 },
+      { error: 'The system cannot find the path specified', code: 314159265 },
+      { error: 'No OpenCL platforms found', code: 314159265 },
+      { error: 'Socket write failed', code: 314159265 },
+      { error: '3221225595', code: 8675309 },
+      { error: '3221225781', code: 8675309 },
+      { error: 'CUDA error: Insufficient CUDA driver: 9', code: 8675309 },
+      { error: 'CUDA error: Insufficient CUDA driver: 7050', code: 8675309 },
+      { error: 'stratum  Error', code: 9999 },
+    ]
 
-    if (message.includes('3221225595')) {
-      this.onError(3221225595)
-    }
+    errors.map(item => {
+      if (message.includes(item.error)) return this.onError!(item.code)
+    })
   }
 
   start = (machineInfo: MachineInfo, id: string) => {

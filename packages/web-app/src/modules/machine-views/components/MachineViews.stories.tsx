@@ -5,7 +5,6 @@ import { Machine } from '../../machine/models/Machine'
 import { StartButton } from './StartButton'
 import { action } from '@storybook/addon-actions'
 import { CompatibilityCheckPage } from './CompatibilityCheckPage'
-import { ErrorPage, CudaErrorPage, UnknownErrorPage } from './ErrorPage'
 
 const getMachines = (num: number): Machine[] => {
   let array: Machine[] = new Array()
@@ -30,15 +29,6 @@ storiesOf('Modules|Machine/Compatibility Check', module)
     />
   ))
   .add('invalid os', () => <CompatibilityCheckPage onNext={action('next')} validGPUs={true} validOS={false} />)
-
-storiesOf('Modules|Machine/Error Pages', module)
-  .add('Error Page', () => (
-    <ErrorPage title="Title goes here" onCloseClicked={action('close')}>
-      Here are some details about the error and maybe some ways to fix the error.
-    </ErrorPage>
-  ))
-  .add('CUDA Error Page', () => <CudaErrorPage onCloseClicked={action('close')} />)
-  .add('Unknown Error Page', () => <UnknownErrorPage onCloseClicked={action('close')} />)
 
 storiesOf('Modules|Machine', module)
   .add('Summary View', () => (
