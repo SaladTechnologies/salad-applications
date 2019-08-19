@@ -2,11 +2,10 @@ import { app, BrowserWindow, ipcMain, shell, Input } from 'electron'
 import { DefaultTheme as theme } from './SaladTheme'
 import * as path from 'path'
 import * as si from 'systeminformation'
-import { getMac } from './getMac'
 import { SaladBridge } from './SaladBridge'
 import { Config } from './config'
 import { Ethminer } from './Ethminer'
-import { MachineInfo } from './models/MachineInfo'
+import { MachineInfo } from './models/machine/MachineInfo'
 import { autoUpdater } from 'electron-updater'
 import { Logger } from './Logger'
 import { exec } from 'child_process'
@@ -30,26 +29,27 @@ let onlineStatus = false
 let updateChecked = false
 
 const getMachineInfo = () =>
-  new Promise<MachineInfo>((resolve, reject) => {
-    si.graphics()
-      .then(graphics => {
-        si.system().then(sys => {
-          si.osInfo().then(os => {
-            getMac().then(mac => {
-              console.log(mac)
-              machineInfo = {
-                macAddress: mac,
-                version: app.getVersion(),
-                system: sys,
-                os: os,
-                gpus: graphics.controllers,
-              }
-              resolve(machineInfo)
-            })
-          })
-        })
-      })
-      .catch(() => reject())
+  new Promise<MachineInfo>(() => {
+    si.getStaticData().then(data => {
+      machineInfo = {
+        version: data.version,
+        system: data.system,
+        bios: data.bios,
+        baseboard: data.baseboard,
+        chassis: data.chassis,
+        os: data.os,
+        uuid: data.uuid,
+        versions: data.versions,
+        cpu: data.cpu,
+        graphics: {
+          graphicsControllerData: data.graphics.controllers,
+          graphicsDisplayData: data.graphics.displays
+        },
+        net: data.net,
+        memLayout: data.memLayout,
+        diskLayout: data.diskLayout,
+      }
+    })
   })
 
 /** Ensure only 1 instance of the app ever run */

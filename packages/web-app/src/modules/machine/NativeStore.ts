@@ -3,8 +3,6 @@ import { RootStore } from '../../Store'
 import * as Storage from '../../Storage'
 import { MachineInfo } from './models'
 import { AxiosInstance } from 'axios'
-// import { Config } from '../../config'
-import { GPUDetailsResource } from './models/GPUDetailsResource'
 
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
@@ -87,9 +85,8 @@ export class NativeStore {
 
   @computed
   get gpuNames(): string[] | undefined {
-    if (this.machineInfo === undefined) return this.machineInfo
-
-    return this.machineInfo.gpus.map(x => x.model)
+    if (this.machineInfo === undefined) return undefined
+    return this.machineInfo.graphics.graphicsControllerData.map(x => x.model)
   }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
@@ -267,28 +264,22 @@ export class NativeStore {
       return
     }
 
-    let deviceInfo = {
-      os: `${this.machineInfo.os.distro}-${this.machineInfo.os.release}`,
-      gpus: this.gpuNames,
-      gpuDriver: '0',
-      macAddress: this.machineId,
-      isAmdGpu: false,
-    }
-
     try {
       console.log('Registering machine with salad')
-      let res = yield this.axios.post('register-machine', deviceInfo, {
-        baseURL: 'https://api.salad.io/core/master/',
-      })
+      let res: any = yield this.axios.post(`machines/${this.machineId}/data`, this.machineInfo)      
       console.log(res)
+
+      this.validGPUs = res.data.validGpus
+      this.validOperatingSystem = res.data.validOs
     } catch (err) {
       this.store.analytics.captureException(new Error(`register-machine error: ${err}`))
+      this.validGPUs = false
       throw err
     }
   })
 
   @action.bound
-  setMachineInfo = flow(function*(this: NativeStore, info: MachineInfo) {
+  setMachineInfo = (info: MachineInfo) => {
     console.log('Received machine info')
     if (this.machineInfo) {
       console.log('Already received machine info. Skipping...')
@@ -298,35 +289,10 @@ export class NativeStore {
     this.machineInfo = info
 
     this.store.analytics.trackMachineInfo(info)
-
-    let req = {
-      gpuNames: this.gpuNames,
-    }
-
-    try {
-      let res = yield this.axios.post('/check-gpu', req, { baseURL: 'https://api.salad.io/core/master/' })
-
-      console.log(res)
-
-      let gpuList: GPUDetailsResource[] = res.data.gpuList
-
-      //Ensure that at least 1 gpu is eligible
-      this.validGPUs = gpuList.some(x => x.isEligible)
-    } catch (err) {
-      this.validGPUs = false
-    }
-
-    this.validOperatingSystem =
-      info.os.platform === 'win32' && (info.os.release.startsWith('10.') || info.os.release.startsWith('6.1'))
-
-    console.log(`Validating machine. OS:${this.validOperatingSystem}, GPUs ${this.validGPUs}`)
-
     this.skippedCompatCheck = this.validOperatingSystem && this.validGPUs
-
     this.loadingMachineInfo = false
-
     this.store.routing.replace('/')
-  })
+  }
 
   @action
   skipCompatibility = () => {

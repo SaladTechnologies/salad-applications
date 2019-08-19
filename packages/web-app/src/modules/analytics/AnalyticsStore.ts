@@ -144,10 +144,10 @@ export class AnalyticsStore {
   public trackMachineInfo = (machine: MachineInfo) => {
     if (!this.canTrack) return
 
-    mixpanel.people.union({
-      'Machine Ids': machine.macAddress,
-      GPUs: machine.gpus.map(x => x.model),
-    })
+    // mixpanel.people.union({
+    //   'Machine Ids': machine.macAddress,
+    //   GPUs: machine.gpus.map(x => x.model),
+    // })
   }
 
   public track = (event: string, properties?: { [key: string]: any }) => {
