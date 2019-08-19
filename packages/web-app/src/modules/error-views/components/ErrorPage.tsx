@@ -12,7 +12,6 @@ const styles = (theme: SaladTheme) => ({
   title: {
     fontFamily: 'SharpGroteskLight09',
     fontSize: theme.xLarge,
-    marginTop: '2rem',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
@@ -50,6 +49,32 @@ interface PageProps {
 }
 
 export const ErrorPage = withStyles(styles)(_ErrorPage)
+
+export const AntiVirusErrorPage = (props: PageProps) => (
+  <ErrorPage title="Antivirus is Blocking Salad" onCloseClicked={props.onCloseClicked}>
+    <div>
+      Uh oh looks like your anti-virus is blocking our miner from running. If you have Norton or Malwarebytes follow the
+      links below to whitelist Salad. More anti-virus guides coming soon!
+    </div>
+    <div style={{ paddingTop: '1rem' }}>
+      <a
+        href="https://salad.zendesk.com/hc/en-us/articles/360032211151-How-to-Whitelist-Salad-in-Norton-Antivirus"
+        target="_blank"
+      >
+        Norton Antivirus
+      </a>
+    </div>
+    <div>
+      <a
+        href="https://salad.zendesk.com/hc/en-us/articles/360031870772-How-to-Whitelist-Salad-in-Malwarebytes"
+        target="_blank"
+      >
+        Malwarebytes
+      </a>
+    </div>
+  </ErrorPage>
+)
+
 export const CudaErrorPage = (props: PageProps) => (
   <ErrorPage title="Insufficient CUDA Driver" onCloseClicked={props.onCloseClicked}>
     <div>
@@ -67,12 +92,13 @@ export const CudaErrorPage = (props: PageProps) => (
     </div>
   </ErrorPage>
 )
+
 export const UnknownErrorPage = (props: PageProps) => (
   <ErrorPage title="ERGH. UNKNOWN ISSUE." onCloseClicked={props.onCloseClicked}>
     <div>
       Wow this is annoying, we apologize! It seems that your system has rejected Salad and we're not exactly sure why.
       Not making excuses. But there are so many different hardware drivers, OS versions, and antivirus software that we
-      try to maintain compatability with - seems we've been had!
+      try to maintain compatibility with - seems we've been had!
     </div>
     <div style={{ paddingTop: '1rem' }}>
       With your help we can improve this, please send us the report so we can squash this bug! Also, a Salad Chef may
