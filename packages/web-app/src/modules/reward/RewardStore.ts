@@ -103,7 +103,7 @@ export class RewardStore {
       const response = await this.axios.get<RewardsResource>('get-rewards')
       runInAction(() => {
         if (response.data.rewards == undefined) return
-        this.rewards = response.data.rewards.map(rewardFromResource).sort((a, b) => b.price - a.price)
+        this.rewards = response.data.rewards.map(rewardFromResource).sort((a, b) => a.price - b.price)
         // this.rewardDetails = new Map(this.rewards.map((x): [string, RewardDetails] => [x.id, new RewardDetails(x.id)]))
         this.updateFilters()
       })
