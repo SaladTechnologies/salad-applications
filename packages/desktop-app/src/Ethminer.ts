@@ -51,7 +51,6 @@ export class Ethminer {
 
     let platform = cuda ? '-U' : '-G'
     this.processName = 'ethminer.exe'
-    // this.processName = cuda ? 'ethminer_cuda.exe' : 'ethminer.exe'
 
     let cmd = `cd dist && cd ethminer && ${
       this.processName
