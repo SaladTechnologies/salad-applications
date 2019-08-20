@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, shell, Input } from 'electron'
 import { DefaultTheme as theme } from './SaladTheme'
 import * as path from 'path'
 import * as si from 'systeminformation'
@@ -120,11 +120,14 @@ const createMainWindow = () => {
     },
   })
 
-  if (Config.devTools) {
-    mainWindow.webContents.openDevTools()
-  }
   mainWindow.loadURL(Config.appUrl)
   mainWindow.on('close', () => app.quit())
+
+  mainWindow.webContents.on('before-input-event', (_: any, input: Input) => {
+    if (input.type !== 'keyUp' || input.key !== 'F12') return
+    mainWindow.webContents.toggleDevTools()
+  })
+
   mainWindow.once('ready-to-show', () => {
     console.log('ready to show main window')
     //Pre-fetch the machine info
@@ -206,6 +209,18 @@ const createMainWindow = () => {
     console.log(`opening new window at ${url}`)
     e.preventDefault()
     shell.openExternal(url)
+  })
+
+  mainWindow.webContents.on('console-message', (_: Event, level: number, message: string, line: number) => {
+    console.log(`console:${line}:${level}:${message}`)
+  })
+
+  mainWindow.webContents.on('will-navigate', (e: Electron.Event, url: string) => {
+    console.log(`Will nav to ${url}`)
+    if (!url.startsWith('https://login.salad.io/authorize')) {
+      e.preventDefault()
+      shell.openExternal(url)
+    }
   })
 }
 
