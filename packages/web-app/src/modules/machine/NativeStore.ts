@@ -16,6 +16,7 @@ const maximize = 'maximize-window'
 const close = 'close-window'
 const start = 'start-salad'
 const stop = 'stop-salad'
+const sendLog = 'send-log'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
 
@@ -59,6 +60,16 @@ export class NativeStore {
   @computed
   get isNative(): boolean {
     return window.salad && window.salad.platform === 'electron'
+  }
+
+  @computed
+  get apiVersion(): number {
+    return window.salad && window.salad.apiVersion
+  }
+
+  @computed
+  get canSendLogs(): boolean {
+    return this.apiVersion >= 2
   }
 
   @computed
@@ -195,6 +206,11 @@ export class NativeStore {
     }
     this.loadingMachineInfo = true
     this.send(getMachineInfo)
+  }
+
+  @action
+  sendLog = () => {
+    this.send(sendLog, this.machineId)
   }
 
   @action

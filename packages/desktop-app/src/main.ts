@@ -200,6 +200,11 @@ const createMainWindow = () => {
     bridge.send(runStatus, false)
   })
 
+  bridge.on('send-log', (id: string) => {
+    console.log('Sending logs')
+    Logger.sendLog(id)
+  })
+
   //Listen for ethminer errors
   ethminer.onError = (code: number) => {
     bridge.send(runError, code)

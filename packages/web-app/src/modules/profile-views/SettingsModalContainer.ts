@@ -13,6 +13,8 @@ const openLink = (url: string) => {
 const mapStoreToProps = (store: RootStore) => ({
   onCloseClicked: () => store.ui.hideModal(),
   onSendBug: handleBug,
+  onSendLog: store.native.sendLog,
+  showSendLog: store.native.canSendLogs,
 })
 
 export const SettingsModalContainer = connect(
