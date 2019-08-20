@@ -2,10 +2,6 @@ node_modules/
 lerna-debug.log
 npm-debug.log
 packages/desktop-app/dist/main\.js
-packages/desktop-app/dist/bminer/*
-packages/desktop-app/dist/ccminer/*
-packages/desktop-app/dist/ethminer/*
-packages/desktop-app/dist/phoenixminer/*
 
 **/release/*
 

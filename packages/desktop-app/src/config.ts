@@ -47,7 +47,6 @@ export const convertHours = (hours: number): number => hours * 3.6e6
 export const convertMinutes = (hours: number): number => hours * 60000
 
 class Config {
-  public readonly devTools: boolean = false
   // public readonly appUrl: string = 'http://localhost:3000/'
   public readonly appUrl: string = 'https://app.salad.io'
 }

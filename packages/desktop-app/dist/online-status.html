@@ -7,7 +7,6 @@
       let online = undefined
 
       const updateOnlineStatus = () => {
-        console.log('Checking online status')
         isOnline({ timeout: 1000 }).then(newStatus => {
           //Changed to the online status
           if (newStatus !== online) {
