@@ -125,7 +125,6 @@ const createMainWindow = () => {
 
   mainWindow.webContents.on('before-input-event', (_: any, input: Input) => {
     if (input.type !== 'keyUp' || input.key !== 'F12') return
-    console.log('Key' + input.key)
     mainWindow.webContents.toggleDevTools()
   })
 
@@ -210,6 +209,10 @@ const createMainWindow = () => {
     console.log(`opening new window at ${url}`)
     e.preventDefault()
     shell.openExternal(url)
+  })
+
+  mainWindow.webContents.on('console-message', (_: Event, level: number, message: string, line: number) => {
+    console.log(`console:${line}:${level}:${message}`)
   })
 
   mainWindow.webContents.on('will-navigate', (e: Electron.Event, url: string) => {

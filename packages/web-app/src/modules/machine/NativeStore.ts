@@ -157,8 +157,6 @@ export class NativeStore {
 
   @action.bound
   private checkOnlineStatus = flow(function*(this: NativeStore) {
-    console.log('Checking online status')
-
     try {
       yield this.axios.get('/')
       this.isOnline = true
