@@ -50,6 +50,8 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   onCloseClicked?: () => void
   onSendBug?: () => void
+  showSendLog?: boolean
+  onSendLog?: () => void
 }
 
 class _SettingsModalPage extends Component<Props> {
@@ -58,8 +60,13 @@ class _SettingsModalPage extends Component<Props> {
 
     if (onSendBug) onSendBug()
   }
+  handleSendLogClicked = () => {
+    const { onSendLog } = this.props
+
+    if (onSendLog) onSendLog()
+  }
   render() {
-    const { onCloseClicked, classes } = this.props
+    const { showSendLog, onCloseClicked, classes } = this.props
     return (
       <ModalPage onCloseClicked={onCloseClicked}>
         <Modal onCloseClicked={onCloseClicked}>
@@ -80,8 +87,13 @@ class _SettingsModalPage extends Component<Props> {
           </div>
           <div>
             <div className={classes.bugButton} onClick={this.handleBugClicked}>
-              Send Bug
+              Report A Bug
             </div>
+            {showSendLog && (
+              <div className={classes.bugButton} onClick={this.handleSendLogClicked}>
+                Send Logs
+              </div>
+            )}
           </div>
         </Modal>
       </ModalPage>

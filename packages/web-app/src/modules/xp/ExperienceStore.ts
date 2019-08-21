@@ -49,8 +49,6 @@ export class ExperienceStore {
       let newXp = res.data.xp
 
       this.updateXp(newXp)
-
-      console.log('XP:' + newXp)
     } catch (err) {
       this.store.analytics.captureException(err)
     }
