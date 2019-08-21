@@ -1,6 +1,7 @@
 import { action, observable, computed, runInAction, flow } from 'mobx'
 import { RootStore } from '../../Store'
 import * as Storage from '../../Storage'
+import { Config } from '../../config'
 import { MachineInfo } from './models'
 import { AxiosInstance } from 'axios'
 
@@ -32,6 +33,7 @@ declare global {
 
 export class NativeStore {
   private callbacks = new Map<string, Function>()
+  private runningHeartbeat?: NodeJS.Timeout
 
   @observable
   public isOnline: boolean = true
@@ -166,6 +168,22 @@ export class NativeStore {
   @action
   setRunStatus = (status: boolean) => {
     this.isRunning = status
+
+    if (this.runningHeartbeat) {
+      clearInterval(this.runningHeartbeat)
+    }
+
+    if (status) {
+      //Send the initial heartbeat
+      this.sendRunningStatus(true)
+
+      //Schedule future heartbeats
+      this.runningHeartbeat = setInterval(() => {
+        this.sendRunningStatus(true)
+      }, Config.statusHeartbeatRate)
+    } else {
+      this.sendRunningStatus(false)
+    }
   }
 
   @action
@@ -242,7 +260,7 @@ export class NativeStore {
 
     try {
       console.log('Registering machine with salad')
-      let res: any = yield this.axios.post(`machines/${this.machineId}/data`, this.machineInfo)      
+      let res: any = yield this.axios.post(`machines/${this.machineId}/data`, this.machineInfo)
       console.log(res)
 
       this.validGPUs = res.data.validGpus
@@ -306,6 +324,22 @@ export class NativeStore {
     this.autoLaunch = Storage.getOrSetDefault(AUTO_LAUNCH, this.autoLaunch.toString()) === 'true'
     this.autoLaunch && this.enableAutoLaunch()
   }
+
+  @action.bound	
+  sendRunningStatus = flow(function*(this: NativeStore, status: boolean) {	
+    console.log('Status MachineId: ' + this.machineId)	
+
+    // let machineId = this.machineInfo ? this.machineInfo.machineId : Storage.getItem(MACHINE_ID)	
+    const machineId = this.store.token.getMachineId()
+    let reason = status ? 'heartbeat' : 'userAction'	
+
+    const data = {	
+      online: status,	
+      reason: reason,	
+    }	
+
+    yield this.axios.post(`machines/${machineId}/status`, data)	
+  })
 
   sleep = (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms))
