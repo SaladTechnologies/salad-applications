@@ -43,8 +43,7 @@ export class RewardStore {
 
   @computed get allRewards(): Reward[] {
     let currentBalance = this.store.balance.currentBalance
-    let earnings = this.store.balance.earnings
-    let earningRate = earnings ? earnings.lastDayEarnings : 0
+    let earningRate = 0 //TODO: Get the earning rate from the balance store
 
     return this.rewards.map(r => {
       var clone: Reward = { ...r }

@@ -5,7 +5,7 @@ import { AngledPanel, Tooltip } from '../../../components'
 import classnames from 'classnames'
 // @ts-ignore
 import ReactHintFactory from 'react-hint'
-import { Earnings } from '../../balance/models/Earnings'
+
 const ReactHint = ReactHintFactory(React)
 
 const styles = (theme: SaladTheme) => ({
@@ -60,6 +60,7 @@ const styles = (theme: SaladTheme) => ({
     right: 0,
     bottom: 0,
     left: 50,
+    letterSpacing: '1.5px',
   },
   infoCorner: {
     position: 'absolute',
@@ -72,26 +73,21 @@ const styles = (theme: SaladTheme) => ({
     textAlign: 'center',
   },
   title: {
-    fontFamily: 'SharpGroteskLight25',
+    fontFamily: theme.fontGroteskLight25,
     fontSize: theme.small,
     textTransform: 'uppercase',
-    letterSpacing: '1px',
   },
   balanceText: {
-    fontFamily: 'SharpGroteskLight09',
+    fontFamily: theme.fontGroteskLight09,
     color: theme.green,
     fontSize: theme.xLarge,
     marginTop: '-.25rem',
     marginBottom: '-.5rem',
   },
-  rateContainer: {
-    fontFamily: theme.fontGroteskBook25,
+  subTitle: {
+    fontFamily: theme.fontGroteskLight25,
     fontSize: 10,
-    letterSpacing: '1.5px',
-    display: 'flex',
-    flexDirection: 'row',
     textTransform: 'uppercase',
-    paddingBottom: 2,
   },
   '@keyframes animated': {
     '0%': {
@@ -126,7 +122,7 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   balance?: number
-  earnings?: Earnings
+  lifetimeBalance?: number
   isRunning?: boolean
   onClick?: () => void
   startEnabled?: boolean
@@ -139,7 +135,7 @@ class _StartButton extends Component<Props> {
     if (onClick && startEnabled) onClick()
   }
   render() {
-    const { balance, earnings, isRunning, startEnabled, classes } = this.props
+    const { balance, lifetimeBalance, isRunning, startEnabled, classes } = this.props
     return (
       <>
         <ReactHint
@@ -181,14 +177,8 @@ class _StartButton extends Component<Props> {
             <div className={classes.textContainer}>
               <div className={classes.title}>Current balance</div>
               <div className={classes.balanceText}>${balance ? balance.toFixed(5) : 0} USD</div>
-              <div className={classes.rateContainer}>
-                <div>Last Hour:</div>
-                <div className={classes.rateText}>${earnings ? earnings.lastHourEarnings.toFixed(3) : '0.000'}</div>
-              </div>
-              <div className={classes.rateContainer}>
-                <div>Last Day:</div>
-                <div className={classes.rateText}>${earnings ? earnings.lastDayEarnings.toFixed(3) : '0.000'}</div>
-              </div>
+              <div className={classes.subTitle}>Lifetime Balance</div>
+              <div className={classes.subText}>${lifetimeBalance ? lifetimeBalance.toFixed(3) : '0.000'}</div>
             </div>
           </AngledPanel>
         </div>
