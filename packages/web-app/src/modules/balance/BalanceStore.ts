@@ -39,7 +39,7 @@ export class BalanceStore {
     try {
       let balance = yield this.axios.get('profile/balance')
       const delta = balance.data.currentBalance - this.currentBalance
-      const maxDelta = parseInt(Config.maxBalanceDelta)
+      const maxDelta = parseFloat(Config.maxBalanceDelta)
       if( delta > maxDelta || delta < 0 ){
         this.currentBalance = balance.data.currentBalance
       }
