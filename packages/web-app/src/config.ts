@@ -75,6 +75,7 @@ class Config {
   public readonly supportUrl: string = requiredString('REACT_APP_SUPPORT_URL')
   public readonly discordUrl: string = requiredString('REACT_APP_DISCORD_URL')
   public readonly releaseNotesUrl: string = requiredString('REACT_APP_RELEASES_URL')
+  public readonly maxBalanceDelta: string = requiredString('REACT_APP_MAX_BALANCE_DELTA')
 }
 
 const instance = new Config()
