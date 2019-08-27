@@ -8,6 +8,11 @@ export class Referral {
   referralDefinition?: ReferralDefinition
   // dateEntered TODO:
 
+  get completed(): boolean {
+    if (!this.referralDefinition) return false
+    return this.earnedBalance >= this.referralDefinition.balanceThreshold
+  }
+
   get percentComplete(): number {
     if (!this.referralDefinition) return 0
     return Math.max(0, Math.min(1, this.earnedBalance / this.referralDefinition.balanceThreshold))

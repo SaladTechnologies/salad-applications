@@ -3,7 +3,6 @@ import { storiesOf } from '@storybook/react'
 import { ReferralItem } from './ReferralItem'
 import { Referral } from '../../referral/models'
 import { ReferralList } from './ReferralList'
-import { action } from '@storybook/addon-actions'
 import { ReferralSummary } from './ReferralSummary'
 import { ReferralDefinition } from '../../referral/models/ReferralDefinition'
 import { ReferralStats } from './ReferralStats'
@@ -30,14 +29,7 @@ storiesOf('Modules/Referral', module)
     </div>
   ))
   .add('Referral Summary', () => {
-    return (
-      <ReferralSummary
-        referralCode={'SALAD'}
-        pendingCount={4}
-        completedCount={20}
-        onOpenDetails={action('open details')}
-      />
-    )
+    return <ReferralSummary pendingCount={4} completedCount={20} />
   })
   .add('Referral Stats', () => {
     return (

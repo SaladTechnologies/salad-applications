@@ -41,7 +41,7 @@ class _ReferralItem extends Component<Props> {
       <div key={referral.refereeId} className={classnames(classes.container)}>
         <div className={classes.headerContainer}>
           <AppBody>
-            {referral.percentComplete === 1 ? 'COMPLETED' : `${referral.currentEarned.toFixed(2)} EARNED`}
+            {referral.percentComplete === 1 ? 'COMPLETED' : `$${referral.currentEarned.toFixed(2)} EARNED`}
           </AppBody>
           <AppBody className={classes.bonusText}>
             ${referral.referralDefinition.maximumReferrerBonus.toFixed(2)} BONUS

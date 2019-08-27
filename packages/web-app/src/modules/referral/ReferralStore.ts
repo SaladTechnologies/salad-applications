@@ -11,22 +11,39 @@ export class ReferralStore {
   public isSending: boolean = false
 
   @observable
-  public totalCount: number = 0
-
-  @observable
   public referralCode: string = ''
+
+  @computed
+  get totalCount(): number {
+    return this.referrals.length
+  }
+
+  @computed
+  get completedCount(): number {
+    return this.referrals.filter(x => x.completed).length
+  }
+
+  @computed
+  get pendingCount(): number {
+    return this.totalCount - this.completedCount
+  }
 
   @computed get activeReferrals(): Referral[] {
     return this.referrals
   }
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
-  @action
-  loadReferrals = () => {
-    // this.referrals = data.activeReferrals.map(referralFromResource)
-    // this.totalCount = data.totalReferrals
-    //TODO: Sort based on the progress
-  }
+  @action.bound
+  loadReferrals = flow(function*(this: ReferralStore) {
+    try {
+      let res = yield this.axios.get('profile/referrals')
+      const referrals = res.data as Referral[]
+      this.referrals = referrals.sort((a: Referral, b: Referral) => a.percentComplete - b.percentComplete)
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  })
 
   showNewReferralModal = () => {
     this.store.ui.showModal(`/new-referral`)
@@ -41,7 +58,6 @@ export class ReferralStore {
     } catch (error) {
       console.error(error)
       throw error
-    } finally {
     }
   })
 
