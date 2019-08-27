@@ -39,11 +39,12 @@ export class BalanceStore {
     try {
       let balance = yield this.axios.get('profile/balance')
       const delta = balance.data.currentBalance - this.currentBalance
-      const maxDelta = parseFloat(Config.maxBalanceDelta)
+      const maxDelta = Config.maxBalanceDelta
       if( delta > maxDelta || delta < 0 ){
         this.currentBalance = balance.data.currentBalance
-      }
+      }else{
       this.interpolRate = delta/Config.dataRefreshRate
+      }
       this.lifetimeBalance = balance.data.lifetimeBalance
     } catch (error) {
       console.error('Balance error: ')
@@ -59,7 +60,10 @@ export class BalanceStore {
 
     let dBal = dt * this.interpolRate 
 
-    this.currentBalance = this.currentBalance + dBal + 1
+    if(dBal){
+      //TODO:: YOU NEED TO make sure the dbal doesn't exceed the current balance
+    }
+    this.currentBalance = this.currentBalance + dBal
 
     this.lastUpdateTime = curTime
   }
