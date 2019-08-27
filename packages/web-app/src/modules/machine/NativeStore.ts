@@ -325,20 +325,37 @@ export class NativeStore {
     this.autoLaunch && this.enableAutoLaunch()
   }
 
-  @action.bound	
-  sendRunningStatus = flow(function*(this: NativeStore, status: boolean) {	
-    console.log('Status MachineId: ' + this.machineId)	
+  @action.bound
+  sendRunningStatus = flow(function*(this: NativeStore, runStatus: boolean) {
+    console.log('Status MachineId: ' + this.machineId)
 
-    // let machineId = this.machineInfo ? this.machineInfo.machineId : Storage.getItem(MACHINE_ID)	
+    /*
+      Web App - Start Mining
+        - Toggle runStatus
+          - True
+            - DEV-433: Begin monitoring logs
+              - If log returns 0
+                - Change text/observable to Initializing
+                - DEV-434: If log returns 0 for longer then X minutes
+                  - Notify user there is something wrong, error code 9999
+                  - Minutes are configurable
+              - If log returns > 0 
+                - Change text/observable to Chopping
+          - False
+            - Send stopped
+            - Set observable to stopped
+    */
+
+    // let machineId = this.machineInfo ? this.machineInfo.machineId : Storage.getItem(MACHINE_ID)
     const machineId = this.store.token.getMachineId()
-    let reason = status ? 'heartbeat' : 'userAction'	
+    let reason = runStatus ? 'heartbeat' : 'userAction'
 
-    const data = {	
-      online: status,	
-      reason: reason,	
-    }	
+    const data = {
+      online: runStatus,
+      reason: reason,
+    }
 
-    yield this.axios.post(`machines/${machineId}/status`, data)	
+    yield this.axios.post(`machines/${machineId}/status`, data)
   })
 
   sleep = (ms: number) => {
