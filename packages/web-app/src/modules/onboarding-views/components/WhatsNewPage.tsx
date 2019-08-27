@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
-import image from '../assets/v020-whats-new.svg'
+import image from '../assets/Home - How it Works.svg'
 import { OnboardingPage } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
@@ -29,22 +29,18 @@ class _WhatsNewPage extends Component<Props> {
   render() {
     const { submitting, onNext, classes } = this.props
     return (
-      <OnboardingPage title={'Ch-Ch-Ch-Changes'} image={image} nextSubmitting={submitting} onNext={onNext}>
-        <div className={classes.title}>1. Auto-update</div>
+      <OnboardingPage title={'#SENDLOGS'} image={image} nextSubmitting={submitting} onNext={onNext}>
+        <div className={classes.title}>1. Share Tracking</div>
         <div className={classes.body}>
-          From now on, you won’t have to worry about having the latest build. Salad will automagically update as we
-          finish up new features.
+          Share Tracking remains an included feature and we’re hard at work in optimizing this experience. 
         </div>
-        <div className={classes.title}>2. NEW EARNING RATES</div>
+        <div className={classes.title}>2. Improved Mining</div>
         <div className={classes.body}>
-          This is a biggie. Earnings will more accurately match your GPU’s computing power. For some of you, this’ll
-          mean a pretty big jump in earnings. For many, it’ll be the opposite, but hopefully not too bad, since we’ll
-          still be padding your earnings.
+          Salad now offers new notifications that inform you if the miner is not working properly with your current hardware and how to resolve those issues.
         </div>
-        <div className={classes.title}>3. reward carousel overhaul</div>
+        <div className={classes.title}>3. Send Logs</div>
         <div className={classes.body}>
-          There's a brand new look and structure for the rewards. With new filtering, we hope this'll make it easier to
-          track your progress or find new rewards.
+          Additionally, we have a new “Send Logs” button included in the app which automatically sends Salad your logs when you run into bugs or other issues.
         </div>
       </OnboardingPage>
     )
