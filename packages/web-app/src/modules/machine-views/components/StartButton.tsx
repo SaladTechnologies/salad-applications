@@ -178,7 +178,7 @@ class _StartButton extends Component<Props> {
               <div className={classes.title}>Current balance</div>
               <div className={classes.balanceText}>${balance ? balance.toFixed(5) : 0} USD</div>
               <div className={classes.subTitle}>Lifetime Balance</div>
-              <div className={classes.subText}>${lifetimeBalance ? lifetimeBalance.toFixed(3) : '0.000'}</div>
+              <div className={classes.subText}>${lifetimeBalance ? lifetimeBalance.toFixed(5) : 0}</div>
             </div>
           </AngledPanel>
         </div>
