@@ -19,13 +19,15 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  className?: string
+}
 
 class _VeggieName extends Component<Props> {
   render() {
-    const { children, classes } = this.props
+    const { className, children, classes } = this.props
 
-    return <label className={classnames('veggieName', classes.veggieName)}>{children}</label>
+    return <label className={classnames('veggieName', className, classes.veggieName)}>{children}</label>
   }
 }
 

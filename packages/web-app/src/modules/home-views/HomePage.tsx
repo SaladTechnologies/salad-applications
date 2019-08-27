@@ -66,6 +66,7 @@ const styles = (theme: SaladTheme) => ({
   rightColumn: {
     padding: '1rem 1rem 3rem',
     marginLeft: 'auto',
+    alignItems: 'flex-end',
   },
   footer: {
     flex: 'none',

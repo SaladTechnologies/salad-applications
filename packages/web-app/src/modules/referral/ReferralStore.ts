@@ -2,8 +2,6 @@ import { observable, computed, flow, action } from 'mobx'
 import { Referral } from './models'
 import { RootStore } from '../../Store'
 import { AxiosInstance } from 'axios'
-import { DataResource } from '../data-refresh/models'
-import { referralFromResource } from '../data-refresh/utils'
 
 export class ReferralStore {
   @observable
@@ -13,21 +11,39 @@ export class ReferralStore {
   public isSending: boolean = false
 
   @observable
-  public totalCount: number = 0
-
-  @observable
   public referralCode: string = ''
+
+  @computed
+  get totalCount(): number {
+    return this.referrals.length
+  }
+
+  @computed
+  get completedCount(): number {
+    return this.referrals.filter(x => x.completed).length
+  }
+
+  @computed
+  get pendingCount(): number {
+    return this.totalCount - this.completedCount
+  }
 
   @computed get activeReferrals(): Referral[] {
     return this.referrals
   }
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
-  @action
-  loadDataRefresh = (data: DataResource) => {
-    this.referrals = data.activeReferrals.map(referralFromResource)
-    this.totalCount = data.totalReferrals
-  }
+  @action.bound
+  loadReferrals = flow(function*(this: ReferralStore) {
+    try {
+      let res = yield this.axios.get('profile/referrals')
+      const referrals = res.data as Referral[]
+      this.referrals = referrals.sort((a: Referral, b: Referral) => a.percentComplete - b.percentComplete)
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  })
 
   showNewReferralModal = () => {
     this.store.ui.showModal(`/new-referral`)
@@ -42,7 +58,6 @@ export class ReferralStore {
     } catch (error) {
       console.error(error)
       throw error
-    } finally {
     }
   })
 
@@ -57,11 +72,8 @@ export class ReferralStore {
     }
 
     try {
-      let res = yield this.axios.post('refer-user', request, { baseURL: 'https://api.salad.io/core/master/' })
+      yield this.axios.post('profile/referrals', request)
 
-      let newReferral: Referral = referralFromResource(res.data)
-
-      this.referrals.push(newReferral)
       this.store.analytics.trackReferralSent()
     } catch (error) {
       console.error(error)

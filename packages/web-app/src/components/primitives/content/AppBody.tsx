@@ -16,13 +16,14 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
+  className?: string
 }
 
 class _AppBody extends Component<Props> {
   render() {
-    const { children, classes } = this.props
+    const { className, children, classes } = this.props
 
-    return <p className={classnames(classes.appBody)}>{children}</p>
+    return <p className={classnames(classes.appBody, className)}>{children}</p>
   }
 }
 
