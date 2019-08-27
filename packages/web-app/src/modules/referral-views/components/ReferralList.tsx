@@ -3,33 +3,28 @@ import { SaladTheme } from '../../../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
 import { Referral } from '../../referral/models'
 import { ReferralItem } from './ReferralItem'
+import { VeggieName, AppBody } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    display: 'inline-block',
-    overflow: 'hidden',
-  },
-  itemContainer: {
-    overflowY: 'auto',
-    height: '200px',
-    marginRight: '-17px',
+    color: theme.darkBlue,
   },
 })
 
 interface Props extends WithStyles<typeof styles> {
   referrals?: Referral[]
-  onCreateNew?: () => void
 }
 
 class _ReferralList extends Component<Props> {
   render() {
-    const { onCreateNew, referrals, classes } = this.props
+    const { referrals, classes } = this.props
+
+    let hasReferrals = referrals && referrals.length !== 0
     return (
       <div className={classes.container}>
-        <div className={classes.itemContainer}>
-          <ReferralItem key={'new'} username="CREATE NEW REFERRAL" onClick={onCreateNew} />
-          {referrals && referrals.map(x => <ReferralItem key={x.id} {...x} />)}
-        </div>
+        <VeggieName>Who you referred</VeggieName>
+        {!hasReferrals && <AppBody>No one has entered your code yet. Send it to your friends now!</AppBody>}
+        {hasReferrals && referrals && referrals.map(x => <ReferralItem referral={x} />)}
       </div>
     )
   }
