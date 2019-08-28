@@ -18,9 +18,15 @@ export class UIStore {
     this.showModal('/profile')
     this.store.analytics.track('Viewed Profile')
   }
+
   showSettingsPage = () => {
     this.showModal('/settings/windows-settings')
     this.store.analytics.track('Viewed Settings')
+  }
+
+  showReferralsPage = () => {
+    this.showModal('/settings/referrals')
+    this.store.analytics.track('Referrals')
   }
 
   @action

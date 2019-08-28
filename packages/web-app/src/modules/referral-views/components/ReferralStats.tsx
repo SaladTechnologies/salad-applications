@@ -24,28 +24,22 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  completeCount?: number
-  inProgressCount?: number
   totalEarned?: number
   potentialEarned?: number
 }
 
 class _ReferralStats extends Component<Props> {
   render() {
-    const { completeCount, inProgressCount, totalEarned, potentialEarned, classes } = this.props
+    const { totalEarned, potentialEarned, classes } = this.props
 
     return (
       <div className={classes.container}>
         <div className={classes.stat}>
-          <VeggieName className={classes.statTitle}>
-            {completeCount ? `Total Earned From ${completeCount} Complete` : 'Total Earned'}
-          </VeggieName>
+          <VeggieName className={classes.statTitle}>Total Earned</VeggieName>
           <div className={classes.statValue}>${totalEarned && totalEarned.toFixed(2)}</div>
         </div>
         <div className={classes.stat}>
-          <VeggieName className={classes.statTitle}>
-            {inProgressCount ? `Potential Earned From ${inProgressCount} InComplete` : 'Potential Earned'}
-          </VeggieName>
+          <VeggieName className={classes.statTitle}>Potential Earnings</VeggieName>
           <div className={classes.statValue}>${potentialEarned && potentialEarned.toFixed(2)}</div>
         </div>
       </div>
