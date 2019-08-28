@@ -1,11 +1,16 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
+import { boolean } from '@storybook/addon-knobs'
+import { action } from '@storybook/addon-actions'
 import { ReferralItem } from './ReferralItem'
 import { Referral } from '../../referral/models'
 import { ReferralList } from './ReferralList'
 import { ReferralSummary } from './ReferralSummary'
 import { ReferralDefinition } from '../../referral/models/ReferralDefinition'
 import { ReferralStats } from './ReferralStats'
+import { ReferralCode } from './ReferralCode'
+import { SendReferral } from './SendReferral'
+import { ReferralDescription } from './ReferralDescription'
 
 const def: ReferralDefinition = new ReferralDefinition({
   balanceThreshold: 5,
@@ -22,7 +27,7 @@ const referrals: Referral[] = [
   new Referral({ refereeId: 'u-05', referrerId: 'u-99', code: 'ABCDEF', earnedBalance: 6, referralDefinition: def }),
 ]
 
-storiesOf('Modules/Referral', module)
+storiesOf('Modules|Referral/Components', module)
   .add('Referral Item', () => (
     <div>
       <ReferralItem referral={referrals[0]} />
@@ -34,7 +39,28 @@ storiesOf('Modules/Referral', module)
   .add('Referral Stats', () => {
     return (
       <div style={{ backgroundColor: '#B2D530' }}>
-        <ReferralStats completeCount={48} inProgressCount={4} totalEarned={164.2345} potentialEarned={6.345} />
+        <ReferralStats totalEarned={164.2345} potentialEarned={6.345} />
+      </div>
+    )
+  })
+  .add('Referral Code', () => {
+    return (
+      <div style={{ backgroundColor: '#B2D530' }}>
+        <ReferralCode code="ABCDEFG" />
+      </div>
+    )
+  })
+  .add('Send Referral', () => {
+    return (
+      <div style={{ backgroundColor: '#B2D530' }}>
+        <SendReferral sending={boolean('Sending', false)} onSend={action('Send referral')} />
+      </div>
+    )
+  })
+  .add('Referral Description', () => {
+    return (
+      <div style={{ backgroundColor: '#B2D530' }}>
+        <ReferralDescription />
       </div>
     )
   })
