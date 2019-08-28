@@ -60,11 +60,11 @@ export class BalanceStore {
 
     let dBal = dt * this.interpolRate 
 
-    if(dBal){
-      //TODO:: YOU NEED TO make sure the dbal doesn't exceed the current balance
-    }
+    if(dBal+ this.currentBalance > this.currentBalance){
+      this.currentBalance = this.currentBalance
+    }else{
     this.currentBalance = this.currentBalance + dBal
-
+    }
     this.lastUpdateTime = curTime
   }
 }
