@@ -27,6 +27,7 @@ export * from './elements/StatElement/StatElement'
 // Primitive
 export * from './primitives/content/AppBody'
 export * from './primitives/headers/CondensedHeader'
+export * from './primitives/layout/Divider'
 export * from './primitives/percentages/Percentage'
 export * from './primitives/titles/MenuTitle'
 export * from './primitives/titles/Username'

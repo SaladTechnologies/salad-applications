@@ -4,35 +4,69 @@ import { RootStore } from '../../Store'
 import { AxiosInstance } from 'axios'
 
 export class ReferralStore {
+  /** A collection of all referrals that this user referred */
   @observable
   public referrals: Referral[] = []
 
   @observable
   public isSending: boolean = false
 
+  /** The current user's referral code */
   @observable
   public referralCode: string = ''
 
+  /** Total number of referrals */
   @computed
   get totalCount(): number {
     return this.referrals.length
   }
 
+  /** The number of referrals that have been completed */
   @computed
-  get completedCount(): number {
-    return this.referrals.filter(x => x.completed).length
+  get completedReferrals(): Referral[] {
+    return this.referrals.filter(x => x.completed)
   }
 
+  /** The number of referrals that have been completed */
+  @computed
+  get completedCount(): number {
+    return this.completedReferrals.length
+  }
+
+  /** The number of referrals that are still pending */
   @computed
   get pendingCount(): number {
     return this.totalCount - this.completedCount
   }
 
-  @computed get activeReferrals(): Referral[] {
-    return this.referrals
+  /** The total amount the user has earned from referrals ($) */
+  @computed
+  get totalEarned(): number {
+    let sum = 0
+
+    this.referrals.forEach(x => {
+      sum += x.earnedBalance
+    })
+
+    return sum
   }
+
+  /** The total amount the user could earn if all referrals were to be completed ($) */
+  @computed
+  get potentialEarnings(): number {
+    let sum = 0
+
+    this.referrals.forEach(x => {
+      if (x.referralDefinition === undefined) return
+      sum += x.referralDefinition.maximumReferrerBonus - x.earnedBalance
+    })
+
+    return sum
+  }
+
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
+  /** (Re)Loads all referrals */
   @action.bound
   loadReferrals = flow(function*(this: ReferralStore) {
     try {
@@ -45,11 +79,7 @@ export class ReferralStore {
     }
   })
 
-  showNewReferralModal = () => {
-    this.store.ui.showModal(`/new-referral`)
-    this.store.analytics.track('Viewed Referral Creation')
-  }
-
+  /** Loads the current user's unique referral code */
   @action.bound
   loadReferralCode = flow(function*(this: ReferralStore) {
     try {
@@ -61,6 +91,7 @@ export class ReferralStore {
     }
   })
 
+  /** Sends a referral email to the given email address */
   @action.bound
   sendReferral = flow(function*(this: ReferralStore, email: string) {
     console.log('Sending Referral')
@@ -81,7 +112,5 @@ export class ReferralStore {
     } finally {
       this.isSending = false
     }
-
-    this.store.routing.replace('/')
   })
 }
