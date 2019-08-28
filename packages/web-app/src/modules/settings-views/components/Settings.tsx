@@ -24,6 +24,7 @@ import { WindowsSettingsContainer } from '../windows-settings-views'
 import { ComingSoonContainer } from '../coming-soon-views'
 import { BatterySaverContainer } from '../battery-saver-views'
 import { DesktopNotificationsContainer } from '../desktop-notifications-views'
+import { ReferralSettingsContainer } from '../../referral-views'
 
 export class MenuItem {
   constructor(public readonly url: string, public readonly text: string) {}
@@ -61,7 +62,7 @@ class _Settings extends Component<Props> {
   }
 
   handleCloseKeyPress = (e: any) => {
-    if(e.key === 'Escape') {
+    if (e.key === 'Escape') {
       const { onCloseKeyPress } = this.props
       if (onCloseKeyPress) onCloseKeyPress()
     }
@@ -79,9 +80,7 @@ class _Settings extends Component<Props> {
     return (
       <Overlay>
         <div className={classnames(classes.menu, classes.menuItems)}>
-          <div>
-            {menuItems && <LinkListUnstyled list={menuItems} onListItemClick={this.handleListItemClick} />}
-          </div>
+          <div>{menuItems && <LinkListUnstyled list={menuItems} onListItemClick={this.handleListItemClick} />}</div>
           <div className={classes.buttonContainer}>
             <Button onClick={this.handleBugClicked}>Send bug</Button>
           </div>
@@ -92,6 +91,7 @@ class _Settings extends Component<Props> {
           <Route path="/settings/desktop-notifications" component={DesktopNotificationsContainer} />
           <Route path="/settings/windows-settings" component={WindowsSettingsContainer} />
           <Route path="/settings/coming-soon" component={ComingSoonContainer} />
+          <Route path="/settings/referrals" component={ReferralSettingsContainer} />
 
           {/* <Button onClick={this.handleCloseClicked}>Close</Button> */}
           <div onClick={this.handleCloseClicked}>

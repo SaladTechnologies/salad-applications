@@ -15,9 +15,10 @@ const handleSettingsMenuClick = (store: RootStore, url: string) => {
 }
 
 const mapStoreToProps = (store: RootStore) => {
-  type LinkList = { url: string, text: string }
+  type LinkList = { url: string; text: string }
   const menuItems: LinkList[] = [
-    { url: '/settings/windows-settings', text: 'Windows Settings' }
+    { url: '/settings/windows-settings', text: 'Windows Settings' },
+    { url: '/settings/referrals', text: 'Referrals' },
   ]
 
   return {

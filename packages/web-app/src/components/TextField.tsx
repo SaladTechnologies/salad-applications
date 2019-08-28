@@ -43,6 +43,7 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   name?: string
   placeholder?: string
+  className?: string
   onBlur?: (event?: React.FocusEvent<any>) => void
   onChange?: (event: React.ChangeEvent<any>) => void
   onFocus?: (event?: React.FocusEvent<any>) => void
@@ -53,10 +54,14 @@ interface Props extends WithStyles<typeof styles> {
 
 class _TextField extends Component<Props> {
   render() {
-    const { errorText, classes, dark, ...input } = this.props
+    const { className, errorText, classes, dark, ...input } = this.props
     return (
       <div className={classes.container}>
-        <input className={classnames(classes.text, { [classes.errorBorder]: errorText })} {...input} type="text" />
+        <input
+          className={classnames(classes.text, className, { [classes.errorBorder]: errorText })}
+          {...input}
+          type="text"
+        />
         {errorText && <div className={classes.errorText}>{errorText}</div>}
       </div>
     )
