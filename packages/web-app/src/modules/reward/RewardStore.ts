@@ -195,9 +195,11 @@ export class RewardStore {
       rewardId: rewardId,
     }
 
+    this.isSelecting = true
+    
     try {
       await this.axios.post('select-reward', request)
-      this.isSelecting = true
+      
       runInAction(() => {
         this.selectedRewardId = rewardId
         console.log('set reward success')
