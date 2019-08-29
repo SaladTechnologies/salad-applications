@@ -103,23 +103,21 @@ export class RewardStore {
     return a
   }
 
-  @action
-  refreshRewards = async () => {
+  @action.bound
+  refreshRewards = flow(function*(this: RewardStore) {
     try {
       this.isLoading = true
-      const response = await this.axios.get<RewardsResource>('get-rewards')
-      runInAction(() => {
-        if (response.data.rewards == undefined) return
-        this.rewards = response.data.rewards.map(rewardFromResource).sort((a, b) => a.price - b.price)
-        // this.rewardDetails = new Map(this.rewards.map((x): [string, RewardDetails] => [x.id, new RewardDetails(x.id)]))
-        this.updateFilters()
-      })
+      const response = yield this.axios.get<RewardsResource>('get-rewards')
+      if (response.data.rewards == undefined) return
+      this.rewards = response.data.rewards.map(rewardFromResource).sort((a:Reward, b:Reward) => a.price - b.price)
+      // this.rewardDetails = new Map(this.rewards.map((x): [string, RewardDetails] => [x.id, new RewardDetails(x.id)]))
+      this.updateFilters()
     } catch (error) {
       console.error(error)
-    } finally{
+    } finally {
       this.isLoading = false
     }
-  }
+  })
 
   @action
   updateFilterText = (text?: string) => {
@@ -188,34 +186,33 @@ export class RewardStore {
     this.store.analytics.trackRewardView(reward.id, reward.name)
   }
 
-  @action
-  selectTargetReward = async (rewardId: string) => {
+  @action.bound
+  selectTargetReward = flow(function*(this: RewardStore, rewardId: string) {
     const request = {
       macAddress: this.store.native.machineId,
       rewardId: rewardId,
     }
 
     this.isSelecting = true
-    
+
     try {
-      await this.axios.post('select-reward', request)
-      
-      runInAction(() => {
-        this.selectedRewardId = rewardId
-        console.log('set reward success')
+      yield this.axios.post('select-reward', request)
 
-        let reward = this.getReward(rewardId)
+      this.selectedRewardId = rewardId
 
-        if (reward) this.store.analytics.trackSelectedReward(rewardId, reward.name)
+      console.log('set reward success')
 
-        this.store.routing.push('/')
-      })
+      let reward = this.getReward(rewardId)
+
+      if (reward) this.store.analytics.trackSelectedReward(rewardId, reward.name)
+
+      this.store.routing.push('/')
     } catch (error) {
       console.error(error)
     } finally {
       this.isSelecting = false
     }
-  }
+  })
 
   @action.bound
   redeemReward = flow(function*(this: RewardStore, rewardId: string, email: string) {
