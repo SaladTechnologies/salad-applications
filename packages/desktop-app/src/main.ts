@@ -219,14 +219,6 @@ const createMainWindow = () => {
   mainWindow.webContents.on('console-message', (_: Event, level: number, message: string, line: number) => {
     console.log(`console:${line}:${level}:${message}`)
   })
-
-  mainWindow.webContents.on('will-navigate', (e: Electron.Event, url: string) => {
-    console.log(`Will nav to ${url}`)
-    if (!url.startsWith('https://login.salad.io/authorize')) {
-      e.preventDefault()
-      shell.openExternal(url)
-    }
-  })
 }
 
 const checkForUpdates = () => {

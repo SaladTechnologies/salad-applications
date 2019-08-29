@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 // Components
 import { ErrorPage } from '../../../components/ErrorPage'
+import { ExternalLink } from '../../../components'
 
 interface Props {
   onCloseClicked?: () => void
@@ -31,20 +32,14 @@ export class AntiVirusErrorPage extends Component<Props> {
           the links below to whitelist Salad. More anti-virus guides coming soon!
         </div>
         <div style={{ paddingTop: '1rem' }}>
-          <a
-            href="https://salad.zendesk.com/hc/en-us/articles/360032211151-How-to-Whitelist-Salad-in-Norton-Antivirus"
-            target="_blank"
-          >
+          <ExternalLink path="https://salad.zendesk.com/hc/en-us/articles/360032211151-How-to-Whitelist-Salad-in-Norton-Antivirus">
             Norton Antivirus
-          </a>
+          </ExternalLink>
         </div>
         <div>
-          <a
-            href="https://salad.zendesk.com/hc/en-us/articles/360031870772-How-to-Whitelist-Salad-in-Malwarebytes"
-            target="_blank"
-          >
+          <ExternalLink path="https://salad.zendesk.com/hc/en-us/articles/360031870772-How-to-Whitelist-Salad-in-Malwarebytes">
             Malwarebytes
-          </a>
+          </ExternalLink>
         </div>
       </ErrorPage>
     )
