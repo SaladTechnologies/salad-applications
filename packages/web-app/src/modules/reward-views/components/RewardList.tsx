@@ -82,7 +82,7 @@ class _RewardList extends Component<Props> {
         <Scrollbar scrollBottom={30} scrollTop={32}>
           <div style={{ height: '2rem' }} />
           {isLoading && <div className={classes.notFoundTitle}>Loading Rewards</div>}
-          {rewards && rewards.length === 0 && <div className={classes.notFoundTitle}>No Rewards Found...</div>}
+          {rewards && !isLoading && rewards.length === 0 && <div className={classes.notFoundTitle}>No Rewards Found...</div>}
           {rewards &&
             rewards.map((r, _) => (
               <div key={r.id} className={classes.item}>
