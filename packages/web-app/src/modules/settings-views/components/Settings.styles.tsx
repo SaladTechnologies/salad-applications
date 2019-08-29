@@ -5,7 +5,9 @@ export const styles = (theme: SaladTheme) => ({
   menu: {
     flex: '0 0 294px', // equates to: 358px total width
     position: 'relative',
-    padding: '1.5rem 2rem'
+    padding: '1.5rem 2rem',
+    display: 'flex',
+    flexDirection: 'column',
   },
 
   menuItems: {
@@ -22,14 +24,14 @@ export const styles = (theme: SaladTheme) => ({
             cursor: 'pointer',
 
             '&:hover': {
-              color: theme.lightGreen
-            }
-          }
-        }
+              color: theme.lightGreen,
+            },
+          },
+        },
       },
     },
     '& hr': {
-      border: `solid 1px ${theme.lightGreen}`
+      border: `solid 1px ${theme.lightGreen}`,
     },
   },
 
@@ -60,11 +62,11 @@ export const styles = (theme: SaladTheme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    position: 'absolute',
-    bottom: '1.5rem',
-    left: '1.5rem',
+    marginTop: 'auto',
+    // position: 'absolute',
+    // bottom: '1.5rem',
+    // left: '1.5rem',
   },
-
   closeButton: {
     border: 'solid 3px ' + theme.lightGreen,
     color: theme.lightGreen,
@@ -82,6 +84,13 @@ export const styles = (theme: SaladTheme) => ({
       border: 'solid 3px ' + theme.darkGreen,
       color: theme.darkGreen,
       transition: 'all 200ms ease',
-    }
-  }
+    },
+  },
+  versionContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    color: theme.mediumGreen,
+    paddingTop: '1rem',
+  },
 })
