@@ -10,6 +10,7 @@
     "oneClick": "false",
     "license": "LICENSE.md",
     "runAfterFinish": true,
+    "perMachine": false,
     "allowToChangeInstallationDirectory": "true"
   },
   "files": ["assets/*", "dist/*"],
@@ -17,7 +18,7 @@
     "icon": "assets/favicon.ico",
     "target": ["nsis"],
     "sign": "./sign.js",
-    "extraFiles": ["assets/*", "dist/ethminer/*"],
+    "extraFiles": ["assets/*", "dist/ethminer"],
     "publish": {
       "provider": "s3",
       "bucket": "salad-app-releases"
