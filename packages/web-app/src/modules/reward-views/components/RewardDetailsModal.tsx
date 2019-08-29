@@ -71,6 +71,7 @@ interface Props extends WithStyles<typeof styles> {
   onClickClose?: () => void
   onRedeem?: (rewardId: string) => void
   onSelect?: (rewardId: string) => void
+  isSelecting?: boolean
 }
 
 class _RewardDetailsModal extends Component<Props> {
@@ -117,7 +118,7 @@ class _RewardDetailsModal extends Component<Props> {
   }
 
   render() {
-    const { reward, classes } = this.props
+    const { reward, classes, isSelecting } = this.props
 
     return (
       <ModalPage onCloseClicked={this.handleClose}>
@@ -144,7 +145,7 @@ class _RewardDetailsModal extends Component<Props> {
                   REDEEM
                 </Button>
               )}
-              <Button dark={reward && reward.redeemable} onClick={this.handleSelect}>
+              <Button dark={reward && reward.redeemable} loading={isSelecting} onClick={this.handleSelect}>
                 SELECT AS REWARD
               </Button>
             </div>
