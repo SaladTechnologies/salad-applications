@@ -61,6 +61,7 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   rewards?: Reward[]
   onRewardClick?: (reward: Reward) => void
+  isLoading?: boolean
 }
 
 class _RewardList extends Component<Props> {
@@ -73,14 +74,15 @@ class _RewardList extends Component<Props> {
   }
 
   render() {
-    const { rewards, classes } = this.props
+    const { rewards, classes, isLoading } = this.props
 
     return (
       <div className={classnames(classes.container)}>
         <Fade className={classes.topFade} direction="down" />
         <Scrollbar scrollBottom={30} scrollTop={32}>
           <div style={{ height: '2rem' }} />
-          {rewards && rewards.length === 0 && <div className={classes.notFoundTitle}>No Rewards Found...</div>}
+          {isLoading && <div className={classes.notFoundTitle}>Loading Rewards</div>}
+          {rewards && !isLoading && rewards.length === 0 && <div className={classes.notFoundTitle}>No Rewards Found...</div>}
           {rewards &&
             rewards.map((r, _) => (
               <div key={r.id} className={classes.item}>
