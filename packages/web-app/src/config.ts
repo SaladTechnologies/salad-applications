@@ -48,6 +48,7 @@ const optionalString = (name: string): string | undefined => {
 
 class Config {
   public readonly appVersion: string = requiredString('REACT_APP_VERSION')
+  public readonly appBuild: string = requiredString('REACT_APP_BUILD')
 
   public readonly dataRefreshRate: number = numberOrDefault('REACT_APP_APP_REFRESH_RATE', convertMinutes(5))
 

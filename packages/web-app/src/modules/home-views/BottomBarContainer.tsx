@@ -22,7 +22,7 @@ const mapStoreToProps = () => ({
   onDiscordClick: handleDiscord,
   onSupportClick: handleSupport,
   onVersionClick: handleVersion,
-  version: Config.appVersion,
+  version: Config.appBuild,
 })
 
 export const BottomBarContainer = connect(
