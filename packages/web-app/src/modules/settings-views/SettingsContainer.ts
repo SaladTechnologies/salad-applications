@@ -1,6 +1,7 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
 import { Settings } from './components'
+import { Config } from '../../config'
 
 const handleBug = () => {
   openLink('https://salad.zendesk.com/hc/en-us/requests/new')
@@ -17,8 +18,8 @@ const handleSettingsMenuClick = (store: RootStore, url: string) => {
 const mapStoreToProps = (store: RootStore) => {
   type LinkList = { url: string; text: string }
   const menuItems: LinkList[] = [
-    { url: '/settings/windows-settings', text: 'Windows Settings' },
     { url: '/settings/referrals', text: 'Referrals' },
+    { url: '/settings/windows-settings', text: 'Windows Settings' },
   ]
 
   return {
@@ -27,6 +28,8 @@ const mapStoreToProps = (store: RootStore) => {
     onListItemClick: (url: string) => handleSettingsMenuClick(store, url),
     onSendBug: handleBug,
     menuItems: menuItems,
+    appVersion: 'Alpha', //TODO: 0.3.0 get the version of the electron app
+    appBuild: Config.appBuild,
   }
 }
 
