@@ -59,6 +59,9 @@ export class NativeStore {
   @observable
   public autoLaunch: boolean = true
 
+  @observable
+  public heartbeatStatus: string = 'Stopped'
+
   @computed
   get isNative(): boolean {
     return window.salad && window.salad.platform === 'electron'
@@ -328,6 +331,14 @@ export class NativeStore {
   @action.bound
   sendRunningStatus = flow(function*(this: NativeStore, runStatus: boolean) {
     console.log('Status MachineId: ' + this.machineId)
+
+    if (runStatus) {
+      
+      this.heartbeatStatus = 'Initializing'
+
+
+      this.heartbeatStatus = 'Chopping'
+    }
 
     /*
       Web App - Start Mining
