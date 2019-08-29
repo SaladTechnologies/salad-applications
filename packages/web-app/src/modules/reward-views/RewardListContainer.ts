@@ -4,6 +4,7 @@ import { RootStore } from '../../Store'
 
 const mapStoreToProps = (store: RootStore) => ({
   rewards: store.rewards.filteredRewards,
+  isLoading: store.rewards.isLoading,
   onRewardClick: store.rewards.viewReward,
 })
 

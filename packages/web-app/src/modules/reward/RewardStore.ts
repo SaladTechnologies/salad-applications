@@ -27,6 +27,9 @@ export class RewardStore {
   @observable
   public isRedeeming: boolean = false
 
+  @observable
+  public isLoading: boolean = false
+
   @computed get selectedReward(): Reward | undefined {
     return this.getReward(this.selectedRewardId)
   }
@@ -100,6 +103,7 @@ export class RewardStore {
   @action
   refreshRewards = async () => {
     try {
+      this.isLoading = true
       const response = await this.axios.get<RewardsResource>('get-rewards')
       runInAction(() => {
         if (response.data.rewards == undefined) return
@@ -109,6 +113,8 @@ export class RewardStore {
       })
     } catch (error) {
       console.error(error)
+    } finally{
+      this.isLoading = false
     }
   }
 
