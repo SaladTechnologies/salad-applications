@@ -41,6 +41,7 @@ export class BalanceStore {
       const delta = balance.data.currentBalance - this.currentBalance
       const maxDelta = Config.maxBalanceDelta
       if( delta > maxDelta || delta < 0 ){
+        this.interpolRate = 0
         this.currentBalance = balance.data.currentBalance
       }else{
       this.interpolRate = delta/Config.dataRefreshRate
