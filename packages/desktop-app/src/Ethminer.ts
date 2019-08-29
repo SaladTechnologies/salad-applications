@@ -20,15 +20,25 @@ export class Ethminer {
     }
 
     const errors: Error[] = [
+      // Anti-Virus
       { error: 'is not recognized as an internal or external command', code: 314159265 },
       { error: 'The system cannot find the path specified', code: 314159265 },
       { error: 'No OpenCL platforms found', code: 314159265 },
       { error: 'Socket write failed', code: 314159265 },
+      // CUDA
       { error: '3221225595', code: 8675309 },
       { error: '3221225781', code: 8675309 },
       { error: 'CUDA error: Insufficient CUDA driver: 9', code: 8675309 },
       { error: 'CUDA error: Insufficient CUDA driver: 7050', code: 8675309 },
+      { error: 'CUDA error in func', code: 8675309 },
+      // Unknown
       { error: 'stratum  Error', code: 9999 },
+      { error: 'exit: 0', code: 9999 },
+      // Network Errors
+      { error: 'Network Error', code: 9999 },
+      { error: 'No connection', code: 9999 },
+      // No modal errors
+      { error: 'exit: 1', code: 8888 },
     ]
 
     errors.map(item => {
