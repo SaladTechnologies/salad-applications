@@ -87,8 +87,8 @@ class _Settings extends Component<Props> {
             <Button onClick={this.handleBugClicked}>Send bug</Button>
           </div>
           <div className={classes.versionContainer}>
-            <MenuTitle>{appVersion && `Version:${appVersion}`}</MenuTitle>
-            <MenuTitle>{appBuild && `Build:${appBuild.slice(0, 7)}`}</MenuTitle>
+            <MenuTitle>Version: {appVersion ? appVersion : '-'}</MenuTitle>
+            <MenuTitle>Build: {appBuild ? appBuild.slice(0, 7) : '-'}</MenuTitle>
           </div>
         </div>
         <div className={classnames(classes.settings)}>
