@@ -70,8 +70,11 @@ class _EditUsername extends Component<Props, State> {
     if (v.username === undefined || v.username.length === 0) {
       errors.username = 'Required!'
     }
-    if (v.username === undefined || v.username.length > 32) {
+    if (v.username && v.username.length > 32) {
       errors.username = `Username can't be more than 32 characters!`
+    }
+    if (v.username && v.username.includes(' ')) {
+      errors.username = `Username can't contain spaces!`
     }
 
     return errors
