@@ -7,10 +7,9 @@
   "nsis": {
     "installerIcon": "assets/favicon.ico",
     "uninstallerIcon": "assets/favicon.ico",
-    "oneClick": "false",
+    "oneClick": false,
     "license": "LICENSE.md",
     "runAfterFinish": true,
-    "perMachine": false,
     "allowToChangeInstallationDirectory": "true"
   },
   "files": ["assets/*", "dist/*"],
