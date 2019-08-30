@@ -25,6 +25,7 @@ import { ComingSoonContainer } from '../coming-soon-views'
 import { BatterySaverContainer } from '../battery-saver-views'
 import { DesktopNotificationsContainer } from '../desktop-notifications-views'
 import { ReferralSettingsContainer } from '../../referral-views'
+import { ProfileSettingsPageContainer } from '../../profile-views/ProfileSettingsPageContainer';
 
 export class MenuItem {
   constructor(public readonly url: string, public readonly text: string) {}
@@ -98,6 +99,7 @@ class _Settings extends Component<Props> {
           <Route path="/settings/windows-settings" component={WindowsSettingsContainer} />
           <Route path="/settings/coming-soon" component={ComingSoonContainer} />
           <Route path="/settings/referrals" component={ReferralSettingsContainer} />
+          <Route path="/settings/profile" component={ProfileSettingsPageContainer} />
 
           {/* <Button onClick={this.handleCloseClicked}>Close</Button> */}
           <div onClick={this.handleCloseClicked}>
