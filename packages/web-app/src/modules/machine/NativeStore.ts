@@ -14,6 +14,8 @@ const close = 'close-window'
 const start = 'start-salad'
 const stop = 'stop-salad'
 const sendLog = 'send-log'
+const getDesktopVersion = 'get-desktop-version'
+const setDesktopVersion = 'set-desktop-version'
 const enableAutoLaunch = 'enable-auto-launch'
 const disableAutoLaunch = 'disable-auto-launch'
 
@@ -33,6 +35,9 @@ declare global {
 
 export class NativeStore {
   private callbacks = new Map<string, Function>()
+
+  @observable
+  public desktopVersion: string = ''
 
   @observable
   public isOnline: boolean = true
@@ -105,6 +110,10 @@ export class NativeStore {
 
       this.checkAutoLaunch()
 
+      this.on(setDesktopVersion, (version: string) => {
+        this.setDesktopVersion(version)
+      })
+
       this.on(runStatus, (status: boolean) => {
         console.log('Received run status: ' + status)
         this.setRunStatus(status)
@@ -139,6 +148,8 @@ export class NativeStore {
             break
         }
       })
+
+      this.send(getDesktopVersion)
     }
   }
 
@@ -185,6 +196,12 @@ export class NativeStore {
   @action
   setRunStatus = (status: boolean) => {
     this.isRunning = status
+  }
+
+  @action
+  setDesktopVersion = (version: string) => {
+    console.log(`Setting desktop version: ${version}`)
+    this.desktopVersion = version
   }
 
   @action
@@ -266,7 +283,7 @@ export class NativeStore {
 
     try {
       console.log('Registering machine with salad')
-      let res: any = yield this.axios.post(`machines/${this.machineId}/data`, this.machineInfo)      
+      let res: any = yield this.axios.post(`machines/${this.machineId}/data`, this.machineInfo)
       console.log(res)
 
       this.validGPUs = res.data.validGpus
