@@ -28,7 +28,7 @@ const mapStoreToProps = (store: RootStore) => {
     onListItemClick: (url: string) => handleSettingsMenuClick(store, url),
     onSendBug: handleBug,
     menuItems: menuItems,
-    appVersion: 'Alpha', //TODO: 0.3.0 get the version of the electron app
+    appVersion: store.native.desktopVersion,
     appBuild: Config.appBuild,
   }
 }
