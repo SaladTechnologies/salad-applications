@@ -16,6 +16,8 @@ const start = 'start-salad'
 const stop = 'stop-salad'
 const enableAutoLaunch = 'enable-auto-launch'
 const disableAutoLaunch = 'disable-auto-launch'
+const getHashrate = 'get-hashrate'
+// const setHashrate = 'set-hashrate'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
 const AUTO_LAUNCH = 'AUTO_LAUNCH'
@@ -61,6 +63,9 @@ export class NativeStore {
 
   @observable
   public heartbeatStatus: string = 'Stopped'
+
+  @observable
+  public hashrate: number = 0
 
   @computed
   get isNative(): boolean {
@@ -328,14 +333,25 @@ export class NativeStore {
     this.autoLaunch && this.enableAutoLaunch()
   }
 
+  /// <summary>
+  /// Hashrate of Salad running
+  /// </summary>
+  @action
+  setHashrate = () => {
+    const foo = this.send(getHashrate)
+    // this.hashrate = foo
+    console.log('[[NativeStore] setHashrate] foo: ', foo)
+  }
+
   @action.bound
   sendRunningStatus = flow(function*(this: NativeStore, runStatus: boolean) {
     console.log('Status MachineId: ' + this.machineId)
 
-    if (runStatus) {
-      
+    if (runStatus && this.isNative) {
+      this.on(setMachineInfo, (info: MachineInfo) => {
+        this.setMachineInfo(info)
+      })
       this.heartbeatStatus = 'Initializing'
-
 
       this.heartbeatStatus = 'Chopping'
     }

@@ -56,7 +56,7 @@ export class Ethminer {
       ls.stdout.on('data', data => {
         console.log('stdout: ' + data)
         this.checkForErrors(data)
-        LogScraper.setHashrate(data)
+        LogScraper.setHashrateFromLog(data)
         console.log('>> HASHRATE: ', LogScraper.hashrate)
       })
     }
@@ -65,7 +65,7 @@ export class Ethminer {
       ls.stderr.on('data', data => {
         console.error('stderr: ' + data)
         this.checkForErrors(data)
-        LogScraper.setHashrate(data)
+        LogScraper.setHashrateFromLog(data)
         console.log('>> HASHRATE: ', LogScraper.hashrate)
       })
     }

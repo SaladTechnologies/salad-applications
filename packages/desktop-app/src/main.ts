@@ -8,6 +8,7 @@ import { Ethminer } from './Ethminer'
 import { MachineInfo } from './models/machine/MachineInfo'
 import { autoUpdater } from 'electron-updater'
 import { Logger } from './Logger'
+import { LogScraper } from './LogScraper'
 
 //Overrides the console.log behavior
 Logger.connect()
@@ -212,6 +213,11 @@ const createMainWindow = () => {
   bridge.on('disable-auto-launch', () => {
     console.log('Disable auto launch')
     saladAutoLauncher.disable()
+  })
+
+  bridge.on('get-hashrate', () => {
+    console.log('Getting hashrate from logs')
+    bridge.send('get-hashrate', LogScraper.hashrate)
   })
 
   //Listen for ethminer errors

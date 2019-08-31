@@ -3,7 +3,7 @@ export module LogScraper {
 
   export let hashrate: number = 0
 
-  export const setHashrate = (entry: string) => {
+  export const setHashrateFromLog = (entry: string) => {
     const split = entry.toString().split(' ')
     const index = split.findIndex(i => {
       return i === hashes.find(hash => i === hash)
