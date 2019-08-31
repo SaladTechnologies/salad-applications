@@ -7,7 +7,7 @@ import { getStore } from '../../../Store'
 import { styles } from './Settings.styles'
 
 // UI
-import { LinkListUnstyled } from '../../../components'
+import { LinkListUnstyled, MenuTitle } from '../../../components'
 import { Button } from '../../../components'
 
 // Packages
@@ -36,6 +36,8 @@ interface Props extends WithStyles<typeof styles> {
   onSendBug?: () => void
   onListItemClick?: (url: string) => any
   menuItems?: MenuItem[]
+  appVersion?: string
+  appBuild?: string
 }
 
 class _Settings extends Component<Props> {
@@ -75,7 +77,7 @@ class _Settings extends Component<Props> {
   }
 
   render() {
-    const { classes, menuItems } = this.props
+    const { appVersion, appBuild, classes, menuItems } = this.props
 
     return (
       <Overlay>
@@ -83,6 +85,10 @@ class _Settings extends Component<Props> {
           <div>{menuItems && <LinkListUnstyled list={menuItems} onListItemClick={this.handleListItemClick} />}</div>
           <div className={classes.buttonContainer}>
             <Button onClick={this.handleBugClicked}>Send bug</Button>
+          </div>
+          <div className={classes.versionContainer}>
+            <MenuTitle>Version: {appVersion ? appVersion : '-'}</MenuTitle>
+            <MenuTitle>Build: {appBuild ? appBuild.slice(0, 7) : '-'}</MenuTitle>
           </div>
         </div>
         <div className={classnames(classes.settings)}>

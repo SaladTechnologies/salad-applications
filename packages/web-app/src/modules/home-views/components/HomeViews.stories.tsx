@@ -8,14 +8,7 @@ import { NotificationBanner } from './NotificationBanner'
 
 storiesOf('Modules/Home', module)
   .add('Bottom Bar', () => {
-    return (
-      <BottomBar
-        version={'1.2.3'}
-        onVersionClick={action('version')}
-        onDiscordClick={action('discord')}
-        onSupportClick={action('support')}
-      />
-    )
+    return <BottomBar onDiscordClick={action('discord')} onSupportClick={action('support')} />
   })
   .add('Title Bar', () => {
     return (

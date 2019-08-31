@@ -48,6 +48,7 @@ const optionalString = (name: string): string | undefined => {
 
 class Config {
   public readonly appVersion: string = requiredString('REACT_APP_VERSION')
+  public readonly appBuild: string = requiredString('REACT_APP_BUILD')
 
   public readonly dataRefreshRate: number = numberOrDefault('REACT_APP_APP_REFRESH_RATE', convertMinutes(5))
 
@@ -76,6 +77,7 @@ class Config {
   public readonly supportUrl: string = requiredString('REACT_APP_SUPPORT_URL')
   public readonly discordUrl: string = requiredString('REACT_APP_DISCORD_URL')
   public readonly releaseNotesUrl: string = requiredString('REACT_APP_RELEASES_URL')
+  public readonly maxBalanceDelta: number = numberOrDefault('REACT_APP_MAX_BALANCE_DELTA', 0.5)
 }
 
 const instance = new Config()

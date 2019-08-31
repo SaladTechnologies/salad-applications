@@ -17,6 +17,8 @@ const AutoLaunch = require('auto-launch')
 
 const runStatus = 'run-status'
 const runError = 'run-error'
+const getDesktopVersion = 'get-desktop-version'
+const setDesktopVersion = 'set-desktop-version'
 
 let mainWindow: BrowserWindow
 let onlineStatusWindow: BrowserWindow
@@ -42,7 +44,7 @@ const getMachineInfo = () =>
         cpu: data.cpu,
         graphics: {
           graphicsControllerData: data.graphics.controllers,
-          graphicsDisplayData: data.graphics.displays
+          graphicsDisplayData: data.graphics.displays,
         },
         net: data.net,
         memLayout: data.memLayout,
@@ -120,6 +122,7 @@ const createMainWindow = () => {
     frame: false,
     show: false,
     webPreferences: {
+      webSecurity: false,
       nodeIntegration: false,
       contextIsolation: false,
       preload: path.resolve(__dirname, './preload.js'),
@@ -203,6 +206,10 @@ const createMainWindow = () => {
     console.log('Stopping salad')
     ethminer.stop()
     bridge.send(runStatus, false)
+  })
+
+  bridge.on(getDesktopVersion, () => {
+    bridge.send(setDesktopVersion, app.getVersion())
   })
 
   bridge.on('enable-auto-launch', () => {

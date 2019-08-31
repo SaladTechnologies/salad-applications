@@ -10,10 +10,6 @@ const handleSupport = () => {
   openLink(Config.supportUrl)
 }
 
-const handleVersion = () => {
-  openLink(Config.releaseNotesUrl)
-}
-
 const openLink = (url: string) => {
   window.open(url, '_blank')
 }
@@ -21,8 +17,6 @@ const openLink = (url: string) => {
 const mapStoreToProps = () => ({
   onDiscordClick: handleDiscord,
   onSupportClick: handleSupport,
-  onVersionClick: handleVersion,
-  version: Config.appVersion,
 })
 
 export const BottomBarContainer = connect(
