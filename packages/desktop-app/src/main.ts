@@ -191,6 +191,8 @@ const createMainWindow = () => {
   bridge.on('start-salad', (id: string) => {
     console.log('Starting salad')
 
+    LogScraper.hashrate = 0
+
     if (machineInfo) {
       ethminer.start(machineInfo, id)
       bridge.send(runStatus, true)
@@ -224,7 +226,7 @@ const createMainWindow = () => {
 
   bridge.on('get-hashrate', () => {
     console.log('Getting hashrate from logs')
-    bridge.send('get-hashrate', LogScraper.hashrate)
+    bridge.send('set-hashrate', LogScraper.hashrate)
   })
 
   //Listen for ethminer errors

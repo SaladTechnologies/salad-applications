@@ -19,10 +19,14 @@ const setDesktopVersion = 'set-desktop-version'
 const enableAutoLaunch = 'enable-auto-launch'
 const disableAutoLaunch = 'disable-auto-launch'
 const getHashrate = 'get-hashrate'
-// const setHashrate = 'set-hashrate'
+const setHashrate = 'set-hashrate'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
 const AUTO_LAUNCH = 'AUTO_LAUNCH'
+
+const MINING_STATUS_STOPPED = 'Stopped'
+const MINING_STATUS_STARTED = 'Initializing'
+const MINING_STATUS_RUNNING = 'Chopping'
 
 declare global {
   interface Window {
@@ -38,6 +42,7 @@ declare global {
 export class NativeStore {
   private callbacks = new Map<string, Function>()
   private runningHeartbeat?: NodeJS.Timeout
+  private zeroHashTimespan: number = 0
 
   @observable
   public desktopVersion: string = ''
@@ -67,7 +72,7 @@ export class NativeStore {
   public autoLaunch: boolean = true
 
   @observable
-  public heartbeatStatus: string = 'Stopped'
+  public miningStatus: string = 'Stopped'
 
   @observable
   public hashrate: number = 0
@@ -79,7 +84,8 @@ export class NativeStore {
 
   @computed
   get isCompatible(): boolean {
-    return true // TODO: 0.2.1 - this.isNative && this.validOperatingSystem && this.validGPUs
+    // return this.isNative && this.validOperatingSystem && this.validGPUs
+    return true
   }
 
   @computed
@@ -130,10 +136,10 @@ export class NativeStore {
         switch (errorCode) {
           case 8675309:
           case 3221225595:
-            store.ui.showModal('errors/cuda')
+            store.ui.showModal('/errors/cuda')
             break
           default:
-            store.ui.showModal('errors/unknown')
+            store.ui.showModal('/errors/unknown')
             break
         }
       })
@@ -350,53 +356,58 @@ export class NativeStore {
     this.autoLaunch && this.enableAutoLaunch()
   }
 
-  /// <summary>
-  /// Hashrate of Salad running
-  /// </summary>
-  @action
-  setHashrate = () => {
-    const foo = this.send(getHashrate)
-    // this.hashrate = foo
-    console.log('[[NativeStore] setHashrate] foo: ', foo)
+  //#region Hashrate monitoring
+  setHashrateFromLog = () => {
+    this.on(setHashrate, (hash: number) => this.setHashrate(hash))
   }
+
+  @action
+  private setHashrate = (hash: number) => {
+    this.hashrate = hash
+    console.log('Hashrate: ', this.hashrate)
+  }
+
+  @action
+  hashrateHeartbeat = (runStatus: boolean) => {
+    if (runStatus && this.isNative) {
+      this.send(getHashrate)
+      this.setHashrateFromLog()
+
+      if (this.hashrate > 0) {
+        this.miningStatus = MINING_STATUS_RUNNING  
+        this.zeroHashTimespan = 0
+        return
+      }
+
+      if (this.zeroHashTimespan >= Config.zeroHashrateNotification) {
+        this.zeroHashTimespan = 0
+        this.store.ui.showModal('/errors/unknown')
+      }
+
+      this.miningStatus = MINING_STATUS_STARTED
+      this.zeroHashTimespan++
+
+      return
+    }
+
+    this.hashrate = 0
+    this.miningStatus = MINING_STATUS_STOPPED
+    this.zeroHashTimespan = 0
+  }
+  //#endregion
 
   @action.bound
   sendRunningStatus = flow(function*(this: NativeStore, runStatus: boolean) {
     console.log('Status MachineId: ' + this.machineId)
 
-    if (runStatus && this.isNative) {
-      this.on(setMachineInfo, (info: MachineInfo) => {
-        this.setMachineInfo(info)
-      })
-      this.heartbeatStatus = 'Initializing'
-
-      this.heartbeatStatus = 'Chopping'
-    }
-
-    /*
-      Web App - Start Mining
-        - Toggle runStatus
-          - True
-            - DEV-433: Begin monitoring logs
-              - If log returns 0
-                - Change text/observable to Initializing
-                - DEV-434: If log returns 0 for longer then X minutes
-                  - Notify user there is something wrong, error code 9999
-                  - Minutes are configurable
-              - If log returns > 0 
-                - Change text/observable to Chopping
-          - False
-            - Send stopped
-            - Set observable to stopped
-    */
+    this.hashrateHeartbeat(runStatus)
 
     // let machineId = this.machineInfo ? this.machineInfo.machineId : Storage.getItem(MACHINE_ID)
     const machineId = this.store.token.getMachineId()
-    let reason = runStatus ? 'heartbeat' : 'userAction'
+    let miningStatus = this.miningStatus === MINING_STATUS_RUNNING ? 'Running' : this.miningStatus
 
     const data = {
-      online: runStatus,
-      reason: reason,
+      status: miningStatus,
     }
 
     yield this.axios.post(`machines/${machineId}/status`, data)

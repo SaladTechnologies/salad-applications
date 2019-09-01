@@ -54,6 +54,7 @@ class Config {
 
   public readonly rewardsRefreshRate: number = numberOrDefault('REACT_APP_REWARD_REFRESH_RATE', convertMinutes(5))
   public readonly statusHeartbeatRate: number = numberOrDefault('REACT_APP_STATUS_HEARTBEAT_REFRESH_RATE', convertMinutes(1))
+  public readonly zeroHashrateNotification: number = numberOrDefault('REACT_APP_ZERO_HASHRATE_NOTIFICATION', 5)
 
   public readonly balanceEstimateRate: number = numberOrDefault('REACT_APP_BALANCE_ESTIMATE_RATE', convertSeconds(1))
 

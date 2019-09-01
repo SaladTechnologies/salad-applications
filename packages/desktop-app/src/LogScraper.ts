@@ -4,15 +4,20 @@ export module LogScraper {
   export let hashrate: number = 0
 
   export const setHashrateFromLog = (entry: string) => {
-    const split = entry.toString().split(' ')
-    const index = split.findIndex(i => {
-      return i === hashes.find(hash => i === hash)
-    })
-    
-    hashrate = Number(split[index - 1])
+    //  The ' m ' I am searching for I assume stands for "mining" and is the only line
+    //  we are interested in to set the hashrate
+    if (entry.includes(' m ')) {
+      const split = entry.toString().split(' ')
+      const index = split.findIndex(i => {
+        return i === hashes.find(hash => i === hash)
+      })
+
+      hashrate = Number(split[index - 1])
+    }
   }
 }
 
+//#region Sample logs
 /*
 -- log_37.log - 0.2.0
 [2019-08-26 15:28:28.929] [error] stderr:  i 15:28:28 cuda-0   Solution: 0xe53452a54900479a
@@ -59,3 +64,4 @@ export module LogScraper {
 
 [2019-08-28 23:37:45.008] [error] stderr:  m 23:37:45 <unknown> 0:09 A2 19.76 Mh - cu0 19.76
 */
+//#endregion
