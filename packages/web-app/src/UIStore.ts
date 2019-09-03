@@ -15,7 +15,7 @@ export class UIStore {
   }
 
   showProfilePage = () => {
-    this.showModal('/profile')
+    this.showModal('/settings/profile')
     this.store.analytics.track('Viewed Profile')
   }
 
