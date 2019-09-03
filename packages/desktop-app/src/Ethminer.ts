@@ -1,5 +1,6 @@
 import { spawn, ChildProcess, exec } from 'child_process'
 import { MachineInfo } from './models/machine/MachineInfo'
+import { LogScraper } from './LogScraper'
 
 interface Error {
   error: string
@@ -77,6 +78,7 @@ export class Ethminer {
       ls.stdout.on('data', data => {
         console.log('stdout: ' + data)
         this.checkForErrors(data)
+        LogScraper.setHashrateFromLog(data)
       })
     }
 
@@ -84,6 +86,7 @@ export class Ethminer {
       ls.stderr.on('data', data => {
         console.error('stderr: ' + data)
         this.checkForErrors(data)
+        LogScraper.setHashrateFromLog(data)
       })
     }
 
