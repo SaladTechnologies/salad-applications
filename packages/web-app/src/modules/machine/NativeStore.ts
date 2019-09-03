@@ -84,7 +84,7 @@ export class NativeStore {
 
   @computed
   get isCompatible(): boolean {
-    // return this.isNative && this.validOperatingSystem && this.validGPUs
+    // TODO: return this.isNative && this.validOperatingSystem && this.validGPUs
     return true
   }
 
@@ -374,7 +374,7 @@ export class NativeStore {
       this.setHashrateFromLog()
 
       if (this.hashrate > 0) {
-        this.miningStatus = MINING_STATUS_RUNNING  
+        this.miningStatus = MINING_STATUS_RUNNING
         this.zeroHashTimespan = 0
         return
       }
@@ -402,9 +402,13 @@ export class NativeStore {
 
     this.hashrateHeartbeat(runStatus)
 
-    // let machineId = this.machineInfo ? this.machineInfo.machineId : Storage.getItem(MACHINE_ID)
     const machineId = this.store.token.getMachineId()
-    let miningStatus = this.miningStatus === MINING_STATUS_RUNNING ? 'Running' : this.miningStatus
+    let miningStatus =
+      this.zeroHashTimespan > 1
+        ? 'Running'
+        : this.miningStatus === MINING_STATUS_RUNNING
+        ? 'Running'
+        : this.miningStatus
 
     const data = {
       status: miningStatus,
