@@ -199,6 +199,23 @@ export class ProfileStore {
     }
   })
 
+  @action.bound
+  updateUsername = flow(function*(this: ProfileStore, username: string) {
+    if (this.currentProfile === undefined) return
+
+    this.isUpdating = true
+
+    try {
+      let patch = yield this.axios.patch('profile', {username: username})
+      let profile = patch.data
+
+      this.currentProfile = profile
+    } finally {
+      this.isUpdating = false
+      this.store.routing.replace('/')
+    }
+  })
+
   sleep = (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms))
   }

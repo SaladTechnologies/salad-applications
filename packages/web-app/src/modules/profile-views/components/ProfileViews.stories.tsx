@@ -7,6 +7,7 @@ import { ProfileMenuItem } from './ProfileMenuItem'
 import { ProfileMenuTooltip } from './ProfileMenuTooltip'
 import { SettingsModalPage } from './SettingsModalPage'
 import { UserStatsSummary } from './UserStatsSummary'
+import { EditUsername } from './EditUsername'
 
 const profile: Profile = {
   id: '1234',
@@ -36,4 +37,11 @@ storiesOf('Modules/Profile', module)
   })
   .add('User Stats', () => {
     return <UserStatsSummary lifetimeEarning={123} machineCount={5} />
+  })
+  .add('Edit Username', () => {
+    return (
+      <div style={{ backgroundColor: '#B2D530' }}>
+        <EditUsername profile={profile} />
+      </div>
+    )
   })
