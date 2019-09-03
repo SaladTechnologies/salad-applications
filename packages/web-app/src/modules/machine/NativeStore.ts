@@ -1,6 +1,7 @@
 import { action, observable, computed, runInAction, flow } from 'mobx'
 import { RootStore } from '../../Store'
 import * as Storage from '../../Storage'
+import { Config } from '../../config'
 import { MachineInfo } from './models'
 import { AxiosInstance } from 'axios'
 
@@ -18,9 +19,15 @@ const getDesktopVersion = 'get-desktop-version'
 const setDesktopVersion = 'set-desktop-version'
 const enableAutoLaunch = 'enable-auto-launch'
 const disableAutoLaunch = 'disable-auto-launch'
+const getHashrate = 'get-hashrate'
+const setHashrate = 'set-hashrate'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
 const AUTO_LAUNCH = 'AUTO_LAUNCH'
+
+const MINING_STATUS_STOPPED = 'Stopped'
+const MINING_STATUS_STARTED = 'Initializing'
+const MINING_STATUS_RUNNING = 'Chopping'
 
 declare global {
   interface Window {
@@ -35,6 +42,8 @@ declare global {
 
 export class NativeStore {
   private callbacks = new Map<string, Function>()
+  private runningHeartbeat?: NodeJS.Timeout
+  private zeroHashTimespan: number = 0
 
   @observable
   public desktopVersion: string = ''
@@ -63,6 +72,12 @@ export class NativeStore {
   @observable
   public autoLaunch: boolean = true
 
+  @observable
+  public miningStatus: string = 'Stopped'
+
+  @observable
+  public hashrate: number = 0
+
   @computed
   get isNative(): boolean {
     return window.salad && window.salad.platform === 'electron'
@@ -80,7 +95,8 @@ export class NativeStore {
 
   @computed
   get isCompatible(): boolean {
-    return true // TODO: 0.2.1 - this.isNative && this.validOperatingSystem && this.validGPUs
+    // TODO: return this.isNative && this.validOperatingSystem && this.validGPUs
+    return true
   }
 
   @computed
@@ -196,6 +212,22 @@ export class NativeStore {
   @action
   setRunStatus = (status: boolean) => {
     this.isRunning = status
+
+    if (this.runningHeartbeat) {
+      clearInterval(this.runningHeartbeat)
+    }
+
+    if (status) {
+      //Send the initial heartbeat
+      this.sendRunningStatus(true)
+
+      //Schedule future heartbeats
+      this.runningHeartbeat = setInterval(() => {
+        this.sendRunningStatus(true)
+      }, Config.statusHeartbeatRate)
+    } else {
+      this.sendRunningStatus(false)
+    }
   }
 
   @action
@@ -348,6 +380,67 @@ export class NativeStore {
     this.autoLaunch = Storage.getOrSetDefault(AUTO_LAUNCH, this.autoLaunch.toString()) === 'true'
     this.autoLaunch && this.enableAutoLaunch()
   }
+
+  //#region Hashrate monitoring
+  setHashrateFromLog = () => {
+    this.on(setHashrate, (hash: number) => this.setHashrate(hash))
+  }
+
+  @action
+  private setHashrate = (hash: number) => {
+    this.hashrate = hash
+    console.log('Hashrate: ', this.hashrate)
+  }
+
+  @action
+  hashrateHeartbeat = (runStatus: boolean) => {
+    if (runStatus && this.isNative) {
+      this.send(getHashrate)
+      this.setHashrateFromLog()
+
+      if (this.hashrate > 0) {
+        this.miningStatus = MINING_STATUS_RUNNING
+        this.zeroHashTimespan = 0
+        return
+      }
+
+      if (this.zeroHashTimespan >= Config.zeroHashrateNotification) {
+        this.zeroHashTimespan = 0
+        this.store.ui.showModal('/errors/unknown')
+      }
+
+      this.miningStatus = MINING_STATUS_STARTED
+      this.zeroHashTimespan++
+
+      return
+    }
+
+    this.hashrate = 0
+    this.miningStatus = MINING_STATUS_STOPPED
+    this.zeroHashTimespan = 0
+  }
+  //#endregion
+
+  @action.bound
+  sendRunningStatus = flow(function*(this: NativeStore, runStatus: boolean) {
+    console.log('Status MachineId: ' + this.machineId)
+
+    this.hashrateHeartbeat(runStatus)
+
+    const machineId = this.store.token.getMachineId()
+    let miningStatus =
+      this.zeroHashTimespan > 1
+        ? 'Running'
+        : this.miningStatus === MINING_STATUS_RUNNING
+        ? 'Running'
+        : this.miningStatus
+
+    const data = {
+      status: miningStatus,
+    }
+
+    yield this.axios.post(`machines/${machineId}/status`, data)
+  })
 
   sleep = (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms))

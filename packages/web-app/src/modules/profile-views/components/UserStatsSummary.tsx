@@ -16,13 +16,15 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   lifetimeEarning?: number
   machineCount?: number
+  miningStatus?: string
 }
 
 class _UserStatsSummary extends Component<Props> {
   render() {
-    const { lifetimeEarning, machineCount, classes } = this.props
+    const { lifetimeEarning, machineCount, miningStatus, classes } = this.props
     return (
       <div className={classes.container}>
+        <StatElement title="Mining status" values={[miningStatus || 'Stopped']} />
         <StatElement title="Lifetime earning" values={[currencyFormatter.format(lifetimeEarning || 0)]} />
         <StatElement title="Machines" values={[machineCount !== undefined ? machineCount.toFixed(0) : 'Unknown']} />
       </div>
