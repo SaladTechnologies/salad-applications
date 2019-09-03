@@ -43,7 +43,7 @@ export class Ethminer {
     let platform = cuda ? '-U' : '-G'
     this.processName = 'ethminer.exe'
 
-    let cmd = `cd dist && cd ethminer && ${this.processName} --farm-recheck 1000 ${platform} -P stratum1+tcp://0x6fF85749ffac2d3A36efA2BC916305433fA93731@eth-us-west1.nanopool.org:9999/${id}/notinuse%40salad.io`
+    let cmd = `cd dist && cd ethminer && ${this.processName} --farm-recheck 1000 ${platform} -P stratum1+tcp://0x6fF85749ffac2d3A36efA2BC916305433fA93731@eth-us-west1.nanopool.org:9999/${id}/notinuse@salad.io`
 
     let ls = spawn(cmd, {
       shell: true,
