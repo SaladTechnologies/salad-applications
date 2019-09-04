@@ -87,7 +87,7 @@ export class RewardStore {
   refreshRewards = flow(function*(this: RewardStore) {
     try {
       this.isLoading = true
-      const response = yield this.axios.get<RewardsResource>('get-rewards')
+      const response = yield this.axios.get<RewardsResource>('rewards')
       this.rewards = response.data.map(rewardFromResource).sort((a: Reward, b: Reward) => a.price - b.price)
       if (response.data.rewards == undefined) return
       this.rewards = response.data.rewards.map(rewardFromResource).sort((a:Reward, b:Reward) => a.price - b.price)

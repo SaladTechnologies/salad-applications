@@ -27,7 +27,8 @@ const AUTO_LAUNCH = 'AUTO_LAUNCH'
 
 const MINING_STATUS_STOPPED = 'Stopped'
 const MINING_STATUS_STARTED = 'Initializing'
-const MINING_STATUS_RUNNING = 'Chopping'
+const MINING_STATUS_RUNNING = 'Running'
+const MINING_STATUS_EARNING = 'Earning'
 
 declare global {
   interface Window {
@@ -45,6 +46,7 @@ export class NativeStore {
   private runningHeartbeat?: NodeJS.Timeout
   private zeroHashTimespan: number = 0
 
+  //#region Observables
   @observable
   public desktopVersion: string = ''
 
@@ -77,6 +79,7 @@ export class NativeStore {
 
   @observable
   public hashrate: number = 0
+  //#endregion
 
   @computed
   get isNative(): boolean {
@@ -393,12 +396,20 @@ export class NativeStore {
   }
 
   @action
-  hashrateHeartbeat = (runStatus: boolean) => {
+  hashrateHeartbeat = (runStatus: boolean, machineStatus: string) => {
+    console.log('[[NativeStore] hashrateHeartbeat] machineStatus: ', machineStatus)
+
     if (runStatus && this.isNative) {
       this.send(getHashrate)
       this.setHashrateFromLog()
 
-      if (this.hashrate > 0) {
+      if (machineStatus === 'running' && this.hashrate > 0) {
+        this.miningStatus = MINING_STATUS_EARNING
+        this.zeroHashTimespan = 0
+        return
+      } 
+      
+      if ((machineStatus === 'stopped' && this.hashrate > 0) || this.hashrate > 0) {
         this.miningStatus = MINING_STATUS_RUNNING
         this.zeroHashTimespan = 0
         return
@@ -425,13 +436,19 @@ export class NativeStore {
   sendRunningStatus = flow(function*(this: NativeStore, runStatus: boolean) {
     console.log('Status MachineId: ' + this.machineId)
 
-    this.hashrateHeartbeat(runStatus)
-
     const machineId = this.store.token.getMachineId()
+    const machineStatus = yield this.axios.get(`machines/${machineId}/status`)
+
+    this.hashrateHeartbeat(runStatus, machineStatus.data.status)
+
+    // let miningStatus = this.miningStatus
+    // let miningStatus = machine.data.status === 'running' ? MINING_STATUS_EARNING : this.miningStatus
+
+    // let miningStatus = this.miningStatus
     let miningStatus =
       this.zeroHashTimespan > 1
         ? 'Running'
-        : this.miningStatus === MINING_STATUS_RUNNING
+        : this.miningStatus === MINING_STATUS_RUNNING || this.miningStatus === MINING_STATUS_EARNING
         ? 'Running'
         : this.miningStatus
 
