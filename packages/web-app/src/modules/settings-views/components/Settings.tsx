@@ -85,7 +85,7 @@ class _Settings extends Component<Props> {
         <div className={classnames(classes.menu, classes.menuItems)}>
           <div>{menuItems && <LinkListUnstyled list={menuItems} onListItemClick={this.handleListItemClick} />}</div>
           <div className={classes.buttonContainer}>
-            <Button onClick={this.handleBugClicked}>Send bug</Button>
+            <Button onClick={this.handleBugClicked}>Submit bug</Button>
           </div>
           <div className={classes.versionContainer}>
             <MenuTitle>Version: {appVersion ? appVersion : '-'}</MenuTitle>
