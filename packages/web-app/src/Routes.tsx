@@ -31,7 +31,8 @@ import {
 } from './modules/reward-views'
 import { AccountModalContainer } from './modules/profile-views'
 import { AnimatedSwitch } from './components/AnimatedSwitch'
-import { CompatibilityCheckPageContainer, CudaErrorContainer, UnknownErrorContainer } from './modules/machine-views'
+import { CompatibilityCheckPageContainer } from './modules/machine-views'
+import { CudaErrorContainer, UnknownErrorContainer, AntiVirusErrorContainer } from './modules/error-views'
 // Settings Menu
 import { SettingsContainer } from './modules/settings-views'
 // Account Menu
