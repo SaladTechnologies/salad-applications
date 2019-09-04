@@ -8,6 +8,8 @@ import { Ethminer } from './Ethminer'
 import { MachineInfo } from './models/machine/MachineInfo'
 import { autoUpdater } from 'electron-updater'
 import { Logger } from './Logger'
+import { exec } from 'child_process'
+import * as fs from 'fs'
 import { LogScraper } from './LogScraper'
 
 //Overrides the console.log behavior
@@ -131,11 +133,12 @@ const createMainWindow = () => {
 
   mainWindow.loadURL(Config.appUrl)
   mainWindow.on('close', () => app.quit())
+
   mainWindow.webContents.on('before-input-event', (_: any, input: Input) => {
     if (input.type !== 'keyUp' || input.key !== 'F12') return
-    console.log('Key' + input.key)
     mainWindow.webContents.toggleDevTools()
   })
+
   mainWindow.once('ready-to-show', () => {
     console.log('ready to show main window')
     //Pre-fetch the machine info
@@ -210,6 +213,11 @@ const createMainWindow = () => {
     bridge.send(runStatus, false)
   })
 
+  bridge.on('send-log', (id: string) => {
+    console.log('Sending logs')
+    Logger.sendLog(id)
+  })
+
   bridge.on(getDesktopVersion, () => {
     bridge.send(setDesktopVersion, app.getVersion())
   })
@@ -238,6 +246,10 @@ const createMainWindow = () => {
     console.log(`opening new window at ${url}`)
     e.preventDefault()
     shell.openExternal(url)
+  })
+
+  mainWindow.webContents.on('console-message', (_: Event, level: number, message: string, line: number) => {
+    console.log(`console:${line}:${level}:${message}`)
   })
 }
 
@@ -281,6 +293,8 @@ const onReady = () => {
   onlineStatusWindow = new BrowserWindow({ width: 0, height: 0, show: false })
   onlineStatusWindow.loadURL(`file://${__dirname}/online-status.html`)
 
+  getCudaData()
+
   ipcMain.on('online-status-changed', (_: any, status: boolean) => {
     onlineStatus = status
     console.log('Online status updated: ' + status)
@@ -293,6 +307,31 @@ const onReady = () => {
     } else {
       createOfflineWindow()
     }
+  })
+}
+
+const getCudaData = () => {
+  const System32Path = 'C:\\Windows\\System32'
+  const ProgramFilesPath = 'C:\\Program Files\\NVIDIA Corporation\\NVSMI'
+  let path: string | undefined = undefined
+
+  // TODO:  Possibly need to find where other sources of nvidia-smi.exe live
+  //        if it's not in the current directories.
+  if (fs.existsSync(`${System32Path}\\nvidia-smi.exe`)) {
+    path = System32Path
+  } else if (fs.existsSync(`${ProgramFilesPath}\\nvidia-smi.exe`)) {
+    path = ProgramFilesPath
+  } else {
+    return
+  }
+
+  // Useful nvidia-smi Queries: https://nvidia.custhelp.com/app/answers/detail/a_id/3751/~/useful-nvidia-smi-queries
+  const query_gpu = '--query-gpu=name,temperature.gpu,utilization.gpu,utilization.memory,driver_version'
+  const cmd = `nvidia-smi.exe ${query_gpu} --format=csv`
+
+  exec(cmd, { cwd: path }, (error, data) => {
+    console.log('cuda error: ', error)
+    console.log('cuda data: ', data)
   })
 }
 

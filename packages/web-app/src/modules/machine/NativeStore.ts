@@ -16,6 +16,7 @@ const start = 'start-salad'
 const stop = 'stop-salad'
 const getDesktopVersion = 'get-desktop-version'
 const setDesktopVersion = 'set-desktop-version'
+const sendLog = 'send-log'
 const enableAutoLaunch = 'enable-auto-launch'
 const disableAutoLaunch = 'disable-auto-launch'
 const getHashrate = 'get-hashrate'
@@ -83,6 +84,16 @@ export class NativeStore {
   }
 
   @computed
+  get apiVersion(): number {
+    return window.salad && window.salad.apiVersion
+  }
+
+  @computed
+  get canSendLogs(): boolean {
+    return this.apiVersion >= 2
+  }
+
+  @computed
   get isCompatible(): boolean {
     // TODO: return this.isNative && this.validOperatingSystem && this.validGPUs
     return true
@@ -131,15 +142,25 @@ export class NativeStore {
       this.on(runError, (errorCode: number) => {
         console.log('Error code: ' + errorCode)
 
-        store.analytics.captureException(new Error(`Received error code ${errorCode} from native`))
-
         switch (errorCode) {
-          case 8675309:
-          case 3221225595:
+          case 8675309: // Tommy Tutone - 867-5309/Jenny: https://youtu.be/6WTdTwcmxyo
             store.ui.showModal('/errors/cuda')
+            store.analytics.captureException(new Error(`Received CUDA error code ${errorCode} from native`))
+            this.stop()
             break
+          case 314159265: // Pie!
+            store.ui.showModal('/errors/anti-virus')
+            store.analytics.captureException(new Error(`Received Anti-Virus error code ${errorCode} from native`))
+            this.stop()
+            break
+          case 8888: // Generic, ethminer.exe terminated, no modal error message
+            this.stop()
+            break
+          case 9999: // Generic, "WTH happened"
           default:
             store.ui.showModal('/errors/unknown')
+            store.analytics.captureException(new Error(`Received Unknown error code ${errorCode} from native`))
+            this.stop()
             break
         }
       })
@@ -177,8 +198,6 @@ export class NativeStore {
 
   @action.bound
   private checkOnlineStatus = flow(function*(this: NativeStore) {
-    console.log('Checking online status')
-
     try {
       yield this.axios.get('/', {
         baseURL: 'https://api.salad.io/core/master/',
@@ -225,6 +244,11 @@ export class NativeStore {
     }
     this.loadingMachineInfo = true
     this.send(getMachineInfo)
+  }
+
+  @action
+  sendLog = () => {
+    this.send(sendLog, this.machineId)
   }
 
   @action
@@ -297,6 +321,7 @@ export class NativeStore {
       this.validGPUs = res.data.validGpus
       this.validOperatingSystem = res.data.validOs
     } catch (err) {
+      this.store.analytics.captureException(new Error(`register-machine error: ${err}`))
       this.validGPUs = false
       throw err
     }

@@ -31,7 +31,8 @@ import {
 } from './modules/reward-views'
 import { AccountModalContainer } from './modules/profile-views'
 import { AnimatedSwitch } from './components/AnimatedSwitch'
-import { CompatibilityCheckPageContainer, CudaErrorContainer, UnknownErrorContainer } from './modules/machine-views'
+import { CompatibilityCheckPageContainer } from './modules/machine-views'
+import { CudaErrorContainer, UnknownErrorContainer, AntiVirusErrorContainer } from './modules/error-views'
 // Settings Menu
 import { SettingsContainer } from './modules/settings-views'
 // Account Menu
@@ -123,6 +124,7 @@ const Auth = () => {
     <>
       <Route path="/" render={() => <HomePage />} />
       <Route exact path="/errors/cuda" component={CudaErrorContainer} />
+      <Route exact path="/errors/anti-virus" component={AntiVirusErrorContainer} />
       <Route exact path="/errors/unknown" component={UnknownErrorContainer} />
       <Route exact path="/rewards/:id" component={RewardDetailsModalContainer} />
       <Route exact path="/rewards/:id/redeem" component={RewardRedemptionModalContainer} />

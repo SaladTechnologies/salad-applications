@@ -1,12 +1,14 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
-import { UnknownErrorPage } from './components/ErrorPage'
+import { CudaErrorPage } from './components/CudaErrorPage'
 
 const mapStoreToProps = (store: RootStore) => ({
   onCloseClicked: () => store.ui.hideModal(),
+  onSendLog: store.native.sendLog,
+  showSendLog: store.native.canSendLogs,
 })
 
-export const UnknownErrorContainer = connect(
+export const CudaErrorContainer = connect(
   mapStoreToProps,
-  UnknownErrorPage,
+  CudaErrorPage,
 )

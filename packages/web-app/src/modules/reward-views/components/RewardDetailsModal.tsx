@@ -69,6 +69,7 @@ interface Props extends WithStyles<typeof styles> {
   onClickClose?: () => void
   onRedeem?: (rewardId: string) => void
   onSelect?: (rewardId: string) => void
+  isSelecting?: boolean
 }
 
 class _RewardDetailsModal extends Component<Props> {

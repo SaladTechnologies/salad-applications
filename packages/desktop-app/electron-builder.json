@@ -7,7 +7,7 @@
   "nsis": {
     "installerIcon": "assets/favicon.ico",
     "uninstallerIcon": "assets/favicon.ico",
-    "oneClick": "false",
+    "oneClick": false,
     "license": "LICENSE.md",
     "runAfterFinish": true,
     "allowToChangeInstallationDirectory": "true"
@@ -16,7 +16,8 @@
   "win": {
     "icon": "assets/favicon.ico",
     "target": ["nsis"],
-    "extraFiles": ["assets/*", "dist/ethminer/*"],
+    "sign": "./sign.js",
+    "extraFiles": ["assets/*", "dist/ethminer"],
     "publish": {
       "provider": "s3",
       "bucket": "salad-app-releases"

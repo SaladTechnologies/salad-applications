@@ -23,6 +23,12 @@ export class RewardStore {
   @observable
   public isRedeeming: boolean = false
 
+  @observable
+  public isLoading: boolean = false
+
+  @observable
+  public isSelecting: boolean = false
+
   @computed get selectedReward(): Reward | undefined {
     return this.getReward(this.selectedRewardId)
   }
@@ -80,12 +86,15 @@ export class RewardStore {
   @action.bound
   refreshRewards = flow(function*(this: RewardStore) {
     try {
+      this.isLoading = true
       const response = yield this.axios.get<RewardsResource[]>('rewards')
       if (response.data == undefined) return
       this.rewards = response.data.map(rewardFromResource).sort((a: Reward, b: Reward) => a.price - b.price)
       this.updateFilters()
     } catch (error) {
       console.error(error)
+    } finally {
+      this.isLoading = false
     }
   })
 
@@ -139,6 +148,8 @@ export class RewardStore {
       rewardId: rewardId,
     }
 
+    this.isSelecting = true
+
     try {
       var res = yield this.axios.patch('profile/selected-reward', request)
       this.selectedRewardId = res.data.rewardId
@@ -150,6 +161,8 @@ export class RewardStore {
       this.store.routing.push('/')
     } catch (error) {
       console.error(error)
+    } finally {
+      this.isSelecting = false
     }
   })
 

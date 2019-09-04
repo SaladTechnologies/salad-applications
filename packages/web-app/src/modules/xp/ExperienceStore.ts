@@ -13,7 +13,7 @@ export class ExperienceStore {
 
   @computed get currentLevel(): Level {
     let matchingLevel = this.levels.find(l => {
-      return this.currentXp >= l.minXp && this.currentXp <= l.maxXp
+      return this.currentXp > l.minXp && this.currentXp <= l.maxXp
     })
 
     if (matchingLevel == undefined) matchingLevel = this.levels[this.levels.length - 1]
@@ -49,8 +49,6 @@ export class ExperienceStore {
       let newXp = res.data.lifetimeXp
 
       this.updateXp(newXp)
-
-      console.log('XP:' + newXp)
     } catch (err) {
       this.store.analytics.captureException(err)
     }

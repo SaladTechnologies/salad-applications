@@ -17,6 +17,7 @@ export * from './Scrollbar'
 export * from './TextField'
 export * from './Tooltip'
 export * from './VerticalProgress'
+export * from './ExternalLink'
 
 // Elements
 export * from './elements/ToggleSwitch/ToggleSwitch'

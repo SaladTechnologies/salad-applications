@@ -1,6 +1,8 @@
 import { BottomBar } from './components/BottomBar'
 import { connect } from '../../connect'
 import { Config } from '../../config'
+import { RootStore } from '../../Store';
+
 
 const handleDiscord = () => {
   openLink(Config.discordUrl)
@@ -14,7 +16,7 @@ const openLink = (url: string) => {
   window.open(url, '_blank')
 }
 
-const mapStoreToProps = () => ({
+const mapStoreToProps = (store: RootStore) => ({
   onDiscordClick: handleDiscord,
   onSupportClick: handleSupport,
 })
