@@ -29,11 +29,6 @@ export class RefreshService {
       return
     }
     try {
-      /*
-        TODO:
-          - this.machine.loadDataRefresh
-      */
-
       this.store.xp.refreshXp()
       this.store.balance.refreshBalance()
       this.store.rewards.loadSelectedReward()
