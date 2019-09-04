@@ -33,24 +33,26 @@ class _ReferralSettings extends Component<Props> {
     const { classes } = this.props
 
     return (
-      <div className={classes.container}>
-        <div className={classes.column}>
-          <CondensedHeader>Referrals</CondensedHeader>
-          {/* TODO: Add in the referral entry component here */}
-          <Divider />
-          <VeggieName>Your Code</VeggieName>
-          <ReferralCodeContainer />
-          <Divider />
-          <VeggieName>Send Referral</VeggieName>
-          <SendReferralContainer />
-          <Divider />
-          <ReferralDescription />
+      <>
+        <CondensedHeader>Referrals</CondensedHeader>
+        <Divider />
+        <div className={classes.container}>
+          <div className={classes.column}>
+            {/* TODO: Add in the referral entry component here */}
+            <VeggieName>Your Code</VeggieName>
+            <ReferralCodeContainer />
+            <Divider />
+            <VeggieName>Send Referral</VeggieName>
+            <SendReferralContainer />
+            <Divider />
+            <ReferralDescription />
+          </div>
+          <div className={classes.column}>
+            <ReferralStatsContainer />
+            <ReferralListContainer />
+          </div>
         </div>
-        <div className={classes.column}>
-          <ReferralStatsContainer />
-          <ReferralListContainer />
-        </div>
-      </div>
+      </>
     )
   }
 }

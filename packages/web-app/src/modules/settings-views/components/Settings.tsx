@@ -25,7 +25,7 @@ import { ComingSoonContainer } from '../coming-soon-views'
 import { BatterySaverContainer } from '../battery-saver-views'
 import { DesktopNotificationsContainer } from '../desktop-notifications-views'
 import { ReferralSettingsContainer } from '../../referral-views'
-import { ProfileSettingsPageContainer } from '../../profile-views/ProfileSettingsPageContainer';
+import { ProfileSettingsPageContainer } from '../../profile-views/ProfileSettingsPageContainer'
 
 export class MenuItem {
   constructor(public readonly url: string, public readonly text: string) {}
@@ -39,6 +39,7 @@ interface Props extends WithStyles<typeof styles> {
   menuItems?: MenuItem[]
   appVersion?: string
   appBuild?: string
+  onSendLog?: () => void
 }
 
 class _Settings extends Component<Props> {
@@ -56,6 +57,12 @@ class _Settings extends Component<Props> {
     const { onSendBug } = this.props
 
     if (onSendBug) onSendBug()
+  }
+
+  handleLogClicked = () => {
+    const { onSendLog } = this.props
+
+    if (onSendLog) onSendLog()
   }
 
   handleCloseClicked = () => {
@@ -85,7 +92,8 @@ class _Settings extends Component<Props> {
         <div className={classnames(classes.menu, classes.menuItems)}>
           <div>{menuItems && <LinkListUnstyled list={menuItems} onListItemClick={this.handleListItemClick} />}</div>
           <div className={classes.buttonContainer}>
-            <Button onClick={this.handleBugClicked}>Send bug</Button>
+            <Button onClick={this.handleBugClicked}>Submit Bug</Button>
+            <Button onClick={this.handleLogClicked}>Submit Log</Button>
           </div>
           <div className={classes.versionContainer}>
             <MenuTitle>Version: {appVersion ? appVersion : '-'}</MenuTitle>

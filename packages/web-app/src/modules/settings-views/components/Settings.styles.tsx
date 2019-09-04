@@ -61,7 +61,7 @@ export const styles = (theme: SaladTheme) => ({
   buttonContainer: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-around',
     marginTop: 'auto',
     // position: 'absolute',
     // bottom: '1.5rem',
