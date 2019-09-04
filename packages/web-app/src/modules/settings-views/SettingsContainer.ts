@@ -31,6 +31,7 @@ const mapStoreToProps = (store: RootStore) => {
     menuItems: menuItems,
     appVersion: store.native.desktopVersion,
     appBuild: Config.appBuild,
+    onSendLog: store.native.sendLog,
   }
 }
 
