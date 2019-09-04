@@ -61,6 +61,7 @@ export class Ethminer {
     console.log('machineId: ' + id)
 
     let platform = cuda ? '-U' : '-G'
+
     this.processName = 'ethminer.exe'
 
     let cmd = `cd dist && cd ethminer && ${
