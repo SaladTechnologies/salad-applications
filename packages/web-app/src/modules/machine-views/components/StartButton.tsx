@@ -89,20 +89,10 @@ const styles = (theme: SaladTheme) => ({
     fontSize: 10,
     textTransform: 'uppercase',
   },
-  '@keyframes animated': {
-    '0%': {
-      filter: `drop-shadow( -10px 0px 3px ${theme.mediumGreen})`,
-    },
-    '100%': {
-      filter: `drop-shadow( -10px 0px 5px ${theme.darkGreen})`,
-    },
-  },
-  runningGlow: {
-    animationName: '$animated',
-    animationDuration: '1s',
-    animationIterationCount: 'infinite',
-    animationDirection: 'alternate',
-  },
+  subText: {
+    color: theme.green,
+    fontFamily: theme.fontGroteskLight25,
+    fontSize: 12,
   },
   '@keyframes animated': {
     '0%': {
@@ -153,10 +143,7 @@ class _StartButton extends Component<Props> {
             </div>
           )}
         />
-        <div className={classnames({
-          className={classnames({
-            [classes.runningGlow]: isRunning,
-          })}>
+        <div className={classnames({[classes.runningGlow]: isRunning})}>
           <AngledPanel leftSide="left" className={classnames(classes.container)}>
             <AngledPanel
               leftSide="left"

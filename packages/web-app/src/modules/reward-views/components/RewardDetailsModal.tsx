@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
-import { ModalPage, Button } from '../../../components'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
+import classnames from 'classnames'
+import { AngledPanel, ModalPage, Button } from '../../../components'
 import { Reward } from '../../reward/models/Reward'
-import { RewardDetailsPanel } from './RewardDetailsPanel'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -120,18 +122,35 @@ class _RewardDetailsModal extends Component<Props> {
 
     return (
       <ModalPage onCloseClicked={this.handleClose}>
-        <RewardDetailsPanel reward={reward} onClickClose={onClickClose}>
-          <div className={classes.buttonContainer}>
-            {reward && reward.redeemable && (
-              <Button dark onClick={this.handleRedeem}>
-                REDEEM
-              </Button>
-            )}
+        <div className={classnames(classes.container)}>
+          <AngledPanel className={classes.imageContainer} leftSide={'right'}>
+            {reward && <img className={classes.image} src={reward.image} draggable={false} />}
+          </AngledPanel>
+
+          <div className={classnames(classes.rightContainer)}>
+            <div style={{ flex: '1' }}>
+              <div className={classes.lock} onClick={this.handleClose}>
+                <FontAwesomeIcon icon={faTimes} />
+              </div>
+
+              <div className={classnames(classes.priceText)}>
+                {reward && `$${reward.price.toFixed(2)} ${this.timeRemainingText()}`}
+              </div>
+              <div className={classnames(classes.nameText)}>{reward ? reward.name : 'Unavailable'}</div>
+              <div className={classnames(classes.details)}>{reward && reward.description}</div>
+            </div>
+            <div className={classes.buttonContainer}>
+              {reward && reward.redeemable && (
+                <Button dark onClick={this.handleRedeem}>
+                  REDEEM
+                </Button>
+              )}
               <Button dark={reward && reward.redeemable} loading={isSelecting} onClick={this.handleSelect}>
-              SELECT AS REWARD
-            </Button>
+                SELECT AS REWARD
+              </Button>
+            </div>
           </div>
-        </RewardDetailsPanel>
+        </div>
       </ModalPage>
     )
   }
