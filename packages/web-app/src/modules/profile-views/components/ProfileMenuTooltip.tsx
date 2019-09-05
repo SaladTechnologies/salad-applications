@@ -17,7 +17,6 @@ const styles = (theme: SaladTheme) => ({
     padding: '0 1rem 1rem',
     fontFamily: 'sharpGroteskLight25',
     fontSize: theme.small,
-    marginTop: '0px !important',
   },
 })
 
@@ -38,7 +37,9 @@ class _ProfileMenuTooltip extends Component<Props> {
           <p>
             Earning XP unlocks tiers of veggie badges.
           </p>
-          Earn XP by running Salad. For every minute you run Salad, you earn 1 XP.
+          <p>
+            Earn XP by running Salad. For every minute you run Salad, you earn 1 XP.
+          </p>
         </div>
       </div>
     )
