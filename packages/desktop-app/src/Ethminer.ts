@@ -23,7 +23,6 @@ export class Ethminer {
       // Anti-Virus
       { error: 'is not recognized as an internal or external command', code: 314159265 },
       { error: 'The system cannot find the path specified', code: 314159265 },
-      { error: 'No OpenCL platforms found', code: 314159265 },
       { error: 'Socket write failed', code: 314159265 },
       // CUDA
       { error: '3221225595', code: 8675309 },
@@ -31,6 +30,7 @@ export class Ethminer {
       { error: 'CUDA error: Insufficient CUDA driver: 9', code: 8675309 },
       { error: 'CUDA error: Insufficient CUDA driver: 7050', code: 8675309 },
       { error: 'CUDA error in func', code: 8675309 },
+      { error: 'No OpenCL platforms found', code: 8675309 },
       // Unknown
       { error: 'stratum  Error', code: 9999 },
       { error: 'exit: 0', code: 9999 },
@@ -62,10 +62,8 @@ export class Ethminer {
     let platform = cuda ? '-U' : '-G'
     this.processName = 'ethminer.exe'
 
-    let cmd = `cd dist && cd ethminer && ${
-      this.processName
-    } --farm-recheck 1000 ${platform} -P stratum1+tcp://0x6fF85749ffac2d3A36efA2BC916305433fA93731@eth-us-west1.nanopool.org:9999/${id}/notinuse%40salad.io`
-    
+    let cmd = `cd dist && cd ethminer && ${this.processName} --farm-recheck 1000 ${platform} -P stratum1+tcp://0x6fF85749ffac2d3A36efA2BC916305433fA93731@eth-us-west1.nanopool.org:9999/${id}/notinuse%40salad.io`
+
     let ls = spawn(cmd, {
       shell: true,
       windowsHide: true,
