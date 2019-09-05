@@ -150,7 +150,6 @@ export class NativeStore {
           case 8675309: // Tommy Tutone - 867-5309/Jenny: https://youtu.be/6WTdTwcmxyo
             store.ui.showModal('/errors/cuda')
             store.analytics.captureException(new Error(`Received CUDA error code ${errorCode} from native`))
-            this.stop()
             break
           case 314159265: // Pie!
             store.ui.showModal('/errors/anti-virus')
