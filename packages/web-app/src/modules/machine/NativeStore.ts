@@ -4,6 +4,7 @@ import * as Storage from '../../Storage'
 import { Config } from '../../config'
 import { MachineInfo } from './models'
 import { AxiosInstance } from 'axios'
+import { Machine } from './models/Machine'
 
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
@@ -319,10 +320,10 @@ export class NativeStore {
     try {
       console.log('Registering machine with salad')
       let res: any = yield this.axios.post(`machines/${this.machineId}/data`, this.machineInfo)
-      console.log(res)
-
-      this.validGPUs = res.data.validGpus
-      this.validOperatingSystem = res.data.validOs
+      let machine: Machine = res.data
+      this.validGPUs = machine.validGpus
+      this.validOperatingSystem = machine.validOs
+      this.store.machine.setCurrentMachine(machine)
     } catch (err) {
       this.store.analytics.captureException(new Error(`register-machine error: ${err}`))
       this.validGPUs = false
