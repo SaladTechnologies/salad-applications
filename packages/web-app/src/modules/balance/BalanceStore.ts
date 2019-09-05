@@ -19,9 +19,6 @@ export class BalanceStore {
 
   private lastUpdateTime: number = Date.now()
 
-  @observable
-  public currentEarningRate: number = 0
-
   constructor(store: RootStore, private readonly axios: AxiosInstance) {
     autorun(() => {
       if (store.native.isRunning) {

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { SaladTheme } from '../../../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
-import { currencyFormatter } from '../../../Formatters'
 import { StatElement } from '../../../components/elements/StatElement/StatElement'
 
 const styles = (theme: SaladTheme) => ({
@@ -14,19 +13,21 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  lifetimeEarning?: number
-  machineCount?: number
+  /** The earning rate (USD/s) */
+  earningRate?: number
   miningStatus?: string
 }
 
 class _UserStatsSummary extends Component<Props> {
   render() {
-    const { lifetimeEarning, machineCount, miningStatus, classes } = this.props
+    const { earningRate, miningStatus, classes } = this.props
     return (
       <div className={classes.container}>
         <StatElement title="Mining status" values={[miningStatus || 'Stopped']} />
-        <StatElement title="Lifetime earning" values={[currencyFormatter.format(lifetimeEarning || 0)]} />
-        <StatElement title="Machines" values={[machineCount !== undefined ? machineCount.toFixed(0) : 'Unknown']} />
+        <StatElement
+          title="Earning Rate"
+          values={[`${earningRate !== undefined ? (earningRate * 86400).toFixed(3) : '0.000'}/day`]}
+        />
       </div>
     )
   }
