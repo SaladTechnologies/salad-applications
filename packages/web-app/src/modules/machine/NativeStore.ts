@@ -4,7 +4,6 @@ import * as Storage from '../../Storage'
 import { Config } from '../../config'
 import { MachineInfo } from './models'
 import { AxiosInstance } from 'axios'
-import { Machine } from './models/Machine'
 
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
@@ -15,9 +14,9 @@ const maximize = 'maximize-window'
 const close = 'close-window'
 const start = 'start-salad'
 const stop = 'stop-salad'
+const sendLog = 'send-log'
 const getDesktopVersion = 'get-desktop-version'
 const setDesktopVersion = 'set-desktop-version'
-const sendLog = 'send-log'
 const enableAutoLaunch = 'enable-auto-launch'
 const disableAutoLaunch = 'disable-auto-launch'
 const getHashrate = 'get-hashrate'
@@ -28,7 +27,8 @@ const AUTO_LAUNCH = 'AUTO_LAUNCH'
 
 const MINING_STATUS_STOPPED = 'Stopped'
 const MINING_STATUS_STARTED = 'Initializing'
-const MINING_STATUS_RUNNING = 'Chopping'
+const MINING_STATUS_RUNNING = 'Running'
+const MINING_STATUS_EARNING = 'Earning'
 
 declare global {
   interface Window {
@@ -46,6 +46,7 @@ export class NativeStore {
   private runningHeartbeat?: NodeJS.Timeout
   private zeroHashTimespan: number = 0
 
+  //#region Observables
   @observable
   public desktopVersion: string = ''
 
@@ -78,6 +79,7 @@ export class NativeStore {
 
   @observable
   public hashrate: number = 0
+  //#endregion
 
   @computed
   get isNative(): boolean {
@@ -317,10 +319,10 @@ export class NativeStore {
     try {
       console.log('Registering machine with salad')
       let res: any = yield this.axios.post(`machines/${this.machineId}/data`, this.machineInfo)
-      let machine: Machine = res.data
-      this.validGPUs = machine.validGpus
-      this.validOperatingSystem = machine.validOs
-      this.store.machine.setCurrentMachine(machine)
+      console.log(res)
+
+      this.validGPUs = res.data.validGpus
+      this.validOperatingSystem = res.data.validOs
     } catch (err) {
       this.store.analytics.captureException(new Error(`register-machine error: ${err}`))
       this.validGPUs = false
@@ -394,12 +396,20 @@ export class NativeStore {
   }
 
   @action
-  hashrateHeartbeat = (runStatus: boolean) => {
+  hashrateHeartbeat = (runStatus: boolean, machineStatus: string) => {
+    console.log('[[NativeStore] hashrateHeartbeat] machineStatus: ', machineStatus)
+
     if (runStatus && this.isNative) {
       this.send(getHashrate)
       this.setHashrateFromLog()
 
-      if (this.hashrate > 0) {
+      if (machineStatus === 'running' && this.hashrate > 0) {
+        this.miningStatus = MINING_STATUS_EARNING
+        this.zeroHashTimespan = 0
+        return
+      }
+
+      if ((machineStatus === 'stopped' && this.hashrate > 0) || this.hashrate > 0) {
         this.miningStatus = MINING_STATUS_RUNNING
         this.zeroHashTimespan = 0
         return
@@ -426,13 +436,15 @@ export class NativeStore {
   sendRunningStatus = flow(function*(this: NativeStore, runStatus: boolean) {
     console.log('Status MachineId: ' + this.machineId)
 
-    this.hashrateHeartbeat(runStatus)
-
     const machineId = this.store.token.getMachineId()
+    const machineStatus = yield this.axios.get(`machines/${machineId}/status`)
+
+    this.hashrateHeartbeat(runStatus, machineStatus.data.status)
+
     let miningStatus =
       this.zeroHashTimespan > 1
         ? 'Running'
-        : this.miningStatus === MINING_STATUS_RUNNING
+        : this.miningStatus === MINING_STATUS_RUNNING || this.miningStatus === MINING_STATUS_EARNING
         ? 'Running'
         : this.miningStatus
 
