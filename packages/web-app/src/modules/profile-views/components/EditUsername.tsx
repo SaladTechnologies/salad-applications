@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import { Form, Field } from 'react-final-form'
-import { TextField, Button, CondensedHeader, Username } from '../../../components'
+import { TextField, Button, CondensedHeader, Username, AppBody, Divider } from '../../../components'
 import { Profile } from '../../profile/models'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
@@ -27,14 +27,29 @@ const styles = (theme: SaladTheme) => ({
   icon: {
     cursor: 'pointer',
     paddingLeft: 10,
-    
-  }
+  },
+  logoutButton: {
+    display: 'inline-block',
+    padding: '.25rem 1rem',
+    backgroundColor: theme.darkBlue,
+    color: theme.green,
+    marginLeft: '60rem',
+    fontFamily: 'sharpGroteskLight25',
+    fontSize: theme.small,
+    cursor: 'pointer',
+    '&:hover': {
+      opacity: 0.8,
+    },
+    position: 'absolute',
+    bottom: '25px',
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
   profile?: Profile
   sending?: boolean
   onSend?: (username: string) => void
+  onLogout?: () => void
 }
 
 interface FormTypes {
@@ -79,16 +94,25 @@ class _EditUsername extends Component<Props, State> {
 
     return errors
   }
+  handleLogout = () => {
+    const { onLogout } = this.props
+
+    if (onLogout) onLogout()
+  }
 
   render() {
     const { sending, classes, profile } = this.props
 
     return (
       <>
-        <CondensedHeader>Display Name:</CondensedHeader>
+        <CondensedHeader>Account</CondensedHeader>
+        <Divider />
+        <Username blue>Display Name:</Username>
         {!this.state.isEdit && profile && (
           <div className={classes.row}>
-            <Username blue >{profile.username}</Username>
+            <p>
+              <Username blue>{profile.username}</Username>
+            </p>
             <div
               onClick={() => {
                 if (!this.state.isEdit) {
@@ -101,33 +125,51 @@ class _EditUsername extends Component<Props, State> {
           </div>
         )}
         {this.state.isEdit && (
-          <Form
-            onSubmit={this.onSubmit}
-            validate={this.validate}
-            render={({ handleSubmit }) => {
-              return (
-                <form onSubmit={handleSubmit}>
-                  <Field name="username" type="text">
-                    {({ input, meta }) => (
-                      <div className={classes.container}>
-                        <TextField
-                          className={classes.input}
-                          {...input}
-                          dark
-                          placeholder={profile && profile.username}
-                          errorText={meta.error && meta.touched && meta.error}
-                        />
-                        <Button type="submit" dark loading={sending} disabled={sending}>
-                          UPDATE
-                        </Button>
-                      </div>
-                    )}
-                  </Field>
-                </form>
-              )
-            }}
-          />
+          <>
+            <p>
+              <Form
+                onSubmit={this.onSubmit}
+                validate={this.validate}
+                render={({ handleSubmit }) => {
+                  return (
+                    <form onSubmit={handleSubmit}>
+                      <Field name="username" type="text">
+                        {({ input, meta }) => (
+                          <div className={classes.container}>
+                            <TextField
+                              className={classes.input}
+                              {...input}
+                              dark
+                              placeholder={profile && profile.username}
+                              errorText={meta.error && meta.touched && meta.error}
+                            />
+                            <Button type="submit" dark loading={sending} disabled={sending}>
+                              UPDATE
+                            </Button>
+                          </div>
+                        )}
+                      </Field>
+                    </form>
+                  )
+                }}
+              />
+            </p>
+            <ul>
+              <li>
+                <AppBody>2-32 characters</AppBody>
+              </li>
+              <li>
+                <AppBody>Numbers and letters only</AppBody>
+              </li>
+              <li>
+                <AppBody>No whitespace</AppBody>
+              </li>
+            </ul>
+          </>
         )}
+        <div className={classes.logoutButton} onClick={this.handleLogout}>
+          LOG OUT
+        </div>
       </>
     )
   }
