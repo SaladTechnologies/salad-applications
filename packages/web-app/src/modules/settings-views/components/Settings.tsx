@@ -93,7 +93,7 @@ class _Settings extends Component<Props> {
           <div>{menuItems && <LinkListUnstyled list={menuItems} onListItemClick={this.handleListItemClick} />}</div>
           <div className={classes.buttonContainer}>
             <Button onClick={this.handleBugClicked}>Submit Bug</Button>
-            <Button onClick={this.handleLogClicked}>Send Log</Button>
+            <Button onClick={this.handleLogClicked}>Send Logs</Button>
           </div>
           <div className={classes.versionContainer}>
             <MenuTitle>Version: {appVersion ? appVersion : '-'}</MenuTitle>
