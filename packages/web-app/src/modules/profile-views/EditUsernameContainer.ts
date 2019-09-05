@@ -6,6 +6,7 @@ const mapStoreToProps = (store: RootStore) => ({
   profile: store.profile.currentProfile,
   isUpdating: store.profile.isUpdating,
   onSend: store.profile.updateUsername,
+  onLogout: store.auth.signOut,
 })
 
 export const EditUsernameContainer = connect(
