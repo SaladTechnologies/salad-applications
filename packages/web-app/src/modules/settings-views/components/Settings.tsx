@@ -107,7 +107,7 @@ class _Settings extends Component<Props> {
           <Route path="/settings/windows-settings" component={WindowsSettingsContainer} />
           <Route path="/settings/coming-soon" component={ComingSoonContainer} />
           <Route path="/settings/referrals" component={ReferralSettingsContainer} />
-          <Route path="/settings/profile" component={ProfileSettingsPageContainer} />
+          <Route path="/settings/account" component={ProfileSettingsPageContainer} />
 
           {/* <Button onClick={this.handleCloseClicked}>Close</Button> */}
           <div onClick={this.handleCloseClicked}>
