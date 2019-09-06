@@ -62,6 +62,10 @@ class _SendReferral extends Component<Props> {
         render={({ handleSubmit }) => {
           return (
             <form onSubmit={handleSubmit}>
+              <P>
+                Salad will send an email to your friend that includes the referral code and a download link so they can
+                join you in the kitchen
+              </P>
               <Field name="email" type="email">
                 {({ input, meta }) => (
                   <div className={classes.container}>
@@ -72,16 +76,19 @@ class _SendReferral extends Component<Props> {
                       placeholder="Email Address"
                       errorText={meta.error && meta.touched && meta.error}
                     />
-                    <Button type="submit" className={classes.sendButton} dark uppercase loading={sending} disabled={sending}>
+                    <Button
+                      type="submit"
+                      className={classes.sendButton}
+                      dark
+                      uppercase
+                      loading={sending}
+                      disabled={sending}
+                    >
                       Send
                     </Button>
                   </div>
                 )}
               </Field>
-              <P>
-                Salad will send an email to your friend that includes the referral code and a download link so they can
-                join you in the kitchen
-              </P>
             </form>
           )
         }}

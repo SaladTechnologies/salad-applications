@@ -12,11 +12,12 @@ const styles = (theme: SaladTheme) => ({
     userSelect: 'none',
     display: 'inline-flex',
     flexDirection: 'column',
-    paddingTop: '1rem',
+    paddingBottom: '1rem',
   },
   codeContainer: {
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   iconButton: {
@@ -38,6 +39,9 @@ class _ReferralCode extends Component<Props> {
 
     return (
       <div className={classes.container}>
+        <P>
+          This is your permanent, unique referral code to share <b>anywhere</b> you can think of.
+        </P>
         <div className={classes.codeContainer}>
           <Username blue>{code}</Username>
           <CopyToClipboard
@@ -46,9 +50,6 @@ class _ReferralCode extends Component<Props> {
             <FontAwesomeIcon className={classes.iconButton} icon={faClipboard} size={'lg'} />
           </CopyToClipboard>
         </div>
-        <P>
-          This is your permanent, unique referral code to share <b>anywhere</b> you can think of.
-        </P>
       </div>
     )
   }

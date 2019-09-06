@@ -49,7 +49,6 @@ class _ReferralSettings extends Component<Props> {
             <Divider />
             <VeggieName>Your Code</VeggieName>
             <ReferralCodeContainer />
-            <Divider />
             <VeggieName>Send Referral</VeggieName>
             <SendReferralContainer />
             <Divider />
