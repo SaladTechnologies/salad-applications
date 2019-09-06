@@ -55,7 +55,7 @@ export class Ethminer {
 
     this.isRunning = true
 
-    let cuda = machineInfo.graphics.graphicsControllerData.some(x => x.vendor.toLocaleLowerCase().includes('nvidia'))
+    let cuda = machineInfo.graphics.controllers.some(x => x.vendor.toLocaleLowerCase().includes('nvidia'))
 
     console.log('cuda: ' + cuda)
     console.log('machineId: ' + id)
@@ -64,10 +64,8 @@ export class Ethminer {
 
     this.processName = 'ethminer.exe'
 
-    let cmd = `cd dist && cd ethminer && ${
-      this.processName
-    } --farm-recheck 1000 ${platform} -P stratum1+tcp://0x6fF85749ffac2d3A36efA2BC916305433fA93731@eth-us-west1.nanopool.org:9999/${id}/notinuse%40salad.io`
-    
+    let cmd = `cd dist && cd ethminer && ${this.processName} --farm-recheck 1000 ${platform} -P stratum1+tcp://0x6fF85749ffac2d3A36efA2BC916305433fA93731@eth-us-west1.nanopool.org:9999/${id}/notinuse%40salad.io`
+
     let ls = spawn(cmd, {
       shell: true,
       windowsHide: true,

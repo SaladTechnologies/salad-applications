@@ -1,7 +1,7 @@
 /** Taken from si.graphics of SystemInformation */
 export interface GraphicsData {
-  graphicsControllerData: GraphicsControllerData[]
-  graphicsDisplayData: GraphicsDisplayData[]
+  controllers: GraphicsControllerData[]
+  displays: GraphicsDisplayData[]
 }
 
 interface GraphicsControllerData {

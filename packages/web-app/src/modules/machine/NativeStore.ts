@@ -111,7 +111,7 @@ export class NativeStore {
   @computed
   get gpuNames(): string[] | undefined {
     if (this.machineInfo === undefined) return undefined
-    return this.machineInfo.graphics.graphicsControllerData.map(x => x.model)
+    return this.machineInfo.graphics.controllers.map(x => x.model)
   }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
