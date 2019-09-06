@@ -14,19 +14,19 @@ import { ReferralDescription } from './ReferralDescription'
 import { CurrentReferralProgress } from './CurrentReferralProgress'
 import { ReferralCodeEntryComponent } from './ReferralCodeEntryComponent'
 
-const def: ReferralDefinition = new ReferralDefinition({
+const def: ReferralDefinition = {
   balanceThreshold: 5,
   bonusRate: 0.5,
   referrerBonus: 1,
-})
+}
 
 const referrals: Referral[] = [
-  new Referral({ refereeId: 'u-01', referrerId: 'u-99', code: 'ABCDEF', earnedBalance: 1, referralDefinition: def }),
-  new Referral({ refereeId: 'u-02', referrerId: 'u-99', code: 'ABCDEF', earnedBalance: 2, referralDefinition: def }),
-  new Referral({ refereeId: 'u-03', referrerId: 'u-99', code: 'ABCDEF', earnedBalance: 3, referralDefinition: def }),
-  new Referral({ refereeId: 'u-04', referrerId: 'u-99', code: 'ABCDEF', earnedBalance: 4, referralDefinition: def }),
-  new Referral({ refereeId: 'u-05', referrerId: 'u-99', code: 'ABCDEF', earnedBalance: 5, referralDefinition: def }),
-  new Referral({ refereeId: 'u-05', referrerId: 'u-99', code: 'ABCDEF', earnedBalance: 6, referralDefinition: def }),
+  { refereeId: 'u-01', referrerId: 'u-99', code: 'ABCDEF', earnedBalance: 1, referralDefinition: def },
+  { refereeId: 'u-02', referrerId: 'u-99', code: 'ABCDEF', earnedBalance: 2, referralDefinition: def },
+  { refereeId: 'u-03', referrerId: 'u-99', code: 'ABCDEF', earnedBalance: 3, referralDefinition: def },
+  { refereeId: 'u-04', referrerId: 'u-99', code: 'ABCDEF', earnedBalance: 4, referralDefinition: def },
+  { refereeId: 'u-05', referrerId: 'u-99', code: 'ABCDEF', earnedBalance: 5, referralDefinition: def },
+  { refereeId: 'u-05', referrerId: 'u-99', code: 'ABCDEF', earnedBalance: 6, referralDefinition: def },
 ]
 
 storiesOf('Modules|Referral/Components', module)

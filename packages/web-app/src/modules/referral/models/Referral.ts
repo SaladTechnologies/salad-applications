@@ -1,30 +1,26 @@
-import { ReferralDefinition } from './ReferralDefinition'
+import { ReferralDefinition, maximumReferrerBonus } from './ReferralDefinition'
 
-export class Referral {
-  refereeId: string = ''
-  referrerId?: string = ''
-  code: string = ''
-  earnedBalance: number = 0
+export interface Referral {
+  refereeId: string
+  referrerId?: string
+  code: string
+  earnedBalance: number
   referralDefinition?: ReferralDefinition
   // dateEntered TODO:
+}
 
-  get completed(): boolean {
-    if (!this.referralDefinition) return false
-    return this.earnedBalance >= this.referralDefinition.balanceThreshold
-  }
+export const completed = (referral: Referral): boolean => {
+  if (!referral.referralDefinition) return false
+  return referral.earnedBalance >= referral.referralDefinition.balanceThreshold
+}
 
-  get percentComplete(): number {
-    if (!this.referralDefinition) return 0
-    return Math.max(0, Math.min(1, this.earnedBalance / this.referralDefinition.balanceThreshold))
-  }
+export const percentComplete = (referral: Referral): number => {
+  if (!referral.referralDefinition || referral.referralDefinition.balanceThreshold === 0) return 0
+  return Math.max(0, Math.min(1, referral.earnedBalance / referral.referralDefinition.balanceThreshold))
+}
 
-  /** The maximum bonus the referrer can earn (USD) */
-  get currentEarned(): number {
-    if (!this.referralDefinition) return 0
-    return this.referralDefinition.maximumReferrerBonus * this.percentComplete
-  }
-
-  public constructor(init?: Partial<Referral>) {
-    Object.assign(this, init)
-  }
+/** The maximum bonus the referrer can earn (USD) */
+export const currentEarned = (referral: Referral): number => {
+  if (!referral.referralDefinition) return 0
+  return maximumReferrerBonus(referral.referralDefinition) * percentComplete(referral)
 }

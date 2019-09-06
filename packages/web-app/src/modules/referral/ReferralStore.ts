@@ -1,7 +1,8 @@
 import { observable, computed, flow, action } from 'mobx'
-import { Referral } from './models'
+import { Referral, completed, percentComplete } from './models'
 import { RootStore } from '../../Store'
 import { AxiosInstance, AxiosError } from 'axios'
+import { maximumReferrerBonus } from './models/ReferralDefinition'
 
 export class ReferralStore {
   /** A collection of all referrals that this user referred */
@@ -28,7 +29,7 @@ export class ReferralStore {
   /** The number of referrals that have been completed */
   @computed
   get completedReferrals(): Referral[] {
-    return this.referrals.filter(x => x.completed)
+    return this.referrals.filter(x => completed(x))
   }
 
   /** The number of referrals that have been completed */
@@ -62,7 +63,7 @@ export class ReferralStore {
 
     this.referrals.forEach(x => {
       if (x.referralDefinition === undefined) return
-      sum += x.referralDefinition.maximumReferrerBonus - x.earnedBalance
+      sum += maximumReferrerBonus(x.referralDefinition) - x.earnedBalance
     })
 
     return sum
@@ -76,7 +77,7 @@ export class ReferralStore {
     try {
       let res = yield this.axios.get('profile/referrals')
       const referrals = res.data as Referral[]
-      this.referrals = referrals.sort((a: Referral, b: Referral) => a.percentComplete - b.percentComplete)
+      this.referrals = referrals.sort((a: Referral, b: Referral) => percentComplete(a) - percentComplete(b))
     } catch (error) {
       console.error(error)
       throw error
