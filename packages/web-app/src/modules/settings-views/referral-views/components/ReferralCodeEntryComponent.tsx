@@ -19,8 +19,11 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  submitting?: boolean
-  onSubmitCode?: (code: string) => void
+  onSubmitCode?: (code: string) => Promise<void>
+}
+
+interface State {
+  submitting: boolean
   errorMessage?: string
 }
 
@@ -28,11 +31,28 @@ interface FormTypes {
   code?: string
 }
 
-class _ReferralCodeEntryComponent extends Component<Props> {
-  onSubmit = (values: {}) => {
+class _ReferralCodeEntryComponent extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      submitting: false,
+    }
+  }
+
+  onSubmit = async (values: {}) => {
     const { onSubmitCode } = this.props
     let v = values as FormTypes
-    if (onSubmitCode && v.code) onSubmitCode(v.code)
+    if (onSubmitCode && v.code) {
+      this.setState({ submitting: true, errorMessage: undefined })
+      try {
+        await onSubmitCode(v.code)
+        this.setState({ submitting: false })
+      } catch (e) {
+        if (e instanceof Error) {
+          this.setState({ submitting: false, errorMessage: e.message })
+        }
+      }
+    }
   }
 
   validate = (values: {}) => {
@@ -50,7 +70,8 @@ class _ReferralCodeEntryComponent extends Component<Props> {
   }
 
   render() {
-    const { errorMessage, submitting, classes } = this.props
+    const { classes } = this.props
+    const { submitting, errorMessage } = this.state
 
     return (
       <Form

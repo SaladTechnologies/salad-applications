@@ -46,6 +46,7 @@ class _ReferralSettings extends Component<Props> {
         <div className={classnames(classes.container)}>
           <div className={classes.column}>
             <CurrentReferralPanelContainer />
+            <Divider />
             <VeggieName>Your Code</VeggieName>
             <ReferralCodeContainer />
             <Divider />

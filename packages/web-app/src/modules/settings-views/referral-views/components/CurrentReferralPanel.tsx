@@ -16,9 +16,8 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   referral?: Referral
-  submitting?: boolean
-  onSubmitCode?: (code: string) => void
-  errorMessage?: string
+
+  onSubmitCode?: (code: string) => Promise<void>
 }
 
 class _CurrentReferralPanel extends Component<Props> {

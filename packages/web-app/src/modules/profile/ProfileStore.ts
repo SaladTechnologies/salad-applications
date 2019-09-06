@@ -136,36 +136,6 @@ export class ProfileStore {
   })
 
   @action.bound
-  submitReferralCode = flow(function*(this: ProfileStore, code: string) {
-    if (this.currentProfile === undefined) return
-
-    this.isUpdating = true
-
-    console.log('Sending referral code ' + code)
-
-    try {
-      yield this.axios.post(
-        'consume-referral-code',
-        {
-          code: code,
-        },
-        { baseURL: 'https://api.salad.io/core/master/' },
-      )
-
-      this.isUpdating = false
-      this.store.routing.replace('/')
-    } catch (err) {
-      //TODO: show an error to the user
-      // 200 if the code is successfully consumed
-      // 400 if the entered code does not match any valid, active user or promotional referral code
-      // 409 if the user has already entered a referral code and is trying to do so again
-      // 500 in the event of some other unforeseen error.
-
-      this.isUpdating = false
-    }
-  })
-
-  @action.bound
   skipReferral = flow(function*(this: ProfileStore) {
     if (this.currentProfile === undefined) return
 

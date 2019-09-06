@@ -1,6 +1,6 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import { boolean, text } from '@storybook/addon-knobs'
+import { boolean } from '@storybook/addon-knobs'
 import { action } from '@storybook/addon-actions'
 import { ReferralItem } from './ReferralItem'
 import { Referral } from '../../../referral/models'
@@ -70,9 +70,7 @@ storiesOf('Modules|Referral/Components', module)
     return (
       <div style={{ backgroundColor: '#B2D530' }}>
         <ReferralCodeEntryComponent
-          submitting={boolean('Submitting', false)}
-          onSubmitCode={action('Submit code')}
-          errorMessage={text('Error Message', null)}
+        // onSubmitCode={action('Submit code')}
         />
       </div>
     )

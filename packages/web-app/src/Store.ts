@@ -60,6 +60,7 @@ export class RootStore {
     yield this.profile.loadProfile()
     this.referral.loadReferralCode()
     this.xp.refreshXp()
+    this.referral.loadCurrentReferral()
     yield this.native.registerMachine()
   })
 
@@ -67,5 +68,6 @@ export class RootStore {
   onLogout = () => {
     this.token.saladToken = ''
     this.referral.referralCode = ''
+    this.referral.currentReferral = undefined
   }
 }
