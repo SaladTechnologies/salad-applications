@@ -3,7 +3,8 @@ import { SaladTheme } from '../../../SaladTheme'
 
 export const styles = (theme: SaladTheme) => ({
   menu: {
-    flex: '0 0 294px', // equates to: 358px total width
+    // flex: '0 0 294px', // equates to: 358px total width
+    flex: '0 0 240px', // equates to: 304px total width
     position: 'relative',
     padding: '1.5rem 2rem',
     display: 'flex',

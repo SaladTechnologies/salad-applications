@@ -10,7 +10,7 @@ import { BottomBarContainer } from './BottomBarContainer'
 import { ProfileMenuItemContainer, UserStatsSummaryContainer } from '../profile-views'
 import { StartButtonContainer } from '../machine-views'
 import { Fade } from '../../components'
-import { ReferralSummaryContainer } from '../referral-views'
+import { ReferralSummaryContainer } from '../settings-views/referral-views'
 import { MainTitlebarContainer } from './MainTitlebarContainer'
 import { NotificationBannerContainer } from './NotificationBannerContainer'
 

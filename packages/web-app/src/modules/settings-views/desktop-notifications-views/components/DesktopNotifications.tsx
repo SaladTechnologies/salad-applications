@@ -7,7 +7,7 @@ import { styles } from './DesktopNotifications.styles'
 import {
   VeggieName,
   CondensedHeader,
-  AppBody,
+  P,
 } from '../../../../components'
 
 // Packages
@@ -25,7 +25,7 @@ class _DesktopNotifications extends Component<Props> {
           <CondensedHeader>Desktop Notifications</CondensedHeader>
         </div>
         <div className="main">
-          <AppBody>In case there’s some Salad Fixins’ we’ve got to tell you about.</AppBody>
+          <P>In case there’s some Salad Fixins’ we’ve got to tell you about.</P>
         </div>
       </>
     )

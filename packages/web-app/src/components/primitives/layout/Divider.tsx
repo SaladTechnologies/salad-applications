@@ -9,11 +9,11 @@ import classnames from 'classnames'
 
 const styles = (theme: SaladTheme) => ({
   divider: {
-    color: theme.lightGreen,
-    backgroundColor: theme.lightGreen,
-    height: 2,
-    border: 0,
-    margin: '1rem 0',
+    borderColor: theme.lightGreen,
+    borderWidth: '0 0 1px',
+    marginTop: theme.mediumLarge,
+    marginBottom: theme.large,
+    width: '100%',
   },
 })
 

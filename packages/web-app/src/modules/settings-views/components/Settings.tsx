@@ -21,11 +21,9 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { Overlay } from '../../../components'
 import { SmartStartContainer } from '../smart-start-views'
 import { WindowsSettingsContainer } from '../windows-settings-views'
-import { ComingSoonContainer } from '../coming-soon-views'
-import { BatterySaverContainer } from '../battery-saver-views'
 import { DesktopNotificationsContainer } from '../desktop-notifications-views'
-import { ReferralSettingsContainer } from '../../referral-views'
-import { ProfileSettingsPageContainer } from '../../profile-views/ProfileSettingsPageContainer'
+import { ReferralSettingsContainer } from '../referral-views'
+import { AccountContainer } from '../account-views'
 
 export class MenuItem {
   constructor(public readonly url: string, public readonly text: string) {}
@@ -102,14 +100,11 @@ class _Settings extends Component<Props> {
         </div>
         <div className={classnames(classes.settings)}>
           <Route path="/settings/smart-start" component={SmartStartContainer} />
-          <Route path="/settings/battery-saver" component={BatterySaverContainer} />
           <Route path="/settings/desktop-notifications" component={DesktopNotificationsContainer} />
           <Route path="/settings/windows-settings" component={WindowsSettingsContainer} />
-          <Route path="/settings/coming-soon" component={ComingSoonContainer} />
           <Route path="/settings/referrals" component={ReferralSettingsContainer} />
-          <Route path="/settings/account" component={ProfileSettingsPageContainer} />
+          <Route path="/settings/account" component={AccountContainer} />
 
-          {/* <Button onClick={this.handleCloseClicked}>Close</Button> */}
           <div onClick={this.handleCloseClicked}>
             <FontAwesomeIcon className={classes.closeButton} icon={faTimes} />
           </div>

@@ -212,7 +212,7 @@ export class ProfileStore {
       this.currentProfile = profile
     } finally {
       this.isUpdating = false
-      this.store.routing.replace('/')
+      // this.store.routing.replace('/')
     }
   })
 
