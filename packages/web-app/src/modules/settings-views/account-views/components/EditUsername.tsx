@@ -37,16 +37,15 @@ const styles = (theme: SaladTheme) => ({
     bottom: '25px',
   },
   editIcon: {
-    marginTop: '-5px'
+    marginTop: '-5px',
   },
   textFieldContainer: {
     position: 'relative',
-    height: 60
+    height: 60,
   },
   updateButton: {
-    position: 'absolute',
     top: '-3px',
-    padding: 6
+    padding: 6,
   },
 })
 
@@ -104,10 +103,10 @@ class _EditUsername extends Component<Props, State> {
 
     return (
       <>
-        <Username blue>Display Name</Username>
+        <Username blue>Username</Username>
         <P>
-          Display names aren't unique, they must be between 2 and 32 characters long. Numbers, letters, and no
-          whitespace. Easy!
+          Spice up your Salad account with a unique, personalized username. This username is what we’ll refer to you as
+          in reward emails and will be what your friends see when you refer them to Salad via email.
         </P>
 
         {!this.state.isEdit && profile && (
@@ -144,12 +143,40 @@ class _EditUsername extends Component<Props, State> {
                           placeholder={profile && profile.username}
                           errorText={meta.error && meta.touched && meta.error}
                         />
-                        <Button type="submit" className={classes.updateButton} dark uppercase loading={sending} disabled={sending}>
+                        <Button
+                          type="submit"
+                          className={classes.updateButton}
+                          dark
+                          uppercase
+                          loading={sending}
+                          disabled={sending}
+                        >
                           Update
+                        </Button>
+                        <Button
+                          onClick={() => this.setState({ isEdit: false })}
+                          className={classes.updateButton}
+                          dark
+                          uppercase
+                          loading={sending}
+                          disabled={sending}
+                        >
+                          Cancel
                         </Button>
                       </div>
                     )}
                   </Field>
+                  <ul>
+                    <li>
+                      <P>2-32 characters</P>
+                    </li>
+                    <li>
+                      <P>Numbers and letters only</P>
+                    </li>
+                    <li>
+                      <P>No whitespace</P>
+                    </li>
+                  </ul>
                 </form>
               )
             }}
