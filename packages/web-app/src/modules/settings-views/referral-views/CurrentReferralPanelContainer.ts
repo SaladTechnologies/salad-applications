@@ -1,6 +1,6 @@
-import { connect } from '../../connect'
+import { connect } from '../../../connect'
 import { CurrentReferralPanel } from './components/CurrentReferralPanel'
-import { RootStore } from '../../Store'
+import { RootStore } from '../../../Store'
 
 const mapStoreToProps = (store: RootStore) => ({
   // referral?: Referral

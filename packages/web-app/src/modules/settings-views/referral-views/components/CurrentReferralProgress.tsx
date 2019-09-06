@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { SaladTheme } from '../../../SaladTheme'
+import { SaladTheme } from '../../../../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
-import { Referral } from '../../referral/models'
-import { AppBody, VeggieName, ProgressBar } from '../../../components'
+import { Referral } from '../../../referral/models'
+import { P, VeggieName, ProgressBar } from '../../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -42,11 +42,11 @@ class _CurrentReferralProgress extends Component<Props> {
         <VeggieName>Your Progress</VeggieName>
 
         <div className={classes.headerContainer}>
-          <AppBody>CODE: {referral.code}</AppBody>
-          <AppBody className={classes.bonusText}>
+          <P>CODE: {referral.code}</P>
+          <P className={classes.bonusText}>
             {referral.percentComplete === 1 ? 'COMPLETED' : (1 + referral.referralDefinition.bonusRate).toFixed(1)}x
             EARNING RATE
-          </AppBody>
+          </P>
         </div>
         <ProgressBar
           className={classes.progressBackground}

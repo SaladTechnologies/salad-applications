@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
+import { SaladTheme } from '../../../../SaladTheme'
 import { Form, Field } from 'react-final-form'
-import { TextField, Button, ErrorText } from '../../../components'
+import { TextField, Button, ErrorText } from '../../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {

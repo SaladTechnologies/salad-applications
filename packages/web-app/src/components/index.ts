@@ -27,7 +27,6 @@ export * from './elements/StatElement/StatElement'
 
 // Primitive
 export * from './primitives/content/Paragraph'
-export * from './primitives/content/AppBody'
 export * from './primitives/content/ErrorText'
 export * from './primitives/headers/CondensedHeader'
 export * from './primitives/layout/Divider'
