@@ -7,7 +7,7 @@ import { styles } from './WindowsSettings.styles'
 import { getStore } from '../../../../Store'
 
 // UI
-import { Username, VeggieName, CondensedHeader, AppBody, ToggleSwitch } from '../../../../components'
+import { Username, VeggieName, CondensedHeader, P, ToggleSwitch, Divider } from '../../../../components'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
@@ -53,17 +53,17 @@ class _WindowsSettings extends Component<Props> {
       <>
         <div className="header">
           {!apiVersion && <VeggieName>Coming Soon</VeggieName>}
-          <CondensedHeader>Windows Settings</CondensedHeader>
-          <hr className={classnames(classes.hr)} />
+          <CondensedHeader>Settings</CondensedHeader>
         </div>
-        <div className={classnames(classes.main)}>
+        <Divider />
+        <div className={classnames(classes.container)}>
           <div className={classnames(classes.toggler)}>{toggler}</div>
           <div className={classnames(classes.description)}>
             <Username blue>Auto Launch {!apiVersion && '(Coming in v0.2.1)'}</Username>
-            <AppBody>
-              Auto Launch opens Salad once you log into Windows, getting the Kitchen warmed up for when you're ready
-              to start chopping.
-            </AppBody>
+            <P>
+              Auto Launch opens Salad once you log into Windows, getting the Kitchen warmed up for when you're ready to
+              start chopping.
+            </P>
           </div>
         </div>
       </>

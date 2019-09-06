@@ -7,7 +7,7 @@ import { ProfileMenuItem } from './ProfileMenuItem'
 import { ProfileMenuTooltip } from './ProfileMenuTooltip'
 import { SettingsModalPage } from './SettingsModalPage'
 import { UserStatsSummary } from './UserStatsSummary'
-import { EditUsername } from './EditUsername'
+import { EditUsername } from '../../settings-views/account-views/components/EditUsername'
 
 const profile: Profile = {
   id: '1234',
