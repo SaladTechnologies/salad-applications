@@ -4,7 +4,7 @@ import { ReferralEntryPage } from './components/ReferralEntryPage'
 
 const mapStoreToProps = (store: RootStore) => ({
   onNext: store.profile.skipReferral,
-  onSubmitCode: store.profile.submitReferralCode,
+  onSubmitCode: store.referral.submitReferralCode,
   submitting: store.profile.isUpdating,
 })
 

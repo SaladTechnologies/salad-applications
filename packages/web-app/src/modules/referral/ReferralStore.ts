@@ -1,12 +1,16 @@
 import { observable, computed, flow, action } from 'mobx'
 import { Referral } from './models'
 import { RootStore } from '../../Store'
-import { AxiosInstance } from 'axios'
+import { AxiosInstance, AxiosError } from 'axios'
 
 export class ReferralStore {
   /** A collection of all referrals that this user referred */
   @observable
   public referrals: Referral[] = []
+
+  /** The referral that the current user entered. Undefined if the user hasn't entered a code yet */
+  @observable
+  public currentReferral: Referral | undefined
 
   @observable
   public isSending: boolean = false
@@ -88,6 +92,42 @@ export class ReferralStore {
     } catch (error) {
       console.error(error)
       throw error
+    }
+  })
+
+  /** Loads the current user's referral */
+  @action.bound
+  loadCurrentReferral = flow(function*(this: ReferralStore) {
+    try {
+      let res = yield this.axios.get<Referral>('profile/referral')
+      this.currentReferral = res.data
+      console.log(res)
+    } catch (error) {
+      throw error
+    }
+  })
+
+  /** Loads the current user's referral */
+  @action.bound
+  submitReferralCode = flow(function*(this: ReferralStore, code: string) {
+    if (this.currentReferral !== undefined) {
+      console.log('The user has already entered a referral code')
+      return
+    }
+
+    console.log('Sending referral code ' + code)
+
+    try {
+      const request = {
+        code: code,
+      }
+      let res = yield this.axios.post<Referral>('profile/referral', request)
+      this.currentReferral = res.data
+    } catch (e) {
+      let err: AxiosError = e
+      if (!err.response || err.response.status == 500) throw new Error('Unknown error')
+      if (err.response.status == 400) throw new Error('Invalid code')
+      if (err.response.status == 409) throw new Error('You have already entered a code')
     }
   })
 

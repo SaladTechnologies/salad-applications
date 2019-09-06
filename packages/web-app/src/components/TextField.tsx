@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
 import classnames from 'classnames'
+import { ErrorText } from '.'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -62,7 +63,7 @@ class _TextField extends Component<Props> {
           {...input}
           type="text"
         />
-        {errorText && <div className={classes.errorText}>{errorText}</div>}
+        {errorText && <ErrorText>{errorText}</ErrorText>}
       </div>
     )
   }

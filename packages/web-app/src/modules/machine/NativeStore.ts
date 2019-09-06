@@ -459,8 +459,4 @@ export class NativeStore {
 
     yield this.axios.post(`machines/${machineId}/status`, data)
   })
-
-  sleep = (ms: number) => {
-    return new Promise(resolve => setTimeout(resolve, ms))
-  }
 }

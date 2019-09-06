@@ -11,6 +11,8 @@ import { ReferralStats } from './ReferralStats'
 import { ReferralCode } from './ReferralCode'
 import { SendReferral } from './SendReferral'
 import { ReferralDescription } from './ReferralDescription'
+import { CurrentReferralProgress } from './CurrentReferralProgress'
+import { ReferralCodeEntryComponent } from './ReferralCodeEntryComponent'
 
 const def: ReferralDefinition = new ReferralDefinition({
   balanceThreshold: 5,
@@ -64,6 +66,15 @@ storiesOf('Modules|Referral/Components', module)
       </div>
     )
   })
+  .add('Referral Code Entry', () => {
+    return (
+      <div style={{ backgroundColor: '#B2D530' }}>
+        <ReferralCodeEntryComponent
+        // onSubmitCode={action('Submit code')}
+        />
+      </div>
+    )
+  })
 
 storiesOf('Modules|Referral/Referral List', module)
   .addDecorator(storyFn => {
@@ -73,3 +84,9 @@ storiesOf('Modules|Referral/Referral List', module)
   .add('Referral List', () => {
     return <ReferralList referrals={referrals} />
   })
+
+storiesOf('Modules|Referral/Current User Referral', module)
+  .addDecorator(storyFn => {
+    return <div style={{ backgroundColor: '#B2D530' }}>{storyFn()}</div>
+  })
+  .add('CurrentReferralProgress', () => <CurrentReferralProgress referral={referrals[0]} />)
