@@ -44,10 +44,7 @@ const getMachineInfo = () =>
         uuid: data.uuid,
         versions: data.versions,
         cpu: data.cpu,
-        graphics: {
-          graphicsControllerData: data.graphics.controllers,
-          graphicsDisplayData: data.graphics.displays,
-        },
+        graphics: data.graphics,
         net: data.net,
         memLayout: data.memLayout,
         diskLayout: data.diskLayout,
