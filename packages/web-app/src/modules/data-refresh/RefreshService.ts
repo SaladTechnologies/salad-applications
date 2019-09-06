@@ -3,6 +3,7 @@ import { RootStore } from '../../Store'
 
 export class RefreshService {
   private dataTimer?: NodeJS.Timeout
+  private xpTimer?: NodeJS.Timeout
   private rewardsTimer?: NodeJS.Timeout
 
   constructor(private store: RootStore) {}
@@ -15,6 +16,10 @@ export class RefreshService {
       this.refreshData()
     }, Config.dataRefreshRate)
 
+    this.xpTimer = setInterval(() => {
+      this.store.xp.refreshXp()
+    }, Config.xpRefreshRate)
+
     this.rewardsTimer = setInterval(() => {
       this.store.rewards.refreshRewards()
     }, Config.rewardsRefreshRate)
@@ -22,6 +27,7 @@ export class RefreshService {
     //Do the initial data pull
     this.refreshData()
     this.store.rewards.refreshRewards()
+    this.store.xp.refreshXp()
   }
 
   refreshData = () => {
@@ -29,7 +35,6 @@ export class RefreshService {
       return
     }
     try {
-      this.store.xp.refreshXp()
       this.store.balance.refreshBalance()
       this.store.rewards.loadSelectedReward()
       this.store.referral.loadReferrals()
@@ -42,5 +47,6 @@ export class RefreshService {
 
     if (this.dataTimer) clearInterval(this.dataTimer)
     if (this.rewardsTimer) clearInterval(this.rewardsTimer)
+    if (this.xpTimer) clearInterval(this.xpTimer)
   }
 }

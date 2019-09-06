@@ -59,6 +59,7 @@ export class RootStore {
   onLogin = flow(function*(this: RootStore) {
     yield this.profile.loadProfile()
     this.referral.loadReferralCode()
+    this.xp.refreshXp()
     yield this.native.registerMachine()
   })
 
