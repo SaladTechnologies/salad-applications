@@ -201,14 +201,19 @@ export class NativeStore {
 
   @action.bound
   private checkOnlineStatus = flow(function*(this: NativeStore) {
+    var prevOnline = this.isOnline
     try {
-      yield this.axios.get('/', {
-        baseURL: 'https://api.salad.io/core/master/',
-      })
+      yield this.axios.get('online')
       this.isOnline = true
     } catch (err) {
-      console.error(err)
-      this.isOnline = false
+      //TODO: Remove these checks once we have an unauthenticated API to check
+      if (err.response === undefined || err.response.status !== 401) {
+        console.log(err)
+        this.isOnline = false
+      }
+    }
+    if (this.isOnline !== prevOnline) {
+      this.store.routing.replace('/')
     }
   })
 
