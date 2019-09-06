@@ -8,6 +8,9 @@ import { Form, Field } from 'react-final-form'
 import { observer } from 'mobx-react'
 import { RewardDetailsPanel } from './RewardDetailsPanel'
 
+//TODO: Move this into a feature flag
+const showGiftOption = false
+
 const styles = (theme: SaladTheme) => ({
   container: {
     display: 'flex',
@@ -150,27 +153,6 @@ class _RewardRedemptionModal extends Component<Props> {
         errors.email = 'Invalid email'
       }
     }
-
-    // const errors: FormTypes = {}
-    // if (v.email === undefined || v.email.length === 0) {
-    //   errors.email = 'Required'
-    // } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v.email)) {
-    //   errors.email = 'Invalid email'
-    // }
-
-    // if (details && details.content) {
-    //   details.content.forEach(x => {
-    //     if (x.type !== ContentType.checkbox) return
-
-    //     let checkName = `check${x.id}`
-    //     let a = !!v[checkName]
-
-    //     if (!a) {
-    //       errors[checkName] = 'Required'
-    //     }
-    //   })
-    // }
-
     return errors
   }
 
@@ -189,36 +171,42 @@ class _RewardRedemptionModal extends Component<Props> {
                   <form onSubmit={handleSubmit}>
                     {reward &&
                       reward.checkoutTerms &&
-                      reward.checkoutTerms.map((term, i) => <div className={classes.termText}>- {term}</div>)}
+                      reward.checkoutTerms.map((term, i) => (
+                        <div key={term} className={classes.termText}>
+                          - {term}
+                        </div>
+                      ))}
                     <div className={classes.bottomContainer}>
-                      <div className={classes.giftPanel}>
-                        <Field name={'gift'} type="checkbox">
-                          {({ input, meta }) => (
-                            <div style={{ padding: '.25rem 0' }}>
-                              <Checkbox
-                                {...input}
-                                text={'This item is a gift'}
-                                dark
-                                errorText={meta.error && meta.touched && meta.error}
-                              />
-                            </div>
-                          )}
-                        </Field>
-                        <this.Condition when="gift" is="true">
-                          <Field name="email">
+                      {showGiftOption && (
+                        <div className={classes.giftPanel}>
+                          <Field name={'gift'} type="checkbox">
                             {({ input, meta }) => (
-                              <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <TextField
-                                  dark
+                              <div style={{ padding: '.25rem 0' }}>
+                                <Checkbox
                                   {...input}
-                                  placeholder={'Email'}
+                                  text={'This item is a gift'}
+                                  dark
                                   errorText={meta.error && meta.touched && meta.error}
                                 />
                               </div>
                             )}
                           </Field>
-                        </this.Condition>
-                      </div>
+                          <this.Condition when="gift" is="true">
+                            <Field name="email">
+                              {({ input, meta }) => (
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                  <TextField
+                                    dark
+                                    {...input}
+                                    placeholder={'Email'}
+                                    errorText={meta.error && meta.touched && meta.error}
+                                  />
+                                </div>
+                              )}
+                            </Field>
+                          </this.Condition>
+                        </div>
+                      )}
                       <div className={classes.submitPanel}>
                         <Button type="submit" loading={submitting} disabled={submitting} dark>
                           Bombs Away
