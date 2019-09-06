@@ -64,6 +64,7 @@ export class ProfileStore {
       this.store.routing.replace('/profile-error')
     } finally {
       this.isLoading = false
+      //TODO: Move the routing logic to the onLogin function so we can load all the data before showing the app
       this.store.routing.replace('/')
     }
   })
@@ -206,7 +207,7 @@ export class ProfileStore {
     this.isUpdating = true
 
     try {
-      let patch = yield this.axios.patch('profile', {username: username})
+      let patch = yield this.axios.patch('profile', { username: username })
       let profile = patch.data
 
       this.currentProfile = profile
