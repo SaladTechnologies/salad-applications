@@ -61,7 +61,14 @@ export class RootStore {
     this.referral.loadReferralCode()
     this.xp.refreshXp()
     this.referral.loadCurrentReferral()
-    yield this.native.registerMachine()
+
+    // Before we can registerMachine we need machineInfo
+    const machineInfoTimer = setTimeout(() => {
+      if (sharedStore.native.machineInfo) {
+        this.native.registerMachine()
+        clearTimeout(machineInfoTimer)
+      }
+    }, 1000)
   })
 
   @action
