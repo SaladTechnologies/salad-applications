@@ -44,7 +44,7 @@ export class RootStore {
     this.analytics = new AnalyticsStore()
     this.routing = new RouterStore()
     this.xp = new ExperienceStore(this, axios)
-    this.machine = new MachineStore()
+    this.machine = new MachineStore(this)
     this.native = new NativeStore(this, axios)
     this.auth = new AuthStore(this, axios)
     this.token = new TokenStore()
@@ -61,7 +61,16 @@ export class RootStore {
     this.referral.loadReferralCode()
     this.xp.refreshXp()
     this.referral.loadCurrentReferral()
-    yield this.native.registerMachine()
+
+    // Before we can registerMachine we need machineInfo
+    let machineInfoHeartbeat = setInterval(() => {
+      if (this.native.machineInfo) {
+        this.native.registerMachine()
+        clearInterval(machineInfoHeartbeat)
+      }
+
+      this.native.loadMachineInfo()
+    }, 1000)
   })
 
   @action
