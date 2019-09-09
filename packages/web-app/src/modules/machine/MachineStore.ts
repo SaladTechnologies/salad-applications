@@ -7,7 +7,12 @@ export class MachineStore {
   public currentMachine?: Machine
 
   @computed
-  get currentEarningRate(): string {
+  get currentEarningRate(): number {
+    return this.currentMachine ? this.currentMachine.earningRate : 0
+  }
+
+  @computed
+  get formattedCurrentEarningRate(): string {
     let earningRate = 'Loading'
 
     if (this.store.native.machineInfo) {
