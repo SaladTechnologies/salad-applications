@@ -19,7 +19,6 @@ class App extends Component {
     }
 
     console.log('Running in native env')
-    this.store.native.loadMachineInfo()
   }
 
   render() {
