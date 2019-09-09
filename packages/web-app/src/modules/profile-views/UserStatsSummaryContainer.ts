@@ -3,7 +3,7 @@ import { RootStore } from '../../Store'
 import { UserStatsSummary } from './components/UserStatsSummary'
 
 const mapStoreToProps = (store: RootStore) => ({
-  earningRate: store.machine.currentEarningRate,
+  earningRate: store.machine.formattedCurrentEarningRate,
   miningStatus: store.native.miningStatus,
 })
 
