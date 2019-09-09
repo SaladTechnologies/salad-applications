@@ -40,9 +40,15 @@ export class BalanceStore {
       let balance = yield this.axios.get('profile/balance')
       const delta = balance.data.currentBalance - this.currentBalance
       const maxDelta = Config.maxBalanceDelta
+
+      console.log('>> [[BalanceStore] refreshBalance] delta: ', delta)
+      console.log('>> [[BalanceStore] refreshBalance] maxDelta: ', maxDelta)
+      console.log('>> [[BalanceStore] refreshBalance] balance.data.currentBalance: ', balance.data.currentBalance)
+
       if (delta > maxDelta || delta < 0) {
         this.interpolRate = 0
         this.currentBalance = balance.data.currentBalance
+        console.log('>>>>>> [[BalanceStore] refreshBalance] this.currentBalance: ', this.currentBalance)
       } else {
         this.interpolRate = delta / Config.dataRefreshRate
       }

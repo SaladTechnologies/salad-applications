@@ -46,6 +46,7 @@ export class NativeStore {
   private callbacks = new Map<string, Function>()
   private runningHeartbeat?: NodeJS.Timeout
   private zeroHashTimespan: number = 0
+  private initializeBalanceRefresh = true
 
   //#region Observables
   @observable
@@ -408,13 +409,20 @@ export class NativeStore {
       this.send(getHashrate)
       this.setHashrateFromLog()
 
-      if (machineStatus === 'running' && this.hashrate > 0) {
+      if (machineStatus === MINING_STATUS_RUNNING.toLowerCase() && this.hashrate > 0) {
         this.miningStatus = MINING_STATUS_EARNING
         this.zeroHashTimespan = 0
+
+        if (this.initializeBalanceRefresh) {
+          this.store.balance.refreshBalance()
+          this.store.balance.refreshBalance()
+          // this.store.refresh.refreshData()
+          this.initializeBalanceRefresh = false
+        }
         return
       }
 
-      if ((machineStatus === 'stopped' && this.hashrate > 0) || this.hashrate > 0) {
+      if ((machineStatus === MINING_STATUS_STOPPED.toLowerCase() && this.hashrate > 0) || this.hashrate > 0) {
         this.miningStatus = MINING_STATUS_RUNNING
         this.zeroHashTimespan = 0
         return
@@ -444,13 +452,13 @@ export class NativeStore {
     const machineId = this.store.token.getMachineId()
     const machineStatus = yield this.axios.get(`machines/${machineId}/status`)
 
-    this.hashrateHeartbeat(runStatus, machineStatus.data.status)
+    this.hashrateHeartbeat(runStatus, machineStatus.data.status.toString().toLowerCase())
 
     let miningStatus =
       this.zeroHashTimespan > 1
-        ? 'Running'
+        ? MINING_STATUS_RUNNING
         : this.miningStatus === MINING_STATUS_RUNNING || this.miningStatus === MINING_STATUS_EARNING
-        ? 'Running'
+        ? MINING_STATUS_RUNNING
         : this.miningStatus
 
     const data = {

@@ -42,6 +42,7 @@ export class RefreshService {
       console.error(error)
     }
   }
+
   stop() {
     console.log('Stopping refresh service')
 
