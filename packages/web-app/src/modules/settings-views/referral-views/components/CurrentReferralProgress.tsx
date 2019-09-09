@@ -44,8 +44,9 @@ class _CurrentReferralProgress extends Component<Props> {
         <div className={classes.headerContainer}>
           <P>CODE: {referral.code}</P>
           <P className={classes.bonusText}>
-            {percentComplete(referral) === 1 ? 'COMPLETED' : (1 + referral.referralDefinition.bonusRate).toFixed(2)}x
-            EARNING RATE
+            {percentComplete(referral) === 1
+              ? 'COMPLETED'
+              : `${(1 + referral.referralDefinition.bonusRate).toFixed(2)}x EARNING RATE`}
           </P>
         </div>
         <ProgressBar

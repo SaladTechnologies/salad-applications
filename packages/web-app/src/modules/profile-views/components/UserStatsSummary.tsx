@@ -26,7 +26,7 @@ class _UserStatsSummary extends Component<Props> {
         <StatElement title="Mining status" values={[miningStatus || 'Stopped']} />
         <StatElement
           title="Earning Rate"
-          values={[`${earningRate !== undefined ? (earningRate * 86400).toFixed(3) : '0.000'}/day`]}
+          values={[`$${earningRate !== undefined ? (earningRate * 86400).toFixed(3) : '0.000'}/day`]}
         />
       </div>
     )
