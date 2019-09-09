@@ -48,7 +48,7 @@ export class RewardStore {
     return this.rewards.map(r => {
       var clone: Reward = { ...r }
       clone.redeemable = r.price <= currentBalance
-      clone.remainingTimeLabel = getTimeRemainingText(r, currentBalance, earningRate)
+      clone.remainingTimeLabel = getTimeRemainingText(r, currentBalance, earningRate || 0)
       clone.percentUnlocked = Math.min(1, Math.max(0, currentBalance / r.price))
       return clone
     })
