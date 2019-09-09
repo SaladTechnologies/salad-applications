@@ -246,7 +246,7 @@ export class NativeStore {
 
   @action
   loadMachineInfo = () => {
-    if (this.machineInfo || this.loadingMachineInfo) {
+    if (this.machineInfo) {
       console.log('Machine info already loaded. Skipping...')
       return
     }
@@ -325,6 +325,7 @@ export class NativeStore {
       console.log('Registering machine with salad')
       let res: any = yield this.axios.post(`machines/${this.machineId}/data`, this.machineInfo)
       let machine: Machine = res.data
+
       this.validGPUs = machine.validGpus
       this.validOperatingSystem = machine.validOs
       this.store.machine.setCurrentMachine(machine)
@@ -348,6 +349,7 @@ export class NativeStore {
     this.store.analytics.trackMachineInfo(info)
     this.skippedCompatCheck = this.validOperatingSystem && this.validGPUs
     this.loadingMachineInfo = false
+
     this.store.routing.replace('/')
   }
 
@@ -402,8 +404,6 @@ export class NativeStore {
 
   @action
   hashrateHeartbeat = (runStatus: boolean, machineStatus: string) => {
-    console.log('[[NativeStore] hashrateHeartbeat] machineStatus: ', machineStatus)
-
     if (runStatus && this.isNative) {
       this.send(getHashrate)
       this.setHashrateFromLog()
