@@ -44,7 +44,7 @@ export class RootStore {
     this.analytics = new AnalyticsStore()
     this.routing = new RouterStore()
     this.xp = new ExperienceStore(this, axios)
-    this.machine = new MachineStore()
+    this.machine = new MachineStore(this)
     this.native = new NativeStore(this, axios)
     this.auth = new AuthStore(this, axios)
     this.token = new TokenStore()

@@ -151,6 +151,7 @@ const createMainWindow = () => {
   //Create the bridge to listen to messages from the web-app
   let bridge = new SaladBridge(mainWindow)
   ipcMain.on('js-dispatch', bridge.receiveMessage)
+  var getMachineInfoPromise: Promise<void> | undefined = undefined
 
   //Listen for machine info requests
   bridge.on('get-machine-info', () => {
@@ -159,10 +160,14 @@ const createMainWindow = () => {
       bridge.send('set-machine-info', machineInfo)
     }
 
+    //Prevent multiple `getMachineInfo` from being called at the same time
+    if (getMachineInfoPromise !== undefined) return
+
     //Fetch the machine info
-    getMachineInfo().then(info => {
+    getMachineInfoPromise = getMachineInfo().then(info => {
       machineInfo = info
       bridge.send('set-machine-info', machineInfo)
+      getMachineInfoPromise = undefined
     })
   })
 
