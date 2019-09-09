@@ -52,6 +52,7 @@ export default class Routes extends Component {
 
     if (profile.lastAcceptedTermsOfService !== Config.termsVersion) return <Redirect to="/onboarding/terms" />
     else if (this.store.profile.needsAnalyticsOnboarding) return <Redirect to="/onboarding/analytics" />
+    else if (profile.viewedReferralOnboarding !== true) return <Redirect to="/onboarding/referral-code" />
     else if (profile.lastSeenApplicationVersion !== Config.whatsNewVersion)
       return <Redirect to="/onboarding/whats-new" />
 

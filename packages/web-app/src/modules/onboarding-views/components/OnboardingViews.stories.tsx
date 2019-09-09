@@ -9,7 +9,7 @@ import { WhatsNewPage } from './WhatsNewPage'
 
 storiesOf('Modules/Onboarding', module)
   .add('Referral Entry Page', () => {
-    return <ReferralEntryPage onSubmitCode={action('submit')} onNext={action('next')} />
+    return <ReferralEntryPage onNext={action('next')} />
   })
   .add('Welcome Page', () => {
     return <WelcomePage onNext={action('login')} />

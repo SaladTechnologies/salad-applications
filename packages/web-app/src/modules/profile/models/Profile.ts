@@ -5,6 +5,7 @@ export interface Profile {
   lastAcceptedTermsOfService: string | undefined
   lastSeenApplicationVersion: string | undefined
   lastAcceptedUsageTrackingVersion: string | undefined
+  viewedReferralOnboarding: boolean | undefined
 }
 
 export enum ReferredStatus {

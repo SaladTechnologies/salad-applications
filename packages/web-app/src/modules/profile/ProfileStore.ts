@@ -37,6 +37,7 @@ export class ProfileStore {
       this.currentProfile === undefined ||
       (this.currentProfile.lastAcceptedTermsOfService !== Config.termsVersion ||
         this.currentProfile.lastSeenApplicationVersion !== Config.whatsNewVersion ||
+        this.currentProfile.viewedReferralOnboarding !== true ||
         this.needsAnalyticsOnboarding)
 
     this.setOnboarding(onboarding)
@@ -101,6 +102,28 @@ export class ProfileStore {
   })
 
   @action.bound
+  setViewedReferralOnboarding = flow(function*(this: ProfileStore) {
+    if (this.currentProfile === undefined) return
+
+    console.log('Viewed the referral onboarding page')
+
+    this.isUpdating = true
+
+    try {
+      let patch = yield this.axios.patch('profile', {
+        viewedReferralOnboarding: true,
+      })
+
+      this.currentProfile = patch.data
+    } catch (err) {
+      console.log(err)
+    } finally {
+      this.isUpdating = false
+      this.store.routing.replace('/')
+    }
+  })
+
+  @action.bound
   setAnalyticsOption = flow(function*(this: ProfileStore, agree: boolean) {
     if (this.currentProfile === undefined) return
 
@@ -133,22 +156,6 @@ export class ProfileStore {
       this.isUpdating = false
       this.store.routing.replace('/')
     }
-  })
-
-  @action.bound
-  skipReferral = flow(function*(this: ProfileStore) {
-    if (this.currentProfile === undefined) return
-
-    console.log('Skipping referral')
-
-    this.isUpdating = true
-
-    //For now we are not going to save the skipped state. We will show the referral
-    //entry page each time that the user opens the app until the server disallows this (currently 7 days)
-    yield this.sleep(500)
-
-    this.isUpdating = false
-    this.store.routing.replace('/')
   })
 
   @action.bound

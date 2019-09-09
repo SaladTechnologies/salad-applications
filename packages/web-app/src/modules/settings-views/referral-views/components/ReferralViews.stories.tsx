@@ -70,7 +70,8 @@ storiesOf('Modules|Referral/Components', module)
     return (
       <div style={{ backgroundColor: '#B2D530' }}>
         <ReferralCodeEntryComponent
-        // onSubmitCode={action('Submit code')}
+          dark
+          // onSubmitCode={action('Submit code')}
         />
       </div>
     )
