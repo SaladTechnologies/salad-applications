@@ -14,7 +14,7 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   /** The earning rate (USD/s) */
-  earningRate?: string
+  earningRate?: number
   miningStatus?: string
 }
 
@@ -24,7 +24,10 @@ class _UserStatsSummary extends Component<Props> {
     return (
       <div className={classes.container}>
         <StatElement title="Mining status" values={[miningStatus || 'Stopped']} />
-        <StatElement title="Earning Rate" values={[earningRate || 'Loading']} />
+        <StatElement
+          title="Earning Rate"
+          values={[earningRate === undefined ? 'Loading' : `$${(earningRate * 86400).toFixed(3)}/day`]}
+        />
       </div>
     )
   }

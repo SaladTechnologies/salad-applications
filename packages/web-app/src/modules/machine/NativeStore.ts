@@ -286,7 +286,15 @@ export class NativeStore {
       return
     }
 
-    this.send(start, this.machineId)
+    if (window.salad.apiVersion <= 2) {
+      this.send(start, this.machineId)
+    } else {
+      let address = `stratum1+tcp://0x6fF85749ffac2d3A36efA2BC916305433fA93731@eth-us-west1.nanopool.org:9999/${this.machineId}/notinuse%40salad.io`
+      this.send(start, {
+        machineId: this.machineId,
+        address: address,
+      })
+    }
 
     this.store.analytics.trackRunStatus(true)
   }

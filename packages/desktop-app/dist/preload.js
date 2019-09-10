@@ -2,12 +2,19 @@ const { ipcRenderer: ipc } = require('electron')
 
 init()
 
+/**
+ * API Versions
+ * 1 - Original
+ * 2 - Auto launch
+ * 3 - Pass the mining address
+ */
+
 function init() {
   console.log('Injecting Salad bridge')
 
   window.salad = {
     platform: 'electron',
-    apiVersion: 2,
+    apiVersion: 3,
     dispatch: dispatch,
   }
 

@@ -4,7 +4,7 @@ import * as path from 'path'
 import * as si from 'systeminformation'
 import { SaladBridge } from './SaladBridge'
 import { Config } from './config'
-import { Ethminer } from './Ethminer'
+import { Ethminer, StartMessage } from './Ethminer'
 import { MachineInfo } from './models/machine/MachineInfo'
 import { autoUpdater } from 'electron-updater'
 import { Logger } from './Logger'
@@ -151,6 +151,7 @@ const createMainWindow = () => {
   //Create the bridge to listen to messages from the web-app
   let bridge = new SaladBridge(mainWindow)
   ipcMain.on('js-dispatch', bridge.receiveMessage)
+  var getMachineInfoPromise: Promise<void> | undefined = undefined
 
   //Listen for machine info requests
   bridge.on('get-machine-info', () => {
@@ -159,10 +160,14 @@ const createMainWindow = () => {
       bridge.send('set-machine-info', machineInfo)
     }
 
+    //Prevent multiple `getMachineInfo` from being called at the same time
+    if (getMachineInfoPromise !== undefined) return
+
     //Fetch the machine info
-    getMachineInfo().then(info => {
+    getMachineInfoPromise = getMachineInfo().then(info => {
       machineInfo = info
       bridge.send('set-machine-info', machineInfo)
+      getMachineInfoPromise = undefined
     })
   })
 
@@ -188,17 +193,17 @@ const createMainWindow = () => {
     app.quit()
   })
 
-  bridge.on('start-salad', (id: string) => {
+  bridge.on('start-salad', (message: StartMessage) => {
     console.log('Starting salad')
 
     LogScraper.hashrate = 0
 
     if (machineInfo) {
-      ethminer.start(machineInfo, id)
+      ethminer.start(machineInfo, message)
       bridge.send(runStatus, true)
     } else {
       getMachineInfo().then(info => {
-        ethminer.start(info, id)
+        ethminer.start(info, message)
         bridge.send(runStatus, true)
       })
     }

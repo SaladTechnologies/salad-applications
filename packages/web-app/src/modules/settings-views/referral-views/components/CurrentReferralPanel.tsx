@@ -30,7 +30,7 @@ class _CurrentReferralPanel extends Component<Props> {
           <div className={classnames(classes.container)}>
             <VeggieName>Enter A Code</VeggieName>
             <P>Receive a referral code? Enter it below so you can earn your referral bonus!.</P>
-            <ReferralCodeEntryComponent {...rest} />
+            <ReferralCodeEntryComponent dark {...rest} />
           </div>
         )}
       </>
