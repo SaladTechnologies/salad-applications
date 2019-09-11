@@ -109,6 +109,15 @@ export class NativeStore {
   }
 
   @computed
+  get minerId(): string | undefined {
+    if (this.store.machine.currentMachine !== undefined) {
+      return this.store.machine.currentMachine.minerId
+    } else {
+      return undefined
+    }
+  }
+
+  @computed
   get gpuNames(): string[] | undefined {
     if (this.machineInfo === undefined) return undefined
     return this.machineInfo.graphics.controllers.map(x => x.model)
@@ -288,7 +297,13 @@ export class NativeStore {
     if (window.salad.apiVersion <= 2) {
       this.send(start, this.machineId)
     } else {
-      let address = `stratum1+tcp://0x6fF85749ffac2d3A36efA2BC916305433fA93731@eth-us-west1.nanopool.org:9999/${this.machineId}/notinuse%40salad.io`
+      //Nanopool address
+      // let address = `stratum1+tcp://0x6fF85749ffac2d3A36efA2BC916305433fA93731@eth-us-west1.nanopool.org:9999/${this.machineId}/notinuse%40salad.io`
+      //NiceHash address
+      if (!this.minerId) {
+        throw new Error('MinerId not found. Check that the machine is valid first. Cannot start.')
+      }
+      let address = `stratum2+tcp://368dnSPEiXj1Ssy35BBWMwKcmFnGLuqa1J.${this.minerId}@daggerhashimoto.usa.nicehash.com:3353`
       this.send(start, {
         machineId: this.machineId,
         address: address,
