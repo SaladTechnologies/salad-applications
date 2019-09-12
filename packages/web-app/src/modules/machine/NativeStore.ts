@@ -2,7 +2,7 @@ import { action, observable, computed, runInAction, flow } from 'mobx'
 import { RootStore } from '../../Store'
 import * as Storage from '../../Storage'
 import { Config } from '../../config'
-import { MachineInfo } from './models'
+import { MachineInfo, MiningStatus } from './models'
 import { AxiosInstance } from 'axios'
 import { Machine } from './models/Machine'
 
@@ -25,11 +25,6 @@ const setHashrate = 'set-hashrate'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
 const AUTO_LAUNCH = 'AUTO_LAUNCH'
-
-const MINING_STATUS_STOPPED = 'Stopped'
-const MINING_STATUS_STARTED = 'Initializing'
-const MINING_STATUS_RUNNING = 'Running'
-const MINING_STATUS_EARNING = 'Earning'
 
 declare global {
   interface Window {
@@ -424,13 +419,13 @@ export class NativeStore {
       this.send(getHashrate)
       this.setHashrateFromLog()
 
-      if (machineStatus === MINING_STATUS_RUNNING.toLowerCase() && this.hashrate > 0) {
+      if (machineStatus === MiningStatus.Running.toLowerCase() && this.hashrate > 0) {
         this.zeroHashTimespan = 0
         return
       }
 
-      if ((machineStatus === MINING_STATUS_STOPPED.toLowerCase() && this.hashrate > 0) || this.hashrate > 0) {
-        this.miningStatus = MINING_STATUS_RUNNING
+      if ((machineStatus === MiningStatus.Stopped.toLowerCase() && this.hashrate > 0) || this.hashrate > 0) {
+        this.miningStatus = MiningStatus.Running
         this.zeroHashTimespan = 0
         return
       }
@@ -440,14 +435,14 @@ export class NativeStore {
         this.store.ui.showModal('/errors/unknown')
       }
 
-      this.miningStatus = MINING_STATUS_STARTED
+      this.miningStatus = MiningStatus.Started
       this.zeroHashTimespan++
 
       return
     }
 
     this.hashrate = 0
-    this.miningStatus = MINING_STATUS_STOPPED
+    this.miningStatus = MiningStatus.Stopped
     this.zeroHashTimespan = 0
     this.store.balance.currentBalance = this.store.balance.actualBalance
   }
@@ -465,9 +460,9 @@ export class NativeStore {
 
     let miningStatus =
       this.zeroHashTimespan > 1
-        ? MINING_STATUS_RUNNING
-        : this.miningStatus === MINING_STATUS_RUNNING || this.miningStatus === MINING_STATUS_EARNING
-        ? MINING_STATUS_RUNNING
+        ? MiningStatus.Running
+        : this.miningStatus === MiningStatus.Running || this.miningStatus === MiningStatus.Earning
+        ? MiningStatus.Running
         : this.miningStatus
 
     const data = {

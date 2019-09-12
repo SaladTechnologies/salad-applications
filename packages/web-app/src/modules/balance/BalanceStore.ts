@@ -2,8 +2,7 @@ import { action, observable, flow, autorun } from 'mobx'
 import { RootStore } from '../../Store'
 import { AxiosInstance } from 'axios'
 import { Config } from '../../config'
-
-const MINING_STATUS_EARNING = 'Earning'
+import { MiningStatus } from '../machine/models/MiningStatus'
 
 export class BalanceStore {
   private estimateTimer?: NodeJS.Timeout
@@ -51,13 +50,13 @@ export class BalanceStore {
       }
 
       // Clears out a check on 'Stopped' so mining status is not changed to 'Earning'
-      if (this.store.native.miningStatus.toLowerCase() === 'stopped') {
+      if (this.store.native.miningStatus.toLowerCase() === MiningStatus.Stopped.toLowerCase()) {
         delta = 0
       }
 
       // Change mining status to 'Earning'
-      if (delta && this.store.native.machineStatus.toLowerCase() === 'running') {
-        this.store.native.miningStatus = MINING_STATUS_EARNING
+      if (delta && this.store.native.machineStatus.toLowerCase() === MiningStatus.Running.toLowerCase()) {
+        this.store.native.miningStatus = MiningStatus.Earning
       }
 
       this.actualBalance = balance.data.currentBalance
