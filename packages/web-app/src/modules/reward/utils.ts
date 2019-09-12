@@ -44,7 +44,7 @@ export const rewardFromResource = (r: RewardResource): Reward => ({
 
 export const getTimeRemainingText = (reward: Reward, currentBalance: number, earningRate: number): string => {
   // Calculates the remaining time in hours
-  let remainingTime = (reward.price - currentBalance) / earningRate
+  let remainingTime = (reward.price - currentBalance) / (earningRate*3600)
   if (remainingTime < 0) return ''
   if (remainingTime < 2) return `${(remainingTime * 60).toFixed(0)} MINUTES REMAINING`
   if (remainingTime < 48) return `${remainingTime.toFixed(0)} HOURS REMAINING`
