@@ -46,7 +46,6 @@ export class NativeStore {
   private callbacks = new Map<string, Function>()
   private runningHeartbeat?: NodeJS.Timeout
   private zeroHashTimespan: number = 0
-  private initializeBalanceRefresh = true
 
   //#region Observables
   @observable
@@ -80,7 +79,13 @@ export class NativeStore {
   public miningStatus: string = 'Stopped'
 
   @observable
+  public machineStatus: string = 'stopped'
+
+  @observable
   public hashrate: number = 0
+
+  @observable
+  public runningStatus: boolean = false
   //#endregion
 
   @computed
@@ -227,15 +232,17 @@ export class NativeStore {
     }
 
     if (status) {
+      this.runningStatus = true
       //Send the initial heartbeat
-      this.sendRunningStatus(true)
+      this.sendRunningStatus(this.runningStatus)
 
       //Schedule future heartbeats
       this.runningHeartbeat = setInterval(() => {
-        this.sendRunningStatus(true)
+        this.sendRunningStatus(this.runningStatus)
       }, Config.statusHeartbeatRate)
     } else {
-      this.sendRunningStatus(false)
+      this.runningStatus = false
+      this.sendRunningStatus(this.runningStatus)
     }
   }
 
@@ -418,15 +425,7 @@ export class NativeStore {
       this.setHashrateFromLog()
 
       if (machineStatus === MINING_STATUS_RUNNING.toLowerCase() && this.hashrate > 0) {
-        this.miningStatus = MINING_STATUS_EARNING
         this.zeroHashTimespan = 0
-
-        if (this.initializeBalanceRefresh) {
-          this.store.balance.refreshBalance()
-          this.store.balance.refreshBalance()
-          // this.store.refresh.refreshData()
-          this.initializeBalanceRefresh = false
-        }
         return
       }
 
@@ -450,6 +449,7 @@ export class NativeStore {
     this.hashrate = 0
     this.miningStatus = MINING_STATUS_STOPPED
     this.zeroHashTimespan = 0
+    this.store.balance.currentBalance = this.store.balance.actualBalance
   }
   //#endregion
 
@@ -458,9 +458,10 @@ export class NativeStore {
     console.log('Status MachineId: ' + this.machineId)
 
     const machineId = this.store.token.getMachineId()
-    const machineStatus = yield this.axios.get(`machines/${machineId}/status`)
+    const response = yield this.axios.get(`machines/${machineId}/status`)
+    this.machineStatus = response.data.status.toString().toLowerCase()
 
-    this.hashrateHeartbeat(runStatus, machineStatus.data.status.toString().toLowerCase())
+    this.hashrateHeartbeat(runStatus, this.machineStatus)
 
     let miningStatus =
       this.zeroHashTimespan > 1

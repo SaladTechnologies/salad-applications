@@ -3,6 +3,8 @@ import { RootStore } from '../../Store'
 import { AxiosInstance } from 'axios'
 import { Config } from '../../config'
 
+const MINING_STATUS_EARNING = 'Earning'
+
 export class BalanceStore {
   private estimateTimer?: NodeJS.Timeout
 
@@ -19,7 +21,7 @@ export class BalanceStore {
 
   private lastUpdateTime: number = Date.now()
 
-  constructor(store: RootStore, private readonly axios: AxiosInstance) {
+  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     autorun(() => {
       if (store.native.isRunning) {
         if (this.estimateTimer) clearInterval(this.estimateTimer)
@@ -38,20 +40,26 @@ export class BalanceStore {
   refreshBalance = flow(function*(this: BalanceStore) {
     try {
       let balance = yield this.axios.get('profile/balance')
-      const delta = balance.data.currentBalance - this.currentBalance
+      let delta = balance.data.currentBalance - this.currentBalance
       const maxDelta = Config.maxBalanceDelta
-
-      console.log('>> [[BalanceStore] refreshBalance] delta: ', delta)
-      console.log('>> [[BalanceStore] refreshBalance] maxDelta: ', maxDelta)
-      console.log('>> [[BalanceStore] refreshBalance] balance.data.currentBalance: ', balance.data.currentBalance)
 
       if (delta > maxDelta || delta < 0) {
         this.interpolRate = 0
         this.currentBalance = balance.data.currentBalance
-        console.log('>>>>>> [[BalanceStore] refreshBalance] this.currentBalance: ', this.currentBalance)
       } else {
         this.interpolRate = delta / Config.dataRefreshRate
       }
+
+      // Clears out a check on 'Stopped' so mining status is not changed to 'Earning'
+      if (this.store.native.miningStatus.toLowerCase() === 'stopped') {
+        delta = 0
+      }
+
+      // Change mining status to 'Earning'
+      if (delta && this.store.native.machineStatus.toLowerCase() === 'running') {
+        this.store.native.miningStatus = MINING_STATUS_EARNING
+      }
+
       this.actualBalance = balance.data.currentBalance
       this.lifetimeBalance = balance.data.lifetimeBalance
     } catch (error) {

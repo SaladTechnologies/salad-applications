@@ -74,6 +74,8 @@ export class RootStore {
 
       this.native.loadMachineInfo()
     }, 1000)
+
+    this.refresh.start()
   })
 
   @action
