@@ -17,7 +17,7 @@ export class Ethminer {
   private isRunning = false
   private processName: string = 'ethminer.exe'
 
-  public onError?: (errorCode: number) => void
+  public onError?: (errorCode: number, errorMessage: string) => void
 
   private checkForErrors = (message: string) => {
     if (!this.onError) {
@@ -48,7 +48,7 @@ export class Ethminer {
     ]
 
     errors.map(item => {
-      if (message.includes(item.error)) return this.onError!(item.code)
+      if (message.includes(item.error)) return this.onError!(item.code, message)
     })
   }
 
