@@ -2,7 +2,7 @@ import { action, observable, computed, runInAction, flow } from 'mobx'
 import { RootStore } from '../../Store'
 import * as Storage from '../../Storage'
 import { Config } from '../../config'
-import { MachineInfo } from './models'
+import { MachineInfo, MiningStatus } from './models'
 import { AxiosInstance } from 'axios'
 import { Machine } from './models/Machine'
 
@@ -25,11 +25,6 @@ const setHashrate = 'set-hashrate'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
 const AUTO_LAUNCH = 'AUTO_LAUNCH'
-
-const MINING_STATUS_STOPPED = 'Stopped'
-const MINING_STATUS_STARTED = 'Initializing'
-const MINING_STATUS_RUNNING = 'Running'
-const MINING_STATUS_EARNING = 'Earning'
 
 declare global {
   interface Window {
@@ -79,7 +74,13 @@ export class NativeStore {
   public miningStatus: string = 'Stopped'
 
   @observable
+  public machineStatus: string = 'stopped'
+
+  @observable
   public hashrate: number = 0
+
+  @observable
+  public runningStatus: boolean = false
   //#endregion
 
   @computed
@@ -231,15 +232,17 @@ export class NativeStore {
     }
 
     if (status) {
+      this.runningStatus = true
       //Send the initial heartbeat
-      this.sendRunningStatus(true)
+      this.sendRunningStatus(this.runningStatus)
 
       //Schedule future heartbeats
       this.runningHeartbeat = setInterval(() => {
-        this.sendRunningStatus(true)
+        this.sendRunningStatus(this.runningStatus)
       }, Config.statusHeartbeatRate)
     } else {
-      this.sendRunningStatus(false)
+      this.runningStatus = false
+      this.sendRunningStatus(this.runningStatus)
     }
   }
 
@@ -421,14 +424,13 @@ export class NativeStore {
       this.send(getHashrate)
       this.setHashrateFromLog()
 
-      if (machineStatus === 'running' && this.hashrate > 0) {
-        this.miningStatus = MINING_STATUS_EARNING
+      if (machineStatus === MiningStatus.Running && this.hashrate > 0) {
         this.zeroHashTimespan = 0
         return
       }
 
-      if ((machineStatus === 'stopped' && this.hashrate > 0) || this.hashrate > 0) {
-        this.miningStatus = MINING_STATUS_RUNNING
+      if ((machineStatus === MiningStatus.Stopped && this.hashrate > 0) || this.hashrate > 0) {
+        this.miningStatus = MiningStatus.Running
         this.zeroHashTimespan = 0
         return
       }
@@ -438,15 +440,16 @@ export class NativeStore {
         this.store.ui.showModal('/errors/unknown')
       }
 
-      this.miningStatus = MINING_STATUS_STARTED
+      this.miningStatus = MiningStatus.Started
       this.zeroHashTimespan++
 
       return
     }
 
     this.hashrate = 0
-    this.miningStatus = MINING_STATUS_STOPPED
+    this.miningStatus = MiningStatus.Stopped
     this.zeroHashTimespan = 0
+    this.store.balance.currentBalance = this.store.balance.actualBalance
   }
   //#endregion
 
@@ -455,15 +458,16 @@ export class NativeStore {
     console.log('Status MachineId: ' + this.machineId)
 
     const machineId = this.store.token.getMachineId()
-    const machineStatus = yield this.axios.get(`machines/${machineId}/status`)
+    const response = yield this.axios.get(`machines/${machineId}/status`)
+    this.machineStatus = response.data.status.toString()
 
-    this.hashrateHeartbeat(runStatus, machineStatus.data.status)
+    this.hashrateHeartbeat(runStatus, this.machineStatus)
 
     let miningStatus =
       this.zeroHashTimespan > 1
-        ? 'Running'
-        : this.miningStatus === MINING_STATUS_RUNNING || this.miningStatus === MINING_STATUS_EARNING
-        ? 'Running'
+        ? MiningStatus.Running
+        : this.miningStatus === MiningStatus.Running || this.miningStatus === MiningStatus.Earning
+        ? MiningStatus.Running
         : this.miningStatus
 
     const data = {

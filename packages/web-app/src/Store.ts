@@ -11,6 +11,7 @@ import { UIStore } from './UIStore'
 import { ReferralStore } from './modules/referral'
 import { AnalyticsStore } from './modules/analytics'
 import { NativeStore } from './modules/machine/NativeStore'
+import { RefreshService } from './modules/data-refresh'
 
 //Forces all changes to state to be from an action
 configure({ enforceActions: 'always' })
@@ -39,6 +40,7 @@ export class RootStore {
   public readonly ui: UIStore
   public readonly referral: ReferralStore
   public readonly native: NativeStore
+  public readonly refresh: RefreshService
 
   constructor(readonly axios: AxiosInstance) {
     this.analytics = new AnalyticsStore()
@@ -53,6 +55,7 @@ export class RootStore {
     this.profile = new ProfileStore(this, axios)
     this.ui = new UIStore(this)
     this.referral = new ReferralStore(this, axios)
+    this.refresh = new RefreshService(this)
   }
 
   @action.bound
@@ -71,6 +74,8 @@ export class RootStore {
 
       this.native.loadMachineInfo()
     }, 1000)
+
+    this.refresh.start()
   })
 
   @action
