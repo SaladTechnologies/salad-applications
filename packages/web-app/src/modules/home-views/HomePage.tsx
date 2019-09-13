@@ -4,7 +4,6 @@ import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 import { ExperienceBarContainer, SlicedVeggieContainer } from '../xp-views'
 import { RewardListContainer, RewardFilterContainer, SelectedRewardContainer } from '../reward-views'
-import { RefreshService } from '../data-refresh'
 import { getStore } from '../../Store'
 import { BottomBarContainer } from './BottomBarContainer'
 import { ProfileMenuItemContainer, UserStatsSummaryContainer } from '../profile-views'
@@ -74,20 +73,10 @@ const styles = (theme: SaladTheme) => ({
 })
 
 class _HomePage extends Component<WithStyles<typeof styles>> {
-  refreshService: RefreshService
-
-  constructor(props: any) {
-    super(props)
-    let store = getStore()
-    this.refreshService = new RefreshService(store)
-  }
-
-  componentDidMount() {
-    this.refreshService.start()
-  }
+  store = getStore()
 
   componentWillUnmount() {
-    this.refreshService.stop()
+    this.store.refresh.stop()
   }
 
   render() {
