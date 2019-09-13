@@ -150,6 +150,22 @@ export class AnalyticsStore {
     // })
   }
 
+  public trackEarning = (hasEarned: boolean) => {
+    if (!this.canTrack) return
+
+    mixpanel.people.set({
+      'Mining Status Earning': hasEarned,
+    })
+  }
+
+  public trackCompatibleGpu = (isCompatible: boolean) => {
+    if (!this.canTrack) return
+
+    mixpanel.people.set({
+      'Compatible GPU': isCompatible,
+    })
+  }
+
   public track = (event: string, properties?: { [key: string]: any }) => {
     if (!this.canTrack) return
 

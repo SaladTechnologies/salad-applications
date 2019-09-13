@@ -345,6 +345,7 @@ export class NativeStore {
       this.validGPUs = machine.validGpus
       this.validOperatingSystem = machine.validOs
       this.store.machine.setCurrentMachine(machine)
+      this.store.analytics.trackCompatibleGpu(this.validGPUs)
     } catch (err) {
       this.store.analytics.captureException(new Error(`register-machine error: ${err}`))
       this.validGPUs = false
@@ -426,22 +427,32 @@ export class NativeStore {
 
       if (machineStatus === MiningStatus.Running && this.hashrate > 0) {
         this.zeroHashTimespan = 0
+        this.store.analytics.track('Mining Status', { MiningStatus: MiningStatus.Earning })
+        this.store.analytics.trackEarning(true)
         return
       }
 
       if ((machineStatus === MiningStatus.Stopped && this.hashrate > 0) || this.hashrate > 0) {
         this.miningStatus = MiningStatus.Running
         this.zeroHashTimespan = 0
+        this.store.analytics.track('Mining Status', { MiningStatus: MiningStatus.Running })
         return
       }
 
       if (this.zeroHashTimespan >= Config.zeroHashrateNotification) {
+        this.miningStatus = MiningStatus.Error
         this.zeroHashTimespan = 0
         this.store.ui.showModal('/errors/unknown')
+        this.store.analytics.track('Mining Status', {
+          MiningStatus: MiningStatus.Error,
+          Message: `${this.hashrate} hashrate for longer than ${Config.zeroHashrateNotification} minutes`,
+        })
+        this.store.analytics.trackEarning(false)
       }
 
       this.miningStatus = MiningStatus.Started
       this.zeroHashTimespan++
+      this.store.analytics.track('Mining Status', { MiningStatus: MiningStatus.Started })
 
       return
     }
@@ -450,6 +461,7 @@ export class NativeStore {
     this.miningStatus = MiningStatus.Stopped
     this.zeroHashTimespan = 0
     this.store.balance.currentBalance = this.store.balance.actualBalance
+    this.store.analytics.track('Mining Status', { MiningStatus: MiningStatus.Stopped })
   }
   //#endregion
 
