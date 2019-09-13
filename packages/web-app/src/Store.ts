@@ -42,6 +42,8 @@ export class RootStore {
   public readonly native: NativeStore
   public readonly refresh: RefreshService
 
+  private machineInfoHeartbeat?: NodeJS.Timeout
+
   constructor(readonly axios: AxiosInstance) {
     this.analytics = new AnalyticsStore()
     this.routing = new RouterStore()
@@ -65,18 +67,23 @@ export class RootStore {
     this.xp.refreshXp()
     this.referral.loadCurrentReferral()
 
-    // Before we can registerMachine we need machineInfo
-    let machineInfoHeartbeat = setInterval(() => {
-      if (this.native.machineInfo) {
-        this.native.registerMachine()
-        clearInterval(machineInfoHeartbeat)
-      }
+    // Start a timer to keep checking for system information
+    this.machineInfoHeartbeat = setInterval(this.tryRegisterMachine, 20000)
 
-      this.native.loadMachineInfo()
-    }, 1000)
+    this.tryRegisterMachine()
 
     this.refresh.start()
   })
+
+  @action
+  tryRegisterMachine = () => {
+    if (this.native.machineInfo) {
+      this.native.registerMachine()
+      if (this.machineInfoHeartbeat) clearInterval(this.machineInfoHeartbeat)
+    } else {
+      this.native.loadMachineInfo()
+    }
+  }
 
   @action
   onLogout = () => {
