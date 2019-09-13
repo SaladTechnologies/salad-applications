@@ -50,12 +50,12 @@ export class BalanceStore {
       }
 
       // Clears out a check on 'Stopped' so mining status is not changed to 'Earning'
-      if (this.store.native.miningStatus.toLowerCase() === MiningStatus.Stopped.toLowerCase()) {
+      if (this.store.native.miningStatus === MiningStatus.Stopped) {
         delta = 0
       }
 
       // Change mining status to 'Earning'
-      if (delta && this.store.native.machineStatus.toLowerCase() === MiningStatus.Running.toLowerCase()) {
+      if (delta && this.store.native.machineStatus === MiningStatus.Running) {
         this.store.native.miningStatus = MiningStatus.Earning
       }
 

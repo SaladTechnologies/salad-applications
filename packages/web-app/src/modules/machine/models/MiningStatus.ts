@@ -1,6 +1,6 @@
 export enum MiningStatus {
-  Stopped = 'Stopped',
-  Started = 'Initializing',
-  Running = 'Running',
-  Earning = 'Earning',
+  Stopped = 'stopped',
+  Started = 'initializing',
+  Running = 'running',
+  Earning = 'earning',
 }

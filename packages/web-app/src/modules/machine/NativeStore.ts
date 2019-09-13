@@ -419,12 +419,12 @@ export class NativeStore {
       this.send(getHashrate)
       this.setHashrateFromLog()
 
-      if (machineStatus === MiningStatus.Running.toLowerCase() && this.hashrate > 0) {
+      if (machineStatus === MiningStatus.Running && this.hashrate > 0) {
         this.zeroHashTimespan = 0
         return
       }
 
-      if ((machineStatus === MiningStatus.Stopped.toLowerCase() && this.hashrate > 0) || this.hashrate > 0) {
+      if ((machineStatus === MiningStatus.Stopped && this.hashrate > 0) || this.hashrate > 0) {
         this.miningStatus = MiningStatus.Running
         this.zeroHashTimespan = 0
         return
@@ -454,7 +454,7 @@ export class NativeStore {
 
     const machineId = this.store.token.getMachineId()
     const response = yield this.axios.get(`machines/${machineId}/status`)
-    this.machineStatus = response.data.status.toString().toLowerCase()
+    this.machineStatus = response.data.status.toString()
 
     this.hashrateHeartbeat(runStatus, this.machineStatus)
 
