@@ -482,6 +482,8 @@ export class NativeStore {
         ? MiningStatus.Running
         : this.miningStatus
 
+    this.store.analytics.track('Machine Status', { MachineStatus: this.machineStatus })
+
     const data = {
       status: miningStatus,
     }
