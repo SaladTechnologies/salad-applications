@@ -58,6 +58,10 @@ export default class Routes extends Component {
   }
 
   render() {
+    if (Config.downTime) {
+      return <Route render={() => <LoadingPage text="Salad Is Currently Down For Maintenance." />} />
+    }
+
     let isElectron = this.store.native.isNative
     let isAuth = this.store.auth.isAuth
     let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
@@ -65,9 +69,7 @@ export default class Routes extends Component {
 
     return (
       <Switch>
-        {!isAuth && (
-          <NoAuth store={this.store.auth} />
-        )}
+        {!isAuth && <NoAuth store={this.store.auth} />}
 
         {isOnboarding && (
           // When extracted into it's own component, onboarding doesn't load
@@ -82,13 +84,9 @@ export default class Routes extends Component {
           </AnimatedSwitch>
         )}
 
-        {isElectron && showCompatibilityPage && (
-          <CompatibilityCheckPageContainer />
-        )}
+        {isElectron && showCompatibilityPage && <CompatibilityCheckPageContainer />}
 
-        {isAuth && (
-          <Auth />
-        )}
+        {isAuth && <Auth />}
 
         <Route render={() => <LoadingPage text="Page Not Found" />} />
       </Switch>
@@ -98,8 +96,7 @@ export default class Routes extends Component {
 
 const NoAuth = (props: any) => {
   const render = () => {
-    if (!props.store.isLoading)
-      return <WelcomePageContainer />
+    if (!props.store.isLoading) return <WelcomePageContainer />
 
     return <LoadingPage text="Logging In" />
   }

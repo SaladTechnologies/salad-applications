@@ -80,6 +80,8 @@ class Config {
   public readonly supportUrl: string = requiredString('REACT_APP_SUPPORT_URL')
   public readonly discordUrl: string = requiredString('REACT_APP_DISCORD_URL')
   public readonly releaseNotesUrl: string = requiredString('REACT_APP_RELEASES_URL')
+
+  public readonly downTime: boolean = optionalBool('REACT_APP_DOWN_TIME')
 }
 
 const instance = new Config()
