@@ -48,8 +48,7 @@ export const convertMinutes = (hours: number): number => hours * 60000
 
 class Config {
   // public readonly appUrl: string = 'http://localhost:3000/'
-  // public readonly appUrl: string = 'https://app.salad.io'
-  public readonly appUrl: string = 'https://0-3-0--salad-web-app.netlify.com/' //TODO:
+  public readonly appUrl: string = 'https://app.salad.io'
 }
 
 const instance = new Config()

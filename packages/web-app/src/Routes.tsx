@@ -64,6 +64,10 @@ export default class Routes extends Component {
       return <Route render={() => <LoadingPage text="Salad Is Currently Down For Maintenance." />} />
     }
 
+    if (this.store.native.apiVersion < 3) {
+      return <Route render={() => <LoadingPage text="Salad Is Out of Date, Please Update to Continue." />} />
+    }
+
     let isElectron = this.store.native.isNative
     let isAuth = this.store.auth.isAuth
     let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
