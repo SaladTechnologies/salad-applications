@@ -5,8 +5,7 @@ import { RootStore } from '../../Store'
 import uuidv4 from 'uuid/v4'
 import { Config } from '../../config'
 import * as Storage from '../../Storage'
-
-const SALAD_TOKEN = 'TOKEN'
+import { SALAD_TOKEN } from '.'
 
 export class AuthStore {
   @observable

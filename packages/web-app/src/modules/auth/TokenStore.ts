@@ -2,7 +2,7 @@ import { action, observable } from 'mobx'
 import { TokenData } from './models'
 import * as Storage from '../../Storage'
 
-const SALAD_TOKEN = 'NEW_TOKEN'
+export const SALAD_TOKEN = 'NEW_TOKEN'
 
 export class TokenStore {
   @observable
