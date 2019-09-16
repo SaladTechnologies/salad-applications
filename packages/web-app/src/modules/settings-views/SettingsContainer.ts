@@ -3,9 +3,7 @@ import { RootStore } from '../../Store'
 import { Settings } from './components'
 import { Config } from '../../config'
 
-const openLink = (url: string) => {
-  window.open(url, '_blank')
-}
+
 
 const handleSettingsMenuClick = (store: RootStore, url: string) => {
   store.routing.push(url)
