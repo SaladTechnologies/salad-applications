@@ -3,10 +3,6 @@ import { RootStore } from '../../Store'
 import { Settings } from './components'
 import { Config } from '../../config'
 
-const handleBug = () => {
-  openLink('https://salad.zendesk.com/hc/en-us/requests/new')
-}
-
 const openLink = (url: string) => {
   window.open(url, '_blank')
 }
@@ -27,7 +23,7 @@ const mapStoreToProps = (store: RootStore) => {
     onCloseClicked: () => store.ui.hideModal(),
     onCloseKeyPress: () => store.ui.hideModal(),
     onListItemClick: (url: string) => handleSettingsMenuClick(store, url),
-    onSendBug: handleBug,
+    onSendBug: store.ui.openCanny,
     menuItems: menuItems,
     appVersion: store.native.desktopVersion,
     appBuild: Config.appBuild,
