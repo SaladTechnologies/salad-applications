@@ -1,23 +1,50 @@
 import { RewardResource } from './models/RewardResource'
+import { RewardCategory } from './models/RewardCategory'
 import { Reward } from './models/Reward'
 
+/** Maps from the reward category to color */
+const colorFromCategory = (category: RewardCategory): string => {
+  switch (category) {
+    case RewardCategory.GamingGiftcard:
+      return '#5e4af4'
+    case RewardCategory.Donation:
+      return '#DBF1C1'
+    case RewardCategory.OtherGiftcard:
+      return '#ef3930'
+    case RewardCategory.HardwareAndPeripheral:
+      return '#ffffff'
+    case RewardCategory.PhysicalGood:
+      return '#DBF1C1'
+    case RewardCategory.Game:
+      return '#DBF1C1'
+    case RewardCategory.Subscription:
+      return '#DBF1C1'
+    default:
+      return '#B2D530'
+  }
+}
+
 export const rewardFromResource = (r: RewardResource): Reward => ({
-  id: String(r.rewardId),
+  //Reward data
+  id: r.id,
   name: r.name,
-  details: r.detailsCard,
+  description: r.description,
   price: r.price,
-  filter: r.filter.toLowerCase(),
-  color: r.color,
+  image: r.image,
+  category: r.category,
+  checkoutTerms: r.checkoutTerms,
+  tags: r.tags.map(x => x.toLowerCase()),
+
+  //Client side
   redeemable: false,
-  imageSrc: r.imageLink,
   remainingTimeLabel: '',
   percentUnlocked: 0,
-  modalId: String(r.initialModal),
+  color: colorFromCategory(r.category),
 })
 
 export const getTimeRemainingText = (reward: Reward, currentBalance: number, earningRate: number): string => {
   // Calculates the remaining time in hours
-  let remainingTime = (reward.price - currentBalance) / earningRate
+  let remainingTime = (reward.price - currentBalance) / (earningRate*3600)
   if (remainingTime < 0) return ''
   if (remainingTime < 2) return `${(remainingTime * 60).toFixed(0)} MINUTES REMAINING`
   if (remainingTime < 48) return `${remainingTime.toFixed(0)} HOURS REMAINING`

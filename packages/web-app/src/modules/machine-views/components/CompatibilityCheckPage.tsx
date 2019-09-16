@@ -86,8 +86,8 @@ class _CompatibilityCheckPage extends Component<Props> {
           <div>
             <div className={classes.gpuList}>
               {gpuList &&
-                gpuList.map(x => (
-                  <div key={x} className={classes.gpuTitle}>
+                gpuList.map((x, index) => (
+                  <div key={index} className={classes.gpuTitle}>
                     {x}
                   </div>
                 ))}

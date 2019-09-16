@@ -16,8 +16,10 @@ import { Config } from './config'
 
 Sentry.init({
   dsn: Config.sentryDSN,
-  release: `web-app@${Config.appVersion}`,
+  release: `web-app@${Config.appBuild}`,
 })
+
+console.log(`Running web app build:${Config.appBuild}`)
 
 const client = createClient()
 const rootStore = createStore(client)

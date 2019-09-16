@@ -5,6 +5,7 @@ import { AngledPanel, Tooltip } from '../../../components'
 import classnames from 'classnames'
 // @ts-ignore
 import ReactHintFactory from 'react-hint'
+
 const ReactHint = ReactHintFactory(React)
 
 const styles = (theme: SaladTheme) => ({
@@ -59,6 +60,7 @@ const styles = (theme: SaladTheme) => ({
     right: 0,
     bottom: 0,
     left: 50,
+    letterSpacing: '1.5px',
   },
   infoCorner: {
     position: 'absolute',
@@ -71,22 +73,26 @@ const styles = (theme: SaladTheme) => ({
     textAlign: 'center',
   },
   title: {
-    fontFamily: 'SharpGroteskLight25',
+    fontFamily: theme.fontGroteskLight25,
     fontSize: theme.small,
     textTransform: 'uppercase',
-    letterSpacing: '1px',
   },
   balanceText: {
-    fontFamily: 'SharpGroteskLight09',
+    fontFamily: theme.fontGroteskLight09,
     color: theme.green,
     fontSize: theme.xLarge,
     marginTop: '-.25rem',
     marginBottom: '-.5rem',
   },
-  rateText: {
-    fontFamily: 'sharpGroteskBook25',
-    fontSize: theme.small,
-    letterSpacing: '1px',
+  subTitle: {
+    fontFamily: theme.fontGroteskLight25,
+    fontSize: 10,
+    textTransform: 'uppercase',
+  },
+  subText: {
+    color: theme.green,
+    fontFamily: theme.fontGroteskLight25,
+    fontSize: 12,
   },
   '@keyframes animated': {
     '0%': {
@@ -102,14 +108,11 @@ const styles = (theme: SaladTheme) => ({
     animationIterationCount: 'infinite',
     animationDirection: 'alternate',
   },
-  disableRateText: {
-    color: '#F6931D',
-  },
 })
 
 interface Props extends WithStyles<typeof styles> {
   balance?: number
-  rate?: number
+  lifetimeBalance?: number
   isRunning?: boolean
   onClick?: () => void
   startEnabled?: boolean
@@ -122,7 +125,7 @@ class _StartButton extends Component<Props> {
     if (onClick && startEnabled) onClick()
   }
   render() {
-    const { balance, rate, isRunning, startEnabled, classes } = this.props
+    const { balance, lifetimeBalance, isRunning, startEnabled, classes } = this.props
     return (
       <>
         <ReactHint
@@ -160,9 +163,8 @@ class _StartButton extends Component<Props> {
             <div className={classes.textContainer}>
               <div className={classes.title}>Current balance</div>
               <div className={classes.balanceText}>${balance ? balance.toFixed(5) : 0} USD</div>
-              <div className={classnames(classes.rateText, { [classes.disableRateText]: !startEnabled })}>
-                ${rate ? (rate * 24).toFixed(3) : '0.000'}/DAY
-              </div>
+              <div className={classes.subTitle}>Lifetime Balance</div>
+              <div className={classes.subText}>${lifetimeBalance ? lifetimeBalance.toFixed(5) : 0}</div>
             </div>
           </AngledPanel>
         </div>

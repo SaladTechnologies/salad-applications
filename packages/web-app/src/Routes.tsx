@@ -7,7 +7,7 @@ import { Route, Switch, Redirect } from 'react-router'
 import { getStore } from './Store'
 
 // Models
-import { ReferredStatus } from './modules/profile/models'
+// import { ReferredStatus } from './modules/profile/models'
 
 // Components
 import { Config } from './config'
@@ -30,11 +30,12 @@ import {
   RedemptionErrorModalContainer,
 } from './modules/reward-views'
 import { AccountModalContainer } from './modules/profile-views'
-import { SettingsModalContainer } from './modules/profile-views'
 import { AnimatedSwitch } from './components/AnimatedSwitch'
-import { NewReferralModalContainer } from './modules/referral-views'
 import { CompatibilityCheckPageContainer } from './modules/machine-views'
 import { CudaErrorContainer, UnknownErrorContainer, AntiVirusErrorContainer } from './modules/error-views'
+// Settings Menu
+import { SettingsContainer } from './modules/settings-views'
+// Account Menu
 
 export default class Routes extends Component {
   store = getStore()
@@ -46,14 +47,15 @@ export default class Routes extends Component {
       if (this.store.profile.isLoading) {
         return <Redirect to="/profile-loading" />
       }
-
       return
     }
 
-    if (profile.termsOfService !== Config.termsVersion) return <Redirect to="/onboarding/terms" />
-    if (this.store.profile.needsAnalyticsOnboarding) return <Redirect to="/onboarding/analytics" />
-    if (profile.referred === ReferredStatus.CanEnter) return <Redirect to="/onboarding/referral-code" />
-    if (profile.whatsNewVersion !== Config.whatsNewVersion) return <Redirect to="/onboarding/whats-new" />
+    if (profile.lastAcceptedTermsOfService !== Config.termsVersion) return <Redirect to="/onboarding/terms" />
+    else if (this.store.profile.needsAnalyticsOnboarding) return <Redirect to="/onboarding/analytics" />
+    else if (profile.viewedReferralOnboarding !== true) return <Redirect to="/onboarding/referral-code" />
+    else if (profile.lastSeenApplicationVersion !== Config.whatsNewVersion)
+      return <Redirect to="/onboarding/whats-new" />
+
     throw Error('Unable to locate a valid onboarding page')
   }
 
@@ -79,7 +81,6 @@ export default class Routes extends Component {
             <Route exact path="/onboarding/terms" component={TermsPageContainer} />
             <Route exact path="/onboarding/analytics" component={AnalyticsPageContainer} />
             <Route exact path="/onboarding/whats-new" component={WhatsNewPageContainer} />
-            {/* TODO: Whats new page */}
             {this.getOnboardingRedirect()}
           </AnimatedSwitch>
         )}
@@ -135,8 +136,8 @@ const Auth = () => {
       <Route exact path="/rewards/:id/redeem-complete" component={RedemptionCompleteModalContainer} />
       <Route exact path="/rewards/:id/redeem-error" component={RedemptionErrorModalContainer} />
       <Route exact path="/profile" component={AccountModalContainer} />
-      <Route exact path="/settings" component={SettingsModalContainer} />
-      <Route exact path="/new-referral" component={NewReferralModalContainer} />
+
+      <Route path="/settings" component={SettingsContainer} />
     </>
   )
 }

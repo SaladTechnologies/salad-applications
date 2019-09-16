@@ -15,11 +15,12 @@ export class UIStore {
   }
 
   showProfilePage = () => {
-    this.showModal('/profile')
+    this.showModal('/settings/account')
     this.store.analytics.track('Viewed Profile')
   }
+
   showSettingsPage = () => {
-    this.showModal('/settings')
+    this.showModal('/settings/windows-settings')
     this.store.analytics.track('Viewed Settings')
   }
 
@@ -53,4 +54,10 @@ export class UIStore {
     
     }
   }
+
+  showReferralsPage = () => {
+    this.showModal('/settings/referrals')
+    this.store.analytics.track('Referrals')
+  }
+
 }

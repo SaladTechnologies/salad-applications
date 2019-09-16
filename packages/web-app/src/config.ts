@@ -48,15 +48,17 @@ const optionalString = (name: string): string | undefined => {
 
 class Config {
   public readonly appVersion: string = requiredString('REACT_APP_VERSION')
+  public readonly appBuild: string = requiredString('REACT_APP_BUILD')
 
   public readonly dataRefreshRate: number = numberOrDefault('REACT_APP_APP_REFRESH_RATE', convertMinutes(5))
+  public readonly xpRefreshRate: number = numberOrDefault('REACT_APP_APP_XP_REFRESH_RATE', convertMinutes(1))
 
   public readonly rewardsRefreshRate: number = numberOrDefault('REACT_APP_REWARD_REFRESH_RATE', convertMinutes(5))
-  public readonly xpRefreshRate: number = numberOrDefault('REACT_APP_XP_REFRESH_RATE', convertMinutes(1))
   public readonly statusHeartbeatRate: number = numberOrDefault(
     'REACT_APP_STATUS_HEARTBEAT_REFRESH_RATE',
     convertMinutes(1),
   )
+  public readonly zeroHashrateNotification: number = numberOrDefault('REACT_APP_ZERO_HASHRATE_NOTIFICATION', 5)
 
   public readonly balanceEstimateRate: number = numberOrDefault('REACT_APP_BALANCE_ESTIMATE_RATE', convertSeconds(1))
 
@@ -80,7 +82,7 @@ class Config {
   public readonly supportUrl: string = requiredString('REACT_APP_SUPPORT_URL')
   public readonly discordUrl: string = requiredString('REACT_APP_DISCORD_URL')
   public readonly releaseNotesUrl: string = requiredString('REACT_APP_RELEASES_URL')
-
+  public readonly maxBalanceDelta: number = numberOrDefault('REACT_APP_MAX_BALANCE_DELTA', 0.01)
   public readonly downTime: boolean = optionalBool('REACT_APP_DOWN_TIME')
 }
 

@@ -4,7 +4,7 @@ import { StartButton } from './components/StartButton'
 
 const mapStoreToProps = (store: RootStore) => ({
   balance: store.balance.currentBalance,
-  rate: store.balance.currentEarningRate,
+  lifetimeBalance: store.balance.lifetimeBalance,
   onClick: store.native.toggleRunning,
   isRunning: store.native.isRunning,
   startEnabled: store.native.isNative && store.native.isCompatible,

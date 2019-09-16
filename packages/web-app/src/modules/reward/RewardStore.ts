@@ -1,12 +1,11 @@
-import { action, observable, runInAction, computed, flow } from 'mobx'
+import { action, observable, computed, flow } from 'mobx'
 import { Reward } from './models/Reward'
 import { RewardsResource } from './models/RewardsResource'
 import { AxiosInstance } from 'axios'
+
 import { rewardFromResource, getTimeRemainingText } from './utils'
 import { RootStore } from '../../Store'
-import { FilterItem, NameFilter } from './models/FilterItem'
-import { DataResource } from '../data-refresh/models/DataResource'
-import { RewardDetails } from './models/RewardDetails'
+import { FilterItem, TagFilter } from './models/FilterItem'
 
 export class RewardStore {
   @observable
@@ -14,9 +13,6 @@ export class RewardStore {
 
   @observable
   private selectedRewardId?: string
-
-  @observable
-  private rewardDetails = new Map<string, RewardDetails>()
 
   @observable
   private filters: FilterItem[] = []
@@ -47,12 +43,12 @@ export class RewardStore {
 
   @computed get allRewards(): Reward[] {
     let currentBalance = this.store.balance.currentBalance
-    let earningRate = this.store.balance.currentEarningRate
+    let earningRate = this.store.machine.currentEarningRate
 
     return this.rewards.map(r => {
       var clone: Reward = { ...r }
       clone.redeemable = r.price <= currentBalance
-      clone.remainingTimeLabel = getTimeRemainingText(r, currentBalance, earningRate)
+      clone.remainingTimeLabel = getTimeRemainingText(r, currentBalance, earningRate || 0)
       clone.percentUnlocked = Math.min(1, Math.max(0, currentBalance / r.price))
       return clone
     })
@@ -79,22 +75,6 @@ export class RewardStore {
     return rewardList
   }
 
-  getRewardDetails = (id?: string): RewardDetails | undefined => {
-    if (id === undefined) return undefined
-    let details = this.rewardDetails.get(id)
-
-    runInAction(() => {
-      if (details === undefined) {
-        details = observable(new RewardDetails(id))
-        details.setLoading(true)
-        this.rewardDetails.set(id, details)
-        this.loadRewardDetails(details)
-      }
-    })
-
-    return details
-  }
-
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   getReward = (id?: string): Reward | undefined => {
@@ -107,10 +87,9 @@ export class RewardStore {
   refreshRewards = flow(function*(this: RewardStore) {
     try {
       this.isLoading = true
-      const response = yield this.axios.get<RewardsResource>('get-rewards')
-      if (response.data.rewards == undefined) return
-      this.rewards = response.data.rewards.map(rewardFromResource).sort((a:Reward, b:Reward) => a.price - b.price)
-      // this.rewardDetails = new Map(this.rewards.map((x): [string, RewardDetails] => [x.id, new RewardDetails(x.id)]))
+      const response = yield this.axios.get<RewardsResource[]>('rewards')
+      if (response.data == undefined) return
+      this.rewards = response.data.map(rewardFromResource).sort((a: Reward, b: Reward) => a.price - b.price)
       this.updateFilters()
     } catch (error) {
       console.error(error)
@@ -131,7 +110,6 @@ export class RewardStore {
   @action
   toggleFilter = (filterName: string) => {
     let filter = this.filters.find(x => x.name === filterName)
-    console.log(filter)
     if (filter) {
       filter.checked = !filter.checked
     }
@@ -139,46 +117,24 @@ export class RewardStore {
 
   @action
   updateFilters = () => {
-    let currentFilters = new Set<string>()
-
+    let currentTags = new Set<string>()
     this.rewards.forEach(x => {
-      currentFilters.add(x.filter.toLowerCase())
+      x.tags &&
+        x.tags.forEach(tag => {
+          currentTags.add(tag.toLowerCase())
+        })
     })
-
-    currentFilters.forEach(x => {
+    currentTags.forEach(x => {
       if (!this.filters.some(f => f.name === x)) {
-        this.filters.push(new NameFilter(x.toLowerCase(), false))
+        this.filters.push(new TagFilter(x.toLowerCase(), false))
       }
     })
   }
 
-  @action
-  loadDataRefresh = (data: DataResource) => {
-    this.selectedRewardId = String(data.currentReward.rewardId)
-  }
-
   @action.bound
-  loadRewardDetails = flow(function*(this: RewardStore, details: RewardDetails) {
-    console.log('Loading the user profile')
-
-    details.setLoading(true)
-
-    let reward = this.getReward(details.id)
-
-    if (reward === undefined) {
-      throw new Error('Unable to find reward ' + details.id)
-    }
-
-    const req = {
-      rewardId: details.id,
-      initialModal: reward.modalId,
-    }
-
-    let res = yield this.axios.post('redeem-reward', req)
-
-    details.content = res.data.content
-
-    details.setLoading(false)
+  loadSelectedReward = flow(function*(this: RewardStore) {
+    var res = yield this.axios.get('profile/selected-reward')
+    this.selectedRewardId = res.data.rewardId
   })
 
   viewReward = (reward: Reward) => {
@@ -189,18 +145,14 @@ export class RewardStore {
   @action.bound
   selectTargetReward = flow(function*(this: RewardStore, rewardId: string) {
     const request = {
-      macAddress: this.store.native.machineId,
       rewardId: rewardId,
     }
 
     this.isSelecting = true
 
     try {
-      yield this.axios.post('select-reward', request)
-
-      this.selectedRewardId = rewardId
-
-      console.log('set reward success')
+      var res = yield this.axios.patch('profile/selected-reward', request)
+      this.selectedRewardId = res.data.rewardId
 
       let reward = this.getReward(rewardId)
 
@@ -215,7 +167,7 @@ export class RewardStore {
   })
 
   @action.bound
-  redeemReward = flow(function*(this: RewardStore, rewardId: string, email: string) {
+  redeemReward = flow(function*(this: RewardStore, rewardId: string, email?: string) {
     if (this.isRedeeming) {
       console.log('Already redeeming reward, skipping')
       return
@@ -224,23 +176,29 @@ export class RewardStore {
     this.isRedeeming = true
 
     const req = {
-      rewardId: rewardId,
-      formValues: {
-        emailInput: email,
-        checkbox: true,
-      },
+      giftEmail: email,
     }
 
     try {
-      yield this.axios.post('/redeem-reward/1/', req)
+      yield this.axios.post(`/rewards/${rewardId}/redemptions`, req)
       this.store.ui.showModal(`/rewards/${rewardId}/redeem-complete`)
-      this.store.refreshData()
       let reward = this.getReward(rewardId)
       if (reward) this.store.analytics.trackRewardRedeemed(reward)
-    } catch (err) {
+    } catch (error) {
+      // Error 😨
+      if (error.response) {
+        /*
+         * The request was made and the server responded with a
+         * status code that falls out of the range of 2xx
+         */
+        console.log(error.response.data)
+        console.log(error.response.status)
+      }
       this.store.ui.showModal(`/rewards/${rewardId}/redeem-error`)
-      console.error(err)
+      //TODO: Send the error to sentry
+      console.error(error)
     } finally {
+      yield this.store.balance.refreshBalance()
       this.isRedeeming = false
     }
   })

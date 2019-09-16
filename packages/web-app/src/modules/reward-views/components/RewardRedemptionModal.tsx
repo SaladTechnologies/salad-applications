@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
-import { AngledPanel, ModalPage, TextField, Button, Checkbox } from '../../../components'
+import { ModalPage, Checkbox, Button, TextField } from '../../../components'
 import { Reward } from '../../reward/models/Reward'
-import { RewardDetails, ContentType, StyleType } from '../../reward/models/RewardDetails'
 import { Form, Field } from 'react-final-form'
-import logo from '../../../components/assets/animated-logo-lg.gif'
 import { observer } from 'mobx-react'
+import { RewardDetailsPanel } from './RewardDetailsPanel'
+
+//TODO: Move this into a feature flag
+const showGiftOption = false
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -56,7 +56,10 @@ const styles = (theme: SaladTheme) => ({
     marginRight: 'auto',
     width: '3rem',
   },
-  contentContainer: {},
+  contentContainer: {
+    fontFamily: theme.fontGroteskBook19,
+    fontSize: theme.small,
+  },
   contentLabel: {
     display: 'inline',
     fontFamily: 'sharpGroteskLight25',
@@ -75,20 +78,39 @@ const styles = (theme: SaladTheme) => ({
     fontFamily: 'sharpGroteskBook19',
     fontSize: theme.medium,
   },
+  submitPanel: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    marginLeft: 'auto',
+  },
+  giftPanel: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  termText: {
+    padding: '.25rem',
+    fontStyle: 'italic',
+  },
+  bottomContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
   reward?: Reward
-  details?: RewardDetails
   submitting?: boolean
   onClickClose?: () => void
   onClickDone?: () => void
-  onRedeem?: (rewardId: string, email: string) => void
+  onRedeem?: (rewardId: string, email?: string) => void
 }
 
 interface FormTypes {
   email?: string
-  [key: string]: any
+  gift?: boolean
 }
 
 @observer
@@ -101,6 +123,12 @@ class _RewardRedemptionModal extends Component<Props> {
     }
   }
 
+  Condition = ({ when, children }: any) => (
+    <Field name={when} subscription={{ value: true }}>
+      {({ input: { value } }) => (!!value ? children : null)}
+    </Field>
+  )
+
   handleDone = () => {
     const { onClickDone } = this.props
 
@@ -112,145 +140,86 @@ class _RewardRedemptionModal extends Component<Props> {
   onSubmit = (values: {}) => {
     const { reward, onRedeem } = this.props
     let v = values as FormTypes
-    if (reward && onRedeem && v.email) onRedeem(reward.id, v.email)
+    if (reward && onRedeem) onRedeem(reward.id, v.gift ? v.email : undefined)
   }
 
   validate = (values: {}) => {
-    const { details } = this.props
-
     let v = values as FormTypes
     const errors: FormTypes = {}
-    if (v.email === undefined || v.email.length === 0) {
-      errors.email = 'Required'
-    } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v.email)) {
-      errors.email = 'Invalid email'
+    if (v.gift) {
+      if (v.email === undefined || v.email.length === 0) {
+        errors.email = 'Required'
+      } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v.email)) {
+        errors.email = 'Invalid email'
+      }
     }
-
-    if (details && details.content) {
-      details.content.forEach(x => {
-        if (x.type !== ContentType.checkbox) return
-
-        let checkName = `check${x.id}`
-        let a = !!v[checkName]
-
-        if (!a) {
-          errors[checkName] = 'Required'
-        }
-      })
-    }
-
     return errors
   }
 
   render() {
-    const { reward, submitting, details, classes } = this.props
+    const { reward, onClickClose, submitting, classes } = this.props
 
     return (
       <ModalPage onCloseClicked={this.handleClose}>
-        <div>{details && details.isLoading}</div>
-        <div className={classnames(classes.container)}>
-          <AngledPanel className={classes.imageContainer} leftSide={'right'}>
-            {reward && <img className={classes.image} src={reward.imageSrc} draggable={false} />}
-          </AngledPanel>
-
-          <div className={classnames(classes.rightContainer)}>
-            <div style={{ flex: '1' }}>
-              <div className={classes.lock} onClick={this.handleClose}>
-                <FontAwesomeIcon icon={faTimes} />
-              </div>
-
-              {!details || details.isLoading ? (
-                <div className={classes.logoContainer}>
-                  <img className={classes.logo} src={logo} />
-                </div>
-              ) : (
-                <div className={classnames(classes.contentContainer)}>
-                  <Form
-                    onSubmit={this.onSubmit}
-                    validate={this.validate}
-                    render={({ handleSubmit }) => {
-                      return (
-                        <form onSubmit={handleSubmit}>
-                          {details &&
-                            details.content &&
-                            details.content.map(x => {
-                              switch (x.type) {
-                                case ContentType.plainText:
-                                  return (
-                                    <div
-                                      key={x.id}
-                                      className={classnames({
-                                        [classes.headerContent]: x.style === StyleType.header,
-                                        [classes.titleContent]: x.style === StyleType.title,
-                                        [classes.descriptionContent]: x.style === StyleType.description,
-                                      })}
-                                    >
-                                      {x.value}
-                                    </div>
-                                  )
-                                case ContentType.emailInput:
-                                  return (
-                                    <Field name="email" key={x.id}>
-                                      {({ input, meta }) => (
-                                        <div style={{ display: 'flex', alignItems: 'center', paddingTop: '1rem' }}>
-                                          <div className={classes.contentLabel}>{x.label}</div>
-                                          <TextField
-                                            dark
-                                            {...input}
-                                            placeholder={x.value}
-                                            errorText={meta.error && meta.touched && meta.error}
-                                          />
-                                        </div>
-                                      )}
-                                    </Field>
-                                  )
-                                case ContentType.checkbox:
-                                  return (
-                                    <Field name={'check' + x.id} type="checkbox" key={x.id}>
-                                      {({ input, meta }) => (
-                                        <div style={{ padding: '.25rem 0' }}>
-                                          <Checkbox
-                                            key={x.id}
-                                            {...input}
-                                            text={x.label}
-                                            dark
-                                            errorText={meta.error && meta.touched && meta.error}
-                                          />
-                                        </div>
-                                      )}
-                                    </Field>
-                                  )
-                                case ContentType.buttonAction:
-                                  return (
-                                    <Button key={x.id} type="submit" loading={submitting} disabled={submitting} dark>
-                                      Bombs Away
-                                    </Button>
-                                  )
-                                case ContentType.doneButton:
-                                  return (
-                                    <Button
-                                      key={x.id}
-                                      loading={submitting}
-                                      disabled={submitting}
-                                      dark
-                                      onClick={this.handleDone}
-                                    >
-                                      Bombs Away
-                                    </Button>
-                                  )
-                                default:
-                                  throw new Error('Unsupported content type ' + x.type)
-                              }
-                            })}
-                        </form>
-                      )
-                    }}
-                  />
-                </div>
-              )}
-            </div>
+        <RewardDetailsPanel reward={reward} onClickClose={onClickClose}>
+          <div className={classnames(classes.contentContainer)}>
+            <Form
+              onSubmit={this.onSubmit}
+              validate={this.validate}
+              render={({ handleSubmit }) => {
+                return (
+                  <form onSubmit={handleSubmit}>
+                    {reward &&
+                      reward.checkoutTerms &&
+                      reward.checkoutTerms.map((term, i) => (
+                        <div key={term} className={classes.termText}>
+                          - {term}
+                        </div>
+                      ))}
+                    <div className={classes.bottomContainer}>
+                      {showGiftOption && (
+                        <div className={classes.giftPanel}>
+                          <Field name={'gift'} type="checkbox">
+                            {({ input, meta }) => (
+                              <div style={{ padding: '.25rem 0' }}>
+                                <Checkbox
+                                  {...input}
+                                  text={'This item is a gift'}
+                                  dark
+                                  errorText={meta.error && meta.touched && meta.error}
+                                />
+                              </div>
+                            )}
+                          </Field>
+                          <this.Condition when="gift" is="true">
+                            <Field name="email">
+                              {({ input, meta }) => (
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                  <TextField
+                                    dark
+                                    {...input}
+                                    placeholder={'Email'}
+                                    errorText={meta.error && meta.touched && meta.error}
+                                  />
+                                </div>
+                              )}
+                            </Field>
+                          </this.Condition>
+                        </div>
+                      )}
+                      <div className={classes.submitPanel}>
+                        <Button type="submit" loading={submitting} disabled={submitting} dark>
+                          Bombs Away
+                        </Button>
+                        <div className={classes.termText}>{`*Salad plays for keeps (no refunds)`}</div>
+                      </div>
+                    </div>
+                  </form>
+                )
+              }}
+            />
           </div>
-        </div>
+        </RewardDetailsPanel>
       </ModalPage>
     )
   }
