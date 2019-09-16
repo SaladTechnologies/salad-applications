@@ -347,7 +347,7 @@ export class NativeStore {
     }
   })
 
-  @action.bound
+  @action
   setMachineInfo = (info: MachineInfo) => {
     console.log('Received machine info')
     if (this.machineInfo) {

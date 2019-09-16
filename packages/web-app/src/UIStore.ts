@@ -54,9 +54,10 @@ export class UIStore {
     
     }
   }
-  
+
   showReferralsPage = () => {
     this.showModal('/settings/referrals')
     this.store.analytics.track('Referrals')
   }
+
 }
