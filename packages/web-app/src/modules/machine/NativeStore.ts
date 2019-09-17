@@ -144,31 +144,30 @@ export class NativeStore {
         this.setMachineInfo(info)
       })
 
-      this.on(runError, (errorCode: number, errorMessage: string) => {
+      this.on(runError, (errorCode: number) => {
         console.log('Error code: ', errorCode)
-        console.log('Error message: ', errorMessage)
 
         switch (errorCode) {
           case 8675309: // Tommy Tutone - 867-5309/Jenny: https://youtu.be/6WTdTwcmxyo
             store.ui.showModal('/errors/cuda')
             store.analytics.captureException(new Error(`Received CUDA error code ${errorCode} from native`))
-            store.analytics.track('CUDA Error', { ErrorCode: errorCode, ErrorMessage: errorMessage })
+            store.analytics.track('CUDA Error', { ErrorCode: errorCode })
             break
           case 314159265: // Pie!
             store.ui.showModal('/errors/anti-virus')
             store.analytics.captureException(new Error(`Received Anti-Virus error code ${errorCode} from native`))
-            store.analytics.track('Anti-Virus Error', { ErrorCode: errorCode, ErrorMessage: errorMessage })
+            store.analytics.track('Anti-Virus Error', { ErrorCode: errorCode })
             this.stop()
             break
           case 8888: // Generic, ethminer.exe terminated, no modal error message
-            store.analytics.track('Ethminer.exe Stopped', { ErrorCode: 8888, ErrorMessage: 'Ethminer.exe stopped' })
+            store.analytics.track('Ethminer.exe Stopped', { ErrorCode: 8888 })
             this.stop()
             break
           case 9999: // Generic, "WTH happened"
           default:
             store.ui.showModal('/errors/unknown')
             store.analytics.captureException(new Error(`Received Unknown error code ${errorCode} from native`))
-            store.analytics.track('Generic Unknown Error', { ErrorCode: errorCode, ErrorMessage: errorMessage })
+            store.analytics.track('Generic Unknown Error', { ErrorCode: errorCode })
             this.stop()
             break
         }
