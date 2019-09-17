@@ -26,6 +26,10 @@ const setHashrate = 'set-hashrate'
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
 const AUTO_LAUNCH = 'AUTO_LAUNCH'
 
+const MINING_STATUS_STOPPED = 'Stopped'
+const MINING_STATUS_STARTED = 'Initializing'
+const MINING_STATUS_RUNNING = 'Chopping'
+
 declare global {
   interface Window {
     salad: {

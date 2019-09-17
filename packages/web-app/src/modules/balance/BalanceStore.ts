@@ -15,6 +15,8 @@ export class BalanceStore {
   @observable
   public actualBalance: number = 0
 
+  private lastUpdateTime: number = Date.now()
+
   @observable
   public lifetimeBalance: number = 0
 

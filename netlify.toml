@@ -39,8 +39,11 @@ ID = "salad-web-app"
     REACT_APP_MIXPANEL_TOKEN = "68db9194f229525012624f3cf368921f"
     
 [context.branch-deploy.environment]
+    REACT_APP_AUTH0_CLIENT_ID="OJ6ffJ2h4eYZr6HqswGF544WgqDcBn2h"
+    
+[context.branch-deploy.environment]
     REACT_APP_AUTH0_CLIENT_ID='K8nT8zWF1Dyu9oqLJg5MTkpt9Aug3Ygt'
-
+    
 # Deploy Preview context: all deploys resulting from a pull/merge request will 
 # inherit these settings.
 [context.deploy-preview.environment]
