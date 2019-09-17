@@ -7,7 +7,6 @@ const mapStoreToProps = (store: RootStore) => {
     new MenuItem('Referrals', store.ui.showReferralsPage),
     new MenuItem('Account', store.ui.showProfilePage),
     new MenuItem('Settings', store.ui.showSettingsPage),
-    new MenuItem('Referrals', store.ui.showReferralsPage),
   ]
   return {
     showWindowActions: store.native.isNative,

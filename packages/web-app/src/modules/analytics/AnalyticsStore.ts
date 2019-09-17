@@ -174,6 +174,9 @@ export class AnalyticsStore {
 
   public captureException = (err: Error) => {
     console.error(err)
-    Sentry.captureException(err)
+    Sentry.withScope(scope => {
+      scope.setFingerprint([err.name, err.message])
+      Sentry.captureException(err)
+    })
   }
 }

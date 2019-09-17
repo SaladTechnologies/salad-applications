@@ -143,14 +143,14 @@ class _StartButton extends Component<Props> {
             </div>
           )}
         />
-        <div className={classnames({[classes.runningGlow]: isRunning})}>
+        <div className={classnames({
+            [classes.runningGlow]: isRunning,
+          })}>
           <AngledPanel leftSide="left" className={classnames(classes.container)}>
             <AngledPanel
               leftSide="left"
               rightSide="left"
-              className={classnames(classes.button, {
-                [classes.disabledButton]: !startEnabled,
-              })}
+              className={classnames(classes.button, { [classes.disabledButton]: !startEnabled })}
               onClick={this.handleClick}
             >
               {!startEnabled && (
@@ -160,7 +160,6 @@ class _StartButton extends Component<Props> {
               )}
               <div className={classes.buttonText}>{isRunning ? 'Stop' : 'Start'}</div>
             </AngledPanel>
-
             <div className={classes.textContainer}>
               <div className={classes.title}>Current balance</div>
               <div className={classes.balanceText}>${balance ? balance.toFixed(5) : 0} USD</div>

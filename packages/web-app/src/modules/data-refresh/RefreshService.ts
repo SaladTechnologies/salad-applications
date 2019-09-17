@@ -48,5 +48,6 @@ export class RefreshService {
 
     if (this.dataTimer) clearInterval(this.dataTimer)
     if (this.rewardsTimer) clearInterval(this.rewardsTimer)
+    if (this.xpTimer) clearInterval(this.xpTimer)
   }
 }
