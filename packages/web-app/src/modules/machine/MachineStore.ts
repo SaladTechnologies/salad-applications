@@ -1,12 +1,24 @@
-import { action, observable } from 'mobx'
-import { DataResource } from '../data-refresh/models'
+import { action, observable, computed } from 'mobx'
+import { Machine } from './models/Machine'
+import { RootStore } from '../../Store'
 
 export class MachineStore {
   @observable
-  public machineCount: number = 0
+  public currentMachine?: Machine
+
+  @computed
+  get currentEarningRate(): number | undefined {
+    if (this.store.native.machineInfo && this.currentMachine && this.currentMachine.earningRate) {
+      return this.currentMachine.earningRate
+    } else {
+      return undefined
+    }
+  }
+
+  constructor(private readonly store: RootStore) {}
 
   @action
-  loadDataRefresh = (data: DataResource) => {
-    this.machineCount = data.machines.length
+  setCurrentMachine = (machine: Machine) => {
+    this.currentMachine = machine
   }
 }

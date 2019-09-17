@@ -1,11 +1,10 @@
 import { action, observable, computed, runInAction, flow } from 'mobx'
 import { RootStore } from '../../Store'
 import * as Storage from '../../Storage'
-import { MachineInfo } from './models'
-import { AxiosInstance } from 'axios'
-import uuidv1 from 'uuid/v1'
 import { Config } from '../../config'
-import { GPUDetailsResource } from './models/GPUDetailsResource'
+import { MachineInfo, MiningStatus } from './models'
+import { AxiosInstance } from 'axios'
+import { Machine } from './models/Machine'
 
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
@@ -17,8 +16,15 @@ const close = 'close-window'
 const start = 'start-salad'
 const stop = 'stop-salad'
 const sendLog = 'send-log'
+const getDesktopVersion = 'get-desktop-version'
+const setDesktopVersion = 'set-desktop-version'
+const enableAutoLaunch = 'enable-auto-launch'
+const disableAutoLaunch = 'disable-auto-launch'
+const getHashrate = 'get-hashrate'
+const setHashrate = 'set-hashrate'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
+const AUTO_LAUNCH = 'AUTO_LAUNCH'
 
 declare global {
   interface Window {
@@ -33,8 +39,12 @@ declare global {
 
 export class NativeStore {
   private callbacks = new Map<string, Function>()
-
   private runningHeartbeat?: NodeJS.Timeout
+  private zeroHashTimespan: number = 0
+
+  //#region Observables
+  @observable
+  public desktopVersion: string = ''
 
   @observable
   public isOnline: boolean = true
@@ -57,6 +67,22 @@ export class NativeStore {
   @observable
   public machineInfo?: MachineInfo
 
+  @observable
+  public autoLaunch: boolean = true
+
+  @observable
+  public miningStatus: string = 'Stopped'
+
+  @observable
+  public machineStatus: string = 'stopped'
+
+  @observable
+  public hashrate: number = 0
+
+  @observable
+  public runningStatus: boolean = false
+  //#endregion
+
   @computed
   get isNative(): boolean {
     return window.salad && window.salad.platform === 'electron'
@@ -74,21 +100,19 @@ export class NativeStore {
 
   @computed
   get isCompatible(): boolean {
-    return this.isNative && this.validOperatingSystem && this.validGPUs
+    // TODO: return this.isNative && this.validOperatingSystem && this.validGPUs
+    return true
   }
 
   @computed
   get machineId(): string {
-    return this.machineInfo !== undefined
-      ? this.machineInfo.macAddress
-      : Storage.getOrSetDefaultCallback('INSTALL_ID', uuidv1).substr(0, 15) //TODO: Remove the substring once we update the db scheme
+    return this.store.token.getMachineId()
   }
 
   @computed
   get gpuNames(): string[] | undefined {
-    if (this.machineInfo === undefined) return this.machineInfo
-
-    return this.machineInfo.gpus.map(x => x.model)
+    if (this.machineInfo === undefined) return undefined
+    return this.machineInfo.graphics.controllers.map(x => x.model)
   }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
@@ -105,6 +129,12 @@ export class NativeStore {
     if (this.isNative) {
       window.salad.onNative = this.onNative
 
+      this.checkAutoLaunch()
+
+      this.on(setDesktopVersion, (version: string) => {
+        this.setDesktopVersion(version)
+      })
+
       this.on(runStatus, (status: boolean) => {
         console.log('Received run status: ' + status)
         this.setRunStatus(status)
@@ -115,30 +145,35 @@ export class NativeStore {
       })
 
       this.on(runError, (errorCode: number) => {
-        console.log('Error code: ' + errorCode)
+        console.log('Error code: ', errorCode)
 
         switch (errorCode) {
           case 8675309: // Tommy Tutone - 867-5309/Jenny: https://youtu.be/6WTdTwcmxyo
             store.ui.showModal('/errors/cuda')
             store.analytics.captureException(new Error(`Received CUDA error code ${errorCode} from native`))
-            this.stop()
+            store.analytics.track('CUDA Error', { ErrorCode: errorCode })
             break
           case 314159265: // Pie!
             store.ui.showModal('/errors/anti-virus')
             store.analytics.captureException(new Error(`Received Anti-Virus error code ${errorCode} from native`))
+            store.analytics.track('Anti-Virus Error', { ErrorCode: errorCode })
             this.stop()
             break
           case 8888: // Generic, ethminer.exe terminated, no modal error message
+            store.analytics.track('Ethminer.exe Stopped', { ErrorCode: 8888 })
             this.stop()
             break
           case 9999: // Generic, "WTH happened"
           default:
             store.ui.showModal('/errors/unknown')
             store.analytics.captureException(new Error(`Received Unknown error code ${errorCode} from native`))
+            store.analytics.track('Generic Unknown Error', { ErrorCode: errorCode })
             this.stop()
             break
         }
       })
+
+      this.send(getDesktopVersion)
     }
   }
 
@@ -171,12 +206,19 @@ export class NativeStore {
 
   @action.bound
   private checkOnlineStatus = flow(function*(this: NativeStore) {
+    var prevOnline = this.isOnline
     try {
-      yield this.axios.get('/')
+      yield this.axios.get('online')
       this.isOnline = true
     } catch (err) {
-      console.error(err)
-      this.isOnline = false
+      //TODO: Remove these checks once we have an unauthenticated API to check
+      if (err.response === undefined || err.response.status !== 401) {
+        console.log(err)
+        this.isOnline = false
+      }
+    }
+    if (this.isOnline !== prevOnline) {
+      this.store.routing.replace('/')
     }
   })
 
@@ -189,21 +231,29 @@ export class NativeStore {
     }
 
     if (status) {
+      this.runningStatus = true
       //Send the initial heartbeat
-      this.sendRunningStatus(true)
+      this.sendRunningStatus(this.runningStatus)
 
       //Schedule future heartbeats
       this.runningHeartbeat = setInterval(() => {
-        this.sendRunningStatus(true)
+        this.sendRunningStatus(this.runningStatus)
       }, Config.statusHeartbeatRate)
     } else {
-      this.sendRunningStatus(false)
+      this.runningStatus = false
+      this.sendRunningStatus(this.runningStatus)
     }
   }
 
   @action
+  setDesktopVersion = (version: string) => {
+    console.log(`Setting desktop version: ${version}`)
+    this.desktopVersion = version
+  }
+
+  @action
   loadMachineInfo = () => {
-    if (this.machineInfo || this.loadingMachineInfo) {
+    if (this.machineInfo) {
       console.log('Machine info already loaded. Skipping...')
       return
     }
@@ -242,7 +292,15 @@ export class NativeStore {
       return
     }
 
-    this.send(start, this.machineId)
+    if (window.salad.apiVersion <= 2) {
+      this.send(start, this.machineId)
+    } else {
+      let address = `stratum1+tcp://0x6fF85749ffac2d3A36efA2BC916305433fA93731@eth-us-west1.nanopool.org:9999/${this.machineId}/notinuse%40salad.io`
+      this.send(start, {
+        machineId: this.machineId,
+        address: address,
+      })
+    }
 
     this.store.analytics.trackRunStatus(true)
   }
@@ -278,26 +336,24 @@ export class NativeStore {
       return
     }
 
-    let deviceInfo = {
-      os: `${this.machineInfo.os.distro}-${this.machineInfo.os.release}`,
-      gpus: this.gpuNames,
-      gpuDriver: '0',
-      macAddress: this.machineId,
-      isAmdGpu: false,
-    }
-
     try {
       console.log('Registering machine with salad')
-      let res = yield this.axios.post('register-machine', deviceInfo)
-      console.log(res)
+      let res: any = yield this.axios.post(`machines/${this.machineId}/data`, this.machineInfo)
+      let machine: Machine = res.data
+
+      this.validGPUs = machine.validGpus
+      this.validOperatingSystem = machine.validOs
+      this.store.machine.setCurrentMachine(machine)
+      this.store.analytics.trackCompatibleGpu(this.validGPUs)
     } catch (err) {
       this.store.analytics.captureException(new Error(`register-machine error: ${err}`))
+      this.validGPUs = false
       throw err
     }
   })
 
-  @action.bound
-  setMachineInfo = flow(function*(this: NativeStore, info: MachineInfo) {
+  @action
+  setMachineInfo = (info: MachineInfo) => {
     console.log('Received machine info')
     if (this.machineInfo) {
       console.log('Already received machine info. Skipping...')
@@ -307,46 +363,11 @@ export class NativeStore {
     this.machineInfo = info
 
     this.store.analytics.trackMachineInfo(info)
-
-    let req = {
-      gpuNames: this.gpuNames,
-    }
-
-    try {
-      let res = yield this.axios.post('/check-gpu', req)
-
-      console.log(res)
-
-      let gpuList: GPUDetailsResource[] = res.data.gpuList
-
-      //Ensure that at least 1 gpu is eligible
-      this.validGPUs = gpuList.some(x => x.isEligible)
-    } catch (err) {
-      this.validGPUs = false
-    }
-
-    this.validOperatingSystem =
-      info.os.platform === 'win32' && (info.os.release.startsWith('10.') || info.os.release.startsWith('6.1'))
-
-    console.log(`Validating machine. OS:${this.validOperatingSystem}, GPUs ${this.validGPUs}`)
-
     this.skippedCompatCheck = this.validOperatingSystem && this.validGPUs
-
     this.loadingMachineInfo = false
 
     this.store.routing.replace('/')
-  })
-
-  @action.bound
-  sendRunningStatus = flow(function*(this: NativeStore, status: boolean) {
-    console.log('Status MachineId: ' + this.machineId)
-
-    let req = {
-      macAddress: this.machineId,
-      online: status,
-    }
-    yield this.axios.post('update-worker-status', req)
-  })
+  }
 
   @action
   skipCompatibility = () => {
@@ -359,7 +380,113 @@ export class NativeStore {
     this.store.routing.replace('/')
   }
 
-  sleep = (ms: number) => {
-    return new Promise(resolve => setTimeout(resolve, ms))
+  @action
+  enableAutoLaunch = () => {
+    this.autoLaunch = true
+    Storage.setItem(AUTO_LAUNCH, 'true')
+
+    this.send(enableAutoLaunch)
   }
+
+  @action
+  disableAutoLaunch = () => {
+    this.autoLaunch = false
+    Storage.setItem(AUTO_LAUNCH, 'false')
+
+    this.send(disableAutoLaunch)
+  }
+
+  @action
+  checkAutoLaunch = () => {
+    if (window.salad.apiVersion <= 1) {
+      this.autoLaunch = false
+      return
+    }
+
+    this.autoLaunch = Storage.getOrSetDefault(AUTO_LAUNCH, this.autoLaunch.toString()) === 'true'
+    this.autoLaunch && this.enableAutoLaunch()
+  }
+
+  //#region Hashrate monitoring
+  setHashrateFromLog = () => {
+    this.on(setHashrate, (hash: number) => this.setHashrate(hash))
+  }
+
+  @action
+  private setHashrate = (hash: number) => {
+    this.hashrate = hash
+    console.log('Hashrate: ', this.hashrate)
+  }
+
+  @action
+  hashrateHeartbeat = (runStatus: boolean, machineStatus: string) => {
+    if (runStatus && this.isNative) {
+      this.send(getHashrate)
+      this.setHashrateFromLog()
+
+      if (machineStatus === MiningStatus.Running && this.hashrate > 0) {
+        this.zeroHashTimespan = 0
+        this.store.analytics.track('Mining Status', { MiningStatus: MiningStatus.Earning })
+        this.store.analytics.trackEarning(true)
+        return
+      }
+
+      if ((machineStatus === MiningStatus.Stopped && this.hashrate > 0) || this.hashrate > 0) {
+        this.miningStatus = MiningStatus.Running
+        this.zeroHashTimespan = 0
+        this.store.analytics.track('Mining Status', { MiningStatus: MiningStatus.Running })
+        return
+      }
+
+      if (this.zeroHashTimespan >= Config.zeroHashrateNotification) {
+        this.miningStatus = MiningStatus.Error
+        this.zeroHashTimespan = 0
+        this.store.ui.showModal('/errors/unknown')
+        this.store.analytics.track('Mining Status', {
+          MiningStatus: MiningStatus.Error,
+          Message: `${this.hashrate} hashrate for longer than ${Config.zeroHashrateNotification} minutes`,
+        })
+        this.store.analytics.trackEarning(false)
+      }
+
+      this.miningStatus = MiningStatus.Started
+      this.zeroHashTimespan++
+      this.store.analytics.track('Mining Status', { MiningStatus: MiningStatus.Started })
+
+      return
+    }
+
+    this.hashrate = 0
+    this.miningStatus = MiningStatus.Stopped
+    this.zeroHashTimespan = 0
+    this.store.balance.currentBalance = this.store.balance.actualBalance
+    this.store.analytics.track('Mining Status', { MiningStatus: MiningStatus.Stopped })
+  }
+  //#endregion
+
+  @action.bound
+  sendRunningStatus = flow(function*(this: NativeStore, runStatus: boolean) {
+    console.log('Status MachineId: ' + this.machineId)
+
+    const machineId = this.store.token.getMachineId()
+    const response = yield this.axios.get(`machines/${machineId}/status`)
+    this.machineStatus = response.data.status.toString()
+
+    this.hashrateHeartbeat(runStatus, this.machineStatus)
+
+    let miningStatus =
+      this.zeroHashTimespan > 1
+        ? MiningStatus.Running
+        : this.miningStatus === MiningStatus.Running || this.miningStatus === MiningStatus.Earning
+        ? MiningStatus.Running
+        : this.miningStatus
+
+    this.store.analytics.track('Machine Status', { MachineStatus: this.machineStatus })
+
+    const data = {
+      status: miningStatus,
+    }
+
+    yield this.axios.post(`machines/${machineId}/status`, data)
+  })
 }

@@ -1,5 +1,16 @@
 import { spawn, ChildProcess, exec } from 'child_process'
-import { MachineInfo } from './models/MachineInfo'
+import { MachineInfo } from './models/machine/MachineInfo'
+import { LogScraper } from './LogScraper'
+
+interface Error {
+  error: string
+  code: number
+}
+
+export interface StartMessage {
+  machineId: string
+  address: string
+}
 
 interface Error {
   error: string
@@ -9,7 +20,7 @@ interface Error {
 export class Ethminer {
   private childProcess?: ChildProcess
   private isRunning = false
-  private processName: string = ''
+  private processName: string = 'ethminer.exe'
 
   public onError?: (errorCode: number) => void
 
@@ -23,7 +34,6 @@ export class Ethminer {
       // Anti-Virus
       { error: 'is not recognized as an internal or external command', code: 314159265 },
       { error: 'The system cannot find the path specified', code: 314159265 },
-      { error: 'No OpenCL platforms found', code: 314159265 },
       { error: 'Socket write failed', code: 314159265 },
       // CUDA
       { error: '3221225595', code: 8675309 },
@@ -31,6 +41,7 @@ export class Ethminer {
       { error: 'CUDA error: Insufficient CUDA driver: 9', code: 8675309 },
       { error: 'CUDA error: Insufficient CUDA driver: 7050', code: 8675309 },
       { error: 'CUDA error in func', code: 8675309 },
+      { error: 'No OpenCL platforms found', code: 8675309 },
       // Unknown
       { error: 'stratum  Error', code: 9999 },
       { error: 'exit: 0', code: 9999 },
@@ -46,7 +57,7 @@ export class Ethminer {
     })
   }
 
-  start = (machineInfo: MachineInfo, id: string) => {
+  start = (machineInfo: MachineInfo, message: StartMessage) => {
     if (this.childProcess || this.isRunning) {
       console.log('Ethminer already running and cannot be started again.')
       return
@@ -54,18 +65,15 @@ export class Ethminer {
 
     this.isRunning = true
 
-    let cuda = machineInfo.gpus.some(x => x.vendor.toLocaleLowerCase().includes('nvidia'))
+    let cuda = machineInfo.graphics.controllers.some(x => x.vendor.toLocaleLowerCase().includes('nvidia'))
 
     console.log('cuda: ' + cuda)
-    console.log('machineId: ' + id)
+    console.log('machineId: ' + message.machineId)
 
     let platform = cuda ? '-U' : '-G'
-    this.processName = 'ethminer.exe'
-
-    let cmd = `cd dist && cd ethminer && ${
-      this.processName
-    } --farm-recheck 1000 ${platform} -P stratum1+tcp://0x6fF85749ffac2d3A36efA2BC916305433fA93731@eth-us-west1.nanopool.org:9999/${id}/notinuse%40salad.io`
     
+    let cmd = `cd dist && cd ethminer && ${this.processName} --farm-recheck 1000 ${platform} -P ${message.address}`
+
     let ls = spawn(cmd, {
       shell: true,
       windowsHide: true,
@@ -77,6 +85,7 @@ export class Ethminer {
       ls.stdout.on('data', data => {
         console.log('stdout: ' + data)
         this.checkForErrors(data)
+        LogScraper.setHashrateFromLog(data)
       })
     }
 
@@ -84,6 +93,7 @@ export class Ethminer {
       ls.stderr.on('data', data => {
         console.error('stderr: ' + data)
         this.checkForErrors(data)
+        LogScraper.setHashrateFromLog(data)
       })
     }
 

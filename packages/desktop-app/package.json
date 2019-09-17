@@ -1,6 +1,6 @@
 {
   "name": "salad",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Salad Technologies Desktop Application",
   "author": "Salad Technologies <dev@salad.io>",
   "homepage": "https://www.salad.io/",
@@ -30,9 +30,10 @@
     "webpack-cli": "^3.3.0"
   },
   "dependencies": {
+    "auto-launch": "^5.0.5",
     "electron-log": "^3.0.5",
     "electron-updater": "^4.0.6",
     "is-online": "^8.2.0",
-    "systeminformation": "^4.1.3"
+    "systeminformation": "^4.14.4"
   }
 }

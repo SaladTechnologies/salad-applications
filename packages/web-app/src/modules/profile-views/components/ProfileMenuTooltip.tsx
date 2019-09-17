@@ -13,7 +13,7 @@ const styles = (theme: SaladTheme) => ({
     paddingTop: '5px',
     pointerEvents: 'none',
   },
-  contentContiner: {
+  contentContainer: {
     padding: '0 1rem 1rem',
     fontFamily: 'sharpGroteskLight25',
     fontSize: theme.small,
@@ -33,17 +33,13 @@ class _ProfileMenuTooltip extends Component<Props> {
     return (
       <div className={classnames(className, classes.container)}>
         <ProfileSummaryTitle profile={profile} xp={xp} />
-        <div className={classnames(classes.contentContiner, 'content')}>
+        <div className={classnames(classes.contentContainer, 'content')}>
           <p>
-            Earning XP unlocks tiers of veggie badges and eventually earns you new referrals. Each successful referral
-            will contribute Salad Bucks to your balance!
+            Earning XP unlocks tiers of veggie badges.
           </p>
-          Earn XP By:
-          <ul>
-            <li>Spending time chopping Salad (+1 XP/Min)</li>
-            <li>Referring Friends (+500XP)</li>
-            <li>Adding Another Salad-Chopping Machine (+500XP)</li>
-          </ul>
+          <p>
+            Earn XP by running Salad. For every minute you run Salad, you earn 1 XP.
+          </p>
         </div>
       </div>
     )

@@ -43,10 +43,10 @@ export class AnalyticsStore {
           $last_login: new Date().toISOString(),
         })
 
-        mixpanel.register({
-          'New User': profile.isNewUser,
-          Version: Config.appVersion,
-        })
+        // mixpanel.register({
+        //   'New User': profile.isNewUser,
+        //   Version: Config.appVersion,
+        // })
 
         mixpanel.identify(profile.id)
 
@@ -125,7 +125,7 @@ export class AnalyticsStore {
     if (!this.canTrack) return
 
     let rewardName = `${reward.id}:${name}`
-    this.track('Reward Redeemed', { Reward: rewardName, Price: reward.price, Tags: reward.filter })
+    this.track('Reward Redeemed', { Reward: rewardName, Price: reward.price, Category: reward.category })
     mixpanel.people.append('Rewards Redeemed', rewardName)
     mixpanel.people.increment('Rewards Redeemed Count')
     mixpanel.people.track_charge(reward.price, { Reward: rewardName })
@@ -144,9 +144,25 @@ export class AnalyticsStore {
   public trackMachineInfo = (machine: MachineInfo) => {
     if (!this.canTrack) return
 
-    mixpanel.people.union({
-      'Machine Ids': machine.macAddress,
-      GPUs: machine.gpus.map(x => x.model),
+    // mixpanel.people.union({
+    //   'Machine Ids': machine.macAddress,
+    //   GPUs: machine.gpus.map(x => x.model),
+    // })
+  }
+
+  public trackEarning = (hasEarned: boolean) => {
+    if (!this.canTrack) return
+
+    mixpanel.people.set({
+      'Mining Status Earning': hasEarned,
+    })
+  }
+
+  public trackCompatibleGpu = (isCompatible: boolean) => {
+    if (!this.canTrack) return
+
+    mixpanel.people.set({
+      'Compatible GPU': isCompatible,
     })
   }
 

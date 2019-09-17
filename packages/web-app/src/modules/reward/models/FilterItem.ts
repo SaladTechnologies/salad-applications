@@ -8,7 +8,7 @@ export abstract class FilterItem {
   @observable
   checked: boolean = false
 
-  constructor(name?: string, checked?: boolean) {
+  constructor(name: string, checked?: boolean) {
     this.name = name ? name : ''
     this.checked = checked ? checked : false
   }
@@ -16,10 +16,12 @@ export abstract class FilterItem {
   abstract checkReward(reward: Reward): boolean
 }
 
-export class NameFilter extends FilterItem {
-  constructor(name?: string, checked?: boolean) {
+export class TagFilter extends FilterItem {
+  constructor(name: string, checked?: boolean) {
     super(name, checked)
   }
 
-  checkReward = (reward: Reward): boolean => this.name === reward.filter
+  checkReward = (reward: Reward): boolean => {
+    return reward && reward.tags && reward.tags.some(x => x === this.name)
+  }
 }

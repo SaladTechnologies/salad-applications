@@ -29,13 +29,16 @@ interface Props extends WithStyles<typeof styles> {
   title?: string
   text?: string
   width?: string
+  children?: React.ReactNode
 }
 
 const _Tooltip: React.StatelessComponent<Props> = ({ text, title, classes, children }) => (
   <div className={classes.container}>
     {title && <div className={classes.title}>{title}</div>}
-    <div className={classes.text}>{text}</div>
-    {children}
+    <div className={classes.text}>
+      {text}
+      <div>{children}</div>
+    </div>
   </div>
 )
 

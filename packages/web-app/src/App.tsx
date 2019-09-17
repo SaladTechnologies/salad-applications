@@ -10,8 +10,7 @@ class App extends Component {
 
   componentDidMount = () => {
     if (this.store.auth.isAuth) {
-      this.store.profile.loadProfile()
-        .then(() => { })
+      this.store.onLogin()
     }
 
     if (!this.store.native.isNative) {
@@ -20,7 +19,6 @@ class App extends Component {
     }
 
     console.log('Running in native env')
-    this.store.native.loadMachineInfo()
   }
 
   render() {

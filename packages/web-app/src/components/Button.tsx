@@ -10,7 +10,7 @@ const styles = (theme: SaladTheme) => ({
     backgroundColor: 'transparent',
     border: 'none',
     textAlign: 'center',
-    textTransform: 'capitalize',
+    textTransform: (props: Props) => (props.uppercase ? 'uppercase' : 'capitalize'),
     userSelect: 'none',
     color: (props: Props) => (props.dark ? theme.darkBlue : theme.lightGreen),
     fontSize: '.625rem',
@@ -38,6 +38,7 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   type?: string
   dark?: boolean
+  uppercase?: boolean
   disabled?: boolean
   loading?: boolean
   children?: ReactNode
@@ -59,7 +60,7 @@ class _Button extends Component<Props> {
     return (
       <AnimatedBorder
         dark={dark}
-        className={classnames(classes.border, {
+        className={classnames(classes.border, className, {
           [classes.disabled]: !enabled,
           [classes.enabled]: enabled,
         })}
@@ -68,7 +69,7 @@ class _Button extends Component<Props> {
       >
         <button
           type={type}
-          className={classnames(classes.button, className, {
+          className={classnames(classes.button, {
             [classes.disabled]: !enabled,
             [classes.enabled]: enabled,
           })}

@@ -2,12 +2,10 @@ export interface Profile {
   id: string
   username: string
   email: string
-  isNewUser: boolean
-  termsOfService?: string
-  whatsNewVersion?: string
-  referred?: ReferredStatus
-  trackUsageVersion?: string
-  tutorialComplete: boolean
+  lastAcceptedTermsOfService: string | undefined
+  lastSeenApplicationVersion: string | undefined
+  lastAcceptedUsageTrackingVersion: string | undefined
+  viewedReferralOnboarding: boolean | undefined
 }
 
 export enum ReferredStatus {

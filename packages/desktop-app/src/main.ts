@@ -2,21 +2,25 @@ import { app, BrowserWindow, ipcMain, shell, Input } from 'electron'
 import { DefaultTheme as theme } from './SaladTheme'
 import * as path from 'path'
 import * as si from 'systeminformation'
-import { getMac } from './getMac'
 import { SaladBridge } from './SaladBridge'
 import { Config } from './config'
-import { Ethminer } from './Ethminer'
-import { MachineInfo } from './models/MachineInfo'
+import { Ethminer, StartMessage } from './Ethminer'
+import { MachineInfo } from './models/machine/MachineInfo'
 import { autoUpdater } from 'electron-updater'
 import { Logger } from './Logger'
 import { exec } from 'child_process'
 import * as fs from 'fs'
+import { LogScraper } from './LogScraper'
 
 //Overrides the console.log behavior
 Logger.connect()
 
+const AutoLaunch = require('auto-launch')
+
 const runStatus = 'run-status'
 const runError = 'run-error'
+const getDesktopVersion = 'get-desktop-version'
+const setDesktopVersion = 'set-desktop-version'
 
 let mainWindow: BrowserWindow
 let onlineStatusWindow: BrowserWindow
@@ -28,26 +32,24 @@ let onlineStatus = false
 let updateChecked = false
 
 const getMachineInfo = () =>
-  new Promise<MachineInfo>((resolve, reject) => {
-    si.graphics()
-      .then(graphics => {
-        si.system().then(sys => {
-          si.osInfo().then(os => {
-            getMac().then(mac => {
-              console.log(mac)
-              machineInfo = {
-                macAddress: mac,
-                version: app.getVersion(),
-                system: sys,
-                os: os,
-                gpus: graphics.controllers,
-              }
-              resolve(machineInfo)
-            })
-          })
-        })
-      })
-      .catch(() => reject())
+  new Promise<MachineInfo>(() => {
+    si.getStaticData().then(data => {
+      machineInfo = {
+        version: data.version,
+        system: data.system,
+        bios: data.bios,
+        baseboard: data.baseboard,
+        chassis: data.chassis,
+        os: data.os,
+        uuid: data.uuid,
+        versions: data.versions,
+        cpu: data.cpu,
+        graphics: data.graphics,
+        net: data.net,
+        memLayout: data.memLayout,
+        diskLayout: data.diskLayout,
+      }
+    })
   })
 
 /** Ensure only 1 instance of the app ever run */
@@ -105,6 +107,9 @@ const createMainWindow = () => {
   }
 
   let maximized = false
+  const saladAutoLauncher = new AutoLaunch({
+    name: 'Salad',
+  })
 
   mainWindow = new BrowserWindow({
     title: 'Salad',
@@ -116,6 +121,7 @@ const createMainWindow = () => {
     frame: false,
     show: false,
     webPreferences: {
+      webSecurity: false,
       nodeIntegration: false,
       contextIsolation: false,
       preload: path.resolve(__dirname, './preload.js'),
@@ -145,6 +151,7 @@ const createMainWindow = () => {
   //Create the bridge to listen to messages from the web-app
   let bridge = new SaladBridge(mainWindow)
   ipcMain.on('js-dispatch', bridge.receiveMessage)
+  var getMachineInfoPromise: Promise<void> | undefined = undefined
 
   //Listen for machine info requests
   bridge.on('get-machine-info', () => {
@@ -153,10 +160,14 @@ const createMainWindow = () => {
       bridge.send('set-machine-info', machineInfo)
     }
 
+    //Prevent multiple `getMachineInfo` from being called at the same time
+    if (getMachineInfoPromise !== undefined) return
+
     //Fetch the machine info
-    getMachineInfo().then(info => {
+    getMachineInfoPromise = getMachineInfo().then(info => {
       machineInfo = info
       bridge.send('set-machine-info', machineInfo)
+      getMachineInfoPromise = undefined
     })
   })
 
@@ -182,15 +193,17 @@ const createMainWindow = () => {
     app.quit()
   })
 
-  bridge.on('start-salad', (id: string) => {
+  bridge.on('start-salad', (message: StartMessage) => {
     console.log('Starting salad')
 
+    LogScraper.hashrate = 0
+
     if (machineInfo) {
-      ethminer.start(machineInfo, id)
+      ethminer.start(machineInfo, message)
       bridge.send(runStatus, true)
     } else {
       getMachineInfo().then(info => {
-        ethminer.start(info, id)
+        ethminer.start(info, message)
         bridge.send(runStatus, true)
       })
     }
@@ -205,6 +218,25 @@ const createMainWindow = () => {
   bridge.on('send-log', (id: string) => {
     console.log('Sending logs')
     Logger.sendLog(id)
+  })
+
+  bridge.on(getDesktopVersion, () => {
+    bridge.send(setDesktopVersion, app.getVersion())
+  })
+
+  bridge.on('enable-auto-launch', () => {
+    console.log('Enable auto launch')
+    saladAutoLauncher.enable()
+  })
+
+  bridge.on('disable-auto-launch', () => {
+    console.log('Disable auto launch')
+    saladAutoLauncher.disable()
+  })
+
+  bridge.on('get-hashrate', () => {
+    console.log('Getting hashrate from logs')
+    bridge.send('set-hashrate', LogScraper.hashrate)
   })
 
   //Listen for ethminer errors

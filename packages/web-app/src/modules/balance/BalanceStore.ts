@@ -1,24 +1,26 @@
-import { action, observable, autorun } from 'mobx'
-import { DataResource } from '../data-refresh/models'
+import { action, observable, flow, autorun } from 'mobx'
 import { RootStore } from '../../Store'
+import { AxiosInstance } from 'axios'
 import { Config } from '../../config'
-import { convertHours } from '../../utils'
+import { MiningStatus } from '../machine/models/MiningStatus'
 
 export class BalanceStore {
   private estimateTimer?: NodeJS.Timeout
 
-  private lastUpdateTime: number = Date.now()
+  private interpolRate: number = 0
 
   @observable
   public currentBalance: number = 0
 
   @observable
-  public lifetimeBalance: number = 0
+  public actualBalance: number = 0
 
   @observable
-  public currentEarningRate: number = 0
+  public lifetimeBalance: number = 0
 
-  constructor(store: RootStore) {
+  private lastUpdateTime: number = Date.now()
+
+  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     autorun(() => {
       if (store.native.isRunning) {
         if (this.estimateTimer) clearInterval(this.estimateTimer)
@@ -33,13 +35,37 @@ export class BalanceStore {
     })
   }
 
-  @action
-  loadDataRefresh = (data: DataResource) => {
-    this.currentBalance = data.currentBalance
-    this.currentEarningRate = data.earningVelocity
-    this.lifetimeBalance = data.lifetimeBalance
-    this.lastUpdateTime = Date.now()
-  }
+  @action.bound
+  refreshBalance = flow(function*(this: BalanceStore) {
+    try {
+      let balance = yield this.axios.get('profile/balance')
+      let delta = balance.data.currentBalance - this.currentBalance
+      const maxDelta = Config.maxBalanceDelta
+
+      if (delta > maxDelta || delta < 0) {
+        this.interpolRate = 0
+        this.currentBalance = balance.data.currentBalance
+      } else {
+        this.interpolRate = delta / Config.dataRefreshRate
+      }
+
+      // Clears out a check on 'Stopped' so mining status is not changed to 'Earning'
+      if (this.store.native.miningStatus === MiningStatus.Stopped) {
+        delta = 0
+      }
+
+      // Change mining status to 'Earning'
+      if (delta && this.store.native.machineStatus === MiningStatus.Running) {
+        this.store.native.miningStatus = MiningStatus.Earning
+      }
+
+      this.actualBalance = balance.data.currentBalance
+      this.lifetimeBalance = balance.data.lifetimeBalance
+    } catch (error) {
+      console.error('Balance error: ')
+      console.error(error)
+    }
+  })
 
   @action
   updateEstimate = () => {
@@ -47,9 +73,9 @@ export class BalanceStore {
 
     let dt = curTime - this.lastUpdateTime
 
-    let dBal = dt * (this.currentEarningRate / convertHours(1))
+    let dBal = dt * this.interpolRate
 
-    this.currentBalance += dBal
+    this.currentBalance = Math.min(this.actualBalance, this.currentBalance + dBal)
 
     this.lastUpdateTime = curTime
   }

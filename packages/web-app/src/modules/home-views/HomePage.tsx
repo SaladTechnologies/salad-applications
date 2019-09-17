@@ -4,13 +4,12 @@ import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 import { ExperienceBarContainer, SlicedVeggieContainer } from '../xp-views'
 import { RewardListContainer, RewardFilterContainer, SelectedRewardContainer } from '../reward-views'
-import { RefreshService } from '../data-refresh'
 import { getStore } from '../../Store'
 import { BottomBarContainer } from './BottomBarContainer'
 import { ProfileMenuItemContainer, UserStatsSummaryContainer } from '../profile-views'
 import { StartButtonContainer } from '../machine-views'
 import { Fade } from '../../components'
-import { ReferralListContainer } from '../referral-views'
+import { ReferralSummaryContainer } from '../settings-views/referral-views'
 import { MainTitlebarContainer } from './MainTitlebarContainer'
 import { NotificationBannerContainer } from './NotificationBannerContainer'
 
@@ -64,8 +63,9 @@ const styles = (theme: SaladTheme) => ({
     marginRight: 'auto',
   },
   rightColumn: {
-    padding: '2rem 0rem',
+    padding: '1rem 1rem 3rem',
     marginLeft: 'auto',
+    alignItems: 'flex-end',
   },
   footer: {
     flex: 'none',
@@ -73,20 +73,10 @@ const styles = (theme: SaladTheme) => ({
 })
 
 class _HomePage extends Component<WithStyles<typeof styles>> {
-  refreshService: RefreshService
-
-  constructor(props: any) {
-    super(props)
-    let store = getStore()
-    this.refreshService = new RefreshService(store)
-  }
-
-  componentDidMount() {
-    this.refreshService.start()
-  }
+  store = getStore()
 
   componentWillUnmount() {
-    this.refreshService.stop()
+    this.store.refresh.stop()
   }
 
   render() {
@@ -137,7 +127,7 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
             <div className={classnames(classes.mainColumn, classes.rightColumn, classes.verticalLayout)}>
               <UserStatsSummaryContainer />
               <div style={{ zIndex: 2000, marginTop: 'auto' }}>
-                <ReferralListContainer />
+                <ReferralSummaryContainer />
               </div>
             </div>
           </div>

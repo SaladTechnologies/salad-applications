@@ -28,7 +28,7 @@ const styles = (theme: SaladTheme) => ({
     height: '100px',
     position: 'relative',
     justifyContent: 'flex-start',
-    cursor: 'pointer',
+    cursor: (props: Props) => (props.reward ? 'pointer' : 'default'),
   },
   lock: {
     position: 'absolute',
@@ -38,7 +38,7 @@ const styles = (theme: SaladTheme) => ({
   imageContainer: {
     display: 'inline-block',
     width: '135.56px',
-    backgroundColor: (props: Props) => (props.reward && props.reward.color) || 'transparent',
+    backgroundColor: (props: Props) => (props.reward && props.reward.color) || theme.darkGreen,
   },
   image: {
     height: '100%',
@@ -89,7 +89,7 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  reward?: Reward,
+  reward?: Reward
   onRewardClick?: (reward: Reward) => void
 }
 
@@ -131,7 +131,7 @@ class _SelectedReward extends Component<Props> {
         <div className={classes.cardContainer} onClick={this.handleClick}>
           {/* Image */}
           <AngledPanel className={classes.imageContainer} leftSide={'right'}>
-            {reward && <img className={classes.image} src={reward.imageSrc} draggable={false} />}
+            {reward && <img className={classes.image} src={reward.image} draggable={false} />}
           </AngledPanel>
 
           {/* Right side panel */}
@@ -150,7 +150,7 @@ class _SelectedReward extends Component<Props> {
             <div className={classnames(classes.priceText)}>
               {reward && `$${reward.price.toFixed(2)} ${this.timeRemainingText()}`}
             </div>
-            <div className={classnames(classes.nameText)}>{reward ? reward.name : 'Unavailable'}</div>
+            <div className={classnames(classes.nameText)}>{reward ? reward.name : 'Please Select a Reward'}</div>
           </div>
         </div>
         <div className={classes.progressContainer}>
