@@ -144,26 +144,31 @@ export class NativeStore {
         this.setMachineInfo(info)
       })
 
-      this.on(runError, (errorCode: number) => {
-        console.log('Error code: ' + errorCode)
+      this.on(runError, (errorCode: number, errorMessage: string) => {
+        console.log('Error code: ', errorCode)
+        console.log('Error message: ', errorMessage)
 
         switch (errorCode) {
           case 8675309: // Tommy Tutone - 867-5309/Jenny: https://youtu.be/6WTdTwcmxyo
             store.ui.showModal('/errors/cuda')
             store.analytics.captureException(new Error(`Received CUDA error code ${errorCode} from native`))
+            store.analytics.track('CUDA Error', { ErrorCode: errorCode, ErrorMessage: errorMessage })
             break
           case 314159265: // Pie!
             store.ui.showModal('/errors/anti-virus')
             store.analytics.captureException(new Error(`Received Anti-Virus error code ${errorCode} from native`))
+            store.analytics.track('Anti-Virus Error', { ErrorCode: errorCode, ErrorMessage: errorMessage })
             this.stop()
             break
           case 8888: // Generic, ethminer.exe terminated, no modal error message
+            store.analytics.track('Ethminer.exe Stopped', { ErrorCode: 8888, ErrorMessage: 'Ethminer.exe stopped' })
             this.stop()
             break
           case 9999: // Generic, "WTH happened"
           default:
             store.ui.showModal('/errors/unknown')
             store.analytics.captureException(new Error(`Received Unknown error code ${errorCode} from native`))
+            store.analytics.track('Generic Unknown Error', { ErrorCode: errorCode, ErrorMessage: errorMessage })
             this.stop()
             break
         }
@@ -340,6 +345,7 @@ export class NativeStore {
       this.validGPUs = machine.validGpus
       this.validOperatingSystem = machine.validOs
       this.store.machine.setCurrentMachine(machine)
+      this.store.analytics.trackCompatibleGpu(this.validGPUs)
     } catch (err) {
       this.store.analytics.captureException(new Error(`register-machine error: ${err}`))
       this.validGPUs = false
@@ -421,22 +427,32 @@ export class NativeStore {
 
       if (machineStatus === MiningStatus.Running && this.hashrate > 0) {
         this.zeroHashTimespan = 0
+        this.store.analytics.track('Mining Status', { MiningStatus: MiningStatus.Earning })
+        this.store.analytics.trackEarning(true)
         return
       }
 
       if ((machineStatus === MiningStatus.Stopped && this.hashrate > 0) || this.hashrate > 0) {
         this.miningStatus = MiningStatus.Running
         this.zeroHashTimespan = 0
+        this.store.analytics.track('Mining Status', { MiningStatus: MiningStatus.Running })
         return
       }
 
       if (this.zeroHashTimespan >= Config.zeroHashrateNotification) {
+        this.miningStatus = MiningStatus.Error
         this.zeroHashTimespan = 0
         this.store.ui.showModal('/errors/unknown')
+        this.store.analytics.track('Mining Status', {
+          MiningStatus: MiningStatus.Error,
+          Message: `${this.hashrate} hashrate for longer than ${Config.zeroHashrateNotification} minutes`,
+        })
+        this.store.analytics.trackEarning(false)
       }
 
       this.miningStatus = MiningStatus.Started
       this.zeroHashTimespan++
+      this.store.analytics.track('Mining Status', { MiningStatus: MiningStatus.Started })
 
       return
     }
@@ -445,6 +461,7 @@ export class NativeStore {
     this.miningStatus = MiningStatus.Stopped
     this.zeroHashTimespan = 0
     this.store.balance.currentBalance = this.store.balance.actualBalance
+    this.store.analytics.track('Mining Status', { MiningStatus: MiningStatus.Stopped })
   }
   //#endregion
 
@@ -464,6 +481,8 @@ export class NativeStore {
         : this.miningStatus === MiningStatus.Running || this.miningStatus === MiningStatus.Earning
         ? MiningStatus.Running
         : this.miningStatus
+
+    this.store.analytics.track('Machine Status', { MachineStatus: this.machineStatus })
 
     const data = {
       status: miningStatus,
