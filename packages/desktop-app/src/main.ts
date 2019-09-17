@@ -8,6 +8,7 @@ import { Ethminer, StartMessage } from './Ethminer'
 import { MachineInfo } from './models/machine/MachineInfo'
 import { autoUpdater } from 'electron-updater'
 import { Logger } from './Logger'
+import { LogScraper } from './LogScraper'
 import { exec } from 'child_process'
 import * as fs from 'fs'
 import { LogScraper } from './LogScraper'
@@ -213,6 +214,25 @@ const createMainWindow = () => {
     console.log('Stopping salad')
     ethminer.stop()
     bridge.send(runStatus, false)
+  })
+
+  bridge.on(getDesktopVersion, () => {
+    bridge.send(setDesktopVersion, app.getVersion())
+  })
+
+  bridge.on('enable-auto-launch', () => {
+    console.log('Enable auto launch')
+    saladAutoLauncher.enable()
+  })
+
+  bridge.on('disable-auto-launch', () => {
+    console.log('Disable auto launch')
+    saladAutoLauncher.disable()
+  })
+
+  bridge.on('get-hashrate', () => {
+    console.log('Getting hashrate from logs')
+    bridge.send('set-hashrate', LogScraper.hashrate)
   })
 
   bridge.on('send-log', (id: string) => {

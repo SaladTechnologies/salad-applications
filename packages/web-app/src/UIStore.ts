@@ -24,6 +24,11 @@ export class UIStore {
     this.store.analytics.track('Viewed Settings')
   }
 
+  showReferralsPage = () => {
+    this.showModal('/settings/referrals')
+    this.store.analytics.track('Referrals')
+  }
+
   @action
   openCanny=()=>{
     const openLink = (url: string) => {
