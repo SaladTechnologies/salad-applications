@@ -60,6 +60,10 @@ export default class Routes extends Component {
   }
 
   render() {
+    if (Config.downTime) {
+      return <Route render={() => <LoadingPage text="Salad Is Currently Down For Maintenance." />} />
+    }
+
     let isElectron = this.store.native.isNative
     let isAuth = this.store.auth.isAuth
     let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck

@@ -12,6 +12,11 @@ export interface StartMessage {
   address: string
 }
 
+interface Error {
+  error: string
+  code: number
+}
+
 export class Ethminer {
   private childProcess?: ChildProcess
   private isRunning = false
@@ -29,7 +34,6 @@ export class Ethminer {
       // Anti-Virus
       { error: 'is not recognized as an internal or external command', code: 314159265 },
       { error: 'The system cannot find the path specified', code: 314159265 },
-      { error: 'No OpenCL platforms found', code: 314159265 },
       { error: 'Socket write failed', code: 314159265 },
       // CUDA
       { error: '3221225595', code: 8675309 },
@@ -37,6 +41,7 @@ export class Ethminer {
       { error: 'CUDA error: Insufficient CUDA driver: 9', code: 8675309 },
       { error: 'CUDA error: Insufficient CUDA driver: 7050', code: 8675309 },
       { error: 'CUDA error in func', code: 8675309 },
+      { error: 'No OpenCL platforms found', code: 8675309 },
       // Unknown
       { error: 'stratum  Error', code: 9999 },
       { error: 'exit: 0', code: 9999 },
@@ -66,7 +71,7 @@ export class Ethminer {
     console.log('machineId: ' + message.machineId)
 
     let platform = cuda ? '-U' : '-G'
-
+    
     let cmd = `cd dist && cd ethminer && ${this.processName} --farm-recheck 1000 ${platform} -P ${message.address}`
 
     let ls = spawn(cmd, {
