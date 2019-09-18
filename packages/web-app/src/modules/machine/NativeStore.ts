@@ -168,7 +168,6 @@ export class NativeStore {
             store.ui.showModal('/errors/unknown')
             store.analytics.captureException(new Error(`Received Unknown error code ${errorCode} from native`))
             store.analytics.track('Generic Unknown Error', { ErrorCode: errorCode })
-            this.stop()
             break
         }
       })
