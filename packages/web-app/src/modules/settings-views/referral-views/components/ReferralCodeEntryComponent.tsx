@@ -6,21 +6,25 @@ import { TextField, Button, ErrorText } from '../../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    color: theme.darkBlue,
     userSelect: 'none',
     display: 'inline-flex',
     flexDirection: 'row',
     alignItems: 'flex-start',
   },
+
   input: {
     marginTop: 5,
     width: 300,
+  },
+
+  submitButton: {
+    margin: '5px 0 0 5px',
+    padding: 6,
   },
 })
 
 interface Props extends WithStyles<typeof styles> {
   onSubmitCode?: (code: string) => Promise<void>
-  dark?: boolean
 }
 
 interface State {
@@ -71,7 +75,7 @@ class _ReferralCodeEntryComponent extends Component<Props, State> {
   }
 
   render() {
-    const { dark, classes } = this.props
+    const { classes } = this.props
     const { submitting, errorMessage } = this.state
 
     return (
@@ -87,12 +91,19 @@ class _ReferralCodeEntryComponent extends Component<Props, State> {
                     <TextField
                       className={classes.input}
                       {...input}
-                      dark={dark}
+                      dark
                       placeholder="Code"
                       errorText={meta.error && meta.touched && meta.error}
                     />
-                    <Button type="submit" dark={dark} loading={submitting} disabled={submitting}>
-                      SUBMIT
+                    <Button
+                      type="submit"
+                      uppercase
+                      dark
+                      loading={submitting}
+                      disabled={submitting}
+                      className={classes.submitButton}
+                    >
+                      Submit
                     </Button>
                   </div>
                 )}

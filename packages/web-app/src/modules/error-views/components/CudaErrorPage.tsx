@@ -29,14 +29,14 @@ export class CudaErrorPage extends Component<Props> {
       >
         <div>
           We’re detecting that your GPU drivers are incompatible with Salad. In order to get chopping you will need to
-          update the the latest drivers.
-          <ExternalLink path="https://www.nvidia.com/Download/index.aspx">NVIDIA Drivers</ExternalLink>
+          update the the latest drivers.{' '}
+          <ExternalLink path="https://www.nvidia.com/Download/index.aspx">NVIDIA Drivers</ExternalLink>{' '}
           <ExternalLink path="https://www.amd.com/en/support">AMD Drivers</ExternalLink>
         </div>
         <div style={{ paddingTop: '1rem' }}>
-          If this issue persists, something else may be causing the problem. If so, please contact
-          <ExternalLink path="https://www.salad.io/support/">Salad Support</ExternalLink>, or join the
-          <ExternalLink path="https://discord.gg/XzyRcd8"> Discord </ExternalLink> for updates.
+          If this issue persists, something else may be causing the problem. If so, please contact{' '}
+          <ExternalLink path="https://www.salad.io/support/">Salad Support</ExternalLink>, or join the{' '}
+          <ExternalLink path="https://discord.gg/XzyRcd8">Discord</ExternalLink> for updates.
         </div>
       </ErrorPage>
     )

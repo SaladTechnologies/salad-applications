@@ -6,9 +6,6 @@ import { Route, Switch, Redirect } from 'react-router'
 // Store
 import { getStore } from './Store'
 
-// Models
-// import { ReferredStatus } from './modules/profile/models'
-
 // Components
 import { Config } from './config'
 
