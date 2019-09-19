@@ -5,6 +5,7 @@ import { Config } from '../../config'
 import { MachineInfo, MiningStatus } from './models'
 import { AxiosInstance } from 'axios'
 import { Machine } from './models/Machine'
+import { featureFlag } from '../../FeatureFlags'
 
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
@@ -100,8 +101,7 @@ export class NativeStore {
 
   @computed
   get isCompatible(): boolean {
-    // TODO: return this.isNative && this.validOperatingSystem && this.validGPUs
-    return true
+    return this.isNative && this.validOperatingSystem && this.validGPUs
   }
 
   @computed
@@ -304,10 +304,16 @@ export class NativeStore {
     if (window.salad.apiVersion <= 2) {
       this.send(start, this.machineId)
     } else {
-      if (!this.minerId) {
-        throw new Error('MinerId not found. Check that the machine is valid first. Cannot start.')
+      let address = ''
+      if (featureFlag('miner.nicepool')) {
+        if (!this.minerId) {
+          throw new Error('MinerId not found. Check that the machine is valid first. Cannot start.')
+        }
+        address = `stratum2+tcp://368dnSPEiXj1Ssy35BBWMwKcmFnGLuqa1J.${this.minerId}@daggerhashimoto.usa.nicehash.com:3353`
+      } else {
+        address = `stratum1+tcp://0x6fF85749ffac2d3A36efA2BC916305433fA93731@eth-us-west1.nanopool.org:9999/${this.machineId}/notinuse%40salad.io`
       }
-      let address = `stratum2+tcp://368dnSPEiXj1Ssy35BBWMwKcmFnGLuqa1J.${this.minerId}@daggerhashimoto.usa.nicehash.com:3353`
+
       this.send(start, {
         machineId: this.machineId,
         address: address,
