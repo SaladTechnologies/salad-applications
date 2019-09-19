@@ -7,7 +7,7 @@ import { styles } from './WindowsSettings.styles'
 import { getStore } from '../../../../Store'
 
 // UI
-import { Username, VeggieName, CondensedHeader, P, ToggleSwitch, Divider } from '../../../../components'
+import { Username, CondensedHeader, P, ToggleSwitch, Divider } from '../../../../components'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
@@ -52,7 +52,6 @@ class _WindowsSettings extends Component<Props> {
     return (
       <>
         <div className="header">
-          {!apiVersion && <VeggieName>Coming Soon</VeggieName>}
           <CondensedHeader>Settings</CondensedHeader>
         </div>
         <Divider />

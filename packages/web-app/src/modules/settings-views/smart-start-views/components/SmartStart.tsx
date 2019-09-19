@@ -5,7 +5,6 @@ import { styles } from './SmartStart.styles'
 
 // UI
 import {
-  VeggieName,
   CondensedHeader,
   P,
 } from '../../../../components'
@@ -20,7 +19,6 @@ class _SmartStart extends Component<Props> {
     return (
       <>
         <div className="header">
-          <VeggieName>Coming Soon</VeggieName>
           <CondensedHeader>Smart Start</CondensedHeader>
         </div>
         <div className="main">
