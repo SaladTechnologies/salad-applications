@@ -1,53 +1,13 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../../SaladTheme'
 import { Form, Field } from 'react-final-form'
 import { TextField, Button, Username, ComputerName, P } from '../../../../components'
 import { Profile } from '../../../profile/models'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 
-const styles = (theme: SaladTheme) => ({
-  input: {
-    marginTop: 5,
-    width: 300,
-  },
-  row: {
-    display: 'flex',
-    alignItems: 'center',
-    // padding: '10px 0',
-  },
-  icon: {
-    cursor: 'pointer',
-    paddingLeft: 10,
-  },
-  logoutButton: {
-    display: 'inline-block',
-    padding: '.25rem 1rem',
-    backgroundColor: theme.darkBlue,
-    color: theme.green,
-    marginLeft: '60rem',
-    fontFamily: 'sharpGroteskLight25',
-    fontSize: theme.small,
-    cursor: 'pointer',
-    '&:hover': {
-      opacity: 0.8,
-    },
-    position: 'absolute',
-    bottom: '25px',
-  },
-  editIcon: {
-    marginTop: '-5px',
-  },
-  textFieldContainer: {
-    position: 'relative',
-    height: 60,
-  },
-  updateButton: {
-    top: '-3px',
-    padding: 6,
-  },
-})
+// Styles
+import { styles } from './EditUsername.styles'
 
 interface Props extends WithStyles<typeof styles> {
   profile?: Profile
@@ -143,30 +103,32 @@ class _EditUsername extends Component<Props, State> {
                           placeholder={profile && profile.username}
                           errorText={meta.error && meta.touched && meta.error}
                         />
-                        <Button
-                          type="submit"
-                          className={classes.updateButton}
-                          dark
-                          uppercase
-                          loading={sending}
-                          disabled={sending}
-                        >
-                          Update
-                        </Button>
-                        <Button
-                          onClick={() => this.setState({ isEdit: false })}
-                          className={classes.updateButton}
-                          dark
-                          uppercase
-                          loading={sending}
-                          disabled={sending}
-                        >
-                          Cancel
-                        </Button>
+                        <div className={classes.buttonContainer}>
+                          <Button
+                            type="submit"
+                            className={classes.updateButton}
+                            dark
+                            uppercase
+                            loading={sending}
+                            disabled={sending}
+                          >
+                            Update
+                          </Button>
+                          <Button
+                            onClick={() => this.setState({ isEdit: false })}
+                            className={classes.updateButton}
+                            dark
+                            uppercase
+                            loading={sending}
+                            disabled={sending}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
                       </div>
                     )}
                   </Field>
-                  <ul>
+                  <ul className={classes.passwordRequirements}>
                     <li>
                       <P>2-32 characters</P>
                     </li>
@@ -186,4 +148,5 @@ class _EditUsername extends Component<Props, State> {
     )
   }
 }
+
 export const EditUsername = withStyles(styles)(_EditUsername)

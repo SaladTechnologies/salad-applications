@@ -4,8 +4,8 @@ import { RootStore } from '../../Store'
 
 const mapStoreToProps = (store: RootStore) => {
   const menuItems: MenuItem[] = [
-    new MenuItem('Referrals', store.ui.showReferralsPage),
     new MenuItem('Account', store.ui.showProfilePage),
+    new MenuItem('Referrals', store.ui.showReferralsPage),
     new MenuItem('Settings', store.ui.showSettingsPage),
   ]
   return {
