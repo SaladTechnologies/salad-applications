@@ -42,6 +42,9 @@ interface Props extends WithStyles<typeof styles> {
 
 class _Settings extends Component<Props> {
   store = getStore()
+  state = {
+    buttonToggle: false,
+  }
 
   componentDidMount() {
     document.addEventListener('keyup', this.handleCloseKeyPress)
@@ -59,6 +62,10 @@ class _Settings extends Component<Props> {
 
   handleLogClicked = () => {
     const { onSendLog } = this.props
+
+    this.setState({
+      buttonToggle: !this.state.buttonToggle,
+    })
 
     if (onSendLog) onSendLog()
   }
@@ -91,7 +98,9 @@ class _Settings extends Component<Props> {
           <div>{menuItems && <LinkListUnstyled list={menuItems} onListItemClick={this.handleListItemClick} />}</div>
           <div className={classes.buttonContainer}>
             <Button onClick={this.handleBugClicked}>Submit Bug</Button>
-            <Button onClick={this.handleLogClicked}>Send Logs</Button>
+            <Button onClick={this.handleLogClicked}>
+              {this.state.buttonToggle ? 'Logs sent' : 'Send logs'}
+            </Button>
           </div>
           <div className={classes.versionContainer}>
             <MenuTitle>Version: {appVersion ? appVersion : '-'}</MenuTitle>

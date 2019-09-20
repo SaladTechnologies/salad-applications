@@ -6,7 +6,6 @@ import { styles } from './Account.styles'
 // UI
 import {
   CondensedHeader,
-  // P,
   Divider,
   Button,
 } from '../../../../components'

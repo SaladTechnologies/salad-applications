@@ -5,7 +5,6 @@ import { styles } from './DesktopNotifications.styles'
 
 // UI
 import {
-  VeggieName,
   CondensedHeader,
   P,
 } from '../../../../components'
@@ -21,11 +20,10 @@ class _DesktopNotifications extends Component<Props> {
     return (
       <>
         <div className="header">
-          <VeggieName>Coming Soon</VeggieName>
           <CondensedHeader>Desktop Notifications</CondensedHeader>
         </div>
         <div className="main">
-          <P>In case there’s some Salad Fixins’ we’ve got to tell you about.</P>
+          <P>In case there's some Salad Fixins' we’ve got to tell you about.</P>
         </div>
       </>
     )
