@@ -362,6 +362,7 @@ export class NativeStore {
       this.validOperatingSystem = machine.validOs
       this.store.machine.setCurrentMachine(machine)
       this.store.analytics.trackCompatibleGpu(this.validGPUs)
+      this.store.routing.replace('/')
     } catch (err) {
       this.store.analytics.captureException(new Error(`register-machine error: ${err}`))
       this.validGPUs = false

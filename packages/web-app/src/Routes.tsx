@@ -37,6 +37,15 @@ import { SettingsContainer } from './modules/settings-views'
 export default class Routes extends Component {
   store = getStore()
 
+  checkMachineLoading = () => {
+    let machine = this.store.machine.currentMachine
+    let machineInfo = this.store.native.machineInfo
+
+    if (machine === undefined || machineInfo === undefined) return <Redirect to="/machine-loading" />
+
+    return
+  }
+
   public getOnboardingRedirect = () => {
     let profile = this.store.profile.currentProfile
 
@@ -72,12 +81,15 @@ export default class Routes extends Component {
 
     return (
       <Switch>
+        <Route exact path="/machine-loading" render={() => <LoadingPage text="Checking the bits" />} />
+
         {!isAuth && <NoAuth store={this.store.auth} />}
 
         {isOnboarding && (
           // When extracted into it's own component, onboarding doesn't load
           <AnimatedSwitch>
             <Route exact path="/profile-loading" render={() => <LoadingPage text="Loading profile" />} />
+
             <Route exact path="/onboarding/referral-code" component={ReferralEntryContainer} />
             <Route exact path="/onboarding/terms" component={TermsPageContainer} />
             <Route exact path="/onboarding/analytics" component={AnalyticsPageContainer} />
@@ -85,6 +97,8 @@ export default class Routes extends Component {
             {this.getOnboardingRedirect()}
           </AnimatedSwitch>
         )}
+
+        {isElectron && this.checkMachineLoading()}
 
         {isElectron && showCompatibilityPage && <CompatibilityCheckPageContainer />}
 
