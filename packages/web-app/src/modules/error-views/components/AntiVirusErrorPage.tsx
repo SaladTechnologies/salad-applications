@@ -2,12 +2,13 @@ import React, { Component } from 'react'
 
 // Components
 import { ErrorPage } from '../../../components/ErrorPage'
-import { ExternalLink } from '../../../components'
+import { ExternalLinkListUnstyled } from '../../../components'
 
 interface Props {
   onCloseClicked?: () => void
   showSendLog?: boolean
   onSendLog?: () => void
+  avLinks: {readonly url: string, readonly text: string}[]
 }
 
 export class AntiVirusErrorPage extends Component<Props> {
@@ -18,7 +19,7 @@ export class AntiVirusErrorPage extends Component<Props> {
   }
 
   render() {
-    const { showSendLog, onCloseClicked } = this.props
+    const { showSendLog, onCloseClicked, avLinks } = this.props
 
     return (
       <ErrorPage
@@ -27,20 +28,12 @@ export class AntiVirusErrorPage extends Component<Props> {
         showSendLog={showSendLog}
         onSendLog={this.handleSendLogClicked}
       >
-        <div>
+        <div style={{ paddingBottom: '1rem' }}>
           Uh oh looks like your anti-virus is blocking our miner from running. If you have Norton or Malwarebytes follow
           the links below to whitelist Salad. More anti-virus guides coming soon!
         </div>
-        <div style={{ paddingTop: '1rem' }}>
-          <ExternalLink path="https://salad.zendesk.com/hc/en-us/articles/360032211151-How-to-Whitelist-Salad-in-Norton-Antivirus">
-            Norton Antivirus
-          </ExternalLink>
-        </div>
-        <div>
-          <ExternalLink path="https://salad.zendesk.com/hc/en-us/articles/360031870772-How-to-Whitelist-Salad-in-Malwarebytes">
-            Malwarebytes
-          </ExternalLink>
-        </div>
+
+        <ExternalLinkListUnstyled list={avLinks} />
       </ErrorPage>
     )
   }

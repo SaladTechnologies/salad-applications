@@ -21,6 +21,7 @@ export * from './ExternalLink'
 
 // Elements
 export * from './elements/ToggleSwitch/ToggleSwitch'
+export * from './elements/lists/ExternalLinkListUnstyled'
 export * from './elements/lists/LinkListUnstyled'
 export * from './elements/lists/ListUnstyled'
 export * from './elements/StatElement/StatElement'
