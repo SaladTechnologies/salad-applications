@@ -42,6 +42,7 @@ export class NativeStore {
   private callbacks = new Map<string, Function>()
   private runningHeartbeat?: NodeJS.Timeout
   private zeroHashTimespan: number = 0
+  private restartingMiner?: NodeJS.Timeout
 
   //#region Observables
   @observable
@@ -158,6 +159,7 @@ export class NativeStore {
 
         switch (errorCode) {
           case 8675309: // Tommy Tutone - 867-5309/Jenny: https://youtu.be/6WTdTwcmxyo
+            this.restartMiner()
             store.ui.showModal('/errors/cuda')
             store.analytics.captureException(new Error(`Received CUDA error code ${errorCode} from native`))
             store.analytics.track('CUDA Error', { ErrorCode: errorCode })
@@ -171,6 +173,11 @@ export class NativeStore {
           case 8888: // Generic, ethminer.exe terminated, no modal error message
             store.analytics.track('Ethminer.exe Stopped', { ErrorCode: 8888 })
             this.stop()
+            break
+          case 9998:
+            this.restartMiner()
+            store.analytics.captureException(new Error(`Received Nonce error code ${errorCode} from native`))
+            store.analytics.track('Nonce Unknown Error', { ErrorCode: errorCode })
             break
           case 9999: // Generic, "WTH happened"
           default:
@@ -319,6 +326,8 @@ export class NativeStore {
       })
     }
 
+    if (this.restartingMiner) clearTimeout(this.restartingMiner)
+    this.miningStatus = MiningStatus.Started
     this.store.analytics.trackRunStatus(true)
   }
 
@@ -333,6 +342,7 @@ export class NativeStore {
       return
     }
 
+    if (this.restartingMiner) clearTimeout(this.restartingMiner)
     this.send(stop)
     this.store.analytics.trackRunStatus(false)
   }
@@ -475,12 +485,21 @@ export class NativeStore {
     }
 
     this.hashrate = 0
-    this.miningStatus = MiningStatus.Stopped
+    this.miningStatus = this.miningStatus === MiningStatus.Restarting ? MiningStatus.Restarting : MiningStatus.Stopped
     this.zeroHashTimespan = 0
     this.store.balance.currentBalance = this.store.balance.actualBalance
     this.store.analytics.track('Mining Status', { MiningStatus: MiningStatus.Stopped })
   }
   //#endregion
+
+  @action
+  restartMiner = () => {
+    this.stop()
+    this.miningStatus = MiningStatus.Restarting
+    this.restartingMiner = setTimeout(() => {
+      this.start()
+    }, 5000)
+  }
 
   @action.bound
   sendRunningStatus = flow(function*(this: NativeStore, runStatus: boolean) {

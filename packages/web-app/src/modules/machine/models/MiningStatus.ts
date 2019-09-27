@@ -4,4 +4,5 @@ export enum MiningStatus {
   Running = 'running',
   Earning = 'earning',
   Error = 'error',
+  Restarting = 'restarting',
 }

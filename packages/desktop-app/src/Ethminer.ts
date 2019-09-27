@@ -42,6 +42,8 @@ export class Ethminer {
       { error: 'CUDA error: Insufficient CUDA driver: 7050', code: 8675309 },
       { error: 'CUDA error in func', code: 8675309 },
       { error: 'No OpenCL platforms found', code: 8675309 },
+      // Nonce
+      { error: 'Invalid nonce', code: 9998 },
       // Unknown
       { error: 'stratum  Error', code: 9999 },
       { error: 'exit: 0', code: 9999 },
