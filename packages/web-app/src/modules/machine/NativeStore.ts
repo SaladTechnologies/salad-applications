@@ -523,7 +523,8 @@ export class NativeStore {
     const data = {
       status: miningStatus,
     }
-
-    yield this.axios.post(`machines/${machineId}/status`, data)
+    try {
+      yield this.axios.post(`machines/${machineId}/status`, data)
+    } catch {}
   })
 }
