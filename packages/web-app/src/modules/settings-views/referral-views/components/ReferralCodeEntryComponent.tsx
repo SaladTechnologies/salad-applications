@@ -3,6 +3,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../../SaladTheme'
 import { Form, Field } from 'react-final-form'
 import { TextField, Button, ErrorText } from '../../../../components'
+import { submitAction, ActionState } from '../../../../ActionHandler'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -27,37 +28,25 @@ interface Props extends WithStyles<typeof styles> {
   onSubmitCode?: (code: string) => Promise<void>
 }
 
-interface State {
-  submitting: boolean
-  errorMessage?: string
-}
+interface State extends ActionState{}
 
 interface FormTypes {
   code?: string
 }
 
 class _ReferralCodeEntryComponent extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      submitting: false,
-    }
-  }
+  // constructor(props: Props) {
+  //   super(props)
+  //   this.state = {
+  //     submitting: false,
+  //   }
+  // }
 
   onSubmit = async (values: {}) => {
     const { onSubmitCode } = this.props
     let v = values as FormTypes
-    if (onSubmitCode && v.code) {
-      this.setState({ submitting: true, errorMessage: undefined })
-      try {
-        await onSubmitCode(v.code)
-        this.setState({ submitting: false })
-      } catch (e) {
-        if (e instanceof Error) {
-          this.setState({ submitting: false, errorMessage: e.message })
-        }
-      }
-    }
+    if (onSubmitCode)
+    submitAction(this, async () => await onSubmitCode(v.code || ''))
   }
 
   validate = (values: {}) => {
