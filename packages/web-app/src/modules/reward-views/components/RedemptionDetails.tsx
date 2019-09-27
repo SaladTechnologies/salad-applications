@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { WithStyles } from 'react-jss'
+import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import classnames from 'classnames'
 import { Checkbox, Button, TextField } from '../../../components'
@@ -107,7 +107,7 @@ interface FormTypes {
   gift?: boolean
 }
 
-export class RedemptionDetails extends Component<Props> {
+class _RedemptionDetails extends Component<Props> {
   validate = (values: {}) => {
     let v = values as FormTypes
     const errors: FormTypes = {}
@@ -190,3 +190,4 @@ export class RedemptionDetails extends Component<Props> {
     )
   }
 }
+export const RedemptionDetails = withStyles(styles)(_RedemptionDetails)
