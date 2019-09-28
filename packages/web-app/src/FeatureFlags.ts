@@ -1,10 +1,21 @@
-import featureFlags from './featureFlags.json'
+import * as LDSdk from 'launchdarkly-js-client-sdk'
+import { Config } from './config'
 
-export const featureFlag = (flag: string): boolean => {
-  //@ts-ignore
-  if (featureFlags.hasOwnProperty(flag)) {
-    //@ts-ignore
-    return featureFlags[flag] === true
+export class FeatureFlags {
+  private ldClient: LDSdk.LDClient | undefined
+
+  loadFeatureFlags = async (userId: string): Promise<void> => {
+    this.ldClient = LDSdk.initialize(Config.launchDarklyId, { key: userId })
+
+    await this.ldClient.waitUntilReady()
   }
-  return false
+
+  getBool = (key: string, defaultValue: boolean = false): boolean => {
+    if (this.ldClient) return this.ldClient.variation(key, defaultValue)
+    return defaultValue
+  }
 }
+
+const instance = new FeatureFlags()
+
+export { instance as featureFlags }

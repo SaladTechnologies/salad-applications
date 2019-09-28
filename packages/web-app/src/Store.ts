@@ -12,6 +12,7 @@ import { ReferralStore } from './modules/referral'
 import { AnalyticsStore } from './modules/analytics'
 import { NativeStore } from './modules/machine/NativeStore'
 import { RefreshService } from './modules/data-refresh'
+import { featureFlags } from './FeatureFlags'
 
 //Forces all changes to state to be from an action
 configure({ enforceActions: 'always' })
@@ -62,10 +63,11 @@ export class RootStore {
 
   @action.bound
   onLogin = flow(function*(this: RootStore) {
-    yield this.profile.loadProfile()
+    var profile = yield this.profile.loadProfile()
     this.referral.loadReferralCode()
     this.xp.refreshXp()
     this.referral.loadCurrentReferral()
+    yield featureFlags.loadFeatureFlags(profile.id)
 
     // Start a timer to keep checking for system information
     this.machineInfoHeartbeat = setInterval(this.tryRegisterMachine, 20000)
