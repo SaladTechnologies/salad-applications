@@ -103,8 +103,13 @@ export class ReferralStore {
       let res = yield this.axios.get<Referral>('profile/referral')
       this.currentReferral = res.data
       console.log(res)
-    } catch (error) {
-      throw error
+    } catch (e) {
+      let err: AxiosError = e
+      if (err.response && err.response.status === 404) {
+        console.log('No referral found')
+      } else {
+        throw e
+      }
     }
   })
 
