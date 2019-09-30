@@ -10,6 +10,7 @@ import { SelectedReward } from './SelectedReward'
 import { RewardDetailsModal } from './RewardDetailsModal'
 import { RewardCategory } from '../../reward/models/RewardCategory'
 import { RedemptionCompletePanel } from './RedemptionCompletePanel'
+import { select } from '@storybook/addon-knobs'
 
 const generateRewards = (count: number): Reward[] => {
   let result = new Array<Reward>(count)
@@ -79,7 +80,7 @@ storiesOf('Modules|Reward/Reward Details Modal', module)
         <RedemptionCompletePanel
           reward={reward}
           onClickClose={action('close')}
-          code="https://discordapp.com/invite/xcvmgQk"
+          code={select('yourmommma', ["https://discordapp.com/invite/xcvmgQk", 'salad', ''], 'salad')}
         />
       </div>
     )

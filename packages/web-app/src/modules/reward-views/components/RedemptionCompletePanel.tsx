@@ -166,7 +166,7 @@ class _RedemptionCompletePanel extends Component<Props> {
                 <div className={classnames(classes.details, classes.centered)}>
                   Nicely done, but how good are you at timed quests?
                   <div className={classnames(classes.centered, classes.top)}>
-                    {!this.isValidUrl && (
+                    {!this.isValidUrl(code) && (
                       <div>
                         {code}{' '}
                         <span className={classnames(classes.bottom)}>
@@ -174,7 +174,7 @@ class _RedemptionCompletePanel extends Component<Props> {
                         </span>
                       </div>
                     )}
-                    {this.isValidUrl && (
+                    {this.isValidUrl(code) && (
                       <div>
                         <ExternalLink path={code}>{code}</ExternalLink>
                       </div>
