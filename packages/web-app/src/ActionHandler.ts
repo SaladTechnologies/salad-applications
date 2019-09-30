@@ -13,7 +13,7 @@ export const submitAction = async (component: Component, func: () => void) => {
     await func()
   } catch (e) {
     if (e instanceof Error) {
-    component.setState({ errorMessage: e.message })
+      component.setState({ errorMessage: e.message })
     }
   } finally {
     component.setState({ submitting: false })

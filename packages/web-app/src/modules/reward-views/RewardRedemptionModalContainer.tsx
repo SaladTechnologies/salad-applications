@@ -7,8 +7,8 @@ const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ id: stri
   reward: store.rewards.getReward(props.match.params.id),
   onClickClose: store.ui.hideModal,
   onRedeem: store.rewards.redeemReward,
-  submitting: store.rewards.isRedeeming,
   onClickDone: store.ui.hideModal,
+  openCanny: store.ui.openCanny,
 })
 
 export const RewardRedemptionModalContainer = connect(

@@ -5,13 +5,11 @@ import demoImage from '../../../../.storybook/assets/itunes-app-store-card.png'
 import { action } from '@storybook/addon-actions'
 import { RewardList } from './RewardList'
 import { Reward } from '../../reward/models/Reward'
-import { RewardFilterPage } from './RewardFilterPage'
 import { SearchBar } from './SearchBar'
-import { FilterList } from './FilterList'
-import { TagFilter } from '../../reward/models/FilterItem'
 import { SelectedReward } from './SelectedReward'
 import { RewardDetailsModal } from './RewardDetailsModal'
 import { RewardCategory } from '../../reward/models/RewardCategory'
+import { RedemptionCompletePanel } from './RedemptionCompletePanel'
 
 const generateRewards = (count: number): Reward[] => {
   let result = new Array<Reward>(count)
@@ -36,8 +34,6 @@ const generateRewards = (count: number): Reward[] => {
   return result
 }
 
-const getFilters = [new TagFilter('Games', true), new TagFilter('Loot', false), new TagFilter('Money', true)]
-
 storiesOf('Modules|Reward/Reward Details Modal', module)
   .add('redeemable ', () => {
     let reward = generateRewards(2)[0]
@@ -61,6 +57,29 @@ storiesOf('Modules|Reward/Reward Details Modal', module)
           onSelect={action('select')}
           onClickClose={action('close')}
           onRedeem={action('redeem')}
+        />
+      </div>
+    )
+  })
+  .add('maual redeemed ', () => {
+    let reward = generateRewards(2)[0]
+    return (
+      <div>
+        <RedemptionCompletePanel
+          reward={reward}
+          onClickClose={action('close')}
+        />
+      </div>
+    )
+  })
+  .add('auto redeemed ', () => {
+    let reward = generateRewards(2)[0]
+    return (
+      <div>
+        <RedemptionCompletePanel
+          reward={reward}
+          onClickClose={action('close')}
+          code="https://discordapp.com/invite/xcvmgQk"
         />
       </div>
     )
@@ -222,25 +241,6 @@ storiesOf('Modules|Reward', module)
     return (
       <div style={{ width: '100vw', height: '100vh', display: 'flex' }}>
         <RewardList rewards={rewards} onRewardClick={action('reward click')} />
-      </div>
-    )
-  })
-  .add('Reward Filter Page', () => {
-    return (
-      <div style={{ backgroundColor: '#092234' }}>
-        <RewardFilterPage
-          searchText={''}
-          filters={getFilters}
-          onTextEntered={action('text entered')}
-          onToggle={action('toggle')}
-        />
-      </div>
-    )
-  })
-  .add('Filter List', () => {
-    return (
-      <div>
-        <FilterList filters={getFilters} onToggle={action('toggle')} />
       </div>
     )
   })

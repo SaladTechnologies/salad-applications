@@ -180,10 +180,12 @@ export class RewardStore {
     }
 
     try {
-      yield this.axios.post(`/rewards/${rewardId}/redemptions`, req)
-      this.store.ui.showModal(`/rewards/${rewardId}/redeem-complete`)
+      let res = yield this.axios.post(`/rewards/${rewardId}/redemptions`, req)
+      let code = res.data.rewardCode || ''
+      // this.store.ui.showModal(`/rewards/${rewardId}/redeem-complete`)
       let reward = this.getReward(rewardId)
       if (reward) this.store.analytics.trackRewardRedeemed(reward)
+      return code
     } catch (error) {
       // Error 😨
       if (error.response) {

@@ -6,15 +6,17 @@ import { Reward } from '../../reward/models/Reward'
 import { observer } from 'mobx-react'
 import { RewardDetailsPanel } from './RewardDetailsPanel'
 import { RedemptionDetails } from './RedemptionDetails'
+import { ActionState, submitAction } from '../../../ActionHandler'
+import { RedemptionCompletePanel } from './RedemptionCompletePanel'
 
 const styles = (theme: SaladTheme) => ({})
 
 interface Props extends WithStyles<typeof styles> {
   reward?: Reward
-  submitting?: boolean
   onClickClose?: () => void
   onClickDone?: () => void
-  onRedeem?: (rewardId: string, email?: string) => void
+  onRedeem?: (rewardId: string, email?: string) => any
+  openCanny?: () => void
 }
 
 interface FormTypes {
@@ -22,8 +24,20 @@ interface FormTypes {
   gift?: boolean
 }
 
+interface State extends ActionState {
+  code?: string
+}
+
 @observer
-class _RewardRedemptionModal extends Component<Props> {
+class _RewardRedemptionModal extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      code: undefined,
+      submitting: false,
+    }
+  }
+
   handleClose = () => {
     const { onClickClose } = this.props
 
@@ -43,7 +57,11 @@ class _RewardRedemptionModal extends Component<Props> {
   onSubmit = (values: {}) => {
     const { reward, onRedeem } = this.props
     let v = values as FormTypes
-    if (reward && onRedeem) onRedeem(reward.id, v.gift ? v.email : undefined)
+    if (reward && onRedeem)
+      submitAction(this, async () => {
+        var _code = await onRedeem(reward.id, v.gift ? v.email : undefined)
+        this.setState({ code: _code })
+      })
   }
 
   validate = (values: {}) => {
@@ -60,13 +78,22 @@ class _RewardRedemptionModal extends Component<Props> {
   }
 
   render() {
-    const { reward, onClickClose } = this.props
+    const { reward, onClickClose, openCanny } = this.props
+    const { code } = this.state
 
     return (
       <ModalPage onCloseClicked={this.handleClose}>
-        <RewardDetailsPanel reward={reward} onClickClose={onClickClose}>
-          <RedemptionDetails onSubmission={this.onSubmit} reward={reward} />
-        </RewardDetailsPanel>
+        {!code && code !== '' && (
+          <RewardDetailsPanel reward={reward} onClickClose={onClickClose}>
+            <RedemptionDetails submitting={this.state.submitting} onSubmission={this.onSubmit} reward={reward} />
+          </RewardDetailsPanel>
+        )}
+        {code ||
+          (code === '' && (
+            <RedemptionCompletePanel reward={reward} openCanny={openCanny} onClickClose={onClickClose}>
+
+            </RedemptionCompletePanel>
+          ))}
       </ModalPage>
     )
   }

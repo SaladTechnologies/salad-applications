@@ -101,6 +101,7 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   onSubmission?: (values: {}) => void
   reward?: Reward
+  submitting?: boolean
 }
 interface FormTypes {
   email?: string
@@ -127,7 +128,7 @@ class _RedemptionDetails extends Component<Props> {
     </Field>
   )
   render() {
-    const { reward, classes, onSubmission } = this.props
+    const { reward, classes, onSubmission, submitting } = this.props
 
     return (
       <div className={classnames(classes.contentContainer)}>
@@ -176,7 +177,7 @@ class _RedemptionDetails extends Component<Props> {
                     </div>
                   )}
                   <div className={classes.submitPanel}>
-                    <Button type="submit"  dark>
+                    <Button loading={submitting} disabled={submitting} type="submit"  dark>
                       Bombs Away
                     </Button>
                     <div className={classes.termText}>{`*Salad plays for keeps (no refunds)`}</div>

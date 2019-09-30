@@ -35,12 +35,12 @@ interface FormTypes {
 }
 
 class _ReferralCodeEntryComponent extends Component<Props, State> {
-  // constructor(props: Props) {
-  //   super(props)
-  //   this.state = {
-  //     submitting: false,
-  //   }
-  // }
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      submitting: false,
+    }
+  }
 
   onSubmit = async (values: {}) => {
     const { onSubmitCode } = this.props
