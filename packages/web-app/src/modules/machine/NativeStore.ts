@@ -158,23 +158,31 @@ export class NativeStore {
         console.log('Error code: ', errorCode)
 
         switch (errorCode) {
-          case 8675309: // Tommy Tutone - 867-5309/Jenny: https://youtu.be/6WTdTwcmxyo
-            this.restartMiner()
+          case 8675309: // CUDA - Tommy Tutone - 867-5309/Jenny: https://youtu.be/6WTdTwcmxyo
             store.ui.showModal('/errors/cuda')
             store.analytics.captureException(new Error(`Received CUDA error code ${errorCode} from native`))
             store.analytics.track('CUDA Error', { ErrorCode: errorCode })
             break
-          case 314159265: // Pie!
+          case 314159265: // Anti-virus - Pie!
             store.ui.showModal('/errors/anti-virus')
             store.analytics.captureException(new Error(`Received Anti-Virus error code ${errorCode} from native`))
             store.analytics.track('Anti-Virus Error', { ErrorCode: errorCode })
             this.stop()
             break
+          case 4000: // Network errors
+          case 4001: 
+          case 4002: 
+          case 4003: 
+          case 4004: 
+            store.ui.showModal('/errors/network')
+            this.restartMiner()
+            store.analytics.track('Network Error', { ErrorCode: errorCode })
+            break
           case 8888: // Generic, ethminer.exe terminated, no modal error message
-            store.analytics.track('Ethminer.exe Stopped', { ErrorCode: 8888 })
+            store.analytics.track('Ethminer.exe Stopped', { ErrorCode: errorCode })
             this.stop()
             break
-          case 9998:
+          case 9998: // Nonce
             this.restartMiner()
             store.analytics.captureException(new Error(`Received Nonce error code ${errorCode} from native`))
             store.analytics.track('Nonce Unknown Error', { ErrorCode: errorCode })
