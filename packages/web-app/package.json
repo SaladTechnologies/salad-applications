@@ -54,6 +54,7 @@
     "babel-loader": "8.0.5",
     "classnames": "^2.2.6",
     "final-form": "^4.12.0",
+    "launchdarkly-js-client-sdk": "^2.13.0",
     "lorem-ipsum": "^1.0.6",
     "mixpanel-browser": "^2.27.1",
     "mobx": "^5.9.0",

@@ -4,8 +4,9 @@ import * as Storage from '../../Storage'
 import { Config } from '../../config'
 import { MachineInfo, MiningStatus } from './models'
 import { AxiosInstance } from 'axios'
+
 import { Machine } from './models/Machine'
-import { featureFlag } from '../../FeatureFlags'
+import { featureFlags } from '../../FeatureFlags'
 
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
@@ -319,7 +320,7 @@ export class NativeStore {
       this.send(start, this.machineId)
     } else {
       let address = ''
-      if (featureFlag('miner.nicepool')) {
+      if (featureFlags.getBool('nice-hash-pool')) {
         if (!this.minerId) {
           throw new Error('MinerId not found. Check that the machine is valid first. Cannot start.')
         }

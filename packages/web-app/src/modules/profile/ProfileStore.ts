@@ -62,12 +62,14 @@ export class ProfileStore {
       this.currentProfile = profile.data
     } catch (err) {
       console.error('Profile error: ', err)
+      this.currentProfile = undefined
       this.store.routing.replace('/profile-error')
     } finally {
       this.isLoading = false
       //TODO: Move the routing logic to the onLogin function so we can load all the data before showing the app
       this.store.routing.replace('/')
     }
+    return this.currentProfile
   })
 
   @action.bound
