@@ -7,6 +7,7 @@ init()
  * 1 - Original
  * 2 - Auto launch
  * 3 - Pass the mining address
+ * 4 - Nicepool
  */
 
 function init() {
@@ -14,7 +15,7 @@ function init() {
 
   window.salad = {
     platform: 'electron',
-    apiVersion: 3,
+    apiVersion: 4,
     dispatch: dispatch,
   }
 

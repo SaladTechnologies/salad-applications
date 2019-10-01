@@ -171,10 +171,10 @@ export class NativeStore {
             this.stop()
             break
           case 4000: // Network errors
-          case 4001: 
-          case 4002: 
-          case 4003: 
-          case 4004: 
+          case 4001:
+          case 4002:
+          case 4003:
+          case 4004:
             store.ui.showModal('/errors/network')
             this.restartMiner()
             store.analytics.track('Network Error', { ErrorCode: errorCode })
@@ -320,7 +320,7 @@ export class NativeStore {
       this.send(start, this.machineId)
     } else {
       let address = ''
-      if (featureFlags.getBool('nice-hash-pool')) {
+      if (window.salad.apiVersion >= 4 && featureFlags.getBool('nice-hash-pool')) {
         if (!this.minerId) {
           throw new Error('MinerId not found. Check that the machine is valid first. Cannot start.')
         }
