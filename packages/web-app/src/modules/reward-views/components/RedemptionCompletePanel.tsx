@@ -55,16 +55,6 @@ const styles = (theme: SaladTheme) => ({
     fontFamily: 'sharpGroteskBook19',
     fontSize: theme.medium,
   },
-  priceText: {
-    fontSize: theme.medium,
-    fontFamily: 'SharpGroteskLight25',
-    whiteSpace: 'pre',
-  },
-  buttonContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
   centered: {
     textAlign: 'center',
   },
@@ -94,24 +84,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _RedemptionCompletePanel extends Component<Props> {
-  timeRemainingText() {
-    const { reward } = this.props
-
-    if (reward === undefined) {
-      return ''
-    }
-
-    if (reward.redeemable) {
-      return '  |  Redeemable'
-    }
-
-    if (reward.remainingTimeLabel) {
-      return `  |  ${reward.remainingTimeLabel}`
-    }
-
-    return ' '
-  }
-
+ 
   handleClose = () => {
     const { onClickClose } = this.props
 
@@ -119,6 +92,7 @@ class _RedemptionCompletePanel extends Component<Props> {
       onClickClose()
     }
   }
+
   isValidUrl = (string: string) => {
     try {
       new URL(string)

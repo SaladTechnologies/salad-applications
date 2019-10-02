@@ -43,7 +43,7 @@ class _ReferralCode extends Component<Props> {
         </P>
         <div className={classes.codeContainer}>
           <Username blue>{code}</Username>
-          <CopyToClipboard text={`Join me on Salad and use code ${code} for a 2x earning rate bonus! https://www.salad.io` || ''} />
+          <CopyToClipboard text={`Join me on Salad and use code ${code} for a 2x earning rate bonus! https://www.salad.io`} />
         </div>
       </div>
     )

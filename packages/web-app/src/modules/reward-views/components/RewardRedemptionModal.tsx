@@ -64,35 +64,20 @@ class _RewardRedemptionModal extends Component<Props, State> {
       })
   }
 
-  validate = (values: {}) => {
-    let v = values as FormTypes
-    const errors: FormTypes = {}
-    if (v.gift) {
-      if (v.email === undefined || v.email.length === 0) {
-        errors.email = 'Required'
-      } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v.email)) {
-        errors.email = 'Invalid email'
-      }
-    }
-    return errors
-  }
-
   render() {
     const { reward, onClickClose, openCanny } = this.props
-    const { code } = this.state
+    const { code, errorMessage, submitting } = this.state
 
     return (
       <ModalPage onCloseClicked={this.handleClose}>
-        {!code && code !== '' && (
+        {!code && (
           <RewardDetailsPanel reward={reward} onClickClose={onClickClose}>
-            <RedemptionDetails submitting={this.state.submitting} onSubmission={this.onSubmit} reward={reward} />
+            <RedemptionDetails error={errorMessage} submitting={submitting} onSubmission={this.onSubmit} reward={reward} />
           </RewardDetailsPanel>
         )}
         {code ||
           (code === '' && (
-            <RedemptionCompletePanel reward={reward} openCanny={openCanny} onClickClose={onClickClose}>
-
-            </RedemptionCompletePanel>
+            <RedemptionCompletePanel reward={reward} openCanny={openCanny} onClickClose={onClickClose} />
           ))}
       </ModalPage>
     )

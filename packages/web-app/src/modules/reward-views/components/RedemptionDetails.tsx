@@ -96,12 +96,16 @@ const styles = (theme: SaladTheme) => ({
     flexDirection: 'row',
     alignItems: 'flex-start',
   },
+  error: {
+    color: 'red',
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
   onSubmission?: (values: {}) => void
   reward?: Reward
   submitting?: boolean
+  error?: string
 }
 interface FormTypes {
   email?: string
@@ -128,7 +132,7 @@ class _RedemptionDetails extends Component<Props> {
     </Field>
   )
   render() {
-    const { reward, classes, onSubmission, submitting } = this.props
+    const { reward, classes, onSubmission, submitting, error } = this.props
 
     return (
       <div className={classnames(classes.contentContainer)}>
@@ -177,9 +181,12 @@ class _RedemptionDetails extends Component<Props> {
                     </div>
                   )}
                   <div className={classes.submitPanel}>
-                    <Button loading={submitting} disabled={submitting} type="submit"  dark>
-                      Bombs Away
-                    </Button>
+                    <div className={error && classes.error}>
+                      {error}
+                      <Button loading={submitting} disabled={submitting} type="submit" dark>
+                        Bombs Away
+                      </Button>
+                    </div>
                     <div className={classes.termText}>{`*Salad plays for keeps (no refunds)`}</div>
                   </div>
                 </div>

@@ -10,7 +10,8 @@ import { SelectedReward } from './SelectedReward'
 import { RewardDetailsModal } from './RewardDetailsModal'
 import { RewardCategory } from '../../reward/models/RewardCategory'
 import { RedemptionCompletePanel } from './RedemptionCompletePanel'
-import { select } from '@storybook/addon-knobs'
+import { RewardRedemptionModal } from './RewardRedemptionModal'
+import { RedemptionDetails } from './RedemptionDetails'
 
 const generateRewards = (count: number): Reward[] => {
   let result = new Array<Reward>(count)
@@ -62,26 +63,34 @@ storiesOf('Modules|Reward/Reward Details Modal', module)
       </div>
     )
   })
-  .add('maual redeemed ', () => {
-    let reward = generateRewards(2)[0]
+  .add('not redeemable ', () => {
+    let reward = generateRewards(2)[1]
     return (
       <div>
-        <RedemptionCompletePanel
+        <RewardDetailsModal
           reward={reward}
+          onSelect={action('select')}
           onClickClose={action('close')}
+          onRedeem={action('redeem')}
         />
       </div>
     )
   })
-  .add('auto redeemed ', () => {
+  .add('maual redeemed ', () => {
     let reward = generateRewards(2)[0]
     return (
       <div>
-        <RedemptionCompletePanel
-          reward={reward}
-          onClickClose={action('close')}
-          code={select('yourmommma', ["https://discordapp.com/invite/xcvmgQk", 'salad', ''], 'salad')}
-        />
+        <RedemptionCompletePanel reward={reward} onClickClose={action('close')} />
+      </div>
+    )
+  })
+  .add('bombs away ', () => {
+    let reward = generateRewards(2)[0]
+    return (
+      <div>
+        <RewardRedemptionModal reward={reward} onClickClose={action('close')} onRedeem={action('redeem')}>
+          <RedemptionDetails reward={reward} error={'yomomma'} />
+        </RewardRedemptionModal>
       </div>
     )
   })
