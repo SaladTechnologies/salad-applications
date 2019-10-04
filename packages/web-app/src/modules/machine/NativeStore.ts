@@ -45,6 +45,8 @@ export class NativeStore {
   private zeroHashTimespan: number = 0
   private restartingMiner?: NodeJS.Timeout
 
+  private failedCount: number = 0
+
   //#region Observables
   @observable
   public desktopVersion: string = ''
@@ -233,12 +235,17 @@ export class NativeStore {
     var prevOnline = this.isOnline
     try {
       yield this.axios.get('online')
+      this.failedCount = 0
       this.isOnline = true
     } catch (err) {
       //TODO: Remove these checks once we have an unauthenticated API to check
       if (err.response === undefined || err.response.status !== 401) {
         console.log(err)
-        this.isOnline = false
+        this.failedCount += 1
+
+        if (this.failedCount >= 3) {
+          this.isOnline = false
+        }
       }
     }
     if (this.isOnline !== prevOnline) {
