@@ -1,7 +1,18 @@
 import React, { Component } from 'react'
 import { SaladTheme } from '../../../SaladTheme'
+
+// Assets
+import i from '../../../components/elements/InfoButton/assets/i.svg'
+
+// Components
+import { StatElement, Tooltip } from '../../../components'
+
+// Packages
 import withStyles, { WithStyles } from 'react-jss'
-import { StatElement } from '../../../components/elements/StatElement/StatElement'
+// @ts-ignore
+import ReactHintFactory from 'react-hint'
+
+const ReactHint = ReactHintFactory(React)
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -10,6 +21,21 @@ const styles = (theme: SaladTheme) => ({
     userSelect: 'none',
     alignItems: 'flex-end',
   },
+
+  infoContainer: {
+    display: 'flex',
+  },
+
+  infoButton: {
+    color: theme.lightGreen,
+    display: 'inline-block',
+    marginTop: 7,
+    cursor: 'help',
+  },
+
+  tootipListItem: {
+    marginBottom: 2
+  }
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -23,7 +49,34 @@ class _UserStatsSummary extends Component<Props> {
     const { earningRate, miningStatus, classes } = this.props
     return (
       <div className={classes.container}>
-        <StatElement title="Mining status" values={[miningStatus || 'Stopped']} />
+        <div className={classes.infoContainer}>
+          <span className={classes.infoButton} data-mining-status>
+            <img height={25} width={'auto'} src={i} />
+          </span>
+          <ReactHint
+            autoPosition
+            events
+            attribute="data-mining-status"
+            onRenderContent={() => (
+              <>
+                <Tooltip>
+                  <div className={classes.tootipListItem}>
+                    <strong>Initializing</strong>: First step! Salad is detecting your hashrate.
+                  </div>
+                  <div className={classes.tootipListItem}>
+                    <strong>Running</strong>: Salad detected a hashrate and is trying to submit a share.
+                  </div>
+                  <div>
+                    <strong>Earning</strong>: Salad is successfully submitting shares. You should see your balance
+                    rising.
+                  </div>
+                </Tooltip>
+              </>
+            )}
+          />
+
+          <StatElement title="Mining status" values={[miningStatus || 'Stopped']} />
+        </div>
         <StatElement
           title="Earning Rate"
           values={[earningRate === undefined ? 'Loading' : `$${(earningRate * 86400).toFixed(3)}/day`]}
