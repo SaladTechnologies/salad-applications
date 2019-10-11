@@ -61,14 +61,13 @@ class _UserStatsSummary extends Component<Props> {
               <>
                 <Tooltip>
                   <div className={classes.tootipListItem}>
-                    <strong>Initializing</strong>: First step! Salad is detecting your hashrate.
+                    <strong>Initializing:</strong> First step! Salad is warming up.
                   </div>
                   <div className={classes.tootipListItem}>
-                    <strong>Running</strong>: Salad detected a hashrate and is trying to submit a share.
+                    <strong>Running:</strong> Salad is hashing.
                   </div>
                   <div>
-                    <strong>Earning</strong>: Salad is successfully submitting shares. You should see your balance
-                    rising.
+                    <strong>Earning:</strong> You are earning money!
                   </div>
                 </Tooltip>
               </>
