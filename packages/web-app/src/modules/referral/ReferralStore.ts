@@ -118,7 +118,7 @@ export class ReferralStore {
   /** Loads the current user's referral */
   @action.bound
   submitReferralCode = flow(function*(this: ReferralStore, code: string) {
-    if (this.currentReferral !== undefined) {
+    if (this.currentReferral) {
       console.log('The user has already entered a referral code')
       return
     }
