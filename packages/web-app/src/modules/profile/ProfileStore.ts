@@ -67,6 +67,8 @@ export class ProfileStore {
     } finally {
       this.isLoading = false
       //TODO: Move the routing logic to the onLogin function so we can load all the data before showing the app
+      
+      console.log('>> [[ProfileStore] loadProfile]')
       this.store.routing.replace('/')
     }
     return this.currentProfile

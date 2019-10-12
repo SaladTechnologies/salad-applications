@@ -29,7 +29,7 @@ const styles = (theme: SaladTheme) => ({
   contentContainer: {
     color: theme.lightGreen,
     display: 'flex',
-    padding: '4rem',
+    padding: (props: Props) => props.leftColumnPadding || '4rem',
     flexDirection: 'column',
     alignItems: 'flex-start',
     flex: '1 1 0',
@@ -38,11 +38,12 @@ const styles = (theme: SaladTheme) => ({
   },
   imageContainer: {
     display: 'flex',
+    padding: (props: Props) => props.rightColumnPadding || 0,
     justifyContent: 'center',
     alignItems: (props: Props) => (props.fullHeightImg ? 'stretch' : 'center'),
     flex: '1 1 0',
     flexBasis: 0,
-    minWidth: 0,
+    minWidth: (props: Props) => props.rightColumnWidth || 0,
     overflow: 'hidden',
   },
   image: {
@@ -75,6 +76,9 @@ interface Props extends WithStyles<typeof styles> {
   subtitle?: string
   image?: string
   rightContent?: React.ReactNode
+  rightColumnWidth?: string
+  leftColumnPadding?: string
+  rightColumnPadding?: string
   hasBack?: boolean
   nextText?: string
   nextSubmitting?: boolean

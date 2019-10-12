@@ -249,6 +249,7 @@ export class NativeStore {
       }
     }
     if (this.isOnline !== prevOnline) {
+      console.log('>> [[NativeStore] checkOnlineStatus]')
       this.store.routing.replace('/')
     }
   })
@@ -388,7 +389,9 @@ export class NativeStore {
       this.validOperatingSystem = machine.validOs
       this.store.machine.setCurrentMachine(machine)
       this.store.analytics.trackCompatibleGpu(this.validGPUs)
-      this.store.routing.replace('/')
+
+      console.log('>> [[NativeStore] registerMachine]')
+      this.store.routing.push('/')
     } catch (err) {
       this.store.analytics.captureException(new Error(`register-machine error: ${err}`))
       this.validGPUs = false
@@ -410,7 +413,8 @@ export class NativeStore {
     this.skippedCompatCheck = this.validOperatingSystem && this.validGPUs
     this.loadingMachineInfo = false
 
-    this.store.routing.replace('/')
+    console.log('>> [[NativeStore] setMachineInfo]')
+    this.store.routing.push('/')
   }
 
   @action
@@ -421,6 +425,7 @@ export class NativeStore {
 
     Storage.setItem(compatibilityKey, 'true')
 
+    console.log('>> [[NativeStore] skipCompatibility]')
     this.store.routing.replace('/')
   }
 

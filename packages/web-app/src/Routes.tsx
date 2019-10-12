@@ -41,6 +41,9 @@ import { SettingsContainer } from './modules/settings-views'
 
 export default class Routes extends Component {
   store = getStore()
+  state = {
+    prevPath: '/',
+  }
 
   checkMachineLoading = () => {
     let machine = this.store.machine.currentMachine
@@ -52,6 +55,9 @@ export default class Routes extends Component {
   }
 
   public getOnboardingRedirect = () => {
+    console.log('-- [[Routes] getOnboardingRedirect] routing.location: ', this.store.routing.location.pathname)
+    console.log('-- [[Routes] getOnboardingRedirect] state.prevPath: ', this.state.prevPath)
+
     let profile = this.store.profile.currentProfile
 
     if (profile === undefined) {
@@ -61,13 +67,32 @@ export default class Routes extends Component {
       return
     }
 
-    if (profile.lastAcceptedTermsOfService !== Config.termsVersion) return <Redirect to="/onboarding/terms" />
-    else if (this.store.profile.needsAnalyticsOnboarding) return <Redirect to="/onboarding/analytics" />
-    else if (profile.viewedReferralOnboarding !== true) return <Redirect to="/onboarding/referral-code" />
-    else if (profile.lastSeenApplicationVersion !== Config.whatsNewVersion)
-      return <Redirect to="/onboarding/whats-new" />
+    // if (this.store.routing.location.pathname === '/') {
+    //   console.log('-- [[Routes] getOnboardingRedirect] *STOP* BEFORE <Redirect />')
+    //   return
+    // }
 
-    throw Error('Unable to locate a valid onboarding page')
+    let path = '/onboarding/terms'
+
+    if (this.state.prevPath === path) return
+
+    this.setState({
+      prevPath: path,
+    })
+
+    console.log('-- [[Routes] getOnboardingRedirect] <Redirect />')
+
+    return <Redirect to={path} />
+
+    // throw Error('Unable to locate a valid onboarding page')
+
+    // if (profile.lastAcceptedTermsOfService !== Config.termsVersion) return <Redirect to="/onboarding/terms" />
+    // else if (this.store.profile.needsAnalyticsOnboarding) return <Redirect to="/onboarding/analytics" />
+    // else if (profile.viewedReferralOnboarding !== true) return <Redirect to="/onboarding/referral-code" />
+    // else if (profile.lastSeenApplicationVersion !== Config.whatsNewVersion)
+    //   return <Redirect to="/onboarding/whats-new" />
+
+    // throw Error('Unable to locate a valid onboarding page')
   }
 
   render() {
@@ -82,7 +107,8 @@ export default class Routes extends Component {
     let isElectron = this.store.native.isNative
     let isAuth = this.store.auth.isAuth
     let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
-    let isOnboarding = this.store.profile.onboarding
+    // let isOnboarding = this.store.profile.onboarding
+    let isOnboarding = true
 
     return (
       <Switch>
