@@ -164,12 +164,10 @@ export class NativeStore {
           case 8675309: // CUDA - Tommy Tutone - 867-5309/Jenny: https://youtu.be/6WTdTwcmxyo
             store.ui.showModal('/errors/cuda')
             store.analytics.captureException(new Error(`Received CUDA error code ${errorCode} from native`))
-            store.analytics.track('CUDA Error', { ErrorCode: errorCode })
             break
           case 314159265: // Anti-virus - Pie!
             store.ui.showModal('/errors/anti-virus')
             store.analytics.captureException(new Error(`Received Anti-Virus error code ${errorCode} from native`))
-            store.analytics.track('Anti-Virus Error', { ErrorCode: errorCode })
             this.stop()
             break
           case 4000: // Network errors
@@ -179,22 +177,18 @@ export class NativeStore {
           case 4004:
             store.ui.showModal('/errors/network')
             this.restartMiner()
-            store.analytics.track('Network Error', { ErrorCode: errorCode })
             break
           case 8888: // Generic, ethminer.exe terminated, no modal error message
-            store.analytics.track('Ethminer.exe Stopped', { ErrorCode: errorCode })
             this.stop()
             break
           case 9998: // Nonce
             this.restartMiner()
             store.analytics.captureException(new Error(`Received Nonce error code ${errorCode} from native`))
-            store.analytics.track('Nonce Unknown Error', { ErrorCode: errorCode })
             break
           case 9999: // Generic, "WTH happened"
           default:
             store.ui.showModal('/errors/unknown')
             store.analytics.captureException(new Error(`Received Unknown error code ${errorCode} from native`))
-            store.analytics.track('Generic Unknown Error', { ErrorCode: errorCode })
             break
         }
       })
@@ -470,7 +464,6 @@ export class NativeStore {
 
       if (machineStatus === MiningStatus.Running && this.hashrate > 0) {
         this.zeroHashTimespan = 0
-        this.store.analytics.track('Mining Status', { MiningStatus: MiningStatus.Earning })
         this.store.analytics.trackEarning(true)
         return
       }
@@ -478,7 +471,6 @@ export class NativeStore {
       if ((machineStatus === MiningStatus.Stopped && this.hashrate > 0) || this.hashrate > 0) {
         this.miningStatus = MiningStatus.Running
         this.zeroHashTimespan = 0
-        this.store.analytics.track('Mining Status', { MiningStatus: MiningStatus.Running })
         return
       }
 
@@ -486,16 +478,11 @@ export class NativeStore {
         this.miningStatus = MiningStatus.Error
         this.zeroHashTimespan = 0
         this.store.ui.showModal('/errors/unknown')
-        this.store.analytics.track('Mining Status', {
-          MiningStatus: MiningStatus.Error,
-          Message: `${this.hashrate} hashrate for longer than ${Config.zeroHashrateNotification} minutes`,
-        })
         this.store.analytics.trackEarning(false)
       }
 
       this.miningStatus = MiningStatus.Started
       this.zeroHashTimespan++
-      this.store.analytics.track('Mining Status', { MiningStatus: MiningStatus.Started })
 
       return
     }
@@ -504,7 +491,6 @@ export class NativeStore {
     this.miningStatus = this.miningStatus === MiningStatus.Restarting ? MiningStatus.Restarting : MiningStatus.Stopped
     this.zeroHashTimespan = 0
     this.store.balance.currentBalance = this.store.balance.actualBalance
-    this.store.analytics.track('Mining Status', { MiningStatus: MiningStatus.Stopped })
   }
   //#endregion
 
@@ -533,8 +519,6 @@ export class NativeStore {
         : this.miningStatus === MiningStatus.Running || this.miningStatus === MiningStatus.Earning
         ? MiningStatus.Running
         : this.miningStatus
-
-    this.store.analytics.track('Machine Status', { MachineStatus: this.machineStatus })
 
     const data = {
       status: miningStatus,
