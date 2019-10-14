@@ -23,6 +23,15 @@ export class ProfileStore {
   @observable
   public onboarding: boolean = false
 
+  @observable
+  public isOnboardingComplete: boolean = false
+  @observable
+  public isOnboardingTesting: boolean = true
+  @observable
+  public isOnboardingRedeem: boolean = false
+  @observable
+  public isOnboardingRunning: boolean = false
+
   @computed get needsAnalyticsOnboarding(): boolean {
     return (
       this.currentProfile !== undefined &&
@@ -33,12 +42,13 @@ export class ProfileStore {
 
   @computed
   public get isOnboarding(): boolean {
-    const onboarding =
-      this.currentProfile === undefined ||
-      (this.currentProfile.lastAcceptedTermsOfService !== Config.termsVersion ||
-        this.currentProfile.lastSeenApplicationVersion !== Config.whatsNewVersion ||
-        this.currentProfile.viewedReferralOnboarding !== true ||
-        this.needsAnalyticsOnboarding)
+    // TODO: Remove the true and uncomment code below
+    const onboarding = true
+    // this.currentProfile === undefined ||
+    // (this.currentProfile.lastAcceptedTermsOfService !== Config.termsVersion ||
+    //   this.currentProfile.lastSeenApplicationVersion !== Config.whatsNewVersion ||
+    //   this.currentProfile.viewedReferralOnboarding !== true ||
+    //   this.needsAnalyticsOnboarding)
 
     this.setOnboarding(onboarding)
 
@@ -67,7 +77,7 @@ export class ProfileStore {
     } finally {
       this.isLoading = false
       //TODO: Move the routing logic to the onLogin function so we can load all the data before showing the app
-      
+
       console.log('>> [[ProfileStore] loadProfile]')
       this.store.routing.replace('/')
     }

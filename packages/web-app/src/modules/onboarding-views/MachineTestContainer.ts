@@ -1,6 +1,6 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
-import { MachineTest } from './MachineTest/MachineTest'
+import { MachineTest } from './components/MachineTest/MachineTest'
 
 const mapStoreToProps = (store: RootStore) => ({})
 

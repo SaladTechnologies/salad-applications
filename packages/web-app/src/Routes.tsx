@@ -12,11 +12,9 @@ import { Config } from './config'
 // Views
 import {
   CallbackContainer,
-  ReferralEntryContainer,
   WelcomePageContainer,
   TermsPageContainer,
-  AnalyticsPageContainer,
-  WhatsNewPageContainer,
+  MachineTestContainer,
 } from './modules/onboarding-views'
 import { HomePage } from './modules/home-views'
 import { LoadingPage } from './components'
@@ -55,10 +53,8 @@ export default class Routes extends Component {
   }
 
   public getOnboardingRedirect = () => {
-    console.log('-- [[Routes] getOnboardingRedirect] routing.location: ', this.store.routing.location.pathname)
-    console.log('-- [[Routes] getOnboardingRedirect] state.prevPath: ', this.state.prevPath)
-
     let profile = this.store.profile.currentProfile
+    let path = '/'
 
     if (profile === undefined) {
       if (this.store.profile.isLoading) {
@@ -67,32 +63,30 @@ export default class Routes extends Component {
       return
     }
 
-    // if (this.store.routing.location.pathname === '/') {
-    //   console.log('-- [[Routes] getOnboardingRedirect] *STOP* BEFORE <Redirect />')
-    //   return
-    // }
+    if (profile.lastAcceptedTermsOfService !== Config.termsVersion) {
+      path = '/onboarding/terms'
+    } else if (this.store.profile.isOnboardingTesting) {
+      path = '/onboarding/machine-test'
+    }
 
-    let path = '/onboarding/terms'
-
+    // This stops the page from loading multiple times
     if (this.state.prevPath === path) return
 
     this.setState({
       prevPath: path,
     })
 
-    console.log('-- [[Routes] getOnboardingRedirect] <Redirect />')
-
-    return <Redirect to={path} />
-
-    // throw Error('Unable to locate a valid onboarding page')
-
-    // if (profile.lastAcceptedTermsOfService !== Config.termsVersion) return <Redirect to="/onboarding/terms" />
-    // else if (this.store.profile.needsAnalyticsOnboarding) return <Redirect to="/onboarding/analytics" />
-    // else if (profile.viewedReferralOnboarding !== true) return <Redirect to="/onboarding/referral-code" />
+    // NOTE: Stream lining the onboarding process and removing these steps
+    // else if (this.store.profile.needsAnalyticsOnboarding)
+    //   path = '/onboarding/analytics'
+    // else if (profile.viewedReferralOnboarding !== true)
+    //   path = '/onboarding/referral-code'
     // else if (profile.lastSeenApplicationVersion !== Config.whatsNewVersion)
-    //   return <Redirect to="/onboarding/whats-new" />
+    //   path = '/onboarding/whats-new'
 
-    // throw Error('Unable to locate a valid onboarding page')
+    if (path !== '/') return <Redirect to={path} />
+
+    throw Error('Unable to locate a valid onboarding page')
   }
 
   render() {
@@ -107,8 +101,7 @@ export default class Routes extends Component {
     let isElectron = this.store.native.isNative
     let isAuth = this.store.auth.isAuth
     let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
-    // let isOnboarding = this.store.profile.onboarding
-    let isOnboarding = true
+    let isOnboarding = this.store.profile.onboarding
 
     return (
       <Switch>
@@ -121,10 +114,8 @@ export default class Routes extends Component {
           <AnimatedSwitch>
             <Route exact path="/profile-loading" render={() => <LoadingPage text="Loading profile" />} />
 
-            <Route exact path="/onboarding/referral-code" component={ReferralEntryContainer} />
             <Route exact path="/onboarding/terms" component={TermsPageContainer} />
-            <Route exact path="/onboarding/analytics" component={AnalyticsPageContainer} />
-            <Route exact path="/onboarding/whats-new" component={WhatsNewPageContainer} />
+            <Route exact path="/onboarding/machine-test" component={MachineTestContainer} />
             {this.getOnboardingRedirect()}
           </AnimatedSwitch>
         )}

@@ -391,7 +391,10 @@ export class NativeStore {
       this.store.analytics.trackCompatibleGpu(this.validGPUs)
 
       console.log('>> [[NativeStore] registerMachine]')
-      this.store.routing.push('/')
+
+      if(!this.store.profile.isOnboarding) {
+        this.store.routing.replace('/')
+      }
     } catch (err) {
       this.store.analytics.captureException(new Error(`register-machine error: ${err}`))
       this.validGPUs = false
@@ -414,7 +417,10 @@ export class NativeStore {
     this.loadingMachineInfo = false
 
     console.log('>> [[NativeStore] setMachineInfo]')
-    this.store.routing.push('/')
+    
+    if (!this.store.profile.isOnboarding) {
+      this.store.routing.replace('/')
+    }
   }
 
   @action
