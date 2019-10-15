@@ -15,7 +15,6 @@ const profile: Profile = {
   email: 'dev@salad.io',
   lastAcceptedTermsOfService: '1.0',
   lastSeenApplicationVersion: '1.0',
-  lastAcceptedUsageTrackingVersion: '1.0',
   viewedReferralOnboarding: false,
 }
 

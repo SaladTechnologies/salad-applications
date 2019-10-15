@@ -15,7 +15,6 @@ import {
   ReferralEntryContainer,
   WelcomePageContainer,
   TermsPageContainer,
-  AnalyticsPageContainer,
   WhatsNewPageContainer,
 } from './modules/onboarding-views'
 import { HomePage } from './modules/home-views'
@@ -62,7 +61,6 @@ export default class Routes extends Component {
     }
 
     if (profile.lastAcceptedTermsOfService !== Config.termsVersion) return <Redirect to="/onboarding/terms" />
-    else if (this.store.profile.needsAnalyticsOnboarding) return <Redirect to="/onboarding/analytics" />
     else if (profile.viewedReferralOnboarding !== true) return <Redirect to="/onboarding/referral-code" />
     else if (profile.lastSeenApplicationVersion !== Config.whatsNewVersion)
       return <Redirect to="/onboarding/whats-new" />
@@ -97,7 +95,6 @@ export default class Routes extends Component {
 
             <Route exact path="/onboarding/referral-code" component={ReferralEntryContainer} />
             <Route exact path="/onboarding/terms" component={TermsPageContainer} />
-            <Route exact path="/onboarding/analytics" component={AnalyticsPageContainer} />
             <Route exact path="/onboarding/whats-new" component={WhatsNewPageContainer} />
             {this.getOnboardingRedirect()}
           </AnimatedSwitch>
@@ -130,19 +127,6 @@ const NoAuth = (props: any) => {
     </Switch>
   )
 }
-
-// const Onboarding = () => {
-//   return (
-//     <AnimatedSwitch>
-//       <Route exact path="/profile-loading" render={() => <LoadingPage text="Loading profile" />} />
-//       <Route exact path="/onboarding/referral-code" component={ReferralEntryContainer} />
-//       <Route exact path="/onboarding/terms" component={TermsPageContainer} />
-//       <Route exact path="/onboarding/analytics" component={AnalyticsPageContainer} />
-//       <Route exact path="/onboarding/whats-new" component={WhatsNewPageContainer} />
-//       {/* TODO: Whats new page */}
-//     </AnimatedSwitch>
-//   )
-// }
 
 const Auth = () => {
   return (
