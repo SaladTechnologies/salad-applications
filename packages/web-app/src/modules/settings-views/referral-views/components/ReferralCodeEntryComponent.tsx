@@ -25,6 +25,7 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   onSubmitCode?: (code: string) => Promise<void>
+  dark?: boolean
 }
 
 interface State {
@@ -75,7 +76,7 @@ class _ReferralCodeEntryComponent extends Component<Props, State> {
   }
 
   render() {
-    const { classes } = this.props
+    const { classes, dark } = this.props
     const { submitting, errorMessage } = this.state
 
     return (
@@ -91,14 +92,14 @@ class _ReferralCodeEntryComponent extends Component<Props, State> {
                     <TextField
                       className={classes.input}
                       {...input}
-                      dark
+                      dark= {dark}
                       placeholder="Code"
                       errorText={meta.error && meta.touched && meta.error}
                     />
                     <Button
                       type="submit"
                       uppercase
-                      dark
+                      dark= {dark}
                       loading={submitting}
                       disabled={submitting}
                       className={classes.submitButton}
