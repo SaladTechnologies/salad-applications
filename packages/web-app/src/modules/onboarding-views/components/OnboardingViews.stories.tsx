@@ -4,7 +4,6 @@ import { action } from '@storybook/addon-actions'
 import { ReferralEntryPage } from './ReferralEntryPage'
 import { WelcomePage } from './WelcomePage'
 import { TermsPage } from './TermsPage'
-import { AnalyticsPage } from './AnalyticsPage'
 import { WhatsNewPage } from './WhatsNewPage'
 
 storiesOf('Modules/Onboarding', module)
@@ -19,7 +18,4 @@ storiesOf('Modules/Onboarding', module)
   })
   .add(`What's New Page`, () => {
     return <WhatsNewPage onNext={action('ok')} />
-  })
-  .add('Analytics Page', () => {
-    return <AnalyticsPage onNext={action('next')} />
   })

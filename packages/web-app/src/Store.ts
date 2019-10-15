@@ -64,6 +64,7 @@ export class RootStore {
   @action.bound
   onLogin = flow(function*(this: RootStore) {
     var profile = yield this.profile.loadProfile()
+    this.analytics.start(profile)
     this.referral.loadReferralCode()
     this.xp.refreshXp()
     this.referral.loadCurrentReferral()
@@ -92,5 +93,6 @@ export class RootStore {
     this.token.saladToken = ''
     this.referral.referralCode = ''
     this.referral.currentReferral = undefined
+    this.analytics.trackLogout()
   }
 }

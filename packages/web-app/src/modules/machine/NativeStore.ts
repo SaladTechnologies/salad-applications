@@ -163,11 +163,11 @@ export class NativeStore {
         switch (errorCode) {
           case 8675309: // CUDA - Tommy Tutone - 867-5309/Jenny: https://youtu.be/6WTdTwcmxyo
             store.ui.showModal('/errors/cuda')
-            store.analytics.captureException(new Error(`Received CUDA error code ${errorCode} from native`))
+            store.analytics.trackMiningError('CUDA Error', errorCode)
             break
           case 314159265: // Anti-virus - Pie!
             store.ui.showModal('/errors/anti-virus')
-            store.analytics.captureException(new Error(`Received Anti-Virus error code ${errorCode} from native`))
+            store.analytics.trackMiningError('Anti-Virus Error', errorCode)
             this.stop()
             break
           case 4000: // Network errors
@@ -176,19 +176,21 @@ export class NativeStore {
           case 4003:
           case 4004:
             store.ui.showModal('/errors/network')
+            store.analytics.trackMiningError('Network Error', errorCode)
             this.restartMiner()
             break
           case 8888: // Generic, ethminer.exe terminated, no modal error message
+            store.analytics.trackMiningError('Ethminer.exe Stopped', errorCode)
             this.stop()
             break
           case 9998: // Nonce
             this.restartMiner()
-            store.analytics.captureException(new Error(`Received Nonce error code ${errorCode} from native`))
+            store.analytics.trackMiningError('Nonce Unknown Error', errorCode)
             break
           case 9999: // Generic, "WTH happened"
           default:
             store.ui.showModal('/errors/unknown')
-            store.analytics.captureException(new Error(`Received Unknown error code ${errorCode} from native`))
+            store.analytics.trackMiningError('Generic Unknown Error', errorCode)
             break
         }
       })
@@ -338,7 +340,7 @@ export class NativeStore {
 
     if (this.restartingMiner) clearTimeout(this.restartingMiner)
     this.miningStatus = MiningStatus.Started
-    this.store.analytics.trackRunStatus(true)
+    this.store.analytics.trackStop()
   }
 
   @action
@@ -354,7 +356,7 @@ export class NativeStore {
 
     if (this.restartingMiner) clearTimeout(this.restartingMiner)
     this.send(stop)
-    this.store.analytics.trackRunStatus(false)
+    this.store.analytics.trackStop()
   }
 
   @action
@@ -381,7 +383,7 @@ export class NativeStore {
       this.validGPUs = machine.validGpus
       this.validOperatingSystem = machine.validOs
       this.store.machine.setCurrentMachine(machine)
-      this.store.analytics.trackCompatibleGpu(this.validGPUs)
+      this.store.analytics.trackMachine(machine)
       this.store.routing.replace('/')
     } catch (err) {
       this.store.analytics.captureException(new Error(`register-machine error: ${err}`))
@@ -400,7 +402,6 @@ export class NativeStore {
 
     this.machineInfo = info
 
-    this.store.analytics.trackMachineInfo(info)
     this.skippedCompatCheck = this.validOperatingSystem && this.validGPUs
     this.loadingMachineInfo = false
 
@@ -464,25 +465,27 @@ export class NativeStore {
 
       if (machineStatus === MiningStatus.Running && this.hashrate > 0) {
         this.zeroHashTimespan = 0
-        this.store.analytics.trackEarning(true)
+        this.store.analytics.trackMiningEarning()
         return
       }
 
       if ((machineStatus === MiningStatus.Stopped && this.hashrate > 0) || this.hashrate > 0) {
         this.miningStatus = MiningStatus.Running
         this.zeroHashTimespan = 0
+        this.store.analytics.trackMiningRunning()
         return
       }
 
       if (this.zeroHashTimespan >= Config.zeroHashrateNotification) {
         this.miningStatus = MiningStatus.Error
         this.zeroHashTimespan = 0
+        this.store.analytics.trackRunningError()
         this.store.ui.showModal('/errors/unknown')
-        this.store.analytics.trackEarning(false)
       }
 
       this.miningStatus = MiningStatus.Started
       this.zeroHashTimespan++
+      this.store.analytics.trackMiningStarted()
 
       return
     }
@@ -491,6 +494,7 @@ export class NativeStore {
     this.miningStatus = this.miningStatus === MiningStatus.Restarting ? MiningStatus.Restarting : MiningStatus.Stopped
     this.zeroHashTimespan = 0
     this.store.balance.currentBalance = this.store.balance.actualBalance
+    this.store.analytics.trackMiningStopped()
   }
   //#endregion
 
@@ -519,6 +523,8 @@ export class NativeStore {
         : this.miningStatus === MiningStatus.Running || this.miningStatus === MiningStatus.Earning
         ? MiningStatus.Running
         : this.miningStatus
+
+    this.store.analytics.trackMachineStatus(this.machineStatus)
 
     const data = {
       status: miningStatus,

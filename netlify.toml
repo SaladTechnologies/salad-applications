@@ -41,10 +41,12 @@ ID = "salad-web-app"
     
 [context.branch-deploy.environment]
     REACT_APP_AUTH0_CLIENT_ID='K8nT8zWF1Dyu9oqLJg5MTkpt9Aug3Ygt'
+    REACT_APP_MIXPANEL_TOKEN="4b245bace4eed86ffdfa35efc3addf1d"
     REACT_APP_LAUNCH_DARKLY_ID='5d8e2d2d5c49cd07a94926c1'
 
 # Deploy Preview context: all deploys resulting from a pull/merge request will 
 # inherit these settings.
 [context.deploy-preview.environment]
     REACT_APP_AUTH0_CLIENT_ID="OJ6ffJ2h4eYZr6HqswGF544WgqDcBn2h"
+    REACT_APP_MIXPANEL_TOKEN="4b245bace4eed86ffdfa35efc3addf1d"
     REACT_APP_LAUNCH_DARKLY_ID='5d8e2d2d5c49cd07a94926c1'

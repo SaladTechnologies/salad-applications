@@ -3,23 +3,19 @@ import { Config } from '../../config'
 import { Profile } from '../profile/models'
 import * as Sentry from '@sentry/browser'
 import { Reward } from '../reward/models'
-import { MachineInfo } from '../machine/models'
+import { MiningStatus } from '../machine/models'
+import { Machine } from '../machine/models/Machine'
 
 export class AnalyticsStore {
-  private trackUsage = false
   private started = false
 
-  public get canTrack(): boolean {
-    return this.started && this.trackUsage
-  }
-
-  public start = (profile: Profile, trackUsage: boolean) => {
-    if (this.started && this.trackUsage === trackUsage) {
+  public start = (profile: Profile) => {
+    if (this.started) {
       console.warn('Already started analytics. Skipping...')
       return
     }
 
-    this.trackUsage = trackUsage
+    this.started = true
 
     Sentry.configureScope(scope => {
       scope.setUser({
@@ -29,145 +25,158 @@ export class AnalyticsStore {
       })
     })
 
-    if (trackUsage) {
-      const token = Config.mixpanelToken
-      if (token) {
-        let config = {}
-
-        mixpanel.init(token, config)
-
-        mixpanel.people.set({
-          Id: profile.id,
-          $email: profile.email,
-          $last_name: profile.username,
-          $last_login: new Date().toISOString(),
-        })
-
-        // mixpanel.register({
-        //   'New User': profile.isNewUser,
-        //   Version: Config.appVersion,
-        // })
-
-        mixpanel.identify(profile.id)
-
-        console.log('Started mixpanel.')
-      } else {
-        console.log('No mixpanel token found. Skipping...')
-        this.trackUsage = false
-      }
+    const token = Config.mixpanelToken
+    if (!token) {
+      return
     }
-    this.started = true
-  }
 
-  public disable = () => {
-    if (this.canTrack) mixpanel.opt_out_tracking()
-  }
+    mixpanel.init(token, {})
 
-  public trackLogin = () => {
-    if (!this.canTrack) return
+    mixpanel.people.set({
+      Id: profile.id,
+      $email: profile.email,
+      $last_name: profile.username,
+      $last_login: new Date().toISOString(),
+    })
 
-    mixpanel.people.increment('Login Count')
     this.track('Login')
   }
 
-  public trackRegistration = () => {
-    if (!this.canTrack) return
+  /** Alias another Id (Auth0 Id) to the Salad user id */
+  public aliasUser = (otherId: string) => {
+    if (!this.started) return
 
-    mixpanel.people.set({
-      $created: new Date().toISOString(),
-    })
-    mixpanel.register({
-      'New User': true,
-    })
-
-    this.track('Registration')
+    mixpanel.alias(otherId)
   }
 
-  /** Tracks if started or stopped */
-  public trackRunStatus = (started: boolean) => {
-    if (!this.canTrack) return
+  public trackLogout = () => {
+    if (!this.started) return
 
-    if (started) {
-      this.track('Start')
-      mixpanel.people.increment('Start Count')
+    this.track('Logout')
+
+    mixpanel.reset()
+  }
+
+  /** Track when mining starts */
+  public trackStart = () => {
+    if (!this.started) return
+
+    this.track('Start')
+  }
+
+  /** Track when mining stops */
+  public trackStop = () => {
+    if (!this.started) return
+
+    this.track('Stop')
+  }
+
+  /** Track when a machine goes to the earning state */
+  public trackMiningEarning = () => {
+    if (!this.started) return
+
+    this.track('Mining Status', { MiningStatus: MiningStatus.Earning })
+  }
+
+  public trackMiningRunning = () => {
+    if (!this.started) return
+
+    this.track('Mining Status', { MiningStatus: MiningStatus.Running })
+  }
+
+  public trackMiningStarted = () => {
+    if (!this.started) return
+
+    this.track('Mining Status', { MiningStatus: MiningStatus.Started })
+  }
+
+  public trackMiningStopped = () => {
+    if (!this.started) return
+
+    this.track('Mining Status', { MiningStatus: MiningStatus.Stopped })
+  }
+
+  public trackRunningError = () => {
+    if (!this.started) return
+
+    this.track('Mining Status', { MiningStatus: MiningStatus.Error })
+  }
+
+  /** Track when a machine goes to the earning state */
+  public trackMiningError = (type: string, errorCode: number) => {
+    if (!this.started) return
+
+    this.track('Mining Error', { ErrorType: type, ErrorCode: errorCode })
+  }
+
+  /** Track when a reward is selected */
+  public trackSelectedReward = (reward: Reward) => {
+    if (!this.started) return
+
+    this.track('Reward Selected', {
+      RewardId: reward.id,
+      RewardName: reward.name,
+      RewardPrice: reward.price,
+      RewardCategory: reward.category,
+    })
+  }
+
+  /** Track when a reward is viewed */
+  public trackRewardView = (reward: Reward) => {
+    if (!this.started) return
+
+    this.track('Reward Viewed', {
+      RewardId: reward.id,
+      RewardName: reward.name,
+      RewardPrice: reward.price,
+      RewardCategory: reward.category,
+    })
+  }
+
+  /** Track when a reward is redeemed */
+  public trackRewardRedeemed = (reward: Reward) => {
+    if (!this.started) return
+
+    this.track('Reward Redeemed', {
+      RewardId: reward.id,
+      RewardName: reward.name,
+      RewardPrice: reward.price,
+      RewardCategory: reward.category,
+    })
+  }
+
+  /** Track when a referral is sent */
+  public trackReferralSent = () => {
+    if (!this.started) return
+
+    this.track('Referral Sent')
+  }
+
+  /** Track when a referral is entered */
+  public trackReferralEntered = (code: string) => {
+    if (!this.started) return
+
+    this.track('Referral Entered', { Code: code })
+  }
+
+  public trackMachine = (machine: Machine) => {
+    if (!this.started) return
+
+    if (machine.qualifying) {
       mixpanel.people.set({
-        'Start Last': new Date().toISOString(),
-      })
-    } else {
-      this.track('Stop')
-      mixpanel.people.set({
-        'Stop Last': new Date().toISOString(),
+        IsQualified: machine.qualifying,
       })
     }
   }
 
-  public trackSelectedReward = (id: string, name: string) => {
-    if (!this.canTrack) return
+  public trackMachineStatus = (status: string) => {
+    if (!this.started) return
 
-    let rewardName = `${id}:${name}`
-    this.track('Reward Selected', { Reward: rewardName })
-    mixpanel.people.append('Rewards Selected', rewardName)
-    mixpanel.people.set({
-      'Reward Selected': rewardName,
-      'Reward Selected Date': new Date().toISOString(),
-    })
+    this.track('Machine Status', { MachineStatus: status })
   }
 
-  public trackRewardView = (id: string, name: string) => {
-    if (!this.canTrack) return
-
-    let rewardName = `${id}:${name}`
-    this.track('Reward Viewed', { Reward: rewardName })
-    mixpanel.people.append('Rewards Viewed', rewardName)
-  }
-
-  public trackRewardRedeemed = (reward: Reward) => {
-    if (!this.canTrack) return
-
-    let rewardName = `${reward.id}:${name}`
-    this.track('Reward Redeemed', { Reward: rewardName, Price: reward.price, Category: reward.category })
-    mixpanel.people.append('Rewards Redeemed', rewardName)
-    mixpanel.people.increment('Rewards Redeemed Count')
-    mixpanel.people.track_charge(reward.price, { Reward: rewardName })
-  }
-
-  public trackReferralSent = () => {
-    if (!this.canTrack) return
-
-    this.track('Referral Sent')
-    mixpanel.people.increment('Referral Sent Count')
-    mixpanel.people.set({
-      'Referral Last Sent': new Date().toISOString(),
-    })
-  }
-
-  public trackMachineInfo = (machine: MachineInfo) => {
-    if (!this.canTrack) return
-
-    // mixpanel.people.union({
-    //   'Machine Ids': machine.macAddress,
-    //   GPUs: machine.gpus.map(x => x.model),
-    // })
-  }
-
-  public trackEarning = (hasEarned: boolean) => {
-    if (!this.canTrack) return
-
-    mixpanel.people.set({
-      'Mining Status Earning': hasEarned,
-    })
-  }
-
-  public trackCompatibleGpu = (isCompatible: boolean) => {
-    if (!this.canTrack) return
-
-    mixpanel.people.set({
-      'Compatible GPU': isCompatible,
-    })
-  }
-
-  public track = (event: string, properties?: { [key: string]: any }) => {
-    if (!this.canTrack) return
+  private track = (event: string, properties?: { [key: string]: any }) => {
+    if (!this.started) return
 
     mixpanel.track(event, properties)
   }
