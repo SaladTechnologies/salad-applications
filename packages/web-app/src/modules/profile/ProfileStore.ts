@@ -4,9 +4,6 @@ import { Config } from '../../config'
 import { RootStore } from '../../Store'
 import { AxiosInstance } from 'axios'
 
-/** Data analytics setting indicating the user does not want to be tracked */
-const OPT_OUT = 'OPT_OUT'
-
 export class ProfileStore {
   @observable
   public currentProfile?: Profile
@@ -32,14 +29,6 @@ export class ProfileStore {
   @observable
   public isOnboardingRunning: boolean = false
 
-  @computed get needsAnalyticsOnboarding(): boolean {
-    return (
-      this.currentProfile !== undefined &&
-      this.currentProfile.lastAcceptedUsageTrackingVersion !== Config.dataTrackingVersion &&
-      this.currentProfile.lastAcceptedUsageTrackingVersion !== OPT_OUT
-    )
-  }
-
   @computed
   public get isOnboarding(): boolean {
     // TODO: Remove the true and uncomment code below
@@ -47,8 +36,7 @@ export class ProfileStore {
     // this.currentProfile === undefined ||
     // (this.currentProfile.lastAcceptedTermsOfService !== Config.termsVersion ||
     //   this.currentProfile.lastSeenApplicationVersion !== Config.whatsNewVersion ||
-    //   this.currentProfile.viewedReferralOnboarding !== true ||
-    //   this.needsAnalyticsOnboarding)
+    //   this.currentProfile.viewedReferralOnboarding !== true)
 
     this.setOnboarding(onboarding)
 
@@ -131,41 +119,6 @@ export class ProfileStore {
       this.currentProfile = patch.data
     } catch (err) {
       console.log(err)
-    } finally {
-      this.isUpdating = false
-      this.store.routing.replace('/')
-    }
-  })
-
-  @action.bound
-  setAnalyticsOption = flow(function*(this: ProfileStore, agree: boolean) {
-    if (this.currentProfile === undefined) return
-
-    console.log('Updating analytics to ' + agree)
-
-    this.isUpdating = true
-
-    let newStatus = agree ? Config.dataTrackingVersion : OPT_OUT
-
-    try {
-      let patch = yield this.axios.patch('profile', {
-        lastAcceptedUsageTrackingVersion: newStatus,
-      })
-      let profile = patch.data
-
-      this.currentProfile = profile
-
-      if (profile.lastAcceptedUsageTrackingVersion === Config.dataTrackingVersion) {
-        this.store.analytics.start(profile, true)
-        if (this.isFirstLogin) {
-          this.store.analytics.trackRegistration()
-        }
-        this.store.analytics.trackLogin()
-      } else if (profile.lastAcceptedUsageTrackingVersion === OPT_OUT) {
-        this.store.analytics.disable()
-      }
-    } catch (err) {
-      this.store.analytics.captureException(err)
     } finally {
       this.isUpdating = false
       this.store.routing.replace('/')

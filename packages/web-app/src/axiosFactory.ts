@@ -73,7 +73,7 @@ export class SaladError extends Error {
 }
 
 const onError = (error: any): Error | undefined => {
-  if (!error || !error.response || !error.response.data) return undefined
+  if (!error.response || !error.response.data) return error
 
   let data = error.response.data
 

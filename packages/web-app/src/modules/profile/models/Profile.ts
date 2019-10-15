@@ -4,7 +4,6 @@ export interface Profile {
   email: string
   lastAcceptedTermsOfService: string | undefined
   lastSeenApplicationVersion: string | undefined
-  lastAcceptedUsageTrackingVersion: string | undefined
   viewedReferralOnboarding: boolean | undefined
 }
 

@@ -148,19 +148,6 @@ const NoAuth = (props: any) => {
   )
 }
 
-// const Onboarding = () => {
-//   return (
-//     <AnimatedSwitch>
-//       <Route exact path="/profile-loading" render={() => <LoadingPage text="Loading profile" />} />
-//       <Route exact path="/onboarding/referral-code" component={ReferralEntryContainer} />
-//       <Route exact path="/onboarding/terms" component={TermsPageContainer} />
-//       <Route exact path="/onboarding/analytics" component={AnalyticsPageContainer} />
-//       <Route exact path="/onboarding/whats-new" component={WhatsNewPageContainer} />
-//       {/* TODO: Whats new page */}
-//     </AnimatedSwitch>
-//   )
-// }
-
 const Auth = () => {
   return (
     <>

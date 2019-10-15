@@ -131,6 +131,7 @@ export class ReferralStore {
       }
       let res = yield this.axios.post<Referral>('profile/referral', request)
       this.currentReferral = res.data
+      this.store.analytics.trackReferralEntered(code)
     } catch (e) {
       let err: AxiosError = e
       if (!err.response || err.response.status == 500) throw new Error('Unknown error')
@@ -152,7 +153,6 @@ export class ReferralStore {
 
     try {
       yield this.axios.post('profile/referrals', request)
-
       this.store.analytics.trackReferralSent()
     } catch (error) {
       console.error(error)

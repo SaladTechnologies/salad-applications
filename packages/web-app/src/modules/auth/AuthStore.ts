@@ -88,7 +88,10 @@ export class AuthStore {
               this.processAuthentication()
             })
             .then(() => {
-              this.store.onLogin()
+              this.store.onLogin().then(() => {
+                //Ensure we have connected the Auth0 id to the Salad Id
+                this.store.analytics.aliasUser(authResult.idTokenPayload.sub)
+              })
             })
         }
       })

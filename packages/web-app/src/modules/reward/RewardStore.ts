@@ -139,7 +139,7 @@ export class RewardStore {
 
   viewReward = (reward: Reward) => {
     this.store.ui.showModal(`/rewards/${reward.id}`)
-    this.store.analytics.trackRewardView(reward.id, reward.name)
+    this.store.analytics.trackRewardView(reward)
   }
 
   @action.bound
@@ -156,7 +156,7 @@ export class RewardStore {
 
       let reward = this.getReward(rewardId)
 
-      if (reward) this.store.analytics.trackSelectedReward(rewardId, reward.name)
+      if (reward) this.store.analytics.trackSelectedReward(reward)
 
       this.store.routing.push('/')
     } catch (error) {
