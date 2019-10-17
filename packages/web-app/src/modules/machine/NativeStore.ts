@@ -327,7 +327,7 @@ export class NativeStore {
         if (!this.minerId) {
           throw new Error('MinerId not found. Check that the machine is valid first. Cannot start.')
         }
-        address = `stratum+tcp://368dnSPEiXj1Ssy35BBWMwKcmFnGLuqa1J.${this.minerId}@daggerhashimoto.usa.nicehash.com:3353`
+        address = `stratum2+tcp://368dnSPEiXj1Ssy35BBWMwKcmFnGLuqa1J.${this.minerId}@daggerhashimoto.usa.nicehash.com:3353`
       } else {
         address = `stratum1+tcp://0x6fF85749ffac2d3A36efA2BC916305433fA93731@eth-us-west1.nanopool.org:9999/${this.machineId}/notinuse%40salad.io`
       }
