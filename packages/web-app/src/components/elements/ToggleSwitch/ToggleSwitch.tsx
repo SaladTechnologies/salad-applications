@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 
 // Styles
 import { styles } from './ToggleSwitch.styles'
-// import css from './ToggleSwitch.module.scss'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'

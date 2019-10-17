@@ -37,10 +37,10 @@ const styles = (theme: SaladTheme) => ({
     minWidth: 0,
   },
   imageContainer: {
-    display: 'flex',
+    display: (props: Props) => props.display || 'flex',
     padding: (props: Props) => props.rightColumnPadding || 0,
     justifyContent: 'center',
-    alignItems: (props: Props) => (props.fullHeightImg ? 'stretch' : 'center'),
+    alignItems: (props: Props) => (props.fullHeightImg ? 'stretch' : props.alignItems || 'center'),
     flex: '1 1 0',
     flexBasis: 0,
     minWidth: (props: Props) => props.rightColumnWidth || 0,
@@ -82,7 +82,9 @@ interface Props extends WithStyles<typeof styles> {
   hasBack?: boolean
   nextText?: string
   nextSubmitting?: boolean
-  fullHeightImg?: boolean
+  fullHeightImg?: boolean,
+  alignItems?: string,
+  display?: string,
   onBack?: () => void
   onNext?: () => void
 }

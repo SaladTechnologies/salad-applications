@@ -21,10 +21,12 @@ export * from './ExternalLink'
 
 // Elements
 export * from './elements/ToggleSwitch/ToggleSwitch'
-export * from './elements/lists/ExternalLinkListUnstyled'
-export * from './elements/lists/LinkListUnstyled'
-export * from './elements/lists/ListUnstyled'
+export * from './elements/Lists/ExternalLinkListUnstyled'
+export * from './elements/Lists/LinkListUnstyled'
+export * from './elements/Lists/ListUnstyled'
+export * from './elements/Lists/ListInline'
 export * from './elements/StatElement/StatElement'
+export * from './elements/Step/Step'
 
 // Primitive
 export * from './primitives/content/Paragraph'
