@@ -16,7 +16,7 @@ ID = "salad-web-app"
   publish = "packages/web-app/build"
 
   # Default build command.
-  command = "yarn build"
+  command = "sh ./build.sh"
 
 # The following redirect proxies API requests to the backend.
 [[redirects]]
