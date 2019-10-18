@@ -19,6 +19,7 @@
     "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "dependencies": {
+    "@aspnet/signalr": "^3.0.0-preview6.19307.2",
     "@babel/core": "^7.2.2",
     "@fortawesome/fontawesome-svg-core": "^1.2.14",
     "@fortawesome/free-solid-svg-icons": "^5.7.1",

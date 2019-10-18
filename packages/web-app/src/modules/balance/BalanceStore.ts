@@ -18,11 +18,15 @@ export class BalanceStore {
   @observable
   public lifetimeBalance: number = 0
 
+  /** What was the balance increase at the last refresh (USD) */
+  @observable
+  public lastDeltaBalance: number = 0
+
   private lastUpdateTime: number = Date.now()
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     autorun(() => {
-      if (store.native.isRunning) {
+      if (store.saladBowl.isRunning) {
         if (this.estimateTimer) clearInterval(this.estimateTimer)
         this.lastUpdateTime = Date.now()
         this.estimateTimer = setInterval(this.updateEstimate, Config.balanceEstimateRate)
@@ -39,24 +43,19 @@ export class BalanceStore {
   refreshBalance = flow(function*(this: BalanceStore) {
     try {
       let balance = yield this.axios.get('profile/balance')
-      let delta = balance.data.currentBalance - this.currentBalance
+      this.lastDeltaBalance = balance.data.currentBalance - this.currentBalance
       const maxDelta = Config.maxBalanceDelta
 
-      if (delta > maxDelta || delta < 0) {
+      if (this.lastDeltaBalance > maxDelta || this.lastDeltaBalance < 0) {
         this.interpolRate = 0
         this.currentBalance = balance.data.currentBalance
       } else {
-        this.interpolRate = delta / Config.dataRefreshRate
+        this.interpolRate = this.lastDeltaBalance / Config.dataRefreshRate
       }
 
       // Clears out a check on 'Stopped' so mining status is not changed to 'Earning'
-      if (this.store.native.miningStatus === MiningStatus.Stopped) {
-        delta = 0
-      }
-
-      // Change mining status to 'Earning'
-      if (delta && this.store.native.machineStatus === MiningStatus.Running) {
-        this.store.native.miningStatus = MiningStatus.Earning
+      if (this.store.saladBowl.status === MiningStatus.Stopped) {
+        this.lastDeltaBalance = 0
       }
 
       this.actualBalance = balance.data.currentBalance
