@@ -5,9 +5,9 @@ import { StartButton } from './components/StartButton'
 const mapStoreToProps = (store: RootStore) => ({
   balance: store.balance.currentBalance,
   lifetimeBalance: store.balance.lifetimeBalance,
-  onClick: store.native.toggleRunning,
-  isRunning: store.native.isRunning,
-  startEnabled: store.native.isNative && store.native.isCompatible,
+  onClick: store.saladBowl.toggleRunning,
+  isRunning: store.saladBowl.isRunning,
+  startEnabled: store.saladBowl.connected && store.machine.minerId !== undefined,
 })
 
 export const StartButtonContainer = connect(

@@ -17,7 +17,7 @@
     "icon": "assets/favicon.ico",
     "target": ["nsis"],
     "sign": "./sign.js",
-    "extraFiles": ["assets/*", "dist/ethminer"],
+    "extraFiles": ["assets/*", "dist/salad-bowl"],
     "publish": {
       "provider": "s3",
       "bucket": "salad-app-releases"

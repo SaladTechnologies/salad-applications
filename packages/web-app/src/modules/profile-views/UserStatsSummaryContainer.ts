@@ -4,7 +4,7 @@ import { UserStatsSummary } from './components/UserStatsSummary'
 
 const mapStoreToProps = (store: RootStore) => ({
   earningRate: store.machine.currentEarningRate,
-  miningStatus: store.native.miningStatus,
+  miningStatus: store.saladBowl.status,
 })
 
 export const UserStatsSummaryContainer = connect(
