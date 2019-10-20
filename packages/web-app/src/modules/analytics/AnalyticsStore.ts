@@ -5,9 +5,18 @@ import * as Sentry from '@sentry/browser'
 import { Reward } from '../reward/models'
 import { MiningStatus } from '../machine/models'
 import { Machine } from '../machine/models/Machine'
+import { RootStore } from '../../Store'
+import { autorun } from 'mobx'
 
 export class AnalyticsStore {
   private started = false
+
+  constructor(private readonly store: RootStore) {
+    autorun(() => {
+      console.log(`Detected change in status:${this.store.saladBowl.status}`)
+      this.trackMiningStatus(this.store.saladBowl.status)
+    })
+  }
 
   public start = (profile: Profile) => {
     if (this.started) {
@@ -71,35 +80,10 @@ export class AnalyticsStore {
     this.track('Stop')
   }
 
-  /** Track when a machine goes to the earning state */
-  public trackMiningEarning = () => {
+  public trackMiningStatus = (status: MiningStatus) => {
     if (!this.started) return
 
     this.track('Mining Status', { MiningStatus: MiningStatus.Earning })
-  }
-
-  public trackMiningRunning = () => {
-    if (!this.started) return
-
-    this.track('Mining Status', { MiningStatus: MiningStatus.Running })
-  }
-
-  public trackMiningStarted = () => {
-    if (!this.started) return
-
-    this.track('Mining Status', { MiningStatus: MiningStatus.Started })
-  }
-
-  public trackMiningStopped = () => {
-    if (!this.started) return
-
-    this.track('Mining Status', { MiningStatus: MiningStatus.Stopped })
-  }
-
-  public trackRunningError = () => {
-    if (!this.started) return
-
-    this.track('Mining Status', { MiningStatus: MiningStatus.Error })
   }
 
   /** Track when a machine goes to the earning state */
@@ -167,12 +151,6 @@ export class AnalyticsStore {
         IsQualified: machine.qualifying,
       })
     }
-  }
-
-  public trackMachineStatus = (status: string) => {
-    if (!this.started) return
-
-    this.track('Machine Status', { MachineStatus: status })
   }
 
   private track = (event: string, properties?: { [key: string]: any }) => {

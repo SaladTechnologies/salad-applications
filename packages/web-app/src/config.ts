@@ -18,6 +18,14 @@ const numberOrDefault = (name: string, defaultValue: number): number => {
   return v
 }
 
+const stringOrDefault = (name: string, defaultValue: string): string => {
+  let v = process.env[name]
+
+  if (!v) return defaultValue
+
+  return v
+}
+
 const optionalBool = (name: string): boolean => {
   let v = process.env[name]
 
@@ -63,6 +71,7 @@ class Config {
   public readonly balanceEstimateRate: number = numberOrDefault('REACT_APP_BALANCE_ESTIMATE_RATE', convertSeconds(1))
 
   public readonly baseAPIUrl: string = requiredString('REACT_APP_API_URL')
+  public readonly saladBowlUrl: string = stringOrDefault('REACT_APP_SALAD_BOWL_URL', 'http://localhost:22222')
 
   public readonly auth0Domain: string = requiredString('REACT_APP_AUTH0_DOMAIN')
   public readonly auth0ClientId: string = requiredString('REACT_APP_AUTH0_CLIENT_ID')

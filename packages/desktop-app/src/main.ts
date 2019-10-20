@@ -4,7 +4,7 @@ import * as path from 'path'
 import * as si from 'systeminformation'
 import { SaladBridge } from './SaladBridge'
 import { Config } from './config'
-import { Ethminer, StartMessage } from './Ethminer'
+import { SaladBowl } from './SaladBowl'
 import { MachineInfo } from './models/machine/MachineInfo'
 import { autoUpdater } from 'electron-updater'
 import { Logger } from './Logger'
@@ -17,8 +17,6 @@ Logger.connect()
 
 const AutoLaunch = require('auto-launch')
 
-const runStatus = 'run-status'
-const runError = 'run-error'
 const getDesktopVersion = 'get-desktop-version'
 const setDesktopVersion = 'set-desktop-version'
 
@@ -27,7 +25,7 @@ let onlineStatusWindow: BrowserWindow
 let offlineWindow: BrowserWindow
 
 let machineInfo: MachineInfo
-let ethminer = new Ethminer()
+let saladBowl = new SaladBowl()
 let onlineStatus = false
 let updateChecked = false
 
@@ -193,28 +191,6 @@ const createMainWindow = () => {
     app.quit()
   })
 
-  bridge.on('start-salad', (message: StartMessage) => {
-    console.log('Starting salad')
-
-    LogScraper.hashrate = 0
-
-    if (machineInfo) {
-      ethminer.start(machineInfo, message)
-      bridge.send(runStatus, true)
-    } else {
-      getMachineInfo().then(info => {
-        ethminer.start(info, message)
-        bridge.send(runStatus, true)
-      })
-    }
-  })
-
-  bridge.on('stop-salad', () => {
-    console.log('Stopping salad')
-    ethminer.stop()
-    bridge.send(runStatus, false)
-  })
-
   bridge.on('send-log', (id: string) => {
     console.log('Sending logs')
     Logger.sendLog(id)
@@ -239,11 +215,6 @@ const createMainWindow = () => {
     bridge.send('set-hashrate', LogScraper.hashrate)
   })
 
-  //Listen for ethminer errors
-  ethminer.onError = (code: number) => {
-    bridge.send(runError, code)
-  }
-
   mainWindow.webContents.on('new-window', (e: Electron.Event, url: string) => {
     console.log(`opening new window at ${url}`)
     e.preventDefault()
@@ -253,6 +224,8 @@ const createMainWindow = () => {
   mainWindow.webContents.on('console-message', (_: Event, level: number, message: string, line: number) => {
     console.log(`console:${line}:${level}:${message}`)
   })
+
+  saladBowl.start()
 }
 
 const checkForUpdates = () => {
@@ -342,12 +315,12 @@ checkForMultipleInstance()
 app.on('ready', () => onReady())
 app.on('will-quit', () => {
   console.log('will quit')
-  ethminer.stop()
+  saladBowl.stop()
 })
 
 process.on('exit', () => {
   console.log('Process exit')
-  ethminer.stop()
+  saladBowl.stop()
 })
 
 app.on('window-all-closed', () => {
@@ -359,7 +332,7 @@ app.on('window-all-closed', () => {
 
 const cleanExit = () => {
   console.log('clean-exit')
-  ethminer.stop()
+  saladBowl.stop()
   process.exit()
 }
 

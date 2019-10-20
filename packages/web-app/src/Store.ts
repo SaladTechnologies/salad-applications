@@ -13,6 +13,7 @@ import { AnalyticsStore } from './modules/analytics'
 import { NativeStore } from './modules/machine/NativeStore'
 import { RefreshService } from './modules/data-refresh'
 import { featureFlags } from './FeatureFlags'
+import { SaladBowlStore } from './modules/salad-bowl'
 
 //Forces all changes to state to be from an action
 configure({ enforceActions: 'always' })
@@ -42,12 +43,13 @@ export class RootStore {
   public readonly referral: ReferralStore
   public readonly native: NativeStore
   public readonly refresh: RefreshService
+  public readonly saladBowl: SaladBowlStore
 
   private machineInfoHeartbeat?: NodeJS.Timeout
 
   constructor(readonly axios: AxiosInstance) {
-    this.analytics = new AnalyticsStore()
     this.routing = new RouterStore()
+    this.saladBowl = new SaladBowlStore(this, axios)
     this.xp = new ExperienceStore(this, axios)
     this.machine = new MachineStore(this)
     this.native = new NativeStore(this, axios)
@@ -59,6 +61,7 @@ export class RootStore {
     this.ui = new UIStore(this)
     this.referral = new ReferralStore(this, axios)
     this.refresh = new RefreshService(this)
+    this.analytics = new AnalyticsStore(this)
   }
 
   @action.bound

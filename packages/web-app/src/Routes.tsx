@@ -94,7 +94,7 @@ export default class Routes extends Component {
       return <Route render={() => <LoadingPage text="Salad Is Currently Down For Maintenance." />} />
     }
 
-    if (this.store.native.apiVersion < 3) {
+    if (this.store.native.apiVersion < 5) {
       return <Route render={() => <LoadingPage text="Salad Is Out of Date, Please Update to Continue." />} />
     }
 

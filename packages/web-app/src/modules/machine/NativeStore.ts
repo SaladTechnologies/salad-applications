@@ -1,29 +1,21 @@
 import { action, observable, computed, runInAction, flow } from 'mobx'
 import { RootStore } from '../../Store'
 import * as Storage from '../../Storage'
-import { Config } from '../../config'
-import { MachineInfo, MiningStatus } from './models'
+import { MachineInfo } from './models'
 import { AxiosInstance } from 'axios'
 
 import { Machine } from './models/Machine'
-import { featureFlags } from '../../FeatureFlags'
 
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
-const runStatus = 'run-status'
-const runError = 'run-error'
 const minimize = 'minimize-window'
 const maximize = 'maximize-window'
 const close = 'close-window'
-const start = 'start-salad'
-const stop = 'stop-salad'
 const sendLog = 'send-log'
 const getDesktopVersion = 'get-desktop-version'
 const setDesktopVersion = 'set-desktop-version'
 const enableAutoLaunch = 'enable-auto-launch'
 const disableAutoLaunch = 'disable-auto-launch'
-const getHashrate = 'get-hashrate'
-const setHashrate = 'set-hashrate'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
 const AUTO_LAUNCH = 'AUTO_LAUNCH'
@@ -41,9 +33,6 @@ declare global {
 
 export class NativeStore {
   private callbacks = new Map<string, Function>()
-  private runningHeartbeat?: NodeJS.Timeout
-  private zeroHashTimespan: number = 0
-  private restartingMiner?: NodeJS.Timeout
 
   // private failedCount: number = 0
 
@@ -53,9 +42,6 @@ export class NativeStore {
 
   @observable
   public isOnline: boolean = true
-
-  @observable
-  public isRunning: boolean = false
 
   @observable
   public skippedCompatCheck: boolean = false
@@ -75,17 +61,6 @@ export class NativeStore {
   @observable
   public autoLaunch: boolean = true
 
-  @observable
-  public miningStatus: string = 'Stopped'
-
-  @observable
-  public machineStatus: string = 'stopped'
-
-  @observable
-  public hashrate: number = 0
-
-  @observable
-  public runningStatus: boolean = false
   //#endregion
 
   @computed
@@ -114,15 +89,6 @@ export class NativeStore {
   }
 
   @computed
-  get minerId(): string | undefined {
-    if (this.store.machine.currentMachine !== undefined) {
-      return this.store.machine.currentMachine.minerId
-    } else {
-      return undefined
-    }
-  }
-
-  @computed
   get gpuNames(): string[] | undefined {
     if (this.machineInfo === undefined) return undefined
     return this.machineInfo.graphics.controllers.map(x => x.model)
@@ -148,51 +114,8 @@ export class NativeStore {
         this.setDesktopVersion(version)
       })
 
-      this.on(runStatus, (status: boolean) => {
-        console.log('Received run status: ' + status)
-        this.setRunStatus(status)
-      })
-
       this.on(setMachineInfo, (info: MachineInfo) => {
         this.setMachineInfo(info)
-      })
-
-      this.on(runError, (errorCode: number) => {
-        console.log('Error code: ', errorCode)
-
-        switch (errorCode) {
-          case 8675309: // CUDA - Tommy Tutone - 867-5309/Jenny: https://youtu.be/6WTdTwcmxyo
-            store.ui.showModal('/errors/cuda')
-            store.analytics.trackMiningError('CUDA Error', errorCode)
-            break
-          case 314159265: // Anti-virus - Pie!
-            store.ui.showModal('/errors/anti-virus')
-            store.analytics.trackMiningError('Anti-Virus Error', errorCode)
-            this.stop()
-            break
-          case 4000: // Network errors
-          case 4001:
-          case 4002:
-          case 4003:
-          case 4004:
-            store.ui.showModal('/errors/network')
-            store.analytics.trackMiningError('Network Error', errorCode)
-            this.restartMiner()
-            break
-          case 8888: // Generic, ethminer.exe terminated, no modal error message
-            store.analytics.trackMiningError('Ethminer.exe Stopped', errorCode)
-            this.stop()
-            break
-          case 9998: // Nonce
-            this.restartMiner()
-            store.analytics.trackMiningError('Nonce Unknown Error', errorCode)
-            break
-          case 9999: // Generic, "WTH happened"
-          default:
-            store.ui.showModal('/errors/unknown')
-            store.analytics.trackMiningError('Generic Unknown Error', errorCode)
-            break
-        }
       })
 
       this.send(getDesktopVersion)
@@ -251,29 +174,6 @@ export class NativeStore {
   // })
 
   @action
-  setRunStatus = (status: boolean) => {
-    this.isRunning = status
-
-    if (this.runningHeartbeat) {
-      clearInterval(this.runningHeartbeat)
-    }
-
-    if (status) {
-      this.runningStatus = true
-      //Send the initial heartbeat
-      this.sendRunningStatus(this.runningStatus)
-
-      //Schedule future heartbeats
-      this.runningHeartbeat = setInterval(() => {
-        this.sendRunningStatus(this.runningStatus)
-      }, Config.statusHeartbeatRate)
-    } else {
-      this.runningStatus = false
-      this.sendRunningStatus(this.runningStatus)
-    }
-  }
-
-  @action
   setDesktopVersion = (version: string) => {
     console.log(`Setting desktop version: ${version}`)
     this.desktopVersion = version
@@ -307,66 +207,6 @@ export class NativeStore {
   @action
   closeWindow = () => {
     this.send(close)
-  }
-
-  @action
-  start = () => {
-    if (!this.isCompatible) {
-      throw new Error('Incompatible machine. Cannot start.')
-    }
-
-    if (this.isRunning) {
-      console.warn('Already running. Skipping...')
-      return
-    }
-
-    if (window.salad.apiVersion <= 2) {
-      this.send(start, this.machineId)
-    } else {
-      let address = ''
-      if (window.salad.apiVersion >= 4 && featureFlags.getBool('nice-hash-pool')) {
-        if (!this.minerId) {
-          throw new Error('MinerId not found. Check that the machine is valid first. Cannot start.')
-        }
-        address = `stratum+tcp://368dnSPEiXj1Ssy35BBWMwKcmFnGLuqa1J.${this.minerId}@daggerhashimoto.usa.nicehash.com:3353`
-      } else {
-        address = `stratum1+tcp://0x6fF85749ffac2d3A36efA2BC916305433fA93731@eth-us-west1.nanopool.org:9999/${this.machineId}/notinuse%40salad.io`
-      }
-
-      this.send(start, {
-        machineId: this.machineId,
-        address: address,
-      })
-    }
-
-    if (this.restartingMiner) clearTimeout(this.restartingMiner)
-    this.miningStatus = MiningStatus.Started
-    this.store.analytics.trackStop()
-  }
-
-  @action
-  stop = () => {
-    if (!this.isCompatible) {
-      throw new Error('Incompatible machine. Cannot stop.')
-    }
-
-    if (!this.isRunning) {
-      console.warn('Nothing is running. Skipping...')
-      return
-    }
-
-    if (this.restartingMiner) clearTimeout(this.restartingMiner)
-    this.send(stop)
-    this.store.analytics.trackStop()
-  }
-
-  @action
-  toggleRunning = () => {
-    if (this.isRunning) {
-      this.stop()
-    } else {
-      this.start()
-    }
   }
 
   @action.bound
@@ -456,92 +296,4 @@ export class NativeStore {
     this.autoLaunch = Storage.getOrSetDefault(AUTO_LAUNCH, this.autoLaunch.toString()) === 'true'
     this.autoLaunch && this.enableAutoLaunch()
   }
-
-  //#region Hashrate monitoring
-  setHashrateFromLog = () => {
-    this.on(setHashrate, (hash: number) => this.setHashrate(hash))
-  }
-
-  @action
-  private setHashrate = (hash: number) => {
-    this.hashrate = hash
-    console.log('Hashrate: ', this.hashrate)
-  }
-
-  @action
-  hashrateHeartbeat = (runStatus: boolean, machineStatus: string) => {
-    if (runStatus && this.isNative) {
-      this.send(getHashrate)
-      this.setHashrateFromLog()
-
-      if (machineStatus === MiningStatus.Running && this.hashrate > 0) {
-        this.zeroHashTimespan = 0
-        this.store.analytics.trackMiningEarning()
-        return
-      }
-
-      if ((machineStatus === MiningStatus.Stopped && this.hashrate > 0) || this.hashrate > 0) {
-        this.miningStatus = MiningStatus.Running
-        this.zeroHashTimespan = 0
-        this.store.analytics.trackMiningRunning()
-        return
-      }
-
-      if (this.zeroHashTimespan >= Config.zeroHashrateNotification) {
-        this.miningStatus = MiningStatus.Error
-        this.zeroHashTimespan = 0
-        this.store.analytics.trackRunningError()
-        this.store.ui.showModal('/errors/unknown')
-      }
-
-      this.miningStatus = MiningStatus.Started
-      this.zeroHashTimespan++
-      this.store.analytics.trackMiningStarted()
-
-      return
-    }
-
-    this.hashrate = 0
-    this.miningStatus = this.miningStatus === MiningStatus.Restarting ? MiningStatus.Restarting : MiningStatus.Stopped
-    this.zeroHashTimespan = 0
-    this.store.balance.currentBalance = this.store.balance.actualBalance
-    this.store.analytics.trackMiningStopped()
-  }
-  //#endregion
-
-  @action
-  restartMiner = () => {
-    this.stop()
-    this.miningStatus = MiningStatus.Restarting
-    this.restartingMiner = setTimeout(() => {
-      this.start()
-    }, 5000)
-  }
-
-  @action.bound
-  sendRunningStatus = flow(function*(this: NativeStore, runStatus: boolean) {
-    console.log('Status MachineId: ' + this.machineId)
-
-    const machineId = this.store.token.getMachineId()
-    const response = yield this.axios.get(`machines/${machineId}/status`)
-    this.machineStatus = response.data.status.toString()
-
-    this.hashrateHeartbeat(runStatus, this.machineStatus)
-
-    let miningStatus =
-      this.zeroHashTimespan > 1
-        ? MiningStatus.Running
-        : this.miningStatus === MiningStatus.Running || this.miningStatus === MiningStatus.Earning
-        ? MiningStatus.Running
-        : this.miningStatus
-
-    this.store.analytics.trackMachineStatus(this.machineStatus)
-
-    const data = {
-      status: miningStatus,
-    }
-    try {
-      yield this.axios.post(`machines/${machineId}/status`, data)
-    } catch {}
-  })
 }
