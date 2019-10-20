@@ -161,6 +161,11 @@ export class ProfileStore {
     }
   })
 
+  @action 
+  startMachineTest = () => {
+    
+  }
+
   sleep = (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms))
   }

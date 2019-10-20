@@ -8,7 +8,7 @@ import image from '../../assets/Home - How it Works.svg'
 
 // Components
 import { OnboardingPage } from '../../../../components'
-import { Step, ListInline, Divider } from '../../../../components'
+import { Step, ListInline, Divider, PhraseViewer, PhraseType, Button } from '../../../../components'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
@@ -19,15 +19,34 @@ import withStyles, { WithStyles } from 'react-jss'
 // import ReactMarkdown from 'react-markdown'
 // import { terms } from '../assets/terms'
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  onTestMachine: () => void
+}
 
 class _MachineTest extends Component<Props> {
+  state = {
+    togglePhraseViewer: false,
+    toggleTestResults: false,
+    toggleTestButton: true,
+  }
+
+  handleTestMachine = () => {
+    this.setState({
+      togglePhraseViewer: true,
+      toggleTestButton: false,
+    })
+
+    const { onTestMachine } = this.props
+
+    if (onTestMachine) onTestMachine()
+  }
+
   render() {
     const { classes } = this.props
 
     const componentList: ReactNode[] = [
-      <Step active={false} complete={true} label={'1. Testing'} />,
-      <Step active={true} complete={false} label={'2. Running'} />,
+      <Step active={true} complete={false} label={'1. Testing'} />,
+      <Step active={false} complete={false} label={'2. Running'} />,
       <Step active={false} complete={false} label={'3. Reward'} />,
     ]
 
@@ -44,7 +63,20 @@ class _MachineTest extends Component<Props> {
           Rewards available in the first 24 hours
         </div>
         <Divider />
-        <div className={'testing'}></div>
+        <div className={'testing'}>
+          {this.state.togglePhraseViewer && <PhraseViewer phraseType={PhraseType.all} phraseDelay={5000} />}
+
+          {this.state.toggleTestButton && (
+            <>
+              <Button uppercase onClick={this.handleTestMachine}>
+                Test machine
+              </Button>
+              <em>
+                Heads up Chef-to-be! Your antivirus may be set off due to Salad downloading and testing the miner.
+              </em>
+            </>
+          )}
+        </div>
       </>
     )
 

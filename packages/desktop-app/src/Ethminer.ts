@@ -2,11 +2,6 @@ import { spawn, ChildProcess, exec } from 'child_process'
 import { MachineInfo } from './models/machine/MachineInfo'
 import { LogScraper } from './LogScraper'
 
-interface Error {
-  error: string
-  code: number
-}
-
 export interface StartMessage {
   machineId: string
   address: string

@@ -27,6 +27,9 @@ export * from './elements/Lists/ListUnstyled'
 export * from './elements/Lists/ListInline'
 export * from './elements/StatElement/StatElement'
 export * from './elements/Step/Step'
+export * from './elements/PhraseViewer/Phrases/Phrases'
+export * from './elements/PhraseViewer/PhraseViewer'
+export * from './elements/Logo/Logo'
 
 // Primitive
 export * from './primitives/content/Paragraph'
