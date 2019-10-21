@@ -1,11 +1,13 @@
-import { action, observable, flow } from 'mobx'
+import { action, observable, flow, autorun, runInAction } from 'mobx'
 import { AxiosInstance } from 'axios'
-import { WebAuth } from 'auth0-js'
+import { WebAuth, Auth0DecodedHash } from 'auth0-js'
 import { RootStore } from '../../Store'
 import uuidv4 from 'uuid/v4'
 import { Config } from '../../config'
 import * as Storage from '../../Storage'
 import { SALAD_TOKEN } from '.'
+
+const WEB_SYSTEM_ID = 'WEB_SYSTEM_ID'
 
 export class AuthStore {
   @observable
@@ -22,6 +24,9 @@ export class AuthStore {
   @observable
   public isAuth: boolean = false
 
+  @observable
+  public auth0Result?: Auth0DecodedHash
+
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     let redirect = `${window.location.origin}/auth/callback`
 
@@ -33,6 +38,8 @@ export class AuthStore {
       responseType: 'token id_token',
       scope: 'openid profile email',
     })
+
+    this.watchForLogin()
   }
 
   @action
@@ -70,29 +77,15 @@ export class AuthStore {
 
     try {
       yield this.webAuth.parseHash((err, authResult) => {
-        if (authResult) {
-          const systemId = this.store.native.machineInfo ? this.store.native.machineInfo.system.uuid : uuidv4()
+        runInAction(() => {
+          this.auth0Result = authResult || undefined
+        })
 
-          const data = {
-            authToken: authResult.accessToken,
-            systemId: systemId,
-            idToken: authResult.idToken,
-          }
+        if (err) {
+          console.error('Login error: ', err)
 
-          this.axios
-            .post('login', data)
-            .then(response => {
-              const saladToken: string = response.data.token
-              this.store.token.setToken(saladToken)
-
-              this.processAuthentication()
-            })
-            .then(() => {
-              this.store.onLogin().then(() => {
-                //Ensure we have connected the Auth0 id to the Salad Id
-                this.store.analytics.aliasUser(authResult.idTokenPayload.sub)
-              })
-            })
+          this.loginError = true
+          this.isLoading = false
         }
       })
     } catch (error) {
@@ -102,6 +95,56 @@ export class AuthStore {
       this.isLoading = false
     }
   })
+
+  @action
+  watchForLogin = () => {
+    autorun(() => {
+      //Ensures that we have an auth0 token
+      if (this.auth0Result === undefined) {
+        console.log('No auth0 result, waiting to login')
+        return
+      }
+
+      let systemId: string
+
+      //Web application login
+      if (!this.store.native.isNative) {
+        systemId = Storage.getOrSetDefault(WEB_SYSTEM_ID, uuidv4())
+        console.log('Got system id for web application')
+      }
+      //Desktop login
+      else if (this.store.native.machineInfo) {
+        systemId = this.store.native.machineInfo.system.uuid
+        console.log('Got system id from desktop application')
+      } else {
+        console.log('No machine info yet, waiting to login')
+        return
+      }
+
+      const data = {
+        authToken: this.auth0Result.accessToken,
+        systemId: systemId,
+        idToken: this.auth0Result.idToken,
+      }
+
+      this.axios
+        .post('login', data)
+        .then(response => {
+          const saladToken: string = response.data.token
+          this.store.token.setToken(saladToken)
+
+          this.processAuthentication()
+        })
+        .then(() => {
+          this.store.onLogin().then(() => {
+            if (this.auth0Result) {
+              //Ensure we have connected the Auth0 id to the Salad Id
+              this.store.analytics.aliasUser(this.auth0Result.idTokenPayload.sub)
+            }
+          })
+        })
+    })
+  }
 
   @action
   processAuthentication = () => {
@@ -124,6 +167,7 @@ export class AuthStore {
     this.store.onLogout()
 
     Storage.removeItem(SALAD_TOKEN)
+    Storage.removeItem(WEB_SYSTEM_ID)
 
     //Switch back to the main page
     this.store.routing.replace('/')
