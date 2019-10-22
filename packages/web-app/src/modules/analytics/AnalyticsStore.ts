@@ -83,7 +83,7 @@ export class AnalyticsStore {
   public trackMiningStatus = (status: MiningStatus) => {
     if (!this.started) return
 
-    this.track('Mining Status', { MiningStatus: MiningStatus.Earning })
+    this.track('Mining Status', { MiningStatus: status })
   }
 
   /** Track when a machine goes to the earning state */
