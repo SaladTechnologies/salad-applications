@@ -2,9 +2,8 @@ import React, { Component } from 'react'
 import { SaladTheme } from '../../../../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
 import { Username, P } from '../../../../components'
-import CopyToClipboard from 'react-copy-to-clipboard'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faClipboard } from '@fortawesome/free-solid-svg-icons'
+import { CopyToClipboard } from '../../../../components/elements/CopyToClipboard/Clipboard'
+
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -44,11 +43,7 @@ class _ReferralCode extends Component<Props> {
         </P>
         <div className={classes.codeContainer}>
           <Username blue>{code}</Username>
-          <CopyToClipboard
-            text={`Join me on Salad and use code ${code} for a 2x earning rate bonus! https://www.salad.io` || ''}
-          >
-            <FontAwesomeIcon className={classes.iconButton} icon={faClipboard} size={'lg'} />
-          </CopyToClipboard>
+          <CopyToClipboard text={`Join me on Salad and use code ${code} for a 2x earning rate bonus! https://www.salad.io`} />
         </div>
       </div>
     )
