@@ -62,6 +62,10 @@ export class RootStore {
     this.referral = new ReferralStore(this, axios)
     this.refresh = new RefreshService(this)
     this.analytics = new AnalyticsStore(this)
+
+    this.machineInfoHeartbeat = setInterval(this.tryRegisterMachine, 20000)
+
+    this.tryRegisterMachine()
   }
 
   @action.bound
@@ -72,6 +76,8 @@ export class RootStore {
     this.xp.refreshXp()
     this.referral.loadCurrentReferral()
     yield featureFlags.loadFeatureFlags(profile.id)
+
+    if (this.machineInfoHeartbeat) clearInterval(this.machineInfoHeartbeat)
 
     // Start a timer to keep checking for system information
     this.machineInfoHeartbeat = setInterval(this.tryRegisterMachine, 20000)
