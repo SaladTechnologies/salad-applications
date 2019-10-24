@@ -27,6 +27,15 @@ const beamV2Definition = (machine: Machine): PluginDefinition | undefined => {
     exe: 'miner',
     args: `-a beamhashII -s beamv2.usa.nicehash.com -n 3378 -u 38U2MyCEvcEdabyuQoE9bHX9D4KNrXjGSs.${machine.minerId} -w 0`,
     runningCheck: 'Share Accepted',
+    errors: [
+      // Anti-Virus
+      {
+        message: 'Anti-hacking system detected modification of the miner memory',
+        errorCode: 20001,
+        errorCategory: ErrorCategory.AntiVirus,
+        errorAction: ErrorAction.Stop,
+      },
+    ],
   }
 
   return def
