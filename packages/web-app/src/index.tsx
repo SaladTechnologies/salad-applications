@@ -16,7 +16,7 @@ import { Config } from './config'
 
 Sentry.init({
   dsn: Config.sentryDSN,
-  release: `web-app@${Config.appBuild}`,
+  release: Config.appBuild,
 })
 
 console.log(`Running web app build:${Config.appBuild}`)

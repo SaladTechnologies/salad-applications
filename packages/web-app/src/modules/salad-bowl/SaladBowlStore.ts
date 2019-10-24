@@ -157,6 +157,8 @@ export class SaladBowlStore {
     }
 
     this.sendRunningStatus()
+
+    this.store.analytics.trackStart()
   })
 
   @action.bound
@@ -168,6 +170,8 @@ export class SaladBowlStore {
       clearInterval(this.runningHeartbeat)
       this.runningHeartbeat = undefined
     }
+
+    this.store.analytics.trackStop()
   })
 
   @action.bound
