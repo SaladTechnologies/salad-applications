@@ -1,0 +1,156 @@
+import { Machine } from '../machine/models/Machine'
+import { PluginDefinition } from './models'
+import { ErrorCategory } from './models/ErrorCategory'
+import { ErrorAction } from './models/ErrorAction'
+import { RootStore } from '../../Store'
+import { MachineInfo } from '../machine/models'
+
+export const getPluginDefinition = (store: RootStore): PluginDefinition | undefined => {
+  let machine = store.machine.currentMachine
+  let machineInfo = store.native.machineInfo
+
+  if (machineInfo === undefined || machine === undefined || store.native.gpuNames === undefined) {
+    return undefined
+  }
+
+  if (store.native.gpuNames.some(x => x.includes('1050'))) {
+    return beamV2Definition(machine)
+  } else {
+    return ethminerDefinition(machine, machineInfo)
+  }
+}
+
+const beamV2Definition = (machine: Machine): PluginDefinition | undefined => {
+  let def = {
+    name: 'BeamV2',
+    downloadUrl: 'https://github.com/develsoftware/GMinerRelease/releases/download/1.70/gminer_1_70_windows64.zip',
+    exe: 'miner',
+    args: `-a beamhashII -s beamv2.usa.nicehash.com -n 3378 -u 38U2MyCEvcEdabyuQoE9bHX9D4KNrXjGSs.${machine.minerId} -w 0`,
+    runningCheck: 'Share Accepted',
+  }
+
+  return def
+}
+
+const ethminerDefinition = (machine: Machine, machineInfo: MachineInfo): PluginDefinition | undefined => {
+  let cuda = machineInfo.graphics.controllers.some(x => x.vendor.toLocaleLowerCase().includes('nvidia'))
+
+  let platform = cuda ? '-U' : '-G'
+
+  let def = {
+    name: 'Ethminer',
+    downloadUrl:
+      'https://github.com/ethereum-mining/ethminer/releases/download/v0.18.0/ethminer-0.18.0-cuda10.0-windows-amd64.zip',
+    exe: 'bin/ethminer.exe',
+    args: `--farm-recheck 1000 ${platform} -P stratum2+tcp://368dnSPEiXj1Ssy35BBWMwKcmFnGLuqa1J.${machine.minerId}@daggerhashimoto.usa.nicehash.com:3353`,
+    runningCheck: '^m.* [KMG]h - ',
+    errors: [
+      // Anti-Virus
+      {
+        message: 'is not recognized as an internal or external command',
+        errorCode: 100000000,
+        errorCategory: ErrorCategory.AntiVirus,
+        errorAction: ErrorAction.Restart,
+      },
+      {
+        message: 'The system cannot find the path specified',
+        errorCode: 100000002,
+        errorCategory: ErrorCategory.AntiVirus,
+        errorAction: ErrorAction.Restart,
+      },
+      // CUDA
+      {
+        message: '3221225595',
+        errorCode: 100000003,
+        errorCategory: ErrorCategory.Driver,
+        errorAction: ErrorAction.Ignore,
+      },
+      {
+        message: '3221225781',
+        errorCode: 100000004,
+        errorCategory: ErrorCategory.Driver,
+        errorAction: ErrorAction.Ignore,
+      },
+      {
+        message: 'CUDA error: Insufficient CUDA driver:',
+        errorCode: 100000005,
+        errorCategory: ErrorCategory.Driver,
+        errorAction: ErrorAction.Ignore,
+      },
+      {
+        message: 'CUDA error in func',
+        errorCode: 100000006,
+        errorCategory: ErrorCategory.Driver,
+        errorAction: ErrorAction.Ignore,
+      },
+      {
+        message: 'No OpenCL platforms found',
+        errorCode: 100000007,
+        errorCategory: ErrorCategory.Driver,
+        errorAction: ErrorAction.Ignore,
+      },
+      // Unknown
+      {
+        message: 'exit: 0',
+        errorCode: 9999,
+        errorCategory: ErrorCategory.Unknown,
+        errorAction: ErrorAction.Ignore,
+      },
+      // Nonce
+      {
+        message: 'Invalid nonce',
+        errorCode: 9998,
+        errorCategory: ErrorCategory.Unknown,
+        errorAction: ErrorAction.Restart,
+      },
+      // Ignore
+      {
+        message: 'exit: 1',
+        errorCode: 8888,
+        errorCategory: ErrorCategory.Silent,
+        errorAction: ErrorAction.Ignore,
+      },
+      // Network Errors
+      {
+        message: 'Network Error',
+        errorCode: 4000,
+        errorCategory: ErrorCategory.Network,
+        errorAction: ErrorAction.Restart,
+      },
+      {
+        message: 'stratum  Error',
+        errorCode: 4001,
+        errorCategory: ErrorCategory.Network,
+        errorAction: ErrorAction.Restart,
+      },
+      {
+        message: 'stratum Error',
+        errorCode: 4001,
+        errorCategory: ErrorCategory.Network,
+        errorAction: ErrorAction.Restart,
+      },
+      {
+        message: 'Socket read failed',
+        errorCode: 4002,
+        errorCategory: ErrorCategory.Network,
+        errorAction: ErrorAction.Restart,
+      },
+      {
+        message: 'Socket write failed',
+        errorCode: 4003,
+        errorCategory: ErrorCategory.Network,
+        errorAction: ErrorAction.Restart,
+      },
+      {
+        message: 'No connection',
+        errorCode: 4004,
+        errorCategory: ErrorCategory.Network,
+        errorAction: ErrorAction.Restart,
+      },
+    ],
+  }
+
+  console.log(JSON.stringify(def))
+
+  return def
+}
