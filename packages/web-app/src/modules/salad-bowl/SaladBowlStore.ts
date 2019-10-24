@@ -10,6 +10,7 @@ import { MiningStatus } from '../machine/models'
 import { ErrorMessage } from './models/ErrorMessage'
 import { ErrorCategory } from './models/ErrorCategory'
 import { MachineStatus } from './models/MachineStatus'
+import { getPluginDefinition } from './PluginDefinitionFactory'
 
 export class SaladBowlStore {
   private readonly hubConnection: HubConnection
@@ -135,7 +136,12 @@ export class SaladBowlStore {
 
   @action.bound
   start = flow(function*(this: SaladBowlStore) {
-    let pluginDefinition = this.store.machine.pluginDefinition()
+    if (!this.store.machine.currentMachine) {
+      console.log('Unable to find a valid plugin definition for this machine. Unable to start.')
+      return
+    }
+
+    let pluginDefinition = getPluginDefinition(this.store)
 
     if (!pluginDefinition) {
       console.log('Unable to find a valid plugin definition for this machine. Unable to start.')
