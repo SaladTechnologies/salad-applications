@@ -22,6 +22,9 @@ export class SaladBowlStore {
   @observable
   public connected: boolean = false
 
+  @observable
+  public error?: ErrorMessage
+
   @computed
   get isRunning(): boolean {
     return this.plugin.status !== PluginStatus.Stopped && this.plugin.status !== PluginStatus.Unknown

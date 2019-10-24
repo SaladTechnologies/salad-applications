@@ -8,7 +8,17 @@ import image from '../../assets/Home - How it Works.svg'
 
 // Components
 import { OnboardingPage } from '../../../../components'
-import { Step, ListInline, Divider, PhraseViewer, PhraseType, Button } from '../../../../components'
+import {
+  Step,
+  ListInline,
+  Divider,
+  PhraseViewer,
+  PhraseType,
+  Button,
+  ErrorText,
+} from '../../../../components'
+// import { PluginInfo } from '../../../salad-bowl/models/PluginInfo'
+// import { ErrorMessage } from '../../../salad-bowl/models'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
@@ -21,6 +31,8 @@ import withStyles, { WithStyles } from 'react-jss'
 
 interface Props extends WithStyles<typeof styles> {
   onTestMachine: () => void
+  // plugin: PluginInfo
+  // error: ErrorMessage
 }
 
 class _MachineTest extends Component<Props> {
@@ -71,11 +83,13 @@ class _MachineTest extends Component<Props> {
               <Button uppercase onClick={this.handleTestMachine}>
                 Test machine
               </Button>
-              <em>
+              <ErrorText>
                 Heads up Chef-to-be! Your antivirus may be set off due to Salad downloading and testing the miner.
-              </em>
+              </ErrorText>
             </>
           )}
+
+          {}
         </div>
       </>
     )

@@ -61,6 +61,9 @@ export class NativeStore {
   @observable
   public autoLaunch: boolean = true
 
+  @observable
+  public hashrate: number = 0
+
   //#endregion
 
   @computed
@@ -228,7 +231,7 @@ export class NativeStore {
 
       console.log('>> [[NativeStore] registerMachine]')
 
-      if(!this.store.profile.isOnboarding) {
+      if (!this.store.profile.isOnboarding) {
         this.store.routing.replace('/')
       }
     } catch (err) {
@@ -252,7 +255,7 @@ export class NativeStore {
     this.loadingMachineInfo = false
 
     console.log('>> [[NativeStore] setMachineInfo]')
-    
+
     if (!this.store.profile.isOnboarding) {
       this.store.routing.replace('/')
     }

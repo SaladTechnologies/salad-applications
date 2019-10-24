@@ -16,4 +16,9 @@ export const styles = (theme: SaladTheme) => ({
       width: '100%',
     },
   },
+
+  content: {
+    color: theme.lightGreen,
+    fontSize: theme.medium,
+  },
 })

@@ -3,9 +3,8 @@ import React, { Component } from 'react'
 // Styles
 import { styles } from './PhraseViewer.styles'
 
-// Componentes
-import { Logo } from '../Logo/Logo'
-import { Phrases, PhraseType } from './Phrases/Phrases'
+// Components
+import { Logo, Phrases, PhraseType } from '../../index'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'

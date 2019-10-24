@@ -33,6 +33,7 @@ export class ProfileStore {
   public get isOnboarding(): boolean {
     // TODO: Remove the true and uncomment code below
     const onboarding = true
+
     // this.currentProfile === undefined ||
     // (this.currentProfile.lastAcceptedTermsOfService !== Config.termsVersion ||
     //   this.currentProfile.lastSeenApplicationVersion !== Config.whatsNewVersion ||
@@ -48,7 +49,9 @@ export class ProfileStore {
     this.onboarding = isOnboarding
   }
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
+  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
+    
+  }
 
   @action.bound
   loadProfile = flow(function*(this: ProfileStore) {
@@ -161,9 +164,14 @@ export class ProfileStore {
     }
   })
 
-  @action 
+  @action
   startMachineTest = () => {
-    
+    this.store.saladBowl.start()
+
+    /*
+      - Need some sort of interval to check if we have a hashrate
+      - Ask Daniel if we have one with the WebSocket
+    */
   }
 
   sleep = (ms: number) => {
