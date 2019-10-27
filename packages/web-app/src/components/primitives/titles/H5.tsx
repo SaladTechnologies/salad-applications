@@ -16,13 +16,15 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  className?: string
+}
 
 class _H5 extends Component<Props> {
   render() {
-    const { children, classes } = this.props
+    const { className, children, classes } = this.props
 
-    return <label className={classnames(classes.h5)}>{children}</label>
+    return <label className={classnames(className, classes.h5)}>{children}</label>
   }
 }
 

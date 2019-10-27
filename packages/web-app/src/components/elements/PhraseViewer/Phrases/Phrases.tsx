@@ -3,8 +3,12 @@ import React, { Component } from 'react'
 // Styles
 import { styles } from './Phrases.styles'
 
+// Components
+import { H4 } from '../../../index'
+
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
+import classnames from 'classnames'
 
 export enum PhraseType {
   loading = 'loading',
@@ -13,6 +17,7 @@ export enum PhraseType {
 }
 
 interface Props extends WithStyles<typeof styles> {
+  className?: string
   phraseType: PhraseType
   phraseDelay?: number
 }
@@ -120,9 +125,13 @@ class _Phrases extends Component<Props> {
   }
 
   render() {
-    const Elements = <label>{this.state.phrase}</label>
+    const { className } = this.props
 
-    return <>{Elements}</>
+    return (
+      <div className={classnames(className)}>
+        <H4>{this.state.phrase}</H4>
+      </div>
+    )
   }
 }
 

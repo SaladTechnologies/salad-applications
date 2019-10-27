@@ -16,6 +16,8 @@ const getDesktopVersion = 'get-desktop-version'
 const setDesktopVersion = 'set-desktop-version'
 const enableAutoLaunch = 'enable-auto-launch'
 const disableAutoLaunch = 'disable-auto-launch'
+const getInstallPath = 'get-install-path'
+const setInstallPath = 'set-install-path'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
 const AUTO_LAUNCH = 'AUTO_LAUNCH'
@@ -61,8 +63,11 @@ export class NativeStore {
   @observable
   public autoLaunch: boolean = true
 
+  // @observable
+  // public hashrate: number = 0
+
   @observable
-  public hashrate: number = 0
+  public installPath: string = ''
 
   //#endregion
 
@@ -119,6 +124,10 @@ export class NativeStore {
 
       this.on(setMachineInfo, (info: MachineInfo) => {
         this.setMachineInfo(info)
+      })
+
+      this.on(setInstallPath, (path: string) => {
+        this.setInstallPath(path)
       })
 
       this.send(getDesktopVersion)
@@ -190,6 +199,7 @@ export class NativeStore {
     }
     this.loadingMachineInfo = true
     this.send(getMachineInfo)
+    this.send(getInstallPath)
   }
 
   @action
@@ -287,6 +297,12 @@ export class NativeStore {
     Storage.setItem(AUTO_LAUNCH, 'false')
 
     this.send(disableAutoLaunch)
+  }
+
+  @action
+  setInstallPath = (path: string) => {
+    console.log('++ [[NativeStore] setInstallPath] path: ', path)
+    this.installPath = path
   }
 
   @action

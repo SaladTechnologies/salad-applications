@@ -16,13 +16,13 @@ interface Props extends WithStyles<typeof styles> {
 
 class _PhraseViewer extends Component<Props> {
   render() {
-    const { phraseType, phraseDelay } = this.props
+    const { phraseType, phraseDelay, classes } = this.props
 
     return (
-      <>
-        <Logo />
-        <Phrases phraseType={phraseType} phraseDelay={phraseDelay} />
-      </>
+      <div className={classes.phraseViewer}>
+        <Logo className={classes.logo} />
+        <Phrases className={classes.phrases} phraseType={phraseType} phraseDelay={phraseDelay} />
+      </div>
     )
   }
 }

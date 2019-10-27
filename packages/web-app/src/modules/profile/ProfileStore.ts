@@ -49,9 +49,7 @@ export class ProfileStore {
     this.onboarding = isOnboarding
   }
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
-    
-  }
+  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   @action.bound
   loadProfile = flow(function*(this: ProfileStore) {
@@ -166,12 +164,17 @@ export class ProfileStore {
 
   @action
   startMachineTest = () => {
-    this.store.saladBowl.start()
+    // this.store.saladBowl.start()
 
     /*
       - Need some sort of interval to check if we have a hashrate
       - Ask Daniel if we have one with the WebSocket
     */
+  }
+
+  @action
+  abortMachineTest = () => {
+    // this.store.saladBowl.stop()
   }
 
   sleep = (ms: number) => {

@@ -23,7 +23,7 @@ export class SaladBowlStore {
   public connected: boolean = false
 
   @observable
-  public error?: ErrorMessage
+  public error?: string
 
   @computed
   get isRunning(): boolean {
@@ -109,12 +109,15 @@ export class SaladBowlStore {
     // Show the error modal
     switch (message.errorCategory) {
       case ErrorCategory.AntiVirus:
+        this.error = ErrorCategory.AntiVirus
         this.store.ui.showModal('/errors/anti-virus')
         break
       case ErrorCategory.Driver:
+        this.error = ErrorCategory.Driver
         this.store.ui.showModal('/errors/cuda')
         break
       case ErrorCategory.Network:
+        this.error = ErrorCategory.Network
         this.store.ui.showModal('/errors/network')
         break
       case ErrorCategory.Silent:
@@ -122,6 +125,7 @@ export class SaladBowlStore {
         break
       case ErrorCategory.Unknown:
       default:
+        this.error = ErrorCategory.Unknown
         this.store.ui.showModal('/errors/unknown')
         break
     }

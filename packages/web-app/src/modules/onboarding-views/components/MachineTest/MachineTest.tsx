@@ -8,38 +8,29 @@ import image from '../../assets/Home - How it Works.svg'
 
 // Components
 import { OnboardingPage } from '../../../../components'
-import {
-  Step,
-  ListInline,
-  Divider,
-  PhraseViewer,
-  PhraseType,
-  Button,
-  ErrorText,
-} from '../../../../components'
+import { Step, ListInline, Divider, PhraseViewer, PhraseType, Button, ErrorText } from '../../../../components'
+import { TestResult } from '../../../../components/elements/TestResults/TestResult'
 // import { PluginInfo } from '../../../salad-bowl/models/PluginInfo'
 // import { ErrorMessage } from '../../../salad-bowl/models'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
-
-// import { Form, Field } from 'react-final-form'
-// import { Checkbox, Scrollbar } from '../../../components'
-// import { Scrollbar } from '../../../components'
-// import ReactMarkdown from 'react-markdown'
-// import { terms } from '../assets/terms'
+import classnames from 'classnames'
 
 interface Props extends WithStyles<typeof styles> {
   onTestMachine: () => void
-  // plugin: PluginInfo
-  // error: ErrorMessage
+  pluginName: string
+  pluginStatus?: string
+  errorCategory?: string
+  errorMessage?: string,
+  installPath?: string,
 }
 
 class _MachineTest extends Component<Props> {
   state = {
     togglePhraseViewer: false,
-    toggleTestResults: false,
-    toggleTestButton: true,
+    toggleTestResults: true,
+    toggleTestButton: false,
   }
 
   handleTestMachine = () => {
@@ -53,8 +44,19 @@ class _MachineTest extends Component<Props> {
     if (onTestMachine) onTestMachine()
   }
 
+  handleAbortTest = () => {
+    this.setState({
+      togglePhraseViewer: false,
+      toggleTestButton: true,
+    })
+
+    const { onTestMachine } = this.props
+
+    if (onTestMachine) onTestMachine()
+  }
+
   render() {
-    const { classes } = this.props
+    const { pluginName, pluginStatus, errorCategory, errorMessage, installPath, classes } = this.props
 
     const componentList: ReactNode[] = [
       <Step active={true} complete={false} label={'1. Testing'} />,
@@ -76,20 +78,37 @@ class _MachineTest extends Component<Props> {
         </div>
         <Divider />
         <div className={'testing'}>
-          {this.state.togglePhraseViewer && <PhraseViewer phraseType={PhraseType.all} phraseDelay={5000} />}
+          {this.state.togglePhraseViewer && (
+            <>
+              <PhraseViewer phraseType={PhraseType.all} phraseDelay={5000} />
+              <div className={classes.stopTest}>
+                <Button uppercase onClick={this.handleAbortTest} className={classnames(classes.stopTestBtn)}>
+                  Stop test
+                </Button>
+              </div>
+            </>
+          )}
 
           {this.state.toggleTestButton && (
             <>
-              <Button uppercase onClick={this.handleTestMachine}>
-                Test machine
+              <Button uppercase onClick={this.handleTestMachine} className={classnames(classes.startTestBtn)}>
+                Start test
               </Button>
-              <ErrorText>
+              <ErrorText className={classes.errorText}>
                 Heads up Chef-to-be! Your antivirus may be set off due to Salad downloading and testing the miner.
               </ErrorText>
             </>
           )}
 
-          {}
+          {pluginStatus === 'stopped' && (
+            <TestResult
+              pluginName={pluginName}
+              pluginStatus={pluginStatus}
+              errorCategory={errorCategory}
+              errorMessage={errorMessage}
+              installPath={installPath}
+            />
+          )}
         </div>
       </>
     )

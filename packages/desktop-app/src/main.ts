@@ -215,6 +215,10 @@ const createMainWindow = () => {
     bridge.send('set-hashrate', LogScraper.hashrate)
   })
 
+  bridge.on('get-install-path', () => {
+    bridge.send('set-install-path', app.getAppPath())
+  })
+
   mainWindow.webContents.on('new-window', (e: Electron.Event, url: string) => {
     console.log(`opening new window at ${url}`)
     e.preventDefault()

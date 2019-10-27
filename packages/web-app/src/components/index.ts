@@ -36,7 +36,9 @@ export * from './elements/TestResults/ResultContent/DeviceFailure'
 export * from './elements/TestResults/ResultContent/DriverFailure'
 export * from './elements/TestResults/ResultContent/NetworkFailure'
 export * from './elements/TestResults/ResultContent/UnknownFailure'
-// export * from './elements/TestResults/TestResult'
+export * from './elements/NotificationIcons/Success'
+export * from './elements/NotificationIcons/Warning'
+export * from './elements/NotificationIcons/Error'
 
 // Primitive
 export * from './primitives/content/Paragraph'

@@ -69,7 +69,7 @@ class _Button extends Component<Props> {
       >
         <button
           type={type}
-          className={classnames(classes.button, {
+          className={classnames('btn', classes.button, {
             [classes.disabled]: !enabled,
             [classes.enabled]: enabled,
           })}

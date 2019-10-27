@@ -8,16 +8,19 @@ import logo from '../../assets/animated-logo-lg.gif'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
+import classnames from 'classnames'
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  className?: string
+}
 
 class _Logo extends Component<Props> {
   render() {
-    const { classes } = this.props
+    const { className, classes } = this.props
 
     return (
       <>
-        <img src={logo} className={classes.logo} />
+        <img src={logo} className={classnames(className || classes.logo)} />
       </>
     )
   }

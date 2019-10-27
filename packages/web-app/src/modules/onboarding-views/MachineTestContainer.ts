@@ -4,13 +4,17 @@ import { MachineTest } from './components/MachineTest/MachineTest'
 
 
 const mapStoreToProps = (store: RootStore) => {
-  setInterval(() => {
-    console.log('>->-> [[MachineTestContainer] mapStoreToProps] saladBowl Plugin: ', store.saladBowl.plugin.status)
-    console.log('>->-> [[MachineTestContainer] mapStoreToProps] saladBowl Error: ', store.saladBowl.error)
-  }, 6000)
+  console.log('>->-> [[MachineTestContainer] mapStoreToProps] saladBowl Plugin: ', store.saladBowl.plugin.status)
+  console.log('>->-> [[MachineTestContainer] mapStoreToProps] saladBowl Error: ', store.saladBowl.error)
 
   return {
     onTestMachine: store.profile.startMachineTest,
+    onAbortTest: store.profile.abortMachineTest,
+    pluginName: 'Ethminer', //store.saladBowl.plugin.name,
+    pluginStatus: 'stopped', //store.saladBowl.plugin.status,
+    errorCategory: 'antiVirus', //store.saladBowl.error,
+    errorMessage: 'Antivirus removed the miner',
+    installPath: store.native.installPath,
   }
 }
 
