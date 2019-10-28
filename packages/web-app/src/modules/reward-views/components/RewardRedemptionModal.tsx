@@ -107,7 +107,6 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   reward?: Reward
-  onSubmission?: (values: {}) => void
   onClickClose?: () => void
   onClickDone?: () => void
   onRedeem?: (rewardId: string, email?: string) => void
