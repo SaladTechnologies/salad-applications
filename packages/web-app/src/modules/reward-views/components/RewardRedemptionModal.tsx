@@ -2,13 +2,12 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import classnames from 'classnames'
-import { ModalPage, Checkbox, Button, TextField } from '../../../components'
+import { ModalPage, Checkbox, Button, TextField, ErrorText } from '../../../components'
 import { Reward } from '../../reward/models/Reward'
 import { Form, Field } from 'react-final-form'
 import { observer } from 'mobx-react'
 import { RewardDetailsPanel } from './RewardDetailsPanel'
 import { ActionState, submitAction } from '../../../ActionHandler'
-
 
 //TODO: Move this into a feature flag
 const showGiftOption = false
@@ -100,9 +99,6 @@ const styles = (theme: SaladTheme) => ({
     flexDirection: 'row',
     alignItems: 'flex-start',
   },
-  error: {
-    color: 'red',
-  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -146,9 +142,9 @@ class _RewardRedemptionModal extends Component<Props, State> {
     const { reward, onRedeem } = this.props
     let v = values as FormTypes
     if (reward && onRedeem)
-     submitAction(this, async()=> {
-       await onRedeem(reward.id, v.gift ? v.email : undefined)
-     })
+      submitAction(this, async () => {
+        await onRedeem(reward.id, v.gift ? v.email : undefined)
+      })
   }
 
   validate = (values: {}) => {
@@ -167,7 +163,6 @@ class _RewardRedemptionModal extends Component<Props, State> {
   render() {
     const { reward, onClickClose, classes } = this.props
     const { errorMessage, submitting } = this.state
-
 
     return (
       <ModalPage onCloseClicked={this.handleClose}>
@@ -218,12 +213,10 @@ class _RewardRedemptionModal extends Component<Props, State> {
                         </div>
                       )}
                       <div className={classes.submitPanel}>
-                        <div className={errorMessage && classes.error}>
-                          {errorMessage}
-                          <Button type="submit" loading={submitting} disabled={submitting} dark>
-                            Bombs Away
-                          </Button>
-                        </div>
+                        <ErrorText>{errorMessage}</ErrorText>
+                        <Button type="submit" loading={submitting} disabled={submitting} dark>
+                          Bombs Away
+                        </Button>
                         <div className={classes.termText}>{`*Salad plays for keeps (no refunds)`}</div>
                       </div>
                     </div>
