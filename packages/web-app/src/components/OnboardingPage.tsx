@@ -118,9 +118,11 @@ class _OnboardingPage extends Component<Props> {
                 Back
               </Button>
             )}
-            <Button className={classes.nextButton} onClick={onNext} loading={nextSubmitting}>
-              {nextText ? nextText : 'Next'}
-            </Button>
+            {onNext && (
+              <Button className={classes.nextButton} onClick={onNext} loading={nextSubmitting}>
+                {nextText ? nextText : 'Next'}
+              </Button>
+            )}
           </div>
         </div>
         <div className={classnames(classes.imageContainer, classes.column)}>

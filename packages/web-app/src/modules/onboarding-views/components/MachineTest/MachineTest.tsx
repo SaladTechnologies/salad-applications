@@ -8,7 +8,7 @@ import image from '../../assets/Home - How it Works.svg'
 
 // Components
 import { OnboardingPage } from '../../../../components'
-import { Step, ListInline, Divider, PhraseViewer, PhraseType, Button, ErrorText } from '../../../../components'
+import { Step, ListInline, Divider, PhraseViewer, PhraseType, Button, ErrorText, EarningsOverTime, EarningsPerDay } from '../../../../components'
 import { TestResult } from '../../../../components/elements/TestResults/TestResult'
 // import { PluginInfo } from '../../../salad-bowl/models/PluginInfo'
 // import { ErrorMessage } from '../../../salad-bowl/models'
@@ -37,6 +37,7 @@ class _MachineTest extends Component<Props> {
     this.setState({
       togglePhraseViewer: true,
       toggleTestButton: false,
+      toggleTestResults: false,
     })
 
     const { onTestMachine } = this.props
@@ -70,11 +71,9 @@ class _MachineTest extends Component<Props> {
           <ListInline componentList={componentList} splitEvenly />
         </div>
         <Divider />
-        <div className={'earnings'}>
-          Average earnings per day
-          <br />
-          <br />
-          Rewards available in the first 24 hours
+        <div className={classes.earnings}>
+          <EarningsPerDay className={classes.earningsPerDay} earnings={0.24} />
+          <EarningsOverTime className={classes.earningsOverTime} rewards={35} hours={24} />
         </div>
         <Divider />
         <div className={'testing'}>
@@ -101,13 +100,25 @@ class _MachineTest extends Component<Props> {
           )}
 
           {pluginStatus === 'stopped' && (
-            <TestResult
-              pluginName={pluginName}
-              pluginStatus={pluginStatus}
-              errorCategory={errorCategory}
-              errorMessage={errorMessage}
-              installPath={installPath}
-            />
+            <>
+              <TestResult
+                pluginName={pluginName}
+                pluginStatus={pluginStatus}
+                errorCategory={errorCategory}
+                errorMessage={errorMessage}
+                installPath={installPath}
+              />
+
+              {errorCategory === 'antiVirus' && (
+                <Button
+                  uppercase
+                  onClick={this.handleTestMachine}
+                  className={classnames(classes.startTestBtn, classes.marginTop)}
+                >
+                  Test again
+                </Button>
+              )}
+            </>
           )}
         </div>
       </>
@@ -118,15 +129,12 @@ class _MachineTest extends Component<Props> {
         title={`Let's Get Started`}
         subtitle={`Salad is checking out your machine and deciding how to optimize your earnings and experience.`}
         image={image}
-        // nextSubmitting={submitting}
         rightContent={Elements}
         rightColumnWidth={'60%'}
         leftColumnPadding={'4rem 1rem 4rem 2rem'}
         rightColumnPadding={'4rem 2rem 4rem 1rem'}
         alignItems={'start'}
         display={'block'}
-        // nextText={'Agree'}
-        // onNext={() => this.submit()}
       ></OnboardingPage>
     )
   }

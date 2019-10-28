@@ -67,4 +67,23 @@ export const styles = (theme: SaladTheme) => ({
     width: '45%',
     margin: 0,
   },
+
+  marginTop: {
+    marginTop: theme.xLarge,
+  },
+
+  earnings: {
+    display: 'flex',
+  },
+
+  earningsPerDay: {
+    order: 0,
+    width: '33%',
+    marginRight: 22,
+  },
+
+  earningsOverTime: {
+    order: 1,
+    width: '33%',
+  },
 })

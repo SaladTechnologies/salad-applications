@@ -39,6 +39,8 @@ export * from './elements/TestResults/ResultContent/UnknownFailure'
 export * from './elements/NotificationIcons/Success'
 export * from './elements/NotificationIcons/Warning'
 export * from './elements/NotificationIcons/Error'
+export * from './elements/EarningsOverTime/EarningsOverTime'
+export * from './elements/EarningsPerDay/EarningsPerDay'
 
 // Primitive
 export * from './primitives/content/Paragraph'
@@ -56,3 +58,4 @@ export * from './primitives/titles/H3'
 export * from './primitives/titles/H4'
 export * from './primitives/titles/H5'
 export * from './primitives/titles/RewardHeader'
+export * from './primitives/content/Select'
