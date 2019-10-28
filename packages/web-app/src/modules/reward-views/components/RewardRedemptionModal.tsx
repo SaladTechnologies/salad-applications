@@ -8,7 +8,6 @@ import { Form, Field } from 'react-final-form'
 import { observer } from 'mobx-react'
 import { RewardDetailsPanel } from './RewardDetailsPanel'
 import { ActionState, submitAction } from '../../../ActionHandler'
-import { async } from 'q'
 
 
 //TODO: Move this into a feature flag
