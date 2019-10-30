@@ -20,14 +20,25 @@ export class ProfileStore {
   @observable
   public onboarding: boolean = false
 
+  //#region Not sure if we need these
   @observable
   public isOnboardingComplete: boolean = false
+
   @observable
   public isOnboardingRedeem: boolean = false
+
   @observable
   public isOnboardingRunning: boolean = false
+
   @observable
   public isOnboardingTesting: boolean = true
+  //#endregion
+
+  @observable
+  public earningRatePerDay: number | undefined = undefined
+
+  @observable
+  public rewardsOverTime: number | undefined = undefined
 
   @computed
   public get isOnboarding(): boolean {
@@ -67,7 +78,6 @@ export class ProfileStore {
       this.isLoading = false
       //TODO: Move the routing logic to the onLogin function so we can load all the data before showing the app
 
-      console.log('>> [[ProfileStore] loadProfile]')
       this.store.routing.replace('/')
     }
     return this.currentProfile
@@ -164,17 +174,33 @@ export class ProfileStore {
 
   @action
   startMachineTest = () => {
-    // this.store.saladBowl.start()
+    console.log('>> [[ProfileStore] startMachineTest] <<')
+    this.store.saladBowl.start()
+    
+    let rewardCount = 0
+    let earningRatePerDay = this.store.machine.currentEarningRatePerDay
 
-    /*
-      - Need some sort of interval to check if we have a hashrate
-      - Ask Daniel if we have one with the WebSocket
-    */
+    this.store.rewards.allRewards.map(reward => {
+      if (earningRatePerDay && reward.price <= earningRatePerDay) {
+        rewardCount++
+      }
+    })
+
+    this.earningRatePerDay = earningRatePerDay
+    this.rewardsOverTime = rewardCount
   }
 
   @action
   abortMachineTest = () => {
+    console.log('>> [[ProfileStore] abortMachineTest] <<')
+    this.store.saladBowl.stop()
+  }
+
+  @action
+  restartMachineTest = () => {
+    console.log('>> [[ProfileStore] restartMachineTest] <<')
     // this.store.saladBowl.stop()
+    // this.store.saladBowl.start()
   }
 
   sleep = (ms: number) => {

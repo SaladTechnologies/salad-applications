@@ -16,6 +16,12 @@ export class MachineStore {
   }
 
   @computed
+  get currentEarningRatePerDay(): number | undefined {
+    const earningRate = this.currentEarningRate ? +(this.currentEarningRate * 86400).toFixed(3) : undefined
+    return earningRate
+  }
+
+  @computed
   get minerId(): string | undefined {
     if (this.store.machine.currentMachine !== undefined) {
       return this.store.machine.currentMachine.minerId

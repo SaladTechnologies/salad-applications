@@ -8,7 +8,17 @@ import image from '../../assets/Home - How it Works.svg'
 
 // Components
 import { OnboardingPage } from '../../../../components'
-import { Step, ListInline, Divider, PhraseViewer, PhraseType, Button, ErrorText, EarningsOverTime, EarningsPerDay } from '../../../../components'
+import {
+  Step,
+  ListInline,
+  Divider,
+  PhraseViewer,
+  PhraseType,
+  Button,
+  ErrorText,
+  RewardsOverTime,
+  EarningsPerDay,
+} from '../../../../components'
 import { TestResult } from '../../../../components/elements/TestResults/TestResult'
 // import { PluginInfo } from '../../../salad-bowl/models/PluginInfo'
 // import { ErrorMessage } from '../../../salad-bowl/models'
@@ -19,18 +29,22 @@ import classnames from 'classnames'
 
 interface Props extends WithStyles<typeof styles> {
   onTestMachine: () => void
+  onAbortTest: () => void
+  onRestartTest: () => void
   pluginName: string
-  pluginStatus?: string
+  pluginStatus: string
   errorCategory?: string
-  errorMessage?: string,
-  installPath?: string,
+  errorMessage?: string
+  installPath?: string
+  earningRatePerDay?: number
+  rewardsOverTime?: number
 }
 
 class _MachineTest extends Component<Props> {
   state = {
     togglePhraseViewer: false,
-    toggleTestResults: true,
-    toggleTestButton: false,
+    toggleTestResults: false,
+    toggleTestButton: true,
   }
 
   handleTestMachine = () => {
@@ -49,15 +63,37 @@ class _MachineTest extends Component<Props> {
     this.setState({
       togglePhraseViewer: false,
       toggleTestButton: true,
+      toggleTestResults: false,
     })
 
-    const { onTestMachine } = this.props
+    const { onAbortTest } = this.props
 
-    if (onTestMachine) onTestMachine()
+    if (onAbortTest) onAbortTest()
+  }
+
+  handleRestartTest = () => {
+    this.setState({
+      togglePhraseViewer: false,
+      toggleTestButton: true,
+      toggleTestResults: false,
+    })
+
+    const { onRestartTest } = this.props
+
+    if (onRestartTest) onRestartTest()
   }
 
   render() {
-    const { pluginName, pluginStatus, errorCategory, errorMessage, installPath, classes } = this.props
+    const {
+      pluginName,
+      pluginStatus,
+      errorCategory,
+      errorMessage,
+      installPath,
+      earningRatePerDay,
+      rewardsOverTime,
+      classes,
+    } = this.props
 
     const componentList: ReactNode[] = [
       <Step active={true} complete={false} label={'1. Testing'} />,
@@ -72,8 +108,8 @@ class _MachineTest extends Component<Props> {
         </div>
         <Divider />
         <div className={classes.earnings}>
-          <EarningsPerDay className={classes.earningsPerDay} earnings={0.24} />
-          <EarningsOverTime className={classes.earningsOverTime} rewards={35} hours={24} />
+          <EarningsPerDay className={classes.earningsPerDay} earnings={earningRatePerDay} />
+          <RewardsOverTime className={classes.earningsOverTime} rewards={rewardsOverTime} hours={24} />
         </div>
         <Divider />
         <div className={'testing'}>
@@ -99,7 +135,12 @@ class _MachineTest extends Component<Props> {
             </>
           )}
 
-          {pluginStatus === 'stopped' && (
+          {pluginStatus === 'running' && (
+            <h1>HELLO WORLD</h1>
+          )}
+
+          {/* {pluginStatus === 'stopped' && ( */}
+          {this.state.toggleTestResults && (
             <>
               <TestResult
                 pluginName={pluginName}
@@ -112,7 +153,7 @@ class _MachineTest extends Component<Props> {
               {errorCategory === 'antiVirus' && (
                 <Button
                   uppercase
-                  onClick={this.handleTestMachine}
+                  onClick={this.handleRestartTest}
                   className={classnames(classes.startTestBtn, classes.marginTop)}
                 >
                   Test again

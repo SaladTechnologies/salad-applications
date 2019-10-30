@@ -180,7 +180,6 @@ export class NativeStore {
   //     }
   //   }
   //   if (this.isOnline !== prevOnline) {
-  //     console.log('>> [[NativeStore] checkOnlineStatus]')
   //     this.store.routing.replace('/')
   //   }
   // })
@@ -239,8 +238,6 @@ export class NativeStore {
       this.store.machine.setCurrentMachine(machine)
       this.store.analytics.trackMachine(machine)
 
-      console.log('>> [[NativeStore] registerMachine]')
-
       if (!this.store.profile.isOnboarding) {
         this.store.routing.replace('/')
       }
@@ -264,8 +261,6 @@ export class NativeStore {
     this.skippedCompatCheck = this.validOperatingSystem && this.validGPUs
     this.loadingMachineInfo = false
 
-    console.log('>> [[NativeStore] setMachineInfo]')
-
     if (!this.store.profile.isOnboarding) {
       this.store.routing.replace('/')
     }
@@ -279,7 +274,6 @@ export class NativeStore {
 
     Storage.setItem(compatibilityKey, 'true')
 
-    console.log('>> [[NativeStore] skipCompatibility]')
     this.store.routing.replace('/')
   }
 
@@ -301,7 +295,6 @@ export class NativeStore {
 
   @action
   setInstallPath = (path: string) => {
-    console.log('++ [[NativeStore] setInstallPath] path: ', path)
     this.installPath = path
   }
 

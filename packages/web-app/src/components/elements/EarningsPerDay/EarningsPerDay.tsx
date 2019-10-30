@@ -11,7 +11,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 
 interface Props extends WithStyles<typeof styles> {
-  earnings: number | string
+  earnings: number | string | undefined
   className?: string
 }
 
@@ -26,7 +26,7 @@ class _EarningsPerDay extends Component<Props> {
           <br />
           earnings per day
         </RewardHeader>
-        <div className={classnames(classes.earningsPerDay)}>${earnings}</div>
+        <div className={classnames(classes.earningsPerDay)}>${earnings || '-.--'}</div>
       </div>
     )
   }

@@ -39,7 +39,7 @@ export * from './elements/TestResults/ResultContent/UnknownFailure'
 export * from './elements/NotificationIcons/Success'
 export * from './elements/NotificationIcons/Warning'
 export * from './elements/NotificationIcons/Error'
-export * from './elements/EarningsOverTime/EarningsOverTime'
+export * from './elements/RewardsOverTime/RewardsOverTime'
 export * from './elements/EarningsPerDay/EarningsPerDay'
 
 // Primitive

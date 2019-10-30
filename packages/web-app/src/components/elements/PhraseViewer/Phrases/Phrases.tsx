@@ -110,7 +110,6 @@ class _Phrases extends Component<Props> {
   }
 
   phraseTimer = setInterval(() => {
-    console.log('>> [[Phrases] phraseTimer] interval')
     this.setPhrase()
   }, this.getPhraseDelay())
 
@@ -120,7 +119,6 @@ class _Phrases extends Component<Props> {
   }
 
   componentWillUnmount() {
-    console.log('>> [[Phrases] phraseTimer] Outside clear interval')
     clearInterval(this.phraseTimer)
   }
 
