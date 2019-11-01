@@ -74,7 +74,11 @@ export default class Routes extends Component {
     }
 
     if (this.store.native.apiVersion < 6) {
-      return <Route render={() => <LoadingPage text="Salad Is Out of Date, Please Update to v0.3.3 to Continue." />} />
+      return (
+        <Route
+          render={() => <LoadingPage text="Salad Is Out of Date, Please Update to the Latest Version to Continue." />}
+        />
+      )
     }
 
     let isElectron = this.store.native.isNative
