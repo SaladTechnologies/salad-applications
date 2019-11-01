@@ -122,7 +122,7 @@ export class SaladBowlStore {
     }
 
     this.plugin.name = pluginDefinition.name
-    this.plugin.status = PluginStatus.Stopped
+    this.plugin.status = PluginStatus.Initializing
 
     yield this.store.native.send('start-salad', pluginDefinition)
 
@@ -140,6 +140,7 @@ export class SaladBowlStore {
   @action.bound
   stop = flow(function*(this: SaladBowlStore) {
     yield this.store.native.send('stop-salad')
+    this.plugin.status = PluginStatus.Stopped
 
     this.sendRunningStatus()
     if (this.runningHeartbeat) {
