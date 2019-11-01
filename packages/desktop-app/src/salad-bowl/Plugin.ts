@@ -68,7 +68,7 @@ export class Plugin {
     console.log(`Starting ${exePath}`)
 
     //Spawns the plugin's process
-    let ls = spawn(exePath, [this.pluginDefinition.args || ''], {
+    let ls = spawn(`"${exePath}"`, [this.pluginDefinition.args || ''], {
       shell: true,
       windowsHide: true,
     })
@@ -150,7 +150,12 @@ export class Plugin {
 
     //Ensure that the download directory exists
     if (!fs.existsSync(downloadFolder)) {
-      await fs.promises.mkdir(downloadFolder, { recursive: true })
+      try {
+        await fs.promises.mkdir(downloadFolder, { recursive: true })
+      } catch (err) {
+        console.log(err)
+        return
+      }
     }
 
     //Removes any previous downloads
@@ -158,9 +163,8 @@ export class Plugin {
       await fs.promises.unlink(downloadFilename)
     }
 
-    let res = await axios.get(this.pluginDefinition.downloadUrl, { responseType: 'stream' })
-
     console.log(`Starting download for ${this.name}`)
+    let res = await axios.get(this.pluginDefinition.downloadUrl, { responseType: 'stream' })
 
     await new Promise(fulfill => {
       let stream = res.data.pipe(fs.createWriteStream(downloadFilename))
