@@ -7,7 +7,7 @@ const handleSettingsMenuClick = (store: RootStore, url: string) => {
   store.routing.push(url)
 }
 
-const mapStoreToProps = (store: RootStore) => {
+const mapStoreToProps = (store: RootStore): any => {
   type LinkList = { url: string; text: string }
   const menuItems: LinkList[] = [
     { url: '/settings/account', text: 'Account' },

@@ -2,7 +2,7 @@ import { connect } from '../../../connect'
 import { RootStore } from '../../../Store'
 import { Account } from './components'
 
-const mapStoreToProps = (store: RootStore) => ({
+const mapStoreToProps = (store: RootStore): any => ({
   onLogout: store.auth.signOut,
   // EditUsername
   profile: store.profile.currentProfile,

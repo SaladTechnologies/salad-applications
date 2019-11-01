@@ -15,7 +15,7 @@ const openLink = (url: string) => {
   window.open(url, '_blank')
 }
 
-const mapStoreToProps = (store: RootStore) => ({
+const mapStoreToProps = (store: RootStore): any => ({
   onDiscordClick: handleDiscord,
   onSupportClick: handleSupport,
 })

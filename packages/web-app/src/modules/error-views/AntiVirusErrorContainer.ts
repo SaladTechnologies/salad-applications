@@ -2,7 +2,7 @@ import { connect } from '../../connect'
 import { RootStore } from '../../Store'
 import { AntiVirusErrorPage } from './components/AntiVirusErrorPage'
 
-const mapStoreToProps = (store: RootStore) => {
+const mapStoreToProps = (store: RootStore): any => {
   type LinkList = { url: string; text: string }
   const avLinks: LinkList[] = [
     {
