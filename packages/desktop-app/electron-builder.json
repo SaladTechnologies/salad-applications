@@ -12,12 +12,12 @@
     "runAfterFinish": true,
     "allowToChangeInstallationDirectory": "true"
   },
-  "files": ["assets/*", "dist/*"],
+  "files": ["assets/*", "dist/main/*"],
   "win": {
     "icon": "assets/favicon.ico",
     "target": ["nsis"],
     "sign": "./sign.js",
-    "extraFiles": ["assets/*", "dist/salad-bowl"],
+    "extraFiles": ["assets/*"],
     "publish": {
       "provider": "s3",
       "bucket": "salad-app-releases"

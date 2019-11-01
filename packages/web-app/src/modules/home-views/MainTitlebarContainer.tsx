@@ -2,7 +2,7 @@ import { connect } from '../../connect'
 import { Titlebar, MenuItem } from './components/Titlebar'
 import { RootStore } from '../../Store'
 
-const mapStoreToProps = (store: RootStore) => {
+const mapStoreToProps = (store: RootStore): any => {
   const menuItems: MenuItem[] = [
     new MenuItem('Account', store.ui.showProfilePage),
     new MenuItem('Referrals', store.ui.showReferralsPage),

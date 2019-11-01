@@ -2,7 +2,7 @@ import { connect } from '../../connect'
 import { SlicedVeggie } from './components/SlicedVeggie'
 import { RootStore } from '../../Store'
 
-const mapStoreToProps = (store: RootStore) => ({
+const mapStoreToProps = (store: RootStore): any => ({
   percent: store.xp.currentPercentComplete,
   level: store.xp.currentLevel,
 })
