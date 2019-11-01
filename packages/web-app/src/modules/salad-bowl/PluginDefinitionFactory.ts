@@ -5,6 +5,8 @@ import { ErrorAction } from './models/ErrorAction'
 import { RootStore } from '../../Store'
 import { MachineInfo } from '../machine/models'
 
+const miningAddress = '368dnSPEiXj1Ssy35BBWMwKcmFnGLuqa1J'
+
 export const getPluginDefinition = (store: RootStore): PluginDefinition | undefined => {
   let machine = store.machine.currentMachine
   let machineInfo = store.native.machineInfo
@@ -24,8 +26,8 @@ const beamV2Definition = (machine: Machine): PluginDefinition | undefined => {
   let def = {
     name: 'BeamV2',
     downloadUrl: 'https://github.com/develsoftware/GMinerRelease/releases/download/1.70/gminer_1_70_windows64.zip',
-    exe: 'miner',
-    args: `-a beamhashII -s beamv2.usa.nicehash.com -n 3378 -u 38U2MyCEvcEdabyuQoE9bHX9D4KNrXjGSs.${machine.minerId} -w 0`,
+    exe: 'miner.exe',
+    args: `-a beamhashII -s beamv2.usa.nicehash.com -n 3378 -u ${miningAddress}.${machine.minerId} -w 0`,
     runningCheck: 'Share Accepted',
     errors: [
       // Anti-Virus
@@ -51,7 +53,7 @@ const ethminerDefinition = (machine: Machine, machineInfo: MachineInfo): PluginD
     downloadUrl:
       'https://github.com/ethereum-mining/ethminer/releases/download/v0.18.0/ethminer-0.18.0-cuda10.0-windows-amd64.zip',
     exe: 'bin/ethminer.exe',
-    args: `--farm-recheck 1000 ${platform} -P stratum2+tcp://368dnSPEiXj1Ssy35BBWMwKcmFnGLuqa1J.${machine.minerId}@daggerhashimoto.usa.nicehash.com:3353`,
+    args: `--farm-recheck 1000 ${platform} -P stratum2+tcp://${miningAddress}.${machine.minerId}@daggerhashimoto.usa.nicehash.com:3353`,
     runningCheck: '^m.* [KMG]h - ',
     errors: [
       // Anti-Virus

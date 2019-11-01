@@ -1,9 +1,8 @@
 import { observable, action, flow, computed } from 'mobx'
-import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr'
 import { PluginInfo } from './models/PluginInfo'
 import { StatusMessage } from './models/StatusMessage'
 import { PluginStatus } from './models/PluginStatus'
-import axios, { AxiosInstance } from 'axios'
+import { AxiosInstance } from 'axios'
 import { Config } from '../../config'
 import { RootStore } from '../../Store'
 import { MiningStatus } from '../machine/models'
@@ -13,15 +12,21 @@ import { MachineStatus } from './models/MachineStatus'
 import { getPluginDefinition } from './PluginDefinitionFactory'
 
 export class SaladBowlStore {
-  private readonly hubConnection: HubConnection
-  private readonly httpClient: AxiosInstance
   private runningHeartbeat?: NodeJS.Timeout
 
   @observable
   public plugin: PluginInfo = new PluginInfo('Unknown')
 
-  @observable
-  public connected: boolean = false
+  @computed
+  get canRun(): boolean {
+    return (
+      this.store.machine &&
+      this.store.machine.currentMachine !== undefined &&
+      this.store.machine.currentMachine.qualifying &&
+      this.store.native &&
+      this.store.native.machineInfo !== undefined
+    )
+  }
 
   @computed
   get isRunning(): boolean {
@@ -59,40 +64,9 @@ export class SaladBowlStore {
     }
   }
 
-  constructor(private readonly store: RootStore, private readonly axiosClient: AxiosInstance) {
-    this.httpClient = axios.create({
-      baseURL: `${Config.saladBowlUrl}/api/v1/`,
-    })
-
-    this.hubConnection = new HubConnectionBuilder().withUrl(`${Config.saladBowlUrl}/mainHub`).build()
-
-    this.hubConnection.on('ReceiveStatus', this.onReceiveStatus)
-    this.hubConnection.on('ReceiveError', this.onReceiveStatus)
-    this.hubConnection.onclose(this.onConnectionClose)
-    this.hubConnection.onreconnecting(this.onConnectionClose)
-    this.hubConnection.onreconnected(this.onConnectionStart)
-
-    this.connect()
-  }
-
-  private connect = () => {
-    this.hubConnection
-      .start()
-      .then(this.onConnectionStart)
-      .catch(this.onConnectionClose)
-  }
-
-  @action
-  onConnectionStart = () => {
-    this.connected = true
-    console.log('Connected to Salad Bowl')
-  }
-
-  @action
-  onConnectionClose = (error?: Error) => {
-    this.connected = false
-    console.log('Failed to connect to Salad Bowl. Will try again.')
-    setTimeout(() => this.connect(), 1000)
+  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
+    this.store.native.on('mining-status', this.onReceiveStatus)
+    this.store.native.on('mining-error', this.onReceiveError)
   }
 
   @action
@@ -109,19 +83,18 @@ export class SaladBowlStore {
       case ErrorCategory.AntiVirus:
         this.store.ui.showModal('/errors/anti-virus')
         break
-      case ErrorCategory.Driver:
-        this.store.ui.showModal('/errors/cuda')
-        break
-      case ErrorCategory.Network:
-        this.store.ui.showModal('/errors/network')
-        break
-      case ErrorCategory.Silent:
-        console.log('Ignoring silent error')
-        break
-      case ErrorCategory.Unknown:
-      default:
-        this.store.ui.showModal('/errors/unknown')
-        break
+      // case ErrorCategory.Driver:
+      //   this.store.ui.showModal('/errors/cuda')
+      //   break
+      // case ErrorCategory.Network:
+      //   this.store.ui.showModal('/errors/network')
+      //   break
+      // case ErrorCategory.Silent:
+      //   console.log('Ignoring silent error')
+      //   break
+      // case ErrorCategory.Unknown:
+      //   this.store.ui.showModal('/errors/unknown')
+      //   break
     }
   }
 
@@ -136,8 +109,8 @@ export class SaladBowlStore {
 
   @action.bound
   start = flow(function*(this: SaladBowlStore) {
-    if (!this.store.machine.currentMachine) {
-      console.log('Unable to find a valid plugin definition for this machine. Unable to start.')
+    if (!this.canRun) {
+      console.log('This machine is not able to run.')
       return
     }
 
@@ -151,7 +124,7 @@ export class SaladBowlStore {
     this.plugin.name = pluginDefinition.name
     this.plugin.status = PluginStatus.Stopped
 
-    yield this.httpClient.post('start', pluginDefinition)
+    yield this.store.native.send('start-salad', pluginDefinition)
 
     if (!this.runningHeartbeat) {
       this.runningHeartbeat = setInterval(() => {
@@ -166,7 +139,7 @@ export class SaladBowlStore {
 
   @action.bound
   stop = flow(function*(this: SaladBowlStore) {
-    yield this.httpClient.post('stop')
+    yield this.store.native.send('stop-salad')
 
     this.sendRunningStatus()
     if (this.runningHeartbeat) {
@@ -185,7 +158,7 @@ export class SaladBowlStore {
       status: this.machineStatus,
     }
     try {
-      yield this.axiosClient.post(`machines/${machineId}/status`, data)
+      yield this.axios.post(`machines/${machineId}/status`, data)
     } catch {}
   })
 }

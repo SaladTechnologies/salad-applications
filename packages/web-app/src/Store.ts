@@ -49,10 +49,10 @@ export class RootStore {
 
   constructor(readonly axios: AxiosInstance) {
     this.routing = new RouterStore()
-    this.saladBowl = new SaladBowlStore(this, axios)
     this.xp = new ExperienceStore(this, axios)
     this.machine = new MachineStore(this)
     this.native = new NativeStore(this, axios)
+    this.saladBowl = new SaladBowlStore(this, axios)
     this.auth = new AuthStore(this, axios)
     this.token = new TokenStore()
     this.rewards = new RewardStore(this, axios)
@@ -71,6 +71,12 @@ export class RootStore {
   @action.bound
   onLogin = flow(function*(this: RootStore) {
     var profile = yield this.profile.loadProfile()
+
+    if (!profile) {
+      this.auth.signOut()
+      return
+    }
+
     this.analytics.start(profile)
     this.referral.loadReferralCode()
     this.xp.refreshXp()

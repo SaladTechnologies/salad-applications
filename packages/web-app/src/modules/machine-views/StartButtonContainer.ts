@@ -7,7 +7,7 @@ const mapStoreToProps = (store: RootStore) => ({
   lifetimeBalance: store.balance.lifetimeBalance,
   onClick: store.saladBowl.toggleRunning,
   isRunning: store.saladBowl.isRunning,
-  startEnabled: store.saladBowl.connected && store.machine.minerId !== undefined,
+  startEnabled: store.saladBowl.canRun,
 })
 
 export const StartButtonContainer = connect(

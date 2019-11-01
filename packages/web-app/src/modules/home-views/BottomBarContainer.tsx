@@ -1,8 +1,7 @@
 import { BottomBar } from './components/BottomBar'
 import { connect } from '../../connect'
 import { Config } from '../../config'
-import { RootStore } from '../../Store';
-
+import { RootStore } from '../../Store'
 
 const handleDiscord = () => {
   openLink(Config.discordUrl)

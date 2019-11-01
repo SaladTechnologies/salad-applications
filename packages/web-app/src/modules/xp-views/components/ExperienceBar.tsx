@@ -100,7 +100,6 @@ class _ExperienceBar extends Component<Props> {
                   progress = (delta / totalRange) * 100
                 }
               }
-              console.log(progress)
               return (
                 <div
                   key={level.key}
