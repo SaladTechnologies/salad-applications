@@ -110,21 +110,33 @@ export class SaladBowlStore {
   @action
   onReceiveError = (message: ErrorMessage) => {
     this.store.analytics.trackMiningError(message.errorCategory, message.errorCode)
-    this.errorMessage = message.message
-    
+    // this.errorMessage = message.message
+
     // Show the error modal
     switch (message.errorCategory) {
       case ErrorCategory.AntiVirus:
         this.errorCategory = ErrorCategory.AntiVirus
-        this.store.ui.showModal('/errors/anti-virus')
+        this.errorMessage = 'Antivirus removed the miner'
+
+        if (!this.store.profile.isOnboarding) {
+          this.store.ui.showModal('/errors/anti-virus')
+        }
         break
       case ErrorCategory.Driver:
         this.errorCategory = ErrorCategory.Driver
-        this.store.ui.showModal('/errors/cuda')
+        this.errorMessage = 'Incompatible CUDA Drivers'
+
+        if (!this.store.profile.isOnboarding) {
+          this.store.ui.showModal('/errors/cuda')
+        }
         break
       case ErrorCategory.Network:
         this.errorCategory = ErrorCategory.Network
-        this.store.ui.showModal('/errors/network')
+        this.errorMessage = 'TODO: Need network copy'
+
+        if (!this.store.profile.isOnboarding) {
+          this.store.ui.showModal('/errors/network')
+        }
         break
       case ErrorCategory.Silent:
         console.log('Ignoring silent error')
@@ -132,7 +144,11 @@ export class SaladBowlStore {
       case ErrorCategory.Unknown:
       default:
         this.errorCategory = ErrorCategory.Unknown
-        this.store.ui.showModal('/errors/unknown')
+        this.errorMessage = 'TODO: Need unknown copy'
+        
+        if (!this.store.profile.isOnboarding) {
+          this.store.ui.showModal('/errors/unknown')
+        }
         break
     }
   }

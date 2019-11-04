@@ -85,8 +85,6 @@ class _AntivirusFailure extends Component<Props> {
             <FontAwesomeIcon className={classes.iconButton} icon={faClipboard} size={'sm'} />
           </CopyToClipboard>
         </div>
-
-        
       </div>
     )
   }

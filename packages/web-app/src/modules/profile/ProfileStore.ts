@@ -28,10 +28,10 @@ export class ProfileStore {
   public isOnboardingRedeem: boolean = false
 
   @observable
-  public isOnboardingRunning: boolean = false
+  public isOnboardingRunning: boolean = true
 
   @observable
-  public isOnboardingTesting: boolean = true
+  public isOnboardingTesting: boolean = false
   //#endregion
 
   @observable
@@ -175,8 +175,8 @@ export class ProfileStore {
   @action
   startMachineTest = () => {
     console.log('>> [[ProfileStore] startMachineTest] <<')
-    this.store.saladBowl.start()
-    
+    // this.store.saladBowl.start()
+
     let rewardCount = 0
     let earningRatePerDay = this.store.machine.currentEarningRatePerDay
 
@@ -193,7 +193,7 @@ export class ProfileStore {
   @action
   abortMachineTest = () => {
     console.log('>> [[ProfileStore] abortMachineTest] <<')
-    this.store.saladBowl.stop()
+    // this.store.saladBowl.stop()
   }
 
   @action
@@ -201,6 +201,14 @@ export class ProfileStore {
     console.log('>> [[ProfileStore] restartMachineTest] <<')
     // this.store.saladBowl.stop()
     // this.store.saladBowl.start()
+  }
+
+  @action
+  onNext = () => {
+    console.log('>> [[ProfileStore] onNext] <<')
+    // this.store.saladBowl.stop()
+    // this.store.saladBowl.start()
+    this.store.routing.replace('/')
   }
 
   sleep = (ms: number) => {

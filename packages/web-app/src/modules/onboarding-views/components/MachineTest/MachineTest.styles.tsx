@@ -9,14 +9,6 @@ export const styles = (theme: SaladTheme) => ({
     padding: '0 5rem',
   },
 
-  breadcrumb: {
-    width: '100%',
-
-    '& ul': {
-      width: '100%',
-    },
-  },
-
   content: {
     color: theme.lightGreen,
     fontSize: theme.medium,
@@ -42,7 +34,7 @@ export const styles = (theme: SaladTheme) => ({
   },
 
   stopTest: {
-    display: 'flex'
+    display: 'flex',
   },
 
   stopTestBtn: {
@@ -63,6 +55,16 @@ export const styles = (theme: SaladTheme) => ({
     },
   },
 
+  runTestLaterBtn: {
+    backgroundColor: 'transparent !important',
+    border: `solid 1px ${theme.green} !important`,
+    boxShadow: `none !important`,
+
+    '& .btn': {
+      color: `${theme.green} !important`,
+    },
+  },
+
   errorText: {
     width: '45%',
     margin: 0,
@@ -70,20 +72,5 @@ export const styles = (theme: SaladTheme) => ({
 
   marginTop: {
     marginTop: theme.xLarge,
-  },
-
-  earnings: {
-    display: 'flex',
-  },
-
-  earningsPerDay: {
-    order: 0,
-    width: '33%',
-    marginRight: 22,
-  },
-
-  earningsOverTime: {
-    order: 1,
-    width: '33%',
   },
 })

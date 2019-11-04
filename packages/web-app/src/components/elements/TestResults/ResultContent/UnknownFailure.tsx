@@ -16,8 +16,6 @@ class _UnknownFailure extends Component<Props> {
     return (
       <>
         <H4>Unknown error.</H4>
-        TODO: Something more comforting than this as our text. This could be an issue that is resolved later, maybe
-        encourage them to run the test again.
       </>
     )
   }

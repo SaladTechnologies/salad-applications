@@ -3,7 +3,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
 import classnames from 'classnames'
 import logo from './assets/SaladLockup-BlueBg.svg'
-import { Button } from '.'
+import { Button, OnboardingHeader } from '.'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -75,6 +75,7 @@ interface Props extends WithStyles<typeof styles> {
   title?: string
   subtitle?: string
   image?: string
+  leftContent?: React.ReactNode
   rightContent?: React.ReactNode
   rightColumnWidth?: string
   leftColumnPadding?: string
@@ -82,9 +83,12 @@ interface Props extends WithStyles<typeof styles> {
   hasBack?: boolean
   nextText?: string
   nextSubmitting?: boolean
-  fullHeightImg?: boolean,
-  alignItems?: string,
-  display?: string,
+  fullHeightImg?: boolean
+  alignItems?: string
+  display?: string
+  onboardingHeader?: boolean
+  earningRatePerDay?: number
+  rewardsOverTime?: number
   onBack?: () => void
   onNext?: () => void
 }
@@ -100,7 +104,11 @@ class _OnboardingPage extends Component<Props> {
       subtitle,
       onBack,
       image,
+      leftContent,
       rightContent,
+      onboardingHeader,
+      earningRatePerDay,
+      rewardsOverTime,
       classes,
       children,
     } = this.props
@@ -111,6 +119,7 @@ class _OnboardingPage extends Component<Props> {
           <img className={classes.logo} src={logo} />
           {title && <div className={classes.title}>{title}</div>}
           {subtitle && <div className={classes.subtitle}>{subtitle}</div>}
+          {leftContent}
           <div className={classes.childrenContainer}>{children}</div>
           <div>
             {hasBack && (
@@ -126,7 +135,13 @@ class _OnboardingPage extends Component<Props> {
           </div>
         </div>
         <div className={classnames(classes.imageContainer, classes.column)}>
-          {rightContent}
+          {!onboardingHeader && rightContent}
+          {onboardingHeader && (
+            <>
+              <OnboardingHeader earningRatePerDay={earningRatePerDay} rewardsOverTime={rewardsOverTime} />
+              {rightContent}
+            </>
+          )}
           {!rightContent && image && <img className={classes.image} src={image} />}
         </div>
       </div>

@@ -41,6 +41,7 @@ export * from './elements/NotificationIcons/Warning'
 export * from './elements/NotificationIcons/Error'
 export * from './elements/RewardsOverTime/RewardsOverTime'
 export * from './elements/EarningsPerDay/EarningsPerDay'
+export * from './elements/OnboardingHeader/OnboardingHeader'
 
 // Primitive
 export * from './primitives/content/Paragraph'

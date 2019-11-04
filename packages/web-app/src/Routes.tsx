@@ -15,6 +15,7 @@ import {
   WelcomePageContainer,
   TermsPageContainer,
   MachineTestContainer,
+  RunningContainer
 } from './modules/onboarding-views'
 import { HomePage } from './modules/home-views'
 import { LoadingPage } from './components'
@@ -67,6 +68,8 @@ export default class Routes extends Component {
       path = '/onboarding/terms'
     } else if (this.store.profile.isOnboardingTesting) {
       path = '/onboarding/machine-test'
+    } else if (this.store.profile.isOnboardingRunning) {
+      path = '/onboarding/running'
     }
 
     // This stops the page from loading multiple times
@@ -116,6 +119,7 @@ export default class Routes extends Component {
 
             <Route exact path="/onboarding/terms" component={TermsPageContainer} />
             <Route exact path="/onboarding/machine-test" component={MachineTestContainer} />
+            <Route exact path="/onboarding/running" component={RunningContainer} />
             {this.getOnboardingRedirect()}
           </AnimatedSwitch>
         )}
