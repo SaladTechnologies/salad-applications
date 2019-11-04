@@ -2,7 +2,7 @@ import { connect } from '../../connect'
 import { RootStore } from '../../Store'
 import { OfflineModal } from './components/OfflineModal'
 
-const mapStoreToProps = (store: RootStore) => ({
+const mapStoreToProps = (store: RootStore): any => ({
   isOnline: store.native.isOnline,
 })
 

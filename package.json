@@ -1,9 +1,6 @@
 {
   "name": "@saladtech/salad-applications",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build",

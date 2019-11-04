@@ -1,16 +1,24 @@
 import { app, BrowserWindow, ipcMain, shell, Input } from 'electron'
 import { DefaultTheme as theme } from './SaladTheme'
+import * as isOnline from 'is-online'
 import * as path from 'path'
 import * as si from 'systeminformation'
 import { SaladBridge } from './SaladBridge'
 import { Config } from './config'
-import { SaladBowl } from './SaladBowl'
 import { MachineInfo } from './models/machine/MachineInfo'
 import { autoUpdater } from 'electron-updater'
 import { Logger } from './Logger'
 import { exec } from 'child_process'
 import * as fs from 'fs'
-import { LogScraper } from './LogScraper'
+import { PluginManager } from './salad-bowl/PluginManager'
+import { PluginDefinition } from './salad-bowl/models/PluginDefinition'
+import { SaladBridgeNotificationService } from './salad-bowl/SaladBridgeNotificationService'
+import * as Sentry from '@sentry/electron'
+
+Sentry.init({ dsn: 'https://0a70874cde284d838a378e1cc3bbd963@sentry.io/1804227' })
+
+/** Path to the /static folder. Provided via electron-webpack */
+declare const __static: string
 
 //Overrides the console.log behavior
 Logger.connect()
@@ -19,34 +27,29 @@ const AutoLaunch = require('auto-launch')
 
 const getDesktopVersion = 'get-desktop-version'
 const setDesktopVersion = 'set-desktop-version'
+const start = 'start-salad'
+const stop = 'stop-salad'
 
 let mainWindow: BrowserWindow
-let onlineStatusWindow: BrowserWindow
 let offlineWindow: BrowserWindow
 
 let machineInfo: MachineInfo
-let saladBowl = new SaladBowl()
-let onlineStatus = false
 let updateChecked = false
+
+let pluginManager: PluginManager | undefined
 
 const getMachineInfo = () =>
   new Promise<MachineInfo>(() => {
-    si.getStaticData().then(data => {
-      machineInfo = {
-        version: data.version,
-        system: data.system,
-        bios: data.bios,
-        baseboard: data.baseboard,
-        chassis: data.chassis,
-        os: data.os,
-        uuid: data.uuid,
-        versions: data.versions,
-        cpu: data.cpu,
-        graphics: data.graphics,
-        net: data.net,
-        memLayout: data.memLayout,
-        diskLayout: data.diskLayout,
-      }
+    si.osInfo(os => {
+      si.system(system => {
+        si.graphics(graphics => {
+          machineInfo = {
+            system: system,
+            os: os,
+            graphics: graphics,
+          }
+        })
+      })
     })
   })
 
@@ -89,7 +92,7 @@ const createOfflineWindow = () => {
     resizable: false,
   })
 
-  offlineWindow.loadURL(`file://${__dirname}/offline.html`)
+  offlineWindow.loadURL(`file://${__static}/offline.html`)
 
   offlineWindow.on('close', () => {
     console.log('offline window close')
@@ -119,7 +122,6 @@ const createMainWindow = () => {
     frame: false,
     show: false,
     webPreferences: {
-      webSecurity: false,
       nodeIntegration: false,
       contextIsolation: false,
       preload: path.resolve(__dirname, './preload.js'),
@@ -136,8 +138,6 @@ const createMainWindow = () => {
 
   mainWindow.once('ready-to-show', () => {
     console.log('ready to show main window')
-    //Pre-fetch the machine info
-    getMachineInfo()
     mainWindow.show()
 
     if (offlineWindow) {
@@ -148,7 +148,14 @@ const createMainWindow = () => {
 
   //Create the bridge to listen to messages from the web-app
   let bridge = new SaladBridge(mainWindow)
+  let notificationService = new SaladBridgeNotificationService(bridge)
+  let exePath = app.getPath('exe')
+  let appPath = path.dirname(exePath)
+  console.log(`Path to Salad:${appPath}`)
+  pluginManager = new PluginManager(appPath, notificationService)
+
   ipcMain.on('js-dispatch', bridge.receiveMessage)
+
   var getMachineInfoPromise: Promise<void> | undefined = undefined
 
   //Listen for machine info requests
@@ -191,6 +198,14 @@ const createMainWindow = () => {
     app.quit()
   })
 
+  bridge.on(start, (pluginDefinition: PluginDefinition) => {
+    if (pluginManager) pluginManager.start(pluginDefinition)
+  })
+
+  bridge.on(stop, () => {
+    if (pluginManager) pluginManager.stop()
+  })
+
   bridge.on('send-log', (id: string) => {
     console.log('Sending logs')
     Logger.sendLog(id)
@@ -210,15 +225,6 @@ const createMainWindow = () => {
     saladAutoLauncher.disable()
   })
 
-  bridge.on('get-hashrate', () => {
-    console.log('Getting hashrate from logs')
-    bridge.send('set-hashrate', LogScraper.hashrate)
-  })
-
-  bridge.on('get-install-path', () => {
-    bridge.send('set-install-path', app.getAppPath())
-  })
-
   mainWindow.webContents.on('new-window', (e: Electron.Event, url: string) => {
     console.log(`opening new window at ${url}`)
     e.preventDefault()
@@ -228,8 +234,6 @@ const createMainWindow = () => {
   mainWindow.webContents.on('console-message', (_: Event, level: number, message: string, line: number) => {
     console.log(`console:${line}:${level}:${message}`)
   })
-
-  saladBowl.start()
 }
 
 const checkForUpdates = () => {
@@ -267,26 +271,24 @@ const checkForUpdates = () => {
   autoUpdater.checkForUpdatesAndNotify()
 }
 
-const onReady = () => {
-  //Create a window to check the online status
-  onlineStatusWindow = new BrowserWindow({ width: 0, height: 0, show: false })
-  onlineStatusWindow.loadURL(`file://${__dirname}/online-status.html`)
-
+const onReady = async () => {
+  //Start loading the machine info
+  getMachineInfo()
   getCudaData()
 
-  ipcMain.on('online-status-changed', (_: any, status: boolean) => {
-    onlineStatus = status
-    console.log('Online status updated: ' + status)
+  //Check to see if we are online
+  let online = await isOnline()
 
-    //If we are online, show the main app
-    if (onlineStatus) {
-      createMainWindow()
+  if (online) {
+    createMainWindow()
 
-      checkForUpdates()
-    } else {
-      createOfflineWindow()
-    }
-  })
+    checkForUpdates()
+
+    //Online
+  } else {
+    //Not online
+    createOfflineWindow()
+  }
 }
 
 const getCudaData = () => {
@@ -319,12 +321,12 @@ checkForMultipleInstance()
 app.on('ready', () => onReady())
 app.on('will-quit', () => {
   console.log('will quit')
-  saladBowl.stop()
+  if (pluginManager) pluginManager.stop()
 })
 
 process.on('exit', () => {
   console.log('Process exit')
-  saladBowl.stop()
+  if (pluginManager) pluginManager.stop()
 })
 
 app.on('window-all-closed', () => {
@@ -336,10 +338,10 @@ app.on('window-all-closed', () => {
 
 const cleanExit = () => {
   console.log('clean-exit')
-  saladBowl.stop()
+  if (pluginManager) pluginManager.stop()
   process.exit()
 }
 
 process.on('SIGINT', cleanExit) // catch ctrl-c
 process.on('SIGTERM', cleanExit) // catch kill
-console.log(`Running ${app.getName()} ${app.getVersion()}`)
+console.log(`Running ${app.name} ${app.getVersion()}`)

@@ -18,5 +18,5 @@
     "jsx": "preserve",
     "experimentalDecorators": true
   },
-  "include": ["src", ".storybook/ThemeDecorator.tsx", "electron-starter.js"]
+  "include": ["src"]
 }

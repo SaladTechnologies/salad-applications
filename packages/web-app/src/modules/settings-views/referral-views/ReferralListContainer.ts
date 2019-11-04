@@ -2,7 +2,7 @@ import { connect } from '../../../connect'
 import { ReferralList } from './components/ReferralList'
 import { RootStore } from '../../../Store'
 
-const mapStoreToProps = (store: RootStore) => ({
+const mapStoreToProps = (store: RootStore): any => ({
   referrals: store.referral.referrals,
 })
 

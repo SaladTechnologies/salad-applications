@@ -2,7 +2,7 @@ import { connect } from '../../connect'
 import { RootStore } from '../../Store'
 import { RedemptionErrorModal } from './components/RedemptionErrorModal'
 
-const mapStoreToProps = (store: RootStore) => ({
+const mapStoreToProps = (store: RootStore): any => ({
   onCloseClicked: store.ui.hideModal,
 })
 
