@@ -27,13 +27,19 @@ export const beamV2Definition = (machine: Machine): PluginDefinition | undefined
     name: 'BeamV2',
     downloadUrl: 'https://github.com/develsoftware/GMinerRelease/releases/download/1.70/gminer_1_70_windows64.zip',
     exe: 'miner.exe',
-    args: `-a beamhashII -s beamv2.usa.nicehash.com -n 3378 -u ${miningAddress}.${machine.minerId} -w 0`,
+    args: `-a beamhashII ${beamUser('usa', machine.minerId)} ${beamUser('eu', machine.minerId)} ${beamUser(
+      'hk',
+      machine.minerId,
+    )} ${beamUser('jp', machine.minerId)} ${beamUser('in', machine.minerId)} ${beamUser('br', machine.minerId)}`,
     runningCheck: 'Share Accepted',
     errors: [...standardErrors],
   }
 
   return def
 }
+
+const beamUser = (location: string, minerId: string) =>
+  `-s beamv2.${location}.nicehash.com -n 3378 -u ${miningAddress}.${minerId}`
 
 export const ethminerDefinition = (machine: Machine, machineInfo: MachineInfo): PluginDefinition | undefined => {
   let cuda = machineInfo.graphics.controllers.some(x => x.vendor.toLocaleLowerCase().includes('nvidia'))
