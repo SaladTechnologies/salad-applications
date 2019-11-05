@@ -57,7 +57,7 @@ const styles = (theme: SaladTheme) => ({
   title: {
     paddingTop: '2rem',
     fontFamily: 'SharpGroteskLight09',
-    fontSize: theme.xxLarge,
+    fontSize: 64, //theme.xxLarge,
     lineHeight: '54px',
   },
   subtitle: {
@@ -89,6 +89,12 @@ interface Props extends WithStyles<typeof styles> {
   onboardingHeader?: boolean
   earningRatePerDay?: number
   rewardsOverTime?: number
+  testingActive?: boolean
+  testingComplete?: boolean
+  runningActive?: boolean
+  runningComplete?: boolean
+  rewardActive?: boolean
+  rewardComplete?: boolean
   onBack?: () => void
   onNext?: () => void
 }
@@ -109,6 +115,12 @@ class _OnboardingPage extends Component<Props> {
       onboardingHeader,
       earningRatePerDay,
       rewardsOverTime,
+      testingActive,
+      testingComplete,
+      runningActive,
+      runningComplete,
+      rewardActive,
+      rewardComplete,
       classes,
       children,
     } = this.props
@@ -138,7 +150,16 @@ class _OnboardingPage extends Component<Props> {
           {!onboardingHeader && rightContent}
           {onboardingHeader && (
             <>
-              <OnboardingHeader earningRatePerDay={earningRatePerDay} rewardsOverTime={rewardsOverTime} />
+              <OnboardingHeader 
+                earningRatePerDay={earningRatePerDay} 
+                rewardsOverTime={rewardsOverTime} 
+                testingActive={testingActive}
+                testingComplete={testingComplete}
+                runningActive={runningActive}
+                runningComplete={runningComplete}
+                rewardActive={rewardActive}
+                rewardComplete={rewardComplete}
+              />
               {rightContent}
             </>
           )}

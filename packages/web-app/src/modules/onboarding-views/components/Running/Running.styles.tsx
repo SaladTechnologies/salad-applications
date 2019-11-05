@@ -2,5 +2,7 @@
 import { SaladTheme } from '../../../../SaladTheme'
 
 export const styles = (theme: SaladTheme) => ({
-  deleteme: {}
+  deleteme: {
+    color: theme.green
+  }
 })

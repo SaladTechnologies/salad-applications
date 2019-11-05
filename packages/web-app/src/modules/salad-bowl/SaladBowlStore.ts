@@ -34,6 +34,9 @@ export class SaladBowlStore {
   @observable
   public errorMessage?: string
 
+  // @observable
+  // public errorMessage?: string
+
   @computed
   get isRunning(): boolean {
     return this.plugin.status !== PluginStatus.Stopped && this.plugin.status !== PluginStatus.Unknown
@@ -100,17 +103,17 @@ export class SaladBowlStore {
         this.errorCategory = ErrorCategory.Driver
         this.errorMessage = 'Incompatible CUDA Drivers'
 
-        if (!this.store.profile.isOnboarding) {
-          this.store.ui.showModal('/errors/cuda')
-        }
+        // if (!this.store.profile.isOnboarding) {
+        //   this.store.ui.showModal('/errors/cuda')
+        // }
         break
       case ErrorCategory.Network:
         this.errorCategory = ErrorCategory.Network
         this.errorMessage = 'TODO: Need network copy'
 
-        if (!this.store.profile.isOnboarding) {
-          this.store.ui.showModal('/errors/network')
-        }
+        // if (!this.store.profile.isOnboarding) {
+        //   this.store.ui.showModal('/errors/network')
+        // }
         break
       case ErrorCategory.Silent:
         console.log('Ignoring silent error')
@@ -119,10 +122,10 @@ export class SaladBowlStore {
       default:
         this.errorCategory = ErrorCategory.Unknown
         this.errorMessage = 'TODO: Need unknown copy'
-        
-        if (!this.store.profile.isOnboarding) {
-          this.store.ui.showModal('/errors/unknown')
-        }
+
+        // if (!this.store.profile.isOnboarding) {
+        //   this.store.ui.showModal('/errors/unknown')
+        // }
         break
     }
   }
@@ -138,10 +141,10 @@ export class SaladBowlStore {
 
   @action.bound
   start = flow(function*(this: SaladBowlStore) {
-    if (!this.canRun) {
-      console.log('This machine is not able to run.')
-      return
-    }
+    // if (!this.canRun) {
+    //   console.log('This machine is not able to run.')
+    //   return
+    // }
 
     let pluginDefinition = getPluginDefinition(this.store)
 

@@ -24,11 +24,11 @@ interface Props extends WithStyles<typeof styles> {
   onNext: () => void
   pluginName: string
   pluginStatus: string
-  errorCategory?: string
-  errorMessage?: string
-  installPath?: string
-  earningRatePerDay?: number
-  rewardsOverTime?: number
+  errorCategory: string | undefined
+  errorMessage: string | undefined
+  installPath: string | undefined
+  earningRatePerDay: number | undefined
+  rewardsOverTime: number | undefined
 }
 
 class _MachineTest extends Component<Props> {
@@ -163,6 +163,7 @@ class _MachineTest extends Component<Props> {
         onboardingHeader
         earningRatePerDay={earningRatePerDay}
         rewardsOverTime={rewardsOverTime}
+        testingActive={true}
       ></OnboardingPage>
     )
   }

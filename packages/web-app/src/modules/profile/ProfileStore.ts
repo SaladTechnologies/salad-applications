@@ -28,17 +28,17 @@ export class ProfileStore {
   public isOnboardingRedeem: boolean = false
 
   @observable
-  public isOnboardingRunning: boolean = true
+  public isOnboardingRunning: boolean = false
 
   @observable
-  public isOnboardingTesting: boolean = false
+  public isOnboardingTesting: boolean = true
   //#endregion
 
   @observable
-  public earningRatePerDay: number | undefined = undefined
+  public earningRatePerDay: number | undefined
 
   @observable
-  public rewardsOverTime: number | undefined = undefined
+  public rewardsOverTime: number | undefined
 
   @computed
   public get isOnboarding(): boolean {
@@ -175,7 +175,7 @@ export class ProfileStore {
   @action
   startMachineTest = () => {
     console.log('>> [[ProfileStore] startMachineTest] <<')
-    // this.store.saladBowl.start()
+    this.store.saladBowl.start()
 
     let rewardCount = 0
     let earningRatePerDay = this.store.machine.currentEarningRatePerDay
@@ -193,7 +193,7 @@ export class ProfileStore {
   @action
   abortMachineTest = () => {
     console.log('>> [[ProfileStore] abortMachineTest] <<')
-    // this.store.saladBowl.stop()
+    this.store.saladBowl.stop()
   }
 
   @action

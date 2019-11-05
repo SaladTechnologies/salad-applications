@@ -24,7 +24,7 @@ import withStyles, { WithStyles } from 'react-jss'
 
 interface Props extends WithStyles<typeof styles> {
   pluginName: string
-  pluginStatus?: string
+  pluginStatus: string
   errorCategory?: string
   errorMessage?: string
   installPath?: string

@@ -13,7 +13,7 @@ interface Props extends WithStyles<typeof styles> {
   pluginName: string
   pluginStatus: string
   errorCategory?: string
-  errorMessage?: string,
+  errorMessage?: string
   installPath?: string
 }
 

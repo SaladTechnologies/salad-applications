@@ -67,7 +67,7 @@ export class NativeStore {
   // public hashrate: number = 0
 
   @observable
-  public installPath: string = ''
+  public installPath?: string
 
   //#endregion
 

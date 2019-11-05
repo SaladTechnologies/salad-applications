@@ -12,8 +12,8 @@ import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 
 interface Props extends WithStyles<typeof styles> {
-  active: boolean
-  complete: boolean
+  active?: boolean | false
+  complete?: boolean | false
   label: string
 }
 

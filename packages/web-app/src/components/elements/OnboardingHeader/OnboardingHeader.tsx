@@ -12,16 +12,32 @@ import withStyles, { WithStyles } from 'react-jss'
 interface Props extends WithStyles<typeof styles> {
   earningRatePerDay?: number
   rewardsOverTime?: number
+  testingActive?: boolean
+  testingComplete?: boolean
+  runningActive?: boolean
+  runningComplete?: boolean
+  rewardActive?: boolean
+  rewardComplete?: boolean
 }
 
 class _OnboardingHeader extends Component<Props> {
   render() {
-    const { earningRatePerDay, rewardsOverTime, classes } = this.props
+    const {
+      earningRatePerDay,
+      rewardsOverTime,
+      testingActive,
+      testingComplete,
+      runningActive,
+      runningComplete,
+      rewardActive,
+      rewardComplete,
+      classes,
+    } = this.props
 
     const componentList: ReactNode[] = [
-      <Step active={true} complete={false} label={'1. Testing'} />,
-      <Step active={false} complete={false} label={'2. Running'} />,
-      <Step active={false} complete={false} label={'3. Reward'} />,
+      <Step active={testingActive} complete={testingComplete} label={'1. Testing'} />,
+      <Step active={runningActive} complete={runningComplete} label={'2. Running'} />,
+      <Step active={rewardActive} complete={rewardComplete} label={'3. Reward'} />,
     ]
 
     return (
