@@ -188,6 +188,9 @@ export class ProfileStore {
 
     this.earningRatePerDay = earningRatePerDay
     this.rewardsOverTime = rewardCount
+
+    console.log('>> [[ProfileStore] startMachineTest] << earningRatePerDay: ', earningRatePerDay)
+    console.log('>> [[ProfileStore] startMachineTest] << rewardCount: ', rewardCount)
   }
 
   @action
@@ -204,11 +207,22 @@ export class ProfileStore {
   }
 
   @action
-  onNext = () => {
-    console.log('>> [[ProfileStore] onNext] <<')
-    // this.store.saladBowl.stop()
-    // this.store.saladBowl.start()
-    this.store.routing.replace('/')
+  onNext = (pathname: string) => {
+    this.isOnboardingComplete = this.isOnboardingRedeem = this.isOnboardingRunning = this.isOnboardingTesting = false
+
+    switch (pathname) {
+      case '/onboarding/running':
+        this.isOnboardingRunning = true
+        break
+      case '/onboarding/redeem':
+        this.isOnboardingRedeem = true
+        break
+      case '/onboarding/complete':
+        this.isOnboardingComplete = true
+        break
+    }
+
+    return this.store.routing.replace('/')
   }
 
   sleep = (ms: number) => {

@@ -21,7 +21,7 @@ interface Props extends WithStyles<typeof styles> {
   onTestMachine: () => void
   onAbortTest: () => void
   onRestartTest: () => void
-  onNext: () => void
+  onNext: (pathname: string) => void
   pluginName: string
   pluginStatus: string
   errorCategory: string | undefined
@@ -71,7 +71,7 @@ class _MachineTest extends Component<Props> {
   handleNext = () => {
     const { onNext } = this.props
 
-    if (onNext) onNext()
+    if (onNext) onNext('/onboarding/running')
   }
 
   render() {

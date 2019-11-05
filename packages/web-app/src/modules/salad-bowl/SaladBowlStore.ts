@@ -17,6 +17,24 @@ export class SaladBowlStore {
   @observable
   public plugin: PluginInfo = new PluginInfo('Unknown')
 
+  @observable
+  public errorCategory?: string
+
+  @observable
+  public errorMessage?: string
+
+  @observable
+  public initializingStatus: boolean = false
+
+  @observable
+  public runningStatus: boolean = false
+
+  @observable
+  public earningStatus: boolean = false
+
+  // @observable
+  // public errorMessage?: string
+
   @computed
   get canRun(): boolean {
     return (
@@ -27,15 +45,6 @@ export class SaladBowlStore {
       this.store.native.machineInfo !== undefined
     )
   }
-
-  @observable
-  public errorCategory?: string
-
-  @observable
-  public errorMessage?: string
-
-  // @observable
-  // public errorMessage?: string
 
   @computed
   get isRunning(): boolean {
@@ -48,10 +57,16 @@ export class SaladBowlStore {
       case PluginStatus.Installing:
         return MiningStatus.Installing
       case PluginStatus.Initializing:
+        this.setInitializingStatus
         return MiningStatus.Initializing
       case PluginStatus.Running:
-        if (this.store.balance.lastDeltaBalance > 0) return MiningStatus.Earning
-        else return MiningStatus.Running
+        if (this.store.balance.lastDeltaBalance > 0) {
+          this.setEarningStatus
+          return MiningStatus.Earning
+        } else {
+          this.setRunningStatus
+          return MiningStatus.Running
+        }
       case PluginStatus.Unknown:
       default:
         return MiningStatus.Stopped
@@ -139,6 +154,19 @@ export class SaladBowlStore {
     }
   }
 
+  @action
+  setInitializingStatus = () => {
+    this.initializingStatus = true
+  }
+  @action
+  setEarningStatus = () => {
+    this.earningStatus = true
+  }
+  @action
+  setRunningStatus = () => {
+    this.runningStatus = true
+  }
+
   @action.bound
   start = flow(function*(this: SaladBowlStore) {
     // if (!this.canRun) {
@@ -173,6 +201,8 @@ export class SaladBowlStore {
   stop = flow(function*(this: SaladBowlStore) {
     yield this.store.native.send('stop-salad')
     this.plugin.status = PluginStatus.Stopped
+
+    this.initializingStatus = this.runningStatus = this.earningStatus = false
 
     this.sendRunningStatus()
     if (this.runningHeartbeat) {

@@ -8,7 +8,8 @@ import image from '../../assets/Home - How it Works.svg'
 
 // Components
 import { OnboardingPage } from '../../../../components'
-import { P, ListUnstyled, MiningStatus } from '../../../../components'
+import { ListUnstyled, MiningStatus } from '../../../../components'
+import { StartButton } from '../../../machine-views/components/StartButton'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
@@ -17,16 +18,28 @@ import withStyles, { WithStyles } from 'react-jss'
 interface Props extends WithStyles<typeof styles> {
   earningRatePerDay: number | undefined
   rewardsOverTime: number | undefined
+  initializingStatus: boolean
+  runningStatus: boolean
+  earningStatus: boolean
 }
 
 class _Running extends Component<Props> {
   render() {
-    const { earningRatePerDay, rewardsOverTime, classes } = this.props
+    const { initializingStatus, runningStatus, earningRatePerDay, rewardsOverTime, earningStatus } = this.props
 
     const list: ReactNode[] = [
-      <MiningStatus label={'Initializing - First step! Salad is detecting your hashrate.'} completed={true} />,
-      <MiningStatus label={'Running - Salad detected a hashrate and is trying to submit a share.'} completed={true} />,
-      <MiningStatus label={'Earning - Salad is successfully submitting shares. You should see your balance rising.'} completed={false} />,
+      <MiningStatus
+        label={'Initializing - First step! Salad is detecting your hashrate.'}
+        completed={initializingStatus}
+      />,
+      <MiningStatus
+        label={'Running - Salad detected a hashrate and is trying to submit a share.'}
+        completed={runningStatus}
+      />,
+      <MiningStatus
+        label={'Earning - Salad is successfully submitting shares. You should see your balance rising.'}
+        completed={earningStatus}
+      />,
     ]
 
     const LeftElements = (
@@ -36,9 +49,7 @@ class _Running extends Component<Props> {
     )
     const RightElements = (
       <>
-        <P className={classes.deleteme}>
-          FOO!!!
-        </P>
+        <StartButton />
       </>
     )
 
