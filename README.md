@@ -12,7 +12,9 @@
   <img src="https://www.salad.io/wp-content/uploads/2019/05/Salad-Applications-Header.png" width="100%" />
 </center>
 
-Salad allows PC gamers to monetize latent computer time in return for digital goods and physical items - gamers can convert PC idle-time into things they love, like games, gift cards, downloadable content, subscriptions, donations, hardware and more. Most gamers use their computers less than 2 hours per day, but with Salad their PC is value-adding 24/7!
+Salad allows PC gamers to monetize latent computer time in return for digital goods and physical items - gamers can convert PC idle-time into things they love, like games, gift cards, downloadable content, subscriptions, donations, hardware and more. Most gamers use their computers less than two hours per day, but with Salad their PC is value-adding 24/7!
+
+To support this mission of generating useful content from idle computer time, we [mine for cryptocurrency](https://www.salad.io/blog/a-gamers-guide-to-blockchain-and-crypto/). Specifically, we use [GMiner](https://github.com/develsoftware/GMinerRelease/releases) to mine [BEAM](https://beam.mw/mining) and [Ethminer](https://github.com/ethereum-mining/ethminer) to mine in support of the [Ethereum](https://ethereum.org/) network.
 
 ## Table of contents
 
