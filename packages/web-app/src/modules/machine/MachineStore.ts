@@ -8,6 +8,10 @@ export class MachineStore {
 
   @computed
   get currentEarningRate(): number | undefined {
+    console.log('++---> this.store.native.machineInfo: ', this.store.native.machineInfo)
+    console.log('++---> this.currentMachine: ', this.currentMachine)
+    console.log('++---> this.currentMachine.earningRate: ', this.currentMachine && this.currentMachine.earningRate)
+
     if (this.store.native.machineInfo && this.currentMachine && this.currentMachine.earningRate) {
       return this.currentMachine.earningRate
     } else {

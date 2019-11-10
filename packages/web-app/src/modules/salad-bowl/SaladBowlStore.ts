@@ -57,16 +57,10 @@ export class SaladBowlStore {
       case PluginStatus.Installing:
         return MiningStatus.Installing
       case PluginStatus.Initializing:
-        this.setInitializingStatus
         return MiningStatus.Initializing
       case PluginStatus.Running:
-        if (this.store.balance.lastDeltaBalance > 0) {
-          this.setEarningStatus
-          return MiningStatus.Earning
-        } else {
-          this.setRunningStatus
-          return MiningStatus.Running
-        }
+        if (this.store.balance.lastDeltaBalance > 0) return MiningStatus.Earning
+        else return MiningStatus.Running
       case PluginStatus.Unknown:
       default:
         return MiningStatus.Stopped
@@ -97,6 +91,25 @@ export class SaladBowlStore {
   onReceiveStatus = (message: StatusMessage) => {
     this.plugin.name = message.name
     this.plugin.status = message.status
+
+    console.log('>>))()) [[SaladBowl] onReceiveStatus] this.plugin.status: ', this.plugin.status)
+    console.log(
+      '>>))()) [[SaladBowl] onReceiveStatus] this.store.balance.lastDeltaBalance: ',
+      this.store.balance.lastDeltaBalance,
+    )
+
+    switch (this.plugin.status) {
+      case PluginStatus.Initializing:
+        this.initializingStatus = true
+        break
+      case PluginStatus.Running:
+        if (this.store.balance.lastDeltaBalance > 0) {
+          this.earningStatus = true
+        } else {
+          this.runningStatus = true
+        }
+        break
+    }
   }
 
   @action
@@ -152,19 +165,6 @@ export class SaladBowlStore {
     } else {
       this.start()
     }
-  }
-
-  @action
-  setInitializingStatus = () => {
-    this.initializingStatus = true
-  }
-  @action
-  setEarningStatus = () => {
-    this.earningStatus = true
-  }
-  @action
-  setRunningStatus = () => {
-    this.runningStatus = true
   }
 
   @action.bound

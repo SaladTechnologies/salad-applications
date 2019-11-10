@@ -13,8 +13,8 @@ interface Props extends WithStyles<typeof styles> {}
 
 class _DriverFailure extends Component<Props> {
   state = {
-    nvidiaLink: '',
-    amdLink: '',
+    nvidiaLink: 'https://salad.zendesk.com/hc/en-us/articles/360035995751-How-to-update-my-Nvidia-Drivers',
+    amdLink: 'https://salad.zendesk.com/hc/en-us/articles/360035633852-How-to-update-my-AMD-Drivers',
   }
 
   render() {
@@ -23,8 +23,6 @@ class _DriverFailure extends Component<Props> {
     return (
       <>
         <H4>Looks like your drivers are incompatible with Salad, update them using these guides:</H4>
-        {/* <Button uppercase>Nvidia</Button>
-        <Button uppercase>AMD</Button> */}
         <div className={classes.buttonContainer}>
           <ExternalLink path={this.state.nvidiaLink} className={classes.supportButton}>
             Nvidia

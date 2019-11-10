@@ -7,15 +7,16 @@ import { styles } from './Running.styles'
 import image from '../../assets/Home - How it Works.svg'
 
 // Components
-import { OnboardingPage } from '../../../../components'
-import { ListUnstyled, MiningStatus } from '../../../../components'
+import { ListUnstyled, MiningStatus, Button, OnboardingPage } from '../../../../components'
 import { StartButton } from '../../../machine-views/components/StartButton'
+import { UserStatsSummary } from '../../../profile-views/components/UserStatsSummary'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
-// import classnames from 'classnames'
+import classnames from 'classnames'
 
 interface Props extends WithStyles<typeof styles> {
+  onNext: (pathname: string) => void
   earningRatePerDay: number | undefined
   rewardsOverTime: number | undefined
   initializingStatus: boolean
@@ -24,8 +25,14 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _Running extends Component<Props> {
+  handleNext = () => {
+    const { onNext } = this.props
+
+    if (onNext) onNext('/onboarding/redeem')
+  }
+
   render() {
-    const { initializingStatus, runningStatus, earningRatePerDay, rewardsOverTime, earningStatus } = this.props
+    const { initializingStatus, runningStatus, earningRatePerDay, rewardsOverTime, earningStatus, classes } = this.props
 
     const list: ReactNode[] = [
       <MiningStatus
@@ -48,9 +55,20 @@ class _Running extends Component<Props> {
       </>
     )
     const RightElements = (
-      <>
-        <StartButton />
-      </>
+      <div className={classes.displayFlex}>
+        <div className={classes.appStartButton}>
+          <StartButton startEnabled={runningStatus} isRunning={runningStatus} />
+          <div className={classes.userStatsSummary}>
+            <UserStatsSummary miningStatus={runningStatus ? 'Running' : earningStatus ? 'Earning' : undefined} />
+          </div>
+        </div>
+
+        {earningStatus && (
+          <Button uppercase onClick={this.handleNext} className={classnames(classes.startTestBtn, classes.marginTop)}>
+            Next
+          </Button>
+        )}
+      </div>
     )
 
     return (
