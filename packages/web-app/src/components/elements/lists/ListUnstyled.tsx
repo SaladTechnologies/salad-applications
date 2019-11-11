@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, ReactNode } from 'react'
 
 // Theme
 import { SaladTheme } from '../../../SaladTheme'
@@ -15,16 +15,22 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  list: string[]
+  list?: string[],
+  componentList?: ReactNode[]
 }
 
 class _ListUnstyled extends Component<Props> {
   render() {
-    const { list, classes } = this.props
+    const { list, componentList, classes } = this.props
 
     return (
       <ul className={classnames(classes.listUnstyled)}>
-        {list.map((item, index) => {
+        {list &&
+          list.map((item, index) => {
+            return <li key={index}>{item}</li>
+          })}
+
+        {componentList && componentList.map((item, index) => {
           return <li key={index}>{item}</li>
         })}
       </ul>

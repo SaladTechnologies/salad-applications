@@ -2,7 +2,7 @@ import { connect } from '../../connect'
 import { Titlebar } from './components/Titlebar'
 import { RootStore } from '../../Store'
 
-const mapStoreToProps = (store: RootStore) => {
+const mapStoreToProps = (store: RootStore): any => {
   return {
     showWindowActions: store.native.isNative,
     onMinimize: store.native.minimizeWindow,

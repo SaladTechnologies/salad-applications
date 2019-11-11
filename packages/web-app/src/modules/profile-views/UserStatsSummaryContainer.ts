@@ -2,7 +2,7 @@ import { connect } from '../../connect'
 import { RootStore } from '../../Store'
 import { UserStatsSummary } from './components/UserStatsSummary'
 
-const mapStoreToProps = (store: RootStore) => ({
+const mapStoreToProps = (store: RootStore): any => ({
   earningRate: store.machine.currentEarningRate,
   miningStatus: store.saladBowl.status,
 })

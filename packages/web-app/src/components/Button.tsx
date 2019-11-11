@@ -14,7 +14,8 @@ const styles = (theme: SaladTheme) => ({
     userSelect: 'none',
     color: (props: Props) => (props.dark ? theme.darkBlue : theme.lightGreen),
     fontSize: '.625rem',
-    fontFamily: 'sharpGroteskLight25',
+    fontFamily: theme.fontGroteskLight25,
+    
     '&:hover': {
       opacity: 0.8,
     },
@@ -69,7 +70,7 @@ class _Button extends Component<Props> {
       >
         <button
           type={type}
-          className={classnames(classes.button, {
+          className={classnames('btn', classes.button, {
             [classes.disabled]: !enabled,
             [classes.enabled]: enabled,
           })}

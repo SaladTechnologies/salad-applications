@@ -5,6 +5,8 @@ import { ErrorAction } from './models/ErrorAction'
 import { RootStore } from '../../Store'
 import { MachineInfo } from '../machine/models'
 
+const miningAddress = '368dnSPEiXj1Ssy35BBWMwKcmFnGLuqa1J'
+
 export const getPluginDefinition = (store: RootStore): PluginDefinition | undefined => {
   let machine = store.machine.currentMachine
   let machineInfo = store.native.machineInfo
@@ -13,35 +15,33 @@ export const getPluginDefinition = (store: RootStore): PluginDefinition | undefi
     return undefined
   }
 
-  if (store.native.gpuNames.some(x => x.includes('1050'))) {
-    return beamV2Definition(machine)
-  } else {
-    return ethminerDefinition(machine, machineInfo)
-  }
+  // if (store.native.gpuNames.some(x => x.includes('1050'))) {
+  return beamV2Definition(machine)
+  // } else {
+  // return ethminerDefinition(machine, machineInfo)
+  // }
 }
 
-const beamV2Definition = (machine: Machine): PluginDefinition | undefined => {
+export const beamV2Definition = (machine: Machine): PluginDefinition | undefined => {
   let def = {
     name: 'BeamV2',
     downloadUrl: 'https://github.com/develsoftware/GMinerRelease/releases/download/1.70/gminer_1_70_windows64.zip',
-    exe: 'miner',
-    args: `-a beamhashII -s beamv2.usa.nicehash.com -n 3378 -u 38U2MyCEvcEdabyuQoE9bHX9D4KNrXjGSs.${machine.minerId} -w 0`,
+    exe: 'miner.exe',
+    args: `-a beamhashII ${beamUser('usa', machine.minerId)} ${beamUser('eu', machine.minerId)} ${beamUser(
+      'hk',
+      machine.minerId,
+    )} ${beamUser('jp', machine.minerId)} ${beamUser('in', machine.minerId)} ${beamUser('br', machine.minerId)}`,
     runningCheck: 'Share Accepted',
-    errors: [
-      // Anti-Virus
-      {
-        message: 'Anti-hacking system detected modification of the miner memory',
-        errorCode: 20001,
-        errorCategory: ErrorCategory.AntiVirus,
-        errorAction: ErrorAction.Stop,
-      },
-    ],
+    errors: [...standardErrors],
   }
 
   return def
 }
 
-const ethminerDefinition = (machine: Machine, machineInfo: MachineInfo): PluginDefinition | undefined => {
+const beamUser = (location: string, minerId: string) =>
+  `-s beamv2.${location}.nicehash.com -n 3378 -u ${miningAddress}.${minerId}`
+
+export const ethminerDefinition = (machine: Machine, machineInfo: MachineInfo): PluginDefinition | undefined => {
   let cuda = machineInfo.graphics.controllers.some(x => x.vendor.toLocaleLowerCase().includes('nvidia'))
 
   let platform = cuda ? '-U' : '-G'
@@ -51,22 +51,10 @@ const ethminerDefinition = (machine: Machine, machineInfo: MachineInfo): PluginD
     downloadUrl:
       'https://github.com/ethereum-mining/ethminer/releases/download/v0.18.0/ethminer-0.18.0-cuda10.0-windows-amd64.zip',
     exe: 'bin/ethminer.exe',
-    args: `--farm-recheck 1000 ${platform} -P stratum2+tcp://368dnSPEiXj1Ssy35BBWMwKcmFnGLuqa1J.${machine.minerId}@daggerhashimoto.usa.nicehash.com:3353`,
+    args: `--farm-recheck 1000 ${platform} -P stratum2+tcp://${miningAddress}.${machine.minerId}@daggerhashimoto.usa.nicehash.com:3353`,
     runningCheck: '^m.* [KMG]h - ',
     errors: [
-      // Anti-Virus
-      {
-        message: 'is not recognized as an internal or external command',
-        errorCode: 100000000,
-        errorCategory: ErrorCategory.AntiVirus,
-        errorAction: ErrorAction.Stop,
-      },
-      {
-        message: 'The system cannot find the path specified',
-        errorCode: 100000002,
-        errorCategory: ErrorCategory.AntiVirus,
-        errorAction: ErrorAction.Stop,
-      },
+      ...standardErrors,
       // CUDA
       {
         message: '3221225595',
@@ -163,3 +151,19 @@ const ethminerDefinition = (machine: Machine, machineInfo: MachineInfo): PluginD
 
   return def
 }
+
+const standardErrors = [
+  // Anti-Virus
+  {
+    message: 'is not recognized as an internal or external command',
+    errorCode: 100000000,
+    errorCategory: ErrorCategory.AntiVirus,
+    errorAction: ErrorAction.Stop,
+  },
+  {
+    message: 'The system cannot find the path specified',
+    errorCode: 100000002,
+    errorCategory: ErrorCategory.AntiVirus,
+    errorAction: ErrorAction.Stop,
+  },
+]

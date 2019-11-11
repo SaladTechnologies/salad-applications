@@ -16,13 +16,15 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  className?: string
+}
 
 class _ErrorText extends Component<Props> {
   render() {
-    const { children, classes } = this.props
+    const { className, children, classes } = this.props
 
-    return <div className={classnames(classes.errorText)}>{children}</div>
+    return <div className={classnames(className, classes.errorText)}>{children}</div>
   }
 }
 

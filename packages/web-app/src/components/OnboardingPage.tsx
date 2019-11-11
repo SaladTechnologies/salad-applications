@@ -3,7 +3,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
 import classnames from 'classnames'
 import logo from './assets/SaladLockup-BlueBg.svg'
-import { Button } from '.'
+import { Button, OnboardingHeader } from '.'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -29,7 +29,7 @@ const styles = (theme: SaladTheme) => ({
   contentContainer: {
     color: theme.lightGreen,
     display: 'flex',
-    padding: '4rem',
+    padding: (props: Props) => props.leftColumnPadding || '4rem',
     flexDirection: 'column',
     alignItems: 'flex-start',
     flex: '1 1 0',
@@ -37,13 +37,15 @@ const styles = (theme: SaladTheme) => ({
     minWidth: 0,
   },
   imageContainer: {
-    display: 'flex',
+    display: (props: Props) => props.display || 'flex',
+    padding: (props: Props) => props.rightColumnPadding || 0,
     justifyContent: 'center',
-    alignItems: (props: Props) => (props.fullHeightImg ? 'stretch' : 'center'),
+    alignItems: (props: Props) => (props.fullHeightImg ? 'stretch' : props.alignItems || 'center'),
     flex: '1 1 0',
     flexBasis: 0,
-    minWidth: 0,
+    minWidth: (props: Props) => props.rightColumnWidth || 0,
     overflow: 'hidden',
+    position: 'relative',
   },
   image: {
     objectFit: 'cover',
@@ -56,7 +58,7 @@ const styles = (theme: SaladTheme) => ({
   title: {
     paddingTop: '2rem',
     fontFamily: 'SharpGroteskLight09',
-    fontSize: theme.xxLarge,
+    fontSize: 64, //theme.xxLarge,
     lineHeight: '54px',
   },
   subtitle: {
@@ -74,11 +76,26 @@ interface Props extends WithStyles<typeof styles> {
   title?: string
   subtitle?: string
   image?: string
+  leftContent?: React.ReactNode
   rightContent?: React.ReactNode
+  rightColumnWidth?: string
+  leftColumnPadding?: string
+  rightColumnPadding?: string
   hasBack?: boolean
   nextText?: string
   nextSubmitting?: boolean
   fullHeightImg?: boolean
+  alignItems?: string
+  display?: string
+  onboardingHeader?: boolean
+  earningRatePerDay?: number
+  rewardsOverTime?: number
+  testingActive?: boolean
+  testingComplete?: boolean
+  runningActive?: boolean
+  runningComplete?: boolean
+  rewardActive?: boolean
+  rewardComplete?: boolean
   onBack?: () => void
   onNext?: () => void
 }
@@ -94,7 +111,17 @@ class _OnboardingPage extends Component<Props> {
       subtitle,
       onBack,
       image,
+      leftContent,
       rightContent,
+      onboardingHeader,
+      earningRatePerDay,
+      rewardsOverTime,
+      testingActive,
+      testingComplete,
+      runningActive,
+      runningComplete,
+      rewardActive,
+      rewardComplete,
       classes,
       children,
     } = this.props
@@ -105,6 +132,7 @@ class _OnboardingPage extends Component<Props> {
           <img className={classes.logo} src={logo} />
           {title && <div className={classes.title}>{title}</div>}
           {subtitle && <div className={classes.subtitle}>{subtitle}</div>}
+          {leftContent}
           <div className={classes.childrenContainer}>{children}</div>
           <div>
             {hasBack && (
@@ -112,13 +140,30 @@ class _OnboardingPage extends Component<Props> {
                 Back
               </Button>
             )}
-            <Button className={classes.nextButton} onClick={onNext} loading={nextSubmitting}>
-              {nextText ? nextText : 'Next'}
-            </Button>
+            {onNext && (
+              <Button className={classes.nextButton} onClick={onNext} loading={nextSubmitting}>
+                {nextText ? nextText : 'Next'}
+              </Button>
+            )}
           </div>
         </div>
         <div className={classnames(classes.imageContainer, classes.column)}>
-          {rightContent}
+          {!onboardingHeader && rightContent}
+          {onboardingHeader && (
+            <>
+              <OnboardingHeader 
+                earningRatePerDay={earningRatePerDay} 
+                rewardsOverTime={rewardsOverTime} 
+                testingActive={testingActive}
+                testingComplete={testingComplete}
+                runningActive={runningActive}
+                runningComplete={runningComplete}
+                rewardActive={rewardActive}
+                rewardComplete={rewardComplete}
+              />
+              {rightContent}
+            </>
+          )}
           {!rightContent && image && <img className={classes.image} src={image} />}
         </div>
       </div>

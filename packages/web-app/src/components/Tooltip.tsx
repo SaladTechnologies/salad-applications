@@ -1,6 +1,7 @@
 import React from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
+import classnames from 'classnames'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -29,11 +30,12 @@ interface Props extends WithStyles<typeof styles> {
   title?: string
   text?: string
   width?: string
+  className?: string
   children?: React.ReactNode
 }
 
-const _Tooltip: React.StatelessComponent<Props> = ({ text, title, classes, children }) => (
-  <div className={classes.container}>
+const _Tooltip: React.StatelessComponent<Props> = ({ text, title, className, classes, children }) => (
+  <div className={classnames(className, classes.container)}>
     {title && <div className={classes.title}>{title}</div>}
     <div className={classes.text}>
       {text}

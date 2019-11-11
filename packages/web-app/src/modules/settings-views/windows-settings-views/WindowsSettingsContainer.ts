@@ -2,7 +2,7 @@ import { connect } from '../../../connect'
 import { RootStore } from '../../../Store'
 import { WindowsSettings } from './components'
 
-const mapStoreToProps = (store: RootStore) => ({
+const mapStoreToProps = (store: RootStore): any => ({
   // onCloseClicked: () => store.ui.hideModal(),
 })
 

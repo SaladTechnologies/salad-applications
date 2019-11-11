@@ -9,7 +9,7 @@ import classnames from 'classnames'
 
 const styles = (theme: SaladTheme) => ({
   appBody: {
-    fontFamily: theme.fontGroteskBook19,
+    fontFamily: (props: Props) => props.fontLight ? theme.fontGroteskLight25 : theme.fontGroteskBook19,
     fontSize: theme.small,
     lineHeight: theme.medium,
   },
@@ -17,6 +17,7 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   className?: string
+  fontLight?: boolean
 }
 
 class _P extends Component<Props> {

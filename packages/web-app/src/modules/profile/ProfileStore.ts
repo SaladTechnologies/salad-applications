@@ -20,13 +20,35 @@ export class ProfileStore {
   @observable
   public onboarding: boolean = false
 
+  //#region Not sure if we need these
+  @observable
+  public isOnboardingComplete: boolean = false
+
+  @observable
+  public isOnboardingRedeem: boolean = false
+
+  @observable
+  public isOnboardingRunning: boolean = false
+
+  @observable
+  public isOnboardingTesting: boolean = true
+  //#endregion
+
+  @observable
+  public earningRatePerDay: number | undefined
+
+  @observable
+  public rewardsOverTime: number | undefined
+
   @computed
   public get isOnboarding(): boolean {
-    const onboarding =
-      this.currentProfile === undefined ||
-      (this.currentProfile.lastAcceptedTermsOfService !== Config.termsVersion ||
-        this.currentProfile.lastSeenApplicationVersion !== Config.whatsNewVersion ||
-        this.currentProfile.viewedReferralOnboarding !== true)
+    // TODO: Remove the true and uncomment code below
+    const onboarding = true
+
+    // this.currentProfile === undefined ||
+    // (this.currentProfile.lastAcceptedTermsOfService !== Config.termsVersion ||
+    //   this.currentProfile.lastSeenApplicationVersion !== Config.whatsNewVersion ||
+    //   this.currentProfile.viewedReferralOnboarding !== true)
 
     this.setOnboarding(onboarding)
 
@@ -55,6 +77,7 @@ export class ProfileStore {
     } finally {
       this.isLoading = false
       //TODO: Move the routing logic to the onLogin function so we can load all the data before showing the app
+
       this.store.routing.replace('/')
     }
     return this.currentProfile
@@ -148,6 +171,59 @@ export class ProfileStore {
       // this.store.routing.replace('/')
     }
   })
+
+  @action
+  startMachineTest = () => {
+    console.log('>> [[ProfileStore] startMachineTest] <<')
+    this.store.saladBowl.start()
+
+    let rewardCount = 0
+    let earningRatePerDay = this.store.machine.currentEarningRatePerDay
+
+    this.store.rewards.allRewards.map(reward => {
+      if (earningRatePerDay && reward.price <= earningRatePerDay) {
+        rewardCount++
+      }
+    })
+
+    this.earningRatePerDay = earningRatePerDay
+    this.rewardsOverTime = rewardCount
+
+    console.log('>> [[ProfileStore] startMachineTest] << earningRatePerDay: ', earningRatePerDay)
+    console.log('>> [[ProfileStore] startMachineTest] << rewardCount: ', rewardCount)
+  }
+
+  @action
+  abortMachineTest = () => {
+    console.log('>> [[ProfileStore] abortMachineTest] <<')
+    this.store.saladBowl.stop()
+  }
+
+  @action
+  restartMachineTest = () => {
+    console.log('>> [[ProfileStore] restartMachineTest] <<')
+    // this.store.saladBowl.stop()
+    // this.store.saladBowl.start()
+  }
+
+  @action
+  onNext = (pathname: string) => {
+    this.isOnboardingComplete = this.isOnboardingRedeem = this.isOnboardingRunning = this.isOnboardingTesting = false
+
+    switch (pathname) {
+      case '/onboarding/running':
+        this.isOnboardingRunning = true
+        break
+      case '/onboarding/redeem':
+        this.isOnboardingRedeem = true
+        break
+      case '/onboarding/complete':
+        this.isOnboardingComplete = true
+        break
+    }
+
+    return this.store.routing.replace('/')
+  }
 
   sleep = (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms))

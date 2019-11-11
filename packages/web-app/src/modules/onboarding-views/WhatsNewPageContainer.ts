@@ -2,7 +2,7 @@ import { connect } from '../../connect'
 import { RootStore } from '../../Store'
 import { WhatsNewPage } from './components/WhatsNewPage'
 
-const mapStoreToProps = (store: RootStore) => ({
+const mapStoreToProps = (store: RootStore): any => ({
   onNext: store.profile.closeWhatsNew,
   submitting: store.profile.isUpdating,
 })

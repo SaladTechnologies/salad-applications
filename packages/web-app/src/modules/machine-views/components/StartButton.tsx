@@ -136,16 +136,18 @@ class _StartButton extends Component<Props> {
             <div>
               <Tooltip
                 title="Incompatible Machine"
-                text="Looks like you're machine doesn't like Salad.
+                text="Looks like your machine doesn't like Salad.
                  Please check your GPU and Windows version to ensure they
                   are compatible with Salad."
               />
             </div>
           )}
         />
-        <div className={classnames({
+        <div
+          className={classnames({
             [classes.runningGlow]: isRunning,
-          })}>
+          })}
+        >
           <AngledPanel leftSide="left" className={classnames(classes.container)}>
             <AngledPanel
               leftSide="left"

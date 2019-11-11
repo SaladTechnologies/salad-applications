@@ -2,7 +2,7 @@ import { connect } from '../../connect'
 import { RootStore } from '../../Store'
 import { CompatibilityCheckPage } from './components/CompatibilityCheckPage'
 
-const mapStoreToProps = (store: RootStore) => ({
+const mapStoreToProps = (store: RootStore): any => ({
   onNext: store.native.skipCompatibility,
   isChecking: store.native.loadingMachineInfo,
   validGPUs: store.native.validGPUs,

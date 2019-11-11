@@ -5,4 +5,4 @@ export interface ReferralDefinition {
 }
 
 export const maximumReferrerBonus = (referralDefinition: ReferralDefinition): number =>
-  referralDefinition.balanceThreshold * referralDefinition.referrerBonus
+  referralDefinition ? referralDefinition.balanceThreshold * referralDefinition.referrerBonus : 0

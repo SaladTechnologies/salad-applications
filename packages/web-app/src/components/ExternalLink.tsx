@@ -7,10 +7,11 @@ const styles = (theme: SaladTheme) => ({})
 interface Props extends WithStyles<typeof styles> {
   path?: string
   children?: ReactNode
+  className?: string
 }
 
-const _ExternalLink = ({ path, children }: Props) => (
-  <a href={path} target="_blank">
+const _ExternalLink = ({ path, className, children }: Props) => (
+  <a href={path} target="_blank" className={className}>
     {children}
   </a>
 )

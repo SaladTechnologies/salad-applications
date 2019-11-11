@@ -2,7 +2,7 @@ import { connect } from '../../../connect'
 import { ReferralSummary } from './components/ReferralSummary'
 import { RootStore } from '../../../Store'
 
-const mapStoreToProps = (store: RootStore) => ({
+const mapStoreToProps = (store: RootStore): any => ({
   pendingCount: store.referral.pendingCount,
   completedCount: store.referral.completedCount,
 })

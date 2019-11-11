@@ -34,8 +34,8 @@ const styles = (theme: SaladTheme) => ({
   },
 
   tootipListItem: {
-    marginBottom: 2
-  }
+    marginBottom: 2,
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {

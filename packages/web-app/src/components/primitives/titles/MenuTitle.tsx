@@ -8,7 +8,8 @@ import withStyles, { WithStyles } from 'react-jss'
 import { NavLink } from 'react-router-dom'
 
 interface Props extends WithStyles<typeof styles> {
-  path?: string
+  path?: string,
+  className?: string,
 }
 
 class _MenuTitle extends Component<Props> {
@@ -23,16 +24,16 @@ class _MenuTitle extends Component<Props> {
   }
 
   render() {
-    const { path, children, classes } = this.props
+    const { path, className, children, classes } = this.props
 
     const elements = path ? (
-      <label className={`menuTitle ${classes.menuTitle}`}>
+      <label className={`menuTitle ${classes.menuTitle} ${className}`}>
         <NavLink to={path} activeClassName="active">
           {children}
         </NavLink>
       </label>
     ) : (
-      <label className={`menuTitle ${classes.menuTitle}`}>{children}</label>
+      <label className={`menuTitle ${classes.menuTitle} ${className}`}>{children}</label>
     )
 
     return <>{elements}</>

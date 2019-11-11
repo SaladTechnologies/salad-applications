@@ -16,6 +16,8 @@ const getDesktopVersion = 'get-desktop-version'
 const setDesktopVersion = 'set-desktop-version'
 const enableAutoLaunch = 'enable-auto-launch'
 const disableAutoLaunch = 'disable-auto-launch'
+const getInstallPath = 'get-install-path'
+const setInstallPath = 'set-install-path'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
 const AUTO_LAUNCH = 'AUTO_LAUNCH'
@@ -34,7 +36,7 @@ declare global {
 export class NativeStore {
   private callbacks = new Map<string, Function>()
 
-  private failedCount: number = 0
+  // private failedCount: number = 0
 
   //#region Observables
   @observable
@@ -60,6 +62,12 @@ export class NativeStore {
 
   @observable
   public autoLaunch: boolean = true
+
+  // @observable
+  // public hashrate: number = 0
+
+  @observable
+  public installPath?: string
 
   //#endregion
 
@@ -96,8 +104,8 @@ export class NativeStore {
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     //Starts the timer to check for online/offline status
-    setInterval(this.checkOnlineStatus, 5000)
-    this.checkOnlineStatus()
+    // setInterval(this.checkOnlineStatus, 5000)
+    // this.checkOnlineStatus()
 
     runInAction(() => {
       this.skippedCompatCheck = Storage.getOrSetDefault(compatibilityKey, 'false') === 'true'
@@ -116,6 +124,10 @@ export class NativeStore {
 
       this.on(setMachineInfo, (info: MachineInfo) => {
         this.setMachineInfo(info)
+      })
+
+      this.on(setInstallPath, (path: string) => {
+        this.setInstallPath(path)
       })
 
       this.send(getDesktopVersion)
@@ -149,28 +161,28 @@ export class NativeStore {
     window.salad.dispatch(type, payload)
   }
 
-  @action.bound
-  private checkOnlineStatus = flow(function*(this: NativeStore) {
-    var prevOnline = this.isOnline
-    try {
-      yield this.axios.get('online')
-      this.failedCount = 0
-      this.isOnline = true
-    } catch (err) {
-      //TODO: Remove these checks once we have an unauthenticated API to check
-      if (err.response === undefined || err.response.status !== 401) {
-        console.log(err)
-        this.failedCount += 1
+  // @action.bound
+  // private checkOnlineStatus = flow(function*(this: NativeStore) {
+  //   var prevOnline = this.isOnline
+  //   try {
+  //     yield this.axios.get('online')
+  //     this.failedCount = 0
+  //     this.isOnline = true
+  //   } catch (err) {
+  //     //TODO: Remove these checks once we have an unauthenticated API to check
+  //     if (err.response === undefined || err.response.status !== 401) {
+  //       console.log(err)
+  //       this.failedCount += 1
 
-        if (this.failedCount >= 3) {
-          this.isOnline = false
-        }
-      }
-    }
-    if (this.isOnline !== prevOnline) {
-      this.store.routing.replace('/')
-    }
-  })
+  //       if (this.failedCount >= 3) {
+  //         this.isOnline = false
+  //       }
+  //     }
+  //   }
+  //   if (this.isOnline !== prevOnline) {
+  //     this.store.routing.replace('/')
+  //   }
+  // })
 
   @action
   setDesktopVersion = (version: string) => {
@@ -186,6 +198,7 @@ export class NativeStore {
     }
     this.loadingMachineInfo = true
     this.send(getMachineInfo)
+    this.send(getInstallPath)
   }
 
   @action
@@ -224,7 +237,10 @@ export class NativeStore {
       this.validOperatingSystem = machine.validOs
       this.store.machine.setCurrentMachine(machine)
       this.store.analytics.trackMachine(machine)
-      this.store.routing.replace('/')
+
+      if (!this.store.profile.isOnboarding) {
+        this.store.routing.replace('/')
+      }
     } catch (err) {
       this.store.analytics.captureException(new Error(`register-machine error: ${err}`))
       this.validGPUs = false
@@ -245,7 +261,9 @@ export class NativeStore {
     this.skippedCompatCheck = this.validOperatingSystem && this.validGPUs
     this.loadingMachineInfo = false
 
-    this.store.routing.replace('/')
+    if (!this.store.profile.isOnboarding) {
+      this.store.routing.replace('/')
+    }
   }
 
   @action
@@ -273,6 +291,11 @@ export class NativeStore {
     Storage.setItem(AUTO_LAUNCH, 'false')
 
     this.send(disableAutoLaunch)
+  }
+
+  @action
+  setInstallPath = (path: string) => {
+    this.installPath = path
   }
 
   @action
