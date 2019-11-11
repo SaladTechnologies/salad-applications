@@ -1,4 +1,4 @@
-import { action, observable } from 'mobx'
+import { action, observable, computed } from 'mobx'
 import { TokenData } from './models'
 import * as Storage from '../../Storage'
 
@@ -27,17 +27,38 @@ export class TokenStore {
     this.saladToken = saladToken
   }
 
-  getTokenData = (): TokenData => {
+  @computed
+  get tokenData(): TokenData | undefined {
     const saladToken = this.saladToken
-    const token = saladToken.split('.')[1]
-    const Base64Token: string = new Buffer(token, 'base64').toString()
-    const tokenData = JSON.parse(Base64Token)
+
+    //Ensure there is a valid token
+    if (!saladToken) return undefined
+
+    //Split the jwt into its parts (header, payload...)
+    const parts = saladToken.split('.')
+
+    //Ensure that the jwt has a payload
+    if (!parts || parts.length <= 1) return undefined
+
+    const payload = parts[1]
+
+    if (!payload) return undefined
+
+    const base64Payload: string = new Buffer(payload, 'base64').toString()
+
+    const tokenData = JSON.parse(base64Payload)
 
     return tokenData
   }
 
-  getTokenExpiration = (): number => {
-    const token = this.getTokenData()
+  /** Returns the number of days until the token expires */
+  @computed
+  get tokenExpiration(): number {
+    const token = this.tokenData
+
+    //Returns that the token has expired
+    if (!token) return 0
+
     const expires = token.exp
     let expirationDate: any = new Date(expires * 1000)
     let expiresInDays = Math.floor((expirationDate - Date.now()) / (1000 * 60 * 60 * 24))
@@ -45,8 +66,9 @@ export class TokenStore {
     return expiresInDays
   }
 
-  getMachineId = () => {
-    const token = this.getTokenData()
+  @computed
+  get machineId(): string | undefined {
+    const token = this.tokenData
     return token && token.pc
   }
 }

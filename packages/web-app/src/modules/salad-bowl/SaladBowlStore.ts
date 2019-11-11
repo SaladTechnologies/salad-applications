@@ -153,7 +153,12 @@ export class SaladBowlStore {
 
   @action.bound
   sendRunningStatus = flow(function*(this: SaladBowlStore) {
-    const machineId = this.store.token.getMachineId()
+    const machineId = this.store.token.machineId
+
+    if (!machineId) {
+      console.warn('No machineId found. Unable to send running status')
+      return
+    }
 
     const data = {
       status: this.machineStatus,
