@@ -51,7 +51,7 @@ export class AuthStore {
       // Set token in observable
       this.store.token.setToken(saladToken)
       // Get token string and expiration
-      let expiration = this.store.token.getTokenExpiration()
+      let expiration = this.store.token.tokenExpiration
 
       if (expiration < 7) {
         this.signOut()
