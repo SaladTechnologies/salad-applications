@@ -92,11 +92,6 @@ export class NativeStore {
   }
 
   @computed
-  get machineId(): string {
-    return this.store.token.getMachineId()
-  }
-
-  @computed
   get gpuNames(): string[] | undefined {
     if (this.machineInfo === undefined) return undefined
     return this.machineInfo.graphics.controllers.map(x => x.model)
@@ -203,7 +198,7 @@ export class NativeStore {
 
   @action
   sendLog = () => {
-    this.send(sendLog, this.machineId)
+    this.send(sendLog, this.store.token.machineId)
   }
 
   @action
@@ -228,9 +223,14 @@ export class NativeStore {
       return
     }
 
+    if (!this.store.token.machineId) {
+      console.warn('No valid machine id found. Unable to register')
+      return
+    }
+
     try {
       console.log('Registering machine with salad')
-      let res: any = yield this.axios.post(`machines/${this.machineId}/data`, this.machineInfo)
+      let res: any = yield this.axios.post(`machines/${this.store.token.machineId}/data`, this.machineInfo)
       let machine: Machine = res.data
 
       this.validGPUs = machine.validGpus
