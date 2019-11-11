@@ -45,6 +45,7 @@ const styles = (theme: SaladTheme) => ({
     flexBasis: 0,
     minWidth: (props: Props) => props.rightColumnWidth || 0,
     overflow: 'hidden',
+    position: 'relative',
   },
   image: {
     objectFit: 'cover',

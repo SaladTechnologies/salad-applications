@@ -34,11 +34,20 @@ export const styles = (theme: SaladTheme) => ({
     display: 'flex',
 
     '& > div': {
-      marginLeft: 'auto'
-    }
+      marginLeft: 'auto',
+    },
   },
 
   displayFlex: {
     display: 'flex',
+    flexDirection: 'column',
+  },
+
+  nextButtonContainer: {
+    display: 'flex',
+  },
+
+  pullRight: {
+    marginLeft: 'auto',
   },
 })

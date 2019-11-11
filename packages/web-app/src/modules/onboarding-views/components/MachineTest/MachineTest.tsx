@@ -99,7 +99,7 @@ class _MachineTest extends Component<Props> {
           </>
         )}
 
-        {this.state.togglePhraseViewer && (
+        {this.state.togglePhraseViewer && pluginStatus !== 'running' && (
           <>
             <PhraseViewer phraseType={PhraseType.all} phraseDelay={5000} />
 
@@ -134,15 +134,15 @@ class _MachineTest extends Component<Props> {
             )}
 
             {pluginStatus === 'running' && (
-              <Button
-                uppercase
-                onClick={this.handleNext}
-                className={classnames(classes.startTestBtn, classes.marginTop, {
-                  [classes.runTestLaterBtn]: errorCategory !== 'antiVirus' && errorCategory !== 'driver',
-                })}
-              >
-                Next
-              </Button>
+              <div className={classes.nextButtonContainer}>
+                <Button
+                  uppercase
+                  onClick={this.handleNext}
+                  className={classnames(classes.startTestBtn, classes.marginTop, classes.pullRight)}
+                >
+                  Next
+                </Button>
+              </div>
             )}
           </>
         )}

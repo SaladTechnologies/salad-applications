@@ -73,4 +73,12 @@ export const styles = (theme: SaladTheme) => ({
   marginTop: {
     marginTop: theme.xLarge,
   },
+
+  nextButtonContainer: {
+    display: 'flex',
+  },
+
+  pullRight: {
+    marginLeft: 'auto'
+  }
 })

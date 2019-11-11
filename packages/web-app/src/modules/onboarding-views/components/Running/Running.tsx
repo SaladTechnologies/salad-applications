@@ -64,9 +64,15 @@ class _Running extends Component<Props> {
         </div>
 
         {earningStatus && (
-          <Button uppercase onClick={this.handleNext} className={classnames(classes.startTestBtn, classes.marginTop)}>
-            Next
-          </Button>
+          <div className={classes.nextButtonContainer}>
+            <Button
+              uppercase
+              onClick={this.handleNext}
+              className={classnames(classes.startTestBtn, classes.marginTop, classes.pullRight)}
+            >
+              Next
+            </Button>
+          </div>
         )}
       </div>
     )
