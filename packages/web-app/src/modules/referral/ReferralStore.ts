@@ -134,9 +134,9 @@ export class ReferralStore {
       this.store.analytics.trackReferralEntered(code)
     } catch (e) {
       let err: AxiosError = e
-      if (!err.response || err.response.status == 500) throw new Error('Unknown error')
-      if (err.response.status == 400) throw new Error('Invalid code')
-      if (err.response.status == 409) throw new Error('You have already entered a code')
+      if (!err.response || err.response.status === 500) throw new Error('Unknown error')
+      if (err.response.status === 400) throw new Error('Invalid code')
+      if (err.response.status === 409) throw new Error('You have already entered a code')
     }
   })
 
