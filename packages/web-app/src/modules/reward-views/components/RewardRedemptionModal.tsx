@@ -2,12 +2,11 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import classnames from 'classnames'
-import { ModalPage, Checkbox, Button, TextField, ErrorText } from '../../../components'
+import { ModalPage, Checkbox, Button, TextField } from '../../../components'
 import { Reward } from '../../reward/models/Reward'
 import { Form, Field } from 'react-final-form'
 import { observer } from 'mobx-react'
 import { RewardDetailsPanel } from './RewardDetailsPanel'
-import { ActionState, submitAction } from '../../../ActionHandler'
 
 //TODO: Move this into a feature flag
 const showGiftOption = false
@@ -103,12 +102,11 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   reward?: Reward
+  submitting?: boolean
   onClickClose?: () => void
   onClickDone?: () => void
   onRedeem?: (rewardId: string, email?: string) => void
 }
-
-interface State extends ActionState {}
 
 interface FormTypes {
   email?: string
@@ -116,9 +114,10 @@ interface FormTypes {
 }
 
 @observer
-class _RewardRedemptionModal extends Component<Props, State> {
+class _RewardRedemptionModal extends Component<Props> {
   handleClose = () => {
     const { onClickClose } = this.props
+
     if (onClickClose) {
       onClickClose()
     }
@@ -141,10 +140,7 @@ class _RewardRedemptionModal extends Component<Props, State> {
   onSubmit = (values: {}) => {
     const { reward, onRedeem } = this.props
     let v = values as FormTypes
-    if (reward && onRedeem)
-      submitAction(this, async () => {
-        await onRedeem(reward.id, v.gift ? v.email : undefined)
-      })
+    if (reward && onRedeem) onRedeem(reward.id, v.gift ? v.email : undefined)
   }
 
   validate = (values: {}) => {
@@ -161,8 +157,7 @@ class _RewardRedemptionModal extends Component<Props, State> {
   }
 
   render() {
-    const { reward, onClickClose, classes } = this.props
-    const { errorMessage, submitting } = this.state
+    const { reward, onClickClose, submitting, classes } = this.props
 
     return (
       <ModalPage onCloseClicked={this.handleClose}>
@@ -213,7 +208,6 @@ class _RewardRedemptionModal extends Component<Props, State> {
                         </div>
                       )}
                       <div className={classes.submitPanel}>
-                        <ErrorText>{errorMessage}</ErrorText>
                         <Button type="submit" loading={submitting} disabled={submitting} dark>
                           Bombs Away
                         </Button>
