@@ -29,6 +29,9 @@ export class RewardStore {
   @observable
   public isSelecting: boolean = false
 
+  @observable
+  public onboardingReward?: Reward | undefined
+
   @computed get selectedReward(): Reward | undefined {
     return this.getReward(this.selectedRewardId)
   }
@@ -75,7 +78,9 @@ export class RewardStore {
     return rewardList
   }
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
+  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
+    // this.getOnboardingReward()
+  }
 
   getReward = (id?: string): Reward | undefined => {
     if (id === undefined) return undefined
@@ -132,14 +137,36 @@ export class RewardStore {
   }
 
   @action.bound
+  setOnboardingReward = flow(function*(this: RewardStore) {
+    console.log('<@=^) [[RewardStore] getOnboardingReward] (^=@>')
+
+    try {
+      const response = yield this.axios.get('rewards/onboarding')
+
+      console.log('<@=^) [[RewardStore] getOnboardingReward] response: ', response)
+      console.log('<@=^) [[RewardStore] getOnboardingReward] response.data: ', response.data)
+
+      this.onboardingReward = response.data
+
+    } catch (error) {
+      console.log('<@=^) [[RewardStore] getOnboardingReward] error: ', error)
+      this.onboardingReward = undefined
+    }
+  })
+
+  @action.bound
   loadSelectedReward = flow(function*(this: RewardStore) {
     var res = yield this.axios.get('profile/selected-reward')
     this.selectedRewardId = res.data.rewardId
   })
 
   viewReward = (reward: Reward) => {
-    this.store.ui.showModal(`/rewards/${reward.id}`)
-    this.store.analytics.trackRewardView(reward)
+    console.log('>> [[RewardStore] viewReward] am I getting here from redeem reward?')
+    console.log('>> [[RewardStore] viewReward] location: ', window.location.href)
+    console.log('>> [[RewardStore] viewReward] reward: ', reward)
+
+    // this.store.ui.showModal(`/rewards/${reward.id}`)
+    // this.store.analytics.trackRewardView(reward)
   }
 
   @action.bound

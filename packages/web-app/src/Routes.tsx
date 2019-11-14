@@ -15,7 +15,9 @@ import {
   WelcomePageContainer,
   TermsPageContainer,
   MachineTestContainer,
-  RunningContainer
+  RunningContainer,
+  RedeemRewardContainer,
+  CompletedContainer,
 } from './modules/onboarding-views'
 import { HomePage } from './modules/home-views'
 import { LoadingPage } from './components'
@@ -70,6 +72,10 @@ export default class Routes extends Component {
       path = '/onboarding/machine-test'
     } else if (this.store.profile.isOnboardingRunning) {
       path = '/onboarding/running'
+    } else if (this.store.profile.isOnboardingRedeem) {
+      path = '/onboarding/redeem-rewards'
+    } else if (this.store.profile.isOnboardingComplete) {
+      path = '/onboarding/completed'
     }
 
     // This stops the page from loading multiple times
@@ -124,6 +130,8 @@ export default class Routes extends Component {
             <Route exact path="/onboarding/terms" component={TermsPageContainer} />
             <Route exact path="/onboarding/machine-test" component={MachineTestContainer} />
             <Route exact path="/onboarding/running" component={RunningContainer} />
+            <Route exact path="/onboarding/redeem-rewards" component={RedeemRewardContainer} />
+            <Route exact path="/onboarding/completed" component={CompletedContainer} />
             {this.getOnboardingRedirect()}
           </AnimatedSwitch>
         )}

@@ -58,14 +58,14 @@ const styles = (theme: SaladTheme) => ({
   title: {
     paddingTop: '2rem',
     fontFamily: 'SharpGroteskLight09',
-    fontSize: 64, //theme.xxLarge,
+    fontSize: theme.xxLarge,
     lineHeight: '54px',
   },
   subtitle: {
     fontFamily: 'sharpGroteskLight25',
     fontSize: '18px',
     lineHeight: '32px',
-    paddingTop: '3rem',
+    paddingTop: theme.large, //'3rem',
   },
   nextButton: {
     margin: '0 .5rem',
