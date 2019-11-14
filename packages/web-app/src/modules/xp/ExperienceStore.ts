@@ -16,7 +16,7 @@ export class ExperienceStore {
       return this.currentXp > l.minXp && this.currentXp <= l.maxXp
     })
 
-    if (matchingLevel == undefined) matchingLevel = this.levels[this.levels.length - 1]
+    if (matchingLevel === undefined) matchingLevel = this.levels[this.levels.length - 1]
 
     return matchingLevel
   }

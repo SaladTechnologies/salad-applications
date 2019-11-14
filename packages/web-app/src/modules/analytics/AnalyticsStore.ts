@@ -140,7 +140,7 @@ export class AnalyticsStore {
   public trackReferralEntered = (code: string) => {
     if (!this.started) return
 
-    this.track('Referral Entered', { Code: code })
+    this.track('Referral Entered', { Code: code.toUpperCase() })
   }
 
   public trackMachine = (machine: Machine) => {

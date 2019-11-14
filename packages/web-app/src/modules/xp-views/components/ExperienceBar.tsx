@@ -77,7 +77,7 @@ class _ExperienceBar extends Component<Props> {
   render() {
     const { currentXp, levels, classes } = this.props
 
-    if (currentXp === undefined || levels == undefined) return <div />
+    if (currentXp === undefined || levels === undefined) return <div />
 
     let currentLevels: Level[] = levels.filter(x => currentXp >= x.minXp)
     currentLevels = currentLevels.slice(0, Math.min(3, currentLevels.length))

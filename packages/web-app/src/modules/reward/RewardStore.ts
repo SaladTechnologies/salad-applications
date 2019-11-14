@@ -93,7 +93,7 @@ export class RewardStore {
     try {
       this.isLoading = true
       const response = yield this.axios.get<RewardsResource[]>('rewards')
-      if (response.data == undefined) return
+      if (response.data === undefined) return
       this.rewards = response.data.map(rewardFromResource).sort((a: Reward, b: Reward) => a.price - b.price)
       this.updateFilters()
     } catch (error) {
