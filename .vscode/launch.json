@@ -1,30 +1,28 @@
 {
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Debug Web App",
-      "type": "chrome",
-      "request": "launch",
-      "runtimeArgs": ["--disable-web-security"],
-      "url": "http://localhost:3000",
-      "webRoot": "${workspaceRoot}/src",
-      "sourceMapPathOverrides": {
-        "webpack:///src/*": "${webRoot}/*"
-      }
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Debug Desktop App",
-      "runtimeExecutable": "yarn",
-      "runtimeArgs": ["start"],
-      "autoAttachChildProcesses": true,
-      "internalConsoleOptions": "openOnFirstSessionStart",
-      "console": "integratedTerminal",
-      "cwd": "${workspaceRoot}/packages/desktop-app"
-    }
-  ]
+
+	"_comment": "Use IntelliSense to learn about possible attributes. Hover to view descriptions of existing attributes. For more information, visit: https: //go.microsoft.com/fwlink/?linkid=830387",
+	"version": "0.2.0",
+	"configurations": [{
+			"name": "Debug Web App",
+			"type": "chrome",
+			"request": "launch",
+			"runtimeArgs": ["--disable-web-security"],
+			"url": "http://localhost:3000",
+			"webRoot": "${workspaceRoot}/src",
+			"sourceMapPathOverrides": {
+				"webpack:///src/*": "${webRoot}/*"
+			}
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Debug Desktop App",
+			"runtimeExecutable": "yarn",
+			"runtimeArgs": ["start"],
+			"autoAttachChildProcesses": true,
+			"internalConsoleOptions": "openOnFirstSessionStart",
+			"console": "integratedTerminal",
+			"cwd": "${workspaceRoot}/packages/desktop-app"
+		}
+	]
 }
