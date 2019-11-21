@@ -2,7 +2,7 @@ import { observable, action, flow, computed } from 'mobx'
 import { PluginInfo } from './models/PluginInfo'
 import { StatusMessage } from './models/StatusMessage'
 import { PluginStatus } from './models/PluginStatus'
-import { AxiosInstance } from 'axios'
+import { AxiosInstance, AxiosError } from 'axios'
 import { Config } from '../../config'
 import { RootStore } from '../../Store'
 import { MiningStatus } from '../machine/models'
@@ -205,6 +205,7 @@ export class SaladBowlStore {
     this.initializingStatus = this.runningStatus = this.earningStatus = false
 
     this.sendRunningStatus()
+
     if (this.runningHeartbeat) {
       clearInterval(this.runningHeartbeat)
       this.runningHeartbeat = undefined
@@ -214,7 +215,7 @@ export class SaladBowlStore {
   })
 
   @action.bound
-  sendRunningStatus = flow(function*(this: SaladBowlStore) {
+  sendRunningStatus = flow(function*(this: SaladBowlStore, retry?: boolean) {
     const machineId = this.store.token.machineId
 
     if (!machineId) {
@@ -225,8 +226,20 @@ export class SaladBowlStore {
     const data = {
       status: this.machineStatus,
     }
+
     try {
       yield this.axios.post(`machines/${machineId}/status`, data)
-    } catch {}
+    } catch (e) {
+      let err: AxiosError = e
+      if (err.response && err.response.status === 409) {
+        console.log('Machine status conflict. Restarting')
+        if (!retry) {
+          this.plugin.status = PluginStatus.Initializing
+          this.sendRunningStatus(true)
+        }
+      } else {
+        throw e
+      }
+    }
   })
 }

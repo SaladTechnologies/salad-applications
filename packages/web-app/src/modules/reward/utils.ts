@@ -1,6 +1,7 @@
 import { RewardResource } from './models/RewardResource'
 import { RewardCategory } from './models/RewardCategory'
 import { Reward } from './models/Reward'
+import { Config } from '../../config'
 
 /** Maps from the reward category to color */
 const colorFromCategory = (category: RewardCategory): string => {
@@ -30,7 +31,7 @@ export const rewardFromResource = (r: RewardResource): Reward => ({
   name: r.name,
   description: r.description,
   price: r.price,
-  image: r.image,
+  image: new URL(r.image, Config.baseAPIUrl).href,
   category: r.category,
   checkoutTerms: r.checkoutTerms,
   tags: r.tags && r.tags.map(x => x.toLowerCase()),
@@ -44,7 +45,7 @@ export const rewardFromResource = (r: RewardResource): Reward => ({
 
 export const getTimeRemainingText = (reward: Reward, currentBalance: number, earningRate: number): string => {
   // Calculates the remaining time in hours
-  let remainingTime = (reward.price - currentBalance) / (earningRate*3600)
+  let remainingTime = (reward.price - currentBalance) / (earningRate * 3600)
   if (remainingTime < 0) return ''
   if (remainingTime < 2) return `${(remainingTime * 60).toFixed(0)} MINUTES REMAINING`
   if (remainingTime < 48) return `${remainingTime.toFixed(0)} HOURS REMAINING`
