@@ -23,8 +23,7 @@ class App extends Component {
 
   render() {
     let isAuth = this.store.auth.isAuthenticated()
-    let isOnboarding = this.store.profile.isOnboarding
-    let showPlainTitle = isOnboarding || !isAuth
+    let showPlainTitle = !isAuth
 
     return (
       <div>

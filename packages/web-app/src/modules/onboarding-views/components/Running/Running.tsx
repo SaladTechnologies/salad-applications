@@ -28,7 +28,7 @@ class _Running extends Component<Props> {
   handleNext = () => {
     const { onNext } = this.props
 
-    if (onNext) onNext('/onboarding/redeem')
+    if (onNext) onNext('/onboarding/redeem-rewards')
   }
 
   render() {

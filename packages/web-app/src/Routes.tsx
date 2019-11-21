@@ -29,7 +29,7 @@ import {
 } from './modules/reward-views'
 import { AccountModalContainer } from './modules/profile-views'
 import { AnimatedSwitch } from './components/AnimatedSwitch'
-import { CompatibilityCheckPageContainer } from './modules/machine-views'
+// import { CompatibilityCheckPageContainer } from './modules/machine-views'
 import {
   AntiVirusErrorContainer,
   CudaErrorContainer,
@@ -57,7 +57,7 @@ export default class Routes extends Component {
 
   public getOnboardingRedirect = () => {
     let profile = this.store.profile.currentProfile
-    let path = '/'
+    let path = window.location.pathname
 
     if (profile === undefined) {
       if (this.store.profile.isLoading) {
@@ -74,8 +74,9 @@ export default class Routes extends Component {
       path = '/onboarding/running'
     } else if (this.store.profile.isOnboardingRedeem) {
       path = '/onboarding/redeem-rewards'
+      // return <Redirect to={'/onboarding/redeem-rewards'} />
     } else if (this.store.profile.isOnboardingComplete) {
-      path = '/onboarding/completed'
+      path = '/onboarding/complete'
     }
 
     // This stops the page from loading multiple times
@@ -84,14 +85,6 @@ export default class Routes extends Component {
     this.setState({
       prevPath: path,
     })
-
-    // NOTE: Stream lining the onboarding process and removing these steps
-    // else if (this.store.profile.needsAnalyticsOnboarding)
-    //   path = '/onboarding/analytics'
-    // else if (profile.viewedReferralOnboarding !== true)
-    //   path = '/onboarding/referral-code'
-    // else if (profile.lastSeenApplicationVersion !== Config.whatsNewVersion)
-    //   path = '/onboarding/whats-new'
 
     if (path !== '/') return <Redirect to={path} />
 
@@ -111,10 +104,14 @@ export default class Routes extends Component {
       )
     }
 
-    let isElectron = this.store.native.isNative
+    // let isElectron = this.store.native.isNative
     let isAuth = this.store.auth.isAuth
-    let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
+    // let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
     let isOnboarding = this.store.profile.onboarding
+
+    console.log('== Routes - Pathname ==================================')
+    console.log('pathname: ', window.location.pathname)
+    console.log('=======================================================')
 
     return (
       <Switch>
@@ -123,22 +120,15 @@ export default class Routes extends Component {
         {!isAuth && <NoAuth store={this.store.auth} />}
 
         {isOnboarding && (
-          // When extracted into it's own component, onboarding doesn't load
-          <AnimatedSwitch>
-            <Route exact path="/profile-loading" render={() => <LoadingPage text="Loading profile" />} />
-
-            <Route exact path="/onboarding/terms" component={TermsPageContainer} />
-            <Route exact path="/onboarding/machine-test" component={MachineTestContainer} />
-            <Route exact path="/onboarding/running" component={RunningContainer} />
-            <Route exact path="/onboarding/redeem-rewards" component={RedeemRewardContainer} />
-            <Route exact path="/onboarding/completed" component={CompletedContainer} />
+          <>
+            <Onboarding />
             {this.getOnboardingRedirect()}
-          </AnimatedSwitch>
+          </>
         )}
 
-        {isElectron && this.checkMachineLoading()}
+        {/* {isElectron && this.checkMachineLoading()}
 
-        {isElectron && showCompatibilityPage && <CompatibilityCheckPageContainer />}
+        {isElectron && showCompatibilityPage && <CompatibilityCheckPageContainer />} */}
 
         {isAuth && <Auth />}
 
@@ -149,6 +139,8 @@ export default class Routes extends Component {
 }
 
 const NoAuth = (props: any) => {
+  console.log('++---> [[Routes] NoAuth]')
+
   const render = () => {
     if (!props.store.isLoading) return <WelcomePageContainer />
 
@@ -165,6 +157,8 @@ const NoAuth = (props: any) => {
 }
 
 const Auth = () => {
+  console.log('++---> [[Routes] Auth]')
+
   return (
     <>
       <Route path="/" render={() => <HomePage />} />
@@ -172,13 +166,50 @@ const Auth = () => {
       <Route exact path="/errors/cuda" component={CudaErrorContainer} />
       <Route exact path="/errors/network" component={NetworkErrorContainer} />
       <Route exact path="/errors/unknown" component={UnknownErrorContainer} />
+
+      <Rewards />
+
+      <Route exact path="/profile" component={AccountModalContainer} />
+
+      <Route path="/settings" component={SettingsContainer} />
+    </>
+  )
+}
+
+const Onboarding = () => {
+  console.log('++---> [[Routes] Onboarding]')
+
+  return (
+    // Note: AnimatedSwitch prevents the modal from showing
+    <>
+      <AnimatedSwitch>
+        <Route exact path="/profile-loading" render={() => <LoadingPage text="Loading profile" />} />
+
+        <Route exact path="/onboarding/terms" component={TermsPageContainer} />
+        <Route exact path="/onboarding/machine-test" component={MachineTestContainer} />
+        <Route exact path="/onboarding/running" component={RunningContainer} />
+      </AnimatedSwitch>
+      
+      <Route path={['/onboarding/redeem-rewards', '/rewards']} component={RedeemRewardContainer} />
+      
+      <AnimatedSwitch>
+        <Route exact path="/onboarding/complete" component={CompletedContainer} />
+      </AnimatedSwitch>
+      
+      <Rewards />
+    </>
+  )
+}
+
+const Rewards = () => {
+  console.log('++---> [[Routes] RedeemReward]')
+
+  return (
+    <>
       <Route exact path="/rewards/:id" component={RewardDetailsModalContainer} />
       <Route exact path="/rewards/:id/redeem" component={RewardRedemptionModalContainer} />
       <Route exact path="/rewards/:id/redeem-complete" component={RedemptionCompleteModalContainer} />
       <Route exact path="/rewards/:id/redeem-error" component={RedemptionErrorModalContainer} />
-      <Route exact path="/profile" component={AccountModalContainer} />
-
-      <Route path="/settings" component={SettingsContainer} />
     </>
   )
 }

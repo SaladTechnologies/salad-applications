@@ -18,16 +18,19 @@ import { Reward } from '../../../reward/models/index'
 interface Props extends WithStyles<typeof styles> {
   onNext: (pathname: string) => void
   onRewardClick: (reward: Reward) => void
+
   earningRatePerDay: number | undefined
   rewardsOverTime: number | undefined
   onboardingReward: Reward | undefined
+
+  onboardingRedeemed: boolean | undefined
 }
 
 class _RedeemReward extends Component<Props> {
   handleNext = () => {
     const { onNext } = this.props
 
-    if (onNext) onNext('/onboarding/completed')
+    if (onNext) onNext('/onboarding/complete')
   }
 
   handleRewardClick = (reward: Reward) => {
@@ -44,11 +47,26 @@ class _RedeemReward extends Component<Props> {
     const RightElements = (
       <div className={classnames(classes.selectedRewardContainer, classes.displayFlex)}>
         {onboardingReward && (
-          <SelectedReward
-            reward={onboardingReward}
-            hideChoppingFor
-            onRewardClick={() => this.handleRewardClick(onboardingReward)}
-          />
+          <>
+            <div>
+              <SelectedReward
+                reward={onboardingReward}
+                hideChoppingFor
+                onRewardClick={() => this.handleRewardClick(onboardingReward)}
+              />
+            </div>
+            {/* {onboardingRedeemed && (
+              <div className={classes.nextButtonContainer}>
+                <Button
+                  uppercase
+                  onClick={this.handleNext}
+                  className={classnames(classes.startTestBtn, classes.marginTop, classes.pullRight)}
+                >
+                  Next
+                </Button>
+              </div>
+            )} */}
+          </>
         )}
       </div>
     )
@@ -56,7 +74,7 @@ class _RedeemReward extends Component<Props> {
     return (
       <OnboardingPage
         title={`Redeem your first reward!`}
-        subtitle={`Salad is running and chopping away! Keep at it and in the next 24 hours you’ll be eligible for lots of goodies. Let’s get you your first reward, you’ve earned it.`}
+        subtitle={`Salad is running and chopping away! Keep at it and in the next 24 hours you'll be eligible for lots of goodies. Let's get you your first reward, you've earned it.`}
         image={image}
         rightContent={RightElements}
         rightColumnWidth={'60%'}

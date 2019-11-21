@@ -45,6 +45,7 @@ export const styles = (theme: SaladTheme) => ({
 
   nextButtonContainer: {
     display: 'flex',
+    width: '100%',
   },
 
   pullRight: {

@@ -14,6 +14,7 @@ const mapStoreToProps = (store: RootStore) => {
 
     earningRatePerDay: store.profile.earningRatePerDay,
     rewardsOverTime: store.profile.rewardsOverTime,
+    onboardingRedeemed: store.rewards.onboardingRedeemed,
   }
 }
 

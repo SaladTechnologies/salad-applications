@@ -28,7 +28,7 @@ export class CudaErrorPage extends Component<Props> {
         onSendLog={this.handleSendLogClicked}
       >
         <div>
-          We’re detecting that your GPU drivers are incompatible with Salad. In order to get chopping you will need to
+          We're detecting that your GPU drivers are incompatible with Salad. In order to get chopping you will need to
           update the the latest drivers.{' '}
           <ExternalLink path="https://www.nvidia.com/Download/index.aspx">NVIDIA Drivers</ExternalLink>{' '}
           <ExternalLink path="https://www.amd.com/en/support">AMD Drivers</ExternalLink>

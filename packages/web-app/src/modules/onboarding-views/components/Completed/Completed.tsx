@@ -7,7 +7,7 @@ import { styles } from './Completed.styles'
 import image from '../../assets/Home - How it Works.svg'
 
 // Components
-import { OnboardingPage } from '../../../../components'
+import { OnboardingPage, Button } from '../../../../components'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
@@ -31,13 +31,22 @@ class _Completed extends Component<Props> {
 
     const Elements = (
       <div className={classnames(classes.displayFlex)}>
+        <div className={classes.nextButtonContainer}>
+          <Button
+            uppercase
+            onClick={this.handleNext}
+            className={classnames(classes.startTestBtn, classes.marginTop, classes.pullRight)}
+          >
+            Finish
+          </Button>
+        </div>
       </div>
     )
 
     return (
       <OnboardingPage
-        title={`Redeem your first reward!`}
-        subtitle={`Salad is running and chopping away! Keep at it and in the next 24 hours you’ll be eligible for lots of goodies. Let’s get you your first reward, you’ve earned it.`}
+        title={`WAHOOO!`}
+        subtitle={`You're a bonafide Salad chef now, feels good doesn't it? Checkout our new referral system to see how you can unlock bonus earnings and our rewards carousel to see what prize you'll want to redeem next!`}
         image={image}
         rightContent={Elements}
         rightColumnWidth={'60%'}
@@ -50,7 +59,7 @@ class _Completed extends Component<Props> {
         rewardsOverTime={rewardsOverTime}
         testingComplete={true}
         runningComplete={true}
-        rewardActive={true}
+        rewardComplete={true}
       ></OnboardingPage>
     )
   }

@@ -32,6 +32,9 @@ export class RewardStore {
   @observable
   public onboardingReward?: Reward | undefined
 
+  @observable
+  public onboardingRedeemed?: boolean = false
+
   @computed get selectedReward(): Reward | undefined {
     return this.getReward(this.selectedRewardId)
   }
@@ -138,18 +141,12 @@ export class RewardStore {
 
   @action.bound
   setOnboardingReward = flow(function*(this: RewardStore) {
-    console.log('<@=^) [[RewardStore] getOnboardingReward] (^=@>')
-
     try {
       const response = yield this.axios.get('rewards/onboarding')
-
-      console.log('<@=^) [[RewardStore] getOnboardingReward] response: ', response)
-      console.log('<@=^) [[RewardStore] getOnboardingReward] response.data: ', response.data)
-
       this.onboardingReward = response.data
 
     } catch (error) {
-      console.log('<@=^) [[RewardStore] getOnboardingReward] error: ', error)
+      console.log('onboarding rewards error: ', error)
       this.onboardingReward = undefined
     }
   })
@@ -162,10 +159,14 @@ export class RewardStore {
 
   viewReward = (reward: Reward) => {
     console.log('>> [[RewardStore] viewReward] am I getting here from redeem reward?')
-    console.log('>> [[RewardStore] viewReward] location: ', window.location.href)
+    console.log('>> [[RewardStore] viewReward] [BEFORE] location: ', window.location.href)
     console.log('>> [[RewardStore] viewReward] reward: ', reward)
+    console.log('>> [[RewardStore] viewReward] reward.id: ', reward.id)
 
-    // this.store.ui.showModal(`/rewards/${reward.id}`)
+    this.store.ui.showModal(`/rewards/${reward.id}`)
+
+    console.log('>> [[RewardStore] viewReward] [AFTER] location: ', window.location.href)
+
     // this.store.analytics.trackRewardView(reward)
   }
 
@@ -185,7 +186,7 @@ export class RewardStore {
 
       if (reward) this.store.analytics.trackSelectedReward(reward)
 
-      this.store.routing.push('/')
+      // this.store.routing.push('/')
     } catch (error) {
       console.error(error)
     } finally {
@@ -200,7 +201,7 @@ export class RewardStore {
       return
     }
 
-    this.isRedeeming = true
+    this.isRedeeming = this.onboardingRedeemed = true
 
     const req = {
       giftEmail: email,
@@ -229,4 +230,10 @@ export class RewardStore {
       this.isRedeeming = false
     }
   })
+
+  @action
+  completeRedemption = () => {
+    this.store.ui.hideModal()
+    this.store.routing.replace('/onboarding/complete')
+  }
 }

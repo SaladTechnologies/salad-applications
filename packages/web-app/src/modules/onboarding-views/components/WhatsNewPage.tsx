@@ -42,13 +42,13 @@ class _WhatsNewPage extends Component<Props> {
             hashrate.
           </p>
           <p>
-            <i>Running</i> - after we detect your hashrate, you’ll be “chopping” until you start submitting shares.
+            <i>Running</i> - after we detect your hashrate, you'll be “chopping” until you start submitting shares.
           </p>
           <p>
             <i>Earning</i> - after we verify your successful submission of a share,
           </p>
           <p>
-            your hard coded earning rate will be displayed.If you don’t have an active earning rate, your balance will
+            your hard coded earning rate will be displayed.If you don't have an active earning rate, your balance will
             not tick up.
           </p>
         </div>
