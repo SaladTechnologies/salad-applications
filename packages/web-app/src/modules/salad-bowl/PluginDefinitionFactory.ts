@@ -25,7 +25,7 @@ export const getPluginDefinition = (store: RootStore): PluginDefinition | undefi
 export const beamV2Definition = (machine: Machine): PluginDefinition | undefined => {
   let def = {
     name: 'BeamV2',
-    downloadUrl: 'https://github.com/develsoftware/GMinerRelease/releases/download/1.70/gminer_1_70_windows64.zip',
+    downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/v1.0.0/gminer-1-78-windows.zip',
     exe: 'miner.exe',
     args: `-a beamhashII ${beamUser('usa', machine.minerId)} ${beamUser('eu', machine.minerId)} ${beamUser(
       'hk',
