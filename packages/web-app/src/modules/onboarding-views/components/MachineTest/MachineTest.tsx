@@ -34,8 +34,6 @@ interface Props extends WithStyles<typeof styles> {
 class _MachineTest extends Component<Props> {
   state = {
     togglePhraseViewer: false,
-    // toggleTestResults: false,
-    // toggleTestButton: true,
   }
 
   handleTestMachine = () => {

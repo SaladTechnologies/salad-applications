@@ -25,13 +25,13 @@ export class ProfileStore {
   public isOnboardingComplete: boolean = false
 
   @observable
-  public isOnboardingRedeem: boolean = true
+  public isOnboardingRedeem: boolean = false
 
   @observable
   public isOnboardingRunning: boolean = false
 
   @observable
-  public isOnboardingTesting: boolean = false
+  public isOnboardingTesting: boolean = true
   //#endregion
 
   @observable

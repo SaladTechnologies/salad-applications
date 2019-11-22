@@ -36,7 +36,7 @@ declare global {
 export class NativeStore {
   private callbacks = new Map<string, Function>()
 
-  // private failedCount: number = 0
+  private failedCount: number = 0
 
   //#region Observables
   @observable
@@ -99,8 +99,8 @@ export class NativeStore {
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     //Starts the timer to check for online/offline status
-    // setInterval(this.checkOnlineStatus, 5000)
-    // this.checkOnlineStatus()
+    setInterval(this.checkOnlineStatus, 5000)
+    this.checkOnlineStatus()
 
     runInAction(() => {
       this.skippedCompatCheck = Storage.getOrSetDefault(compatibilityKey, 'false') === 'true'
@@ -156,28 +156,28 @@ export class NativeStore {
     window.salad.dispatch(type, payload)
   }
 
-  // @action.bound
-  // private checkOnlineStatus = flow(function*(this: NativeStore) {
-  //   var prevOnline = this.isOnline
-  //   try {
-  //     yield this.axios.get('online')
-  //     this.failedCount = 0
-  //     this.isOnline = true
-  //   } catch (err) {
-  //     //TODO: Remove these checks once we have an unauthenticated API to check
-  //     if (err.response === undefined || err.response.status !== 401) {
-  //       console.log(err)
-  //       this.failedCount += 1
+  @action.bound
+  private checkOnlineStatus = flow(function*(this: NativeStore) {
+    var prevOnline = this.isOnline
+    try {
+      yield this.axios.get('online')
+      this.failedCount = 0
+      this.isOnline = true
+    } catch (err) {
+      //TODO: Remove these checks once we have an unauthenticated API to check
+      if (err.response === undefined || err.response.status !== 401) {
+        console.log(err)
+        this.failedCount += 1
 
-  //       if (this.failedCount >= 3) {
-  //         this.isOnline = false
-  //       }
-  //     }
-  //   }
-  //   if (this.isOnline !== prevOnline) {
-  //     this.store.routing.replace('/')
-  //   }
-  // })
+        if (this.failedCount >= 3) {
+          this.isOnline = false
+        }
+      }
+    }
+    if (this.isOnline !== prevOnline) {
+      this.store.routing.replace('/')
+    }
+  })
 
   @action
   setDesktopVersion = (version: string) => {

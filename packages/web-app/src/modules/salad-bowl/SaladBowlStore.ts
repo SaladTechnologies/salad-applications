@@ -115,13 +115,12 @@ export class SaladBowlStore {
   @action
   onReceiveError = (message: ErrorMessage) => {
     this.store.analytics.trackMiningError(message.errorCategory, message.errorCode)
-    // this.errorMessage = message.message
 
     // Show the error modal
     switch (message.errorCategory) {
       case ErrorCategory.AntiVirus:
         this.errorCategory = ErrorCategory.AntiVirus
-        this.errorMessage = 'Antivirus removed the miner'
+        this.errorMessage = 'Anti-Virus removed the miner'
 
         if (!this.store.profile.isOnboarding) {
           this.store.ui.showModal('/errors/anti-virus')
@@ -129,19 +128,11 @@ export class SaladBowlStore {
         break
       case ErrorCategory.Driver:
         this.errorCategory = ErrorCategory.Driver
-        this.errorMessage = 'Incompatible CUDA Drivers'
-
-        // if (!this.store.profile.isOnboarding) {
-        //   this.store.ui.showModal('/errors/cuda')
-        // }
+        this.errorMessage = 'Incompatible CUDA driver'
         break
       case ErrorCategory.Network:
         this.errorCategory = ErrorCategory.Network
-        this.errorMessage = 'TODO: Need network copy'
-
-        // if (!this.store.profile.isOnboarding) {
-        //   this.store.ui.showModal('/errors/network')
-        // }
+        this.errorMessage = 'Network error'
         break
       case ErrorCategory.Silent:
         console.log('Ignoring silent error')
@@ -149,11 +140,7 @@ export class SaladBowlStore {
       case ErrorCategory.Unknown:
       default:
         this.errorCategory = ErrorCategory.Unknown
-        this.errorMessage = 'TODO: Need unknown copy'
-
-        // if (!this.store.profile.isOnboarding) {
-        //   this.store.ui.showModal('/errors/unknown')
-        // }
+        this.errorMessage = 'Unknown error'
         break
     }
   }
@@ -169,10 +156,10 @@ export class SaladBowlStore {
 
   @action.bound
   start = flow(function*(this: SaladBowlStore) {
-    // if (!this.canRun) {
-    //   console.log('This machine is not able to run.')
-    //   return
-    // }
+    if (!this.canRun) {
+      console.log('This machine is not able to run.')
+      return
+    }
 
     let pluginDefinition = getPluginDefinition(this.store)
 
