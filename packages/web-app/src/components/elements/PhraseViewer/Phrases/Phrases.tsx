@@ -84,7 +84,7 @@ class _Phrases extends Component<Props> {
 
     let index: number = this.getRandomNumber(phraseType)
 
-    if (index === this.state.lastPhraseIndex) this.phraseTimer
+    if (index === this.state.lastPhraseIndex) this.phraseTimer()
 
     this.setState({
       lastPhraseIndex: index,
