@@ -109,17 +109,19 @@ class _Phrases extends Component<Props> {
     }
   }
 
-  phraseTimer = setInterval(() => {
-    this.setPhrase()
-  }, this.getPhraseDelay())
+  phraseTimer = () => {
+    return setInterval(() => {
+      this.setPhrase()
+    }, this.getPhraseDelay())
+  }
 
   componentDidMount() {
     this.setPhrase()
-    this.phraseTimer
+    this.phraseTimer()
   }
 
   componentWillUnmount() {
-    clearInterval(this.phraseTimer)
+    clearInterval(this.phraseTimer())
   }
 
   render() {

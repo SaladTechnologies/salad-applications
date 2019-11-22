@@ -99,7 +99,7 @@ class _MachineTest extends Component<Props> {
 
         {this.state.togglePhraseViewer && pluginStatus !== 'running' && (
           <>
-            <PhraseViewer phraseType={PhraseType.all} phraseDelay={5000} />
+            <PhraseViewer phraseType={PhraseType.all} phraseDelay={6000} />
 
             <div className={classes.stopTest}>
               <Button uppercase onClick={this.handleAbortTest} className={classnames(classes.stopTestBtn)}>
