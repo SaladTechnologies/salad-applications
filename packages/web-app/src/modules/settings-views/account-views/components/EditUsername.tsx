@@ -65,7 +65,7 @@ class _EditUsername extends Component<Props, State> {
       <>
         <Username blue>Username</Username>
         <P>
-          Spice up your Salad account with a unique, personalized username. This username is what we’ll refer to you as
+          Spice up your Salad account with a unique, personalized username. This username is what we'll refer to you as
           in reward emails and will be what your friends see when you refer them to Salad via email.
         </P>
 

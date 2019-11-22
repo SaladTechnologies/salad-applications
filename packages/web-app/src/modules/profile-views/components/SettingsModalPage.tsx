@@ -75,14 +75,14 @@ class _SettingsModalPage extends Component<Props> {
             <br />
             <div className={classnames(classes.lineBreak, classes.detailButton)}>
               <b>Smart Start: </b>
-              Smartypants Salad will start chopping whenever you’re not using the computer, and automatically stop when
+              Smartypants Salad will start chopping whenever you're not using the computer, and automatically stop when
               you are. Open on boot up, and Salad will launch after booting up your computer.
             </div>
             <div className={classnames(classes.lineBreak, classes.detailButton)}>
-              <b>Battery Saver: </b>Salad won’t chop if your laptop isn’t connected to a power source.
+              <b>Battery Saver: </b>Salad won't chop if your laptop isn't connected to a power source.
             </div>
             <div className={classes.detailButton}>
-              <b>Desktop Notifications: </b>In case there’s some Salad Fixins’ we’ve got to tell you about.
+              <b>Desktop Notifications: </b>In case there's some Salad Fixins' we've got to tell you about.
             </div>
           </div>
           <div>

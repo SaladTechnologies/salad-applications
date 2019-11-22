@@ -29,6 +29,12 @@ export class RewardStore {
   @observable
   public isSelecting: boolean = false
 
+  @observable
+  public onboardingReward?: Reward | undefined
+
+  @observable
+  public onboardingRedeemed?: boolean = false
+
   @computed get selectedReward(): Reward | undefined {
     return this.getReward(this.selectedRewardId)
   }
@@ -75,7 +81,9 @@ export class RewardStore {
     return rewardList
   }
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
+  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
+    // this.getOnboardingReward()
+  }
 
   getReward = (id?: string): Reward | undefined => {
     if (id === undefined) return undefined
@@ -88,7 +96,7 @@ export class RewardStore {
     try {
       this.isLoading = true
       const response = yield this.axios.get<RewardsResource[]>('rewards')
-      if (response.data == undefined) return
+      if (response.data === undefined) return
       this.rewards = response.data.map(rewardFromResource).sort((a: Reward, b: Reward) => a.price - b.price)
       this.updateFilters()
     } catch (error) {
@@ -132,14 +140,34 @@ export class RewardStore {
   }
 
   @action.bound
+  setOnboardingReward = flow(function*(this: RewardStore) {
+    try {
+      const response = yield this.axios.get('rewards/onboarding')
+      this.onboardingReward = response.data
+
+    } catch (error) {
+      console.log('onboarding rewards error: ', error)
+      this.onboardingReward = undefined
+    }
+  })
+
+  @action.bound
   loadSelectedReward = flow(function*(this: RewardStore) {
     var res = yield this.axios.get('profile/selected-reward')
     this.selectedRewardId = res.data.rewardId
   })
 
   viewReward = (reward: Reward) => {
+    console.log('>> [[RewardStore] viewReward] am I getting here from redeem reward?')
+    console.log('>> [[RewardStore] viewReward] [BEFORE] location: ', window.location.href)
+    console.log('>> [[RewardStore] viewReward] reward: ', reward)
+    console.log('>> [[RewardStore] viewReward] reward.id: ', reward.id)
+
     this.store.ui.showModal(`/rewards/${reward.id}`)
-    this.store.analytics.trackRewardView(reward)
+
+    console.log('>> [[RewardStore] viewReward] [AFTER] location: ', window.location.href)
+
+    // this.store.analytics.trackRewardView(reward)
   }
 
   @action.bound
@@ -158,7 +186,7 @@ export class RewardStore {
 
       if (reward) this.store.analytics.trackSelectedReward(reward)
 
-      this.store.routing.push('/')
+      // this.store.routing.push('/')
     } catch (error) {
       console.error(error)
     } finally {
@@ -173,7 +201,7 @@ export class RewardStore {
       return
     }
 
-    this.isRedeeming = true
+    this.isRedeeming = this.onboardingRedeemed = true
 
     const req = {
       giftEmail: email,
@@ -202,4 +230,10 @@ export class RewardStore {
       this.isRedeeming = false
     }
   })
+
+  @action
+  completeRedemption = () => {
+    this.store.ui.hideModal()
+    this.store.routing.replace('/onboarding/complete')
+  }
 }

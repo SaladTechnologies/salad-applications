@@ -3,7 +3,7 @@ import { RootStore } from '../../Store'
 import { RedemptionCompleteModal } from './components/RedemptionCompleteModal'
 
 const mapStoreToProps = (store: RootStore): any => ({
-  onCloseClicked: store.ui.hideModal,
+  onCloseClicked: store.rewards.completeRedemption,
 })
 
 export const RedemptionCompleteModalContainer = connect(

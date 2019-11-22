@@ -36,7 +36,7 @@ declare global {
 export class NativeStore {
   private callbacks = new Map<string, Function>()
 
-  // private failedCount: number = 0
+  private failedCount: number = 0
 
   //#region Observables
   @observable
@@ -92,11 +92,6 @@ export class NativeStore {
   }
 
   @computed
-  get machineId(): string {
-    return this.store.token.getMachineId()
-  }
-
-  @computed
   get gpuNames(): string[] | undefined {
     if (this.machineInfo === undefined) return undefined
     return this.machineInfo.graphics.controllers.map(x => x.model)
@@ -104,8 +99,8 @@ export class NativeStore {
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     //Starts the timer to check for online/offline status
-    // setInterval(this.checkOnlineStatus, 5000)
-    // this.checkOnlineStatus()
+    setInterval(this.checkOnlineStatus, 5000)
+    this.checkOnlineStatus()
 
     runInAction(() => {
       this.skippedCompatCheck = Storage.getOrSetDefault(compatibilityKey, 'false') === 'true'
@@ -161,28 +156,28 @@ export class NativeStore {
     window.salad.dispatch(type, payload)
   }
 
-  // @action.bound
-  // private checkOnlineStatus = flow(function*(this: NativeStore) {
-  //   var prevOnline = this.isOnline
-  //   try {
-  //     yield this.axios.get('online')
-  //     this.failedCount = 0
-  //     this.isOnline = true
-  //   } catch (err) {
-  //     //TODO: Remove these checks once we have an unauthenticated API to check
-  //     if (err.response === undefined || err.response.status !== 401) {
-  //       console.log(err)
-  //       this.failedCount += 1
+  @action.bound
+  private checkOnlineStatus = flow(function*(this: NativeStore) {
+    var prevOnline = this.isOnline
+    try {
+      yield this.axios.get('online')
+      this.failedCount = 0
+      this.isOnline = true
+    } catch (err) {
+      //TODO: Remove these checks once we have an unauthenticated API to check
+      if (err.response === undefined || err.response.status !== 401) {
+        console.log(err)
+        this.failedCount += 1
 
-  //       if (this.failedCount >= 3) {
-  //         this.isOnline = false
-  //       }
-  //     }
-  //   }
-  //   if (this.isOnline !== prevOnline) {
-  //     this.store.routing.replace('/')
-  //   }
-  // })
+        if (this.failedCount >= 3) {
+          this.isOnline = false
+        }
+      }
+    }
+    if (this.isOnline !== prevOnline) {
+      this.store.routing.replace('/')
+    }
+  })
 
   @action
   setDesktopVersion = (version: string) => {
@@ -203,7 +198,7 @@ export class NativeStore {
 
   @action
   sendLog = () => {
-    this.send(sendLog, this.machineId)
+    this.send(sendLog, this.store.token.machineId)
   }
 
   @action
@@ -228,9 +223,14 @@ export class NativeStore {
       return
     }
 
+    if (!this.store.token.machineId) {
+      console.warn('No valid machine id found. Unable to register')
+      return
+    }
+
     try {
       console.log('Registering machine with salad')
-      let res: any = yield this.axios.post(`machines/${this.machineId}/data`, this.machineInfo)
+      let res: any = yield this.axios.post(`machines/${this.store.token.machineId}/data`, this.machineInfo)
       let machine: Machine = res.data
 
       this.validGPUs = machine.validGpus

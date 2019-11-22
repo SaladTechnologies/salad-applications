@@ -2,7 +2,7 @@ import { observable, action, flow, computed } from 'mobx'
 import { PluginInfo } from './models/PluginInfo'
 import { StatusMessage } from './models/StatusMessage'
 import { PluginStatus } from './models/PluginStatus'
-import { AxiosInstance } from 'axios'
+import { AxiosInstance, AxiosError } from 'axios'
 import { Config } from '../../config'
 import { RootStore } from '../../Store'
 import { MiningStatus } from '../machine/models'
@@ -115,13 +115,12 @@ export class SaladBowlStore {
   @action
   onReceiveError = (message: ErrorMessage) => {
     this.store.analytics.trackMiningError(message.errorCategory, message.errorCode)
-    // this.errorMessage = message.message
 
     // Show the error modal
     switch (message.errorCategory) {
       case ErrorCategory.AntiVirus:
         this.errorCategory = ErrorCategory.AntiVirus
-        this.errorMessage = 'Antivirus removed the miner'
+        this.errorMessage = 'Anti-Virus removed the miner'
 
         if (!this.store.profile.isOnboarding) {
           this.store.ui.showModal('/errors/anti-virus')
@@ -129,19 +128,11 @@ export class SaladBowlStore {
         break
       case ErrorCategory.Driver:
         this.errorCategory = ErrorCategory.Driver
-        this.errorMessage = 'Incompatible CUDA Drivers'
-
-        // if (!this.store.profile.isOnboarding) {
-        //   this.store.ui.showModal('/errors/cuda')
-        // }
+        this.errorMessage = 'Incompatible CUDA driver'
         break
       case ErrorCategory.Network:
         this.errorCategory = ErrorCategory.Network
-        this.errorMessage = 'TODO: Need network copy'
-
-        // if (!this.store.profile.isOnboarding) {
-        //   this.store.ui.showModal('/errors/network')
-        // }
+        this.errorMessage = 'Network error'
         break
       case ErrorCategory.Silent:
         console.log('Ignoring silent error')
@@ -149,11 +140,7 @@ export class SaladBowlStore {
       case ErrorCategory.Unknown:
       default:
         this.errorCategory = ErrorCategory.Unknown
-        this.errorMessage = 'TODO: Need unknown copy'
-
-        // if (!this.store.profile.isOnboarding) {
-        //   this.store.ui.showModal('/errors/unknown')
-        // }
+        this.errorMessage = 'Unknown error'
         break
     }
   }
@@ -169,10 +156,10 @@ export class SaladBowlStore {
 
   @action.bound
   start = flow(function*(this: SaladBowlStore) {
-    // if (!this.canRun) {
-    //   console.log('This machine is not able to run.')
-    //   return
-    // }
+    if (!this.canRun) {
+      console.log('This machine is not able to run.')
+      return
+    }
 
     let pluginDefinition = getPluginDefinition(this.store)
 
@@ -205,6 +192,7 @@ export class SaladBowlStore {
     this.initializingStatus = this.runningStatus = this.earningStatus = false
 
     this.sendRunningStatus()
+
     if (this.runningHeartbeat) {
       clearInterval(this.runningHeartbeat)
       this.runningHeartbeat = undefined
@@ -214,14 +202,31 @@ export class SaladBowlStore {
   })
 
   @action.bound
-  sendRunningStatus = flow(function*(this: SaladBowlStore) {
-    const machineId = this.store.token.getMachineId()
+  sendRunningStatus = flow(function*(this: SaladBowlStore, retry?: boolean) {
+    const machineId = this.store.token.machineId
+
+    if (!machineId) {
+      console.warn('No machineId found. Unable to send running status')
+      return
+    }
 
     const data = {
       status: this.machineStatus,
     }
+
     try {
       yield this.axios.post(`machines/${machineId}/status`, data)
-    } catch {}
+    } catch (e) {
+      let err: AxiosError = e
+      if (err.response && err.response.status === 409) {
+        console.log('Machine status conflict. Restarting')
+        if (!retry) {
+          this.plugin.status = PluginStatus.Initializing
+          this.sendRunningStatus(true)
+        }
+      } else {
+        throw e
+      }
+    }
   })
 }

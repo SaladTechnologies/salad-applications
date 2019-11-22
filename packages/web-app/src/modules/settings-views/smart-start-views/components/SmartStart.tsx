@@ -23,7 +23,7 @@ class _SmartStart extends Component<Props> {
         </div>
         <div className="main">
           <P>
-            Smartypants Salad will start chopping whenever you’re not using the computer, and automatically stop when
+            Smartypants Salad will start chopping whenever you're not using the computer, and automatically stop when
             you are.Open on boot up, and Salad will launch after booting up your computer.
           </P>
         </div>

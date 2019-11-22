@@ -188,9 +188,6 @@ export class ProfileStore {
 
     this.earningRatePerDay = earningRatePerDay
     this.rewardsOverTime = rewardCount
-
-    console.log('>> [[ProfileStore] startMachineTest] << earningRatePerDay: ', earningRatePerDay)
-    console.log('>> [[ProfileStore] startMachineTest] << rewardCount: ', rewardCount)
   }
 
   @action
@@ -214,15 +211,23 @@ export class ProfileStore {
       case '/onboarding/running':
         this.isOnboardingRunning = true
         break
-      case '/onboarding/redeem':
+      case '/onboarding/redeem-rewards':
         this.isOnboardingRedeem = true
         break
       case '/onboarding/complete':
         this.isOnboardingComplete = true
         break
+      default:
+        this.onboarding = false
+        break
     }
 
     return this.store.routing.replace('/')
+  }
+
+  @action
+  completeOnboarding = () => {
+    this.isOnboarding
   }
 
   sleep = (ms: number) => {
