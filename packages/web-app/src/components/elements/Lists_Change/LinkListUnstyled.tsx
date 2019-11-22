@@ -7,7 +7,7 @@ import { getStore } from '../../../Store'
 import { SaladTheme } from '../../../SaladTheme'
 
 // UI
-import { MenuTitle } from '../../'
+import { MenuTitle } from '../..'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
