@@ -50,7 +50,7 @@ export class ReferralStore {
     let sum = 0
 
     this.referrals.forEach(x => {
-      if (x.referralDefinition) {
+      if (x && x.referralDefinition) {
         sum += x.earnedBalance * x.referralDefinition.referrerBonus
       }
     })
