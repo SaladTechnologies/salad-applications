@@ -227,7 +227,7 @@ export class ProfileStore {
 
   @action
   completeOnboarding = () => {
-    this.isOnboarding
+    this.onboarding = false
   }
 
   sleep = (ms: number) => {
