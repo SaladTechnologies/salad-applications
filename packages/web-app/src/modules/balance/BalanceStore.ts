@@ -50,7 +50,11 @@ export class BalanceStore {
         this.interpolRate = 0
         this.currentBalance = balance.data.currentBalance
       } else {
-        this.interpolRate = this.lastDeltaBalance / Config.dataRefreshRate
+        if (this.store.profile.isOnboarding) {
+          this.interpolRate = this.lastDeltaBalance / Config.onboardingDataRefreshRate
+        } else {
+          this.interpolRate = this.lastDeltaBalance / Config.dataRefreshRate
+        }
       }
 
       // Clears out a check on 'Stopped' so mining status is not changed to 'Earning'

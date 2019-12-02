@@ -12,9 +12,16 @@ export class RefreshService {
     console.log('Starting refresh service')
 
     //Start a timer to poll for data
-    this.dataTimer = setInterval(() => {
-      this.refreshData()
-    }, Config.dataRefreshRate)
+    if(this.store.profile.isOnboarding) {
+      this.dataTimer = setInterval(() => {
+        this.refreshData()
+      }, Config.onboardingDataRefreshRate)
+    } else {
+      this.dataTimer = setInterval(() => {
+        this.refreshData()
+      }, Config.dataRefreshRate)
+    }
+    
 
     this.xpTimer = setInterval(() => {
       this.store.xp.refreshXp()
@@ -31,6 +38,7 @@ export class RefreshService {
   }
 
   refreshData = () => {
+    console.log('=>> RefreshData')
     if (!this.store.auth.isAuthenticated()) {
       return
     }
