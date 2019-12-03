@@ -26,16 +26,15 @@
     "@fortawesome/free-solid-svg-icons": "^5.7.1",
     "@fortawesome/react-fontawesome": "^0.1.4",
     "@sentry/browser": "^5.5.0",
-    "@storybook/addon-actions": "^5.2.6",
-    "@storybook/addon-backgrounds": "^5.0.0",
-    "@storybook/addon-console": "^1.1.0",
-    "@storybook/addon-knobs": "^5.0.0",
-    "@storybook/addon-links": "^5.2.6",
-    "@storybook/addon-notes": "^5.0.0",
-    "@storybook/addons": "^5.2.6",
-    "@storybook/react": "^5.2.6",
+    "@storybook/addon-actions": "^5.2.8",
+    "@storybook/addon-backgrounds": "^5.2.8",
+    "@storybook/addon-console": "^1.2.1",
+    "@storybook/addon-knobs": "^5.2.8",
+    "@storybook/addon-links": "^5.2.8",
+    "@storybook/addon-notes": "^5.2.8",
+    "@storybook/addons": "^5.2.8",
+    "@storybook/react": "^5.2.8",
     "@types/auth0-js": "^8.11.11",
-    "@types/axios": "^0.14.0",
     "@types/classnames": "^2.2.7",
     "@types/lorem-ipsum": "^1.0.2",
     "@types/mixpanel-browser": "^2.23.0",
@@ -47,13 +46,9 @@
     "@types/react-jss": "^8.6.1",
     "@types/react-router-dom": "^4.3.1",
     "@types/react-transition-group": "^2.0.16",
-    "@types/storybook__addon-actions": "^3.4.2",
-    "@types/storybook__addon-knobs": "^4.0.1",
-    "@types/storybook__react": "^4.0.1",
     "@types/uuid": "^3.4.4",
     "auth0-js": "^9.10.0",
     "axios": "^0.18.0",
-    "babel-loader": "8.0.6",
     "classnames": "^2.2.6",
     "final-form": "^4.12.0",
     "launchdarkly-js-client-sdk": "^2.13.0",
@@ -84,8 +79,5 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "devDependencies": {
-    "core-js": "2.6.10",
-    "webpack": "4.41.0"
-  }
+  "devDependencies": {}
 }

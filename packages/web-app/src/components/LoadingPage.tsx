@@ -51,7 +51,7 @@ class _LoadingPage extends Component<Props> {
     const { text, classes } = this.props
     return (
       <div className={classes.container}>
-        <img className={classes.logo} src={logo} />
+        <img className={classes.logo} src={logo} alt="" />
         <div className={classNames(classes.text)}>
           <p>{text === undefined ? 'Loading...' : text}</p>
         </div>
