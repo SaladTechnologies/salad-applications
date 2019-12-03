@@ -38,7 +38,11 @@ class _ProfileImage extends Component<Props> {
     const { src, classes } = this.props
     return (
       <div data-rh={'profile-image'} className={classNames(classes.container)}>
-        {src ? <img className={classes.img} src={src} /> : <div className={classes.fallbackText}>Alpha Release</div>}
+        {src ? (
+          <img className={classes.img} src={src} alt="" />
+        ) : (
+          <div className={classes.fallbackText}>Alpha Release</div>
+        )}
       </div>
     )
   }

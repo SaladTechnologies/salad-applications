@@ -104,7 +104,7 @@ class _RewardSummary extends Component<Props> {
       <div className={classnames(classes.container)} onClick={this.handleClick}>
         {/* Image */}
         <AngledPanel className={classes.imageContainer} leftSide={'right'}>
-          <img className={classes.image} src={image} draggable={false} />
+          <img className={classes.image} src={image} draggable={false} alt="" />
         </AngledPanel>
 
         {/* Right side panel */}
