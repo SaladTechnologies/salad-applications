@@ -186,7 +186,7 @@ export class ProfileStore {
       }
     })
 
-    this.store.analytics.track('Onboarding: Test Run')
+    this.store.analytics.trackError('Onboarding: Test Run')
 
     this.earningRatePerDay = earningRatePerDay
     this.rewardsOverTime = rewardCount
@@ -208,6 +208,7 @@ export class ProfileStore {
   }
 
   @action
+  // Pathname is set when the user clicks Next on an Onboarding page
   onNext = (pathname: string) => {
     this.isOnboardingComplete = this.isOnboardingRedeem = this.isOnboardingRunning = this.isOnboardingTesting = false
 
@@ -216,9 +217,8 @@ export class ProfileStore {
         this.isOnboardingRunning = true
         break
       case '/onboarding/redeem-rewards':
-        // This pathname is set when the user clicks Next on the Running page
         this.isOnboardingRedeem = true
-        this.store.analytics.track('Onboarding: Running Page Complete')
+        this.store.analytics.trackError('Onboarding: Running Page Complete')
         break
       case '/onboarding/complete':
         this.isOnboardingComplete = true

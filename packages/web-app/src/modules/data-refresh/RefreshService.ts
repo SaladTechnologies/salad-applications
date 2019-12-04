@@ -12,7 +12,7 @@ export class RefreshService {
     console.log('Starting refresh service')
 
     //Start a timer to poll for data
-    if(this.store.profile.isOnboarding) {
+    if (this.store.profile.onboarding) {
       this.dataTimer = setInterval(() => {
         this.refreshData()
       }, Config.onboardingDataRefreshRate)
@@ -21,7 +21,6 @@ export class RefreshService {
         this.refreshData()
       }, Config.dataRefreshRate)
     }
-    
 
     this.xpTimer = setInterval(() => {
       this.store.xp.refreshXp()

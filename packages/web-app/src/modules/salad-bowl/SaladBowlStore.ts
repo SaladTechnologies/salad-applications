@@ -116,6 +116,10 @@ export class SaladBowlStore {
   onReceiveError = (message: ErrorMessage) => {
     this.store.analytics.trackMiningError(message.errorCategory, message.errorCode)
 
+    if (this.store.profile.onboarding) {
+      this.store.analytics.trackError(`Onbarding: ${message.errorCategory}`)
+    }
+
     // Show the error modal
     switch (message.errorCategory) {
       case ErrorCategory.AntiVirus:
@@ -125,8 +129,6 @@ export class SaladBowlStore {
         // This is starting to feel dirty
         if (!this.store.profile.isOnboarding) {
           this.store.ui.showModal('/errors/anti-virus')
-        } else {
-          this.store.analytics.track('Onbarding: AV Error')
         }
         break
       case ErrorCategory.Driver:
