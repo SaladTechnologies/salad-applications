@@ -186,6 +186,8 @@ export class ProfileStore {
       }
     })
 
+    this.store.analytics.track('Onboarding: Test Run')
+
     this.earningRatePerDay = earningRatePerDay
     this.rewardsOverTime = rewardCount
   }
@@ -199,6 +201,8 @@ export class ProfileStore {
   @action
   restartMachineTest = () => {
     console.log('>> [[ProfileStore] restartMachineTest] <<')
+    // Button: [ Run test again || Run test later ]
+
     // this.store.saladBowl.stop()
     // this.store.saladBowl.start()
   }
@@ -212,7 +216,9 @@ export class ProfileStore {
         this.isOnboardingRunning = true
         break
       case '/onboarding/redeem-rewards':
+        // This pathname is set when the user clicks Next on the Running page
         this.isOnboardingRedeem = true
+        this.store.analytics.track('Onboarding: Running Page Complete')
         break
       case '/onboarding/complete':
         this.isOnboardingComplete = true

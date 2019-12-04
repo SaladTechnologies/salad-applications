@@ -122,8 +122,11 @@ export class SaladBowlStore {
         this.errorCategory = ErrorCategory.AntiVirus
         this.errorMessage = 'Anti-Virus removed the miner'
 
+        // This is starting to feel dirty
         if (!this.store.profile.isOnboarding) {
           this.store.ui.showModal('/errors/anti-virus')
+        } else {
+          this.store.analytics.track('Onbarding: AV Error')
         }
         break
       case ErrorCategory.Driver:
