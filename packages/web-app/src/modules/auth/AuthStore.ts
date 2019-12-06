@@ -10,10 +10,16 @@ import { SALAD_TOKEN } from '.'
 const WEB_SYSTEM_ID = 'WEB_SYSTEM_ID'
 
 export class AuthStore {
+  private webAuth: WebAuth
+
+  /** Flag indicating if we are currently verifying */
+  private isVerifying: boolean = false
+
+  @observable
+  public hasVerifiedEmail: boolean = false
+
   @observable
   public authToken?: string = undefined
-  public webAuth: WebAuth
-  public authProfile: any
 
   @observable
   public isLoading: boolean = false
@@ -26,6 +32,9 @@ export class AuthStore {
 
   @observable
   public auth0Result?: Auth0DecodedHash
+
+  @observable
+  public sendVerificationStatus?: string
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     let redirect = `${window.location.origin}/auth/callback`
@@ -72,21 +81,22 @@ export class AuthStore {
   }
 
   @action.bound
-  handleAuthentication = flow(function*(this: AuthStore) {
+  handleAuthentication = flow(function* (this: AuthStore) {
     this.isLoading = true
 
     try {
       yield this.webAuth.parseHash((err, authResult) => {
         runInAction(() => {
           this.auth0Result = authResult || undefined
-
-          if (err) {
-            console.error('Login error: ', err)
-
-            this.loginError = err.errorDescription || err.error_description || 'Unable to login'
-            this.isLoading = false
-          }
+          this.hasVerifiedEmail = this.auth0Result?.idTokenPayload?.email_verified
         })
+
+        if (err) {
+          console.error('Login error: ', err)
+
+          this.loginError = err.errorDescription || err.error_description || 'Unable to login'
+          this.isLoading = false
+        }
       })
     } catch (error) {
       console.error('Login error: ', error)
@@ -102,6 +112,12 @@ export class AuthStore {
       //Ensures that we have an auth0 token
       if (this.auth0Result === undefined) {
         console.log('No auth0 result, waiting to login')
+        return
+      }
+
+      if (!this.hasVerifiedEmail) {
+        console.log('Email not verified yet. Waiting to login')
+        this.startVerificationCheck()
         return
       }
 
@@ -127,15 +143,16 @@ export class AuthStore {
         idToken: this.auth0Result.idToken,
       }
 
-      this.axios
-        .post('login', data)
-        .then(response => {
+      const login = this.axios.post('login', data)
+
+      login
+        .then((response) => {
           const saladToken: string = response.data.token
           this.store.token.setToken(saladToken)
 
           this.processAuthentication()
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err)
         })
         .then(async () => {
@@ -146,6 +163,12 @@ export class AuthStore {
             //Ensure we have connected the Auth0 id to the Salad Id
             this.store.analytics.aliasUser(this.auth0Result.idTokenPayload.sub)
           }
+        })
+        .catch((err) => {
+          console.warn('Error logging in ' + err)
+          this.isAuth = false
+          this.isLoading = false
+          this.loginError = err
         })
     })
   }
@@ -176,4 +199,67 @@ export class AuthStore {
     //Switch back to the main page
     this.store.routing.replace('/')
   }
+
+  startVerificationCheck = () => {
+    if (this.isVerifying) {
+      console.log('Already trying to verify the email account')
+      return
+    }
+
+    this.store.routing.push('/email-verification')
+
+    let accessToken = this.auth0Result?.accessToken
+
+    this.isVerifying = true
+
+    // Begin polling for a change in user verification status.
+    const loop = setInterval(() => {
+      if (!accessToken) return
+      this.webAuth.client.userInfo(accessToken, (error, userInfo) => {
+        if (error) {
+          console.error(error)
+        } else {
+          runInAction(() => {
+            this.hasVerifiedEmail = !!userInfo.email_verified
+            if (this.hasVerifiedEmail) {
+              console.log('Email is now verified')
+
+              //Stop the timer from checking
+              clearInterval(loop)
+              this.isVerifying = false
+              this.store.routing.push('/')
+            }
+          })
+        }
+      })
+    }, 6000)
+  }
+
+  /** Resend the verification email to the user */
+  @action.bound
+  resendVerificationEmail = flow(function* (this: AuthStore) {
+    this.sendVerificationStatus = undefined
+
+    //Ensures that we have an auth0 token
+    if (this.auth0Result === undefined) {
+      console.log('No auth0 result, waiting to login')
+      this.sendVerificationStatus = 'Unable to send verification email. Please restart Salad and try again.'
+      return
+    }
+
+    const data = {
+      authToken: this.auth0Result.accessToken,
+      idToken: this.auth0Result.idToken,
+    }
+
+    console.log('Resending verification email')
+
+    try {
+      yield this.axios.post('login/verification-email', data)
+      this.sendVerificationStatus = 'Verification email sent'
+    } catch {
+      console.warn('Unable to send verification email')
+      this.sendVerificationStatus = 'Error sending verification email. Please try again.'
+    }
+  })
 }
