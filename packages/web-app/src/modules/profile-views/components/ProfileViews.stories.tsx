@@ -8,6 +8,7 @@ import { ProfileMenuTooltip } from './ProfileMenuTooltip'
 import { SettingsModalPage } from './SettingsModalPage'
 import { UserStatsSummary } from './UserStatsSummary'
 import { EditUsername } from '../../settings-views/account-views/components/EditUsername'
+import { EmailVerificationPage } from './EmailVerificationPage'
 
 const profile: Profile = {
   id: '1234',
@@ -41,3 +42,4 @@ storiesOf('Modules/Profile', module)
       </div>
     )
   })
+  .add('Email Verification Page', () => <EmailVerificationPage resendVerification={action('resend email')} />)
