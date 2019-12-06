@@ -105,7 +105,7 @@ class _RewardDetailsPanel extends Component<Props> {
     return (
       <div className={classnames(classes.container)}>
         <AngledPanel className={classes.imageContainer} leftSide={'right'}>
-          {reward && <img className={classes.image} src={reward.image} draggable={false} />}
+          {reward && <img className={classes.image} src={reward.image} draggable={false} alt="" />}
         </AngledPanel>
 
         <div className={classnames(classes.rightContainer)}>

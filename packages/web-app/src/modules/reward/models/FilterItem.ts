@@ -17,10 +17,6 @@ export abstract class FilterItem {
 }
 
 export class TagFilter extends FilterItem {
-  constructor(name: string, checked?: boolean) {
-    super(name, checked)
-  }
-
   checkReward = (reward: Reward): boolean => {
     return reward && reward.tags && reward.tags.some(x => x === this.name)
   }

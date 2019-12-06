@@ -131,7 +131,7 @@ class _SelectedReward extends Component<Props> {
         <div className={classes.cardContainer} onClick={this.handleClick}>
           {/* Image */}
           <AngledPanel className={classes.imageContainer} leftSide={'right'}>
-            {reward && <img className={classes.image} src={reward.image} draggable={false} />}
+            {reward && <img className={classes.image} src={reward.image} draggable={false} alt="" />}
           </AngledPanel>
 
           {/* Right side panel */}

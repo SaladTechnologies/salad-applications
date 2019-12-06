@@ -64,7 +64,7 @@ export class ReferralStore {
     let sum = 0
 
     this.referrals.forEach(x => {
-      if (x.referralDefinition === undefined) return
+      if (x === undefined || x.referralDefinition === undefined) return
       sum += maximumReferrerBonus(x.referralDefinition) - x.earnedBalance * x.referralDefinition.referrerBonus
     })
 

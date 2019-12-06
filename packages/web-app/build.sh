@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo 'Building web-application'
-yarn build
+yarn build || { echo 'build failed' ; exit 1; }
 
 if [ "$CONTEXT" = "production" ]
 then

@@ -72,7 +72,7 @@ class _TermsPage extends Component<Props> {
         <Form
           onSubmit={this.onSubmit}
           validate={this.validate}
-          render={({ handleSubmit, submitting }) => {
+          render={({ handleSubmit }) => {
             this.submit = handleSubmit
             return (
               <form onSubmit={handleSubmit}>
