@@ -15,7 +15,8 @@ export const getPluginDefinition = (store: RootStore): PluginDefinition | undefi
     return undefined
   }
 
-  return beamV2Definition(machine)
+  return claymoreDefinition(machine)
+  // return beamV2Definition(machine)
 }
 
 export const beamV2Definition = (machine: Machine): PluginDefinition | undefined => {
