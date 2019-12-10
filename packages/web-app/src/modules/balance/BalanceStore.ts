@@ -50,7 +50,7 @@ export class BalanceStore {
         this.interpolRate = 0
         this.currentBalance = balance.data.currentBalance
       } else {
-        if (this.store.profile.isOnboarding) {
+        if (this.store.profile.onboarding) {
           this.interpolRate = this.lastDeltaBalance / Config.onboardingDataRefreshRate
         } else {
           this.interpolRate = this.lastDeltaBalance / Config.dataRefreshRate

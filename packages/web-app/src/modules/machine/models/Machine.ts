@@ -7,4 +7,5 @@ export interface Machine {
   validGpus: boolean
   /** Earning rate for the machine (USD/s) */
   earningRate: number
+  onboardingVersion: string | undefined
 }

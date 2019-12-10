@@ -29,7 +29,7 @@ import {
 } from './modules/reward-views'
 import { AccountModalContainer } from './modules/profile-views'
 import { AnimatedSwitch } from './components/AnimatedSwitch'
-// import { CompatibilityCheckPageContainer } from './modules/machine-views'
+import { CompatibilityCheckPageContainer } from './modules/machine-views'
 import {
   AntiVirusErrorContainer,
   CudaErrorContainer,
@@ -59,6 +59,8 @@ export default class Routes extends Component {
     let profile = this.store.profile.currentProfile
     let path = window.location.pathname
 
+    console.log('== || getOnboardingRedirect || ========================')
+
     if (profile === undefined) {
       if (this.store.profile.isLoading) {
         return <Redirect to="/profile-loading" />
@@ -79,8 +81,14 @@ export default class Routes extends Component {
       path = '/onboarding/complete'
     }
 
+    console.log('path: ', path)
+    
+
     // This stops the page from loading multiple times
     if (this.state.prevPath === path) return
+
+    console.log(`passed check for multiple redirects`)
+    console.log('=======================================================')
 
     this.setState({
       prevPath: path,
@@ -104,13 +112,16 @@ export default class Routes extends Component {
       )
     }
 
-    // let isElectron = this.store.native.isNative
+    let isElectron = this.store.native.isNative
     let isAuth = this.store.auth.isAuth
-    // let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
-    let isOnboarding = this.store.profile.onboarding
+    let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
+    let isOnboarding = this.store.profile.onboarding || this.store.profile.machineOnboarding
 
     console.log('== Routes - Pathname ==================================')
     console.log('pathname: ', window.location.pathname)
+    console.log('isOnboarding: ', isOnboarding)
+    console.log('---- profile.onboarding: ', this.store.profile.onboarding)
+    console.log('---- profile.machineOnboarding: ', this.store.profile.machineOnboarding)
     console.log('=======================================================')
 
     return (
@@ -126,9 +137,9 @@ export default class Routes extends Component {
           </>
         )}
 
-        {/* {isElectron && this.checkMachineLoading()}
+        {isElectron && this.checkMachineLoading()}
 
-        {isElectron && showCompatibilityPage && <CompatibilityCheckPageContainer />} */}
+        {isElectron && showCompatibilityPage && <CompatibilityCheckPageContainer />}
 
         {isAuth && <Auth />}
 

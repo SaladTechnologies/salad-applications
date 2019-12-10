@@ -86,6 +86,7 @@ class Config {
   public readonly dataTrackingVersion: string = requiredString('REACT_APP_DATA_TRACKING_VERSION')
   public readonly termsVersion: string = requiredString('REACT_APP_TERMS_VERSION')
   public readonly whatsNewVersion: string = requiredString('REACT_APP_WHATS_NEW_VERSION')
+  public readonly onboardingVersion: string = requiredString('REACT_APP_ONBOARDING_VERSION')
 
   public readonly devTools: boolean = optionalBool('REACT_APP_DEV_TOOLS')
 

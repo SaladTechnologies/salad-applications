@@ -234,7 +234,6 @@ export class RewardStore {
   @action
   completeRedemption = () => {
     this.store.analytics.trackError('Onboarding: Reward Redeemed')
-    // this.store.refresh.restartDataTimer()
     
     this.store.refresh.stop()
     this.store.refresh.start()

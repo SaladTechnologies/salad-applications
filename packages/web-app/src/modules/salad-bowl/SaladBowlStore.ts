@@ -92,12 +92,6 @@ export class SaladBowlStore {
     this.plugin.name = message.name
     this.plugin.status = message.status
 
-    console.log('>>))()) [[SaladBowl] onReceiveStatus] this.plugin.status: ', this.plugin.status)
-    console.log(
-      '>>))()) [[SaladBowl] onReceiveStatus] this.store.balance.lastDeltaBalance: ',
-      this.store.balance.lastDeltaBalance,
-    )
-
     switch (this.plugin.status) {
       case PluginStatus.Initializing:
         this.initializingStatus = true
@@ -127,7 +121,7 @@ export class SaladBowlStore {
         this.errorMessage = 'Anti-Virus removed the miner'
 
         // This is starting to feel dirty
-        if (!this.store.profile.isOnboarding) {
+        if (!this.store.profile.onboarding) {
           this.store.ui.showModal('/errors/anti-virus')
         }
         break
