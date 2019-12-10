@@ -26,7 +26,7 @@ class _InfoButton extends Component<Props> {
     return (
       <>
         <span className={classes.infoButton} data-rh="machine-sync-tooltip">
-          <img height={25} width={'auto'} src={i} />
+          <img height={25} width={'auto'} src={i} alt="" />
         </span>
         <ReactHint
           delay={{ hide: 250 }}

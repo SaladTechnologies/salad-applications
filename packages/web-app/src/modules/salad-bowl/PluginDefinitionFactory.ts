@@ -15,17 +15,13 @@ export const getPluginDefinition = (store: RootStore): PluginDefinition | undefi
     return undefined
   }
 
-  // if (store.native.gpuNames.some(x => x.includes('1050'))) {
   return beamV2Definition(machine)
-  // } else {
-  // return ethminerDefinition(machine, machineInfo)
-  // }
 }
 
 export const beamV2Definition = (machine: Machine): PluginDefinition | undefined => {
   let def = {
-    name: 'BeamV2',
-    downloadUrl: 'https://github.com/develsoftware/GMinerRelease/releases/download/1.70/gminer_1_70_windows64.zip',
+    name: 'BeamV2-1.83',
+    downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer1.83/gminer-1-83-windows.zip',
     exe: 'miner.exe',
     args: `-a beamhashII ${beamUser('usa', machine.minerId)} ${beamUser('eu', machine.minerId)} ${beamUser(
       'hk',
@@ -40,6 +36,19 @@ export const beamV2Definition = (machine: Machine): PluginDefinition | undefined
 
 const beamUser = (location: string, minerId: string) =>
   `-s beamv2.${location}.nicehash.com -n 3378 -u ${miningAddress}.${minerId}`
+
+export const claymoreDefinition = (machine: Machine): PluginDefinition | undefined => {
+  let def = {
+    name: 'Claymore-15',
+    downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/claymore15/claymore-15-windows.zip',
+    exe: 'EthDcrMiner64.exe',
+    args: `-esm 3 -ewal ${miningAddress}.${machine.minerId} -epool daggerhashimoto.usa.nicehash.com:3353 -allpools 1 -allcoins 0`,
+    runningCheck: 'ETH: GPU0 [1-9]+(\.[0-9][0-9][0-9]?)? [KMG]h/s',
+    errors: [...standardErrors]
+  }
+
+  return def
+}
 
 export const ethminerDefinition = (machine: Machine, machineInfo: MachineInfo): PluginDefinition | undefined => {
   let cuda = machineInfo.graphics.controllers.some(x => x.vendor.toLocaleLowerCase().includes('nvidia'))

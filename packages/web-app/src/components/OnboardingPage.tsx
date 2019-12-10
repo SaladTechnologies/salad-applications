@@ -129,7 +129,7 @@ class _OnboardingPage extends Component<Props> {
     return (
       <div className={classnames(classes.container)}>
         <div className={classnames(classes.contentContainer, classes.column)}>
-          <img className={classes.logo} src={logo} />
+          <img className={classes.logo} src={logo} alt="" />
           {title && <div className={classes.title}>{title}</div>}
           {subtitle && <div className={classes.subtitle}>{subtitle}</div>}
           {leftContent}

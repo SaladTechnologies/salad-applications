@@ -52,6 +52,7 @@ class _SlicedVeggie extends Component<Props> {
                 style={{ top: `${pos * gridSize}rem` }}
                 src={getImage(level.key, i + 1)}
                 draggable={false}
+                alt=""
               />
             </div>
           )

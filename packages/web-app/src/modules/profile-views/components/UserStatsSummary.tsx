@@ -51,7 +51,7 @@ class _UserStatsSummary extends Component<Props> {
       <div className={classes.container}>
         <div className={classes.infoContainer}>
           <span className={classes.infoButton} data-mining-status>
-            <img height={25} width={'auto'} src={i} />
+            <img height={25} width={'auto'} src={i} alt="" />
           </span>
           <ReactHint
             autoPosition

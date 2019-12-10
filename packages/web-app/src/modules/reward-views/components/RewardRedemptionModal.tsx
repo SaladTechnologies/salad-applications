@@ -7,6 +7,7 @@ import { Reward } from '../../reward/models/Reward'
 import { Form, Field } from 'react-final-form'
 import { observer } from 'mobx-react'
 import { RewardDetailsPanel } from './RewardDetailsPanel'
+import { isEmailFormat } from '../../../utils'
 
 //TODO: Move this into a feature flag
 const showGiftOption = false
@@ -149,7 +150,7 @@ class _RewardRedemptionModal extends Component<Props> {
     if (v.gift) {
       if (v.email === undefined || v.email.length === 0) {
         errors.email = 'Required'
-      } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v.email)) {
+      } else if (!isEmailFormat(v.email)) {
         errors.email = 'Invalid email'
       }
     }
