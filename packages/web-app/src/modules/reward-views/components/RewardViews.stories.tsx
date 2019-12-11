@@ -30,6 +30,7 @@ const generateRewards = (count: number): Reward[] => {
       remainingTimeLabel: '2 days',
       percentUnlocked: 0.5,
       color: 'red',
+      quantity:3,
     }
   }
 

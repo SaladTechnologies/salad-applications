@@ -14,4 +14,5 @@ export interface Reward {
   percentUnlocked: number
   remainingTimeLabel: string
   color: string
+  quantity?: number
 }
