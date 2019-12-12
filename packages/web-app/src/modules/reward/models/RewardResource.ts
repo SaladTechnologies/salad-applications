@@ -9,4 +9,5 @@ export interface RewardResource {
   category: RewardCategory
   checkoutTerms: string[]
   tags: string[]
+  quantity?: number
 }
