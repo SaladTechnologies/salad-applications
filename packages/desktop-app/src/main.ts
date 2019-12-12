@@ -203,8 +203,8 @@ const createMainWindow = () => {
     app.quit()
   })
 
-  bridge.on(start, (pluginDefinition: PluginDefinition) => {
-    if (pluginManager) pluginManager.start(pluginDefinition)
+  bridge.on(start, (pluginDefinitions: Array<PluginDefinition>) => {
+    if (pluginManager) pluginManager.start(pluginDefinitions, 0)
   })
 
   bridge.on(stop, () => {

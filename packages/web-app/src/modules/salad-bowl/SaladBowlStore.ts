@@ -9,13 +9,13 @@ import { MiningStatus } from '../machine/models'
 import { ErrorMessage } from './models/ErrorMessage'
 import { ErrorCategory } from './models/ErrorCategory'
 import { MachineStatus } from './models/MachineStatus'
-import { getPluginDefinition } from './PluginDefinitionFactory'
+import { getPluginDefinitions } from './PluginDefinitionFactory'
 
 export class SaladBowlStore {
   private runningHeartbeat?: NodeJS.Timeout
 
   @observable
-  public plugin: PluginInfo = new PluginInfo('Unknown')
+  public plugins: Array<PluginInfo> = new Array()
 
   @computed
   get canRun(): boolean {
@@ -30,12 +30,20 @@ export class SaladBowlStore {
 
   @computed
   get isRunning(): boolean {
-    return this.plugin.status !== PluginStatus.Stopped && this.plugin.status !== PluginStatus.Unknown
+    if (this.plugins[0]) {
+      return this.plugins[0].status !== PluginStatus.Stopped && this.plugins[0].status !== PluginStatus.Unknown
+    } else {
+      return false
+    }
   }
 
   @computed
   get status(): MiningStatus {
-    switch (this.plugin.status) {
+    if (!this.plugins[0]) {
+      return MiningStatus.Stopped
+    }
+
+    switch (this.plugins[0].status) {
       case PluginStatus.Installing:
         return MiningStatus.Installing
       case PluginStatus.Initializing:
@@ -52,7 +60,11 @@ export class SaladBowlStore {
   /** Returns the summary status for the machine */
   @computed
   get machineStatus(): MachineStatus {
-    switch (this.plugin.status) {
+    if (!this.plugins[0]) {
+      return MachineStatus.Stopped
+    }
+
+    switch (this.plugins[0].status) {
       case PluginStatus.Installing:
       case PluginStatus.Initializing:
         return MachineStatus.Initializing
@@ -71,8 +83,10 @@ export class SaladBowlStore {
 
   @action
   onReceiveStatus = (message: StatusMessage) => {
-    this.plugin.name = message.name
-    this.plugin.status = message.status
+    if (this.plugins[0]) {
+      this.plugins[0].name = message.name
+      this.plugins[0].status = message.status
+    }
   }
 
   @action
@@ -82,6 +96,9 @@ export class SaladBowlStore {
     switch (message.errorCategory) {
       case ErrorCategory.AntiVirus:
         this.store.ui.showModal('/errors/anti-virus')
+        break
+      case ErrorCategory.Incompatible:
+        this.store.ui.showModal('/errors/no-plugins')
         break
       // case ErrorCategory.Driver:
       //   this.store.ui.showModal('/errors/cuda')
@@ -114,17 +131,28 @@ export class SaladBowlStore {
       return
     }
 
-    let pluginDefinition = getPluginDefinition(this.store)
+    let pluginDefinitions = getPluginDefinitions(this.store)
 
-    if (!pluginDefinition) {
-      console.log('Unable to find a valid plugin definition for this machine. Unable to start.')
+    if (pluginDefinitions.length < 1) {
+      console.log('Unable to find any valid plugin definitions for this machine. Unable to start.')
       return
     }
 
-    this.plugin.name = pluginDefinition.name
-    this.plugin.status = PluginStatus.Initializing
+    let plugins = []
+    for (let i = 0; i < pluginDefinitions.length; i++) {
+      let pluginDefinition = pluginDefinitions[i]
+      let pluginName = ''
+      if (pluginDefinition) {
+        pluginName = pluginDefinition.name
+      }
+      plugins.push({
+        name: pluginName,
+        status: PluginStatus.Initializing
+      })
+    }
+    this.plugins = plugins
 
-    yield this.store.native.send('start-salad', pluginDefinition)
+    yield this.store.native.send('start-salad', pluginDefinitions)
 
     if (!this.runningHeartbeat) {
       this.runningHeartbeat = setInterval(() => {
@@ -140,7 +168,9 @@ export class SaladBowlStore {
   @action.bound
   stop = flow(function*(this: SaladBowlStore) {
     yield this.store.native.send('stop-salad')
-    this.plugin.status = PluginStatus.Stopped
+    if (this.plugins[0]) {
+      this.plugins[0].status = PluginStatus.Stopped
+    }
 
     this.sendRunningStatus()
 
@@ -172,7 +202,7 @@ export class SaladBowlStore {
       if (err.response && err.response.status === 409) {
         console.log('Machine status conflict. Restarting')
         if (!retry) {
-          this.plugin.status = PluginStatus.Initializing
+          this.plugins[0].status = PluginStatus.Initializing
           this.sendRunningStatus(true)
         }
       } else {

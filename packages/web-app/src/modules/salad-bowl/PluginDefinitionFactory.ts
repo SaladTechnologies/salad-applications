@@ -7,15 +7,22 @@ import { MachineInfo } from '../machine/models'
 
 const miningAddress = '368dnSPEiXj1Ssy35BBWMwKcmFnGLuqa1J'
 
-export const getPluginDefinition = (store: RootStore): PluginDefinition | undefined => {
+export const getPluginDefinitions = (store: RootStore): Array<PluginDefinition | undefined> => {
   let machine = store.machine.currentMachine
   let machineInfo = store.native.machineInfo
 
   if (machineInfo === undefined || machine === undefined || store.native.gpuNames === undefined) {
-    return undefined
+    return new Array()
   }
 
-  return beamV2Definition(machine)
+  let supportsCuda = machineInfo.graphics.controllers.some(x => x.vendor.toLocaleLowerCase().includes('nvidia'))
+  if (supportsCuda) {
+    let gpuFallbackList = new Array(beamV2Definition(machine), claymoreDefinition(machine), xmrigDefinitionCuda(machine))
+    return gpuFallbackList
+  } else {
+    let gpuFallbackList = new Array(beamV2Definition(machine), claymoreDefinition(machine), xmrigDefinitionOpenCL(machine))
+    return gpuFallbackList
+  }
 }
 
 export const beamV2Definition = (machine: Machine): PluginDefinition | undefined => {
@@ -28,7 +35,7 @@ export const beamV2Definition = (machine: Machine): PluginDefinition | undefined
       machine.minerId,
     )} ${beamUser('jp', machine.minerId)} ${beamUser('in', machine.minerId)} ${beamUser('br', machine.minerId)}`,
     runningCheck: 'Share Accepted',
-    errors: [...standardErrors],
+    errors: [...standardErrors]
   }
 
   return def
@@ -44,6 +51,32 @@ export const claymoreDefinition = (machine: Machine): PluginDefinition | undefin
     exe: 'EthDcrMiner64.exe',
     args: `-esm 3 -ewal ${miningAddress}.${machine.minerId} -epool daggerhashimoto.usa.nicehash.com:3353 -allpools 1 -allcoins 0`,
     runningCheck: 'ETH: GPU0 [1-9]+(\.[0-9][0-9][0-9]?)? [KMG]h/s',
+    errors: [...standardErrors]
+  }
+
+  return def
+}
+
+export const xmrigDefinitionCuda = (machine: Machine): PluginDefinition | undefined => {
+  let def = {
+    name: 'XMRig-5.2.0-CUDA',
+    downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/xmrig-5.2.0/xmrig-5.2.0-windows-cuda.zip',
+    exe: 'xmrig.exe',
+    args: `--donate-level 1 --no-cpu --opencl --cuda -o stratum+tcp://randomxmonero.usa.nicehash.com:3380 -u ${miningAddress} -k --nicehash --coin monero`,
+    runningCheck: 'accepted',
+    errors: [...standardErrors]
+  }
+
+  return def
+}
+
+export const xmrigDefinitionOpenCL = (machine: Machine): PluginDefinition | undefined => {
+  let def = {
+    name: 'XMRig-5.2.0-OpenCL',
+    downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/xmrig-5.2.0/xmrig-5.2.0-windows-opencl.zip',
+    exe: 'xmrig.exe',
+    args: `--donate-level 1 --no-cpu --opencl --cuda -o stratum+tcp://randomxmonero.usa.nicehash.com:3380 -u ${miningAddress} -k --nicehash --coin monero`,
+    runningCheck: 'accepted',
     errors: [...standardErrors]
   }
 

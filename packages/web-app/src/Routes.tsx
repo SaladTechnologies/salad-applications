@@ -33,6 +33,7 @@ import {
   CudaErrorContainer,
   NetworkErrorContainer,
   UnknownErrorContainer,
+  NoPluginErrorContainer
 } from './modules/error-views'
 // Settings Menu
 import { SettingsContainer } from './modules/settings-views'
@@ -137,6 +138,7 @@ const Auth = () => {
     <>
       <Route path="/" render={() => <HomePage />} />
       <Route exact path="/errors/anti-virus" component={AntiVirusErrorContainer} />
+      <Route exact path="/errors/no-plugins" component={NoPluginErrorContainer} />
       <Route exact path="/errors/cuda" component={CudaErrorContainer} />
       <Route exact path="/errors/network" component={NetworkErrorContainer} />
       <Route exact path="/errors/unknown" component={UnknownErrorContainer} />
