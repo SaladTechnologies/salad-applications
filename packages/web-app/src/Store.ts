@@ -53,7 +53,7 @@ export class RootStore {
   public readonly vault: VaultStore
   public readonly version: VersionStore
 
-  private machineInfoHeartbeat?: NodeJS.Timeout
+  private machineInfoHeartbeat?: number
 
   constructor(readonly axios: AxiosInstance) {
     this.routing = new RouterStore()
@@ -65,7 +65,7 @@ export class RootStore {
     this.auth = new AuthStore(this, axios)
     this.token = new TokenStore()
     this.rewards = new RewardStore(this, axios)
-    this.balance = new BalanceStore(this, axios)
+    this.balance = new BalanceStore(axios)
     this.profile = new ProfileStore(this, axios)
     this.ui = new UIStore(this)
     this.referral = new ReferralStore(this, axios)

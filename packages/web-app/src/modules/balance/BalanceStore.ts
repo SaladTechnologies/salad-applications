@@ -1,81 +1,48 @@
-import { action, observable, flow, autorun } from 'mobx'
-import { RootStore } from '../../Store'
+import { action, observable, flow } from 'mobx'
 import { AxiosInstance } from 'axios'
-import { Config } from '../../config'
-import { MiningStatus } from '../machine/models/MiningStatus'
+import { BalanceEvent } from './models'
+import moment from 'moment'
 
 export class BalanceStore {
-  private estimateTimer?: NodeJS.Timeout
-
-  private interpolRate: number = 0
-
   @observable
   public currentBalance: number = 0
 
   @observable
-  public actualBalance: number = 0
-
-  @observable
   public lifetimeBalance: number = 0
 
-  /** What was the balance increase at the last refresh (USD) */
   @observable
-  public lastDeltaBalance: number = 0
+  public balanceEvents: BalanceEvent[] = []
 
-  private lastUpdateTime: number = Date.now()
+  private balanceEventId: number = 0
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
-    autorun(() => {
-      if (store.saladBowl.isRunning) {
-        if (this.estimateTimer) clearInterval(this.estimateTimer)
-        this.lastUpdateTime = Date.now()
-        this.estimateTimer = setInterval(this.updateEstimate, Config.balanceEstimateRate)
-      } else {
-        if (this.estimateTimer) {
-          clearInterval(this.estimateTimer)
-          this.estimateTimer = undefined
-        }
-      }
-    })
-  }
+  constructor(private readonly axios: AxiosInstance) {}
 
   @action.bound
   refreshBalance = flow(function*(this: BalanceStore) {
     try {
       let balance = yield this.axios.get('profile/balance')
-      this.lastDeltaBalance = balance.data.currentBalance - this.currentBalance
-      const maxDelta = Config.maxBalanceDelta
+      const deltaBalance = balance.data.currentBalance - this.currentBalance
 
-      if (this.lastDeltaBalance > maxDelta || this.lastDeltaBalance < 0) {
-        this.interpolRate = 0
-        this.currentBalance = balance.data.currentBalance
-      } else {
-        this.interpolRate = this.lastDeltaBalance / Config.dataRefreshRate
+      if (deltaBalance > 0 && this.currentBalance !== 0) {
+        const balanceEvent: BalanceEvent = {
+          id: this.balanceEventId++,
+          deltaBalance: deltaBalance,
+          timestamp: moment.utc(),
+        }
+
+        //Adds the event
+        this.balanceEvents.unshift(balanceEvent)
       }
 
-      // Clears out a check on 'Stopped' so mining status is not changed to 'Earning'
-      if (this.store.saladBowl.status === MiningStatus.Stopped) {
-        this.lastDeltaBalance = 0
+      //Limits the number of events
+      while (this.balanceEvents.length > 20) {
+        this.balanceEvents.pop()
       }
 
-      this.actualBalance = balance.data.currentBalance
+      this.currentBalance = balance.data.currentBalance
       this.lifetimeBalance = balance.data.lifetimeBalance
     } catch (error) {
-      console.error('Balance error: ')
-      console.error(error)
+      console.error('Balance error: ' + error)
     }
   })
-
-  @action
-  updateEstimate = () => {
-    let curTime = Date.now()
-
-    let dt = curTime - this.lastUpdateTime
-
-    let dBal = dt * this.interpolRate
-
-    this.currentBalance = Math.min(this.actualBalance, this.currentBalance + dBal)
-
-    this.lastUpdateTime = curTime
-  }
 }

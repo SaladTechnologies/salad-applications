@@ -1203,24 +1203,24 @@
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.2.26.tgz#6e0b13a752676036f8196f8a1500d53a27b4adc1"
   integrity sha512-CcM/fIFwZlRdiWG/25xE/wHbtyUuCtqoCTrr6BsWw7hH072fR++n4L56KPydAr3ANgMJMjT8v83ZFIsDc7kE+A==
 
-"@fortawesome/fontawesome-svg-core@1.2.26":
-  version "1.2.26"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-1.2.26.tgz#671569271d6b532cdea5e3deb8ff16f8b7ac251d"
-  integrity sha512-3Dfd/v2IztP1TxKOxZiB5+4kaOZK9mNy0KU1vVK7nFlPWz3gzxrCWB+AloQhQUoJ8HhGqbzjliK89Vl7PExGbw==
+"@fortawesome/fontawesome-svg-core@^1.2.14":
+  version "1.2.25"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-1.2.25.tgz#24b03391d14f0c6171e8cad7057c687b74049790"
+  integrity sha512-MotKnn53JKqbkLQiwcZSBJVYtTgIKFbh7B8+kd05TSnfKYPFmjKKI59o2fpz5t0Hzl35vVGU6+N4twoOpZUrqA==
   dependencies:
     "@fortawesome/fontawesome-common-types" "^0.2.26"
 
-"@fortawesome/free-solid-svg-icons@5.12.0":
-  version "5.12.0"
-  resolved "https://registry.yarnpkg.com/@fortawesome/free-solid-svg-icons/-/free-solid-svg-icons-5.12.0.tgz#8decac5844e60453cc0c7c51437d1461df053a35"
-  integrity sha512-CnpsWs6GhTs9ekNB3d8rcO5HYqRkXbYKf2YNiAlTWbj5eVlPqsd/XH1F9If8jkcR1aegryAbln/qYeKVZzpM0g==
+"@fortawesome/free-solid-svg-icons@^5.7.1":
+  version "5.11.2"
+  resolved "https://registry.yarnpkg.com/@fortawesome/free-solid-svg-icons/-/free-solid-svg-icons-5.11.2.tgz#2f2f1459743a27902b76655a0d0bc5ec4d945631"
+  integrity sha512-zBue4i0PAZJUXOmLBBvM7L0O7wmsDC8dFv9IhpW5QL4kT9xhhVUsYg/LX1+5KaukWq4/cbDcKT+RT1aRe543sg==
   dependencies:
     "@fortawesome/fontawesome-common-types" "^0.2.26"
 
-"@fortawesome/react-fontawesome@0.1.8":
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/@fortawesome/react-fontawesome/-/react-fontawesome-0.1.8.tgz#cb6d4dd3aeec45b6ff2d48c812317a6627618511"
-  integrity sha512-I5h9YQg/ePA3Br9ISS18fcwOYmzQYDSM1ftH03/8nHkiqIVHtUyQBw482+60dnzvlr82gHt3mGm+nDUp159FCw==
+"@fortawesome/react-fontawesome@^0.1.4":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@fortawesome/react-fontawesome/-/react-fontawesome-0.1.7.tgz#c004ca75c15c5a1218101e8f042b8da8dec0c4b5"
+  integrity sha512-AHWSzOsHBe5vqOkrvs+CKw+8eLl+0XZsVixOWhTPpGpOA8WQUbVU6J9cmtAvTaxUU5OIf+rgxxF8ZKc3BVldxg==
   dependencies:
     prop-types "^15.5.10"
 
@@ -1433,56 +1433,56 @@
     react-lifecycles-compat "^3.0.4"
     warning "^3.0.0"
 
-"@sentry/browser@5.11.1":
-  version "5.11.1"
-  resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-5.11.1.tgz#337ffcb52711b23064c847a07629e966f54a5ebb"
-  integrity sha512-oqOX/otmuP92DEGRyZeBuQokXdeT9HQRxH73oqIURXXNLMP3PWJALSb4HtT4AftEt/2ROGobZLuA4TaID6My/Q==
+"@sentry/browser@^5.5.0":
+  version "5.9.1"
+  resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-5.9.1.tgz#b2ec27ead501a49f26807a9c0774f44f4292f236"
+  integrity sha512-7AOabwp9yAH9h6Xe6TfDwlLxHbUSWs+SPWHI7bPlht2yDSAqkXYGSzRr5X0XQJX9oBQdx2cEPMqHyJrbNaP/og==
   dependencies:
-    "@sentry/core" "5.11.1"
-    "@sentry/types" "5.11.0"
-    "@sentry/utils" "5.11.1"
+    "@sentry/core" "5.8.0"
+    "@sentry/types" "5.7.1"
+    "@sentry/utils" "5.8.0"
     tslib "^1.9.3"
 
-"@sentry/core@5.11.1":
-  version "5.11.1"
-  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-5.11.1.tgz#9e2da485e196ae32971545c1c49ee6fe719930e2"
-  integrity sha512-BpvPosVNT20Xso4gAV54Lu3KqDmD20vO63HYwbNdST5LUi8oYV4JhvOkoBraPEM2cbBwQvwVcFdeEYKk4tin9A==
+"@sentry/core@5.8.0":
+  version "5.8.0"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-5.8.0.tgz#bbfd2f4711491951a8e3a0e8fa8b172fdf7bff6f"
+  integrity sha512-aAh2KLidIXJVGrxmHSVq2eVKbu7tZiYn5ylW6yzJXFetS5z4MA+JYaSBaG2inVYDEEqqMIkb17TyWxxziUDieg==
   dependencies:
-    "@sentry/hub" "5.11.1"
-    "@sentry/minimal" "5.11.1"
-    "@sentry/types" "5.11.0"
-    "@sentry/utils" "5.11.1"
+    "@sentry/hub" "5.8.0"
+    "@sentry/minimal" "5.8.0"
+    "@sentry/types" "5.7.1"
+    "@sentry/utils" "5.8.0"
     tslib "^1.9.3"
 
-"@sentry/hub@5.11.1":
-  version "5.11.1"
-  resolved "https://registry.yarnpkg.com/@sentry/hub/-/hub-5.11.1.tgz#ddcb865563fae53852d405885c46b4c6de68a91b"
-  integrity sha512-ucKprYCbGGLLjVz4hWUqHN9KH0WKUkGf5ZYfD8LUhksuobRkYVyig0ZGbshECZxW5jcDTzip4Q9Qimq/PkkXBg==
+"@sentry/hub@5.8.0":
+  version "5.8.0"
+  resolved "https://registry.yarnpkg.com/@sentry/hub/-/hub-5.8.0.tgz#56aaeb7324cb66d90db838011cb0127f5558007f"
+  integrity sha512-VdApn1ZCNwH1wwQwoO6pu53PM/qgHG+DQege0hbByluImpLBhAj9w50nXnF/8KzV4UoMIVbzCb6jXzMRmqqp9A==
   dependencies:
-    "@sentry/types" "5.11.0"
-    "@sentry/utils" "5.11.1"
+    "@sentry/types" "5.7.1"
+    "@sentry/utils" "5.8.0"
     tslib "^1.9.3"
 
-"@sentry/minimal@5.11.1":
-  version "5.11.1"
-  resolved "https://registry.yarnpkg.com/@sentry/minimal/-/minimal-5.11.1.tgz#0e705d01a567282d8fbbda2aed848b4974cc3cec"
-  integrity sha512-HK8zs7Pgdq7DsbZQTThrhQPrJsVWzz7MaluAbQA0rTIAJ3TvHKQpsVRu17xDpjZXypqWcKCRsthDrC4LxDM1Bg==
+"@sentry/minimal@5.8.0":
+  version "5.8.0"
+  resolved "https://registry.yarnpkg.com/@sentry/minimal/-/minimal-5.8.0.tgz#b7ad5113504ab67f1ef2b0f465b7ba608e6b8dc5"
+  integrity sha512-MIlFOgd+JvAUrBBmq7vr9ovRH1HvckhnwzHdoUPpKRBN+rQgTyZy1o6+kA2fASCbrRqFCP+Zk7EHMACKg8DpIw==
   dependencies:
-    "@sentry/hub" "5.11.1"
-    "@sentry/types" "5.11.0"
+    "@sentry/hub" "5.8.0"
+    "@sentry/types" "5.7.1"
     tslib "^1.9.3"
 
-"@sentry/types@5.11.0":
-  version "5.11.0"
-  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-5.11.0.tgz#40f0f3174362928e033ddd9725d55e7c5cb7c5b6"
-  integrity sha512-1Uhycpmeo1ZK2GLvrtwZhTwIodJHcyIS6bn+t4IMkN9MFoo6ktbAfhvexBDW/IDtdLlCGJbfm8nIZerxy0QUpg==
+"@sentry/types@5.7.1":
+  version "5.7.1"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-5.7.1.tgz#4c4c1d4d891b6b8c2c3c7b367d306a8b1350f090"
+  integrity sha512-tbUnTYlSliXvnou5D4C8Zr+7/wJrHLbpYX1YkLXuIJRU0NSi81bHMroAuHWILcQKWhVjaV/HZzr7Y/hhWtbXVQ==
 
-"@sentry/utils@5.11.1":
-  version "5.11.1"
-  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-5.11.1.tgz#aa19fcc234cf632257b2281261651d2fac967607"
-  integrity sha512-O0Zl4R2JJh8cTkQ8ZL2cDqGCmQdpA5VeXpuBbEl1v78LQPkBDISi35wH4mKmLwMsLBtTVpx2UeUHBj0KO5aLlA==
+"@sentry/utils@5.8.0":
+  version "5.8.0"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-5.8.0.tgz#34683088159b9935f973b6e6cad1a1cc26bbddac"
+  integrity sha512-KDxUvBSYi0/dHMdunbxAxD3389pcQioLtcO6CI6zt/nJXeVFolix66cRraeQvqupdLhvOk/el649W4fCPayTHw==
   dependencies:
-    "@sentry/types" "5.11.0"
+    "@sentry/types" "5.7.1"
     tslib "^1.9.3"
 
 "@storybook/addon-actions@5.3.8":
@@ -2141,15 +2141,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-13.1.8.tgz#1d590429fe8187a02707720ecf38a6fe46ce294b"
   integrity sha512-6XzyyNM9EKQW4HKuzbo/CkOIjn/evtCmsU+MUM1xDfJ+3/rNjBttM1NgN7AOQvN6tP1Sl1D1PIKMreTArnxM9A==
 
-"@types/node@12.12.24":
-  version "12.12.24"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.24.tgz#d4606afd8cf6c609036b854360367d1b2c78931f"
-  integrity sha512-1Ciqv9pqwVtW6FsIUKSZNB82E5Cu1I2bBTj1xuIHXLe/1zYLl3956Nbhg2MzSYHVfl9/rmanjbQIb7LibfCnug==
-
-"@types/npmlog@^4.1.2":
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/@types/npmlog/-/npmlog-4.1.2.tgz#d070fe6a6b78755d1092a3dc492d34c3d8f871c4"
-  integrity sha512-4QQmOF5KlwfxJ5IGXFIudkeLCdMABz03RcUXu+LCb24zmln8QW6aDjuGl4d4XPVLf2j+FnjelHTP7dvceAFbhA==
+"@types/node@10.12.21":
+  version "10.12.21"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.21.tgz#7e8a0c34cf29f4e17a36e9bd0ea72d45ba03908e"
+  integrity sha512-CBgLNk4o3XMnqMc0rhb6lc77IwShMEglz05deDcn2lQxyXEZivfwgYJu7SMha9V5XcrP6qZuevTHV/QrN2vjKQ==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -9035,11 +9030,6 @@ mobx@5.15.2:
   version "5.15.2"
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-5.15.2.tgz#010a6abf49add64a3372966d17a01416e7e40655"
   integrity sha512-eVmHGuSYd0ZU6x8gYMdgLEnCC9kfBJaf7/qJt+/yIxczVVUiVzHvTBjZH3xEa5FD5VJJSh1/Ba4SThE4ErEGjw==
-
-moment@^2.18.1:
-  version "2.24.0"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
-  integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
 
 move-concurrently@^1.0.1:
   version "1.0.1"

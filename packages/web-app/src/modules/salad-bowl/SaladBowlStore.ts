@@ -48,8 +48,7 @@ export class SaladBowlStore {
       case PluginStatus.Initializing:
         return MiningStatus.Initializing
       case PluginStatus.Running:
-        if (this.store.balance.lastDeltaBalance > 0) return MiningStatus.Earning
-        else return MiningStatus.Running
+        return MiningStatus.Running
       case PluginStatus.Unknown:
       default:
         return MiningStatus.Stopped

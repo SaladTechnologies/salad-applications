@@ -12,6 +12,7 @@ import { Fade } from '../../components'
 import { ReferralSummaryContainer } from '../settings-views/referral-views'
 import { MainTitlebarContainer } from './MainTitlebarContainer'
 import { NotificationBannerContainer } from './NotificationBannerContainer'
+import { EarningEventsListContainer } from '../balance-views'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -126,6 +127,9 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
             {/* Right column */}
             <div className={classnames(classes.mainColumn, classes.rightColumn, classes.verticalLayout)}>
               <UserStatsSummaryContainer />
+              <div style={{ marginTop: 8 }}>
+                <EarningEventsListContainer />
+              </div>
               <div style={{ zIndex: 2000, marginTop: 'auto' }}>
                 <ReferralSummaryContainer />
               </div>
