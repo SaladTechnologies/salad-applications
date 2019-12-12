@@ -164,7 +164,7 @@ class _RewardSummary extends Component<Props> {
           </div>
           <div>
             <div className={classnames(classes.nameText)}>{name}</div>
-            {quantity && quantity === 0 && (
+            {quantity === 0 && (
               <AngledPanel leftSide={'right'} className={classnames(classes.outOfStock)}>
                 OUT OF STOCK
               </AngledPanel>
