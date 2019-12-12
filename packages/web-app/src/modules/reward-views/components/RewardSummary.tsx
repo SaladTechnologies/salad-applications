@@ -169,7 +169,7 @@ class _RewardSummary extends Component<Props> {
                 OUT OF STOCK
               </AngledPanel>
             )}
-            {quantity && quantity <= 5 && (
+            {quantity && quantity <= 5 && quantity > 0 && (
               <AngledPanel leftSide={'right'} className={classnames(classes.lowStock)}>
                 {quantity} REMAINING
               </AngledPanel>
