@@ -137,7 +137,7 @@ class _RewardDetailsPanel extends Component<Props> {
             <div>
               <div className={classnames(classes.nameText)}>{reward ? reward.name : 'Unavailable'}</div>
               {reward && reward.quantity === 0 && <div className={classes.outOfStock}>OUT OF STOCK</div>}
-              {reward && reward.quantity && reward.quantity <= 5 && reward.quantity > 0 && (
+              {reward && reward.quantity && reward.quantity <= 5 && reward.quantity != 0 && (
                 <div className={classes.outOfStock}>{reward.quantity} REMAINING</div>
               )}
             </div>
