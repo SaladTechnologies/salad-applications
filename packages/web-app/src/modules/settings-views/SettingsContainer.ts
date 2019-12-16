@@ -11,6 +11,7 @@ const mapStoreToProps = (store: RootStore): any => {
   type LinkList = { url: string; text: string }
   const menuItems: LinkList[] = [
     { url: '/settings/account', text: 'Account' },
+    { url: '/settings/earning-stats', text: 'Earning Stats' },
     { url: '/settings/referrals', text: 'Referrals' },
     { url: '/settings/reward-vault', text: 'Reward Vault' },
     { url: '/settings/windows-settings', text: 'Settings' },

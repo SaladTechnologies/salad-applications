@@ -21,6 +21,7 @@ import { DesktopNotificationsContainer } from '../desktop-notifications-views'
 import { ReferralSettingsContainer } from '../referral-views'
 import { AccountContainer } from '../account-views'
 import { VaultListContainer } from '../../vault-views'
+import { EarningStatsContainer } from '../earning-stats-views'
 
 export class MenuItem {
   constructor(public readonly url: string, public readonly text: string) {}
@@ -125,6 +126,7 @@ class _Settings extends Component<Props> {
           <Route path="/settings/referrals" component={ReferralSettingsContainer} />
           <Route path="/settings/account" component={AccountContainer} />
           <Route path="/settings/reward-vault" component={VaultListContainer} />
+          <Route path="/settings/earning-stats" component={EarningStatsContainer} />
 
           <div onClick={this.handleCloseClicked}>
             <FontAwesomeIcon className={classes.closeButton} icon={faTimes} />

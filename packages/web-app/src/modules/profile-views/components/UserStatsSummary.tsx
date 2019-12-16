@@ -46,7 +46,7 @@ interface Props extends WithStyles<typeof styles> {
 
 class _UserStatsSummary extends Component<Props> {
   render() {
-    const { earningRate, miningStatus, classes } = this.props
+    const { miningStatus, classes } = this.props
     return (
       <div className={classes.container}>
         <div className={classes.infoContainer}>
@@ -76,10 +76,10 @@ class _UserStatsSummary extends Component<Props> {
 
           <StatElement title="Mining status" values={[miningStatus || 'Stopped']} />
         </div>
-        <StatElement
+        {/* <StatElement
           title="Earning Rate"
           values={[earningRate === undefined ? 'Loading' : `$${(earningRate * 86400).toFixed(3)}/day`]}
-        />
+        /> */}
       </div>
     )
   }
