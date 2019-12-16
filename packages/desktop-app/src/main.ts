@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell, Input } from 'electron'
+import { app, BrowserWindow, ipcMain, shell, Input, powerMonitor } from 'electron'
 import { DefaultTheme as theme } from './SaladTheme'
 import * as isOnline from 'is-online'
 import * as path from 'path'
@@ -33,6 +33,7 @@ const AutoLaunch = require('auto-launch')
 
 const getDesktopVersion = 'get-desktop-version'
 const setDesktopVersion = 'set-desktop-version'
+const setIdleTime = 'set-idle-time'
 const start = 'start-salad'
 const stop = 'stop-salad'
 
@@ -41,6 +42,7 @@ let offlineWindow: BrowserWindow
 
 let machineInfo: MachineInfo
 let updateChecked = false
+let idleTimer: NodeJS.Timeout | undefined
 
 let pluginManager: PluginManager | undefined
 
@@ -255,6 +257,16 @@ const createMainWindow = () => {
   mainWindow.webContents.on('console-message', (_: Event, level: number, message: string, line: number) => {
     console.log(`console:${line}:${level}:${message}`)
   })
+
+  //Starts a timer to get the idle time
+  if (idleTimer === undefined) {
+    idleTimer = setInterval(() => {
+      let n = powerMonitor.getSystemIdleTime()
+      bridge.send(setIdleTime, {
+        time: n,
+      })
+    }, 1000 * 60)
+  }
 }
 
 const checkForUpdates = () => {
@@ -340,6 +352,7 @@ const getCudaData = () => {
 checkForMultipleInstance()
 
 app.on('ready', () => onReady())
+
 app.on('will-quit', () => {
   console.log('will quit')
   if (pluginManager) pluginManager.stop()

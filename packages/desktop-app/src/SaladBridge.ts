@@ -11,7 +11,7 @@ export class SaladBridge {
       console.log(`Received message ${args.type}. Payload: ${args.payload}`)
       func(args.payload)
     } else {
-      console.log('Recevied unhandled message type ' + args.type)
+      console.log('Received unhandled message type ' + args.type)
     }
   }
 
