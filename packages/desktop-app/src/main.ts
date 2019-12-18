@@ -14,8 +14,14 @@ import { PluginManager } from './salad-bowl/PluginManager'
 import { PluginDefinition } from './salad-bowl/models/PluginDefinition'
 import { SaladBridgeNotificationService } from './salad-bowl/SaladBridgeNotificationService'
 import * as Sentry from '@sentry/electron'
+import { Profile } from './models/Profile'
 
-Sentry.init({ dsn: 'https://0a70874cde284d838a378e1cc3bbd963@sentry.io/1804227' })
+const appVersion = app.getVersion()
+
+Sentry.init({
+  dsn: 'https://0a70874cde284d838a378e1cc3bbd963@sentry.io/1804227',
+  release: appVersion,
+})
 
 /** Path to the /static folder. Provided via electron-webpack */
 declare const __static: string
@@ -149,10 +155,9 @@ const createMainWindow = () => {
   //Create the bridge to listen to messages from the web-app
   let bridge = new SaladBridge(mainWindow)
   let notificationService = new SaladBridgeNotificationService(bridge)
-  let exePath = app.getPath('exe')
-  let appPath = path.dirname(exePath)
-  console.log(`Path to Salad:${appPath}`)
-  pluginManager = new PluginManager(appPath, notificationService)
+  let dataFolder = app.getPath('userData')
+  console.log(`Path to Salad plugins:${dataFolder}`)
+  pluginManager = new PluginManager(dataFolder, notificationService)
 
   ipcMain.on('js-dispatch', bridge.receiveMessage)
 
@@ -223,6 +228,22 @@ const createMainWindow = () => {
   bridge.on('disable-auto-launch', () => {
     console.log('Disable auto launch')
     saladAutoLauncher.disable()
+  })
+
+  bridge.on('login', (profile: Profile) => {
+    Sentry.configureScope(scope => {
+      scope.setUser({
+        id: profile.id,
+        email: profile.email,
+        username: profile.username,
+      })
+    })
+  })
+
+  bridge.on('logout', () => {
+    Sentry.configureScope(scope => {
+      scope.setUser({})
+    })
   })
 
   mainWindow.webContents.on('new-window', (e: Electron.Event, url: string) => {
@@ -344,4 +365,4 @@ const cleanExit = () => {
 
 process.on('SIGINT', cleanExit) // catch ctrl-c
 process.on('SIGTERM', cleanExit) // catch kill
-console.log(`Running ${app.name} ${app.getVersion()}`)
+console.log(`Running ${app.name} ${appVersion}`)

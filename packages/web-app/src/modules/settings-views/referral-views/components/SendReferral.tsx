@@ -3,6 +3,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../../SaladTheme'
 import { Form, Field } from 'react-final-form'
 import { TextField, Button, P } from '../../../../components'
+import { isEmailFormat } from '../../../../utils'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -45,7 +46,7 @@ class _SendReferral extends Component<Props> {
     const errors: FormTypes = {}
     if (v.email === undefined || v.email.length === 0) {
       errors.email = 'Required'
-    } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v.email)) {
+    } else if (!isEmailFormat(v.email)) {
       errors.email = 'Invalid email'
     }
 

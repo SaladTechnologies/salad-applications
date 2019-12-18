@@ -55,17 +55,6 @@ class _RedeemReward extends Component<Props> {
                 onRewardClick={() => this.handleRewardClick(onboardingReward)}
               />
             </div>
-            {/* {onboardingRedeemed && (
-              <div className={classes.nextButtonContainer}>
-                <Button
-                  uppercase
-                  onClick={this.handleNext}
-                  className={classnames(classes.startTestBtn, classes.marginTop, classes.pullRight)}
-                >
-                  Next
-                </Button>
-              </div>
-            )} */}
           </>
         )}
       </div>

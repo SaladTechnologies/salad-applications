@@ -6,6 +6,9 @@ import { styles } from './Running.styles'
 // Assets
 import image from '../../assets/Home - How it Works.svg'
 
+// Store
+import { getStore } from '../../../../Store'
+
 // Components
 import { ListUnstyled, MiningStatus, Button, OnboardingPage } from '../../../../components'
 import { StartButton } from '../../../machine-views/components/StartButton'
@@ -25,10 +28,16 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _Running extends Component<Props> {
+  store = getStore()
+
   handleNext = () => {
     const { onNext } = this.props
 
-    if (onNext) onNext('/onboarding/redeem-rewards')
+    if (!this.store.profile.machineOnboarding) {
+      if (onNext) onNext('/onboarding/redeem-rewards')
+    } else {
+      if (onNext) onNext('/onboarding/complete')
+    }
   }
 
   render() {

@@ -4,7 +4,13 @@ import { Config } from '../../config'
 import { RootStore } from '../../Store'
 import { AxiosInstance } from 'axios'
 
+const RUNNING_URI = '/onboarding/running'
+const REDEEM_REWARDS_URI = '/onboarding/redeem-rewards'
+const COMPLETE_URI = '/onboarding/complete'
+
 export class ProfileStore {
+  private pathname: string = '/'
+
   @observable
   public currentProfile?: Profile
 
@@ -19,6 +25,9 @@ export class ProfileStore {
 
   @observable
   public onboarding: boolean = false
+
+  @observable
+  public machineOnboarding: boolean = false
 
   //#region Not sure if we need these
   @observable
@@ -42,13 +51,10 @@ export class ProfileStore {
 
   @computed
   public get isOnboarding(): boolean {
-    // TODO: Remove the true and uncomment code below
-    const onboarding = true
-
-    // this.currentProfile === undefined ||
-    // (this.currentProfile.lastAcceptedTermsOfService !== Config.termsVersion ||
-    //   this.currentProfile.lastSeenApplicationVersion !== Config.whatsNewVersion ||
-    //   this.currentProfile.viewedReferralOnboarding !== true)
+    const onboarding =
+      this.currentProfile === undefined ||
+        (this.currentProfile.lastAcceptedTermsOfService !== Config.termsVersion ||
+        this.currentProfile.onboardingVersion !== Config.onboardingVersion)
 
     this.setOnboarding(onboarding)
 
@@ -57,7 +63,7 @@ export class ProfileStore {
 
   @action
   setOnboarding = (isOnboarding: boolean) => {
-    this.onboarding = isOnboarding
+    this.onboarding = this.machineOnboarding || isOnboarding
   }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
@@ -168,13 +174,12 @@ export class ProfileStore {
       this.currentProfile = profile
     } finally {
       this.isUpdating = false
-      // this.store.routing.replace('/')
+      this.store.routing.replace('/')
     }
   })
 
   @action
   startMachineTest = () => {
-    console.log('>> [[ProfileStore] startMachineTest] <<')
     this.store.saladBowl.start()
 
     let rewardCount = 0
@@ -186,49 +191,72 @@ export class ProfileStore {
       }
     })
 
+    this.store.analytics.trackError('Onboarding: Test Run')
+
     this.earningRatePerDay = earningRatePerDay
     this.rewardsOverTime = rewardCount
   }
 
   @action
   abortMachineTest = () => {
-    console.log('>> [[ProfileStore] abortMachineTest] <<')
     this.store.saladBowl.stop()
   }
 
   @action
   restartMachineTest = () => {
-    console.log('>> [[ProfileStore] restartMachineTest] <<')
+    // Button: [ Run test again || Run test later ]
+
     // this.store.saladBowl.stop()
     // this.store.saladBowl.start()
   }
 
   @action
+  // Pathname is set when the user clicks Next on an Onboarding page
   onNext = (pathname: string) => {
     this.isOnboardingComplete = this.isOnboardingRedeem = this.isOnboardingRunning = this.isOnboardingTesting = false
+    this.pathname = pathname
 
-    switch (pathname) {
-      case '/onboarding/running':
+    switch (this.pathname) {
+      case RUNNING_URI:
         this.isOnboardingRunning = true
-        break
-      case '/onboarding/redeem-rewards':
+        return this.store.routing.replace('/')
+      case REDEEM_REWARDS_URI:
         this.isOnboardingRedeem = true
-        break
-      case '/onboarding/complete':
+        this.store.analytics.trackError('Onboarding: Running Page Complete')
+        return this.store.routing.replace('/')
+      case COMPLETE_URI:
         this.isOnboardingComplete = true
-        break
+        return this.store.routing.replace('/')
       default:
-        this.onboarding = false
+        this.completeOnboarding()
         break
     }
-
-    return this.store.routing.replace('/')
   }
 
-  @action
-  completeOnboarding = () => {
-    this.onboarding = false
-  }
+  @action.bound
+  completeOnboarding = flow(function*(this: ProfileStore) {
+    try {
+      const profilePatch = yield this.axios.patch('profile', {
+        onboardingVersion: Config.onboardingVersion,
+      })
+
+      const machinePatch = yield this.axios.patch(`machines/${this.store.token.machineId}`, {
+        onboardingVersion: Config.onboardingVersion,
+      })
+
+      const profile = profilePatch.data
+      const machine = machinePatch.data
+
+      this.currentProfile = profile
+      this.store.machine.currentMachine = machine
+    } catch (error) {
+      console.error('completeOnboarding Error: ', error)
+    } finally {
+      this.onboarding = false
+      this.machineOnboarding = false
+      this.store.routing.replace('/')
+    }
+  })
 
   sleep = (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms))

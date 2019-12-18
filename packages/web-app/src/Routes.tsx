@@ -29,7 +29,7 @@ import {
 } from './modules/reward-views'
 import { AccountModalContainer } from './modules/profile-views'
 import { AnimatedSwitch } from './components/AnimatedSwitch'
-// import { CompatibilityCheckPageContainer } from './modules/machine-views'
+import { CompatibilityCheckPageContainer } from './modules/machine-views'
 import {
   AntiVirusErrorContainer,
   CudaErrorContainer,
@@ -58,7 +58,7 @@ export default class Routes extends Component {
   public getOnboardingRedirect = () => {
     let profile = this.store.profile.currentProfile
     let path = window.location.pathname
-
+    
     if (profile === undefined) {
       if (this.store.profile.isLoading) {
         return <Redirect to="/profile-loading" />
@@ -77,6 +77,8 @@ export default class Routes extends Component {
       // return <Redirect to={'/onboarding/redeem-rewards'} />
     } else if (this.store.profile.isOnboardingComplete) {
       path = '/onboarding/complete'
+    } else if (!this.store.profile.onboarding && !this.store.profile.machineOnboarding) {
+      return <Redirect to={'/'} />
     }
 
     // This stops the page from loading multiple times
@@ -104,14 +106,10 @@ export default class Routes extends Component {
       )
     }
 
-    // let isElectron = this.store.native.isNative
+    let isElectron = this.store.native.isNative
     let isAuth = this.store.auth.isAuth
-    // let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
-    let isOnboarding = this.store.profile.onboarding
-
-    console.log('== Routes - Pathname ==================================')
-    console.log('pathname: ', window.location.pathname)
-    console.log('=======================================================')
+    let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
+    let isOnboarding = this.store.profile.isOnboarding
 
     return (
       <Switch>
@@ -126,9 +124,9 @@ export default class Routes extends Component {
           </>
         )}
 
-        {/* {isElectron && this.checkMachineLoading()}
+        {isElectron && this.checkMachineLoading()}
 
-        {isElectron && showCompatibilityPage && <CompatibilityCheckPageContainer />} */}
+        {isElectron && showCompatibilityPage && <CompatibilityCheckPageContainer />}
 
         {isAuth && <Auth />}
 
@@ -139,8 +137,6 @@ export default class Routes extends Component {
 }
 
 const NoAuth = (props: any) => {
-  console.log('++---> [[Routes] NoAuth]')
-
   const render = () => {
     if (!props.store.isLoading) return <WelcomePageContainer />
 
@@ -157,8 +153,6 @@ const NoAuth = (props: any) => {
 }
 
 const Auth = () => {
-  console.log('++---> [[Routes] Auth]')
-
   return (
     <>
       <Route path="/" render={() => <HomePage />} />
@@ -177,8 +171,6 @@ const Auth = () => {
 }
 
 const Onboarding = () => {
-  console.log('++---> [[Routes] Onboarding]')
-
   return (
     // Note: AnimatedSwitch prevents the modal from showing
     <>
@@ -202,8 +194,6 @@ const Onboarding = () => {
 }
 
 const Rewards = () => {
-  console.log('++---> [[Routes] RedeemReward]')
-
   return (
     <>
       <Route exact path="/rewards/:id" component={RewardDetailsModalContainer} />

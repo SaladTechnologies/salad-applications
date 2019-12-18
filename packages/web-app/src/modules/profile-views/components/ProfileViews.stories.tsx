@@ -16,6 +16,7 @@ const profile: Profile = {
   lastAcceptedTermsOfService: '1.0',
   lastSeenApplicationVersion: '1.0',
   viewedReferralOnboarding: false,
+  onboardingVersion: '1.0',
 }
 
 storiesOf('Modules/Profile', module)

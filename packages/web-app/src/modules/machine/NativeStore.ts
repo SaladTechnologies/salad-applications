@@ -5,6 +5,7 @@ import { MachineInfo } from './models'
 import { AxiosInstance } from 'axios'
 
 import { Machine } from './models/Machine'
+import { Config } from '../../config'
 
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
@@ -238,7 +239,12 @@ export class NativeStore {
       this.store.machine.setCurrentMachine(machine)
       this.store.analytics.trackMachine(machine)
 
-      if (!this.store.profile.isOnboarding) {
+      // this.store.profile.onboarding needs to be false because onboarding should have been completed beforehand.
+      // If this.store.profile.machineOnboarding = true, then we will short-circuit the Redeem Reward page
+      this.store.profile.machineOnboarding = !this.store.profile.onboarding && machine.onboardingVersion !== Config.onboardingVersion
+
+      // NOTE: This was used to stop multi loading of pages
+      if (!this.store.profile.onboarding || this.store.profile.machineOnboarding) {
         this.store.routing.replace('/')
       }
     } catch (err) {
@@ -261,7 +267,7 @@ export class NativeStore {
     this.skippedCompatCheck = this.validOperatingSystem && this.validGPUs
     this.loadingMachineInfo = false
 
-    if (!this.store.profile.isOnboarding) {
+    if (!this.store.profile.onboarding) {
       this.store.routing.replace('/')
     }
   }

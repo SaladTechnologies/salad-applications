@@ -233,6 +233,11 @@ export class RewardStore {
 
   @action
   completeRedemption = () => {
+    this.store.analytics.trackError('Onboarding: Reward Redeemed')
+    
+    this.store.refresh.stop()
+    this.store.refresh.start()
+
     this.store.ui.hideModal()
     this.store.routing.replace('/onboarding/complete')
   }

@@ -3,10 +3,6 @@ import { RootStore } from '../../Store'
 import { Running } from './components/Running/Running'
 
 const mapStoreToProps = (store: RootStore) => {
-  console.log('++---> [[RunningContainer]] store.saladBowl.initializingStatus: ', store.saladBowl.initializingStatus)
-  console.log('++---> [[RunningContainer]] store.saladBowl.runningStatus: ', store.saladBowl.runningStatus)
-  console.log('++---> [[RunningContainer]] store.saladBowl.earningStatus: ', store.saladBowl.earningStatus)
-
   return {
     onNext: store.profile.onNext,
 

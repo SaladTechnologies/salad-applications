@@ -153,6 +153,10 @@ export class AnalyticsStore {
     }
   }
 
+  public trackError = (event: string) => {
+    this.track(event)
+  }
+
   private track = (event: string, properties?: { [key: string]: any }) => {
     if (!this.started) return
 

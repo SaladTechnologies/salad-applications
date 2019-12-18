@@ -46,6 +46,7 @@ export class RootStore {
   public readonly saladBowl: SaladBowlStore
 
   private machineInfoHeartbeat?: NodeJS.Timeout
+  private currentMachineHeartbeat?: NodeJS.Timeout
 
   constructor(readonly axios: AxiosInstance) {
     this.routing = new RouterStore()
@@ -64,6 +65,7 @@ export class RootStore {
     this.analytics = new AnalyticsStore(this)
 
     this.machineInfoHeartbeat = setInterval(this.tryRegisterMachine, 20000)
+    this.currentMachineHeartbeat = setInterval(this.checkCurrentMachine, 2000)
 
     this.tryRegisterMachine()
   }
@@ -84,13 +86,14 @@ export class RootStore {
     yield featureFlags.loadFeatureFlags(profile.id)
 
     if (this.machineInfoHeartbeat) clearInterval(this.machineInfoHeartbeat)
+    if (this.currentMachineHeartbeat) clearInterval(this.currentMachineHeartbeat)
 
     // Start a timer to keep checking for system information
     this.machineInfoHeartbeat = setInterval(this.tryRegisterMachine, 20000)
 
     this.tryRegisterMachine()
 
-    this.refresh.start()
+    this.currentMachineHeartbeat = setInterval(this.checkCurrentMachine, 2000)
   })
 
   @action
@@ -104,10 +107,19 @@ export class RootStore {
   }
 
   @action
+  checkCurrentMachine = () => {
+    if (this.machine.currentMachine) {
+      this.refresh.start()
+      if (this.currentMachineHeartbeat) clearInterval(this.currentMachineHeartbeat)
+    }
+  }
+
+  @action
   onLogout = () => {
     this.token.saladToken = ''
     this.referral.referralCode = ''
     this.referral.currentReferral = undefined
     this.analytics.trackLogout()
+    this.saladBowl.stop()
   }
 }

@@ -92,12 +92,6 @@ export class SaladBowlStore {
     this.plugin.name = message.name
     this.plugin.status = message.status
 
-    console.log('>>))()) [[SaladBowl] onReceiveStatus] this.plugin.status: ', this.plugin.status)
-    console.log(
-      '>>))()) [[SaladBowl] onReceiveStatus] this.store.balance.lastDeltaBalance: ',
-      this.store.balance.lastDeltaBalance,
-    )
-
     switch (this.plugin.status) {
       case PluginStatus.Initializing:
         this.initializingStatus = true
@@ -116,13 +110,18 @@ export class SaladBowlStore {
   onReceiveError = (message: ErrorMessage) => {
     this.store.analytics.trackMiningError(message.errorCategory, message.errorCode)
 
+    if (this.store.profile.onboarding) {
+      this.store.analytics.trackError(`Onbarding: ${message.errorCategory}`)
+    }
+
     // Show the error modal
     switch (message.errorCategory) {
       case ErrorCategory.AntiVirus:
         this.errorCategory = ErrorCategory.AntiVirus
         this.errorMessage = 'Anti-Virus removed the miner'
 
-        if (!this.store.profile.isOnboarding) {
+        // This is starting to feel dirty
+        if (!this.store.profile.onboarding) {
           this.store.ui.showModal('/errors/anti-virus')
         }
         break

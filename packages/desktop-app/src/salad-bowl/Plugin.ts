@@ -147,20 +147,25 @@ export class Plugin {
     let filename = path.basename(this.pluginDefinition.downloadUrl)
     let downloadFolder = path.join(this.baseDirectory, '_downloads')
     let downloadFilename = path.join(downloadFolder, filename)
+    console.log('Installation details', filename, downloadFolder, downloadFilename)
 
     //Ensure that the download directory exists
     if (!fs.existsSync(downloadFolder)) {
       try {
+        console.log(`Download directory started for ${this.name}`)
         await fs.promises.mkdir(downloadFolder, { recursive: true })
+        console.log(`Download directory finished for ${this.name}`)
       } catch (err) {
-        console.log(err)
+        console.log('Download directory creation error', err)
         return
       }
     }
 
     //Removes any previous downloads
     if (fs.existsSync(downloadFilename)) {
+      console.log(`Previous download removal started for ${this.name}`)
       await fs.promises.unlink(downloadFilename)
+      console.log(`Previous download removal completed for ${this.name}`)
     }
 
     console.log(`Starting download for ${this.name}`)
@@ -178,6 +183,7 @@ export class Plugin {
       let unzipper = new DecompressZip(downloadFilename)
 
       unzipper.on('error', (err: any) => {
+        console.log(`Unzipping failed for ${this.name}`, err)
         reject(err)
       })
 
@@ -194,7 +200,9 @@ export class Plugin {
     console.log(`Finished extracting ${this.name}`)
 
     //Removes the downloaded file from the machine
+    console.log(`Previous download removal started for ${this.name}`)
     await fs.promises.unlink(downloadFilename)
+    console.log(`Previous download removal completed for ${this.name}`)
 
     await this.timeout(1000)
 

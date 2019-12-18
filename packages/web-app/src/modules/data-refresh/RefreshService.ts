@@ -12,9 +12,19 @@ export class RefreshService {
     console.log('Starting refresh service')
 
     //Start a timer to poll for data
-    this.dataTimer = setInterval(() => {
-      this.refreshData()
-    }, Config.dataRefreshRate)
+    if (this.store.profile.isOnboarding) {
+      if (this.dataTimer) clearInterval(this.dataTimer)
+
+      this.dataTimer = setInterval(() => {
+        this.refreshData()
+      }, Config.onboardingDataRefreshRate)
+    } else {
+      if (this.dataTimer) clearInterval(this.dataTimer)
+
+      this.dataTimer = setInterval(() => {
+        this.refreshData()
+      }, Config.dataRefreshRate)
+    }
 
     this.xpTimer = setInterval(() => {
       this.store.xp.refreshXp()
@@ -24,16 +34,15 @@ export class RefreshService {
       this.store.rewards.refreshRewards()
     }, Config.rewardsRefreshRate)
 
-    //Do the initial data pull
+    // Do the initial data pull
     this.refreshData()
     this.store.rewards.refreshRewards()
     this.store.xp.refreshXp()
   }
 
   refreshData = () => {
-    if (!this.store.auth.isAuthenticated()) {
-      return
-    }
+    if (!this.store.auth.isAuthenticated()) return
+    
     try {
       this.store.balance.refreshBalance()
       this.store.rewards.loadSelectedReward()
