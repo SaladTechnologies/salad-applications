@@ -25,6 +25,9 @@ export const getPluginDefinitions = (store: RootStore): Array<PluginDefinition |
   }
 }
 
+const beamUser = (location: string, minerId: string) =>
+  `-s beamv2.${location}.nicehash.com -n 3378 -u ${miningAddress}.${minerId}`
+
 export const beamV2Definition = (machine: Machine): PluginDefinition | undefined => {
   let def = {
     name: 'BeamV2-1.83',
@@ -41,15 +44,15 @@ export const beamV2Definition = (machine: Machine): PluginDefinition | undefined
   return def
 }
 
-const beamUser = (location: string, minerId: string) =>
-  `-s beamv2.${location}.nicehash.com -n 3378 -u ${miningAddress}.${minerId}`
+const claymoreRegion = (location: string) =>
+  `-epool daggerhashimoto.${location}.nicehash.com:3353`
 
 export const claymoreDefinition = (machine: Machine): PluginDefinition | undefined => {
   let def = {
     name: 'Claymore-15',
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/claymore15/claymore-15-windows.zip',
     exe: 'EthDcrMiner64.exe',
-    args: `-esm 3 -ewal ${miningAddress}.${machine.minerId} -epool daggerhashimoto.usa.nicehash.com:3353 -allpools 1 -allcoins 0`,
+    args: `-esm 3 -ewal ${miningAddress}.${machine.minerId} ${claymoreRegion('usa')} ${claymoreRegion('eu')} ${claymoreRegion('hk')} ${claymoreRegion('jp')} ${claymoreRegion('in')} ${claymoreRegion('br')} -allpools 1 -allcoins 0`,
     runningCheck: 'ETH: GPU0 [1-9]+(\.[0-9][0-9][0-9]?)? [KMG]h/s',
     errors: [...standardErrors]
   }
