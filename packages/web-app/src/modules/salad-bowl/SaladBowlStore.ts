@@ -213,8 +213,10 @@ export class SaladBowlStore {
       if (err.response && err.response.status === 409) {
         console.log('Machine status conflict. Restarting')
         if (!retry) {
-          this.plugins[this.currentPluginIndex].status = PluginStatus.Initializing
-          this.sendRunningStatus(true)
+          if (this.plugins[this.currentPluginIndex]) {
+            this.plugins[this.currentPluginIndex].status = PluginStatus.Initializing
+            this.sendRunningStatus(true)
+          }
         }
       } else {
         throw e

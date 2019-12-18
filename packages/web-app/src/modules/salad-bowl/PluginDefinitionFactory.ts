@@ -33,7 +33,7 @@ export const beamV2Definition = (machine: Machine): PluginDefinition | undefined
     name: 'BeamV2-1.83',
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer1.83/gminer-1-83-windows.zip',
     exe: 'miner.exe',
-    args: `-a beamhashII ${beamUser('usa', machine.minerId)} ${beamUser('eu', machine.minerId)} ${beamUser(
+    args: `-a -w 0 beamhashII ${beamUser('usa', machine.minerId)} ${beamUser('eu', machine.minerId)} ${beamUser(
       'hk',
       machine.minerId,
     )} ${beamUser('jp', machine.minerId)} ${beamUser('in', machine.minerId)} ${beamUser('br', machine.minerId)}`,
