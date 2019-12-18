@@ -163,7 +163,12 @@ export class SaladBowlStore {
     }
     this.plugins = plugins
 
-    yield this.store.native.send('start-salad', pluginDefinitions)
+    let apiVersion = this.store.native.apiVersion;
+    if (apiVersion < 7) {
+      yield this.store.native.send('start-salad', pluginDefinitions[0])
+    } else {
+      yield this.store.native.send('start-salad', pluginDefinitions)
+    }
 
     if (!this.runningHeartbeat) {
       this.runningHeartbeat = setInterval(() => {

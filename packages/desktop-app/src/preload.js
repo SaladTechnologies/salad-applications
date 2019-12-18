@@ -17,7 +17,7 @@ function init() {
 
   window.salad = {
     platform: 'electron',
-    apiVersion: 6,
+    apiVersion: 7,
     dispatch: dispatch,
   }
 
