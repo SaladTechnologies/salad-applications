@@ -31,7 +31,7 @@ export class SaladBowlStore {
 
   @computed
   get isRunning(): boolean {
-    if (this.plugins[this.this.currentPluginIndex]) {
+    if (this.plugins[this.currentPluginIndex]) {
       return this.plugins[this.currentPluginIndex].status !== PluginStatus.Stopped && this.plugins[this.currentPluginIndex].status !== PluginStatus.Unknown
     } else {
       return false
@@ -94,7 +94,7 @@ export class SaladBowlStore {
 
   @action
   onNextPlugin = () => {
-    this.this.currentPluginIndex += 1
+    this.currentPluginIndex += 1
   }
 
   @action
@@ -141,7 +141,7 @@ export class SaladBowlStore {
       return
     }
 
-    this.this.currentPluginIndex = 1
+    this.currentPluginIndex = 1
     let pluginDefinitions = getPluginDefinitions(this.store)
 
     if (pluginDefinitions.length < 1) {
