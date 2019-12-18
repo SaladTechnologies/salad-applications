@@ -78,7 +78,7 @@ export const xmrigDefinitionOpenCL = (machine: Machine): PluginDefinition | unde
     name: 'XMRig-5.2.0-OpenCL',
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/xmrig-5.2.0/xmrig-5.2.0-windows-opencl.zip',
     exe: 'xmrig.exe',
-    args: `--donate-level 1 --no-cpu --opencl --cuda -o stratum+tcp://randomxmonero.usa.nicehash.com:3380 -u ${miningAddress} -k --nicehash --coin monero`,
+    args: `--donate-level 1 --no-cpu --opencl -o stratum+tcp://randomxmonero.usa.nicehash.com:3380 -u ${miningAddress} -k --nicehash --coin monero`,
     runningCheck: 'accepted',
     errors: [...standardErrors]
   }
