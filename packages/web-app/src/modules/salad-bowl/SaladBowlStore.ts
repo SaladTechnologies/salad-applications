@@ -98,7 +98,9 @@ export class SaladBowlStore {
         this.store.ui.showModal('/errors/anti-virus')
         break
       case ErrorCategory.NoCompatiblePlugins:
-        this.store.ui.showModal('/errors/no-plugins')
+        if (message.errorCode === 8008135) {
+          this.store.ui.showModal('/errors/no-plugins')
+        }
         break
       // case ErrorCategory.Driver:
       //   this.store.ui.showModal('/errors/cuda')
