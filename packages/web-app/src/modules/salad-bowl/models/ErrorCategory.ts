@@ -4,5 +4,5 @@ export enum ErrorCategory {
   AntiVirus = 'antiVirus',
   Network = 'network',
   Silent = 'silent',
-  Incompatible = 'incompatible'
+  NoCompatiblePlugins = 'noCompatiblePlugins'
 }

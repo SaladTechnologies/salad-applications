@@ -97,7 +97,7 @@ export class SaladBowlStore {
       case ErrorCategory.AntiVirus:
         this.store.ui.showModal('/errors/anti-virus')
         break
-      case ErrorCategory.Incompatible:
+      case ErrorCategory.NoCompatiblePlugins:
         this.store.ui.showModal('/errors/no-plugins')
         break
       // case ErrorCategory.Driver:

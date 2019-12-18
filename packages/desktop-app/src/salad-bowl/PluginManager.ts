@@ -27,7 +27,7 @@ export class PluginManager {
         this.notificationService.sendError({
           message: 'There are no compatible plugins for this machine to use.',
           errorCode: 8008135,
-          errorCategory: ErrorCategory.Incompatible
+          errorCategory: ErrorCategory.NoCompatiblePlugins
         })
       } else {
         let nextPluginIndex = pluginIndex + 1
