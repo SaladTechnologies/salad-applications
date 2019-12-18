@@ -13,7 +13,7 @@ import { getPluginDefinitions } from './PluginDefinitionFactory'
 
 export class SaladBowlStore {
   private runningHeartbeat?: NodeJS.Timeout
-  private currentPluginIndex: number
+  private currentPluginIndex: number = 0
 
   @observable
   public plugins: Array<PluginInfo> = new Array()
