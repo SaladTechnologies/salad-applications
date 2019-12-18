@@ -10,6 +10,10 @@ export class SaladBridgeNotificationService implements INotificationService {
     this.bridge.send('mining-status', message)
   }
 
+  sendPluginChange = () => {
+    this.bridge.send('plugin-change')
+  }
+
   sendError = (message: ErrorMessage) => {
     this.bridge.send('mining-error', message)
   }

@@ -30,8 +30,8 @@ export class PluginManager {
           errorCategory: ErrorCategory.NoCompatiblePlugins
         })
       } else {
+        this.notificationService.sendPluginChange()
         let nextPluginIndex = pluginIndex + 1
-
         await this.start(pluginDefinitions, nextPluginIndex)
       }
     })
