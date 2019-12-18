@@ -31,8 +31,8 @@ export class SaladBowlStore {
 
   @computed
   get isRunning(): boolean {
-    if (this.plugins[currentPluginIndex]) {
-      return this.plugins[currentPluginIndex].status !== PluginStatus.Stopped && this.plugins[currentPluginIndex].status !== PluginStatus.Unknown
+    if (this.plugins[this.this.currentPluginIndex]) {
+      return this.plugins[this.currentPluginIndex].status !== PluginStatus.Stopped && this.plugins[this.currentPluginIndex].status !== PluginStatus.Unknown
     } else {
       return false
     }
@@ -40,11 +40,11 @@ export class SaladBowlStore {
 
   @computed
   get status(): MiningStatus {
-    if (!this.plugins[currentPluginIndex]) {
+    if (!this.plugins[this.currentPluginIndex]) {
       return MiningStatus.Stopped
     }
 
-    switch (this.plugins[currentPluginIndex].status) {
+    switch (this.plugins[this.currentPluginIndex].status) {
       case PluginStatus.Installing:
         return MiningStatus.Installing
       case PluginStatus.Initializing:
@@ -61,11 +61,11 @@ export class SaladBowlStore {
   /** Returns the summary status for the machine */
   @computed
   get machineStatus(): MachineStatus {
-    if (!this.plugins[currentPluginIndex]) {
+    if (!this.plugins[this.currentPluginIndex]) {
       return MachineStatus.Stopped
     }
 
-    switch (this.plugins[currentPluginIndex].status) {
+    switch (this.plugins[this.currentPluginIndex].status) {
       case PluginStatus.Installing:
       case PluginStatus.Initializing:
         return MachineStatus.Initializing
@@ -78,7 +78,7 @@ export class SaladBowlStore {
   }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
-    this.currentPluginIndex = 0
+    this.this.currentPluginIndex = 0
     this.store.native.on('mining-status', this.onReceiveStatus)
     this.store.native.on('plugin-change', this.onNextPlugin)
     this.store.native.on('mining-error', this.onReceiveError)
@@ -86,15 +86,15 @@ export class SaladBowlStore {
 
   @action
   onReceiveStatus = (message: StatusMessage) => {
-    if (this.plugins[currentPluginIndex]) {
-      this.plugins[currentPluginIndex].name = message.name
-      this.plugins[currentPluginIndex].status = message.status
+    if (this.plugins[this.currentPluginIndex]) {
+      this.plugins[this.currentPluginIndex].name = message.name
+      this.plugins[this.currentPluginIndex].status = message.status
     }
   }
 
   @action
   onNextPlugin = () => {
-    this.currentPluginIndex += 1
+    this.this.currentPluginIndex += 1
   }
 
   @action
@@ -141,7 +141,7 @@ export class SaladBowlStore {
       return
     }
 
-    this.currentPluginIndex = 1
+    this.this.currentPluginIndex = 1
     let pluginDefinitions = getPluginDefinitions(this.store)
 
     if (pluginDefinitions.length < 1) {
@@ -179,8 +179,8 @@ export class SaladBowlStore {
   @action.bound
   stop = flow(function*(this: SaladBowlStore) {
     yield this.store.native.send('stop-salad')
-    if (this.plugins[currentPluginIndex]) {
-      this.plugins[currentPluginIndex].status = PluginStatus.Stopped
+    if (this.plugins[this.currentPluginIndex]) {
+      this.plugins[this.currentPluginIndex].status = PluginStatus.Stopped
     }
 
     this.sendRunningStatus()
@@ -213,7 +213,7 @@ export class SaladBowlStore {
       if (err.response && err.response.status === 409) {
         console.log('Machine status conflict. Restarting')
         if (!retry) {
-          this.plugins[currentPluginIndex].status = PluginStatus.Initializing
+          this.plugins[this.currentPluginIndex].status = PluginStatus.Initializing
           this.sendRunningStatus(true)
         }
       } else {
