@@ -38,6 +38,7 @@ export class RefreshService {
       this.store.balance.refreshBalance()
       this.store.rewards.loadSelectedReward()
       this.store.referral.loadReferrals()
+      this.store.home.loadBannerInfo()
     } catch (error) {
       console.error(error)
     }

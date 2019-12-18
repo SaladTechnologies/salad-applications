@@ -13,6 +13,7 @@ import { AnalyticsStore } from './modules/analytics'
 import { RefreshService } from './modules/data-refresh'
 import { featureFlags } from './FeatureFlags'
 import { SaladBowlStore } from './modules/salad-bowl'
+import { HomeStore } from './modules/home/HomeStore'
 import { NotificationStore } from './modules/notifications'
 
 //Forces all changes to state to be from an action
@@ -42,6 +43,7 @@ export class RootStore {
   public readonly profile: ProfileStore
   public readonly ui: UIStore
   public readonly referral: ReferralStore
+  public readonly home: HomeStore
   public readonly native: NativeStore
   public readonly refresh: RefreshService
   public readonly saladBowl: SaladBowlStore
@@ -63,6 +65,7 @@ export class RootStore {
     this.profile = new ProfileStore(this, axios)
     this.ui = new UIStore(this)
     this.referral = new ReferralStore(this, axios)
+    this.home = new HomeStore(this, axios)
     this.refresh = new RefreshService(this)
     this.analytics = new AnalyticsStore(this)
     this.autoStart = new AutoStartStore(this)
@@ -116,5 +119,9 @@ export class RootStore {
     this.analytics.trackLogout()
     this.saladBowl.stop('logout')
     this.native.logout()
+  }
+
+  loadData = () =>{
+    this.home.loadBannerInfo()
   }
 }
