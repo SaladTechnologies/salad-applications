@@ -58,9 +58,7 @@ export default class Routes extends Component {
   public getOnboardingRedirect = () => {
     let profile = this.store.profile.currentProfile
     let path = window.location.pathname
-
-    console.log('== || getOnboardingRedirect || ========================')
-
+    
     if (profile === undefined) {
       if (this.store.profile.isLoading) {
         return <Redirect to="/profile-loading" />
@@ -79,16 +77,12 @@ export default class Routes extends Component {
       // return <Redirect to={'/onboarding/redeem-rewards'} />
     } else if (this.store.profile.isOnboardingComplete) {
       path = '/onboarding/complete'
+    } else if (!this.store.profile.onboarding && !this.store.profile.machineOnboarding) {
+      return <Redirect to={'/'} />
     }
-
-    console.log('path: ', path)
-    
 
     // This stops the page from loading multiple times
     if (this.state.prevPath === path) return
-
-    console.log(`passed check for multiple redirects`)
-    console.log('=======================================================')
 
     this.setState({
       prevPath: path,
@@ -115,14 +109,7 @@ export default class Routes extends Component {
     let isElectron = this.store.native.isNative
     let isAuth = this.store.auth.isAuth
     let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
-    let isOnboarding = this.store.profile.onboarding || this.store.profile.machineOnboarding
-
-    console.log('== Routes - Pathname ==================================')
-    console.log('pathname: ', window.location.pathname)
-    console.log('isOnboarding: ', isOnboarding)
-    console.log('---- profile.onboarding: ', this.store.profile.onboarding)
-    console.log('---- profile.machineOnboarding: ', this.store.profile.machineOnboarding)
-    console.log('=======================================================')
+    let isOnboarding = this.store.profile.isOnboarding
 
     return (
       <Switch>
@@ -150,8 +137,6 @@ export default class Routes extends Component {
 }
 
 const NoAuth = (props: any) => {
-  console.log('++---> [[Routes] NoAuth]')
-
   const render = () => {
     if (!props.store.isLoading) return <WelcomePageContainer />
 
@@ -168,8 +153,6 @@ const NoAuth = (props: any) => {
 }
 
 const Auth = () => {
-  console.log('++---> [[Routes] Auth]')
-
   return (
     <>
       <Route path="/" render={() => <HomePage />} />
@@ -188,8 +171,6 @@ const Auth = () => {
 }
 
 const Onboarding = () => {
-  console.log('++---> [[Routes] Onboarding]')
-
   return (
     // Note: AnimatedSwitch prevents the modal from showing
     <>
@@ -213,8 +194,6 @@ const Onboarding = () => {
 }
 
 const Rewards = () => {
-  console.log('++---> [[Routes] RedeemReward]')
-
   return (
     <>
       <Route exact path="/rewards/:id" component={RewardDetailsModalContainer} />

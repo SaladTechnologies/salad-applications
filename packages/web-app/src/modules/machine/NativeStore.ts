@@ -239,14 +239,14 @@ export class NativeStore {
       this.store.machine.setCurrentMachine(machine)
       this.store.analytics.trackMachine(machine)
 
-      this.store.profile.machineOnboarding = machine.onboardingVersion !== Config.onboardingVersion
+      // this.store.profile.onboarding needs to be false because onboarding should have been completed beforehand.
+      // If this.store.profile.machineOnboarding = true, then we will short-circuit the Redeem Reward page
+      this.store.profile.machineOnboarding = !this.store.profile.onboarding && machine.onboardingVersion !== Config.onboardingVersion
 
       // NOTE: This was used to stop multi loading of pages
-      if (!this.store.profile.onboarding) {
+      if (!this.store.profile.onboarding || this.store.profile.machineOnboarding) {
         this.store.routing.replace('/')
       }
-
-      // this.store.routing.replace('/')
     } catch (err) {
       this.store.analytics.captureException(new Error(`register-machine error: ${err}`))
       this.validGPUs = false

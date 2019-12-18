@@ -7,7 +7,6 @@ import { AxiosInstance } from 'axios'
 const RUNNING_URI = '/onboarding/running'
 const REDEEM_REWARDS_URI = '/onboarding/redeem-rewards'
 const COMPLETE_URI = '/onboarding/complete'
-// const MACHINE_TEST_URI = '/onboarding/machine-test'
 
 export class ProfileStore {
   private pathname: string = '/'
@@ -175,7 +174,7 @@ export class ProfileStore {
       this.currentProfile = profile
     } finally {
       this.isUpdating = false
-      // this.store.routing.replace('/')
+      this.store.routing.replace('/')
     }
   })
 
@@ -217,26 +216,21 @@ export class ProfileStore {
     this.isOnboardingComplete = this.isOnboardingRedeem = this.isOnboardingRunning = this.isOnboardingTesting = false
     this.pathname = pathname
 
-    console.log('~+~+~+~(O> onNext Pathname: ', pathname)
-
     switch (this.pathname) {
       case RUNNING_URI:
         this.isOnboardingRunning = true
-        break
+        return this.store.routing.replace('/')
       case REDEEM_REWARDS_URI:
         this.isOnboardingRedeem = true
         this.store.analytics.trackError('Onboarding: Running Page Complete')
-        break
+        return this.store.routing.replace('/')
       case COMPLETE_URI:
         this.isOnboardingComplete = true
-        break
+        return this.store.routing.replace('/')
       default:
-        this.onboarding = this.machineOnboarding = false
         this.completeOnboarding()
         break
     }
-
-    return this.store.routing.replace('/')
   }
 
   @action.bound
@@ -246,17 +240,20 @@ export class ProfileStore {
         onboardingVersion: Config.onboardingVersion,
       })
 
-      this.axios.patch('machine', {
+      const machinePatch = yield this.axios.patch(`machines/${this.store.token.machineId}`, {
         onboardingVersion: Config.onboardingVersion,
       })
 
       const profile = profilePatch.data
-      this.currentProfile = profile
+      const machine = machinePatch.data
 
-      this.onboarding = this.isOnboarding
+      this.currentProfile = profile
+      this.store.machine.currentMachine = machine
     } catch (error) {
       console.error('completeOnboarding Error: ', error)
     } finally {
+      this.onboarding = false
+      this.machineOnboarding = false
       this.store.routing.replace('/')
     }
   })

@@ -93,7 +93,6 @@ export class RootStore {
 
     this.tryRegisterMachine()
 
-    // this.refresh.start()
     this.currentMachineHeartbeat = setInterval(this.checkCurrentMachine, 2000)
   })
 
@@ -109,7 +108,7 @@ export class RootStore {
 
   @action
   checkCurrentMachine = () => {
-    if(this.machine.currentMachine) {
+    if (this.machine.currentMachine) {
       this.refresh.start()
       if (this.currentMachineHeartbeat) clearInterval(this.currentMachineHeartbeat)
     }
