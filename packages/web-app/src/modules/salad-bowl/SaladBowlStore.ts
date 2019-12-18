@@ -78,7 +78,7 @@ export class SaladBowlStore {
   }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
-    this.this.currentPluginIndex = 0
+    this.currentPluginIndex = 0
     this.store.native.on('mining-status', this.onReceiveStatus)
     this.store.native.on('plugin-change', this.onNextPlugin)
     this.store.native.on('mining-error', this.onReceiveError)
