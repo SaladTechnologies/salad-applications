@@ -138,7 +138,6 @@ export class ProfileStore {
       console.log(err)
     } finally {
       this.isUpdating = false
-      this.store.routing.replace('/')
     }
   })
 

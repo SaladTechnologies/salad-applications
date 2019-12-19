@@ -4,9 +4,9 @@ import { RootStore } from '../../Store'
 
 const mapStoreToProps = (store: RootStore): any => {
   const menuItems: MenuItem[] = [
-    new MenuItem('Account', store.ui.showProfilePage),
-    new MenuItem('Referrals', store.ui.showReferralsPage),
-    new MenuItem('Settings', store.ui.showSettingsPage),
+    new MenuItem('Account', store.ui.showProfilePage, true),
+    new MenuItem('Referrals', store.ui.showReferralsPage, store.profile.currentProfile && store.profile.currentProfile.viewedReferralOnboarding),
+    new MenuItem('Settings', store.ui.showSettingsPage, true),
   ]
   return {
     showWindowActions: store.native.isNative,
