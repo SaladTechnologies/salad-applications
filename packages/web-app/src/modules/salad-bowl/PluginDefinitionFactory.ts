@@ -20,10 +20,10 @@ export const getPluginDefinitions = (store: RootStore): Array<PluginDefinition |
 
   let supportsCuda = machineInfo.graphics.controllers.some(x => x.vendor.toLocaleLowerCase().includes('nvidia'))
   if (supportsCuda) {
-    let gpuFallbackList = new Array(beamV2Definition(machine), claymoreDefinition(machine), xmrigDefinitionCuda(machine))
+    let gpuFallbackList = new Array(beamV2Definition(machine), gminerEthDefinition(machine), claymoreDefinition(machine), xmrigDefinitionCuda(machine))
     return gpuFallbackList
   } else {
-    let gpuFallbackList = new Array(beamV2Definition(machine), claymoreDefinition(machine), xmrigDefinitionOpenCL(machine))
+    let gpuFallbackList = new Array(beamV2Definition(machine), gminerEthDefinition(machine), claymoreDefinition(machine), xmrigDefinitionOpenCL(machine))
     return gpuFallbackList
   }
 }
