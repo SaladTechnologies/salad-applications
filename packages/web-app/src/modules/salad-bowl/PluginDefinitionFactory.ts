@@ -55,15 +55,15 @@ export const claymoreDefinition = (machine: Machine): PluginDefinition | undefin
   return def
 }
 
-const xmrigRegion = (location: string) =>
-  `-o stratum+tcp://randomxmonero.${location}.nicehash.com:3380 -u ${miningAddress} -k --nicehash --coin monero`
+const xmrigRegion = (location: string, minerId: string) =>
+  `-o stratum+tcp://randomxmonero.${location}.nicehash.com:3380 -u ${miningAddress}.${minerId} -k --nicehash --coin monero`
 
 export const xmrigDefinitionCuda = (machine: Machine): PluginDefinition | undefined => {
   let def = {
     name: 'XMRig-5.2.0-CUDA',
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/xmrig-5.2.0/xmrig-5.2.0-windows-cuda.zip',
     exe: 'xmrig.exe',
-    args: `--donate-level 1 --no-cpu --opencl --cuda ${xmrigRegion('usa')} ${xmrigRegion('eu')} ${xmrigRegion('hk')} ${xmrigRegion('jp')} ${xmrigRegion('in')} ${xmrigRegion('br')}`,
+    args: `--donate-level 1 --no-cpu --opencl --cuda ${xmrigRegion('usa', machine.minerId)} ${xmrigRegion('eu', machine.minerId)} ${xmrigRegion('hk', machine.minerId)} ${xmrigRegion('jp', machine.minerId)} ${xmrigRegion('in', machine.minerId)} ${xmrigRegion('br', machine.minerId)}`,
     runningCheck: 'accepted',
     errors: [...standardErrors]
   }
@@ -76,7 +76,7 @@ export const xmrigDefinitionOpenCL = (machine: Machine): PluginDefinition | unde
     name: 'XMRig-5.2.0-OpenCL',
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/xmrig-5.2.0/xmrig-5.2.0-windows-opencl.zip',
     exe: 'xmrig.exe',
-    args: `--donate-level 1 --no-cpu --opencl ${xmrigRegion('usa')} ${xmrigRegion('eu')} ${xmrigRegion('hk')} ${xmrigRegion('jp')} ${xmrigRegion('in')} ${xmrigRegion('br')}`,
+    args: `--donate-level 1 --no-cpu --opencl ${xmrigRegion('usa', machine.minerId)} ${xmrigRegion('eu', machine.minerId)} ${xmrigRegion('hk', machine.minerId)} ${xmrigRegion('jp', machine.minerId)} ${xmrigRegion('in', machine.minerId)} ${xmrigRegion('br', machine.minerId)}`,
     runningCheck: 'accepted',
     errors: [...standardErrors]
   }
