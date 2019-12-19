@@ -44,7 +44,7 @@ export class TokenStore {
 
     if (!payload) return undefined
 
-    const base64Payload: string = new Buffer(payload, 'base64').toString()
+    const base64Payload: string = atob(payload)
 
     const tokenData = JSON.parse(base64Payload)
 
