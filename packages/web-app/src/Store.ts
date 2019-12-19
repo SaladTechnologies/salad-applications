@@ -120,8 +120,4 @@ export class RootStore {
     this.saladBowl.stop('logout')
     this.native.logout()
   }
-
-  loadData = () =>{
-    this.home.loadBannerInfo()
-  }
 }
