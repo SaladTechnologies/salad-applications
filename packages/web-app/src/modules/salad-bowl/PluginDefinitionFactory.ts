@@ -4,8 +4,11 @@ import { ErrorCategory } from './models/ErrorCategory'
 import { ErrorAction } from './models/ErrorAction'
 import { RootStore } from '../../Store'
 import { MachineInfo } from '../machine/models'
+import { gminerEthDefinition } from './GMinerDefinitions'
 
-const miningAddress = '368dnSPEiXj1Ssy35BBWMwKcmFnGLuqa1J'
+export const miningAddress = '368dnSPEiXj1Ssy35BBWMwKcmFnGLuqa1J'
+
+export const nicehashUser = (machine: Machine) => `${miningAddress}.${machine.minerId}`
 
 export const getPluginDefinition = (store: RootStore): PluginDefinition | undefined => {
   let machine = store.machine.currentMachine
@@ -15,13 +18,14 @@ export const getPluginDefinition = (store: RootStore): PluginDefinition | undefi
     return undefined
   }
 
-  return beamV2Definition(machine)
+  return gminerEthDefinition(machine)
 }
 
 export const beamV2Definition = (machine: Machine): PluginDefinition | undefined => {
   let def = {
     name: 'BeamV2-1.83',
-    downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer1.83/gminer-1-83-windows.zip',
+    downloadUrl:
+      'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer1.83/gminer-1-83-windows.zip',
     exe: 'miner.exe',
     args: `-a beamhashII ${beamUser('usa', machine.minerId)} ${beamUser('eu', machine.minerId)} ${beamUser(
       'hk',
@@ -40,11 +44,12 @@ const beamUser = (location: string, minerId: string) =>
 export const claymoreDefinition = (machine: Machine): PluginDefinition | undefined => {
   let def = {
     name: 'Claymore-15',
-    downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/claymore15/claymore-15-windows.zip',
+    downloadUrl:
+      'https://github.com/SaladTechnologies/plugin-downloads/releases/download/claymore15/claymore-15-windows.zip',
     exe: 'EthDcrMiner64.exe',
     args: `-esm 3 -ewal ${miningAddress}.${machine.minerId} -epool daggerhashimoto.usa.nicehash.com:3353 -allpools 1 -allcoins 0`,
-    runningCheck: 'ETH: GPU0 [1-9]+(\.[0-9][0-9][0-9]?)? [KMG]h/s',
-    errors: [...standardErrors]
+    runningCheck: 'ETH: GPU0 [1-9]+(.[0-9][0-9][0-9]?)? [KMG]h/s',
+    errors: [...standardErrors],
   }
 
   return def
@@ -161,7 +166,7 @@ export const ethminerDefinition = (machine: Machine, machineInfo: MachineInfo): 
   return def
 }
 
-const standardErrors = [
+export const standardErrors = [
   // Anti-Virus
   {
     message: 'is not recognized as an internal or external command',
