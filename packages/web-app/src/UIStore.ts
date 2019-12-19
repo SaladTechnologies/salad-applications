@@ -55,6 +55,10 @@ export class UIStore {
   }
 
   showReferralsPage = () => {
+    if (this.store.profile.currentProfile && !this.store.profile.currentProfile.viewedReferralOnboarding) {
+      this.store.profile.setViewedReferralOnboarding()
+    }
+
     this.showModal('/settings/referrals')
   }
 }
