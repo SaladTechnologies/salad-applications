@@ -93,20 +93,6 @@ export const xmrigDefinitionOpenCL = (machine: Machine): PluginDefinition | unde
   return def
 }
 
-export const claymoreDefinition = (machine: Machine): PluginDefinition | undefined => {
-  let def = {
-    name: 'Claymore-15',
-    downloadUrl:
-      'https://github.com/SaladTechnologies/plugin-downloads/releases/download/claymore15/claymore-15-windows.zip',
-    exe: 'EthDcrMiner64.exe',
-    args: `-esm 3 -ewal ${miningAddress}.${machine.minerId} -epool daggerhashimoto.usa.nicehash.com:3353 -allpools 1 -allcoins 0`,
-    runningCheck: 'ETH: GPU0 [1-9]+(.[0-9][0-9][0-9]?)? [KMG]h/s',
-    errors: [...standardErrors],
-  }
-
-  return def
-}
-
 export const ethminerDefinition = (machine: Machine, machineInfo: MachineInfo): PluginDefinition | undefined => {
   let cuda = machineInfo.graphics.controllers.some(x => x.vendor.toLocaleLowerCase().includes('nvidia'))
 
