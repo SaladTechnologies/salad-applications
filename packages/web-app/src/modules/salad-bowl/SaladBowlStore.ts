@@ -19,21 +19,9 @@ export class SaladBowlStore {
   private heartbeatTimer?: NodeJS.Timeout
   private pluginDefinitions?: PluginDefinition[]
   private timeoutTimer?: NodeJS.Timeout
-  private runningHeartbeat?: NodeJS.Timeout
 
   @observable
   public plugin: PluginInfo = new PluginInfo('Unknown')
-
-  @computed
-  get canRun(): boolean {
-    return (
-      this.store.machine &&
-      this.store.machine.currentMachine !== undefined &&
-      this.store.machine.currentMachine.qualifying &&
-      this.store.native &&
-      this.store.native.machineInfo !== undefined
-    )
-  }
   
   @observable
   public errorCategory?: string
@@ -49,9 +37,6 @@ export class SaladBowlStore {
 
   @observable
   public earningStatus: boolean = false
-
-  // @observable
-  // public errorMessage?: string
 
   @computed
   get canRun(): boolean {

@@ -11,7 +11,12 @@ export class UIStore {
 
   @action
   hideModal = () => {
-    this.store.routing.replace('/')
+    // This kind of sucks, I don't like the idea of hard coding the path
+    if (this.store.profile.isOnboardingRedeem) {
+      return this.store.routing.replace('/onboarding/redeem-rewards')
+    }
+
+    return this.store.routing.replace('/')
   }
 
   showProfilePage = () => {
