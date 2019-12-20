@@ -16,7 +16,7 @@
   "win": {
     "icon": "assets/favicon.ico",
     "target": ["nsis"],
-    "sign": "./sign.js",
+    "rfc3161TimeStampServer": "http://timestamp.comodoca.com",
     "extraFiles": ["assets/*"],
     "publish": {
       "provider": "s3",
