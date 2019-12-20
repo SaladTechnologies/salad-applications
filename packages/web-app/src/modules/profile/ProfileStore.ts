@@ -142,7 +142,7 @@ export class ProfileStore {
   })
 
   @action.bound
-  closeWhatsNew = flow(function*(this: ProfileStore) {
+  setWhatsNew = flow(function*(this: ProfileStore) {
     if (this.currentProfile === undefined) return
 
     this.isUpdating = true
@@ -156,8 +156,12 @@ export class ProfileStore {
       this.currentProfile = profile
     } finally {
       this.isUpdating = false
-      this.store.routing.replace('/')
     }
+  })
+
+  @action.bound
+  closeWhatsNew = flow(function*(this: ProfileStore) {
+    this.store.routing.replace('/')
   })
 
   @action.bound
