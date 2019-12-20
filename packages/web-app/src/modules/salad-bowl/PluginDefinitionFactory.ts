@@ -3,6 +3,7 @@ import { getClaymoreDefinition } from './definitions/getClaymoreDefinition'
 import { getGminerBeamV2Definition } from './definitions/getGminerBeamV2Definition'
 import { getGminerEthDefinition } from './definitions/getGminerEthDefinition'
 import { PluginDefinition } from './models'
+import { getXmrigDefinition } from './definitions/getXmrigDefinition'
 
 export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
   let machine = store.machine.currentMachine
@@ -16,6 +17,7 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
     getGminerBeamV2Definition(machine),
     getGminerEthDefinition(machine),
     getClaymoreDefinition(machine),
+    getXmrigDefinition(machine, machineInfo),
     // TODO: getEthminerDefinition(machine, machineInfo),
   ]
 }
