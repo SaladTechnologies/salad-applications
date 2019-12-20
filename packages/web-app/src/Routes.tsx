@@ -31,6 +31,7 @@ import { CompatibilityCheckPageContainer } from './modules/machine-views'
 import {
   AntiVirusErrorContainer,
   CudaErrorContainer,
+  FallbackErrorContainer,
   NetworkErrorContainer,
   UnknownErrorContainer,
 } from './modules/error-views'
@@ -138,6 +139,7 @@ const Auth = () => {
       <Route path="/" render={() => <HomePage />} />
       <Route exact path="/errors/anti-virus" component={AntiVirusErrorContainer} />
       <Route exact path="/errors/cuda" component={CudaErrorContainer} />
+      <Route exact path="/errors/fallback" component={FallbackErrorContainer} />
       <Route exact path="/errors/network" component={NetworkErrorContainer} />
       <Route exact path="/errors/unknown" component={UnknownErrorContainer} />
       <Route exact path="/rewards/:id" component={RewardDetailsModalContainer} />

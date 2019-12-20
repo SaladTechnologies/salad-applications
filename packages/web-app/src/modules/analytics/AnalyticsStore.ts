@@ -14,7 +14,7 @@ export class AnalyticsStore {
   constructor(private readonly store: RootStore) {
     autorun(() => {
       console.log(`Detected change in status:${this.store.saladBowl.status}`)
-      this.trackMiningStatus(this.store.saladBowl.status)
+      this.trackMiningStatus(this.store.saladBowl.status, this.store.saladBowl.plugin.name)
     })
   }
 
@@ -80,10 +80,10 @@ export class AnalyticsStore {
     this.track('Stop')
   }
 
-  public trackMiningStatus = (status: MiningStatus) => {
+  public trackMiningStatus = (status: MiningStatus, pluginName: string) => {
     if (!this.started) return
 
-    this.track('Mining Status', { MiningStatus: status })
+    this.track('Mining Status', { MiningStatus: status, PluginName: pluginName })
   }
 
   /** Track when a machine goes to the earning state */
