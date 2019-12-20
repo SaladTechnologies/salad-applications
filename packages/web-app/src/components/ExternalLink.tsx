@@ -11,7 +11,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const _ExternalLink = ({ path, className, children }: Props) => (
-  <a href={path} target="_blank" className={className}>
+  <a href={path} target="_blank" className={className} rel="noopener noreferrer">
     {children}
   </a>
 )

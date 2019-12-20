@@ -9,14 +9,32 @@ import { MiningStatus } from '../machine/models'
 import { ErrorMessage } from './models/ErrorMessage'
 import { ErrorCategory } from './models/ErrorCategory'
 import { MachineStatus } from './models/MachineStatus'
-import { getPluginDefinition } from './PluginDefinitionFactory'
+import { getPluginDefinitions } from './PluginDefinitionFactory'
+import { PluginDefinition } from './models'
 
 export class SaladBowlStore {
+  private currentPluginDefinition?: PluginDefinition
+  private currentPluginDefinitionIndex: number = 0
+  private currentPluginRetries: number = 0
+  private heartbeatTimer?: NodeJS.Timeout
+  private pluginDefinitions?: PluginDefinition[]
+  private timeoutTimer?: NodeJS.Timeout
   private runningHeartbeat?: NodeJS.Timeout
 
   @observable
   public plugin: PluginInfo = new PluginInfo('Unknown')
 
+  @computed
+  get canRun(): boolean {
+    return (
+      this.store.machine &&
+      this.store.machine.currentMachine !== undefined &&
+      this.store.machine.currentMachine.qualifying &&
+      this.store.native &&
+      this.store.native.machineInfo !== undefined
+    )
+  }
+  
   @observable
   public errorCategory?: string
 
@@ -89,8 +107,27 @@ export class SaladBowlStore {
 
   @action
   onReceiveStatus = (message: StatusMessage) => {
+    if (this.plugin.name !== message.name) {
+      return
+    }
+    
     this.plugin.name = message.name
     this.plugin.status = message.status
+    if (this.timeoutTimer != null) {
+      if (message.status === PluginStatus.Running) {
+        // Hooray! The miner started. Let's stop the timeout watchdog.
+        clearTimeout(this.timeoutTimer)
+        this.timeoutTimer = undefined
+      } else if (this.currentPluginDefinition != null && message.status === PluginStatus.Stopped) {
+        // This indicates the miner was automatically restarted.
+        this.currentPluginRetries++
+        if (this.currentPluginRetries > this.currentPluginDefinition.initialRetries) {
+          clearTimeout(this.timeoutTimer)
+          this.timeoutTimer = undefined
+          this.startNext()
+        }
+      }
+    }
 
     switch (this.plugin.status) {
       case PluginStatus.Initializing:
@@ -160,43 +197,87 @@ export class SaladBowlStore {
       return
     }
 
-    let pluginDefinition = getPluginDefinition(this.store)
+    if (this.timeoutTimer != null) {
+      clearTimeout(this.timeoutTimer)
+      this.timeoutTimer = undefined
+    }
 
-    if (!pluginDefinition) {
+    if (this.heartbeatTimer != null) {
+      clearInterval(this.heartbeatTimer)
+      this.heartbeatTimer = undefined
+    }
+
+    this.currentPluginDefinition = undefined
+    this.currentPluginDefinitionIndex = 0
+    this.currentPluginRetries = 0
+    this.pluginDefinitions = getPluginDefinitions(this.store)
+    if (this.pluginDefinitions.length === 0) {
       console.log('Unable to find a valid plugin definition for this machine. Unable to start.')
       return
     }
 
-    this.plugin.name = pluginDefinition.name
+    this.currentPluginDefinition = this.pluginDefinitions[this.currentPluginDefinitionIndex]
+    this.plugin.name = this.currentPluginDefinition.name
     this.plugin.status = PluginStatus.Initializing
+    yield this.store.native.send('start-salad', this.currentPluginDefinition)
 
-    yield this.store.native.send('start-salad', pluginDefinition)
+    this.timeoutTimer = setTimeout(() => {
+      this.timeoutTimer = undefined
+      this.startNext()
+    }, this.currentPluginDefinition.initialTimeout)
 
-    if (!this.runningHeartbeat) {
-      this.runningHeartbeat = setInterval(() => {
-        this.sendRunningStatus()
-      }, Config.statusHeartbeatRate)
-    }
+    this.heartbeatTimer = setInterval(() => {
+      this.sendRunningStatus()
+    }, Config.statusHeartbeatRate)
 
     this.sendRunningStatus()
-
     this.store.analytics.trackStart()
   })
 
   @action.bound
+  startNext = flow(function*(this: SaladBowlStore) {
+    if (this.pluginDefinitions == null) {
+      return
+    }
+
+    this.currentPluginDefinitionIndex++
+    this.currentPluginRetries = 0
+    if (this.currentPluginDefinitionIndex >= this.pluginDefinitions.length) {
+      this.stop()
+      this.store.ui.showModal('/errors/fallback')
+    } else {
+      this.currentPluginDefinition = this.pluginDefinitions[this.currentPluginDefinitionIndex]
+      this.plugin.name = this.currentPluginDefinition.name
+      this.plugin.status = PluginStatus.Initializing
+      yield this.store.native.send('start-salad', this.currentPluginDefinition)
+
+      this.timeoutTimer = setTimeout(() => {
+        this.timeoutTimer = undefined
+        this.startNext()
+      }, this.currentPluginDefinition.initialTimeout)
+
+      this.sendRunningStatus()
+    }
+  })
+
+  @action.bound
   stop = flow(function*(this: SaladBowlStore) {
-    yield this.store.native.send('stop-salad')
+    if (this.timeoutTimer != null) {
+      clearTimeout(this.timeoutTimer)
+      this.timeoutTimer = undefined
+    }
+
+    if (this.heartbeatTimer != null) {
+      clearInterval(this.heartbeatTimer)
+      this.heartbeatTimer = undefined
+    }
+
     this.plugin.status = PluginStatus.Stopped
+    yield this.store.native.send('stop-salad')
 
     this.initializingStatus = this.runningStatus = this.earningStatus = false
 
     this.sendRunningStatus()
-
-    if (this.runningHeartbeat) {
-      clearInterval(this.runningHeartbeat)
-      this.runningHeartbeat = undefined
-    }
-
     this.store.analytics.trackStop()
   })
 
