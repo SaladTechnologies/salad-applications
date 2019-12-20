@@ -5,7 +5,7 @@ import { MINING_ADDRESS, STANDARD_ERRORS } from './constants'
 const xmrigRegion = (location: string, minerId: string) =>
   `-o stratum+tcp://randomxmonero.${location}.nicehash.com:3380 -u ${MINING_ADDRESS}.${minerId} -k --nicehash --coin monero`
 
-export const getXMRigCUDADefinition = (machine: Machine): PluginDefinition | undefined => {
+export const getXMRigCUDADefinition = (machine: Machine): PluginDefinition => {
   let def = {
     name: 'XMRig-5.2.0-CUDA',
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/xmrig-5.2.0/xmrig-5.2.0-windows-cuda.zip',

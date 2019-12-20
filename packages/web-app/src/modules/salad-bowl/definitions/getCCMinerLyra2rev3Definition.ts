@@ -5,7 +5,7 @@ import { MINING_ADDRESS, STANDARD_ERRORS } from './constants'
 const ccminerRegionLyra2rev3 = (location: string) =>
   `-o stratum+tcp://lyra2rev3.${location}.nicehash.com:3366`
 
-export const getCCMinerLyra2rev3Definition = (machine: Machine) : PluginDefinition | undefined => {
+export const getCCMinerLyra2rev3Definition = (machine: Machine) : PluginDefinition => {
   let def = {
     name: 'CCMiner-2.3.1-lyra2rev3',
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/ccminer-2.31/ccminer-2-3-1-windows.zip',

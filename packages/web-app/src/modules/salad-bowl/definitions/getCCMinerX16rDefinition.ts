@@ -5,7 +5,7 @@ import { MINING_ADDRESS, STANDARD_ERRORS } from './constants'
 const ccminerRegionX16r = (location: string) =>
   `-o stratum+tcp://x16r.${location}.nicehash.com:3366`
 
-export const getCCMinerX16rDefinition = (machine: Machine) : PluginDefinition | undefined => {
+export const getCCMinerX16rDefinition = (machine: Machine) : PluginDefinition => {
   let def = {
     name: 'CCMiner-2.3.1-x16r',
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/ccminer-2.31/ccminer-2-3-1-windows.zip',
