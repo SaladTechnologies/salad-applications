@@ -52,6 +52,7 @@ const styles = (theme: SaladTheme) => ({
   },
   childrenContainer: {
     paddingTop: '2rem',
+    paddingBottom: (props: Props) => props.childContainerPaddingBottom || '',
     flexGrow: 2,
     alignSelf: 'stretch',
   },
@@ -81,6 +82,7 @@ interface Props extends WithStyles<typeof styles> {
   rightColumnWidth?: string
   leftColumnPadding?: string
   rightColumnPadding?: string
+  childContainerPaddingBottom?: string
   hasBack?: boolean
   nextText?: string
   nextSubmitting?: boolean

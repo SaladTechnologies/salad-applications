@@ -18,6 +18,7 @@ import {
   RunningContainer,
   RedeemRewardContainer,
   CompletedContainer,
+  WhatsNewPageContainer
 } from './modules/onboarding-views'
 import { HomePage } from './modules/home-views'
 import { LoadingPage } from './components'
@@ -166,6 +167,8 @@ const Auth = () => {
       <Route exact path="/profile" component={AccountModalContainer} />
 
       <Route path="/settings" component={SettingsContainer} />
+
+      <Route exact path="/onboarding/whats-new" component={WhatsNewPageContainer} />
     </>
   )
 }
