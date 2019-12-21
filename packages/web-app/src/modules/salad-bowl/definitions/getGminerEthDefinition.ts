@@ -13,13 +13,13 @@ export const getGminerEthDefinition = (machine: Machine): PluginDefinition => {
     downloadUrl:
       'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer1.83/gminer-1-83-windows.zip',
     exe: 'miner.exe',
-    args: `-a eth ${daggerRegion('usa', machine)} ${daggerRegion('eu', machine)} ${daggerRegion(
+    args: `-w 0 -a eth ${daggerRegion('usa', machine)} ${daggerRegion('eu', machine)} ${daggerRegion(
       'hk',
       machine,
     )} ${daggerRegion('jp', machine)} ${daggerRegion('in', machine)} ${daggerRegion('br', machine)}`,
     runningCheck: '.*[1-9]d* [KMG]H/s ',
     initialTimeout: 600000,
-    initialRetries: 3,
+    initialRetries: 1,
     errors: [...STANDARD_ERRORS],
   }
 
