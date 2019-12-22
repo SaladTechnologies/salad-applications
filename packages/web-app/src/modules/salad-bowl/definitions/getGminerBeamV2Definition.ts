@@ -17,7 +17,7 @@ export const getGminerBeamV2Definition = (machine: Machine): PluginDefinition =>
     )} ${beamUser('jp', machine.minerId)} ${beamUser('in', machine.minerId)} ${beamUser('br', machine.minerId)}`,
     runningCheck: 'Share Accepted',
     initialTimeout: 600000,
-    initialRetries: 1,
+    initialRetries: 0,
     errors: [...STANDARD_ERRORS],
   }
 

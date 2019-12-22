@@ -19,7 +19,7 @@ export const getGminerEthDefinition = (machine: Machine): PluginDefinition => {
     )} ${daggerRegion('jp', machine)} ${daggerRegion('in', machine)} ${daggerRegion('br', machine)}`,
     runningCheck: '.*[1-9]d* [KMG]H/s ',
     initialTimeout: 600000,
-    initialRetries: 1,
+    initialRetries: 0,
     errors: [...STANDARD_ERRORS],
   }
 

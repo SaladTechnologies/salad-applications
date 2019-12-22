@@ -58,6 +58,7 @@ export class Plugin {
       }
     }
     this.status = PluginStatus.Initializing
+    this.stopCalled = false
 
     //Adds any extra files
     if (this.pluginDefinition.extraFiles) {
