@@ -33,6 +33,7 @@ const AutoLaunch = require('auto-launch')
 
 const getDesktopVersion = 'get-desktop-version'
 const setDesktopVersion = 'set-desktop-version'
+const getIdleTime = 'get-idle-time'
 const setIdleTime = 'set-idle-time'
 const start = 'start-salad'
 const stop = 'stop-salad'
@@ -42,7 +43,6 @@ let offlineWindow: BrowserWindow
 
 let machineInfo: MachineInfo
 let updateChecked = false
-let idleTimer: NodeJS.Timeout | undefined
 
 let pluginManager: PluginManager | undefined
 
@@ -248,6 +248,14 @@ const createMainWindow = () => {
     })
   })
 
+  //Gets the current idle time
+  bridge.on(getIdleTime, () => {
+    let n = powerMonitor.getSystemIdleTime()
+    bridge.send(setIdleTime, {
+      time: n,
+    })
+  })
+
   mainWindow.webContents.on('new-window', (e: Electron.Event, url: string) => {
     console.log(`opening new window at ${url}`)
     e.preventDefault()
@@ -257,16 +265,6 @@ const createMainWindow = () => {
   mainWindow.webContents.on('console-message', (_: Event, level: number, message: string, line: number) => {
     console.log(`console:${line}:${level}:${message}`)
   })
-
-  //Starts a timer to get the idle time
-  if (idleTimer === undefined) {
-    idleTimer = setInterval(() => {
-      let n = powerMonitor.getSystemIdleTime()
-      bridge.send(setIdleTime, {
-        time: n,
-      })
-    }, 1000 * 60)
-  }
 }
 
 const checkForUpdates = () => {
