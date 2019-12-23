@@ -10,7 +10,7 @@ const AUTOSTART = 'AUTO_START'
 export class AutoStartStore {
   private autoStarted: boolean = false
 
-  private idleTimer?: number
+  private idleTimer?: NodeJS.Timeout
 
   @observable
   public autoStart: boolean = true

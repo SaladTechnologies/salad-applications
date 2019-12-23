@@ -263,6 +263,15 @@ export class NativeStore {
   }
 
   @action
+  toggleAutoLaunch = () => {
+    if (this.autoLaunch) {
+      this.disableAutoLaunch()
+    } else {
+      this.enableAutoLaunch()
+    }
+  }
+
+  @action
   enableAutoLaunch = () => {
     this.autoLaunch = true
     Storage.setItem(AUTO_LAUNCH, 'true')

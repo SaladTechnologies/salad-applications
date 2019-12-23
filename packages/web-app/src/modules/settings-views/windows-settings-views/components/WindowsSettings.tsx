@@ -3,9 +3,6 @@ import React, { Component } from 'react'
 // Styles
 import { styles } from './WindowsSettings.styles'
 
-// Store
-import { getStore } from '../../../../Store'
-
 // UI
 import { Username, CondensedHeader, P, ToggleSwitch, Divider } from '../../../../components'
 
@@ -13,22 +10,16 @@ import { Username, CondensedHeader, P, ToggleSwitch, Divider } from '../../../..
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  autoLaunch?: boolean
+  autoLaunchToggle?: () => void
+  autoStart?: boolean
+  autoStartToggle?: () => void
+}
 
 class _WindowsSettings extends Component<Props> {
-  store = getStore()
-
-  toggleAutoLaunch = () => {
-    if (this.store.native.autoLaunch) {
-      this.store.native.disableAutoLaunch()
-      return
-    }
-
-    this.store.native.enableAutoLaunch()
-  }
-
   render() {
-    const { classes } = this.props
+    const { autoLaunch, autoLaunchToggle, classes } = this.props
 
     return (
       <>
@@ -38,13 +29,7 @@ class _WindowsSettings extends Component<Props> {
         <Divider />
         <div className={classnames(classes.container)}>
           <div className={classnames(classes.toggler)}>
-            {' '}
-            <ToggleSwitch
-              toggleLeft="Off"
-              toggleRight="On"
-              toggleOn={this.store.native.autoLaunch}
-              toggleClick={this.toggleAutoLaunch}
-            />
+            <ToggleSwitch toggleLeft="Off" toggleRight="On" toggleOn={autoLaunch} toggleClick={autoLaunchToggle} />
           </div>
           <div className={classnames(classes.description)}>
             <Username blue>Auto Launch</Username>
