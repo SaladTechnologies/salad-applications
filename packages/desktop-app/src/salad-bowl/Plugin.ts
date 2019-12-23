@@ -58,6 +58,7 @@ export class Plugin {
       }
     }
     this.status = PluginStatus.Initializing
+    this.stopCalled = false
 
     //Adds any extra files
     if (this.pluginDefinition.extraFiles) {
@@ -235,9 +236,13 @@ export class Plugin {
 
     if (this.pluginDefinition.autoRestart === false) {
       console.log(`Auto restart is disabled for ${this.name}`)
+      if (!stopped) {
+        await this.stop()
+      }
+
       return
     }
-    //If the plugin was intentionally stopped
+
     if (this.status === PluginStatus.Stopped || stopped) {
       return
     }
