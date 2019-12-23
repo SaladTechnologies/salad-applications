@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell, Input } from 'electron'
+import { app, BrowserWindow, ipcMain, shell, Input, powerMonitor } from 'electron'
 import { DefaultTheme as theme } from './SaladTheme'
 import * as isOnline from 'is-online'
 import * as path from 'path'
@@ -33,6 +33,8 @@ const AutoLaunch = require('auto-launch')
 
 const getDesktopVersion = 'get-desktop-version'
 const setDesktopVersion = 'set-desktop-version'
+const getIdleTime = 'get-idle-time'
+const setIdleTime = 'set-idle-time'
 const start = 'start-salad'
 const stop = 'stop-salad'
 
@@ -246,6 +248,14 @@ const createMainWindow = () => {
     })
   })
 
+  //Gets the current idle time
+  bridge.on(getIdleTime, () => {
+    let n = powerMonitor.getSystemIdleTime()
+    bridge.send(setIdleTime, {
+      time: n,
+    })
+  })
+
   mainWindow.webContents.on('new-window', (e: Electron.Event, url: string) => {
     console.log(`opening new window at ${url}`)
     e.preventDefault()
@@ -340,6 +350,7 @@ const getCudaData = () => {
 checkForMultipleInstance()
 
 app.on('ready', () => onReady())
+
 app.on('will-quit', () => {
   console.log('will quit')
   if (pluginManager) pluginManager.stop()
