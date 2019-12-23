@@ -14,7 +14,8 @@ export class HomeStore {
       this.bannerInfo = res.data
     } catch (err) {
       console.log(err)
-    }
+      this.bannerInfo = undefined
+    } 
   })
 //@ts-ignore
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
