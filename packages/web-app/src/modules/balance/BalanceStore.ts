@@ -5,7 +5,7 @@ import { Config } from '../../config'
 import { MiningStatus } from '../machine/models/MiningStatus'
 
 export class BalanceStore {
-  private estimateTimer?: NodeJS.Timeout
+  private estimateTimer?: number
 
   private interpolRate: number = 0
 

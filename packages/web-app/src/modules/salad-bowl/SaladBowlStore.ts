@@ -141,6 +141,9 @@ export class SaladBowlStore {
 
   @action.bound
   start = flow(function*(this: SaladBowlStore) {
+    if (this.isRunning) {
+      return
+    }
     if (!this.canRun) {
       console.log('This machine is not able to run.')
       return

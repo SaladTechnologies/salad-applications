@@ -29,25 +29,6 @@ class _WindowsSettings extends Component<Props> {
 
   render() {
     const { classes } = this.props
-    const apiVersion: boolean = window.salad && window.salad.apiVersion > 1
-
-    let toggler =
-      apiVersion ? (
-        <ToggleSwitch
-          toggleLeft="Off"
-          toggleRight="On"
-          toggleOn={this.store.native.autoLaunch}
-          toggleClick={this.toggleAutoLaunch}
-        />
-      ) : (
-        <ToggleSwitch
-          toggleLeft="Off"
-          toggleRight="On"
-          disabled
-          toggleOn={this.store.native.autoLaunch}
-          toggleClick={this.toggleAutoLaunch}
-        />
-      )
 
     return (
       <>
@@ -56,9 +37,17 @@ class _WindowsSettings extends Component<Props> {
         </div>
         <Divider />
         <div className={classnames(classes.container)}>
-          <div className={classnames(classes.toggler)}>{toggler}</div>
+          <div className={classnames(classes.toggler)}>
+            {' '}
+            <ToggleSwitch
+              toggleLeft="Off"
+              toggleRight="On"
+              toggleOn={this.store.native.autoLaunch}
+              toggleClick={this.toggleAutoLaunch}
+            />
+          </div>
           <div className={classnames(classes.description)}>
-            <Username blue>Auto Launch {!apiVersion && '(Coming in v0.2.1)'}</Username>
+            <Username blue>Auto Launch</Username>
             <P>
               Auto Launch opens Salad once you log into Windows, getting the Kitchen warmed up for when you're ready to
               start chopping.

@@ -5,12 +5,11 @@ import { AxiosInstance } from 'axios'
 import { ExperienceStore } from './modules/xp'
 import { RewardStore } from './modules/reward'
 import { BalanceStore } from './modules/balance'
-import { MachineStore } from './modules/machine'
+import { MachineStore, AutoStartStore, NativeStore } from './modules/machine'
 import { ProfileStore } from './modules/profile'
 import { UIStore } from './UIStore'
 import { ReferralStore } from './modules/referral'
 import { AnalyticsStore } from './modules/analytics'
-import { NativeStore } from './modules/machine/NativeStore'
 import { RefreshService } from './modules/data-refresh'
 import { featureFlags } from './FeatureFlags'
 import { SaladBowlStore } from './modules/salad-bowl'
@@ -31,6 +30,7 @@ export const getStore = (): RootStore => sharedStore
 
 export class RootStore {
   public readonly auth: AuthStore
+  public readonly autoStart: AutoStartStore
   public readonly token: TokenStore
   public readonly analytics: AnalyticsStore
   public readonly routing: RouterStore
@@ -45,7 +45,7 @@ export class RootStore {
   public readonly refresh: RefreshService
   public readonly saladBowl: SaladBowlStore
 
-  private machineInfoHeartbeat?: NodeJS.Timeout
+  private machineInfoHeartbeat?: number
 
   constructor(readonly axios: AxiosInstance) {
     this.routing = new RouterStore()
@@ -62,6 +62,7 @@ export class RootStore {
     this.referral = new ReferralStore(this, axios)
     this.refresh = new RefreshService(this)
     this.analytics = new AnalyticsStore(this)
+    this.autoStart = new AutoStartStore(this)
 
     this.machineInfoHeartbeat = setInterval(this.tryRegisterMachine, 20000)
 
