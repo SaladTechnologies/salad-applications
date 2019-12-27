@@ -12,6 +12,8 @@ export class AutoStartStore {
 
   private idleTimer?: NodeJS.Timeout
 
+  public readonly canAutoStart: boolean
+
   @observable
   public autoStart: boolean = true
 
@@ -21,12 +23,14 @@ export class AutoStartStore {
 
   /** The idle time threshold to required to auto start salad (sec) */
   @observable
-  public idleThreshold: number = 5
+  public idleThreshold: number = 10 * 60
 
   constructor(private readonly store: RootStore) {
-    if (store.native.isNative) {
+    this.canAutoStart = store.native.isNative && store.native.apiVersion >= 7
+
+    if (this.canAutoStart) {
       // Load the auto start setting from storage
-      let autoStart = Storage.getItem(AUTOSTART) == 'true'
+      let autoStart = Storage.getItem(AUTOSTART) === 'true'
 
       this.setAutoStart(autoStart)
 
@@ -42,21 +46,47 @@ export class AutoStartStore {
   }
 
   @action
+  toggleAutoStart = () => {
+    console.log('Toggle autostart')
+    if (this.autoStart) {
+      this.setAutoStart(false)
+    } else {
+      this.setAutoStart(true)
+    }
+  }
+
+  @action
   setAutoStart = (enabled: boolean) => {
+    if (!this.canAutoStart) {
+      console.log('Unable to run autostart on this machine')
+      this.autoStart = false
+      return
+    }
+
     this.autoStart = enabled
     Storage.setItem(AUTOSTART, enabled)
+    console.log('Setting autostart to ' + enabled)
 
     if (enabled) {
+      if (this.idleTimer) clearInterval(this.idleTimer)
       // Starts a timer that will refresh the idle time for auto start
-      this.idleTimer = setInterval(() => this.store.native.send(getIdleTime), 1000)
+      this.idleTimer = setInterval(this.getIdleTime, 1000)
     } else {
       //Stop any timers that refresh the idle time
       if (this.idleTimer) clearInterval(this.idleTimer)
     }
   }
 
+  getIdleTime = () => {
+    this.store.native.send(getIdleTime)
+  }
+
   @action
   watchForAutostart = () => {
+    if (!this.canAutoStart) {
+      return
+    }
+
     autorun(() => {
       //Skip if auto start is disabled
       if (!this.autoStart) {

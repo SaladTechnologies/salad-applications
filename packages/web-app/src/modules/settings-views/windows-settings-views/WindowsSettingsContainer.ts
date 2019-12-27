@@ -5,8 +5,9 @@ import { WindowsSettings } from './components'
 const mapStoreToProps = (store: RootStore): any => ({
   autoLaunch: store.native.autoLaunch,
   autoLaunchToggle: store.native.toggleAutoLaunch,
-  // autoStart?: boolean //TODO:DRS
-  // autoStartToggle?: () => void //TODO:DRS
+  autoStart: store.autoStart.autoStart,
+  autoStartToggle: store.autoStart.toggleAutoStart,
+  autoStartEnabled: store.autoStart.canAutoStart,
 })
 
 export const WindowsSettingsContainer = connect(mapStoreToProps, WindowsSettings)

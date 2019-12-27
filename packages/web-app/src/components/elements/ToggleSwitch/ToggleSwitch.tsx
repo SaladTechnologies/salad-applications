@@ -1,61 +1,84 @@
 import React, { Component } from 'react'
 
-// Styles
-import { styles } from './ToggleSwitch.styles'
-// import css from './ToggleSwitch.module.scss'
-
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 
+import { SaladTheme } from '../../../SaladTheme'
+
+export const styles = (theme: SaladTheme) => ({
+  btn: {
+    border: '1px solid ' + theme.lightGreen,
+    display: 'inline-block',
+    padding: '6px 2px',
+    position: 'relative',
+    textAlign: 'center',
+    transition: 'background 600ms ease, color 600ms ease',
+    userSelect: 'none',
+    fontFamily: theme.fontGroteskLight25,
+    fontSize: theme.small,
+    textTransform: 'uppercase',
+    minWidth: 50,
+    lineHeight: '20px',
+  },
+  active: {
+    backgroundColor: theme.mediumGreen,
+    color: theme.lightGreen,
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+    cursor: 'default',
+    transition: 'color 200ms',
+  },
+  inactive: {
+    color: theme.darkGreen,
+    cursor: 'pointer',
+  },
+  disabled: {
+    boxShadow: 'none',
+    backgroundColor: 'initial',
+    color: theme.lightGreen,
+    cursor: 'not-allowed',
+  },
+})
+
 interface Props extends WithStyles<typeof styles> {
-  toggleLeft?: string | 'Off'
-  toggleRight?: string | 'On'
+  toggleLeft?: string
+  toggleRight?: string
   toggleOn?: boolean
   toggleClick?: () => void
   disabled?: boolean
 }
 
 class _ToggleSwitch extends Component<Props> {
-  state = {
-    toggled: this.props.toggleOn,
+  onToggle = () => {
+    const { toggleClick } = this.props
+
+    if (toggleClick) {
+      toggleClick()
+    }
   }
-
   render() {
-    const { 
-      classes, 
-      toggleLeft, 
-      toggleRight, 
-      toggleClick, 
-      disabled } = this.props
-
+    const { toggleOn, classes, toggleLeft, toggleRight, disabled } = this.props
     return (
       <>
-        <input
-          id="toggle-on"
-          className={classnames(classes.toggle, 'toggle-left', disabled && 'disabled')}
-          name="toggle"
-          value="false"
-          type="radio"
-          defaultChecked={!this.state.toggled}
-          onClick={toggleClick}
-          disabled={disabled}
-        />
-        <label htmlFor="toggle-on" className={classnames(classes.btn, disabled && 'disabled')}>
-          {toggleLeft}
+        <label
+          className={classnames(classes.btn, {
+            [classes.active]: !toggleOn,
+            [classes.inactive]: toggleOn,
+            [classes.disabled]: disabled,
+          })}
+          onClick={this.onToggle}
+        >
+          {toggleLeft || 'Off'}
         </label>
-        <input
-          id="toggle-off"
-          className={classnames(classes.toggle, 'toggle-right', disabled && 'disabled')}
-          name="toggle"
-          value="true"
-          type="radio"
-          defaultChecked={this.state.toggled}
-          onClick={toggleClick}
-          disabled={disabled}
-        />
-        <label htmlFor="toggle-off" className={classnames(classes.btn, disabled && 'disabled')}>
-          {toggleRight}
+        <label
+          className={classnames(classes.btn, {
+            [classes.active]: toggleOn,
+            [classes.inactive]: !toggleOn,
+            [classes.disabled]: disabled,
+          })}
+          onClick={this.onToggle}
+        >
+          {toggleRight || 'On'}
         </label>
       </>
     )
