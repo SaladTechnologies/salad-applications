@@ -13,6 +13,7 @@ import { AnalyticsStore } from './modules/analytics'
 import { RefreshService } from './modules/data-refresh'
 import { featureFlags } from './FeatureFlags'
 import { SaladBowlStore } from './modules/salad-bowl'
+import { NotificationStore } from './modules/notifications'
 
 //Forces all changes to state to be from an action
 configure({ enforceActions: 'always' })
@@ -44,11 +45,13 @@ export class RootStore {
   public readonly native: NativeStore
   public readonly refresh: RefreshService
   public readonly saladBowl: SaladBowlStore
+  public readonly notifications: NotificationStore
 
   private machineInfoHeartbeat?: NodeJS.Timeout
 
   constructor(readonly axios: AxiosInstance) {
     this.routing = new RouterStore()
+    this.notifications = new NotificationStore(this)
     this.xp = new ExperienceStore(this, axios)
     this.machine = new MachineStore(this)
     this.native = new NativeStore(this, axios)

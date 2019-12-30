@@ -10,6 +10,11 @@ const AUTOSTART = 'AUTO_START'
 export class AutoStartStore {
   private autoStarted: boolean = false
 
+  private warningShown: boolean = false
+
+  /** How long before the threshold should we warn the user (sec) */
+  private warningTime = 5
+
   private idleTimer?: NodeJS.Timeout
 
   public readonly canAutoStart: boolean
@@ -23,7 +28,7 @@ export class AutoStartStore {
 
   /** The idle time threshold to required to auto start salad (sec) */
   @observable
-  public idleThreshold: number = 10 * 60
+  public idleThreshold: number = 10 // 10 * 60
 
   constructor(private readonly store: RootStore) {
     this.canAutoStart = store.native.isNative && store.native.apiVersion >= 7
@@ -93,16 +98,41 @@ export class AutoStartStore {
         return
       }
 
-      console.warn(`Idle time updated to:${this.idleTime}`)
+      //The unique id for the desktop notification
+      const notificationId = 22
+
+      if (this.idleTime >= this.idleThreshold - this.warningTime) {
+        if (!this.warningShown) {
+          this.warningShown = true
+
+          //Send a notification that we are going to start soon
+          this.store.notifications.sendNotification({
+            title: 'Salad is About to Start',
+            message: 'Looks like you are AFK, Salad is getting warmed up to start running',
+            id: notificationId,
+          })
+        }
+      } else if (this.warningShown) {
+        this.store.notifications.removeNotification(notificationId)
+        this.warningShown = false
+      }
 
       if (this.idleTime <= this.idleThreshold) {
         if (this.autoStarted) {
           this.store.saladBowl.stop()
+          this.store.notifications.removeNotification(notificationId)
         }
         this.autoStarted = false
       } else if (!this.store.saladBowl.isRunning) {
         this.autoStarted = true
         this.store.saladBowl.start()
+
+        //Send a notification that we auto started
+        this.store.notifications.sendNotification({
+          title: 'Salad is Running',
+          message: 'Salad detected you were AFK and started automatically',
+          id: notificationId,
+        })
       }
     })
   }
