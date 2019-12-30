@@ -123,7 +123,7 @@ class _RewardDetailsModal extends Component<Props> {
         <RewardDetailsPanel reward={reward} onClickClose={onClickClose}>
           <div className={classes.buttonContainer}>
             {reward && reward.redeemable && (
-              <Button dark onClick={this.handleRedeem}>
+              <Button disabled={reward.quantity === 0} dark onClick={this.handleRedeem}>
                 REDEEM
               </Button>
             )}

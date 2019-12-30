@@ -64,6 +64,23 @@ const styles = (theme: SaladTheme) => ({
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
+  outOfStock: {
+    textTransform: 'uppercase',
+    position: 'absolute',
+    right: '35px',
+    top: '9px',
+    fontSize: theme.medium,
+    whiteSpace: 'pre',
+    fontFamily: theme.fontGroteskLight25,
+    fontStyle: 'normal',
+    lineHeight: '6px',
+    padding: '5px',
+    paddingLeft: '12.5px',
+    verticalAlign: 'middle',
+    textAlign: 'center',
+    letterSpacing: '1.14px',
+    color: theme.red,
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -117,7 +134,13 @@ class _RewardDetailsPanel extends Component<Props> {
             <div className={classnames(classes.priceText)}>
               {reward && `$${reward.price.toFixed(2)} ${this.timeRemainingText()}`}
             </div>
-            <div className={classnames(classes.nameText)}>{reward ? reward.name : 'Unavailable'}</div>
+            <div>
+              <div className={classnames(classes.nameText)}>{reward ? reward.name : 'Unavailable'}</div>
+              {reward && reward.quantity === 0 && <div className={classes.outOfStock}>OUT OF STOCK</div>}
+              {reward && reward.quantity !== null && reward.quantity !== 0 && (
+                <div className={classes.outOfStock}>{reward.quantity} REMAINING</div>
+              )}
+            </div>
             <div className={classnames(classes.details)}>{reward && reward.description}</div>
           </div>
           {children}

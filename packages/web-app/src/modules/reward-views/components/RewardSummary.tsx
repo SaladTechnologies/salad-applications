@@ -65,6 +65,44 @@ const styles = (theme: SaladTheme) => ({
     whiteSpace: 'pre',
     textTransform: 'uppercase',
   },
+  outOfStock: {
+    textTransform: 'uppercase',
+    position: 'absolute',
+    height: '6px',
+    right: '-0.5px',
+    bottom: '0px',
+    fontFamily: theme.fontGroteskLight25,
+    fontStyle: 'normal',
+    fontWeight: '300',
+    fontSize: '8px',
+    lineHeight: '6px',
+    backgroundColor: theme.red,
+    padding: '5px',
+    paddingLeft: '12.5px',
+    verticalAlign: 'middle',
+    textAlign: 'center',
+    letterSpacing: '1.14px',
+    color: theme.darkBlue,
+  },
+  lowStock: {
+    textTransform: 'uppercase',
+    position: 'absolute',
+    height: '6px',
+    right: '-0.5px',
+    bottom: '0px',
+    fontFamily: theme.fontGroteskLight25,
+    fontStyle: 'normal',
+    fontWeight: '300',
+    fontSize: '8px',
+    lineHeight: '6px',
+    backgroundColor: theme.orange,
+    padding: '5px',
+    paddingLeft: '12.5px',
+    verticalAlign: 'middle',
+    textAlign: 'center',
+    letterSpacing: '1.14px',
+    color: theme.darkBlue,
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -75,6 +113,7 @@ interface Props extends WithStyles<typeof styles> {
   image?: string
   color?: string
   onClick?: () => void
+  quantity?: number
 }
 
 class _RewardSummary extends Component<Props> {
@@ -99,7 +138,7 @@ class _RewardSummary extends Component<Props> {
     }
   }
   render() {
-    const { name, price, redeemable, image, classes } = this.props
+    const { name, price, redeemable, image, classes, quantity } = this.props
     return (
       <div className={classnames(classes.container)} onClick={this.handleClick}>
         {/* Image */}
@@ -123,7 +162,19 @@ class _RewardSummary extends Component<Props> {
           <div className={classnames(classes.priceText)}>
             ${price ? price.toFixed(2) : '0.00'} {this.timeRemainingText()}
           </div>
-          <div className={classnames(classes.nameText)}>{name}</div>
+          <div>
+            <div className={classnames(classes.nameText)}>{name}</div>
+            {quantity === 0 && (
+              <AngledPanel leftSide={'right'} className={classnames(classes.outOfStock)}>
+                OUT OF STOCK
+              </AngledPanel>
+            )}
+            {quantity !== null && quantity !== 0 && (
+              <AngledPanel leftSide={'right'} className={classnames(classes.lowStock)}>
+                {quantity} REMAINING
+              </AngledPanel>
+            )}
+          </div>
         </div>
       </div>
     )

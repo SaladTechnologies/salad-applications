@@ -35,6 +35,7 @@ export const rewardFromResource = (r: RewardResource): Reward => ({
   category: r.category,
   checkoutTerms: r.checkoutTerms,
   tags: r.tags && r.tags.map(x => x.toLowerCase()),
+  quantity: r.quantity,
 
   //Client side
   redeemable: false,

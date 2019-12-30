@@ -36,12 +36,12 @@ const styles = (theme: SaladTheme) => ({
     top: 0,
     width: '.5rem !important',
     padding: '-5px',
-    background: `linear-gradient(to right, 
-      transparent 0%, 
-      transparent calc(50% - 0.81px), 
-      ${theme.lightGreen} calc(50% - 0.8px), 
-      ${theme.lightGreen} calc(50% + 0.8px), 
-      transparent calc(50% + 0.81px), 
+    background: `linear-gradient(to right,
+      transparent 0%,
+      transparent calc(50% - 0.81px),
+      ${theme.lightGreen} calc(50% - 0.8px),
+      ${theme.lightGreen} calc(50% + 0.8px),
+      transparent calc(50% + 0.81px),
       transparent 100%)`,
   },
   disclaimer: {
@@ -94,6 +94,7 @@ class _RewardList extends Component<Props> {
                   onClick={() => {
                     this.handleClick(r)
                   }}
+                  quantity={r.quantity}
                   timeRemaining={r.remainingTimeLabel}
                   color={r.color}
                 />
