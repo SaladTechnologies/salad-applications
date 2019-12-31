@@ -1,12 +1,12 @@
 import { RootStore } from '../../Store'
-import { getClaymoreDefinition } from './definitions/getClaymoreDefinition'
-import { getGminerBeamV2Definition } from './definitions/getGminerBeamV2Definition'
-import { getGminerEthDefinition } from './definitions/getGminerEthDefinition'
-import { getXMRigCUDADefinition } from './definitions/getXMRigCUDADefinition'
-import { getXMRigOpenCLDefinition } from './definitions/getXMRigOpenCLDefinition'
-import { getCCMinerX16rDefinition } from './definitions/getCCMinerX16rDefinition'
-import { getCCMinerLyra2rev3Definition } from './definitions/getCCMinerLyra2rev3Definition'
-import { getCCMinerEquihashDefinition } from './definitions/getCCMinerEquihashDefinition'
+import { getCCMinerLyra2REv3Definition } from './definitions/getCCMinerLyra2REv3Definition'
+import { getCCMinerX16RDefinition } from './definitions/getCCMinerX16RDefinition'
+import { getClaymoreEthashDefinition } from './definitions/getClaymoreEthashDefinition'
+import { getGminerBeamHashIIDefinition } from './definitions/getGminerBeamHashIIDefinition'
+import { getGminerCuckARood29Definition } from './definitions/getGminerCuckARood29Definition'
+import { getGminerZHashDefinition } from './definitions/getGminerZHashDefinition'
+import { getXMRigRandomXCUDADefinition } from './definitions/getXMRigRandomXCUDADefinition'
+import { getXMRigRandomXOpenCLDefinition } from './definitions/getXMRigRandomXOpenCLDefinition'
 import { PluginDefinition } from './models'
 
 export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
@@ -20,23 +20,23 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
   let supportsCuda = machineInfo.graphics.controllers.some(x => x.vendor.toLocaleLowerCase().includes('nvidia'))
   if (supportsCuda) {
     return [
-      getGminerBeamV2Definition(machine),
-      getGminerEthDefinition(machine),
-      getClaymoreDefinition(machine),
-      getXMRigCUDADefinition(machine),
-      getCCMinerX16rDefinition(machine),
-      getCCMinerLyra2rev3Definition(machine),
-      getCCMinerEquihashDefinition(machine)
+      getGminerBeamHashIIDefinition(machine), // BeamHashII
+      getGminerZHashDefinition(machine), // Equihash 144,5
+      getGminerCuckARood29Definition(machine), // cuckARood29
+      getClaymoreEthashDefinition(machine), // Ethash
+      getXMRigRandomXCUDADefinition(machine), // RandomX
+      getCCMinerX16RDefinition(machine), // X16R
+      getCCMinerLyra2REv3Definition(machine), // Lyra2REv3
     ]
   } else {
     return [
-      getGminerBeamV2Definition(machine),
-      getGminerEthDefinition(machine),
-      getClaymoreDefinition(machine),
-      getXMRigOpenCLDefinition(machine),
-      getCCMinerX16rDefinition(machine),
-      getCCMinerLyra2rev3Definition(machine),
-      getCCMinerEquihashDefinition(machine)
+      getGminerBeamHashIIDefinition(machine), // BeamHashII
+      getGminerZHashDefinition(machine), // Equihash 144,5
+      getGminerCuckARood29Definition(machine), // cuckARood29
+      getClaymoreEthashDefinition(machine), // Ethash
+      getXMRigRandomXOpenCLDefinition(machine), // RandomX
+      getCCMinerX16RDefinition(machine), // X16R
+      getCCMinerLyra2REv3Definition(machine), // Lyra2REv3
     ]
   }
 }

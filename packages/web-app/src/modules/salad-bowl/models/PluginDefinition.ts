@@ -8,5 +8,6 @@ export interface PluginDefinition {
   runningCheck: string
   initialTimeout: number
   initialRetries: number
+  watchdogTimeout: number
   errors?: ErrorDefinition[]
 }

@@ -5,19 +5,17 @@ import { MINING_ADDRESS, STANDARD_ERRORS } from './constants'
 const beamUser = (location: string, minerId: string) =>
   `-s beamv2.${location}.nicehash.com -n 3378 -u ${MINING_ADDRESS}.${minerId}`
 
-export const getGminerBeamV2Definition = (machine: Machine): PluginDefinition => {
+export const getGminerBeamHashIIDefinition = (machine: Machine): PluginDefinition => {
   let def = {
     name: 'BeamV2-1.83',
     downloadUrl:
       'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer1.83/gminer-1-83-windows.zip',
     exe: 'miner.exe',
-    args: `-w 0 -a beamhashII ${beamUser('usa', machine.minerId)} ${beamUser('eu', machine.minerId)} ${beamUser(
-      'hk',
-      machine.minerId,
-    )} ${beamUser('jp', machine.minerId)} ${beamUser('in', machine.minerId)} ${beamUser('br', machine.minerId)}`,
+    args: `-a beamhashII ${beamUser('usa', machine.minerId)} ${beamUser('eu', machine.minerId)} -w 0`,
     runningCheck: 'Share Accepted',
     initialTimeout: 600000,
-    initialRetries: 0,
+    initialRetries: 1,
+    watchdogTimeout: 900000,
     errors: [...STANDARD_ERRORS],
   }
 
