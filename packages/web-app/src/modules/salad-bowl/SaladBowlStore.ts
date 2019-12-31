@@ -18,6 +18,7 @@ export class SaladBowlStore {
   private currentPluginRetries: number = 0
   private heartbeatTimer?: NodeJS.Timeout
   private pluginDefinitions?: PluginDefinition[]
+  private somethingWorks: boolean = false
   private timeoutTimer?: NodeJS.Timeout
 
   @observable
@@ -82,12 +83,19 @@ export class SaladBowlStore {
     }
 
     this.plugin.status = message.status
-    if (this.timeoutTimer != null) {
+    if (this.timeoutTimer != null && this.currentPluginDefinition != null) {
       if (message.status === PluginStatus.Running) {
         // Hooray! The miner started. Let's stop the timeout watchdog.
         clearTimeout(this.timeoutTimer)
-        this.timeoutTimer = undefined
-      } else if (this.currentPluginDefinition != null && message.status === PluginStatus.Stopped) {
+        this.currentPluginRetries = 0
+        this.somethingWorks = true
+
+        // But... it _could_ fail in the future... so let's keep watch!
+        this.timeoutTimer = setTimeout(() => {
+          this.timeoutTimer = undefined
+          this.startNext()
+        }, this.currentPluginDefinition.watchdogTimeout)
+      } else if (message.status === PluginStatus.Stopped) {
         // This indicates the miner was automatically restarted.
         this.currentPluginRetries++
         if (this.currentPluginRetries > this.currentPluginDefinition.initialRetries) {
@@ -151,6 +159,7 @@ export class SaladBowlStore {
     this.currentPluginDefinition = undefined
     this.currentPluginDefinitionIndex = 0
     this.currentPluginRetries = 0
+    this.somethingWorks = false
     this.pluginDefinitions = getPluginDefinitions(this.store)
     if (this.pluginDefinitions.length === 0) {
       console.log('Unable to find a valid plugin definition for this machine. Unable to start.')
@@ -182,6 +191,11 @@ export class SaladBowlStore {
     }
 
     this.currentPluginDefinitionIndex++
+    if (this.currentPluginDefinitionIndex >= this.pluginDefinitions.length && this.somethingWorks) {
+      // Don't stop... something works!
+      this.currentPluginDefinitionIndex = 0
+    }
+
     this.currentPluginRetries = 0
     if (this.currentPluginDefinitionIndex >= this.pluginDefinitions.length) {
       this.stop()
