@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { styles } from './WindowsSettings.styles'
 
 // UI
-import { CondensedHeader, Divider } from '../../../../components'
+import { CondensedHeader, Divider, Slider, P } from '../../../../components'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
@@ -16,11 +16,21 @@ interface Props extends WithStyles<typeof styles> {
   autoStart?: boolean
   autoStartToggle?: () => void
   autoStartEnabled?: boolean
+  autoStartDelay?: number
+  autoStartUpdate?: (value: number) => void
 }
 
 class _WindowsSettings extends Component<Props> {
   render() {
-    const { autoLaunch, autoLaunchToggle, autoStart, autoStartToggle, autoStartEnabled } = this.props
+    const {
+      autoLaunch,
+      autoLaunchToggle,
+      autoStart,
+      autoStartToggle,
+      autoStartEnabled,
+      autoStartDelay,
+      autoStartUpdate,
+    } = this.props
 
     return (
       <>
@@ -37,14 +47,30 @@ class _WindowsSettings extends Component<Props> {
           onToggle={autoLaunchToggle}
         />
         {autoStartEnabled && (
-          <ToggleSetting
-            title={'Auto Start'}
-            description={
-              'Salad will automatically start to run after being AFK a determined amount of time *and* will automatically stop when your return.'
-            }
-            toggled={autoStart}
-            onToggle={autoStartToggle}
-          />
+          <>
+            <Divider />
+            <ToggleSetting
+              title={'Auto Start'}
+              description={
+                'Salad will automatically start to run after being AFK a determined amount of time *and* will automatically stop when your return.'
+              }
+              toggled={autoStart}
+              onToggle={autoStartToggle}
+            >
+              <div style={{ width: 300 }}>
+                <P>START AFTER {autoStartDelay ? autoStartDelay / 60 : 10} MINUTES</P>
+                <Slider
+                  stepSize={10}
+                  minimum={10}
+                  maximum={60}
+                  value={autoStartDelay ? autoStartDelay / 60 : 10}
+                  onValueChange={(value: number) => {
+                    if (autoStartUpdate) autoStartUpdate(value * 60)
+                  }}
+                />
+              </div>
+            </ToggleSetting>
+          </>
         )}
       </>
     )

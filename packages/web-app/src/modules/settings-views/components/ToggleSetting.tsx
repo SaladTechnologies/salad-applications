@@ -12,15 +12,16 @@ export const styles = (theme: SaladTheme) => ({
   container: {
     display: 'flex',
     marginBottom: '20px',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
   },
-
   toggler: {
     flex: '0 0 auto',
     margin: '0 1.5rem 0 0',
   },
-
-  description: {
-    order: 1,
+  description: {},
+  extrasContainer: {
+    paddingLeft: 30,
   },
 })
 
@@ -33,7 +34,7 @@ interface Props extends WithStyles<typeof styles> {
 
 class _ToggleSetting extends Component<Props> {
   render() {
-    const { title, description, toggled, onToggle, classes } = this.props
+    const { title, description, toggled, onToggle, classes, children } = this.props
 
     return (
       <div className={classnames(classes.container)}>
@@ -44,6 +45,7 @@ class _ToggleSetting extends Component<Props> {
           <Username blue>{title}</Username>
           <P>{description}</P>
         </div>
+        <div className={classes.extrasContainer}>{children}</div>
       </div>
     )
   }

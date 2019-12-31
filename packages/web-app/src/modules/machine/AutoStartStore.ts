@@ -28,7 +28,7 @@ export class AutoStartStore {
 
   /** The idle time threshold to required to auto start salad (sec) */
   @observable
-  public idleThreshold: number = 10 // 10 * 60
+  public idleThreshold: number = 10 * 60
 
   constructor(private readonly store: RootStore) {
     this.canAutoStart = store.native.isNative && store.native.apiVersion >= 7
@@ -80,6 +80,11 @@ export class AutoStartStore {
       //Stop any timers that refresh the idle time
       if (this.idleTimer) clearInterval(this.idleTimer)
     }
+  }
+
+  @action
+  setIdleTime = (value: number) => {
+    this.idleThreshold = value
   }
 
   getIdleTime = () => {

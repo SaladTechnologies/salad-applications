@@ -6,7 +6,7 @@ import classnames from 'classnames'
 
 import { SaladTheme } from '../../../SaladTheme'
 
-export const styles = (theme: SaladTheme) => ({
+const styles = (theme: SaladTheme) => ({
   btn: {
     border: '1px solid ' + theme.lightGreen,
     display: 'inline-block',
