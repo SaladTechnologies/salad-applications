@@ -2,6 +2,7 @@ import { RootStore } from '../../Store'
 import { getCCMinerLyra2REv3Definition } from './definitions/getCCMinerLyra2REv3Definition'
 import { getCCMinerX16RDefinition } from './definitions/getCCMinerX16RDefinition'
 import { getClaymoreEthashDefinition } from './definitions/getClaymoreEthashDefinition'
+import { getClaymoreEthashNanopoolDefinition } from './definitions/getClaymoreEthashNanopoolDefinition'
 import { getGminerBeamHashIIDefinition } from './definitions/getGminerBeamHashIIDefinition'
 import { getGminerCuckARood29Definition } from './definitions/getGminerCuckARood29Definition'
 import { getGminerZHashDefinition } from './definitions/getGminerZHashDefinition'
@@ -27,6 +28,7 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
       getXMRigRandomXCUDADefinition(machine), // RandomX
       getCCMinerX16RDefinition(machine), // X16R
       getCCMinerLyra2REv3Definition(machine), // Lyra2REv3
+      getClaymoreEthashNanopoolDefinition(machine), // Ethash (on Nanopool)
     ]
   } else {
     return [
@@ -37,6 +39,7 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
       getXMRigRandomXOpenCLDefinition(machine), // RandomX
       getCCMinerX16RDefinition(machine), // X16R
       getCCMinerLyra2REv3Definition(machine), // Lyra2REv3
+      getClaymoreEthashNanopoolDefinition(machine), // Ethash (on Nanopool)
     ]
   }
 }

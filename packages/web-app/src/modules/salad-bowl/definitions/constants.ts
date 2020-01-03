@@ -1,6 +1,7 @@
 import { ErrorAction } from '../models/ErrorAction'
 import { ErrorCategory } from '../models/ErrorCategory'
 
+export const WALLET_ADDRESS = '0x6ff85749ffac2d3a36efa2bc916305433fa93731'
 export const MINING_ADDRESS = '368dnSPEiXj1Ssy35BBWMwKcmFnGLuqa1J'
 
 export const STANDARD_ERRORS = [
