@@ -77,6 +77,7 @@ export class RootStore {
       return
     }
 
+    this.native.login(profile)
     this.analytics.start(profile)
     this.referral.loadReferralCode()
     this.xp.refreshXp()
@@ -110,5 +111,6 @@ export class RootStore {
     this.referral.currentReferral = undefined
     this.analytics.trackLogout()
     this.saladBowl.stop()
+    this.native.logout()
   }
 }

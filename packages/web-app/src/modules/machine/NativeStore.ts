@@ -5,6 +5,7 @@ import { MachineInfo } from './models'
 import { AxiosInstance } from 'axios'
 
 import { Machine } from './models/Machine'
+import { Profile } from '../profile/models'
 
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
@@ -16,6 +17,8 @@ const getDesktopVersion = 'get-desktop-version'
 const setDesktopVersion = 'set-desktop-version'
 const enableAutoLaunch = 'enable-auto-launch'
 const disableAutoLaunch = 'disable-auto-launch'
+const login = 'login'
+const logout = 'logout'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
 const AUTO_LAUNCH = 'AUTO_LAUNCH'
@@ -284,5 +287,15 @@ export class NativeStore {
 
     this.autoLaunch = Storage.getOrSetDefault(AUTO_LAUNCH, this.autoLaunch.toString()) === 'true'
     this.autoLaunch && this.enableAutoLaunch()
+  }
+
+  @action
+  login = (profile: Profile) => {
+    this.send(login, profile)
+  }
+
+  @action
+  logout = () => {
+    this.send(logout)
   }
 }
