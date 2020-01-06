@@ -24,13 +24,20 @@ export class ProfileStore {
   public get isOnboarding(): boolean {
     const onboarding =
       this.currentProfile === undefined ||
-      (this.currentProfile.lastAcceptedTermsOfService !== Config.termsVersion ||
-        this.currentProfile.lastSeenApplicationVersion !== Config.whatsNewVersion ||
-        this.currentProfile.viewedReferralOnboarding !== true)
+        this.currentProfile.lastAcceptedTermsOfService !== Config.termsVersion
 
     this.setOnboarding(onboarding)
 
     return this.onboarding
+  }
+
+  @computed
+  public get showWhatsNew(): boolean {
+    const show = 
+      this.store.profile.currentProfile !== undefined &&
+        this.store.profile.currentProfile.lastSeenApplicationVersion !== Config.whatsNewVersion
+
+    return show
   }
 
   @action
@@ -110,6 +117,24 @@ export class ProfileStore {
     } finally {
       this.isUpdating = false
       this.store.routing.replace('/')
+    }
+  })
+
+  @action.bound
+  setWhatsNew = flow(function*(this: ProfileStore) {
+    if (this.currentProfile === undefined) return
+
+    this.isUpdating = true
+
+    try {
+      let patch = yield this.axios.patch('profile', {
+        lastSeenApplicationVersion: Config.whatsNewVersion,
+      })
+      let profile = patch.data
+
+      this.currentProfile = profile
+    } finally {
+      this.isUpdating = false
     }
   })
 
