@@ -57,4 +57,9 @@ export class UIStore {
   showReferralsPage = () => {
     this.showModal('/settings/referrals')
   }
+
+  showWhatNewPage = () => {
+    this.store.profile.setWhatsNew()
+    this.showModal('/onboarding/whats-new')
+  }
 }

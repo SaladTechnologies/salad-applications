@@ -57,9 +57,6 @@ export default class Routes extends Component {
     }
 
     if (profile.lastAcceptedTermsOfService !== Config.termsVersion) return <Redirect to="/onboarding/terms" />
-    else if (profile.viewedReferralOnboarding !== true) return <Redirect to="/onboarding/referral-code" />
-    else if (profile.lastSeenApplicationVersion !== Config.whatsNewVersion)
-      return <Redirect to="/onboarding/whats-new" />
 
     throw Error('Unable to locate a valid onboarding page')
   }
@@ -140,6 +137,8 @@ const Auth = () => {
       <Route exact path="/rewards/:id" component={RewardDetailsModalContainer} />
       <Route exact path="/rewards/:id/redeem" component={RewardRedemptionModalContainer} />
       <Route exact path="/profile" component={AccountModalContainer} />
+
+      <Route exact path="/onboarding/whats-new" component={WhatsNewPageContainer} />
 
       <Route path="/settings" component={SettingsContainer} />
     </>
