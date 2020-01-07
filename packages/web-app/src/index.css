@@ -5,6 +5,10 @@ body {
   overflow: hidden;
   margin: 0;
 }
+.hide-toast {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
 
 @font-face {
   font-family: 'sharpGroteskBook19';

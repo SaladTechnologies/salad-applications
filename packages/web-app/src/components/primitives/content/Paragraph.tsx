@@ -13,17 +13,21 @@ const styles = (theme: SaladTheme) => ({
     fontSize: theme.small,
     lineHeight: theme.medium,
   },
+  bold: {
+    fontWeight: 'bold',
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
   className?: string
+  bold?: boolean
 }
 
 class _P extends Component<Props> {
   render() {
-    const { className, children, classes } = this.props
+    const { className, bold, children, classes } = this.props
 
-    return <p className={classnames(classes.appBody, className)}>{children}</p>
+    return <p className={classnames(classes.appBody, className, { [classes.bold]: bold })}>{children}</p>
   }
 }
 

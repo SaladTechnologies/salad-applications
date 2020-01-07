@@ -36,11 +36,13 @@ const getMessage = (type: string): string => {
 
     //Reward redemption
     case 'redemptions:insufficientBalance':
-      return 'Not enough balance'
+      return `Must construct additional pylons ...just kidding! You balance isn't enough to redeem this reward, try again after you’ve earned some more`
 
     //Rewards
     case 'rewards:notFound':
       return 'Reward not found'
+    case 'rewards:outOfStock':
+      return 'This reward has run out. Check back later!'
 
     //Users
     case 'users:notFound':
