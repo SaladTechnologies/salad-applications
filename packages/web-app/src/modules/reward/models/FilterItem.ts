@@ -1,4 +1,4 @@
-import { observable } from 'mobx'
+import { observable, runInAction } from 'mobx'
 import { Reward } from './Reward'
 
 export abstract class FilterItem {
@@ -9,8 +9,10 @@ export abstract class FilterItem {
   checked: boolean = false
 
   constructor(name: string, checked?: boolean) {
-    this.name = name ? name : ''
-    this.checked = checked ? checked : false
+    runInAction(() => {
+      this.name = name ? name : ''
+      this.checked = checked ? checked : false
+    })
   }
 
   abstract checkReward(reward: Reward): boolean

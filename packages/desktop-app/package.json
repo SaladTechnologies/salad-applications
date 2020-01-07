@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@types/electron": "^1.6.10",
+    "@types/node-notifier": "^5.4.0",
     "@types/node": "^13.1.4",
     "electron": "^7.1.7",
     "electron-builder": "^22.1.0",
@@ -52,6 +53,7 @@
     "electron-log": "^4.0.2",
     "electron-updater": "^4.2.0",
     "is-online": "^8.2.1",
+    "node-notifier": "^6.0.0",
     "source-map-support": "^0.5.16",
     "systeminformation": "^4.17.3"
   }

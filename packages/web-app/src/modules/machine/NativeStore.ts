@@ -140,7 +140,7 @@ export class NativeStore {
   /** Sends a message to the native code */
   public send = (type: string, payload?: any) => {
     if (!this.isNative) {
-      console.warn('Unable to send. Not running in electron env.')
+      console.warn(`Unable to send ${type}. Not running in electron env.`)
       return
     }
     console.log(`Sending ${type} to native with ${payload}`)
@@ -260,6 +260,15 @@ export class NativeStore {
     Storage.setItem(compatibilityKey, 'true')
 
     this.store.routing.replace('/')
+  }
+
+  @action
+  toggleAutoLaunch = () => {
+    if (this.autoLaunch) {
+      this.disableAutoLaunch()
+    } else {
+      this.enableAutoLaunch()
+    }
   }
 
   @action

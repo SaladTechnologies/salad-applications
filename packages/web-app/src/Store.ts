@@ -5,15 +5,15 @@ import { AxiosInstance } from 'axios'
 import { ExperienceStore } from './modules/xp'
 import { RewardStore } from './modules/reward'
 import { BalanceStore } from './modules/balance'
-import { MachineStore } from './modules/machine'
+import { MachineStore, AutoStartStore, NativeStore } from './modules/machine'
 import { ProfileStore } from './modules/profile'
 import { UIStore } from './UIStore'
 import { ReferralStore } from './modules/referral'
 import { AnalyticsStore } from './modules/analytics'
-import { NativeStore } from './modules/machine/NativeStore'
 import { RefreshService } from './modules/data-refresh'
 import { featureFlags } from './FeatureFlags'
 import { SaladBowlStore } from './modules/salad-bowl'
+import { NotificationStore } from './modules/notifications'
 
 //Forces all changes to state to be from an action
 configure({ enforceActions: 'always' })
@@ -31,6 +31,7 @@ export const getStore = (): RootStore => sharedStore
 
 export class RootStore {
   public readonly auth: AuthStore
+  public readonly autoStart: AutoStartStore
   public readonly token: TokenStore
   public readonly analytics: AnalyticsStore
   public readonly routing: RouterStore
@@ -44,11 +45,13 @@ export class RootStore {
   public readonly native: NativeStore
   public readonly refresh: RefreshService
   public readonly saladBowl: SaladBowlStore
+  public readonly notifications: NotificationStore
 
   private machineInfoHeartbeat?: NodeJS.Timeout
 
   constructor(readonly axios: AxiosInstance) {
     this.routing = new RouterStore()
+    this.notifications = new NotificationStore(this)
     this.xp = new ExperienceStore(this, axios)
     this.machine = new MachineStore(this)
     this.native = new NativeStore(this, axios)
@@ -62,6 +65,7 @@ export class RootStore {
     this.referral = new ReferralStore(this, axios)
     this.refresh = new RefreshService(this)
     this.analytics = new AnalyticsStore(this)
+    this.autoStart = new AutoStartStore(this)
 
     this.machineInfoHeartbeat = setInterval(this.tryRegisterMachine, 20000)
 
