@@ -71,6 +71,7 @@ export class AutoStartStore {
     this.autoStart = enabled
     Storage.setItem(AUTOSTART, enabled)
     console.log('Setting autostart to ' + enabled)
+    this.store.analytics.trackAutoStart(enabled)
 
     if (enabled) {
       if (this.idleTimer) clearInterval(this.idleTimer)
@@ -127,13 +128,13 @@ export class AutoStartStore {
 
       if (this.idleTime <= this.idleThreshold) {
         if (this.autoStarted) {
-          this.store.saladBowl.stop()
+          this.store.saladBowl.stop('automatic')
           this.store.notifications.removeNotification(notificationId)
         }
         this.autoStarted = false
       } else if (!this.store.saladBowl.isRunning) {
         this.autoStarted = true
-        this.store.saladBowl.start()
+        this.store.saladBowl.start('automatic')
 
         //Send a notification that we auto started
         this.store.notifications.sendNotification(

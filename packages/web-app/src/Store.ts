@@ -114,7 +114,7 @@ export class RootStore {
     this.referral.referralCode = ''
     this.referral.currentReferral = undefined
     this.analytics.trackLogout()
-    this.saladBowl.stop()
+    this.saladBowl.stop('logout')
     this.native.logout()
   }
 }

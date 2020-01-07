@@ -133,14 +133,14 @@ export class SaladBowlStore {
   @action
   toggleRunning = () => {
     if (this.isRunning) {
-      this.stop()
+      this.stop('manual')
     } else {
-      this.start()
+      this.start('manual')
     }
   }
 
   @action.bound
-  start = flow(function*(this: SaladBowlStore) {
+  start = flow(function*(this: SaladBowlStore, reason: string) {
     if (this.isRunning) {
       return
     }
@@ -184,7 +184,7 @@ export class SaladBowlStore {
     }, Config.statusHeartbeatRate)
 
     this.sendRunningStatus()
-    this.store.analytics.trackStart()
+    this.store.analytics.trackStart(reason)
   })
 
   @action.bound
@@ -201,7 +201,7 @@ export class SaladBowlStore {
 
     this.currentPluginRetries = 0
     if (this.currentPluginDefinitionIndex >= this.pluginDefinitions.length) {
-      this.stop()
+      this.stop('fallthrough')
       this.store.ui.showModal('/errors/fallback')
     } else {
       this.currentPluginDefinition = this.pluginDefinitions[this.currentPluginDefinitionIndex]
@@ -219,7 +219,7 @@ export class SaladBowlStore {
   })
 
   @action.bound
-  stop = flow(function*(this: SaladBowlStore) {
+  stop = flow(function*(this: SaladBowlStore, reason: string) {
     if (this.timeoutTimer != null) {
       clearTimeout(this.timeoutTimer)
       this.timeoutTimer = undefined
@@ -234,7 +234,7 @@ export class SaladBowlStore {
     yield this.store.native.send('stop-salad')
 
     this.sendRunningStatus()
-    this.store.analytics.trackStop()
+    this.store.analytics.trackStop(reason)
   })
 
   @action.bound
