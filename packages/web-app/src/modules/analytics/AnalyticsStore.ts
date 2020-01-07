@@ -67,17 +67,29 @@ export class AnalyticsStore {
   }
 
   /** Track when mining starts */
-  public trackStart = () => {
+  public trackStart = (reason: string) => {
     if (!this.started) return
 
-    this.track('Start')
+    this.track('Start', {
+      Reason: reason,
+    })
   }
 
   /** Track when mining stops */
-  public trackStop = () => {
+  public trackStop = (reason: string) => {
     if (!this.started) return
 
-    this.track('Stop')
+    this.track('Stop', {
+      Reason: reason,
+    })
+  }
+
+  public trackAutoStart = (enabled: boolean) => {
+    if (!this.started) return
+
+    this.track('AutoStart', {
+      Enabled: enabled,
+    })
   }
 
   public trackMiningStatus = (status: MiningStatus, pluginName: string) => {
