@@ -19,12 +19,7 @@ import {
 } from './modules/onboarding-views'
 import { HomePage } from './modules/home-views'
 import { LoadingPage } from './components'
-import {
-  RewardDetailsModalContainer,
-  RewardRedemptionModalContainer,
-  RedemptionCompleteModalContainer,
-  RedemptionErrorModalContainer,
-} from './modules/reward-views'
+import { RewardDetailsModalContainer, RewardRedemptionModalContainer } from './modules/reward-views'
 import { AccountModalContainer } from './modules/profile-views'
 import { AnimatedSwitch } from './components/AnimatedSwitch'
 import { CompatibilityCheckPageContainer } from './modules/machine-views'
@@ -144,8 +139,6 @@ const Auth = () => {
       <Route exact path="/errors/unknown" component={UnknownErrorContainer} />
       <Route exact path="/rewards/:id" component={RewardDetailsModalContainer} />
       <Route exact path="/rewards/:id/redeem" component={RewardRedemptionModalContainer} />
-      <Route exact path="/rewards/:id/redeem-complete" component={RedemptionCompleteModalContainer} />
-      <Route exact path="/rewards/:id/redeem-error" component={RedemptionErrorModalContainer} />
       <Route exact path="/profile" component={AccountModalContainer} />
 
       <Route path="/settings" component={SettingsContainer} />

@@ -70,6 +70,7 @@
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "3.2.0",
+    "react-toastify": "^5.5.0",
     "react-transition-group": "^2.6.1",
     "typescript": "3.7.2",
     "uuid": "^3.3.2"

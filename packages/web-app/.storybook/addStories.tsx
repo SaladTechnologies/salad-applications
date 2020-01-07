@@ -14,9 +14,20 @@ export const addStories = (
   backgroundColor?: string,
 ): StoryApi<StoryFnReactReturnType> => {
   stories.add('(all)', () => (
-    <div style={{ backgroundColor: backgroundColor }}>
+    <div
+      style={{
+        backgroundColor: backgroundColor,
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        overflow: 'scroll',
+        padding: 20,
+      }}
+    >
       {storyList.map(x => (
-        <div key={x.name} style={{ marginLeft: '20px', marginBottom: '40px' }}>
+        <div key={x.name} style={{ marginBottom: '60px' }}>
           <div
             style={{
               marginBottom: '10px',
