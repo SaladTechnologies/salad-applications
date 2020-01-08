@@ -5,6 +5,7 @@ import { BottomBar } from './BottomBar'
 import { Titlebar } from './Titlebar'
 import { OfflineModal } from './OfflineModal'
 import { NotificationBanner } from './NotificationBanner'
+import { BannerInfo } from '../../home/models/BannerInfo'
 
 storiesOf('Modules/Home', module)
   .add('Bottom Bar', () => {
@@ -21,33 +22,39 @@ storiesOf('Modules/Home', module)
     )
   })
   .add('Notification Banner', () => {
-    let duration = 20 * 60000 // 20 minutes
-    let start = new Date()
-    let end = new Date(start.getTime() + duration)
-    let text = '2X Earnings Week: May 16 - May 22'
+    let afterBannerInfo: BannerInfo = {
+      // puts the start date 20 minutes in the past
+      startDate: `${new Date(new Date().getTime() - 20 * 60000)}`,
+      // 2 minutes after startDate
+      endDate: `${new Date(new Date().getTime() - 18 * 60000)}`,
+      text: '2X Earnings Week: May 16 - May 22',
+    }
+    let duringBannerInfo: BannerInfo = {
+      startDate: `${new Date()}`,
+      // 20 minutes after startDate
+      endDate: `${new Date(new Date().getTime() + 20 * 60000)}`,
+      text: '2X Earnings Week: May 16 - May 22',
+    }
+    let beforeBannerInfo: BannerInfo = {
+      //puts the start date into the future
+      startDate: `${new Date(new Date().getTime() + 20 * 60000)}`,
+      // 20 minutes after startDate
+      endDate: `${new Date(new Date().getTime() + 20 * 60000)}`,
+      text: '2X Earnings Week: May 16 - May 22',
+    }
     return (
       <>
         <div>
           Before time
-          <NotificationBanner now={new Date(start.getTime() - duration)} startDate={start} endDate={end} text={text} />
+          <NotificationBanner bannerInfo={beforeBannerInfo} />
         </div>
         <div>
           During
-          <NotificationBanner
-            now={new Date(start.getTime() + duration / 2)}
-            startDate={start}
-            endDate={end}
-            text={text}
-          />
+          <NotificationBanner bannerInfo={duringBannerInfo} />
         </div>
         <div>
           After
-          <NotificationBanner
-            now={new Date(start.getTime() + duration * 2)}
-            startDate={start}
-            endDate={end}
-            text={text}
-          />
+          <NotificationBanner bannerInfo={afterBannerInfo} />
         </div>
       </>
     )
