@@ -1,5 +1,5 @@
 import { action, observable, flow} from 'mobx'
-import { RootStore } from '../../Store'
+// import { RootStore } from '../../Store'
 import { AxiosInstance } from 'axios'
 import { BannerInfo } from './models/BannerInfo'
 
@@ -17,6 +17,5 @@ export class HomeStore {
       this.bannerInfo = undefined
     } 
   })
-//@ts-ignore
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
+  constructor(private readonly axios: AxiosInstance) {}
 }

@@ -65,7 +65,7 @@ export class RootStore {
     this.profile = new ProfileStore(this, axios)
     this.ui = new UIStore(this)
     this.referral = new ReferralStore(this, axios)
-    this.home = new HomeStore(this, axios)
+    this.home = new HomeStore(axios)
     this.refresh = new RefreshService(this)
     this.analytics = new AnalyticsStore(this)
     this.autoStart = new AutoStartStore(this)
