@@ -205,6 +205,7 @@ export class RewardStore {
       )
     } finally {
       yield this.store.balance.refreshBalance()
+      yield this.store.vault.loadVault()
       this.isRedeeming = false
     }
   })

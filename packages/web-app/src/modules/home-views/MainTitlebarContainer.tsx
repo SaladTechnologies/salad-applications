@@ -6,6 +6,7 @@ const mapStoreToProps = (store: RootStore): any => {
   const menuItems: MenuItem[] = [
     new MenuItem('Account', store.ui.showProfilePage),
     new MenuItem('Referrals', store.ui.showReferralsPage),
+    new MenuItem('Reward Vault', store.ui.showRewardVaultPage),
     new MenuItem('Settings', store.ui.showSettingsPage),
   ]
   return {
@@ -20,7 +21,4 @@ const mapStoreToProps = (store: RootStore): any => {
   }
 }
 
-export const MainTitlebarContainer = connect(
-  mapStoreToProps,
-  Titlebar,
-)
+export const MainTitlebarContainer = connect(mapStoreToProps, Titlebar)

@@ -24,6 +24,7 @@ import { WindowsSettingsContainer } from '../windows-settings-views'
 import { DesktopNotificationsContainer } from '../desktop-notifications-views'
 import { ReferralSettingsContainer } from '../referral-views'
 import { AccountContainer } from '../account-views'
+import { VaultListContainer } from '../../vault-views'
 
 export class MenuItem {
   constructor(public readonly url: string, public readonly text: string) {}
@@ -98,9 +99,7 @@ class _Settings extends Component<Props> {
           <div>{menuItems && <LinkListUnstyled list={menuItems} onListItemClick={this.handleListItemClick} />}</div>
           <div className={classes.buttonContainer}>
             <Button onClick={this.handleBugClicked}>Submit Bug</Button>
-            <Button onClick={this.handleLogClicked}>
-              {this.state.buttonToggle ? 'Logs sent' : 'Send logs'}
-            </Button>
+            <Button onClick={this.handleLogClicked}>{this.state.buttonToggle ? 'Logs sent' : 'Send logs'}</Button>
           </div>
           <div className={classes.versionContainer}>
             <MenuTitle>Version: {appVersion ? appVersion : '-'}</MenuTitle>
@@ -113,6 +112,7 @@ class _Settings extends Component<Props> {
           <Route path="/settings/windows-settings" component={WindowsSettingsContainer} />
           <Route path="/settings/referrals" component={ReferralSettingsContainer} />
           <Route path="/settings/account" component={AccountContainer} />
+          <Route path="/settings/reward-vault" component={VaultListContainer} />
 
           <div onClick={this.handleCloseClicked}>
             <FontAwesomeIcon className={classes.closeButton} icon={faTimes} />

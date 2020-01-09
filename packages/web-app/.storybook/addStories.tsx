@@ -34,6 +34,7 @@ export const addStories = (
               color: '#DBF1C1',
               fontSize: '16px',
               fontFamily: 'Arial',
+              userSelect: 'none',
             }}
           >
             {x.name}

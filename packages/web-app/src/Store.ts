@@ -15,6 +15,7 @@ import { featureFlags } from './FeatureFlags'
 import { SaladBowlStore } from './modules/salad-bowl'
 import { HomeStore } from './modules/home/HomeStore'
 import { NotificationStore } from './modules/notifications'
+import { VaultStore } from './modules/vault'
 
 //Forces all changes to state to be from an action
 configure({ enforceActions: 'always' })
@@ -48,6 +49,7 @@ export class RootStore {
   public readonly refresh: RefreshService
   public readonly saladBowl: SaladBowlStore
   public readonly notifications: NotificationStore
+  public readonly vault: VaultStore
 
   private machineInfoHeartbeat?: NodeJS.Timeout
 
@@ -69,6 +71,7 @@ export class RootStore {
     this.refresh = new RefreshService(this)
     this.analytics = new AnalyticsStore(this)
     this.autoStart = new AutoStartStore(this)
+    this.vault = new VaultStore(axios)
 
     this.machineInfoHeartbeat = setInterval(this.tryRegisterMachine, 20000)
 
@@ -89,6 +92,7 @@ export class RootStore {
     this.referral.loadReferralCode()
     this.xp.refreshXp()
     this.referral.loadCurrentReferral()
+    this.vault.loadVault()
     yield featureFlags.loadFeatureFlags(profile.id)
 
     if (this.machineInfoHeartbeat) clearInterval(this.machineInfoHeartbeat)

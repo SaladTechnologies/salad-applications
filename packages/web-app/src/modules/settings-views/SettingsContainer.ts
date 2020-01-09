@@ -12,6 +12,7 @@ const mapStoreToProps = (store: RootStore): any => {
   const menuItems: LinkList[] = [
     { url: '/settings/account', text: 'Account' },
     { url: '/settings/referrals', text: 'Referrals' },
+    { url: '/settings/reward-vault', text: 'Reward Vault' },
     { url: '/settings/windows-settings', text: 'Settings' },
   ]
 
@@ -27,7 +28,4 @@ const mapStoreToProps = (store: RootStore): any => {
   }
 }
 
-export const SettingsContainer = connect(
-  mapStoreToProps,
-  Settings,
-)
+export const SettingsContainer = connect(mapStoreToProps, Settings)
