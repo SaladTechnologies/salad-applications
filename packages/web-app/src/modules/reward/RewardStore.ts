@@ -191,7 +191,7 @@ export class RewardStore {
         //Show a notification
         this.store.notifications.sendNotification({
           title: `You redeemed ${reward.name}!`,
-          message: `Congrats on your pick! Your reward will be available in your inbox soon!`,
+          message: `Congrats on your pick! Your reward is available in the reward vault!`,
         })
       }
     } catch (error) {
