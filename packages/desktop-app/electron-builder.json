@@ -7,9 +7,8 @@
   "nsis": {
     "installerIcon": "assets/favicon.ico",
     "uninstallerIcon": "assets/favicon.ico",
-    "oneClick": true,
-    "perMachine": false,
-    "allowToChangeInstallationDirectory": false,
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
     "license": "LICENSE.md",
     "runAfterFinish": true,
     "artifactName": "${productName} Installer ${version}.${ext}"
