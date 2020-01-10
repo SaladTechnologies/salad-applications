@@ -48,6 +48,9 @@ class _ReferralCodeEntryComponent extends Component<Props, State> {
   onSubmit = async (values: {}) => {
     const { onSubmitCode } = this.props
     let v = values as FormTypes
+    this.setState({errorMessage:undefined})
+    this.validate(v.code)
+      if (this.state.errorMessage) return
     if (onSubmitCode && v.code) {
       this.setState({ submitting: true, errorMessage: undefined })
       try {
@@ -61,18 +64,14 @@ class _ReferralCodeEntryComponent extends Component<Props, State> {
     }
   }
 
-  validate = (values: {}) => {
-    let v = values as FormTypes
-
-    const errors: FormTypes = {}
-    if (v.code === undefined || v.code.length === 0) {
-      errors.code = 'Required'
-    } else if (/\s/g.test(v.code)) {
-      errors.code = 'Whitespace not allowed'
-    } else if (v.code.length > 10) {
-      errors.code = 'Code is too long'
+  validate = (code: string|undefined) => {
+    if (code === undefined || code.length === 0) {
+      this.setState({errorMessage:'Required'})
+    } else if (/\s/g.test(code)) {
+      this.setState({errorMessage:'Whitespace not allowed'})
+    } else if (code.length > 10) {
+      this.setState({errorMessage:'Code is too long'})
     }
-    return errors
   }
 
   render() {
@@ -82,7 +81,6 @@ class _ReferralCodeEntryComponent extends Component<Props, State> {
     return (
       <Form
         onSubmit={this.onSubmit}
-        validate={this.validate}
         render={({ handleSubmit }) => {
           return (
             <form onSubmit={handleSubmit}>
