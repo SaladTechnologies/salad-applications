@@ -66,7 +66,7 @@ class _ReferralCodeEntryComponent extends Component<Props, State> {
 
   validate = (code: string|undefined) => {
     if (code === undefined || code.length === 0) {
-      this.setState({errorMessage:'Required'})
+      this.setState({errorMessage:'Cannot Submit Nothing'})
     } else if (/\s/g.test(code)) {
       this.setState({errorMessage:'Whitespace not allowed'})
     } else if (code.length > 10) {
