@@ -7,8 +7,8 @@ const zhashUser = (location: string, minerId: string) =>
 
 export const getGminerZHashDefinition = (machine: Machine): PluginDefinition => {
   let def = {
-    name: 'GMiner-1.83-ZHash',
-    downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer1.83/gminer-1-83-windows.zip',
+    name: 'GMiner-1.93-NiceHash-ZHash',
+    downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer1.93/gminer-1-93-windows.zip',
     exe: 'miner.exe',
     args: `-a 144_5 ${zhashUser('usa', machine.minerId)} ${zhashUser('eu', machine.minerId)} -w 0 --pers auto`,
     runningCheck: 'Share Accepted',

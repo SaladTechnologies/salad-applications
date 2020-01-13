@@ -4,6 +4,7 @@ import { getCCMinerX16RDefinition } from './definitions/getCCMinerX16RDefinition
 import { getClaymoreEthashBitflyDefinition } from './definitions/getClaymoreEthashBitflyDefinition'
 import { getClaymoreEthashDefinition } from './definitions/getClaymoreEthashDefinition'
 import { getGminerBeamHashIIDefinition } from './definitions/getGminerBeamHashIIDefinition'
+import { getGminerBeamBitflyDefinition } from './definitions/getGminerBeamBitflyDefinition'
 import { getGminerCuckARoom29Definition } from './definitions/getGminerCuckARoom29Definition'
 import { getGminerZHashDefinition } from './definitions/getGminerZHashDefinition'
 import { getXMRigRandomXCUDADefinition } from './definitions/getXMRigRandomXCUDADefinition'
@@ -21,8 +22,9 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
   let supportsCuda = machineInfo.graphics.controllers.some(x => x.vendor.toLocaleLowerCase().includes('nvidia'))
   if (supportsCuda) {
     return [
-      getClaymoreEthashBitflyDefinition(machine), // Ethash @ Bitfly
       getGminerBeamHashIIDefinition(machine), // BeamHashII @ NiceHash
+      getGminerBeamBitflyDefinition(machine), // BeamHashII @ Bitfly
+      getClaymoreEthashBitflyDefinition(machine), // Ethash @ Bitfly
       getGminerZHashDefinition(machine), // Equihash 144,5 @ NiceHash
       getGminerCuckARoom29Definition(machine), // cuckARoom29 @ NiceHash
       getClaymoreEthashDefinition(machine), // Ethash @ NiceHash
@@ -32,8 +34,9 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
     ]
   } else {
     return [
-      getClaymoreEthashBitflyDefinition(machine), // Ethash @ Bitfly
       getGminerBeamHashIIDefinition(machine), // BeamHashII @ NiceHash
+      getGminerBeamBitflyDefinition(machine), // BeamHashII @ Bitfly
+      getClaymoreEthashBitflyDefinition(machine), // Ethash @ Bitfly
       getGminerZHashDefinition(machine), // Equihash 144,5 @ NiceHash
       getGminerCuckARoom29Definition(machine), // cuckARoom29 @ NiceHash
       getClaymoreEthashDefinition(machine), // Ethash @ NiceHash

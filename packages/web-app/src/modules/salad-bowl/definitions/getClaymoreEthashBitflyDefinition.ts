@@ -7,7 +7,7 @@ const claymoreRegion = (location: string) =>
 
 export const getClaymoreEthashBitflyDefinition = (machine: Machine): PluginDefinition => {
   let def = {
-    name: 'Claymore-15',
+    name: 'Claymore-15-Ethermine-Ethash',
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/claymore15/claymore-15-windows.zip',
     exe: 'EthDcrMiner64.exe',
     args: `${claymoreRegion('us1')} ${claymoreRegion('us2')} ${claymoreRegion('eu1')} -ewal ${ETH_WALLET_ADDRESS}.${machine.minerId}`,
