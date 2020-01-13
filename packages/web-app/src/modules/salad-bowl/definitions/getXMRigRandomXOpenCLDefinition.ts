@@ -1,9 +1,9 @@
 import { Machine } from '../../machine/models/Machine'
 import { PluginDefinition } from '../models'
-import { MINING_ADDRESS, STANDARD_ERRORS } from './constants'
+import { NICEHASH_MINING_ADDRESS, STANDARD_ERRORS } from './constants'
 
 const xmrigRegion = (location: string, minerId: string) =>
-  `-o stratum+tcp://randomxmonero.${location}.nicehash.com:3380 --coin monero -u ${MINING_ADDRESS}.${minerId} -k --nicehash`
+  `-o stratum+tcp://randomxmonero.${location}.nicehash.com:3380 --coin monero -u ${NICEHASH_MINING_ADDRESS}.${minerId} -k --nicehash`
 
 export const getXMRigRandomXOpenCLDefinition = (machine: Machine): PluginDefinition => {
   let def = {
