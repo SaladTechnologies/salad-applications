@@ -36,7 +36,7 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  type?: string
+  type?: "button" | "submit" | "reset"
   dark?: boolean
   uppercase?: boolean
   disabled?: boolean
