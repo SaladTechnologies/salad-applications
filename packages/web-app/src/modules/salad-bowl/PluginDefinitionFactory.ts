@@ -4,7 +4,7 @@ import { getCCMinerX16RDefinition } from './definitions/getCCMinerX16RDefinition
 import { getClaymoreEthashBitflyDefinition } from './definitions/getClaymoreEthashBitflyDefinition'
 import { getClaymoreEthashDefinition } from './definitions/getClaymoreEthashDefinition'
 import { getGminerBeamHashIIDefinition } from './definitions/getGminerBeamHashIIDefinition'
-import { getGminerCuckARood29Definition } from './definitions/getGminerCuckARood29Definition'
+import { getGminerCuckARoom29Definition } from './definitions/getGminerCuckARoom29Definition'
 import { getGminerZHashDefinition } from './definitions/getGminerZHashDefinition'
 import { getXMRigRandomXCUDADefinition } from './definitions/getXMRigRandomXCUDADefinition'
 import { getXMRigRandomXOpenCLDefinition } from './definitions/getXMRigRandomXOpenCLDefinition'
@@ -24,7 +24,7 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
       getClaymoreEthashBitflyDefinition(machine), // Ethash @ Bitfly
       getGminerBeamHashIIDefinition(machine), // BeamHashII @ NiceHash
       getGminerZHashDefinition(machine), // Equihash 144,5 @ NiceHash
-      getGminerCuckARood29Definition(machine), // cuckARood29 @ NiceHash
+      getGminerCuckARoom29Definition(machine), // cuckARoom29 @ NiceHash
       getClaymoreEthashDefinition(machine), // Ethash @ NiceHash
       getXMRigRandomXCUDADefinition(machine), // RandomX @ NiceHash
       getCCMinerX16RDefinition(machine), // X16R @ NiceHash
@@ -35,7 +35,7 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
       getClaymoreEthashBitflyDefinition(machine), // Ethash @ Bitfly
       getGminerBeamHashIIDefinition(machine), // BeamHashII @ NiceHash
       getGminerZHashDefinition(machine), // Equihash 144,5 @ NiceHash
-      getGminerCuckARood29Definition(machine), // cuckARood29 @ NiceHash
+      getGminerCuckARoom29Definition(machine), // cuckARoom29 @ NiceHash
       getClaymoreEthashDefinition(machine), // Ethash @ NiceHash
       getXMRigRandomXOpenCLDefinition(machine), // RandomX @ NiceHash
       getCCMinerX16RDefinition(machine), // X16R @ NiceHash
