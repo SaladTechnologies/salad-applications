@@ -174,6 +174,7 @@ export class NativeStore {
   setDesktopVersion = (version: string) => {
     console.log(`Setting desktop version: ${version}`)
     this.desktopVersion = version
+    this.store.analytics.trackDesktopVersion(version)
   }
 
   @action

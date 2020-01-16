@@ -35,11 +35,16 @@ export class AnalyticsStore {
     })
 
     const token = Config.mixpanelToken
+
     if (!token) {
       return
     }
 
     mixpanel.init(token, {})
+
+    mixpanel.register({
+      $app_build_number: Config.appBuild,
+    })
 
     mixpanel.people.set({
       Id: profile.id,
@@ -56,6 +61,12 @@ export class AnalyticsStore {
     if (!this.started) return
 
     mixpanel.alias(otherId)
+  }
+
+  public trackDesktopVersion = (version: string) => {
+    mixpanel.register({
+      $app_version_string: version,
+    })
   }
 
   public trackLogout = () => {
