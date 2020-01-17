@@ -24,18 +24,33 @@ export class NotificationStore {
       this.store.native.send('show-notification', message)
     }
     if (inApp) {
-      toast(<NotificationToast {...message} error={error} />, {
-        className: 'hide-toast',
-        bodyClassName: 'hide-toast',
-        position: toast.POSITION.BOTTOM_LEFT,
-        autoClose: error ? false : 15000,
-        closeButton: false,
-        hideProgressBar: true,
-      })
+      if (message.id && toast.isActive(message.id)) {
+        toast.update(message.id, {
+          render: <NotificationToast {...message} error={error} />,
+          toastId: message.id,
+          className: 'hide-toast', //This hides the default toast styles
+          bodyClassName: 'hide-toast', //This hides the default toast styles
+          position: toast.POSITION.BOTTOM_LEFT,
+          autoClose: error ? false : 15000,
+          closeButton: false,
+          hideProgressBar: true,
+        })
+      } else {
+        toast(<NotificationToast {...message} error={error} />, {
+          toastId: message.id,
+          className: 'hide-toast', //This hides the default toast styles
+          bodyClassName: 'hide-toast', //This hides the default toast styles
+          position: toast.POSITION.BOTTOM_LEFT,
+          autoClose: error ? false : 15000,
+          closeButton: false,
+          hideProgressBar: true,
+        })
+      }
     }
   }
 
   removeNotification = (id: number) => {
     this.store.native.send('show-notification', { remove: id, close: id })
+    toast.dismiss(id)
   }
 }
