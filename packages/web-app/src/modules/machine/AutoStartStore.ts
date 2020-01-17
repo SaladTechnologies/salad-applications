@@ -118,6 +118,7 @@ export class AutoStartStore {
               message: 'Looks like you are AFK, Salad is getting warmed up to start running',
               id: notificationId,
             },
+            false,
             true,
           )
         }
@@ -143,6 +144,7 @@ export class AutoStartStore {
             message: 'Salad detected you were AFK and started automatically',
             id: notificationId,
           },
+          false,
           true,
         )
       }
