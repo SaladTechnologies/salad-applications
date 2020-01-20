@@ -46,6 +46,12 @@ export class AnalyticsStore {
       $app_build_number: Config.appBuild,
     })
 
+    if (this.store.native.desktopVersion) {
+      mixpanel.register({
+        $app_version_string: this.store.native.desktopVersion,
+      })
+    }
+
     mixpanel.people.set({
       Id: profile.id,
       $email: profile.email,
@@ -64,6 +70,8 @@ export class AnalyticsStore {
   }
 
   public trackDesktopVersion = (version: string) => {
+    if (!this.started) return
+
     mixpanel.register({
       $app_version_string: version,
     })

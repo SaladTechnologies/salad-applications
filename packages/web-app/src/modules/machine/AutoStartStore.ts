@@ -133,7 +133,7 @@ export class AutoStartStore {
           this.store.notifications.removeNotification(notificationId)
         }
         this.autoStarted = false
-      } else if (!this.store.saladBowl.isRunning) {
+      } else if (!this.store.saladBowl.isRunning && !this.autoStarted) {
         this.autoStarted = true
         this.store.saladBowl.start('automatic')
 
