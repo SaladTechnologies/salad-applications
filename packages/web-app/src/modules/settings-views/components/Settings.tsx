@@ -7,8 +7,7 @@ import { getStore } from '../../../Store'
 import { styles } from './Settings.styles'
 
 // UI
-import { LinkListUnstyled, MenuTitle } from '../../../components'
-import { Button } from '../../../components'
+import { LinkListUnstyled, MenuTitle, Button, Divider } from '../../../components'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
@@ -18,7 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 
 // Components
-import { Overlay } from '../../../components'
+import { Overlay, DownloadLatest } from '../../../components'
 import { SmartStartContainer } from '../smart-start-views'
 import { WindowsSettingsContainer } from '../windows-settings-views'
 import { DesktopNotificationsContainer } from '../desktop-notifications-views'
@@ -96,7 +95,15 @@ class _Settings extends Component<Props> {
     return (
       <Overlay>
         <div className={classnames(classes.menu, classes.menuItems)}>
-          <div>{menuItems && <LinkListUnstyled list={menuItems} onListItemClick={this.handleListItemClick} />}</div>
+          {menuItems && <LinkListUnstyled list={menuItems} onListItemClick={this.handleListItemClick} />}
+          
+          {this.store.downloadLatest.showDownloadButton && (
+            <div className={classes.updateSalad}>
+              <Divider opacity={'.25'} />
+              <DownloadLatest path={this.store.downloadLatest.downloadPath}>Download Update</DownloadLatest>
+            </div>
+          )}
+
           <div className={classes.buttonContainer}>
             <Button onClick={this.handleBugClicked}>Submit Bug</Button>
             <Button onClick={this.handleLogClicked}>{this.state.buttonToggle ? 'Logs sent' : 'Send logs'}</Button>

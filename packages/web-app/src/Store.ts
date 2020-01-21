@@ -16,6 +16,7 @@ import { SaladBowlStore } from './modules/salad-bowl'
 import { HomeStore } from './modules/home/HomeStore'
 import { NotificationStore } from './modules/notifications'
 import { VaultStore } from './modules/vault'
+import { DownloadLatestStore } from './modules/download-latest/DownloadLatestStore'
 
 //Forces all changes to state to be from an action
 configure({ enforceActions: 'always' })
@@ -50,8 +51,10 @@ export class RootStore {
   public readonly saladBowl: SaladBowlStore
   public readonly notifications: NotificationStore
   public readonly vault: VaultStore
+  public readonly downloadLatest: DownloadLatestStore
 
   private machineInfoHeartbeat?: NodeJS.Timeout
+  private appVersionHeartbeat?: NodeJS.Timeout
 
   constructor(readonly axios: AxiosInstance) {
     this.routing = new RouterStore()
@@ -72,8 +75,10 @@ export class RootStore {
     this.analytics = new AnalyticsStore(this)
     this.autoStart = new AutoStartStore(this)
     this.vault = new VaultStore(axios)
+    this.downloadLatest = new DownloadLatestStore(axios)
 
     this.machineInfoHeartbeat = setInterval(this.tryRegisterMachine, 20000)
+    this.appVersionHeartbeat = setInterval(this.tryRegisterMachine, 3600000)
 
     this.tryRegisterMachine()
   }
@@ -96,9 +101,11 @@ export class RootStore {
     yield featureFlags.loadFeatureFlags(profile.id)
 
     if (this.machineInfoHeartbeat) clearInterval(this.machineInfoHeartbeat)
+    if (this.appVersionHeartbeat) clearInterval(this.appVersionHeartbeat)
 
     // Start a timer to keep checking for system information
     this.machineInfoHeartbeat = setInterval(this.tryRegisterMachine, 20000)
+    this.appVersionHeartbeat = setInterval(this.downloadLatest.checkVersion, 3600000)
 
     this.tryRegisterMachine()
 
@@ -109,6 +116,10 @@ export class RootStore {
   tryRegisterMachine = () => {
     if (this.native.machineInfo) {
       this.native.registerMachine()
+      
+      // TODO: Move this - testing only
+      this.downloadLatest.checkVersion()
+
       if (this.machineInfoHeartbeat) clearInterval(this.machineInfoHeartbeat)
     } else {
       this.native.loadMachineInfo()

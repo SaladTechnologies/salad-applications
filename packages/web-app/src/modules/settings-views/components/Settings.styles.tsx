@@ -59,14 +59,11 @@ export const styles = (theme: SaladTheme) => ({
     },
   },
 
+  updateSalad: {
+    textAlign: 'center',
+  },
   buttonContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
     marginTop: 'auto',
-    // position: 'absolute',
-    // bottom: '1.5rem',
-    // left: '1.5rem',
   },
   closeButton: {
     border: 'solid 3px ' + theme.lightGreen,
