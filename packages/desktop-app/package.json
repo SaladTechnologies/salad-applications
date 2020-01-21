@@ -45,7 +45,7 @@
     "tslint": "5.20.1",
     "tslint-config-standard": "9.0.0",
     "tslint-loader": "3.5.4",
-    "typescript": "3.7.4",
+    "typescript": "3.7.5",
     "webpack": "4.41.5",
     "webpack-cli": "3.3.10"
   },
