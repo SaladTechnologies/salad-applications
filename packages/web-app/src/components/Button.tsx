@@ -57,6 +57,7 @@ class _Button extends Component<Props> {
   render() {
     const { dark, loading, className, type, classes, disabled, children } = this.props
     let enabled = !loading && !disabled
+    
     return (
       <AnimatedBorder
         dark={dark}

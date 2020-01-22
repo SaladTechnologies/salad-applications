@@ -14,10 +14,13 @@ const styles = (theme: SaladTheme) => ({
     marginTop: theme.mediumLarge,
     marginBottom: theme.large,
     width: '100%',
+    opacity: (props: Props) => (props.opacity || '1'),
   },
 })
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  opacity?: string
+}
 
 class _Divider extends Component<Props> {
   render() {

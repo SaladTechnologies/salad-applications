@@ -6,6 +6,7 @@ export interface SaladTheme {
   green: string
   lightGreen: string
   red: string
+  darkRed: string
   orange: string
 
   // Font sizes
@@ -38,6 +39,7 @@ export const DefaultTheme: SaladTheme = {
   green: '#B2D530',
   lightGreen: '#DBF1C1',
   red: '#EF502A',
+  darkRed: '#D61F28',
   orange: '#F5A623',
 
   // Font sizes
