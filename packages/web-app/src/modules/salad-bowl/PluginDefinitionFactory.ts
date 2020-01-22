@@ -20,8 +20,9 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
   }
 
   let supportsCuda = machineInfo.graphics.controllers.some(x => x.vendor.toLocaleLowerCase().includes('nvidia'))
+  let pluginDefinitions: PluginDefinition[]
   if (supportsCuda) {
-    return [
+    pluginDefinitions = [
       getGminerBeamHashIIDefinition(machine), // BeamHashII @ NiceHash
       getGminerBeamBitflyDefinition(machine), // BeamHashII @ Bitfly
       getClaymoreEthashBitflyDefinition(machine), // Ethash @ Bitfly
@@ -33,7 +34,7 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
       getCCMinerLyra2REv3Definition(machine), // Lyra2REv3 @ NiceHash
     ]
   } else {
-    return [
+    pluginDefinitions = [
       getGminerBeamHashIIDefinition(machine), // BeamHashII @ NiceHash
       getGminerBeamBitflyDefinition(machine), // BeamHashII @ Bitfly
       getClaymoreEthashBitflyDefinition(machine), // Ethash @ Bitfly
@@ -45,4 +46,11 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
       getCCMinerLyra2REv3Definition(machine), // Lyra2REv3 @ NiceHash
     ]
   }
+
+  // Only a 25% chance to try BeamHashII @ NiceHash first.
+  if (Math.random() >= 0.25) {
+    pluginDefinitions.push(pluginDefinitions.shift()!)
+  }
+
+  return pluginDefinitions
 }
