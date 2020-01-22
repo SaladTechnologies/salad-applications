@@ -6,9 +6,11 @@ import { styles } from './MenuTitle.styles'
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
 import { NavLink } from 'react-router-dom'
+import classNames from 'classnames'
 
 interface Props extends WithStyles<typeof styles> {
   path?: string
+  className?: string
 }
 
 class _MenuTitle extends Component<Props> {
@@ -23,16 +25,16 @@ class _MenuTitle extends Component<Props> {
   }
 
   render() {
-    const { path, children, classes } = this.props
+    const { path, children, className, classes } = this.props
 
     const elements = path ? (
-      <label className={`menuTitle ${classes.menuTitle}`}>
+      <label className={classNames(`menuTitle ${classes.menuTitle}`, className)}>
         <NavLink to={path} activeClassName="active">
           {children}
         </NavLink>
       </label>
     ) : (
-      <label className={`menuTitle ${classes.menuTitle}`}>{children}</label>
+      <label className={classNames(`menuTitle ${classes.menuTitle}`, className)}>{children}</label>
     )
 
     return <>{elements}</>

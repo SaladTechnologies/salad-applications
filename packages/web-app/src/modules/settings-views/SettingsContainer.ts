@@ -25,6 +25,8 @@ const mapStoreToProps = (store: RootStore): any => {
     appVersion: store.native.desktopVersion,
     appBuild: Config.appBuild,
     onSendLog: store.native.sendLog,
+    latestDesktop: store.version.onLatestDesktop,
+    onDownloadLatestDesktop: store.version.downloadLatestDesktop,
   }
 }
 

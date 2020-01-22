@@ -91,4 +91,7 @@ export const styles = (theme: SaladTheme) => ({
     color: theme.mediumGreen,
     paddingTop: '1rem',
   },
+  outOfDateLabel: {
+    color: theme.darkRed,
+  },
 })

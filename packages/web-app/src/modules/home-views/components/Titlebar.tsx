@@ -7,9 +7,9 @@ import classnames from 'classnames'
 
 export class MenuItem {
   constructor(
-    public readonly name: string, 
+    public readonly name: string,
     public readonly onClick: () => void,
-    public readonly disableNotification?: boolean,
+    public readonly showNotification?: boolean,
   ) {}
 }
 
@@ -130,11 +130,11 @@ class _Titlebar extends Component<Props> {
           {menuItems &&
             menuItems.map(x => (
               <div key={x.name} className={classes.menuItem} onClick={() => x.onClick()}>
-                {!x.disableNotification && <div className={classes.menuItemNotification}></div>}
+                {x.showNotification && <div className={classes.menuItemNotification}></div>}
                 {x.name}
               </div>
             ))}
-          
+
           {showWhatsNew && (
             <div
               className={classnames(classes.menuItem, classes.altMenuItemColor, classes.uppercase)}
