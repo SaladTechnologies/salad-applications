@@ -22,9 +22,13 @@ const styles = (theme: SaladTheme) => ({
     textTransform: 'uppercase',
   },
   eventContainer: {
-    padding: '1px 0',
+    padding: '2px 0',
     color: theme.lightGreen,
     height: itemHeight,
+    whiteSpace: 'pre',
+  },
+  extraPadding: {
+    paddingRight: 13,
   },
   moveEnter: {
     opacity: 0.01,
@@ -59,7 +63,7 @@ interface State {
 }
 
 class _EarningEventsList extends Component<Props, State> {
-  private refreshTimer?: number
+  private refreshTimer?: NodeJS.Timeout
 
   constructor(props: Props) {
     super(props)
@@ -77,7 +81,7 @@ class _EarningEventsList extends Component<Props, State> {
   }
 
   componentWillUnmount() {
-    clearInterval(this.refreshTimer)
+    if (this.refreshTimer) clearInterval(this.refreshTimer)
   }
 
   render() {
@@ -105,22 +109,25 @@ class _EarningEventsList extends Component<Props, State> {
 
     const itemList =
       balanceEvents &&
-      balanceEvents.map(x => (
-        <CSSTransition
-          key={x.id}
-          timeout={500}
-          classNames={{
-            enter: classes.moveEnter,
-            enterActive: classes.moveEnterActive,
-            exit: classes.moveExit,
-            exitActive: classes.moveExitActive,
-          }}
-        >
-          <div className={classnames(classes.eventContainer)}>
-            ${x.deltaBalance.toFixed(5)} ({x.timestamp.from(currentTime, true)})
-          </div>
-        </CSSTransition>
-      ))
+      balanceEvents.map(x => {
+        let text = `$${x.deltaBalance.toFixed(5)} (${x.timestamp.from(currentTime, true)})`
+        return (
+          <CSSTransition
+            key={x.id}
+            timeout={500}
+            classNames={{
+              enter: classes.moveEnter,
+              enterActive: classes.moveEnterActive,
+              exit: classes.moveExit,
+              exitActive: classes.moveExitActive,
+            }}
+          >
+            <div className={classnames(classes.eventContainer, { [classes.extraPadding]: text.length <= 17 })}>
+              {text}
+            </div>
+          </CSSTransition>
+        )
+      })
 
     return (
       <div className={classnames(classes.container)}>

@@ -53,7 +53,7 @@ export class RootStore {
   public readonly vault: VaultStore
   public readonly version: VersionStore
 
-  private machineInfoHeartbeat?: number
+  private machineInfoHeartbeat?: NodeJS.Timeout
 
   constructor(readonly axios: AxiosInstance) {
     this.routing = new RouterStore()

@@ -2,9 +2,9 @@ import { Config } from '../../config'
 import { RootStore } from '../../Store'
 
 export class RefreshService {
-  private dataTimer?: number
-  private xpTimer?: number
-  private rewardsTimer?: number
+  private dataTimer?: NodeJS.Timeout
+  private xpTimer?: NodeJS.Timeout
+  private rewardsTimer?: NodeJS.Timeout
 
   constructor(private store: RootStore) {}
 

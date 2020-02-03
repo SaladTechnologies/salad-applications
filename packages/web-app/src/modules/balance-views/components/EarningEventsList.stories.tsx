@@ -1,9 +1,8 @@
-import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { EarningEventsList } from './EarningEventsList'
 import { BalanceEvent } from '../../balance/models'
 import moment from 'moment'
-import { number } from '@storybook/addon-knobs'
+import { addStories } from '../../../../.storybook/addStories'
 
 const createEvent = (id: number, delta: number): BalanceEvent => {
   const timestamp = moment().subtract(id, 'm')
@@ -14,7 +13,6 @@ const createEvent = (id: number, delta: number): BalanceEvent => {
   }
 }
 
-const maxCount = 5
 const events: BalanceEvent[] = [
   createEvent(0, 0.115423),
   createEvent(1, 0.219873),
@@ -34,24 +32,30 @@ const events: BalanceEvent[] = [
   createEvent(15, 0.115423),
 ]
 
-const getEvents = (count: number) => events.slice(events.length - count, events.length).slice(0, maxCount)
+const getEvents = (count: number) => events.slice(events.length - count, events.length).slice(0, events.length)
 
-storiesOf('Modules|Balance/Earning Events', module)
-  .add('(all)', () => {
-    return <EarningEventsList />
-  })
-  .add('none', () => {
-    return <EarningEventsList />
-  })
-  .add('events no delay', () => {
-    return <EarningEventsList balanceEvents={[createEvent(0, 0.115423)]} />
-  })
-  .add('events (n=1)', () => {
-    return <EarningEventsList balanceEvents={getEvents(1)} />
-  })
-  .add('events (n=5)', () => {
-    return <EarningEventsList balanceEvents={getEvents(5)} />
-  })
-  .add('events (n=variable)', () => {
-    return <EarningEventsList balanceEvents={getEvents(number('Count', 1))} />
-  })
+const stories = [
+  {
+    name: 'none',
+    props: {},
+  },
+  {
+    name: 'events no delay',
+    props: { balanceEvents: [createEvent(0, 0.115423)] },
+  },
+  {
+    name: 'events (n=1)',
+    props: { balanceEvents: getEvents(1) },
+  },
+  {
+    name: 'events (n=5)',
+    props: { balanceEvents: getEvents(5) },
+  },
+  {
+    name: 'events (n=15)',
+    props: { balanceEvents: getEvents(14) },
+  },
+]
+
+// @ts-ignore
+addStories(EarningEventsList, stories, storiesOf('Modules|Balance/Earning Events', module))
