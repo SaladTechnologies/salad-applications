@@ -21,8 +21,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public"
+    "storybook": "start-storybook -p 9009",
+    "build-storybook": "build-storybook -c .storybook -o storybook-build"
   },
   "dependencies": {
     "@babel/core": "7.8.3",
@@ -30,12 +30,12 @@
     "@fortawesome/free-solid-svg-icons": "5.12.0",
     "@fortawesome/react-fontawesome": "0.1.8",
     "@sentry/browser": "5.11.1",
-    "@storybook/addon-actions": "5.3.8",
-    "@storybook/addon-backgrounds": "5.3.8",
+    "@storybook/addon-actions": "5.3.12",
+    "@storybook/addon-backgrounds": "5.3.12",
     "@storybook/addon-console": "1.2.1",
-    "@storybook/addon-knobs": "5.3.8",
-    "@storybook/addon-links": "5.3.8",
-    "@storybook/addon-notes": "5.3.8",
+    "@storybook/addon-knobs": "5.3.12",
+    "@storybook/addon-links": "5.3.12",
+    "@storybook/addon-notes": "5.3.12",
     "@storybook/addons": "5.3.8",
     "@storybook/preset-create-react-app": "1.5.2",
     "@storybook/react": "5.3.8",
