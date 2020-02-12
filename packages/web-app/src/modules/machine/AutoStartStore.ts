@@ -1,6 +1,7 @@
 import { action, observable, runInAction, autorun } from 'mobx'
 import { RootStore } from '../../Store'
 import * as Storage from '../../Storage'
+import { StartReason, StopReason } from '../salad-bowl/models'
 
 const getIdleTime = 'get-idle-time'
 const setIdleTime = 'set-idle-time'
@@ -129,13 +130,13 @@ export class AutoStartStore {
 
       if (this.idleTime <= this.idleThreshold) {
         if (this.autoStarted) {
-          this.store.saladBowl.stop('automatic')
+          this.store.saladBowl.stop(StopReason.Automatic)
           this.store.notifications.removeNotification(notificationId)
         }
         this.autoStarted = false
       } else if (!this.store.saladBowl.isRunning && !this.autoStarted) {
         this.autoStarted = true
-        this.store.saladBowl.start('automatic')
+        this.store.saladBowl.start(StartReason.Automatic)
 
         //Send a notification that we auto started
         this.store.notifications.sendNotification(
