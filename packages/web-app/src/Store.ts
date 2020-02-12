@@ -17,6 +17,7 @@ import { HomeStore } from './modules/home/HomeStore'
 import { NotificationStore } from './modules/notifications'
 import { VaultStore } from './modules/vault'
 import { VersionStore } from './modules/versions'
+import { StopReason } from './modules/salad-bowl/models'
 
 //Forces all changes to state to be from an action
 configure({ enforceActions: 'always' })
@@ -124,7 +125,7 @@ export class RootStore {
     this.referral.referralCode = ''
     this.referral.currentReferral = undefined
     this.analytics.trackLogout()
-    this.saladBowl.stop('logout')
+    this.saladBowl.stop(StopReason.Logout)
     this.version.stopVersionChecks()
     this.native.logout()
   }
