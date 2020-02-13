@@ -71,6 +71,9 @@ export class NativeStore {
   @observable
   public minimizeToTray: boolean = true
 
+  @observable
+  public canMinimizeToTray: boolean = true
+
   //#endregion
 
   @computed
@@ -110,11 +113,12 @@ export class NativeStore {
 
     console.log('Initial compat check: ' + this.skippedCompatCheck)
 
+    this.canMinimizeToTray = store.native.isNative && store.native.apiVersion >= 7
+
     if (this.isNative) {
       window.salad.onNative = this.onNative
 
       this.checkAutoLaunch()
-      this.checkMinimizeToTray()
 
       this.on(setDesktopVersion, (version: string) => {
         this.setDesktopVersion(version)
@@ -334,17 +338,6 @@ export class NativeStore {
 
     this.autoLaunch = Storage.getOrSetDefault(AUTO_LAUNCH, this.autoLaunch.toString()) === 'true'
     this.autoLaunch && this.enableAutoLaunch()
-  }
-
-  @action
-  checkMinimizeToTray = () => {
-    if (window.salad.apiVersion <= 1) {
-      this.autoLaunch = false
-      return
-    }
-
-    this.minimizeToTray = Storage.getOrSetDefault(MINIMIZE_TO_TRAY, this.minimizeToTray.toString()) === 'true'
-    this.minimizeToTray && this.enableMinimizeToTray()
   }
 
   @action

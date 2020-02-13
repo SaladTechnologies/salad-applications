@@ -140,7 +140,7 @@ const createMainWindow = () => {
   })
 
   mainWindow.loadURL(Config.appUrl)
-  mainWindow.on('close', () => mainWindow.hide())
+  mainWindow.on('close', () => app.quit())
 
   mainWindow.webContents.on('before-input-event', (_: any, input: Input) => {
     if (input.type !== 'keyUp' || input.key !== 'F12') return
