@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell, Input, powerMonitor } from 'electron'
+import { app, BrowserWindow, ipcMain, shell, Input, powerMonitor, Tray, Menu, nativeImage } from 'electron'
 import { DefaultTheme as theme } from './SaladTheme'
 import isOnline from 'is-online'
 import * as path from 'path'
@@ -16,6 +16,7 @@ import { SaladBridgeNotificationService } from './salad-bowl/SaladBridgeNotifica
 import * as Sentry from '@sentry/electron'
 import { Profile } from './models/Profile'
 import * as notifier from 'node-notifier'
+import logo from '../static/salad-logo.png'
 
 const appVersion = app.getVersion()
 
@@ -106,7 +107,7 @@ const createOfflineWindow = () => {
 
   offlineWindow.on('close', () => {
     console.log('offline window close')
-    app.quit()
+    app.hide()
   })
 }
 
@@ -139,7 +140,7 @@ const createMainWindow = () => {
   })
 
   mainWindow.loadURL(Config.appUrl)
-  mainWindow.on('close', () => app.quit())
+  mainWindow.on('close', () => mainWindow.hide())
 
   mainWindow.webContents.on('before-input-event', (_: any, input: Input) => {
     if (input.type !== 'keyUp' || input.key !== 'F12') return
@@ -149,6 +150,18 @@ const createMainWindow = () => {
   mainWindow.once('ready-to-show', () => {
     console.log('ready to show main window')
     mainWindow.show()
+
+    console.log('creating tray')
+    const iconPath = path.join(__static, 'salad-tray-logo.png')
+    let logo = nativeImage.createFromPath(iconPath)
+    let tray = new Tray(logo)
+    // A menu that pops up when you right click the tray icon
+    const contextMenu = Menu.buildFromTemplate([
+      { label: 'Quit', click(){app.quit()} },
+    ])
+    tray.setToolTip('Salad')
+    tray.setContextMenu(contextMenu)
+    tray.on('click',()=> mainWindow.show())
 
     if (offlineWindow) {
       console.log('Closing offline')
@@ -205,6 +218,11 @@ const createMainWindow = () => {
   bridge.on('close-window', () => {
     console.log('Closing main window')
     app.quit()
+  })
+
+  bridge.on('hide-window', ()=> {
+    console.log('Minimizing to tray')
+    mainWindow.hide()
   })
 
   bridge.on(start, (pluginDefinition: PluginDefinition) => {

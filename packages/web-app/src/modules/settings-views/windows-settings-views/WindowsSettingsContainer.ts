@@ -10,6 +10,8 @@ const mapStoreToProps = (store: RootStore): any => ({
   autoStartEnabled: store.autoStart.canAutoStart,
   autoStartDelay: store.autoStart.idleThreshold,
   autoStartUpdate: store.autoStart.setIdleTime,
+  minimizeToTrayToggle: store.native.toggleMinimizeToTray,
+  minimizeToTray: store.native.minimizeToTray,
 })
 
 export const WindowsSettingsContainer = connect(mapStoreToProps, WindowsSettings)

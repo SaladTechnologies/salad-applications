@@ -12,16 +12,20 @@ const setMachineInfo = 'set-machine-info'
 const minimize = 'minimize-window'
 const maximize = 'maximize-window'
 const close = 'close-window'
+const hide = 'hide-window'
 const sendLog = 'send-log'
 const getDesktopVersion = 'get-desktop-version'
 const setDesktopVersion = 'set-desktop-version'
 const enableAutoLaunch = 'enable-auto-launch'
 const disableAutoLaunch = 'disable-auto-launch'
+const enableMinimizeToTray = 'enable-minimize-to-tray'
+const disableMinimizeToTray = 'disable-minimize-to-tray'
 const login = 'login'
 const logout = 'logout'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
 const AUTO_LAUNCH = 'AUTO_LAUNCH'
+const MINIMIZE_TO_TRAY = 'MINIMIZE_TO_TRAY'
 
 declare global {
   interface Window {
@@ -63,6 +67,9 @@ export class NativeStore {
 
   @observable
   public autoLaunch: boolean = true
+
+  @observable
+  public minimizeToTray: boolean = true
 
   //#endregion
 
@@ -107,6 +114,7 @@ export class NativeStore {
       window.salad.onNative = this.onNative
 
       this.checkAutoLaunch()
+      this.checkMinimizeToTray()
 
       this.on(setDesktopVersion, (version: string) => {
         this.setDesktopVersion(version)
@@ -204,7 +212,11 @@ export class NativeStore {
 
   @action
   closeWindow = () => {
-    this.send(close)
+    if (this.minimizeToTray) {
+      this.send(hide)
+    } else {
+      this.send(close)
+    }
   }
 
   @action.bound
@@ -273,6 +285,15 @@ export class NativeStore {
   }
 
   @action
+  toggleMinimizeToTray = () => {
+    if (this.autoLaunch) {
+      this.disableMinimizeToTray()
+    } else {
+      this.enableMinimizeToTray()
+    }
+  }
+
+  @action
   enableAutoLaunch = () => {
     this.autoLaunch = true
     Storage.setItem(AUTO_LAUNCH, 'true')
@@ -289,6 +310,22 @@ export class NativeStore {
   }
 
   @action
+  enableMinimizeToTray = () => {
+    this.minimizeToTray = true
+    Storage.setItem(MINIMIZE_TO_TRAY, 'true')
+
+    this.send(enableMinimizeToTray)
+  }
+
+  @action
+  disableMinimizeToTray = () => {
+    this.minimizeToTray = false
+    Storage.setItem(MINIMIZE_TO_TRAY, 'false')
+
+    this.send(disableMinimizeToTray)
+  }
+
+  @action
   checkAutoLaunch = () => {
     if (window.salad.apiVersion <= 1) {
       this.autoLaunch = false
@@ -297,6 +334,17 @@ export class NativeStore {
 
     this.autoLaunch = Storage.getOrSetDefault(AUTO_LAUNCH, this.autoLaunch.toString()) === 'true'
     this.autoLaunch && this.enableAutoLaunch()
+  }
+
+  @action
+  checkMinimizeToTray = () => {
+    if (window.salad.apiVersion <= 1) {
+      this.autoLaunch = false
+      return
+    }
+
+    this.minimizeToTray = Storage.getOrSetDefault(MINIMIZE_TO_TRAY, this.minimizeToTray.toString()) === 'true'
+    this.minimizeToTray && this.enableMinimizeToTray()
   }
 
   @action

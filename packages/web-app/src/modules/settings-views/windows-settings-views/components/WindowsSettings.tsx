@@ -18,6 +18,8 @@ interface Props extends WithStyles<typeof styles> {
   autoStartEnabled?: boolean
   autoStartDelay?: number
   autoStartUpdate?: (value: number) => void
+  minimizeToTrayToggle?: () => void
+  minimizeToTray?: boolean
 }
 
 class _WindowsSettings extends Component<Props> {
@@ -30,6 +32,8 @@ class _WindowsSettings extends Component<Props> {
       autoStartEnabled,
       autoStartDelay,
       autoStartUpdate,
+      minimizeToTrayToggle,
+      minimizeToTray,
     } = this.props
 
     return (
@@ -72,6 +76,17 @@ class _WindowsSettings extends Component<Props> {
             </ToggleSetting>
           </>
         )}
+        {
+          <>
+            <Divider />
+            <ToggleSetting
+              title={'Minimize to Tray'}
+              description={'your mom is hot and spicy'}
+              toggled={minimizeToTray}
+              onToggle={minimizeToTrayToggle}
+            />
+          </>
+        }
       </>
     )
   }
