@@ -26,7 +26,7 @@ class App extends Component {
     let showPlainTitle = isOnboarding || !isAuth
 
     return (
-      <div>
+      <div style={{ userSelect: 'none' }}>
         <OfflineModalContainer />
         {showPlainTitle && <PlainTitlebarContainer />}
 

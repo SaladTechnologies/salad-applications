@@ -1,259 +1,204 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import { RewardSummary } from './RewardSummary'
-import demoImage from '../../../../.storybook/assets/itunes-app-store-card.png'
+import skyrimCover from '../../../../.storybook/assets/skyrim-cover.jpg'
+import witcherCover from '../../../../.storybook/assets/witcher-cover.jpg'
 import { action } from '@storybook/addon-actions'
-import { RewardList } from './RewardList'
 import { Reward } from '../../reward/models/Reward'
-import { RewardFilterPage } from './RewardFilterPage'
-import { SearchBar } from './SearchBar'
-import { FilterList } from './FilterList'
-import { TagFilter } from '../../reward/models/FilterItem'
-import { SelectedReward } from './SelectedReward'
-import { RewardDetailsModal } from './RewardDetailsModal'
 import { RewardCategory } from '../../reward/models/RewardCategory'
+import { RewardItem } from './RewardItem'
+import { RewardSlider } from './RewardSlider'
+import { RewardSliderButton } from './RewardSliderButton'
+import { RewardHeroItem } from './RewardHeroItem'
+import { RewardHero } from './RewardHero'
+import { RewardHeroButtonGroup } from './RewardHeroButtonGroup'
 
 const generateRewards = (count: number): Reward[] => {
   let result = new Array<Reward>(count)
 
   for (var i = count - 1; i >= 0; i--) {
-    result[i] = {
+    let reward = {
       id: String(i),
-      name: `$${i}.00 Salad Gift Card`,
-      description: 'Here are some details! And some more details! Lots and lots of details!!!',
+      name: `Rocketcers ${i}`,
+      headline: 'Discover the new Fortuna Pass, map and vehicles this season!',
+      description: '',
       price: i,
       redeemable: i < count / 2,
-      image: demoImage,
+      coverImage: i % 2 === 0 ? skyrimCover : witcherCover,
       category: RewardCategory.Game,
       checkoutTerms: ["Don't scam us"],
       tags: ['Game'],
       remainingTimeLabel: '2 days',
       percentUnlocked: 0.5,
       color: 'red',
-      quantity:3,
+      quantity: 3,
     }
+
+    if (i % 2 !== 0) {
+      reward.name = 'A very long name, probably the longest name that you have ever seen'
+    }
+
+    for (var x = 0; x < i; x++) {
+      reward.description +=
+        'A short description outlining the scope of the game, its game play and how it might work in the carousel. '
+    }
+
+    result[i] = reward
   }
 
   return result
 }
 
-const getFilters = [new TagFilter('Games', true), new TagFilter('Loot', false), new TagFilter('Money', true)]
-
-storiesOf('Modules|Reward/Reward Details Modal', module)
-  .add('redeemable ', () => {
-    let reward = generateRewards(2)[0]
-    return (
-      <div>
-        <RewardDetailsModal
-          reward={reward}
-          onSelect={action('select')}
-          onClickClose={action('close')}
-          onRedeem={action('redeem')}
-        />
-      </div>
-    )
+storiesOf('Modules/Rewards/Reward Item', module)
+  .add('complete reward', () => {
+    let reward = generateRewards(1)[0]
+    return <RewardItem reward={reward} />
   })
-  .add('not redeemable ', () => {
+  .add('complete reward (long name)', () => {
     let reward = generateRewards(2)[1]
-    return (
-      <div>
-        <RewardDetailsModal
-          reward={reward}
-          onSelect={action('select')}
-          onClickClose={action('close')}
-          onRedeem={action('redeem')}
-        />
-      </div>
-    )
+    return <RewardItem reward={reward} />
+  })
+  .add('missing reward', () => {
+    return <RewardItem />
+  })
+  .add('no reward image', () => {
+    let reward = generateRewards(1)[0]
+    reward.coverImage = ''
+    return <RewardItem reward={reward} />
   })
 
-storiesOf('Modules|Reward/Reward Summary', module)
-  .add('with images', () => {
-    const frameStyle = { paddingBottom: '.5rem' }
-    return (
-      <div>
-        <div style={frameStyle}>
-          <RewardSummary
-            name="$20 Steam Gift Card"
-            price={20}
-            redeemable={true}
-            image={demoImage}
-            color="red"
-            onClick={action('Clicked')}
-          />
-        </div>
-        <div style={frameStyle}>
-          <RewardSummary
-            name="Razer Blackwidow Ultimate Keyboard 2018"
-            price={999.99}
-            redeemable={false}
-            timeRemaining={'3 weeks'}
-            image={demoImage}
-            color="red"
-            onClick={action('Clicked')}
-          />
-        </div>
-        <div style={frameStyle}>
-          <RewardSummary
-            name="Razer Blackwidow Ultimate Keyboard 2018"
-            price={999.99}
-            redeemable={false}
-            timeRemaining={'3 weeks'}
-            image={demoImage}
-            color="red"
-            onClick={action('Clicked')}
-          />
-        </div>
-      </div>
-    )
-  })
-  .add('without image', () => {
-    const frameStyle = { paddingBottom: '.5rem', color: 'white' }
-    return (
-      <div>
-        <div style={frameStyle}>
-          No color set
-          <RewardSummary
-            name="Razer Blackwidow Ultimate Keyboard 2018"
-            price={999.99}
-            redeemable={false}
-            timeRemaining={'3 weeks'}
-            // image={demoImage}
-            onClick={action('Clicked')}
-          />
-        </div>
-        <div style={frameStyle}>
-          With color set
-          <RewardSummary
-            name="Razer Blackwidow Ultimate Keyboard 2018"
-            price={999.99}
-            redeemable={false}
-            timeRemaining={'3 weeks'}
-            color="purple"
-            onClick={action('Clicked')}
-          />
-        </div>
-      </div>
-    )
-  })
-//TODO: Add in stories here
-// storiesOf('Modules|Reward/Reward Redemption', module)
-// .add('missing details', () => {
-//   let reward = generateRewards(2)[0]
-//   return <RewardRedemptionModal reward={reward} />
-// })
-// .add('plain text', () => {
-//   let reward = generateRewards(2)[0]
-//   let details = new RewardDetails(reward.id)
-//   details.content = [
-//     new ModalContent({ id: '1', value: 'Header text', type: ContentType.plainText, style: StyleType.header }),
-//     new ModalContent({ id: '2', value: 'Title text', type: ContentType.plainText, style: StyleType.title }),
-//     new ModalContent({
-//       id: '3',
-//       value: 'Description text',
-//       type: ContentType.plainText,
-//       style: StyleType.description,
-//     }),
-//   ]
-//   return <RewardRedemptionModal reward={reward} details={details} />
-// })
-// .add('text input', () => {
-//   let reward = generateRewards(2)[0]
-//   let details = new RewardDetails(reward.id)
-//   details.content = [
-//     new ModalContent({ id: '2', label: 'Email', value: 'user@salad.io', type: ContentType.emailInput }),
-//   ]
-//   return <RewardRedemptionModal reward={reward} details={details} />
-// })
-// .add('checkbox', () => {
-//   let reward = generateRewards(2)[0]
-//   let details = new RewardDetails(reward.id)
-//   details.content = [
-//     new ModalContent({ id: '1', label: 'Check 1', type: ContentType.checkbox }),
-//     new ModalContent({ id: '2', label: 'Check 2', type: ContentType.checkbox }),
-//   ]
-//   return <RewardRedemptionModal reward={reward} details={details} />
-// })
-// .add('done button', () => {
-//   let reward = generateRewards(2)[0]
-//   let details = new RewardDetails(reward.id)
-//   details.content = [new ModalContent({ id: '1', type: ContentType.buttonAction })]
-//   return <RewardRedemptionModal reward={reward} details={details} />
-// })
-// .add('example', () => {
-//   let reward = generateRewards(2)[0]
-//   let details = new RewardDetails(reward.id)
-//   details.content = [
-//     new ModalContent({
-//       id: '1',
-//       value: 'Here is a super cool reward',
-//       type: ContentType.plainText,
-//       style: StyleType.header,
-//     }),
-//     new ModalContent({ id: '2', value: '$1M/yr Salary!', type: ContentType.plainText, style: StyleType.title }),
-//     new ModalContent({
-//       id: '3',
-//       value: 'Simply join the salad team and get what you deserve.',
-//       type: ContentType.plainText,
-//       style: StyleType.description,
-//     }),
-//     new ModalContent({ id: '4', label: 'Email', value: 'user@salad.io', type: ContentType.emailInput }),
-//     new ModalContent({ id: '5', label: 'Check 1', type: ContentType.checkbox }),
-//     new ModalContent({ id: '6', label: 'Check 1', type: ContentType.checkbox }),
-//     new ModalContent({ id: '7', type: ContentType.buttonAction }),
-//   ]
-//   return <RewardRedemptionModal reward={reward} details={details} onRedeem={action('redeem')} />
-// })
-// .add('completed', () => <RedemptionCompleteModal onCloseClicked={action('close')} />)
-// .add('error', () => <RedemptionErrorModal onCloseClicked={action('close')} />)
-
-storiesOf('Modules|Reward', module)
-  .add('Selected Reward', () => {
+storiesOf('Modules/Rewards/Reward Slider', module)
+  .add('with 1 item', () => {
     let reward = generateRewards(1)[0]
     return (
-      <div>
-        <SelectedReward reward={reward} />
-        <SelectedReward reward={undefined} />
-      </div>
+      <RewardSlider>
+        <RewardItem reward={reward} />
+      </RewardSlider>
     )
   })
-  .add('Reward List', () => {
-    let rewards = generateRewards(20)
+  .add('with multiple items', () => {
+    let rewards = generateRewards(10)
+    return (
+      <RewardSlider>
+        {rewards.map(x => (
+          <RewardItem reward={x} />
+        ))}
+      </RewardSlider>
+    )
+  })
+  .add('multiple sliders', () => {
+    let rewards = generateRewards(10)
+    return (
+      <>
+        <RewardSlider title={'Category 1'}>
+          {rewards.map(x => (
+            <RewardItem reward={x} />
+          ))}
+        </RewardSlider>
+        <RewardSlider title={'Category 2'}>
+          {rewards.map(x => (
+            <RewardItem reward={x} />
+          ))}
+        </RewardSlider>
+        <RewardSlider title={'Category 3'}>
+          {rewards.map(x => (
+            <RewardItem reward={x} />
+          ))}
+        </RewardSlider>
+      </>
+    )
+  })
 
-    return (
-      <div style={{ width: '100vw', height: '100vh', display: 'flex' }}>
-        <RewardList rewards={rewards} onRewardClick={action('reward click')} />
-      </div>
-    )
+storiesOf('Modules/Rewards/Reward Hero Item', module)
+  .add('complete reward', () => {
+    let reward = generateRewards(1)[0]
+    return <RewardHeroItem reward={reward} onViewReward={action('view reward')} onSelect={action('select')} />
   })
-  .add('Reward Filter Page', () => {
-    return (
-      <div style={{ backgroundColor: '#092234' }}>
-        <RewardFilterPage
-          searchText={''}
-          filters={getFilters}
-          onTextEntered={action('text entered')}
-          onToggle={action('toggle')}
-        />
-      </div>
-    )
+  .add('complete reward (long name)', () => {
+    let reward = generateRewards(2)[1]
+    return <RewardHeroItem reward={reward} onViewReward={action('view reward')} onSelect={action('select')} />
   })
-  .add('Filter List', () => {
-    return (
-      <div>
-        <FilterList filters={getFilters} onToggle={action('toggle')} />
-      </div>
-    )
+  .add('missing reward', () => {
+    return <RewardHeroItem onViewReward={action('view reward')} onSelect={action('select')} />
   })
-  .add('Search Bar', () => {
-    let textEntered = action('text entered')
+  .add('no reward image', () => {
+    let reward = generateRewards(1)[0]
+    reward.coverImage = ''
+    return <RewardHeroItem reward={reward} onViewReward={action('view reward')} onSelect={action('select')} />
+  })
+  .add('no headline', () => {
+    let reward = generateRewards(1)[0]
+    reward.headline = undefined
+    return <RewardHeroItem reward={reward} onViewReward={action('view reward')} onSelect={action('select')} />
+  })
 
+storiesOf('Modules/Rewards/Reward Hero', module)
+  .add('with 1 item', () => {
+    let reward = generateRewards(1)[0]
     return (
-      <div>
-        With placeholder
-        <SearchBar text={''} onTextEntered={textEntered} />
-        With text
-        <SearchBar text={'hello world'} onTextEntered={textEntered} />
-      </div>
+      <RewardHero>
+        <RewardHeroItem reward={reward} onViewReward={action('view reward')} onSelect={action('select')} />
+      </RewardHero>
     )
   })
+  .add('with multiple items (no title)', () => {
+    let rewards = generateRewards(10)
+    return (
+      <RewardHero>
+        {rewards.map(x => (
+          <RewardHeroItem reward={x} onViewReward={action('view reward')} onSelect={action('select')} />
+        ))}
+      </RewardHero>
+    )
+  })
+  .add('with multiple items (w/ title)', () => {
+    let rewards = generateRewards(10)
+    return (
+      <RewardHero title="Hero Title">
+        {rewards.map(x => (
+          <RewardHeroItem reward={x} onViewReward={action('view reward')} onSelect={action('select')} />
+        ))}
+      </RewardHero>
+    )
+  })
+  .add('multiple sliders', () => {
+    let rewards = generateRewards(10)
+    return (
+      <>
+        <RewardHero title={'Category 1'}>
+          {rewards.map(x => (
+            <RewardHeroItem reward={x} onViewReward={action('view reward')} onSelect={action('select')} />
+          ))}
+        </RewardHero>
+        <RewardHero title={'Category 2'}>
+          {rewards.map(x => (
+            <RewardHeroItem reward={x} onViewReward={action('view reward')} onSelect={action('select')} />
+          ))}
+        </RewardHero>
+        <RewardHero title={'Category 3'}>
+          {rewards.map(x => (
+            <RewardHeroItem reward={x} onViewReward={action('view reward')} onSelect={action('select')} />
+          ))}
+        </RewardHero>
+      </>
+    )
+  })
+
+storiesOf('Modules/Rewards/Reward Slider Button', module)
+  .add('both', () => {
+    return (
+      <>
+        <RewardSliderButton onClick={action('click')} direction={'left'} />
+        <RewardSliderButton onClick={action('click')} direction={'right'} />
+      </>
+    )
+  })
+  .add('left', () => {
+    return <RewardSliderButton onClick={action('click')} direction={'left'} />
+  })
+  .add('right', () => {
+    return <RewardSliderButton onClick={action('click')} direction={'right'} />
+  })
+
+storiesOf('Modules/Rewards/Reward Hero Button Group', module).add('both', () => {
+  return <RewardHeroButtonGroup next={action('next')} previous={action('prev')} />
+})
