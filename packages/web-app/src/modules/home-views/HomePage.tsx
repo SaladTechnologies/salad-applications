@@ -1,14 +1,9 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import classnames from 'classnames'
-import { ExperienceBarContainer, SlicedVeggieContainer } from '../xp-views'
-import { RewardListContainer, RewardFilterContainer, SelectedRewardContainer } from '../reward-views'
+import { MainStorefrontContainer } from '../reward-views'
 import { getStore } from '../../Store'
-import { BottomBarContainer } from './BottomBarContainer'
-import { ProfileMenuItemContainer, UserStatsSummaryContainer } from '../profile-views'
+import { ProfileMenuItemContainer } from '../profile-views'
 import { StartButtonContainer } from '../machine-views'
-import { Fade } from '../../components'
-import { ReferralSummaryContainer } from '../settings-views/referral-views'
 import { MainTitlebarContainer } from './MainTitlebarContainer'
 import { NotificationBannerContainer } from './NotificationBannerContainer'
 
@@ -47,10 +42,6 @@ const styles = ({
     zIndex: 1000,
   },
   main: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-    alignItems: 'stretch',
     flex: 1,
   },
   mainColumn: {},
@@ -84,7 +75,6 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
       <div className={classes.container}>
         <MainTitlebarContainer />
         <div className={classes.appContainer}>
-          <Fade className={classnames(classes.headerFade)} direction="down" />
           <div className={classes.header}>
             <ProfileMenuItemContainer />
             <div style={{ marginLeft: 'auto', marginTop: '-1px' }}>
@@ -96,19 +86,19 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
           </div>
 
           <div className={classes.main}>
+            {/* TODO: Remove all these */}
             {/* XP bar */}
-            <div className={classnames(classes.mainColumn, classes.verticalLayout)}>
+            {/* <div className={classnames(classes.mainColumn, classes.verticalLayout)}>
               <ExperienceBarContainer />
-            </div>
+            </div> */}
 
             {/* Veggie column */}
-            <div className={classnames(classes.mainColumn, classes.veggieColumn)}>
+            {/* <div className={classnames(classes.mainColumn, classes.veggieColumn)}>
               <SlicedVeggieContainer />
-            </div>
+            </div> */}
 
             {/* Rewards column */}
-            <div className={classnames(classes.mainColumn, classes.verticalLayout)}>
-              <SelectedRewardContainer />
+            {/* <div className={classnames(classes.mainColumn, classes.verticalLayout)}>
               <div
                 style={{
                   display: 'flex',
@@ -120,20 +110,22 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
                 <RewardFilterContainer />
                 <RewardListContainer />
               </div>
-            </div>
+            </div> */}
+            <MainStorefrontContainer />
 
             {/* Right column */}
-            <div className={classnames(classes.mainColumn, classes.rightColumn, classes.verticalLayout)}>
+            {/* TODO: This needs to move */}
+            {/* <div className={classnames(classes.mainColumn, classes.rightColumn, classes.verticalLayout)}>
               <UserStatsSummaryContainer />
               <div style={{ zIndex: 2000, marginTop: 'auto' }}>
                 <ReferralSummaryContainer />
               </div>
-            </div>
+            </div> */}
           </div>
 
-          <div className={classes.footer}>
+          {/* <div className={classes.footer}>
             <BottomBarContainer />
-          </div>
+          </div> */}
         </div>
       </div>
     )

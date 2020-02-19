@@ -19,7 +19,6 @@ import {
 } from './modules/onboarding-views'
 import { HomePage } from './modules/home-views'
 import { LoadingPage } from './components'
-import { RewardDetailsModalContainer, RewardRedemptionModalContainer } from './modules/reward-views'
 import { AccountModalContainer } from './modules/profile-views'
 import { AnimatedSwitch } from './components/AnimatedSwitch'
 import { CompatibilityCheckPageContainer } from './modules/machine-views'
@@ -134,8 +133,8 @@ const Auth = () => {
       <Route exact path="/errors/fallback" component={FallbackErrorContainer} />
       <Route exact path="/errors/network" component={NetworkErrorContainer} />
       <Route exact path="/errors/unknown" component={UnknownErrorContainer} />
-      <Route exact path="/rewards/:id" component={RewardDetailsModalContainer} />
-      <Route exact path="/rewards/:id/redeem" component={RewardRedemptionModalContainer} />
+      {/* <Route exact path="/rewards/:id" component={RewardDetailsModalContainer} />
+      <Route exact path="/rewards/:id/redeem" component={RewardRedemptionModalContainer} /> */}
       <Route exact path="/profile" component={AccountModalContainer} />
 
       <Route exact path="/onboarding/whats-new" component={WhatsNewPageContainer} />

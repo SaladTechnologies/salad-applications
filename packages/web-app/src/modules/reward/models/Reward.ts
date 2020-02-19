@@ -3,9 +3,11 @@ import { RewardCategory } from './RewardCategory'
 export interface Reward {
   id: string
   name: string
+  headline?: string
   description: string
   price: number
-  image: string
+  coverImage?: string
+  image?: string
   category: RewardCategory
   checkoutTerms: string[]
   tags: string[]

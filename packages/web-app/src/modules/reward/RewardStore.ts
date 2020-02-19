@@ -3,22 +3,20 @@ import { Reward } from './models/Reward'
 import { RewardsResource } from './models/RewardsResource'
 import { AxiosInstance } from 'axios'
 
-import { rewardFromResource, getTimeRemainingText } from './utils'
+import { rewardFromResource } from './utils'
 import { RootStore } from '../../Store'
-import { FilterItem, TagFilter } from './models/FilterItem'
+
+type RewardId = string
 
 export class RewardStore {
   @observable
-  private rewards: Reward[] = []
+  private rewards: Map<string, Reward> = new Map<string, Reward>()
+
+  @observable
+  private categories: Map<string, RewardId[]> = new Map<string, RewardId[]>()
 
   @observable
   private selectedRewardId?: string
-
-  @observable
-  private filters: FilterItem[] = []
-
-  @observable
-  public filterText?: string
 
   @observable
   public isRedeeming: boolean = false
@@ -33,54 +31,28 @@ export class RewardStore {
     return this.getReward(this.selectedRewardId)
   }
 
-  @computed get currentFilters(): FilterItem[] {
-    return this.filters.sort((a, b) => {
-      if (a.name < b.name) return -1
-      if (a.name > b.name) return 1
-      return 0
+  @computed get categorizedRewards(): Map<string, Reward[]> {
+    let result = new Map<string, Reward[]>()
+
+    this.categories.forEach((rewardIds, c) => {
+      let rewards = []
+      for (let id of rewardIds) {
+        let r = this.rewards.get(id)
+        if (r !== undefined) {
+          rewards.push(r)
+        }
+      }
+      result.set(c, rewards)
     })
-  }
 
-  @computed get allRewards(): Reward[] {
-    let currentBalance = this.store.balance.currentBalance
-    let earningRate = this.store.machine.currentEarningRate
-
-    return this.rewards.map(r => {
-      var clone: Reward = { ...r }
-      clone.redeemable = r.price <= currentBalance
-      clone.remainingTimeLabel = getTimeRemainingText(r, currentBalance, earningRate || 0)
-      clone.percentUnlocked = Math.min(1, Math.max(0, currentBalance / r.price))
-      return clone
-    })
-  }
-
-  @computed get filteredRewards(): Reward[] {
-    let rewardList = this.allRewards
-
-    let all = this.filters.every(x => !x.checked)
-
-    if (!all) {
-      rewardList = rewardList.filter(r => {
-        let filter = this.filters.find(x => x.checkReward(r))
-
-        return !filter || filter.checked
-      })
-    }
-
-    if (this.filterText) {
-      let text = this.filterText.toLowerCase()
-      rewardList = rewardList.filter(r => r.name.toLowerCase().indexOf(text) !== -1)
-    }
-
-    return rewardList
+    return result
   }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   getReward = (id?: string): Reward | undefined => {
     if (id === undefined) return undefined
-    let a = this.allRewards.find(x => x.id === id)
-    return a
+    return this.rewards.get(id)
   }
 
   @action.bound
@@ -89,8 +61,16 @@ export class RewardStore {
       this.isLoading = true
       const response = yield this.axios.get<RewardsResource[]>('rewards')
       if (response.data === undefined) return
-      this.rewards = response.data.map(rewardFromResource).sort((a: Reward, b: Reward) => a.price - b.price)
-      this.updateFilters()
+
+      //Convert from the resource to the models
+      let rewardList: Reward[] = response.data.map(rewardFromResource)
+
+      // Updates the list of rewards
+      for (let x of rewardList) {
+        this.rewards.set(x.id, x)
+      }
+
+      this.categories = this.categorizeRewards(rewardList)
     } catch (error) {
       console.error(error)
     } finally {
@@ -98,37 +78,20 @@ export class RewardStore {
     }
   })
 
-  @action
-  updateFilterText = (text?: string) => {
-    if (text) {
-      this.filterText = text
-    } else {
-      this.filterText = undefined
-    }
-  }
+  private categorizeRewards = (rewards: Reward[]): Map<string, RewardId[]> => {
+    let categories = new Map<string, RewardId[]>()
 
-  @action
-  toggleFilter = (filterName: string) => {
-    let filter = this.filters.find(x => x.name === filterName)
-    if (filter) {
-      filter.checked = !filter.checked
-    }
-  }
-
-  @action
-  updateFilters = () => {
-    let currentTags = new Set<string>()
-    this.rewards.forEach(x => {
-      x.tags &&
-        x.tags.forEach(tag => {
-          currentTags.add(tag.toLowerCase())
-        })
-    })
-    currentTags.forEach(x => {
-      if (!this.filters.some(f => f.name === x)) {
-        this.filters.push(new TagFilter(x.toLowerCase(), false))
+    for (let r of rewards) {
+      for (let t of r.tags) {
+        if (!categories.has(t)) {
+          categories.set(t, [r.id])
+        } else {
+          categories.get(t)?.push(r.id)
+        }
       }
-    })
+    }
+
+    return categories
   }
 
   @action.bound
