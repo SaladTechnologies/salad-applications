@@ -16,7 +16,6 @@ import { SaladBridgeNotificationService } from './salad-bowl/SaladBridgeNotifica
 import * as Sentry from '@sentry/electron'
 import { Profile } from './models/Profile'
 import * as notifier from 'node-notifier'
-import logo from '../static/salad-logo.png'
 
 const appVersion = app.getVersion()
 
@@ -107,7 +106,7 @@ const createOfflineWindow = () => {
 
   offlineWindow.on('close', () => {
     console.log('offline window close')
-    app.hide()
+    app.quit()
   })
 }
 

@@ -18,8 +18,6 @@ const getDesktopVersion = 'get-desktop-version'
 const setDesktopVersion = 'set-desktop-version'
 const enableAutoLaunch = 'enable-auto-launch'
 const disableAutoLaunch = 'disable-auto-launch'
-const enableMinimizeToTray = 'enable-minimize-to-tray'
-const disableMinimizeToTray = 'disable-minimize-to-tray'
 const login = 'login'
 const logout = 'logout'
 
@@ -290,7 +288,7 @@ export class NativeStore {
 
   @action
   toggleMinimizeToTray = () => {
-    if (this.autoLaunch) {
+    if (this.minimizeToTray) {
       this.disableMinimizeToTray()
     } else {
       this.enableMinimizeToTray()
@@ -317,16 +315,12 @@ export class NativeStore {
   enableMinimizeToTray = () => {
     this.minimizeToTray = true
     Storage.setItem(MINIMIZE_TO_TRAY, 'true')
-
-    this.send(enableMinimizeToTray)
   }
 
   @action
   disableMinimizeToTray = () => {
     this.minimizeToTray = false
     Storage.setItem(MINIMIZE_TO_TRAY, 'false')
-
-    this.send(disableMinimizeToTray)
   }
 
   @action
