@@ -9,7 +9,6 @@ import classnames from 'classnames'
 
 const styles = (theme: SaladTheme) => ({
   condensedHeader: {
-    color: theme.darkBlue,
     fontFamily: theme.fontGroteskLight09,
     fontSize: theme.xLarge,
     lineHeight: theme.xLarge,
