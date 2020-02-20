@@ -16,13 +16,12 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   categories?: Map<string, Reward[]>
+  onViewReward?: (reward?: Reward) => void
 }
 
-class _RewardItem extends Component<Props> {
+class _MainStorefrontPage extends Component<Props> {
   render() {
-    const { categories, classes } = this.props
-
-    console.log(categories)
+    const { categories, onViewReward, classes } = this.props
 
     return (
       <Scrollbars>
@@ -31,7 +30,7 @@ class _RewardItem extends Component<Props> {
             Array.from(categories).map(([category, rewards]) => (
               <RewardSlider title={category}>
                 {rewards.map(x => (
-                  <RewardItem reward={x} />
+                  <RewardItem reward={x} onViewReward={onViewReward} />
                 ))}
               </RewardSlider>
             ))}
@@ -41,4 +40,4 @@ class _RewardItem extends Component<Props> {
   }
 }
 
-export const MainStorefrontPage = withStyles(styles)(_RewardItem)
+export const MainStorefrontPage = withStyles(styles)(_MainStorefrontPage)

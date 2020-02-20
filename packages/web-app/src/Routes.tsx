@@ -31,6 +31,7 @@ import {
 } from './modules/error-views'
 // Settings Menu
 import { SettingsContainer } from './modules/settings-views'
+import { RewardDetailsContainer } from './modules/reward-views'
 // Account Menu
 
 export default class Routes extends Component {
@@ -133,8 +134,8 @@ const Auth = () => {
       <Route exact path="/errors/fallback" component={FallbackErrorContainer} />
       <Route exact path="/errors/network" component={NetworkErrorContainer} />
       <Route exact path="/errors/unknown" component={UnknownErrorContainer} />
-      {/* <Route exact path="/rewards/:id" component={RewardDetailsModalContainer} />
-      <Route exact path="/rewards/:id/redeem" component={RewardRedemptionModalContainer} /> */}
+      <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
+      {/*<Route exact path="/rewards/:id/redeem" component={RewardRedemptionModalContainer} /> */}
       <Route exact path="/profile" component={AccountModalContainer} />
 
       <Route exact path="/onboarding/whats-new" component={WhatsNewPageContainer} />
