@@ -8,23 +8,22 @@ import logo from './assets/default-image.png'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    userSelect: 'none',
     position: 'relative',
     flexShrink: 0,
     margin: '0 6px',
     display: 'flex',
     flexDirection: 'column',
     maxWidth: 500,
+    cursor: 'pointer',
+    '&:hover': {
+      opacity: 0.8,
+    },
   },
   image: {
     height: 'auto',
     width: '100%',
     boxShadow: '8px 14px 22px rgba(0, 0, 0, 0.45)',
     border: '1px solid rgba(255, 255, 255, 0.10)',
-    cursor: 'pointer',
-    '&:hover': {
-      opacity: 0.8,
-    },
   },
   missingImageContainer: {
     position: 'relative',
@@ -64,14 +63,22 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   reward?: Reward
-  onClick?: () => void
+  onViewReward?: (reward?: Reward) => void
 }
 
 class _RewardItem extends Component<Props> {
+  handleViewReward = () => {
+    const { onViewReward, reward } = this.props
+
+    if (onViewReward) {
+      onViewReward(reward)
+    }
+  }
+
   render() {
     const { reward, classes } = this.props
     return (
-      <div key={reward?.id} className={classnames(classes.container)}>
+      <div key={reward?.id} className={classnames(classes.container)} onClick={this.handleViewReward}>
         <Img
           className={classes.image}
           src={reward?.coverImage}
