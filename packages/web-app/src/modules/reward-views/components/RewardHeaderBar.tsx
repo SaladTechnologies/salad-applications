@@ -67,8 +67,8 @@ class _RewardHeaderBar extends Component<Props> {
   render() {
     const { reward, classes } = this.props
     return (
-      <div className={classnames(classes.container)} onClick={this.handleBack}>
-        <div className={classes.backButton}>
+      <div className={classnames(classes.container)}>
+        <div className={classes.backButton} onClick={this.handleBack}>
           <IconArrowLeft />
         </div>
         <div className={classes.nameText}>{reward && reward.name ? reward.name : 'Unknown'}</div>
