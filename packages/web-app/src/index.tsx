@@ -20,6 +20,16 @@ Sentry.init({
   release: Config.appBuild,
 })
 
+//Adds a dummy window.salad for use in the web-app, this will be skipped in desktop-app
+if (!window.salad) {
+  window.salad = {
+    platform: 'web',
+    apiVersion: 100000000,
+    dispatch: (type: string, payload: any) => {},
+    onNative: (args: { type: string; payload: any }) => {},
+  }
+}
+
 console.log(`Running web app build:${Config.appBuild}`)
 
 const client = createClient()
