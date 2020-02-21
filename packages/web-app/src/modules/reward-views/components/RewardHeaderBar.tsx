@@ -11,14 +11,14 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: '6px 12px',
+    padding: '6px 20px 6px 12px',
     borderBottom: `1px solid ${theme.green}`,
     color: theme.lightGreen,
+    height: 87,
   },
   backButton: {
-    height: '100%',
     width: 15,
-    paddingRight: 20,
+    padding: 20,
     cursor: 'pointer',
     '&:hover': {
       opacity: 0.5,
@@ -26,7 +26,7 @@ const styles = (theme: SaladTheme) => ({
   },
   nameText: {
     fontFamily: theme.fontGroteskLight09,
-    fontSize: 36,
+    fontSize: 42,
     letterSpacing: 0.5,
     flex: 1,
     whiteSpace: 'nowrap',
@@ -36,8 +36,18 @@ const styles = (theme: SaladTheme) => ({
   priceText: {
     color: theme.green,
     fontFamily: theme.fontGroteskBook25,
-    fontSize: 10,
+    fontSize: 14,
     letterSpacing: 1,
+    marginRight: 10,
+  },
+  buyButton: {
+    backgroundColor: theme.green,
+    padding: '10px 30px',
+  },
+  buyText: {
+    fontSize: 14,
+    color: theme.darkBlue,
+    fontWeight: 'bold',
   },
 })
 
@@ -73,7 +83,9 @@ class _RewardHeaderBar extends Component<Props> {
         </div>
         <div className={classes.nameText}>{reward && reward.name ? reward.name : 'Unknown'}</div>
         <div className={classes.priceText}>${reward ? reward.price.toFixed(2) : '-'}</div>
-        <Button onClick={this.handleRedeem}>BUY NOW</Button>
+        <Button className={classes.buyButton} onClick={this.handleRedeem}>
+          <div className={classes.buyText}>BUY NOW</div>
+        </Button>
       </div>
     )
   }
