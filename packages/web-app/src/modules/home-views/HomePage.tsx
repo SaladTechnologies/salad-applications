@@ -33,14 +33,7 @@ const styles = (theme: SaladTheme) => ({
     flexDirection: 'row',
     flexWrap: 'nowrap',
     zIndex: 2000,
-  },
-  headerFade: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: '100px',
-    zIndex: 1000,
+    borderBottom: `1px solid ${theme.green}`,
   },
   main: {
     flex: 1,

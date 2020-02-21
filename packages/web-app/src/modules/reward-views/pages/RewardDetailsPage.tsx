@@ -15,7 +15,7 @@ import { Scrollbars } from 'react-custom-scrollbars'
 const styles = (theme: SaladTheme) => ({
   container: {
     position: 'absolute',
-    top: 0,
+    top: '33px',
     bottom: 0,
     left: 0,
     right: 0,
