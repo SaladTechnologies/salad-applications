@@ -6,7 +6,9 @@ import classnames from 'classnames'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    padding: '1rem 1rem 0',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
   username: {
     fontFamily: 'sharpGroteskLight25',
@@ -19,6 +21,7 @@ const styles = (theme: SaladTheme) => ({
     fontFamily: 'sharpGroteskLight25',
     fontSize: theme.small,
     letterSpacing: '1px',
+    color: theme.mediumGreen,
   },
 })
 
