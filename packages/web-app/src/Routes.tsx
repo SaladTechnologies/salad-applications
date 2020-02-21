@@ -32,6 +32,7 @@ import {
 // Settings Menu
 import { SettingsContainer } from './modules/settings-views'
 import { RewardDetailsContainer } from './modules/reward-views'
+import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
 // Account Menu
 
 export default class Routes extends Component {
@@ -137,8 +138,11 @@ const Auth = () => {
       <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
       {/*<Route exact path="/rewards/:id/redeem" component={RewardRedemptionModalContainer} /> */}
       <Route exact path="/profile" component={AccountModalContainer} />
-
       <Route exact path="/onboarding/whats-new" component={WhatsNewPageContainer} />
+
+      {/* SaladPay: This is stand in until we figure out iFrames, popups... */}
+      <Route exact path="/salad-pay/order-summary" component={SaladPayOrderSummaryContainer} />
+      {/* <Route exact path="/salad-pay/confirmation" component={WhatsNewPageContainer} /> */}
 
       <Route path="/settings" component={SettingsContainer} />
     </>

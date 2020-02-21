@@ -6,6 +6,7 @@ import { RouteComponentProps } from 'react-router-dom'
 const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ id: string }>): any => ({
   reward: store.rewards.getReward(props.match.params.id),
   onBack: store.routing.goBack,
+  onRedeem: store.rewards.redeemReward,
 })
 
 export const RewardDetailsContainer = connect(mapStoreToProps, RewardDetailsPage)
