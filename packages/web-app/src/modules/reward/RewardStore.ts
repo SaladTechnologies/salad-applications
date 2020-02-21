@@ -5,10 +5,14 @@ import { AxiosInstance } from 'axios'
 
 import { rewardFromResource } from './utils'
 import { RootStore } from '../../Store'
+import { SaladPay } from '../salad-pay/SaladPay'
+import { SaladPaymentResponse, AbortError } from '../salad-pay'
 
 type RewardId = string
 
 export class RewardStore {
+  private readonly saladPay = new SaladPay('43e8e26fa9077bb9c932d1849f52ef68e89c3ca39287c949275e0f18be6d074b')
+
   @observable
   private rewards: Map<string, Reward> = new Map<string, Reward>()
 
@@ -130,7 +134,7 @@ export class RewardStore {
   })
 
   @action.bound
-  redeemReward = flow(function*(this: RewardStore, rewardId: string, email?: string) {
+  redeemReward = flow(function*(this: RewardStore, reward: Reward) {
     if (this.isRedeeming) {
       console.log('Already redeeming reward, skipping')
       return
@@ -138,38 +142,55 @@ export class RewardStore {
 
     this.isRedeeming = true
 
-    const req = {
-      giftEmail: email,
-    }
-
     try {
-      yield this.axios.post(`/rewards/${rewardId}/redemptions`, req)
-      this.store.routing.replace('/')
-      let reward = this.getReward(rewardId)
-
-      if (reward) {
-        //Track the redemption in mixpanel
-        this.store.analytics.trackRewardRedeemed(reward)
-
-        //Show a notification
-        this.store.notifications.sendNotification({
-          title: `You redeemed ${reward.name}!`,
-          message: `Congrats on your pick! Your reward is available in the reward vault!`,
-        })
-      }
-    } catch (error) {
-      //Show an error notification
-      this.store.notifications.sendNotification(
-        {
-          title: `Uh Oh. Something went wrong.`,
-          message: error.message || 'Please try again later',
+      //Creates a new SaladPay payment request
+      let request = this.saladPay.paymentRequest({
+        total: {
+          label: 'Total',
+          amount: reward.price,
         },
-        true,
-      )
+        displayItems: [
+          {
+            label: reward.name,
+            amount: reward.price,
+          },
+        ],
+      })
+
+      //Shows the SaladPay UI
+      let response: SaladPaymentResponse = yield request.show()
+
+      console.log(`Completed SaladPay transaction ${response.details.transactionToken}`)
+
+      yield this.axios.post(`/rewards/${reward.id}/redemptions`, {})
+
+      //Completes the transaction and closes SaladPay
+      response.complete('success')
+
+      //Track the redemption in mixpanel
+      this.store.analytics.trackRewardRedeemed(reward)
+
+      //Show a notification
+      this.store.notifications.sendNotification({
+        title: `You redeemed ${reward.name}!`,
+        message: `Congrats on your pick! Your reward is available in the reward vault!`,
+      })
+    } catch (error) {
+      if (!(error instanceof AbortError)) {
+        //Show an error notification
+        this.store.notifications.sendNotification(
+          {
+            title: `Uh Oh. Something went wrong.`,
+            message: error.message || 'Please try again later',
+          },
+          true,
+        )
+      }
     } finally {
       yield this.store.balance.refreshBalance()
       yield this.store.vault.loadVault()
       this.isRedeeming = false
+      console.error('Cleared isRedeeming flag')
     }
   })
 }
