@@ -1,29 +1,6 @@
 import { RewardResource } from './models/RewardResource'
-import { RewardCategory } from './models/RewardCategory'
 import { Reward } from './models/Reward'
 import { Config } from '../../config'
-
-/** Maps from the reward category to color */
-const colorFromCategory = (category: RewardCategory): string => {
-  switch (category) {
-    case RewardCategory.GamingGiftcard:
-      return '#5e4af4'
-    case RewardCategory.Donation:
-      return '#DBF1C1'
-    case RewardCategory.OtherGiftcard:
-      return '#ef3930'
-    case RewardCategory.HardwareAndPeripheral:
-      return '#ffffff'
-    case RewardCategory.PhysicalGood:
-      return '#DBF1C1'
-    case RewardCategory.Game:
-      return '#DBF1C1'
-    case RewardCategory.Subscription:
-      return '#DBF1C1'
-    default:
-      return '#B2D530'
-  }
-}
 
 export const rewardFromResource = (r: RewardResource): Reward => ({
   //Reward data
@@ -31,9 +8,8 @@ export const rewardFromResource = (r: RewardResource): Reward => ({
   name: r.name,
   description: r.description,
   price: r.price,
-  image: new URL(r.image, Config.baseAPIUrl).href,
+  image: r.image ? new URL(r.image, Config.baseAPIUrl).href : undefined,
   category: r.category,
-  checkoutTerms: r.checkoutTerms,
   tags: r.tags && r.tags.map(x => x.toLowerCase()),
   quantity: r.quantity,
 
