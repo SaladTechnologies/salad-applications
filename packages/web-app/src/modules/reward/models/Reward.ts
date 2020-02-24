@@ -4,17 +4,21 @@ import { RewardRequirements } from './RewardRequirements'
 
 export interface Reward {
   id: string
+
   /** The display name for the reward */
   name: string
 
   /** When was the reward released. This should be the game's release date or for non games when it was added to salad */
   releaseDate?: Date
 
+  /** When was the reward aded to Salad. */
+  addedDate?: Date
+
   /** Developer of the product */
-  developer?: string
+  developerName?: string
 
   /** Publisher of the product */
-  publisher?: string
+  publisherName?: string
 
   /** Short headline to show when the reward is featured */
   headline?: string
@@ -46,7 +50,6 @@ export interface Reward {
   /** How much of the reward has already been unlocked (0-1) */
   percentUnlocked: number
   remainingTimeLabel: string
-  color: string
   quantity?: number
 
   /** Requirements to utilize the reward */

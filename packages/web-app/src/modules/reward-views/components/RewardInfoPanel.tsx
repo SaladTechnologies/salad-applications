@@ -73,8 +73,8 @@ class _RewardInfoPanel extends Component<Props> {
       <>
         <div className={classnames(classes.container)}>
           <InfoItem title={'Release Date'} value={reward?.releaseDate?.toLocaleDateString()} />
-          <InfoItem title={'Developer'} value={reward?.developer} />
-          <InfoItem title={'Publisher'} value={reward?.publisher} />
+          <InfoItem title={'Developer'} value={reward?.developerName} />
+          <InfoItem title={'Publisher'} value={reward?.publisherName} />
           <InfoItem
             title={'Platform'}
             value={platformIcon && <Img className={classes.platformIcon} src={platformIcon} alt="" />}

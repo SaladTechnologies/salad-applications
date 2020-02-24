@@ -1,9 +1,10 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { SaladPayPage } from './SaladPayPage'
-import { SaladPayOrderSummaryPage, SaladPayOrderConfirmationPage } from '.'
+import { SaladPayOrderSummaryPage } from '.'
 import { SaladPaymentRequestOptions } from '../../salad-pay/models'
 import { action } from '@storybook/addon-actions'
+import { SaladPayCheckoutButton } from './SaladPayCheckoutButton'
 
 export const fullRequest: SaladPaymentRequestOptions = {
   total: {
@@ -82,6 +83,17 @@ storiesOf('Salad Pay/Components/Order Summary Page', module)
       />
     )
   })
+  .add('processing request', () => {
+    return (
+      <SaladPayOrderSummaryPage
+        request={fullRequest}
+        availableBalance={20.08}
+        onConfirm={action('confirm')}
+        onClose={action('close')}
+        processing
+      />
+    )
+  })
   .add('insufficient balance', () => {
     return (
       <SaladPayOrderSummaryPage
@@ -94,8 +106,16 @@ storiesOf('Salad Pay/Components/Order Summary Page', module)
   })
 
 /**
- * SaladPayOrderConfirmationPage
+ * SaladPayCheckoutButton
  */
-storiesOf('Salad Pay/Components/Order Confirmation Page', module).add('default', () => {
-  return <SaladPayOrderConfirmationPage onClose={action('close')} />
-})
+storiesOf('Salad Pay/Components/Checkout Button', module)
+  .addDecorator(storyFn => <div style={{ backgroundColor: 'white' }}>{storyFn()}</div>)
+  .add('default', () => {
+    return <SaladPayCheckoutButton enabled={true} onClick={action('click')} />
+  })
+  .add('disabled', () => {
+    return <SaladPayCheckoutButton enabled={false} onClick={action('click')} />
+  })
+  .add('loading', () => {
+    return <SaladPayCheckoutButton enabled={false} loading onClick={action('click')} />
+  })

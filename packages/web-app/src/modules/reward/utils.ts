@@ -41,7 +41,6 @@ export const rewardFromResource = (r: RewardResource): Reward => ({
   redeemable: false,
   remainingTimeLabel: '',
   percentUnlocked: 0,
-  color: colorFromCategory(r.category),
 })
 
 export const getTimeRemainingText = (reward: Reward, currentBalance: number, earningRate: number): string => {
