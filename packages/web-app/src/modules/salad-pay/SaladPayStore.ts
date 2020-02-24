@@ -25,6 +25,10 @@ export class SaladPayStore {
   @observable
   public currentRequestOptions?: SaladPaymentRequestOptions
 
+  /** Is a payment request currently being processed */
+  @observable
+  public processing: boolean = false
+
   @computed
   get currentBalance(): number {
     return this.balance.currentBalance
@@ -35,6 +39,7 @@ export class SaladPayStore {
     console.log('Updating request options')
     this.currentRequest = request
     this.currentRequestOptions = request.options
+    this.processing = false
   }
 
   @action
@@ -52,6 +57,7 @@ export class SaladPayStore {
   abort = () => {
     console.log('Aborting request')
     this.hide()
+    this.processing = false
     if (this.currentRequest) {
       let req = this.currentRequest
 
@@ -70,6 +76,8 @@ export class SaladPayStore {
   confirmPayment = flow(function*(this: SaladPayStore) {
     console.log('User confirmed order, do magic here')
 
+    this.processing = true
+
     this.currentRequest?.resolveShow({
       methodName: 'salad-pay',
       details: {
@@ -79,6 +87,7 @@ export class SaladPayStore {
         console.log('SaladPay "complete" called')
         this.hide()
         this.currentRequest?.emit('complete')
+        this.processing = false
       },
     })
   })

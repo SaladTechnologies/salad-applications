@@ -44,8 +44,8 @@ export const generateRewards = (count: number): Reward[] => {
       name: `Rocketcers ${i}`,
       headline: 'Discover the new Fortuna Pass, map and vehicles this season!',
       releaseDate: new Date(i + 2000, 0),
-      developer: `Bob's Cool Games`,
-      publisher: 'Salad Technologies',
+      developerName: `Bob's Cool Games`,
+      publisherName: 'Salad Technologies',
       platform: RewardPlatform.Steam,
       description: lorem.generateParagraphs(20),
       price: i,
@@ -328,12 +328,12 @@ storiesOf('Modules/Rewards/Reward Info Panel', module)
   })
   .add('no developer', () => {
     let reward = generateRewards(1)[0]
-    reward.developer = undefined
+    reward.developerName = undefined
     return <RewardInfoPanel reward={reward} />
   })
   .add('no publisher', () => {
     let reward = generateRewards(1)[0]
-    reward.publisher = undefined
+    reward.publisherName = undefined
     return <RewardInfoPanel reward={reward} />
   })
   .add('no platform', () => {
