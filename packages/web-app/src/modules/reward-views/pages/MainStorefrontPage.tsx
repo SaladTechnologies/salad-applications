@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import { Reward } from '../../reward/models'
-import { RewardSlider } from '../components'
+import { RewardSlider, RewardDisclaimers } from '../components'
 import { RewardItem } from '../components/RewardItem'
 import { Scrollbars } from 'react-custom-scrollbars'
 
@@ -34,6 +34,7 @@ class _MainStorefrontPage extends Component<Props> {
                 ))}
               </RewardSlider>
             ))}
+          <RewardDisclaimers />
         </div>
       </Scrollbars>
     )
