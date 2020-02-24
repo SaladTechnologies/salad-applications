@@ -7,6 +7,7 @@ const mapStoreToProps = (store: SaladPayStore): any => ({
   availableBalance: store.currentBalance,
   onClose: store.abort,
   onConfirm: store.confirmPayment,
+  processing: store.processing,
 })
 
 export const SaladPayOrderSummaryContainer = connectSaladPay(mapStoreToProps, SaladPayOrderSummaryPage)

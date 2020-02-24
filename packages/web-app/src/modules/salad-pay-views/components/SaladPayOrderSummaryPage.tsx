@@ -4,6 +4,7 @@ import { SaladTheme } from '../../../SaladTheme'
 import { SaladPaymentRequestOptions } from '../../salad-pay/models'
 import classNames from 'classnames'
 import { SaladPayPage } from '.'
+import { SaladPayCheckoutButton } from './SaladPayCheckoutButton'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -52,33 +53,12 @@ const styles = (theme: SaladTheme) => ({
   missingBalance: {
     color: theme.red,
   },
-  button: {
-    fontFamily: theme.fontGroteskBook25,
-    fontSize: 12,
-    backgroundColor: theme.mediumGreen,
-    color: theme.lightGreen,
-    textTransform: 'uppercase',
-    borderRadius: 5,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 218,
-    height: 70,
-  },
-  enabledButton: {
-    cursor: 'pointer',
-    '&:hover': {
-      backgroundColor: theme.green,
-    },
-  },
-  disabledButton: {
-    cursor: 'not-allowed',
-  },
 })
 
 interface Props extends WithStyles<typeof styles> {
   request?: SaladPaymentRequestOptions
   availableBalance?: number
+  processing?: boolean
   onConfirm?: () => void
   onClose?: () => void
 }
@@ -104,7 +84,7 @@ class _SaladPayOrderSummaryPage extends Component<Props> {
   }
 
   render() {
-    const { request, availableBalance, onClose, classes } = this.props
+    const { request, availableBalance, processing, onClose, classes } = this.props
 
     if (!request) {
       return (
@@ -146,15 +126,7 @@ class _SaladPayOrderSummaryPage extends Component<Props> {
                 {moneyFormat(availableBalance)}
               </div>
             </div>
-            <div
-              className={classNames(classes.button, {
-                [classes.enabledButton]: hasBalance,
-                [classes.disabledButton]: !hasBalance,
-              })}
-              onClick={this.handleConfirm}
-            >
-              Pay With Salad
-            </div>
+            <SaladPayCheckoutButton onClick={this.handleConfirm} loading={processing} enabled={hasBalance} />
           </div>
         </div>
       </SaladPayPage>
