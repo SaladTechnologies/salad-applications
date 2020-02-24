@@ -44,7 +44,7 @@ export interface Reward {
   /** Platform (eg. Steam) */
   platform?: RewardPlatform
   category: RewardCategory
-  checkoutTerms: string[]
+  checkoutTerms?: string[]
   tags: string[]
   redeemable: boolean
   /** How much of the reward has already been unlocked (0-1) */
