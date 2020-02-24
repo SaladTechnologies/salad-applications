@@ -9,7 +9,6 @@ const styles = (theme: SaladTheme) => ({
   button: {
     fontFamily: theme.fontGroteskBook25,
     fontSize: 12,
-    // backgroundColor: theme.me2pxdiumGreen,
     border: `2px solid ${theme.mediumGreen}`,
     color: theme.darkBlue,
     textTransform: 'uppercase',
