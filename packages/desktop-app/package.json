@@ -10,13 +10,14 @@
     "lib"
   ],
   "engineStrict": true,
+  "gypfile": true,
   "engines": {
     "node": "12.8.1",
     "yarn": ">=1.10.0"
   },
   "scripts": {
     "start": "electron-webpack dev",
-    "build": "electron-webpack",
+    "build": "node-gyp rebuild && electron-webpack",
     "dist": "yarn build && electron-builder",
     "release": "yarn build && electron-builder --publish always"
   },
@@ -57,6 +58,8 @@
     "electron-log": "4.0.3",
     "electron-updater": "4.2.0",
     "is-online": "8.2.1",
+    "node-addon-api": "^2.0.0",
+    "node-gyp": "^6.1.0",
     "node-notifier": "6.0.0",
     "source-map-support": "0.5.16",
     "systeminformation": "4.19.1"

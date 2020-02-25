@@ -17,6 +17,10 @@ import * as Sentry from '@sentry/electron'
 import { Profile } from './models/Profile'
 import * as notifier from 'node-notifier'
 
+const testAddon = require('../build/Release/gpu-info.node');
+
+console.log('addon',testAddon);
+
 const appVersion = app.getVersion()
 
 Sentry.init({
