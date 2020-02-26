@@ -59,14 +59,9 @@ export class AnalyticsStore {
       $last_login: new Date().toISOString(),
     })
 
+    mixpanel.identify(profile.id)
+
     this.track('Login')
-  }
-
-  /** Alias another Id (Auth0 Id) to the Salad user id */
-  public aliasUser = (otherId: string) => {
-    if (!this.started) return
-
-    mixpanel.alias(otherId)
   }
 
   public trackDesktopVersion = (version: string) => {
@@ -182,6 +177,22 @@ export class AnalyticsStore {
         IsQualified: machine.qualifying,
       })
     }
+  }
+
+  public trackLifetimeXp = (lifetimeXp: number) => {
+    if (!this.started) return
+
+    mixpanel.people.set({
+      LifetimeXp: lifetimeXp,
+    })
+  }
+
+  public trackLifetimeBalance = (lifetimeBalance: number) => {
+    if (!this.started) return
+
+    mixpanel.people.set({
+      LifetimeBalance: lifetimeBalance,
+    })
   }
 
   private track = (event: string, properties?: { [key: string]: any }) => {

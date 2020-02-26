@@ -1,4 +1,4 @@
-import { action, observable, computed, flow } from 'mobx'
+import { action, observable, computed, flow, autorun } from 'mobx'
 import { Level } from './models/Level'
 import { defaultLevels } from './models/defaultLevels'
 import { AxiosInstance } from 'axios'
@@ -30,6 +30,12 @@ export class ExperienceStore {
 
   constructor(private readonly store: RootStore, readonly axios: AxiosInstance) {
     this.loadInitialLevels()
+
+    autorun(() => {
+      if (this.currentXp !== 0) {
+        this.store.analytics.trackLifetimeXp(this.currentXp)
+      }
+    })
   }
 
   @action loadInitialLevels() {

@@ -127,22 +127,12 @@ export class AuthStore {
         idToken: this.auth0Result.idToken,
       }
 
-      this.axios
-        .post('login', data)
-        .then(response => {
-          const saladToken: string = response.data.token
-          this.store.token.setToken(saladToken)
+      this.axios.post('login', data).then(response => {
+        const saladToken: string = response.data.token
+        this.store.token.setToken(saladToken)
 
-          this.processAuthentication()
-        })
-        .then(() => {
-          this.store.onLogin().then(() => {
-            if (this.auth0Result) {
-              //Ensure we have connected the Auth0 id to the Salad Id
-              this.store.analytics.aliasUser(this.auth0Result.idTokenPayload.sub)
-            }
-          })
-        })
+        this.processAuthentication()
+      })
     })
   }
 
