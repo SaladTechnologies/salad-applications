@@ -1,0 +1,25 @@
+{
+  "name": "@saladtech/gpu-info",
+  "version": "0.1.0",
+  "author": "Salad Technology <dev@salad.io>",
+  "homepage": "https://www.salad.io/",
+  "license": "MIT",
+  "main": "index.js",
+  "gypfile": true,
+  "engineStrict": true,
+  "engines": {
+    "node": "12.8.1",
+    "yarn": ">=1.10.0"
+  },
+  "scripts": {
+    "install": "node-gyp-build",
+    "prebuild": "prebuild --napi --target=win"
+  },
+  "devDependencies": {
+    "prebuildify": "^3.0.4"
+  },
+  "dependencies": {
+    "node-addon-api": "^2.0.0",
+    "node-gyp-build": "^4.2.0"
+  }
+}
