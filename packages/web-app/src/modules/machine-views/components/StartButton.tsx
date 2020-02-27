@@ -5,6 +5,7 @@ import { AngledPanel, Tooltip } from '../../../components'
 import classnames from 'classnames'
 // @ts-ignore
 import ReactHintFactory from 'react-hint'
+import { StartButtonText } from './StartButtonText'
 
 const ReactHint = ReactHintFactory(React)
 
@@ -74,25 +75,26 @@ const styles = (theme: SaladTheme) => ({
   },
   title: {
     fontFamily: theme.fontGroteskLight25,
-    fontSize: theme.small,
+    fontSize: 11,
     textTransform: 'uppercase',
   },
   balanceText: {
     fontFamily: theme.fontGroteskLight09,
     color: theme.green,
     fontSize: theme.xLarge,
-    marginTop: '-.25rem',
-    marginBottom: '-.5rem',
+    marginTop: -6,
+    marginBottom: -2,
   },
   subTitle: {
     fontFamily: theme.fontGroteskLight25,
-    fontSize: 10,
+    fontSize: 8,
     textTransform: 'uppercase',
   },
   subText: {
     color: theme.green,
     fontFamily: theme.fontGroteskLight25,
     fontSize: 12,
+    textTransform: 'uppercase',
   },
   '@keyframes animated': {
     '0%': {
@@ -111,9 +113,11 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  balance?: number
+  currentBalance?: number
   lifetimeBalance?: number
+  earningRate?: number
   isRunning?: boolean
+  status?: string
   onClick?: () => void
   startEnabled?: boolean
 }
@@ -125,7 +129,7 @@ class _StartButton extends Component<Props> {
     if (onClick && startEnabled) onClick()
   }
   render() {
-    const { balance, lifetimeBalance, isRunning, startEnabled, classes } = this.props
+    const { currentBalance, lifetimeBalance, earningRate, status, isRunning, startEnabled, classes } = this.props
     return (
       <>
         <ReactHint
@@ -163,10 +167,19 @@ class _StartButton extends Component<Props> {
               <div className={classes.buttonText}>{isRunning ? 'Stop' : 'Start'}</div>
             </AngledPanel>
             <div className={classes.textContainer}>
-              <div className={classes.title}>Current balance</div>
-              <div className={classes.balanceText}>${balance ? balance.toFixed(5) : 0} USD</div>
-              <div className={classes.subTitle}>Lifetime Balance</div>
-              <div className={classes.subText}>${lifetimeBalance ? lifetimeBalance.toFixed(5) : 0}</div>
+              <StartButtonText
+                textOptions={[
+                  { title: 'Current Balance', value: `$${currentBalance ? currentBalance.toFixed(5) : 0}` },
+                  { title: 'Lifetime Balance', value: `$${lifetimeBalance ? lifetimeBalance.toFixed(5) : 0}` },
+                  {
+                    title: 'Earning Rate',
+                    value: `${earningRate === undefined ? 'Loading' : `$${(earningRate * 86400).toFixed(3)}/day`}`,
+                  },
+                ]}
+              />
+              {/* Earning rate  {earningRate === undefined ? 'Loading' : `$${(earningRate * 86400).toFixed(3)}/day`} */}
+              <div className={classes.subTitle}>Status</div>
+              <div className={classes.subText}>{status || 'Stopped'}</div>
             </div>
           </AngledPanel>
         </div>
