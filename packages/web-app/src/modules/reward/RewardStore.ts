@@ -61,6 +61,10 @@ export class RewardStore {
     return this.rewards.get(id)
   }
 
+  isInChoppingCart = (id?: string): boolean => {
+    return this.selectedRewardId === id
+  }
+
   @action.bound
   refreshRewards = flow(function*(this: RewardStore) {
     try {
@@ -112,9 +116,9 @@ export class RewardStore {
   }
 
   @action.bound
-  selectTargetReward = flow(function*(this: RewardStore, rewardId: string) {
+  addToChoppingCart = flow(function*(this: RewardStore, reward: Reward) {
     const request = {
-      rewardId: rewardId,
+      rewardId: reward.id,
     }
 
     this.isSelecting = true
@@ -123,11 +127,25 @@ export class RewardStore {
       var res = yield this.axios.patch('profile/selected-reward', request)
       this.selectedRewardId = res.data.rewardId
 
-      let reward = this.getReward(rewardId)
-
       if (reward) this.store.analytics.trackSelectedReward(reward)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      this.isSelecting = false
+    }
+  })
 
-      this.store.routing.push('/')
+  @action.bound
+  removeFromChoppingCart = flow(function*(this: RewardStore, reward: Reward) {
+    const request = {
+      rewardId: undefined,
+    }
+
+    this.isSelecting = true
+
+    try {
+      var res = yield this.axios.patch('profile/selected-reward', request)
+      this.selectedRewardId = res.data.rewardId
     } catch (error) {
       console.error(error)
     } finally {

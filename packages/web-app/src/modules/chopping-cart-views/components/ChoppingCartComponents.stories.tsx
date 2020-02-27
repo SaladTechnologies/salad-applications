@@ -1,6 +1,6 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import { ChoppingCartButton, ChoppingCartTooltip } from '.'
+import { ChoppingCartButton, ChoppingCartTooltip, AddToCartButton } from '.'
 import { generateRewards } from '../../reward-views/components/RewardComponents.stories'
 import { action } from '@storybook/addon-actions'
 
@@ -40,4 +40,28 @@ storiesOf('Modules/Chopping Cart/Tooltip', module)
   })
   .add('no rewards (empty)', () => {
     return <ChoppingCartTooltip rewards={[]} onViewReward={action('view reward')} />
+  })
+
+storiesOf('Modules/Chopping Cart/Add To Cart', module)
+  .add('not in cart', () => {
+    let reward = generateRewards(1)[0]
+    return (
+      <AddToCartButton
+        isInCart={false}
+        reward={reward}
+        onAddToCart={action('add')}
+        onRemoveFromCart={action('remove')}
+      />
+    )
+  })
+  .add('already in cart', () => {
+    let reward = generateRewards(1)[0]
+    return (
+      <AddToCartButton
+        isInCart={true}
+        reward={reward}
+        onAddToCart={action('add')}
+        onRemoveFromCart={action('remove')}
+      />
+    )
   })
