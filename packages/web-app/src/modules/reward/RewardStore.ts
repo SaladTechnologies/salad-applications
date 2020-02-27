@@ -31,8 +31,10 @@ export class RewardStore {
   @observable
   public isSelecting: boolean = false
 
-  @computed get selectedReward(): Reward | undefined {
-    return this.getReward(this.selectedRewardId)
+  @computed get choppingCart(): Reward[] | undefined {
+    let selectedReward = this.getReward(this.selectedRewardId)
+    if (selectedReward === undefined) return undefined
+    return [selectedReward]
   }
 
   @computed get categorizedRewards(): Map<string, Reward[]> {
