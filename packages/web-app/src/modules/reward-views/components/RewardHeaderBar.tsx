@@ -5,6 +5,7 @@ import classnames from 'classnames'
 import { Reward } from '../../reward/models'
 import { Button } from '../../../components'
 import { IconArrowLeft } from './assets'
+import { AddToCartButton } from '../../chopping-cart-views/components'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -76,6 +77,9 @@ interface Props extends WithStyles<typeof styles> {
   reward?: Reward
   onBack?: () => void
   onRedeem?: (reward?: Reward) => void
+  isInCart?: boolean
+  onAddToCart?: (reward: Reward) => void
+  onRemoveFromCart?: (reward: Reward) => void
 }
 
 class _RewardHeaderBar extends Component<Props> {
@@ -96,7 +100,8 @@ class _RewardHeaderBar extends Component<Props> {
   }
 
   render() {
-    const { reward, classes } = this.props
+    const { reward, classes, ...rest } = this.props
+
     let outOfStock = reward?.quantity === 0
     let lowQuanity = reward?.quantity !== undefined && reward?.quantity > 0
 
@@ -124,6 +129,7 @@ class _RewardHeaderBar extends Component<Props> {
         <Button className={classes.buyButton} onClick={this.handleRedeem} disabled={outOfStock}>
           <div className={classes.buyText}>BUY NOW</div>
         </Button>
+        <AddToCartButton reward={reward} {...rest} />
       </div>
     )
   }

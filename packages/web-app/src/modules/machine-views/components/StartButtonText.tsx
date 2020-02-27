@@ -53,7 +53,7 @@ class _StartButtonText extends Component<Props, State> {
     let index = this.state.currentIndex + 1
     const { textOptions } = this.props
 
-    if (textOptions == undefined || index >= textOptions.length) {
+    if (textOptions === undefined || index >= textOptions.length) {
       index = 0
     }
 

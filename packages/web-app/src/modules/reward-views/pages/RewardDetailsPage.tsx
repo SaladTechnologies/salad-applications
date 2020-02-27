@@ -32,15 +32,18 @@ interface Props extends WithStyles<typeof styles> {
   reward?: Reward
   onRedeem?: (reward?: Reward) => void
   onBack?: () => void
+  isInCart?: boolean
+  onAddToCart?: (reward: Reward) => void
+  onRemoveFromCart?: (reward: Reward) => void
 }
 
 class _RewardDetailsPage extends Component<Props> {
   render() {
-    const { reward, onRedeem, onBack, classes } = this.props
+    const { reward, onRedeem, onBack, classes, ...rest } = this.props
 
     return (
       <div className={classes.container}>
-        <RewardHeaderBar reward={reward} onBack={onBack} onRedeem={onRedeem} />
+        <RewardHeaderBar reward={reward} onBack={onBack} onRedeem={onRedeem} {...rest} />
         <Scrollbars>
           <div className={classes.scrollContent}>
             <RewardImageCarousel reward={reward} />
