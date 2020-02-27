@@ -43,6 +43,9 @@ const styles = (theme: SaladTheme) => ({
   textContainer: {
     padding: '0 10px',
   },
+  subTextContainer: {
+    display: 'flex',
+  },
   nameText: {
     color: theme.lightGreen,
     fontFamily: theme.fontGroteskLight09,
@@ -58,6 +61,23 @@ const styles = (theme: SaladTheme) => ({
     fontFamily: theme.fontGroteskBook25,
     fontSize: 10,
     letterSpacing: 1,
+  },
+  outOfStockPrice: {
+    textDecoration: 'line-through',
+    color: theme.red,
+  },
+  stockLabel: {
+    marginLeft: 8,
+    padding: '1px 10px',
+    fontSize: 8,
+  },
+  outOfStockLabel: {
+    color: theme.lightGreen,
+    backgroundColor: theme.red,
+  },
+  lowQuanityLabel: {
+    color: theme.darkBlue,
+    backgroundColor: theme.green,
   },
 })
 
@@ -77,6 +97,8 @@ class _RewardItem extends Component<Props> {
 
   render() {
     const { reward, classes } = this.props
+    let outOfStock = reward?.quantity === 0
+    let lowQuanity = reward?.quantity !== undefined && reward?.quantity > 0
     return (
       <div key={reward?.id} className={classnames(classes.container)} onClick={this.handleViewReward}>
         <Img
@@ -93,7 +115,21 @@ class _RewardItem extends Component<Props> {
         />
         <div className={classes.textContainer}>
           <div className={classes.nameText}>{reward ? reward.name : 'Unknown'}</div>
-          <div className={classes.priceText}>${reward ? reward.price.toFixed(2) : '-'}</div>
+          <div className={classes.subTextContainer}>
+            <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
+              ${reward ? reward.price.toFixed(2) : '-'}
+            </div>
+            {outOfStock && (
+              <div className={classnames(classes.priceText, classes.stockLabel, classes.outOfStockLabel)}>
+                Out of Stock
+              </div>
+            )}
+            {lowQuanity && (
+              <div className={classnames(classes.priceText, classes.stockLabel, classes.lowQuanityLabel)}>
+                {`${reward?.quantity} Remaining`}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     )

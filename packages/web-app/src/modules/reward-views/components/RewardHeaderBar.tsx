@@ -33,6 +33,11 @@ const styles = (theme: SaladTheme) => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
+  priceContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+  },
   priceText: {
     color: theme.green,
     fontFamily: theme.fontGroteskBook25,
@@ -48,6 +53,22 @@ const styles = (theme: SaladTheme) => ({
     fontSize: 14,
     color: theme.darkBlue,
     fontWeight: 'bold',
+  },
+  outOfStockPrice: {
+    textDecoration: 'line-through',
+    color: theme.red,
+  },
+  stockLabel: {
+    padding: '2px 10px',
+    fontSize: 8,
+  },
+  outOfStockLabel: {
+    color: theme.lightGreen,
+    backgroundColor: theme.red,
+  },
+  lowQuanityLabel: {
+    color: theme.darkBlue,
+    backgroundColor: theme.green,
   },
 })
 
@@ -76,14 +97,31 @@ class _RewardHeaderBar extends Component<Props> {
 
   render() {
     const { reward, classes } = this.props
+    let outOfStock = reward?.quantity === 0
+    let lowQuanity = reward?.quantity !== undefined && reward?.quantity > 0
+
     return (
       <div className={classnames(classes.container)}>
         <div className={classes.backButton} onClick={this.handleBack}>
           <IconArrowLeft />
         </div>
         <div className={classes.nameText}>{reward && reward.name ? reward.name : 'Unknown'}</div>
-        <div className={classes.priceText}>${reward ? reward.price.toFixed(2) : '-'}</div>
-        <Button className={classes.buyButton} onClick={this.handleRedeem}>
+        <div className={classes.priceContainer}>
+          <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
+            ${reward ? reward.price.toFixed(2) : '-'}
+          </div>
+          {outOfStock && (
+            <div className={classnames(classes.priceText, classes.stockLabel, classes.outOfStockLabel)}>
+              Out of Stock
+            </div>
+          )}
+          {lowQuanity && (
+            <div className={classnames(classes.priceText, classes.stockLabel, classes.lowQuanityLabel)}>
+              {`${reward?.quantity} Remaining`}
+            </div>
+          )}
+        </div>
+        <Button className={classes.buyButton} onClick={this.handleRedeem} disabled={outOfStock}>
           <div className={classes.buyText}>BUY NOW</div>
         </Button>
       </div>
