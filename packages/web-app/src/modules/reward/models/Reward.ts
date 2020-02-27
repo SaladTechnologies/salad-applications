@@ -50,6 +50,10 @@ export interface Reward {
   /** How much of the reward has already been unlocked (0-1) */
   percentUnlocked: number
   remainingTimeLabel: string
+
+  /** The quantity of rewards remaining.
+   *  A value means stock is getting low.
+   *  Undefined means we have "significant" stock */
   quantity?: number
 
   /** Requirements to utilize the reward */

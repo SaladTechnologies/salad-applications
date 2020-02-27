@@ -59,7 +59,7 @@ export const generateRewards = (count: number): Reward[] => {
       remainingTimeLabel: '2 days',
       percentUnlocked: 0.5,
       color: 'red',
-      quantity: 3,
+      quantity: (i + 2) % 5 === 0 ? 0 : undefined,
       requirements: {
         systems: new Map([
           [
@@ -125,6 +125,21 @@ storiesOf('Modules/Rewards/Reward Item', module)
   })
   .add('complete reward (long name)', () => {
     let reward = generateRewards(2)[1]
+    return <RewardItem reward={reward} onViewReward={action('view reward')} />
+  })
+  .add('out of stock', () => {
+    let reward = generateRewards(2)[1]
+    reward.quantity = 0
+    return <RewardItem reward={reward} onViewReward={action('view reward')} />
+  })
+  .add('low stock (n=1)', () => {
+    let reward = generateRewards(2)[1]
+    reward.quantity = 1
+    return <RewardItem reward={reward} onViewReward={action('view reward')} />
+  })
+  .add('low stock (n=3)', () => {
+    let reward = generateRewards(2)[1]
+    reward.quantity = 3
     return <RewardItem reward={reward} onViewReward={action('view reward')} />
   })
   .add('missing reward', () => {
@@ -280,6 +295,16 @@ storiesOf('Modules/Rewards/Reward Header Bar', module)
   })
   .add('complete reward (long name)', () => {
     let reward = generateRewards(2)[1]
+    return <RewardHeaderBar reward={reward} onBack={action('back')} onRedeem={action('redeem')} />
+  })
+  .add('out of stock', () => {
+    let reward = generateRewards(2)[1]
+    reward.quantity = 0
+    return <RewardHeaderBar reward={reward} onBack={action('back')} onRedeem={action('redeem')} />
+  })
+  .add('low stock', () => {
+    let reward = generateRewards(2)[1]
+    reward.quantity = 2
     return <RewardHeaderBar reward={reward} onBack={action('back')} onRedeem={action('redeem')} />
   })
   .add('blank name', () => {
