@@ -13,7 +13,7 @@
   },
   "scripts": {
     "install": "node-gyp-build",
-    "prebuild": "prebuild --napi --target=win"
+    "prebuild": "prebuildify --napi"
   },
   "devDependencies": {
     "prebuildify": "^3.0.4"

@@ -1,7 +1,6 @@
 {
     "targets": [{
         "target_name": "gpu-info",
-        "product_dir": '<(module_path)',
         "conditions": [
       		['OS == "win"', {
                 "cflags!": [ "-fno-exceptions" ],
