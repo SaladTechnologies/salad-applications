@@ -145,7 +145,9 @@ class _Titlebar extends Component<Props> {
             </div>
           )}
         </div>
-        <ChoppingCartButtonContainer />
+
+        {menuItems && <ChoppingCartButtonContainer />}
+
         {showWindowActions && (
           <>
             <div onClick={this.handleMinimize}>
