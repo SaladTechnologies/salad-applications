@@ -34,6 +34,10 @@ Modal that lets the user know that they are currently offline. If the machine go
 
 The Desktop Application serves the UI from [app.salad.io](https://app.salad.io/) and provides hooks that allow the web application to interface with the native OS. This bridge from web app to native is accomplished by injecting a bridge object into the web application at `window.salad`, allowing the web application to call native methods and interface with the computing frameworks.
 
+### Native GPU Metrics
+
+See the GPU metric native Node library [README](./cppsrc/Readme.md)
+
 ## Ethminer
 
 The Salad Desktop Application includes a wrapper around ethminer, allowing Salad to interface with an Ethereum mining solution that supports both OpenCL- and CUDA-compatible devices. Salad currently only supports Windows environments and will not work in a browser. Ethminer also supports OSX and Linux, so additional platform support is planned for future releases.
