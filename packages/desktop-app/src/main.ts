@@ -16,7 +16,7 @@ import { SaladBridgeNotificationService } from './salad-bowl/SaladBridgeNotifica
 import * as Sentry from '@sentry/electron'
 import { Profile } from './models/Profile'
 import * as notifier from 'node-notifier'
-const gpuInfo = require('@saladtech/gpu-info')
+import * as gpuInfo from '@saladtech/gpu-info';
 
 console.log("Running with GPU-Info version:", gpuInfo.version());
 

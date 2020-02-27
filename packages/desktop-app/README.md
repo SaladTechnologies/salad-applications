@@ -36,7 +36,7 @@ The Desktop Application serves the UI from [app.salad.io](https://app.salad.io/)
 
 ### Native GPU Metrics
 
-See the GPU metric native Node library [README](./cppsrc/Readme.md)
+See the GPU metric native Node library [README](../gpu-info/README.md)
 
 ## Ethminer
 
