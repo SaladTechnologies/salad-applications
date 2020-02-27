@@ -16,9 +16,9 @@ import { SaladBridgeNotificationService } from './salad-bowl/SaladBridgeNotifica
 import * as Sentry from '@sentry/electron'
 import { Profile } from './models/Profile'
 import * as notifier from 'node-notifier'
-import {GPUInfoBinary} from "./gpu-info";
+const gpuInfo = require('@saladtech/gpu-info')
 
-console.log(GPUInfoBinary.version());
+console.log("Running with GPU-Info version:", gpuInfo.version());
 
 const appVersion = app.getVersion()
 
