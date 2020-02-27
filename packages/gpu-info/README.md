@@ -5,10 +5,6 @@ The purpose of this library is to fetch GPU information that are not accessible 
 It is not intended to build/run this library on any other platform that Windows. 
 The library is build and integrated to Node.js with [node-gyp](https://github.com/nodejs/node-gyp).
 
-## TODO:
-* [ ] Lazy loading with preload.js
-* [ ] Move to own package
-
 ## Development
 Windows users need to have the msvc (Visual Studio 2017) build tools set up on their system.
 
