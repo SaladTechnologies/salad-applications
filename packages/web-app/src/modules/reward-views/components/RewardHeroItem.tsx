@@ -1,27 +1,33 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
+import 'react-aspect-ratio/aspect-ratio.css'
+//@ts-ignore
+import AspectRatio from 'react-aspect-ratio'
 import { SaladTheme } from '../../../SaladTheme'
 import classnames from 'classnames'
 import { Reward } from '../../reward/models'
 import { Button } from '../../../components'
+import Img from 'react-image'
+import { RewardMissingImage } from './RewardMissingImage'
 
 const styles = (theme: SaladTheme) => ({
-  container: {
-    userSelect: 'none',
+  container: {},
+  content: {
+    margin: '0 auto', //Centers the content
+    maxWidth: 1400,
     position: 'relative',
-    flexShrink: 0,
-    margin: '0 2px',
+    padding: '0 30px',
   },
   imageContainer: {
     width: '70%',
     cursor: 'pointer',
+    overflow: 'hidden',
     '&:hover': {
       opacity: 0.8,
     },
   },
   image: {
-    height: 'auto',
-    width: '100%',
+    objectFit: 'cover',
     boxShadow: '8px 14px 22px rgba(0, 0, 0, 0.45)',
     border: '1px solid rgba(255, 255, 255, 0.15)',
   },
@@ -29,9 +35,11 @@ const styles = (theme: SaladTheme) => ({
     position: 'absolute',
     color: theme.lightGreen,
     top: '10%',
-    width: '30%',
-    height: '60%',
-    right: 0,
+    width: '26%',
+    height: '50%',
+    minWidth: 300,
+    minHeight: 180,
+    right: 30,
     padding: '6px 24px',
     zIndex: 2,
     backdropFilter: 'blur(8.57952px)',
@@ -40,22 +48,46 @@ const styles = (theme: SaladTheme) => ({
     border: '1px solid rgba(219, 241, 193, 0.25)',
     display: 'flex',
     flexDirection: 'column',
+    textShadow: '0px 0px 5px rgba(178, 213, 48, 0.5), -1px -1px 3px rgba(0, 0, 0, 0.25)',
   },
   nameText: {
     fontFamily: theme.fontGroteskLight09,
-    fontSize: 36,
+    fontSize: 48,
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
+  priceContainer: {
+    display: 'flex',
+  },
   priceText: {
     color: theme.green,
     fontFamily: theme.fontGroteskBook25,
-    fontSize: 10,
+    fontSize: 12,
+  },
+  outOfStockPrice: {
+    textDecoration: 'line-through',
+    color: theme.red,
+  },
+  stockLabel: {
+    marginLeft: 8,
+    padding: '1px 10px',
+    fontSize: 8,
+    display: 'flex',
+    alignItems: 'center',
+    textShadow: '',
+  },
+  outOfStockLabel: {
+    color: theme.lightGreen,
+    backgroundColor: theme.red,
+  },
+  lowQuanityLabel: {
+    color: theme.darkBlue,
+    backgroundColor: theme.green,
   },
   headlineText: {
     fontFamily: theme.fontGroteskBook19,
-    fontSize: 12,
+    fontSize: 14,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     wordWrap: 'break-word',
@@ -68,41 +100,63 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   reward?: Reward
   onViewReward?: (reward?: Reward) => void
-  onSelect?: (reward?: Reward) => void
 }
 
 class _RewardHeroItem extends Component<Props> {
   handleViewReward = () => {
     const { onViewReward, reward } = this.props
 
-    if (onViewReward) {
+    if (onViewReward && reward) {
       onViewReward(reward)
-    }
-  }
-
-  handleSelect = () => {
-    const { onSelect, reward } = this.props
-
-    if (onSelect) {
-      onSelect(reward)
     }
   }
 
   render() {
     const { reward, classes } = this.props
+
+    let outOfStock = reward?.quantity === 0
+    let lowQuanity = reward?.quantity !== undefined && reward?.quantity > 0
+
     return (
       <div key={reward?.id} className={classnames(classes.container)}>
-        <div className={classes.imageContainer} onClick={this.handleViewReward}>
-          {reward?.image && <img className={classes.image} src={reward?.image} draggable={false} alt="" />}
-        </div>
-        <div className={classes.infoContainer}>
-          <div className={classes.nameText}>{reward?.name}</div>
-          <div className={classes.priceText}>${reward?.price.toFixed(2)}</div>
-          <div className={classes.headlineText}>{reward?.headline}</div>
-          <div className={classes.buttonContainer}>
-            <Button onClick={this.handleSelect}>CHOP FOR IT</Button>
-            <Button onClick={this.handleViewReward}>GET IT NOW</Button>
+        <div className={classes.content}>
+          <div className={classes.imageContainer} onClick={this.handleViewReward}>
+            <AspectRatio ratio={'800/450'}>
+              <Img
+                className={classes.image}
+                src={reward?.heroImage}
+                draggable={false}
+                alt=""
+                unloader={<RewardMissingImage text={reward?.name} />}
+              />
+            </AspectRatio>
           </div>
+          {reward && (
+            <div className={classes.infoContainer}>
+              <div className={classes.nameText}>{reward?.name}</div>
+              <div className={classes.priceContainer}>
+                <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
+                  ${reward?.price.toFixed(2)}
+                </div>
+                {outOfStock && (
+                  <div className={classnames(classes.priceText, classes.stockLabel, classes.outOfStockLabel)}>
+                    Out of Stock
+                  </div>
+                )}
+                {lowQuanity && (
+                  <div className={classnames(classes.priceText, classes.stockLabel, classes.lowQuanityLabel)}>
+                    {`${reward?.quantity} Remaining`}
+                  </div>
+                )}
+              </div>
+              <div className={classes.headlineText}>{reward?.headline}</div>
+              <div className={classes.buttonContainer}>
+                <Button onClick={this.handleViewReward} disabled={reward === undefined}>
+                  GET IT NOW
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     )

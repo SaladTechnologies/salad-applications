@@ -19,8 +19,8 @@ const styles = (theme: SaladTheme) => ({
 const responsive = {
   superLargeDesktop: {
     breakpoint: { max: 4000, min: 3000 },
-    items: 7,
-    slidesToSlide: 7,
+    items: 8,
+    slidesToSlide: 8,
     partialVisibilityGutter: 20,
   },
   desktop: {
