@@ -32,6 +32,9 @@ export interface Reward {
   /** Main image show on the storefront. Similar to a game box */
   coverImage?: string
 
+  /** The large hero image. */
+  heroImage?: string
+
   /** @deprecated This has been replaced by several other properties including coverImage and images */
   image?: string
 

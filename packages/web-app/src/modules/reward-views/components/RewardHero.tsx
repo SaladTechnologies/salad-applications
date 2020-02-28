@@ -12,6 +12,7 @@ const styles = (theme: SaladTheme) => ({
     fontFamily: theme.fontGroteskBook19,
     fontSize: 18,
     padding: '6px 12px',
+    textTransform: 'capitalize',
   },
 })
 
@@ -37,6 +38,8 @@ class _RewardHero extends Component<Props> {
             autoPlay
             autoPlaySpeed={5000}
             customButtonGroup={<RewardHeroButtonGroup />}
+            draggable={false}
+            keyBoardControl={false}
             renderButtonGroupOutside
             responsive={responsive}
             arrows={false}

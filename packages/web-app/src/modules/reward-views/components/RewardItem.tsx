@@ -4,7 +4,7 @@ import Img from 'react-image'
 import { SaladTheme } from '../../../SaladTheme'
 import classnames from 'classnames'
 import { Reward } from '../../reward/models'
-import logo from './assets/default-image.png'
+import { RewardMissingImage } from './RewardMissingImage'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -106,12 +106,7 @@ class _RewardItem extends Component<Props> {
           src={reward?.coverImage}
           draggable={false}
           alt=""
-          unloader={
-            <div className={classes.missingImageContainer}>
-              <Img className={classes.image} src={logo} alt="" />
-              <div className={classes.missingImageText}>{reward?.name}</div>
-            </div>
-          }
+          unloader={<RewardMissingImage text={reward?.name} />}
         />
         <div className={classes.textContainer}>
           <div className={classes.nameText}>{reward ? reward.name : 'Unknown'}</div>
