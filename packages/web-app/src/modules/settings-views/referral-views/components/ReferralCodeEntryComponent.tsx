@@ -6,21 +6,14 @@ import { TextField, Button, ErrorText } from '../../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    userSelect: 'none',
     display: 'inline-flex',
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
-
   input: {
-    marginTop: 5,
     width: 300,
   },
-
-  submitButton: {
-    margin: '5px 0 0 5px',
-    padding: 6,
-  },
+  submitButton: {},
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -48,9 +41,9 @@ class _ReferralCodeEntryComponent extends Component<Props, State> {
   onSubmit = async (values: {}) => {
     const { onSubmitCode } = this.props
     let v = values as FormTypes
-    this.setState({errorMessage:undefined})
+    this.setState({ errorMessage: undefined })
     this.validate(v.code)
-      if (this.state.errorMessage) return
+    if (this.state.errorMessage) return
     if (onSubmitCode && v.code) {
       this.setState({ submitting: true, errorMessage: undefined })
       try {
@@ -64,13 +57,13 @@ class _ReferralCodeEntryComponent extends Component<Props, State> {
     }
   }
 
-  validate = (code: string|undefined) => {
+  validate = (code: string | undefined) => {
     if (code === undefined || code.length === 0) {
-      this.setState({errorMessage:'Invalid Code'})
+      this.setState({ errorMessage: 'Invalid Code' })
     } else if (/\s/g.test(code)) {
-      this.setState({errorMessage:'Whitespace not allowed'})
+      this.setState({ errorMessage: 'Whitespace not allowed' })
     } else if (code.length > 10) {
-      this.setState({errorMessage:'Code is too long'})
+      this.setState({ errorMessage: 'Code is too long' })
     }
   }
 
@@ -90,14 +83,14 @@ class _ReferralCodeEntryComponent extends Component<Props, State> {
                     <TextField
                       className={classes.input}
                       {...input}
-                      dark= {dark}
+                      dark={dark}
                       placeholder="Code"
                       errorText={meta.error && meta.touched && meta.error}
                     />
                     <Button
                       type="submit"
                       uppercase
-                      dark= {dark}
+                      dark={dark}
                       loading={submitting}
                       disabled={submitting}
                       className={classes.submitButton}
