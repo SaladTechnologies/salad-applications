@@ -5,6 +5,7 @@ import { MachineInfo } from './models'
 import { AxiosInstance } from 'axios'
 
 import { Machine } from './models/Machine'
+import { Profile } from '../profile/models'
 
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
@@ -16,6 +17,8 @@ const getDesktopVersion = 'get-desktop-version'
 const setDesktopVersion = 'set-desktop-version'
 const enableAutoLaunch = 'enable-auto-launch'
 const disableAutoLaunch = 'disable-auto-launch'
+const login = 'login'
+const logout = 'logout'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
 const AUTO_LAUNCH = 'AUTO_LAUNCH'
@@ -137,7 +140,7 @@ export class NativeStore {
   /** Sends a message to the native code */
   public send = (type: string, payload?: any) => {
     if (!this.isNative) {
-      console.warn('Unable to send. Not running in electron env.')
+      console.warn(`Unable to send ${type}. Not running in electron env.`)
       return
     }
     console.log(`Sending ${type} to native with ${payload}`)
@@ -171,6 +174,7 @@ export class NativeStore {
   setDesktopVersion = (version: string) => {
     console.log(`Setting desktop version: ${version}`)
     this.desktopVersion = version
+    this.store.analytics.trackDesktopVersion(version)
   }
 
   @action
@@ -260,6 +264,15 @@ export class NativeStore {
   }
 
   @action
+  toggleAutoLaunch = () => {
+    if (this.autoLaunch) {
+      this.disableAutoLaunch()
+    } else {
+      this.enableAutoLaunch()
+    }
+  }
+
+  @action
   enableAutoLaunch = () => {
     this.autoLaunch = true
     Storage.setItem(AUTO_LAUNCH, 'true')
@@ -284,5 +297,15 @@ export class NativeStore {
 
     this.autoLaunch = Storage.getOrSetDefault(AUTO_LAUNCH, this.autoLaunch.toString()) === 'true'
     this.autoLaunch && this.enableAutoLaunch()
+  }
+
+  @action
+  login = (profile: Profile) => {
+    this.send(login, profile)
+  }
+
+  @action
+  logout = () => {
+    this.send(logout)
   }
 }

@@ -181,24 +181,31 @@ export class RewardStore {
 
     try {
       yield this.axios.post(`/rewards/${rewardId}/redemptions`, req)
-      this.store.ui.showModal(`/rewards/${rewardId}/redeem-complete`)
+      this.store.routing.replace('/')
       let reward = this.getReward(rewardId)
-      if (reward) this.store.analytics.trackRewardRedeemed(reward)
-    } catch (error) {
-      // Error 😨
-      if (error.response) {
-        /*
-         * The request was made and the server responded with a
-         * status code that falls out of the range of 2xx
-         */
-        console.log(error.response.data)
-        console.log(error.response.status)
+
+      if (reward) {
+        //Track the redemption in mixpanel
+        this.store.analytics.trackRewardRedeemed(reward)
+
+        //Show a notification
+        this.store.notifications.sendNotification({
+          title: `You redeemed ${reward.name}!`,
+          message: `Congrats on your pick! Your reward is available in the reward vault!`,
+        })
       }
-      this.store.ui.showModal(`/rewards/${rewardId}/redeem-error`)
-      //TODO: Send the error to sentry
-      console.error(error)
+    } catch (error) {
+      //Show an error notification
+      this.store.notifications.sendNotification(
+        {
+          title: `Uh Oh. Something went wrong.`,
+          message: error.message || 'Please try again later',
+        },
+        true,
+      )
     } finally {
       yield this.store.balance.refreshBalance()
+      yield this.store.vault.loadVault()
       this.isRedeeming = false
     }
   })

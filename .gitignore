@@ -8,3 +8,5 @@ packages/desktop-app/dist/main\.js
 packages/desktop-app/yarn-error\.log
 
 packages/desktop-app/dist/main/
+
+packages/web-app/storybook-build/

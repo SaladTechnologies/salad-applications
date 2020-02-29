@@ -1,10 +1,12 @@
 import { RootStore } from '../../Store'
 import { getCCMinerLyra2REv3Definition } from './definitions/getCCMinerLyra2REv3Definition'
 import { getCCMinerX16RDefinition } from './definitions/getCCMinerX16RDefinition'
+import { getClaymoreEthashBitflyDefinition } from './definitions/getClaymoreEthashBitflyDefinition'
 import { getClaymoreEthashDefinition } from './definitions/getClaymoreEthashDefinition'
 import { getClaymoreEthashNanopoolDefinition } from './definitions/getClaymoreEthashNanopoolDefinition'
 import { getGminerBeamHashIIDefinition } from './definitions/getGminerBeamHashIIDefinition'
-import { getGminerCuckARood29Definition } from './definitions/getGminerCuckARood29Definition'
+import { getGminerBeamBitflyDefinition } from './definitions/getGminerBeamBitflyDefinition'
+import { getGminerCuckARoom29Definition } from './definitions/getGminerCuckARoom29Definition'
 import { getGminerZHashDefinition } from './definitions/getGminerZHashDefinition'
 import { getXMRigRandomXCUDADefinition } from './definitions/getXMRigRandomXCUDADefinition'
 import { getXMRigRandomXOpenCLDefinition } from './definitions/getXMRigRandomXOpenCLDefinition'
@@ -19,27 +21,39 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
   }
 
   let supportsCuda = machineInfo.graphics.controllers.some(x => x.vendor.toLocaleLowerCase().includes('nvidia'))
+  let pluginDefinitions: PluginDefinition[]
   if (supportsCuda) {
-    return [
-      getGminerBeamHashIIDefinition(machine), // BeamHashII
-      getGminerZHashDefinition(machine), // Equihash 144,5
-      getGminerCuckARood29Definition(machine), // cuckARood29
-      getClaymoreEthashDefinition(machine), // Ethash
-      getXMRigRandomXCUDADefinition(machine), // RandomX
-      getCCMinerX16RDefinition(machine), // X16R
-      getCCMinerLyra2REv3Definition(machine), // Lyra2REv3
-      getClaymoreEthashNanopoolDefinition(machine), // Ethash (on Nanopool)
+    pluginDefinitions = [
+      getGminerBeamHashIIDefinition(machine), // BeamHashII @ NiceHash
+      getGminerBeamBitflyDefinition(machine), // BeamHashII @ Bitfly
+      getClaymoreEthashBitflyDefinition(machine), // Ethash @ Bitfly
+      getGminerZHashDefinition(machine), // Equihash 144,5 @ NiceHash
+      getGminerCuckARoom29Definition(machine), // cuckARoom29 @ NiceHash
+      getClaymoreEthashDefinition(machine), // Ethash @ NiceHash
+      getXMRigRandomXCUDADefinition(machine), // RandomX @ NiceHash
+      getCCMinerX16RDefinition(machine), // X16R @ NiceHash
+      getCCMinerLyra2REv3Definition(machine), // Lyra2REv3 @ NiceHash
+      getClaymoreEthashNanopoolDefinition(machine), // Ethash @ Nanopool
     ]
   } else {
-    return [
-      getGminerBeamHashIIDefinition(machine), // BeamHashII
-      getGminerZHashDefinition(machine), // Equihash 144,5
-      getGminerCuckARood29Definition(machine), // cuckARood29
-      getClaymoreEthashDefinition(machine), // Ethash
-      getXMRigRandomXOpenCLDefinition(machine), // RandomX
-      getCCMinerX16RDefinition(machine), // X16R
-      getCCMinerLyra2REv3Definition(machine), // Lyra2REv3
-      getClaymoreEthashNanopoolDefinition(machine), // Ethash (on Nanopool)
+    pluginDefinitions = [
+      getGminerBeamHashIIDefinition(machine), // BeamHashII @ NiceHash
+      getGminerBeamBitflyDefinition(machine), // BeamHashII @ Bitfly
+      getClaymoreEthashBitflyDefinition(machine), // Ethash @ Bitfly
+      getGminerZHashDefinition(machine), // Equihash 144,5 @ NiceHash
+      getGminerCuckARoom29Definition(machine), // cuckARoom29 @ NiceHash
+      getClaymoreEthashDefinition(machine), // Ethash @ NiceHash
+      getXMRigRandomXOpenCLDefinition(machine), // RandomX @ NiceHash
+      getCCMinerX16RDefinition(machine), // X16R @ NiceHash
+      getCCMinerLyra2REv3Definition(machine), // Lyra2REv3 @ NiceHash
+      getClaymoreEthashNanopoolDefinition(machine), // Ethash @ Nanopool
     ]
   }
+
+  // Only a 25% chance to try BeamHashII @ NiceHash first.
+  if (Math.random() >= 0.25) {
+    pluginDefinitions.push(pluginDefinitions.shift()!)
+  }
+
+  return pluginDefinitions
 }

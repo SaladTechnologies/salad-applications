@@ -8,6 +8,9 @@ import { VeggieName, P } from '../../../../components'
 const styles = (theme: SaladTheme) => ({
   container: {
     color: theme.darkBlue,
+    height: '100%',
+    width: '100%',
+    overflow: 'auto',
   },
 })
 

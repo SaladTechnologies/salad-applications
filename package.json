@@ -1,16 +1,10 @@
 {
   "name": "@saladtech/salad-applications",
+  "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "bootstrap": "lerna bootstrap",
-    "build": "lerna run build",
-    "clean": "lerna run clean",
-    "lint": "lerna run lint",
-    "test": "lerna run test"
-  },
-  "dependencies": {
-    "@types/node": "^11.9.5",
-    "lerna": "^3.13.1",
-    "typescript": "^3.3.3333"
+  "engineStrict": true,
+  "engines": {
+    "node": "12.8.1",
+    "yarn": ">=1.10.0"
   }
 }

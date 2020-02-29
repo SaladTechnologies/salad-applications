@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { OfflineModalContainer, PlainTitlebarContainer } from './modules/home-views'
 import { getStore } from './Store'
-import DevTools from 'mobx-react-devtools'
-import { Config } from './config'
+import { ToastContainer } from 'react-toastify'
 import Routes from './Routes'
 
 class App extends Component {
@@ -33,8 +32,7 @@ class App extends Component {
 
         <div style={{ top: showPlainTitle ? '2rem' : 0, left: 0, right: 0, bottom: 0, position: 'absolute' }}>
           <Routes />
-
-          {Config.devTools && <DevTools position={{ left: 0, bottom: 0 }} />}
+          <ToastContainer pauseOnFocusLoss={true} />
         </div>
       </div>
     )

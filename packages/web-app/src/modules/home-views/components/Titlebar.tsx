@@ -6,7 +6,11 @@ import { faMinus, faClone, faTimes } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
 
 export class MenuItem {
-  constructor(public readonly name: string, public readonly onClick: () => void) {}
+  constructor(
+    public readonly name: string,
+    public readonly onClick: () => void,
+    public readonly showNotification?: boolean,
+  ) {}
 }
 
 const styles = (theme: SaladTheme) => ({
@@ -52,12 +56,32 @@ const styles = (theme: SaladTheme) => ({
     fontSize: theme.small,
     letterSpacing: '1.3px',
     cursor: 'pointer',
+    position: 'relative',
+  },
+  menuItemNotification: {
+    background: theme.darkRed,
+    boxShadow: '0 0 11px #F13834, 0 0 4px #F13834',
+    width: 12,
+    height: 12,
+    borderRadius: '50%',
+    position: 'absolute',
+    top: 6,
+    right: 8,
   },
   closeButton: {
     '&:hover': {
       opacity: 1,
       backgroundColor: 'darkred',
     },
+  },
+  altMenuItemColor: {
+    color: theme.green,
+  },
+  uppercase: {
+    textTransform: 'uppercase',
+  },
+  hide: {
+    display: 'none',
   },
 })
 
@@ -67,7 +91,9 @@ interface Props extends WithStyles<typeof styles> {
   onMinimize?: () => void
   onMaximize?: () => void
   onClose?: () => void
+  onWhatsNew?: () => void
   menuItems?: MenuItem[]
+  showWhatsNew?: boolean
 }
 
 class _Titlebar extends Component<Props> {
@@ -89,8 +115,14 @@ class _Titlebar extends Component<Props> {
     if (onMaximize) onMaximize()
   }
 
+  handleWhatsNewClick = () => {
+    const { onWhatsNew } = this.props
+
+    if (onWhatsNew) onWhatsNew()
+  }
+
   render() {
-    const { showWindowActions, menuItems, bottomBorder, classes } = this.props
+    const { showWindowActions, menuItems, bottomBorder, showWhatsNew, classes } = this.props
     return (
       <div className={classnames(classes.container, { [classes.bottomBorder]: bottomBorder })}>
         <div className={classes.leftItems}>
@@ -98,9 +130,19 @@ class _Titlebar extends Component<Props> {
           {menuItems &&
             menuItems.map(x => (
               <div key={x.name} className={classes.menuItem} onClick={() => x.onClick()}>
+                {x.showNotification && <div className={classes.menuItemNotification}></div>}
                 {x.name}
               </div>
             ))}
+
+          {showWhatsNew && (
+            <div
+              className={classnames(classes.menuItem, classes.altMenuItemColor, classes.uppercase)}
+              onClick={this.handleWhatsNewClick}
+            >
+              What's new
+            </div>
+          )}
         </div>
         {showWindowActions && (
           <>

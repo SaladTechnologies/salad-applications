@@ -22,6 +22,10 @@ export class UIStore {
     this.showModal('/settings/windows-settings')
   }
 
+  showRewardVaultPage = () => {
+    this.showModal('/settings/reward-vault')
+  }
+
   @action
   openCanny = () => {
     const openLink = (url: string) => {
@@ -56,5 +60,10 @@ export class UIStore {
 
   showReferralsPage = () => {
     this.showModal('/settings/referrals')
+  }
+
+  showWhatNewPage = () => {
+    this.store.profile.setWhatsNew()
+    this.showModal('/onboarding/whats-new')
   }
 }

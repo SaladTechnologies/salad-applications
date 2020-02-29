@@ -5,33 +5,37 @@ body {
   overflow: hidden;
   margin: 0;
 }
+.hide-toast {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
 
 @font-face {
   font-family: 'sharpGroteskBook19';
-  src: url('https://s3.us-east-2.amazonaws.com/salad-ui-assets/fonts/SharpGroteskBook19.otf');
+  src: url('./assets/fonts/SharpGroteskBook19.woff');
 }
 
 @font-face {
   font-family: 'sharpGroteskBook25';
-  src: url('https://s3.us-east-2.amazonaws.com/salad-ui-assets/fonts/SharpGroteskBook25.otf');
+  src: url('./assets/fonts/SharpGroteskBook25.woff');
 }
 
 @font-face {
   font-family: 'SharpGroteskLight05';
-  src: url('https://s3.us-east-2.amazonaws.com/salad-ui-assets/fonts/SharpGroteskLight05.otf');
+  src: url('./assets/fonts/SharpGroteskLight05.woff');
 }
 
 @font-face {
   font-family: 'sharpGroteskLight09';
-  src: url('https://s3.us-east-2.amazonaws.com/salad-ui-assets/fonts/SharpGroteskLight09.otf');
+  src: url('./assets/fonts/SharpGroteskLight09.woff');
 }
 
 @font-face {
   font-family: 'sharpGroteskLight25';
-  src: url('https://s3.us-east-2.amazonaws.com/salad-ui-assets/fonts/SharpGroteskLight25.otf');
+  src: url('./assets/fonts/SharpGroteskLight25.woff');
 }
 
 @font-face {
   font-family: 'sharpGroteskMedium25';
-  src: url('https://s3.us-east-2.amazonaws.com/salad-ui-assets/fonts/SharpGroteskMedium25.otf');
+  src: url('./assets/fonts/SharpGroteskMedium25.woff');
 }

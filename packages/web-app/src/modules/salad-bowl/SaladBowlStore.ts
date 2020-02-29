@@ -10,7 +10,7 @@ import { ErrorMessage } from './models/ErrorMessage'
 import { ErrorCategory } from './models/ErrorCategory'
 import { MachineStatus } from './models/MachineStatus'
 import { getPluginDefinitions } from './PluginDefinitionFactory'
-import { PluginDefinition } from './models'
+import { PluginDefinition, StartReason, StopReason } from './models'
 
 export class SaladBowlStore {
   private currentPluginDefinition?: PluginDefinition
@@ -133,14 +133,17 @@ export class SaladBowlStore {
   @action
   toggleRunning = () => {
     if (this.isRunning) {
-      this.stop()
+      this.stop(StopReason.Manual)
     } else {
-      this.start()
+      this.start(StartReason.Manual)
     }
   }
 
   @action.bound
-  start = flow(function*(this: SaladBowlStore) {
+  start = flow(function*(this: SaladBowlStore, reason: StartReason) {
+    if (this.isRunning) {
+      return
+    }
     if (!this.canRun) {
       console.log('This machine is not able to run.')
       return
@@ -171,6 +174,15 @@ export class SaladBowlStore {
     this.plugin.status = PluginStatus.Initializing
     yield this.store.native.send('start-salad', this.currentPluginDefinition)
 
+    //Show a notification reminding users to use auto start
+    if (reason === StartReason.Manual && this.store.autoStart.canAutoStart) {
+      this.store.notifications.sendNotification({
+        title: 'Salad is best run AFK',
+        message: `Don't forget to enable auto start in Settings`,
+        id: 123456,
+      })
+    }
+
     this.timeoutTimer = setTimeout(() => {
       this.timeoutTimer = undefined
       this.startNext()
@@ -181,7 +193,7 @@ export class SaladBowlStore {
     }, Config.statusHeartbeatRate)
 
     this.sendRunningStatus()
-    this.store.analytics.trackStart()
+    this.store.analytics.trackStart(reason)
   })
 
   @action.bound
@@ -198,7 +210,7 @@ export class SaladBowlStore {
 
     this.currentPluginRetries = 0
     if (this.currentPluginDefinitionIndex >= this.pluginDefinitions.length) {
-      this.stop()
+      this.stop(StopReason.Fallthrough)
       this.store.ui.showModal('/errors/fallback')
     } else {
       this.currentPluginDefinition = this.pluginDefinitions[this.currentPluginDefinitionIndex]
@@ -216,7 +228,7 @@ export class SaladBowlStore {
   })
 
   @action.bound
-  stop = flow(function*(this: SaladBowlStore) {
+  stop = flow(function*(this: SaladBowlStore, reason: StopReason) {
     if (this.timeoutTimer != null) {
       clearTimeout(this.timeoutTimer)
       this.timeoutTimer = undefined
@@ -231,7 +243,7 @@ export class SaladBowlStore {
     yield this.store.native.send('stop-salad')
 
     this.sendRunningStatus()
-    this.store.analytics.trackStop()
+    this.store.analytics.trackStop(reason)
   })
 
   @action.bound

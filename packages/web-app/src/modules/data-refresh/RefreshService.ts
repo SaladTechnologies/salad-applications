@@ -28,6 +28,7 @@ export class RefreshService {
     this.refreshData()
     this.store.rewards.refreshRewards()
     this.store.xp.refreshXp()
+    this.store.vault.loadVault()
   }
 
   refreshData = () => {
@@ -38,6 +39,8 @@ export class RefreshService {
       this.store.balance.refreshBalance()
       this.store.rewards.loadSelectedReward()
       this.store.referral.loadReferrals()
+      this.store.home.loadBannerInfo()
+      this.store.vault.loadVault()
     } catch (error) {
       console.error(error)
     }

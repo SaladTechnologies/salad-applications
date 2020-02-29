@@ -3,51 +3,34 @@ import React, { Component } from 'react'
 // Styles
 import { styles } from './WindowsSettings.styles'
 
-// Store
-import { getStore } from '../../../../Store'
-
 // UI
-import { Username, CondensedHeader, P, ToggleSwitch, Divider } from '../../../../components'
+import { CondensedHeader, Divider, Slider, P } from '../../../../components'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
-import classnames from 'classnames'
+import { ToggleSetting } from '../../components'
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  autoLaunch?: boolean
+  autoLaunchToggle?: () => void
+  autoStart?: boolean
+  autoStartToggle?: () => void
+  autoStartEnabled?: boolean
+  autoStartDelay?: number
+  autoStartUpdate?: (value: number) => void
+}
 
 class _WindowsSettings extends Component<Props> {
-  store = getStore()
-
-  toggleAutoLaunch = () => {
-    if (this.store.native.autoLaunch) {
-      this.store.native.disableAutoLaunch()
-      return
-    }
-
-    this.store.native.enableAutoLaunch()
-  }
-
   render() {
-    const { classes } = this.props
-    const apiVersion: boolean = window.salad && window.salad.apiVersion > 1
-
-    let toggler =
-      apiVersion ? (
-        <ToggleSwitch
-          toggleLeft="Off"
-          toggleRight="On"
-          toggleOn={this.store.native.autoLaunch}
-          toggleClick={this.toggleAutoLaunch}
-        />
-      ) : (
-        <ToggleSwitch
-          toggleLeft="Off"
-          toggleRight="On"
-          disabled
-          toggleOn={this.store.native.autoLaunch}
-          toggleClick={this.toggleAutoLaunch}
-        />
-      )
+    const {
+      autoLaunch,
+      autoLaunchToggle,
+      autoStart,
+      autoStartToggle,
+      autoStartEnabled,
+      autoStartDelay,
+      autoStartUpdate,
+    } = this.props
 
     return (
       <>
@@ -55,16 +38,40 @@ class _WindowsSettings extends Component<Props> {
           <CondensedHeader>Settings</CondensedHeader>
         </div>
         <Divider />
-        <div className={classnames(classes.container)}>
-          <div className={classnames(classes.toggler)}>{toggler}</div>
-          <div className={classnames(classes.description)}>
-            <Username blue>Auto Launch {!apiVersion && '(Coming in v0.2.1)'}</Username>
-            <P>
-              Auto Launch opens Salad once you log into Windows, getting the Kitchen warmed up for when you're ready to
-              start chopping.
-            </P>
-          </div>
-        </div>
+        <ToggleSetting
+          title={'Auto Launch'}
+          description={
+            "Auto Launch opens Salad once you log into Windows, getting the Kitchen warmed up for when you're ready to start chopping."
+          }
+          toggled={autoLaunch}
+          onToggle={autoLaunchToggle}
+        />
+        {autoStartEnabled && (
+          <>
+            <Divider />
+            <ToggleSetting
+              title={'Auto Start'}
+              description={
+                'Salad will automatically start to run after being AFK a determined amount of time *and* will automatically stop when your return.'
+              }
+              toggled={autoStart}
+              onToggle={autoStartToggle}
+            >
+              <div style={{ width: 300 }}>
+                <P>START AFTER {autoStartDelay ? autoStartDelay / 60 : 10} MINUTES</P>
+                <Slider
+                  stepSize={10}
+                  minimum={10}
+                  maximum={60}
+                  value={autoStartDelay ? autoStartDelay / 60 : 10}
+                  onValueChange={(value: number) => {
+                    if (autoStartUpdate) autoStartUpdate(value * 60)
+                  }}
+                />
+              </div>
+            </ToggleSetting>
+          </>
+        )}
       </>
     )
   }

@@ -15,6 +15,7 @@ import { PluginDefinition } from './salad-bowl/models/PluginDefinition'
 import { SaladBridgeNotificationService } from './salad-bowl/SaladBridgeNotificationService'
 import * as Sentry from '@sentry/electron'
 import { Profile } from './models/Profile'
+import * as notifier from 'node-notifier'
 
 const appVersion = app.getVersion()
 
@@ -35,6 +36,7 @@ const getDesktopVersion = 'get-desktop-version'
 const setDesktopVersion = 'set-desktop-version'
 const getIdleTime = 'get-idle-time'
 const setIdleTime = 'set-idle-time'
+const showNotification = 'show-notification'
 const start = 'start-salad'
 const stop = 'stop-salad'
 
@@ -254,6 +256,30 @@ const createMainWindow = () => {
     bridge.send(setIdleTime, {
       time: n,
     })
+  })
+
+  bridge.on(showNotification, (message: {}) => {
+    notifier.notify(
+      {
+        ...message,
+        icon: path.join(__static, 'salad-logo.png'),
+        appID: 'salad-technologies-desktop-app',
+      },
+      err => {
+        if (err) {
+          console.warn('Notification error')
+          console.warn(err)
+        }
+      },
+    )
+
+    // notifier.on('timeout', () => {
+    //   console.log('Timed out!')
+    // })
+
+    // notifier.on('click', () => {
+    //   console.log('Clicked!')
+    // })
   })
 
   mainWindow.webContents.on('new-window', (e: Electron.Event, url: string) => {

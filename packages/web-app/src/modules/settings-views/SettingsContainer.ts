@@ -12,6 +12,7 @@ const mapStoreToProps = (store: RootStore): any => {
   const menuItems: LinkList[] = [
     { url: '/settings/account', text: 'Account' },
     { url: '/settings/referrals', text: 'Referrals' },
+    { url: '/settings/reward-vault', text: 'Reward Vault' },
     { url: '/settings/windows-settings', text: 'Settings' },
   ]
 
@@ -24,10 +25,9 @@ const mapStoreToProps = (store: RootStore): any => {
     appVersion: store.native.desktopVersion,
     appBuild: Config.appBuild,
     onSendLog: store.native.sendLog,
+    latestDesktop: store.version.onLatestDesktop,
+    onDownloadLatestDesktop: store.version.downloadLatestDesktop,
   }
 }
 
-export const SettingsContainer = connect(
-  mapStoreToProps,
-  Settings,
-)
+export const SettingsContainer = connect(mapStoreToProps, Settings)

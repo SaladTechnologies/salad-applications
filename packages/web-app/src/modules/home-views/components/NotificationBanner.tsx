@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { SaladTheme } from '../../../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
+import { BannerInfo } from '../../home/models/BannerInfo'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -17,20 +18,24 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  now?: Date
-  startDate?: Date
-  endDate?: Date
-  text?: string
+  bannerInfo?: BannerInfo
 }
 
 class _NotificationBanner extends Component<Props> {
   render() {
-    const { now, startDate, endDate, text, classes } = this.props
+    const { bannerInfo, classes } = this.props
+    let now = new Date()
 
-    if (now === undefined || startDate === undefined || endDate === undefined || now < startDate || now > endDate)
+    if (
+      (bannerInfo === undefined) ||
+      (bannerInfo && bannerInfo.startDate === undefined) ||
+      (bannerInfo && bannerInfo.endDate === undefined) ||
+      (bannerInfo && now.toISOString() < bannerInfo.startDate) ||
+      (bannerInfo && now.toISOString() > bannerInfo.endDate)
+    )
       return null
 
-    return <div className={classes.container}>{text}</div>
+    return <div className={classes.container}>{bannerInfo && bannerInfo.text}</div>
   }
 }
 

@@ -5,15 +5,19 @@ import { AxiosInstance } from 'axios'
 import { ExperienceStore } from './modules/xp'
 import { RewardStore } from './modules/reward'
 import { BalanceStore } from './modules/balance'
-import { MachineStore } from './modules/machine'
+import { MachineStore, AutoStartStore, NativeStore } from './modules/machine'
 import { ProfileStore } from './modules/profile'
 import { UIStore } from './UIStore'
 import { ReferralStore } from './modules/referral'
 import { AnalyticsStore } from './modules/analytics'
-import { NativeStore } from './modules/machine/NativeStore'
 import { RefreshService } from './modules/data-refresh'
 import { featureFlags } from './FeatureFlags'
 import { SaladBowlStore } from './modules/salad-bowl'
+import { HomeStore } from './modules/home/HomeStore'
+import { NotificationStore } from './modules/notifications'
+import { VaultStore } from './modules/vault'
+import { VersionStore } from './modules/versions'
+import { StopReason } from './modules/salad-bowl/models'
 
 //Forces all changes to state to be from an action
 configure({ enforceActions: 'always' })
@@ -31,6 +35,7 @@ export const getStore = (): RootStore => sharedStore
 
 export class RootStore {
   public readonly auth: AuthStore
+  public readonly autoStart: AutoStartStore
   public readonly token: TokenStore
   public readonly analytics: AnalyticsStore
   public readonly routing: RouterStore
@@ -41,14 +46,19 @@ export class RootStore {
   public readonly profile: ProfileStore
   public readonly ui: UIStore
   public readonly referral: ReferralStore
+  public readonly home: HomeStore
   public readonly native: NativeStore
   public readonly refresh: RefreshService
   public readonly saladBowl: SaladBowlStore
+  public readonly notifications: NotificationStore
+  public readonly vault: VaultStore
+  public readonly version: VersionStore
 
   private machineInfoHeartbeat?: NodeJS.Timeout
 
   constructor(readonly axios: AxiosInstance) {
     this.routing = new RouterStore()
+    this.notifications = new NotificationStore(this)
     this.xp = new ExperienceStore(this, axios)
     this.machine = new MachineStore(this)
     this.native = new NativeStore(this, axios)
@@ -60,8 +70,12 @@ export class RootStore {
     this.profile = new ProfileStore(this, axios)
     this.ui = new UIStore(this)
     this.referral = new ReferralStore(this, axios)
+    this.home = new HomeStore(axios)
     this.refresh = new RefreshService(this)
     this.analytics = new AnalyticsStore(this)
+    this.autoStart = new AutoStartStore(this)
+    this.vault = new VaultStore(axios)
+    this.version = new VersionStore(this, axios)
 
     this.machineInfoHeartbeat = setInterval(this.tryRegisterMachine, 20000)
 
@@ -77,17 +91,19 @@ export class RootStore {
       return
     }
 
+    this.native.login(profile)
     this.analytics.start(profile)
     this.referral.loadReferralCode()
     this.xp.refreshXp()
     this.referral.loadCurrentReferral()
+    this.vault.loadVault()
     yield featureFlags.loadFeatureFlags(profile.id)
 
     if (this.machineInfoHeartbeat) clearInterval(this.machineInfoHeartbeat)
 
     // Start a timer to keep checking for system information
     this.machineInfoHeartbeat = setInterval(this.tryRegisterMachine, 20000)
-
+    this.version.startVersionChecks()
     this.tryRegisterMachine()
 
     this.refresh.start()
@@ -109,6 +125,8 @@ export class RootStore {
     this.referral.referralCode = ''
     this.referral.currentReferral = undefined
     this.analytics.trackLogout()
-    this.saladBowl.stop()
+    this.saladBowl.stop(StopReason.Logout)
+    this.version.stopVersionChecks()
+    this.native.logout()
   }
 }

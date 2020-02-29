@@ -10,6 +10,7 @@ init()
  * 4 - Nicepool
  * 5 - Salad Bowl (C#)
  * 6 - Salad Bowl (TS)
+ * 7 - Get Idle Time
  */
 
 function init() {
@@ -17,7 +18,7 @@ function init() {
 
   window.salad = {
     platform: 'electron',
-    apiVersion: 6,
+    apiVersion: 7,
     dispatch: dispatch,
   }
 

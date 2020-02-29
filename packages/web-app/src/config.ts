@@ -86,8 +86,6 @@ class Config {
   public readonly termsVersion: string = requiredString('REACT_APP_TERMS_VERSION')
   public readonly whatsNewVersion: string = requiredString('REACT_APP_WHATS_NEW_VERSION')
 
-  public readonly devTools: boolean = optionalBool('REACT_APP_DEV_TOOLS')
-
   public readonly supportUrl: string = requiredString('REACT_APP_SUPPORT_URL')
   public readonly discordUrl: string = requiredString('REACT_APP_DISCORD_URL')
   public readonly releaseNotesUrl: string = requiredString('REACT_APP_RELEASES_URL')

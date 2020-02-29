@@ -22,8 +22,8 @@ export const getOrSetDefaultCallback = (key: string, fallback: () => string) => 
   return item
 }
 
-export const setItem = (key: string, value: string) => {
-  localStorage.setItem(getFullKey(key), value)
+export const setItem = (key: string, value: string | boolean | number) => {
+  localStorage.setItem(getFullKey(key), String(value))
 }
 
 export const removeItem = (key: string) => {

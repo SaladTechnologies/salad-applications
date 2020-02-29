@@ -35,11 +35,22 @@ export class AnalyticsStore {
     })
 
     const token = Config.mixpanelToken
+
     if (!token) {
       return
     }
 
     mixpanel.init(token, {})
+
+    mixpanel.register({
+      $app_build_number: Config.appBuild,
+    })
+
+    if (this.store.native.desktopVersion) {
+      mixpanel.register({
+        $app_version_string: this.store.native.desktopVersion,
+      })
+    }
 
     mixpanel.people.set({
       Id: profile.id,
@@ -48,14 +59,17 @@ export class AnalyticsStore {
       $last_login: new Date().toISOString(),
     })
 
+    mixpanel.identify(profile.id)
+
     this.track('Login')
   }
 
-  /** Alias another Id (Auth0 Id) to the Salad user id */
-  public aliasUser = (otherId: string) => {
+  public trackDesktopVersion = (version: string) => {
     if (!this.started) return
 
-    mixpanel.alias(otherId)
+    mixpanel.register({
+      $app_version_string: version,
+    })
   }
 
   public trackLogout = () => {
@@ -67,17 +81,29 @@ export class AnalyticsStore {
   }
 
   /** Track when mining starts */
-  public trackStart = () => {
+  public trackStart = (reason: string) => {
     if (!this.started) return
 
-    this.track('Start')
+    this.track('Start', {
+      Reason: reason,
+    })
   }
 
   /** Track when mining stops */
-  public trackStop = () => {
+  public trackStop = (reason: string) => {
     if (!this.started) return
 
-    this.track('Stop')
+    this.track('Stop', {
+      Reason: reason,
+    })
+  }
+
+  public trackAutoStart = (enabled: boolean) => {
+    if (!this.started) return
+
+    this.track('AutoStart', {
+      Enabled: enabled,
+    })
   }
 
   public trackMiningStatus = (status: MiningStatus, pluginName: string) => {
@@ -151,6 +177,22 @@ export class AnalyticsStore {
         IsQualified: machine.qualifying,
       })
     }
+  }
+
+  public trackLifetimeXp = (lifetimeXp: number) => {
+    if (!this.started) return
+
+    mixpanel.people.set({
+      LifetimeXp: lifetimeXp,
+    })
+  }
+
+  public trackLifetimeBalance = (lifetimeBalance: number) => {
+    if (!this.started) return
+
+    mixpanel.people.set({
+      LifetimeBalance: lifetimeBalance,
+    })
   }
 
   private track = (event: string, properties?: { [key: string]: any }) => {

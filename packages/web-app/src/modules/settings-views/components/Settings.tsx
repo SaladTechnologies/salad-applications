@@ -1,14 +1,10 @@
 import React, { Component } from 'react'
 
-// Store
-import { getStore } from '../../../Store'
-
 // Styles
 import { styles } from './Settings.styles'
 
 // UI
-import { LinkListUnstyled, MenuTitle } from '../../../components'
-import { Button } from '../../../components'
+import { LinkListUnstyled, MenuTitle, Button, Divider } from '../../../components'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
@@ -24,6 +20,7 @@ import { WindowsSettingsContainer } from '../windows-settings-views'
 import { DesktopNotificationsContainer } from '../desktop-notifications-views'
 import { ReferralSettingsContainer } from '../referral-views'
 import { AccountContainer } from '../account-views'
+import { VaultListContainer } from '../../vault-views'
 
 export class MenuItem {
   constructor(public readonly url: string, public readonly text: string) {}
@@ -38,10 +35,11 @@ interface Props extends WithStyles<typeof styles> {
   appVersion?: string
   appBuild?: string
   onSendLog?: () => void
+  latestDesktop?: boolean
+  onDownloadLatestDesktop?: () => void
 }
 
 class _Settings extends Component<Props> {
-  store = getStore()
   state = {
     buttonToggle: false,
   }
@@ -89,23 +87,36 @@ class _Settings extends Component<Props> {
     if (onListItemClick) onListItemClick(url)
   }
 
+  handleDownloadLatest = () => {
+    const { onDownloadLatestDesktop } = this.props
+
+    if (onDownloadLatestDesktop) onDownloadLatestDesktop()
+  }
+
   render() {
-    const { appVersion, appBuild, classes, menuItems } = this.props
+    const { appVersion, appBuild, classes, menuItems, latestDesktop } = this.props
 
     return (
       <Overlay>
         <div className={classnames(classes.menu, classes.menuItems)}>
-          <div>{menuItems && <LinkListUnstyled list={menuItems} onListItemClick={this.handleListItemClick} />}</div>
+          {menuItems && <LinkListUnstyled list={menuItems} onListItemClick={this.handleListItemClick} />}
+
           <div className={classes.buttonContainer}>
             <Button onClick={this.handleBugClicked}>Submit Bug</Button>
-            <Button onClick={this.handleLogClicked}>
-              {this.state.buttonToggle ? 'Logs sent' : 'Send logs'}
-            </Button>
+            <Button onClick={this.handleLogClicked}>{this.state.buttonToggle ? 'Logs sent' : 'Send logs'}</Button>
           </div>
           <div className={classes.versionContainer}>
-            <MenuTitle>Version: {appVersion ? appVersion : '-'}</MenuTitle>
+            <MenuTitle className={classnames({ [classes.outOfDateLabel]: !latestDesktop })}>
+              Version: {appVersion ? appVersion : '-'}
+            </MenuTitle>
             <MenuTitle>Build: {appBuild ? appBuild.slice(0, 7) : '-'}</MenuTitle>
           </div>
+          {!latestDesktop && (
+            <div className={classes.updateSalad}>
+              <Divider />
+              <Button onClick={this.handleDownloadLatest}>Download Latest Version</Button>
+            </div>
+          )}
         </div>
         <div className={classnames(classes.settings)}>
           <Route path="/settings/smart-start" component={SmartStartContainer} />
@@ -113,6 +124,7 @@ class _Settings extends Component<Props> {
           <Route path="/settings/windows-settings" component={WindowsSettingsContainer} />
           <Route path="/settings/referrals" component={ReferralSettingsContainer} />
           <Route path="/settings/account" component={AccountContainer} />
+          <Route path="/settings/reward-vault" component={VaultListContainer} />
 
           <div onClick={this.handleCloseClicked}>
             <FontAwesomeIcon className={classes.closeButton} icon={faTimes} />

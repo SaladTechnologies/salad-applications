@@ -1,21 +1,12 @@
 {
-  "productName": "Salad",
   "appId": "salad-technologies-desktop-app",
+  "productName": "Salad",
   "directories": {
     "output": "release"
-  },
-  "nsis": {
-    "installerIcon": "assets/favicon.ico",
-    "uninstallerIcon": "assets/favicon.ico",
-    "oneClick": false,
-    "license": "LICENSE.md",
-    "runAfterFinish": true,
-    "allowToChangeInstallationDirectory": "true"
   },
   "files": ["assets/*", "dist/main/*"],
   "win": {
     "icon": "assets/favicon.ico",
-    "target": ["nsis"],
     "rfc3161TimeStampServer": "http://timestamp.comodoca.com",
     "extraFiles": ["assets/*"],
     "publish": {
@@ -23,12 +14,10 @@
       "bucket": "salad-app-releases"
     }
   },
-  "mac": {
-    "icon": "dist",
-    "target": ["dmg"]
-  },
-  "linux": {
-    "icon": "dist",
-    "target": ["AppImage"]
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "license": "LICENSE.md",
+    "artifactName": "${productName} Installer ${version}.${ext}"
   }
 }
