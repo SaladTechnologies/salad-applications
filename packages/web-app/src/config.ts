@@ -78,7 +78,6 @@ class Config {
   public readonly authRefreshRate: number = numberOrDefault('REACT_APP_AUTH_REFRESH_RATE', convertHours(4))
 
   public readonly mixpanelToken?: string = optionalString('REACT_APP_MIXPANEL_TOKEN')
-  public readonly launchDarklyId: string = requiredString('REACT_APP_LAUNCH_DARKLY_ID')
   public readonly sentryDSN?: string = optionalString('REACT_APP_SENTRY_DSN')
 
   /** The current version of the terms of service */

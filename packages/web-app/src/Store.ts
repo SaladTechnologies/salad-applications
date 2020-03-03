@@ -11,7 +11,6 @@ import { UIStore } from './UIStore'
 import { ReferralStore } from './modules/referral'
 import { AnalyticsStore } from './modules/analytics'
 import { RefreshService } from './modules/data-refresh'
-import { featureFlags } from './FeatureFlags'
 import { SaladBowlStore } from './modules/salad-bowl'
 import { HomeStore } from './modules/home/HomeStore'
 import { NotificationStore } from './modules/notifications'
@@ -97,7 +96,6 @@ export class RootStore {
     this.xp.refreshXp()
     this.referral.loadCurrentReferral()
     this.vault.loadVault()
-    yield featureFlags.loadFeatureFlags(profile.id)
 
     if (this.machineInfoHeartbeat) clearInterval(this.machineInfoHeartbeat)
 
