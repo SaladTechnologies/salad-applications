@@ -9,7 +9,6 @@ export module Logger {
     console.log = electronlog.log
     console.warn = electronlog.warn
     console.error = electronlog.error
-    console.exception = electronlog.error
   }
   export const sendLog = (id: string) => {
     try {

@@ -1,6 +1,6 @@
 import { app, BrowserWindow, ipcMain, shell, Input, powerMonitor } from 'electron'
 import { DefaultTheme as theme } from './SaladTheme'
-import * as isOnline from 'is-online'
+import isOnline from 'is-online'
 import * as path from 'path'
 import * as si from 'systeminformation'
 import { SaladBridge } from './SaladBridge'
@@ -288,7 +288,7 @@ const createMainWindow = () => {
     shell.openExternal(url)
   })
 
-  mainWindow.webContents.on('console-message', (_: Event, level: number, message: string, line: number) => {
+  mainWindow.webContents.on('console-message', (_: Electron.Event, level: number, message: string, line: number) => {
     console.log(`console:${line}:${level}:${message}`)
   })
 }

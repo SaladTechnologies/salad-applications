@@ -33,7 +33,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _Modal extends Component<Props> {
-  handleClose = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  handleClose = () => {
     const { onCloseClicked } = this.props
     if (onCloseClicked) {
       onCloseClicked()

@@ -1,8 +1,7 @@
 import React, { ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../SaladTheme'
 
-const styles = (theme: SaladTheme) => ({})
+const styles = ({})
 
 interface Props extends WithStyles<typeof styles> {
   path?: string

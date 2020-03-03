@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { SaladTheme } from '../../../../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
 import { Referral } from '../../../referral/models'
 import { CurrentReferralProgress } from './CurrentReferralProgress'
@@ -7,7 +6,7 @@ import classnames from 'classnames'
 import { VeggieName, P } from '../../../../components'
 import { ReferralCodeEntryComponent } from './ReferralCodeEntryComponent'
 
-const styles = (theme: SaladTheme) => ({
+const styles = ({
   container: {
     userSelect: 'none',
     paddingBottom: '1rem',

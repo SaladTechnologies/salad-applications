@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
 
-// Theme
-import { SaladTheme } from '../../../SaladTheme'
-
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 
-const styles = (theme: SaladTheme) => ({
+const styles = ({
   listUnstyled: {
     paddingLeft: 0,
     listStyle: 'none',

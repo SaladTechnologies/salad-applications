@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { SaladTheme } from '../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
 import classNames from 'classnames'
 
-const styles = (theme: SaladTheme) => ({
+const styles = ({
   container: {
     position: 'absolute',
     top: 0,

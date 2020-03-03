@@ -4,13 +4,12 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 
-import { SaladTheme } from '../../../SaladTheme'
 import { P, Divider, Username, ExternalLink } from '../../../components'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClipboard } from '@fortawesome/free-solid-svg-icons'
 
-const styles = (theme: SaladTheme) => ({
+const styles = ({
   container: {
     userSelect: 'none',
   },

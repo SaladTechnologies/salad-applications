@@ -5,6 +5,6 @@
   "engineStrict": true,
   "engines": {
     "node": "12.8.1",
-    "yarn": ">=1.10.0"
+    "yarn": ">=1.22.0"
   }
 }

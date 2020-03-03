@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
 import classnames from 'classnames'
 import { SearchBar } from './SearchBar'
 import { FilterList } from './FilterList'
 import { FilterItem } from '../../reward/models/FilterItem'
 
-const styles = (theme: SaladTheme) => ({
+const styles = ({
   container: {
     paddingTop: '2rem',
     userSelect: 'none',

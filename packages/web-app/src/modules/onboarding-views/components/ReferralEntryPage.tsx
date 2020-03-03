@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
 import image from '../assets/Referrals.svg'
 import { OnboardingPage } from '../../../components'
 import { ReferralCodeEntryComponent } from '../../settings-views/referral-views/components/ReferralCodeEntryComponent'
 
-const styles = (theme: SaladTheme) => ({
+const styles = ({
   container: {},
 })
 

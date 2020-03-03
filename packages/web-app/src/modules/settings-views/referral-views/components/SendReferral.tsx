@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../../SaladTheme'
 import { Form, Field } from 'react-final-form'
 import { TextField, Button, P } from '../../../../components'
 import { isEmailFormat } from '../../../../utils'
 
-const styles = (theme: SaladTheme) => ({
+const styles = ({
   container: {
     userSelect: 'none',
     display: 'inline-flex',

@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
 import { Level } from '../../xp/models/Level'
 import classnames from 'classnames'
 
 const gridSize = 1
 
-const styles = (theme: SaladTheme) => ({
+const styles = ({
   container: {
     whiteSpace: 'nowrap',
     userSelect: 'none',
@@ -31,7 +30,7 @@ const getImage = (key: string, slice: number) => require(`../assets/${key}/${sli
 
 class _SlicedVeggie extends Component<Props> {
   getColumnPositions = (percent: number): number[] =>
-    new Array(16).fill(0).map((v, i) => {
+    new Array(16).fill(0).map((_v, i) => {
       return Math.round(50 * (1 - percent) * Math.sin(i))
     })
 
