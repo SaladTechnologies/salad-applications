@@ -19,7 +19,7 @@ export class AuthStore {
   public isLoading: boolean = false
 
   @observable
-  public loginError: boolean = false
+  public loginError?: string
 
   @observable
   public isAuth: boolean = false
@@ -66,7 +66,7 @@ export class AuthStore {
 
   @action
   signIn = async () => {
-    this.loginError = false
+    this.loginError = undefined
     this.isLoading = true
     this.webAuth.authorize()
   }
@@ -79,19 +79,19 @@ export class AuthStore {
       yield this.webAuth.parseHash((err, authResult) => {
         runInAction(() => {
           this.auth0Result = authResult || undefined
+
+          if (err) {
+            console.error('Login error: ', err)
+
+            this.loginError = err.errorDescription || err.error_description || 'Unable to login'
+            this.isLoading = false
+          }
         })
-
-        if (err) {
-          console.error('Login error: ', err)
-
-          this.loginError = true
-          this.isLoading = false
-        }
       })
     } catch (error) {
       console.error('Login error: ', error)
 
-      this.loginError = true
+      this.loginError = undefined
       this.isLoading = false
     }
   })
@@ -149,7 +149,7 @@ export class AuthStore {
     this.axios.defaults.headers.common['Authorization'] = `Bearer ${this.store.token.saladToken}`
 
     this.isAuth = true
-    this.loginError = false
+    this.loginError = undefined
     this.isLoading = false
   }
 

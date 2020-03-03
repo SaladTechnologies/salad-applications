@@ -39,7 +39,7 @@ export class BalanceStore {
     })
 
     autorun(() => {
-      this.store.analytics.trackLifetimeBalance(this.lifetimeBalance)
+      this.store?.analytics?.trackLifetimeBalance?.(this.lifetimeBalance)
     })
   }
 
