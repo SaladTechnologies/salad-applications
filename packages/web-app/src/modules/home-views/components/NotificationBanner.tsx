@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { SaladTheme } from '../../../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
 import { BannerInfo } from '../../home/models/BannerInfo'
 
-const styles = (theme: SaladTheme) => ({
+const styles = ({
   container: {
     userSelect: 'none',
     fontFamily: 'sharpGroteskLight09',

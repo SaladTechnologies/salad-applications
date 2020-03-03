@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { SaladTheme } from '../../../../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
 import { P } from '../../../../components'
 
-const styles = (theme: SaladTheme) => ({})
+const styles = ({})
 
 interface Props extends WithStyles<typeof styles> {}
 

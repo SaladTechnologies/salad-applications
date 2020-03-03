@@ -1,7 +1,4 @@
-// Theme
-import { SaladTheme } from '../../../../SaladTheme'
-
-export const styles = (theme: SaladTheme) => ({
+export const styles = ({
   main: {
     display: 'flex',
   },

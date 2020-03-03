@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
 import image from '../assets/Welcome.svg'
 import { OnboardingPage } from '../../../components'
 
-const styles = (theme: SaladTheme) => ({
+const styles = ({
   container: {},
 })
 

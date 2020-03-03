@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
 import { LoadingPage, Button } from '../../../components'
 
-const styles = (theme: SaladTheme) => ({
-  container: {},
+const styles = ({
   detailText: {
     fontSize: 14,
   },

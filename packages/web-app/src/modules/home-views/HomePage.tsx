@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { SaladTheme } from '../../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 import { ExperienceBarContainer, SlicedVeggieContainer } from '../xp-views'
@@ -13,7 +12,7 @@ import { ReferralSummaryContainer } from '../settings-views/referral-views'
 import { MainTitlebarContainer } from './MainTitlebarContainer'
 import { NotificationBannerContainer } from './NotificationBannerContainer'
 
-const styles = (theme: SaladTheme) => ({
+const styles = ({
   container: {
     bottom: 0,
     left: 0,

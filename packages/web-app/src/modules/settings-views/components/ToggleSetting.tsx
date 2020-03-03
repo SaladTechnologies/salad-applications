@@ -5,10 +5,9 @@ import React, { Component } from 'react'
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
-import { SaladTheme } from '../../../SaladTheme'
 import { ToggleSwitch, Username, P } from '../../../components'
 
-export const styles = (theme: SaladTheme) => ({
+export const styles = ({
   container: {
     display: 'flex',
     marginBottom: '20px',

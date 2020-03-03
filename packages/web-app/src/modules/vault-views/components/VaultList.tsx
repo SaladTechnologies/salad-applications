@@ -3,12 +3,11 @@ import React, { Component } from 'react'
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
 
-import { SaladTheme } from '../../../SaladTheme'
 import { P, Divider, CondensedHeader } from '../../../components'
 import { RewardVaultItem } from '../../vault/models'
 import { VaultItem } from './VaultItem'
 
-const styles = (theme: SaladTheme) => ({
+const styles = ({
   container: {
     userSelect: 'none',
     height: '100%',

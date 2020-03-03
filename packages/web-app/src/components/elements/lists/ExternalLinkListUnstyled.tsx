@@ -3,9 +3,6 @@ import React, { Component } from 'react'
 // Store
 import { getStore } from '../../../Store'
 
-// Theme
-import { SaladTheme } from '../../../SaladTheme'
-
 // UI
 import { ExternalLink } from '../..'
 
@@ -13,7 +10,7 @@ import { ExternalLink } from '../..'
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 
-const styles = (theme: SaladTheme) => ({
+const styles = ({
   linkListUnstyled: {
     margin: 0,
     padding: 0,

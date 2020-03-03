@@ -8,7 +8,7 @@ export interface StoryData {
 }
 
 export const addStories = (
-  component: React.ReactNode,
+  component: React.FunctionComponent | React.ComponentClass,
   storyList: [StoryData],
   stories: StoryApi<StoryFnReactReturnType>,
   backgroundColor?: string,

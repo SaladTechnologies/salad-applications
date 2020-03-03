@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import { SaladTheme } from '../../../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 import { AngledButton } from '../../../components'
 import { Fade } from '../../../components'
 
-const styles = (theme: SaladTheme) => ({
+const styles = ({
   container: {
     height: '10rem',
     position: 'absolute',

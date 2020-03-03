@@ -1,11 +1,10 @@
 import React, { CSSProperties, ReactNode, Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import classNames from 'classnames'
-import { SaladTheme } from '../SaladTheme'
 
 export type AngleDirection = 'none' | 'left' | 'right'
 
-const styles = (theme: SaladTheme) => ({
+const styles = () => ({
   container: {
     clipPath: getClipPath,
   },

@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
 import image from '../assets/Home - How it Works.svg'
 import { OnboardingPage, Scrollbar } from '../../../components'
 
-const styles = (theme: SaladTheme) => ({
+const styles = ({
   title: {
     fontFamily: 'sharpGroteskBook25',
     textTransform: 'uppercase',

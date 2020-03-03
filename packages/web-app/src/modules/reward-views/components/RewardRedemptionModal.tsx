@@ -172,7 +172,7 @@ class _RewardRedemptionModal extends Component<Props> {
                   <form onSubmit={handleSubmit}>
                     {reward &&
                       reward.checkoutTerms &&
-                      reward.checkoutTerms.map((term, i) => (
+                      reward.checkoutTerms.map(term => (
                         <div key={term} className={classes.termText}>
                           - {term}
                         </div>

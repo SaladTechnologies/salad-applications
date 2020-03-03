@@ -1,17 +1,29 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "target": "es2015",
-    "moduleResolution": "node",
-    "pretty": true,
-    "newLine": "LF",
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "preserve",
+    "lib": [
+      "es2020"
+    ],
+    "module": "commonjs",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "sourceMap": true,
     "skipLibCheck": true,
-    "allowJs": true,
-    "jsx": "preserve"
-  }
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2019",
+    "types": [
+      "node"
+    ],
+    "useDefineForClassFields": true
+  },
+  "include": [
+    "./src/**/*"
+  ]
 }

@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { SaladTheme } from '../../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
 import { EditUsernameContainer } from '../settings-views/account-views/EditUsernameContainer';
 
-const styles = (theme: SaladTheme) => ({
+const styles = ({
   container: {
     display: 'flex',
     flexDirection: 'row',
