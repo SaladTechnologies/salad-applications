@@ -59,6 +59,10 @@ export class AnalyticsStore {
       $last_login: new Date().toISOString(),
     })
 
+    mixpanel.people.set_once({
+      'First login': new Date().toISOString(),
+    })
+
     mixpanel.identify(profile.id)
 
     this.track('Login')
@@ -78,6 +82,32 @@ export class AnalyticsStore {
     this.track('Logout')
 
     mixpanel.reset()
+  }
+
+  /** Tracks when a user accepts Salad TOS */
+  public trackAcceptedTerms = (version: string) => {
+    if (!this.started) return
+
+    this.track('Accepted Terms', {
+      Version: version,
+    })
+
+    mixpanel.people.set({
+      'Terms Version': version,
+    })
+  }
+
+  /** Tracks when a user accepts Salad TOS */
+  public trackWhatsNew = (version: string) => {
+    if (!this.started) return
+
+    this.track('Whats New', {
+      Version: version,
+    })
+
+    mixpanel.people.set({
+      'Whats New Version': version,
+    })
   }
 
   /** Track when mining starts */

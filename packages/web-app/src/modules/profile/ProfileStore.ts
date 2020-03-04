@@ -23,8 +23,7 @@ export class ProfileStore {
   @computed
   public get isOnboarding(): boolean {
     const onboarding =
-      this.currentProfile === undefined ||
-        this.currentProfile.lastAcceptedTermsOfService !== Config.termsVersion
+      this.currentProfile === undefined || this.currentProfile.lastAcceptedTermsOfService !== Config.termsVersion
 
     this.setOnboarding(onboarding)
 
@@ -33,9 +32,9 @@ export class ProfileStore {
 
   @computed
   public get showWhatsNew(): boolean {
-    const show = 
+    const show =
       this.store.profile.currentProfile !== undefined &&
-        this.store.profile.currentProfile.lastSeenApplicationVersion !== Config.whatsNewVersion
+      this.store.profile.currentProfile.lastSeenApplicationVersion !== Config.whatsNewVersion
 
     return show
   }
@@ -90,6 +89,8 @@ export class ProfileStore {
       }
 
       this.currentProfile = profile
+
+      this.store.analytics.trackAcceptedTerms(Config.termsVersion)
     } catch (err) {
       console.log(err)
     } finally {
@@ -133,6 +134,8 @@ export class ProfileStore {
       let profile = patch.data
 
       this.currentProfile = profile
+
+      this.store.analytics.trackWhatsNew(Config.whatsNewVersion)
     } finally {
       this.isUpdating = false
     }
