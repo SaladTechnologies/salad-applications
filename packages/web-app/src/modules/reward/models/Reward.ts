@@ -39,7 +39,7 @@ export interface Reward {
   image?: string
 
   /** A collection of product images */
-  images?: string[]
+  images?: Array<string | undefined>
 
   /** A collection of product videos */
   videos?: string[]
