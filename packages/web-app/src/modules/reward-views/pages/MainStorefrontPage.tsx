@@ -33,7 +33,9 @@ class _MainStorefrontPage extends Component<Props> {
         <div className={classes.content}>
           {categories &&
             Array.from(categories).map(([category, rewards]) => {
-              if (heroCategories.includes(category)) {
+              if (!rewards || rewards.length === 0) {
+                return null
+              } else if (heroCategories.includes(category)) {
                 return (
                   <RewardHero title={category}>
                     {rewards.map(x => (
