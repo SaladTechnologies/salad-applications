@@ -16,6 +16,7 @@ export const rewardFromResource = (r: RewardResource): Reward => ({
   description: r.description,
   price: r.price,
   coverImage: toFullImageUrl(r.coverImage),
+  heroImage: toFullImageUrl(r.heroImage),
   image: toFullImageUrl(r.image),
   images: r.images && r.images.map(x => toFullImageUrl(x)),
   platform: r.platform,

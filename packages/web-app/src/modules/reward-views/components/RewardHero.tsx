@@ -10,8 +10,8 @@ const styles = (theme: SaladTheme) => ({
   container: { color: theme.lightGreen },
   titleText: {
     fontFamily: theme.fontGroteskBook19,
-    fontSize: 18,
-    padding: '6px 12px',
+    fontSize: 20,
+    padding: '12px 18px',
     textTransform: 'capitalize',
   },
 })
