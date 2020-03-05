@@ -22,7 +22,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 /** List of categories that should be displayed as heros, all others are regular rewards */
-const heroCategories = ['gaming gift cards', 'hardware']
+const heroCategories = ['top chops']
 
 class _MainStorefrontPage extends Component<Props> {
   render() {

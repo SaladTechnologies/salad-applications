@@ -2,16 +2,27 @@ import { RewardResource } from './models/RewardResource'
 import { Reward } from './models/Reward'
 import { Config } from '../../config'
 
+const toFullImageUrl = (url?: string): string | undefined => (url ? new URL(url, Config.baseAPIUrl).href : undefined)
+
 export const rewardFromResource = (r: RewardResource): Reward => ({
   //Reward data
   id: r.id,
   name: r.name,
+  releaseDate: r.releaseDate,
+  addedDate: r.addedDate,
+  developerName: r.developerName,
+  publisherName: r.publisherName,
+  headline: r.headline,
   description: r.description,
   price: r.price,
-  image: r.image ? new URL(r.image, Config.baseAPIUrl).href : undefined,
+  coverImage: toFullImageUrl(r.coverImage),
+  image: toFullImageUrl(r.image),
+  images: r.images && r.images.map(x => toFullImageUrl(x)),
+  platform: r.platform,
   category: r.category,
   tags: r.tags && r.tags.map(x => x.toLowerCase()),
   quantity: r.quantity,
+  //TODO: Requirements...
 
   //Client side
   redeemable: false,
