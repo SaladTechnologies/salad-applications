@@ -91,6 +91,9 @@ export class RewardStore {
   private categorizeRewards = (rewards: Reward[]): Map<string, RewardId[]> => {
     let categories = new Map<string, RewardId[]>()
 
+    //Adds the top chops category as the first category so it will always be the first row
+    categories.set('top chops', [])
+
     for (let r of rewards) {
       for (let t of r.tags) {
         if (!categories.has(t)) {

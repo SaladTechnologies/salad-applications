@@ -41,7 +41,7 @@ const styles = (theme: SaladTheme) => ({
     textAlign: 'center',
   },
   textContainer: {
-    padding: '0 10px',
+    padding: 10,
   },
   subTextContainer: {
     display: 'flex',
@@ -49,7 +49,7 @@ const styles = (theme: SaladTheme) => ({
   nameText: {
     color: theme.lightGreen,
     fontFamily: theme.fontGroteskLight09,
-    fontSize: 24,
+    fontSize: 32,
     letterSpacing: 0.5,
     flex: 1,
     whiteSpace: 'nowrap',
@@ -59,8 +59,9 @@ const styles = (theme: SaladTheme) => ({
   priceText: {
     color: theme.green,
     fontFamily: theme.fontGroteskBook25,
-    fontSize: 10,
+    fontSize: 14,
     letterSpacing: 1,
+    paddingTop: 5,
   },
   outOfStockPrice: {
     textDecoration: 'line-through',
@@ -68,7 +69,10 @@ const styles = (theme: SaladTheme) => ({
   },
   stockLabel: {
     marginLeft: 8,
-    padding: '1px 10px',
+    padding: '0px 10px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     fontSize: 8,
   },
   outOfStockLabel: {
