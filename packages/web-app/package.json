@@ -87,6 +87,7 @@
     "react-hint": "3.2.0",
     "react-image": "^2.4.0",
     "react-jss": "10.0.0-alpha.10",
+    "react-loading-skeleton": "^2.0.1",
     "react-markdown": "4.3.1",
     "react-multi-carousel": "^2.5.2",
     "react-player": "^1.15.2",

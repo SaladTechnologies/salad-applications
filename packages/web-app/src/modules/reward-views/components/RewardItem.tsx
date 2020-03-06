@@ -5,6 +5,9 @@ import { SaladTheme } from '../../../SaladTheme'
 import classnames from 'classnames'
 import { Reward } from '../../reward/models'
 import { RewardMissingImage } from './RewardMissingImage'
+import Skeleton from 'react-loading-skeleton'
+//@ts-ignore
+import AspectRatio from 'react-aspect-ratio'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -105,18 +108,25 @@ class _RewardItem extends Component<Props> {
     let lowQuanity = reward?.quantity !== undefined && reward?.quantity > 0
     return (
       <div key={reward?.id} className={classnames(classes.container)} onClick={this.handleViewReward}>
-        <Img
-          className={classes.image}
-          src={reward?.coverImage}
-          draggable={false}
-          alt=""
-          unloader={<RewardMissingImage text={reward?.name} />}
-        />
+        <AspectRatio ratio={'323/433'}>
+          {reward ? (
+            <Img
+              className={classes.image}
+              src={reward?.coverImage}
+              draggable={false}
+              alt=""
+              loader={<Skeleton height={'100%'} />}
+              unloader={<RewardMissingImage text={reward?.name} />}
+            />
+          ) : (
+            <Skeleton height={'100%'} />
+          )}
+        </AspectRatio>
         <div className={classes.textContainer}>
-          <div className={classes.nameText}>{reward ? reward.name : 'Unknown'}</div>
+          <div className={classes.nameText}>{reward ? reward.name : <Skeleton />}</div>
           <div className={classes.subTextContainer}>
             <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
-              ${reward ? reward.price.toFixed(2) : '-'}
+              {reward ? `$${reward.price.toFixed(2)}` : <Skeleton width={100} />}
             </div>
             {outOfStock && (
               <div className={classnames(classes.priceText, classes.stockLabel, classes.outOfStockLabel)}>

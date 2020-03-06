@@ -9,6 +9,7 @@ import { Reward } from '../../reward/models'
 import { Button } from '../../../components'
 import Img from 'react-image'
 import { RewardMissingImage } from './RewardMissingImage'
+import Skeleton from 'react-loading-skeleton'
 
 const styles = (theme: SaladTheme) => ({
   container: {},
@@ -35,11 +36,14 @@ const styles = (theme: SaladTheme) => ({
     position: 'absolute',
     color: theme.lightGreen,
     top: '10%',
-    width: '26%',
+    width: '30%',
     height: '50%',
     minWidth: 300,
     minHeight: 180,
     right: 30,
+    zIndex: 2,
+  },
+  infoContent: {
     padding: '6px 24px',
     zIndex: 2,
     backdropFilter: 'blur(8.57952px)',
@@ -49,6 +53,7 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
     flexDirection: 'column',
     textShadow: '0px 0px 5px rgba(178, 213, 48, 0.5), -1px -1px 3px rgba(0, 0, 0, 0.25)',
+    height: '100%',
   },
   nameText: {
     fontFamily: theme.fontGroteskLight09,
@@ -122,41 +127,51 @@ class _RewardHeroItem extends Component<Props> {
         <div className={classes.content}>
           <div className={classes.imageContainer} onClick={this.handleViewReward}>
             <AspectRatio ratio={'800/450'}>
-              <Img
-                className={classes.image}
-                src={reward?.heroImage}
-                draggable={false}
-                alt=""
-                unloader={<RewardMissingImage text={reward?.name} />}
-              />
+              {reward ? (
+                <Img
+                  className={classes.image}
+                  src={reward?.heroImage}
+                  draggable={false}
+                  alt=""
+                  loader={<Skeleton height={'100%'} />}
+                  unloader={<RewardMissingImage text={reward?.name} />}
+                />
+              ) : (
+                <Skeleton height={'100%'} />
+              )}
             </AspectRatio>
           </div>
-          {reward && (
-            <div className={classes.infoContainer}>
-              <div className={classes.nameText}>{reward?.name}</div>
-              <div className={classes.priceContainer}>
-                <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
-                  ${reward?.price.toFixed(2)}
+
+          <div className={classes.infoContainer}>
+            {reward ? (
+              <div className={classes.infoContent}>
+                <div className={classes.nameText}>{reward?.name}</div>
+                <div className={classes.priceContainer}>
+                  <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
+                    ${reward?.price.toFixed(2)}
+                  </div>
+                  {outOfStock && (
+                    <div className={classnames(classes.priceText, classes.stockLabel, classes.outOfStockLabel)}>
+                      Out of Stock
+                    </div>
+                  )}
+                  {lowQuanity && (
+                    <div className={classnames(classes.priceText, classes.stockLabel, classes.lowQuanityLabel)}>
+                      {`${reward?.quantity} Remaining`}
+                    </div>
+                  )}
                 </div>
-                {outOfStock && (
-                  <div className={classnames(classes.priceText, classes.stockLabel, classes.outOfStockLabel)}>
-                    Out of Stock
-                  </div>
-                )}
-                {lowQuanity && (
-                  <div className={classnames(classes.priceText, classes.stockLabel, classes.lowQuanityLabel)}>
-                    {`${reward?.quantity} Remaining`}
-                  </div>
-                )}
+                <div className={classes.headlineText}>{reward?.headline}</div>
+                <div className={classes.buttonContainer}>
+                  <Button onClick={this.handleViewReward} disabled={reward === undefined}>
+                    GET IT NOW
+                  </Button>
+                </div>
               </div>
-              <div className={classes.headlineText}>{reward?.headline}</div>
-              <div className={classes.buttonContainer}>
-                <Button onClick={this.handleViewReward} disabled={reward === undefined}>
-                  GET IT NOW
-                </Button>
-              </div>
-            </div>
-          )}
+            ) : (
+              <Skeleton height={'100%'} />
+            )}
+          </div>
         </div>
       </div>
     )
