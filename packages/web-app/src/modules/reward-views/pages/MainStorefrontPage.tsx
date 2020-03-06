@@ -69,7 +69,6 @@ class _MainStorefrontPage extends Component<Props> {
                 <RewardItem />
                 <RewardItem />
               </RewardSlider>
-              {/* </RewardHero> */}
             </div>
           )}
           <RewardDisclaimers />
