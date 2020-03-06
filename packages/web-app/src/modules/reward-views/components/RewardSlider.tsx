@@ -16,7 +16,7 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
-const responsive = {
+export const rewardItemResponsive = {
   superLargeDesktop: {
     breakpoint: { max: 4000, min: 3000 },
     items: 8,
@@ -87,7 +87,7 @@ class _RewardSlider extends Component<Props, State> {
         <div onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
           <Carousel
             keyBoardControl={false}
-            responsive={responsive}
+            responsive={rewardItemResponsive}
             customRightArrow={isHovering ? <RewardSliderButton direction="right" /> : <div />}
             customLeftArrow={isHovering ? <RewardSliderButton direction="left" /> : <div />}
             arrows

@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinus, faClone, faTimes } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
 import { ChoppingCartButtonContainer } from '../../chopping-cart-views'
+import { RewardSearchBarContainer } from '../../reward-views'
 
 export class MenuItem {
   constructor(
@@ -146,7 +147,12 @@ class _Titlebar extends Component<Props> {
           )}
         </div>
 
-        {menuItems && <ChoppingCartButtonContainer />}
+        {menuItems && (
+          <>
+            <RewardSearchBarContainer />
+            <ChoppingCartButtonContainer />
+          </>
+        )}
 
         {showWindowActions && (
           <>

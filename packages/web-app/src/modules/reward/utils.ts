@@ -8,8 +8,8 @@ export const rewardFromResource = (r: RewardResource): Reward => ({
   //Reward data
   id: r.id,
   name: r.name,
-  releaseDate: r.releaseDate,
-  addedDate: r.addedDate,
+  releaseDate: r.releaseDate ? new Date(r.releaseDate) : undefined,
+  addedDate: r.addedDate ? new Date(r.addedDate) :undefined,
   developerName: r.developerName,
   publisherName: r.publisherName,
   headline: r.headline,

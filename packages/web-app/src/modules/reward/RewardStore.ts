@@ -216,4 +216,40 @@ export class RewardStore {
       console.error('Cleared isRedeeming flag')
     }
   })
+
+  @action
+  searchRewards = (query?: string): Reward[] | undefined => {
+    console.log('Searing for rewards with query ' + query)
+
+    let search = query?.replace('?q=', '').toLowerCase()
+
+    if (search) {
+      return Array.from(this.rewards.values())
+        .filter(x => search && x.name.toLowerCase().includes(search))
+        .sort((a: Reward, b: Reward) => {
+          let name1 = a.name.toLowerCase()
+          let name2 = b.name.toLowerCase()
+
+          if (name1 < name2) {
+            return -1
+          }
+          if (name2 > name1) {
+            return 1
+          }
+          return 0
+        })
+    }
+
+    return undefined
+  }
+
+  /** Updates the current search text */
+  @action
+  updateSearch = (searchText: string) => {
+    if (searchText) {
+      this.store.routing.push({ pathname: '/search', search: `?q=${searchText}` })
+    } else {
+      this.store.routing.push('/')
+    }
+  }
 }

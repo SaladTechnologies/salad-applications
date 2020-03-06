@@ -49,7 +49,9 @@ class _RewardImageCarousel extends Component<Props> {
     }
 
     if (!reward.images || reward.images.length === 0) {
-      if (reward.coverImage) {
+      if (reward.heroImage) {
+        return <Img className={classes.singleImage} src={reward.heroImage} alt="" />
+      } else if (reward.coverImage) {
         return <Img className={classes.singleImage} src={reward.coverImage} alt="" />
       } else if (reward.image) {
         return <Img className={classes.singleImage} src={reward.image} alt="" />
