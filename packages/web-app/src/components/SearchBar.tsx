@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
+import { SaladTheme } from '../SaladTheme'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
@@ -8,30 +8,25 @@ import { ChangeEvent } from 'react'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    userSelect: 'none',
-  },
-  innerContainer: {
     display: 'inline-flex',
-    borderBottom: `2px solid ${theme.lightGreen}`,
-    paddingBottom: '.25rem',
+    // borderBottom: `2px solid ${theme.lightGreen}`,
+    paddingBottom: 4,
     flexWrap: 'nowrap',
     alignItems: 'baseline',
+    color: theme.lightGreen,
   },
   icon: {
-    marginRight: '.5rem',
-    color: theme.lightGreen,
-    height: '9px',
+    margin: 5,
   },
   textInput: {
-    fontFamily: 'sharpGroteskLight25',
-    fontSize: theme.small,
+    fontFamily: theme.fontGroteskLight25,
+    fontSize: 10,
     background: 'transparent',
     border: 'none',
     outline: 'none',
-    letterSpacing: '1px',
-    userSelect: 'none',
-    width: '136px', //This is used to drive the width of the entire search bar
+    letterSpacing: 1,
     color: theme.lightGreen,
+    width: 200, //This is used to drive the width of the entire search bar
     '&::placeholder': {
       opacity: 0.5,
       color: theme.lightGreen,
@@ -42,7 +37,6 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   text?: string
   onTextEntered?: (txt: string) => void
-  className?: string
 }
 
 class _SearchBar extends Component<Props> {
@@ -53,20 +47,18 @@ class _SearchBar extends Component<Props> {
     }
   }
   render() {
-    const { text, className, classes } = this.props
+    const { text, classes } = this.props
 
     return (
-      <div className={classnames(classes.container, className)}>
-        <div className={classnames(classes.innerContainer)}>
-          <FontAwesomeIcon className={classes.icon} icon={faSearch} />
-          <input
-            className={classes.textInput}
-            type="text"
-            value={text}
-            placeholder="SEARCH"
-            onChange={this.handleTextEntry}
-          />
-        </div>
+      <div className={classnames(classes.container)}>
+        <FontAwesomeIcon className={classes.icon} icon={faSearch} />
+        <input
+          className={classes.textInput}
+          type="text"
+          value={text}
+          placeholder="SEARCH"
+          onChange={this.handleTextEntry}
+        />
       </div>
     )
   }
