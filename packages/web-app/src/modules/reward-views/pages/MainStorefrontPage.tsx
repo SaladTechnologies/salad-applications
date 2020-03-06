@@ -31,7 +31,7 @@ class _MainStorefrontPage extends Component<Props> {
     return (
       <Scrollbars>
         <div className={classes.content}>
-          {categories &&
+          {categories && categories.size > 0 ? (
             Array.from(categories).map(([category, rewards]) => {
               if (!rewards || rewards.length === 0) {
                 return null
@@ -52,7 +52,25 @@ class _MainStorefrontPage extends Component<Props> {
                   </RewardSlider>
                 )
               }
-            })}
+            })
+          ) : (
+            <div>
+              <RewardHero title={'Top Chops'}>
+                <RewardHeroItem />
+              </RewardHero>
+              <RewardSlider title={'Games'}>
+                <RewardItem />
+                <RewardItem />
+                <RewardItem />
+                <RewardItem />
+                <RewardItem />
+                <RewardItem />
+                <RewardItem />
+                <RewardItem />
+                <RewardItem />
+              </RewardSlider>
+            </div>
+          )}
           <RewardDisclaimers />
         </div>
       </Scrollbars>

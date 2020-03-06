@@ -8,12 +8,26 @@ storiesOf('Modules/Reward Pages/Main Storefront Page', module)
   .addDecorator(storyFn => (
     <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}>{storyFn()}</div>
   ))
-  .add('with rewards', () => {
-    let rewards = generateRewards(1)[8]
+  .add('with rewards (no hero)', () => {
+    let rewards = generateRewards(8)
     let categories = new Map()
-    categories.set('Category 1', rewards)
-    categories.set('Category 2', rewards)
+    categories.set('category 1', rewards)
+    categories.set('category 2', rewards)
     return <MainStorefrontPage onViewReward={action('view reward')} categories={categories} />
+  })
+  .add('with rewards (w/ hero)', () => {
+    let rewards = generateRewards(8)
+    let categories = new Map()
+    categories.set('top chops', rewards)
+    categories.set('category 1', rewards)
+    categories.set('category 2', rewards)
+    return <MainStorefrontPage onViewReward={action('view reward')} categories={categories} />
+  })
+  .add('without rewards (undefined)', () => {
+    return <MainStorefrontPage onViewReward={action('view reward')} categories={undefined} />
+  })
+  .add('without rewards (empty)', () => {
+    return <MainStorefrontPage onViewReward={action('view reward')} categories={new Map()} />
   })
 
 storiesOf('Modules/Reward Pages/Reward Details Page', module)

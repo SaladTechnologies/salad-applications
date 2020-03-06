@@ -14,6 +14,7 @@ import { DefaultTheme } from './SaladTheme'
 import { createClient } from './axiosFactory'
 import * as Sentry from '@sentry/browser'
 import { Config } from './config'
+import { SkeletonTheme } from 'react-loading-skeleton'
 
 Sentry.init({
   dsn: Config.sentryDSN,
@@ -40,7 +41,9 @@ const history = syncHistoryWithStore(routerHistory, rootStore.routing)
 ReactDOM.render(
   <Router history={history}>
     <ThemeProvider theme={DefaultTheme}>
-      <App />
+      <SkeletonTheme color={'#172E40'} highlightColor="#304759">
+        <App />
+      </SkeletonTheme>
     </ThemeProvider>
   </Router>,
   document.getElementById('root'),
