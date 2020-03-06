@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { SaladTheme } from '../../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
-import { MainStorefrontContainer } from '../reward-views'
+import { Route } from 'react-router'
+import { MainStorefrontContainer, RewardSearchResultContainer } from '../reward-views'
 import { getStore } from '../../Store'
 import { ProfileMenuItemContainer } from '../profile-views'
 import { StartButtonContainer } from '../machine-views'
@@ -105,7 +106,8 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
                 <RewardListContainer />
               </div>
             </div> */}
-            <MainStorefrontContainer />
+            <Route path="/search" component={RewardSearchResultContainer} />
+            <Route path="/" component={MainStorefrontContainer} />
 
             {/* Right column */}
             {/* TODO: This needs to move */}

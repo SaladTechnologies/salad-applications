@@ -10,10 +10,10 @@ export interface RewardResource {
   name: string
 
   /** When was the reward released. This should be the game's release date or for non games when it was added to salad */
-  releaseDate?: Date
+  releaseDate?: string
 
   /** When was the reward aded to Salad. */
-  addedDate?: Date
+  addedDate?: string
 
   /** Developer of the product */
   developerName?: string
