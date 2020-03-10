@@ -3,7 +3,7 @@ import { Reward } from './models/Reward'
 import { RewardsResource } from './models/RewardsResource'
 import { AxiosInstance } from 'axios'
 
-import { rewardFromResource } from './utils'
+import { rewardFromResource, encodeCategory } from './utils'
 import { RootStore } from '../../Store'
 import { SaladPay } from '../salad-pay/SaladPay'
 import { SaladPaymentResponse, AbortError } from '../salad-pay'
@@ -61,6 +61,19 @@ export class RewardStore {
     return this.rewards.get(id)
   }
 
+  getRewardsByCategory = (category?: string): Array<Reward | undefined> | undefined => {
+    if (!category) {
+      return undefined
+    }
+    let rewardIds = this.categories.get(category)
+
+    if (!rewardIds) {
+      return undefined
+    }
+
+    return rewardIds.map(x => this.getReward(x)).filter(x => x !== undefined)
+  }
+
   isInChoppingCart = (id?: string): boolean => {
     return this.selectedRewardId === id
   }
@@ -99,11 +112,13 @@ export class RewardStore {
     categories.set('donations', [])
 
     for (let r of rewards) {
-      for (let t of r.tags) {
-        if (!categories.has(t)) {
-          categories.set(t, [r.id])
-        } else {
-          categories.get(t)?.push(r.id)
+      if (r.tags) {
+        for (let t of r.tags) {
+          if (!categories.has(t)) {
+            categories.set(t, [r.id])
+          } else {
+            categories.get(t)?.push(r.id)
+          }
         }
       }
     }
@@ -116,11 +131,6 @@ export class RewardStore {
     var res = yield this.axios.get('profile/selected-reward')
     this.selectedRewardId = res.data.rewardId
   })
-
-  viewReward = (reward: Reward) => {
-    this.store.ui.showModal(`/rewards/${reward.id}`)
-    this.store.analytics.trackRewardView(reward)
-  }
 
   @action.bound
   addToChoppingCart = flow(function*(this: RewardStore, reward: Reward) {
@@ -251,9 +261,32 @@ export class RewardStore {
   @action
   updateSearch = (searchText: string) => {
     if (searchText) {
-      this.store.routing.push({ pathname: '/search', search: `?q=${searchText}` })
+      this.store.routing.replace({ pathname: '/search', search: `?q=${searchText}` })
+      this.store.analytics.trackRewardSearch(searchText)
     } else {
       this.store.routing.push('/')
     }
+  }
+
+  /** Shows the reward details modal page for the given reward */
+  viewReward = (reward: Reward) => {
+    this.store.ui.showModal(`/rewards/${reward.id}`)
+    this.store.analytics.trackRewardView(reward)
+  }
+
+  /** Shows the "Explore More" page for the given category */
+  @action
+  viewCategory = (category: string) => {
+    if (!category || !this.categories.has(category)) {
+      console.warn(`Unable to view category ${category}. Not found.`)
+      return
+    }
+
+    //Normalize the category to ensure it is safe to be used as a URL
+    let safeCategory = encodeCategory(category)
+
+    this.store.routing.push({ pathname: `/browse/category/${safeCategory}` })
+
+    this.store.analytics.trackRewardCategoryViewed(category)
   }
 }

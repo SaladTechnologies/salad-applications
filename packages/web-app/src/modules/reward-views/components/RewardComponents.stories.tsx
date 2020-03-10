@@ -15,7 +15,6 @@ import gta7 from '../../../../.storybook/assets/gta-7.jpg'
 import gta8 from '../../../../.storybook/assets/gta-8.jpg'
 import { action } from '@storybook/addon-actions'
 import { Reward } from '../../reward/models/Reward'
-import { RewardCategory } from '../../reward/models/RewardCategory'
 import { RewardItem } from './RewardItem'
 import { RewardSlider } from './RewardSlider'
 import { RewardSliderButton } from './RewardSliderButton'
@@ -51,14 +50,12 @@ export const generateRewards = (count: number): Reward[] => {
       platform: RewardPlatform.Steam,
       description: lorem.generateParagraphs(20),
       price: i + 1,
-      redeemable: i < count / 2,
       coverImage: i % 2 === 0 ? skyrimCover : witcherCover,
       heroImage: i % 2 === 0 ? skyrimHero : witcherHero,
       images: [gta1, gta2, gta3, gta4, gta5, gta6, gta7, gta8],
       videos: ['https://www.youtube.com/watch?v=xZzhFnEbfIc', 'https://www.youtube.com/embed/1xjCdN_rWCE'],
-      category: RewardCategory.Game,
       checkoutTerms: ["Don't scam us"],
-      tags: ['Game'],
+      tags: ['game'],
       remainingTimeLabel: '2 days',
       percentUnlocked: 0.5,
       color: 'red',
@@ -155,18 +152,28 @@ storiesOf('Modules/Rewards/Reward Item', module)
   })
 
 storiesOf('Modules/Rewards/Reward Slider', module)
-  .add('with 1 item', () => {
+  .add('item (n=1)', () => {
     let reward = generateRewards(1)[0]
     return (
-      <RewardSlider>
+      <RewardSlider onViewMore={action('view more')}>
         <RewardItem reward={reward} onViewReward={action('view reward')} />
+      </RewardSlider>
+    )
+  })
+  .add('items (n=10)', () => {
+    let rewards = generateRewards(10)
+    return (
+      <RewardSlider onViewMore={action('view more')}>
+        {rewards.map(x => (
+          <RewardItem reward={x} onViewReward={action('view reward')} />
+        ))}
       </RewardSlider>
     )
   })
   .add('with multiple items', () => {
     let rewards = generateRewards(10)
     return (
-      <RewardSlider>
+      <RewardSlider onViewMore={action('view more')}>
         {rewards.map(x => (
           <RewardItem reward={x} onViewReward={action('view reward')} />
         ))}
@@ -177,17 +184,17 @@ storiesOf('Modules/Rewards/Reward Slider', module)
     let rewards = generateRewards(10)
     return (
       <>
-        <RewardSlider title={'Category 1'}>
+        <RewardSlider title={'Category 1'} onViewMore={action('view more')}>
           {rewards.map(x => (
             <RewardItem reward={x} onViewReward={action('view reward')} />
           ))}
         </RewardSlider>
-        <RewardSlider title={'Category 2'}>
+        <RewardSlider title={'Category 2'} onViewMore={action('view more')}>
           {rewards.map(x => (
             <RewardItem reward={x} onViewReward={action('view reward')} />
           ))}
         </RewardSlider>
-        <RewardSlider title={'Category 3'}>
+        <RewardSlider title={'Category 3'} onViewMore={action('view more')}>
           {rewards.map(x => (
             <RewardItem reward={x} onViewReward={action('view reward')} />
           ))}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { Route } from 'react-router'
-import { MainStorefrontContainer, RewardSearchResultContainer } from '../reward-views'
+import { Route, Switch } from 'react-router'
+import { MainStorefrontContainer, RewardSearchResultContainer, RewardBrowseCategoryContainer } from '../reward-views'
 import { getStore } from '../../Store'
 import { ProfileMenuItemContainer } from '../profile-views'
 import { StartButtonContainer } from '../machine-views'
@@ -37,6 +37,7 @@ const styles = ({
   },
   main: {
     flex: 1,
+    position: 'relative',
   },
   mainColumn: {},
   verticalLayout: {
@@ -105,9 +106,11 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
                 <RewardListContainer />
               </div>
             </div> */}
-            <Route path="/search" component={RewardSearchResultContainer} />
-            <Route path="/" component={MainStorefrontContainer} />
-
+            <Switch>
+              <Route exact path="/search" component={RewardSearchResultContainer} />
+              <Route exact path="/browse/category/:category" component={RewardBrowseCategoryContainer} />
+              <Route path="/" component={MainStorefrontContainer} />
+            </Switch>
             {/* Right column */}
             {/* TODO: This needs to move */}
             {/* <div className={classnames(classes.mainColumn, classes.rightColumn, classes.verticalLayout)}>

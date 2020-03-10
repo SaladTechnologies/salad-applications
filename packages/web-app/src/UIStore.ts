@@ -1,6 +1,5 @@
 import { action } from 'mobx'
 import { RootStore } from './Store'
-import { Reward } from './modules/reward/models'
 
 export class UIStore {
   constructor(private readonly store: RootStore) {}
@@ -13,11 +12,6 @@ export class UIStore {
   @action
   hideModal = () => {
     this.store.routing.replace('/')
-  }
-
-  showReward = (reward: Reward) => {
-    this.store.ui.showModal(`/rewards/${reward.id}`)
-    this.store.analytics.trackRewardView(reward)
   }
 
   showProfilePage = () => {
