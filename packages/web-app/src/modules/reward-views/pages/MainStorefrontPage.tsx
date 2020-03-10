@@ -19,6 +19,7 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   categories?: Map<string, Reward[]>
   onViewReward?: (reward?: Reward) => void
+  onViewMore?: (title?: string) => void
 }
 
 /** List of categories that should be displayed as heros, all others are regular rewards */
@@ -26,7 +27,9 @@ const heroCategories = ['top chops']
 
 class _MainStorefrontPage extends Component<Props> {
   render() {
-    const { categories, onViewReward, classes } = this.props
+    const { categories, onViewReward, onViewMore, classes } = this.props
+    //Maximum number of rewards to show in a single row
+    const maxRowSize = 20
 
     return (
       <Scrollbars>
@@ -45,8 +48,8 @@ class _MainStorefrontPage extends Component<Props> {
                 )
               } else {
                 return (
-                  <RewardSlider title={category}>
-                    {rewards.map(x => (
+                  <RewardSlider title={category} onViewMore={onViewMore}>
+                    {rewards.slice(0, maxRowSize).map(x => (
                       <RewardItem reward={x} onViewReward={onViewReward} />
                     ))}
                   </RewardSlider>
@@ -58,17 +61,13 @@ class _MainStorefrontPage extends Component<Props> {
               <RewardHero title={'Top Chops'}>
                 <RewardHeroItem />
               </RewardHero>
-              <RewardSlider title={'Games'}>
-                <RewardItem />
-                <RewardItem />
-                <RewardItem />
-                <RewardItem />
-                <RewardItem />
-                <RewardItem />
-                <RewardItem />
-                <RewardItem />
-                <RewardItem />
-              </RewardSlider>
+              {[...Array(3)].map(() => (
+                <RewardSlider title={'Games'}>
+                  {[...Array(maxRowSize / 2)].map(() => (
+                    <RewardItem />
+                  ))}
+                </RewardSlider>
+              ))}
             </div>
           )}
           <RewardDisclaimers />

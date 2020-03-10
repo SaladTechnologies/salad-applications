@@ -1,4 +1,3 @@
-import { RewardCategory } from './RewardCategory'
 import { RewardPlatform } from './RewardPlatform'
 import { RewardRequirements } from './RewardRequirements'
 
@@ -46,13 +45,8 @@ export interface Reward {
 
   /** Platform (eg. Steam) */
   platform?: RewardPlatform
-  category: RewardCategory
   checkoutTerms?: string[]
   tags: string[]
-  redeemable: boolean
-  /** How much of the reward has already been unlocked (0-1) */
-  percentUnlocked: number
-  remainingTimeLabel: string
 
   /** The quantity of rewards remaining.
    *  A value means stock is getting low.

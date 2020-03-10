@@ -1,4 +1,3 @@
-import { RewardCategory } from './RewardCategory'
 import { RewardPlatform } from '.'
 import { RewardRequirements } from './RewardRequirements'
 
@@ -44,9 +43,6 @@ export interface RewardResource {
 
   /** Platform (eg. Steam...) */
   platform?: RewardPlatform
-
-  /** The reward category (eg. Game, Gift Card...) */
-  category: RewardCategory
 
   /** A collection of tags to categorize the reward */
   tags: string[]
