@@ -111,6 +111,7 @@ export class RewardStore {
     categories.set('hardware', [])
     categories.set('donations', [])
 
+    //Group the rewards by category
     for (let r of rewards) {
       if (r.tags) {
         for (let t of r.tags) {
@@ -121,6 +122,30 @@ export class RewardStore {
           }
         }
       }
+    }
+
+    //Sorts each category
+    for (let rewardIds of categories.values()) {
+      rewardIds?.sort((a, b) => {
+        let rewardA = this.getReward(a)
+        let rewardB = this.getReward(b)
+
+        let rewardAName = rewardA?.name || ''
+        let rewardBName = rewardB?.name || ''
+
+        //If we are out of stock, make them the lowest priority
+        let rewardAStock = rewardA?.quantity === 0 ? Number.MIN_VALUE : Number.MAX_VALUE
+        let rewardBStock = rewardB?.quantity === 0 ? Number.MIN_VALUE : Number.MAX_VALUE
+
+        let stockDiff = rewardBStock - rewardAStock
+
+        //If the stock status is the same, sort by name
+        if (stockDiff === 0) {
+          return rewardAName > rewardBName ? 1 : rewardBName > rewardAName ? -1 : 0
+        }
+
+        return stockDiff
+      })
     }
 
     return categories
