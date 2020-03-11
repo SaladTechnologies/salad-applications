@@ -286,7 +286,12 @@ export class RewardStore {
   @action
   updateSearch = (searchText: string) => {
     if (searchText) {
-      this.store.routing.replace({ pathname: '/search', search: `?q=${searchText}` })
+      const searchPath = '/search'
+      if (this.store.routing.location.pathname.includes(searchPath)) {
+        this.store.routing.replace({ pathname: searchPath, search: `?q=${searchText}` })
+      } else {
+        this.store.routing.push({ pathname: searchPath, search: `?q=${searchText}` })
+      }
       this.store.analytics.trackRewardSearch(searchText)
     } else {
       this.store.routing.push('/')

@@ -70,6 +70,11 @@ const styles = (theme: SaladTheme) => ({
     top: 6,
     right: 8,
   },
+  componentContainer: {
+    display: 'flex',
+    paddingRight: 50,
+    '-webkit-app-region': 'none',
+  },
   closeButton: {
     '&:hover': {
       opacity: 1,
@@ -148,10 +153,10 @@ class _Titlebar extends Component<Props> {
         </div>
 
         {menuItems && (
-          <>
+          <div className={classes.componentContainer}>
             <RewardSearchBarContainer />
             <ChoppingCartButtonContainer />
-          </>
+          </div>
         )}
 
         {showWindowActions && (
