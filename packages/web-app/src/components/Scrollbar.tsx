@@ -47,6 +47,7 @@ class _Scrollbar extends Component<Props> {
         renderTrackVertical={renderTrack}
         renderThumbHorizontal={renderThumb}
         renderThumbVertical={renderThumb}
+        hideTracksWhenNotNeeded
       >
         <div className={classes.container}>{children}</div>
       </Scrollbars>
