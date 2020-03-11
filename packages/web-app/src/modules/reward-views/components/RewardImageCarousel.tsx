@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
 import classnames from 'classnames'
 import { Reward } from '../../reward/models'
 import Carousel from 'react-multi-carousel'
 import Img from 'react-image'
 import { Divider } from '../../../components'
 
-const styles = (theme: SaladTheme) => ({
+const styles = ({
   container: {
     paddingTop: 18,
   },

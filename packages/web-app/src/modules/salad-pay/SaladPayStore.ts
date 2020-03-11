@@ -1,4 +1,4 @@
-import { action, observable, flow, computed } from 'mobx'
+import { action, observable, computed } from 'mobx'
 import { SaladPaymentRequestOptions } from './models'
 import { getStore } from '../../Store'
 import { SaladAppPaymentRequest } from './handlers'
@@ -72,8 +72,8 @@ export class SaladPayStore {
     this.routing.goBack()
   }
 
-  @action.bound
-  confirmPayment = flow(function*(this: SaladPayStore) {
+  @action
+  confirmPayment = () => {
     console.log('User confirmed order, do magic here')
 
     this.processing = true
@@ -90,5 +90,5 @@ export class SaladPayStore {
         this.processing = false
       },
     })
-  })
+  }
 }

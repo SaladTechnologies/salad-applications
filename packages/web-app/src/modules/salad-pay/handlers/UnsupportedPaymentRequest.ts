@@ -13,7 +13,7 @@ export class UnsupportedPaymentRequest implements SaladPaymentRequest {
     console.error('Unsupported SaladPay environment.')
   }
 
-  on = (event: SaladPaymentRequestEvents, callback: () => void) => {
+  on = (_event: SaladPaymentRequestEvents, _callback: () => void) => {
     console.error('Unsupported SaladPay environment.')
   }
 }

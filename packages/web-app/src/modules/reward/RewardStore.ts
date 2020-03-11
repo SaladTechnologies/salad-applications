@@ -178,7 +178,7 @@ export class RewardStore {
   })
 
   @action.bound
-  removeFromChoppingCart = flow(function*(this: RewardStore, reward: Reward) {
+  removeFromChoppingCart = flow(function*(this: RewardStore, _reward: Reward) {
     const request = {
       rewardId: undefined,
     }

@@ -77,7 +77,7 @@ class _RewardRequirementsPanel extends Component<Props> {
         <Tabs className={classes.tabs}>
           <TabList className={classes.tabList}>
             {reward.requirements.systems &&
-              Array.from(reward.requirements.systems).map(([system, requirements]) => (
+              Array.from(reward.requirements.systems).map(([system]) => (
                 <Tab className={classnames(classes.tab, classes.greenMaterial)} selectedClassName={classes.selectedTab}>
                   {system}
                 </Tab>
@@ -85,7 +85,7 @@ class _RewardRequirementsPanel extends Component<Props> {
           </TabList>
 
           {reward.requirements.systems &&
-            Array.from(reward.requirements.systems).map(([system, requirements]) => (
+            Array.from(reward.requirements.systems).map(([_system, requirements]) => (
               <TabPanel
                 className={classes.tabPanel}
                 selectedClassName={classnames(classes.selectedTabPanel, classes.greenMaterial)}

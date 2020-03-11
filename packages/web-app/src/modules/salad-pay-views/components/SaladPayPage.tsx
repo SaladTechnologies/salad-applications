@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
 import saladPayLogo from '../assets/saladpay.png'
 import Img from 'react-image'
 import { ModalPage } from '../../../components'
 
-const styles = (theme: SaladTheme) => ({
+const styles = ({
   container: {
     width: 516,
     minHeight: 100,

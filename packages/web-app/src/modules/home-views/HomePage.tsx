@@ -7,8 +7,9 @@ import { ProfileMenuItemContainer } from '../profile-views'
 import { StartButtonContainer } from '../machine-views'
 import { MainTitlebarContainer } from './MainTitlebarContainer'
 import { NotificationBannerContainer } from './NotificationBannerContainer'
+import { SaladTheme } from '../../SaladTheme'
 
-const styles = ({
+const styles = (theme: SaladTheme) => ({
   container: {
     bottom: 0,
     left: 0,

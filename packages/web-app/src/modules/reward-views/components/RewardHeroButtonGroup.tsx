@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
 import { IconTriangleRight, IconTriangleLeft } from './assets'
 import { ButtonGroupProps } from 'react-multi-carousel/lib/types'
 
-const styles = (theme: SaladTheme) => ({
+const styles = ({
   container: {
     display: 'flex',
     flexDirection: 'row',

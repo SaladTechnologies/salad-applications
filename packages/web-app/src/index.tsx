@@ -26,7 +26,9 @@ if (!window.salad) {
   window.salad = {
     platform: 'web',
     apiVersion: 100000000,
+    // @ts-ignore
     dispatch: (type: string, payload: any) => {},
+    // @ts-ignore
     onNative: (args: { type: string; payload: any }) => {},
   }
 }

@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
 import { Reward } from '../../reward/models'
 import { RewardSlider, RewardDisclaimers, RewardHero } from '../components'
 import { RewardItem } from '../components/RewardItem'
 import { Scrollbars } from 'react-custom-scrollbars'
 import { RewardHeroItem } from '../components/RewardHeroItem'
 
-const styles = (theme: SaladTheme) => ({
+const styles = ({
   container: {},
   content: {
     paddingTop: 20,
@@ -61,9 +60,9 @@ class _MainStorefrontPage extends Component<Props> {
               <RewardHero title={'Top Chops'}>
                 <RewardHeroItem />
               </RewardHero>
-              {[...Array(3)].map((v, i) => (
+              {[...Array(3)].map((_v, i) => (
                 <RewardSlider key={i} title={'Games'}>
-                  {[...Array(maxRowSize / 2)].map((v, i) => (
+                  {[...Array(maxRowSize / 2)].map((_v, i) => (
                     <RewardItem key={i} />
                   ))}
                 </RewardSlider>

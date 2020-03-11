@@ -1,14 +1,10 @@
 import React, { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
 import { P } from '../../../components'
 import { RewardDetailsContentPanel } from './RewardDetailsContentPanel'
 
-const styles = (theme: SaladTheme) => ({})
+interface Props {}
 
-interface Props extends WithStyles<typeof styles> {}
-
-class _RewardDisclaimers extends Component<Props> {
+export class RewardDisclaimers extends Component<Props> {
   render() {
     return (
       <RewardDetailsContentPanel hideDivider>
@@ -22,5 +18,3 @@ class _RewardDisclaimers extends Component<Props> {
     )
   }
 }
-
-export const RewardDisclaimers = withStyles(styles)(_RewardDisclaimers)
