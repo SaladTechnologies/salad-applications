@@ -53,12 +53,15 @@ const styles = (theme: SaladTheme) => ({
   menuItem: {
     color: theme.mediumGreen,
     '-webkit-app-region': 'none',
-    padding: '.5rem 1rem',
+    padding: '.5rem .75rem',
     fontFamily: 'sharpGroteskLight25',
     fontSize: theme.small,
     letterSpacing: '1.3px',
     cursor: 'pointer',
     position: 'relative',
+    '&:hover': {
+      opacity: 0.7,
+    },
   },
   menuItemNotification: {
     background: theme.darkRed,
@@ -147,6 +150,7 @@ class _Titlebar extends Component<Props> {
               className={classnames(classes.menuItem, classes.altMenuItemColor, classes.uppercase)}
               onClick={this.handleWhatsNewClick}
             >
+              <div className={classes.menuItemNotification} />
               What's new
             </div>
           )}
