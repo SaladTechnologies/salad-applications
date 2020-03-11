@@ -4,8 +4,8 @@ export const IconTriangleRight = () => (
   <svg width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g filter="url(#filter0_dd)">
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M4 19.9999L18 11.9999L4 4L4 19.9999Z"
         stroke="url(#paint0_linear)"
       />
@@ -18,9 +18,9 @@ export const IconTriangleRight = () => (
         width="23.5078"
         height="25.7231"
         filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
+        colorInterpolationFilters="sRGB"
       >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
         <feOffset dx="2" dy="2" />
         <feGaussianBlur stdDeviation="1.5" />
@@ -41,9 +41,9 @@ export const IconTriangleRight = () => (
         y2="39.1879"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#DBF1C1" />
-        <stop offset="0.489583" stop-color="#DBF1C1" stop-opacity="0.3" />
-        <stop offset="1" stop-color="#DBF1C1" />
+        <stop stopColor="#DBF1C1" />
+        <stop offset="0.489583" stopColor="#DBF1C1" stopOpacity="0.3" />
+        <stop offset="1" stopColor="#DBF1C1" />
       </linearGradient>
     </defs>
   </svg>

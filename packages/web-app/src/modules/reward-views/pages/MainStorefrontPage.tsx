@@ -40,17 +40,17 @@ class _MainStorefrontPage extends Component<Props> {
                 return null
               } else if (heroCategories.includes(category)) {
                 return (
-                  <RewardHero title={category}>
+                  <RewardHero key={category} title={category}>
                     {rewards.map(x => (
-                      <RewardHeroItem reward={x} onViewReward={onViewReward} />
+                      <RewardHeroItem key={x.id} reward={x} onViewReward={onViewReward} />
                     ))}
                   </RewardHero>
                 )
               } else {
                 return (
-                  <RewardSlider title={category} onViewMore={onViewMore}>
+                  <RewardSlider key={category} title={category} onViewMore={onViewMore}>
                     {rewards.slice(0, maxRowSize).map(x => (
-                      <RewardItem reward={x} onViewReward={onViewReward} />
+                      <RewardItem key={x.id} reward={x} onViewReward={onViewReward} />
                     ))}
                   </RewardSlider>
                 )
@@ -61,10 +61,10 @@ class _MainStorefrontPage extends Component<Props> {
               <RewardHero title={'Top Chops'}>
                 <RewardHeroItem />
               </RewardHero>
-              {[...Array(3)].map(() => (
-                <RewardSlider title={'Games'}>
-                  {[...Array(maxRowSize / 2)].map(() => (
-                    <RewardItem />
+              {[...Array(3)].map((v, i) => (
+                <RewardSlider key={i} title={'Games'}>
+                  {[...Array(maxRowSize / 2)].map((v, i) => (
+                    <RewardItem key={i} />
                   ))}
                 </RewardSlider>
               ))}
