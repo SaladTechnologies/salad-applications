@@ -4,6 +4,8 @@ import { SaladTheme } from '../../../SaladTheme'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinus, faClone, faTimes } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
+import { ChoppingCartButtonContainer } from '../../chopping-cart-views'
+import { RewardSearchBarContainer } from '../../reward-views'
 
 export class MenuItem {
   constructor(
@@ -67,6 +69,11 @@ const styles = (theme: SaladTheme) => ({
     position: 'absolute',
     top: 6,
     right: 8,
+  },
+  componentContainer: {
+    display: 'flex',
+    paddingRight: 50,
+    '-webkit-app-region': 'none',
   },
   closeButton: {
     '&:hover': {
@@ -144,6 +151,14 @@ class _Titlebar extends Component<Props> {
             </div>
           )}
         </div>
+
+        {menuItems && (
+          <div className={classes.componentContainer}>
+            <RewardSearchBarContainer />
+            <ChoppingCartButtonContainer />
+          </div>
+        )}
+
         {showWindowActions && (
           <>
             <div onClick={this.handleMinimize}>

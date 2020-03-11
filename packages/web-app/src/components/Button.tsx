@@ -10,6 +10,7 @@ const styles = (theme: SaladTheme) => ({
     backgroundColor: 'transparent',
     border: 'none',
     textAlign: 'center',
+    padding: '8px 12px',
     textTransform: (props: Props) => (props.uppercase ? 'uppercase' : 'capitalize'),
     userSelect: 'none',
     color: (props: Props) => (props.dark ? theme.darkBlue : theme.lightGreen),
@@ -36,7 +37,7 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  type?: "button" | "submit" | "reset"
+  type?: 'button' | 'submit' | 'reset'
   dark?: boolean
   uppercase?: boolean
   disabled?: boolean
@@ -47,8 +48,9 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _Button extends Component<Props> {
-  handleClick = () => {
+  handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const { loading, disabled, onClick } = this.props
+    event.stopPropagation()
     if (loading !== true && !disabled && onClick != null) {
       onClick()
     }
@@ -57,7 +59,7 @@ class _Button extends Component<Props> {
   render() {
     const { dark, loading, className, type, classes, disabled, children } = this.props
     let enabled = !loading && !disabled
-    
+
     return (
       <AnimatedBorder
         dark={dark}

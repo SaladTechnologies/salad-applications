@@ -6,21 +6,14 @@ import { isEmailFormat } from '../../../../utils'
 
 const styles = ({
   container: {
-    userSelect: 'none',
     display: 'inline-flex',
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
-
   input: {
-    marginTop: 5,
     width: 300,
   },
-
-  sendButton: {
-    margin: '5px 0 0 5px',
-    padding: 6,
-  },
+  sendButton: {},
 })
 
 interface Props extends WithStyles<typeof styles> {

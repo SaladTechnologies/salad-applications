@@ -157,7 +157,7 @@ export class AnalyticsStore {
       RewardId: reward.id,
       RewardName: reward.name,
       RewardPrice: reward.price,
-      RewardCategory: reward.category,
+      RewardCategory: reward.tags,
     })
   }
 
@@ -169,7 +169,25 @@ export class AnalyticsStore {
       RewardId: reward.id,
       RewardName: reward.name,
       RewardPrice: reward.price,
-      RewardCategory: reward.category,
+      RewardCategory: reward.tags,
+    })
+  }
+
+  /** Track when a reward category is viewed */
+  public trackRewardCategoryViewed = (category: string) => {
+    if (!this.started) return
+
+    this.track('Reward Category Viewed', {
+      Category: category,
+    })
+  }
+
+  /** Track when a reward category is viewed */
+  public trackRewardSearch = (searchTerm: string) => {
+    if (!this.started) return
+
+    this.track('Reward Search', {
+      Term: searchTerm,
     })
   }
 
@@ -181,7 +199,7 @@ export class AnalyticsStore {
       RewardId: reward.id,
       RewardName: reward.name,
       RewardPrice: reward.price,
-      RewardCategory: reward.category,
+      RewardCategory: reward.tags,
     })
   }
 

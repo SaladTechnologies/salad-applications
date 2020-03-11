@@ -19,7 +19,6 @@ import {
 } from './modules/onboarding-views'
 import { HomePage } from './modules/home-views'
 import { LoadingPage } from './components'
-import { RewardDetailsModalContainer, RewardRedemptionModalContainer } from './modules/reward-views'
 import { AccountModalContainer } from './modules/profile-views'
 import { AnimatedSwitch } from './components/AnimatedSwitch'
 import { CompatibilityCheckPageContainer } from './modules/machine-views'
@@ -32,6 +31,8 @@ import {
 } from './modules/error-views'
 // Settings Menu
 import { SettingsContainer } from './modules/settings-views'
+import { RewardDetailsContainer } from './modules/reward-views'
+import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
 // Account Menu
 
 export default class Routes extends Component {
@@ -134,11 +135,14 @@ const Auth = () => {
       <Route exact path="/errors/fallback" component={FallbackErrorContainer} />
       <Route exact path="/errors/network" component={NetworkErrorContainer} />
       <Route exact path="/errors/unknown" component={UnknownErrorContainer} />
-      <Route exact path="/rewards/:id" component={RewardDetailsModalContainer} />
-      <Route exact path="/rewards/:id/redeem" component={RewardRedemptionModalContainer} />
+      <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
+      {/*<Route exact path="/rewards/:id/redeem" component={RewardRedemptionModalContainer} /> */}
       <Route exact path="/profile" component={AccountModalContainer} />
-
       <Route exact path="/onboarding/whats-new" component={WhatsNewPageContainer} />
+
+      {/* SaladPay: This is stand in until we figure out iFrames, popups... */}
+      <Route exact path="/salad-pay/order-summary" component={SaladPayOrderSummaryContainer} />
+      {/* <Route exact path="/salad-pay/confirmation" component={WhatsNewPageContainer} /> */}
 
       <Route path="/settings" component={SettingsContainer} />
     </>

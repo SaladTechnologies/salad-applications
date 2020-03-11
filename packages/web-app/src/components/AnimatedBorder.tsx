@@ -4,7 +4,7 @@ import { SaladTheme } from '../SaladTheme'
 import classnames from 'classnames'
 
 const animationTime = 3
-const borderWidth = 2
+const borderWidth = 1
 const glowWidth = 4
 
 const styles = (theme: SaladTheme) => ({
