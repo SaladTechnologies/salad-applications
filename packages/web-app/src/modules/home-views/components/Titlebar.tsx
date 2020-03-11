@@ -72,7 +72,7 @@ const styles = (theme: SaladTheme) => ({
   },
   componentContainer: {
     display: 'flex',
-    paddingRight: 50,
+    paddingRight: 10,
     '-webkit-app-region': 'none',
   },
   closeButton: {
