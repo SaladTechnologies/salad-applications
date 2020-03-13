@@ -40,6 +40,8 @@ export const styles = (theme: SaladTheme) => ({
     backgroundColor: theme.green,
     color: theme.darkBlue,
     order: 1,
+    display: 'flex',
+    flexDirection: 'column',
     width: '100%',
     padding: '1.5rem 2rem',
   },

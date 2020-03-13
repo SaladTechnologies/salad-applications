@@ -13,6 +13,7 @@ const mapStoreToProps = (store: RootStore): any => {
     { url: '/settings/account', text: 'Account' },
     { url: '/settings/referrals', text: 'Referrals' },
     { url: '/settings/reward-vault', text: 'Reward Vault' },
+    { url: '/settings/offerwall', text: 'Offerwall' },
     { url: '/settings/windows-settings', text: 'Settings' },
   ]
 

@@ -26,6 +26,10 @@ export class UIStore {
     this.showModal('/settings/reward-vault')
   }
 
+  showOfferwallPage = () => {
+    this.showModal('/settings/offerwall')
+  }
+
   @action
   openCanny = () => {
     const openLink = (url: string) => {
