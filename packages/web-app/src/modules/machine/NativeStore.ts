@@ -213,7 +213,7 @@ export class NativeStore {
 
   @action
   closeWindow = () => {
-    if (this.minimizeToTray) {
+    if (this.canMinimizeToTray && this.minimizeToTray) {
       this.send(hide)
     } else {
       this.send(close)
