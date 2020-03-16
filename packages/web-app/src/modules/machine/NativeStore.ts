@@ -72,7 +72,7 @@ export class NativeStore {
   //#endregion
   @computed
   get canMinimizeToTray(): boolean {
-    return this.isNative && this.apiVersion >=8 && this.minimizeToTray
+    return this.isNative && this.apiVersion >=8
   }
 
   @computed
@@ -213,7 +213,7 @@ export class NativeStore {
 
   @action
   closeWindow = () => {
-    if (this.canMinimizeToTray) {
+    if (this.canMinimizeToTray && this.minimizeToTray) {
       this.send(hide)
     } else {
       this.send(close)
