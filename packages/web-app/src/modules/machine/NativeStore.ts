@@ -111,7 +111,7 @@ export class NativeStore {
 
     console.log('Initial compat check: ' + this.skippedCompatCheck)
 
-    this.canMinimizeToTray = store.native.isNative && store.native.apiVersion >= 7
+    this.canMinimizeToTray = store.native.isNative && store.native.apiVersion >= 8
 
     if (this.isNative) {
       window.salad.onNative = this.onNative
