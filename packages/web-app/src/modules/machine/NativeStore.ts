@@ -12,6 +12,7 @@ const setMachineInfo = 'set-machine-info'
 const minimize = 'minimize-window'
 const maximize = 'maximize-window'
 const close = 'close-window'
+const hide = 'hide-window'
 const sendLog = 'send-log'
 const getDesktopVersion = 'get-desktop-version'
 const setDesktopVersion = 'set-desktop-version'
@@ -22,6 +23,7 @@ const logout = 'logout'
 
 const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
 const AUTO_LAUNCH = 'AUTO_LAUNCH'
+const MINIMIZE_TO_TRAY = 'MINIMIZE_TO_TRAY'
 
 declare global {
   interface Window {
@@ -64,6 +66,12 @@ export class NativeStore {
   @observable
   public autoLaunch: boolean = true
 
+  @observable
+  public minimizeToTray: boolean = true
+
+  @observable
+  public canMinimizeToTray: boolean = true
+
   //#endregion
 
   @computed
@@ -102,6 +110,8 @@ export class NativeStore {
     })
 
     console.log('Initial compat check: ' + this.skippedCompatCheck)
+
+    this.canMinimizeToTray = store.native.isNative && store.native.apiVersion >= 8
 
     if (this.isNative) {
       window.salad.onNative = this.onNative
@@ -204,7 +214,11 @@ export class NativeStore {
 
   @action
   closeWindow = () => {
-    this.send(close)
+    if (this.minimizeToTray) {
+      this.send(hide)
+    } else {
+      this.send(close)
+    }
   }
 
   @action.bound
@@ -273,6 +287,15 @@ export class NativeStore {
   }
 
   @action
+  toggleMinimizeToTray = () => {
+    if (this.minimizeToTray) {
+      this.disableMinimizeToTray()
+    } else {
+      this.enableMinimizeToTray()
+    }
+  }
+
+  @action
   enableAutoLaunch = () => {
     this.autoLaunch = true
     Storage.setItem(AUTO_LAUNCH, 'true')
@@ -286,6 +309,18 @@ export class NativeStore {
     Storage.setItem(AUTO_LAUNCH, 'false')
 
     this.send(disableAutoLaunch)
+  }
+
+  @action
+  enableMinimizeToTray = () => {
+    this.minimizeToTray = true
+    Storage.setItem(MINIMIZE_TO_TRAY, 'true')
+  }
+
+  @action
+  disableMinimizeToTray = () => {
+    this.minimizeToTray = false
+    Storage.setItem(MINIMIZE_TO_TRAY, 'false')
   }
 
   @action

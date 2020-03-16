@@ -18,6 +18,9 @@ interface Props extends WithStyles<typeof styles> {
   autoStartEnabled?: boolean
   autoStartDelay?: number
   autoStartUpdate?: (value: number) => void
+  minimizeToTrayToggle?: () => void
+  minimizeToTray?: boolean
+  canMinimizeToTray?:boolean
 }
 
 class _WindowsSettings extends Component<Props> {
@@ -30,6 +33,9 @@ class _WindowsSettings extends Component<Props> {
       autoStartEnabled,
       autoStartDelay,
       autoStartUpdate,
+      minimizeToTrayToggle,
+      minimizeToTray,
+      canMinimizeToTray,
     } = this.props
 
     return (
@@ -70,6 +76,17 @@ class _WindowsSettings extends Component<Props> {
                 />
               </div>
             </ToggleSetting>
+          </>
+        )}
+        {canMinimizeToTray && (
+          <>
+            <Divider />
+            <ToggleSetting
+              title={'Minimize to Tray'}
+              description={"Salad's minimize to tray feature streamlines your time spent launching the app. With it easily accessible in your computer's tray, you can start your chopping with even more ease."}
+              toggled={minimizeToTray}
+              onToggle={minimizeToTrayToggle}
+            />
           </>
         )}
       </>

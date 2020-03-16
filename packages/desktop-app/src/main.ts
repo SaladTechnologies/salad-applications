@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell, Input, powerMonitor } from 'electron'
+import { app, BrowserWindow, ipcMain, shell, Input, powerMonitor, Tray, Menu, nativeImage } from 'electron'
 import { DefaultTheme as theme } from './SaladTheme'
 import isOnline from 'is-online'
 import * as path from 'path'
@@ -150,6 +150,18 @@ const createMainWindow = () => {
     console.log('ready to show main window')
     mainWindow.show()
 
+    console.log('creating tray')
+    const iconPath = path.join(__static, 'salad-tray-logo.png')
+    let logo = nativeImage.createFromPath(iconPath)
+    let tray = new Tray(logo)
+    // A menu that pops up when you right click the tray icon
+    const contextMenu = Menu.buildFromTemplate([
+      { label: 'Quit', click(){app.quit()} },
+    ])
+    tray.setToolTip('Salad')
+    tray.setContextMenu(contextMenu)
+    tray.on('click',()=> mainWindow.show())
+
     if (offlineWindow) {
       console.log('Closing offline')
       offlineWindow.destroy()
@@ -205,6 +217,11 @@ const createMainWindow = () => {
   bridge.on('close-window', () => {
     console.log('Closing main window')
     app.quit()
+  })
+
+  bridge.on('hide-window', ()=> {
+    console.log('Minimizing to tray')
+    mainWindow.hide()
   })
 
   bridge.on(start, (pluginDefinition: PluginDefinition) => {
