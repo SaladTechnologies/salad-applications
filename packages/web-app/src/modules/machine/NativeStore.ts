@@ -69,10 +69,11 @@ export class NativeStore {
   @observable
   public minimizeToTray: boolean = true
 
-  @observable
-  public canMinimizeToTray: boolean = true
-
   //#endregion
+  @computed
+  get canMinimizeToTray(): boolean {
+    return this.isNative && this.apiVersion >=8
+  }
 
   @computed
   get isNative(): boolean {
@@ -110,8 +111,6 @@ export class NativeStore {
     })
 
     console.log('Initial compat check: ' + this.skippedCompatCheck)
-
-    this.canMinimizeToTray = store.native.isNative && store.native.apiVersion >= 8
 
     if (this.isNative) {
       window.salad.onNative = this.onNative
