@@ -54,6 +54,7 @@ class _Offerwall extends Component<Props> {
                 zIndex: 999999,
               }}
               title={`offerwall-${playerId}`}
+              sandbox="allow-scripts allow-popups allow-forms allow-same-origin"
             >
               Your browser doesn't support iframes
             </iframe>
