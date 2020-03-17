@@ -21,6 +21,14 @@ class _Offerwall extends Component<Props> {
   render() {
     const { offerwall, offerwallToggle, playerId, classes } = this.props
 
+    const offerwallDescription = (
+      <>
+        Hey Chefs! Here you can opt-in for additional ways to earn Salad Balance that don't involve mining, feel free to utilize them or keep chopping as you see fit.
+        <br /><br />
+        Please Note: This service is run by a third-party site and you should practice absolute security and awareness while using it. Salad does not condone the collection of private information, so if you encounter anything suspicious, please let us know immediately.
+      </>
+    )
+
     return (
       <>
         <div className="header">
@@ -30,7 +38,7 @@ class _Offerwall extends Component<Props> {
 
         <ToggleSetting
           title={'Offerwall'}
-          description={'This is where some Offerwall text will go'}
+          description={offerwallDescription}
           toggled={offerwall}
           onToggle={offerwallToggle}
         />
