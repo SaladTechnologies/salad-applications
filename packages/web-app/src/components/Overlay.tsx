@@ -4,9 +4,10 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 
-const styles = ({
+const styles = {
   overlayContainer: {
     backgroundColor: 'rgba(10, 33, 51, 0.9)',
+    backdropFilter: 'blur(8.57952px)',
     display: 'flex',
     position: 'fixed',
     top: '33px',
@@ -14,24 +15,20 @@ const styles = ({
     bottom: 0,
     left: 0,
     userSelect: 'none',
-    zIndex: 5000
-  }
-})
+    zIndex: 5000,
+  },
+}
 
 interface Props extends WithStyles<typeof styles> {
-  onCloseClicked?: () => void,
-  onCloseKeyPress?: (e: any) => void,
+  onCloseClicked?: () => void
+  onCloseKeyPress?: (e: any) => void
 }
 
 class _Overlay extends Component<Props> {
   render() {
     const { children, classes } = this.props
 
-    return (
-      <div className={classnames(classes.overlayContainer)}>
-        {children}
-      </div>
-    )
+    return <div className={classnames(classes.overlayContainer)}>{children}</div>
   }
 }
 

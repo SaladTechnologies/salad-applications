@@ -136,6 +136,18 @@ export class AnalyticsStore {
     })
   }
 
+  public trackOfferwallStatus = (enabled: boolean) => {
+    if (!this.started) return
+
+    this.track('Offerwall Toggle', {
+      Enabled: enabled,
+    })
+
+    mixpanel.people.set({
+      Offerwall: enabled,
+    })
+  }
+
   public trackMiningStatus = (status: MiningStatus, pluginName: string) => {
     if (!this.started) return
 

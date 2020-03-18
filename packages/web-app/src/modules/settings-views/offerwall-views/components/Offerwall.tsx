@@ -1,31 +1,49 @@
 import React, { Component } from 'react'
-
-// Styles
-import { styles } from './Offerwall.styles'
-
-// UI
+import withStyles, { WithStyles } from 'react-jss'
+import classnames from 'classnames'
 import { CondensedHeader, Divider } from '../../../../components'
 import { ToggleSetting } from '../../components'
 
-// Packages
-import withStyles, { WithStyles } from 'react-jss'
-import classnames from 'classnames'
+const styles = {
+  container: {
+    display: 'flex',
+  },
+
+  toggler: {
+    flex: '0 0 auto',
+    margin: '0 1.5rem 0 0',
+  },
+
+  description: {
+    order: 1,
+  },
+
+  offerwallWrapper: {
+    position: 'relative',
+    flexGrow: 1,
+    margin: '0 -30px -25px',
+  },
+}
 
 interface Props extends WithStyles<typeof styles> {
   offerwall?: boolean
   offerwallToggle?: () => void
-  playerId?: string
+  userId?: string
 }
 
 class _Offerwall extends Component<Props> {
   render() {
-    const { offerwall, offerwallToggle, playerId, classes } = this.props
+    const { offerwall, offerwallToggle, userId, classes } = this.props
 
     const offerwallDescription = (
       <>
-        Hey Chefs! Here you can opt-in for additional ways to earn Salad Balance that don't involve mining, feel free to utilize them or keep chopping as you see fit.
-        <br /><br />
-        Please Note: This service is run by a third-party site and you should practice absolute security and awareness while using it. Salad does not condone the collection of private information, so if you encounter anything suspicious, please let us know immediately.
+        Here you can opt-in for additional ways to earn Salad Balance that don't involve mining, feel free to utilize
+        them or keep chopping as you see fit.
+        <br />
+        <br />
+        Please Note: This service is run by a third-party site and you should practice absolute security and awareness
+        while using it. Salad does not condone the collection of private information, so if you encounter anything
+        suspicious, please let us know immediately.
       </>
     )
 
@@ -46,7 +64,7 @@ class _Offerwall extends Component<Props> {
         {offerwall && (
           <div className={classnames(classes.offerwallWrapper)}>
             <iframe
-              src={`https://api.adgem.com/v1/wall?appid=1735&playerid=${playerId}`}
+              src={`https://api.adgem.com/v1/wall?appid=1735&playerid=${userId}`}
               style={{
                 position: 'absolute',
                 top: 0,
@@ -61,7 +79,7 @@ class _Offerwall extends Component<Props> {
                 overflow: 'hidden',
                 zIndex: 999999,
               }}
-              title={`offerwall-${playerId}`}
+              title={`offerwall-${userId}`}
               sandbox="allow-scripts allow-popups allow-forms allow-same-origin"
             >
               Your browser doesn't support iframes
