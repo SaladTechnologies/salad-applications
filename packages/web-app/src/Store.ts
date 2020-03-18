@@ -77,7 +77,7 @@ export class RootStore {
     this.autoStart = new AutoStartStore(this)
     this.vault = new VaultStore(axios)
     this.version = new VersionStore(this, axios)
-    this.offerwall = new OfferwallStore()
+    this.offerwall = new OfferwallStore(this)
 
     this.machineInfoHeartbeat = setInterval(this.tryRegisterMachine, 20000)
 
