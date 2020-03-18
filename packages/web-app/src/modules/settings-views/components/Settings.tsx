@@ -20,6 +20,7 @@ import { WindowsSettingsContainer } from '../windows-settings-views'
 import { DesktopNotificationsContainer } from '../desktop-notifications-views'
 import { ReferralSettingsContainer } from '../referral-views'
 import { AccountContainer } from '../account-views'
+import { OfferwallContainer } from '../offerwall-views'
 import { VaultListContainer } from '../../vault-views'
 
 export class MenuItem {
@@ -125,6 +126,7 @@ class _Settings extends Component<Props> {
           <Route path="/settings/referrals" component={ReferralSettingsContainer} />
           <Route path="/settings/account" component={AccountContainer} />
           <Route path="/settings/reward-vault" component={VaultListContainer} />
+          <Route path="/settings/offerwall" component={OfferwallContainer} />
 
           <div onClick={this.handleCloseClicked}>
             <FontAwesomeIcon className={classes.closeButton} icon={faTimes} />

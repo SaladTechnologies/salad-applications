@@ -55,7 +55,7 @@ const styles = (theme: SaladTheme) => ({
     '-webkit-app-region': 'none',
     padding: '.5rem .75rem',
     fontFamily: 'sharpGroteskLight25',
-    fontSize: theme.small,
+    fontSize: '0.7rem',
     letterSpacing: '1.3px',
     cursor: 'pointer',
     position: 'relative',
