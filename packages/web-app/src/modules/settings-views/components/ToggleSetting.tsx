@@ -7,7 +7,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 import { ToggleSwitch, Username, P } from '../../../components'
 
-export const styles = ({
+export const styles = {
   container: {
     display: 'flex',
     marginBottom: '20px',
@@ -22,13 +22,13 @@ export const styles = ({
   extrasContainer: {
     paddingLeft: 30,
   },
-})
+}
 
 interface Props extends WithStyles<typeof styles> {
   toggled?: boolean
   onToggle?: () => void
   title?: string
-  description?: string
+  description?: string | JSX.Element
 }
 
 class _ToggleSetting extends Component<Props> {

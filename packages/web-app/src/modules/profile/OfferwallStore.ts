@@ -1,5 +1,4 @@
 import { observable, action } from 'mobx'
-// import { RootStore } from '../../Store'
 import * as Storage from '../../Storage'
 
 const OFFERWALL = 'OFFERWALL'
@@ -9,7 +8,7 @@ export class OfferwallStore {
   public offerwall: boolean = false
 
   constructor() {
-    const checkOfferwall = (Storage.getOrSetDefault(OFFERWALL, 'false') === 'true')
+    const checkOfferwall = Storage.getOrSetDefault(OFFERWALL, 'false') === 'true'
     this.setOfferwall(checkOfferwall)
   }
 
