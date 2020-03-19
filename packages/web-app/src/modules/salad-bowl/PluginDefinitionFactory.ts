@@ -20,39 +20,53 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
     return []
   }
 
-  let supportsCuda = machineInfo.graphics.controllers.some(x => x.vendor.toLocaleLowerCase().includes('nvidia'))
-  let pluginDefinitions: PluginDefinition[]
-  if (supportsCuda) {
-    pluginDefinitions = [
-      getGminerBeamHashIIDefinition(machine), // BeamHashII @ NiceHash
-      getGminerBeamBitflyDefinition(machine), // BeamHashII @ Bitfly
-      getClaymoreEthashBitflyDefinition(machine), // Ethash @ Bitfly
-      getGminerZHashDefinition(machine), // Equihash 144,5 @ NiceHash
-      getGminerCuckARoom29Definition(machine), // cuckARoom29 @ NiceHash
-      getClaymoreEthashDefinition(machine), // Ethash @ NiceHash
-      getXMRigRandomXCUDADefinition(machine), // RandomX @ NiceHash
-      getCCMinerX16RDefinition(machine), // X16R @ NiceHash
-      getCCMinerLyra2REv3Definition(machine), // Lyra2REv3 @ NiceHash
-      getClaymoreEthashNanopoolDefinition(machine), // Ethash @ Nanopool
-    ]
+  const has4gbSupport = machineInfo.graphics.controllers.some(x => x.vram >= (1024 * 4 * 0.95))
+  const hasCudaSupport = machineInfo.graphics.controllers.some(x => x.vendor.toLocaleLowerCase().includes('nvidia'))
+  const preferNiceHash = Math.random() < 0.25
+  const pluginDefinitions: PluginDefinition[] = []
+
+  // Ethereum / Ethash
+  if (preferNiceHash && has4gbSupport) {
+    pluginDefinitions.push(getClaymoreEthashDefinition(machine)) // NiceHash
+    pluginDefinitions.push(getClaymoreEthashBitflyDefinition(machine)) // Bitfly's Ethermine
   } else {
-    pluginDefinitions = [
-      getGminerBeamHashIIDefinition(machine), // BeamHashII @ NiceHash
-      getGminerBeamBitflyDefinition(machine), // BeamHashII @ Bitfly
-      getClaymoreEthashBitflyDefinition(machine), // Ethash @ Bitfly
-      getGminerZHashDefinition(machine), // Equihash 144,5 @ NiceHash
-      getGminerCuckARoom29Definition(machine), // cuckARoom29 @ NiceHash
-      getClaymoreEthashDefinition(machine), // Ethash @ NiceHash
-      getXMRigRandomXOpenCLDefinition(machine), // RandomX @ NiceHash
-      getCCMinerX16RDefinition(machine), // X16R @ NiceHash
-      getCCMinerLyra2REv3Definition(machine), // Lyra2REv3 @ NiceHash
-      getClaymoreEthashNanopoolDefinition(machine), // Ethash @ Nanopool
-    ]
+    pluginDefinitions.push(getClaymoreEthashBitflyDefinition(machine)) // Bitfly's Ethermine
+    pluginDefinitions.push(getClaymoreEthashDefinition(machine)) // NiceHash
   }
 
-  // Only a 25% chance to try BeamHashII @ NiceHash first.
-  if (Math.random() >= 0.25) {
-    pluginDefinitions.push(pluginDefinitions.shift()!)
+  // Beam // BeamHashII
+  if (preferNiceHash) {
+    pluginDefinitions.push(getGminerBeamHashIIDefinition(machine)) // NiceHash
+    pluginDefinitions.push(getGminerBeamBitflyDefinition(machine)) // Bitfly's Flypool
+  } else {
+    pluginDefinitions.push(getGminerBeamBitflyDefinition(machine)) // Bitfly Flypool
+    pluginDefinitions.push(getGminerBeamHashIIDefinition(machine)) // NiceHash
+  }
+
+  // BitCoinGold / ZHash
+  pluginDefinitions.push(getGminerZHashDefinition(machine)) // NiceHash
+
+  // Grin / cuckARoom29
+  if (has4gbSupport) {
+    pluginDefinitions.push(getGminerCuckARoom29Definition(machine)) // NiceHash
+  }
+
+  // Monero / RandomX
+  if (hasCudaSupport) {
+    pluginDefinitions.push(getXMRigRandomXCUDADefinition(machine)) // NiceHash
+  } else {
+    pluginDefinitions.push(getXMRigRandomXOpenCLDefinition(machine)) // NiceHash
+  }
+
+  // Ravencoin / X16R
+  pluginDefinitions.push(getCCMinerX16RDefinition(machine)) // NiceHash
+
+  // Vertcoin / Lyra2REv3
+  pluginDefinitions.push(getCCMinerLyra2REv3Definition(machine)) // NiceHash
+
+  // Fallback: Ethereum / Ethash
+  if (has4gbSupport) {
+    pluginDefinitions.push(getClaymoreEthashNanopoolDefinition(machine)) // Nanopool
   }
 
   return pluginDefinitions
