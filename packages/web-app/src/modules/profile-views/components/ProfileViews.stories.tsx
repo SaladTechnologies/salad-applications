@@ -12,9 +12,7 @@ const profile: Profile = {
   id: '1234',
   username: 'Master Chef Bob is World #1 hero',
   email: 'dev@salad.io',
-  lastAcceptedTermsOfService: '1.0',
   lastSeenApplicationVersion: '1.0',
-  viewedReferralOnboarding: false,
 }
 
 storiesOf('Modules/Profile', module)

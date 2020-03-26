@@ -10,16 +10,10 @@ import { getStore } from './Store'
 import { Config } from './config'
 
 // Views
-import {
-  CallbackContainer,
-  WelcomePageContainer,
-  TermsPageContainer,
-  WhatsNewPageContainer,
-} from './modules/onboarding-views'
+import { CallbackContainer, WelcomePageContainer, WhatsNewPageContainer } from './modules/onboarding-views'
 import { HomePage } from './modules/home-views'
 import { LoadingPage } from './components'
 import { AccountModalContainer } from './modules/profile-views'
-import { AnimatedSwitch } from './components/AnimatedSwitch'
 import { CompatibilityCheckPageContainer } from './modules/machine-views'
 import {
   AntiVirusErrorContainer,
@@ -46,21 +40,6 @@ export default class Routes extends Component {
     return
   }
 
-  public getOnboardingRedirect = () => {
-    let profile = this.store.profile.currentProfile
-
-    if (profile === undefined) {
-      if (this.store.profile.isLoading) {
-        return <Redirect to="/profile-loading" />
-      }
-      return
-    }
-
-    if (profile.lastAcceptedTermsOfService !== Config.termsVersion) return <Redirect to="/onboarding/terms" />
-
-    throw Error('Unable to locate a valid onboarding page')
-  }
-
   render() {
     if (Config.downTime) {
       return <Route render={() => <LoadingPage text="Salad Is Currently Down For Maintenance." />} />
@@ -77,7 +56,7 @@ export default class Routes extends Component {
     let isElectron = this.store.native.isNative
     let isAuth = this.store.auth.isAuth
     let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
-    let isOnboarding = this.store.profile.onboarding
+    let hasProfile = this.store.profile.currentProfile !== undefined
 
     return (
       <Switch>
@@ -85,14 +64,7 @@ export default class Routes extends Component {
 
         {!isAuth && <NoAuth store={this.store.auth} />}
 
-        {isOnboarding && (
-          // When extracted into it's own component, onboarding doesn't load
-          <AnimatedSwitch>
-            <Route exact path="/profile-loading" render={() => <LoadingPage text="Loading profile" />} />
-            <Route exact path="/onboarding/terms" component={TermsPageContainer} />
-            {this.getOnboardingRedirect()}
-          </AnimatedSwitch>
-        )}
+        {!hasProfile && <Route render={() => <LoadingPage text="Loading profile" />} />}
 
         {isElectron && this.checkMachineLoading()}
 

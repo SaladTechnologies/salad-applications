@@ -84,20 +84,7 @@ export class AnalyticsStore {
     mixpanel.reset()
   }
 
-  /** Tracks when a user accepts Salad TOS */
-  public trackAcceptedTerms = (version: string) => {
-    if (!this.started) return
-
-    this.track('Accepted Terms', {
-      Version: version,
-    })
-
-    mixpanel.people.set({
-      'Terms Version': version,
-    })
-  }
-
-  /** Tracks when a user accepts Salad TOS */
+  /** Tracks when a user views the What's New page */
   public trackWhatsNew = (version: string) => {
     if (!this.started) return
 
