@@ -17,30 +17,12 @@ export class ProfileStore {
   @observable
   public isLoading: boolean = false
 
-  @observable
-  public onboarding: boolean = false
-
-  @computed
-  public get isOnboarding(): boolean {
-    const onboarding =
-      this.currentProfile === undefined || this.currentProfile.lastAcceptedTermsOfService !== Config.termsVersion
-
-    this.setOnboarding(onboarding)
-
-    return this.onboarding
-  }
-
   @computed
   public get showWhatsNew(): boolean {
     const show =
       this.currentProfile !== undefined && this.currentProfile.lastSeenApplicationVersion !== Config.whatsNewVersion
 
     return show
-  }
-
-  @action
-  setOnboarding = (isOnboarding: boolean) => {
-    this.onboarding = isOnboarding
   }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
@@ -73,61 +55,6 @@ export class ProfileStore {
       this.isLoading = false
     }
     return this.currentProfile
-  })
-
-  @action.bound
-  agreeToTerms = flow(function*(this: ProfileStore) {
-    if (this.currentProfile === undefined) return
-
-    console.log('Accepted TOS')
-
-    this.isUpdating = true
-
-    try {
-      let patch = yield this.axios.patch('profile', {
-        lastAcceptedTermsOfService: Config.termsVersion,
-      })
-      let profile = patch.data
-
-      if (profile.lastAcceptedTermsOfService !== String(Config.termsVersion)) {
-        this.store.analytics.captureException(
-          new Error(
-            `Profile failed to update terms of service. UserId:${this.currentProfile.id}, TOS:${Config.termsVersion}`,
-          ),
-        )
-      }
-
-      this.currentProfile = profile
-
-      this.store.analytics.trackAcceptedTerms(Config.termsVersion)
-    } catch (err) {
-      console.log(err)
-    } finally {
-      this.isUpdating = false
-      this.store.routing.replace('/')
-    }
-  })
-
-  @action.bound
-  setViewedReferralOnboarding = flow(function*(this: ProfileStore) {
-    if (this.currentProfile === undefined) return
-
-    console.log('Viewed the referral onboarding page')
-
-    this.isUpdating = true
-
-    try {
-      let patch = yield this.axios.patch('profile', {
-        viewedReferralOnboarding: true,
-      })
-
-      this.currentProfile = patch.data
-    } catch (err) {
-      console.log(err)
-    } finally {
-      this.isUpdating = false
-      this.store.routing.replace('/')
-    }
   })
 
   @action.bound
