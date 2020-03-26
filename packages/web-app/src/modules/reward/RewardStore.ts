@@ -240,13 +240,12 @@ export class RewardStore {
     } catch (error) {
       if (!(error instanceof AbortError)) {
         //Show an error notification
-        this.store.notifications.sendNotification(
-          {
-            title: `Uh Oh. Something went wrong.`,
-            message: error.message || 'Please try again later',
-          },
-          true,
-        )
+        this.store.notifications.sendNotification({
+          title: `Uh Oh. Something went wrong.`,
+          message: error.message || 'Please try again later',
+          autoClose: false,
+          type: 'error',
+        })
       }
     } finally {
       yield this.store.balance.refreshBalance()

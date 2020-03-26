@@ -35,7 +35,7 @@ class _WhatsNewPage extends Component<Props> {
           image={image}
           nextSubmitting={submitting}
           onNext={onNext}
-          nextText={'Close'}
+          nextText={'Got It!'}
         >
           <Scrollbar>
             <div className={classes.title}>Salad Storefront</div>
