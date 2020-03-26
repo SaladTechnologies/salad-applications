@@ -134,6 +134,10 @@ export class AnalyticsStore {
     this.track('AutoStart', {
       Enabled: enabled,
     })
+
+    mixpanel.people.set({
+      AutoStart: enabled,
+    })
   }
 
   public trackOfferwallStatus = (enabled: boolean) => {
