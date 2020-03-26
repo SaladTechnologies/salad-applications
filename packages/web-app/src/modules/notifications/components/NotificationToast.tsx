@@ -52,32 +52,26 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  closeToast?: () => void
+  onClick?: () => void
   title?: string
   message?: string
-  error?: boolean
+  isError?: boolean
 }
 
 class _NotificationToast extends Component<Props> {
-  handleClose = () => {
-    const { closeToast } = this.props
-    if (closeToast) {
-      closeToast()
-    }
+  handleClick = () => {
+    const { onClick } = this.props
+    onClick?.()
   }
+
   render() {
-    const { title, message, error, classes, closeToast } = this.props
+    const { title, message, isError, classes } = this.props
     return (
-      <div
-        className={classnames(classes.container, { [classes.error]: error, [classes.clickable]: closeToast })}
-        onClick={this.handleClose}
-      >
-        {closeToast && (
-          <div className={classes.closeButton}>
-            <FontAwesomeIcon icon={faTimes} />
-          </div>
-        )}
-        <div className={classes.contentContainer}>
+      <div className={classnames(classes.container, classes.clickable, { [classes.error]: isError })}>
+        <div className={classes.closeButton}>
+          <FontAwesomeIcon icon={faTimes} />
+        </div>
+        <div className={classes.contentContainer} onClick={this.handleClick}>
           <P bold className={classes.title}>
             {title}
           </P>

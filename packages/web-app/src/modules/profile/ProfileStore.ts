@@ -33,8 +33,7 @@ export class ProfileStore {
   @computed
   public get showWhatsNew(): boolean {
     const show =
-      this.store.profile.currentProfile !== undefined &&
-      this.store.profile.currentProfile.lastSeenApplicationVersion !== Config.whatsNewVersion
+      this.currentProfile !== undefined && this.currentProfile.lastSeenApplicationVersion !== Config.whatsNewVersion
 
     return show
   }
@@ -54,14 +53,24 @@ export class ProfileStore {
     try {
       let profile = yield this.axios.get('profile')
       this.currentProfile = profile.data
+      //TODO: Move the routing logic to the onLogin function so we can load all the data before showing the app
+      this.store.routing.replace('/')
+
+      //Check to see if we should add the What's New notification
+      if (this.showWhatsNew) {
+        this.store.notifications.sendNotification({
+          title: 'Salad was Updated',
+          message: 'Something new just came out from the kitchen. Click here to learn more.',
+          autoClose: false,
+          onClick: () => this.store.ui.showModal('/whats-new'),
+        })
+      }
     } catch (err) {
       console.error('Profile error: ', err)
       this.currentProfile = undefined
       this.store.routing.replace('/profile-error')
     } finally {
       this.isLoading = false
-      //TODO: Move the routing logic to the onLogin function so we can load all the data before showing the app
-      this.store.routing.replace('/')
     }
     return this.currentProfile
   })
@@ -122,7 +131,7 @@ export class ProfileStore {
   })
 
   @action.bound
-  setWhatsNew = flow(function*(this: ProfileStore) {
+  setWhatsNewViewed = flow(function*(this: ProfileStore) {
     if (this.currentProfile === undefined) return
 
     this.isUpdating = true
@@ -138,25 +147,7 @@ export class ProfileStore {
       this.store.analytics.trackWhatsNew(Config.whatsNewVersion)
     } finally {
       this.isUpdating = false
-    }
-  })
-
-  @action.bound
-  closeWhatsNew = flow(function*(this: ProfileStore) {
-    if (this.currentProfile === undefined) return
-
-    this.isUpdating = true
-
-    try {
-      let patch = yield this.axios.patch('profile', {
-        lastSeenApplicationVersion: Config.whatsNewVersion,
-      })
-      let profile = patch.data
-
-      this.currentProfile = profile
-    } finally {
-      this.isUpdating = false
-      this.store.routing.replace('/')
+      this.store.routing.goBack()
     }
   })
 

@@ -101,9 +101,7 @@ interface Props extends WithStyles<typeof styles> {
   onMinimize?: () => void
   onMaximize?: () => void
   onClose?: () => void
-  onWhatsNew?: () => void
   menuItems?: MenuItem[]
-  showWhatsNew?: boolean
 }
 
 class _Titlebar extends Component<Props> {
@@ -125,14 +123,8 @@ class _Titlebar extends Component<Props> {
     if (onMaximize) onMaximize()
   }
 
-  handleWhatsNewClick = () => {
-    const { onWhatsNew } = this.props
-
-    if (onWhatsNew) onWhatsNew()
-  }
-
   render() {
-    const { showWindowActions, menuItems, bottomBorder, showWhatsNew, classes } = this.props
+    const { showWindowActions, menuItems, bottomBorder, classes } = this.props
     return (
       <div className={classnames(classes.container, { [classes.bottomBorder]: bottomBorder })}>
         <div className={classes.leftItems}>
@@ -144,16 +136,6 @@ class _Titlebar extends Component<Props> {
                 {x.name}
               </div>
             ))}
-
-          {showWhatsNew && (
-            <div
-              className={classnames(classes.menuItem, classes.altMenuItemColor, classes.uppercase)}
-              onClick={this.handleWhatsNewClick}
-            >
-              <div className={classes.menuItemNotification} />
-              What's new
-            </div>
-          )}
         </div>
 
         {menuItems && (

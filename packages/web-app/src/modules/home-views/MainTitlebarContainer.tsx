@@ -14,10 +14,8 @@ const mapStoreToProps = (store: RootStore): any => {
     onMinimize: store.native.minimizeWindow,
     onMaximize: store.native.maximizeWindow,
     onClose: store.native.closeWindow,
-    onWhatsNew: store.ui.showWhatNewPage,
     bottomBorder: true,
     menuItems: menuItems,
-    showWhatsNew: store.profile.showWhatsNew,
   }
 }
 

@@ -113,15 +113,12 @@ export class AutoStartStore {
           this.warningShown = true
 
           //Send a notification that we are going to start soon
-          this.store.notifications.sendNotification(
-            {
-              title: 'Salad is About to Start',
-              message: 'Looks like you are AFK, Salad is getting warmed up to start running',
-              id: notificationId,
-            },
-            false,
-            true,
-          )
+          this.store.notifications.sendNotification({
+            title: 'Salad is About to Start',
+            message: 'Looks like you are AFK, Salad is getting warmed up to start running',
+            id: notificationId,
+            showDesktop: true,
+          })
         }
       } else if (this.warningShown) {
         this.store.notifications.removeNotification(notificationId)
@@ -139,15 +136,12 @@ export class AutoStartStore {
         this.store.saladBowl.start(StartReason.Automatic)
 
         //Send a notification that we auto started
-        this.store.notifications.sendNotification(
-          {
-            title: 'Salad is Running',
-            message: 'Salad detected you were AFK and started automatically',
-            id: notificationId,
-          },
-          false,
-          true,
-        )
+        this.store.notifications.sendNotification({
+          title: 'Salad is Running',
+          message: 'Salad detected you were AFK and started automatically',
+          id: notificationId,
+          showDesktop: true,
+        })
       }
     })
   }

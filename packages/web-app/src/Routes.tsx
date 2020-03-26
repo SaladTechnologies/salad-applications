@@ -12,7 +12,6 @@ import { Config } from './config'
 // Views
 import {
   CallbackContainer,
-  ReferralEntryContainer,
   WelcomePageContainer,
   TermsPageContainer,
   WhatsNewPageContainer,
@@ -90,10 +89,7 @@ export default class Routes extends Component {
           // When extracted into it's own component, onboarding doesn't load
           <AnimatedSwitch>
             <Route exact path="/profile-loading" render={() => <LoadingPage text="Loading profile" />} />
-
-            <Route exact path="/onboarding/referral-code" component={ReferralEntryContainer} />
             <Route exact path="/onboarding/terms" component={TermsPageContainer} />
-            <Route exact path="/onboarding/whats-new" component={WhatsNewPageContainer} />
             {this.getOnboardingRedirect()}
           </AnimatedSwitch>
         )}
@@ -138,7 +134,7 @@ const Auth = () => {
       <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
       {/*<Route exact path="/rewards/:id/redeem" component={RewardRedemptionModalContainer} /> */}
       <Route exact path="/profile" component={AccountModalContainer} />
-      <Route exact path="/onboarding/whats-new" component={WhatsNewPageContainer} />
+      <Route exact path="/whats-new" component={WhatsNewPageContainer} />
 
       {/* SaladPay: This is stand in until we figure out iFrames, popups... */}
       <Route exact path="/salad-pay/order-summary" component={SaladPayOrderSummaryContainer} />
