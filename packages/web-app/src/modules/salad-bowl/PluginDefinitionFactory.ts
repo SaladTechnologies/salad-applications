@@ -26,7 +26,11 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
   const pluginDefinitions: PluginDefinition[] = []
 
   // Ethereum / Ethash
-  if (has4gbSupport) {
+  if (preferNiceHash && has4gbSupport) {
+    pluginDefinitions.push(getClaymoreEthashDefinition(machine)) // NiceHash
+    pluginDefinitions.push(getClaymoreEthashBitflyDefinition(machine)) // Bitfly's Ethermine
+  } else if (has4gbSupport) {
+    pluginDefinitions.push(getClaymoreEthashBitflyDefinition(machine)) // Bitfly's Ethermine
     pluginDefinitions.push(getClaymoreEthashDefinition(machine)) // NiceHash
   }
 
@@ -59,11 +63,6 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
 
   // Vertcoin / Lyra2REv3
   pluginDefinitions.push(getCCMinerLyra2REv3Definition(machine)) // NiceHash
-
-  // Fallback: Ethereum / Ethash
-  if (has4gbSupport) {
-    pluginDefinitions.push(getClaymoreEthashBitflyDefinition(machine)) // Bitfly's Ethermine
-  }
 
   // Fallback: Ethereum / Ethash
   if (has4gbSupport) {
