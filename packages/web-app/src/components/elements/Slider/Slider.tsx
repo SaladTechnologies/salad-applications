@@ -3,7 +3,7 @@ import { Range, getTrackBackground } from 'react-range'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 
-export const styles = (theme: SaladTheme) => ({
+const styles = (theme: SaladTheme) => ({
   touchArea: {
     height: '36px',
     display: 'flex',

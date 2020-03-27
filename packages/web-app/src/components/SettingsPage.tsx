@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 
 // Styles
-import { styles } from './Settings.styles'
+import { styles } from './SettingsPage.styles'
 
 // UI
-import { LinkListUnstyled, MenuTitle, Button, Divider } from '../../../components'
+import { LinkListUnstyled, MenuTitle, Button, Divider } from '.'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
@@ -14,17 +14,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 
 // Components
-import { Overlay } from '../../../components'
-import { SmartStartContainer } from '../smart-start-views'
-import { WindowsSettingsContainer } from '../windows-settings-views'
-import { DesktopNotificationsContainer } from '../desktop-notifications-views'
-import { ReferralSettingsContainer } from '../referral-views'
-import { AccountContainer } from '../account-views'
-import { OfferwallContainer } from '../offerwall-views'
-import { VaultListContainer } from '../../vault-views'
+import { Overlay } from '.'
 
-export class MenuItem {
-  constructor(public readonly url: string, public readonly text: string) {}
+export interface MenuItem {
+  url: string
+  text: string
+  component: React.ComponentType<any>
 }
 
 interface Props extends WithStyles<typeof styles> {
@@ -95,7 +90,16 @@ class _Settings extends Component<Props> {
   }
 
   render() {
-    const { appVersion, appBuild, classes, menuItems, latestDesktop } = this.props
+    const {
+      appVersion,
+      appBuild,
+      classes,
+      menuItems,
+      latestDesktop,
+      onSendBug,
+      onSendLog,
+      onDownloadLatestDesktop,
+    } = this.props
 
     return (
       <Overlay>
@@ -103,16 +107,20 @@ class _Settings extends Component<Props> {
           {menuItems && <LinkListUnstyled list={menuItems} onListItemClick={this.handleListItemClick} />}
 
           <div className={classes.buttonContainer}>
-            <Button onClick={this.handleBugClicked}>Submit Bug</Button>
-            <Button onClick={this.handleLogClicked}>{this.state.buttonToggle ? 'Logs sent' : 'Send logs'}</Button>
+            {onSendBug && <Button onClick={this.handleBugClicked}>Submit Bug</Button>}
+            {onSendLog && (
+              <Button onClick={this.handleLogClicked}>{this.state.buttonToggle ? 'Logs sent' : 'Send logs'}</Button>
+            )}
           </div>
           <div className={classes.versionContainer}>
-            <MenuTitle className={classnames({ [classes.outOfDateLabel]: !latestDesktop })}>
-              Version: {appVersion ? appVersion : '-'}
-            </MenuTitle>
-            <MenuTitle>Build: {appBuild ? appBuild.slice(0, 7) : '-'}</MenuTitle>
+            {appVersion !== undefined && (
+              <MenuTitle className={classnames({ [classes.outOfDateLabel]: !latestDesktop })}>
+                Version: {appVersion ? appVersion : '-'}
+              </MenuTitle>
+            )}
+            {appBuild !== undefined && <MenuTitle>Build: {appBuild ? appBuild.slice(0, 7) : '-'}</MenuTitle>}
           </div>
-          {!latestDesktop && (
+          {!latestDesktop && onDownloadLatestDesktop && (
             <div className={classes.updateSalad}>
               <Divider />
               <Button onClick={this.handleDownloadLatest}>Download Latest Version</Button>
@@ -120,13 +128,9 @@ class _Settings extends Component<Props> {
           )}
         </div>
         <div className={classnames(classes.settings)}>
-          <Route path="/settings/smart-start" component={SmartStartContainer} />
-          <Route path="/settings/desktop-notifications" component={DesktopNotificationsContainer} />
-          <Route path="/settings/windows-settings" component={WindowsSettingsContainer} />
-          <Route path="/settings/referrals" component={ReferralSettingsContainer} />
-          <Route path="/settings/account" component={AccountContainer} />
-          <Route path="/settings/reward-vault" component={VaultListContainer} />
-          <Route path="/settings/offerwall" component={OfferwallContainer} />
+          {menuItems?.map(x => (
+            <Route path={x.url} component={x.component} />
+          ))}
 
           <div onClick={this.handleCloseClicked}>
             <FontAwesomeIcon className={classes.closeButton} icon={faTimes} />
@@ -137,4 +141,4 @@ class _Settings extends Component<Props> {
   }
 }
 
-export const Settings = withStyles(styles)(_Settings)
+export const SettingsPage = withStyles(styles)(_Settings)

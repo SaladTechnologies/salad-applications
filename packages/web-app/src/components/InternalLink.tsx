@@ -1,8 +1,10 @@
 import React, { ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
+import { Link } from 'react-router-dom'
 
 const styles = {
   link: {
+    color: 'inherit',
     '&:visited': {
       color: 'inherit',
     },
@@ -10,14 +12,14 @@ const styles = {
 }
 
 interface Props extends WithStyles<typeof styles> {
-  path?: string
+  to: string
   children?: ReactNode
 }
 
-const _ExternalLink = ({ path, children, classes }: Props) => (
-  <a className={classes.link} href={path} target="_blank" rel="noopener noreferrer">
+const _InternalLink = ({ to, children, classes }: Props) => (
+  <Link to={to} className={classes.link}>
     {children}
-  </a>
+  </Link>
 )
 
-export const ExternalLink = withStyles(styles)(_ExternalLink)
+export const InternalLink = withStyles(styles)(_InternalLink)

@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
-import { ToggleSwitch, Username, P } from '../../../components'
+import { ToggleSwitch, Username, P } from '.'
 
 export const styles = {
   container: {

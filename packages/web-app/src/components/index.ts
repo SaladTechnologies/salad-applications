@@ -17,7 +17,10 @@ export * from './TextField'
 export * from './Tooltip'
 export * from './VerticalProgress'
 export * from './ExternalLink'
+export * from './InternalLink'
 export * from './SearchBar'
+export * from './SettingsPage'
+export * from './ToggleSetting'
 
 // Elements
 export * from './elements/ToggleSwitch/ToggleSwitch'

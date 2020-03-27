@@ -11,6 +11,8 @@ const styles = (theme: SaladTheme) => ({
     overflow: 'hidden',
     zIndex: 9999,
     pointerEvents: 'none',
+    boxShadow: '8px 14px 22px rgba(0, 0, 0, 0.45)',
+    border: `1px solid ${theme.darkBlue}`,
   },
   title: {
     fontFamily: 'sharpGroteskLight09',
