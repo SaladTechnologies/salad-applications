@@ -1,12 +1,41 @@
-import axios, { AxiosInstance } from 'axios'
+import axios, { AxiosInstance, AxiosError } from 'axios'
 import { Config } from './config'
+import axiosRetry, { exponentialDelay } from 'axios-retry'
+import isRetryAllowed from 'is-retry-allowed'
+
+/**
+ * The list of safe HTTP request methods. HTTP requests using these methods may be retried.
+ */
+const SAFE_HTTP_METHODS: ReadonlyArray<string> = ['get', 'head', 'options']
+
+/**
+ * Determines whether a HTTP request may be retried. HTTP requests may be retried on network errors. HTTP requests using
+ * safe methods (GET, HEAD, and OPTIONS) may be retried after a HTTP response with status codes 408 or 500-599.
+ * @param error The error.
+ * @returns `true` if the HTTP request may be retried; otherwise, `false`.
+ */
+const shouldRetryDownload = (error: any): boolean => {
+  if (error.isAxiosError === true) {
+    const axiosError: AxiosError<any> = error
+    if (
+      SAFE_HTTP_METHODS.indexOf(axiosError.config.method?.toLowerCase() || '') !== -1 &&
+      (axiosError.response == null ||
+        axiosError.response.status === 408 ||
+        (axiosError.response.status >= 500 && axiosError.response.status <= 599))
+    ) {
+      return true
+    }
+  }
+
+  return isRetryAllowed(error)
+}
 
 export const createClient = (): AxiosInstance => {
-  let c = axios.create({
+  let httpClient = axios.create({
     baseURL: Config.baseAPIUrl,
   })
 
-  c.interceptors.response.use(
+  httpClient.interceptors.response.use(
     response => {
       // Any status code that lie within the range of 2xx cause this function to trigger
       // Do something with response data
@@ -20,8 +49,14 @@ export const createClient = (): AxiosInstance => {
       throw a
     },
   )
+  httpClient.defaults.timeout = 10000
 
-  return c
+  axiosRetry(httpClient, {
+    retryDelay: exponentialDelay,
+    retryCondition: shouldRetryDownload,
+    shouldResetTimeout: true,
+  })
+  return httpClient
 }
 
 const getMessage = (type: string): string => {
