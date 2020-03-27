@@ -46,7 +46,7 @@ class _EditUsername extends Component<Props, State> {
       errors.username = 'Must be at least 2 characters!'
     }
     if (v.username === undefined || v.username.length === 0) {
-      errors.username = 'Required!'
+      errors.username = 'Username is required!'
     }
     if (v.username && v.username.length > 32) {
       errors.username = `Username can't be more than 32 characters!`
