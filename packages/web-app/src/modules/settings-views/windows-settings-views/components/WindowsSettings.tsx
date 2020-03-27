@@ -1,14 +1,25 @@
 import React, { Component } from 'react'
 
-// Styles
-import { styles } from './WindowsSettings.styles'
-
 // UI
-import { CondensedHeader, Divider, Slider, P } from '../../../../components'
+import { CondensedHeader, Divider, Slider, P, ToggleSetting } from '../../../../components'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
-import { ToggleSetting } from '../../components'
+
+const styles = {
+  container: {
+    padding: 20,
+  },
+
+  toggler: {
+    flex: '0 0 auto',
+    margin: '0 1.5rem 0 0',
+  },
+
+  description: {
+    order: 1,
+  },
+}
 
 interface Props extends WithStyles<typeof styles> {
   autoLaunch?: boolean
@@ -20,7 +31,7 @@ interface Props extends WithStyles<typeof styles> {
   autoStartUpdate?: (value: number) => void
   minimizeToTrayToggle?: () => void
   minimizeToTray?: boolean
-  canMinimizeToTray?:boolean
+  canMinimizeToTray?: boolean
 }
 
 class _WindowsSettings extends Component<Props> {
@@ -36,10 +47,11 @@ class _WindowsSettings extends Component<Props> {
       minimizeToTrayToggle,
       minimizeToTray,
       canMinimizeToTray,
+      classes,
     } = this.props
 
     return (
-      <>
+      <div className={classes.container}>
         <div className="header">
           <CondensedHeader>Settings</CondensedHeader>
         </div>
@@ -83,13 +95,15 @@ class _WindowsSettings extends Component<Props> {
             <Divider />
             <ToggleSetting
               title={'Minimize to Tray'}
-              description={"Salad's minimize to tray feature streamlines your time spent launching the app. With it easily accessible in your computer's tray, you can start your chopping with even more ease."}
+              description={
+                "Salad's minimize to tray feature streamlines your time spent launching the app. With it easily accessible in your computer's tray, you can start your chopping with even more ease."
+              }
               toggled={minimizeToTray}
               onToggle={minimizeToTrayToggle}
             />
           </>
         )}
-      </>
+      </div>
     )
   }
 }

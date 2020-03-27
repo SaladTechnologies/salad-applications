@@ -26,6 +26,7 @@ import {
 import { SettingsContainer } from './modules/settings-views'
 import { RewardDetailsContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
+import { EarnMenuContainer } from './modules/earn-views'
 // Account Menu
 
 export default class Routes extends Component {
@@ -64,6 +65,7 @@ export default class Routes extends Component {
 
         {!isAuth && <NoAuth store={this.store.auth} />}
 
+        {/* Forces the profile loading page */}
         {!hasProfile && <Route render={() => <LoadingPage text="Loading profile" />} />}
 
         {isElectron && this.checkMachineLoading()}
@@ -113,6 +115,7 @@ const Auth = () => {
       {/* <Route exact path="/salad-pay/confirmation" component={WhatsNewPageContainer} /> */}
 
       <Route path="/settings" component={SettingsContainer} />
+      <Route path="/earn" component={EarnMenuContainer} />
     </>
   )
 }

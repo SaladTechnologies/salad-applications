@@ -13,10 +13,12 @@ import { CurrentReferralPanelContainer } from '../CurrentReferralPanelContainer'
 
 const styles = (theme: SaladTheme) => ({
   container: {
+    padding: 20,
+  },
+  content: {
     display: 'flex',
     flexDirection: 'row',
   },
-
   column: {
     flexGrow: 1,
     flexBasis: 0,
@@ -38,12 +40,12 @@ class _ReferralSettings extends Component<Props> {
     const { classes } = this.props
 
     return (
-      <>
+      <div className={classnames(classes.container)}>
         <div className="header">
           <CondensedHeader>Referrals</CondensedHeader>
         </div>
         <Divider />
-        <div className={classnames(classes.container)}>
+        <div className={classnames(classes.content)}>
           <div className={classes.column}>
             <CurrentReferralPanelContainer />
             <Divider />
@@ -59,7 +61,7 @@ class _ReferralSettings extends Component<Props> {
             <ReferralListContainer />
           </div>
         </div>
-      </>
+      </div>
     )
   }
 }

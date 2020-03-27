@@ -7,7 +7,7 @@ const mapStoreToProps = (store: RootStore): any => {
     new MenuItem('Referrals', store.ui.showReferralsPage),
     new MenuItem('Reward Vault', store.ui.showRewardVaultPage),
     new MenuItem('Settings', store.ui.showSettingsPage, !store.version.onLatestDesktop),
-    new MenuItem('Offerwall', store.ui.showOfferwallPage),
+    new MenuItem('Earn', () => store.routing.push('/earn/mine')),
   ]
   return {
     showWindowActions: store.native.isNative,

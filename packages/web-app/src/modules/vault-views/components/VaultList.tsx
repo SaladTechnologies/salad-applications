@@ -7,12 +7,12 @@ import { P, Divider, CondensedHeader } from '../../../components'
 import { RewardVaultItem } from '../../vault/models'
 import { VaultItem } from './VaultItem'
 
-const styles = ({
+const styles = {
   container: {
-    userSelect: 'none',
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
+    padding: 20,
   },
   listContainer: {
     overflow: 'hidden',
@@ -25,7 +25,7 @@ const styles = ({
     overflow: 'auto',
     paddingRight: '20px',
   },
-})
+}
 
 interface Props extends WithStyles<typeof styles> {
   redemptions?: RewardVaultItem[]

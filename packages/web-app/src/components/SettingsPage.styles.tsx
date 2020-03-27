@@ -1,5 +1,5 @@
 // Theme
-import { SaladTheme } from '../../../SaladTheme'
+import { SaladTheme } from '../SaladTheme'
 
 export const styles = (theme: SaladTheme) => ({
   menu: {
@@ -43,7 +43,6 @@ export const styles = (theme: SaladTheme) => ({
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
-    padding: '1.5rem 2rem',
   },
 
   bugButton: {

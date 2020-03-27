@@ -1,26 +1,24 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
-import { Settings } from './components'
+import { SettingsPage, MenuItem } from '../../components'
 import { Config } from '../../config'
-
-const handleSettingsMenuClick = (store: RootStore, url: string) => {
-  store.routing.push(url)
-}
+import { ReferralSettingsContainer } from './referral-views'
+import { VaultListContainer } from '../vault-views'
+import { WindowsSettingsContainer } from './windows-settings-views'
+import { AccountContainer } from './account-views'
 
 const mapStoreToProps = (store: RootStore): any => {
-  type LinkList = { url: string; text: string }
-  const menuItems: LinkList[] = [
-    { url: '/settings/account', text: 'Account' },
-    { url: '/settings/referrals', text: 'Referrals' },
-    { url: '/settings/reward-vault', text: 'Reward Vault' },
-    { url: '/settings/offerwall', text: 'Offerwall' },
-    { url: '/settings/windows-settings', text: 'Settings' },
+  const menuItems: MenuItem[] = [
+    { url: '/settings/account', text: 'Account', component: AccountContainer },
+    { url: '/settings/referrals', text: 'Referrals', component: ReferralSettingsContainer },
+    { url: '/settings/reward-vault', text: 'Reward Vault', component: VaultListContainer },
+    { url: '/settings/windows-settings', text: 'Settings', component: WindowsSettingsContainer },
   ]
 
   return {
     onCloseClicked: () => store.ui.hideModal(),
     onCloseKeyPress: () => store.ui.hideModal(),
-    onListItemClick: (url: string) => handleSettingsMenuClick(store, url),
+    onListItemClick: (url: string) => store.routing.push(url),
     onSendBug: store.ui.openCanny,
     menuItems: menuItems,
     appVersion: store.native.desktopVersion,
@@ -31,4 +29,4 @@ const mapStoreToProps = (store: RootStore): any => {
   }
 }
 
-export const SettingsContainer = connect(mapStoreToProps, Settings)
+export const SettingsContainer = connect(mapStoreToProps, SettingsPage)
