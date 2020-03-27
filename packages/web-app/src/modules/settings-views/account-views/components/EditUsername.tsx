@@ -43,7 +43,7 @@ class _EditUsername extends Component<Props, State> {
 
     const errors: FormTypes = {}
     if (v.username && v.username.length < 2) {
-      errors.username = 'Must be at least 2 characters!'
+      errors.username = 'Username must be at least 2 characters!'
     }
     if (v.username === undefined || v.username.length === 0) {
       errors.username = 'Username is required!'
