@@ -57,7 +57,7 @@ class _SendReferral extends Component<Props> {
             <form onSubmit={handleSubmit}>
               <P>
                 Salad will send an email to your friend that includes the referral code and a download link so they can
-                join you in the kitchen
+                join you in the kitchen.
               </P>
               <Field name="email" type="email">
                 {({ input, meta }) => (

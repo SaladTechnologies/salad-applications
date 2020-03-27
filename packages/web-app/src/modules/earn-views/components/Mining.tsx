@@ -54,7 +54,7 @@ class _Mining extends Component<Props> {
                   many cases it will take your machine some time to get to the "Running" or "Earning" status.
                   <b> Remember, Salad is best left AFK!!!</b>
                 </P>
-                <P>There are 4 states of Salad that you should be aware of</P>
+                <P>There are 4 states of Salad that you should be aware of:</P>
                 <P>
                   <b>STOPPED</b>
                   <br /> Salad isn't doing anything, your GPU is not being used, and you won't earn anything.
@@ -77,7 +77,7 @@ class _Mining extends Component<Props> {
                   <b>
                     <InternalLink to="/settings/windows-settings">Autostart</InternalLink>
                   </b>
-                  , this will allow Salad to automatically start when you step away from your machine
+                  , this will allow Salad to automatically start when you step away from your machine.
                 </P>
               </div>
               <div className={classes.column}>
@@ -101,7 +101,7 @@ class _Mining extends Component<Props> {
               <div className={classes.column} style={{ paddingLeft: 20 }}>
                 <Username blue>What if I can't mine?</Username>
                 <P>
-                  If your machine doesn't currently support mining, don't worry there are other options for you to earn
+                  If your machine doesn't currently support mining, don't worry! There are other options for you to earn
                   Salad balance.
                 </P>
                 <P>
