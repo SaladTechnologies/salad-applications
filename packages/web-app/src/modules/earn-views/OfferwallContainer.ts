@@ -1,5 +1,5 @@
-import { connect } from '../../../connect'
-import { RootStore } from '../../../Store'
+import { connect } from '../../connect'
+import { RootStore } from '../../Store'
 import { Offerwall } from './components'
 
 const mapStoreToProps = (store: RootStore): any => ({

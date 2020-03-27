@@ -10,7 +10,7 @@ const styles = {
     backdropFilter: 'blur(8.57952px)',
     display: 'flex',
     position: 'fixed',
-    top: '33px',
+    top: '33px', //Allows the menu bar to still be shown
     right: 0,
     bottom: 0,
     left: 0,

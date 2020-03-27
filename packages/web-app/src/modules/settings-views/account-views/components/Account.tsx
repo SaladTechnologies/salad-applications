@@ -1,22 +1,27 @@
 import React, { Component } from 'react'
-
-// Styles
-import { styles } from './Account.styles'
-
-// UI
-import {
-  CondensedHeader,
-  Divider,
-  Button,
-} from '../../../../components'
-
-// Packages
+import { CondensedHeader, Divider, Button } from '../../../../components'
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
-
-// Components
 import { EditUsername } from './EditUsername'
 import { Profile } from '../../../profile/models'
+import { SaladTheme } from '../../../../SaladTheme'
+
+const styles = (theme: SaladTheme) => ({
+  container: {
+    padding: 20,
+  },
+
+  logoutButton: {
+    backgroundColor: theme.darkBlue,
+    position: 'absolute',
+    bottom: theme.large,
+    right: '2rem',
+
+    '& button': {
+      color: theme.lightGreen,
+    },
+  },
+})
 
 interface Props extends WithStyles<typeof styles> {
   onLogout?: () => void
@@ -36,7 +41,7 @@ class _Account extends Component<Props> {
     const { profile, onSend, sending, classes } = this.props
 
     return (
-      <>
+      <div className={classes.container}>
         <div className="header">
           <CondensedHeader>Account</CondensedHeader>
         </div>
@@ -44,9 +49,11 @@ class _Account extends Component<Props> {
         <div className={classnames(classes.container)}>
           <EditUsername profile={profile} onSend={onSend} sending={sending} />
 
-          <Button className={classes.logoutButton} dark uppercase onClick={this.handleLogout}>Log out</Button>
+          <Button className={classes.logoutButton} dark uppercase onClick={this.handleLogout}>
+            Log out
+          </Button>
         </div>
-      </>
+      </div>
     )
   }
 }
