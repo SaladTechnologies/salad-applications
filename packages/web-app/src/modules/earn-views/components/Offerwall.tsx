@@ -112,7 +112,7 @@ class _Offerwall extends Component<Props> {
                   </P>
                   <P>
                     By partnering with AdGem, we now host a large catalog of offers, most of which are easily completed
-                    and all provide extra earnings
+                    and all provide extra earnings.
                   </P>
                 </div>
                 <br />
@@ -132,7 +132,7 @@ class _Offerwall extends Component<Props> {
                   <P>{disclaimer}</P>
                   <i>
                     - It may take up to 24 hours to receive your balance <br />
-                    - Bluestacks or other device emulators may not be supported by offerwall providers
+                    - BlueStacks or other device emulators may not be supported by offerwall providers
                     <br />- The use of a VPN may result in a ban by the offerwall provider
                   </i>
                 </P>
