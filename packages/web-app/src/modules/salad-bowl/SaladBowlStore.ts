@@ -175,11 +175,12 @@ export class SaladBowlStore {
     yield this.store.native.send('start-salad', this.currentPluginDefinition)
 
     //Show a notification reminding users to use auto start
-    if (reason === StartReason.Manual && this.store.autoStart.canAutoStart) {
+    if (reason === StartReason.Manual && this.store.autoStart.canAutoStart && !this.store.autoStart.autoStart) {
       this.store.notifications.sendNotification({
         title: 'Salad is best run AFK',
         message: `Don't forget to enable auto start in Settings`,
         id: 123456,
+        onClick: () => this.store.routing.push('/settings/windows-settings'),
       })
     }
 
