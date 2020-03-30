@@ -241,6 +241,8 @@ export class AnalyticsStore {
   public trackLifetimeBalance = (lifetimeBalance: number) => {
     if (!this.started) return
 
+    if (lifetimeBalance === 0) return
+
     mixpanel.people.set({
       LifetimeBalance: lifetimeBalance,
     })
