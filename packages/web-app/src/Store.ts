@@ -18,6 +18,7 @@ import { VaultStore } from './modules/vault'
 import { VersionStore } from './modules/versions'
 import { StopReason } from './modules/salad-bowl/models'
 import { OfferwallStore } from './modules/profile/OfferwallStore'
+import { EngagementStore } from './modules/engagement'
 
 //Forces all changes to state to be from an action
 configure({ enforceActions: 'always' })
@@ -54,6 +55,7 @@ export class RootStore {
   public readonly vault: VaultStore
   public readonly version: VersionStore
   public readonly offerwall: OfferwallStore
+  public readonly engagement: EngagementStore
 
   private machineInfoHeartbeat?: NodeJS.Timeout
 
@@ -78,6 +80,7 @@ export class RootStore {
     this.vault = new VaultStore(axios)
     this.version = new VersionStore(this, axios)
     this.offerwall = new OfferwallStore(this)
+    this.engagement = new EngagementStore(this)
 
     this.machineInfoHeartbeat = setInterval(this.tryRegisterMachine, 20000)
 
