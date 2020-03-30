@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import icon from '../assets/favicon-32x32.png'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -6,24 +7,22 @@ import { faMinus, faClone, faTimes } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
 import { ChoppingCartButtonContainer } from '../../chopping-cart-views'
 import { RewardSearchBarContainer } from '../../reward-views'
+import { InternalLink } from '../../../components'
+import Img from 'react-image'
 
 export class MenuItem {
-  constructor(
-    public readonly name: string,
-    public readonly onClick: () => void,
-    public readonly showNotification?: boolean,
-  ) {}
+  constructor(public readonly name: string, public readonly url: string, public readonly showNotification?: boolean) {}
 }
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    color: theme.lightGreen,
+    color: theme.green,
     height: '2rem',
     userSelect: 'none',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'stretch',
-    paddingLeft: '1rem',
+    paddingLeft: 10,
     margin: 0,
     '-webkit-app-region': 'drag',
   },
@@ -34,12 +33,10 @@ const styles = (theme: SaladTheme) => ({
     marginRight: 'auto',
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'baseline',
+    alignItems: 'center',
   },
-  title: {
-    fontFamily: 'sharpGroteskBook19',
-    fontSize: theme.small,
-    paddingRight: '1rem',
+  icon: {
+    paddingRight: 5,
   },
   buttons: {
     padding: '0 .75rem',
@@ -51,16 +48,16 @@ const styles = (theme: SaladTheme) => ({
     },
   },
   menuItem: {
-    color: theme.mediumGreen,
     '-webkit-app-region': 'none',
     padding: '.5rem .75rem',
+    textDecoration: 'none',
     fontFamily: 'sharpGroteskLight25',
     fontSize: '0.7rem',
     letterSpacing: '1.3px',
     cursor: 'pointer',
     position: 'relative',
     '&:hover': {
-      opacity: 0.7,
+      color: theme.lightGreen,
     },
   },
   menuItemNotification: {
@@ -128,13 +125,15 @@ class _Titlebar extends Component<Props> {
     return (
       <div className={classnames(classes.container, { [classes.bottomBorder]: bottomBorder })}>
         <div className={classes.leftItems}>
-          <div className={classes.title}>Salad</div>
+          <div className={classes.icon}>
+            <Img height={24} src={icon} />
+          </div>
           {menuItems &&
             menuItems.map(x => (
-              <div key={x.name} className={classes.menuItem} onClick={() => x.onClick()}>
+              <InternalLink key={x.name} className={classes.menuItem} to={x.url}>
                 {x.showNotification && <div className={classes.menuItemNotification}></div>}
                 {x.name}
-              </div>
+              </InternalLink>
             ))}
         </div>
 

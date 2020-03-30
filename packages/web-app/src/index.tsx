@@ -38,6 +38,24 @@ console.log(`Running web app build:${Config.appBuild}`)
 const client = createClient()
 const rootStore = createStore(client)
 const routerHistory = createBrowserHistory()
+
+let currentLocation: any = null
+
+// Ensures that the same url will not get "pushed" multiple times
+routerHistory.block((location, action) => {
+  const nextLocation = location.pathname + location.search
+
+  if (action === 'PUSH') {
+    if (currentLocation === nextLocation) {
+      return false
+    }
+  }
+
+  currentLocation = nextLocation
+
+  return undefined
+})
+
 const history = syncHistoryWithStore(routerHistory, rootStore.routing)
 
 ReactDOM.render(

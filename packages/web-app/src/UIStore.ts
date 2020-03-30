@@ -14,22 +14,6 @@ export class UIStore {
     this.store.routing.replace('/')
   }
 
-  showProfilePage = () => {
-    this.showModal('/settings/account')
-  }
-
-  showSettingsPage = () => {
-    this.showModal('/settings/windows-settings')
-  }
-
-  showRewardVaultPage = () => {
-    this.showModal('/settings/reward-vault')
-  }
-
-  showOfferwallPage = () => {
-    this.showModal('/settings/offerwall')
-  }
-
   @action
   openCanny = () => {
     const openLink = (url: string) => {
@@ -60,9 +44,5 @@ export class UIStore {
     } else {
       openLink('https://feedback.salad.io')
     }
-  }
-
-  showReferralsPage = () => {
-    this.showModal('/settings/referrals')
   }
 }
