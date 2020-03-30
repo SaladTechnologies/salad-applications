@@ -53,6 +53,14 @@ const styles = (theme: SaladTheme) => ({
   missingBalance: {
     color: theme.red,
   },
+  disclaimer: {
+    fontFamily: theme.fontGroteskBook25,
+    fontSize: 8,
+    lineSpacing: 1.5,
+    paddingTop: 10,
+    textAlign: 'center',
+    textTransform: 'uppercase',
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -126,7 +134,10 @@ class _SaladPayOrderSummaryPage extends Component<Props> {
                 {moneyFormat(availableBalance)}
               </div>
             </div>
-            <SaladPayCheckoutButton onClick={this.handleConfirm} loading={processing} enabled={hasBalance} />
+            <div>
+              <SaladPayCheckoutButton onClick={this.handleConfirm} loading={processing} enabled={hasBalance} />
+              <div className={classes.disclaimer}>Salad Plays for Keeps, No Refunds</div>
+            </div>
           </div>
         </div>
       </SaladPayPage>
