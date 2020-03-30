@@ -103,7 +103,7 @@ class _CompatibilityCheckPage extends Component<Props> {
             <div style={{ padding: '1rem 0' }}>
               <div className={classes.detailsTitle}>THE GOOD NEWS</div>
               <div className={classes.detailsText}>
-                You can still earn Salad Balance by referring people who have a qualifying GPU.
+                You can still earn Salad Balance by referring people who have a qualifying GPU, or by completing tasks on the Offerwall.
               </div>
             </div>
           </div>
