@@ -60,7 +60,7 @@ class _VaultItem extends Component<Props> {
         )}
         {code && code.startsWith('https') && (
           <P>
-            <ExternalLink path={code}>Click Here to Claim</ExternalLink>
+            <ExternalLink path={code}>Click here to claim</ExternalLink>
           </P>
         )}
         <Divider />
