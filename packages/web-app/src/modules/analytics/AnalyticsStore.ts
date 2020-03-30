@@ -68,6 +68,15 @@ export class AnalyticsStore {
     this.track('Login')
   }
 
+  /** Alias another Id (Auth0 Id) to the Salad user id */
+  public aliasUser = (otherId: string) => {
+    if (!this.started) return
+
+    if (!otherId) return
+
+    mixpanel.alias(otherId)
+  }
+
   public trackDesktopVersion = (version: string) => {
     if (!this.started) return
 

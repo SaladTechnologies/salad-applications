@@ -138,8 +138,14 @@ export class AuthStore {
         .catch(err => {
           console.log(err)
         })
+        .then(async () => {
+          await this.store.onLogin()
+        })
         .then(() => {
-          this.store.onLogin()
+          if (this.auth0Result) {
+            //Ensure we have connected the Auth0 id to the Salad Id
+            this.store.analytics.aliasUser(this.auth0Result.idTokenPayload.sub)
+          }
         })
     })
   }
