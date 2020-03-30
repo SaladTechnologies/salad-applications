@@ -236,7 +236,7 @@ export class RewardStore {
       this.store.notifications.sendNotification({
         title: `You redeemed ${reward.name}!`,
         message: `Congrats on your pick! Your reward is available in the reward vault!`,
-        onClick: this.store.ui.showRewardVaultPage,
+        onClick: () => this.store.routing.push('/settings/reward-vault'),
       })
     } catch (error) {
       if (!(error instanceof AbortError)) {

@@ -3,9 +3,7 @@ import withStyles, { WithStyles } from 'react-jss'
 
 const styles = {
   link: {
-    '&:visited': {
-      color: 'inherit',
-    },
+    color: 'inherit',
   },
 }
 
