@@ -3,11 +3,11 @@ import icon from '../assets/favicon-32x32.png'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMinus, faClone, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { faMinus, faClone, faTimes, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
 import { ChoppingCartButtonContainer } from '../../chopping-cart-views'
 import { RewardSearchBarContainer } from '../../reward-views'
-import { InternalLink } from '../../../components'
+import { InternalLink, ExternalLink } from '../../../components'
 import Img from 'react-image'
 
 export class MenuItem {
@@ -143,6 +143,10 @@ class _Titlebar extends Component<Props> {
             <ChoppingCartButtonContainer />
           </div>
         )}
+
+        <ExternalLink path={'https://www.salad.io/support'}>
+          <FontAwesomeIcon size="xs" className={classes.buttons} icon={faQuestionCircle} />
+        </ExternalLink>
 
         {showWindowActions && (
           <>
