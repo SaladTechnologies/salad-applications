@@ -29,7 +29,7 @@ export class AntiVirusErrorPage extends Component<Props> {
         onSendLog={this.handleSendLogClicked}
       >
         <div style={{ paddingBottom: '1rem' }}>
-          Uh oh, looks like your anti-virus is blocking our miner from running. Follow the link below to whitelist Salad with your anti-virus.
+          Uh oh, looks like your anti-virus is blocking our miner from running. Follow the link below for a guide on how to whitelist Salad in your anti-virus.
         </div>
 
         <ExternalLinkListUnstyled list={avLinks} />
