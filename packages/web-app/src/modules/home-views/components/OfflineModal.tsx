@@ -36,10 +36,10 @@ class _OfflineModal extends Component<Props> {
         <ModalPage>
           <Modal>
             <div className={classes.container}>
-              <div className={classes.subTitle}>Uh, Oh.</div>
-              <div className={classes.title}>OOPS! LOOKS LIKE YOU'RE NOT CONNECTED</div>
+              <div className={classes.subTitle}>Uh Oh!</div>
+              <div className={classes.title}>OOPS! LOOKS LIKE YOU'RE NOT CONNECTED TO THE INTERWEBS</div>
               <div className={classes.description}>
-                Check your connection to get reconnected and start chopping again.
+                Check your connection and get reconnected to start chopping again.
               </div>
             </div>
           </Modal>
