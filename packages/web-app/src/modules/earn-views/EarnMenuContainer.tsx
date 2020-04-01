@@ -1,20 +1,23 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
-import { SettingsPage, MenuItem } from '../../components'
+import { SettingsPage } from '../../components'
 import { OfferwallContainer } from './OfferwallContainer'
 import { MiningContainer } from './MiningContainer'
+import { AdGemContainer } from './AdGemContainer'
+import { OfferToroContainer } from './OfferToroContainer'
+import { AdGateContainer } from './AdGateContainer'
 
 const mapStoreToProps = (store: RootStore): any => {
-  const menuItems: MenuItem[] = [
-    { text: 'Mining', url: '/earn/mine', component: MiningContainer },
-    { text: 'Offerwall', url: '/earn/offerwall', component: OfferwallContainer },
-  ]
-
   return {
     onCloseClicked: () => store.ui.hideModal(),
     onCloseKeyPress: () => store.ui.hideModal(),
-    onListItemClick: (url: string) => store.routing.push(url),
-    menuItems: menuItems,
+    menuItems: [
+      { text: 'Mining', url: '/earn/mine', component: MiningContainer },
+      { text: 'Offerwalls', url: '/earn/offerwall', component: OfferwallContainer, divider: true },
+      { text: 'AdGate', url: '/earn/adgate', component: AdGateContainer, enabled: store.offerwall.offerwall },
+      { text: 'AdGem', url: '/earn/adgem', component: AdGemContainer, enabled: store.offerwall.offerwall },
+      { text: 'OfferToro', url: '/earn/offer-toro', component: OfferToroContainer, enabled: store.offerwall.offerwall },
+    ],
   }
 }
 

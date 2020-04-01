@@ -20,13 +20,16 @@ export interface MenuItem {
   url: string
   text: string
   component: React.ComponentType<any>
+  /** Should a divider be drawn before this item */
+  divider?: boolean
+  /** Is the item clickable */
+  enabled?: boolean
 }
 
 interface Props extends WithStyles<typeof styles> {
   onCloseClicked?: () => void
   onCloseKeyPress?: () => void
   onSendBug?: () => void
-  onListItemClick?: (url: string) => any
   menuItems?: MenuItem[]
   appVersion?: string
   appBuild?: string
@@ -77,12 +80,6 @@ class _Settings extends Component<Props> {
     }
   }
 
-  handleListItemClick = (url: string) => {
-    const { onListItemClick } = this.props
-
-    if (onListItemClick) onListItemClick(url)
-  }
-
   handleDownloadLatest = () => {
     const { onDownloadLatestDesktop } = this.props
 
@@ -104,7 +101,7 @@ class _Settings extends Component<Props> {
     return (
       <Overlay>
         <div className={classnames(classes.menu, classes.menuItems)}>
-          {menuItems && <LinkListUnstyled list={menuItems} onListItemClick={this.handleListItemClick} />}
+          {menuItems && <LinkListUnstyled list={menuItems} />}
 
           <div className={classes.buttonContainer}>
             {onSendBug && <Button onClick={this.handleBugClicked}>Submit Bug</Button>}
@@ -128,6 +125,7 @@ class _Settings extends Component<Props> {
           )}
         </div>
         <div className={classnames(classes.settings)}>
+          {/* Adds each path */}
           {menuItems?.map(x => (
             <Route path={x.url} component={x.component} />
           ))}
