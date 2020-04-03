@@ -5,7 +5,6 @@ import { Offerwall } from './components'
 const mapStoreToProps = (store: RootStore): any => ({
   offerwall: store.offerwall.offerwall,
   offerwallToggle: store.offerwall.toggleOfferwall,
-  userId: store.profile.currentProfile && store.profile.currentProfile.id,
 })
 
 export const OfferwallContainer = connect(mapStoreToProps, Offerwall)
