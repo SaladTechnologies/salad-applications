@@ -70,7 +70,7 @@ class _Offerwall extends Component<Props> {
                 </P>
               </div>
               <br />
-              <P>Example Offers</P>
+              <P>Example AdGem Offers</P>
               <Img className={classes.exampleImage} src={offerWallExample} />
               <P>
                 <P>
