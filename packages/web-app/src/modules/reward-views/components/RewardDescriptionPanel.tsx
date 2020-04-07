@@ -1,9 +1,11 @@
-import React, { Component } from 'react'
+import React, { Component, ReactElement } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import { Reward } from '../../reward/models'
-import { P } from '../../../components'
+import { P, ExternalLink } from '../../../components'
 import { RewardDetailsContentPanel } from './RewardDetailsContentPanel'
+import ReactHtmlParser from 'react-html-parser'
+import { DomElement } from 'htmlparser2'
 
 const styles = (theme: SaladTheme) => ({
   titleText: {
@@ -21,6 +23,15 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _RewardDescriptionPanel extends Component<Props> {
+  transform = (node: DomElement): ReactElement | void | null => {
+    //Transform a tags to external links
+    if (node.type === 'tag' && node.name === 'a') {
+      return <ExternalLink path={node.attribs.href}>{node.children[0].data}</ExternalLink>
+    } else {
+      //Return the default
+      return undefined
+    }
+  }
   render() {
     const { reward, classes } = this.props
 
@@ -29,7 +40,7 @@ class _RewardDescriptionPanel extends Component<Props> {
     return (
       <RewardDetailsContentPanel>
         <div className={classes.titleText}>Description</div>
-        <P className={classes.bodyText}>{reward?.description}</P>
+        <P className={classes.bodyText}>{ReactHtmlParser(reward?.description, { transform: this.transform })}</P>
       </RewardDetailsContentPanel>
     )
   }
