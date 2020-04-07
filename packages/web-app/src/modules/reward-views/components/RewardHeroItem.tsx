@@ -148,7 +148,7 @@ class _RewardHeroItem extends Component<Props> {
                 <div className={classes.nameText}>{reward?.name}</div>
                 <div className={classes.priceContainer}>
                   <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
-                    ${reward?.price.toFixed(2)}
+                    {reward?.price ? `$${reward?.price.toFixed(2)}` : 'FREE'}
                   </div>
                   {outOfStock && (
                     <div className={classnames(classes.priceText, classes.stockLabel, classes.outOfStockLabel)}>
