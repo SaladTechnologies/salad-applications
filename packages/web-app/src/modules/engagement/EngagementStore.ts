@@ -12,11 +12,21 @@ export class EngagementStore {
     return show
   }
 
+  /** A flag indicating if the initial notification has already been sent */
+  private showedInitialNotification = false
+
   constructor(private readonly store: RootStore) {
     autorun(() => {
       if (!this.store.auth.isAuth) {
         return
       }
+
+      if (this.showedInitialNotification) {
+        return
+      }
+
+      this.showedInitialNotification = true
+
       if (this.store.saladBowl.canRun && this.store.xp.currentXp <= 10) {
         //Link to the mining page
         this.store.notifications.sendNotification({
