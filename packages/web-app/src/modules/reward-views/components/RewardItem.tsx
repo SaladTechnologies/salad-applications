@@ -126,7 +126,7 @@ class _RewardItem extends Component<Props> {
           <div className={classes.nameText}>{reward ? reward.name : <Skeleton />}</div>
           <div className={classes.subTextContainer}>
             <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
-              {reward ? `$${reward.price.toFixed(2)}` : <Skeleton width={100} />}
+              {reward ?  reward?.price ? `$${reward?.price.toFixed(2)}` : 'FREE' : <Skeleton width={100} />}
             </div>
             {outOfStock && (
               <div className={classnames(classes.priceText, classes.stockLabel, classes.outOfStockLabel)}>
