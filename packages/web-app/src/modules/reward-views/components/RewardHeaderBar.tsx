@@ -134,7 +134,7 @@ class _RewardHeaderBar extends Component<Props> {
             <Button className={classes.buyButton} onClick={this.handleRedeem} disabled={outOfStock || promoGame}>
               <div className={classes.buyText}>BUY NOW</div>
             </Button>
-            <AddToCartButton reward={reward} {...rest} />}
+            <AddToCartButton reward={reward} {...rest} />
           </>
         )}
       </div>
