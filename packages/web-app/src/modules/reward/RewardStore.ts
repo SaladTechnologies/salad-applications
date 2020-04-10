@@ -106,6 +106,7 @@ export class RewardStore {
 
     //Adds the top chops category as the first category so it will always be the first row
     categories.set('top chops', [])
+    categories.set('fresh loot friday', [])
     categories.set('games', [])
     categories.set('gaming gift cards', [])
     categories.set('hardware', [])
