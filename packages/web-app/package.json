@@ -68,7 +68,7 @@
     "@types/react-tabs": "2.3.1",
     "@types/react-transition-group": "4.2.4",
     "@types/uuid": "7.0.1",
-    "auth0-js": "9.12.2",
+    "auth0-js": "9.13.2",
     "axios": "0.19.2",
     "axios-retry": "^3.1.2",
     "classnames": "2.2.6",
