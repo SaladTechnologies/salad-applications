@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import image from '../assets/GPUs.svg'
-import { OnboardingPage } from '../../../components'
+import { OnboardingPage, InternalLink } from '../../../components'
 import { LoadingPage } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
@@ -77,7 +77,7 @@ class _CompatibilityCheckPage extends Component<Props> {
     if (!validGPUs) {
       return (
         <OnboardingPage
-          title={`We don't wanna swipe left.`}
+          title={`Your machine doesn't have the chops.`}
           subtitle={'Looks like your GPU might be incompatible with Salad:'}
           image={image}
           nextText={'GOT IT'}
@@ -103,8 +103,8 @@ class _CompatibilityCheckPage extends Component<Props> {
             <div style={{ padding: '1rem 0' }}>
               <div className={classes.detailsTitle}>THE GOOD NEWS</div>
               <div className={classes.detailsText}>
-                You can still earn Salad Balance by referring people who have a qualifying GPU, or by completing tasks on the
-                Offerwall.
+                You can still earn Salad Balance by referring people who have a qualifying GPU, or by completing tasks
+                one of the <InternalLink to="/earn/offerwall">available offerwalls</InternalLink>.
               </div>
             </div>
           </div>
