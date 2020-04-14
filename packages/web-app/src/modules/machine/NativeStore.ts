@@ -72,7 +72,7 @@ export class NativeStore {
   //#endregion
   @computed
   get canMinimizeToTray(): boolean {
-    return this.isNative && this.apiVersion >=8
+    return this.isNative && this.apiVersion >= 8
   }
 
   @computed
@@ -98,7 +98,7 @@ export class NativeStore {
   @computed
   get gpuNames(): string[] | undefined {
     if (this.machineInfo === undefined) return undefined
-    return this.machineInfo.graphics.controllers.map(x => x.model)
+    return this.machineInfo.graphics.controllers.map((x) => x.model)
   }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
@@ -134,7 +134,9 @@ export class NativeStore {
     let func = this.callbacks.get(args.type)
 
     if (func) {
-      console.log('Received message ' + args.type)
+      if (args.type !== 'set-idle-time') {
+        console.log('Received message ' + args.type)
+      }
       func(args.payload)
     } else {
       console.log('Received unhandled message type ' + args.type)
@@ -157,7 +159,7 @@ export class NativeStore {
   }
 
   @action.bound
-  private checkOnlineStatus = flow(function*(this: NativeStore) {
+  private checkOnlineStatus = flow(function* (this: NativeStore) {
     var prevOnline = this.isOnline
     try {
       yield this.axios.get('online')
@@ -221,7 +223,7 @@ export class NativeStore {
   }
 
   @action.bound
-  registerMachine = flow(function*(this: NativeStore) {
+  registerMachine = flow(function* (this: NativeStore) {
     if (!this.machineInfo) {
       console.warn('No valid machine info found. Unable to register.')
       return

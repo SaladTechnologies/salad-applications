@@ -142,7 +142,8 @@ class _StartButton extends Component<Props> {
                 title="Incompatible Machine"
                 text="Looks like your machine doesn't like Salad.
                  Please check your GPU and Windows version to ensure they
-                  are compatible with Salad."
+                  are compatible with Salad. All hope is NOT lost, check 
+                  out the 'Earn' tab for more info."
               />
             </div>
           )}
