@@ -5,9 +5,8 @@ import { RootStore } from '../../Store'
 const mapStoreToProps = (store: RootStore): any => {
   const menuItems: MenuItem[] = [
     new MenuItem('Store', '/'),
-    new MenuItem('Referrals', '/settings/referrals'),
-    new MenuItem('Reward Vault', '/settings/reward-vault'),
-    new MenuItem('Settings', '/settings/windows-settings', !store.version.onLatestDesktop),
+    new MenuItem('Referrals', '/account/referrals'),
+    new MenuItem('Reward Vault', '/account/reward-vault'),
     new MenuItem('Earn', '/earn/mine'),
   ]
   return {

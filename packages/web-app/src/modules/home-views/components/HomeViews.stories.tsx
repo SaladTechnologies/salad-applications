@@ -1,16 +1,11 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import { action } from '@storybook/addon-actions'
-import { BottomBar } from './BottomBar'
 import { Titlebar } from './Titlebar'
 import { OfflineModal } from './OfflineModal'
 import { NotificationBanner } from './NotificationBanner'
 import { BannerInfo } from '../../home/models/BannerInfo'
 
 storiesOf('Modules/Home', module)
-  .add('Bottom Bar', () => {
-    return <BottomBar onDiscordClick={action('discord')} onSupportClick={action('support')} />
-  })
   .add('Title Bar', () => {
     return (
       <>

@@ -8,6 +8,7 @@ import classnames from 'classnames'
 import { ChoppingCartButtonContainer } from '../../chopping-cart-views'
 import { RewardSearchBarContainer } from '../../reward-views'
 import { InternalLink, ExternalLink } from '../../../components'
+import GearIcon from '../assets/GearIcon.svg'
 import Img from 'react-image'
 
 export class MenuItem {
@@ -72,7 +73,7 @@ const styles = (theme: SaladTheme) => ({
   },
   componentContainer: {
     display: 'flex',
-    paddingRight: 10,
+    alignItems: 'center',
     '-webkit-app-region': 'none',
   },
   closeButton: {
@@ -89,6 +90,10 @@ const styles = (theme: SaladTheme) => ({
   },
   hide: {
     display: 'none',
+  },
+  settingsButton: {
+    display: 'flex',
+    alignItems: 'center',
   },
 })
 
@@ -129,7 +134,7 @@ class _Titlebar extends Component<Props> {
             <Img height={24} src={icon} />
           </div>
           {menuItems &&
-            menuItems.map(x => (
+            menuItems.map((x) => (
               <InternalLink key={x.name} className={classes.menuItem} to={x.url}>
                 {x.showNotification && <div className={classes.menuItemNotification}></div>}
                 {x.name}
@@ -141,6 +146,12 @@ class _Titlebar extends Component<Props> {
           <div className={classes.componentContainer}>
             <RewardSearchBarContainer />
             <ChoppingCartButtonContainer />
+            <InternalLink
+              className={classnames(classes.settingsButton, classes.buttons)}
+              to={'/settings/windows-settings'}
+            >
+              <Img height={16} src={GearIcon} />
+            </InternalLink>
           </div>
         )}
 
