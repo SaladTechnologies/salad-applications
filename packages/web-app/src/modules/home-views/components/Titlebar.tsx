@@ -98,7 +98,7 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  showWindowActions?: boolean
+  isDesktop?: boolean
   bottomBorder?: boolean
   onMinimize?: () => void
   onMaximize?: () => void
@@ -126,7 +126,7 @@ class _Titlebar extends Component<Props> {
   }
 
   render() {
-    const { showWindowActions, menuItems, bottomBorder, classes } = this.props
+    const { isDesktop, menuItems, bottomBorder, classes } = this.props
     return (
       <div className={classnames(classes.container, { [classes.bottomBorder]: bottomBorder })}>
         <div className={classes.leftItems}>
@@ -146,12 +146,14 @@ class _Titlebar extends Component<Props> {
           <div className={classes.componentContainer}>
             <RewardSearchBarContainer />
             <ChoppingCartButtonContainer />
-            <InternalLink
-              className={classnames(classes.settingsButton, classes.buttons)}
-              to={'/settings/windows-settings'}
-            >
-              <Img height={16} src={GearIcon} />
-            </InternalLink>
+            {isDesktop && (
+              <InternalLink
+                className={classnames(classes.settingsButton, classes.buttons)}
+                to={'/settings/windows-settings'}
+              >
+                <Img height={16} src={GearIcon} />
+              </InternalLink>
+            )}
           </div>
         )}
 
@@ -159,7 +161,7 @@ class _Titlebar extends Component<Props> {
           <FontAwesomeIcon size="xs" className={classes.buttons} icon={faQuestionCircle} />
         </ExternalLink>
 
-        {showWindowActions && (
+        {isDesktop && (
           <>
             <div onClick={this.handleMinimize}>
               <FontAwesomeIcon size="xs" className={classes.buttons} icon={faMinus} />

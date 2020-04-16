@@ -10,7 +10,7 @@ const mapStoreToProps = (store: RootStore): any => {
     new MenuItem('Earn', '/earn/mine'),
   ]
   return {
-    showWindowActions: store.native.isNative,
+    isDesktop: store.native.isNative,
     onMinimize: store.native.minimizeWindow,
     onMaximize: store.native.maximizeWindow,
     onClose: store.native.closeWindow,

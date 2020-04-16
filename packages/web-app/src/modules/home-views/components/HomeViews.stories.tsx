@@ -10,7 +10,7 @@ storiesOf('Modules/Home', module)
     return (
       <>
         With actions
-        <Titlebar showWindowActions />
+        <Titlebar isDesktop />
         Without actions
         <Titlebar />
       </>
