@@ -7,7 +7,7 @@ const mapStoreToProps = (store: RootStore): any => {
     new MenuItem('Store', '/'),
     new MenuItem('Referrals', '/account/referrals'),
     new MenuItem('Reward Vault', '/account/reward-vault'),
-    new MenuItem('Earn', '/earn/mine'),
+    new MenuItem('Earn', '/earn/offerwall'),
   ]
   return {
     isDesktop: store.native.isNative,
