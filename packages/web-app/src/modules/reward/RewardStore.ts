@@ -17,7 +17,7 @@ export class RewardStore {
   private rewards: Map<string, Reward> = new Map<string, Reward>()
 
   @observable
-  private categories: Map<string, RewardId[]> = new Map<string, RewardId[]>()
+  private categories: Map<string, Set<RewardId>> = new Map<string, Set<RewardId>>()
 
   @observable
   private selectedRewardId?: string
@@ -71,7 +71,7 @@ export class RewardStore {
       return undefined
     }
 
-    return rewardIds.map(x => this.getReward(x)).filter(x => x !== undefined)
+    return [...rewardIds].map((x) => this.getReward(x)).filter((x) => x !== undefined)
   }
 
   isInChoppingCart = (id?: string): boolean => {
@@ -79,7 +79,7 @@ export class RewardStore {
   }
 
   @action.bound
-  refreshRewards = flow(function*(this: RewardStore) {
+  refreshRewards = flow(function* (this: RewardStore) {
     try {
       this.isLoading = true
       const response = yield this.axios.get<RewardsResource[]>('rewards')
@@ -101,33 +101,34 @@ export class RewardStore {
     }
   })
 
-  private categorizeRewards = (rewards: Reward[]): Map<string, RewardId[]> => {
-    let categories = new Map<string, RewardId[]>()
+  private categorizeRewards = (rewards: Reward[]): Map<string, Set<RewardId>> => {
+    let categories = new Map<string, Set<RewardId>>()
 
     //Adds the top chops category as the first category so it will always be the first row
-    categories.set('top chops', [])
-    categories.set('fresh loot friday', [])
-    categories.set('games', [])
-    categories.set('gaming gift cards', [])
-    categories.set('hardware', [])
-    categories.set('donations', [])
+    categories.set('top chops', new Set())
+    categories.set('fresh loot friday', new Set())
+    categories.set('games', new Set())
+    categories.set('gaming gift cards', new Set())
+    categories.set('hardware', new Set())
+    categories.set('donations', new Set())
 
     //Group the rewards by category
     for (let r of rewards) {
       if (r.tags) {
         for (let t of r.tags) {
-          if (!categories.has(t)) {
-            categories.set(t, [r.id])
-          } else {
-            categories.get(t)?.push(r.id)
+          let categoryIds: Set<RewardId> | undefined = categories.get(t)
+          if (!categoryIds) {
+            categoryIds = new Set()
+            categories.set(t, categoryIds)
           }
+          categoryIds.add(r.id)
         }
       }
     }
 
     //Sorts each category
-    for (let rewardIds of categories.values()) {
-      rewardIds?.sort((a, b) => {
+    for (let [category, rewardIds] of categories) {
+      let sortedIds = [...rewardIds].sort((a, b) => {
         let rewardA = this.getReward(a)
         let rewardB = this.getReward(b)
 
@@ -147,19 +148,21 @@ export class RewardStore {
 
         return stockDiff
       })
+
+      categories.set(category, new Set(sortedIds))
     }
 
     return categories
   }
 
   @action.bound
-  loadSelectedReward = flow(function*(this: RewardStore) {
+  loadSelectedReward = flow(function* (this: RewardStore) {
     var res = yield this.axios.get('profile/selected-reward')
     this.selectedRewardId = res.data.rewardId
   })
 
   @action.bound
-  addToChoppingCart = flow(function*(this: RewardStore, reward: Reward) {
+  addToChoppingCart = flow(function* (this: RewardStore, reward: Reward) {
     const request = {
       rewardId: reward.id,
     }
@@ -179,7 +182,7 @@ export class RewardStore {
   })
 
   @action.bound
-  removeFromChoppingCart = flow(function*(this: RewardStore, _reward: Reward) {
+  removeFromChoppingCart = flow(function* (this: RewardStore, _reward: Reward) {
     const request = {
       rewardId: undefined,
     }
@@ -197,7 +200,7 @@ export class RewardStore {
   })
 
   @action.bound
-  redeemReward = flow(function*(this: RewardStore, reward: Reward) {
+  redeemReward = flow(function* (this: RewardStore, reward: Reward) {
     if (this.isRedeeming) {
       console.log('Already redeeming reward, skipping')
       return
@@ -265,7 +268,7 @@ export class RewardStore {
 
     if (search) {
       return Array.from(this.rewards.values())
-        .filter(x => search && x.name.toLowerCase().includes(search))
+        .filter((x) => search && x.name.toLowerCase().includes(search))
         .sort((a: Reward, b: Reward) => {
           let name1 = a.name.toLowerCase()
           let name2 = b.name.toLowerCase()
