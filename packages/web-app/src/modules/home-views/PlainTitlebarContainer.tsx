@@ -4,14 +4,11 @@ import { RootStore } from '../../Store'
 
 const mapStoreToProps = (store: RootStore): any => {
   return {
-    showWindowActions: store.native.isNative,
+    isDesktop: store.native.isNative,
     onMinimize: store.native.minimizeWindow,
     onMaximize: store.native.maximizeWindow,
     onClose: store.native.closeWindow,
   }
 }
 
-export const PlainTitlebarContainer = connect(
-  mapStoreToProps,
-  Titlebar,
-)
+export const PlainTitlebarContainer = connect(mapStoreToProps, Titlebar)

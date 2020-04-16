@@ -53,7 +53,7 @@ class _WindowsSettings extends Component<Props> {
     return (
       <div className={classes.container}>
         <div className="header">
-          <CondensedHeader>Settings</CondensedHeader>
+          <CondensedHeader>Windows Settings</CondensedHeader>
         </div>
         <Divider />
         <ToggleSetting

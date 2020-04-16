@@ -13,7 +13,6 @@ import { Config } from './config'
 import { CallbackContainer, WelcomePageContainer, WhatsNewPageContainer } from './modules/onboarding-views'
 import { HomePage } from './modules/home-views'
 import { LoadingPage } from './components'
-import { AccountModalContainer } from './modules/profile-views'
 import { CompatibilityCheckPageContainer } from './modules/machine-views'
 import {
   AntiVirusErrorContainer,
@@ -23,10 +22,11 @@ import {
   UnknownErrorContainer,
 } from './modules/error-views'
 // Settings Menu
-import { SettingsContainer } from './modules/settings-views'
+import { AccountSettingsContainer } from './modules/account-views'
 import { RewardDetailsContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
 import { EarnMenuContainer } from './modules/earn-views'
+import { SettingsContainer } from './modules/settings-views'
 // Account Menu
 
 export default class Routes extends Component {
@@ -106,14 +106,12 @@ const Auth = () => {
       <Route exact path="/errors/network" component={NetworkErrorContainer} />
       <Route exact path="/errors/unknown" component={UnknownErrorContainer} />
       <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
-      {/*<Route exact path="/rewards/:id/redeem" component={RewardRedemptionModalContainer} /> */}
-      <Route exact path="/profile" component={AccountModalContainer} />
       <Route exact path="/whats-new" component={WhatsNewPageContainer} />
 
       {/* SaladPay: This is stand in until we figure out iFrames, popups... */}
       <Route exact path="/salad-pay/order-summary" component={SaladPayOrderSummaryContainer} />
-      {/* <Route exact path="/salad-pay/confirmation" component={WhatsNewPageContainer} /> */}
 
+      <Route path="/account" component={AccountSettingsContainer} />
       <Route path="/settings" component={SettingsContainer} />
       <Route path="/earn" component={EarnMenuContainer} />
     </>

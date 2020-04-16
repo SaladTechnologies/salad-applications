@@ -105,7 +105,7 @@ class _Mining extends Component<Props> {
                   Salad balance.
                 </P>
                 <P>
-                  <InternalLink to="/settings/referrals">Referrals</InternalLink>
+                  <InternalLink to="/account/referrals">Referrals</InternalLink>
                 </P>
                 <P>
                   <InternalLink to="/earn/offerwall">Offerwalls</InternalLink>
