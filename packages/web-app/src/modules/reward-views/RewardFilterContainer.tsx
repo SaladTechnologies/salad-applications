@@ -9,6 +9,9 @@ interface Props {
   location?: Location
 }
 
+//The value for the slider when we are at the maximum setting (no price filter)
+const NoMaxPriceValue = 65
+
 const toggleValue = (startingValue?: boolean): any => {
   if (startingValue) {
     return undefined
@@ -60,19 +63,40 @@ const toggleArray = (value: string, startingArray?: string[] | string): string[]
   })
 }
 
+const getPriceLabel = (value?: number): string => {
+  if (value === undefined || value === NoMaxPriceValue) {
+    return 'Any Price'
+  } else if (value === 0) {
+    return 'Free'
+  }
+  return `Under $${value.toFixed(0)}`
+}
+
 const mapStoreToProps = (store: RootStore, props: Props): any => {
   if (!props.location) {
     return {}
   }
-  const query: RewardQuery = queryString.parse(props.location?.search)
+
+  const query: RewardQuery = queryString.parse(props.location?.search, { parseNumbers: true, parseBooleans: true })
 
   const updateQuery = () => {
-    console.log('Updating query')
     const newQuery = queryString.stringify(query)
     store.routing.replace({ search: newQuery })
   }
 
   return {
+    priceFilter: {
+      label: getPriceLabel(query.maxPrice),
+      value: query.maxPrice !== undefined ? query.maxPrice : 65,
+      onChance: (value: number) => {
+        if (value === NoMaxPriceValue) {
+          query.maxPrice = undefined
+        } else {
+          query.maxPrice = value
+        }
+        updateQuery()
+      },
+    },
     stockFilter: {
       label: 'Only In Stock',
       active: query.available,

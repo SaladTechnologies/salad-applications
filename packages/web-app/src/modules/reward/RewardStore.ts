@@ -296,10 +296,15 @@ export class RewardStore {
   updateSearch = (searchText: string) => {
     if (searchText) {
       const searchPath = '/search'
+
+      //TODO:DRS Get the current route as an arg for this function, update just the q parameter and then stringify it so we can search and use filters at the same time
+      const query: RewardQuery = queryString.parse(this.store.routing.location.search)
+      query.q = searchText
+      const search = queryString.stringify(query)
       if (this.store.routing.location.pathname.includes(searchPath)) {
-        this.store.routing.replace({ pathname: searchPath, search: `?q=${searchText}` })
+        this.store.routing.replace({ pathname: searchPath, search: search })
       } else {
-        this.store.routing.push({ pathname: searchPath, search: `?q=${searchText}` })
+        this.store.routing.push({ pathname: searchPath, search: search })
       }
       this.store.analytics.trackRewardSearch(searchText)
     } else {

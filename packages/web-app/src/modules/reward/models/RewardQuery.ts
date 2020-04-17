@@ -9,4 +9,7 @@ export interface RewardQuery {
   redeemable?: boolean
 
   category?: string[]
+
+  /** Maximum reward price. If undefined then no price limit */
+  maxPrice?: number
 }

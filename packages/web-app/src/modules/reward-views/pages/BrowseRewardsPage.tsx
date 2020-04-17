@@ -33,8 +33,8 @@ const styles = (theme: SaladTheme) => {
       flex: 1,
     },
     filterContainer: {
-      flex: 0,
-      paddingLeft: 20,
+      flex: 1,
+      padding: 20,
     },
     titleBar: {
       display: 'flex',
@@ -76,7 +76,7 @@ const styles = (theme: SaladTheme) => {
 
   for (let value of Object.values(rewardItemResponsive)) {
     a[`@media screen and (max-width:${value.breakpoint.max}px)`] = {
-      rewardItem: { flex: `0 0 ${(1 / (value.items + 2)) * 100}%` },
+      rewardItem: { flex: `0 0 ${(1 / value.items) * 100}%` },
     }
   }
 
@@ -112,13 +112,6 @@ class _BrowseRewardsPage extends Component<Props> {
         <div className={classes.columnContainer}>
           <div style={{ flex: 1 }}>
             <Scrollbars>
-              <div className={classes.filterContainer}>
-                <RewardFilterContainer location={location} />
-              </div>
-            </Scrollbars>
-          </div>
-          <div style={{ flex: 5 }}>
-            <Scrollbars>
               <div className={classes.contentContainer}>
                 {!hasRewards && <P className={classes.placeholderText}>No Rewards Found</P>}
                 {hasRewards && (
@@ -133,6 +126,13 @@ class _BrowseRewardsPage extends Component<Props> {
                     <RewardDisclaimers />
                   </div>
                 )}
+              </div>
+            </Scrollbars>
+          </div>
+          <div style={{ flex: '0 0 250px' }}>
+            <Scrollbars>
+              <div className={classes.filterContainer}>
+                <RewardFilterContainer location={location} />
               </div>
             </Scrollbars>
           </div>

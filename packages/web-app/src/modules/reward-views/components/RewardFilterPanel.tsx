@@ -7,15 +7,18 @@ import { Divider, Checkbox, Slider } from '../../../components'
 const styles = (theme: SaladTheme) => ({
   container: {
     fontFamily: theme.fontGroteskBook19,
-    maxWidth: 250,
+    fontSize: 12,
   },
   sectionContainer: {
-    padding: '0 20px',
+    padding: '0 10px',
   },
-  pri: {
-    display: 'flex',
-    paddingInlineStart: 0, //Removes the default left padding for a <ul/>
-    marginBottom: 0,
+  checkbox: {
+    padding: '5px 0',
+  },
+  priceLabel: {
+    textAlign: 'center',
+    marginTop: -5,
+    paddingBottom: 10,
   },
 })
 
@@ -45,23 +48,33 @@ class _RewardFilterPanel extends Component<Props> {
     return (
       <div className={classnames(classes.container)}>
         {priceFilter && (
-          <div className={classnames(classes.sectionContainer)}>
-            <Slider
-              stepSize={5}
-              minimum={0}
-              maximum={65}
-              value={priceFilter.value}
-              onValueChange={priceFilter.onChance}
-            />
-          </div>
+          <>
+            <div className={classnames(classes.sectionContainer)}>
+              <Slider
+                stepSize={5}
+                minimum={0}
+                maximum={65}
+                value={priceFilter.value}
+                onValueChange={priceFilter.onChance}
+              />
+              <div className={classnames(classes.priceLabel)}>{priceFilter.label}</div>
+            </div>
+            <Divider narrow />
+          </>
         )}
-        <Divider narrow />
+
         <div className={classnames(classes.sectionContainer)}>
           {stockFilter && (
-            <Checkbox text={stockFilter.label} checked={stockFilter.active} onClick={stockFilter.onToggle} />
+            <Checkbox
+              className={classes.checkbox}
+              text={stockFilter.label}
+              checked={stockFilter.active}
+              onClick={stockFilter.onToggle}
+            />
           )}
           {redeemableFilter && (
             <Checkbox
+              className={classes.checkbox}
               text={redeemableFilter.label}
               checked={redeemableFilter.active}
               onClick={redeemableFilter.onToggle}
@@ -70,7 +83,10 @@ class _RewardFilterPanel extends Component<Props> {
         </div>
         <Divider narrow />
         <div className={classnames(classes.sectionContainer)}>
-          {tagFilters && tagFilters.map((x) => <Checkbox text={x.label} checked={x.active} onClick={x.onToggle} />)}
+          {tagFilters &&
+            tagFilters.map((x) => (
+              <Checkbox className={classes.checkbox} text={x.label} checked={x.active} onClick={x.onToggle} />
+            ))}
         </div>
       </div>
     )

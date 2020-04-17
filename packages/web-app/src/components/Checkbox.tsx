@@ -39,7 +39,7 @@ const styles = (theme: SaladTheme) => ({
     width: 0,
   },
   text: {
-    paddingLeft: '.25rem',
+    paddingLeft: 8,
     fontFamily: 'sharpGroteskBook19',
     cursor: 'pointer',
     margin: 0,
@@ -68,6 +68,7 @@ interface Props extends WithStyles<typeof styles> {
   text?: string
   errorText?: string
   textClassName?: string
+  className?: string
   onClick?: () => void
 }
 
@@ -79,9 +80,9 @@ class _Checkbox extends Component<Props> {
     }
   }
   render() {
-    const { textClassName, text, dark, errorText, checked, classes, onChange, ...input } = this.props
+    const { textClassName, className, text, dark, errorText, checked, classes, onChange, ...input } = this.props
     return (
-      <div className={classes.container}>
+      <div className={classnames(classes.container, className)}>
         <label className={classes.checkboxContainer}>
           {onChange && (
             <input onChange={onChange} checked={checked} className={classes.hidden} {...input} type="checkbox" />
