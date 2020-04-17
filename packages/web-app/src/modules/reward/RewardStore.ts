@@ -7,6 +7,8 @@ import { rewardFromResource, encodeCategory } from './utils'
 import { RootStore } from '../../Store'
 import { SaladPay } from '../salad-pay/SaladPay'
 import { SaladPaymentResponse, AbortError } from '../salad-pay'
+import queryString from 'query-string'
+import { RewardQuery } from './models'
 
 type RewardId = string
 
@@ -17,7 +19,7 @@ export class RewardStore {
   private rewards: Map<string, Reward> = new Map<string, Reward>()
 
   @observable
-  private categories: Map<string, Set<RewardId>> = new Map<string, Set<RewardId>>()
+  private categoryData: Map<string, Set<RewardId>> = new Map<string, Set<RewardId>>()
 
   @observable
   private selectedRewardId?: string
@@ -40,7 +42,7 @@ export class RewardStore {
   @computed get categorizedRewards(): Map<string, Reward[]> {
     let result = new Map<string, Reward[]>()
 
-    this.categories.forEach((rewardIds, c) => {
+    this.categoryData.forEach((rewardIds, c) => {
       let rewards = []
       for (let id of rewardIds) {
         let r = this.rewards.get(id)
@@ -54,6 +56,10 @@ export class RewardStore {
     return result
   }
 
+  @computed get categories(): string[] {
+    return [...this.categoryData.keys()].filter((x) => x)
+  }
+
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   getReward = (id?: string): Reward | undefined => {
@@ -65,13 +71,38 @@ export class RewardStore {
     if (!category) {
       return undefined
     }
-    let rewardIds = this.categories.get(category)
+    let rewardIds = this.categoryData.get(category)
 
     if (!rewardIds) {
       return undefined
     }
 
     return [...rewardIds].map((x) => this.getReward(x)).filter((x) => x !== undefined)
+  }
+
+  searchRewards = (queryUrl: string): Reward[] | undefined => {
+    let query: RewardQuery = queryString.parse(queryUrl)
+
+    const search = query.q?.toLowerCase()
+
+    if (search) {
+      return Array.from(this.rewards.values())
+        .filter((x) => search && x.name.toLowerCase().includes(search))
+        .sort((a: Reward, b: Reward) => {
+          let name1 = a.name.toLowerCase()
+          let name2 = b.name.toLowerCase()
+
+          if (name1 < name2) {
+            return -1
+          }
+          if (name2 > name1) {
+            return 1
+          }
+          return 0
+        })
+    }
+
+    return undefined
   }
 
   isInChoppingCart = (id?: string): boolean => {
@@ -93,7 +124,7 @@ export class RewardStore {
         this.rewards.set(x.id, x)
       }
 
-      this.categories = this.categorizeRewards(rewardList)
+      this.categoryData = this.categorizeRewards(rewardList)
     } catch (error) {
       console.error(error)
     } finally {
@@ -260,32 +291,6 @@ export class RewardStore {
     }
   })
 
-  @action
-  searchRewards = (query?: string): Reward[] | undefined => {
-    console.log('Searing for rewards with query ' + query)
-
-    let search = query?.replace('?q=', '').toLowerCase()
-
-    if (search) {
-      return Array.from(this.rewards.values())
-        .filter((x) => search && x.name.toLowerCase().includes(search))
-        .sort((a: Reward, b: Reward) => {
-          let name1 = a.name.toLowerCase()
-          let name2 = b.name.toLowerCase()
-
-          if (name1 < name2) {
-            return -1
-          }
-          if (name2 > name1) {
-            return 1
-          }
-          return 0
-        })
-    }
-
-    return undefined
-  }
-
   /** Updates the current search text */
   @action
   updateSearch = (searchText: string) => {
@@ -311,7 +316,7 @@ export class RewardStore {
   /** Shows the "Explore More" page for the given category */
   @action
   viewCategory = (category: string) => {
-    if (!category || !this.categories.has(category)) {
+    if (!category || !this.categoryData.has(category)) {
       console.warn(`Unable to view category ${category}. Not found.`)
       return
     }

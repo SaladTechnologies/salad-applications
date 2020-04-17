@@ -80,6 +80,7 @@
     "mobx": "5.15.4",
     "mobx-react": "6.1.8",
     "mobx-react-router": "4.1.0",
+    "query-string": "^6.12.1",
     "rc-slider": "9.2.3",
     "react": "16.13.0",
     "react-aspect-ratio": "1.0.42",

@@ -8,6 +8,7 @@ import { P } from '../../../components'
 import { RewardItem } from '../components/RewardItem'
 import { rewardItemResponsive } from '../components/RewardSlider'
 import { IconArrowLeft } from '../components/assets'
+import { RewardFilterContainer } from '../RewardFilterContainer'
 
 const styles = (theme: SaladTheme) => {
   let style = {
@@ -21,10 +22,19 @@ const styles = (theme: SaladTheme) => {
       display: 'flex',
       flexDirection: 'column',
     },
+    columnContainer: {
+      display: 'flex',
+      flex: 1,
+    },
     contentContainer: {
       padding: 20,
       display: 'flex',
       flexDirection: 'column',
+      flex: 1,
+    },
+    filterContainer: {
+      flex: 0,
+      paddingLeft: 20,
     },
     titleBar: {
       display: 'flex',
@@ -78,6 +88,7 @@ interface Props extends WithStyles<typeof styles> {
   rewards?: Reward[]
   onViewReward?: (reward?: Reward) => void
   onBack?: () => void
+  location?: Location
 }
 
 class _BrowseRewardsPage extends Component<Props> {
@@ -87,7 +98,7 @@ class _BrowseRewardsPage extends Component<Props> {
     onBack?.()
   }
   render() {
-    const { rewards, title, onViewReward, classes } = this.props
+    const { rewards, title, onViewReward, location, classes } = this.props
     const hasRewards = rewards && rewards.length > 0
 
     return (
@@ -98,23 +109,34 @@ class _BrowseRewardsPage extends Component<Props> {
           </div>
           <div className={classes.titleText}>{title || 'Back'}</div>
         </div>
-        <Scrollbars>
-          <div className={classes.contentContainer}>
-            {!hasRewards && <P className={classes.placeholderText}>No Rewards Found</P>}
-            {hasRewards && (
-              <div>
-                <div className={classes.rewardContainer}>
-                  {rewards?.map(x => (
-                    <div className={classes.rewardItem}>
-                      <RewardItem reward={x} onViewReward={onViewReward} />
-                    </div>
-                  ))}
-                </div>
-                <RewardDisclaimers />
+        <div className={classes.columnContainer}>
+          <div style={{ flex: 1 }}>
+            <Scrollbars>
+              <div className={classes.filterContainer}>
+                <RewardFilterContainer location={location} />
               </div>
-            )}
+            </Scrollbars>
           </div>
-        </Scrollbars>
+          <div style={{ flex: 5 }}>
+            <Scrollbars>
+              <div className={classes.contentContainer}>
+                {!hasRewards && <P className={classes.placeholderText}>No Rewards Found</P>}
+                {hasRewards && (
+                  <div>
+                    <div className={classes.rewardContainer}>
+                      {rewards?.map((x) => (
+                        <div className={classes.rewardItem}>
+                          <RewardItem reward={x} onViewReward={onViewReward} />
+                        </div>
+                      ))}
+                    </div>
+                    <RewardDisclaimers />
+                  </div>
+                )}
+              </div>
+            </Scrollbars>
+          </div>
+        </div>
       </div>
     )
   }

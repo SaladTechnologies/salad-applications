@@ -43,6 +43,10 @@ const styles = (theme: SaladTheme) => ({
     fontFamily: 'sharpGroteskBook19',
     cursor: 'pointer',
     margin: 0,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    textTransform: 'capitalize',
   },
   errorText: {
     margin: '.25rem',

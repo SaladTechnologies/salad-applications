@@ -3,10 +3,11 @@ import { RootStore } from '../../Store'
 import { BrowseRewardsPage } from './pages'
 import { RouteComponentProps } from 'react-router'
 
-const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ id: string }>): any => ({
+const mapStoreToProps = (store: RootStore, props: RouteComponentProps): any => ({
   rewards: store.rewards.searchRewards(props.location.search),
   onViewReward: store.rewards.viewReward,
   onBack: store.routing.goBack,
+  location: props.location,
 })
 
 export const RewardSearchResultContainer = connect(mapStoreToProps, BrowseRewardsPage)

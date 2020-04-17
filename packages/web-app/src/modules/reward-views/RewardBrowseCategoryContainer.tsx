@@ -9,6 +9,7 @@ const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ category
   rewards: store.rewards.getRewardsByCategory(decodeCategory(props.match.params.category)),
   onBack: store.routing.goBack,
   onViewReward: store.rewards.viewReward,
+  location: props.location,
 })
 
 export const RewardBrowseCategoryContainer = connect(mapStoreToProps, BrowseRewardsPage)
