@@ -23,7 +23,7 @@ We're sorry this happened to you!
 
 Consider jumping into the [#tech-support channel on the SaladChefs Discord server](https://discord.gg/7tmU8pj). The community may have already found a solution.
 
-Post a new [bug report on Zendesk](https://salad.zendesk.com/hc/en-us/requests/new).
+Post a new [bug report](https://salad.zendesk.com/hc/en-us/requests/new).
 
 ## Requesting Features
 
