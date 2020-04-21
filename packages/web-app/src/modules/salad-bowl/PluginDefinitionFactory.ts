@@ -4,6 +4,9 @@ import { getCCMinerX16RDefinition } from './definitions/getCCMinerX16RDefinition
 import { getClaymoreEthashBitflyDefinition } from './definitions/getClaymoreEthashBitflyDefinition'
 import { getClaymoreEthashDefinition } from './definitions/getClaymoreEthashDefinition'
 import { getClaymoreEthashNanopoolDefinition } from './definitions/getClaymoreEthashNanopoolDefinition'
+import { getPhoenixMinerEthashBitflyDefinition } from './definitions/getPhoenixMinerEthashBitflyDefinition'
+import { getPhoenixMinerEthashDefinition } from './definitions/getPhoenixMinerEthashDefinition'
+import { getPhoenixMinerEthashNanopoolDefinition } from './definitions/getPhoenixMinerEthashNanopoolDefinition'
 import { getGminerBeamHashIIDefinition } from './definitions/getGminerBeamHashIIDefinition'
 import { getGminerBeamBitflyDefinition } from './definitions/getGminerBeamBitflyDefinition'
 import { getGminerCuckARoom29Definition } from './definitions/getGminerCuckARoom29Definition'
@@ -27,10 +30,14 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
 
   // Ethereum / Ethash
   if (preferNiceHash && has4gbSupport) {
+    pluginDefinitions.push(getPhoenixMinerEthashDefinition(machine)) // NiceHash
     pluginDefinitions.push(getClaymoreEthashDefinition(machine)) // NiceHash
+    pluginDefinitions.push(getPhoenixMinerEthashBitflyDefinition(machine)) // Bitfly's Ethermine
     pluginDefinitions.push(getClaymoreEthashBitflyDefinition(machine)) // Bitfly's Ethermine
   } else if (has4gbSupport) {
+    pluginDefinitions.push(getPhoenixMinerEthashBitflyDefinition(machine)) // Bitfly's Ethermine
     pluginDefinitions.push(getClaymoreEthashBitflyDefinition(machine)) // Bitfly's Ethermine
+    pluginDefinitions.push(getPhoenixMinerEthashDefinition(machine)) // NiceHash
     pluginDefinitions.push(getClaymoreEthashDefinition(machine)) // NiceHash
   }
 
@@ -66,6 +73,7 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
 
   // Fallback: Ethereum / Ethash
   if (has4gbSupport) {
+    pluginDefinitions.push(getPhoenixMinerEthashNanopoolDefinition(machine)) // Nanopool
     pluginDefinitions.push(getClaymoreEthashNanopoolDefinition(machine)) // Nanopool
   }
 
