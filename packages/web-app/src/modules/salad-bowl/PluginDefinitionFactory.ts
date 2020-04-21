@@ -1,6 +1,5 @@
 import { RootStore } from '../../Store'
 import { getCCMinerLyra2REv3Definition } from './definitions/getCCMinerLyra2REv3Definition'
-import { getCCMinerX16RDefinition } from './definitions/getCCMinerX16RDefinition'
 import { getClaymoreEthashBitflyDefinition } from './definitions/getClaymoreEthashBitflyDefinition'
 import { getClaymoreEthashDefinition } from './definitions/getClaymoreEthashDefinition'
 import { getClaymoreEthashNanopoolDefinition } from './definitions/getClaymoreEthashNanopoolDefinition'
@@ -64,9 +63,6 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
   } else {
     pluginDefinitions.push(getXMRigRandomXOpenCLDefinition(machine)) // NiceHash
   }
-
-  // Ravencoin / X16R
-  pluginDefinitions.push(getCCMinerX16RDefinition(machine)) // NiceHash
 
   // Vertcoin / Lyra2REv3
   pluginDefinitions.push(getCCMinerLyra2REv3Definition(machine)) // NiceHash

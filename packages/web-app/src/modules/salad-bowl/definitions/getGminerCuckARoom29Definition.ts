@@ -7,11 +7,11 @@ const cuckaroomUser = (location: string, minerId: string) =>
 
 export const getGminerCuckARoom29Definition = (machine: Machine): PluginDefinition => {
   let def = {
-    name: 'GMiner-1.93-NiceHash-cuckARoom29',
+    name: 'GMiner',
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer1.93/gminer-1-93-windows.zip',
     exe: 'miner.exe',
     args: `-a cuckaroom29 ${cuckaroomUser('usa', machine.minerId)} ${cuckaroomUser('eu', machine.minerId)} -w 0`,
-    runningCheck: 'Share Accepted',
+    runningCheck: '(?:Share Accepted|[1-9][0-9]*.\d* G\/s)',
     initialTimeout: 600000,
     initialRetries: 1,
     watchdogTimeout: 900000,
