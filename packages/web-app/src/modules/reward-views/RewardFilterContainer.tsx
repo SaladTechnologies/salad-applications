@@ -3,9 +3,10 @@ import { RootStore } from '../../Store'
 import { RewardFilterPanel } from './components/RewardFilterPanel'
 import { RewardQuery } from '../reward/models'
 import { parseRewardQuery, stringifyRewardQuery } from '../reward/utils'
+import { RouteComponentProps } from 'react-router'
 
 interface Props {
-  location?: Location
+  route?: RouteComponentProps<{ category: string }>
 }
 
 //The value for the slider when we are at the maximum setting (no price filter)
@@ -50,16 +51,19 @@ const getPriceLabel = (value?: number): string => {
 }
 
 const mapStoreToProps = (store: RootStore, props: Props): any => {
-  if (!props.location) {
+  if (!props.route) {
     return {}
   }
 
-  const query: RewardQuery = parseRewardQuery(props.location?.search)
+  const query: RewardQuery = parseRewardQuery(props.route?.location?.search)
 
   const updateQuery = () => {
     const newQuery = stringifyRewardQuery(query)
     store.routing.replace({ search: newQuery })
   }
+
+  //Gets the rewards that match the current filters
+  const rewards = store.rewards.getRewardsByUrl(props.route)
 
   return {
     priceFilter: {
@@ -77,6 +81,7 @@ const mapStoreToProps = (store: RootStore, props: Props): any => {
     stockFilter: {
       label: 'In Stock',
       active: query.available,
+      count: store.rewards.filterRewards({ available: true }, rewards).length,
       onToggle: () => {
         query.available = toggleValue(query.available)
         updateQuery()
@@ -85,6 +90,7 @@ const mapStoreToProps = (store: RootStore, props: Props): any => {
     redeemableFilter: {
       label: 'Redeemable',
       active: query.redeemable,
+      count: store.rewards.filterRewards({ redeemable: true }, rewards).length,
       onToggle: () => {
         query.redeemable = toggleValue(query.redeemable)
         updateQuery()
@@ -98,6 +104,7 @@ const mapStoreToProps = (store: RootStore, props: Props): any => {
       return {
         label: x,
         active: active,
+        count: store.rewards.filterRewards({ category: [x] }, rewards).length,
         onToggle: () => {
           query.category = toggleArray(x, query.category)
           updateQuery()

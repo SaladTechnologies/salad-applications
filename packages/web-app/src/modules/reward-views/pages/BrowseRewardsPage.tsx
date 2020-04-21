@@ -9,6 +9,7 @@ import { RewardItem } from '../components/RewardItem'
 import { rewardItemResponsive } from '../components/RewardSlider'
 import { IconArrowLeft } from '../components/assets'
 import { RewardFilterContainer } from '../RewardFilterContainer'
+import { RouteComponentProps } from 'react-router'
 
 const styles = (theme: SaladTheme) => {
   let style = {
@@ -88,7 +89,7 @@ interface Props extends WithStyles<typeof styles> {
   rewards?: Reward[]
   onViewReward?: (reward?: Reward) => void
   onBack?: () => void
-  location?: Location
+  route?: RouteComponentProps<{ category: string }>
 }
 
 class _BrowseRewardsPage extends Component<Props> {
@@ -98,7 +99,7 @@ class _BrowseRewardsPage extends Component<Props> {
     onBack?.()
   }
   render() {
-    const { rewards, title, onViewReward, location, classes } = this.props
+    const { rewards, title, onViewReward, route, classes } = this.props
     const hasRewards = rewards && rewards.length > 0
 
     return (
@@ -132,7 +133,7 @@ class _BrowseRewardsPage extends Component<Props> {
           <div style={{ flex: '0 0 250px' }}>
             <Scrollbars>
               <div className={classes.filterContainer}>
-                <RewardFilterContainer location={location} />
+                <RewardFilterContainer route={route} />
               </div>
             </Scrollbars>
           </div>

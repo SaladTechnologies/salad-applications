@@ -13,35 +13,33 @@ const styles = (theme: SaladTheme) => ({
   checkboxContainer: {
     display: 'flex',
     alignItems: 'center',
-    color: (props: Props) => (props.dark ? theme.darkBlue : theme.lightGreen),
+    color: theme.lightGreen,
   },
   checkBox: {
     width: '1rem',
     height: '1rem',
     flex: 'none',
     borderWidth: '1px',
-    borderColor: (props: Props) => (props.dark ? theme.darkBlue : theme.lightGreen),
+    borderColor: 'inherit',
     borderStyle: 'solid',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  enabled: {
     cursor: 'pointer',
+  },
+  disabled: {
+    opacity: 0.5,
+    cursor: 'not-allowed',
   },
   checkmark: {
-    color: (props: Props) => (props.dark ? theme.darkBlue : theme.lightGreen),
+    color: 'inherit',
     position: 'absolute',
-  },
-  hidden: {
-    position: 'absolute',
-    opacity: 0,
-    cursor: 'pointer',
-    height: 0,
-    width: 0,
   },
   text: {
     paddingLeft: 8,
     fontFamily: 'sharpGroteskBook19',
-    cursor: 'pointer',
     margin: 0,
     whiteSpace: 'nowrap',
     overflow: 'hidden',
@@ -58,13 +56,9 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   name?: string
-  dark?: boolean
-  placeholder?: string
-  onBlur?: (event?: React.FocusEvent<any>) => void
-  onChange?: (event: React.ChangeEvent<any>) => void
-  onFocus?: (event?: React.FocusEvent<any>) => void
   value?: any
   checked?: boolean
+  disabled?: boolean
   text?: string
   errorText?: string
   textClassName?: string
@@ -74,19 +68,23 @@ interface Props extends WithStyles<typeof styles> {
 
 class _Checkbox extends Component<Props> {
   handleClick = () => {
-    const { onClick } = this.props
-    if (onClick) {
-      onClick()
-    }
+    const { onClick, disabled } = this.props
+
+    if (disabled) return
+
+    onClick?.()
   }
+
   render() {
-    const { textClassName, className, text, dark, errorText, checked, classes, onChange, ...input } = this.props
+    const { textClassName, disabled, className, text, errorText, checked, classes } = this.props
     return (
       <div className={classnames(classes.container, className)}>
-        <label className={classes.checkboxContainer}>
-          {onChange && (
-            <input onChange={onChange} checked={checked} className={classes.hidden} {...input} type="checkbox" />
-          )}
+        <label
+          className={classnames(classes.checkboxContainer, {
+            [classes.enabled]: !disabled,
+            [classes.disabled]: disabled,
+          })}
+        >
           <div className={classes.checkBox} onClick={this.handleClick}>
             {checked && <FontAwesomeIcon size="xs" className={classes.checkmark} icon={faCheck} />}
           </div>

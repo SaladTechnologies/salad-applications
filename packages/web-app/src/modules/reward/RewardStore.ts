@@ -3,11 +3,19 @@ import { Reward } from './models/Reward'
 import { RewardsResource } from './models/RewardsResource'
 import { AxiosInstance } from 'axios'
 
-import { rewardFromResource, encodeCategory, parseRewardQuery, stringifyRewardQuery } from './utils'
+import {
+  rewardFromResource,
+  encodeCategory,
+  parseRewardQuery,
+  stringifyRewardQuery,
+  decodeCategory,
+  sortRewards,
+} from './utils'
 import { RootStore } from '../../Store'
 import { SaladPay } from '../salad-pay/SaladPay'
 import { SaladPaymentResponse, AbortError } from '../salad-pay'
 import { RewardQuery } from './models'
+import { RouteComponentProps } from 'react-router'
 
 type RewardId = string
 
@@ -66,14 +74,17 @@ export class RewardStore {
     return this.rewards.get(id)
   }
 
-  getRewardsByCategory = (category: string, queryUrl: string): Reward[] | undefined => {
-    let query: RewardQuery = parseRewardQuery(queryUrl)
+  getRewardsByUrl = (route: RouteComponentProps<{ category: string }>): Reward[] | undefined => {
+    let query: RewardQuery = parseRewardQuery(route.location.search)
 
     //Adds the given category to the query
-    if (!query.category) {
-      query.category = [category]
-    } else if (query.category instanceof Array && !query.category.includes(category)) {
-      query.category.push(category)
+    if (route.match && route.match.params.category) {
+      const category = decodeCategory(route.match.params.category)
+      if (!query.category) {
+        query.category = [category]
+      } else if (query.category instanceof Array && !query.category.includes(category)) {
+        query.category.push(category)
+      }
     }
 
     return this.getRewards(query)
@@ -85,11 +96,21 @@ export class RewardStore {
     return this.getRewards(query)
   }
 
-  private getRewards = (query: RewardQuery): Reward[] | undefined => {
+  availableFilter = (x: Reward): boolean => x.quantity === undefined || x.quantity > 0
+
+  getRewards = (query: RewardQuery): Reward[] | undefined => {
     let rewards = [...this.rewards.values()]
 
+    return this.filterRewards(query, rewards)
+  }
+
+  filterRewards = (query: RewardQuery, rewards?: Reward[]): Reward[] => {
+    if (rewards === undefined) {
+      return []
+    }
+
     if (query.available) {
-      rewards = rewards.filter((x) => x.quantity === undefined || x.quantity > 0)
+      rewards = rewards.filter((x) => x.quantity === undefined || x.quantity === null || x.quantity > 0)
     }
 
     if (query.redeemable) {
@@ -109,19 +130,8 @@ export class RewardStore {
       rewards = rewards.filter((x) => query.q && x.name.toLowerCase().includes(query.q.toLowerCase()))
     }
 
-    //TODO: Sort logic
-    rewards = rewards.sort((a: Reward, b: Reward) => {
-      let name1 = a.name.toLowerCase()
-      let name2 = b.name.toLowerCase()
-
-      if (name1 < name2) {
-        return -1
-      }
-      if (name2 > name1) {
-        return 1
-      }
-      return 0
-    })
+    //TODO: Pass in the sort type here
+    rewards = sortRewards(rewards)
 
     return rewards
   }
@@ -186,26 +196,9 @@ export class RewardStore {
         break
       }
 
-      let sortedIds = [...rewardIds].sort((a, b) => {
-        let rewardA = this.getReward(a)
-        let rewardB = this.getReward(b)
+      const rewards = [...rewardIds].map((x) => this.getReward(x)).filter((x): x is Reward => x !== undefined)
 
-        let rewardAName = rewardA?.name || ''
-        let rewardBName = rewardB?.name || ''
-
-        //If we are out of stock, make them the lowest priority
-        let rewardAStock = rewardA?.quantity === 0 ? Number.MIN_VALUE : Number.MAX_VALUE
-        let rewardBStock = rewardB?.quantity === 0 ? Number.MIN_VALUE : Number.MAX_VALUE
-
-        let stockDiff = rewardBStock - rewardAStock
-
-        //If the stock status is the same, sort by name
-        if (stockDiff === 0) {
-          return rewardAName > rewardBName ? 1 : rewardBName > rewardAName ? -1 : 0
-        }
-
-        return stockDiff
-      })
+      let sortedIds = sortRewards(rewards).map((x: Reward) => x.id)
 
       categories.set(category, new Set(sortedIds))
     }

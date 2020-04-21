@@ -50,3 +50,11 @@ storiesOf('Components/Checkbox', module)
       </div>
     )
   })
+  .add('disabled', () => {
+    return (
+      <>
+        <Checkbox disabled onClick={action('This should not happen')} text={'Disabled checkbox'} />
+        <Checkbox onClick={action('This should happen')} text={'Enabled checkbox'} />
+      </>
+    )
+  })

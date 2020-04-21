@@ -25,6 +25,7 @@ const styles = (theme: SaladTheme) => ({
 export interface ToggleFilter {
   label: string
   active: boolean
+  count: number
   onToggle: () => void
 }
 
@@ -39,6 +40,12 @@ interface Props extends WithStyles<typeof styles> {
   stockFilter?: ToggleFilter
   redeemableFilter?: ToggleFilter
   tagFilters?: ToggleFilter[]
+}
+
+const getLabelString = (filter: ToggleFilter): string => {
+  if (filter.count > 0) {
+    return `${filter.label} (${filter.count})`
+  } else return filter.label
 }
 
 class _RewardFilterPanel extends Component<Props> {
@@ -67,17 +74,19 @@ class _RewardFilterPanel extends Component<Props> {
           {stockFilter && (
             <Checkbox
               className={classes.checkbox}
-              text={stockFilter.label}
+              text={getLabelString(stockFilter)}
               checked={stockFilter.active}
               onClick={stockFilter.onToggle}
+              disabled={stockFilter.count === 0}
             />
           )}
           {redeemableFilter && (
             <Checkbox
               className={classes.checkbox}
-              text={redeemableFilter.label}
+              text={getLabelString(redeemableFilter)}
               checked={redeemableFilter.active}
               onClick={redeemableFilter.onToggle}
+              disabled={redeemableFilter.count === 0}
             />
           )}
         </div>
@@ -88,9 +97,10 @@ class _RewardFilterPanel extends Component<Props> {
               <Checkbox
                 key={x.label}
                 className={classes.checkbox}
-                text={x.label}
+                text={getLabelString(x)}
                 checked={x.active}
                 onClick={x.onToggle}
+                disabled={x.count === 0}
               />
             ))}
         </div>

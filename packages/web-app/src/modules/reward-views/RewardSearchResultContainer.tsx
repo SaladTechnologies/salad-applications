@@ -7,7 +7,7 @@ const mapStoreToProps = (store: RootStore, props: RouteComponentProps): any => (
   rewards: store.rewards.searchRewards(props.location.search),
   onViewReward: store.rewards.viewReward,
   onBack: store.routing.goBack,
-  location: props.location,
+  route: props,
 })
 
 export const RewardSearchResultContainer = connect(mapStoreToProps, BrowseRewardsPage)
