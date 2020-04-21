@@ -1,9 +1,8 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
-import queryString from 'query-string'
 import { RewardFilterPanel } from './components/RewardFilterPanel'
 import { RewardQuery } from '../reward/models'
-import { encodeCategory } from '../reward/utils'
+import { parseRewardQuery, stringifyRewardQuery } from '../reward/utils'
 
 interface Props {
   location?: Location
@@ -20,47 +19,25 @@ const toggleValue = (startingValue?: boolean): any => {
   }
 }
 
-const toggleArray = (value: string, startingArray?: string[] | string): string[] | undefined => {
+const toggleArray = (value: string, startingArray?: string[]): string[] | undefined => {
   //Ensures that the format for our values is consistent
-  value = encodeCategory(value)
+  // value = encodeCategory(value)
 
   if (!startingArray) {
     return [value]
   }
 
-  let result: string[] | undefined = undefined
-
   //If there is only a single query string, this is a string. If there are multiple then it is an array
-  if (typeof startingArray === 'string' || startingArray instanceof String) {
-    //Removing the only value
-    if (startingArray === value) {
-      return undefined
-    } else {
-      result = [String(startingArray), value]
+  if (startingArray.includes(value)) {
+    //Remove an existing item
+    const index = startingArray.indexOf(value)
+    if (index > -1) {
+      startingArray.splice(index, 1)
     }
   } else {
-    if (startingArray.includes(value)) {
-      //Remove an existing item
-      const index = startingArray.indexOf(value)
-      if (index > -1) {
-        startingArray.splice(index, 1)
-      }
-    } else {
-      startingArray.push(value)
-    }
-    result = startingArray
+    startingArray.push(value)
   }
-
-  return result?.sort((a, b) => {
-    console.log('Sorting')
-    if (a < b) {
-      return -1
-    }
-    if (a > b) {
-      return 1
-    }
-    return 0
-  })
+  return startingArray
 }
 
 const getPriceLabel = (value?: number): string => {
@@ -69,7 +46,7 @@ const getPriceLabel = (value?: number): string => {
   } else if (value === 0) {
     return 'Free'
   }
-  return `Under $${value.toFixed(0)}`
+  return `$${value.toFixed(0)} & Under`
 }
 
 const mapStoreToProps = (store: RootStore, props: Props): any => {
@@ -77,17 +54,17 @@ const mapStoreToProps = (store: RootStore, props: Props): any => {
     return {}
   }
 
-  const query: RewardQuery = queryString.parse(props.location?.search, { parseNumbers: true, parseBooleans: true })
+  const query: RewardQuery = parseRewardQuery(props.location?.search)
 
   const updateQuery = () => {
-    const newQuery = queryString.stringify(query)
+    const newQuery = stringifyRewardQuery(query)
     store.routing.replace({ search: newQuery })
   }
 
   return {
     priceFilter: {
       label: getPriceLabel(query.maxPrice),
-      value: query.maxPrice !== undefined ? query.maxPrice : 65,
+      value: query.maxPrice !== undefined ? query.maxPrice : NoMaxPriceValue,
       onChance: (value: number) => {
         if (value === NoMaxPriceValue) {
           query.maxPrice = undefined
@@ -98,7 +75,7 @@ const mapStoreToProps = (store: RootStore, props: Props): any => {
       },
     },
     stockFilter: {
-      label: 'Only In Stock',
+      label: 'In Stock',
       active: query.available,
       onToggle: () => {
         query.available = toggleValue(query.available)
@@ -106,21 +83,18 @@ const mapStoreToProps = (store: RootStore, props: Props): any => {
       },
     },
     redeemableFilter: {
-      label: 'Only Redeemable',
+      label: 'Redeemable',
       active: query.redeemable,
       onToggle: () => {
         query.redeemable = toggleValue(query.redeemable)
         updateQuery()
       },
     },
-    tagFilters: store.rewards.categories.map((x) => {
+    tagFilters: store.rewards.categories.sort().map((x) => {
       let active: boolean | undefined = false
 
-      if (typeof query.category === 'string' || query.category instanceof String) {
-        active = String(query.category) === encodeCategory(x)
-      } else {
-        active = query.category?.includes(encodeCategory(x))
-      }
+      active = query.category?.includes(x)
+
       return {
         label: x,
         active: active,

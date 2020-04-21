@@ -3,11 +3,10 @@ import { Reward } from './models/Reward'
 import { RewardsResource } from './models/RewardsResource'
 import { AxiosInstance } from 'axios'
 
-import { rewardFromResource, encodeCategory } from './utils'
+import { rewardFromResource, encodeCategory, parseRewardQuery, stringifyRewardQuery } from './utils'
 import { RootStore } from '../../Store'
 import { SaladPay } from '../salad-pay/SaladPay'
 import { SaladPaymentResponse, AbortError } from '../salad-pay'
-import queryString from 'query-string'
 import { RewardQuery } from './models'
 
 type RewardId = string
@@ -67,42 +66,64 @@ export class RewardStore {
     return this.rewards.get(id)
   }
 
-  getRewardsByCategory = (category?: string): Array<Reward | undefined> | undefined => {
-    if (!category) {
-      return undefined
-    }
-    let rewardIds = this.categoryData.get(category)
+  getRewardsByCategory = (category: string, queryUrl: string): Reward[] | undefined => {
+    let query: RewardQuery = parseRewardQuery(queryUrl)
 
-    if (!rewardIds) {
-      return undefined
+    //Adds the given category to the query
+    if (!query.category) {
+      query.category = [category]
+    } else if (query.category instanceof Array && !query.category.includes(category)) {
+      query.category.push(category)
     }
 
-    return [...rewardIds].map((x) => this.getReward(x)).filter((x) => x !== undefined)
+    return this.getRewards(query)
   }
 
   searchRewards = (queryUrl: string): Reward[] | undefined => {
-    let query: RewardQuery = queryString.parse(queryUrl)
+    let query: RewardQuery = parseRewardQuery(queryUrl)
 
-    const search = query.q?.toLowerCase()
+    return this.getRewards(query)
+  }
 
-    if (search) {
-      return Array.from(this.rewards.values())
-        .filter((x) => search && x.name.toLowerCase().includes(search))
-        .sort((a: Reward, b: Reward) => {
-          let name1 = a.name.toLowerCase()
-          let name2 = b.name.toLowerCase()
+  private getRewards = (query: RewardQuery): Reward[] | undefined => {
+    let rewards = [...this.rewards.values()]
 
-          if (name1 < name2) {
-            return -1
-          }
-          if (name2 > name1) {
-            return 1
-          }
-          return 0
-        })
+    if (query.available) {
+      rewards = rewards.filter((x) => x.quantity === undefined || x.quantity > 0)
     }
 
-    return undefined
+    if (query.redeemable) {
+      const currentBalance = this.store.balance.currentBalance
+      rewards = rewards.filter((x) => x.price <= currentBalance)
+    }
+
+    if (query.maxPrice !== undefined) {
+      rewards = rewards.filter((x) => x.price <= (query.maxPrice === undefined ? Number.MAX_VALUE : query.maxPrice))
+    }
+
+    if (query.category) {
+      rewards = rewards.filter((x) => query.category && query.category.every((y) => x.tags.includes(y)))
+    }
+
+    if (query.q) {
+      rewards = rewards.filter((x) => query.q && x.name.toLowerCase().includes(query.q.toLowerCase()))
+    }
+
+    //TODO: Sort logic
+    rewards = rewards.sort((a: Reward, b: Reward) => {
+      let name1 = a.name.toLowerCase()
+      let name2 = b.name.toLowerCase()
+
+      if (name1 < name2) {
+        return -1
+      }
+      if (name2 > name1) {
+        return 1
+      }
+      return 0
+    })
+
+    return rewards
   }
 
   isInChoppingCart = (id?: string): boolean => {
@@ -159,6 +180,12 @@ export class RewardStore {
 
     //Sorts each category
     for (let [category, rewardIds] of categories) {
+      //Remove any unused categories
+      if (rewardIds.size === 0) {
+        categories.delete(category)
+        break
+      }
+
       let sortedIds = [...rewardIds].sort((a, b) => {
         let rewardA = this.getReward(a)
         let rewardB = this.getReward(b)
@@ -298,9 +325,9 @@ export class RewardStore {
       const searchPath = '/search'
 
       //TODO:DRS Get the current route as an arg for this function, update just the q parameter and then stringify it so we can search and use filters at the same time
-      const query: RewardQuery = queryString.parse(this.store.routing.location.search)
+      const query: RewardQuery = parseRewardQuery(this.store.routing.location.search)
       query.q = searchText
-      const search = queryString.stringify(query)
+      const search = stringifyRewardQuery(query)
       if (this.store.routing.location.pathname.includes(searchPath)) {
         this.store.routing.replace({ pathname: searchPath, search: search })
       } else {

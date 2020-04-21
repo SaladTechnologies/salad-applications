@@ -85,7 +85,13 @@ class _RewardFilterPanel extends Component<Props> {
         <div className={classnames(classes.sectionContainer)}>
           {tagFilters &&
             tagFilters.map((x) => (
-              <Checkbox className={classes.checkbox} text={x.label} checked={x.active} onClick={x.onToggle} />
+              <Checkbox
+                key={x.label}
+                className={classes.checkbox}
+                text={x.label}
+                checked={x.active}
+                onClick={x.onToggle}
+              />
             ))}
         </div>
       </div>
