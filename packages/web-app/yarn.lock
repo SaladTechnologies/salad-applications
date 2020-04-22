@@ -2143,6 +2143,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-dom@*":
+  version "16.9.6"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.9.6.tgz#9e7f83d90566521cc2083be2277c6712dcaf754c"
+  integrity sha512-S6ihtlPMDotrlCJE9ST1fRmYrQNNwfgL61UB4I1W7M6kPulUKx9fXAleW5zpdIjUQ4fTaaog8uERezjsGUj9HQ==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-dom@16.9.5":
   version "16.9.5"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.9.5.tgz#5de610b04a35d07ffd8f44edad93a71032d9aaa7"
@@ -2175,6 +2182,15 @@
     "@types/history" "*"
     "@types/react" "*"
 
+"@types/react-select@^3.0.11":
+  version "3.0.11"
+  resolved "https://registry.yarnpkg.com/@types/react-select/-/react-select-3.0.11.tgz#b69b6fe1999bedfb05bd7499327206e16a7fb00e"
+  integrity sha512-ggUsAdZuRFtLMjGMcdf9SeeE678TRq3lAKj1fbwGM8JAZTIzCu1CED0dvJgFVCPT2bDs8TcBD6+6SN6i4e7JYQ==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-dom" "*"
+    "@types/react-transition-group" "*"
+
 "@types/react-syntax-highlighter@11.0.4":
   version "11.0.4"
   resolved "https://registry.yarnpkg.com/@types/react-syntax-highlighter/-/react-syntax-highlighter-11.0.4.tgz#d86d17697db62f98046874f62fdb3e53a0bbc4cd"
@@ -2196,7 +2212,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-transition-group@4.2.4":
+"@types/react-transition-group@*", "@types/react-transition-group@4.2.4":
   version "4.2.4"
   resolved "https://registry.yarnpkg.com/@types/react-transition-group/-/react-transition-group-4.2.4.tgz#c7416225987ccdb719262766c1483da8f826838d"
   integrity sha512-8DMUaDqh0S70TjkqU0DxOu80tFUiiaS9rxkWip/nb7gtvAsbqOXm02UCmR8zdcjWujgeYPiPNTVpVpKzUDotwA==
@@ -11266,6 +11282,20 @@ react-select@^3.0.8:
     react-input-autosize "^2.2.2"
     react-transition-group "^2.2.1"
 
+react-select@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/react-select/-/react-select-3.1.0.tgz#ab098720b2e9fe275047c993f0d0caf5ded17c27"
+  integrity sha512-wBFVblBH1iuCBprtpyGtd1dGMadsG36W5/t2Aj8OE6WbByDg5jIFyT7X5gT+l0qmT5TqWhxX+VsKJvCEl2uL9g==
+  dependencies:
+    "@babel/runtime" "^7.4.4"
+    "@emotion/cache" "^10.0.9"
+    "@emotion/core" "^10.0.9"
+    "@emotion/css" "^10.0.9"
+    memoize-one "^5.0.0"
+    prop-types "^15.6.0"
+    react-input-autosize "^2.2.2"
+    react-transition-group "^4.3.0"
+
 react-sizeme@^2.6.7:
   version "2.6.12"
   resolved "https://registry.yarnpkg.com/react-sizeme/-/react-sizeme-2.6.12.tgz#ed207be5476f4a85bf364e92042520499455453e"
@@ -11313,7 +11343,7 @@ react-toastify@5.5.0:
     prop-types "^15.7.2"
     react-transition-group "^4"
 
-react-transition-group@4.3.0, react-transition-group@^4:
+react-transition-group@4.3.0, react-transition-group@^4, react-transition-group@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-4.3.0.tgz#fea832e386cf8796c58b61874a3319704f5ce683"
   integrity sha512-1qRV1ZuVSdxPlPf4O8t7inxUGpdyO5zG9IoNfJxSO0ImU2A1YWkEQvFPuIPZmMLkg5hYs7vv5mMOyfgSkvAwvw==

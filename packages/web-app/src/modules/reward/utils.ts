@@ -1,8 +1,9 @@
 import { RewardResource } from './models/RewardResource'
 import { Reward } from './models/Reward'
 import { Config } from '../../config'
-import { RewardQuery } from './models'
+import { RewardQuery, RewardSort } from './models'
 import queryString from 'query-string'
+import { RouteComponentProps } from 'react-router'
 
 const toFullImageUrl = (url?: string): string | undefined => (url ? new URL(url, Config.baseAPIUrl).href : undefined)
 
@@ -43,12 +44,22 @@ export const stringifyRewardQuery = (query: RewardQuery): string => {
   return queryString.stringify(query)
 }
 
-export const parseRewardQuery = (queryUrl: string): RewardQuery => {
-  const query: RewardQuery = queryString.parse(queryUrl, { parseNumbers: true, parseBooleans: true })
+export const parseRewardQuery = (route: RouteComponentProps<{ category?: string }>): RewardQuery => {
+  const query: RewardQuery = queryString.parse(route.location.search, { parseNumbers: true, parseBooleans: true })
 
   //If only 1 category is returned, then the value will be a string, we need to ensure that it is always an array
   if (query.category && !Array.isArray(query.category)) {
     query.category = [query.category]
+  }
+
+  //Adds the given category to the query
+  if (route.match && route.match.params.category) {
+    const category = route.match.params.category
+    if (!query.category) {
+      query.category = [category]
+    } else if (query.category instanceof Array && !query.category.includes(category)) {
+      query.category.push(category)
+    }
   }
 
   if (query.category) {
@@ -58,23 +69,40 @@ export const parseRewardQuery = (queryUrl: string): RewardQuery => {
   return query
 }
 
-export const sortRewards = (rewards: Reward[]): Reward[] => {
-  rewards.sort((rewardA, rewardB) => {
-    let rewardAName = rewardA?.name || ''
-    let rewardBName = rewardB?.name || ''
+export const sortRewards = (rewards: Reward[], sort: RewardSort): Reward[] => {
+  switch (sort) {
+    case RewardSort.Alphabetical:
+      return rewards.sort((a, b) => {
+        let rewardAName = a?.name || ''
+        let rewardBName = b?.name || ''
 
-    //If we are out of stock, make them the lowest priority
-    let rewardAStock = rewardA?.quantity === 0 ? Number.MIN_VALUE : Number.MAX_VALUE
-    let rewardBStock = rewardB?.quantity === 0 ? Number.MIN_VALUE : Number.MAX_VALUE
+        return rewardAName > rewardBName ? 1 : rewardBName > rewardAName ? -1 : 0
+      })
 
-    let stockDiff = rewardBStock - rewardAStock
+    case RewardSort.PriceAscending:
+      return rewards.sort((a, b) => a.price - b.price)
 
-    //If the stock status is the same, sort by name
-    if (stockDiff === 0) {
-      return rewardAName > rewardBName ? 1 : rewardBName > rewardAName ? -1 : 0
-    }
+    case RewardSort.PriceDescending:
+      return rewards.sort((a, b) => b.price - a.price)
 
-    return stockDiff
-  })
-  return rewards
+    case RewardSort.Default:
+    default:
+      return rewards.sort((a, b) => {
+        let rewardAName = a?.name || ''
+        let rewardBName = b?.name || ''
+
+        //If we are out of stock, make them the lowest priority
+        let rewardAStock = a?.quantity === 0 ? Number.MIN_VALUE : Number.MAX_VALUE
+        let rewardBStock = b?.quantity === 0 ? Number.MIN_VALUE : Number.MAX_VALUE
+
+        let stockDiff = rewardBStock - rewardAStock
+
+        //If the stock status is the same, sort by name
+        if (stockDiff === 0) {
+          return rewardAName > rewardBName ? 1 : rewardBName > rewardAName ? -1 : 0
+        }
+
+        return stockDiff
+      })
+  }
 }

@@ -1,4 +1,5 @@
 export * from './Reward'
 export * from './RewardPlatform'
 export * from './RewardSystemDetails'
+export * from './RewardSort'
 export * from './RewardQuery'

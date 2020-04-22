@@ -1,7 +1,7 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
 import { RewardFilterPanel } from './components/RewardFilterPanel'
-import { RewardQuery } from '../reward/models'
+import { RewardQuery, RewardSort } from '../reward/models'
 import { parseRewardQuery, stringifyRewardQuery } from '../reward/utils'
 import { RouteComponentProps } from 'react-router'
 
@@ -21,9 +21,6 @@ const toggleValue = (startingValue?: boolean): any => {
 }
 
 const toggleArray = (value: string, startingArray?: string[]): string[] | undefined => {
-  //Ensures that the format for our values is consistent
-  // value = encodeCategory(value)
-
   if (!startingArray) {
     return [value]
   }
@@ -55,7 +52,7 @@ const mapStoreToProps = (store: RootStore, props: Props): any => {
     return {}
   }
 
-  const query: RewardQuery = parseRewardQuery(props.route?.location?.search)
+  const query: RewardQuery = parseRewardQuery(props.route)
 
   const updateQuery = () => {
     const newQuery = stringifyRewardQuery(query)
@@ -66,6 +63,16 @@ const mapStoreToProps = (store: RootStore, props: Props): any => {
   const rewards = store.rewards.getRewardsByUrl(props.route)
 
   return {
+    sortOptions: {
+      onChange: (value: RewardSort) => {
+        if (value === RewardSort.Default) {
+          query.sort = undefined
+        } else {
+          query.sort = value
+        }
+        updateQuery()
+      },
+    },
     priceFilter: {
       label: getPriceLabel(query.maxPrice),
       value: query.maxPrice !== undefined ? query.maxPrice : NoMaxPriceValue,

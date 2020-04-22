@@ -1,5 +1,3 @@
-import { RewardSort } from './RewardSort'
-
 export interface RewardQuery {
   /** The search text */
   q?: string
@@ -15,5 +13,5 @@ export interface RewardQuery {
   /** Maximum reward price. If undefined then no price limit */
   maxPrice?: number
 
-  sort?: RewardSort
+  sort?: string
 }

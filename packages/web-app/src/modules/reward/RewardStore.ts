@@ -3,18 +3,11 @@ import { Reward } from './models/Reward'
 import { RewardsResource } from './models/RewardsResource'
 import { AxiosInstance } from 'axios'
 
-import {
-  rewardFromResource,
-  encodeCategory,
-  parseRewardQuery,
-  stringifyRewardQuery,
-  decodeCategory,
-  sortRewards,
-} from './utils'
+import { rewardFromResource, encodeCategory, parseRewardQuery, stringifyRewardQuery, sortRewards } from './utils'
 import { RootStore } from '../../Store'
 import { SaladPay } from '../salad-pay/SaladPay'
 import { SaladPaymentResponse, AbortError } from '../salad-pay'
-import { RewardQuery } from './models'
+import { RewardQuery, RewardSort } from './models'
 import { RouteComponentProps } from 'react-router'
 
 type RewardId = string
@@ -74,24 +67,8 @@ export class RewardStore {
     return this.rewards.get(id)
   }
 
-  getRewardsByUrl = (route: RouteComponentProps<{ category: string }>): Reward[] | undefined => {
-    let query: RewardQuery = parseRewardQuery(route.location.search)
-
-    //Adds the given category to the query
-    if (route.match && route.match.params.category) {
-      const category = decodeCategory(route.match.params.category)
-      if (!query.category) {
-        query.category = [category]
-      } else if (query.category instanceof Array && !query.category.includes(category)) {
-        query.category.push(category)
-      }
-    }
-
-    return this.getRewards(query)
-  }
-
-  searchRewards = (queryUrl: string): Reward[] | undefined => {
-    let query: RewardQuery = parseRewardQuery(queryUrl)
+  getRewardsByUrl = (route: RouteComponentProps<{ category?: string }>): Reward[] | undefined => {
+    let query: RewardQuery = parseRewardQuery(route)
 
     return this.getRewards(query)
   }
@@ -99,6 +76,7 @@ export class RewardStore {
   availableFilter = (x: Reward): boolean => x.quantity === undefined || x.quantity > 0
 
   getRewards = (query: RewardQuery): Reward[] | undefined => {
+    //TODO: Figure out how to make this be computed and to memoize it
     let rewards = [...this.rewards.values()]
 
     return this.filterRewards(query, rewards)
@@ -123,15 +101,15 @@ export class RewardStore {
     }
 
     if (query.category) {
-      rewards = rewards.filter((x) => query.category && query.category.every((y) => x.tags.includes(y)))
+      rewards = rewards.filter((x) => query.category && [...query.category].every((y) => x.tags.includes(y)))
     }
 
     if (query.q) {
       rewards = rewards.filter((x) => query.q && x.name.toLowerCase().includes(query.q.toLowerCase()))
     }
 
-    //TODO: Pass in the sort type here
-    rewards = sortRewards(rewards)
+    //Sorts the rewards based on the query
+    rewards = sortRewards(rewards, (query.sort as RewardSort) || RewardSort.Default)
 
     return rewards
   }
@@ -198,7 +176,7 @@ export class RewardStore {
 
       const rewards = [...rewardIds].map((x) => this.getReward(x)).filter((x): x is Reward => x !== undefined)
 
-      let sortedIds = sortRewards(rewards).map((x: Reward) => x.id)
+      let sortedIds = sortRewards(rewards, RewardSort.Default).map((x: Reward) => x.id)
 
       categories.set(category, new Set(sortedIds))
     }
@@ -317,15 +295,18 @@ export class RewardStore {
     if (searchText) {
       const searchPath = '/search'
 
-      //TODO:DRS Get the current route as an arg for this function, update just the q parameter and then stringify it so we can search and use filters at the same time
-      const query: RewardQuery = parseRewardQuery(this.store.routing.location.search)
+      //TODO:DRS Get the current route as an arg for this function, update just the q parameter and then stringify it so we can search and use filters at the same time.
+      //We can do this once we have moved the search bar down to main page content
+      const query: RewardQuery = {} // parseRewardQuery(this.store.routing.location)
       query.q = searchText
       const search = stringifyRewardQuery(query)
+
       if (this.store.routing.location.pathname.includes(searchPath)) {
         this.store.routing.replace({ pathname: searchPath, search: search })
       } else {
         this.store.routing.push({ pathname: searchPath, search: search })
       }
+
       this.store.analytics.trackRewardSearch(searchText)
     } else {
       this.store.routing.push('/')

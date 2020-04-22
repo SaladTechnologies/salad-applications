@@ -1,5 +1,6 @@
 export enum RewardSort {
-  alphabetical = 'alphabetical',
-  priceDescending = 'price-descending',
-  priceAscending = 'price-ascending',
+  Default = 'default',
+  Alphabetical = 'alphabetical',
+  PriceDescending = 'price-descending',
+  PriceAscending = 'price-ascending',
 }
