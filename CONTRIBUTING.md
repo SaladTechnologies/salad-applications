@@ -21,13 +21,9 @@ _Please don't use GitHub issues to ask a question._ We will politely close a Git
 
 We're sorry this happened to you!
 
-First, search the [bug reports](https://feedback.salad.io/bugs) on our dedicated feedback website to see if this is already a known issue. If you find something that matches the bug you encountered, please upvote the existing bug report. If you have new or additional details, please comment on the existing bug report.
+Consider jumping into the [#tech-support channel on the SaladChefs Discord server](https://discord.gg/7tmU8pj). The community may have already found a solution.
 
-Second, consider jumping into the [#tech-support channel on the SaladChefs Discord server](https://discord.gg/7tmU8pj). The community may have already found a solution.
-
-Finally, post a new [bug report](https://feedback.salad.io/bugs).
-
-![screenshot of the bug report form](./docs/create-bug-report.png)
+Post a new [bug report](https://salad.zendesk.com/hc/en-us/requests/new).
 
 ## Requesting Features
 
