@@ -7,11 +7,11 @@ const getPool = (subdomain: string): string =>
 
 export const getClaymoreEthashNanopoolDefinition = (machine: Machine): PluginDefinition => {
   let def = {
-    name: 'Claymore-15',
+    name: 'Claymore',
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/claymore15/claymore-15-windows.zip',
     exe: 'EthDcrMiner64.exe',
     args: `${getPool('eth-us-west1')} ${getPool('eth-us-east1')} ${getPool('eth-eu1')} ${getPool('eth-eu2')} -ewal ${ETH_WALLET_ADDRESS} -epsw x -eworker ${machine.id} -allpools 1 -allcoins 0`,
-    runningCheck: 'Share accepted',
+    runningCheck: '(?:Share accepted|[1-9][0-9]*.\d* (?:kh|kH|Kh|KH|mh|mH|Mh|MH)\/s)',
     initialTimeout: 600000,
     initialRetries: 3,
     watchdogTimeout: 900000,

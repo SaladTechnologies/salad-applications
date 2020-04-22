@@ -7,11 +7,11 @@ const xmrigRegion = (location: string, minerId: string) =>
 
 export const getXMRigRandomXCUDADefinition = (machine: Machine): PluginDefinition => {
   let def = {
-    name: 'XMRig-5.2.0-CUDA',
+    name: 'XMRig-CUDA',
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/xmrig-5.2.0/xmrig-5.2.0-windows-cuda.zip',
     exe: 'xmrig.exe',
     args: `${xmrigRegion('usa', machine.minerId)} ${xmrigRegion('eu', machine.minerId)} --donate-level 1 --no-cpu --cuda`,
-    runningCheck: 'accepted',
+    runningCheck: '(?:accepted|[1-9][0-9]*.\d* H\/s)',
     initialTimeout: 600000,
     initialRetries: 3,
     watchdogTimeout: 900000,
