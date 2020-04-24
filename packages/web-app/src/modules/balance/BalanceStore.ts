@@ -1,69 +1,78 @@
-import { action, observable, flow, autorun } from 'mobx'
+import { action, observable, flow, autorun, runInAction, computed } from 'mobx'
 import { RootStore } from '../../Store'
 import { AxiosInstance } from 'axios'
-import { Config } from '../../config'
-import { MiningStatus } from '../machine/models/MiningStatus'
+
+/** The earning history bucket size (ms) */
+const bucketSize = 1000 * 60 * 15 // convert minutes to ms
 
 export class BalanceStore {
-  private estimateTimer?: NodeJS.Timeout
-
-  private interpolRate: number = 0
-
   @observable
   public currentBalance: number = 0
 
   @observable
-  public actualBalance: number = 0
-
-  @observable
   public lifetimeBalance: number = 0
 
-  /** What was the balance increase at the last refresh (USD) */
   @observable
-  public lastDeltaBalance: number = 0
+  public earningHistory: Map<number, number> = new Map()
 
-  private lastUpdateTime: number = Date.now()
+  /** Total earnings for the last 24 hours */
+  @computed
+  public get lastDayEarnings(): number {
+    return this.getTotalEarnings(1)
+  }
+
+  /** Total earnings for the last 7 days */
+  @computed
+  public get lastWeekEarnings(): number {
+    return this.getTotalEarnings(7)
+  }
+
+  /** Total earnings for the last 30 days */
+  @computed
+  public get lastMonthEarnings(): number {
+    return this.getTotalEarnings(30)
+  }
+
+  private getTotalEarnings = (numberOfDays: number): number => {
+    let totalEarnings = 0
+    const now = Date.now()
+
+    for (let [time, earning] of this.earningHistory) {
+      //Delta time (days)
+      const deltaTime = (now - time) / (24 * 60 * 60 * 1000)
+
+      if (deltaTime <= numberOfDays) {
+        totalEarnings += earning
+      }
+    }
+
+    return totalEarnings
+  }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     autorun(() => {
-      if (store.saladBowl.isRunning) {
-        if (this.estimateTimer) clearInterval(this.estimateTimer)
-        this.lastUpdateTime = Date.now()
-        this.estimateTimer = setInterval(this.updateEstimate, Config.balanceEstimateRate)
-      } else {
-        if (this.estimateTimer) {
-          clearInterval(this.estimateTimer)
-          this.estimateTimer = undefined
-        }
-      }
-    })
-
-    autorun(() => {
       this.store?.analytics?.trackLifetimeBalance?.(this.lifetimeBalance)
     })
+
+    //TODO: DRS Test Only!! Remove before this goes live.
+    setInterval(() => {
+      this.addFakeEarningHistory(this.currentBalance, this.currentBalance + 0.01)
+      runInAction(() => {
+        this.currentBalance += 0.01
+      })
+    }, 1000)
   }
 
   @action.bound
-  refreshBalance = flow(function*(this: BalanceStore) {
+  refreshBalance = flow(function* (this: BalanceStore) {
     try {
-      let balance = yield this.axios.get('profile/balance')
-      this.lastDeltaBalance = balance.data.currentBalance - this.currentBalance
-      const maxDelta = Config.maxBalanceDelta
+      const response = yield this.axios.get('profile/balance')
 
-      if (this.lastDeltaBalance > maxDelta || this.lastDeltaBalance < 0) {
-        this.interpolRate = 0
-        this.currentBalance = balance.data.currentBalance
-      } else {
-        this.interpolRate = this.lastDeltaBalance / Config.dataRefreshRate
-      }
+      //Generates a fake earning history in the client
+      this.addFakeEarningHistory(this.currentBalance, response.data.currentBalance)
 
-      // Clears out a check on 'Stopped' so mining status is not changed to 'Earning'
-      if (this.store.saladBowl.status === MiningStatus.Stopped) {
-        this.lastDeltaBalance = 0
-      }
-
-      this.actualBalance = balance.data.currentBalance
-      this.lifetimeBalance = balance.data.lifetimeBalance
+      this.currentBalance = response.data.currentBalance
+      this.lifetimeBalance = response.data.lifetimeBalance
     } catch (error) {
       console.error('Balance error: ')
       console.error(error)
@@ -71,15 +80,23 @@ export class BalanceStore {
   })
 
   @action
-  updateEstimate = () => {
-    let curTime = Date.now()
+  private addFakeEarningHistory = (currentBalance: number, newBalance: number) => {
+    //Skip the initial data load
+    if (currentBalance === 0) return
 
-    let dt = curTime - this.lastUpdateTime
+    const deltaBalance = newBalance - currentBalance
 
-    let dBal = dt * this.interpolRate
+    if (deltaBalance < 0) return
 
-    this.currentBalance = Math.min(this.actualBalance, this.currentBalance + dBal)
+    this.addEarningEvent(deltaBalance, new Date(Date.now()))
+  }
 
-    this.lastUpdateTime = curTime
+  @action
+  private addEarningEvent = (deltaBalance: number, timestamp: Date) => {
+    const roundedDate = Math.round(timestamp.getTime() / bucketSize) * bucketSize
+
+    const currentEarning = this.earningHistory.get(roundedDate)
+
+    this.earningHistory.set(roundedDate, (currentEarning || 0) + deltaBalance)
   }
 }
