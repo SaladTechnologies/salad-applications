@@ -11,7 +11,7 @@ export const getXMRigRandomXCUDADefinition = (machine: Machine): PluginDefinitio
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/xmrig-5.2.0/xmrig-5.2.0-windows-cuda.zip',
     exe: 'xmrig.exe',
     args: `${xmrigRegion('usa', machine.minerId)} ${xmrigRegion('eu', machine.minerId)} --donate-level 1 --no-cpu --cuda`,
-    runningCheck: '(?:accepted|[1-9][0-9]*.\d* H\/s)',
+    runningCheck: '(?:accepted|[1-9][0-9]*.d* H/s)',
     initialTimeout: 600000,
     initialRetries: 3,
     watchdogTimeout: 900000,
