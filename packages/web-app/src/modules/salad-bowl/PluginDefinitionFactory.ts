@@ -14,10 +14,10 @@ import { getXMRigRandomXCUDADefinition } from './definitions/getXMRigRandomXCUDA
 import { getXMRigRandomXOpenCLDefinition } from './definitions/getXMRigRandomXOpenCLDefinition'
 import { PluginDefinition } from './models'
 
-let cachedPluginDefinitions: PluginDefinition[]
+let cachedPluginDefinitions: PluginDefinition[] | undefined
 
 export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
-  if (cachedPluginDefinitions !== null && cachedPluginDefinitions !== undefined) {
+  if (cachedPluginDefinitions != null) {
     return cachedPluginDefinitions
   }
 
@@ -29,7 +29,6 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
   }
 
   console.log(JSON.stringify(machineInfo.graphics.controllers))
-  machineInfo.graphics.controllers.some(x => console.log('vram', x.vram))
   const has2gbSupport = machineInfo.graphics.controllers.some(x => x.vram >= (1024 * 2 * 0.95))
   const has4gbSupport = machineInfo.graphics.controllers.some(x => x.vram >= (1024 * 4 * 0.95))
   const has6gbSupport = machineInfo.graphics.controllers.some(x => x.vram >= (1024 * 6 * 0.95))

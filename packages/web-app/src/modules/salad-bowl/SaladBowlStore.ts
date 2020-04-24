@@ -33,8 +33,6 @@ export class SaladBowlStore {
       this.store.machine.currentMachine.qualifying &&
       this.store.native &&
       this.store.native.machineInfo !== undefined &&
-      cachedPluginDefinitions !== null &&
-      cachedPluginDefinitions !== undefined &&
       cachedPluginDefinitions.length > 0
     )
   }
