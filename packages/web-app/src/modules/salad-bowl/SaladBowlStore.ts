@@ -26,12 +26,16 @@ export class SaladBowlStore {
 
   @computed
   get canRun(): boolean {
+    let cachedPluginDefinitions = getPluginDefinitions(this.store)
     return (
       this.store.machine &&
       this.store.machine.currentMachine !== undefined &&
       this.store.machine.currentMachine.qualifying &&
       this.store.native &&
-      this.store.native.machineInfo !== undefined
+      this.store.native.machineInfo !== undefined &&
+      cachedPluginDefinitions !== null &&
+      cachedPluginDefinitions !== undefined &&
+      cachedPluginDefinitions.length > 0
     )
   }
 
