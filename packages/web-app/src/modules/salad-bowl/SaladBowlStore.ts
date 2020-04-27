@@ -41,6 +41,12 @@ export class SaladBowlStore {
   }
 
   @computed
+  get runningTime(): number {
+    //TODO:
+    return 0
+  }
+
+  @computed
   get status(): MiningStatus {
     switch (this.plugin.status) {
       case PluginStatus.Installing:

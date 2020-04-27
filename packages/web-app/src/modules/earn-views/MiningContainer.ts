@@ -1,6 +1,12 @@
 import { connect } from '../../connect'
-import { Mining } from './components/Mining'
+import { MiningPage } from './pages/MiningPage'
+import { RootStore } from '../../Store'
 
-const mapStoreToProps = (): any => ({})
+const mapStoreToProps = (store: RootStore): any => ({
+  status: store.saladBowl.status,
+  lifetimeXp: store.xp.currentXp,
+  runningTime: store.saladBowl.runningTime,
+  machine: store.machine.currentMachine,
+})
 
-export const MiningContainer = connect(mapStoreToProps, Mining)
+export const MiningContainer = connect(mapStoreToProps, MiningPage)

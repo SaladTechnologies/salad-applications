@@ -78,7 +78,7 @@ class _CompatibilityCheckPage extends Component<Props> {
       return (
         <OnboardingPage
           title={`Your machine doesn't have the chops.`}
-          subtitle={'Looks like your GPU might be incompatible with Salad:'}
+          subtitle={'Looks like your GPU is incompatible with Salad:'}
           image={image}
           nextText={'GOT IT'}
           onNext={this.handleNext}

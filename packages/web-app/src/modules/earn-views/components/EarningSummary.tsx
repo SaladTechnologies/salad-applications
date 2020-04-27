@@ -1,13 +1,21 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { StatElement } from '../../../components'
+import { SaladTheme } from '../../../SaladTheme'
 
-const styles = {
+const styles = (theme: SaladTheme) => ({
   container: {
     display: 'flex',
     justifyContent: 'space-evenly',
   },
-}
+  title: {
+    fontFamily: theme.fontGroteskBook25,
+    textTransform: 'uppercase',
+    fontSize: 10,
+    color: theme.lightGreen,
+    letterSpacing: '1px',
+  },
+})
 
 interface Props extends WithStyles<typeof styles> {
   currentBalance?: number
