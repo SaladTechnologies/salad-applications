@@ -7,15 +7,6 @@ export class MachineStore {
   public currentMachine?: Machine
 
   @computed
-  get currentEarningRate(): number | undefined {
-    if (this.store.native.machineInfo && this.currentMachine && this.currentMachine.earningRate) {
-      return this.currentMachine.earningRate
-    } else {
-      return undefined
-    }
-  }
-
-  @computed
   get minerId(): string | undefined {
     if (this.store.machine.currentMachine !== undefined) {
       return this.store.machine.currentMachine.minerId

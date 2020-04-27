@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { BarChart, Bar, Cell, XAxis, Tooltip, ResponsiveContainer } from 'recharts'
-import { StatElement } from '../../../components'
+import { StatElement, SectionHeader } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { EarningWindow } from '../../balance/models'
 import classNames from 'classnames'
@@ -10,13 +10,6 @@ const styles = (theme: SaladTheme) => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
-  },
-  title: {
-    fontFamily: theme.fontGroteskBook25,
-    textTransform: 'uppercase',
-    fontSize: 10,
-    color: theme.lightGreen,
-    letterSpacing: '1px',
   },
   row: {
     display: 'flex',
@@ -99,11 +92,23 @@ class _EarningHistory extends Component<Props, State> {
     return (
       <div className={classes.container}>
         <div className={classes.row}>
-          <div className={classes.title}>Earning History</div>
+          <SectionHeader>Earning History</SectionHeader>
           <div className={classNames(classes.row, classes.statsContainer)}>
-            <StatElement title={'Last 24Hr'} values={[`$${last24Hr ? last24Hr.toFixed(2) : 0}`]} />
-            <StatElement title={'Last 7 Days'} values={[`$${last7Day ? last7Day.toFixed(2) : 0}`]} />
-            <StatElement title={'Last 30 Days'} values={[`$${last30Day ? last30Day.toFixed(2) : 0}`]} />
+            <StatElement
+              title={'Last 24Hr'}
+              values={[`$${last24Hr ? last24Hr.toFixed(2) : 0}`]}
+              infoText={'Total amount earned in the past 24 hours'}
+            />
+            <StatElement
+              title={'Last 7 Days'}
+              values={[`$${last7Day ? last7Day.toFixed(2) : 0}`]}
+              infoText={'Total amount earned in the past 7 days'}
+            />
+            <StatElement
+              title={'Last 30 Days'}
+              values={[`$${last30Day ? last30Day.toFixed(2) : 0}`]}
+              infoText={'Total amount earned in the past 30 days'}
+            />
           </div>
         </div>
         <div className={classes.row}>

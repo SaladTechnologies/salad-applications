@@ -1,38 +1,32 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
-import { AngledPanel, Tooltip } from '../../../components'
 import classnames from 'classnames'
-// @ts-ignore
-import ReactHintFactory from 'react-hint'
-import { StartButtonText } from './StartButtonText'
-
-const ReactHint = ReactHintFactory(React)
+import { MiningStatus } from '../../machine/models'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    height: '107px',
-    width: '350px',
+    height: 100,
+    width: 200,
     display: 'flex',
-    flexDirection: 'row',
-    backgroundColor: theme.darkBlue,
-    borderColor: theme.green,
-    borderWidth: '1px',
-    borderTopStyle: 'solid',
-    borderBottomStyle: 'solid',
-    whiteSpace: 'noWrap',
-    position: 'relative',
-    userSelect: 'none',
+    padding: 30,
   },
   button: {
     backgroundColor: theme.green,
-    height: '107px',
-    width: '147px',
+    color: theme.darkBlue,
+    fontFamily: theme.fontGroteskBook25,
+    border: '1px solid black',
+    fontSize: 18,
+    textTransform: 'uppercase',
+    flex: 1,
+    borderRadius: 10,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    boxShadow: '8px 14px 22px rgba(0, 0, 0, 0.45)',
+  },
+  enabledButton: {
     cursor: 'pointer',
-    zIndex: 100,
     '&:hover': {
       opacity: 0.9,
     },
@@ -40,151 +34,58 @@ const styles = (theme: SaladTheme) => ({
   disabledButton: {
     cursor: 'not-allowed',
   },
-  buttonText: {
-    color: theme.darkBlue,
-    textAlign: 'center',
-    fontSize: theme.small,
-    fontFamily: 'sharpGroteskMedium25',
-    textTransform: 'uppercase',
-  },
-  textContainer: {
-    display: 'flex',
-    textAlign: 'right',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    padding: '.5rem 1rem',
-    whiteSpace: 'noWrap',
-    color: theme.lightGreen,
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 50,
-    letterSpacing: '1.5px',
-  },
-  infoCorner: {
-    position: 'absolute',
-    top: 0,
-    left: 2,
-    backgroundColor: '#F6931D',
-    height: '25px',
-    width: '29.17px',
-    clipPath: 'polygon(50% 100%, 0 0, 100% 0)',
-    textAlign: 'center',
-  },
-  title: {
-    fontFamily: theme.fontGroteskLight25,
-    fontSize: 11,
-    textTransform: 'uppercase',
-  },
-  balanceText: {
-    fontFamily: theme.fontGroteskLight09,
-    color: theme.green,
-    fontSize: theme.xLarge,
-    marginTop: -6,
-    marginBottom: -2,
-  },
-  subTitle: {
-    fontFamily: theme.fontGroteskLight25,
-    fontSize: 8,
-    textTransform: 'uppercase',
-  },
-  subText: {
-    color: theme.green,
-    fontFamily: theme.fontGroteskLight25,
-    fontSize: 12,
-    textTransform: 'uppercase',
-  },
   '@keyframes animated': {
     '0%': {
-      filter: `drop-shadow( -10px 0px 3px ${theme.mediumGreen})`,
+      backgroundPosition: '0% 50%',
+    },
+    '50%': {
+      backgroundPosition: '100% 50%',
     },
     '100%': {
-      filter: `drop-shadow( -10px 0px 5px ${theme.darkGreen})`,
+      backgroundPosition: '0% 50%',
     },
   },
-  runningGlow: {
-    animationName: '$animated',
-    animationDuration: '1s',
-    animationIterationCount: 'infinite',
-    animationDirection: 'alternate',
+  running: {
+    color: theme.lightGreen,
+    backgroundSize: '300% 300%',
+    background:
+      'linear-gradient(96deg, rgba(201, 240, 55, 0.24) 5.38%, rgba(175, 214, 28, 0.64) 47.76%, rgba(178, 213, 48, 0.571429) 68.71%, rgba(178, 213, 48, 0.24) 101.12%)',
+    animation: '$animated 10s linear infinite',
   },
 })
 
 interface Props extends WithStyles<typeof styles> {
-  currentBalance?: number
-  lifetimeBalance?: number
-  earningRate?: number
-  isRunning?: boolean
-  status?: string
+  status?: MiningStatus
+  isEnabled?: boolean
   onClick?: () => void
-  startEnabled?: boolean
 }
 
 class _StartButton extends Component<Props> {
   handleClick = () => {
-    const { onClick, startEnabled } = this.props
+    const { onClick, isEnabled } = this.props
 
-    if (onClick && startEnabled) onClick()
+    if (!isEnabled) return
+
+    onClick?.()
   }
   render() {
-    const { currentBalance, lifetimeBalance, earningRate, status, isRunning, startEnabled, classes } = this.props
+    const { status, isEnabled, classes } = this.props
+    const isRunning =
+      status === MiningStatus.Installing || status === MiningStatus.Initializing || status === MiningStatus.Running
+
     return (
-      <>
-        <ReactHint
-          autoPosition
-          events
-          attribute="data-start-button"
-          onRenderContent={() => (
-            <div>
-              <Tooltip
-                title="Incompatible Machine"
-                text="Looks like your machine doesn't like Salad.
-                 Please check your GPU and Windows version to ensure they
-                  are compatible with Salad. All hope is NOT lost, check 
-                  out the 'Earn' tab for more info."
-              />
-            </div>
-          )}
-        />
+      <div className={classes.container}>
         <div
-          className={classnames({
-            [classes.runningGlow]: isRunning,
+          className={classnames(classes.button, {
+            [classes.running]: isRunning,
+            [classes.enabledButton]: isEnabled,
+            [classes.disabledButton]: !isEnabled,
           })}
+          onClick={this.handleClick}
         >
-          <AngledPanel leftSide="left" className={classnames(classes.container)}>
-            <AngledPanel
-              leftSide="left"
-              rightSide="left"
-              className={classnames(classes.button, { [classes.disabledButton]: !startEnabled })}
-              onClick={this.handleClick}
-            >
-              {!startEnabled && (
-                <div data-start-button className={classes.infoCorner}>
-                  !!
-                </div>
-              )}
-              <div className={classes.buttonText}>{isRunning ? 'Stop' : 'Start'}</div>
-            </AngledPanel>
-            <div className={classes.textContainer}>
-              <StartButtonText
-                textOptions={[
-                  { title: 'Current Balance', value: `$${currentBalance ? currentBalance.toFixed(5) : 0}` },
-                  { title: 'Lifetime Balance', value: `$${lifetimeBalance ? lifetimeBalance.toFixed(5) : 0}` },
-                  {
-                    title: 'Earning Rate',
-                    value: `${earningRate === undefined ? 'Loading' : `$${(earningRate * 86400).toFixed(3)}/day`}`,
-                  },
-                ]}
-              />
-              {/* Earning rate  {earningRate === undefined ? 'Loading' : `$${(earningRate * 86400).toFixed(3)}/day`} */}
-              <div className={classes.subTitle}>Status</div>
-              <div className={classes.subText}>{status || 'Stopped'}</div>
-            </div>
-          </AngledPanel>
+          {isRunning ? 'Stop' : 'Start'}
         </div>
-      </>
+      </div>
     )
   }
 }
