@@ -1,3 +1,5 @@
+export * from './EarningHistory'
+export * from './EarningSummary'
 export * from './Offerwall'
 export * from './AdGatePage'
 export * from './AdGemPage'

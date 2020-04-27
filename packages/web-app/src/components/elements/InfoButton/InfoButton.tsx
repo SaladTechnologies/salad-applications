@@ -1,39 +1,29 @@
-import React, { Component, ReactNode } from 'react'
+import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
-import { Tooltip } from '../../Tooltip'
 import i from './assets/i.svg'
-
-// @ts-ignore
-import ReactHintFactory from 'react-hint'
-const ReactHint = ReactHintFactory(React)
 
 const styles = (theme: SaladTheme) => ({
   infoButton: {
     color: theme.lightGreen,
     cursor: 'help',
+    height: 18,
+    width: 18,
   },
 })
 
 interface Props extends WithStyles<typeof styles> {
   text?: string
-  tooltip?: ReactNode
 }
 
 class _InfoButton extends Component<Props> {
   render() {
-    const { text, tooltip, classes } = this.props
+    const { text, classes } = this.props
     return (
       <>
-        <span className={classes.infoButton} data-rh="machine-sync-tooltip">
-          <img height={25} width={'auto'} src={i} alt="" />
-        </span>
-        <ReactHint
-          delay={{ hide: 250 }}
-          events={{ click: true }}
-          autoPosition
-          onRenderContent={() => tooltip || (text && <Tooltip width={'14rem'} text={text} />)}
-        />
+        <div className={classes.infoButton} data-rh={text}>
+          <img height={'auto'} width={'100%'} src={i} alt="" />
+        </div>
       </>
     )
   }

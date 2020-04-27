@@ -50,8 +50,7 @@ export class SaladBowlStore {
       case PluginStatus.Initializing:
         return MiningStatus.Initializing
       case PluginStatus.Running:
-        if (this.store.balance.lastDeltaBalance > 0) return MiningStatus.Earning
-        else return MiningStatus.Running
+        return MiningStatus.Running
       case PluginStatus.Unknown:
       default:
         return MiningStatus.Stopped
@@ -142,7 +141,7 @@ export class SaladBowlStore {
   }
 
   @action.bound
-  start = flow(function*(this: SaladBowlStore, reason: StartReason) {
+  start = flow(function* (this: SaladBowlStore, reason: StartReason) {
     if (this.isRunning) {
       return
     }
@@ -200,7 +199,7 @@ export class SaladBowlStore {
   })
 
   @action.bound
-  startNext = flow(function*(this: SaladBowlStore) {
+  startNext = flow(function* (this: SaladBowlStore) {
     if (this.pluginDefinitions == null) {
       return
     }
@@ -231,7 +230,7 @@ export class SaladBowlStore {
   })
 
   @action.bound
-  stop = flow(function*(this: SaladBowlStore, reason: StopReason) {
+  stop = flow(function* (this: SaladBowlStore, reason: StopReason) {
     if (this.timeoutTimer != null) {
       clearTimeout(this.timeoutTimer)
       this.timeoutTimer = undefined
@@ -250,7 +249,7 @@ export class SaladBowlStore {
   })
 
   @action.bound
-  sendRunningStatus = flow(function*(this: SaladBowlStore, retry?: boolean) {
+  sendRunningStatus = flow(function* (this: SaladBowlStore, retry?: boolean) {
     const machineId = this.store.token.machineId
 
     if (!machineId) {
