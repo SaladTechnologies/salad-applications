@@ -24,6 +24,7 @@ export interface MenuItem {
   divider?: boolean
   /** Is the item clickable */
   enabled?: boolean
+  inset?: boolean
 }
 
 interface Props extends WithStyles<typeof styles> {
@@ -96,6 +97,7 @@ class _Settings extends Component<Props> {
       onSendBug,
       onSendLog,
       onDownloadLatestDesktop,
+      onCloseClicked,
     } = this.props
 
     return (
@@ -126,13 +128,15 @@ class _Settings extends Component<Props> {
         </div>
         <div className={classnames(classes.settings)}>
           {/* Adds each path */}
-          {menuItems?.map(x => (
+          {menuItems?.map((x) => (
             <Route path={x.url} component={x.component} />
           ))}
 
-          <div onClick={this.handleCloseClicked}>
-            <FontAwesomeIcon className={classes.closeButton} icon={faTimes} />
-          </div>
+          {onCloseClicked && (
+            <div onClick={this.handleCloseClicked}>
+              <FontAwesomeIcon className={classes.closeButton} icon={faTimes} />
+            </div>
+          )}
         </div>
       </Overlay>
     )

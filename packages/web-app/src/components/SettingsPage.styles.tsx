@@ -37,8 +37,8 @@ export const styles = (theme: SaladTheme) => ({
   },
 
   settings: {
-    backgroundColor: theme.green,
-    color: theme.darkBlue,
+    backgroundColor: theme.darkBlue,
+    color: theme.lightGreen,
     order: 1,
     display: 'flex',
     flexDirection: 'column',

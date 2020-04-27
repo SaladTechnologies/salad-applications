@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
@@ -8,49 +8,46 @@ import { InfoButton } from '../..'
 const styles = (theme: SaladTheme) => ({
   container: {
     display: 'flex',
-    flexDirection: 'row',
-    paddingTop: '.5rem',
-    userSelect: 'none',
   },
-  textContainer: {
-    textTransform: 'uppercase',
-    fontFamily: theme.fontGroteskBook25,
-    fontSize: theme.small,
-    textAlign: 'right',
-    letterSpacing: '1.5px',
-  },
+  textContainer: {},
   title: {
     color: theme.mediumGreen,
+    fontFamily: theme.fontGroteskBook25,
+    fontSize: 10,
+    letterSpacing: '1.5px',
+    textTransform: 'uppercase',
+    whiteSpace: 'nowrap',
   },
-  value: {
-    color: theme.lightGreen,
+  valueText: {
+    color: theme.green,
+    fontFamily: theme.fontGroteskLight09,
+    fontSize: 48,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
 })
 
 interface Props extends WithStyles<typeof styles> {
   title?: string
   values?: string[]
-  showInfo?: boolean
+  hideInfo?: boolean
   infoText?: string
-  infoTooltip?: ReactNode
 }
 
-// Define the component using these styles and pass it the 'classes' prop.
-// Use this to assign scoped class names.
-const _StatElement = ({ title, values, showInfo, infoText, infoTooltip, classes }: Props) => (
+const _StatElement = ({ title, values, infoText, classes }: Props) => (
   <div className={classes.container}>
     <div className={classes.textContainer}>
       <div className={classes.title}>{title}</div>
       {values &&
-        values.map(value => (
-          <div key={value} className={classes.value}>
+        values.map((value) => (
+          <div key={value} className={classes.valueText}>
             {value}
           </div>
         ))}
     </div>
-    <div>{showInfo && <InfoButton text={infoText} tooltip={infoTooltip} />}</div>
+    <div>{infoText && <InfoButton text={infoText} />}</div>
   </div>
 )
 
-// Finally, inject the stylesheet into the component.
 export const StatElement = withStyles(styles)(_StatElement)
