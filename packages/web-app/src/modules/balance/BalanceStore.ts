@@ -1,6 +1,7 @@
 import { action, observable, flow, autorun, runInAction, computed } from 'mobx'
 import { RootStore } from '../../Store'
 import { AxiosInstance } from 'axios'
+import { EarningWindow } from './models'
 
 /** The earning history bucket size (ms) */
 const bucketSize = 1000 * 60 * 15 // convert minutes to ms
@@ -13,8 +14,21 @@ export class BalanceStore {
   public lifetimeBalance: number = 0
 
   @observable
-  public earningHistory: Map<number, number> = new Map()
+  private earningHistory: Map<number, number> = new Map()
 
+  @computed
+  public get earningWindows(): EarningWindow[] {
+    const windows: EarningWindow[] = []
+
+    for (let [time, earning] of this.earningHistory) {
+      windows.push({
+        timestamp: new Date(time),
+        earnings: earning,
+      })
+    }
+
+    return windows.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime())
+  }
   /** Total earnings for the last 24 hours */
   @computed
   public get lastDayEarnings(): number {
@@ -59,8 +73,14 @@ export class BalanceStore {
       this.addFakeEarningHistory(this.currentBalance, this.currentBalance + 0.01)
       runInAction(() => {
         this.currentBalance += 0.01
+        this.lifetimeBalance += 0.01
       })
     }, 1000)
+
+    //TODO: Test only
+    for (let i = 0; i < 96; i++) {
+      this.addEarningEvent(Math.random(), new Date(Date.now() - bucketSize * i))
+    }
   }
 
   @action.bound

@@ -15,6 +15,7 @@ import { createClient } from './axiosFactory'
 import * as Sentry from '@sentry/browser'
 import { Config } from './config'
 import { SkeletonTheme } from 'react-loading-skeleton'
+import { Tooltips } from './Tooltips'
 
 Sentry.init({
   dsn: Config.sentryDSN,
@@ -62,7 +63,10 @@ ReactDOM.render(
   <Router history={history}>
     <ThemeProvider theme={DefaultTheme}>
       <SkeletonTheme color={'#172E40'} highlightColor="#304759">
-        <App />
+        <>
+          <Tooltips />
+          <App />
+        </>
       </SkeletonTheme>
     </ThemeProvider>
   </Router>,

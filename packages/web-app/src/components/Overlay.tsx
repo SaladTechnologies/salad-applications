@@ -3,11 +3,11 @@ import React, { Component } from 'react'
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
+import { SaladTheme } from '../SaladTheme'
 
-const styles = {
+const styles = (theme: SaladTheme) => ({
   overlayContainer: {
-    backgroundColor: 'rgba(10, 33, 51, 0.9)',
-    backdropFilter: 'blur(8.57952px)',
+    backgroundColor: theme.darkBlue,
     display: 'flex',
     position: 'fixed',
     top: '33px', //Allows the menu bar to still be shown
@@ -17,7 +17,7 @@ const styles = {
     userSelect: 'none',
     zIndex: 5000,
   },
-}
+})
 
 interface Props extends WithStyles<typeof styles> {
   onCloseClicked?: () => void

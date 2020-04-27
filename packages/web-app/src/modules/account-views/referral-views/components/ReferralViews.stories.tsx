@@ -5,7 +5,6 @@ import { action } from '@storybook/addon-actions'
 import { ReferralItem } from './ReferralItem'
 import { Referral } from '../../../referral/models'
 import { ReferralList } from './ReferralList'
-import { ReferralSummary } from './ReferralSummary'
 import { ReferralDefinition } from '../../../referral/models/ReferralDefinition'
 import { ReferralStats } from './ReferralStats'
 import { ReferralCode } from './ReferralCode'
@@ -35,9 +34,6 @@ storiesOf('Modules|Referral/Components', module)
       <ReferralItem referral={referrals[0]} />
     </div>
   ))
-  .add('Referral Summary', () => {
-    return <ReferralSummary pendingCount={4} completedCount={20} />
-  })
   .add('Referral Stats', () => {
     return (
       <div style={{ backgroundColor: '#B2D530' }}>
@@ -75,7 +71,7 @@ storiesOf('Modules|Referral/Components', module)
   })
 
 storiesOf('Modules|Referral/Referral List', module)
-  .addDecorator(storyFn => {
+  .addDecorator((storyFn) => {
     return <div style={{ backgroundColor: '#B2D530' }}>{storyFn()}</div>
   })
   .add('Empty List', () => <ReferralList referrals={[]} />)
@@ -84,7 +80,7 @@ storiesOf('Modules|Referral/Referral List', module)
   })
 
 storiesOf('Modules|Referral/Current User Referral', module)
-  .addDecorator(storyFn => {
+  .addDecorator((storyFn) => {
     return <div style={{ backgroundColor: '#B2D530' }}>{storyFn()}</div>
   })
   .add('CurrentReferralProgress', () => <CurrentReferralProgress referral={referrals[0]} />)
