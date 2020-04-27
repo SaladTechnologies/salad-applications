@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Username, ExternalLink, P, Divider, InternalLink } from '../../../components'
 import Scrollbars from 'react-custom-scrollbars'
-import { StartButtonContainer } from '../../machine-views'
 import { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
@@ -38,7 +37,7 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {}
 
-class _Mining extends Component<Props> {
+class _MiningInformation extends Component<Props> {
   render() {
     const { classes } = this.props
 
@@ -79,11 +78,6 @@ class _Mining extends Component<Props> {
                   </b>
                   , this will allow Salad to automatically start when you step away from your machine.
                 </P>
-              </div>
-              <div className={classes.column}>
-                <div className={classes.startContainer}>
-                  <StartButtonContainer />
-                </div>
               </div>
             </div>
             <Divider />
@@ -139,4 +133,4 @@ class _Mining extends Component<Props> {
   }
 }
 
-export const Mining = withStyles(styles)(_Mining)
+export const MiningInformation = withStyles(styles)(_MiningInformation)

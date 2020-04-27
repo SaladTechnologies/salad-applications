@@ -5,6 +5,4 @@ export interface Machine {
   qualifying: boolean
   validOs: boolean
   validGpus: boolean
-  /** Earning rate for the machine (USD/s) */
-  earningRate: number
 }

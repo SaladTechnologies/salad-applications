@@ -3,5 +3,4 @@ export enum MiningStatus {
   Initializing = 'initializing',
   Running = 'running',
   Stopped = 'stopped',
-  Error = 'error',
 }
