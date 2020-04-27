@@ -7,7 +7,7 @@ import { AccountContainer } from './account-views'
 
 const mapStoreToProps = (store: RootStore): any => {
   const menuItems: MenuItem[] = [
-    { url: '/account/account', text: 'Account', component: AccountContainer },
+    { url: '/account/summary', text: 'Account Summary', component: AccountContainer },
     { url: '/account/referrals', text: 'Referrals', component: ReferralSettingsContainer },
     { url: '/account/reward-vault', text: 'Reward Vault', component: VaultListContainer },
   ]
