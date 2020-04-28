@@ -10,6 +10,7 @@ import { RewardSearchBarContainer } from '../../reward-views'
 import { InternalLink, ExternalLink } from '../../../components'
 import GearIcon from '../assets/GearIcon.svg'
 import Img from 'react-image'
+import { AccountMenuContainer } from '../../account-views/account-menu'
 
 export class MenuItem {
   constructor(public readonly name: string, public readonly url: string, public readonly showNotification?: boolean) {}
@@ -53,7 +54,7 @@ const styles = (theme: SaladTheme) => ({
     padding: '.5rem .75rem',
     textDecoration: 'none',
     fontFamily: 'sharpGroteskLight25',
-    fontSize: '0.7rem',
+    fontSize: 12,
     letterSpacing: '1.3px',
     cursor: 'pointer',
     position: 'relative',
@@ -145,6 +146,7 @@ class _Titlebar extends Component<Props> {
         {menuItems && (
           <div className={classes.componentContainer}>
             <RewardSearchBarContainer />
+            <AccountMenuContainer />
             <ChoppingCartButtonContainer />
             {isDesktop && (
               <InternalLink

@@ -10,9 +10,7 @@ const mapStoreToProps = (store: RootStore): any => {
   ]
 
   return {
-    onCloseClicked: () => store.ui.hideModal(),
-    onCloseKeyPress: () => store.ui.hideModal(),
-    onListItemClick: (url: string) => store.routing.push(url),
+    onClose: () => store.ui.hideModal(),
     onSendBug: store.ui.openNewBug,
     menuItems: menuItems,
     appVersion: store.native.desktopVersion,

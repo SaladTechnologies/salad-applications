@@ -18,7 +18,6 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
     alignItems: 'center',
     position: 'relative',
-    paddingRight: 15,
   },
   notificationDot: {
     position: 'absolute',
@@ -54,7 +53,6 @@ class _ChoppingCartButton extends Component<Props> {
         <div className={classes.container} data-chopping-cart-button>
           {rewards && rewards.length !== 0 && <div className={classes.notificationDot}>{rewards.length}</div>}
           <CartIcon />
-          Chopping Cart
         </div>
       </>
     )

@@ -27,11 +27,16 @@ export interface MenuItem {
   inset?: boolean
 }
 
+export interface MenuButton {
+  text: string
+  onClick: () => void
+}
+
 interface Props extends WithStyles<typeof styles> {
-  onCloseClicked?: () => void
-  onCloseKeyPress?: () => void
+  onClose?: () => void
   onSendBug?: () => void
   menuItems?: MenuItem[]
+  menuButtons?: MenuButton[]
   appVersion?: string
   appBuild?: string
   onSendLog?: () => void
@@ -69,15 +74,15 @@ class _Settings extends Component<Props> {
   }
 
   handleCloseClicked = () => {
-    const { onCloseClicked } = this.props
+    const { onClose } = this.props
 
-    if (onCloseClicked) onCloseClicked()
+    onClose?.()
   }
 
   handleCloseKeyPress = (e: any) => {
     if (e.key === 'Escape') {
-      const { onCloseKeyPress } = this.props
-      if (onCloseKeyPress) onCloseKeyPress()
+      const { onClose } = this.props
+      onClose?.()
     }
   }
 
@@ -93,11 +98,12 @@ class _Settings extends Component<Props> {
       appBuild,
       classes,
       menuItems,
+      menuButtons,
       latestDesktop,
       onSendBug,
       onSendLog,
       onDownloadLatestDesktop,
-      onCloseClicked,
+      onClose,
     } = this.props
 
     return (
@@ -110,6 +116,7 @@ class _Settings extends Component<Props> {
             {onSendLog && (
               <Button onClick={this.handleLogClicked}>{this.state.buttonToggle ? 'Logs sent' : 'Send logs'}</Button>
             )}
+            {menuButtons && menuButtons.map((x) => <Button onClick={x.onClick}>{x.text}</Button>)}
           </div>
           <div className={classes.versionContainer}>
             {appVersion !== undefined && (
@@ -132,7 +139,7 @@ class _Settings extends Component<Props> {
             <Route path={x.url} component={x.component} />
           ))}
 
-          {onCloseClicked && (
+          {onClose && (
             <div onClick={this.handleCloseClicked}>
               <FontAwesomeIcon className={classes.closeButton} icon={faTimes} />
             </div>
