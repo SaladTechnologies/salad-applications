@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { Username, ExternalLink, P, Divider, InternalLink } from '../../../components'
+import { Username, SmartLink, P, Divider } from '../../../components'
 import Scrollbars from 'react-custom-scrollbars'
 import { SaladTheme } from '../../../SaladTheme'
 
@@ -74,7 +74,7 @@ class _MiningInformation extends Component<Props> {
                 <P>
                   Don't forget to enable{' '}
                   <b>
-                    <InternalLink to="/settings/windows-settings">Autostart</InternalLink>
+                    <SmartLink to="/settings/windows-settings">Autostart</SmartLink>
                   </b>
                   , this will allow Salad to automatically start when you step away from your machine.
                 </P>
@@ -99,10 +99,10 @@ class _MiningInformation extends Component<Props> {
                   Salad balance.
                 </P>
                 <P>
-                  <InternalLink to="/account/referrals">Referrals</InternalLink>
+                  <SmartLink to="/account/referrals">Referrals</SmartLink>
                 </P>
                 <P>
-                  <InternalLink to="/earn/offerwall">Offerwalls</InternalLink>
+                  <SmartLink to="/earn/offerwall">Offerwalls</SmartLink>
                 </P>
               </div>
             </div>
@@ -112,19 +112,19 @@ class _MiningInformation extends Component<Props> {
             <Username blue>More Information</Username>
             <br />
             <P>
-              <ExternalLink path="https://medium.com/@saladchefs/a-gamers-guide-to-blockchain-and-crypto-b76bce353a4d">
+              <SmartLink to="https://medium.com/@saladchefs/a-gamers-guide-to-blockchain-and-crypto-b76bce353a4d">
                 Gamers Guide to Blockchain
-              </ExternalLink>
+              </SmartLink>
             </P>
             <P>
-              <ExternalLink path="https://medium.com/@saladchefs/making-money-with-salad-whats-the-catch-f33ad86d1a9c">
+              <SmartLink to="https://medium.com/@saladchefs/making-money-with-salad-whats-the-catch-f33ad86d1a9c">
                 What's the Catch?
-              </ExternalLink>
+              </SmartLink>
             </P>
             <P>
-              <ExternalLink path="https://medium.com/@saladchefs/does-mining-for-cryptocurrency-damage-my-gpu-5a74827a0742">
+              <SmartLink to="https://medium.com/@saladchefs/does-mining-for-cryptocurrency-damage-my-gpu-5a74827a0742">
                 Does mining hurt my machine?
-              </ExternalLink>
+              </SmartLink>
             </P>
           </div>
         </Scrollbars>
