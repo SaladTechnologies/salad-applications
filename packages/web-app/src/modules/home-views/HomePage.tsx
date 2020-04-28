@@ -1,7 +1,12 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Route, Switch } from 'react-router'
-import { MainStorefrontContainer, RewardSearchResultContainer, RewardBrowseCategoryContainer } from '../reward-views'
+import {
+  MainStorefrontContainer,
+  RewardSearchResultContainer,
+  RewardBrowseCategoryContainer,
+  RewardSearchBarContainer,
+} from '../reward-views'
 import { getStore } from '../../Store'
 import { MainTitlebarContainer } from './MainTitlebarContainer'
 import { SaladTheme } from '../../SaladTheme'
@@ -52,6 +57,7 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
       <div className={classes.container}>
         <MainTitlebarContainer />
         <div className={classes.appContainer}>
+          <RewardSearchBarContainer />
           <div className={classes.main}>
             <Switch>
               <Route exact path="/search" component={RewardSearchResultContainer} />

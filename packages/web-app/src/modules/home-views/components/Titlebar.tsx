@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinus, faClone, faTimes } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
 import { ChoppingCartButtonContainer } from '../../chopping-cart-views'
-import { RewardSearchBarContainer } from '../../reward-views'
 import { SmartLink } from '../../../components'
 import GearIcon from '../assets/GearIcon.svg'
 import Img from 'react-image'
@@ -146,7 +145,6 @@ class _Titlebar extends Component<Props> {
 
         {menuItems && (
           <div className={classes.componentContainer}>
-            <RewardSearchBarContainer />
             <AccountMenuContainer />
             <ChoppingCartButtonContainer />
             {isDesktop && (
