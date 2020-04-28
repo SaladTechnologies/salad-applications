@@ -1,5 +1,3 @@
-export * from './AngledButton'
-export * from './AngledPanel'
 export * from './AnimatedBorder'
 export * from './AnimatedSwitch'
 export * from './Button'

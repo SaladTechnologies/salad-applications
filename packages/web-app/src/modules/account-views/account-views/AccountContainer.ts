@@ -4,13 +4,9 @@ import { Account } from './components'
 
 const mapStoreToProps = (store: RootStore): any => ({
   onLogout: store.auth.signOut,
-  // EditUsername
   profile: store.profile.currentProfile,
   isUpdating: store.profile.isUpdating,
   onSend: store.profile.updateUsername,
 })
 
-export const AccountContainer = connect(
-  mapStoreToProps,
-  Account,
-)
+export const AccountContainer = connect(mapStoreToProps, Account)
