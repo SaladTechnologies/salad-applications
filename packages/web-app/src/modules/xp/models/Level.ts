@@ -9,6 +9,5 @@ export class Level {
     public readonly title: string,
     public readonly minXp: number,
     public readonly maxXp: number,
-    public readonly color: string,
   ) {}
 }

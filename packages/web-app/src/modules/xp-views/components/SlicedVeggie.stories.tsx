@@ -1,14 +1,18 @@
 import React from 'react'
-import { storiesOf } from '@storybook/react'
 import { Level } from '../../xp/models/Level'
 import { number, select } from '@storybook/addon-knobs'
 import { SlicedVeggie } from './SlicedVeggie'
 import { defaultLevels } from '../../xp/models/defaultLevels'
 
+export default {
+  title: 'Modules/XP/Sliced Veggie',
+  component: SlicedVeggie,
+}
+
 const levels = defaultLevels
 
-storiesOf('Modules/XP', module).add('Sliced Veggie', () => {
-  let xp = number('XP Percent', 50, {
+export const Basic = () => {
+  let xp = number('XP Percent', 0.5, {
     range: true,
     min: 0,
     max: 1,
@@ -27,4 +31,4 @@ storiesOf('Modules/XP', module).add('Sliced Veggie', () => {
       <SlicedVeggie percent={xp} level={selectedLevel} />
     </div>
   )
-})
+}
