@@ -6,14 +6,14 @@ import { RewardItem } from '../components/RewardItem'
 import { Scrollbars } from 'react-custom-scrollbars'
 import { RewardHeroItem } from '../components/RewardHeroItem'
 
-const styles = ({
+const styles = {
   container: {},
   content: {
-    paddingTop: 20,
+    paddingTop: 5,
     display: 'flex',
     flexDirection: 'column',
   },
-})
+}
 
 interface Props extends WithStyles<typeof styles> {
   categories?: Map<string, Reward[]>
@@ -40,7 +40,7 @@ class _MainStorefrontPage extends Component<Props> {
               } else if (heroCategories.includes(category)) {
                 return (
                   <RewardHero key={category} title={category}>
-                    {rewards.map(x => (
+                    {rewards.map((x) => (
                       <RewardHeroItem key={x.id} reward={x} onViewReward={onViewReward} />
                     ))}
                   </RewardHero>
@@ -48,7 +48,7 @@ class _MainStorefrontPage extends Component<Props> {
               } else {
                 return (
                   <RewardSlider key={category} title={category} onViewMore={onViewMore}>
-                    {rewards.slice(0, maxRowSize).map(x => (
+                    {rewards.slice(0, maxRowSize).map((x) => (
                       <RewardItem key={x.id} reward={x} onViewReward={onViewReward} />
                     ))}
                   </RewardSlider>
