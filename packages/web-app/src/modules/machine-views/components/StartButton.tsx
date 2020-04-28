@@ -3,9 +3,15 @@ import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import classnames from 'classnames'
 import { MiningStatus } from '../../machine/models'
+import { StatElement } from '../../../components'
+import { formatDuration } from '../../../utils'
 
 const styles = (theme: SaladTheme) => ({
   container: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  buttonContainer: {
     height: 100,
     width: 200,
     display: 'flex',
@@ -56,6 +62,7 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   status?: MiningStatus
+  runningTime?: number
   isEnabled?: boolean
   onClick?: () => void
 }
@@ -69,22 +76,28 @@ class _StartButton extends Component<Props> {
     onClick?.()
   }
   render() {
-    const { status, isEnabled, classes } = this.props
+    const { status, runningTime, isEnabled, classes } = this.props
     const isRunning =
       status === MiningStatus.Installing || status === MiningStatus.Initializing || status === MiningStatus.Running
 
     return (
       <div className={classes.container}>
-        <div
-          className={classnames(classes.button, {
-            [classes.running]: isRunning,
-            [classes.enabledButton]: isEnabled,
-            [classes.disabledButton]: !isEnabled,
-          })}
-          onClick={this.handleClick}
-        >
-          {isRunning ? 'Stop' : 'Start'}
+        <div className={classes.buttonContainer}>
+          <div
+            className={classnames(classes.button, {
+              [classes.running]: isRunning,
+              [classes.enabledButton]: isEnabled,
+              [classes.disabledButton]: !isEnabled,
+            })}
+            onClick={this.handleClick}
+          >
+            {isRunning ? 'Stop' : 'Start'}
+          </div>
         </div>
+        <StatElement
+          title={runningTime ? formatDuration(runningTime) : 'Status'}
+          values={[`${(status || MiningStatus.Stopped).toUpperCase()}`]}
+        />
       </div>
     )
   }
