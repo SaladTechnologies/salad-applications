@@ -1,4 +1,4 @@
-import { observable, action, flow, computed } from 'mobx'
+import { observable, action, flow, computed, runInAction } from 'mobx'
 import { PluginInfo } from './models/PluginInfo'
 import { StatusMessage } from './models/StatusMessage'
 import { PluginStatus } from './models/PluginStatus'
@@ -17,9 +17,16 @@ export class SaladBowlStore {
   private currentPluginDefinitionIndex: number = 0
   private currentPluginRetries: number = 0
   private heartbeatTimer?: NodeJS.Timeout
+  private runningTimer?: NodeJS.Timeout
   private pluginDefinitions?: PluginDefinition[]
   private somethingWorks: boolean = false
   private timeoutTimer?: NodeJS.Timeout
+
+  /** The timestamp last time that start was pressed */
+  private startTimestamp?: Date
+
+  /** The time since the start button was pressed (ms) */
+  public runningTime: number = 0
 
   @observable
   public plugin: PluginInfo = new PluginInfo('Unknown')
@@ -40,12 +47,6 @@ export class SaladBowlStore {
   @computed
   get isRunning(): boolean {
     return this.plugin.status !== PluginStatus.Stopped && this.plugin.status !== PluginStatus.Unknown
-  }
-
-  @computed
-  get runningTime(): number {
-    //TODO:
-    return 0
   }
 
   @computed
@@ -151,6 +152,7 @@ export class SaladBowlStore {
     if (this.isRunning) {
       return
     }
+
     if (!this.canRun) {
       console.log('This machine is not able to run.')
       return
@@ -164,6 +166,11 @@ export class SaladBowlStore {
     if (this.heartbeatTimer != null) {
       clearInterval(this.heartbeatTimer)
       this.heartbeatTimer = undefined
+    }
+
+    if (this.runningTimer) {
+      clearInterval(this.runningTimer)
+      this.runningTimer = undefined
     }
 
     this.currentPluginDefinition = undefined
@@ -190,6 +197,18 @@ export class SaladBowlStore {
         onClick: () => this.store.routing.push('/settings/windows-settings'),
       })
     }
+
+    this.startTimestamp = new Date(Date.now())
+
+    this.runningTimer = setTimeout(() => {
+      runInAction(() => {
+        if (!this.startTimestamp) {
+          this.runningTime = 0
+        } else {
+          this.runningTime = Date.now() - this.startTimestamp.getTime()
+        }
+      })
+    }, 1000)
 
     this.timeoutTimer = setTimeout(() => {
       this.timeoutTimer = undefined
@@ -245,6 +264,12 @@ export class SaladBowlStore {
     if (this.heartbeatTimer != null) {
       clearInterval(this.heartbeatTimer)
       this.heartbeatTimer = undefined
+    }
+
+    if (this.runningTimer) {
+      clearInterval(this.runningTimer)
+      this.runningTimer = undefined
+      this.startTimestamp = undefined
     }
 
     this.plugin.status = PluginStatus.Stopped
