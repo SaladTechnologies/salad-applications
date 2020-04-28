@@ -67,8 +67,8 @@ export const styles = (theme: SaladTheme) => ({
     marginTop: 'auto',
   },
   closeButton: {
-    border: 'solid 3px ' + theme.lightGreen,
-    color: theme.lightGreen,
+    border: 'solid 3px ' + theme.green,
+    color: theme.green,
     position: 'absolute',
     top: 30,
     right: 30,
@@ -80,8 +80,8 @@ export const styles = (theme: SaladTheme) => ({
     padding: 3,
 
     '&:hover': {
-      border: 'solid 3px ' + theme.darkGreen,
-      color: theme.darkGreen,
+      border: 'solid 3px ' + theme.lightGreen,
+      color: theme.lightGreen,
       transition: 'all 200ms ease',
     },
   },

@@ -4,20 +4,20 @@ import React, { Component } from 'react'
 import { getStore } from '../../../Store'
 
 // UI
-import { ExternalLink } from '../..'
+import { SmartLink } from '../..'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 
-const styles = ({
+const styles = {
   linkListUnstyled: {
     margin: 0,
     padding: 0,
     listStyle: 'none',
   },
   linkListItem: {},
-})
+}
 
 interface Props extends WithStyles<typeof styles> {
   list: {
@@ -39,9 +39,9 @@ class _ExternalLinkListUnstyled extends Component<Props> {
             <li
               key={index}
               className={classnames('linkListItem', classes.linkListItem)}
-              style={{marginBottom: '2px'}}
+              style={{ marginBottom: '2px' }}
             >
-              <ExternalLink path={item.url}>{item.text}</ExternalLink>
+              <SmartLink to={item.url}>{item.text}</SmartLink>
             </li>
           )
         })}
