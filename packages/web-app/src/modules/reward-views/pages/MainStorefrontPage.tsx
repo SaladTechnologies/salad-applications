@@ -5,6 +5,7 @@ import { RewardSlider, RewardDisclaimers, RewardHero } from '../components'
 import { RewardItem } from '../components/RewardItem'
 import { Scrollbars } from 'react-custom-scrollbars'
 import { RewardHeroItem } from '../components/RewardHeroItem'
+import { NotificationBannerContainer } from '../../home-views/NotificationBannerContainer'
 
 const styles = {
   container: {},
@@ -33,6 +34,7 @@ class _MainStorefrontPage extends Component<Props> {
     return (
       <Scrollbars>
         <div className={classes.content}>
+          <NotificationBannerContainer />
           {categories && categories.size > 0 ? (
             Array.from(categories).map(([category, rewards]) => {
               if (!rewards || rewards.length === 0) {
