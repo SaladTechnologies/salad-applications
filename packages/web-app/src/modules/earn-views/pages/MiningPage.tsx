@@ -6,7 +6,6 @@ import { SaladTheme } from '../../../SaladTheme'
 import { MiningSummary } from '../components'
 import classNames from 'classnames'
 import { SlicedVeggieContainer, PantryContainer } from '../../xp-views'
-import { MiningStatus } from '../../machine/models'
 import { Machine } from '../../machine/models/Machine'
 
 const styles = (theme: SaladTheme) => ({
@@ -43,22 +42,21 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  status?: MiningStatus
   lifetimeXp?: number
-  runningTime?: number
   machine?: Machine
 }
 
 class _MiningPage extends Component<Props> {
   render() {
-    const { status, lifetimeXp, runningTime, machine, classes } = this.props
+    const { lifetimeXp, machine, classes } = this.props
 
     return (
       <div className={classNames(classes.container, classes.splitContainer)}>
         <Scrollbars>
           <div className={classNames(classes.content, classes.splitContainer)}>
             <div className={classNames(classes.column, classes.mainColumn)}>
-              <MiningSummary status={status} lifetimeXp={lifetimeXp} runningTime={runningTime} machine={machine} />
+              <MiningSummary lifetimeXp={lifetimeXp} machine={machine} />
+
               <Divider />
 
               <SectionHeader>Pantry</SectionHeader>
@@ -67,6 +65,9 @@ class _MiningPage extends Component<Props> {
 
               <SectionHeader>More Information</SectionHeader>
               <br />
+              <P>
+                <SmartLink to="/earn/mine/how-it-works">How It Works</SmartLink>
+              </P>
               <P>
                 <SmartLink to="https://support.salad.io/hc/en-us/sections/360008458292-Anti-Virus">
                   Having Anti-Virus Issues?

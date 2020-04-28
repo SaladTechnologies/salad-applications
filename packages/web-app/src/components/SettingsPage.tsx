@@ -136,7 +136,7 @@ class _Settings extends Component<Props> {
         <div className={classnames(classes.settings)}>
           {/* Adds each path */}
           {menuItems?.map((x) => (
-            <Route path={x.url} component={x.component} />
+            <Route exact path={x.url} component={x.component} />
           ))}
 
           {onClose && (

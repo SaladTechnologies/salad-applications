@@ -8,6 +8,7 @@ import { OfferToroContainer } from './OfferToroContainer'
 import { AdGateContainer } from './AdGateContainer'
 import { ReferralSettingsContainer } from '../account-views/referral-views'
 import { EarningSummaryContainer } from './EarningSummaryContainer'
+import { MiningInformationContainer } from './MiningInformationContainer'
 
 const mapStoreToProps = (store: RootStore): any => {
   return {
@@ -30,6 +31,7 @@ const mapStoreToProps = (store: RootStore): any => {
         inset: true,
       },
       { text: 'Mining', url: '/earn/mine', component: MiningContainer, divider: true },
+      { text: 'How It Works', url: '/earn/mine/how-it-works', component: MiningInformationContainer, inset: true },
       { text: 'Referrals', url: '/earn/referrals', component: ReferralSettingsContainer, divider: true },
     ],
   }
