@@ -11,8 +11,8 @@ const styles = (theme: SaladTheme) => ({
   divider: {
     borderColor: theme.lightGreen,
     borderWidth: '0 0 1px',
-    marginTop: theme.mediumLarge,
-    marginBottom: theme.large,
+    marginTop: (props: Props) => (props.narrow ? 5 : theme.mediumLarge),
+    marginBottom: (props: Props) => (props.narrow ? 5 : theme.large),
     width: '100%',
     opacity: (props: Props) => props.opacity || '1',
   },
@@ -21,6 +21,7 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   opacity?: string
   className?: string
+  narrow?: boolean
 }
 
 class _Divider extends Component<Props> {

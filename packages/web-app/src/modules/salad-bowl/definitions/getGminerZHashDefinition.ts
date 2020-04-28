@@ -11,7 +11,7 @@ export const getGminerZHashDefinition = (machine: Machine): PluginDefinition => 
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer1.93/gminer-1-93-windows.zip',
     exe: 'miner.exe',
     args: `-a 144_5 ${zhashUser('usa', machine.minerId)} ${zhashUser('eu', machine.minerId)} -w 0 --pers auto`,
-    runningCheck: '(?:Share Accepted|[1-9][0-9]*.\d* Sol\/s)',
+    runningCheck: '(?:Share Accepted|[1-9][0-9]*.d* Sol/s)',
     initialTimeout: 600000,
     initialRetries: 1,
     watchdogTimeout: 900000,
