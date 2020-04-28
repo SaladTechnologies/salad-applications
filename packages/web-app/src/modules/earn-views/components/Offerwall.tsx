@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { ToggleSetting, ExternalLink, P, Username } from '../../../components'
+import { ToggleSetting, SmartLink, P, Username } from '../../../components'
 import offerWallExample from '../assets/AdGem.png'
 import Img from 'react-image'
 import Scrollbars from 'react-custom-scrollbars'
@@ -87,13 +87,13 @@ class _Offerwall extends Component<Props> {
                 </i>
               </P>
               <P>
-                <ExternalLink
-                  path={
+                <SmartLink
+                  to={
                     'https://salad.zendesk.com/hc/en-us/articles/360041472991-The-Salad-Guide-to-AdGem-and-Offerwalls'
                   }
                 >
                   Check out our FAQ for more info!
-                </ExternalLink>
+                </SmartLink>
               </P>
             </div>
           </div>

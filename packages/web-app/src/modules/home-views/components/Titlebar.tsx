@@ -3,11 +3,11 @@ import icon from '../assets/favicon-32x32.png'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMinus, faClone, faTimes, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
+import { faMinus, faClone, faTimes } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
 import { ChoppingCartButtonContainer } from '../../chopping-cart-views'
 import { RewardSearchBarContainer } from '../../reward-views'
-import { InternalLink, ExternalLink } from '../../../components'
+import { SmartLink } from '../../../components'
 import GearIcon from '../assets/GearIcon.svg'
 import Img from 'react-image'
 import { AccountMenuContainer } from '../../account-views/account-menu'
@@ -76,6 +76,7 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
     alignItems: 'center',
     '-webkit-app-region': 'none',
+    paddingRight: 10,
   },
   closeButton: {
     '&:hover': {
@@ -136,10 +137,10 @@ class _Titlebar extends Component<Props> {
           </div>
           {menuItems &&
             menuItems.map((x) => (
-              <InternalLink key={x.name} className={classes.menuItem} to={x.url}>
+              <SmartLink key={x.name} className={classes.menuItem} to={x.url}>
                 {x.showNotification && <div className={classes.menuItemNotification}></div>}
                 {x.name}
-              </InternalLink>
+              </SmartLink>
             ))}
         </div>
 
@@ -149,19 +150,15 @@ class _Titlebar extends Component<Props> {
             <AccountMenuContainer />
             <ChoppingCartButtonContainer />
             {isDesktop && (
-              <InternalLink
+              <SmartLink
                 className={classnames(classes.settingsButton, classes.buttons)}
                 to={'/settings/windows-settings'}
               >
                 <Img height={16} src={GearIcon} />
-              </InternalLink>
+              </SmartLink>
             )}
           </div>
         )}
-
-        <ExternalLink path={'https://www.salad.io/support'}>
-          <FontAwesomeIcon size="xs" className={classes.buttons} icon={faQuestionCircle} />
-        </ExternalLink>
 
         {isDesktop && (
           <>

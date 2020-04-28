@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { ExternalLink, P, Divider, SectionHeader } from '../../../components'
+import { SmartLink, P, Divider, SectionHeader } from '../../../components'
 import Scrollbars from 'react-custom-scrollbars'
 import { SaladTheme } from '../../../SaladTheme'
 import { MiningSummary } from '../components'
@@ -68,24 +68,24 @@ class _MiningPage extends Component<Props> {
               <SectionHeader>More Information</SectionHeader>
               <br />
               <P>
-                <ExternalLink path="https://support.salad.io/hc/en-us/sections/360008458292-Anti-Virus">
+                <SmartLink to="https://support.salad.io/hc/en-us/sections/360008458292-Anti-Virus">
                   Having Anti-Virus Issues?
-                </ExternalLink>
+                </SmartLink>
               </P>
               <P>
-                <ExternalLink path="https://medium.com/@saladchefs/a-gamers-guide-to-blockchain-and-crypto-b76bce353a4d">
+                <SmartLink to="https://medium.com/@saladchefs/a-gamers-guide-to-blockchain-and-crypto-b76bce353a4d">
                   Gamers Guide to Blockchain
-                </ExternalLink>
+                </SmartLink>
               </P>
               <P>
-                <ExternalLink path="https://medium.com/@saladchefs/making-money-with-salad-whats-the-catch-f33ad86d1a9c">
+                <SmartLink to="https://medium.com/@saladchefs/making-money-with-salad-whats-the-catch-f33ad86d1a9c">
                   What's the Catch?
-                </ExternalLink>
+                </SmartLink>
               </P>
               <P>
-                <ExternalLink path="https://medium.com/@saladchefs/does-mining-for-cryptocurrency-damage-my-gpu-5a74827a0742">
+                <SmartLink to="https://medium.com/@saladchefs/does-mining-for-cryptocurrency-damage-my-gpu-5a74827a0742">
                   Does mining hurt my machine?
-                </ExternalLink>
+                </SmartLink>
               </P>
             </div>
           </div>

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 // Components
 import { ErrorPage } from '../../../components/ErrorPage'
-import { ExternalLink } from '../../../components'
+import { SmartLink } from '../../../components'
 
 interface Props {
   onCloseClicked?: () => void
@@ -32,7 +32,7 @@ export class FallbackErrorPage extends Component<Props> {
           report by following the link below.
         </div>
         <div style={{ paddingTop: '1rem' }}>
-          <ExternalLink path="https://www.salad.io/support/">Salad Support</ExternalLink>
+          <SmartLink to="https://www.salad.io/support/">Salad Support</SmartLink>
         </div>
       </ErrorPage>
     )

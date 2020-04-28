@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import image from '../assets/GPUs.svg'
-import { OnboardingPage, InternalLink } from '../../../components'
+import { OnboardingPage, SmartLink } from '../../../components'
 import { LoadingPage } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
@@ -104,7 +104,7 @@ class _CompatibilityCheckPage extends Component<Props> {
               <div className={classes.detailsTitle}>THE GOOD NEWS</div>
               <div className={classes.detailsText}>
                 You can still earn Salad Balance by referring people who have a qualifying GPU, or by completing tasks
-                on one of the <InternalLink to="/earn/offerwall">available offerwalls</InternalLink>.
+                on one of the <SmartLink to="/earn/offerwall">available offerwalls</SmartLink>.
               </div>
             </div>
           </div>

@@ -2,7 +2,7 @@ import React, { Component, ReactElement } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import { Reward } from '../../reward/models'
-import { P, ExternalLink } from '../../../components'
+import { P, SmartLink } from '../../../components'
 import { RewardDetailsContentPanel } from './RewardDetailsContentPanel'
 import ReactHtmlParser from 'react-html-parser'
 import { DomElement } from 'htmlparser2'
@@ -26,7 +26,7 @@ class _RewardDescriptionPanel extends Component<Props> {
   transform = (node: DomElement): ReactElement | void | null => {
     //Transform a tags to external links
     if (node.type === 'tag' && node.name === 'a') {
-      return <ExternalLink path={node.attribs.href}>{node.children[0].data}</ExternalLink>
+      return <SmartLink to={node.attribs.href}>{node.children[0].data}</SmartLink>
     } else {
       //Return the default
       return undefined
