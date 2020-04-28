@@ -5,7 +5,7 @@ import Scrollbars from 'react-custom-scrollbars'
 import { SaladTheme } from '../../../SaladTheme'
 import { MiningSummary } from '../components'
 import classNames from 'classnames'
-import { SlicedVeggieContainer } from '../../xp-views'
+import { SlicedVeggieContainer, PantryContainer } from '../../xp-views'
 import { MiningStatus } from '../../machine/models'
 import { Machine } from '../../machine/models/Machine'
 
@@ -62,11 +62,16 @@ class _MiningPage extends Component<Props> {
               <Divider />
 
               <SectionHeader>Pantry</SectionHeader>
-
+              <PantryContainer />
               <Divider />
 
               <SectionHeader>More Information</SectionHeader>
               <br />
+              <P>
+                <ExternalLink path="https://support.salad.io/hc/en-us/sections/360008458292-Anti-Virus">
+                  Having Anti-Virus Issues?
+                </ExternalLink>
+              </P>
               <P>
                 <ExternalLink path="https://medium.com/@saladchefs/a-gamers-guide-to-blockchain-and-crypto-b76bce353a4d">
                   Gamers Guide to Blockchain
