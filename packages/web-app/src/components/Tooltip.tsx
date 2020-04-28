@@ -23,6 +23,8 @@ const styles = (theme: SaladTheme) => ({
   text: {
     fontFamily: 'sharpGroteskBook19',
     fontSize: theme.small,
+    textTransform: 'capitalize',
+    whiteSpace: 'pre-wrap',
   },
 })
 
