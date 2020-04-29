@@ -33,7 +33,7 @@ class _ReferralStats extends Component<Props> {
         <StatElement
           title={'Potential Earnings'}
           values={[`$${potentialEarned ? potentialEarned.toFixed(2) : 0}`]}
-          infoText={'Total balance earned'}
+          infoText={'Total bonus amount you will earn when all your referrals complete'}
         />
       </div>
     )
