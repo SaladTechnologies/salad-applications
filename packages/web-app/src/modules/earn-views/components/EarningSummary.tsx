@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { StatElement } from '../../../components'
+import { StatElement, SectionHeader } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
-  container: {
+  container: {},
+  row: {
+    paddingTop: 20,
     display: 'flex',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-around',
   },
   title: {
     fontFamily: theme.fontGroteskBook25,
@@ -28,16 +30,19 @@ class _EarningSummary extends Component<Props> {
 
     return (
       <div className={classes.container}>
-        <StatElement
-          title={'Current Balance'}
-          values={[`$${currentBalance ? currentBalance.toFixed(2) : 0}`]}
-          infoText={'Current balance available to spend'}
-        />
-        <StatElement
-          title={'Lifetime Balance'}
-          values={[`$${lifetimeBalance ? lifetimeBalance.toFixed(2) : 0}`]}
-          infoText={'Total balance earned'}
-        />
+        <SectionHeader>Summary</SectionHeader>
+        <div className={classes.row}>
+          <StatElement
+            title={'Current Balance'}
+            values={[`$${currentBalance ? currentBalance.toFixed(2) : 0}`]}
+            infoText={'Current balance available to spend'}
+          />
+          <StatElement
+            title={'Lifetime Balance'}
+            values={[`$${lifetimeBalance ? lifetimeBalance.toFixed(2) : 0}`]}
+            infoText={'Total balance earned'}
+          />
+        </div>
       </div>
     )
   }

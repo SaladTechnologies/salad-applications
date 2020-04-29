@@ -8,7 +8,6 @@ import {
   RewardSearchBarContainer,
 } from '../reward-views'
 import { getStore } from '../../Store'
-import { MainTitlebarContainer } from './MainTitlebarContainer'
 import { SaladTheme } from '../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
@@ -55,7 +54,6 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
     const { classes } = this.props
     return (
       <div className={classes.container}>
-        <MainTitlebarContainer />
         <div className={classes.appContainer}>
           <RewardSearchBarContainer />
           <div className={classes.main}>

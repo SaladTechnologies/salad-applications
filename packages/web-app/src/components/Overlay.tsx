@@ -9,13 +9,12 @@ const styles = (theme: SaladTheme) => ({
   overlayContainer: {
     backgroundColor: theme.darkBlue,
     display: 'flex',
-    position: 'fixed',
-    top: '33px', //Allows the menu bar to still be shown
+    position: 'absolute',
+    top: 0,
     right: 0,
     bottom: 0,
     left: 0,
-    userSelect: 'none',
-    zIndex: 5000,
+    zIndex: 999,
   },
 })
 
