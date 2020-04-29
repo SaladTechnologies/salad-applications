@@ -88,7 +88,7 @@ export class RootStore {
   }
 
   @action.bound
-  onLogin = flow(function*(this: RootStore) {
+  onLogin = flow(function* (this: RootStore) {
     var profile = yield this.profile.loadProfile()
 
     if (!profile) {
@@ -111,6 +111,11 @@ export class RootStore {
     this.tryRegisterMachine()
 
     this.refresh.start()
+
+    if (this.routing.location.pathname.startsWith('/auth/callback')) {
+      //TODO: Once we do deferred auth, we should replace with the url that they were on before they started to login
+      this.routing.replace('/')
+    }
   })
 
   @action
