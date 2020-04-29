@@ -34,7 +34,11 @@ class _MiningSummary extends Component<Props> {
           <div className={classes.row}>
             <StartButtonContainer />
           </div>
-          <StatElement title={'Total XP'} values={[Math.round(lifetimeXp || 0).toLocaleString() || '0']} />
+          <StatElement
+            title={'Total XP'}
+            values={[Math.round(lifetimeXp || 0).toLocaleString() || '0']}
+            infoText={'Total Experience Points earned \nYou are awarded 1 XP/minute while mining'}
+          />
         </div>
         {machine && (
           <>
