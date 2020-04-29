@@ -6,12 +6,12 @@ import classnames from 'classnames'
 import { VeggieName, P } from '../../../../components'
 import { ReferralCodeEntryComponent } from './ReferralCodeEntryComponent'
 
-const styles = ({
+const styles = {
   container: {
     userSelect: 'none',
     paddingBottom: '1rem',
   },
-})
+}
 
 interface Props extends WithStyles<typeof styles> {
   referral?: Referral
@@ -29,7 +29,7 @@ class _CurrentReferralPanel extends Component<Props> {
           <div className={classnames(classes.container)}>
             <VeggieName>Enter A Code</VeggieName>
             <P>Received a referral code? Enter it below so you can earn your referral bonus!</P>
-            <ReferralCodeEntryComponent {...rest} dark/>
+            <ReferralCodeEntryComponent {...rest} />
           </div>
         )}
       </>

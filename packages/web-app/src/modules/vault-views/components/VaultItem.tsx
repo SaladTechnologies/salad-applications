@@ -41,14 +41,12 @@ class _VaultItem extends Component<Props> {
     const { id, name, price, timestamp, code, classes } = this.props
     return (
       <div key={id} className={classnames(classes.container)}>
-        <Username blue>{name}</Username>
+        <Username>{name}</Username>
         <div className={classes.rightContent}>
-          <Username blue className={classes.rightText}>
-            ${price?.toFixed(2)}
-          </Username>
-          <Username blue className={classes.rightText}>
-            {timestamp?.toLocaleDateString()}
-          </Username>
+          {/* TODO: Add custom classname */}
+          <Username>${price?.toFixed(2)}</Username>
+          {/* TODO: Add custom classname */}
+          <Username>{timestamp?.toLocaleDateString()}</Username>
         </div>
         {code && !code.startsWith('https') && (
           <P>

@@ -3,7 +3,7 @@ import { SaladTheme } from '../../../../SaladTheme'
 
 export const styles = (theme: SaladTheme) => ({
   input: {
-    marginTop: 5,
+    marginTop: 8,
     width: 300,
   },
 
@@ -41,12 +41,10 @@ export const styles = (theme: SaladTheme) => ({
   textFieldContainer: {
     display: 'flex',
     height: 60,
+    border: '1px solid red',
   },
 
-  updateButton: {
-    top: '-3px',
-    padding: 6,
-  },
+  updateButton: {},
 
   buttonContainer: {
     display: 'flex',
@@ -58,7 +56,7 @@ export const styles = (theme: SaladTheme) => ({
     padding: 0,
 
     '& p': {
-      marginBottom: 0
-    }
+      marginBottom: 0,
+    },
   },
 })

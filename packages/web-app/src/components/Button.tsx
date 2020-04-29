@@ -13,7 +13,7 @@ const styles = (theme: SaladTheme) => ({
     padding: '8px 12px',
     textTransform: (props: Props) => (props.uppercase ? 'uppercase' : 'capitalize'),
     userSelect: 'none',
-    color: (props: Props) => (props.dark ? theme.darkBlue : theme.lightGreen),
+    color: theme.lightGreen,
     fontSize: '.625rem',
     fontFamily: 'sharpGroteskLight25',
     '&:hover': {
@@ -38,7 +38,6 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   type?: 'button' | 'submit' | 'reset'
-  dark?: boolean
   uppercase?: boolean
   disabled?: boolean
   loading?: boolean
@@ -57,12 +56,11 @@ class _Button extends Component<Props> {
   }
 
   render() {
-    const { dark, loading, className, type, classes, disabled, children } = this.props
+    const { loading, className, type, classes, disabled, children } = this.props
     let enabled = !loading && !disabled
 
     return (
       <AnimatedBorder
-        dark={dark}
         className={classnames(classes.border, className, {
           [classes.disabled]: !enabled,
           [classes.enabled]: enabled,
