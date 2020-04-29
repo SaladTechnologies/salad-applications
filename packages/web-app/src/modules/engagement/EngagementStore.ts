@@ -1,6 +1,7 @@
 import { computed, autorun } from 'mobx'
 import { RootStore } from '../../Store'
 import { Config } from '../../config'
+import { HeroType } from './models/HeroType'
 
 export class EngagementStore {
   @computed
@@ -12,12 +13,30 @@ export class EngagementStore {
     return show
   }
 
+  @computed
+  public get heroes(): Map<number, HeroType> {
+    const heroes = new Map<number, HeroType>()
+
+    heroes.set(2, HeroType.Mining)
+    heroes.set(4, HeroType.Offerwall)
+
+    if (!this.store.referral.currentReferral) {
+      heroes.set(6, HeroType.ReferralEntry)
+    }
+
+    return heroes
+  }
+
   /** A flag indicating if the initial notification has already been sent */
   private showedInitialNotification = false
 
   constructor(private readonly store: RootStore) {
     autorun(() => {
       if (!this.store.auth.isAuth) {
+        return
+      }
+
+      if (!this.store.machine.currentMachine) {
         return
       }
 

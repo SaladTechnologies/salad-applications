@@ -15,7 +15,7 @@ const styles = (theme: SaladTheme) => ({
   container: {},
   content: {
     margin: '0 auto', //Centers the content
-    maxWidth: 1400,
+    maxWidth: 1000,
     position: 'relative',
     padding: '0 30px',
   },

@@ -64,8 +64,6 @@ class _App extends Component<Props> {
         <OfflineModalContainer />
         {showPlainTitle && <PlainTitlebarContainer />}
         {!showPlainTitle && <MainTitlebarContainer />}
-
-        {/* <div style={{ top: showPlainTitle ? 33 : 0, left: 0, right: 0, bottom: 0, position: 'absolute' }}> */}
         <div className={classes.container}>
           <div className={classes.content}>
             <Routes />

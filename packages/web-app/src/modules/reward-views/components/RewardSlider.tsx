@@ -13,7 +13,7 @@ const styles = (theme: SaladTheme) => ({
     alignItems: 'center',
     fontFamily: theme.fontGroteskBook19,
     fontSize: 20,
-    padding: '12px 18px',
+    padding: '12px 6px',
     textTransform: 'capitalize',
   },
   viewMoreText: {
@@ -33,22 +33,16 @@ const styles = (theme: SaladTheme) => ({
 })
 
 export const rewardItemResponsive = {
-  superLargeDesktop: {
-    breakpoint: { max: 4000, min: 2300 },
-    items: 8,
-    slidesToSlide: 8,
-    partialVisibilityGutter: 20,
-  },
   desktop: {
     breakpoint: { max: 2300, min: 1300 },
-    items: 6,
-    slidesToSlide: 6,
+    items: 7,
+    slidesToSlide: 7,
     partialVisibilityGutter: 20,
   },
   tablet: {
     breakpoint: { max: 1300, min: 900 },
-    items: 4,
-    slidesToSlide: 4,
+    items: 5,
+    slidesToSlide: 5,
     partialVisibilityGutter: 20,
   },
   tabletSmall: {

@@ -8,6 +8,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    color: 'inherit',
   },
   input: {
     width: 300,
