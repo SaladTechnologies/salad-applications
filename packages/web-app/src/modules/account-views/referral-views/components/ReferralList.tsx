@@ -1,16 +1,18 @@
 import React, { Component } from 'react'
-import { SaladTheme } from '../../../../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
 import { Referral } from '../../../referral/models'
 import { ReferralItem } from './ReferralItem'
-import { VeggieName, P } from '../../../../components'
+import { SectionHeader, P } from '../../../../components'
+import Scrollbars from 'react-custom-scrollbars'
 
-const styles = (theme: SaladTheme) => ({
+const styles = () => ({
   container: {
-    color: theme.darkBlue,
+    padding: 20,
     height: '100%',
-    width: '100%',
-    overflow: 'auto',
+  },
+  content: {
+    // padding: 20,
+    paddingBottom: 50,
   },
 })
 
@@ -25,9 +27,13 @@ class _ReferralList extends Component<Props> {
     let hasReferrals = referrals && referrals.length !== 0
     return (
       <div className={classes.container}>
-        <VeggieName>Who you referred</VeggieName>
+        <SectionHeader>Who you referred</SectionHeader>
         {!hasReferrals && <P>No one has entered your code yet. Send it to your friends now!</P>}
-        {hasReferrals && referrals && referrals.map(x => <ReferralItem referral={x} />)}
+        {hasReferrals && (
+          <Scrollbars>
+            <div className={classes.content}>{referrals && referrals.map((x) => <ReferralItem referral={x} />)}</div>
+          </Scrollbars>
+        )}
       </div>
     )
   }

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { CondensedHeader, Divider } from '../../../../components'
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 import { EditUsername } from './EditUsername'
@@ -30,10 +29,6 @@ class _Account extends Component<Props> {
 
     return (
       <div className={classes.container}>
-        <div className="header">
-          <CondensedHeader>Account</CondensedHeader>
-        </div>
-        <Divider />
         <div className={classnames(classes.container)}>
           <EditUsername profile={profile} onSend={onSend} sending={sending} />
         </div>

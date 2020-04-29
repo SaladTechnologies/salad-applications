@@ -41,7 +41,7 @@ class _ToggleSetting extends Component<Props> {
           <ToggleSwitch toggleOn={toggled} toggleClick={onToggle} />
         </div>
         <div className={classnames(classes.description)}>
-          <Username blue>{title}</Username>
+          <Username>{title}</Username>
           <P>{description}</P>
         </div>
         <div className={classes.extrasContainer}>{children}</div>

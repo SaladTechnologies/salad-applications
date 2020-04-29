@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { ToggleSetting, SmartLink, P, Username } from '../../../components'
+import { ToggleSetting, SmartLink, P, SectionHeader } from '../../../components'
 import offerWallExample from '../assets/AdGem.png'
 import Img from 'react-image'
 import Scrollbars from 'react-custom-scrollbars'
@@ -61,7 +61,7 @@ class _Offerwall extends Component<Props> {
             </div>
             <div className={classes.descriptionContainer}>
               <div>
-                <Username blue>Getting Started</Username>
+                <SectionHeader>Getting Started</SectionHeader>
                 <P>
                   Offerwalls are easy, simply "Enable Offerwalls" above and then browse our collection of offerwall
                   partners to find an offer. Click on any of the offers to learn more about what is required to complete

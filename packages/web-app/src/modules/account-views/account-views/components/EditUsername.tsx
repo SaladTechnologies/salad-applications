@@ -63,7 +63,7 @@ class _EditUsername extends Component<Props, State> {
 
     return (
       <>
-        <Username blue>Username</Username>
+        <Username>Username</Username>
         <P>
           Spice up your Salad account with a unique, personalized username. This username is what we’ll refer to you as
           in reward emails and will be what your friends see when you refer them to Salad via email.
@@ -72,7 +72,7 @@ class _EditUsername extends Component<Props, State> {
         {!this.state.isEdit && profile && (
           <div className={classes.row}>
             <P>
-              <ComputerName blue>{profile.username}</ComputerName>
+              <ComputerName>{profile.username}</ComputerName>
             </P>
             <div
               className={classes.editIcon}
@@ -99,25 +99,15 @@ class _EditUsername extends Component<Props, State> {
                         <TextField
                           className={classes.input}
                           {...input}
-                          dark
                           placeholder={profile && profile.username}
                           errorText={meta.error && meta.touched && meta.error}
                         />
                         <div className={classes.buttonContainer}>
-                          <Button
-                            type="submit"
-                            className={classes.updateButton}
-                            dark
-                            uppercase
-                            loading={sending}
-                            disabled={sending}
-                          >
+                          <Button type="submit" uppercase loading={sending} disabled={sending}>
                             Update
                           </Button>
                           <Button
                             onClick={() => this.setState({ isEdit: false })}
-                            className={classes.updateButton}
-                            dark
                             uppercase
                             loading={sending}
                             disabled={sending}

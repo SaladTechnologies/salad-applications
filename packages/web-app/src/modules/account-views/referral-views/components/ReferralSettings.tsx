@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { SaladTheme } from '../../../../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
 import { Referral } from '../../../referral/models'
-import { CondensedHeader, Divider, VeggieName } from '../../../../components'
+import { Divider, SectionHeader } from '../../../../components'
 import { ReferralCodeContainer } from '../ReferralCodeContainer'
 import { SendReferralContainer } from '../SendReferralContainer'
 import { ReferralDescription } from './ReferralDescription'
@@ -41,17 +41,13 @@ class _ReferralSettings extends Component<Props> {
 
     return (
       <div className={classnames(classes.container)}>
-        <div className="header">
-          <CondensedHeader>Referrals</CondensedHeader>
-        </div>
-        <Divider />
         <div className={classnames(classes.content)}>
           <div className={classes.column}>
             <CurrentReferralPanelContainer />
             <Divider />
-            <VeggieName>Your Code</VeggieName>
+            <SectionHeader>Your Code</SectionHeader>
             <ReferralCodeContainer />
-            <VeggieName>Send Referral</VeggieName>
+            <SectionHeader>Send Referral</SectionHeader>
             <SendReferralContainer />
             <Divider />
             <ReferralDescription />
