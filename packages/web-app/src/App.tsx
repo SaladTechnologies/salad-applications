@@ -39,17 +39,18 @@ interface Props extends WithStyles<typeof styles> {}
 class _App extends Component<Props> {
   store = getStore()
 
-  componentDidMount = () => {
+  componentDidMount = async () => {
     if (this.store.auth.isAuth) {
-      this.store.onLogin()
+      await this.store.onLogin()
+      //Force the app to reload once all data has been loaded
+      this.forceUpdate()
     }
 
-    if (!this.store.native.isNative) {
+    if (this.store.native.isNative) {
+      console.log('Running in native env')
+    } else {
       console.log('Running in web env')
-      return
     }
-
-    console.log('Running in native env')
   }
 
   render() {

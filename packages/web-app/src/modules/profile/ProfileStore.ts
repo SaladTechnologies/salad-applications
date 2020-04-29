@@ -20,15 +20,13 @@ export class ProfileStore {
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   @action.bound
-  loadProfile = flow(function*(this: ProfileStore) {
+  loadProfile = flow(function* (this: ProfileStore) {
     console.log('Loading the user profile')
 
     this.isLoading = true
     try {
       let profile = yield this.axios.get('profile')
       this.currentProfile = profile.data
-      //TODO: Move the routing logic to the onLogin function so we can load all the data before showing the app
-      this.store.routing.replace('/')
     } catch (err) {
       console.error('Profile error: ', err)
       this.currentProfile = undefined
@@ -40,7 +38,7 @@ export class ProfileStore {
   })
 
   @action.bound
-  setWhatsNewViewed = flow(function*(this: ProfileStore) {
+  setWhatsNewViewed = flow(function* (this: ProfileStore) {
     if (this.currentProfile === undefined) return
 
     this.isUpdating = true
@@ -61,7 +59,7 @@ export class ProfileStore {
   })
 
   @action.bound
-  updateUsername = flow(function*(this: ProfileStore, username: string) {
+  updateUsername = flow(function* (this: ProfileStore, username: string) {
     if (this.currentProfile === undefined) return
 
     this.isUpdating = true
@@ -76,8 +74,4 @@ export class ProfileStore {
       // this.store.routing.replace('/')
     }
   })
-
-  sleep = (ms: number) => {
-    return new Promise(resolve => setTimeout(resolve, ms))
-  }
 }
