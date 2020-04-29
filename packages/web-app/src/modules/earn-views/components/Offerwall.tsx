@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { ToggleSetting, SmartLink, P, SectionHeader } from '../../../components'
+import { ToggleSetting, SmartLink, P, SectionHeader, Scrollbar } from '../../../components'
 import offerWallExample from '../assets/AdGem.png'
 import Img from 'react-image'
-import Scrollbars from 'react-custom-scrollbars'
 
 const styles = {
   container: {
@@ -46,7 +45,7 @@ class _Offerwall extends Component<Props> {
     const { offerwall, offerwallToggle, classes } = this.props
 
     return (
-      <Scrollbars>
+      <Scrollbar>
         <div className={classes.container}>
           <div className={classes.content}>
             <div>
@@ -98,7 +97,7 @@ class _Offerwall extends Component<Props> {
             </div>
           </div>
         </div>
-      </Scrollbars>
+      </Scrollbar>
     )
   }
 }

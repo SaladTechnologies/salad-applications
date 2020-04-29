@@ -3,9 +3,9 @@ import withStyles, { WithStyles } from 'react-jss'
 import { Reward } from '../../reward/models'
 import { RewardSlider, RewardDisclaimers, RewardHero } from '../components'
 import { RewardItem } from '../components/RewardItem'
-import { Scrollbars } from 'react-custom-scrollbars'
 import { RewardHeroItem } from '../components/RewardHeroItem'
 import { NotificationBannerContainer } from '../../home-views/NotificationBannerContainer'
+import { Scrollbar } from '../../../components'
 
 const styles = {
   container: {},
@@ -32,7 +32,7 @@ class _MainStorefrontPage extends Component<Props> {
     const maxRowSize = 20
 
     return (
-      <Scrollbars>
+      <Scrollbar>
         <div className={classes.content}>
           <NotificationBannerContainer />
           {categories && categories.size > 0 ? (
@@ -73,7 +73,7 @@ class _MainStorefrontPage extends Component<Props> {
           )}
           <RewardDisclaimers />
         </div>
-      </Scrollbars>
+      </Scrollbar>
     )
   }
 }

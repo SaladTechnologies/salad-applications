@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SmartLink, P, Divider, SectionHeader } from '../../../components'
-import Scrollbars from 'react-custom-scrollbars'
+import { SmartLink, P, Divider, SectionHeader, Scrollbar } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { StartButtonContainer } from '../../machine-views'
 
@@ -43,7 +42,7 @@ class _MiningInformation extends Component<Props> {
 
     return (
       <div className={classes.container}>
-        <Scrollbars>
+        <Scrollbar>
           <div className={classes.content}>
             <div className={classes.splitContainer}>
               <div className={classes.column} style={{ paddingRight: 20 }}>
@@ -128,7 +127,7 @@ class _MiningInformation extends Component<Props> {
               </div>
             </div>
           </div>
-        </Scrollbars>
+        </Scrollbar>
       </div>
     )
   }

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SmartLink, P, Divider, SectionHeader } from '../../../components'
-import Scrollbars from 'react-custom-scrollbars'
+import { SmartLink, P, Divider, SectionHeader, Scrollbar } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { MiningSummary } from '../components'
 import classNames from 'classnames'
@@ -52,7 +51,7 @@ class _MiningPage extends Component<Props> {
 
     return (
       <div className={classNames(classes.container, classes.splitContainer)}>
-        <Scrollbars>
+        <Scrollbar>
           <div className={classNames(classes.content, classes.splitContainer)}>
             <div className={classNames(classes.column, classes.mainColumn)}>
               <MiningSummary lifetimeXp={lifetimeXp} machine={machine} />
@@ -90,7 +89,7 @@ class _MiningPage extends Component<Props> {
               </P>
             </div>
           </div>
-        </Scrollbars>
+        </Scrollbar>
         <div className={classes.column}>
           <SlicedVeggieContainer />
         </div>

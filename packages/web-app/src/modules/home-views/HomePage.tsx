@@ -58,9 +58,9 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
           <RewardSearchBarContainer />
           <div className={classes.main}>
             <Switch>
+              <Route exact path="/" component={MainStorefrontContainer} />
               <Route exact path="/search" component={RewardSearchResultContainer} />
               <Route exact path="/browse/category/:category" component={RewardBrowseCategoryContainer} />
-              <Route path="/" component={MainStorefrontContainer} />
             </Switch>
           </div>
         </div>

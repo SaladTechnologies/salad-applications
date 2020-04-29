@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { Divider } from '../../../components'
-import Scrollbars from 'react-custom-scrollbars'
+import { Divider, Scrollbar } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { EarningSummary, EarningHistory } from '../components'
 import { EarningWindow } from '../../balance/models'
@@ -46,13 +45,13 @@ class _EarningSummaryPage extends Component<Props> {
     const { classes, ...rest } = this.props
 
     return (
-      <Scrollbars>
+      <Scrollbar>
         <div className={classes.content}>
           <EarningSummary {...rest} />
           <Divider />
           <EarningHistory {...rest} />
         </div>
-      </Scrollbars>
+      </Scrollbar>
     )
   }
 }
