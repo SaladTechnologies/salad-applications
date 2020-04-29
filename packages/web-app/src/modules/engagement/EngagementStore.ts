@@ -55,6 +55,7 @@ export class EngagementStore {
           onClick: () => this.store.routing.push('/earn/mine'),
         })
       }
+
       //Incompatible machine and offerwalls are disabled
       else if (!this.store.saladBowl.canRun && !this.store.offerwall.offerwall) {
         //Link to offerwall page
@@ -65,6 +66,7 @@ export class EngagementStore {
           onClick: () => this.store.routing.push('/earn/offerwall'),
         })
       }
+
       //Check to see if we should add the What's New notification
       else if (this.showWhatsNew) {
         this.store.notifications.sendNotification({
@@ -72,6 +74,16 @@ export class EngagementStore {
           message: 'Something new just came out from the kitchen. Click here to learn more.',
           autoClose: false,
           onClick: () => this.store.ui.showModal('/whats-new'),
+        })
+      }
+
+      //Remind users to mine
+      else if (this.store.saladBowl.canRun) {
+        this.store.notifications.sendNotification({
+          title: 'Time to get Chopping',
+          message: 'Welcome back to the kitchen. Click here to get chopping again.',
+          autoClose: false,
+          onClick: () => this.store.ui.showModal('/earn/mine'),
         })
       }
     })
