@@ -105,7 +105,7 @@ export class RewardStore {
     }
 
     if (query.q) {
-      rewards = rewards.filter((x) => query.q && x.name.toLowerCase().includes(query.q.toLowerCase()))
+      rewards = rewards.filter((x) => query.q && x.name.toLowerCase().includes(query.q))
     }
 
     //Sorts the rewards based on the query

@@ -66,6 +66,10 @@ export const parseRewardQuery = (route: RouteComponentProps<{ category?: string 
     query.category = query.category.map((x) => decodeCategory(x))
   }
 
+  //Ensures that the query is always a normalized string
+  if (query.q) {
+    query.q = String(query.q).toLowerCase()
+  }
   return query
 }
 
