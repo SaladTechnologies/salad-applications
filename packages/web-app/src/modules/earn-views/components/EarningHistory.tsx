@@ -15,8 +15,9 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
   },
   statsContainer: {
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-around',
     flex: 1,
+    paddingTop: 20,
   },
   chartContainer: {
     paddingTop: 75,
@@ -93,23 +94,23 @@ class _EarningHistory extends Component<Props, State> {
       <div className={classes.container}>
         <div className={classes.row}>
           <SectionHeader>Earning History</SectionHeader>
-          <div className={classNames(classes.row, classes.statsContainer)}>
-            <StatElement
-              title={'Last 24Hr'}
-              values={[`$${last24Hr ? last24Hr.toFixed(2) : 0}`]}
-              infoText={'Total amount earned in the past 24 hours'}
-            />
-            <StatElement
-              title={'Last 7 Days'}
-              values={[`$${last7Day ? last7Day.toFixed(2) : 0}`]}
-              infoText={'Total amount earned in the past 7 days'}
-            />
-            <StatElement
-              title={'Last 30 Days'}
-              values={[`$${last30Day ? last30Day.toFixed(2) : 0}`]}
-              infoText={'Total amount earned in the past 30 days'}
-            />
-          </div>
+        </div>
+        <div className={classNames(classes.row, classes.statsContainer)}>
+          <StatElement
+            title={'Last 24Hr'}
+            values={[`$${last24Hr ? last24Hr.toFixed(2) : 0}`]}
+            infoText={'Total amount earned in the past 24 hours'}
+          />
+          <StatElement
+            title={'Last 7 Days'}
+            values={[`$${last7Day ? last7Day.toFixed(2) : 0}`]}
+            infoText={'Total amount earned in the past 7 days'}
+          />
+          <StatElement
+            title={'Last 30 Days'}
+            values={[`$${last30Day ? last30Day.toFixed(2) : 0}`]}
+            infoText={'Total amount earned in the past 30 days'}
+          />
         </div>
         <div className={classes.row}>
           <div className={classes.chartContainer}>

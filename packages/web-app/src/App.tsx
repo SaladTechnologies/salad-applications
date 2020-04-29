@@ -1,10 +1,42 @@
 import React, { Component } from 'react'
 import { OfflineModalContainer, PlainTitlebarContainer } from './modules/home-views'
 import { getStore } from './Store'
+import withStyles, { WithStyles } from 'react-jss'
 import { ToastContainer } from 'react-toastify'
 import Routes from './Routes'
+import { MainTitlebarContainer } from './modules/home-views/MainTitlebarContainer'
 
-class App extends Component {
+const styles = () => ({
+  mainWindow: {
+    userSelect: 'none',
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+  },
+  container: {
+    display: 'flex',
+    position: 'fixed',
+    top: '33px',
+    right: 0,
+    bottom: 0,
+    left: 0,
+    userSelect: 'none',
+    zIndex: 5000,
+    justifyContent: 'center',
+  },
+  content: {
+    display: 'flex',
+    flex: 1,
+    maxWidth: 1600,
+    position: 'relative',
+  },
+})
+
+interface Props extends WithStyles<typeof styles> {}
+
+class _App extends Component<Props> {
   store = getStore()
 
   componentDidMount = () => {
@@ -21,21 +53,29 @@ class App extends Component {
   }
 
   render() {
+    const { classes } = this.props
+
     let isAuth = this.store.auth.isAuthenticated()
     let showPlainTitle = !isAuth
 
     return (
-      <div style={{ userSelect: 'none' }}>
+      <div className={classes.mainWindow}>
         <OfflineModalContainer />
         {showPlainTitle && <PlainTitlebarContainer />}
+        {!showPlainTitle && <MainTitlebarContainer />}
 
-        <div style={{ top: showPlainTitle ? '2rem' : 0, left: 0, right: 0, bottom: 0, position: 'absolute' }}>
-          <Routes />
+        {/* <div style={{ top: showPlainTitle ? 33 : 0, left: 0, right: 0, bottom: 0, position: 'absolute' }}> */}
+        <div className={classes.container}>
+          <div className={classes.content}>
+            <Routes />
+          </div>
           <ToastContainer pauseOnFocusLoss={true} />
         </div>
       </div>
     )
   }
 }
+
+export const App = withStyles(styles)(_App)
 
 export default App

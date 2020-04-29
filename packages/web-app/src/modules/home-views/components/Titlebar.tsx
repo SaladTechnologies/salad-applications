@@ -26,6 +26,7 @@ const styles = (theme: SaladTheme) => ({
     paddingLeft: 10,
     margin: 0,
     '-webkit-app-region': 'drag',
+    zIndex: 9999,
   },
   bottomBorder: {
     borderBottom: `1px solid ${theme.green}`,
@@ -132,7 +133,9 @@ class _Titlebar extends Component<Props> {
       <div className={classnames(classes.container, { [classes.bottomBorder]: bottomBorder })}>
         <div className={classes.leftItems}>
           <div className={classes.icon}>
-            <Img height={24} src={icon} />
+            <SmartLink to="/">
+              <Img height={24} src={icon} />
+            </SmartLink>
           </div>
           {menuItems &&
             menuItems.map((x) => (
