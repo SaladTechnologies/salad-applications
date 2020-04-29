@@ -5,14 +5,17 @@ import { TextField, Button, ErrorText } from '../../../../components'
 
 const styles = {
   container: {
-    display: 'inline-flex',
+    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
   },
   input: {
     width: 300,
   },
-  submitButton: {},
+  buttonContainer: {
+    display: 'flex',
+    height: 47,
+  },
 }
 
 interface Props extends WithStyles<typeof styles> {
@@ -84,15 +87,11 @@ class _ReferralCodeEntryComponent extends Component<Props, State> {
                       placeholder="Code"
                       errorText={meta.error && meta.touched && meta.error}
                     />
-                    <Button
-                      type="submit"
-                      uppercase
-                      loading={submitting}
-                      disabled={submitting}
-                      className={classes.submitButton}
-                    >
-                      Submit
-                    </Button>
+                    <div className={classes.buttonContainer}>
+                      <Button type="submit" uppercase loading={submitting} disabled={submitting}>
+                        Submit
+                      </Button>
+                    </div>
                   </div>
                 )}
               </Field>

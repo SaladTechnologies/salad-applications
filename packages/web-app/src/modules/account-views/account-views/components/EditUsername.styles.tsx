@@ -41,10 +41,7 @@ export const styles = (theme: SaladTheme) => ({
   textFieldContainer: {
     display: 'flex',
     height: 60,
-    border: '1px solid red',
   },
-
-  updateButton: {},
 
   buttonContainer: {
     display: 'flex',

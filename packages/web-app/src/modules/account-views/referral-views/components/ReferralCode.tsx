@@ -8,7 +8,7 @@ import { faClipboard } from '@fortawesome/free-solid-svg-icons'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    color: theme.darkBlue,
+    color: 'inherit',
     userSelect: 'none',
     display: 'inline-flex',
     flexDirection: 'column',
@@ -19,6 +19,7 @@ const styles = (theme: SaladTheme) => ({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    color: theme.green,
   },
   iconButton: {
     cursor: 'pointer',

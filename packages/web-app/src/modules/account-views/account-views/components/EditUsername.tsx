@@ -103,18 +103,11 @@ class _EditUsername extends Component<Props, State> {
                           errorText={meta.error && meta.touched && meta.error}
                         />
                         <div className={classes.buttonContainer}>
-                          <Button
-                            type="submit"
-                            className={classes.updateButton}
-                            uppercase
-                            loading={sending}
-                            disabled={sending}
-                          >
+                          <Button type="submit" uppercase loading={sending} disabled={sending}>
                             Update
                           </Button>
                           <Button
                             onClick={() => this.setState({ isEdit: false })}
-                            className={classes.updateButton}
                             uppercase
                             loading={sending}
                             disabled={sending}

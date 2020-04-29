@@ -8,12 +8,16 @@ const styles = {
   container: {
     display: 'inline-flex',
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   input: {
     width: 300,
+    marginTop: 8,
   },
-  sendButton: {},
+  buttonContainer: {
+    display: 'flex',
+    height: 47,
+  },
 }
 
 interface Props extends WithStyles<typeof styles> {
@@ -68,9 +72,11 @@ class _SendReferral extends Component<Props> {
                       placeholder="Email Address"
                       errorText={meta.error && meta.touched && meta.error}
                     />
-                    <Button type="submit" className={classes.sendButton} uppercase loading={sending} disabled={sending}>
-                      Send
-                    </Button>
+                    <div className={classes.buttonContainer}>
+                      <Button type="submit" uppercase loading={sending} disabled={sending}>
+                        Send
+                      </Button>
+                    </div>
                   </div>
                 )}
               </Field>
