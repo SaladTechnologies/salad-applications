@@ -4,7 +4,7 @@ import { SaladTheme } from '../../../SaladTheme'
 import { Reward } from '../../reward/models'
 import { RewardDisclaimers } from '../components'
 import { Scrollbars } from 'react-custom-scrollbars'
-import { P } from '../../../components'
+import { P, Scrollbar } from '../../../components'
 import { RewardItem } from '../components/RewardItem'
 import { rewardItemResponsive } from '../components/RewardSlider'
 import { IconArrowLeft } from '../components/assets'
@@ -112,7 +112,7 @@ class _BrowseRewardsPage extends Component<Props> {
         </div>
         <div className={classes.columnContainer}>
           <div style={{ flex: 1 }}>
-            <Scrollbars>
+            <Scrollbar>
               <div className={classes.contentContainer}>
                 {!hasRewards && <P className={classes.placeholderText}>No Rewards Found</P>}
                 {hasRewards && (
@@ -128,7 +128,7 @@ class _BrowseRewardsPage extends Component<Props> {
                   </div>
                 )}
               </div>
-            </Scrollbars>
+            </Scrollbar>
           </div>
           <div style={{ flex: '0 0 250px' }}>
             <Scrollbars>
