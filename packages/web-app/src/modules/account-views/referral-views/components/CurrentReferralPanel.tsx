@@ -4,7 +4,7 @@ import { Referral } from '../../../referral/models'
 import { CurrentReferralProgress } from './CurrentReferralProgress'
 import classnames from 'classnames'
 import { P, SectionHeader } from '../../../../components'
-import { ReferralCodeEntryComponent } from './ReferralCodeEntryComponent'
+import { ReferralCodeEntryContainer } from '../..'
 
 const styles = {
   container: {
@@ -15,13 +15,11 @@ const styles = {
 
 interface Props extends WithStyles<typeof styles> {
   referral?: Referral
-
-  onSubmitCode?: (code: string) => Promise<void>
 }
 
 class _CurrentReferralPanel extends Component<Props> {
   render() {
-    const { referral, classes, ...rest } = this.props
+    const { referral, classes } = this.props
     return (
       <>
         {referral && <CurrentReferralProgress referral={referral} />}
@@ -29,7 +27,7 @@ class _CurrentReferralPanel extends Component<Props> {
           <div className={classnames(classes.container)}>
             <SectionHeader>Enter A Code</SectionHeader>
             <P>Received a referral code? Enter it below so you can earn your referral bonus!</P>
-            <ReferralCodeEntryComponent {...rest} />
+            <ReferralCodeEntryContainer />
           </div>
         )}
       </>

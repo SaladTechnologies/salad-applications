@@ -50,7 +50,9 @@ export class RewardStore {
           rewards.push(r)
         }
       }
-      result.set(c, rewards)
+      if (rewards.length > 0) {
+        result.set(c, rewards)
+      }
     })
 
     return result

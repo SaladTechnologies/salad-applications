@@ -6,6 +6,8 @@ import { RewardItem } from '../components/RewardItem'
 import { RewardHeroItem } from '../components/RewardHeroItem'
 import { NotificationBannerContainer } from '../../home-views/NotificationBannerContainer'
 import { Scrollbar } from '../../../components'
+import { MiningHero, OfferwallHero, ReferralEntryHero } from '../heroes'
+import { HeroType } from '../../engagement/models/HeroType'
 
 const styles = {
   container: {},
@@ -20,12 +22,32 @@ interface Props extends WithStyles<typeof styles> {
   categories?: Map<string, Reward[]>
   onViewReward?: (reward?: Reward) => void
   onViewMore?: (title?: string) => void
+  heroes?: Map<number, HeroType>
 }
 
 /** List of categories that should be displayed as heros, all others are regular rewards */
 const heroCategories = ['top chops']
 
 class _MainStorefrontPage extends Component<Props> {
+  getHero = (index: number) => {
+    console.warn('Checking ' + index)
+    const { heroes } = this.props
+
+    const type = heroes?.get(index + 1)
+
+    switch (type) {
+      case HeroType.Mining:
+        return <MiningHero key={index} />
+      case HeroType.Offerwall:
+        return <OfferwallHero key={index} />
+      case HeroType.ReferralEntry:
+        return <ReferralEntryHero key={index} />
+
+      default:
+        return null
+    }
+  }
+
   render() {
     const { categories, onViewReward, onViewMore, classes } = this.props
     //Maximum number of rewards to show in a single row
@@ -36,7 +58,7 @@ class _MainStorefrontPage extends Component<Props> {
         <div className={classes.content}>
           <NotificationBannerContainer />
           {categories && categories.size > 0 ? (
-            Array.from(categories).map(([category, rewards]) => {
+            Array.from(categories).map(([category, rewards], i) => {
               if (!rewards || rewards.length === 0) {
                 return null
               } else if (heroCategories.includes(category)) {
@@ -49,11 +71,14 @@ class _MainStorefrontPage extends Component<Props> {
                 )
               } else {
                 return (
-                  <RewardSlider key={category} title={category} onViewMore={onViewMore}>
-                    {rewards.slice(0, maxRowSize).map((x) => (
-                      <RewardItem key={x.id} reward={x} onViewReward={onViewReward} />
-                    ))}
-                  </RewardSlider>
+                  <>
+                    <RewardSlider key={category} title={category} onViewMore={onViewMore}>
+                      {rewards.slice(0, maxRowSize).map((x) => (
+                        <RewardItem key={x.id} reward={x} onViewReward={onViewReward} />
+                      ))}
+                    </RewardSlider>
+                    {this.getHero(i)}
+                  </>
                 )
               }
             })
