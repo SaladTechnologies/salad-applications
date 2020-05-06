@@ -36,6 +36,10 @@ export class AuthStore {
   @observable
   public sendVerificationStatus?: string
 
+  /** The email address used to login. This is only available if the user logged in during the current session */
+  @observable
+  public loginEmail?: string
+
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     let redirect = `${window.location.origin}/auth/callback`
 
@@ -89,6 +93,7 @@ export class AuthStore {
         runInAction(() => {
           this.auth0Result = authResult || undefined
           this.hasVerifiedEmail = this.auth0Result?.idTokenPayload?.email_verified
+          this.loginEmail = this.auth0Result?.idTokenPayload?.email
         })
 
         if (err) {

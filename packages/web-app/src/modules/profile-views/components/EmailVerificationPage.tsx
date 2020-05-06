@@ -44,30 +44,39 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  resendVerification?: () => void
   sendStatus?: string
+  emailAddress?: string
+  goBack?: () => void
+  resendVerification?: () => void
 }
 
 class _EmailVerificationPage extends Component<Props> {
-  onResend = () => {
+  handleResend = () => {
     const { resendVerification } = this.props
-
-    if (resendVerification) {
-      resendVerification()
-    }
+    resendVerification?.()
   }
+
+  handleGoBack = () => {
+    const { goBack } = this.props
+    goBack?.()
+  }
+
   render() {
-    const { sendStatus, classes } = this.props
+    const { emailAddress, sendStatus, classes } = this.props
     return (
       <div className={classes.container}>
         <img className={classes.logo} src={logo} alt="" />
         <div className={classNames(classes.text)}>
           <p>Verify it's you</p>
           <p className={classNames(classes.subTitle)}>
-            We've sent you a verification email, please check your inbox and click the link to continue
+            {`We've sent a verification email${emailAddress ? ` to ${emailAddress}` : ''}`}
           </p>
+          <p className={classNames(classes.subTitle)}>Please check your inbox and click the link to continue</p>
         </div>
-        <Button onClick={this.onResend}>Resend Verification Email </Button>
+        <div>
+          <Button onClick={this.handleGoBack}>Go Back</Button>
+          <Button onClick={this.handleResend}>Resend Verification Email</Button>
+        </div>
         <div className={classes.statusText}>{sendStatus}</div>
       </div>
     )
