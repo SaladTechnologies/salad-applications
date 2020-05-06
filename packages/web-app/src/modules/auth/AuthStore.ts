@@ -148,7 +148,9 @@ export class AuthStore {
         idToken: this.auth0Result.idToken,
       }
 
-      const login = this.axios.post('login', data)
+      const login = this.axios.post('login', data, {
+        headers: { Authorization: 'Bearer ' + this.auth0Result.accessToken },
+      })
 
       login
         .then((response) => {
@@ -260,7 +262,9 @@ export class AuthStore {
     console.log('Resending verification email')
 
     try {
-      yield this.axios.post('login/verification-email', data)
+      yield this.axios.post('login/verification-email', data, {
+        headers: { Authorization: 'Bearer ' + this.auth0Result.accessToken },
+      })
       this.sendVerificationStatus = 'Verification email sent'
     } catch {
       console.warn('Unable to send verification email')
