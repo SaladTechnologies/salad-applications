@@ -39,7 +39,7 @@ export class ExperienceStore {
   }
 
   @action loadInitialLevels() {
-    this.levels = defaultLevels
+    this.levels = defaultLevels()
   }
 
   @action

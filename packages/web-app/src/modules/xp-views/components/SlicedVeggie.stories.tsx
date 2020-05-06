@@ -9,7 +9,7 @@ export default {
   component: SlicedVeggie,
 }
 
-const levels = defaultLevels
+const levels = defaultLevels()
 
 export const Basic = () => {
   let xp = number('XP Percent', 0.5, {
@@ -21,13 +21,13 @@ export const Basic = () => {
 
   let options: any = {}
   for (var l of levels) {
-    options[l.title] = l
+    options[l.key] = l
   }
 
   let selectedLevel = (select('Veggie', options, levels[0] as any) as any) as Level
 
   return (
-    <div>
+    <div style={{ paddingTop: 200 }}>
       <SlicedVeggie percent={xp} level={selectedLevel} />
     </div>
   )
