@@ -133,7 +133,7 @@ class _EarningHistory extends Component<Props, State> {
                   <Bar dataKey="earnings" fill="#B2D530">
                     {earningHistory &&
                       earningHistory.map((window, index) => {
-                        if (index === hoverIndex) return <Cell fill={'#DBF1C1'} />
+                        if (index === hoverIndex) return <Cell key={window.timestamp.toString()} fill={'#DBF1C1'} />
                         else return <Cell key={window.timestamp.toString()} fill={'#B2D530'} />
                       })}
                   </Bar>

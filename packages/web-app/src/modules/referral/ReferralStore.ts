@@ -29,7 +29,7 @@ export class ReferralStore {
   /** The number of referrals that have been completed */
   @computed
   get completedReferrals(): Referral[] {
-    return this.referrals.filter(x => completed(x))
+    return this.referrals.filter((x) => completed(x))
   }
 
   /** The number of referrals that have been completed */
@@ -49,7 +49,7 @@ export class ReferralStore {
   get totalEarned(): number {
     let sum = 0
 
-    this.referrals.forEach(x => {
+    this.referrals.forEach((x) => {
       if (x && x.referralDefinition) {
         sum += x.earnedBalance * x.referralDefinition.referrerBonus
       }
@@ -64,7 +64,7 @@ export class ReferralStore {
     let sum = 0
 
     if (this.referrals && this.referrals.length > 0) {
-      this.referrals.forEach(x => {
+      this.referrals.forEach((x) => {
         if (x && x.referralDefinition) {
           sum += maximumReferrerBonus(x.referralDefinition) - x.earnedBalance * x.referralDefinition.referrerBonus
         }
@@ -78,7 +78,7 @@ export class ReferralStore {
 
   /** (Re)Loads all referrals */
   @action.bound
-  loadReferrals = flow(function*(this: ReferralStore) {
+  loadReferrals = flow(function* (this: ReferralStore) {
     try {
       let res = yield this.axios.get('profile/referrals')
       const referrals = res.data as Referral[]
@@ -91,7 +91,7 @@ export class ReferralStore {
 
   /** Loads the current user's unique referral code */
   @action.bound
-  loadReferralCode = flow(function*(this: ReferralStore) {
+  loadReferralCode = flow(function* (this: ReferralStore) {
     try {
       let res = yield this.axios.get('profile/referral-code')
       this.referralCode = res.data.code
@@ -103,11 +103,10 @@ export class ReferralStore {
 
   /** Loads the current user's referral */
   @action.bound
-  loadCurrentReferral = flow(function*(this: ReferralStore) {
+  loadCurrentReferral = flow(function* (this: ReferralStore) {
     try {
       let res = yield this.axios.get<Referral>('profile/referral')
       this.currentReferral = res.data
-      console.log(res)
     } catch (e) {
       let err: AxiosError = e
       if (err.response && err.response.status === 404) {
@@ -120,7 +119,7 @@ export class ReferralStore {
 
   /** Loads the current user's referral */
   @action.bound
-  submitReferralCode = flow(function*(this: ReferralStore, code: string) {
+  submitReferralCode = flow(function* (this: ReferralStore, code: string) {
     if (this.currentReferral) {
       console.log('The user has already entered a referral code')
       return
@@ -145,7 +144,7 @@ export class ReferralStore {
 
   /** Sends a referral email to the given email address */
   @action.bound
-  sendReferral = flow(function*(this: ReferralStore, email: string) {
+  sendReferral = flow(function* (this: ReferralStore, email: string) {
     console.log('Sending Referral')
 
     this.isSending = true

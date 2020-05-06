@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { HeroPanel } from '../../../components/HeroPanel'
 
-const styles = () => ({})
+const styles = {}
 
 interface Props extends WithStyles<typeof styles> {}
 

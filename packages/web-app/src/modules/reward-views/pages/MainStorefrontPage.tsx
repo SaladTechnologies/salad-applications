@@ -30,7 +30,6 @@ const heroCategories = ['top chops']
 
 class _MainStorefrontPage extends Component<Props> {
   getHero = (index: number) => {
-    console.warn('Checking ' + index)
     const { heroes } = this.props
 
     const type = heroes?.get(index + 1)
@@ -71,14 +70,14 @@ class _MainStorefrontPage extends Component<Props> {
                 )
               } else {
                 return (
-                  <>
+                  <React.Fragment key={category}>
                     <RewardSlider key={category} title={category} onViewMore={onViewMore}>
                       {rewards.slice(0, maxRowSize).map((x) => (
                         <RewardItem key={x.id} reward={x} onViewReward={onViewReward} />
                       ))}
                     </RewardSlider>
                     {this.getHero(i)}
-                  </>
+                  </React.Fragment>
                 )
               }
             })

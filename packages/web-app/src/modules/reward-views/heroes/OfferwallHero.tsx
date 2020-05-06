@@ -4,7 +4,7 @@ import { HeroPanel } from '../../../components/HeroPanel'
 import { HeroTitle, SmartLink } from '../../../components'
 import classnames from 'classnames'
 
-const styles = () => ({
+const styles = {
   column: {
     flex: 1,
   },
@@ -12,7 +12,7 @@ const styles = () => ({
     display: 'flex',
     justifyContent: 'center',
   },
-})
+}
 
 interface Props extends WithStyles<typeof styles> {}
 

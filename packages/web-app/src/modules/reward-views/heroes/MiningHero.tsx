@@ -5,7 +5,7 @@ import { StartButtonContainer } from '../../machine-views'
 import { HeroTitle, SmartLink } from '../../../components'
 import classnames from 'classnames'
 
-const styles = () => ({
+const styles = {
   column: {
     flex: 1,
   },
@@ -14,7 +14,7 @@ const styles = () => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
-})
+}
 
 interface Props extends WithStyles<typeof styles> {}
 

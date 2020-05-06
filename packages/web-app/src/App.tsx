@@ -5,8 +5,9 @@ import withStyles, { WithStyles } from 'react-jss'
 import { ToastContainer } from 'react-toastify'
 import Routes from './Routes'
 import { MainTitlebarContainer } from './modules/home-views/MainTitlebarContainer'
+import { FooterBarContainer } from './modules/home-views'
 
-const styles = () => ({
+const styles = {
   mainWindow: {
     userSelect: 'none',
     position: 'absolute',
@@ -14,16 +15,12 @@ const styles = () => ({
     right: 0,
     bottom: 0,
     left: 0,
+    display: 'flex',
+    flexDirection: 'column',
   },
   container: {
     display: 'flex',
-    position: 'fixed',
-    top: '33px',
-    right: 0,
-    bottom: 0,
-    left: 0,
-    userSelect: 'none',
-    zIndex: 5000,
+    flex: 1,
     justifyContent: 'center',
   },
   content: {
@@ -32,7 +29,7 @@ const styles = () => ({
     maxWidth: 1600,
     position: 'relative',
   },
-})
+}
 
 interface Props extends WithStyles<typeof styles> {}
 
@@ -68,8 +65,9 @@ class _App extends Component<Props> {
           <div className={classes.content}>
             <Routes />
           </div>
-          <ToastContainer pauseOnFocusLoss={true} />
+          <ToastContainer />
         </div>
+        <FooterBarContainer />
       </div>
     )
   }
