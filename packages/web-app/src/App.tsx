@@ -67,7 +67,7 @@ class _App extends Component<Props> {
           </div>
           <ToastContainer />
         </div>
-        <FooterBarContainer />
+        {isAuth && <FooterBarContainer />}
       </div>
     )
   }
