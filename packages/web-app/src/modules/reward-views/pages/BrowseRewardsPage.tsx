@@ -119,7 +119,7 @@ class _BrowseRewardsPage extends Component<Props> {
                   <div>
                     <div className={classes.rewardContainer}>
                       {rewards?.map((x) => (
-                        <div className={classes.rewardItem}>
+                        <div key={x.id} className={classes.rewardItem}>
                           <RewardItem reward={x} onViewReward={onViewReward} />
                         </div>
                       ))}

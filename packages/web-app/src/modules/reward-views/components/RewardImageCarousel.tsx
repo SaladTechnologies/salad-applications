@@ -6,7 +6,7 @@ import Carousel from 'react-multi-carousel'
 import Img from 'react-image'
 import { Divider } from '../../../components'
 
-const styles = ({
+const styles = {
   container: {
     paddingTop: 18,
   },
@@ -26,7 +26,7 @@ const styles = ({
     width: '100%',
     border: '1px solid rgba(255, 255, 255, 0.10)',
   },
-})
+}
 
 interface Props extends WithStyles<typeof styles> {
   reward?: Reward
@@ -62,8 +62,8 @@ class _RewardImageCarousel extends Component<Props> {
     return (
       <div className={classnames(classes.container)}>
         <Carousel keyBoardControl={false} responsive={responsive} autoPlay arrows centerMode infinite>
-          {reward?.images?.map(x => (
-            <div className={classes.imageContainer}>
+          {reward?.images?.map((x) => (
+            <div key={x} className={classes.imageContainer}>
               <Img className={classes.image} src={x} alt="" />
             </div>
           ))}

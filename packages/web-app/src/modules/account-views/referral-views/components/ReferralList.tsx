@@ -5,7 +5,7 @@ import { ReferralItem } from './ReferralItem'
 import { SectionHeader, P } from '../../../../components'
 import Scrollbars from 'react-custom-scrollbars'
 
-const styles = () => ({
+const styles = {
   container: {
     padding: 20,
     height: '100%',
@@ -14,7 +14,7 @@ const styles = () => ({
     // padding: 20,
     paddingBottom: 50,
   },
-})
+}
 
 interface Props extends WithStyles<typeof styles> {
   referrals?: Referral[]

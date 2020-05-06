@@ -46,19 +46,16 @@ class _LinkListUnstyled extends Component<Props> {
 
     return (
       <ul className={classnames('linkListUnstyled', classes.linkListUnstyled)}>
-        {list.map((item, index) => {
+        {list.map((item) => {
           return (
-            <>
+            <React.Fragment key={item.url}>
               {item.divider && <Divider className={classes.divider} />}
-              <li
-                key={index}
-                className={classnames('linkListItem', classes.linkListItem, { [classes.inset]: item.inset })}
-              >
+              <li className={classnames('linkListItem', classes.linkListItem, { [classes.inset]: item.inset })}>
                 <MenuTitle path={item.url} enabled={item.enabled}>
                   {item.text}
                 </MenuTitle>
               </li>
-            </>
+            </React.Fragment>
           )
         })}
       </ul>

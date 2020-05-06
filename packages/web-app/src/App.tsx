@@ -6,7 +6,7 @@ import { ToastContainer } from 'react-toastify'
 import Routes from './Routes'
 import { MainTitlebarContainer } from './modules/home-views/MainTitlebarContainer'
 
-const styles = () => ({
+const styles = {
   mainWindow: {
     userSelect: 'none',
     position: 'absolute',
@@ -32,7 +32,7 @@ const styles = () => ({
     maxWidth: 1600,
     position: 'relative',
   },
-})
+}
 
 interface Props extends WithStyles<typeof styles> {}
 
