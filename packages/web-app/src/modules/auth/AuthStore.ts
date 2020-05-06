@@ -15,6 +15,9 @@ export class AuthStore {
   /** Flag indicating if we are currently verifying */
   private isVerifying: boolean = false
 
+  /** Timestamp when the last verification email was sent */
+  private lastEmailVerificationSent?: Date
+
   @observable
   public hasVerifiedEmail: boolean = false
 
@@ -239,12 +242,25 @@ export class AuthStore {
           })
         }
       })
-    }, 6000)
+    }, 15000)
   }
 
   /** Resend the verification email to the user */
   @action.bound
   resendVerificationEmail = flow(function* (this: AuthStore) {
+    if (this.lastEmailVerificationSent) {
+      //Calculates the time since the last email verification email was sent
+      const delta = Date.now() - this.lastEmailVerificationSent.getTime()
+
+      //If we are sending emails too quickly, block
+      if (delta <= 30000) {
+        this.sendVerificationStatus = 'Please wait to resend the verification email again'
+        return
+      }
+    }
+
+    this.lastEmailVerificationSent = new Date(Date.now())
+
     this.sendVerificationStatus = undefined
 
     //Ensures that we have an auth0 token
