@@ -6,5 +6,5 @@ interface Props {
 }
 
 export const AdGatePage = ({ userId }: Props) => (
-  <IFramePage pageTitle="Offerwall - AdGate" src={`https://wall.adgaterewards.com/nq-Uqw/${userId}`} />
+  <IFramePage pageTitle="Offerwalls - AdGate" src={`https://wall.adgaterewards.com/nq-Uqw/${userId}`} />
 )
