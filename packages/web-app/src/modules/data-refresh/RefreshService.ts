@@ -16,10 +16,6 @@ export class RefreshService {
       this.refreshData()
     }, Config.dataRefreshRate)
 
-    this.xpTimer = setInterval(() => {
-      this.store.xp.refreshXp()
-    }, Config.xpRefreshRate)
-
     this.rewardsTimer = setInterval(() => {
       this.store.rewards.refreshRewards()
     }, Config.rewardsRefreshRate)
@@ -27,20 +23,24 @@ export class RefreshService {
     //Do the initial data pull
     this.refreshData()
     this.store.rewards.refreshRewards()
-    this.store.xp.refreshXp()
-    this.store.vault.loadVault()
+
+    if (this.store.auth.isAuthenticated()) {
+      this.store.vault.loadVault()
+    }
   }
 
   refreshData = () => {
     if (!this.store.auth.isAuthenticated()) {
       return
     }
+
     try {
       this.store.balance.refreshBalance()
       this.store.rewards.loadSelectedReward()
       this.store.referral.loadReferrals()
       this.store.home.loadBannerInfo()
       this.store.vault.loadVault()
+      this.store.xp.refreshXp()
     } catch (error) {
       console.error(error)
     }

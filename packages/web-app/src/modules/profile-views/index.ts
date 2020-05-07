@@ -1,1 +1,1 @@
-export * from './ProfileMenuItemContainer'
+export * from './EmailVerificationPageContainer'

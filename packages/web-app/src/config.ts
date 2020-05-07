@@ -60,9 +60,8 @@ class Config {
   public readonly appBuild: string = requiredString('REACT_APP_BUILD')
 
   public readonly dataRefreshRate: number = numberOrDefault('REACT_APP_APP_REFRESH_RATE', convertMinutes(5))
-  public readonly xpRefreshRate: number = numberOrDefault('REACT_APP_APP_XP_REFRESH_RATE', convertMinutes(1))
-
   public readonly rewardsRefreshRate: number = numberOrDefault('REACT_APP_REWARD_REFRESH_RATE', convertMinutes(5))
+
   public readonly statusHeartbeatRate: number = numberOrDefault(
     'REACT_APP_STATUS_HEARTBEAT_REFRESH_RATE',
     convertMinutes(1),

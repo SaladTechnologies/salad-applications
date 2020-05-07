@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { OfflineModalContainer, PlainTitlebarContainer } from './modules/home-views'
+import { OfflineModalContainer } from './modules/home-views'
 import { getStore } from './Store'
 import withStyles, { WithStyles } from 'react-jss'
 import { ToastContainer } from 'react-toastify'
@@ -53,21 +53,17 @@ class _App extends Component<Props> {
   render() {
     const { classes } = this.props
 
-    let isAuth = this.store.auth.isAuthenticated()
-    let showPlainTitle = !isAuth
-
     return (
       <div className={classes.mainWindow}>
         <OfflineModalContainer />
-        {showPlainTitle && <PlainTitlebarContainer />}
-        {!showPlainTitle && <MainTitlebarContainer />}
+        <MainTitlebarContainer />
         <div className={classes.container}>
           <div className={classes.content}>
             <Routes />
           </div>
           <ToastContainer />
         </div>
-        {isAuth && <FooterBarContainer />}
+        <FooterBarContainer />
       </div>
     )
   }
