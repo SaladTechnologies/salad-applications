@@ -18,6 +18,7 @@ const mapStoreToProps = (store: RootStore): any => {
   ]
 
   return {
+    pageTitle: 'Account',
     onClose: () => store.ui.hideModal(),
     menuItems: menuItems,
     menuButtons: buttons,

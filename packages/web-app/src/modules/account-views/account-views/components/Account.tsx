@@ -3,6 +3,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 import { EditUsername } from './EditUsername'
 import { Profile } from '../../../profile/models'
+import { Head } from '../../../../components'
 
 const styles = {
   container: {
@@ -29,6 +30,7 @@ class _Account extends Component<Props> {
 
     return (
       <div className={classes.container}>
+        <Head title="Account" />
         <div className={classnames(classes.container)}>
           <EditUsername profile={profile} onSend={onSend} sending={sending} />
         </div>

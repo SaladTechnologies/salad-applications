@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SmartLink, P, Divider, SectionHeader, Scrollbar } from '../../../components'
+import { SmartLink, P, Divider, SectionHeader, Scrollbar, Head } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { MiningSummary } from '../components'
 import classNames from 'classnames'
@@ -51,6 +51,7 @@ class _MiningPage extends Component<Props> {
 
     return (
       <div className={classNames(classes.container, classes.splitContainer)}>
+        <Head title="Mining" />
         <Scrollbar>
           <div className={classNames(classes.content, classes.splitContainer)}>
             <div className={classNames(classes.column, classes.mainColumn)}>

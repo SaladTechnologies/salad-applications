@@ -16,6 +16,7 @@ import * as Sentry from '@sentry/browser'
 import { Config } from './config'
 import { SkeletonTheme } from 'react-loading-skeleton'
 import { Tooltips } from './Tooltips'
+import { Head } from './components'
 
 Sentry.init({
   dsn: Config.sentryDSN,
@@ -64,6 +65,8 @@ ReactDOM.render(
     <ThemeProvider theme={DefaultTheme}>
       <SkeletonTheme color={'#172E40'} highlightColor="#304759">
         <>
+          {/* Default page title for any page that doesn't specify one */}
+          <Head title="Salad Technologies" />
           <Tooltips />
           <App />
         </>

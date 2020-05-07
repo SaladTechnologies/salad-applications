@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { ToggleSetting, SmartLink, P, SectionHeader, Scrollbar } from '../../../components'
+import { ToggleSetting, SmartLink, P, SectionHeader, Scrollbar, Head } from '../../../components'
 import offerWallExample from '../assets/AdGem.png'
 import Img from 'react-image'
 
@@ -46,6 +46,7 @@ class _Offerwall extends Component<Props> {
 
     return (
       <Scrollbar>
+        <Head title="Offerwalls" />
         <div className={classes.container}>
           <div className={classes.content}>
             <div>

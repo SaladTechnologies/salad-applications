@@ -5,7 +5,7 @@ import { RewardSlider, RewardDisclaimers, RewardHero } from '../components'
 import { RewardItem } from '../components/RewardItem'
 import { RewardHeroItem } from '../components/RewardHeroItem'
 import { NotificationBannerContainer } from '../../home-views/NotificationBannerContainer'
-import { Scrollbar } from '../../../components'
+import { Scrollbar, Head } from '../../../components'
 import { MiningHero, OfferwallHero, ReferralEntryHero } from '../heroes'
 import { HeroType } from '../../engagement/models/HeroType'
 import { rewardCategoryRoute } from '../../../RouteUtils'
@@ -53,6 +53,7 @@ class _MainStorefrontPage extends Component<Props> {
 
     return (
       <Scrollbar>
+        <Head title="Official Store" />
         <div className={classes.content}>
           <NotificationBannerContainer />
           {categories && categories.size > 0 ? (
