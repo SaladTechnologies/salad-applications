@@ -8,7 +8,6 @@ const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ category
   title: decodeCategory(props.match.params.category),
   rewards: store.rewards.getRewardsByUrl(props),
   onBack: store.routing.goBack,
-  onViewReward: store.rewards.viewReward,
   route: props,
 })
 

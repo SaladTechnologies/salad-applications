@@ -6,10 +6,11 @@ import AspectRatio from 'react-aspect-ratio'
 import { SaladTheme } from '../../../SaladTheme'
 import classnames from 'classnames'
 import { Reward } from '../../reward/models'
-import { Button } from '../../../components'
+import { Button, SmartLink } from '../../../components'
 import Img from 'react-image'
 import { RewardMissingImage } from './RewardMissingImage'
 import Skeleton from 'react-loading-skeleton'
+import { rewardRoute } from '../../../RouteUtils'
 
 const styles = (theme: SaladTheme) => ({
   container: {},
@@ -104,18 +105,9 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   reward?: Reward
-  onViewReward?: (reward?: Reward) => void
 }
 
 class _RewardHeroItem extends Component<Props> {
-  handleViewReward = () => {
-    const { onViewReward, reward } = this.props
-
-    if (onViewReward && reward) {
-      onViewReward(reward)
-    }
-  }
-
   render() {
     const { reward, classes } = this.props
 
@@ -125,22 +117,24 @@ class _RewardHeroItem extends Component<Props> {
     return (
       <div key={reward?.id} className={classnames(classes.container)}>
         <div className={classes.content}>
-          <div className={classes.imageContainer} onClick={this.handleViewReward}>
-            <AspectRatio ratio={'800/450'}>
-              {reward ? (
-                <Img
-                  className={classes.image}
-                  src={reward?.heroImage}
-                  draggable={false}
-                  alt=""
-                  loader={<Skeleton height={'100%'} />}
-                  unloader={<RewardMissingImage text={reward?.name} />}
-                />
-              ) : (
-                <Skeleton height={'100%'} />
-              )}
-            </AspectRatio>
-          </div>
+          <SmartLink to={rewardRoute(reward)}>
+            <div className={classes.imageContainer}>
+              <AspectRatio ratio={'800/450'}>
+                {reward ? (
+                  <Img
+                    className={classes.image}
+                    src={reward?.heroImage}
+                    draggable={false}
+                    alt=""
+                    loader={<Skeleton height={'100%'} />}
+                    unloader={<RewardMissingImage text={reward?.name} />}
+                  />
+                ) : (
+                  <Skeleton height={'100%'} />
+                )}
+              </AspectRatio>
+            </div>
+          </SmartLink>
 
           <div className={classes.infoContainer}>
             {reward ? (
@@ -163,9 +157,9 @@ class _RewardHeroItem extends Component<Props> {
                 </div>
                 <div className={classes.headlineText}>{reward?.headline}</div>
                 <div className={classes.buttonContainer}>
-                  <Button onClick={this.handleViewReward} disabled={reward === undefined}>
-                    GET IT NOW
-                  </Button>
+                  <SmartLink to={rewardRoute(reward)}>
+                    <Button disabled={reward === undefined}>GET IT NOW</Button>
+                  </SmartLink>
                 </div>
               </div>
             ) : (

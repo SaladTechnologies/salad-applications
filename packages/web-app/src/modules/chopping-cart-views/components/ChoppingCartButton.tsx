@@ -34,12 +34,11 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   rewards?: Reward[]
-  onViewReward?: (reward: Reward) => void
 }
 
 class _ChoppingCartButton extends Component<Props> {
   render() {
-    const { rewards, onViewReward, classes } = this.props
+    const { rewards, classes } = this.props
 
     return (
       <>
@@ -48,7 +47,7 @@ class _ChoppingCartButton extends Component<Props> {
           events
           delay={{ show: 0, hide: 300 }}
           attribute="data-chopping-cart-button"
-          onRenderContent={() => <ChoppingCartTooltip rewards={rewards} onViewReward={onViewReward} />}
+          onRenderContent={() => <ChoppingCartTooltip rewards={rewards} />}
         />
         <div className={classes.container} data-chopping-cart-button>
           {rewards && rewards.length !== 0 && <div className={classes.notificationDot}>{rewards.length}</div>}

@@ -3,7 +3,7 @@ import { Reward } from './models/Reward'
 import { RewardsResource } from './models/RewardsResource'
 import { AxiosInstance } from 'axios'
 
-import { rewardFromResource, encodeCategory, parseRewardQuery, stringifyRewardQuery, sortRewards } from './utils'
+import { rewardFromResource, parseRewardQuery, stringifyRewardQuery, sortRewards } from './utils'
 import { RootStore } from '../../Store'
 import { SaladPay } from '../salad-pay/SaladPay'
 import { SaladPaymentResponse, AbortError } from '../salad-pay'
@@ -314,27 +314,5 @@ export class RewardStore {
     } else {
       this.store.routing.push('/')
     }
-  }
-
-  /** Shows the reward details modal page for the given reward */
-  viewReward = (reward: Reward) => {
-    this.store.ui.showModal(`/rewards/${reward.id}`)
-    this.store.analytics.trackRewardView(reward)
-  }
-
-  /** Shows the "Explore More" page for the given category */
-  @action
-  viewCategory = (category: string) => {
-    if (!category || !this.categoryData.has(category)) {
-      console.warn(`Unable to view category ${category}. Not found.`)
-      return
-    }
-
-    //Normalize the category to ensure it is safe to be used as a URL
-    let safeCategory = encodeCategory(category)
-
-    this.store.routing.push({ pathname: `/browse/category/${safeCategory}` })
-
-    this.store.analytics.trackRewardCategoryViewed(category)
   }
 }

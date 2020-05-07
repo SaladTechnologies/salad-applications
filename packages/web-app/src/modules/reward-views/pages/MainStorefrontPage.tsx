@@ -8,6 +8,7 @@ import { NotificationBannerContainer } from '../../home-views/NotificationBanner
 import { Scrollbar } from '../../../components'
 import { MiningHero, OfferwallHero, ReferralEntryHero } from '../heroes'
 import { HeroType } from '../../engagement/models/HeroType'
+import { rewardCategoryRoute } from '../../../RouteUtils'
 
 const styles = {
   container: {},
@@ -20,8 +21,6 @@ const styles = {
 
 interface Props extends WithStyles<typeof styles> {
   categories?: Map<string, Reward[]>
-  onViewReward?: (reward?: Reward) => void
-  onViewMore?: (title?: string) => void
   heroes?: Map<number, HeroType>
 }
 
@@ -48,7 +47,7 @@ class _MainStorefrontPage extends Component<Props> {
   }
 
   render() {
-    const { categories, onViewReward, onViewMore, classes } = this.props
+    const { categories, classes } = this.props
     //Maximum number of rewards to show in a single row
     const maxRowSize = 20
 
@@ -64,16 +63,16 @@ class _MainStorefrontPage extends Component<Props> {
                 return (
                   <RewardHero key={category} title={category}>
                     {rewards.map((x) => (
-                      <RewardHeroItem key={x.id} reward={x} onViewReward={onViewReward} />
+                      <RewardHeroItem key={x.id} reward={x} />
                     ))}
                   </RewardHero>
                 )
               } else {
                 return (
                   <React.Fragment key={category}>
-                    <RewardSlider key={category} title={category} onViewMore={onViewMore}>
+                    <RewardSlider key={category} title={category} viewAllRoute={rewardCategoryRoute(category)}>
                       {rewards.slice(0, maxRowSize).map((x) => (
-                        <RewardItem key={x.id} reward={x} onViewReward={onViewReward} />
+                        <RewardItem key={x.id} reward={x} />
                       ))}
                     </RewardSlider>
                     {this.getHero(i)}
