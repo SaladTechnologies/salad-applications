@@ -5,6 +5,7 @@ import { RewardSliderButton } from './RewardSliderButton'
 import Carousel from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
 import { IconArrowRight } from './assets'
+import { SmartLink } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: { color: theme.lightGreen, paddingBottom: 64 },
@@ -61,7 +62,7 @@ export const rewardItemResponsive = {
 
 interface Props extends WithStyles<typeof styles> {
   title?: string
-  onViewMore?: (title?: string) => void
+  viewAllRoute?: string
 }
 
 interface State {
@@ -103,26 +104,22 @@ class _RewardSlider extends Component<Props, State> {
     })
   }
 
-  handleViewMore = () => {
-    const { title, onViewMore } = this.props
-
-    onViewMore?.(title)
-  }
-
   render() {
-    const { title, classes, children } = this.props
+    const { title, viewAllRoute, classes, children } = this.props
     const { isHovering, isHoveringRewards } = this.state
     return (
       <div className={classes.container} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
         <div className={classes.titleContainer}>
           {title}
           {isHovering && (
-            <div className={classes.viewMoreText} onClick={this.handleViewMore}>
-              Explore All
-              <div className={classes.arrow}>
-                <IconArrowRight />
+            <SmartLink to={viewAllRoute}>
+              <div className={classes.viewMoreText}>
+                Explore All
+                <div className={classes.arrow}>
+                  <IconArrowRight />
+                </div>
               </div>
-            </div>
+            </SmartLink>
           )}
         </div>
         <div onMouseEnter={this.handleMouseEnterRewards} onMouseLeave={this.handleMouseLeaveRewards}>
