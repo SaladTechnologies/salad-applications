@@ -9,8 +9,8 @@ const styles = (theme: SaladTheme) => ({
   container: {
     fontFamily: theme.fontGroteskBook25,
     fontSize: 10,
-    height: 56,
-    width: 56,
+    height: 54,
+    width: 54,
     textTransform: 'uppercase',
     color: theme.lightGreen,
     display: 'flex',

@@ -22,6 +22,8 @@ const styles = {
     display: 'flex',
     flex: 1,
     justifyContent: 'center',
+    position: 'relative',
+    overflow: 'hidden',
   },
   content: {
     display: 'flex',
