@@ -27,6 +27,8 @@ import { RewardDetailsContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
 import { EarnMenuContainer } from './modules/earn-views'
 import { SettingsContainer } from './modules/settings-views'
+import { AuthStore } from './modules/auth'
+import { EmailVerificationPageContainer } from './modules/profile-views/EmailVerificationPageContainer'
 // Account Menu
 
 export default class Routes extends Component {
@@ -62,6 +64,7 @@ export default class Routes extends Component {
     return (
       <Switch>
         <Route exact path="/machine-loading" render={() => <LoadingPage text="Checking the bits" />} />
+        <Route exact path="/email-verification" component={EmailVerificationPageContainer} />
 
         {!isAuth && <NoAuth store={this.store.auth} />}
 
@@ -80,10 +83,9 @@ export default class Routes extends Component {
   }
 }
 
-const NoAuth = (props: any) => {
+const NoAuth = (props: { store: AuthStore }) => {
   const render = () => {
     if (!props.store.isLoading) return <WelcomePageContainer />
-
     return <LoadingPage text="Logging In" />
   }
 

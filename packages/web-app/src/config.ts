@@ -1,4 +1,5 @@
 import { convertMinutes, convertSeconds, convertHours } from './utils'
+import * as Storage from './Storage'
 
 declare global {
   interface Window {
@@ -70,7 +71,15 @@ class Config {
 
   public readonly balanceEstimateRate: number = numberOrDefault('REACT_APP_BALANCE_ESTIMATE_RATE', convertSeconds(1))
 
-  public readonly baseAPIUrl: string = requiredString('REACT_APP_API_URL')
+  public get baseAPIUrl(): string {
+    const override = Storage.getItem('OVERRIDE_APP_API_URL')
+
+    if (override) {
+      return override
+    } else {
+      return requiredString('REACT_APP_API_URL')
+    }
+  }
   public readonly saladBowlUrl: string = stringOrDefault('REACT_APP_SALAD_BOWL_URL', 'http://localhost:22222')
 
   public readonly auth0Domain: string = requiredString('REACT_APP_AUTH0_DOMAIN')
