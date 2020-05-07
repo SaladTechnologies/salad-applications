@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SmartLink, P, Divider, SectionHeader, Scrollbar } from '../../../components'
+import { SmartLink, P, Divider, SectionHeader, Scrollbar, Head } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { StartButtonContainer } from '../../machine-views'
 
@@ -42,6 +42,7 @@ class _MiningInformation extends Component<Props> {
 
     return (
       <div className={classes.container}>
+        <Head title="Mining - How it Works" />
         <Scrollbar>
           <div className={classes.content}>
             <div className={classes.splitContainer}>

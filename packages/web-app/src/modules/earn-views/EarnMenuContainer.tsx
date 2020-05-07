@@ -12,6 +12,7 @@ import { MiningInformationContainer } from './MiningInformationContainer'
 
 const mapStoreToProps = (store: RootStore): any => {
   return {
+    pageTitle: 'Earn',
     menuItems: [
       { text: 'Summary', url: '/earn/summary', component: EarningSummaryContainer },
       { text: 'Offerwalls', url: '/earn/offerwall', component: OfferwallContainer, divider: true },

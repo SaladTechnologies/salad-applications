@@ -10,7 +10,7 @@ import {
   RewardRequirementsPanel,
   RewardDisclaimers,
 } from '../components'
-import { Scrollbar } from '../../../components'
+import { Scrollbar, Head } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -43,6 +43,7 @@ class _RewardDetailsPage extends Component<Props> {
 
     return (
       <div className={classes.container}>
+        <Head title={reward?.name} />
         <RewardHeaderBar reward={reward} onBack={onBack} onRedeem={onRedeem} {...rest} />
         <Scrollbar>
           <div className={classes.scrollContent}>

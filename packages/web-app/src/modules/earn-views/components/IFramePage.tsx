@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
+import { Head } from '../../../components'
 
 const styles = {
   container: {
@@ -27,15 +28,17 @@ const styles = {
 }
 
 interface Props extends WithStyles<typeof styles> {
+  pageTitle?: string
   src?: string
 }
 
 class _IFramePage extends Component<Props> {
   render() {
-    const { src, classes } = this.props
+    const { src, pageTitle, classes } = this.props
 
     return (
       <div className={classes.container}>
+        <Head title={pageTitle} />
         <iframe
           src={src}
           style={{

@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
 
-import { P } from '../../../components'
+import { P, Head } from '../../../components'
 import { RewardVaultItem } from '../../vault/models'
 import { VaultItem } from './VaultItem'
 
@@ -36,6 +36,7 @@ class _VaultList extends Component<Props> {
     const { redemptions, classes } = this.props
     return (
       <div className={classes.container}>
+        <Head title="Reward Vault" />
         <div className={classes.listContainer}>
           <div className={classes.innerListContainer}>
             {redemptions && redemptions.length > 0 && redemptions.map((x) => <VaultItem {...x} />)}

@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { styles } from './SettingsPage.styles'
 
 // UI
-import { LinkListUnstyled, MenuTitle, Button, Divider } from '.'
+import { LinkListUnstyled, MenuTitle, Button, Divider, Head } from '.'
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
@@ -33,6 +33,7 @@ export interface MenuButton {
 }
 
 interface Props extends WithStyles<typeof styles> {
+  pageTitle?: string
   onClose?: () => void
   onSendBug?: () => void
   menuItems?: MenuItem[]
@@ -104,10 +105,12 @@ class _Settings extends Component<Props> {
       onSendLog,
       onDownloadLatestDesktop,
       onClose,
+      pageTitle,
     } = this.props
 
     return (
       <Overlay>
+        <Head title={pageTitle} />
         <div className={classnames(classes.menu, classes.menuItems)}>
           {menuItems && <LinkListUnstyled list={menuItems} />}
 
