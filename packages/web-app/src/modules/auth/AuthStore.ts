@@ -1,11 +1,11 @@
-import { action, observable, flow, autorun, runInAction } from 'mobx'
+import { Auth0DecodedHash, WebAuth } from 'auth0-js'
 import { AxiosInstance } from 'axios'
-import { WebAuth, Auth0DecodedHash } from 'auth0-js'
-import { RootStore } from '../../Store'
+import { action, autorun, flow, observable, runInAction, toJS } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
+import { SALAD_TOKEN } from '.'
 import { Config } from '../../config'
 import * as Storage from '../../Storage'
-import { SALAD_TOKEN } from '.'
+import { RootStore } from '../../Store'
 
 const WEB_SYSTEM_ID = 'WEB_SYSTEM_ID'
 
@@ -84,7 +84,9 @@ export class AuthStore {
   signIn = async () => {
     this.loginError = undefined
     this.isLoading = true
-    this.webAuth.authorize()
+    //TODO: Add the iframe or whatever needs to happen since we removed the auth0 method
+    // this.webAuth.authorize()
+    this.store.routing.push('/login', { currentLocation: toJS(this.store.routing.location) })
   }
 
   @action.bound
@@ -216,7 +218,7 @@ export class AuthStore {
       return
     }
 
-    this.store.routing.push('/email-verification')
+    this.store.routing.push('/login/email-verification')
 
     let accessToken = this.auth0Result?.accessToken
 

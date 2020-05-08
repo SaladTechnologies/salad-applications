@@ -1,19 +1,11 @@
+import { Location } from 'history'
 import React, { Component } from 'react'
-
-// Packages
-import { Route, Switch, Redirect, withRouter, RouteComponentProps } from 'react-router'
-
-// Store
-import { getStore } from './Store'
-
-// Components
-import { Config } from './config'
-
-// Views
-import { CallbackContainer, WhatsNewPageContainer } from './modules/onboarding-views'
-import { HomePage } from './modules/home-views'
+import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router'
 import { LoadingPage } from './components'
-import { CompatibilityCheckPageContainer } from './modules/machine-views'
+import { Config } from './config'
+import { AccountSettingsContainer } from './modules/account-views'
+import { EmailVerificationPageContainer, LoginPageContainer } from './modules/auth-views'
+import { EarnMenuContainer } from './modules/earn-views'
 import {
   AntiVirusErrorContainer,
   CudaErrorContainer,
@@ -21,15 +13,14 @@ import {
   NetworkErrorContainer,
   UnknownErrorContainer,
 } from './modules/error-views'
-// Settings Menu
-import { AccountSettingsContainer } from './modules/account-views'
+import { HomePage } from './modules/home-views'
+import { CompatibilityCheckPageContainer } from './modules/machine-views'
+import { WhatsNewPageContainer } from './modules/onboarding-views'
 import { RewardDetailsContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
-import { EarnMenuContainer } from './modules/earn-views'
 import { SettingsContainer } from './modules/settings-views'
-import { EmailVerificationPageContainer } from './modules/profile-views'
 import { PrivateRoute } from './PrivateRoute'
-// Account Menu
+import { getStore } from './Store'
 
 class _Routes extends Component<RouteComponentProps> {
   store = getStore()
@@ -64,20 +55,14 @@ class _Routes extends Component<RouteComponentProps> {
     let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
     const isAuth = this.store.auth.isAuth
 
-    const currentLocation = (location.state as { currentLocation: any })?.currentLocation || location
-
+    const currentLocation =
+      (location.state as { currentLocation: Location | undefined } | undefined)?.currentLocation || location
     return (
       <>
-        {/* TODO: If state.currentLocation is set, pass it in here, otherwise pull the */}
         <Switch location={currentLocation}>
           <Route exact path="/machine-loading" render={() => <LoadingPage text="Checking the bits" />} />
-          <Route exact path="/email-verification" component={EmailVerificationPageContainer} />
-          <Route exact path="/auth/callback" component={CallbackContainer} />
-
           {isElectron && this.checkMachineLoading()}
-
           {isElectron && showCompatibilityPage && <CompatibilityCheckPageContainer />}
-
           <Route exact path="/errors/anti-virus" component={AntiVirusErrorContainer} />
           <Route exact path="/errors/cuda" component={CudaErrorContainer} />
           <Route exact path="/errors/fallback" component={FallbackErrorContainer} />
@@ -85,18 +70,16 @@ class _Routes extends Component<RouteComponentProps> {
           <Route exact path="/errors/unknown" component={UnknownErrorContainer} />
           <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
           <Route exact path="/whats-new" component={WhatsNewPageContainer} />
-
           {/* SaladPay: This is stand in until we figure out iFrames, popups... */}
           <Route exact path="/salad-pay/order-summary" component={SaladPayOrderSummaryContainer} />
-
           <PrivateRoute path="/account" component={AccountSettingsContainer} isSignedIn={isAuth} />
           <Route path="/settings" component={SettingsContainer} />
           <Route path="/earn" component={EarnMenuContainer} />
           <Route path="/" render={() => <HomePage />} />
-
           <Route render={() => <LoadingPage text="Page Not Found" />} />
         </Switch>
-        <Route path="/login" render={() => <LoadingPage text="Login" />} />
+        <Route path="/login" exact component={LoginPageContainer} />
+        <Route path="/login/email-verification" exact component={EmailVerificationPageContainer} />
       </>
     )
   }
