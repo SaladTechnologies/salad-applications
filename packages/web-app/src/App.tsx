@@ -3,7 +3,7 @@ import { OfflineModalContainer } from './modules/home-views'
 import { getStore } from './Store'
 import withStyles, { WithStyles } from 'react-jss'
 import { ToastContainer } from 'react-toastify'
-import Routes from './Routes'
+import { Routes } from './Routes'
 import { MainTitlebarContainer } from './modules/home-views/MainTitlebarContainer'
 import { FooterBarContainer } from './modules/home-views'
 

@@ -2,6 +2,14 @@
 import { SaladTheme } from '../SaladTheme'
 
 export const styles = (theme: SaladTheme) => ({
+  container: {
+    display: 'flex',
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+  },
   menu: {
     // flex: '0 0 294px', // equates to: 358px total width
     flex: '0 0 240px', // equates to: 304px total width

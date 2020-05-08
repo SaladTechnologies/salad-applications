@@ -9,44 +9,24 @@ interface Props extends RouteProps {
 export class PrivateRoute extends Component<Props> {
   render() {
     const { component: Component, isSignedIn, ...rest } = this.props
-
     return (
       <Route
         {...rest}
-        render={(routeProps) =>
-          isSignedIn ? (
+        render={(routeProps) => (
+          <>
             <Component {...routeProps} />
-          ) : (
-            <Redirect
-              to={{
-                pathname: '/signin',
-                state: { currentRoute: document.location.pathname },
-              }}
-            />
-          )
-        }
+            {!isSignedIn && (
+              <Redirect
+                push
+                to={{
+                  pathname: '/login',
+                  state: { currentLocation: routeProps.location },
+                }}
+              />
+            )}
+          </>
+        )}
       />
     )
   }
 }
-
-// export class PrivateRoute extends Component<Props> {
-//     async componentDidMount() {
-//       const { store } = this.props
-
-//       if (store.auth.isAuth) {
-//         return
-//       }
-
-//       try {
-//         await store.auth.signIn()
-//       } catch (err) {
-//         console.error(err)
-//       }
-//     }
-
-//     render() {
-//       const { component: Component, ...rest } = this.props
-//       return <Route {...rest} render={(routeProps) => <Component {...routeProps} />} />
-//     }
-//   }

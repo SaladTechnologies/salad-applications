@@ -7,6 +7,7 @@ const mapStoreToProps = (store: RootStore): any => {
     new MenuItem('Store', '/'),
     new MenuItem('Earn', '/earn/summary'),
     new MenuItem('Help', 'https://www.salad.io/support'),
+    new MenuItem('Kyle Test Button', '/account/summary'),
   ]
   return {
     isDesktop: store.native.isNative,

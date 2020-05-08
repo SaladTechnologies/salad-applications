@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 // Packages
-import { Route, Switch, Redirect } from 'react-router'
+import { Route, Switch, Redirect, withRouter, RouteComponentProps } from 'react-router'
 
 // Store
 import { getStore } from './Store'
@@ -31,7 +31,7 @@ import { EmailVerificationPageContainer } from './modules/profile-views'
 import { PrivateRoute } from './PrivateRoute'
 // Account Menu
 
-export default class Routes extends Component {
+class _Routes extends Component<RouteComponentProps> {
   store = getStore()
 
   checkMachineLoading = () => {
@@ -44,6 +44,10 @@ export default class Routes extends Component {
   }
 
   render() {
+    const { location } = this.props
+
+    console.error(location)
+
     if (Config.downTime) {
       return <Route render={() => <LoadingPage text="Salad Is Currently Down For Maintenance." />} />
     }
@@ -60,10 +64,12 @@ export default class Routes extends Component {
     let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
     const isAuth = this.store.auth.isAuth
 
+    const currentLocation = (location.state as { currentLocation: any })?.currentLocation || location
+
     return (
       <>
-        {/* TODO: If state.currentLocation is set, pass it in here */}
-        <Switch location={undefined}>
+        {/* TODO: If state.currentLocation is set, pass it in here, otherwise pull the */}
+        <Switch location={currentLocation}>
           <Route exact path="/machine-loading" render={() => <LoadingPage text="Checking the bits" />} />
           <Route exact path="/email-verification" component={EmailVerificationPageContainer} />
           <Route exact path="/auth/callback" component={CallbackContainer} />
@@ -90,8 +96,10 @@ export default class Routes extends Component {
 
           <Route render={() => <LoadingPage text="Page Not Found" />} />
         </Switch>
-        <Route path="/login" render={() => <LoadingPage text="Checking the bits" />} />
+        <Route path="/login" render={() => <LoadingPage text="Login" />} />
       </>
     )
   }
 }
+
+export const Routes = withRouter(_Routes)
