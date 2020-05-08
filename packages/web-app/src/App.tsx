@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import { OfflineModalContainer } from './modules/home-views'
-import { getStore } from './Store'
 import withStyles, { WithStyles } from 'react-jss'
 import { ToastContainer } from 'react-toastify'
-import { Routes } from './Routes'
+import { FooterBarContainer, OfflineModalContainer } from './modules/home-views'
 import { MainTitlebarContainer } from './modules/home-views/MainTitlebarContainer'
-import { FooterBarContainer } from './modules/home-views'
+import { Routes } from './Routes'
+import { getStore } from './Store'
 
 const styles = {
   mainWindow: {
@@ -35,42 +34,40 @@ const styles = {
 
 interface Props extends WithStyles<typeof styles> {}
 
-class _App extends Component<Props> {
-  store = getStore()
+export const App = withStyles(styles)(
+  class App extends Component<Props> {
+    store = getStore()
 
-  componentDidMount = async () => {
-    if (this.store.auth.isAuth) {
-      await this.store.onLogin()
-      //Force the app to reload once all data has been loaded
-      this.forceUpdate()
+    componentDidMount = async () => {
+      if (this.store.auth.isAuth) {
+        await this.store.onLogin()
+        //Force the app to reload once all data has been loaded
+        this.forceUpdate()
+      }
+
+      if (this.store.native.isNative) {
+        console.log('Running in native env')
+      } else {
+        console.log('Running in web env')
+      }
     }
 
-    if (this.store.native.isNative) {
-      console.log('Running in native env')
-    } else {
-      console.log('Running in web env')
-    }
-  }
+    render() {
+      const { classes } = this.props
 
-  render() {
-    const { classes } = this.props
-
-    return (
-      <div className={classes.mainWindow}>
-        <OfflineModalContainer />
-        <MainTitlebarContainer />
-        <div className={classes.container}>
-          <div className={classes.content}>
-            <Routes />
+      return (
+        <div className={classes.mainWindow}>
+          <OfflineModalContainer />
+          <MainTitlebarContainer />
+          <div className={classes.container}>
+            <div className={classes.content}>
+              <Routes />
+            </div>
+            <ToastContainer />
           </div>
-          <ToastContainer />
+          <FooterBarContainer />
         </div>
-        <FooterBarContainer />
-      </div>
-    )
-  }
-}
-
-export const App = withStyles(styles)(_App)
-
-export default App
+      )
+    }
+  },
+)

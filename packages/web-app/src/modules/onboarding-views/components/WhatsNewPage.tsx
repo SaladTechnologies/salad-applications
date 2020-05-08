@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import image from '../assets/Home - How it Works.svg'
 import { OnboardingPage, Scrollbar } from '../../../components'
+import image from '../assets/Home - How it Works.svg'
 
 const styles = {
   title: {
