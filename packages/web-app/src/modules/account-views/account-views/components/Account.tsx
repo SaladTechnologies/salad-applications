@@ -4,6 +4,7 @@ import classnames from 'classnames'
 import { EditUsername } from './EditUsername'
 import { Profile } from '../../../profile/models'
 import { Head } from '../../../../components'
+import { withLogin } from '../../../auth-views'
 
 const styles = {
   container: {
@@ -39,4 +40,4 @@ class _Account extends Component<Props> {
   }
 }
 
-export const Account = withStyles(styles)(_Account)
+export const Account = withLogin(withStyles(styles)(_Account))

@@ -5,6 +5,7 @@ import { CondensedHeader, Divider, Slider, P, ToggleSetting } from '../../../../
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
+import { withLogin } from '../../../auth-views'
 
 const styles = {
   container: {
@@ -108,4 +109,4 @@ class _WindowsSettings extends Component<Props> {
   }
 }
 
-export const WindowsSettings = withStyles(styles)(_WindowsSettings)
+export const WindowsSettings = withLogin(withStyles(styles)(_WindowsSettings))

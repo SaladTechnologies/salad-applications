@@ -32,8 +32,12 @@ const styles = (theme: SaladTheme) => ({
     letterSpacing: 1.5,
   },
   signUpButton: {
-    color: theme.darkBlue,
-    backgroundColor: theme.green,
+    color: theme.lightGreen,
+    minWidth: 80,
+    textAlign: 'center',
+    background:
+      'linear-gradient(303.31deg, rgba(83, 166, 38, 0.3) -2.7%, rgba(178, 213, 48, 0.24) 48.55%, rgba(83, 166, 38, 0.3) 95.11%)',
+    boxShadow: 'inset 3px 3px 4px rgba(0, 0, 0, 0.25)',
     fontFamily: theme.fontGroteskLight25,
     letterSpacing: '1.3px',
     fontSize: 12,
@@ -41,6 +45,7 @@ const styles = (theme: SaladTheme) => ({
     border: `1px solid ${theme.lightGreen}`,
     cursor: 'pointer',
     textTransform: 'uppercase',
+    marginLeft: 10,
     '&:hover': {
       opacity: 0.7,
     },
@@ -81,9 +86,14 @@ class _AccountMenu extends Component<Props> {
       )
     }
     return (
-      <div className={classes.signUpButton} onClick={this.handleClick}>
-        Sign Up
-      </div>
+      <>
+        <div className={classes.signUpButton} onClick={this.handleClick}>
+          Login
+        </div>
+        <div className={classes.signUpButton} onClick={this.handleClick}>
+          Register
+        </div>
+      </>
     )
   }
 }
