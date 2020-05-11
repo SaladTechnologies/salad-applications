@@ -4,6 +4,8 @@ import { Divider, Scrollbar } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { EarningSummary, EarningHistory } from '../components'
 import { EarningWindow } from '../../balance/models'
+import { withLogin } from '../../auth-views'
+import { EarningInformationContainer } from '../EarningInformationContainer'
 
 const styles = (theme: SaladTheme) => ({
   content: {
@@ -56,4 +58,4 @@ class _EarningSummaryPage extends Component<Props> {
   }
 }
 
-export const EarningSummaryPage = withStyles(styles)(_EarningSummaryPage)
+export const EarningSummaryPage = withLogin(withStyles(styles)(_EarningSummaryPage), EarningInformationContainer)

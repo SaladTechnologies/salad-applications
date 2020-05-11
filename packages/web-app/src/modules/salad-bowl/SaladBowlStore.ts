@@ -158,6 +158,11 @@ export class SaladBowlStore {
       return
     }
 
+    if (!this.store.auth.isAuth) {
+      yield this.store.auth.signIn()
+      return //TODO: Remove this once `signIn` is fully async for the full login flow
+    }
+
     if (this.timeoutTimer != null) {
       clearTimeout(this.timeoutTimer)
       this.timeoutTimer = undefined
