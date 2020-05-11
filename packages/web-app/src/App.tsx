@@ -5,6 +5,7 @@ import { FooterBarContainer, OfflineModalContainer } from './modules/home-views'
 import { MainTitlebarContainer } from './modules/home-views/MainTitlebarContainer'
 import { Routes } from './Routes'
 import { getStore } from './Store'
+import { NotMobile, MobileDevice, LoadingPage } from './components'
 
 const styles = {
   mainWindow: {
@@ -56,17 +57,24 @@ export const App = withStyles(styles)(
       const { classes } = this.props
 
       return (
-        <div className={classes.mainWindow}>
-          <OfflineModalContainer />
-          <MainTitlebarContainer />
-          <div className={classes.container}>
-            <div className={classes.content}>
-              <Routes />
+        <>
+          <MobileDevice>
+            <LoadingPage text={`Device Not Currently Supported`} />
+          </MobileDevice>
+          <NotMobile>
+            <div className={classes.mainWindow}>
+              <OfflineModalContainer />
+              <MainTitlebarContainer />
+              <div className={classes.container}>
+                <div className={classes.content}>
+                  <Routes />
+                </div>
+                <ToastContainer />
+              </div>
+              <FooterBarContainer />
             </div>
-            <ToastContainer />
-          </div>
-          <FooterBarContainer />
-        </div>
+          </NotMobile>
+        </>
       )
     }
   },
