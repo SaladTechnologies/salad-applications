@@ -20,6 +20,7 @@ export * from './SmartLink'
 export * from './SearchBar'
 export * from './SettingsPage'
 export * from './ToggleSetting'
+export * from './DeviceTypes'
 
 // Elements
 export * from './elements/ToggleSwitch/ToggleSwitch'

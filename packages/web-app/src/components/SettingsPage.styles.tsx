@@ -12,12 +12,12 @@ export const styles = (theme: SaladTheme) => ({
   },
   menu: {
     // flex: '0 0 294px', // equates to: 358px total width
-    flex: '0 0 240px', // equates to: 304px total width
+    flex: '0 0 200px', // equates to: 304px total width
     position: 'relative',
     padding: '1.5rem 2rem',
     display: 'flex',
     flexDirection: 'column',
-    boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.75)',
+    boxShadow: '3px 0px 3px 0px rgba(0,0,0,0.75)',
   },
 
   menuItems: {
