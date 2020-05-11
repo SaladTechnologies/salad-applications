@@ -12,6 +12,7 @@ import classnames from 'classnames'
 import { Route } from 'react-router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
+import { DesktopRoute } from '../DesktopRoute'
 
 export interface MenuItem {
   url: string
@@ -22,6 +23,7 @@ export interface MenuItem {
   /** Is the item clickable */
   enabled?: boolean
   inset?: boolean
+  desktopOnly?: boolean
 }
 
 export interface MenuButton {
@@ -135,9 +137,13 @@ class _Settings extends Component<Props> {
         </div>
         <div className={classnames(classes.settings)}>
           {/* Adds each path */}
-          {menuItems?.map((x) => (
-            <Route key={x.url} exact path={x.url} component={x.component} />
-          ))}
+          {menuItems?.map((x) =>
+            x.desktopOnly ? (
+              <DesktopRoute key={x.url} exact path={x.url} component={x.component} />
+            ) : (
+              <Route key={x.url} exact path={x.url} component={x.component} />
+            ),
+          )}
 
           {onClose && (
             <div onClick={this.handleCloseClicked}>

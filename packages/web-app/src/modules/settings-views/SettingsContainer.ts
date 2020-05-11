@@ -6,7 +6,12 @@ import { WindowsSettingsContainer } from './windows-settings-views'
 
 const mapStoreToProps = (store: RootStore): any => {
   const menuItems: MenuItem[] = [
-    { url: '/settings/windows-settings', text: 'Windows Settings', component: WindowsSettingsContainer },
+    {
+      url: '/settings/windows-settings',
+      text: 'Windows Settings',
+      component: WindowsSettingsContainer,
+      desktopOnly: true,
+    },
   ]
 
   return {

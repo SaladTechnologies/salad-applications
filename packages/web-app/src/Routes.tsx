@@ -37,8 +37,6 @@ class _Routes extends Component<RouteComponentProps> {
   render() {
     const { location } = this.props
 
-    console.error(location)
-
     if (Config.downTime) {
       return <Route render={() => <LoadingPage text="Salad Is Currently Down For Maintenance." />} />
     }
