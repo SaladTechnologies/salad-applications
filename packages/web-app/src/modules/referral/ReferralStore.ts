@@ -117,12 +117,17 @@ export class ReferralStore {
     }
   })
 
-  /** Loads the current user's referral */
+  /** Called when a user enters in a referral code */
   @action.bound
   submitReferralCode = flow(function* (this: ReferralStore, code: string) {
     if (this.currentReferral) {
       console.log('The user has already entered a referral code')
       return
+    }
+
+    if (!this.store.auth.isAuth) {
+      yield this.store.auth.signIn()
+      return //TODO: Remove this once `signIn` is fully async for the full login flow
     }
 
     console.log('Sending referral code ' + code)

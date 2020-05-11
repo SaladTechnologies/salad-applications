@@ -194,6 +194,11 @@ export class RewardStore {
 
   @action.bound
   addToChoppingCart = flow(function* (this: RewardStore, reward: Reward) {
+    if (!this.store.auth.isAuth) {
+      yield this.store.auth.signIn()
+      return //TODO: Remove this once `signIn` is fully async for the full login flow
+    }
+
     const request = {
       rewardId: reward.id,
     }
@@ -235,6 +240,11 @@ export class RewardStore {
     if (this.isRedeeming) {
       console.log('Already redeeming reward, skipping')
       return
+    }
+
+    if (!this.store.auth.isAuth) {
+      yield this.store.auth.signIn()
+      return //TODO: Remove this once `signIn` is fully async for the full login flow
     }
 
     this.isRedeeming = true

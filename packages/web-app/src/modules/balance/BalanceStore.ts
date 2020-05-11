@@ -1,4 +1,4 @@
-import { action, observable, flow, autorun, runInAction, computed } from 'mobx'
+import { action, observable, flow, autorun, computed } from 'mobx'
 import { RootStore } from '../../Store'
 import { AxiosInstance } from 'axios'
 import { EarningWindow } from './models'
@@ -67,15 +67,6 @@ export class BalanceStore {
     autorun(() => {
       this.store?.analytics?.trackLifetimeBalance?.(this.lifetimeBalance)
     })
-
-    //TODO: DRS Test Only!! Remove before this goes live.
-    setInterval(() => {
-      this.addFakeEarningHistory(this.currentBalance, this.currentBalance + 0.01)
-      runInAction(() => {
-        this.currentBalance += 0.01
-        this.lifetimeBalance += 0.01
-      })
-    }, 1000)
 
     //TODO: Test only
     for (let i = 0; i < 96; i++) {

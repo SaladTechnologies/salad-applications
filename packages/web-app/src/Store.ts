@@ -85,6 +85,9 @@ export class RootStore {
     this.machineInfoHeartbeat = setInterval(this.tryRegisterMachine, 20000)
 
     this.tryRegisterMachine()
+
+    //Start refreshing data
+    this.refresh.start()
   }
 
   @action.bound
@@ -109,8 +112,6 @@ export class RootStore {
     this.machineInfoHeartbeat = setInterval(this.tryRegisterMachine, 20000)
     this.version.startVersionChecks()
     this.tryRegisterMachine()
-
-    this.refresh.start()
 
     if (this.routing.location.pathname.startsWith('/auth/callback')) {
       //TODO: Once we do deferred auth, we should replace with the url that they were on before they started to login

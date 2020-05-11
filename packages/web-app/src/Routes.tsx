@@ -1,19 +1,11 @@
+import { Location } from 'history'
 import React, { Component } from 'react'
-
-// Packages
-import { Route, Switch, Redirect } from 'react-router'
-
-// Store
-import { getStore } from './Store'
-
-// Components
-import { Config } from './config'
-
-// Views
-import { CallbackContainer, WelcomePageContainer, WhatsNewPageContainer } from './modules/onboarding-views'
-import { HomePage } from './modules/home-views'
+import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router'
 import { LoadingPage } from './components'
-import { CompatibilityCheckPageContainer } from './modules/machine-views'
+import { Config } from './config'
+import { AccountSettingsContainer } from './modules/account-views'
+import { EmailVerificationPageContainer, LoginPageContainer } from './modules/auth-views'
+import { EarnMenuContainer } from './modules/earn-views'
 import {
   AntiVirusErrorContainer,
   CudaErrorContainer,
@@ -21,17 +13,16 @@ import {
   NetworkErrorContainer,
   UnknownErrorContainer,
 } from './modules/error-views'
-// Settings Menu
-import { AccountSettingsContainer } from './modules/account-views'
+import { HomePage } from './modules/home-views'
+import { CompatibilityCheckPageContainer } from './modules/machine-views'
+import { WhatsNewPageContainer } from './modules/onboarding-views'
 import { RewardDetailsContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
-import { EarnMenuContainer } from './modules/earn-views'
 import { SettingsContainer } from './modules/settings-views'
-import { AuthStore } from './modules/auth'
-import { EmailVerificationPageContainer } from './modules/profile-views/EmailVerificationPageContainer'
-// Account Menu
+import { PrivateRoute } from './PrivateRoute'
+import { getStore } from './Store'
 
-export default class Routes extends Component {
+class _Routes extends Component<RouteComponentProps> {
   store = getStore()
 
   checkMachineLoading = () => {
@@ -44,6 +35,10 @@ export default class Routes extends Component {
   }
 
   render() {
+    const { location } = this.props
+
+    console.error(location)
+
     if (Config.downTime) {
       return <Route render={() => <LoadingPage text="Salad Is Currently Down For Maintenance." />} />
     }
@@ -57,65 +52,37 @@ export default class Routes extends Component {
     }
 
     let isElectron = this.store.native.isNative
-    let isAuth = this.store.auth.isAuth
     let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
-    let hasProfile = this.store.profile.currentProfile !== undefined
+    const isAuth = this.store.auth.isAuth
 
+    const currentLocation =
+      (location.state as { currentLocation: Location | undefined } | undefined)?.currentLocation || location
     return (
-      <Switch>
-        <Route exact path="/machine-loading" render={() => <LoadingPage text="Checking the bits" />} />
-        <Route exact path="/email-verification" component={EmailVerificationPageContainer} />
-
-        {!isAuth && <NoAuth store={this.store.auth} />}
-
-        {/* Forces the profile loading page */}
-        {!hasProfile && <Route render={() => <LoadingPage text="Loading profile" />} />}
-
-        {isElectron && this.checkMachineLoading()}
-
-        {isElectron && showCompatibilityPage && <CompatibilityCheckPageContainer />}
-
-        {isAuth && <Auth />}
-
-        <Route render={() => <LoadingPage text="Page Not Found" />} />
-      </Switch>
+      <>
+        <Switch location={currentLocation}>
+          <Route exact path="/machine-loading" render={() => <LoadingPage text="Checking the bits" />} />
+          {isElectron && this.checkMachineLoading()}
+          {isElectron && showCompatibilityPage && <CompatibilityCheckPageContainer />}
+          <Route exact path="/errors/anti-virus" component={AntiVirusErrorContainer} />
+          <Route exact path="/errors/cuda" component={CudaErrorContainer} />
+          <Route exact path="/errors/fallback" component={FallbackErrorContainer} />
+          <Route exact path="/errors/network" component={NetworkErrorContainer} />
+          <Route exact path="/errors/unknown" component={UnknownErrorContainer} />
+          <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
+          <Route exact path="/whats-new" component={WhatsNewPageContainer} />
+          {/* SaladPay: This is stand in until we figure out iFrames, popups... */}
+          <Route exact path="/salad-pay/order-summary" component={SaladPayOrderSummaryContainer} />
+          <PrivateRoute path="/account" component={AccountSettingsContainer} isSignedIn={isAuth} />
+          <Route path="/settings" component={SettingsContainer} />
+          <Route path="/earn" component={EarnMenuContainer} />
+          <Route path="/" render={() => <HomePage />} />
+          <Route render={() => <LoadingPage text="Page Not Found" />} />
+        </Switch>
+        <Route path="/login" exact component={LoginPageContainer} />
+        <Route path="/login/email-verification" exact component={EmailVerificationPageContainer} />
+      </>
     )
   }
 }
 
-const NoAuth = (props: { store: AuthStore }) => {
-  const render = () => {
-    if (!props.store.isLoading) return <WelcomePageContainer />
-    return <LoadingPage text="Logging In" />
-  }
-
-  return (
-    <Switch>
-      <Route exact path="/auth/callback" component={CallbackContainer} />
-      <Route exact path="/" render={render} />
-      <Redirect to="/" />
-    </Switch>
-  )
-}
-
-const Auth = () => {
-  return (
-    <>
-      <Route path="/" render={() => <HomePage />} />
-      <Route exact path="/errors/anti-virus" component={AntiVirusErrorContainer} />
-      <Route exact path="/errors/cuda" component={CudaErrorContainer} />
-      <Route exact path="/errors/fallback" component={FallbackErrorContainer} />
-      <Route exact path="/errors/network" component={NetworkErrorContainer} />
-      <Route exact path="/errors/unknown" component={UnknownErrorContainer} />
-      <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
-      <Route exact path="/whats-new" component={WhatsNewPageContainer} />
-
-      {/* SaladPay: This is stand in until we figure out iFrames, popups... */}
-      <Route exact path="/salad-pay/order-summary" component={SaladPayOrderSummaryContainer} />
-
-      <Route path="/account" component={AccountSettingsContainer} />
-      <Route path="/settings" component={SettingsContainer} />
-      <Route path="/earn" component={EarnMenuContainer} />
-    </>
-  )
-}
+export const Routes = withRouter(_Routes)

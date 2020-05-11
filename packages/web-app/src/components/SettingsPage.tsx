@@ -13,9 +13,6 @@ import { Route } from 'react-router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 
-// Components
-import { Overlay } from '.'
-
 export interface MenuItem {
   url: string
   text: string
@@ -109,7 +106,7 @@ class _Settings extends Component<Props> {
     } = this.props
 
     return (
-      <Overlay>
+      <div className={classes.container}>
         <Head title={pageTitle} />
         <div className={classnames(classes.menu, classes.menuItems)}>
           {menuItems && <LinkListUnstyled list={menuItems} />}
@@ -148,7 +145,7 @@ class _Settings extends Component<Props> {
             </div>
           )}
         </div>
-      </Overlay>
+      </div>
     )
   }
 }

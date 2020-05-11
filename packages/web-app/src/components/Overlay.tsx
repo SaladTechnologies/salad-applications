@@ -1,34 +1,60 @@
-import React, { Component } from 'react'
-
-// Packages
+import React, { Component, MouseEvent } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import classnames from 'classnames'
 import { SaladTheme } from '../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
-  overlayContainer: {
+  overlay: {
+    backdropFilter: 'blur(25px)',
     backgroundColor: theme.darkBlue,
-    display: 'flex',
-    position: 'absolute',
-    top: 0,
-    right: 0,
+    backgroundBlendMode: 'multiply',
     bottom: 0,
+    display: 'flex',
     left: 0,
-    zIndex: 999,
+    opacity: '75%',
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    // TODO: Remove z-indexes!!!
+    zIndex: 9999999998,
   },
 })
 
-interface Props extends WithStyles<typeof styles> {
-  onCloseClicked?: () => void
-  onCloseKeyPress?: (e: any) => void
+export interface OverlayProps extends WithStyles<typeof styles> {
+  onCloseRequested?: () => void
 }
 
-class _Overlay extends Component<Props> {
-  render() {
-    const { children, classes } = this.props
+export const Overlay = withStyles(styles)(
+  class Overlay extends Component<OverlayProps> {
+    componentDidMount() {
+      document.addEventListener('keydown', this.onKeyDown)
+    }
 
-    return <div className={classnames(classes.overlayContainer)}>{children}</div>
-  }
-}
+    componentWillUnmount() {
+      document.removeEventListener('keydown', this.onKeyDown)
+    }
 
-export const Overlay = withStyles(styles)(_Overlay)
+    onClick = (event: MouseEvent<HTMLDivElement>) => {
+      if (event.currentTarget !== event.target) {
+        // Ignore clicks on descendent elements.
+        return
+      }
+
+      this.props.onCloseRequested?.()
+    }
+
+    onKeyDown = (event: KeyboardEvent) => {
+      // Detect "Escape" key presses.
+      if (event.keyCode === 27) {
+        this.props.onCloseRequested?.()
+      }
+    }
+
+    render() {
+      return (
+        <div className={this.props.classes.overlay} onClick={this.onClick}>
+          {this.props.children}
+        </div>
+      )
+    }
+  },
+)

@@ -6,6 +6,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import { P, Head } from '../../../components'
 import { RewardVaultItem } from '../../vault/models'
 import { VaultItem } from './VaultItem'
+import { withLogin } from '../../auth-views'
 
 const styles = {
   container: {
@@ -48,4 +49,4 @@ class _VaultList extends Component<Props> {
   }
 }
 
-export const VaultList = withStyles(styles)(_VaultList)
+export const VaultList = withLogin(withStyles(styles)(_VaultList))

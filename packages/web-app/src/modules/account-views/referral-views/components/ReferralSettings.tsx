@@ -10,6 +10,7 @@ import { ReferralStatsContainer } from '../ReferralStatsContainer'
 import { ReferralListContainer } from '../ReferralListContainer'
 import classnames from 'classnames'
 import { CurrentReferralPanelContainer } from '../CurrentReferralPanelContainer'
+import { withLogin } from '../../../auth-views'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -63,4 +64,4 @@ class _ReferralSettings extends Component<Props> {
   }
 }
 
-export const ReferralSettings = withStyles(styles)(_ReferralSettings)
+export const ReferralSettings = withLogin(withStyles(styles)(_ReferralSettings))

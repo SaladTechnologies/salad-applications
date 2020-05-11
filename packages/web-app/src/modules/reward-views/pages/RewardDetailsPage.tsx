@@ -40,7 +40,6 @@ interface Props extends WithStyles<typeof styles> {
 class _RewardDetailsPage extends Component<Props> {
   render() {
     const { reward, onRedeem, onBack, classes, ...rest } = this.props
-
     return (
       <div className={classes.container}>
         <Head title={reward?.name} />
