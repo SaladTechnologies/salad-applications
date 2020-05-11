@@ -26,7 +26,7 @@ export class AnalyticsStore {
 
     this.started = true
 
-    Sentry.configureScope(scope => {
+    Sentry.configureScope((scope) => {
       scope.setUser({
         id: profile.id,
         email: profile.email,
@@ -133,18 +133,6 @@ export class AnalyticsStore {
 
     mixpanel.people.set({
       AutoStart: enabled,
-    })
-  }
-
-  public trackOfferwallStatus = (enabled: boolean) => {
-    if (!this.started) return
-
-    this.track('Offerwall Toggle', {
-      Enabled: enabled,
-    })
-
-    mixpanel.people.set({
-      Offerwall: enabled,
     })
   }
 
@@ -265,7 +253,7 @@ export class AnalyticsStore {
 
   public captureException = (err: Error) => {
     console.error(err)
-    Sentry.withScope(scope => {
+    Sentry.withScope((scope) => {
       scope.setFingerprint([err.name, err.message])
       Sentry.captureException(err)
     })

@@ -57,7 +57,7 @@ export class EngagementStore {
       }
 
       //Incompatible machine and offerwalls are disabled
-      else if (!this.store.saladBowl.canRun && !this.store.offerwall.offerwall) {
+      else if (!this.store.saladBowl.canRun && this.store.balance.lifetimeBalance === 0) {
         //Link to offerwall page
         this.store.notifications.sendNotification({
           title: `Can't Chop? Try Offerwalls!`,
