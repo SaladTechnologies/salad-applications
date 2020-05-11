@@ -1,7 +1,13 @@
+// Import CSS. Order is important!
 import './index.css'
 import 'react-hint/css/index.css'
 import 'react-toastify/dist/ReactToastify.css'
 
+// Import polyfills. Order is important!
+import 'react-app-polyfill/stable'
+import 'whatwg-fetch'
+
+// Import dependencies.
 import * as Sentry from '@sentry/browser'
 import { createBrowserHistory } from 'history'
 import { syncHistoryWithStore } from 'mobx-react-router'
