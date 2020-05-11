@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { ToggleSetting, SmartLink, P, SectionHeader, Scrollbar, Head } from '../../../components'
+import { SmartLink, P, SectionHeader, Scrollbar, Head } from '../../../components'
 import offerWallExample from '../assets/AdGem.png'
 import Img from 'react-image'
 
@@ -35,38 +35,33 @@ const styles = {
   },
 }
 
-interface Props extends WithStyles<typeof styles> {
-  offerwall?: boolean
-  offerwallToggle?: () => void
-}
+interface Props extends WithStyles<typeof styles> {}
 
 class _Offerwall extends Component<Props> {
   render() {
-    const { offerwall, offerwallToggle, classes } = this.props
+    const { classes } = this.props
 
     return (
       <Scrollbar>
         <Head title="Offerwalls" />
         <div className={classes.container}>
           <div className={classes.content}>
-            <div>
-              <ToggleSetting
-                title={'Enable Offerwalls'}
-                description={`Earn Salad Balance by completing tasks such as downloading and playing mobile games. Whether you just
-                  want to top off your balance, boost your regular earnings, or can’t mine with Salad,
-                  offerwalls allow you to make more money.`}
-                toggled={offerwall}
-                onToggle={offerwallToggle}
-              />
-            </div>
             <div className={classes.descriptionContainer}>
               <div>
                 <SectionHeader>Getting Started</SectionHeader>
                 <P>
-                  Offerwalls are easy, simply "Enable Offerwalls" above and then browse our collection of offerwall
-                  partners to find an offer. Click on any of the offers to learn more about what is required to complete
-                  the offer. Once you have completed an offer, you will automatically be rewarded with your new Salad
-                  balance.
+                  Offerwalls are easy, simply browse our collection of offerwall partners to find an offer. Click on any
+                  of the offers to learn more about what is required to complete the offer. Once you have completed an
+                  offer, you will automatically be rewarded with your new Salad balance.
+                </P>
+                <P>
+                  <SmartLink
+                    to={
+                      'https://salad.zendesk.com/hc/en-us/articles/360041472991-The-Salad-Guide-to-AdGem-and-Offerwalls'
+                    }
+                  >
+                    Check out our FAQ for more info!
+                  </SmartLink>
                 </P>
               </div>
               <br />
@@ -85,15 +80,6 @@ class _Offerwall extends Component<Props> {
                   - BlueStacks or other device emulators may not be supported by offerwall providers
                   <br />- The use of a VPN may result in a ban by the offerwall provider
                 </i>
-              </P>
-              <P>
-                <SmartLink
-                  to={
-                    'https://salad.zendesk.com/hc/en-us/articles/360041472991-The-Salad-Guide-to-AdGem-and-Offerwalls'
-                  }
-                >
-                  Check out our FAQ for more info!
-                </SmartLink>
               </P>
             </div>
           </div>

@@ -1,5 +1,4 @@
 import { connect } from '../../connect'
-import { RootStore } from '../../Store'
 import { SettingsPage } from '../../components'
 import { OfferwallContainer } from './OfferwallContainer'
 import { MiningContainer } from './MiningContainer'
@@ -10,7 +9,7 @@ import { ReferralSettingsContainer } from '../account-views/referral-views'
 import { EarningSummaryContainer } from './EarningSummaryContainer'
 import { MiningInformationContainer } from './MiningInformationContainer'
 
-const mapStoreToProps = (store: RootStore): any => {
+const mapStoreToProps = (): any => {
   return {
     pageTitle: 'Earn',
     menuItems: [
@@ -20,15 +19,13 @@ const mapStoreToProps = (store: RootStore): any => {
         text: 'AdGate',
         url: '/earn/adgate',
         component: AdGateContainer,
-        enabled: store.offerwall.offerwall,
         inset: true,
       },
-      { text: 'AdGem', url: '/earn/adgem', component: AdGemContainer, enabled: store.offerwall.offerwall, inset: true },
+      { text: 'AdGem', url: '/earn/adgem', component: AdGemContainer, inset: true },
       {
         text: 'OfferToro',
         url: '/earn/offer-toro',
         component: OfferToroContainer,
-        enabled: store.offerwall.offerwall,
         inset: true,
       },
       { text: 'Mining', url: '/earn/mine', component: MiningContainer, divider: true },
