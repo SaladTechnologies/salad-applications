@@ -31,7 +31,8 @@
     "build-storybook": "build-storybook -c .storybook -o storybook-build --quiet",
     "start": "react-scripts start",
     "storybook": "start-storybook -p 9009",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "list-browsers": "npx browserslist"
   },
   "browserslist": [
     ">0.2%",

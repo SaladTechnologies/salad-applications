@@ -55,6 +55,7 @@ export const App = withStyles(styles)(
 
     render() {
       const { classes } = this.props
+      const isNative = this.store.native.isNative
 
       return (
         <>
@@ -71,7 +72,7 @@ export const App = withStyles(styles)(
                 </div>
                 <ToastContainer />
               </div>
-              <FooterBarContainer />
+              {isNative && <FooterBarContainer />}
             </div>
           </NotMobile>
         </>

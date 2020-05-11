@@ -17,7 +17,7 @@ export const styles = (theme: SaladTheme) => ({
     padding: '1.5rem 2rem',
     display: 'flex',
     flexDirection: 'column',
-    boxShadow: '3px 0px 3px 0px rgba(0,0,0,0.75)',
+    boxShadow: '3px 0px 3px 0px rgba(0,0,0,0.4)',
   },
 
   menuItems: {

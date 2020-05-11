@@ -6,6 +6,9 @@ interface Props extends RouteProps {
   isSignedIn: boolean
 }
 
+/**
+ * A React Router route that only is available a user is signed into Salad
+ */
 export class PrivateRoute extends Component<Props> {
   render() {
     const { component: Component, isSignedIn, ...rest } = this.props
