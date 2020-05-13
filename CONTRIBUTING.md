@@ -13,7 +13,7 @@ Thanks for being here and for being awesome! 👍
 
 The easiest way to contribute to Salad is by participating in discussions on our [SaladChefs Discord server](https://discord.gg/7tmU8pj). The community often chimes in with helpful advice when you have a question, and you may also find yourself providing answers and helping others.
 
-You can also participate in [bug reports](https://feedback.salad.io/bugs) and [feature requests](https://feedback.salad.io/features) on our dedicated feedback website. Some users find our feedback website easier to use than GitHub issues, and consolidating discussions about bugs and features helps us track and prioritize issues.
+You can also participate in [bug reports](https://support.salad.io/hc/en-us/requests/new). Some users find our feedback website easier to use than GitHub issues, and consolidating discussions about bugs helps us track and prioritize issues.
 
 _Please don't use GitHub issues to ask a question._ We will politely close a GitHub issue that asks a question and kindly refer you to one of the aforementioned avenues.
 
@@ -29,13 +29,7 @@ Post a new [bug report](https://salad.zendesk.com/hc/en-us/requests/new).
 
 We love a good idea. Do you have one?
 
-First, search the [feature requests](https://feedback.salad.io/features) on our dedicated feedback website to see if this is already a suggestion. If you find something that matches the idea you thought of first, please upvote the existing feature request. If you have new or additional details, please comment on the existing feature request.
-
-Second, consider jumping into the [#feature-requests channel on the SaladChefs Discord server](https://discord.gg/7tmU8pj). The community may have some interesting insights.
-
-Finally, post a new [feature request](https://feedback.salad.io/features).
-
-![screenshot of the feature request form](./docs/create-feature-request.png)
+Consider jumping into the [#feature-requests channel on the SaladChefs Discord server](https://discord.gg/7tmU8pj). The community may have some interesting insights.
 
 ## Changing Code
 
