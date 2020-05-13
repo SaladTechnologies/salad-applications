@@ -6,9 +6,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinus, faClone, faTimes } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
 import { SmartLink } from '../../../components'
-import GearIcon from '../assets/GearIcon.svg'
 import Img from 'react-image'
 import { AccountMenuContainer } from '../../account-views/account-menu'
+import { SettingsButtonContainer } from '../../settings-views'
 
 export class MenuItem {
   constructor(public readonly name: string, public readonly url: string, public readonly showNotification?: boolean) {}
@@ -148,14 +148,7 @@ class _Titlebar extends Component<Props> {
         {menuItems && (
           <div className={classes.componentContainer}>
             <AccountMenuContainer />
-            {isDesktop && (
-              <SmartLink
-                className={classnames(classes.settingsButton, classes.buttons)}
-                to={'/settings/windows-settings'}
-              >
-                <Img height={16} src={GearIcon} />
-              </SmartLink>
-            )}
+            {isDesktop && <SettingsButtonContainer />}
           </div>
         )}
 
