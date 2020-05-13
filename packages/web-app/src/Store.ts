@@ -19,8 +19,12 @@ import { VersionStore } from './modules/versions'
 import { StopReason } from './modules/salad-bowl/models'
 import { EngagementStore } from './modules/engagement'
 
-//Forces all changes to state to be from an action
-configure({ enforceActions: 'always' })
+configure({
+  computedRequiresReaction: process.env.NODE_ENV === 'development',
+  enforceActions: 'always',
+  observableRequiresReaction: process.env.NODE_ENV === 'development',
+  reactionRequiresObservable: process.env.NODE_ENV === 'development',
+})
 
 let sharedStore: RootStore
 
