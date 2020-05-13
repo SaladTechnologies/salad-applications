@@ -49,7 +49,7 @@ export class VersionStore {
   }
 
   @action.bound
-  private checkDesktopVersion = flow(function*(this: VersionStore) {
+  private checkDesktopVersion = flow(function* (this: VersionStore) {
     if (!this.store.native.desktopVersion) {
       this.onLatestDesktop = false
       return
@@ -67,7 +67,6 @@ export class VersionStore {
   })
 
   downloadLatestDesktop = () => {
-    console.log('Downloading latest version of the desktop app')
-    window.open('https://getsalad.io', '_blank')
+    window.open('https://www.salad.io/download', '_blank')
   }
 }

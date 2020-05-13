@@ -3,6 +3,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import { SmartLink, P, Divider, SectionHeader, Scrollbar, Head } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { StartButtonContainer } from '../../machine-views'
+import { DesktopDownloadContainer } from '../DesktopDownloadContainer'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -45,6 +46,7 @@ class _MiningInformation extends Component<Props> {
         <Head title="Mining - How it Works" />
         <Scrollbar>
           <div className={classes.content}>
+            <DesktopDownloadContainer />
             <div className={classes.splitContainer}>
               <div className={classes.column} style={{ paddingRight: 20 }}>
                 <SectionHeader>What is Mining?</SectionHeader>

@@ -6,6 +6,7 @@ import { MiningSummary } from '../components'
 import classNames from 'classnames'
 import { SlicedVeggieContainer, PantryContainer } from '../../xp-views'
 import { Machine } from '../../machine/models/Machine'
+import { DesktopDownloadContainer } from '../DesktopDownloadContainer'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -55,6 +56,7 @@ class _MiningPage extends Component<Props> {
         <Scrollbar>
           <div className={classNames(classes.content, classes.splitContainer)}>
             <div className={classNames(classes.column, classes.mainColumn)}>
+              <DesktopDownloadContainer />
               <MiningSummary lifetimeXp={lifetimeXp} machine={machine} />
 
               <Divider />
