@@ -82,6 +82,9 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
     alignItems: 'center',
     textShadow: '',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   outOfStockLabel: {
     color: theme.lightGreen,
