@@ -68,7 +68,17 @@ const getPlatformIcon = (platform?: RewardPlatform): string | undefined => {
 class _RewardInfoPanel extends Component<Props> {
   render() {
     const { reward, classes } = this.props
+
+    if (!reward) {
+      return null
+    }
+
+    if (!reward.releaseDate && !reward.developerName && !reward.publisherName) {
+      return null
+    }
+
     let platformIcon = getPlatformIcon(reward?.platform)
+
     return (
       <>
         <div className={classnames(classes.container)}>
