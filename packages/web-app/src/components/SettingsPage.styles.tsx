@@ -20,6 +20,25 @@ export const styles = (theme: SaladTheme) => ({
     boxShadow: '3px 0px 3px 0px rgba(0,0,0,0.4)',
   },
 
+  menuItem: {
+    display: 'flex',
+    alignItems: 'center',
+    fontFamily: theme.fontGroteskBook25,
+    fontSize: theme.small,
+    lineHeight: theme.small,
+    letterSpacing: '0.01rem',
+    fontWeight: 'normal',
+    color: theme.green,
+    cursor: 'pointer',
+    '&:hover': {
+      color: theme.lightGreen,
+    },
+  },
+  backButton: {
+    paddingRight: 5,
+    width: 15,
+  },
+
   menuItems: {
     '& .linkListUnstyled': {
       '& .linkListItem': {
@@ -68,31 +87,11 @@ export const styles = (theme: SaladTheme) => ({
       opacity: 0.8,
     },
   },
-
   updateSalad: {
     textAlign: 'center',
   },
   buttonContainer: {
     marginTop: 'auto',
-  },
-  closeButton: {
-    border: 'solid 3px ' + theme.green,
-    color: theme.green,
-    position: 'absolute',
-    top: 30,
-    right: 30,
-    cursor: 'pointer',
-    transition: 'color 200ms',
-    borderRadius: '50%',
-    width: '20px !important',
-    height: 20,
-    padding: 3,
-
-    '&:hover': {
-      border: 'solid 3px ' + theme.lightGreen,
-      color: theme.lightGreen,
-      transition: 'all 200ms ease',
-    },
   },
   versionContainer: {
     display: 'flex',
