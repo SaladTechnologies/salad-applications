@@ -62,6 +62,9 @@ const styles = (theme: SaladTheme) => ({
   stockLabel: {
     padding: '2px 10px',
     fontSize: 8,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   outOfStockLabel: {
     color: theme.lightGreen,

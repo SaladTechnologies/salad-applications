@@ -64,7 +64,7 @@ const styles = (theme: SaladTheme) => ({
   priceText: {
     color: theme.green,
     fontFamily: theme.fontGroteskBook25,
-    fontSize: 14,
+    fontSize: 12,
     letterSpacing: 1,
     paddingTop: 5,
   },
@@ -78,7 +78,10 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: 8,
+    fontSize: 7,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   outOfStockLabel: {
     color: theme.lightGreen,
