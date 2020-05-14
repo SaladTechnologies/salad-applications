@@ -10,20 +10,12 @@ const styles = {
   container: {
     paddingTop: 18,
   },
-  imageContainer: {
-    padding: '0px 10px',
-  },
-  singleImage: {
-    paddingTop: 18,
-    height: 'auto',
-    width: '25%',
-    display: 'block',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-  },
   image: {
-    height: 'auto',
-    width: '100%',
+    display: 'block',
+    height: '100%',
+    margin: 'auto',
+    width: 'auto',
+    maxHeight: '50vh',
     border: '1px solid rgba(255, 255, 255, 0.10)',
   },
 }
@@ -39,6 +31,41 @@ const responsive = {
   },
 }
 
+const renderImageComponent = (props: Props) => {
+  const { reward, classes } = props
+
+  if (!reward) {
+    return null
+  }
+
+  //Other images as a default
+  if (!reward.images || reward.images.length === 0) {
+    if (reward.heroImage) {
+      return <Img className={classes.image} src={reward.heroImage} alt="" />
+    } else if (reward.coverImage) {
+      return <Img className={classes.image} src={reward.coverImage} alt="" />
+    } else if (reward.image) {
+      return <Img className={classes.image} src={reward.image} alt="" />
+    } else {
+      return null
+    }
+  }
+
+  //Single reward image
+  if (reward.images && reward.images.length === 1) {
+    return <Img className={classes.image} src={reward.images[0]} alt="" />
+  }
+
+  //Collection of images
+  return (
+    <Carousel keyBoardControl={false} responsive={responsive} arrows showDots>
+      {reward?.images?.map((x) => (
+        <Img key={x} className={classes.image} src={x} alt="" />
+      ))}
+    </Carousel>
+  )
+}
+
 class _RewardImageCarousel extends Component<Props> {
   render() {
     const { reward, classes } = this.props
@@ -47,27 +74,9 @@ class _RewardImageCarousel extends Component<Props> {
       return null
     }
 
-    if (!reward.images || reward.images.length === 0) {
-      if (reward.heroImage) {
-        return <Img className={classes.singleImage} src={reward.heroImage} alt="" />
-      } else if (reward.coverImage) {
-        return <Img className={classes.singleImage} src={reward.coverImage} alt="" />
-      } else if (reward.image) {
-        return <Img className={classes.singleImage} src={reward.image} alt="" />
-      } else {
-        return null
-      }
-    }
-
     return (
       <div className={classnames(classes.container)}>
-        <Carousel keyBoardControl={false} responsive={responsive} autoPlay arrows centerMode infinite>
-          {reward?.images?.map((x) => (
-            <div key={x} className={classes.imageContainer}>
-              <Img className={classes.image} src={x} alt="" />
-            </div>
-          ))}
-        </Carousel>
+        {renderImageComponent(this.props)}
         <Divider />
       </div>
     )
