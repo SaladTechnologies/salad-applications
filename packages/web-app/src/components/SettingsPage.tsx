@@ -10,9 +10,8 @@ import { LinkListUnstyled, MenuTitle, Button, Divider, Head } from '.'
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 import { Route } from 'react-router'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { DesktopRoute } from '../DesktopRoute'
+import { IconArrowLeft } from '../modules/reward-views/components/assets'
 
 export interface MenuItem {
   url: string
@@ -111,6 +110,17 @@ class _Settings extends Component<Props> {
       <div className={classes.container}>
         <Head title={pageTitle} />
         <div className={classnames(classes.menu, classes.menuItems)}>
+          {onClose && (
+            <>
+              <div className={classes.menuItem} onClick={this.handleCloseClicked}>
+                <div className={classes.backButton}>
+                  <IconArrowLeft />
+                </div>
+                Back
+              </div>
+              <Divider />
+            </>
+          )}
           {menuItems && <LinkListUnstyled list={menuItems} />}
 
           <div className={classes.buttonContainer}>
@@ -143,12 +153,6 @@ class _Settings extends Component<Props> {
             ) : (
               <Route key={x.url} exact path={x.url} component={x.component} />
             ),
-          )}
-
-          {onClose && (
-            <div onClick={this.handleCloseClicked}>
-              <FontAwesomeIcon className={classes.closeButton} icon={faTimes} />
-            </div>
           )}
         </div>
       </div>
