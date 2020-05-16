@@ -71,7 +71,7 @@ class _WindowsSettings extends Component<Props> {
             <ToggleSetting
               title={'Auto Start'}
               description={
-                'Salad will automatically start to run after being AFK a determined amount of time *and* will automatically stop when your return.'
+                'Salad will automatically start to run after being AFK a determined amount of time *and* will automatically stop when you return.'
               }
               toggled={autoStart}
               onToggle={autoStartToggle}
