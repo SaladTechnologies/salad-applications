@@ -176,6 +176,7 @@ export class SaladBowlStore {
     if (this.runningTimer) {
       clearInterval(this.runningTimer)
       this.runningTimer = undefined
+      this.runningTime = 0
     }
 
     this.currentPluginDefinition = undefined

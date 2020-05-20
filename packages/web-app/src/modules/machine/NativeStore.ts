@@ -164,14 +164,11 @@ export class NativeStore {
       this.failedCount = 0
       this.isOnline = true
     } catch (err) {
-      //TODO: Remove these checks once we have an unauthenticated API to check
-      if (err.response === undefined || err.response.status !== 401) {
-        console.log(err)
-        this.failedCount += 1
+      console.log(err)
+      this.failedCount += 1
 
-        if (this.failedCount >= 3) {
-          this.isOnline = false
-        }
+      if (this.failedCount >= 3) {
+        this.isOnline = false
       }
     }
     if (this.isOnline !== prevOnline) {
