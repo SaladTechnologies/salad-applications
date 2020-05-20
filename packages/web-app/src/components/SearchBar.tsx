@@ -25,12 +25,13 @@ const styles = (theme: SaladTheme) => ({
   },
   textInput: {
     fontFamily: theme.fontGroteskLight25,
-    fontSize: 10,
+    fontSize: 12,
     background: 'transparent',
     border: 'none',
     outline: 'none',
     letterSpacing: 1,
     color: theme.lightGreen,
+    paddingBottom: 5,
     borderBottom: `1px solid ${theme.lightGreen}`,
     opacity: 1,
     width: 200, //This is used to drive the width of the entire search bar
