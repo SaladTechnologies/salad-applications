@@ -41,14 +41,14 @@ const styles = (theme: SaladTheme) => {
       display: 'flex',
       alignItems: 'center',
       padding: '20px 0px',
-    },
-    backButton: {
-      width: 15,
-      padding: 10,
       cursor: 'pointer',
       '&:hover': {
         opacity: 0.5,
       },
+    },
+    backButton: {
+      width: 15,
+      padding: 10,
     },
     titleText: {
       fontFamily: theme.fontGroteskBook19,
@@ -104,8 +104,8 @@ class _BrowseRewardsPage extends Component<Props> {
 
     return (
       <div className={classes.container}>
-        <div className={classes.titleBar}>
-          <div className={classes.backButton} onClick={this.handleBack}>
+        <div className={classes.titleBar} onClick={this.handleBack}>
+          <div className={classes.backButton}>
             <IconArrowLeft />
           </div>
           <div className={classes.titleText}>{title || 'Back'}</div>

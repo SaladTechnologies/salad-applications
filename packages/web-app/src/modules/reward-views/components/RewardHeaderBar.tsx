@@ -17,13 +17,19 @@ const styles = (theme: SaladTheme) => ({
     color: theme.lightGreen,
     height: 87,
   },
-  backButton: {
-    width: 15,
-    padding: 20,
+  nameContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center',
     cursor: 'pointer',
     '&:hover': {
       opacity: 0.5,
     },
+  },
+  backButton: {
+    width: 15,
+    padding: 10,
   },
   nameText: {
     fontFamily: theme.fontGroteskLight09,
@@ -113,10 +119,13 @@ class _RewardHeaderBar extends Component<Props> {
 
     return (
       <div className={classnames(classes.container)}>
-        <div className={classes.backButton} onClick={this.handleBack}>
-          <IconArrowLeft />
+        <div className={classes.nameContainer} onClick={this.handleBack}>
+          <div className={classes.backButton}>
+            <IconArrowLeft />
+          </div>
+          <div className={classes.nameText}>{reward && reward.name ? reward.name : ''}</div>
         </div>
-        <div className={classes.nameText}>{reward && reward.name ? reward.name : 'Unknown'}</div>
+
         {!promoGame && (
           <>
             <div className={classes.priceContainer}>

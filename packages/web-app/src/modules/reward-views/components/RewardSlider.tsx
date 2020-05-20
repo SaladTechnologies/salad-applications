@@ -11,18 +11,23 @@ const styles = (theme: SaladTheme) => ({
   container: { color: theme.lightGreen, paddingBottom: 64 },
   titleContainer: {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'baseline',
     fontFamily: theme.fontGroteskBook19,
     fontSize: 20,
     padding: '12px 6px',
     textTransform: 'capitalize',
+    cursor: 'pointer',
+  },
+  titleText: {
+    '&:hover': {
+      opacity: 0.8,
+    },
   },
   viewMoreText: {
-    paddingLeft: 15,
+    paddingLeft: 10,
     fontSize: 12,
     display: 'flex',
     alignItems: 'center',
-    cursor: 'pointer',
     '&:hover': {
       opacity: 0.8,
     },
@@ -109,19 +114,19 @@ class _RewardSlider extends Component<Props, State> {
     const { isHovering, isHoveringRewards } = this.state
     return (
       <div className={classes.container} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
-        <div className={classes.titleContainer}>
-          {title}
-          {isHovering && (
-            <SmartLink to={viewAllRoute}>
+        <SmartLink to={viewAllRoute}>
+          <div className={classes.titleContainer}>
+            <div className={classes.titleText}>{title}</div>
+            {isHovering && (
               <div className={classes.viewMoreText}>
                 Explore All
                 <div className={classes.arrow}>
                   <IconArrowRight />
                 </div>
               </div>
-            </SmartLink>
-          )}
-        </div>
+            )}{' '}
+          </div>
+        </SmartLink>
         <div onMouseEnter={this.handleMouseEnterRewards} onMouseLeave={this.handleMouseLeaveRewards}>
           <Carousel
             keyBoardControl={false}
