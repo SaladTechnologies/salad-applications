@@ -66,7 +66,7 @@ export class SaladBowlStore {
 
   /** Returns the summary status for the machine */
   @computed
-  get machineStatus(): MachineStatus {
+  private get machineStatus(): MachineStatus {
     switch (this.plugin.status) {
       case PluginStatus.Installing:
       case PluginStatus.Initializing:

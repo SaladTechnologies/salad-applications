@@ -1,6 +1,6 @@
 export enum MiningStatus {
   Installing = 'installing',
-  Initializing = 'initializing',
+  Initializing = 'prepping',
   Running = 'chopping',
   Stopped = 'stopped',
 }
