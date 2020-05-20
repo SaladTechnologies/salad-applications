@@ -32,6 +32,7 @@ export * from './elements/StatElement/StatElement'
 
 // Primitive
 
+export * from './primitives/content/Li'
 export * from './primitives/content/Paragraph'
 export * from './primitives/content/ErrorText'
 export * from './primitives/headers/CondensedHeader'
