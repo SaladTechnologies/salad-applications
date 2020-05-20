@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { Divider, Scrollbar, SectionHeader, P, SmartLink } from '../../../components'
+import { Divider, Scrollbar, SectionHeader, P, SmartLink, Li } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { StartButtonContainer } from '../../machine-views'
 
@@ -48,8 +48,9 @@ class _EarningInformationPage extends Component<Props> {
               <div className={classes.column} style={{ paddingRight: 20 }}>
                 <SectionHeader>What is Earning?</SectionHeader>
                 <P>
-                  With Salad you can easily earn Salad balance to purchase anything available in our Store or on partner
-                  websites that support SaladPay.
+                  You can earn with Salad in several ways, from mining crypto, completing offers, and fulfilling
+                  referrals. All of these earnings are converted automatically for you into Salad Balance. This Balance
+                  can be used to redeem rewards in our Storefront.
                 </P>
               </div>
               <div className={classes.column}></div>
@@ -58,10 +59,14 @@ class _EarningInformationPage extends Component<Props> {
             <SectionHeader>Offerwalls</SectionHeader>
             <div className={classes.splitContainer}>
               <div className={classes.column}>
+                <P>Earn Salad Balance by completing offers such as:</P>
+                <Li>Downloading and playing mobile games</Li>
+                <Li>Filling out surveys</Li>
+                <Li>Watching advertisements</Li>
                 <P>
-                  Earn Salad Balance by completing tasks such as downloading and playing mobile games. Whether you just
-                  want to top off your balance, boost your regular earnings, or can’t mine with Salad, offerwalls allow
-                  you to make more money.
+                  Offers payout anywhere from $0.01 - $20.00+, depending on the task. Whether you want to top off your
+                  balance, boost your typical earnings, or can't mine with Salad, Offerwalls allow you to make more
+                  money.
                 </P>
                 <P>
                   <SmartLink to="/earn/offerwall">Learn More</SmartLink>
@@ -75,9 +80,10 @@ class _EarningInformationPage extends Component<Props> {
             <div className={classes.splitContainer}>
               <div className={classes.column}>
                 <P>
-                  Mining powers the world of cryptocurrency, individual miners (computers) form vast networks of shared
-                  processing power to keep networks like Ethereum and Bitcoin running. Mining is easy, simply press the
-                  "Start" button and Salad will automatically start mining for you.
+                  Mining powers the world of cryptocurrency, and it's the bread and butter of Salad Earnings. We make
+                  the process easy; Salad automatically matches your PC to the most profitable mining protocols and
+                  converts crypto into Salad Balance, usable immediately in our Storefront. Just press "Start," wait for
+                  us to configure your computer, and start Earning.
                 </P>
                 <P>
                   <SmartLink to="/earn/mine">Learn More</SmartLink>
@@ -94,9 +100,10 @@ class _EarningInformationPage extends Component<Props> {
             <div className={classes.splitContainer}>
               <div className={classes.column}>
                 <P>
-                  Referrals make it easy to invite your friends to join you in Salad. You will receive a 50% bonus
-                  relative to your referee's Salad earnings (up to $1 per referee), paid out as they earn. This does not
-                  impact their earnings. The more your referees run Salad, the faster you'll see your bonuses.
+                  Referrals allow you to easily invite friends, family, and acquaintances to join you in Salad. You
+                  receive a 50% earnings bonus relative to your referee's Salad earnings (up to $1 per referral), which
+                  is paid out incrementally as they mine. The more your referee runs Salad, the faster you'll earn your
+                  bonus.
                 </P>
                 <P>
                   <SmartLink to="/earn/referrals">Learn More</SmartLink>

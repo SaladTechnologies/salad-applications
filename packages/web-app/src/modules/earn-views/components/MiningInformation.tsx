@@ -72,10 +72,10 @@ class _MiningInformation extends Component<Props> {
                 <P>There are 3 states of Salad that you should be aware of:</P>
                 <P>
                   <b>STOPPED</b>
-                  <br /> Salad isn't doing anything, your GPU is not being used, and you won't earn anything.
+                  <br /> Salad isn't doing anything, your machine is NOT being used, and you won't earn anything.
                 </P>
                 <P>
-                  <b>INITIALIZING</b>
+                  <b>PREPPING</b>
                   <br /> Salad is now downloading and running a miner. Things are warming up but we are still waiting
                   for confirmation that your miner is running properly. This can take some time.
                 </P>
