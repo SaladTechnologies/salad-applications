@@ -58,7 +58,7 @@ const styles = (theme: SaladTheme) => ({
   },
   nameText: {
     fontFamily: theme.fontGroteskLight09,
-    fontSize: 48,
+    fontSize: 42,
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
@@ -96,14 +96,17 @@ const styles = (theme: SaladTheme) => ({
   },
   headlineText: {
     fontFamily: theme.fontGroteskBook19,
-    fontSize: 14,
+    fontSize: 12,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     wordWrap: 'break-word',
     flex: 2,
+    lineHeight: '150%',
     paddingTop: 8,
   },
-  buttonContainer: {},
+  buttonContainer: {
+    marginLeft: -8,
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
