@@ -31,6 +31,7 @@ const styles = (theme: SaladTheme) => ({
     padding: 80,
     fontFamily: theme.fontGroteskBook19,
     fontSize: 16,
+    lineHeight: '150%',
     display: 'flex',
     marginBottom: 40,
   },
