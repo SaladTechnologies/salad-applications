@@ -4,9 +4,6 @@ export const convertHours = (hours: number): number => hours * 3.6e6
 /** Convert minutes to ms */
 export const convertMinutes = (minutes: number): number => minutes * 60000
 
-/** Convert sec to ms */
-export const convertSeconds = (sec: number): number => sec * 1000
-
 /**
  * Checks to see if the email is formatted correctly
  * @param email The email address to check
@@ -52,9 +49,3 @@ export const formatDuration = (duration: number): string => {
   }
   return Math.floor(seconds) + ' sec'
 }
-
-/**
- * Returns the formatted duration since the give timestamp
- * @param date
- */
-export const timeSince = (date: Date): string => formatDuration(Date.now() - date.getTime())

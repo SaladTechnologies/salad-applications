@@ -9,7 +9,7 @@ export const withLogin = <P extends object>(Component: React.ComponentType<P>, D
     render() {
       const store = getStore()
       const { ...props } = this.props
-      return store.auth.isAuth ? (
+      return store.auth.isAuthenticated ? (
         <Component {...(props as P)} />
       ) : DefaultComponent ? (
         <DefaultComponent />

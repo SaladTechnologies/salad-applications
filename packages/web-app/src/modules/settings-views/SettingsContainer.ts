@@ -1,7 +1,7 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
 import { SettingsPage, MenuItem } from '../../components'
-import { Config } from '../../config'
+import { config } from '../../config'
 import { WindowsSettingsContainer } from './windows-settings-views'
 
 const mapStoreToProps = (store: RootStore): any => {
@@ -19,7 +19,7 @@ const mapStoreToProps = (store: RootStore): any => {
     onSendBug: store.ui.openNewBug,
     menuItems: menuItems,
     appVersion: store.native.desktopVersion,
-    appBuild: Config.appBuild,
+    appBuild: config.appBuild,
     onSendLog: store.native.sendLog,
     latestDesktop: store.version.onLatestDesktop,
     onDownloadLatestDesktop: store.version.downloadLatestDesktop,

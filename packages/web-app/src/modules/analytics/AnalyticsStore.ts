@@ -1,5 +1,5 @@
 import mixpanel from 'mixpanel-browser'
-import { Config } from '../../config'
+import { config } from '../../config'
 import { Profile } from '../profile/models'
 import * as Sentry from '@sentry/browser'
 import { Reward } from '../reward/models'
@@ -34,7 +34,7 @@ export class AnalyticsStore {
       })
     })
 
-    const token = Config.mixpanelToken
+    const token = config.mixpanelToken
 
     if (!token) {
       return
@@ -43,7 +43,7 @@ export class AnalyticsStore {
     mixpanel.init(token, {})
 
     mixpanel.register({
-      $app_build_number: Config.appBuild,
+      $app_build_number: config.appBuild,
     })
 
     if (this.store.native.desktopVersion) {
@@ -66,15 +66,6 @@ export class AnalyticsStore {
     mixpanel.identify(profile.id)
 
     this.track('Login')
-  }
-
-  /** Alias another Id (Auth0 Id) to the Salad user id */
-  public aliasUser = (otherId: string) => {
-    if (!this.started) return
-
-    if (!otherId) return
-
-    mixpanel.alias(otherId)
   }
 
   public trackDesktopVersion = (version: string) => {

@@ -10,14 +10,19 @@ const styles = (theme: SaladTheme) => ({
   },
   container: {
     backgroundColor: theme.darkBlue,
+    border: '1px solid rgba(187, 187, 187, 1)',
+    boxShadow: '0 0 10px rgba(187, 187, 187, 1)',
+    color: 'white',
+    height: '70vh',
     left: '50%',
-    maxHeight: 462,
-    minHeight: 100,
-    padding: 30,
+    margin: 0,
+    minHeight: 400,
+    minWidth: 250,
+    padding: 0,
     position: 'absolute',
     top: '50%',
     transform: 'translateX(-50%) translateY(-50%)',
-    width: 516,
+    width: '50vw',
     // TODO: Remove z-indexes!!!
     zIndex: 9999999999,
   },
@@ -47,25 +52,17 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   emailAddress?: string
-  goBack?: () => void
-  resendVerificationEmail?: () => void
-  sendStatus?: string
+  onLogout: () => void
+  onResendVerificationEmail: () => void
+  status?: string
 }
 
 export const EmailVerificationPage = withStyles(styles)(
   class EmailVerificationPage extends Component<Props> {
-    handleGoBack = () => {
-      this.props.goBack?.()
-    }
-
-    handleResendVerificationEmail = () => {
-      this.props.resendVerificationEmail?.()
-    }
-
     render() {
       return (
         <Portal>
-          <Overlay onCloseRequested={this.handleGoBack} />
+          <Overlay onCloseRequested={this.props.onLogout} />
           <div className={this.props.classes.container}>
             <img className={this.props.classes.logo} src={logo} alt="" />
             <div className={this.props.classes.text}>
@@ -78,10 +75,12 @@ export const EmailVerificationPage = withStyles(styles)(
               <p className={this.props.classes.subTitle}>Please check your inbox, and click the link to continue.</p>
             </div>
             <div className={this.props.classes.actions}>
-              <Button onClick={this.handleGoBack}>Go Back</Button>
-              <Button onClick={this.handleResendVerificationEmail}>Resend Verification Email</Button>
+              <Button onClick={this.props.onLogout}>Logout</Button>
+              <Button onClick={this.props.onResendVerificationEmail}>Resend Verification Email</Button>
             </div>
-            <div className={this.props.classes.statusText}>{this.props.sendStatus}</div>
+            {this.props.status !== undefined && (
+              <div className={this.props.classes.statusText}>{this.props.status}</div>
+            )}
           </div>
         </Portal>
       )

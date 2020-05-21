@@ -1,6 +1,6 @@
 import { observable, action, flow } from 'mobx'
 import { Profile } from './models'
-import { Config } from '../../config'
+import { config } from '../../config'
 import { RootStore } from '../../Store'
 import { AxiosInstance } from 'axios'
 
@@ -25,7 +25,7 @@ export class ProfileStore {
 
     this.isLoading = true
     try {
-      let profile = yield this.axios.get('profile')
+      let profile = yield this.axios.get('/api/v1/profile')
       this.currentProfile = profile.data
     } catch (err) {
       console.error('Profile error: ', err)
@@ -44,14 +44,14 @@ export class ProfileStore {
     this.isUpdating = true
 
     try {
-      let patch = yield this.axios.patch('profile', {
-        lastSeenApplicationVersion: Config.whatsNewVersion,
+      let patch = yield this.axios.patch('/api/v1/profile', {
+        lastSeenApplicationVersion: config.whatsNewVersion,
       })
       let profile = patch.data
 
       this.currentProfile = profile
 
-      this.store.analytics.trackWhatsNew(Config.whatsNewVersion)
+      this.store.analytics.trackWhatsNew(config.whatsNewVersion)
     } finally {
       this.isUpdating = false
       this.store.routing.goBack()
@@ -65,7 +65,7 @@ export class ProfileStore {
     this.isUpdating = true
 
     try {
-      let patch = yield this.axios.patch('profile', { username: username })
+      let patch = yield this.axios.patch('/api/v1/profile', { username: username })
       let profile = patch.data
 
       this.currentProfile = profile

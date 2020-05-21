@@ -2,9 +2,8 @@ import { Location } from 'history'
 import React, { Component } from 'react'
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router'
 import { LoadingPage } from './components'
-import { Config } from './config'
 import { AccountSettingsContainer } from './modules/account-views'
-import { EmailVerificationPageContainer, LoginPageContainer } from './modules/auth-views'
+import { EmailVerificationPageContainer, LoginPageContainer, LogoutPageContainer } from './modules/auth-views'
 import { EarnMenuContainer } from './modules/earn-views'
 import {
   AntiVirusErrorContainer,
@@ -37,10 +36,6 @@ class _Routes extends Component<RouteComponentProps> {
   render() {
     const { location } = this.props
 
-    if (Config.downTime) {
-      return <Route render={() => <LoadingPage text="Salad Is Currently Down For Maintenance." />} />
-    }
-
     if (this.store.native.apiVersion < 6) {
       return (
         <Route
@@ -51,7 +46,6 @@ class _Routes extends Component<RouteComponentProps> {
 
     let isElectron = this.store.native.isNative
     let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
-    const isAuth = this.store.auth.isAuth
 
     const currentLocation =
       (location.state as { currentLocation: Location | undefined } | undefined)?.currentLocation || location
@@ -70,7 +64,11 @@ class _Routes extends Component<RouteComponentProps> {
           <Route exact path="/whats-new" component={WhatsNewPageContainer} />
           {/* SaladPay: This is stand in until we figure out iFrames, popups... */}
           <Route exact path="/salad-pay/order-summary" component={SaladPayOrderSummaryContainer} />
-          <PrivateRoute path="/account" component={AccountSettingsContainer} isSignedIn={isAuth} />
+          <PrivateRoute
+            path="/account"
+            component={AccountSettingsContainer}
+            isSignedIn={this.store.auth.isAuthenticated}
+          />
           <Route path="/settings" component={SettingsContainer} />
           <Route path="/earn" component={EarnMenuContainer} />
           <Route path="/" render={() => <HomePage />} />
@@ -78,6 +76,7 @@ class _Routes extends Component<RouteComponentProps> {
         </Switch>
         <Route path="/login" exact component={LoginPageContainer} />
         <Route path="/login/email-verification" exact component={EmailVerificationPageContainer} />
+        <Route path="/logout" exact component={LogoutPageContainer} />
       </>
     )
   }

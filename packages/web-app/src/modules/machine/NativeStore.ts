@@ -2,9 +2,8 @@ import { action, observable, computed, runInAction, flow } from 'mobx'
 import { RootStore } from '../../Store'
 import * as Storage from '../../Storage'
 import { MachineInfo } from './models'
-import { AxiosInstance } from 'axios'
 
-import { Machine } from './models/Machine'
+// import { Machine } from './models/Machine'
 import { Profile } from '../profile/models'
 
 const getMachineInfo = 'get-machine-info'
@@ -13,7 +12,7 @@ const minimize = 'minimize-window'
 const maximize = 'maximize-window'
 const close = 'close-window'
 const hide = 'hide-window'
-const sendLog = 'send-log'
+// const sendLog = 'send-log'
 const getDesktopVersion = 'get-desktop-version'
 const setDesktopVersion = 'set-desktop-version'
 const enableAutoLaunch = 'enable-auto-launch'
@@ -39,7 +38,7 @@ declare global {
 export class NativeStore {
   private callbacks = new Map<string, Function>()
 
-  private failedCount: number = 0
+  // private failedCount: number = 0
 
   //#region Observables
   @observable
@@ -101,10 +100,10 @@ export class NativeStore {
     return this.machineInfo.graphics.controllers.map((x) => x.model)
   }
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
+  constructor(private readonly store: RootStore) {
     //Starts the timer to check for online/offline status
-    setInterval(this.checkOnlineStatus, 5000)
-    this.checkOnlineStatus()
+    // setInterval(this.checkOnlineStatus, 5000)
+    // this.checkOnlineStatus()
 
     runInAction(() => {
       this.skippedCompatCheck = Storage.getOrSetDefault(compatibilityKey, 'false') === 'true'
@@ -156,26 +155,6 @@ export class NativeStore {
     window.salad.dispatch(type, payload)
   }
 
-  @action.bound
-  private checkOnlineStatus = flow(function* (this: NativeStore) {
-    var prevOnline = this.isOnline
-    try {
-      yield this.axios.get('online')
-      this.failedCount = 0
-      this.isOnline = true
-    } catch (err) {
-      console.log(err)
-      this.failedCount += 1
-
-      if (this.failedCount >= 3) {
-        this.isOnline = false
-      }
-    }
-    if (this.isOnline !== prevOnline) {
-      this.store.routing.replace('/')
-    }
-  })
-
   @action
   setDesktopVersion = (version: string) => {
     console.log(`Setting desktop version: ${version}`)
@@ -195,7 +174,7 @@ export class NativeStore {
 
   @action
   sendLog = () => {
-    this.send(sendLog, this.store.token.machineId)
+    // this.send(sendLog, this.store.token.machineId)
   }
 
   @action
@@ -217,34 +196,38 @@ export class NativeStore {
     }
   }
 
-  @action.bound
   registerMachine = flow(function* (this: NativeStore) {
     if (!this.machineInfo) {
       console.warn('No valid machine info found. Unable to register.')
       return
     }
 
-    if (!this.store.token.machineId) {
-      console.warn('No valid machine id found. Unable to register')
-      return
-    }
+    yield new Promise(resolve => {
+      setTimeout(() => {
+        resolve()
+      }, 2000)
+    })
+    // if (!this.store.token.machineId) {
+    //   console.warn('No valid machine id found. Unable to register')
+    //   return
+    // }
 
-    try {
-      console.log('Registering machine with salad')
-      let res: any = yield this.axios.post(`machines/${this.store.token.machineId}/data`, this.machineInfo)
-      let machine: Machine = res.data
+    // try {
+    //   console.log('Registering machine with salad')
+    //   let res: any = yield this.axios.post(`/api/v1/machines/${this.store.token.machineId}/data`, this.machineInfo)
+    //   let machine: Machine = res.data
 
-      this.validGPUs = machine.validGpus
-      this.validOperatingSystem = machine.validOs
-      this.store.machine.setCurrentMachine(machine)
-      this.store.analytics.trackMachine(machine)
-      this.store.routing.replace('/')
-    } catch (err) {
-      this.store.analytics.captureException(new Error(`register-machine error: ${err}`))
-      this.validGPUs = false
-      throw err
-    }
-  })
+    //   this.validGPUs = machine.validGpus
+    //   this.validOperatingSystem = machine.validOs
+    //   this.store.machine.setCurrentMachine(machine)
+    //   this.store.analytics.trackMachine(machine)
+    //   this.store.routing.replace('/')
+    // } catch (err) {
+    //   this.store.analytics.captureException(new Error(`register-machine error: ${err}`))
+    //   this.validGPUs = false
+    //   throw err
+    // }
+  }.bind(this))
 
   @action
   setMachineInfo = (info: MachineInfo) => {

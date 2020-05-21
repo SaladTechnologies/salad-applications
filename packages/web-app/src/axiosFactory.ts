@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosError } from 'axios'
-import { Config } from './config'
+import { config } from './config'
 import axiosRetry, { exponentialDelay } from 'axios-retry'
 import isRetryAllowed from 'is-retry-allowed'
 
@@ -32,7 +32,7 @@ const shouldRetryDownload = (error: any): boolean => {
 
 export const createClient = (): AxiosInstance => {
   let httpClient = axios.create({
-    baseURL: Config.baseAPIUrl,
+    baseURL: config.apiBaseUrl,
   })
 
   httpClient.interceptors.response.use(
@@ -88,7 +88,7 @@ const getMessage = (type: string): string => {
   }
 }
 
-export class SaladError extends Error {
+class SaladError extends Error {
   // You have to extend Error, set the __proto__ to Error, and use
   // Object.setPrototypeOf in order to have a proper custom error type in JS.
   // Because JS/TS are dumb sometimes, and all three are needed to make this

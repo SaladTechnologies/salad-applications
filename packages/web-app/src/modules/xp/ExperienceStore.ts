@@ -50,7 +50,7 @@ export class ExperienceStore {
   @action.bound
   refreshXp = flow(function* (this: ExperienceStore) {
     try {
-      let res = yield this.axios.get('/profile/xp')
+      let res = yield this.axios.get('/api/v1/profile/xp')
 
       let newXp = res.data.lifetimeXp
 

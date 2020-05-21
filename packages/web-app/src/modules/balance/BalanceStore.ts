@@ -77,7 +77,7 @@ export class BalanceStore {
   @action.bound
   refreshBalance = flow(function* (this: BalanceStore) {
     try {
-      const response = yield this.axios.get('profile/balance')
+      const response = yield this.axios.get('/api/v1/profile/balance')
 
       //Generates a fake earning history in the client
       this.addFakeEarningHistory(this.currentBalance, response.data.currentBalance)

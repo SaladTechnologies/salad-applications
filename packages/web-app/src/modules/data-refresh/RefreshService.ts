@@ -1,4 +1,4 @@
-import { Config } from '../../config'
+import { config } from '../../config'
 import { RootStore } from '../../Store'
 
 export class RefreshService {
@@ -14,23 +14,23 @@ export class RefreshService {
     //Start a timer to poll for data
     this.dataTimer = setInterval(() => {
       this.refreshData()
-    }, Config.dataRefreshRate)
+    }, config.dataRefreshRate)
 
     this.rewardsTimer = setInterval(() => {
       this.store.rewards.refreshRewards()
-    }, Config.rewardsRefreshRate)
+    }, config.rewardRefreshRate)
 
     //Do the initial data pull
     this.refreshData()
     this.store.rewards.refreshRewards()
 
-    if (this.store.auth.isAuthenticated()) {
+    if (this.store.auth.isAuthenticated) {
       this.store.vault.loadVault()
     }
   }
 
   refreshData = () => {
-    if (!this.store.auth.isAuthenticated()) {
+    if (!this.store.auth.isAuthenticated) {
       return
     }
 

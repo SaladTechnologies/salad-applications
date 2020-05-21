@@ -3,7 +3,7 @@ import { RootStore } from '../../../Store'
 import { Account } from './components'
 
 const mapStoreToProps = (store: RootStore): any => ({
-  onLogout: store.auth.signOut,
+  onLogout: store.auth.logout,
   profile: store.profile.currentProfile,
   isUpdating: store.profile.isUpdating,
   onSend: store.profile.updateUsername,

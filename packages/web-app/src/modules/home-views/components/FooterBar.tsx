@@ -6,10 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faStop } from '@fortawesome/free-solid-svg-icons'
 import { MiningStatus } from '../../machine/models'
 
-export class MenuItem {
-  constructor(public readonly name: string, public readonly url: string, public readonly showNotification?: boolean) {}
-}
-
 const styles = (theme: SaladTheme) => ({
   container: {
     color: theme.green,

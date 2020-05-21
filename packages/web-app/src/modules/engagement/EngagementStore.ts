@@ -1,6 +1,6 @@
 import { computed, autorun } from 'mobx'
 import { RootStore } from '../../Store'
-import { Config } from '../../config'
+import { config } from '../../config'
 import { HeroType } from './models/HeroType'
 
 export class EngagementStore {
@@ -8,7 +8,7 @@ export class EngagementStore {
   public get showWhatsNew(): boolean {
     const show =
       this.store?.profile?.currentProfile !== undefined &&
-      this.store?.profile?.currentProfile.lastSeenApplicationVersion !== Config.whatsNewVersion
+      this.store?.profile?.currentProfile.lastSeenApplicationVersion !== config.whatsNewVersion
 
     return show
   }
@@ -32,7 +32,7 @@ export class EngagementStore {
 
   constructor(private readonly store: RootStore) {
     autorun(() => {
-      if (!this.store.auth.isAuth) {
+      if (!this.store.auth.isAuthenticated) {
         return
       }
 

@@ -8,21 +8,21 @@ export default {
 }
 
 export const Blank = () => (
-  <EmailVerificationPage resendVerificationEmail={action('resend')} goBack={action('go back')} />
+  <EmailVerificationPage onResendVerificationEmail={action('resend')} onLogout={action('go back')} />
 )
 
 export const SendStatus = () => (
   <EmailVerificationPage
-    sendStatus="Sending now"
-    resendVerificationEmail={action('resend')}
-    goBack={action('go back')}
+    status="Sending now"
+    onResendVerificationEmail={action('resend')}
+    onLogout={action('go back')}
   />
 )
 
 export const WithEmail = () => (
   <EmailVerificationPage
     emailAddress="dev@salad.io"
-    resendVerificationEmail={action('resend')}
-    goBack={action('go back')}
+    onResendVerificationEmail={action('resend')}
+    onLogout={action('go back')}
   />
 )

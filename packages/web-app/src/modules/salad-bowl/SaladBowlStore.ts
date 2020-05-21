@@ -3,7 +3,6 @@ import { PluginInfo } from './models/PluginInfo'
 import { StatusMessage } from './models/StatusMessage'
 import { PluginStatus } from './models/PluginStatus'
 import { AxiosInstance, AxiosError } from 'axios'
-import { Config } from '../../config'
 import { RootStore } from '../../Store'
 import { MiningStatus } from '../machine/models'
 import { ErrorMessage } from './models/ErrorMessage'
@@ -16,7 +15,6 @@ export class SaladBowlStore {
   private currentPluginDefinition?: PluginDefinition
   private currentPluginDefinitionIndex: number = 0
   private currentPluginRetries: number = 0
-  private heartbeatTimer?: NodeJS.Timeout
   private runningTimer?: NodeJS.Timeout
   private pluginDefinitions?: PluginDefinition[]
   private somethingWorks: boolean = false
@@ -158,19 +156,14 @@ export class SaladBowlStore {
       return
     }
 
-    if (!this.store.auth.isAuth) {
-      yield this.store.auth.signIn()
+    if (!this.store.auth.isAuthenticated) {
+      yield this.store.auth.login()
       return //TODO: Remove this once `signIn` is fully async for the full login flow
     }
 
     if (this.timeoutTimer != null) {
       clearTimeout(this.timeoutTimer)
       this.timeoutTimer = undefined
-    }
-
-    if (this.heartbeatTimer != null) {
-      clearInterval(this.heartbeatTimer)
-      this.heartbeatTimer = undefined
     }
 
     if (this.runningTimer) {
@@ -221,10 +214,6 @@ export class SaladBowlStore {
       this.startNext()
     }, this.currentPluginDefinition.initialTimeout)
 
-    this.heartbeatTimer = setInterval(() => {
-      this.sendRunningStatus()
-    }, Config.statusHeartbeatRate)
-
     this.sendRunningStatus()
     this.store.analytics.trackStart(reason)
   })
@@ -267,11 +256,6 @@ export class SaladBowlStore {
       this.timeoutTimer = undefined
     }
 
-    if (this.heartbeatTimer != null) {
-      clearInterval(this.heartbeatTimer)
-      this.heartbeatTimer = undefined
-    }
-
     if (this.runningTimer) {
       clearInterval(this.runningTimer)
       this.runningTimer = undefined
@@ -287,19 +271,19 @@ export class SaladBowlStore {
 
   @action.bound
   sendRunningStatus = flow(function* (this: SaladBowlStore, retry?: boolean) {
-    const machineId = this.store.token.machineId
+    // const machineId = this.store.token.machineId
 
-    if (!machineId) {
-      console.warn('No machineId found. Unable to send running status')
-      return
-    }
+    // if (!machineId) {
+    //   console.warn('No machineId found. Unable to send running status')
+    //   return
+    // }
 
     const data = {
       status: this.machineStatus,
     }
 
     try {
-      yield this.axios.post(`machines/${machineId}/status`, data)
+      yield this.axios.post(`/api/v1/machines/:machineId/status`, data)
     } catch (e) {
       let err: AxiosError = e
       if (err.response && err.response.status === 409) {
