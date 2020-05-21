@@ -124,7 +124,7 @@ export class RewardStore {
   refreshRewards = flow(function* (this: RewardStore) {
     try {
       this.isLoading = true
-      const response = yield this.axios.get<RewardsResource[]>('rewards')
+      const response = yield this.axios.get<RewardsResource[]>('/api/v1/rewards')
       if (response.data === undefined) return
 
       //Convert from the resource to the models
@@ -188,14 +188,14 @@ export class RewardStore {
 
   @action.bound
   loadSelectedReward = flow(function* (this: RewardStore) {
-    var res = yield this.axios.get('profile/selected-reward')
+    var res = yield this.axios.get('/api/v1/profile/selected-reward')
     this.selectedRewardId = res.data.rewardId
   })
 
   @action.bound
   addToChoppingCart = flow(function* (this: RewardStore, reward: Reward) {
-    if (!this.store.auth.isAuth) {
-      yield this.store.auth.signIn()
+    if (!this.store.auth.isAuthenticated) {
+      yield this.store.auth.login()
       return //TODO: Remove this once `signIn` is fully async for the full login flow
     }
 
@@ -206,7 +206,7 @@ export class RewardStore {
     this.isSelecting = true
 
     try {
-      var res = yield this.axios.patch('profile/selected-reward', request)
+      var res = yield this.axios.patch('/api/v1/profile/selected-reward', request)
       this.selectedRewardId = res.data.rewardId
 
       if (reward) this.store.analytics.trackSelectedReward(reward)
@@ -226,7 +226,7 @@ export class RewardStore {
     this.isSelecting = true
 
     try {
-      var res = yield this.axios.patch('profile/selected-reward', request)
+      var res = yield this.axios.patch('/api/v1/profile/selected-reward', request)
       this.selectedRewardId = res.data.rewardId
     } catch (error) {
       console.error(error)
@@ -242,8 +242,8 @@ export class RewardStore {
       return
     }
 
-    if (!this.store.auth.isAuth) {
-      yield this.store.auth.signIn()
+    if (!this.store.auth.isAuthenticated) {
+      yield this.store.auth.login()
       return //TODO: Remove this once `signIn` is fully async for the full login flow
     }
 
@@ -269,7 +269,7 @@ export class RewardStore {
 
       console.log(`Completed SaladPay transaction ${response.details.transactionToken}`)
 
-      yield this.axios.post(`/rewards/${reward.id}/redemptions`, {})
+      yield this.axios.post(`/api/v1/rewards/${reward.id}/redemptions`, {})
 
       //Completes the transaction and closes SaladPay
       response.complete('success')

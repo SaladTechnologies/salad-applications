@@ -1,292 +1,470 @@
-import { Auth0DecodedHash, WebAuth } from 'auth0-js'
+import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js'
 import { AxiosInstance } from 'axios'
-import { action, autorun, flow, observable, runInAction, toJS } from 'mobx'
-import { v4 as uuidv4 } from 'uuid'
-import { SALAD_TOKEN } from '.'
+import { action, flow, observable, toJS } from 'mobx'
+import { RouterStore } from 'mobx-react-router'
+import { Cancelable, once, ResponseMessageEvent } from 'post-robot'
 import { Config } from '../../config'
-import * as Storage from '../../Storage'
-import { RootStore } from '../../Store'
 
-const WEB_SYSTEM_ID = 'WEB_SYSTEM_ID'
+interface LoginResponse {
+  action: 'login'
+  error?: string
+  xsrfToken?: string
+}
 
 export class AuthStore {
-  private webAuth: WebAuth
+  private readonly apiBaseUrl: string
 
-  /** Flag indicating if we are currently verifying */
-  private isVerifying: boolean = false
+  private readonly auth0Audience: string
 
-  /** Timestamp when the last verification email was sent */
-  private lastEmailVerificationSent?: Date
+  private readonly auth0ClientId: string
 
-  @observable
-  public hasVerifiedEmail: boolean = false
+  private readonly auth0Domain: string
 
-  @observable
-  public authToken?: string = undefined
+  /**
+   * The Auth0 access token. This is only obtained from Auth0 when the user's email address is not verified.
+   */
+  private auth0Token?: string
 
-  @observable
-  public isLoading: boolean = false
+  private frameListener?: Cancelable & Promise<ResponseMessageEvent>
 
-  @observable
-  public loginError?: string
-
-  @observable
-  public isAuth: boolean = false
-
-  @observable
-  public auth0Result?: Auth0DecodedHash
-
-  @observable
-  public sendVerificationStatus?: string
-
-  /** The email address used to login. This is only available if the user logged in during the current session */
-  @observable
-  public loginEmail?: string
-
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
-    let redirect = `${window.location.origin}/auth/callback`
-
-    this.webAuth = new WebAuth({
-      domain: Config.auth0Domain,
-      clientID: Config.auth0ClientId,
-      redirectUri: redirect,
-      audience: 'https://api.salad.io/core/master',
-      responseType: 'token id_token',
-      scope: 'openid profile email',
-    })
-
-    this.watchForLogin()
+  private framePromise?: {
+    reject: (reason?: any) => void
+    resolve: (value?: any) => void
   }
 
-  @action
-  isAuthenticated(): boolean {
-    // Get Salad token from memory
-    const saladToken = this.store.token.saladToken
+  private frameTimeout?: NodeJS.Timeout
 
-    if (saladToken) {
-      // Set token in observable
-      this.store.token.setToken(saladToken)
-      // Get token string and expiration
-      let expiration = this.store.token.tokenExpiration
+  /**
+   * The user's email address. This is only obtained from Auth0 when the user's email address is not verified.
+   */
+  @observable
+  public emailAddress?: string = undefined
 
-      if (expiration < 7) {
-        this.signOut()
-        return (this.isAuth = false)
-      }
+  /**
+   * A value indicating whether the user is authenticated.
+   */
+  @observable
+  public isAuthenticated: boolean = false
 
-      this.processAuthentication()
+  /**
+   * A value indicating whether the user is currently logging in or logging out.
+   */
+  @observable
+  public isAuthenticationPending: boolean = false
+
+  constructor(config: Config, private readonly axios: AxiosInstance, private readonly router: RouterStore) {
+    this.apiBaseUrl = config.apiBaseUrl
+    this.auth0Audience = config.auth0Audience
+    this.auth0ClientId = config.auth0ClientId
+    this.auth0Domain = config.auth0Domain
+  }
+
+  public get loginUrl(): string {
+    return this.apiBaseUrl + '/login'
+  }
+
+  public get silentLoginUrl(): string {
+    return this.apiBaseUrl + '/login?prompt=none'
+  }
+
+  public get logoutUrl(): string {
+    return this.apiBaseUrl + '/logout'
+  }
+
+  public createLoginFrameListener = (frame: HTMLIFrameElement, timeout?: number): (() => void) => {
+    if (this.frameListener !== undefined) {
+      // TODO: Improve error.
+      throw new Error()
     }
 
-    return this.isAuth
+    if (this.frameTimeout !== undefined) {
+      clearTimeout(this.frameTimeout)
+    }
+
+    this.frameListener = once('authentication', {
+      domain: this.apiBaseUrl,
+      errorOnClose: true,
+      window: frame.contentWindow!,
+    })
+    this.frameListener.then(this.handleLoginResponseMessageEvent).catch(this.handleError)
+
+    if (timeout !== undefined) {
+      this.frameTimeout = setTimeout(this.handleTimeout, timeout)
+    }
+
+    return this.cancel
+  }
+
+  public createLogoutFrameListener = (frame: HTMLIFrameElement, timeout?: number): (() => void) => {
+    if (this.frameListener !== undefined) {
+      // TODO: Improve error.
+      throw new Error()
+    }
+
+    if (this.frameTimeout !== undefined) {
+      clearTimeout(this.frameTimeout)
+    }
+
+    this.frameListener = once('authentication', {
+      domain: this.apiBaseUrl,
+      errorOnClose: true,
+      window: frame.contentWindow!,
+    })
+    this.frameListener.then(this.handleLogoutResponseMessageEvent).catch(this.handleError)
+
+    if (timeout !== undefined) {
+      this.frameTimeout = setTimeout(this.handleTimeout, timeout)
+    }
+
+    return this.cancel
   }
 
   @action
-  signIn = async () => {
-    this.loginError = undefined
-    this.isLoading = true
-    //TODO: Add the iframe or whatever needs to happen since we removed the auth0 method
-    // this.webAuth.authorize()
-    this.store.routing.push('/login', { currentLocation: toJS(this.store.routing.location) })
+  public login = (): Promise<void> => {
+    if (this.isAuthenticationPending) {
+      // TODO: Improve error.
+      throw new Error()
+    }
+
+    this.isAuthenticationPending = true
+    this.router.push('/login', { previousLocation: toJS(this.router.location) })
+    return new Promise((resolve, reject) => {
+      this.framePromise = {
+        reject,
+        resolve,
+      }
+    })
   }
 
-  @action.bound
-  handleAuthentication = flow(function* (this: AuthStore) {
-    this.isLoading = true
+  @action
+  public loginSilently = (): Promise<void> => {
+    if (this.isAuthenticationPending) {
+      // TODO: Improve error.
+      throw new Error()
+    }
 
-    try {
-      yield this.webAuth.parseHash((err, authResult) => {
-        runInAction(() => {
-          this.auth0Result = authResult || undefined
-          this.hasVerifiedEmail = this.auth0Result?.idTokenPayload?.email_verified
-          this.loginEmail = this.auth0Result?.idTokenPayload?.email
-        })
+    this.isAuthenticationPending = true
 
-        if (err) {
-          console.error('Login error: ', err)
+    // Create a hidden `iframe`.
+    const frame = window.document.createElement('iframe')
+    frame.setAttribute('height', '0')
+    frame.setAttribute('width', '0')
+    frame.style.display = 'none'
 
-          this.loginError = err.errorDescription || err.error_description || 'Unable to login'
-          this.isLoading = false
+    const promise = new Promise((resolve, reject) => {
+      this.framePromise = {
+        reject,
+        resolve,
+      }
+    })
+      .then(() => {})
+      .catch(() => {})
+      .finally(() => {
+        if (window.document.body.contains(frame)) {
+          window.document.body.removeChild(frame)
         }
       })
-    } catch (error) {
-      console.error('Login error: ', error)
+    this.createLoginFrameListener(frame, 10000)
 
-      this.loginError = undefined
-      this.isLoading = false
-    }
-  })
+    // Load the silent login page.
+    window.document.body.appendChild(frame)
+    frame.setAttribute('src', this.silentLoginUrl)
+
+    return promise
+  }
 
   @action
-  watchForLogin = () => {
-    autorun(() => {
-      //Ensures that we have an auth0 token
-      if (this.auth0Result === undefined) {
-        console.log('No auth0 result, waiting to login')
-        return
+  public logout = (): Promise<void> => {
+    if (this.isAuthenticationPending) {
+      // TODO: Improve error.
+      throw new Error()
+    }
+
+    this.isAuthenticationPending = true
+    this.router.push('/logout', { previousLocation: toJS(this.router.location) })
+    return new Promise((resolve, reject) => {
+      this.framePromise = {
+        reject,
+        resolve,
       }
-
-      if (!this.hasVerifiedEmail) {
-        console.log('Email not verified yet. Waiting to login')
-        this.startVerificationCheck()
-        return
-      }
-
-      let systemId: string
-
-      //Web application login
-      if (!this.store.native.isNative) {
-        systemId = Storage.getOrSetDefault(WEB_SYSTEM_ID, uuidv4())
-        console.log('Got system id for web application')
-      }
-      //Desktop login
-      else if (this.store.native.machineInfo) {
-        systemId = this.store.native.machineInfo.system.uuid
-        console.log('Got system id from desktop application')
-      } else {
-        console.log('No machine info yet, waiting to login')
-        return
-      }
-
-      const data = {
-        authToken: this.auth0Result.accessToken,
-        systemId: systemId,
-        idToken: this.auth0Result.idToken,
-      }
-
-      const login = this.axios.post('login', data, {
-        headers: { Authorization: 'Bearer ' + this.auth0Result.accessToken },
-      })
-
-      login
-        .then((response) => {
-          const saladToken: string = response.data.token
-          this.store.token.setToken(saladToken)
-
-          this.processAuthentication()
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-        .then(async () => {
-          await this.store.onLogin()
-        })
-        .then(() => {
-          if (this.auth0Result) {
-            //Ensure we have connected the Auth0 id to the Salad Id
-            this.store.analytics.aliasUser(this.auth0Result.idTokenPayload.sub)
-          }
-        })
-        .catch((err) => {
-          console.warn('Error logging in ' + err)
-          this.isAuth = false
-          this.isLoading = false
-          this.loginError = err
-        })
     })
   }
 
   @action
-  processAuthentication = () => {
-    this.axios.defaults.headers.common['Authorization'] = `Bearer ${this.store.token.saladToken}`
-
-    this.isAuth = true
-    this.loginError = undefined
-    this.isLoading = false
-  }
-
-  @action
-  signOut = () => {
-    let redirect = window.location.origin
-    this.webAuth.logout({
-      clientID: Config.auth0ClientId,
-      returnTo: redirect,
-    })
-    this.authToken = undefined
-    this.isAuth = false
-    this.store.onLogout()
-
-    Storage.removeItem(SALAD_TOKEN)
-    Storage.removeItem(WEB_SYSTEM_ID)
-
-    //Switch back to the main page
-    this.store.routing.replace('/')
-  }
-
-  startVerificationCheck = () => {
-    if (this.isVerifying) {
-      console.log('Already trying to verify the email account')
-      return
+  public logoutSilently = (): Promise<void> => {
+    if (this.isAuthenticationPending) {
+      // TODO: Improve error.
+      throw new Error()
     }
 
-    this.store.routing.push('/login/email-verification')
+    this.isAuthenticationPending = true
 
-    let accessToken = this.auth0Result?.accessToken
+    // Create a hidden `iframe`.
+    const frame = window.document.createElement('iframe')
+    frame.setAttribute('height', '0')
+    frame.setAttribute('width', '0')
+    frame.style.display = 'none'
 
-    this.isVerifying = true
-
-    // Begin polling for a change in user verification status.
-    const loop = setInterval(() => {
-      if (!accessToken) return
-      this.webAuth.client.userInfo(accessToken, (error, userInfo) => {
-        if (error) {
-          console.error(error)
-        } else {
-          runInAction(() => {
-            this.hasVerifiedEmail = !!userInfo.email_verified
-            if (this.hasVerifiedEmail) {
-              console.log('Email is now verified')
-
-              //Stop the timer from checking
-              clearInterval(loop)
-              this.isVerifying = false
-              this.store.routing.push('/')
-            }
-          })
+    const promise = new Promise((resolve, reject) => {
+      this.framePromise = {
+        reject,
+        resolve,
+      }
+    })
+      .then(() => {})
+      .catch(() => {})
+      .finally(() => {
+        if (window.document.body.contains(frame)) {
+          window.document.body.removeChild(frame)
         }
       })
-    }, 15000)
+    this.createLoginFrameListener(frame, 10000)
+
+    // Load the silent login page.
+    window.document.body.appendChild(frame)
+    frame.setAttribute('src', this.logoutUrl)
+
+    return promise
   }
 
-  /** Resend the verification email to the user */
-  @action.bound
-  resendVerificationEmail = flow(function* (this: AuthStore) {
-    if (this.lastEmailVerificationSent) {
-      //Calculates the time since the last email verification email was sent
-      const delta = Date.now() - this.lastEmailVerificationSent.getTime()
+  public resendVerificationEmail = flow(
+    function* (this: AuthStore) {
+      try {
+        yield this.axios.post('/api/v2/verification-emails', undefined, {
+          headers: {
+            Authorization: `Bearer ${this.auth0Token}`,
+          },
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    }.bind(this),
+  )
 
-      //If we are sending emails too quickly, block
-      if (delta <= 30000) {
-        this.sendVerificationStatus = 'Please wait to resend the verification email again'
+  private static isLoginResponse(data: unknown): data is LoginResponse {
+    if (typeof data !== 'object' || data == null) {
+      return false
+    }
+
+    if (!('action' in data) || (data as { action: unknown }).action !== 'login') {
+      return false
+    }
+
+    if (
+      'error' in data &&
+      !(
+        typeof (data as { error: unknown }).error === 'string' ||
+        typeof (data as { error: unknown }).error === 'undefined'
+      )
+    ) {
+      return false
+    }
+
+    if (
+      'xsrfToken' in data &&
+      !(
+        typeof (data as { xsrfToken: unknown }).xsrfToken === 'string' ||
+        typeof (data as { xsrfToken: unknown }).xsrfToken === 'undefined'
+      )
+    ) {
+      return false
+    }
+
+    return true
+  }
+
+  @action
+  private cancel = (): void => {
+    if (this.frameTimeout !== undefined) {
+      clearTimeout(this.frameTimeout)
+      this.frameTimeout = undefined
+    }
+
+    if (this.frameListener !== undefined) {
+      this.frameListener.cancel()
+      this.frameListener = undefined
+    }
+
+    this.isAuthenticationPending = false
+  }
+
+  private handleEmailNotVerified = flow(
+    function* (this: AuthStore) {
+      try {
+        // This automatically attempts a silent login.
+        const auth0Client: Auth0Client = yield createAuth0Client({
+          audience: this.auth0Audience,
+          authorizeTimeoutInSeconds: 10,
+          advancedOptions: {
+            defaultScope: 'email',
+          },
+          client_id: this.auth0ClientId,
+          domain: this.auth0Domain,
+          redirect_uri: `${this.apiBaseUrl}/login/callback`,
+        })
+
+        const [tokenResult, userResult]: PromiseSettledResult<any>[] = yield Promise.allSettled([
+          yield auth0Client.getTokenSilently(),
+          yield auth0Client.getUser(),
+        ])
+
+        if (tokenResult.status !== 'fulfilled') {
+          // TODO: Improve error.
+          throw new Error()
+        }
+
+        this.auth0Token = tokenResult.value
+
+        if (userResult.status === 'fulfilled' && typeof userResult.value?.email === 'string') {
+          this.emailAddress = userResult.value.email
+        }
+
+        this.router.push('/login/email-verification')
+      } catch (error) {
+        // TODO: Show an error page.
+        console.log(error)
+      }
+    }.bind(this),
+  )
+
+  private handleError = (error: any): void => {
+    // TODO: Remove debug code.
+    console.log(error)
+
+    if (this.frameTimeout !== undefined) {
+      clearTimeout(this.frameTimeout)
+      this.frameTimeout = undefined
+    }
+
+    if (this.frameListener !== undefined) {
+      this.frameListener.cancel()
+      this.frameListener = undefined
+    }
+
+    // Let's be safe and force a logout.
+    this.onLogout()
+    if (this.framePromise !== undefined) {
+      this.framePromise.reject()
+      this.framePromise = undefined
+    }
+
+    // TODO: Show an error page.
+    this.router.replace('/')
+  }
+
+  private handleLoginResponseMessageEvent = (event: ResponseMessageEvent): void => {
+    if (this.frameTimeout !== undefined) {
+      clearTimeout(this.frameTimeout)
+      this.frameTimeout = undefined
+    }
+
+    if (this.frameListener !== undefined) {
+      this.frameListener.cancel()
+      this.frameListener = undefined
+    }
+
+    let error: string = ''
+    if (AuthStore.isLoginResponse(event.data)) {
+      if (event.data.xsrfToken !== undefined) {
+        this.onLogin(event.data.xsrfToken)
+
+        if (this.framePromise !== undefined) {
+          this.framePromise.resolve()
+          this.framePromise = undefined
+        }
+
+        // TODO: Navigate back.
+        this.router.replace('/')
         return
+      } else if (event.data.error !== undefined) {
+        error = event.data.error
       }
     }
 
-    this.lastEmailVerificationSent = new Date(Date.now())
-
-    this.sendVerificationStatus = undefined
-
-    //Ensures that we have an auth0 token
-    if (this.auth0Result === undefined) {
-      console.log('No auth0 result, waiting to login')
-      this.sendVerificationStatus = 'Unable to send verification email. Please restart Salad and try again.'
-      return
+    // Let's be safe and force a logout.
+    this.onLogout()
+    if (this.framePromise !== undefined) {
+      this.framePromise.reject()
+      this.framePromise = undefined
     }
 
-    const data = {
-      authToken: this.auth0Result.accessToken,
-      idToken: this.auth0Result.idToken,
+    switch (error) {
+      case 'email_not_verified':
+        this.handleEmailNotVerified()
+        break
+      case 'login_required':
+        // This is common when attempting a silent login. It confirms that the user must login interactively.
+        break
+      default:
+        // TODO: Show an error page.
+        this.router.replace('/')
+        break
+    }
+  }
+
+  private handleLogoutResponseMessageEvent = (_event: ResponseMessageEvent): void => {
+    if (this.frameTimeout !== undefined) {
+      clearTimeout(this.frameTimeout)
+      this.frameTimeout = undefined
     }
 
-    console.log('Resending verification email')
-
-    try {
-      yield this.axios.post('login/verification-email', data, {
-        headers: { Authorization: 'Bearer ' + this.auth0Result.accessToken },
-      })
-      this.sendVerificationStatus = 'Verification email sent'
-    } catch {
-      console.warn('Unable to send verification email')
-      this.sendVerificationStatus = 'Error sending verification email. Please try again.'
+    if (this.frameListener !== undefined) {
+      this.frameListener.cancel()
+      this.frameListener = undefined
     }
-  })
+
+    this.onLogout()
+    if (this.framePromise !== undefined) {
+      this.framePromise.resolve()
+      this.framePromise = undefined
+    }
+
+    // TODO: Navigate back.
+    this.router.replace('/')
+  }
+
+  private handleTimeout = (): void => {
+    if (this.frameTimeout !== undefined) {
+      clearTimeout(this.frameTimeout)
+      this.frameTimeout = undefined
+    }
+
+    if (this.frameListener !== undefined) {
+      this.frameListener.cancel()
+      this.frameListener = undefined
+    }
+
+    // Let's be safe and force a logout.
+    this.onLogout()
+    if (this.framePromise !== undefined) {
+      this.framePromise.reject()
+      this.framePromise = undefined
+    }
+
+    // TODO: Show an error page.
+    this.router.replace('/')
+  }
+
+  @action
+  private onLogin = (xsrfToken: string) => {
+    // TODO: Update "hint" in localStorage.
+    this.axios.defaults.headers.common['X-XSRF-TOKEN'] = xsrfToken
+    this.axios.defaults.withCredentials = true
+
+    this.isAuthenticated = true
+    this.isAuthenticationPending = false
+  }
+
+  @action
+  private onLogout = () => {
+    // TODO: Update "hint" in localStorage.
+    delete this.axios.defaults.headers.common['X-XSRF-TOKEN']
+    this.axios.defaults.withCredentials = false
+
+    this.isAuthenticated = false
+    this.isAuthenticationPending = false
+
+    this.auth0Token = undefined
+    this.emailAddress = undefined
+  }
 }

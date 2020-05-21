@@ -1,23 +1,24 @@
-import { AuthStore, TokenStore } from './modules/auth'
-import { configure, action, flow } from 'mobx'
-import { RouterStore } from 'mobx-react-router'
 import { AxiosInstance } from 'axios'
-import { ExperienceStore } from './modules/xp'
-import { RewardStore } from './modules/reward'
-import { BalanceStore } from './modules/balance'
-import { MachineStore, AutoStartStore, NativeStore } from './modules/machine'
-import { ProfileStore } from './modules/profile'
-import { UIStore } from './UIStore'
-import { ReferralStore } from './modules/referral'
+import { autorun, configure, flow } from 'mobx'
+import { RouterStore } from 'mobx-react-router'
+import { config } from './config'
 import { AnalyticsStore } from './modules/analytics'
+import { AuthStore } from './modules/auth'
+import { BalanceStore } from './modules/balance'
 import { RefreshService } from './modules/data-refresh'
-import { SaladBowlStore } from './modules/salad-bowl'
+import { EngagementStore } from './modules/engagement'
 import { HomeStore } from './modules/home/HomeStore'
+import { AutoStartStore, MachineStore, NativeStore } from './modules/machine'
 import { NotificationStore } from './modules/notifications'
+import { ProfileStore } from './modules/profile'
+import { ReferralStore } from './modules/referral'
+import { RewardStore } from './modules/reward'
+import { SaladBowlStore } from './modules/salad-bowl'
+import { StopReason } from './modules/salad-bowl/models'
 import { VaultStore } from './modules/vault'
 import { VersionStore } from './modules/versions'
-import { StopReason } from './modules/salad-bowl/models'
-import { EngagementStore } from './modules/engagement'
+import { ExperienceStore } from './modules/xp'
+import { UIStore } from './UIStore'
 
 configure({
   computedRequiresReaction: process.env.NODE_ENV === 'development',
@@ -40,7 +41,6 @@ export const getStore = (): RootStore => sharedStore
 export class RootStore {
   public readonly auth: AuthStore
   public readonly autoStart: AutoStartStore
-  public readonly token: TokenStore
   public readonly analytics: AnalyticsStore
   public readonly routing: RouterStore
   public readonly xp: ExperienceStore
@@ -59,17 +59,14 @@ export class RootStore {
   public readonly version: VersionStore
   public readonly engagement: EngagementStore
 
-  private machineInfoHeartbeat?: NodeJS.Timeout
-
   constructor(readonly axios: AxiosInstance) {
     this.routing = new RouterStore()
     this.notifications = new NotificationStore(this)
     this.xp = new ExperienceStore(this, axios)
     this.machine = new MachineStore(this)
-    this.native = new NativeStore(this, axios)
+    this.native = new NativeStore(this)
     this.saladBowl = new SaladBowlStore(this, axios)
-    this.auth = new AuthStore(this, axios)
-    this.token = new TokenStore()
+    this.auth = new AuthStore(config, axios, this.routing)
     this.rewards = new RewardStore(this, axios)
     this.analytics = new AnalyticsStore(this)
     this.balance = new BalanceStore(this, axios)
@@ -83,61 +80,48 @@ export class RootStore {
     this.version = new VersionStore(this, axios)
     this.engagement = new EngagementStore(this)
 
-    this.machineInfoHeartbeat = setInterval(this.tryRegisterMachine, 20000)
-
-    this.tryRegisterMachine()
-
-    //Start refreshing data
+    // Start refreshing data
     this.refresh.start()
+    autorun(() => {
+      if (this.auth.isAuthenticated) {
+        this.onLogin()
+      } else {
+        this.onLogout()
+      }
+    })
   }
 
-  @action.bound
-  onLogin = flow(function* (this: RootStore) {
-    var profile = yield this.profile.loadProfile()
+  onLogin = flow(
+    function* (this: RootStore) {
+      var profile = yield this.profile.loadProfile()
+      if (!profile) {
+        this.auth.logout()
+        return
+      }
 
-    if (!profile) {
-      this.auth.signOut()
-      return
-    }
+      yield Promise.allSettled([
+        this.analytics.start(profile),
+        this.native.login(profile),
+        this.referral.loadCurrentReferral(),
+        this.referral.loadReferralCode(),
+        this.vault.loadVault(),
+        this.version.startVersionChecks(),
+        this.xp.refreshXp(),
+      ])
+    }.bind(this),
+  )
 
-    this.native.login(profile)
-    this.analytics.start(profile)
-    this.referral.loadReferralCode()
-    this.xp.refreshXp()
-    this.referral.loadCurrentReferral()
-    this.vault.loadVault()
+  onLogout = flow(
+    function* (this: RootStore) {
+      this.referral.currentReferral = undefined
+      this.referral.referralCode = ''
 
-    if (this.machineInfoHeartbeat) clearInterval(this.machineInfoHeartbeat)
-
-    // Start a timer to keep checking for system information
-    this.machineInfoHeartbeat = setInterval(this.tryRegisterMachine, 20000)
-    this.version.startVersionChecks()
-    this.tryRegisterMachine()
-
-    if (this.routing.location.pathname.startsWith('/auth/callback')) {
-      //TODO: Once we do deferred auth, we should replace with the url that they were on before they started to login
-      this.routing.replace('/')
-    }
-  })
-
-  @action
-  tryRegisterMachine = () => {
-    if (this.native.machineInfo) {
-      this.native.registerMachine()
-      if (this.machineInfoHeartbeat) clearInterval(this.machineInfoHeartbeat)
-    } else {
-      this.native.loadMachineInfo()
-    }
-  }
-
-  @action
-  onLogout = () => {
-    this.token.saladToken = ''
-    this.referral.referralCode = ''
-    this.referral.currentReferral = undefined
-    this.analytics.trackLogout()
-    this.saladBowl.stop(StopReason.Logout)
-    this.version.stopVersionChecks()
-    this.native.logout()
-  }
+      yield Promise.allSettled([
+        this.analytics.trackLogout(),
+        this.saladBowl.stop(StopReason.Logout),
+        this.version.stopVersionChecks(),
+        this.native.logout(),
+      ])
+    }.bind(this),
+  )
 }

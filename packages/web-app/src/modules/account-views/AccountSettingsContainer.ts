@@ -13,7 +13,7 @@ const mapStoreToProps = (store: RootStore): any => {
   ]
 
   const buttons: MenuButton[] = [
-    { text: 'Log out', onClick: store.auth.signOut },
+    { text: 'Log out', onClick: store.auth.logout },
     { text: 'Send Bug', onClick: store.ui.openNewBug },
   ]
 

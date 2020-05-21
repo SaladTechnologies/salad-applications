@@ -10,12 +10,12 @@ export class HomeStore {
   @action.bound
   loadBannerInfo = flow(function*(this: HomeStore) {
     try {
-      let res = yield this.axios.get<BannerInfo>('/notification-banner')
+      let res = yield this.axios.get<BannerInfo>('/api/v1/notification-banner')
       this.bannerInfo = res.data
     } catch (err) {
       console.log(err)
       this.bannerInfo = undefined
-    } 
+    }
   })
   constructor(private readonly axios: AxiosInstance) {}
 }

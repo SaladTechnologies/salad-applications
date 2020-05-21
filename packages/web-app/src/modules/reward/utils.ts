@@ -1,11 +1,11 @@
 import { RewardResource } from './models/RewardResource'
 import { Reward } from './models/Reward'
-import { Config } from '../../config'
+import { config } from '../../config'
 import { RewardQuery, RewardSort } from './models'
 import queryString from 'query-string'
 import { RouteComponentProps } from 'react-router'
 
-const toFullImageUrl = (url?: string): string | undefined => (url ? new URL(url, Config.baseAPIUrl).href : undefined)
+const toFullImageUrl = (url?: string): string | undefined => (url ? new URL(url, config.apiBaseUrl).href : undefined)
 
 export const rewardFromResource = (r: RewardResource): Reward => ({
   //Reward data

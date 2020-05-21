@@ -19,15 +19,15 @@ import { Router } from 'react-router-dom'
 import { App } from './App'
 import { createClient } from './axiosFactory'
 import { Head } from './components'
-import { Config } from './config'
+import { config } from './config'
 import { DefaultTheme } from './SaladTheme'
 import * as serviceWorker from './serviceWorker'
 import { createStore } from './Store'
 import { Tooltips } from './Tooltips'
 
 Sentry.init({
-  dsn: Config.sentryDSN,
-  release: Config.appBuild,
+  dsn: config.sentryDSN,
+  release: config.appBuild,
 })
 
 //Adds a dummy window.salad for use in the web-app, this will be skipped in desktop-app
@@ -42,7 +42,7 @@ if (!window.salad) {
   }
 }
 
-console.log(`Running web app build:${Config.appBuild}`)
+console.log(`Running web app build:${config.appBuild}`)
 
 const client = createClient()
 const rootStore = createStore(client)

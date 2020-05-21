@@ -56,7 +56,7 @@ export class VersionStore {
     }
 
     try {
-      let response = yield this.axios.get<DesktopVersionResource>('desktop-app/version')
+      let response = yield this.axios.get<DesktopVersionResource>('/api/v1/desktop-app/version')
 
       let versionData: DesktopVersionResource = response.data
 

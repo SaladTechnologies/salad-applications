@@ -80,7 +80,7 @@ export class ReferralStore {
   @action.bound
   loadReferrals = flow(function* (this: ReferralStore) {
     try {
-      let res = yield this.axios.get('profile/referrals')
+      let res = yield this.axios.get('/api/v1/profile/referrals')
       const referrals = res.data as Referral[]
       this.referrals = referrals.sort((a: Referral, b: Referral) => percentComplete(a) - percentComplete(b))
     } catch (error) {
@@ -93,7 +93,7 @@ export class ReferralStore {
   @action.bound
   loadReferralCode = flow(function* (this: ReferralStore) {
     try {
-      let res = yield this.axios.get('profile/referral-code')
+      let res = yield this.axios.get('/api/v1/profile/referral-code')
       this.referralCode = res.data.code
     } catch (error) {
       console.error(error)
@@ -105,7 +105,7 @@ export class ReferralStore {
   @action.bound
   loadCurrentReferral = flow(function* (this: ReferralStore) {
     try {
-      let res = yield this.axios.get<Referral>('profile/referral')
+      let res = yield this.axios.get<Referral>('/api/v1/profile/referral')
       this.currentReferral = res.data
     } catch (e) {
       let err: AxiosError = e
@@ -125,8 +125,8 @@ export class ReferralStore {
       return
     }
 
-    if (!this.store.auth.isAuth) {
-      yield this.store.auth.signIn()
+    if (!this.store.auth.isAuthenticated) {
+      yield this.store.auth.login()
       return //TODO: Remove this once `signIn` is fully async for the full login flow
     }
 
@@ -136,7 +136,7 @@ export class ReferralStore {
       const request = {
         code: code,
       }
-      let res = yield this.axios.post<Referral>('profile/referral', request)
+      let res = yield this.axios.post<Referral>('/api/v1/profile/referral', request)
       this.currentReferral = res.data
       this.store.analytics.trackReferralEntered(code)
     } catch (e) {
@@ -165,7 +165,7 @@ export class ReferralStore {
     }
 
     try {
-      yield this.axios.post('profile/referrals', request)
+      yield this.axios.post('/api/v1/profile/referrals', request)
       this.store.analytics.trackReferralSent()
     } catch (error) {
       console.error(error)

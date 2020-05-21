@@ -3,11 +3,11 @@ import { RootStore } from '../../Store'
 import { FramePage } from './components/FramePage'
 
 const mapStoreToProps = (store: RootStore): any => ({
-  createFrameListener: store.auth.createLoginFrameListener,
+  createFrameListener: store.auth.createLogoutFrameListener,
   frameSandbox: 'allow-same-origin allow-scripts allow-forms',
-  frameTitle: 'Login - Salad',
-  frameUrl: store.auth.loginUrl,
+  frameTitle: 'Logout - Salad',
+  frameUrl: store.auth.logoutUrl,
   onCloseRequested: store.routing.goBack,
 })
 
-export const LoginPageContainer = connect(mapStoreToProps, FramePage)
+export const LogoutPageContainer = connect(mapStoreToProps, FramePage)

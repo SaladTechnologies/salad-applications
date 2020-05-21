@@ -40,12 +40,7 @@ export const App = withStyles(styles)(
     store = getStore()
 
     componentDidMount = async () => {
-      if (this.store.auth.isAuth) {
-        await this.store.onLogin()
-        //Force the app to reload once all data has been loaded
-        this.forceUpdate()
-      }
-
+      this.store.auth.loginSilently()
       if (this.store.native.isNative) {
         console.log('Running in native env')
       } else {
