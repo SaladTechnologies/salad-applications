@@ -1,11 +1,10 @@
+import classNames from 'classnames'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SmartLink, P, Divider, SectionHeader, Scrollbar, Head } from '../../../components'
+import { Divider, Head, P, Scrollbar, SectionHeader, SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
+import { PantryContainer, SlicedVeggieContainer } from '../../xp-views'
 import { MiningSummary } from '../components'
-import classNames from 'classnames'
-import { SlicedVeggieContainer, PantryContainer } from '../../xp-views'
-import { Machine } from '../../machine/models/Machine'
 import { DesktopDownloadContainer } from '../DesktopDownloadContainer'
 
 const styles = (theme: SaladTheme) => ({
@@ -43,12 +42,11 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   lifetimeXp?: number
-  machine?: Machine
 }
 
 class _MiningPage extends Component<Props> {
   render() {
-    const { lifetimeXp, machine, classes } = this.props
+    const { lifetimeXp, classes } = this.props
 
     return (
       <div className={classNames(classes.container, classes.splitContainer)}>
@@ -57,7 +55,7 @@ class _MiningPage extends Component<Props> {
           <div className={classNames(classes.content, classes.splitContainer)}>
             <div className={classNames(classes.column, classes.mainColumn)}>
               <DesktopDownloadContainer />
-              <MiningSummary lifetimeXp={lifetimeXp} machine={machine} />
+              <MiningSummary lifetimeXp={lifetimeXp} />
 
               <Divider />
 

@@ -1,15 +1,13 @@
-import { observable, action, flow, computed, runInAction } from 'mobx'
-import { PluginInfo } from './models/PluginInfo'
-import { StatusMessage } from './models/StatusMessage'
-import { PluginStatus } from './models/PluginStatus'
-import { AxiosInstance, AxiosError } from 'axios'
+import { action, computed, flow, observable, runInAction } from 'mobx'
 import { RootStore } from '../../Store'
 import { MiningStatus } from '../machine/models'
-import { ErrorMessage } from './models/ErrorMessage'
-import { ErrorCategory } from './models/ErrorCategory'
-import { MachineStatus } from './models/MachineStatus'
-import { getPluginDefinitions } from './PluginDefinitionFactory'
 import { PluginDefinition, StartReason, StopReason } from './models'
+import { ErrorCategory } from './models/ErrorCategory'
+import { ErrorMessage } from './models/ErrorMessage'
+import { PluginInfo } from './models/PluginInfo'
+import { PluginStatus } from './models/PluginStatus'
+import { StatusMessage } from './models/StatusMessage'
+import { getPluginDefinitions } from './PluginDefinitionFactory'
 
 export class SaladBowlStore {
   private currentPluginDefinition?: PluginDefinition
@@ -35,7 +33,6 @@ export class SaladBowlStore {
     return (
       this.store.machine &&
       this.store.machine.currentMachine !== undefined &&
-      this.store.machine.currentMachine.qualifying &&
       this.store.native &&
       this.store.native.machineInfo !== undefined &&
       cachedPluginDefinitions.length > 0
@@ -62,22 +59,7 @@ export class SaladBowlStore {
     }
   }
 
-  /** Returns the summary status for the machine */
-  @computed
-  private get machineStatus(): MachineStatus {
-    switch (this.plugin.status) {
-      case PluginStatus.Installing:
-      case PluginStatus.Initializing:
-        return MachineStatus.Initializing
-      case PluginStatus.Running:
-        return MachineStatus.Running
-      case PluginStatus.Unknown:
-      default:
-        return MachineStatus.Stopped
-    }
-  }
-
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
+  constructor(private readonly store: RootStore) {
     this.store.native.on('mining-status', this.onReceiveStatus)
     this.store.native.on('mining-error', this.onReceiveError)
   }
@@ -156,10 +138,8 @@ export class SaladBowlStore {
       return
     }
 
-    if (!this.store.auth.isAuthenticated) {
-      yield this.store.auth.login()
-      return //TODO: Remove this once `signIn` is fully async for the full login flow
-    }
+    //Ensures that the user is logged in
+    yield this.store.auth.login()
 
     if (this.timeoutTimer != null) {
       clearTimeout(this.timeoutTimer)
@@ -214,7 +194,6 @@ export class SaladBowlStore {
       this.startNext()
     }, this.currentPluginDefinition.initialTimeout)
 
-    this.sendRunningStatus()
     this.store.analytics.trackStart(reason)
   })
 
@@ -244,8 +223,6 @@ export class SaladBowlStore {
         this.timeoutTimer = undefined
         this.startNext()
       }, this.currentPluginDefinition.initialTimeout)
-
-      this.sendRunningStatus()
     }
   })
 
@@ -265,36 +242,6 @@ export class SaladBowlStore {
     this.plugin.status = PluginStatus.Stopped
     yield this.store.native.send('stop-salad')
 
-    this.sendRunningStatus()
     this.store.analytics.trackStop(reason)
-  })
-
-  @action.bound
-  sendRunningStatus = flow(function* (this: SaladBowlStore, retry?: boolean) {
-    // const machineId = this.store.token.machineId
-
-    // if (!machineId) {
-    //   console.warn('No machineId found. Unable to send running status')
-    //   return
-    // }
-
-    const data = {
-      status: this.machineStatus,
-    }
-
-    try {
-      yield this.axios.post(`/api/v1/machines/:machineId/status`, data)
-    } catch (e) {
-      let err: AxiosError = e
-      if (err.response && err.response.status === 409) {
-        console.log('Machine status conflict. Restarting')
-        if (!retry) {
-          this.plugin.status = PluginStatus.Initializing
-          this.sendRunningStatus(true)
-        }
-      } else {
-        throw e
-      }
-    }
   })
 }

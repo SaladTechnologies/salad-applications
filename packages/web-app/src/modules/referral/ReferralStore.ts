@@ -1,7 +1,7 @@
-import { observable, computed, flow, action } from 'mobx'
-import { Referral, completed, percentComplete } from './models'
+import { AxiosError, AxiosInstance } from 'axios'
+import { action, computed, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
-import { AxiosInstance, AxiosError } from 'axios'
+import { completed, percentComplete, Referral } from './models'
 import { maximumReferrerBonus } from './models/ReferralDefinition'
 
 export class ReferralStore {
@@ -125,10 +125,8 @@ export class ReferralStore {
       return
     }
 
-    if (!this.store.auth.isAuthenticated) {
-      yield this.store.auth.login()
-      return //TODO: Remove this once `signIn` is fully async for the full login flow
-    }
+    //Ensures that the user is logged in
+    yield this.store.auth.login()
 
     console.log('Sending referral code ' + code)
 

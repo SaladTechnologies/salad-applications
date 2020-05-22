@@ -13,7 +13,6 @@ import {
   UnknownErrorContainer,
 } from './modules/error-views'
 import { HomePage } from './modules/home-views'
-import { CompatibilityCheckPageContainer } from './modules/machine-views'
 import { WhatsNewPageContainer } from './modules/onboarding-views'
 import { RewardDetailsContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
@@ -44,17 +43,11 @@ class _Routes extends Component<RouteComponentProps> {
       )
     }
 
-    let isElectron = this.store.native.isNative
-    let showCompatibilityPage = !this.store.native.isCompatible && !this.store.native.skippedCompatCheck
-
     const currentLocation =
       (location.state as { currentLocation: Location | undefined } | undefined)?.currentLocation || location
     return (
       <>
         <Switch location={currentLocation}>
-          <Route exact path="/machine-loading" render={() => <LoadingPage text="Checking the bits" />} />
-          {isElectron && this.checkMachineLoading()}
-          {isElectron && showCompatibilityPage && <CompatibilityCheckPageContainer />}
           <Route exact path="/errors/anti-virus" component={AntiVirusErrorContainer} />
           <Route exact path="/errors/cuda" component={CudaErrorContainer} />
           <Route exact path="/errors/fallback" component={FallbackErrorContainer} />

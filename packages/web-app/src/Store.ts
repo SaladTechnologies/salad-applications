@@ -65,7 +65,7 @@ export class RootStore {
     this.xp = new ExperienceStore(this, axios)
     this.machine = new MachineStore(this)
     this.native = new NativeStore(this)
-    this.saladBowl = new SaladBowlStore(this, axios)
+    this.saladBowl = new SaladBowlStore(this)
     this.auth = new AuthStore(config, axios, this.routing)
     this.rewards = new RewardStore(this, axios)
     this.analytics = new AnalyticsStore(this)

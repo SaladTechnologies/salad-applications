@@ -6,19 +6,17 @@ import { SaladTheme } from '../../../SaladTheme'
 const styles = (theme: SaladTheme) => ({
   container: {
     backgroundColor: theme.darkBlue,
-    border: '1px solid rgba(187, 187, 187, 1)',
-    boxShadow: '0 0 10px rgba(187, 187, 187, 1)',
+    border: 'none',
+    boxShadow: `none`,
     color: 'white',
-    height: '70vh',
+    height: 450,
     left: '50%',
     margin: 0,
-    minHeight: 400,
-    minWidth: 250,
     padding: 0,
     position: 'absolute',
     top: '50%',
     transform: 'translateX(-50%) translateY(-50%)',
-    width: '50vw',
+    width: 300,
     // TODO: Remove z-indexes!!!
     zIndex: 9999999999,
   },
@@ -42,16 +40,15 @@ export const FramePage = withStyles(styles)(
       this.frame = React.createRef()
     }
 
-    componentDidMount() {
-      if (this.frame.current == null) {
-        throw new TypeError('The iframe element must not be null.')
-      }
-
-      this.cancelFrameListener = this.props.createFrameListener(this.frame.current)
+    componentWillUnmount() {
+      this.cancelFrameListener?.()
+      this.cancelFrameListener = undefined
     }
 
     handleCloseRequested = () => {
       this.cancelFrameListener?.()
+      this.cancelFrameListener = undefined
+
       this.props.onCloseRequested()
     }
 

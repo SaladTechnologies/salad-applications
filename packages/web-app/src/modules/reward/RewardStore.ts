@@ -1,14 +1,13 @@
-import { action, observable, computed, flow } from 'mobx'
+import { AxiosInstance } from 'axios'
+import { action, computed, flow, observable } from 'mobx'
+import { RouteComponentProps } from 'react-router'
+import { RootStore } from '../../Store'
+import { AbortError, SaladPaymentResponse } from '../salad-pay'
+import { SaladPay } from '../salad-pay/SaladPay'
+import { RewardQuery, RewardSort } from './models'
 import { Reward } from './models/Reward'
 import { RewardsResource } from './models/RewardsResource'
-import { AxiosInstance } from 'axios'
-
-import { rewardFromResource, parseRewardQuery, stringifyRewardQuery, sortRewards } from './utils'
-import { RootStore } from '../../Store'
-import { SaladPay } from '../salad-pay/SaladPay'
-import { SaladPaymentResponse, AbortError } from '../salad-pay'
-import { RewardQuery, RewardSort } from './models'
-import { RouteComponentProps } from 'react-router'
+import { parseRewardQuery, rewardFromResource, sortRewards, stringifyRewardQuery } from './utils'
 
 type RewardId = string
 
@@ -194,10 +193,8 @@ export class RewardStore {
 
   @action.bound
   addToChoppingCart = flow(function* (this: RewardStore, reward: Reward) {
-    if (!this.store.auth.isAuthenticated) {
-      yield this.store.auth.login()
-      return //TODO: Remove this once `signIn` is fully async for the full login flow
-    }
+    //Ensures that the user is logged in
+    yield this.store.auth.login()
 
     const request = {
       rewardId: reward.id,
@@ -242,10 +239,8 @@ export class RewardStore {
       return
     }
 
-    if (!this.store.auth.isAuthenticated) {
-      yield this.store.auth.login()
-      return //TODO: Remove this once `signIn` is fully async for the full login flow
-    }
+    //Ensures that the user is logged in
+    yield this.store.auth.login()
 
     this.isRedeeming = true
 

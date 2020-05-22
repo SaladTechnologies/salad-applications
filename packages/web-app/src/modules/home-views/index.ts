@@ -1,3 +1,2 @@
-export * from './HomePage'
-export * from './OfflineModalContainer'
 export * from './FooterBarContainer'
+export * from './HomePage'
