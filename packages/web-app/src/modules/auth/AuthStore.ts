@@ -8,7 +8,6 @@ import { Config } from '../../config'
 interface LoginResponse {
   action: 'login'
   error?: string
-  xsrfToken?: string
 }
 
 export class AuthStore {
@@ -127,13 +126,18 @@ export class AuthStore {
     }
 
     this.isAuthenticationPending = true
-    this.router.push('/login', { previousLocation: toJS(this.router.location) })
-    return new Promise((resolve, reject) => {
-      this.framePromise = {
-        reject,
-        resolve,
-      }
-    })
+    if (localStorage.getItem('salad.isAuthenticated') === 'true') {
+      return this.refreshXsrfTokens().then((xsrfToken) => {
+        if (xsrfToken) {
+          this.onLogin(xsrfToken)
+          return Promise.resolve()
+        } else {
+          return this.loginRequired()
+        }
+      })
+    } else {
+      return this.loginRequired()
+    }
   }
 
   @action
@@ -144,33 +148,18 @@ export class AuthStore {
     }
 
     this.isAuthenticationPending = true
-
-    // Create a hidden `iframe`.
-    const frame = window.document.createElement('iframe')
-    frame.setAttribute('height', '0')
-    frame.setAttribute('width', '0')
-    frame.style.display = 'none'
-
-    const promise = new Promise((resolve, reject) => {
-      this.framePromise = {
-        reject,
-        resolve,
-      }
-    })
-      .then(() => {})
-      .catch(() => {})
-      .finally(() => {
-        if (window.document.body.contains(frame)) {
-          window.document.body.removeChild(frame)
+    if (localStorage.getItem('salad.isAuthenticated') === 'true') {
+      return this.refreshXsrfTokens().then((xsrfToken) => {
+        if (xsrfToken) {
+          this.onLogin(xsrfToken)
+          return Promise.resolve()
+        } else {
+          return this.loginSilentlyRequired()
         }
       })
-    this.createLoginFrameListener(frame, 10000)
-
-    // Load the silent login page.
-    window.document.body.appendChild(frame)
-    frame.setAttribute('src', this.silentLoginUrl)
-
-    return promise
+    } else {
+      return this.loginSilentlyRequired()
+    }
   }
 
   @action
@@ -181,13 +170,16 @@ export class AuthStore {
     }
 
     this.isAuthenticationPending = true
-    this.router.push('/logout', { previousLocation: toJS(this.router.location) })
-    return new Promise((resolve, reject) => {
+
+    const promise = new Promise<void>((resolve, reject) => {
       this.framePromise = {
         reject,
         resolve,
       }
     })
+
+    this.router.push('/logout', { previousLocation: toJS(this.router.location) })
+    return promise
   }
 
   @action
@@ -199,13 +191,12 @@ export class AuthStore {
 
     this.isAuthenticationPending = true
 
-    // Create a hidden `iframe`.
     const frame = window.document.createElement('iframe')
     frame.setAttribute('height', '0')
     frame.setAttribute('width', '0')
     frame.style.display = 'none'
 
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise<void>((resolve, reject) => {
       this.framePromise = {
         reject,
         resolve,
@@ -218,12 +209,11 @@ export class AuthStore {
           window.document.body.removeChild(frame)
         }
       })
-    this.createLoginFrameListener(frame, 10000)
 
     // Load the silent login page.
+    this.createLoginFrameListener(frame, 10000)
     window.document.body.appendChild(frame)
     frame.setAttribute('src', this.logoutUrl)
-
     return promise
   }
 
@@ -255,16 +245,6 @@ export class AuthStore {
       !(
         typeof (data as { error: unknown }).error === 'string' ||
         typeof (data as { error: unknown }).error === 'undefined'
-      )
-    ) {
-      return false
-    }
-
-    if (
-      'xsrfToken' in data &&
-      !(
-        typeof (data as { xsrfToken: unknown }).xsrfToken === 'string' ||
-        typeof (data as { xsrfToken: unknown }).xsrfToken === 'undefined'
       )
     ) {
       return false
@@ -352,7 +332,7 @@ export class AuthStore {
     this.router.replace('/')
   }
 
-  private handleLoginResponseMessageEvent = (event: ResponseMessageEvent): void => {
+  private handleLoginResponseMessageEvent = async (event: ResponseMessageEvent): Promise<void> => {
     if (this.frameTimeout !== undefined) {
       clearTimeout(this.frameTimeout)
       this.frameTimeout = undefined
@@ -365,18 +345,23 @@ export class AuthStore {
 
     let error: string = ''
     if (AuthStore.isLoginResponse(event.data)) {
-      if (event.data.xsrfToken !== undefined) {
-        this.onLogin(event.data.xsrfToken)
+      if (event.data.error === undefined) {
+        const xsrfToken = await this.refreshXsrfTokens()
+        if (xsrfToken) {
+          this.onLogin(xsrfToken)
 
-        if (this.framePromise !== undefined) {
-          this.framePromise.resolve()
-          this.framePromise = undefined
+          if (this.framePromise !== undefined) {
+            this.framePromise.resolve()
+            this.framePromise = undefined
+          }
+
+          // TODO: Navigate back.
+          this.router.replace('/')
+          return
+        } else {
+          error = 'login_required'
         }
-
-        // TODO: Navigate back.
-        this.router.replace('/')
-        return
-      } else if (event.data.error !== undefined) {
+      } else {
         error = event.data.error
       }
     }
@@ -445,19 +430,58 @@ export class AuthStore {
     this.router.replace('/')
   }
 
+  private loginRequired(): Promise<void> {
+    const promise = new Promise<void>((resolve, reject) => {
+      this.framePromise = {
+        reject,
+        resolve,
+      }
+    })
+
+    this.router.push('/login', { previousLocation: toJS(this.router.location) })
+    return promise
+  }
+
+  private loginSilentlyRequired(): Promise<void> {
+    const frame = window.document.createElement('iframe')
+    frame.setAttribute('height', '0')
+    frame.setAttribute('width', '0')
+    frame.style.display = 'none'
+
+    const promise = new Promise<void>((resolve, reject) => {
+      this.framePromise = {
+        reject,
+        resolve,
+      }
+    })
+      .then(() => {})
+      .catch(() => {})
+      .finally(() => {
+        if (window.document.body.contains(frame)) {
+          window.document.body.removeChild(frame)
+        }
+      })
+
+    // Load the silent login page.
+    this.createLoginFrameListener(frame, 10000)
+    window.document.body.appendChild(frame)
+    frame.setAttribute('src', this.silentLoginUrl)
+    return promise
+  }
+
   @action
   private onLogin = (xsrfToken: string) => {
-    // TODO: Update "hint" in localStorage.
     this.axios.defaults.headers.common['X-XSRF-TOKEN'] = xsrfToken
     this.axios.defaults.withCredentials = true
 
     this.isAuthenticated = true
     this.isAuthenticationPending = false
+
+    localStorage.setItem('salad.isAuthenticated', 'true')
   }
 
   @action
   private onLogout = () => {
-    // TODO: Update "hint" in localStorage.
     delete this.axios.defaults.headers.common['X-XSRF-TOKEN']
     this.axios.defaults.withCredentials = false
 
@@ -466,5 +490,26 @@ export class AuthStore {
 
     this.auth0Token = undefined
     this.emailAddress = undefined
+
+    localStorage.removeItem('salad.isAuthenticated')
+  }
+
+  private async refreshXsrfTokens(): Promise<string | undefined> {
+    let xsrfToken: string | undefined = undefined
+    try {
+      const response = await this.axios.get('/api/v2/antiforgery-tokens', {
+        withCredentials: true,
+      })
+      if (response.headers['x-xsrf-token']) {
+        xsrfToken = response.headers['x-xsrf-token']
+      }
+    } catch {}
+
+    if (!xsrfToken) {
+      // Let's be safe and force a logout.
+      this.onLogout()
+    }
+
+    return xsrfToken
   }
 }
