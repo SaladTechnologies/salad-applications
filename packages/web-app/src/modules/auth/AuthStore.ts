@@ -119,7 +119,33 @@ export class AuthStore {
   }
 
   @action
+  public forceLogin = (): Promise<void> => {
+    if (this.isAuthenticationPending) {
+      // TODO: Improve error.
+      throw new Error()
+    }
+
+    this.isAuthenticationPending = true
+    if (localStorage.getItem('salad.isAuthenticated') === 'true') {
+      return this.refreshXsrfTokens().then((xsrfToken) => {
+        if (xsrfToken) {
+          this.onLogin(xsrfToken)
+          return Promise.resolve()
+        } else {
+          return this.loginRequired()
+        }
+      })
+    } else {
+      return this.loginRequired()
+    }
+  }
+
+  @action
   public login = (): Promise<void> => {
+    if (this.isAuthenticated) {
+      return Promise.resolve()
+    }
+
     if (this.isAuthenticationPending) {
       // TODO: Improve error.
       throw new Error()
@@ -266,6 +292,10 @@ export class AuthStore {
     }
 
     this.isAuthenticationPending = false
+    if (this.framePromise !== undefined) {
+      this.framePromise.reject()
+      this.framePromise = undefined
+    }
   }
 
   private handleEmailNotVerified = flow(
@@ -280,7 +310,7 @@ export class AuthStore {
           },
           client_id: this.auth0ClientId,
           domain: this.auth0Domain,
-          redirect_uri: `${this.apiBaseUrl}/login/callback`,
+          redirect_uri: `${window.location.origin}/login/callback`,
         })
 
         const [tokenResult, userResult]: PromiseSettledResult<any>[] = yield Promise.allSettled([

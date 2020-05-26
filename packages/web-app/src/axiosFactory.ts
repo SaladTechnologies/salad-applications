@@ -42,11 +42,11 @@ export const addAuthInterceptor = (httpClient: AxiosInstance, authStore: AuthSto
       if (error.isAxiosError === true) {
         const axiosError: AxiosError<any> = error
         if (axiosError.response && axiosError.response.status === 401) {
-          console.log('TODO: Force login')
-          console.log(authStore.isAuthenticated)
-          debugger
-          // await authStore.forceLogin()
-          return
+          if (!authStore.isAuthenticationPending) {
+            try {
+              await authStore.forceLogin()
+            } catch {}
+          }
         }
       }
 
