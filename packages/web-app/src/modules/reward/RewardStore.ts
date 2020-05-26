@@ -291,6 +291,7 @@ export class RewardStore {
       }
     } finally {
       yield this.store.balance.refreshBalance()
+      yield this.store.balance.refreshBalanceHistory()
       yield this.store.vault.loadVault()
       this.isRedeeming = false
       console.error('Cleared isRedeeming flag')

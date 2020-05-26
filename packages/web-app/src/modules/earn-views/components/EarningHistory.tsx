@@ -1,10 +1,10 @@
+import classNames from 'classnames'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { BarChart, Bar, Cell, XAxis, Tooltip, ResponsiveContainer } from 'recharts'
-import { StatElement, SectionHeader } from '../../../components'
+import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis } from 'recharts'
+import { SectionHeader, StatElement } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { EarningWindow } from '../../balance/models'
-import classNames from 'classnames'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -49,13 +49,13 @@ const _CustomTooltip = ({ active, payload, classes }: TooltipProps) => {
     return null
   }
 
-  const timestamp = payload[0].payload.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  const timestamp = payload[0].payload.timestamp.format('LT')
   const earnings = payload[0].payload.earnings
 
   return (
     <div className={classes.tooltipContainer}>
       <div>{timestamp}</div>
-      <div>{`$ ${earnings.toFixed(2)}`}</div>
+      <div>{`$ ${Number(earnings.toFixed(3))}`}</div>
     </div>
   )
 }

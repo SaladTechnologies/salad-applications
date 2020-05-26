@@ -1,4 +1,6 @@
+import { Moment } from 'moment'
+
 export interface EarningWindow {
-  timestamp: Date
+  timestamp: Moment
   earnings: number
 }
