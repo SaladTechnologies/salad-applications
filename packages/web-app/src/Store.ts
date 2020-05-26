@@ -1,6 +1,7 @@
 import { AxiosInstance } from 'axios'
 import { autorun, configure, flow } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
+import { addAuthInterceptor } from './axiosFactory'
 import { config } from './config'
 import { AnalyticsStore } from './modules/analytics'
 import { AuthStore } from './modules/auth'
@@ -79,6 +80,8 @@ export class RootStore {
     this.vault = new VaultStore(axios)
     this.version = new VersionStore(this, axios)
     this.engagement = new EngagementStore(this)
+
+    addAuthInterceptor(axios, this.auth)
 
     // Start refreshing data
     this.refresh.start()
