@@ -1,7 +1,8 @@
-import axios, { AxiosInstance, AxiosError } from 'axios'
-import { config } from './config'
+import axios, { AxiosError, AxiosInstance } from 'axios'
 import axiosRetry, { exponentialDelay } from 'axios-retry'
 import isRetryAllowed from 'is-retry-allowed'
+import { config } from './config'
+import { AuthStore } from './modules/auth'
 
 /**
  * The list of safe HTTP request methods. HTTP requests using these methods may be retried.
@@ -17,17 +18,41 @@ const SAFE_HTTP_METHODS: ReadonlyArray<string> = ['get', 'head', 'options']
 const shouldRetryDownload = (error: any): boolean => {
   if (error.isAxiosError === true) {
     const axiosError: AxiosError<any> = error
-    if (
+    return (
       SAFE_HTTP_METHODS.indexOf(axiosError.config.method?.toLowerCase() || '') !== -1 &&
       (axiosError.response == null ||
         axiosError.response.status === 408 ||
         (axiosError.response.status >= 500 && axiosError.response.status <= 599))
-    ) {
-      return true
-    }
+    )
   }
-
   return isRetryAllowed(error)
+}
+
+/**
+ * Adds an auth interceptor that forces uses to re-login if we get a 401
+ * @param httpClient
+ * @param authStore
+ */
+export const addAuthInterceptor = (httpClient: AxiosInstance, authStore: AuthStore) => {
+  httpClient.interceptors.response.use(
+    (response) => {
+      return response
+    },
+    async (error) => {
+      if (error.isAxiosError === true) {
+        const axiosError: AxiosError<any> = error
+        if (axiosError.response && axiosError.response.status === 401) {
+          console.log('TODO: Force login')
+          console.log(authStore.isAuthenticated)
+          debugger
+          // await authStore.forceLogin()
+          return
+        }
+      }
+
+      throw error
+    },
+  )
 }
 
 export const createClient = (): AxiosInstance => {
@@ -36,16 +61,17 @@ export const createClient = (): AxiosInstance => {
   })
 
   httpClient.interceptors.response.use(
-    response => {
-      // Any status code that lie within the range of 2xx cause this function to trigger
-      // Do something with response data
+    // Any status code that lie within the range of 2xx cause this function to trigger
+    // Do something with response data
+    (response) => {
       return response
     },
-    error => {
+    // Any status codes that falls outside the range of 2xx cause this function to trigger
+    // Do something with response error
+    // return Promise.reject(a)
+    async (error) => {
       let a = onError(error)
-      // Any status codes that falls outside the range of 2xx cause this function to trigger
-      // Do something with response error
-      // return Promise.reject(a)
+
       throw a
     },
   )

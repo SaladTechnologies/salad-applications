@@ -1,12 +1,11 @@
-import mixpanel from 'mixpanel-browser'
-import { config } from '../../config'
-import { Profile } from '../profile/models'
 import * as Sentry from '@sentry/browser'
-import { Reward } from '../reward/models'
-import { MiningStatus } from '../machine/models'
-import { Machine } from '../machine/models/Machine'
-import { RootStore } from '../../Store'
+import mixpanel from 'mixpanel-browser'
 import { autorun } from 'mobx'
+import { config } from '../../config'
+import { RootStore } from '../../Store'
+import { MiningStatus } from '../machine/models'
+import { Profile } from '../profile/models'
+import { Reward } from '../reward/models'
 
 export class AnalyticsStore {
   private started = false
@@ -206,16 +205,6 @@ export class AnalyticsStore {
     if (!this.started) return
 
     this.track('Referral Entered', { Code: code.toUpperCase() })
-  }
-
-  public trackMachine = (machine: Machine) => {
-    if (!this.started) return
-
-    if (machine.qualifying) {
-      mixpanel.people.set({
-        IsQualified: machine.qualifying,
-      })
-    }
   }
 
   public trackLifetimeXp = (lifetimeXp: number) => {

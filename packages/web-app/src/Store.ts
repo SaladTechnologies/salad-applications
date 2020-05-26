@@ -1,6 +1,7 @@
 import { AxiosInstance } from 'axios'
 import { autorun, configure, flow } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
+import { addAuthInterceptor } from './axiosFactory'
 import { config } from './config'
 import { AnalyticsStore } from './modules/analytics'
 import { AuthStore } from './modules/auth'
@@ -65,7 +66,7 @@ export class RootStore {
     this.xp = new ExperienceStore(this, axios)
     this.machine = new MachineStore(this)
     this.native = new NativeStore(this)
-    this.saladBowl = new SaladBowlStore(this, axios)
+    this.saladBowl = new SaladBowlStore(this)
     this.auth = new AuthStore(config, axios, this.routing)
     this.rewards = new RewardStore(this, axios)
     this.analytics = new AnalyticsStore(this)
@@ -79,6 +80,8 @@ export class RootStore {
     this.vault = new VaultStore(axios)
     this.version = new VersionStore(this, axios)
     this.engagement = new EngagementStore(this)
+
+    addAuthInterceptor(axios, this.auth)
 
     // Start refreshing data
     this.refresh.start()

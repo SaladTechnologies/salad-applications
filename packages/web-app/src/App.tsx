@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { ToastContainer } from 'react-toastify'
-import { FooterBarContainer, OfflineModalContainer } from './modules/home-views'
+import { LoadingPage, MobileDevice, NotMobile } from './components'
+import { FooterBarContainer } from './modules/home-views'
 import { MainTitlebarContainer } from './modules/home-views/MainTitlebarContainer'
 import { Routes } from './Routes'
 import { getStore } from './Store'
-import { NotMobile, MobileDevice, LoadingPage } from './components'
 
 const styles = {
   mainWindow: {
@@ -59,7 +59,6 @@ export const App = withStyles(styles)(
           </MobileDevice>
           <NotMobile>
             <div className={classes.mainWindow}>
-              <OfflineModalContainer />
               <MainTitlebarContainer />
               <div className={classes.container}>
                 <div className={classes.content}>

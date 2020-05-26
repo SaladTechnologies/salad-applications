@@ -1,10 +1,10 @@
+import classnames from 'classnames'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import classnames from 'classnames'
-import { EditUsername } from './EditUsername'
-import { Profile } from '../../../profile/models'
 import { Head } from '../../../../components'
 import { withLogin } from '../../../auth-views'
+import { Profile } from '../../../profile/models'
+import { EditUsername } from './EditUsername'
 
 const styles = {
   container: {
@@ -13,19 +13,12 @@ const styles = {
 }
 
 interface Props extends WithStyles<typeof styles> {
-  onLogout?: () => void
   profile?: Profile
   sending?: boolean
   onSend?: (username: string) => void
 }
 
 class _Account extends Component<Props> {
-  handleLogout = () => {
-    const { onLogout } = this.props
-
-    if (onLogout) onLogout()
-  }
-
   render() {
     const { profile, onSend, sending, classes } = this.props
 
