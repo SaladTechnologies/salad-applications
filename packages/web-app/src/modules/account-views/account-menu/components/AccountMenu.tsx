@@ -86,14 +86,14 @@ class _AccountMenu extends Component<Props> {
       )
     }
     return (
-      <>
+      <div className={classes.container}>
         <div className={classes.signUpButton} onClick={this.handleClick}>
           Login
         </div>
         <div className={classes.signUpButton} onClick={this.handleClick}>
           Register
         </div>
-      </>
+      </div>
     )
   }
 }

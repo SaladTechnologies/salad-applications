@@ -1,14 +1,14 @@
-import React, { Component } from 'react'
-import icon from '../assets/favicon-32x32.png'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
+import { faClone, faMinus, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMinus, faClone, faTimes } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
-import { SmartLink } from '../../../components'
+import React, { Component } from 'react'
 import Img from 'react-image'
+import withStyles, { WithStyles } from 'react-jss'
+import { SmartLink } from '../../../components'
+import { SaladTheme } from '../../../SaladTheme'
 import { AccountMenuContainer } from '../../account-views/account-menu'
 import { SettingsButtonContainer } from '../../settings-views'
+import icon from '../assets/favicon-32x32.png'
 
 export class MenuItem {
   constructor(public readonly name: string, public readonly url: string, public readonly showNotification?: boolean) {}

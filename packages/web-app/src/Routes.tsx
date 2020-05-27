@@ -1,6 +1,6 @@
 import { Location } from 'history'
 import React, { Component } from 'react'
-import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router'
+import { Route, RouteComponentProps, Switch, withRouter } from 'react-router'
 import { LoadingPage } from './components'
 import { AccountSettingsContainer } from './modules/account-views'
 import { EmailVerificationPageContainer, LoginPageContainer, LogoutPageContainer } from './modules/auth-views'
@@ -22,15 +22,6 @@ import { getStore } from './Store'
 
 class _Routes extends Component<RouteComponentProps> {
   store = getStore()
-
-  checkMachineLoading = () => {
-    let machine = this.store.machine.currentMachine
-    let machineInfo = this.store.native.machineInfo
-
-    if (machine === undefined || machineInfo === undefined) return <Redirect to="/machine-loading" />
-
-    return
-  }
 
   render() {
     const { location } = this.props
