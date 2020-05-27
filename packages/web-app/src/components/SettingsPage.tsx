@@ -1,17 +1,11 @@
-import React, { Component } from 'react'
-
-// Styles
-import { styles } from './SettingsPage.styles'
-
-// UI
-import { LinkListUnstyled, MenuTitle, Button, Divider, Head } from '.'
-
-// Packages
-import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
+import React, { Component } from 'react'
+import withStyles, { WithStyles } from 'react-jss'
 import { Route } from 'react-router'
+import { Button, Divider, Head, LinkListUnstyled, MenuTitle } from '.'
 import { DesktopRoute } from '../DesktopRoute'
 import { IconArrowLeft } from '../modules/reward-views/components/assets'
+import { styles } from './SettingsPage.styles'
 
 export interface MenuItem {
   url: string
@@ -141,7 +135,7 @@ class _Settings extends Component<Props> {
           {!latestDesktop && onDownloadLatestDesktop && (
             <div className={classes.updateSalad}>
               <Divider />
-              <Button onClick={this.handleDownloadLatest}>Download Latest Version</Button>
+              <Button onClick={this.handleDownloadLatest}>Get Latest Version</Button>
             </div>
           )}
         </div>
