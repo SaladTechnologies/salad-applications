@@ -35,7 +35,7 @@ export class RefreshService {
     }
 
     try {
-      this.store.balance.refreshBalance()
+      this.store.balance.refreshBalanceAndHistory()
       this.store.rewards.loadSelectedReward()
       this.store.referral.loadReferrals()
       this.store.home.loadBannerInfo()

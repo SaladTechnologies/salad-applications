@@ -1,3 +1,4 @@
+import moment from 'moment'
 import React from 'react'
 import { EarningHistory } from '.'
 import { EarningWindow } from '../../balance/models'
@@ -7,27 +8,10 @@ export default {
   component: EarningHistory,
 }
 
-const bucketSize = 60000 * 15 //minutes
-
 const data: EarningWindow[] = [...Array(96)].map((_, i) => ({
-  timestamp: new Date(Date.now() + bucketSize * i),
+  timestamp: moment().add(i * 15, 'm'),
   earnings: Math.random(),
 }))
-//  [
-//
-//   {
-//     timestamp: new Date(Date.now() + bucketSize * 1),
-//     earnings: 0.002,
-//   },
-//   {
-//     timestamp: new Date(Date.now() + bucketSize * 2),
-//     earnings: 0,
-//   },
-//   {
-//     timestamp: new Date(Date.now() + bucketSize * 3),
-//     earnings: 0.01,
-//   },
-// ]
 
 export const Empty = () => <EarningHistory />
 export const Complete = () => (

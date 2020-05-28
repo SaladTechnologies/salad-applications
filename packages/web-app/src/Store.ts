@@ -110,6 +110,7 @@ export class RootStore {
         this.vault.loadVault(),
         this.version.startVersionChecks(),
         this.xp.refreshXp(),
+        this.balance.refreshBalanceAndHistory(),
       ])
     }.bind(this),
   )

@@ -1,10 +1,8 @@
-import { action, observable, flow, autorun, computed } from 'mobx'
-import { RootStore } from '../../Store'
 import { AxiosInstance } from 'axios'
+import { action, autorun, computed, flow, observable } from 'mobx'
+import moment from 'moment'
+import { RootStore } from '../../Store'
 import { EarningWindow } from './models'
-
-/** The earning history bucket size (ms) */
-const bucketSize = 1000 * 60 * 15 // convert minutes to ms
 
 export class BalanceStore {
   @observable
@@ -17,71 +15,59 @@ export class BalanceStore {
   private earningHistory: Map<number, number> = new Map()
 
   @computed
-  public get earningWindows(): EarningWindow[] {
-    const windows: EarningWindow[] = []
-
-    for (let [time, earning] of this.earningHistory) {
-      windows.push({
-        timestamp: new Date(time),
-        earnings: earning,
-      })
-    }
-
-    return windows.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime())
+  public get lastDayEarningWindows(): EarningWindow[] {
+    return this.getEarningWindows(1)
   }
+
   /** Total earnings for the last 24 hours */
-  @computed
-  public get lastDayEarnings(): number {
-    return this.getTotalEarnings(1)
-  }
+  @observable
+  public lastDayEarnings: number = 0
 
   /** Total earnings for the last 7 days */
-  @computed
-  public get lastWeekEarnings(): number {
-    return this.getTotalEarnings(7)
-  }
+  @observable
+  public lastWeekEarnings: number = 0
 
   /** Total earnings for the last 30 days */
-  @computed
-  public get lastMonthEarnings(): number {
-    return this.getTotalEarnings(30)
-  }
+  @observable
+  public lastMonthEarnings: number = 0
 
-  private getTotalEarnings = (numberOfDays: number): number => {
-    let totalEarnings = 0
-    const now = Date.now()
+  private getEarningWindows = (numberOfDays: number): EarningWindow[] => {
+    const windows: EarningWindow[] = []
 
-    for (let [time, earning] of this.earningHistory) {
+    const now = moment.utc()
+
+    for (let [unixTime, earning] of this.earningHistory) {
+      const time = moment.unix(unixTime)
+
       //Delta time (days)
-      const deltaTime = (now - time) / (24 * 60 * 60 * 1000)
+      const deltaTime = now.diff(time, 'hours')
 
-      if (deltaTime <= numberOfDays) {
-        totalEarnings += earning
+      if (deltaTime <= numberOfDays * 24) {
+        windows.push({
+          timestamp: time,
+          earnings: earning,
+        })
       }
     }
 
-    return totalEarnings
+    return windows.sort((a, b) => a.timestamp.diff(b.timestamp))
   }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     autorun(() => {
       this.store?.analytics?.trackLifetimeBalance?.(this.lifetimeBalance)
     })
-
-    //TODO: Test only
-    for (let i = 0; i < 96; i++) {
-      this.addEarningEvent(Math.random(), new Date(Date.now() - bucketSize * i))
-    }
   }
+
+  @action.bound
+  refreshBalanceAndHistory = flow(function* (this: BalanceStore) {
+    yield Promise.allSettled([this.refreshBalance(), this.refreshBalanceHistory()])
+  })
 
   @action.bound
   refreshBalance = flow(function* (this: BalanceStore) {
     try {
       const response = yield this.axios.get('/api/v1/profile/balance')
-
-      //Generates a fake earning history in the client
-      this.addFakeEarningHistory(this.currentBalance, response.data.currentBalance)
-
       this.currentBalance = response.data.currentBalance
       this.lifetimeBalance = response.data.lifetimeBalance
     } catch (error) {
@@ -90,24 +76,61 @@ export class BalanceStore {
     }
   })
 
-  @action
-  private addFakeEarningHistory = (currentBalance: number, newBalance: number) => {
-    //Skip the initial data load
-    if (currentBalance === 0) return
+  @action.bound
+  refreshBalanceHistory = flow(function* (this: BalanceStore) {
+    try {
+      const response = yield this.axios.get('/api/v2/reports/30-day-earning-history')
 
-    const deltaBalance = newBalance - currentBalance
+      const earningData = response.data
 
-    if (deltaBalance < 0) return
+      const roundedDown = Math.floor(moment().minute() / 15) * 15
 
-    this.addEarningEvent(deltaBalance, new Date(Date.now()))
-  }
+      const now = moment().minute(roundedDown).second(0).millisecond(0)
 
-  @action
-  private addEarningEvent = (deltaBalance: number, timestamp: Date) => {
-    const roundedDate = Math.round(timestamp.getTime() / bucketSize) * bucketSize
+      const threshold24Hrs = moment(now).subtract(24, 'hours')
+      const threshold7Days = moment(now).subtract(7, 'days')
 
-    const currentEarning = this.earningHistory.get(roundedDate)
+      const earningValues: Map<number, number> = new Map()
 
-    this.earningHistory.set(roundedDate, (currentEarning || 0) + deltaBalance)
-  }
+      let total24Hrs = 0
+      let total7Days = 0
+      let total30Days = 0
+
+      //Process the input data into a usable format
+      for (let key in earningData) {
+        const timestamp = moment(key)
+        const earnings: number = earningData[key]
+        earningValues.set(timestamp.unix(), earnings)
+
+        if (timestamp >= threshold24Hrs) {
+          total24Hrs += earnings
+        }
+
+        if (timestamp >= threshold7Days) {
+          total7Days += earnings
+        }
+
+        total30Days += earnings
+      }
+
+      this.lastMonthEarnings = total30Days
+      this.lastWeekEarnings = total7Days
+      this.lastDayEarnings = total24Hrs
+
+      const history = new Map<number, number>()
+
+      for (let i = 0; i < 2880; ++i) {
+        const ts = now.subtract(15, 'minutes')
+        const earning = earningValues.get(ts.unix())
+        history.set(ts.unix(), earning || 0)
+      }
+
+      this.earningHistory = history
+
+      console.error('Refreshed balance history')
+    } catch (error) {
+      console.error('Balance history error: ')
+      console.error(error)
+    }
+  })
 }

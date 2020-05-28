@@ -1,3 +1,4 @@
+import moment from 'moment'
 import React from 'react'
 import { EarningWindow } from '../../balance/models'
 import { EarningSummaryPage } from './EarningSummaryPage'
@@ -10,10 +11,8 @@ export default {
   ],
 }
 
-const bucketSize = 60000 * 15 //minutes
-
 const data: EarningWindow[] = [...Array(96)].map((_, i) => ({
-  timestamp: new Date(Date.now() + bucketSize * i),
+  timestamp: moment().add(i * 15, 'm'),
   earnings: Math.random(),
 }))
 
