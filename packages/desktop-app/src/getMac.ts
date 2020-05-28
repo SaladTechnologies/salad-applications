@@ -8,13 +8,11 @@ const macRegex: RegExp = /(?:[a-z0-9]{2}[:-]){5}[a-z0-9]{2}/gi
 export const getMac = (): Promise<string> =>
   new Promise<string>((resolve, reject) => {
     //If we already have a mac address, return it now
-
-    console.log('Getting mac')
     if (mac) {
       return resolve(mac)
     }
-    const cmd = '%SystemRoot%/System32/getmac.exe'
 
+    const cmd = '%SystemRoot%/System32/getmac.exe'
     exec(cmd, (err, stdout, _) => {
       if (err) return reject(err)
 

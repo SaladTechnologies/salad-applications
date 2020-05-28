@@ -1,21 +1,21 @@
-import { app, BrowserWindow, ipcMain, shell, Input, powerMonitor, Tray, Menu, nativeImage } from 'electron'
-import { DefaultTheme as theme } from './SaladTheme'
+import * as Sentry from '@sentry/electron'
+import { exec } from 'child_process'
+import { app, BrowserWindow, Input, ipcMain, powerMonitor, shell } from 'electron'
+import { autoUpdater } from 'electron-updater'
+import * as fs from 'fs'
 import isOnline from 'is-online'
+import * as notifier from 'node-notifier'
 import * as path from 'path'
 import * as si from 'systeminformation'
-import { SaladBridge } from './SaladBridge'
 import { Config } from './config'
+import * as Logger from './Logger'
 import { MachineInfo } from './models/machine/MachineInfo'
-import { autoUpdater } from 'electron-updater'
-import { Logger } from './Logger'
-import { exec } from 'child_process'
-import * as fs from 'fs'
-import { PluginManager } from './salad-bowl/PluginManager'
-import { PluginDefinition } from './salad-bowl/models/PluginDefinition'
-import { SaladBridgeNotificationService } from './salad-bowl/SaladBridgeNotificationService'
-import * as Sentry from '@sentry/electron'
 import { Profile } from './models/Profile'
-import * as notifier from 'node-notifier'
+import { PluginDefinition } from './salad-bowl/models/PluginDefinition'
+import { PluginManager } from './salad-bowl/PluginManager'
+import { SaladBridgeNotificationService } from './salad-bowl/SaladBridgeNotificationService'
+import { SaladBridge } from './SaladBridge'
+import { DefaultTheme as theme } from './SaladTheme'
 
 const appVersion = app.getVersion()
 
@@ -50,9 +50,9 @@ let pluginManager: PluginManager | undefined
 
 const getMachineInfo = () =>
   new Promise<MachineInfo>(() => {
-    si.osInfo(os => {
-      si.system(system => {
-        si.graphics(graphics => {
+    si.osInfo((os) => {
+      si.system((system) => {
+        si.graphics((graphics) => {
           machineInfo = {
             system: system,
             os: os,
@@ -82,24 +82,25 @@ const checkForMultipleInstance = () => {
 
 const createOfflineWindow = () => {
   if (offlineWindow) {
-    console.log('Offline window already created. Skipping...')
     return
   }
 
   if (mainWindow) {
-    console.log('Main window already being show. No need for an offline window. Skipping...')
     return
   }
 
   offlineWindow = new BrowserWindow({
-    title: 'Salad',
-    width: 300,
-    height: 350,
-    center: true,
-    icon: './assets/favicon.ico',
     backgroundColor: theme.darkBlue,
+    center: true,
     frame: false,
+    height: 350,
+    icon: './assets/favicon.ico',
     resizable: false,
+    title: 'Salad',
+    webPreferences: {
+      enableRemoteModule: false,
+    },
+    width: 300,
   })
 
   offlineWindow.loadURL(`file://${__static}/offline.html`)
@@ -113,7 +114,6 @@ const createOfflineWindow = () => {
 const createMainWindow = () => {
   if (mainWindow) {
     mainWindow.show()
-    console.log('Main window already created. Skipping...')
     return
   }
 
@@ -123,17 +123,18 @@ const createMainWindow = () => {
   })
 
   mainWindow = new BrowserWindow({
-    title: 'Salad',
-    minWidth: 1216,
-    minHeight: 766,
-    center: true,
     backgroundColor: theme.darkBlue,
-    icon: '../assets/favicon.ico',
+    center: true,
     frame: false,
+    icon: './assets/favicon.ico',
+    minHeight: 766,
+    minWidth: 1216,
     show: false,
+    title: 'Salad',
     webPreferences: {
-      nodeIntegration: false,
       contextIsolation: false,
+      enableRemoteModule: false,
+      nodeIntegration: false,
       preload: path.resolve(__dirname, './preload.js'),
     },
   })
@@ -147,23 +148,8 @@ const createMainWindow = () => {
   })
 
   mainWindow.once('ready-to-show', () => {
-    console.log('ready to show main window')
     mainWindow.show()
-
-    console.log('creating tray')
-    const iconPath = path.join(__static, 'salad-tray-logo.png')
-    let logo = nativeImage.createFromPath(iconPath)
-    let tray = new Tray(logo)
-    // A menu that pops up when you right click the tray icon
-    const contextMenu = Menu.buildFromTemplate([
-      { label: 'Quit', click(){app.quit()} },
-    ])
-    tray.setToolTip('Salad')
-    tray.setContextMenu(contextMenu)
-    tray.on('click',()=> mainWindow.show())
-
     if (offlineWindow) {
-      console.log('Closing offline')
       offlineWindow.destroy()
     }
   })
@@ -190,7 +176,7 @@ const createMainWindow = () => {
     if (getMachineInfoPromise !== undefined) return
 
     //Fetch the machine info
-    getMachineInfoPromise = getMachineInfo().then(info => {
+    getMachineInfoPromise = getMachineInfo().then((info) => {
       machineInfo = info
       bridge.send('set-machine-info', machineInfo)
       getMachineInfoPromise = undefined
@@ -219,9 +205,10 @@ const createMainWindow = () => {
     app.quit()
   })
 
-  bridge.on('hide-window', ()=> {
-    console.log('Minimizing to tray')
-    mainWindow.hide()
+  bridge.on('hide-window', () => {
+    // TODO: Fix minimizing to the system tray.
+    console.log('Closing main window')
+    app.quit()
   })
 
   bridge.on(start, (pluginDefinition: PluginDefinition) => {
@@ -242,17 +229,15 @@ const createMainWindow = () => {
   })
 
   bridge.on('enable-auto-launch', () => {
-    console.log('Enable auto launch')
     saladAutoLauncher.enable()
   })
 
   bridge.on('disable-auto-launch', () => {
-    console.log('Disable auto launch')
     saladAutoLauncher.disable()
   })
 
   bridge.on('login', (profile: Profile) => {
-    Sentry.configureScope(scope => {
+    Sentry.configureScope((scope) => {
       scope.setUser({
         id: profile.id,
         email: profile.email,
@@ -262,7 +247,7 @@ const createMainWindow = () => {
   })
 
   bridge.on('logout', () => {
-    Sentry.configureScope(scope => {
+    Sentry.configureScope((scope) => {
       scope.setUser({})
     })
   })
@@ -282,21 +267,13 @@ const createMainWindow = () => {
         icon: path.join(__static, 'salad-logo.png'),
         appID: 'salad-technologies-desktop-app',
       },
-      err => {
+      (err) => {
         if (err) {
           console.warn('Notification error')
           console.warn(err)
         }
       },
     )
-
-    // notifier.on('timeout', () => {
-    //   console.log('Timed out!')
-    // })
-
-    // notifier.on('click', () => {
-    //   console.log('Clicked!')
-    // })
   })
 
   mainWindow.webContents.on('new-window', (e: Electron.Event, url: string) => {
@@ -313,31 +290,31 @@ const createMainWindow = () => {
 const checkForUpdates = () => {
   //When we are online, check for updates
   if (updateChecked) {
-    console.log('Already checked for updates. Skipping')
     return
   }
+
   updateChecked = true
   console.log('Checking for updates...')
 
   autoUpdater.on('checking-for-update', () => {
     console.log('Checking for update...')
   })
-  autoUpdater.on('update-available', info => {
+  autoUpdater.on('update-available', (info) => {
     console.log('Update available.' + info)
   })
-  autoUpdater.on('update-not-available', info => {
+  autoUpdater.on('update-not-available', (info) => {
     console.log('Update not available.' + info)
   })
-  autoUpdater.on('error', err => {
+  autoUpdater.on('error', (err) => {
     console.log('Error in auto-updater. ' + err)
   })
-  autoUpdater.on('download-progress', progressObj => {
+  autoUpdater.on('download-progress', (progressObj) => {
     let log_message = 'Download speed: ' + progressObj.bytesPerSecond
     log_message = log_message + ' - Downloaded ' + progressObj.percent + '%'
     log_message = log_message + ' (' + progressObj.transferred + '/' + progressObj.total + ')'
     console.log(log_message)
   })
-  autoUpdater.on('update-downloaded', info => {
+  autoUpdater.on('update-downloaded', (info) => {
     console.log('Update downloaded.' + info)
   })
 
@@ -346,10 +323,6 @@ const checkForUpdates = () => {
 }
 
 const onReady = async () => {
-  //Start loading the machine info
-  getMachineInfo()
-  getCudaData()
-
   //Check to see if we are online
   let online = await isOnline()
 

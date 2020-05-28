@@ -8,7 +8,7 @@ export class SaladBridge {
     let func = this.callbacks.get(args.type)
 
     if (func) {
-      if (args.type !== 'get-idle-time') {
+      if (args.type !== 'get-idle-time' && args.type !== 'set-idle-time') {
         console.log(`Received message ${args.type}. Payload: ${args.payload}`)
       }
       func(args.payload)
