@@ -7,22 +7,59 @@ export default {
   component: EmailVerificationPage,
 }
 
-export const Blank = () => (
-  <EmailVerificationPage onResendVerificationEmail={action('resend')} onLogout={action('go back')} />
-)
+const handleCheckEmailVerification = (...args: any[]) => {
+  action('Check Email Verification')(...args)
+  return Promise.resolve(false)
+}
 
-export const SendStatus = () => (
+const handleEmailVerificationComplete = (...args: any[]) => {
+  action('Email Verification Complete')(...args)
+  return Promise.resolve()
+}
+
+const handleResendVerificationEmail = (...args: any[]) => {
+  action('Resend')(...args)
+  return Promise.resolve()
+}
+
+export const WithoutEmailAndWithoutResend = () => (
   <EmailVerificationPage
-    status="Sending now"
-    onResendVerificationEmail={action('resend')}
-    onLogout={action('go back')}
+    canResendVerificationEmail={false}
+    onCheckEmailVerification={handleCheckEmailVerification}
+    onCloseRequested={action('Close')}
+    onEmailVerificationComplete={handleEmailVerificationComplete}
+    onResendVerificationEmail={handleResendVerificationEmail}
   />
 )
 
-export const WithEmail = () => (
+export const WithoutEmailAndWithResend = () => (
   <EmailVerificationPage
-    emailAddress="dev@salad.io"
-    onResendVerificationEmail={action('resend')}
-    onLogout={action('go back')}
+    canResendVerificationEmail
+    onCheckEmailVerification={handleCheckEmailVerification}
+    onCloseRequested={action('Close')}
+    onEmailVerificationComplete={handleEmailVerificationComplete}
+    onResendVerificationEmail={handleResendVerificationEmail}
+  />
+)
+
+export const WithEmailAndWithoutResend = () => (
+  <EmailVerificationPage
+    canResendVerificationEmail={false}
+    emailAddress="user@example.com"
+    onCheckEmailVerification={handleCheckEmailVerification}
+    onCloseRequested={action('Close')}
+    onEmailVerificationComplete={handleEmailVerificationComplete}
+    onResendVerificationEmail={handleResendVerificationEmail}
+  />
+)
+
+export const WithEmailAndWithResend = () => (
+  <EmailVerificationPage
+    canResendVerificationEmail
+    emailAddress="user@example.com"
+    onCheckEmailVerification={handleCheckEmailVerification}
+    onCloseRequested={action('Close')}
+    onEmailVerificationComplete={handleEmailVerificationComplete}
+    onResendVerificationEmail={handleResendVerificationEmail}
   />
 )

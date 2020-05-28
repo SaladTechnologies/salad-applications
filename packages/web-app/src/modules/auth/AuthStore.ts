@@ -1,9 +1,11 @@
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js'
 import { AxiosInstance } from 'axios'
-import { action, flow, observable, toJS } from 'mobx'
+import { History, Location } from 'history'
+import { action, computed, flow, observable, toJS } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
 import { Cancelable, once, ResponseMessageEvent } from 'post-robot'
 import { Config } from '../../config'
+import { TooManyRequestsError } from './TooManyRequestsError'
 
 interface LoginResponse {
   action: 'login'
@@ -20,8 +22,14 @@ export class AuthStore {
   private readonly auth0Domain: string
 
   /**
+   * The Auth0 client. This is only created when the user's email address is not verified.
+   */
+  private auth0Client?: Auth0Client
+
+  /**
    * The Auth0 access token. This is only obtained from Auth0 when the user's email address is not verified.
    */
+  @observable
   private auth0Token?: string
 
   private frameListener?: Cancelable & Promise<ResponseMessageEvent>
@@ -58,6 +66,11 @@ export class AuthStore {
     this.auth0Domain = config.auth0Domain
   }
 
+  @computed
+  public get canResendVerificationEmail() {
+    return this.auth0Token !== undefined
+  }
+
   public get loginUrl(): string {
     return this.apiBaseUrl + '/login'
   }
@@ -70,10 +83,44 @@ export class AuthStore {
     return this.apiBaseUrl + '/logout'
   }
 
+  private get antiforgeryTokensUrl(): string {
+    return this.apiBaseUrl + '/api/v2/antiforgery-tokens'
+  }
+
+  private get verificationEmailsUrl(): string {
+    return this.apiBaseUrl + '/api/v2/verification-emails'
+  }
+
+  public checkEmailVerification = flow(
+    function* (this: AuthStore) {
+      try {
+        if (this.auth0Client === undefined) {
+          // This automatically attempts a silent login.
+          this.auth0Client = yield createAuth0Client({
+            audience: this.auth0Audience,
+            authorizeTimeoutInSeconds: 10,
+            advancedOptions: {
+              defaultScope: 'email',
+            },
+            client_id: this.auth0ClientId,
+            domain: this.auth0Domain,
+            redirect_uri: `${window.location.origin}/login/callback`,
+          })
+        } else {
+          this.auth0Token = yield this.auth0Client.getTokenSilently({ ignoreCache: true })
+        }
+
+        const user: any = yield this.auth0Client!.getUser()
+        return typeof user?.email_verified === 'boolean' && user.email_verified === true
+      } catch {
+        return false
+      }
+    }.bind(this),
+  )
+
   public createLoginFrameListener = (frame: HTMLIFrameElement, timeout?: number): (() => void) => {
     if (this.frameListener !== undefined) {
-      // TODO: Improve error.
-      throw new Error()
+      throw new Error('A login or logout frame already exists.')
     }
 
     if (this.frameTimeout !== undefined) {
@@ -96,8 +143,7 @@ export class AuthStore {
 
   public createLogoutFrameListener = (frame: HTMLIFrameElement, timeout?: number): (() => void) => {
     if (this.frameListener !== undefined) {
-      // TODO: Improve error.
-      throw new Error()
+      throw new Error('A login or logout frame already exists.')
     }
 
     if (this.frameTimeout !== undefined) {
@@ -121,8 +167,7 @@ export class AuthStore {
   @action
   public forceLogin = (): Promise<void> => {
     if (this.isAuthenticationPending) {
-      // TODO: Improve error.
-      throw new Error()
+      throw new Error('A login or logout attempt is already pending.')
     }
 
     this.isAuthenticationPending = true
@@ -147,8 +192,7 @@ export class AuthStore {
     }
 
     if (this.isAuthenticationPending) {
-      // TODO: Improve error.
-      throw new Error()
+      throw new Error('A login or logout attempt is already pending.')
     }
 
     this.isAuthenticationPending = true
@@ -169,8 +213,7 @@ export class AuthStore {
   @action
   public loginSilently = (): Promise<void> => {
     if (this.isAuthenticationPending) {
-      // TODO: Improve error.
-      throw new Error()
+      throw new Error('A login or logout attempt is already pending.')
     }
 
     this.isAuthenticationPending = true
@@ -191,8 +234,7 @@ export class AuthStore {
   @action
   public logout = (): Promise<void> => {
     if (this.isAuthenticationPending) {
-      // TODO: Improve error.
-      throw new Error()
+      throw new Error('A login or logout attempt is already pending.')
     }
 
     this.isAuthenticationPending = true
@@ -211,8 +253,7 @@ export class AuthStore {
   @action
   public logoutSilently = (): Promise<void> => {
     if (this.isAuthenticationPending) {
-      // TODO: Improve error.
-      throw new Error()
+      throw new Error('A login or logout attempt is already pending.')
     }
 
     this.isAuthenticationPending = true
@@ -245,14 +286,37 @@ export class AuthStore {
 
   public resendVerificationEmail = flow(
     function* (this: AuthStore) {
+      let response: Response
       try {
-        yield this.axios.post('/api/v2/verification-emails', undefined, {
+        response = yield fetch(this.verificationEmailsUrl, {
           headers: {
             Authorization: `Bearer ${this.auth0Token}`,
           },
+          method: 'POST',
         })
-      } catch (error) {
-        console.log(error)
+      } catch {
+        throw new Error('Failed to connect to Salad. Please check your network connection and try again.')
+      }
+
+      if (!response.ok) {
+        switch (response.status) {
+          case 400:
+            // The email address is already verified.
+            break
+          case 429:
+            let retryAfter: number = NaN
+            if (response.headers.has('Retry-After')) {
+              retryAfter = parseInt(response.headers.get('Retry-After') || '')
+            }
+
+            if (isNaN(retryAfter) || retryAfter < 0) {
+              retryAfter = 60
+            }
+
+            throw new TooManyRequestsError('Please wait before sending another verification email.', retryAfter)
+          default:
+            throw new Error('Failed to send the verification email.')
+        }
       }
     }.bind(this),
   )
@@ -273,6 +337,20 @@ export class AuthStore {
         typeof (data as { error: unknown }).error === 'undefined'
       )
     ) {
+      return false
+    }
+
+    return true
+  }
+
+  private static isStateWithPreviousLocation(
+    state: any,
+  ): state is { previousLocation?: Location<History.PoorMansUnknown> } {
+    if (typeof state != 'object' || state == null) {
+      return false
+    }
+
+    if (!('previousLocation' in state)) {
       return false
     }
 
@@ -301,46 +379,39 @@ export class AuthStore {
   private handleEmailNotVerified = flow(
     function* (this: AuthStore) {
       try {
-        // This automatically attempts a silent login.
-        const auth0Client: Auth0Client = yield createAuth0Client({
-          audience: this.auth0Audience,
-          authorizeTimeoutInSeconds: 10,
-          advancedOptions: {
-            defaultScope: 'email',
-          },
-          client_id: this.auth0ClientId,
-          domain: this.auth0Domain,
-          redirect_uri: `${window.location.origin}/login/callback`,
-        })
-
-        const [tokenResult, userResult]: PromiseSettledResult<any>[] = yield Promise.allSettled([
-          yield auth0Client.getTokenSilently(),
-          yield auth0Client.getUser(),
-        ])
-
-        if (tokenResult.status !== 'fulfilled') {
-          // TODO: Improve error.
-          throw new Error()
+        if (this.auth0Client === undefined) {
+          // This automatically attempts a silent login.
+          this.auth0Client = yield createAuth0Client({
+            audience: this.auth0Audience,
+            authorizeTimeoutInSeconds: 10,
+            advancedOptions: {
+              defaultScope: 'email',
+            },
+            client_id: this.auth0ClientId,
+            domain: this.auth0Domain,
+            redirect_uri: `${window.location.origin}/login/callback`,
+          })
         }
 
-        this.auth0Token = tokenResult.value
+        const [tokenResult, userResult]: PromiseSettledResult<any>[] = yield Promise.allSettled([
+          yield this.auth0Client!.getTokenSilently(),
+          yield this.auth0Client!.getUser(),
+        ])
+
+        if (tokenResult.status === 'fulfilled') {
+          this.auth0Token = tokenResult.value
+        }
 
         if (userResult.status === 'fulfilled' && typeof userResult.value?.email === 'string') {
           this.emailAddress = userResult.value.email
         }
+      } catch {}
 
-        this.router.push('/login/email-verification')
-      } catch (error) {
-        // TODO: Show an error page.
-        console.log(error)
-      }
+      this.router.push('/login/email-verification')
     }.bind(this),
   )
 
-  private handleError = (error: any): void => {
-    // TODO: Remove debug code.
-    console.log(error)
-
+  private handleError = (): void => {
     if (this.frameTimeout !== undefined) {
       clearTimeout(this.frameTimeout)
       this.frameTimeout = undefined
@@ -385,8 +456,15 @@ export class AuthStore {
             this.framePromise = undefined
           }
 
-          // TODO: Navigate back.
-          this.router.replace('/')
+          if (
+            AuthStore.isStateWithPreviousLocation(this.router.location.state) &&
+            this.router.location.state.previousLocation !== undefined
+          ) {
+            this.router.replace(this.router.location.state.previousLocation)
+          } else {
+            this.router.replace('/')
+          }
+
           return
         } else {
           error = 'login_required'
@@ -434,7 +512,6 @@ export class AuthStore {
       this.framePromise = undefined
     }
 
-    // TODO: Navigate back.
     this.router.replace('/')
   }
 
@@ -504,6 +581,9 @@ export class AuthStore {
     this.axios.defaults.headers.common['X-XSRF-TOKEN'] = xsrfToken
     this.axios.defaults.withCredentials = true
 
+    this.auth0Client = undefined
+    this.auth0Token = undefined
+    this.emailAddress = undefined
     this.isAuthenticated = true
     this.isAuthenticationPending = false
 
@@ -515,6 +595,9 @@ export class AuthStore {
     delete this.axios.defaults.headers.common['X-XSRF-TOKEN']
     this.axios.defaults.withCredentials = false
 
+    this.auth0Client = undefined
+    this.auth0Token = undefined
+    this.emailAddress = undefined
     this.isAuthenticated = false
     this.isAuthenticationPending = false
 
@@ -527,11 +610,11 @@ export class AuthStore {
   private async refreshXsrfTokens(): Promise<string | undefined> {
     let xsrfToken: string | undefined = undefined
     try {
-      const response = await this.axios.get('/api/v2/antiforgery-tokens', {
-        withCredentials: true,
+      const response = await fetch(this.antiforgeryTokensUrl, {
+        credentials: 'include',
       })
-      if (response.headers['x-xsrf-token']) {
-        xsrfToken = response.headers['x-xsrf-token']
+      if (response.ok && response.headers.has('X-XSRF-TOKEN')) {
+        xsrfToken = response.headers.get('X-XSRF-TOKEN') || ''
       }
     } catch {}
 
