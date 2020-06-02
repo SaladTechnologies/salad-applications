@@ -1,4 +1,4 @@
-import { action, computed, flow, observable } from 'mobx'
+import { action, computed, observable } from 'mobx'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
 // import { Machine } from './models/Machine'
@@ -92,6 +92,7 @@ export class NativeStore {
       })
 
       this.send(getDesktopVersion)
+      this.loadMachineInfo()
     }
   }
 
@@ -163,41 +164,6 @@ export class NativeStore {
     }
   }
 
-  registerMachine = flow(
-    function* (this: NativeStore) {
-      if (!this.machineInfo) {
-        console.warn('No valid machine info found. Unable to register.')
-        return
-      }
-
-      yield new Promise((resolve) => {
-        setTimeout(() => {
-          resolve()
-        }, 2000)
-      })
-      // if (!this.store.token.machineId) {
-      //   console.warn('No valid machine id found. Unable to register')
-      //   return
-      // }
-
-      // try {
-      //   console.log('Registering machine with salad')
-      //   let res: any = yield this.axios.post(`/api/v1/machines/${this.store.token.machineId}/data`, this.machineInfo)
-      //   let machine: Machine = res.data
-
-      //   this.validGPUs = machine.validGpus
-      //   this.validOperatingSystem = machine.validOs
-      //   this.store.machine.setCurrentMachine(machine)
-      //   this.store.analytics.trackMachine(machine)
-      //   this.store.routing.replace('/')
-      // } catch (err) {
-      //   this.store.analytics.captureException(new Error(`register-machine error: ${err}`))
-      //   this.validGPUs = false
-      //   throw err
-      // }
-    }.bind(this),
-  )
-
   @action
   setMachineInfo = (info: MachineInfo) => {
     console.log('Received machine info')
@@ -209,8 +175,6 @@ export class NativeStore {
     this.machineInfo = info
 
     this.loadingMachineInfo = false
-
-    this.store.routing.replace('/')
   }
 
   @action
