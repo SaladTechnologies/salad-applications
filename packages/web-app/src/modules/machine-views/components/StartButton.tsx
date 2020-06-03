@@ -1,10 +1,10 @@
+import classnames from 'classnames'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
-import classnames from 'classnames'
-import { MiningStatus } from '../../machine/models'
 import { StatElement } from '../../../components'
+import { SaladTheme } from '../../../SaladTheme'
 import { formatDuration } from '../../../utils'
+import { MiningStatus } from '../../machine/models'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -14,18 +14,30 @@ const styles = (theme: SaladTheme) => ({
   buttonContainer: {
     height: 100,
     width: 200,
+    margin: 20,
     display: 'flex',
-    padding: 30,
+    backgroundColor: theme.darkBlue,
+    color: theme.lightGreen,
+  },
+  buttonBorder: {
+    background:
+      'linear-gradient(-75deg, rgba(178, 213, 48, 0.5) 30%, rgba(175, 214, 28, 0.2) 50%, rgba(178, 213, 48, 0.70) 100%)',
+    width: '100%',
+    display: 'flex',
+    padding: 2, //borderWidth
+  },
+  buttonBorderInner: {
+    backgroundColor: theme.darkBlue,
+    width: '100%',
+    display: 'flex',
   },
   button: {
-    backgroundColor: theme.green,
-    color: theme.darkBlue,
+    background:
+      'linear-gradient(75.49deg, rgba(201, 240, 55, 0.24) -16.36%, rgba(175, 214, 28, 0.64) 58.63%, rgba(178, 213, 48, 0.571429) 95.69%, rgba(178, 213, 48, 0.24) 153.04%)',
     fontFamily: theme.fontGroteskBook25,
-    border: '1px solid black',
     fontSize: 18,
     textTransform: 'uppercase',
     flex: 1,
-    borderRadius: 10,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -39,6 +51,7 @@ const styles = (theme: SaladTheme) => ({
   },
   disabledButton: {
     cursor: 'not-allowed',
+    color: theme.darkBlue,
   },
   '@keyframes animated': {
     '0%': {
@@ -83,15 +96,19 @@ class _StartButton extends Component<Props> {
     return (
       <div className={classes.container}>
         <div className={classes.buttonContainer}>
-          <div
-            className={classnames(classes.button, {
-              [classes.running]: isRunning,
-              [classes.enabledButton]: isEnabled,
-              [classes.disabledButton]: !isEnabled,
-            })}
-            onClick={this.handleClick}
-          >
-            {isRunning ? 'Stop' : 'Start'}
+          <div className={classes.buttonBorder}>
+            <div className={classes.buttonBorderInner}>
+              <div
+                className={classnames(classes.button, {
+                  [classes.running]: isRunning,
+                  [classes.enabledButton]: isEnabled,
+                  [classes.disabledButton]: !isEnabled,
+                })}
+                onClick={this.handleClick}
+              >
+                {isRunning ? 'Stop' : 'Start'}
+              </div>
+            </div>
           </div>
         </div>
         <StatElement

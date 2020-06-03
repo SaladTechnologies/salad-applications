@@ -1,9 +1,8 @@
 import React from 'react'
-
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
 import { InfoButton } from '../..'
+import { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -23,7 +22,7 @@ const styles = (theme: SaladTheme) => ({
     fontFamily: theme.fontGroteskLight09,
     fontSize: 48,
     whiteSpace: 'nowrap',
-    overflow: 'hidden',
+    // overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
 })

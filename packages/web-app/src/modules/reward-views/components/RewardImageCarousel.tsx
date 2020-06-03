@@ -1,14 +1,19 @@
-import React, { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
-import { Reward } from '../../reward/models'
-import Carousel from 'react-multi-carousel'
+import React, { Component } from 'react'
 import Img from 'react-image'
+import withStyles, { WithStyles } from 'react-jss'
+import Carousel from 'react-multi-carousel'
 import { Divider } from '../../../components'
+import { Reward } from '../../reward/models'
+import { RewardImageDot } from './RewardImageDot'
 
 const styles = {
   container: {
     paddingTop: 18,
+  },
+  carouselContainer: {
+    position: 'relative',
+    paddingBottom: 30,
   },
   image: {
     display: 'block',
@@ -58,11 +63,20 @@ const renderImageComponent = (props: Props) => {
 
   //Collection of images
   return (
-    <Carousel keyBoardControl={false} responsive={responsive} arrows showDots>
-      {reward?.images?.map((x) => (
-        <Img key={x} className={classes.image} src={x} alt="" />
-      ))}
-    </Carousel>
+    <div className={classes.carouselContainer}>
+      <Carousel
+        keyBoardControl={false}
+        responsive={responsive}
+        arrows
+        showDots
+        customDot={<RewardImageDot />}
+        renderDotsOutside
+      >
+        {reward?.images?.map((x) => (
+          <Img key={x} className={classes.image} src={x} alt="" />
+        ))}
+      </Carousel>
+    </div>
   )
 }
 
@@ -70,14 +84,16 @@ class _RewardImageCarousel extends Component<Props> {
   render() {
     const { reward, classes } = this.props
 
-    if (!reward) {
+    const image = renderImageComponent(this.props)
+
+    if (!reward || !image) {
       return null
     }
 
     return (
       <div className={classnames(classes.container)}>
-        {renderImageComponent(this.props)}
-        <Divider />
+        {image}
+        {image && <Divider />}
       </div>
     )
   }

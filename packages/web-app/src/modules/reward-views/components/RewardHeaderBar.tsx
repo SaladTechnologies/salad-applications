@@ -1,11 +1,11 @@
+import classnames from 'classnames'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
-import classnames from 'classnames'
-import { Reward } from '../../reward/models'
 import { Button } from '../../../components'
-import { IconArrowLeft } from './assets'
+import { SaladTheme } from '../../../SaladTheme'
 import { AddToCartButton } from '../../chopping-cart-views/components'
+import { Reward } from '../../reward/models'
+import { IconArrowLeft } from './assets'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -13,7 +13,7 @@ const styles = (theme: SaladTheme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     padding: '6px 20px 6px 12px',
-    borderBottom: `1px solid ${theme.green}`,
+    borderBottom: `1px solid ${theme.lightGreen}`,
     color: theme.lightGreen,
     height: 87,
   },
