@@ -1,10 +1,8 @@
-import React from 'react'
+import { action } from '@storybook/addon-actions'
 import { storiesOf } from '@storybook/react'
 import { LoremIpsum } from 'lorem-ipsum'
-import skyrimHero from '../../../../.storybook/assets/skyrim.jpg'
-import witcherHero from '../../../../.storybook/assets/witcher.jpg'
-import skyrimCover from '../../../../.storybook/assets/skyrim-cover.jpg'
-import witcherCover from '../../../../.storybook/assets/witcher-cover.jpg'
+import React from 'react'
+import { RewardDescriptionPanel, RewardHeaderBar, RewardInfoPanel, RewardRequirementsPanel } from '.'
 import gta1 from '../../../../.storybook/assets/gta-1.jpg'
 import gta2 from '../../../../.storybook/assets/gta-2.jpg'
 import gta3 from '../../../../.storybook/assets/gta-3.jpg'
@@ -13,17 +11,19 @@ import gta5 from '../../../../.storybook/assets/gta-5.jpg'
 import gta6 from '../../../../.storybook/assets/gta-6.jpg'
 import gta7 from '../../../../.storybook/assets/gta-7.jpg'
 import gta8 from '../../../../.storybook/assets/gta-8.jpg'
-import { action } from '@storybook/addon-actions'
+import skyrimCover from '../../../../.storybook/assets/skyrim-cover.jpg'
+import skyrimHero from '../../../../.storybook/assets/skyrim.jpg'
+import witcherCover from '../../../../.storybook/assets/witcher-cover.jpg'
+import witcherHero from '../../../../.storybook/assets/witcher.jpg'
+import { RewardPlatform } from '../../reward/models'
 import { Reward } from '../../reward/models/Reward'
+import { RewardHero } from './RewardHero'
+import { RewardHeroButtonGroup } from './RewardHeroButtonGroup'
+import { RewardHeroItem } from './RewardHeroItem'
+import { RewardImageCarousel } from './RewardImageCarousel'
 import { RewardItem } from './RewardItem'
 import { RewardSlider } from './RewardSlider'
 import { RewardSliderButton } from './RewardSliderButton'
-import { RewardHeroItem } from './RewardHeroItem'
-import { RewardHero } from './RewardHero'
-import { RewardHeroButtonGroup } from './RewardHeroButtonGroup'
-import { RewardHeaderBar, RewardInfoPanel, RewardDescriptionPanel, RewardRequirementsPanel } from '.'
-import { RewardImageCarousel } from './RewardImageCarousel'
-import { RewardPlatform } from '../../reward/models'
 
 const lorem = new LoremIpsum({
   sentencesPerParagraph: {
@@ -363,7 +363,16 @@ storiesOf('Modules/Rewards/Reward Image Carousel', module)
     let reward = generateRewards(2)[1]
     reward.images = []
     reward.videos = []
+    reward.heroImage = undefined
+    reward.image = undefined
+    reward.coverImage = undefined
     return <RewardImageCarousel reward={reward} />
+  })
+  .add('empty', () => {
+    let reward = generateRewards(2)[1]
+    reward.images = []
+    reward.videos = []
+    return <RewardImageCarousel />
   })
 
 storiesOf('Modules/Rewards/Reward Info Panel', module)
