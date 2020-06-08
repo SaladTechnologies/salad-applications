@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Route, Switch } from 'react-router'
+import { SaladTheme } from '../../SaladTheme'
 import {
   MainStorefrontContainer,
-  RewardSearchResultContainer,
   RewardBrowseCategoryContainer,
   RewardSearchBarContainer,
+  RewardSearchResultContainer,
 } from '../reward-views'
-import { getStore } from '../../Store'
-import { SaladTheme } from '../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -44,12 +43,6 @@ const styles = (theme: SaladTheme) => ({
 })
 
 class _HomePage extends Component<WithStyles<typeof styles>> {
-  store = getStore()
-
-  componentWillUnmount() {
-    this.store.refresh.stop()
-  }
-
   render() {
     const { classes } = this.props
     return (
