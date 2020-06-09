@@ -126,8 +126,6 @@ export class BalanceStore {
       }
 
       this.earningHistory = history
-
-      console.error('Refreshed balance history')
     } catch (error) {
       console.error('Balance history error: ')
       console.error(error)

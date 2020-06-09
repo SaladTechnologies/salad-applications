@@ -85,6 +85,7 @@ export class RootStore {
 
     // Start refreshing data
     this.refresh.start()
+
     autorun(() => {
       if (this.auth.isAuthenticated) {
         this.onLogin()
@@ -107,10 +108,8 @@ export class RootStore {
         this.native.login(profile),
         this.referral.loadCurrentReferral(),
         this.referral.loadReferralCode(),
-        this.vault.loadVault(),
         this.version.startVersionChecks(),
-        this.xp.refreshXp(),
-        this.balance.refreshBalanceAndHistory(),
+        this.refresh.refreshData(),
       ])
     }.bind(this),
   )

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SmartLink, P, Divider, SectionHeader, Scrollbar, Head } from '../../../components'
+import { Divider, Head, P, Scrollbar, SectionHeader, SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { StartButtonContainer } from '../../machine-views'
 import { DesktopDownloadContainer } from '../DesktopDownloadContainer'
