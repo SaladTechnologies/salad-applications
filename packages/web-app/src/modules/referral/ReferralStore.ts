@@ -126,6 +126,11 @@ export class ReferralStore {
       return
     }
 
+    //TODO: Remove this ASAP
+    if (code.toUpperCase() === 'ISAAC') {
+      code = 'ISAAC2'
+    }
+
     console.log('Sending referral code ' + code)
 
     try {
