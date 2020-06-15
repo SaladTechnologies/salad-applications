@@ -19,10 +19,12 @@ export class SaladBowlStore {
   private timeoutTimer?: NodeJS.Timeout
 
   /** The timestamp last time that start was pressed */
+
   private startTimestamp?: Date
 
   /** The time since the start button was pressed (ms) */
-  public runningTime: number = 0
+  @observable
+  public runningTime?: number = undefined
 
   @observable
   public plugin: PluginInfo = new PluginInfo('Unknown')
@@ -149,7 +151,7 @@ export class SaladBowlStore {
     if (this.runningTimer) {
       clearInterval(this.runningTimer)
       this.runningTimer = undefined
-      this.runningTime = 0
+      this.runningTime = undefined
     }
 
     this.currentPluginDefinition = undefined
@@ -178,8 +180,9 @@ export class SaladBowlStore {
     }
 
     this.startTimestamp = new Date(Date.now())
+    this.runningTime = 0
 
-    this.runningTimer = setTimeout(() => {
+    this.runningTimer = setInterval(() => {
       runInAction(() => {
         if (!this.startTimestamp) {
           this.runningTime = 0
@@ -237,6 +240,8 @@ export class SaladBowlStore {
       clearInterval(this.runningTimer)
       this.runningTimer = undefined
       this.startTimestamp = undefined
+      console.log('Stopping after running for: ' + this.runningTime)
+      this.runningTime = undefined
     }
 
     this.plugin.status = PluginStatus.Stopped

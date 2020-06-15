@@ -36,6 +36,8 @@ declare global {
 export class NativeStore {
   private callbacks = new Map<string, Function>()
 
+  private machineInfoRetry?: NodeJS.Timeout
+
   @observable
   public desktopVersion: string = ''
 
@@ -93,6 +95,8 @@ export class NativeStore {
 
       this.send(getDesktopVersion)
       this.loadMachineInfo()
+
+      this.machineInfoRetry = setInterval(this.loadMachineInfo, 1000)
     }
   }
 
@@ -134,8 +138,13 @@ export class NativeStore {
   loadMachineInfo = () => {
     if (this.machineInfo) {
       console.log('Machine info already loaded. Skipping...')
+      if (this.machineInfoRetry) {
+        clearInterval(this.machineInfoRetry)
+        this.machineInfoRetry = undefined
+      }
       return
     }
+    console.log('Getting machine info')
     this.loadingMachineInfo = true
     this.send(getMachineInfo)
   }
@@ -169,11 +178,15 @@ export class NativeStore {
     console.log('Received machine info')
     if (this.machineInfo) {
       console.log('Already received machine info. Skipping...')
+
+      if (this.machineInfoRetry) {
+        clearInterval(this.machineInfoRetry)
+        this.machineInfoRetry = undefined
+      }
       return
     }
 
     this.machineInfo = info
-
     this.loadingMachineInfo = false
   }
 
