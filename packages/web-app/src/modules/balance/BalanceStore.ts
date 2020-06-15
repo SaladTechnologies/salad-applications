@@ -36,13 +36,12 @@ export class BalanceStore {
 
     const now = moment.utc()
 
+    const threshold = moment(now).subtract(numberOfDays, 'days')
+
     for (let [unixTime, earning] of this.earningHistory) {
       const time = moment.unix(unixTime)
 
-      //Delta time (days)
-      const deltaTime = now.diff(time, 'hours')
-
-      if (deltaTime <= numberOfDays * 24) {
+      if (time >= threshold) {
         windows.push({
           timestamp: time,
           earnings: earning,
@@ -120,9 +119,9 @@ export class BalanceStore {
       const history = new Map<number, number>()
 
       for (let i = 0; i < 2880; ++i) {
-        const ts = now.subtract(15, 'minutes')
-        const earning = earningValues.get(ts.unix())
-        history.set(ts.unix(), earning || 0)
+        const earning = earningValues.get(now.unix())
+        history.set(now.unix(), earning || 0)
+        now.subtract(15, 'minutes')
       }
 
       this.earningHistory = history

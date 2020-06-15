@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import moment from 'moment'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis } from 'recharts'
@@ -42,20 +43,24 @@ interface TooltipProps extends WithStyles<typeof styles> {
   active?: boolean
   payload?: any
   label?: string
+  nowWindow?: EarningWindow
 }
 
-const _CustomTooltip = ({ active, payload, classes }: TooltipProps) => {
+const _CustomTooltip = ({ active, payload, classes, nowWindow }: TooltipProps) => {
   if (!active || !payload) {
     return null
   }
 
-  const timestamp = payload[0].payload.timestamp.format('LT')
-  const earnings = payload[0].payload.earnings
+  const window: EarningWindow = payload[0].payload
+
+  const timestamp = moment(window.timestamp).add(15, 'minute').format('LT')
+  const earnings = window.earnings
+  const isNow = window === nowWindow
 
   return (
     <div className={classes.tooltipContainer}>
-      <div>{timestamp}</div>
-      <div>{`$ ${Number(earnings.toFixed(3))}`}</div>
+      <div>{isNow ? 'Current' : timestamp}</div>
+      <div>{`$${Number(earnings.toFixed(3))}`}</div>
     </div>
   )
 }
@@ -125,7 +130,7 @@ class _EarningHistory extends Component<Props, State> {
                 >
                   <Tooltip
                     cursor={<CustomizedCursor />}
-                    content={<CustomTooltip />}
+                    content={<CustomTooltip nowWindow={earningHistory[earningHistory.length - 1]} />}
                     isAnimationActive={false}
                     //@ts-ignore
                     position={{ y: 0, x: 'auto' }}
@@ -133,8 +138,22 @@ class _EarningHistory extends Component<Props, State> {
                   <Bar dataKey="earnings" fill="#B2D530">
                     {earningHistory &&
                       earningHistory.map((window, index) => {
-                        if (index === hoverIndex) return <Cell key={window.timestamp.toString()} fill={'#DBF1C1'} />
-                        else return <Cell key={window.timestamp.toString()} fill={'#B2D530'} />
+                        let color = '#B2D530'
+                        let border = ''
+                        let dash = ''
+
+                        if (index === hoverIndex) {
+                          color = '#DBF1C1'
+                        }
+
+                        if (index === earningHistory.length - 1) {
+                          border = color
+                          color = '#0A2133'
+                          dash = '3 3'
+                        }
+                        return (
+                          <Cell key={window.timestamp.toString()} fill={color} stroke={border} strokeDasharray={dash} />
+                        )
                       })}
                   </Bar>
                   <XAxis dataKey="timestamp" tickLine={false} stroke="#B2D530" tick={false} />
