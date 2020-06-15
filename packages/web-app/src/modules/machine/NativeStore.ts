@@ -1,4 +1,4 @@
-import { action, computed, observable } from 'mobx'
+import { action, computed, observable, toJS } from 'mobx'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
 // import { Machine } from './models/Machine'
@@ -120,7 +120,7 @@ export class NativeStore {
     if (!this.isNative) {
       return
     }
-    window.salad.dispatch(type, payload)
+    window.salad.dispatch(type, payload && toJS(payload))
   }
 
   @action
