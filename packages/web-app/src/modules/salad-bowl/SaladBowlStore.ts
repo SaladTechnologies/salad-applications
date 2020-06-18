@@ -26,6 +26,9 @@ export class SaladBowlStore {
   @observable
   public runningTime?: number = undefined
 
+  /** The total time we have been in the chopping state since the start button was pressed (ms) */
+  private choppingTime?: number = undefined
+
   @observable
   public plugin: PluginInfo = new PluginInfo('Unknown')
 
@@ -152,6 +155,7 @@ export class SaladBowlStore {
       clearInterval(this.runningTimer)
       this.runningTimer = undefined
       this.runningTime = undefined
+      this.choppingTime = undefined
     }
 
     this.currentPluginDefinition = undefined
@@ -181,13 +185,29 @@ export class SaladBowlStore {
 
     this.startTimestamp = new Date(Date.now())
     this.runningTime = 0
+    this.choppingTime = 0
 
     this.runningTimer = setInterval(() => {
       runInAction(() => {
         if (!this.startTimestamp) {
           this.runningTime = 0
         } else {
-          this.runningTime = Date.now() - this.startTimestamp.getTime()
+          //Calculates the new total time since we started
+          const totalTime = Date.now() - this.startTimestamp.getTime()
+
+          //Checks to see if the miner is confirmed to be running and adds to the chopping time if it is
+          if (this.status === MiningStatus.Running) {
+            //Calculates the delta since the last timer
+            const deltaTime = totalTime - (this.runningTime || 0)
+
+            if (this.choppingTime) {
+              this.choppingTime += deltaTime
+            } else {
+              this.choppingTime = deltaTime
+            }
+          }
+
+          this.runningTime = totalTime
         }
       })
     }, 1000)
@@ -239,14 +259,16 @@ export class SaladBowlStore {
     if (this.runningTimer) {
       clearInterval(this.runningTimer)
       this.runningTimer = undefined
-      this.startTimestamp = undefined
-      console.log('Stopping after running for: ' + this.runningTime)
-      this.runningTime = undefined
     }
 
     this.plugin.status = PluginStatus.Stopped
     yield this.store.native.send('stop-salad')
 
-    this.store.analytics.trackStop(reason)
+    this.store.analytics.trackStop(reason, this.runningTime || 0, this.choppingTime || 0)
+
+    this.startTimestamp = undefined
+    console.log('Stopping after running for: ' + this.runningTime)
+    this.runningTime = undefined
+    this.choppingTime = undefined
   })
 }

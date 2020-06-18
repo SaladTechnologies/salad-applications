@@ -105,12 +105,19 @@ export class AnalyticsStore {
     })
   }
 
-  /** Track when mining stops */
-  public trackStop = (reason: string) => {
+  /**
+   * Tracks when mining stops
+   * @param reason Why did mining stop
+   * @param totalTime Total time between start and stop (ms)
+   * @param choppingTime Total time in the chopping state (ms)
+   */
+  public trackStop = (reason: string, totalTime: number, choppingTime: number) => {
     if (!this.started) return
 
     this.track('Stop', {
       Reason: reason,
+      TotalTime: totalTime,
+      ChoppingTime: choppingTime,
     })
   }
 
