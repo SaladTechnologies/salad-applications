@@ -9,6 +9,8 @@ import { Reward } from '../reward/models'
 
 export class AnalyticsStore {
   private started = false
+  private previousStatus?: MiningStatus
+  private previousStatusTimestamp?: number
 
   constructor(private readonly store: RootStore) {
     autorun(() => {
@@ -136,7 +138,28 @@ export class AnalyticsStore {
   public trackMiningStatus = (status: MiningStatus, pluginName: string) => {
     if (!this.started) return
 
-    this.track('Mining Status', { MiningStatus: status, PluginName: pluginName })
+    const now = Date.now()
+
+    let previousTotalTime: number | undefined = undefined
+
+    if (this.previousStatusTimestamp) {
+      previousTotalTime = now - this.previousStatusTimestamp
+    }
+
+    this.track('Mining Status', {
+      PrevStatus: this.previousStatus,
+      MiningStatus: status,
+      PluginName: pluginName,
+      PrevTime: previousTotalTime,
+    })
+
+    if (status === MiningStatus.Stopped) {
+      this.previousStatus = undefined
+      this.previousStatusTimestamp = undefined
+    } else {
+      this.previousStatus = status
+      this.previousStatusTimestamp = now
+    }
   }
 
   /** Track when a machine goes to the earning state */

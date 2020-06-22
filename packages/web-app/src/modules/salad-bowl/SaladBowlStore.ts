@@ -173,6 +173,8 @@ export class SaladBowlStore {
     this.plugin.status = PluginStatus.Initializing
     yield this.store.native.send('start-salad', this.currentPluginDefinition)
 
+    this.store.analytics.trackStart(reason)
+
     //Show a notification reminding users to use auto start
     if (reason === StartReason.Manual && this.store.autoStart.canAutoStart && !this.store.autoStart.autoStart) {
       this.store.notifications.sendNotification({
@@ -216,8 +218,6 @@ export class SaladBowlStore {
       this.timeoutTimer = undefined
       this.startNext()
     }, this.currentPluginDefinition.initialTimeout)
-
-    this.store.analytics.trackStart(reason)
   })
 
   @action.bound
