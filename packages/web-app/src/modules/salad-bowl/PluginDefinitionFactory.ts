@@ -1,10 +1,8 @@
 import { RootStore } from '../../Store'
 import { getCCMinerLyra2REv3Definition } from './definitions/getCCMinerLyra2REv3Definition'
-import { getGminerBeamBitflyDefinition } from './definitions/getGminerBeamBitflyDefinition'
 import { getGminerBeamHashIIDefinition } from './definitions/getGminerBeamHashIIDefinition'
 import { getGminerCuckARoom29Definition } from './definitions/getGminerCuckARoom29Definition'
 import { getGminerZHashDefinition } from './definitions/getGminerZHashDefinition'
-import { getPhoenixMinerEthashBitflyDefinition } from './definitions/getPhoenixMinerEthashBitflyDefinition'
 import { getPhoenixMinerEthashDefinition } from './definitions/getPhoenixMinerEthashDefinition'
 import { getXMRigRandomXCUDADefinition } from './definitions/getXMRigRandomXCUDADefinition'
 import { getXMRigRandomXOpenCLDefinition } from './definitions/getXMRigRandomXOpenCLDefinition'
@@ -35,18 +33,18 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
   // Ethereum / Ethash
   if (preferNiceHash && has4gbSupport) {
     pluginDefinitions.push(getPhoenixMinerEthashDefinition(machine)) // NiceHash
-    pluginDefinitions.push(getPhoenixMinerEthashBitflyDefinition(machine)) // Bitfly's Ethermine
+    //TODO: pluginDefinitions.push(getPhoenixMinerEthashBitflyDefinition(machine)) // Bitfly's Ethermine
   } else if (has4gbSupport) {
-    pluginDefinitions.push(getPhoenixMinerEthashBitflyDefinition(machine)) // Bitfly's Ethermine
+    //TODO: pluginDefinitions.push(getPhoenixMinerEthashBitflyDefinition(machine)) // Bitfly's Ethermine
     pluginDefinitions.push(getPhoenixMinerEthashDefinition(machine)) // NiceHash
   }
 
   // Beam // BeamHashII
   if (preferNiceHash && has4gbSupport) {
     pluginDefinitions.push(getGminerBeamHashIIDefinition(machine)) // NiceHash
-    pluginDefinitions.push(getGminerBeamBitflyDefinition(machine)) // Bitfly's Flypool
+    //TODO: pluginDefinitions.push(getGminerBeamBitflyDefinition(machine)) // Bitfly's Flypool
   } else if (has4gbSupport) {
-    pluginDefinitions.push(getGminerBeamBitflyDefinition(machine)) // Bitfly Flypool
+    //TODO: pluginDefinitions.push(getGminerBeamBitflyDefinition(machine)) // Bitfly Flypool
     pluginDefinitions.push(getGminerBeamHashIIDefinition(machine)) // NiceHash
   }
 
