@@ -5,6 +5,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis } from 'recharts'
 import { SectionHeader, StatElement } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
+import { formatBalance } from '../../../utils'
 import { EarningWindow } from '../../balance/models'
 
 const styles = (theme: SaladTheme) => ({
@@ -60,7 +61,7 @@ const _CustomTooltip = ({ active, payload, classes, nowWindow }: TooltipProps) =
   return (
     <div className={classes.tooltipContainer}>
       <div>{isNow ? 'Current' : timestamp}</div>
-      <div>{`$${Number(earnings.toFixed(3))}`}</div>
+      <div>{formatBalance(earnings)}</div>
     </div>
   )
 }
@@ -103,17 +104,17 @@ class _EarningHistory extends Component<Props, State> {
         <div className={classNames(classes.row, classes.statsContainer)}>
           <StatElement
             title={'Last 24Hr'}
-            values={[`$${last24Hr ? last24Hr.toFixed(2) : 0}`]}
+            values={[formatBalance(last24Hr)]}
             infoText={'Total amount earned in the past 24 hours'}
           />
           <StatElement
             title={'Last 7 Days'}
-            values={[`$${last7Day ? last7Day.toFixed(2) : 0}`]}
+            values={[formatBalance(last7Day)]}
             infoText={'Total amount earned in the past 7 days'}
           />
           <StatElement
             title={'Last 30 Days'}
-            values={[`$${last30Day ? last30Day.toFixed(2) : 0}`]}
+            values={[formatBalance(last30Day)]}
             infoText={'Total amount earned in the past 30 days'}
           />
         </div>
