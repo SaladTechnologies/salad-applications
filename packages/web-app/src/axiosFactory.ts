@@ -36,12 +36,12 @@ export const createClient = (): AxiosInstance => {
   })
 
   httpClient.interceptors.response.use(
-    response => {
+    (response) => {
       // Any status code that lie within the range of 2xx cause this function to trigger
       // Do something with response data
       return response
     },
-    error => {
+    (error) => {
       let a = onError(error)
       // Any status codes that falls outside the range of 2xx cause this function to trigger
       // Do something with response error
@@ -72,6 +72,8 @@ const getMessage = (type: string): string => {
     //Reward redemption
     case 'redemptions:insufficientBalance':
       return `Must construct additional pylons ...just kidding! You balance isn't enough to redeem this reward, try again after you’ve earned some more`
+    case 'redemptions:disabled':
+      return `Redemptions are currently disabled, please try again later.`
 
     //Rewards
     case 'rewards:notFound':
