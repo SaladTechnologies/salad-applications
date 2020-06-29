@@ -1,6 +1,6 @@
 import { RootStore } from '../../Store'
 import { getCCMinerLyra2REv3Definition } from './definitions/getCCMinerLyra2REv3Definition'
-import { getGminerBeamHashIIDefinition } from './definitions/getGminerBeamHashIIDefinition'
+import { getGminerBeamNiceHashDefinition } from './definitions/getGminerBeamNiceHashDefinition'
 import { getGminerCuckARoom29Definition } from './definitions/getGminerCuckARoom29Definition'
 import { getGminerZHashDefinition } from './definitions/getGminerZHashDefinition'
 import { getPhoenixMinerEthashDefinition } from './definitions/getPhoenixMinerEthashDefinition'
@@ -41,11 +41,11 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
 
   // Beam // BeamHashII
   if (preferNiceHash && has4gbSupport) {
-    pluginDefinitions.push(getGminerBeamHashIIDefinition(machine)) // NiceHash
+    pluginDefinitions.push(getGminerBeamNiceHashDefinition(machine)) // NiceHash
     //TODO: pluginDefinitions.push(getGminerBeamBitflyDefinition(machine)) // Bitfly's Flypool
   } else if (has4gbSupport) {
     //TODO: pluginDefinitions.push(getGminerBeamBitflyDefinition(machine)) // Bitfly Flypool
-    pluginDefinitions.push(getGminerBeamHashIIDefinition(machine)) // NiceHash
+    pluginDefinitions.push(getGminerBeamNiceHashDefinition(machine)) // NiceHash
   }
 
   // Grin / cuckARoom29
