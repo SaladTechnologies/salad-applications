@@ -49,3 +49,19 @@ export const formatDuration = (duration: number): string => {
   }
   return Math.floor(seconds) + ' sec'
 }
+
+export const formatBalance = (balance?: number): string => {
+  if (!balance) {
+    return '$0'
+  }
+
+  let balanceStr: string
+
+  if (balance < 0.01) {
+    balanceStr = balance.toPrecision(2)
+  } else {
+    balanceStr = balance.toFixed(2)
+  }
+
+  return '$' + balanceStr
+}

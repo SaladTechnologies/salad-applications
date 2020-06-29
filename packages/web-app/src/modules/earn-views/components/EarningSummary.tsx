@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { StatElement, SectionHeader } from '../../../components'
+import { SectionHeader, StatElement } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
+import { formatBalance } from '../../../utils'
 
 const styles = (theme: SaladTheme) => ({
   container: {},
@@ -34,12 +35,12 @@ class _EarningSummary extends Component<Props> {
         <div className={classes.row}>
           <StatElement
             title={'Current Balance'}
-            values={[`$${currentBalance ? currentBalance.toFixed(2) : 0}`]}
+            values={[formatBalance(currentBalance)]}
             infoText={'Current balance available to spend'}
           />
           <StatElement
             title={'Lifetime Balance'}
-            values={[`$${lifetimeBalance ? lifetimeBalance.toFixed(2) : 0}`]}
+            values={[formatBalance(lifetimeBalance)]}
             infoText={'Total balance earned'}
           />
         </div>

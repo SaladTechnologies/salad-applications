@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../../SaladTheme'
+import { formatBalance } from '../../../../utils'
 import { ChoppingCartButtonContainer } from '../../../chopping-cart-views'
 
 const styles = (theme: SaladTheme) => ({
@@ -79,7 +80,7 @@ class _AccountMenu extends Component<Props> {
         <>
           <div className={classes.container} onClick={this.handleClick}>
             <div className={classes.username}>{username}</div>
-            {currentBalance !== undefined && <div className={classes.balance}>{`$${currentBalance.toFixed(2)}`}</div>}
+            {currentBalance !== undefined && <div className={classes.balance}>{formatBalance(currentBalance)}</div>}
           </div>
           <ChoppingCartButtonContainer />
         </>
