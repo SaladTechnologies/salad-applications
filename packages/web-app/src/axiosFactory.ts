@@ -70,6 +70,8 @@ const getMessage = (type: string): string => {
     //Reward redemption
     case 'redemptions:insufficientBalance':
       return `Must construct additional pylons ...just kidding! You balance isn't enough to redeem this reward, try again after you’ve earned some more`
+    case 'redemptions:disabled':
+      return `Redemptions are currently disabled, please try again later.`
 
     //Rewards
     case 'rewards:notFound':
