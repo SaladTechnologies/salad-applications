@@ -3,6 +3,9 @@
 echo 'Building web-application'
 yarn run build || { echo 'build failed' ; exit 1; }
 
+echo 'Adding version file'
+echo "$COMMIT_REF" > build/version.txt
+
 if [ "$CONTEXT" = "production" ]
 then
 echo 'Installing sentry-cli'
