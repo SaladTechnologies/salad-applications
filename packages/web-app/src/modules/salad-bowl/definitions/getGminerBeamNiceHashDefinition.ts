@@ -11,7 +11,7 @@ export const getGminerBeamNiceHashDefinition = (machine: Machine): PluginDefinit
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer2.11/gminer-2-11-windows.zip',
     exe: 'miner.exe',
     args: `-a beamhashIII ${beamUser('usa', machine.minerId)} ${beamUser('eu', machine.minerId)} -w 0`,
-    runningCheck: '(?:Share Accepted|[1-9][0-9]*.d* Sol/s)',
+    runningCheck: '(?:Share Accepted|[1-9][0-9]*.\d* Sol\/s)',
     initialTimeout: 600000,
     initialRetries: 1,
     watchdogTimeout: 900000,
