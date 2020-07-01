@@ -5,10 +5,10 @@ import { NICEHASH_MINING_ADDRESS, STANDARD_ERRORS } from './constants'
 export const getPhoenixMinerEthashDefinition = (machine: Machine): PluginDefinition => {
   let def = {
     name: 'PhoenixMiner',
-    downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/phoenixminer-4-9-c/phoenixminer-4-9-c-windows.zip',
+    downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/phoenixminer-5-0-e/phoenixminer-5-0-e-windows.zip',
     exe: 'PhoenixMiner.exe',
     args: `-rvram 1 -pool stratum+tcp://daggerhashimoto.usa.nicehash.com:3353 -pool2 stratum+tcp://daggerhashimoto.eu.nicehash.com:3353 -ewal ${NICEHASH_MINING_ADDRESS}.${machine.minerId} -esm 3 -allpools 1 -allcoins 0`,
-    runningCheck: '(?:Share accepted|[1-9][0-9]*.d* (?:kh|kH|Kh|KH|mh|mH|Mh|MH)/s)',
+    runningCheck: '(?:Share accepted|[1-9][0-9]*.\d* (?:kh|kH|Kh|KH|mh|mH|Mh|MH)\/s)',
     initialTimeout: 600000,
     initialRetries: 3,
     watchdogTimeout: 900000,
