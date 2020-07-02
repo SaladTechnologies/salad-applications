@@ -8,6 +8,7 @@ const claymoreRegion = (location: string) =>
 export const getClaymoreEthashDefinition = (machine: Machine): PluginDefinition => {
   let def = {
     name: 'Claymore',
+    version: 1,
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/claymore15/claymore-15-windows.zip',
     exe: 'EthDcrMiner64.exe',
     args: `${claymoreRegion('usa')} ${claymoreRegion('eu')} -ewal ${NICEHASH_MINING_ADDRESS}.${machine.minerId} -eres 0 -esm 3 -allpools 1 -allcoins 0`,

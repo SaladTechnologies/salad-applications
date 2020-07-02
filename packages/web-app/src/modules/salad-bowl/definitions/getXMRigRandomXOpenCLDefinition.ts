@@ -8,6 +8,7 @@ const xmrigRegion = (location: string, minerId: string) =>
 export const getXMRigRandomXOpenCLDefinition = (machine: Machine): PluginDefinition => {
   let def = {
     name: 'XMRig-OpenCL',
+    version: 1,
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/xmrig-6.2.2/xmrig-6.2.2-windows-opencl.zip',
     exe: 'xmrig.exe',
     args: `${xmrigRegion('usa', machine.minerId)} ${xmrigRegion('eu', machine.minerId)} --donate-level 1 --no-cpu --opencl`,

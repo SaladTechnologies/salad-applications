@@ -5,6 +5,7 @@ import { getMiniZBeamNiceHashDefinition } from './definitions/getMiniZBeamNiceHa
 import { getGminerCuckARoom29Definition } from './definitions/getGminerCuckARoom29Definition'
 import { getGminerZHashDefinition } from './definitions/getGminerZHashDefinition'
 import { getPhoenixMinerEthashDefinition } from './definitions/getPhoenixMinerEthashDefinition'
+import { getPhoenixMinerEthashBitflyDefinition } from './definitions/getPhoenixMinerEthashBitflyDefinition'
 import { getXMRigRandomXCUDADefinition } from './definitions/getXMRigRandomXCUDADefinition'
 import { getXMRigRandomXOpenCLDefinition } from './definitions/getXMRigRandomXOpenCLDefinition'
 import { PluginDefinition } from './models'
@@ -35,9 +36,9 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
   // Ethereum / Ethash
   if (preferNiceHash && has4gbSupport) {
     pluginDefinitions.push(getPhoenixMinerEthashDefinition(machine)) // NiceHash
-    //TODO: pluginDefinitions.push(getPhoenixMinerEthashBitflyDefinition(machine)) // Bitfly's Ethermine
+    pluginDefinitions.push(getPhoenixMinerEthashBitflyDefinition(machine)) // Bitfly's Ethermine
   } else if (has4gbSupport) {
-    //TODO: pluginDefinitions.push(getPhoenixMinerEthashBitflyDefinition(machine)) // Bitfly's Ethermine
+    pluginDefinitions.push(getPhoenixMinerEthashBitflyDefinition(machine)) // Bitfly's Ethermine
     pluginDefinitions.push(getPhoenixMinerEthashDefinition(machine)) // NiceHash
   }
 

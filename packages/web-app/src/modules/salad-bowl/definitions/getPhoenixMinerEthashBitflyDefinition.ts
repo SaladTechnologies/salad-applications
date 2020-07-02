@@ -5,6 +5,7 @@ import { ETH_WALLET_ADDRESS, STANDARD_ERRORS } from './constants'
 export const getPhoenixMinerEthashBitflyDefinition = (machine: Machine): PluginDefinition => {
   let def = {
     name: 'PhoenixMiner',
+    version: 1,
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/phoenixminer-5-0-e/phoenixminer-5-0-e-windows.zip',
     exe: 'PhoenixMiner.exe',
     args: `-rvram 1 -pool ssl://us1.ethermine.org:5555 -pool2 ssl://eu1.ethermine.org:5555 -ewal ${ETH_WALLET_ADDRESS}.${machine.minerId}`,

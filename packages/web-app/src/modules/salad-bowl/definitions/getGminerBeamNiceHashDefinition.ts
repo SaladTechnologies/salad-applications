@@ -8,6 +8,7 @@ const beamUser = (location: string, minerId: string) =>
 export const getGminerBeamNiceHashDefinition = (machine: Machine): PluginDefinition => {
   let def = {
     name: 'GMiner',
+    version: 1,
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer2.11/gminer-2-11-windows.zip',
     exe: 'miner.exe',
     args: `-a beamhashIII ${beamUser('usa', machine.minerId)} ${beamUser('eu', machine.minerId)} -w 0`,
