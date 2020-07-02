@@ -6,6 +6,7 @@ import { SaladTheme } from '../../../SaladTheme'
 import { PantryContainer, SlicedVeggieContainer } from '../../xp-views'
 import { MiningSummary } from '../components'
 import { DesktopDownloadContainer } from '../DesktopDownloadContainer'
+import { EarningHistoryContainer } from '../EarningHistoryContainer'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -56,11 +57,13 @@ class _MiningPage extends Component<Props> {
             <div className={classNames(classes.column, classes.mainColumn)}>
               <DesktopDownloadContainer />
               <MiningSummary lifetimeXp={lifetimeXp} />
-
               <Divider />
 
               <SectionHeader>Pantry</SectionHeader>
               <PantryContainer />
+              <Divider />
+
+              <EarningHistoryContainer />
               <Divider />
 
               <SectionHeader>More Information</SectionHeader>
