@@ -12,7 +12,7 @@ export const getGminerCuckARoom29Definition = (machine: Machine): PluginDefiniti
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer2.11/gminer-2-11-windows.zip',
     exe: 'miner.exe',
     args: `-a cuckaroom29 ${cuckaroomUser('usa', machine.minerId)} ${cuckaroomUser('eu', machine.minerId)} -w 0`,
-    runningCheck: '(?:Share Accepted|[1-9][0-9]*.\d* G\/s)',
+    runningCheck: '(?:Share Accepted|[1-9][0-9]*\\.\\d* G\\/s)',
     initialTimeout: 600000,
     initialRetries: 1,
     watchdogTimeout: 900000,
