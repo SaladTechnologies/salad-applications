@@ -1,6 +1,7 @@
 import { RootStore } from '../../Store'
 import { getCCMinerLyra2REv3Definition } from './definitions/getCCMinerLyra2REv3Definition'
-import { getGminerBeamNiceHashDefinition } from './definitions/getGminerBeamNiceHashDefinition'
+import { getMiniZBeamBitflyDefinition } from './definitions/getMiniZBeamBitflyDefinition'
+import { getMiniZBeamNiceHashDefinition } from './definitions/getMiniZBeamNiceHashDefinition'
 import { getGminerCuckARoom29Definition } from './definitions/getGminerCuckARoom29Definition'
 import { getGminerZHashDefinition } from './definitions/getGminerZHashDefinition'
 import { getPhoenixMinerEthashDefinition } from './definitions/getPhoenixMinerEthashDefinition'
@@ -24,6 +25,7 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
 
   console.log(JSON.stringify(machineInfo.graphics.controllers))
   const has2gbSupport = machineInfo.graphics.controllers.some((x) => x.vram >= 1024 * 2 * 0.95)
+  const has3gbSupport = machineInfo.graphics.controllers.some((x) => x.vram >= 1024 * 3 * 0.95)
   const has4gbSupport = machineInfo.graphics.controllers.some((x) => x.vram >= 1024 * 4 * 0.95)
   const has6gbSupport = machineInfo.graphics.controllers.some((x) => x.vram >= 1024 * 6 * 0.95)
   const hasCudaSupport = machineInfo.graphics.controllers.some((x) => x.vendor.toLocaleLowerCase().includes('nvidia'))
@@ -39,23 +41,23 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
     pluginDefinitions.push(getPhoenixMinerEthashDefinition(machine)) // NiceHash
   }
 
-  // Beam // BeamHashII
-  if (preferNiceHash && has4gbSupport) {
-    pluginDefinitions.push(getGminerBeamNiceHashDefinition(machine)) // NiceHash
-    //TODO: pluginDefinitions.push(getGminerBeamBitflyDefinition(machine)) // Bitfly's Flypool
-  } else if (has4gbSupport) {
-    //TODO: pluginDefinitions.push(getGminerBeamBitflyDefinition(machine)) // Bitfly Flypool
-    pluginDefinitions.push(getGminerBeamNiceHashDefinition(machine)) // NiceHash
-  }
-
   // Grin / cuckARoom29
   if (has6gbSupport) {
     pluginDefinitions.push(getGminerCuckARoom29Definition(machine)) // NiceHash
   }
 
   // BitCoinGold / ZHash
-  if (has2gbSupport && !has4gbSupport) {
+  if (has2gbSupport) {
     pluginDefinitions.push(getGminerZHashDefinition(machine)) // NiceHash
+  }
+
+  // Beam // BeamHashII
+  if (preferNiceHash && has3gbSupport) {
+    pluginDefinitions.push(getMiniZBeamNiceHashDefinition(machine)) // NiceHash
+    pluginDefinitions.push(getMiniZBeamBitflyDefinition(machine)) // Bitfly's Flypool
+  } else if (has3gbSupport) {
+    pluginDefinitions.push(getMiniZBeamBitflyDefinition(machine)) // Bitfly Flypool
+    pluginDefinitions.push(getMiniZBeamNiceHashDefinition(machine)) // NiceHash
   }
 
   // Monero / RandomX
