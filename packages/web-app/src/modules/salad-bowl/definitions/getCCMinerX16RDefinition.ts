@@ -8,10 +8,11 @@ const ccminerRegionX16r = (location: string) =>
 export const getCCMinerX16RDefinition = (machine: Machine) : PluginDefinition => {
   let def = {
     name: 'CCMiner',
+    version: '2.31',
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/ccminer-2.31/ccminer-2-3-1-windows.zip',
     exe: 'ccminer-x64.exe',
     args: `-a x16r ${ccminerRegionX16r('usa')} ${ccminerRegionX16r('eu')} -u ${NICEHASH_MINING_ADDRESS}.${machine.minerId}`,
-    runningCheck: '(?:accepted|[1-9][0-9]*.d* (?:kh|kH|Kh|KH|mh|mH|Mh|MH)/s)',
+    runningCheck: '(?:accepted|[1-9][0-9]*\\.\\d* (?:kh|kH|Kh|KH|mh|mH|Mh|MH)\\/s)',
     initialTimeout: 600000,
     initialRetries: 3,
     watchdogTimeout: 900000,

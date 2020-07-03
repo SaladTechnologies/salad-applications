@@ -14,7 +14,7 @@ export class AnalyticsStore {
   constructor(private readonly store: RootStore) {
     autorun(() => {
       console.log(`Detected change in status:${this.store.saladBowl.status}`)
-      this.trackMiningStatus(this.store.saladBowl.status, this.store.saladBowl.plugin.name)
+      this.trackMiningStatus(this.store.saladBowl.status, this.store.saladBowl.plugin.name, this.store.saladBowl.plugin.version)
     })
   }
 
@@ -26,7 +26,7 @@ export class AnalyticsStore {
 
     this.started = true
 
-    Sentry.configureScope(scope => {
+    Sentry.configureScope((scope) => {
       scope.setUser({
         id: profile.id,
         email: profile.email,
@@ -148,10 +148,10 @@ export class AnalyticsStore {
     })
   }
 
-  public trackMiningStatus = (status: MiningStatus, pluginName: string) => {
+  public trackMiningStatus = (status: MiningStatus, pluginName: string, pluginVersion: string) => {
     if (!this.started) return
 
-    this.track('Mining Status', { MiningStatus: status, PluginName: pluginName })
+    this.track('Mining Status', { MiningStatus: status, PluginName: pluginName, PluginVersion: pluginVersion })
   }
 
   /** Track when a machine goes to the earning state */
@@ -265,7 +265,7 @@ export class AnalyticsStore {
 
   public captureException = (err: Error) => {
     console.error(err)
-    Sentry.withScope(scope => {
+    Sentry.withScope((scope) => {
       scope.setFingerprint([err.name, err.message])
       Sentry.captureException(err)
     })
