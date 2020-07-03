@@ -8,10 +8,11 @@ const claymoreRegion = (location: string) =>
 export const getClaymoreEthashBitflyDefinition = (machine: Machine): PluginDefinition => {
   let def = {
     name: 'Claymore',
+    version: '15',
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/claymore15/claymore-15-windows.zip',
     exe: 'EthDcrMiner64.exe',
     args: `${claymoreRegion('us1')} ${claymoreRegion('us2')} ${claymoreRegion('eu1')} -eres 0 -ewal ${ETH_WALLET_ADDRESS}.${machine.minerId}`,
-    runningCheck: '(?:Share accepted|[1-9][0-9]*.d* (?:kh|kH|Kh|KH|mh|mH|Mh|MH)/s)',
+    runningCheck: '(?:Share accepted|[1-9][0-9]*\\.\\d* (?:kh|kH|Kh|KH|mh|mH|Mh|MH)\\/s)',
     initialTimeout: 600000,
     initialRetries: 3,
     watchdogTimeout: 900000,

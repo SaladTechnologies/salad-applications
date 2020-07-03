@@ -15,7 +15,7 @@ export class AnalyticsStore {
   constructor(private readonly store: RootStore) {
     autorun(() => {
       console.log(`Detected change in status:${this.store.saladBowl.status}`)
-      this.trackMiningStatus(this.store.saladBowl.status, this.store.saladBowl.plugin.name)
+      this.trackMiningStatus(this.store.saladBowl.status, this.store.saladBowl.plugin.name, this.store.saladBowl.plugin.version)
     })
   }
 
@@ -135,7 +135,7 @@ export class AnalyticsStore {
     })
   }
 
-  public trackMiningStatus = (status: MiningStatus, pluginName: string) => {
+  public trackMiningStatus = (status: MiningStatus, pluginName: string, pluginVersion: string) => {
     if (!this.started) return
 
     const now = Date.now()
@@ -150,6 +150,7 @@ export class AnalyticsStore {
       PrevStatus: this.previousStatus,
       MiningStatus: status,
       PluginName: pluginName,
+      PluginVersion: pluginVersion,
       PrevTime: previousTotalTime,
     })
 

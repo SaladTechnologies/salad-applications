@@ -8,10 +8,11 @@ const beamUser = (location: string, minerId: string) =>
 export const getGminerBeamBitflyDefinition = (machine: Machine): PluginDefinition => {
   let def = {
     name: 'GMiner',
+    version: '2.11',
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer2.11/gminer-2-11-windows.zip',
     exe: 'miner.exe',
     args: `-a beamhashIII ${beamUser('us1', machine.minerId)} ${beamUser('eu1', machine.minerId)} -w 0`,
-    runningCheck: '(?:Share Accepted|[1-9][0-9]*.d* Sol/s)',
+    runningCheck: '(?:Share Accepted|[1-9][0-9]*\\.\\d* Sol\\/s)',
     initialTimeout: 600000,
     initialRetries: 1,
     watchdogTimeout: 900000,
