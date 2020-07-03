@@ -41,6 +41,16 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
     pluginDefinitions.push(getPhoenixMinerEthashDefinition(machine)) // NiceHash
   }
 
+  // Grin / cuckARoom29
+  if (has6gbSupport) {
+    pluginDefinitions.push(getGminerCuckARoom29Definition(machine)) // NiceHash
+  }
+
+  // BitCoinGold / ZHash
+  if (has2gbSupport) {
+    pluginDefinitions.push(getGminerZHashDefinition(machine)) // NiceHash
+  }
+
   // Beam // BeamHashII
   if (preferNiceHash && has4gbSupport) {
     pluginDefinitions.push(getGminerBeamNiceHashDefinition(machine)) // NiceHash
@@ -48,16 +58,6 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
   } else if (has4gbSupport) {
     pluginDefinitions.push(getGminerBeamBitflyDefinition(machine)) // Bitfly Flypool
     pluginDefinitions.push(getGminerBeamNiceHashDefinition(machine)) // NiceHash
-  }
-
-  // Grin / cuckARoom29
-  if (has6gbSupport) {
-    pluginDefinitions.push(getGminerCuckARoom29Definition(machine)) // NiceHash
-  }
-
-  // BitCoinGold / ZHash
-  if (has2gbSupport && !has4gbSupport) {
-    pluginDefinitions.push(getGminerZHashDefinition(machine)) // NiceHash
   }
 
   // Monero / RandomX

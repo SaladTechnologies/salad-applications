@@ -22,7 +22,7 @@ export class SaladBowlStore {
   private timeoutTimer?: NodeJS.Timeout
 
   @observable
-  public plugin: PluginInfo = new PluginInfo('Unknown')
+  public plugin: PluginInfo = new PluginInfo()
 
   @computed
   get canRun(): boolean {
@@ -80,7 +80,7 @@ export class SaladBowlStore {
 
   @action
   onReceiveStatus = (message: StatusMessage) => {
-    if (this.plugin.name !== message.name) {
+    if (`${this.plugin.name}-${this.plugin.version}` !== message.name) {
       return
     }
 
@@ -173,8 +173,16 @@ export class SaladBowlStore {
 
     this.currentPluginDefinition = this.pluginDefinitions[this.currentPluginDefinitionIndex]
     this.plugin.name = this.currentPluginDefinition.name
+    this.plugin.version = this.currentPluginDefinition.version
     this.plugin.status = PluginStatus.Initializing
-    yield this.store.native.send('start-salad', this.currentPluginDefinition)
+    yield this.store.native.send('start-salad', {
+      name: `${this.currentPluginDefinition.name}-${this.currentPluginDefinition.version}`,
+      downloadUrl: this.currentPluginDefinition.downloadUrl,
+      exe: this.currentPluginDefinition.exe,
+      args: this.currentPluginDefinition.args,
+      runningCheck: this.currentPluginDefinition.runningCheck,
+      errors: this.currentPluginDefinition.errors,
+    })
 
     //Show a notification reminding users to use auto start
     if (reason === StartReason.Manual && this.store.autoStart.canAutoStart && !this.store.autoStart.autoStart) {
@@ -218,8 +226,16 @@ export class SaladBowlStore {
     } else {
       this.currentPluginDefinition = this.pluginDefinitions[this.currentPluginDefinitionIndex]
       this.plugin.name = this.currentPluginDefinition.name
+      this.plugin.version = this.currentPluginDefinition.version
       this.plugin.status = PluginStatus.Initializing
-      yield this.store.native.send('start-salad', this.currentPluginDefinition)
+      yield this.store.native.send('start-salad', {
+        name: `${this.currentPluginDefinition.name}-${this.currentPluginDefinition.version}`,
+        downloadUrl: this.currentPluginDefinition.downloadUrl,
+        exe: this.currentPluginDefinition.exe,
+        args: this.currentPluginDefinition.args,
+        runningCheck: this.currentPluginDefinition.runningCheck,
+        errors: this.currentPluginDefinition.errors,
+      })
 
       this.timeoutTimer = setTimeout(() => {
         this.timeoutTimer = undefined

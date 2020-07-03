@@ -109,7 +109,7 @@
     "uuid": "7.0.2"
   },
   "engines": {
-    "node": "12.8.1",
+    "node": "12.18.2",
     "yarn": ">=1.22.0"
   },
   "engineStrict": true
