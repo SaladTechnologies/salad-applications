@@ -63,15 +63,6 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
     pluginDefinitions.push(getGminerBeamBitflyDefinition(machine)) // Bitfly's Flypool
   }
 
-  // Beam // BeamHashII
-  if (preferNiceHash && has4gbSupport) {
-    pluginDefinitions.push(getGminerBeamNiceHashDefinition(machine)) // NiceHash
-    pluginDefinitions.push(getGminerBeamBitflyDefinition(machine)) // Bitfly's Flypool
-  } else if (has4gbSupport) {
-    pluginDefinitions.push(getGminerBeamBitflyDefinition(machine)) // Bitfly Flypool
-    pluginDefinitions.push(getGminerBeamNiceHashDefinition(machine)) // NiceHash
-  }
-
   // Monero / RandomX
   if (has2gbSupport && !has4gbSupport) {
     if (hasCudaSupport) {
