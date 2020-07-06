@@ -8,7 +8,7 @@ const ccminerRegionX16r = (location: string) =>
 export const getCCMinerX16RDefinition = (nicehashAddress: string, machine: Machine) : PluginDefinition => {
   let def = {
     name: 'CCMiner',
-    version: 1,
+    version: '2.31',
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/ccminer-2.31/ccminer-2-3-1-windows.zip',
     exe: 'ccminer-x64.exe',
     args: `-a x16r ${ccminerRegionX16r('usa')} ${ccminerRegionX16r('eu')} -u ${nicehashAddress}.${machine.minerId}`,

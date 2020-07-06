@@ -2,6 +2,7 @@ import { ErrorDefinition } from './ErrorDefinition'
 
 export interface PluginDefinition {
   name: string
+  version: string
   downloadUrl: string
   exe: string
   args: string

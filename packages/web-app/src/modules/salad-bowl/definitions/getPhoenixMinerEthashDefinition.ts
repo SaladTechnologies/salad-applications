@@ -5,7 +5,7 @@ import { STANDARD_ERRORS } from './constants'
 export const getPhoenixMinerEthashDefinition = (nicehashAddress: string, machine: Machine): PluginDefinition => {
   let def = {
     name: 'PhoenixMiner',
-    version: 1,
+    version: '5.0e',
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/phoenixminer-5-0-e/phoenixminer-5-0-e-windows.zip',
     exe: 'PhoenixMiner.exe',
     args: `-rvram 1 -pool stratum+tcp://daggerhashimoto.usa.nicehash.com:3353 -pool2 stratum+tcp://daggerhashimoto.eu.nicehash.com:3353 -ewal ${nicehashAddress}.${machine.minerId} -esm 3 -allpools 1 -allcoins 0`,

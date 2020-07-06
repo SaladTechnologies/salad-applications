@@ -1,9 +1,13 @@
-import { PluginStatus } from './PluginStatus'
 import { observable } from 'mobx'
+import { PluginStatus } from './PluginStatus'
 
 export class PluginInfo {
   @observable
-  public status: PluginStatus = PluginStatus.Unknown
+  public name: string = 'Unknown'
 
-  constructor(public name: string) {}
+  @observable
+  public version: string = ''
+
+  @observable
+  public status: PluginStatus = PluginStatus.Unknown
 }
