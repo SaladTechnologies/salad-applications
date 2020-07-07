@@ -1,14 +1,14 @@
 import { Machine } from '../../machine/models/Machine'
 import { PluginDefinition } from '../models'
-import { BEAM_WALLET_ADDRESS, STANDARD_ERRORS } from './constants'
+import { STANDARD_ERRORS } from './constants'
 
-export const getMiniZBeamBitflyDefinition = (machine: Machine): PluginDefinition => {
+export const getMiniZZHashDefinition = (nicehashAddress: string, machine: Machine): PluginDefinition => {
   let def = {
     name: 'MiniZ',
     version: '1.6v3',
     downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/miniz-1.6v3/miniz-1.6v3-cuda.zip',
     exe: 'miniZ.exe',
-    args: `--url=ssl://${BEAM_WALLET_ADDRESS}.${machine.minerId}@us1-beam.flypool.org:3443 --url=ssl://${BEAM_WALLET_ADDRESS}.${machine.minerId}@eu1-beam.flypool.org:3443 --par=144,5s`,
+    args: `--url=tcp://${nicehashAddress}.${machine.minerId}@zhash.usa.nicehash.com:3387 --url=tcp://${nicehashAddress}.${machine.minerId}@zhash.eu.nicehash.com:3387 --par=144,5`,
     runningCheck: '\\*[1-9][0-9]*\\.\\d* I\\/s [1-9][0-9]*\\.\\d\\([1-9][0-9]*\\.\\d\\)Sol\\/s',
     initialTimeout: 600000,
     initialRetries: 1,

@@ -57,8 +57,8 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
     pluginDefinitions.push(getGminerZHashDefinition(nicehashMiningAddress, machine)) // NiceHash
   }
 
-  // Beam // BeamHashII
-  if (has3gbSupport) {
+  // Beam // BeamHashIII
+  if (has4gbSupport) {
     pluginDefinitions.push(getGminerBeamNiceHashDefinition(nicehashMiningAddress, machine)) // NiceHash
     pluginDefinitions.push(getGminerBeamBitflyDefinition(machine)) // Bitfly's Flypool
   }
