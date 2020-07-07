@@ -35,7 +35,7 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
 
   console.log(JSON.stringify(machineInfo.graphics.controllers))
   const has2gbSupport = machineInfo.graphics.controllers.some((x) => x.vram >= 1024 * 2 * 0.95)
-  const has3gbSupport = machineInfo.graphics.controllers.some((x) => x.vram >= 1024 * 3 * 0.95)
+  // TODO: use when enabling MiniZ; const has3gbSupport = machineInfo.graphics.controllers.some((x) => x.vram >= 1024 * 3 * 0.95)
   const has4gbSupport = machineInfo.graphics.controllers.some((x) => x.vram >= 1024 * 4 * 0.95)
   const has6gbSupport = machineInfo.graphics.controllers.some((x) => x.vram >= 1024 * 6 * 0.95)
   const hasCudaSupport = machineInfo.graphics.controllers.some((x) => x.vendor.toLocaleLowerCase().includes('nvidia'))
