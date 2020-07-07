@@ -20,10 +20,6 @@ export class Plugin {
   /** The path to the location of the installed plugin */
   public readonly pluginDirectory: string
 
-  get version(): string {
-    return this.pluginDefinition.version
-  }
-
   get name(): string {
     return this.pluginDefinition.name
   }
@@ -46,7 +42,7 @@ export class Plugin {
     private readonly pluginDefinition: PluginDefinition,
     private readonly notificationService: INotificationService,
   ) {
-    this.pluginDirectory = path.join(baseDirectory, `${this.name}-${this.version}`)
+    this.pluginDirectory = path.join(baseDirectory, this.name)
   }
 
   /** Starts the plugin */
