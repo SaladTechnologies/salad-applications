@@ -8,8 +8,8 @@ const cuckaroomUser = (address: string, location: string, minerId: string) =>
 export const getGminerCuckARoom29Definition = (nicehashAddress: string, machine: Machine): PluginDefinition => {
   let def = {
     name: 'GMiner',
-    version: '2.11',
-    downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer2.11/gminer-2-11-windows.zip',
+    version: '2.15',
+    downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer2.15/gminer-2-15-windows.zip',
     exe: 'miner.exe',
     args: `-a cuckaroom29 ${cuckaroomUser(nicehashAddress, 'usa', machine.minerId)} ${cuckaroomUser(nicehashAddress, 'eu', machine.minerId)} -w 0`,
     runningCheck: '(?:Share Accepted|[1-9][0-9]*\\.\\d* G\\/s)',
