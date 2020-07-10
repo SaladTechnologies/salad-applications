@@ -12,7 +12,7 @@ yarn start
 
 Salad UI will now be available at http://localhost:3000/ and automatically refresh when any changes are detected. Debugging is available if you run via the included VSCode launch task `Debug Web App`.
 
-While doing UI component development it is recommended to us [Storybook](https://storybook.js.org/).
+While doing UI component development it is recommended to use [Storybook](https://storybook.js.org/).
 
 ```
 yarn storybook
