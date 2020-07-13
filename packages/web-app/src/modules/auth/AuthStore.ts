@@ -246,7 +246,20 @@ export class AuthStore {
       }
     })
 
-    this.router.push('/logout', { previousLocation: toJS(this.router.location) })
+    const pathname = this.router.location.pathname.toLowerCase()
+    if (pathname === '/login' || pathname.startsWith('/login/')) {
+      if (
+        AuthStore.isStateWithPreviousLocation(this.router.location.state) &&
+        this.router.location.state.previousLocation !== undefined
+      ) {
+        this.router.replace('/logout', { previousLocation: toJS(this.router.location.state.previousLocation) })
+      } else {
+        this.router.replace('/logout')
+      }
+    } else {
+      this.router.push('/logout', { previousLocation: toJS(this.router.location) })
+    }
+
     return promise
   }
 
@@ -407,7 +420,21 @@ export class AuthStore {
         }
       } catch {}
 
-      this.router.push('/login/email-verification')
+      const pathname = this.router.location.pathname.toLowerCase()
+      if (pathname === '/login' || pathname.startsWith('/login/')) {
+        if (
+          AuthStore.isStateWithPreviousLocation(this.router.location.state) &&
+          this.router.location.state.previousLocation !== undefined
+        ) {
+          this.router.replace('/login/email-verification', {
+            previousLocation: toJS(this.router.location.state.previousLocation),
+          })
+        } else {
+          this.router.replace('/login/email-verification')
+        }
+      } else {
+        this.router.push('/login/email-verification', { previousLocation: toJS(this.router.location) })
+      }
     }.bind(this),
   )
 
@@ -545,7 +572,20 @@ export class AuthStore {
       }
     })
 
-    this.router.push('/login', { previousLocation: toJS(this.router.location) })
+    const pathname = this.router.location.pathname.toLowerCase()
+    if (pathname === '/login' || pathname.startsWith('/login/')) {
+      if (
+        AuthStore.isStateWithPreviousLocation(this.router.location.state) &&
+        this.router.location.state.previousLocation !== undefined
+      ) {
+        this.router.replace('/login', { previousLocation: toJS(this.router.location.state.previousLocation) })
+      } else {
+        this.router.replace('/login')
+      }
+    } else {
+      this.router.push('/login', { previousLocation: toJS(this.router.location) })
+    }
+
     return promise
   }
 
