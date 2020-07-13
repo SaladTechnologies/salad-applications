@@ -1,6 +1,6 @@
-import { computed, autorun } from 'mobx'
-import { RootStore } from '../../Store'
+import { autorun, computed } from 'mobx'
 import { config } from '../../config'
+import { RootStore } from '../../Store'
 import { HeroType } from './models/HeroType'
 
 export class EngagementStore {
@@ -9,7 +9,6 @@ export class EngagementStore {
     const show =
       this.store?.profile?.currentProfile !== undefined &&
       this.store?.profile?.currentProfile.lastSeenApplicationVersion !== config.whatsNewVersion
-
     return show
   }
 
@@ -36,15 +35,31 @@ export class EngagementStore {
         return
       }
 
-      if (!this.store.machine.currentMachine) {
-        return
-      }
-
       if (this.showedInitialNotification) {
         return
       }
 
+      if (!this.store?.profile?.currentProfile) {
+        return
+      }
+
       this.showedInitialNotification = true
+
+      //Check to see if we should add the What's New notification
+      if (this.showWhatsNew) {
+        this.store.notifications.sendNotification({
+          title: 'Salad was Updated',
+          message: 'Something new just came out from the kitchen. Click here to learn more.',
+          autoClose: false,
+          onClick: () => this.store.ui.showModal('/whats-new'),
+        })
+
+        return
+      }
+
+      if (!this.store.machine.currentMachine) {
+        return
+      }
 
       if (this.store.saladBowl.canRun && this.store.xp.currentXp <= 10) {
         //Link to the mining page
@@ -66,17 +81,6 @@ export class EngagementStore {
           onClick: () => this.store.routing.push('/earn/offerwall'),
         })
       }
-
-      //Check to see if we should add the What's New notification
-      else if (this.showWhatsNew) {
-        this.store.notifications.sendNotification({
-          title: 'Salad was Updated',
-          message: 'Something new just came out from the kitchen. Click here to learn more.',
-          autoClose: false,
-          onClick: () => this.store.ui.showModal('/whats-new'),
-        })
-      }
-
       //Remind users to mine
       else if (this.store.saladBowl.canRun) {
         this.store.notifications.sendNotification({
