@@ -91,9 +91,10 @@ class _AccountMenu extends Component<Props> {
         <div className={classes.signUpButton} onClick={this.handleClick}>
           Login
         </div>
-        <div className={classes.signUpButton} onClick={this.handleClick}>
+        {/* TODO: Add back in once we can open directly to the register page */}
+        {/* <div className={classes.signUpButton} onClick={this.handleClick}>
           Register
-        </div>
+        </div> */}
       </div>
     )
   }
