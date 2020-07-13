@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { OnboardingPage, Scrollbar } from '../../../components'
+import { OnboardingPage, Scrollbar, SmartLink } from '../../../components'
 import image from '../assets/Home - How it Works.svg'
 
 const styles = {
@@ -38,19 +38,24 @@ class _WhatsNewPage extends Component<Props> {
           nextText={'Got It!'}
         >
           <Scrollbar>
-            <div className={classes.title}>Salad Storefront</div>
+            <div className={classes.title}>Dynamic Earnings</div>
             <div className={classes.body}>
-              We’ve modernized, updated, and otherwise improved our rewards. With this change, we've prepared Salad for
-              the future, as we can more easily house 1000s of rewards.
+              Salad payouts are now determined by how much your machine actually contributes to any of the many
+              blockchain protocols we support. So long earning tables!!
             </div>
-            <div className={classes.title}>Salad Pay</div>
             <div className={classes.body}>
-              <p>We have officially launched SaladPay within the app!</p>
-              <p>
-                SaladPay allows you to spend your hard earned Salad Balance on any website or app that supports
-                SaladPay. Check it out when you redeem any reward in Salad. Look out for upcoming partnership
-                announcements in the future.
-              </p>
+              Learn more by reading our{' '}
+              <SmartLink to="https://medium.com/@saladchefs/the-salad-guide-to-dynamic-earnings-e6e81edba726">
+                Guide to Dynamic Earnings
+              </SmartLink>
+            </div>
+
+            <div className={classes.body}>
+              Features include:
+              <li>New mining statuses</li>
+              <li>New earning history table</li>
+              <li>Updates to XP</li>
+              <li>The Pantry</li>
             </div>
           </Scrollbar>
         </OnboardingPage>
