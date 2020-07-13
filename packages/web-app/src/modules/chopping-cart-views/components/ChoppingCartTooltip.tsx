@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import { Reward } from '../../reward/models'
-import { P } from '../../../components'
+import { P, SmartLink } from '../../../components'
 import Img from 'react-image'
+import { rewardRoute } from '../../../RouteUtils'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -68,15 +69,9 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   rewards?: Reward[]
-  onViewReward?: (reward: Reward) => void
 }
 
 class _ChoppingCartTooltip extends Component<Props> {
-  handleViewReward = (reward: Reward) => {
-    const { onViewReward } = this.props
-
-    onViewReward?.(reward)
-  }
   render() {
     const { rewards, classes } = this.props
 
@@ -87,20 +82,22 @@ class _ChoppingCartTooltip extends Component<Props> {
         <div className={classes.title}>Chopping Cart</div>
         {!hasRewards && <P>Your Chopping Cart is Empty</P>}
         {hasRewards &&
-          rewards?.map(x => (
-            <div className={classes.rewardItem} onClick={() => this.handleViewReward(x)}>
-              <Img
-                className={classes.rewardImage}
-                src={x.coverImage}
-                draggable={false}
-                alt=""
-                unloader={<div className={classes.missingRewardImage}></div>}
-              />
-              <div className={classes.textContainer}>
-                <div className={classes.nameText}>{x.name}</div>
-                <div className={classes.priceText}>${x.price.toFixed(2)}</div>
+          rewards?.map((x) => (
+            <SmartLink to={rewardRoute(x)}>
+              <div className={classes.rewardItem}>
+                <Img
+                  className={classes.rewardImage}
+                  src={x.coverImage}
+                  draggable={false}
+                  alt=""
+                  unloader={<div className={classes.missingRewardImage}></div>}
+                />
+                <div className={classes.textContainer}>
+                  <div className={classes.nameText}>{x.name}</div>
+                  <div className={classes.priceText}>${x.price.toFixed(2)}</div>
+                </div>
               </div>
-            </div>
+            </SmartLink>
           ))}
       </div>
     )

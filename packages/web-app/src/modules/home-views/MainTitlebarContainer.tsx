@@ -1,13 +1,12 @@
 import { connect } from '../../connect'
-import { Titlebar, MenuItem } from './components/Titlebar'
 import { RootStore } from '../../Store'
+import { MenuItem, Titlebar } from './components/Titlebar'
 
 const mapStoreToProps = (store: RootStore): any => {
   const menuItems: MenuItem[] = [
     new MenuItem('Store', '/'),
-    new MenuItem('Referrals', '/account/referrals'),
-    new MenuItem('Reward Vault', '/account/reward-vault'),
-    new MenuItem('Earn', '/earn/offerwall'),
+    new MenuItem('Earn', '/earn/summary'),
+    new MenuItem('Help', 'https://www.salad.io/support'),
   ]
   return {
     isDesktop: store.native.isNative,

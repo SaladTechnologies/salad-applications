@@ -27,7 +27,7 @@ export class NotificationStore {
         toastId: message.id,
         className: 'hide-toast', //This hides the default toast styles
         bodyClassName: 'hide-toast', //This hides the default toast styles
-        position: toast.POSITION.BOTTOM_LEFT,
+        position: toast.POSITION.BOTTOM_LEFT as 'bottom-left',
         autoClose: message.autoClose,
         closeButton: false,
         hideProgressBar: true,
@@ -37,7 +37,7 @@ export class NotificationStore {
         toastId: message.id,
         className: 'hide-toast', //This hides the default toast styles
         bodyClassName: 'hide-toast', //This hides the default toast styles
-        position: toast.POSITION.BOTTOM_LEFT,
+        position: toast.POSITION.BOTTOM_LEFT as 'bottom-left',
         autoClose: message.autoClose,
         closeButton: false,
         hideProgressBar: true,

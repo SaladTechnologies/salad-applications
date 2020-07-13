@@ -5,6 +5,7 @@ import { CondensedHeader, Divider, Slider, P, ToggleSetting } from '../../../../
 
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
+import { withLogin } from '../../../auth-views'
 
 const styles = {
   container: {
@@ -70,7 +71,7 @@ class _WindowsSettings extends Component<Props> {
             <ToggleSetting
               title={'Auto Start'}
               description={
-                'Salad will automatically start to run after being AFK a determined amount of time *and* will automatically stop when your return.'
+                'Salad will automatically start to run after being AFK a determined amount of time *and* will automatically stop when you return.'
               }
               toggled={autoStart}
               onToggle={autoStartToggle}
@@ -108,4 +109,4 @@ class _WindowsSettings extends Component<Props> {
   }
 }
 
-export const WindowsSettings = withStyles(styles)(_WindowsSettings)
+export const WindowsSettings = withLogin(withStyles(styles)(_WindowsSettings))

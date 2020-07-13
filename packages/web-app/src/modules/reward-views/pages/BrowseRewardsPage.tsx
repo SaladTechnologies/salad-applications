@@ -4,7 +4,7 @@ import { SaladTheme } from '../../../SaladTheme'
 import { Reward } from '../../reward/models'
 import { RewardDisclaimers } from '../components'
 import { Scrollbars } from 'react-custom-scrollbars'
-import { P } from '../../../components'
+import { P, Scrollbar } from '../../../components'
 import { RewardItem } from '../components/RewardItem'
 import { rewardItemResponsive } from '../components/RewardSlider'
 import { IconArrowLeft } from '../components/assets'
@@ -41,14 +41,14 @@ const styles = (theme: SaladTheme) => {
       display: 'flex',
       alignItems: 'center',
       padding: '20px 0px',
-    },
-    backButton: {
-      width: 15,
-      padding: 10,
       cursor: 'pointer',
       '&:hover': {
         opacity: 0.5,
       },
+    },
+    backButton: {
+      width: 15,
+      padding: 10,
     },
     titleText: {
       fontFamily: theme.fontGroteskBook19,
@@ -104,22 +104,22 @@ class _BrowseRewardsPage extends Component<Props> {
 
     return (
       <div className={classes.container}>
-        <div className={classes.titleBar}>
-          <div className={classes.backButton} onClick={this.handleBack}>
+        <div className={classes.titleBar} onClick={this.handleBack}>
+          <div className={classes.backButton}>
             <IconArrowLeft />
           </div>
           <div className={classes.titleText}>{title || 'Back'}</div>
         </div>
         <div className={classes.columnContainer}>
           <div style={{ flex: 1 }}>
-            <Scrollbars>
+            <Scrollbar>
               <div className={classes.contentContainer}>
                 {!hasRewards && <P className={classes.placeholderText}>No Rewards Found</P>}
                 {hasRewards && (
                   <div>
                     <div className={classes.rewardContainer}>
                       {rewards?.map((x) => (
-                        <div className={classes.rewardItem}>
+                        <div key={x.id} className={classes.rewardItem}>
                           <RewardItem reward={x} onViewReward={onViewReward} />
                         </div>
                       ))}
@@ -128,7 +128,7 @@ class _BrowseRewardsPage extends Component<Props> {
                   </div>
                 )}
               </div>
-            </Scrollbars>
+            </Scrollbar>
           </div>
           <div style={{ flex: '0 0 250px' }}>
             <Scrollbars>

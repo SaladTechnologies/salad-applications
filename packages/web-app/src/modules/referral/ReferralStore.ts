@@ -1,7 +1,7 @@
-import { observable, computed, flow, action } from 'mobx'
-import { Referral, completed, percentComplete } from './models'
+import { AxiosError, AxiosInstance } from 'axios'
+import { action, computed, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
-import { AxiosInstance, AxiosError } from 'axios'
+import { completed, percentComplete, Referral } from './models'
 import { maximumReferrerBonus } from './models/ReferralDefinition'
 
 export class ReferralStore {
@@ -80,7 +80,7 @@ export class ReferralStore {
   @action.bound
   loadReferrals = flow(function* (this: ReferralStore) {
     try {
-      let res = yield this.axios.get('profile/referrals')
+      let res = yield this.axios.get('/api/v1/profile/referrals')
       const referrals = res.data as Referral[]
       this.referrals = referrals.sort((a: Referral, b: Referral) => percentComplete(a) - percentComplete(b))
     } catch (error) {
@@ -93,7 +93,7 @@ export class ReferralStore {
   @action.bound
   loadReferralCode = flow(function* (this: ReferralStore) {
     try {
-      let res = yield this.axios.get('profile/referral-code')
+      let res = yield this.axios.get('/api/v1/profile/referral-code')
       this.referralCode = res.data.code
     } catch (error) {
       console.error(error)
@@ -105,9 +105,8 @@ export class ReferralStore {
   @action.bound
   loadCurrentReferral = flow(function* (this: ReferralStore) {
     try {
-      let res = yield this.axios.get<Referral>('profile/referral')
+      let res = yield this.axios.get<Referral>('/api/v1/profile/referral')
       this.currentReferral = res.data
-      console.log(res)
     } catch (e) {
       let err: AxiosError = e
       if (err.response && err.response.status === 404) {
@@ -118,7 +117,7 @@ export class ReferralStore {
     }
   })
 
-  /** Loads the current user's referral */
+  /** Called when a user enters in a referral code */
   @action.bound
   submitReferralCode = flow(function* (this: ReferralStore, code: string) {
     if (this.currentReferral) {
@@ -131,13 +130,16 @@ export class ReferralStore {
       code = 'ISAAC2'
     }
 
+    //Ensures that the user is logged in
+    yield this.store.auth.login()
+
     console.log('Sending referral code ' + code)
 
     try {
       const request = {
         code: code,
       }
-      let res = yield this.axios.post<Referral>('profile/referral', request)
+      let res = yield this.axios.post<Referral>('/api/v1/profile/referral', request)
       this.currentReferral = res.data
       this.store.analytics.trackReferralEntered(code)
     } catch (e) {
@@ -166,7 +168,7 @@ export class ReferralStore {
     }
 
     try {
-      yield this.axios.post('profile/referrals', request)
+      yield this.axios.post('/api/v1/profile/referrals', request)
       this.store.analytics.trackReferralSent()
     } catch (error) {
       console.error(error)

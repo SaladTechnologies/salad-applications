@@ -5,6 +5,7 @@ import { SaladPaymentRequestOptions } from '../../salad-pay/models'
 import classNames from 'classnames'
 import { SaladPayPage } from '.'
 import { SaladPayCheckoutButton } from './SaladPayCheckoutButton'
+import { currencyFormatter } from '../../../formatters'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -71,10 +72,7 @@ interface Props extends WithStyles<typeof styles> {
   onClose?: () => void
 }
 
-const moneyFormat = (amount?: number): string => {
-  if (amount === undefined) return '$0.00'
-  return `$${amount?.toFixed(2)}`
-}
+const moneyFormat = (amount?: number): string => currencyFormatter.format(amount ?? 0)
 
 class _SaladPayOrderSummaryPage extends Component<Props> {
   hasBalance = (): boolean => {

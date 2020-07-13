@@ -4,17 +4,21 @@ import { Form, Field } from 'react-final-form'
 import { TextField, Button, P } from '../../../../components'
 import { isEmailFormat } from '../../../../utils'
 
-const styles = ({
+const styles = {
   container: {
     display: 'inline-flex',
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   input: {
     width: 300,
+    marginTop: 8,
   },
-  sendButton: {},
-})
+  buttonContainer: {
+    display: 'flex',
+    height: 47,
+  },
+}
 
 interface Props extends WithStyles<typeof styles> {
   sending?: boolean
@@ -65,20 +69,14 @@ class _SendReferral extends Component<Props> {
                     <TextField
                       className={classes.input}
                       {...input}
-                      dark
                       placeholder="Email Address"
                       errorText={meta.error && meta.touched && meta.error}
                     />
-                    <Button
-                      type="submit"
-                      className={classes.sendButton}
-                      dark
-                      uppercase
-                      loading={sending}
-                      disabled={sending}
-                    >
-                      Send
-                    </Button>
+                    <div className={classes.buttonContainer}>
+                      <Button type="submit" uppercase loading={sending} disabled={sending}>
+                        Send
+                      </Button>
+                    </div>
                   </div>
                 )}
               </Field>

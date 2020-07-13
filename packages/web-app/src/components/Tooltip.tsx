@@ -6,7 +6,6 @@ const styles = (theme: SaladTheme) => ({
   container: {
     backgroundColor: theme.green,
     color: theme.darkBlue,
-    width: (props: Props) => (props.width ? props.width : '20rem'),
     padding: '1rem',
     overflow: 'hidden',
     zIndex: 9999,
@@ -24,13 +23,14 @@ const styles = (theme: SaladTheme) => ({
   text: {
     fontFamily: 'sharpGroteskBook19',
     fontSize: theme.small,
+    textTransform: 'capitalize',
+    whiteSpace: 'pre-wrap',
   },
 })
 
 interface Props extends WithStyles<typeof styles> {
   title?: string
   text?: string
-  width?: string
   children?: React.ReactNode
 }
 

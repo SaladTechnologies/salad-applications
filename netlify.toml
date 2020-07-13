@@ -1,45 +1,34 @@
 [Settings]
-# Added automatically by the Netlify CLI. It has no effect during normal 
-# Git-backed deploys.
 ID = "salad-web-app"
 
-# Settings in the [build] context are global and are applied to all contexts 
-# unless otherwise overridden by more specific contexts.  
 [build]
-  # Directory to change to before starting a build. 
-  # This is where we will look for package.json/.nvmrc/etc.
   base = "packages/web-app"
 
-# The following redirect proxies API requests to the backend.
-[[redirects]]
-  from = "/api/*"
-  to = "https://app-api.salad.io/api/:splat"
-  status = 200
-
-# The following redirect is intended for use with most SPAs that handle
-# routing internally.
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# Production context: all deploys from the Production branch set in your site's 
-# deploy contexts will inherit these settings.
 [context.production.environment]
     REACT_APP_AUTH0_CLIENT_ID='K8nT8zWF1Dyu9oqLJg5MTkpt9Aug3Ygt'
-    REACT_APP_SENTRY_DSN = "https://15f1024783af4b60a295b04ace0bbd2a@sentry.io/1424792"
-    REACT_APP_MIXPANEL_TOKEN = "68db9194f229525012624f3cf368921f"
-    
-[context.branch-deploy.environment]
-    REACT_APP_AUTH0_DOMAIN='salad-test.auth0.com'
-    REACT_APP_AUTH0_CLIENT_ID='Dtl7itmaCcqC42zycn9LXlyWmSyUIvUO'
-    REACT_APP_API_URL='https://app-api-testing.salad.io/api/v1/'
-    REACT_APP_MIXPANEL_TOKEN="4b245bace4eed86ffdfa35efc3addf1d"
+    REACT_APP_MIXPANEL_TOKEN='68db9194f229525012624f3cf368921f'
+    REACT_APP_SENTRY_DSN='https://15f1024783af4b60a295b04ace0bbd2a@sentry.io/1424792'
 
-# Deploy Preview context: all deploys resulting from a pull/merge request will 
-# inherit these settings.
+[context.branch-deploy.environment]
+    REACT_APP_API_URL='https://app-api-testing.salad.io'
+    REACT_APP_AUTH0_DOMAIN='login-test.salad.io'
+    REACT_APP_AUTH0_CLIENT_ID='MuyOVLwIinvcKb505k3nUScwPB75snYp'
+    REACT_APP_MIXPANEL_TOKEN='4b245bace4eed86ffdfa35efc3addf1d'
+
 [context.deploy-preview.environment]
-    REACT_APP_AUTH0_DOMAIN='salad-test.auth0.com'
-    REACT_APP_AUTH0_CLIENT_ID='Dtl7itmaCcqC42zycn9LXlyWmSyUIvUO'
-    REACT_APP_API_URL='https://app-api-testing.salad.io/api/v1/'
-    REACT_APP_MIXPANEL_TOKEN="4b245bace4eed86ffdfa35efc3addf1d"
+    REACT_APP_API_URL='https://app-api-testing.salad.io'
+    REACT_APP_AUTH0_DOMAIN='login-test.salad.io'
+    REACT_APP_AUTH0_CLIENT_ID='MuyOVLwIinvcKb505k3nUScwPB75snYp'
+    REACT_APP_MIXPANEL_TOKEN='4b245bace4eed86ffdfa35efc3addf1d'
+
+# Only used for the canary app deployment
+[context.dynamic-earnings.environment]
+    REACT_APP_API_URL='https://app-api-testing.salad.io'
+    REACT_APP_AUTH0_DOMAIN='login-test.salad.io'
+    REACT_APP_AUTH0_CLIENT_ID='MuyOVLwIinvcKb505k3nUScwPB75snYp'
+    REACT_APP_MIXPANEL_TOKEN='4b245bace4eed86ffdfa35efc3addf1d'

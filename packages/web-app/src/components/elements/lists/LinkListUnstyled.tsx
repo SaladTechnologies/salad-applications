@@ -21,6 +21,9 @@ const styles = {
     marginTop: '10px !important',
     marginBottom: '10px !important',
   },
+  inset: {
+    paddingLeft: 15,
+  },
 }
 
 interface Props extends WithStyles<typeof styles> {
@@ -31,6 +34,7 @@ interface Props extends WithStyles<typeof styles> {
     divider?: boolean
     /** Is the item clickable */
     enabled?: boolean
+    inset?: boolean
   }[]
 }
 
@@ -42,16 +46,16 @@ class _LinkListUnstyled extends Component<Props> {
 
     return (
       <ul className={classnames('linkListUnstyled', classes.linkListUnstyled)}>
-        {list.map((item, index) => {
+        {list.map((item) => {
           return (
-            <>
+            <React.Fragment key={item.url}>
               {item.divider && <Divider className={classes.divider} />}
-              <li key={index} className={classnames('linkListItem', classes.linkListItem)}>
+              <li className={classnames('linkListItem', classes.linkListItem, { [classes.inset]: item.inset })}>
                 <MenuTitle path={item.url} enabled={item.enabled}>
                   {item.text}
                 </MenuTitle>
               </li>
-            </>
+            </React.Fragment>
           )
         })}
       </ul>

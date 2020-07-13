@@ -3,9 +3,10 @@ import React, { Component } from 'react'
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
 
-import { P, Divider, CondensedHeader } from '../../../components'
+import { P, Head } from '../../../components'
 import { RewardVaultItem } from '../../vault/models'
 import { VaultItem } from './VaultItem'
+import { withLogin } from '../../auth-views'
 
 const styles = {
   container: {
@@ -36,13 +37,10 @@ class _VaultList extends Component<Props> {
     const { redemptions, classes } = this.props
     return (
       <div className={classes.container}>
-        <div className="header">
-          <CondensedHeader>Reward Vault</CondensedHeader>
-        </div>
-        <Divider />
+        <Head title="Reward Vault" />
         <div className={classes.listContainer}>
           <div className={classes.innerListContainer}>
-            {redemptions && redemptions.length > 0 && redemptions.map(x => <VaultItem {...x} />)}
+            {redemptions && redemptions.length > 0 && redemptions.map((x) => <VaultItem {...x} />)}
             {(!redemptions || redemptions.length === 0) && <P>Nothing here yet, go redeem something!</P>}
           </div>
         </div>
@@ -51,4 +49,4 @@ class _VaultList extends Component<Props> {
   }
 }
 
-export const VaultList = withStyles(styles)(_VaultList)
+export const VaultList = withLogin(withStyles(styles)(_VaultList))

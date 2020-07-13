@@ -9,26 +9,19 @@ import classnames from 'classnames'
 
 const styles = (theme: SaladTheme) => ({
   username: {
-    color: theme.green,
     fontFamily: theme.fontGroteskLight25,
     fontSize: theme.mediumLarge,
     lineHeight: theme.mediumLarge,
   },
-  blue: {
-    color: theme.darkBlue,
-  },
 })
 
-interface Props extends WithStyles<typeof styles> {
-  blue?: boolean
-  className?: string
-}
+interface Props extends WithStyles<typeof styles> {}
 
 class _Username extends Component<Props> {
   render() {
-    const { blue, className, children, classes } = this.props
+    const { children, classes } = this.props
 
-    return <label className={classnames(classes.username, className, { [classes.blue]: blue })}>{children}</label>
+    return <label className={classnames(classes.username)}>{children}</label>
   }
 }
 

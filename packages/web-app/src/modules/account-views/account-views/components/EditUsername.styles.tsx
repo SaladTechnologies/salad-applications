@@ -3,7 +3,7 @@ import { SaladTheme } from '../../../../SaladTheme'
 
 export const styles = (theme: SaladTheme) => ({
   input: {
-    marginTop: 5,
+    marginTop: 8,
     width: 300,
   },
 
@@ -43,11 +43,6 @@ export const styles = (theme: SaladTheme) => ({
     height: 60,
   },
 
-  updateButton: {
-    top: '-3px',
-    padding: 6,
-  },
-
   buttonContainer: {
     display: 'flex',
     height: 47,
@@ -58,7 +53,7 @@ export const styles = (theme: SaladTheme) => ({
     padding: 0,
 
     '& p': {
-      marginBottom: 0
-    }
+      marginBottom: 0,
+    },
   },
 })

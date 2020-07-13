@@ -1,14 +1,13 @@
-import { action, observable, computed, flow } from 'mobx'
+import { AxiosInstance } from 'axios'
+import { action, computed, flow, observable } from 'mobx'
+import { RouteComponentProps } from 'react-router'
+import { RootStore } from '../../Store'
+import { AbortError, SaladPaymentResponse } from '../salad-pay'
+import { SaladPay } from '../salad-pay/SaladPay'
+import { RewardQuery, RewardSort } from './models'
 import { Reward } from './models/Reward'
 import { RewardsResource } from './models/RewardsResource'
-import { AxiosInstance } from 'axios'
-
-import { rewardFromResource, encodeCategory, parseRewardQuery, stringifyRewardQuery, sortRewards } from './utils'
-import { RootStore } from '../../Store'
-import { SaladPay } from '../salad-pay/SaladPay'
-import { SaladPaymentResponse, AbortError } from '../salad-pay'
-import { RewardQuery, RewardSort } from './models'
-import { RouteComponentProps } from 'react-router'
+import { parseRewardQuery, rewardFromResource, sortRewards, stringifyRewardQuery } from './utils'
 
 type RewardId = string
 
@@ -50,7 +49,9 @@ export class RewardStore {
           rewards.push(r)
         }
       }
-      result.set(c, rewards)
+      if (rewards.length > 0) {
+        result.set(c, rewards)
+      }
     })
 
     return result
@@ -105,7 +106,7 @@ export class RewardStore {
     }
 
     if (query.q) {
-      rewards = rewards.filter((x) => query.q && x.name.toLowerCase().includes(query.q))
+      rewards = rewards.filter((x) => query.q && x.name.toLowerCase().includes(query.q.toLowerCase()))
     }
 
     //Sorts the rewards based on the query
@@ -122,7 +123,7 @@ export class RewardStore {
   refreshRewards = flow(function* (this: RewardStore) {
     try {
       this.isLoading = true
-      const response = yield this.axios.get<RewardsResource[]>('rewards')
+      const response = yield this.axios.get<RewardsResource[]>('/api/v1/rewards')
       if (response.data === undefined) return
 
       //Convert from the resource to the models
@@ -186,12 +187,15 @@ export class RewardStore {
 
   @action.bound
   loadSelectedReward = flow(function* (this: RewardStore) {
-    var res = yield this.axios.get('profile/selected-reward')
+    var res = yield this.axios.get('/api/v1/profile/selected-reward')
     this.selectedRewardId = res.data.rewardId
   })
 
   @action.bound
   addToChoppingCart = flow(function* (this: RewardStore, reward: Reward) {
+    //Ensures that the user is logged in
+    yield this.store.auth.login()
+
     const request = {
       rewardId: reward.id,
     }
@@ -199,7 +203,7 @@ export class RewardStore {
     this.isSelecting = true
 
     try {
-      var res = yield this.axios.patch('profile/selected-reward', request)
+      var res = yield this.axios.patch('/api/v1/profile/selected-reward', request)
       this.selectedRewardId = res.data.rewardId
 
       if (reward) this.store.analytics.trackSelectedReward(reward)
@@ -219,7 +223,7 @@ export class RewardStore {
     this.isSelecting = true
 
     try {
-      var res = yield this.axios.patch('profile/selected-reward', request)
+      var res = yield this.axios.patch('/api/v1/profile/selected-reward', request)
       this.selectedRewardId = res.data.rewardId
     } catch (error) {
       console.error(error)
@@ -234,6 +238,9 @@ export class RewardStore {
       console.log('Already redeeming reward, skipping')
       return
     }
+
+    //Ensures that the user is logged in
+    yield this.store.auth.login()
 
     this.isRedeeming = true
 
@@ -257,7 +264,7 @@ export class RewardStore {
 
       console.log(`Completed SaladPay transaction ${response.details.transactionToken}`)
 
-      yield this.axios.post(`/rewards/${reward.id}/redemptions`, {})
+      yield this.axios.post(`/api/v1/rewards/${reward.id}/redemptions`, {})
 
       //Completes the transaction and closes SaladPay
       response.complete('success')
@@ -270,6 +277,7 @@ export class RewardStore {
         title: `You redeemed ${reward.name}!`,
         message: `Congrats on your pick! Your reward is available in the reward vault!`,
         onClick: () => this.store.routing.push('/account/reward-vault'),
+        autoClose: false,
       })
     } catch (error) {
       if (!(error instanceof AbortError)) {
@@ -283,6 +291,7 @@ export class RewardStore {
       }
     } finally {
       yield this.store.balance.refreshBalance()
+      yield this.store.balance.refreshBalanceHistory()
       yield this.store.vault.loadVault()
       this.isRedeeming = false
       console.error('Cleared isRedeeming flag')
@@ -311,27 +320,5 @@ export class RewardStore {
     } else {
       this.store.routing.push('/')
     }
-  }
-
-  /** Shows the reward details modal page for the given reward */
-  viewReward = (reward: Reward) => {
-    this.store.ui.showModal(`/rewards/${reward.id}`)
-    this.store.analytics.trackRewardView(reward)
-  }
-
-  /** Shows the "Explore More" page for the given category */
-  @action
-  viewCategory = (category: string) => {
-    if (!category || !this.categoryData.has(category)) {
-      console.warn(`Unable to view category ${category}. Not found.`)
-      return
-    }
-
-    //Normalize the category to ensure it is safe to be used as a URL
-    let safeCategory = encodeCategory(category)
-
-    this.store.routing.push({ pathname: `/browse/category/${safeCategory}` })
-
-    this.store.analytics.trackRewardCategoryViewed(category)
   }
 }

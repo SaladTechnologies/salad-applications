@@ -10,12 +10,12 @@ import {
   RewardRequirementsPanel,
   RewardDisclaimers,
 } from '../components'
-import { Scrollbars } from 'react-custom-scrollbars'
+import { Scrollbar, Head } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {
     position: 'absolute',
-    top: '33px',
+    top: 0,
     bottom: 0,
     left: 0,
     right: 0,
@@ -40,11 +40,11 @@ interface Props extends WithStyles<typeof styles> {
 class _RewardDetailsPage extends Component<Props> {
   render() {
     const { reward, onRedeem, onBack, classes, ...rest } = this.props
-
     return (
       <div className={classes.container}>
+        <Head title={reward?.name} />
         <RewardHeaderBar reward={reward} onBack={onBack} onRedeem={onRedeem} {...rest} />
-        <Scrollbars>
+        <Scrollbar>
           <div className={classes.scrollContent}>
             <RewardImageCarousel reward={reward} />
             <RewardInfoPanel reward={reward} />
@@ -52,7 +52,7 @@ class _RewardDetailsPage extends Component<Props> {
             <RewardRequirementsPanel reward={reward} />
             <RewardDisclaimers />
           </div>
-        </Scrollbars>
+        </Scrollbar>
       </div>
     )
   }

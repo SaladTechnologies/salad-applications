@@ -3,7 +3,7 @@ import { SaladTheme } from '../../../../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 import { Referral, percentComplete } from '../../../referral/models'
-import { P, VeggieName, ProgressBar } from '../../../../components'
+import { P, SectionHeader, ProgressBar } from '../../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -39,7 +39,7 @@ class _CurrentReferralProgress extends Component<Props> {
     if (!referral || !referral.referralDefinition) return null
     return (
       <div key={referral.refereeId} className={classnames(classes.container)}>
-        <VeggieName>Your Progress</VeggieName>
+        <SectionHeader>Your Progress</SectionHeader>
 
         <div className={classes.headerContainer}>
           <P>CODE: {referral.code}</P>

@@ -5,7 +5,6 @@ import { action } from '@storybook/addon-actions'
 import { ReferralItem } from './ReferralItem'
 import { Referral } from '../../../referral/models'
 import { ReferralList } from './ReferralList'
-import { ReferralSummary } from './ReferralSummary'
 import { ReferralDefinition } from '../../../referral/models/ReferralDefinition'
 import { ReferralStats } from './ReferralStats'
 import { ReferralCode } from './ReferralCode'
@@ -35,56 +34,61 @@ storiesOf('Modules|Referral/Components', module)
       <ReferralItem referral={referrals[0]} />
     </div>
   ))
-  .add('Referral Summary', () => {
-    return <ReferralSummary pendingCount={4} completedCount={20} />
-  })
   .add('Referral Stats', () => {
     return (
-      <div style={{ backgroundColor: '#B2D530' }}>
+      <div>
         <ReferralStats totalEarned={164.2345} potentialEarned={6.345} />
       </div>
     )
   })
   .add('Referral Code', () => {
     return (
-      <div style={{ backgroundColor: '#B2D530' }}>
+      <div>
         <ReferralCode code="ABCDEFG" />
       </div>
     )
   })
   .add('Send Referral', () => {
     return (
-      <div style={{ backgroundColor: '#B2D530' }}>
+      <div>
         <SendReferral sending={boolean('Sending', false)} onSend={action('Send referral')} />
       </div>
     )
   })
   .add('Referral Description', () => {
     return (
-      <div style={{ backgroundColor: '#B2D530' }}>
+      <div>
         <ReferralDescription />
       </div>
     )
   })
   .add('Referral Code Entry', () => {
     return (
-      <div style={{ backgroundColor: '#B2D530' }}>
+      <div>
         <ReferralCodeEntryComponent />
       </div>
     )
   })
 
 storiesOf('Modules|Referral/Referral List', module)
-  .addDecorator(storyFn => {
-    return <div style={{ backgroundColor: '#B2D530' }}>{storyFn()}</div>
+  .addDecorator((storyFn) => {
+    return <div>{storyFn()}</div>
   })
-  .add('Empty List', () => <ReferralList referrals={[]} />)
+  .add('Empty List', () => (
+    <div>
+      <ReferralList referrals={[]} />
+    </div>
+  ))
   .add('Referral List', () => {
-    return <ReferralList referrals={referrals} />
+    return (
+      <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}>
+        <ReferralList referrals={referrals} />
+      </div>
+    )
   })
 
 storiesOf('Modules|Referral/Current User Referral', module)
-  .addDecorator(storyFn => {
-    return <div style={{ backgroundColor: '#B2D530' }}>{storyFn()}</div>
+  .addDecorator((storyFn) => {
+    return <div>{storyFn()}</div>
   })
   .add('CurrentReferralProgress', () => <CurrentReferralProgress referral={referrals[0]} />)

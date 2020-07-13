@@ -1,27 +1,32 @@
-import { AuthStore, TokenStore } from './modules/auth'
-import { configure, action, flow } from 'mobx'
-import { RouterStore } from 'mobx-react-router'
 import { AxiosInstance } from 'axios'
-import { ExperienceStore } from './modules/xp'
-import { RewardStore } from './modules/reward'
-import { BalanceStore } from './modules/balance'
-import { MachineStore, AutoStartStore, NativeStore } from './modules/machine'
-import { ProfileStore } from './modules/profile'
-import { UIStore } from './UIStore'
-import { ReferralStore } from './modules/referral'
+import { autorun, configure, flow } from 'mobx'
+import { RouterStore } from 'mobx-react-router'
+import { addAuthInterceptor } from './axiosFactory'
+import { config } from './config'
 import { AnalyticsStore } from './modules/analytics'
+import { AuthStore } from './modules/auth'
+import { BalanceStore } from './modules/balance'
 import { RefreshService } from './modules/data-refresh'
-import { SaladBowlStore } from './modules/salad-bowl'
+import { EngagementStore } from './modules/engagement'
 import { HomeStore } from './modules/home/HomeStore'
+import { AutoStartStore, MachineStore, NativeStore } from './modules/machine'
 import { NotificationStore } from './modules/notifications'
+import { ProfileStore } from './modules/profile'
+import { ReferralStore } from './modules/referral'
+import { RewardStore } from './modules/reward'
+import { SaladBowlStore } from './modules/salad-bowl'
+import { StopReason } from './modules/salad-bowl/models'
 import { VaultStore } from './modules/vault'
 import { VersionStore } from './modules/versions'
-import { StopReason } from './modules/salad-bowl/models'
-import { OfferwallStore } from './modules/profile/OfferwallStore'
-import { EngagementStore } from './modules/engagement'
+import { ExperienceStore } from './modules/xp'
+import { UIStore } from './UIStore'
 
-//Forces all changes to state to be from an action
-configure({ enforceActions: 'always' })
+configure({
+  computedRequiresReaction: process.env.NODE_ENV === 'development',
+  enforceActions: 'always',
+  observableRequiresReaction: process.env.NODE_ENV === 'development',
+  reactionRequiresObservable: process.env.NODE_ENV === 'development',
+})
 
 let sharedStore: RootStore
 
@@ -37,7 +42,6 @@ export const getStore = (): RootStore => sharedStore
 export class RootStore {
   public readonly auth: AuthStore
   public readonly autoStart: AutoStartStore
-  public readonly token: TokenStore
   public readonly analytics: AnalyticsStore
   public readonly routing: RouterStore
   public readonly xp: ExperienceStore
@@ -54,20 +58,16 @@ export class RootStore {
   public readonly notifications: NotificationStore
   public readonly vault: VaultStore
   public readonly version: VersionStore
-  public readonly offerwall: OfferwallStore
   public readonly engagement: EngagementStore
-
-  private machineInfoHeartbeat?: NodeJS.Timeout
 
   constructor(readonly axios: AxiosInstance) {
     this.routing = new RouterStore()
     this.notifications = new NotificationStore(this)
     this.xp = new ExperienceStore(this, axios)
-    this.machine = new MachineStore(this)
-    this.native = new NativeStore(this, axios)
-    this.saladBowl = new SaladBowlStore(this, axios)
-    this.auth = new AuthStore(this, axios)
-    this.token = new TokenStore()
+    this.native = new NativeStore(this)
+    this.saladBowl = new SaladBowlStore(this)
+    this.auth = new AuthStore(config, axios, this.routing)
+    this.machine = new MachineStore(this, axios)
     this.rewards = new RewardStore(this, axios)
     this.analytics = new AnalyticsStore(this)
     this.balance = new BalanceStore(this, axios)
@@ -79,58 +79,52 @@ export class RootStore {
     this.autoStart = new AutoStartStore(this)
     this.vault = new VaultStore(axios)
     this.version = new VersionStore(this, axios)
-    this.offerwall = new OfferwallStore(this)
     this.engagement = new EngagementStore(this)
 
-    this.machineInfoHeartbeat = setInterval(this.tryRegisterMachine, 20000)
+    addAuthInterceptor(axios, this.auth)
 
-    this.tryRegisterMachine()
-  }
-
-  @action.bound
-  onLogin = flow(function*(this: RootStore) {
-    var profile = yield this.profile.loadProfile()
-
-    if (!profile) {
-      this.auth.signOut()
-      return
-    }
-
-    this.native.login(profile)
-    this.analytics.start(profile)
-    this.referral.loadReferralCode()
-    this.xp.refreshXp()
-    this.referral.loadCurrentReferral()
-    this.vault.loadVault()
-
-    if (this.machineInfoHeartbeat) clearInterval(this.machineInfoHeartbeat)
-
-    // Start a timer to keep checking for system information
-    this.machineInfoHeartbeat = setInterval(this.tryRegisterMachine, 20000)
-    this.version.startVersionChecks()
-    this.tryRegisterMachine()
-
+    // Start refreshing data
     this.refresh.start()
-  })
 
-  @action
-  tryRegisterMachine = () => {
-    if (this.native.machineInfo) {
-      this.native.registerMachine()
-      if (this.machineInfoHeartbeat) clearInterval(this.machineInfoHeartbeat)
-    } else {
-      this.native.loadMachineInfo()
-    }
+    autorun(() => {
+      if (this.auth.isAuthenticated) {
+        this.onLogin()
+      } else {
+        this.onLogout()
+      }
+    })
   }
 
-  @action
-  onLogout = () => {
-    this.token.saladToken = ''
-    this.referral.referralCode = ''
-    this.referral.currentReferral = undefined
-    this.analytics.trackLogout()
-    this.saladBowl.stop(StopReason.Logout)
-    this.version.stopVersionChecks()
-    this.native.logout()
-  }
+  onLogin = flow(
+    function* (this: RootStore) {
+      var profile = yield this.profile.loadProfile()
+      if (!profile) {
+        this.auth.logout()
+        return
+      }
+
+      yield Promise.allSettled([
+        this.analytics.start(profile),
+        this.native.login(profile),
+        this.referral.loadCurrentReferral(),
+        this.referral.loadReferralCode(),
+        this.version.startVersionChecks(),
+        this.refresh.refreshData(),
+      ])
+    }.bind(this),
+  )
+
+  onLogout = flow(
+    function* (this: RootStore) {
+      this.referral.currentReferral = undefined
+      this.referral.referralCode = ''
+
+      yield Promise.allSettled([
+        this.analytics.trackLogout(),
+        this.saladBowl.stop(StopReason.Logout),
+        this.version.stopVersionChecks(),
+        this.native.logout(),
+      ])
+    }.bind(this),
+  )
 }

@@ -1,15 +1,16 @@
-import mixpanel from 'mixpanel-browser'
-import { Config } from '../../config'
-import { Profile } from '../profile/models'
 import * as Sentry from '@sentry/browser'
-import { Reward } from '../reward/models'
-import { MiningStatus } from '../machine/models'
-import { Machine } from '../machine/models/Machine'
-import { RootStore } from '../../Store'
+import mixpanel from 'mixpanel-browser'
 import { autorun } from 'mobx'
+import { config } from '../../config'
+import { RootStore } from '../../Store'
+import { MiningStatus } from '../machine/models'
+import { Profile } from '../profile/models'
+import { Reward } from '../reward/models'
 
 export class AnalyticsStore {
   private started = false
+  private previousStatus?: MiningStatus
+  private previousStatusTimestamp?: number
 
   constructor(private readonly store: RootStore) {
     autorun(() => {
@@ -34,7 +35,7 @@ export class AnalyticsStore {
       })
     })
 
-    const token = Config.mixpanelToken
+    const token = config.mixpanelToken
 
     if (!token) {
       return
@@ -43,7 +44,7 @@ export class AnalyticsStore {
     mixpanel.init(token, {})
 
     mixpanel.register({
-      $app_build_number: Config.appBuild,
+      $app_build_number: config.appBuild,
     })
 
     if (this.store.native.desktopVersion) {
@@ -66,15 +67,6 @@ export class AnalyticsStore {
     mixpanel.identify(profile.id)
 
     this.track('Login')
-  }
-
-  /** Alias another Id (Auth0 Id) to the Salad user id */
-  public aliasUser = (otherId: string) => {
-    if (!this.started) return
-
-    if (!otherId) return
-
-    mixpanel.alias(otherId)
   }
 
   public trackDesktopVersion = (version: string) => {
@@ -115,12 +107,19 @@ export class AnalyticsStore {
     })
   }
 
-  /** Track when mining stops */
-  public trackStop = (reason: string) => {
+  /**
+   * Tracks when mining stops
+   * @param reason Why did mining stop
+   * @param totalTime Total time between start and stop (ms)
+   * @param choppingTime Total time in the chopping state (ms)
+   */
+  public trackStop = (reason: string, totalTime: number, choppingTime: number) => {
     if (!this.started) return
 
     this.track('Stop', {
       Reason: reason,
+      TotalTime: totalTime,
+      ChoppingTime: choppingTime,
     })
   }
 
@@ -136,22 +135,32 @@ export class AnalyticsStore {
     })
   }
 
-  public trackOfferwallStatus = (enabled: boolean) => {
-    if (!this.started) return
-
-    this.track('Offerwall Toggle', {
-      Enabled: enabled,
-    })
-
-    mixpanel.people.set({
-      Offerwall: enabled,
-    })
-  }
-
   public trackMiningStatus = (status: MiningStatus, pluginName: string, pluginVersion: string) => {
     if (!this.started) return
 
-    this.track('Mining Status', { MiningStatus: status, PluginName: pluginName, PluginVersion: pluginVersion })
+    const now = Date.now()
+
+    let previousTotalTime: number | undefined = undefined
+
+    if (this.previousStatusTimestamp) {
+      previousTotalTime = now - this.previousStatusTimestamp
+    }
+
+    this.track('Mining Status', {
+      PrevStatus: this.previousStatus,
+      MiningStatus: status,
+      PluginName: pluginName,
+      PluginVersion: pluginVersion,
+      PrevTime: previousTotalTime,
+    })
+
+    if (status === MiningStatus.Stopped) {
+      this.previousStatus = undefined
+      this.previousStatusTimestamp = undefined
+    } else {
+      this.previousStatus = status
+      this.previousStatusTimestamp = now
+    }
   }
 
   /** Track when a machine goes to the earning state */
@@ -227,16 +236,6 @@ export class AnalyticsStore {
     if (!this.started) return
 
     this.track('Referral Entered', { Code: code.toUpperCase() })
-  }
-
-  public trackMachine = (machine: Machine) => {
-    if (!this.started) return
-
-    if (machine.qualifying) {
-      mixpanel.people.set({
-        IsQualified: machine.qualifying,
-      })
-    }
   }
 
   public trackLifetimeXp = (lifetimeXp: number) => {

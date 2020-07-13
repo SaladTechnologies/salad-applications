@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
+import { Head } from '../../../components'
+import { withLogin } from '../../auth-views'
 
 const styles = {
   container: {
@@ -27,15 +29,17 @@ const styles = {
 }
 
 interface Props extends WithStyles<typeof styles> {
+  pageTitle?: string
   src?: string
 }
 
 class _IFramePage extends Component<Props> {
   render() {
-    const { src, classes } = this.props
+    const { src, pageTitle, classes } = this.props
 
     return (
       <div className={classes.container}>
+        <Head title={pageTitle} />
         <iframe
           src={src}
           style={{
@@ -50,7 +54,6 @@ class _IFramePage extends Component<Props> {
             margin: 0,
             padding: 0,
             overflow: 'hidden',
-            zIndex: 999999,
           }}
           title={`offerwall`}
           sandbox="allow-scripts allow-popups allow-forms allow-same-origin"
@@ -62,4 +65,4 @@ class _IFramePage extends Component<Props> {
   }
 }
 
-export const IFramePage = withStyles(styles)(_IFramePage)
+export const IFramePage = withLogin(withStyles(styles)(_IFramePage))

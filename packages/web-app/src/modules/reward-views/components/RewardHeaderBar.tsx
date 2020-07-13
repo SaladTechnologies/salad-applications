@@ -1,11 +1,11 @@
+import classnames from 'classnames'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
-import classnames from 'classnames'
-import { Reward } from '../../reward/models'
 import { Button } from '../../../components'
-import { IconArrowLeft } from './assets'
+import { SaladTheme } from '../../../SaladTheme'
 import { AddToCartButton } from '../../chopping-cart-views/components'
+import { Reward } from '../../reward/models'
+import { IconArrowLeft } from './assets'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -13,17 +13,23 @@ const styles = (theme: SaladTheme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     padding: '6px 20px 6px 12px',
-    borderBottom: `1px solid ${theme.green}`,
+    borderBottom: `1px solid ${theme.lightGreen}`,
     color: theme.lightGreen,
     height: 87,
   },
-  backButton: {
-    width: 15,
-    padding: 20,
+  nameContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center',
     cursor: 'pointer',
     '&:hover': {
       opacity: 0.5,
     },
+  },
+  backButton: {
+    width: 15,
+    padding: 10,
   },
   nameText: {
     fontFamily: theme.fontGroteskLight09,
@@ -62,6 +68,9 @@ const styles = (theme: SaladTheme) => ({
   stockLabel: {
     padding: '2px 10px',
     fontSize: 8,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   outOfStockLabel: {
     color: theme.lightGreen,
@@ -110,10 +119,13 @@ class _RewardHeaderBar extends Component<Props> {
 
     return (
       <div className={classnames(classes.container)}>
-        <div className={classes.backButton} onClick={this.handleBack}>
-          <IconArrowLeft />
+        <div className={classes.nameContainer} onClick={this.handleBack}>
+          <div className={classes.backButton}>
+            <IconArrowLeft />
+          </div>
+          <div className={classes.nameText}>{reward && reward.name ? reward.name : ''}</div>
         </div>
-        <div className={classes.nameText}>{reward && reward.name ? reward.name : 'Unknown'}</div>
+
         {!promoGame && (
           <>
             <div className={classes.priceContainer}>

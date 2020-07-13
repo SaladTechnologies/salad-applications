@@ -5,23 +5,29 @@ import { RewardSliderButton } from './RewardSliderButton'
 import Carousel from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
 import { IconArrowRight } from './assets'
+import { SmartLink } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: { color: theme.lightGreen, paddingBottom: 64 },
   titleContainer: {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'baseline',
     fontFamily: theme.fontGroteskBook19,
     fontSize: 20,
-    padding: '12px 18px',
+    padding: '12px 6px',
     textTransform: 'capitalize',
+    cursor: 'pointer',
+  },
+  titleText: {
+    '&:hover': {
+      opacity: 0.8,
+    },
   },
   viewMoreText: {
-    paddingLeft: 15,
+    paddingLeft: 10,
     fontSize: 12,
     display: 'flex',
     alignItems: 'center',
-    cursor: 'pointer',
     '&:hover': {
       opacity: 0.8,
     },
@@ -33,22 +39,16 @@ const styles = (theme: SaladTheme) => ({
 })
 
 export const rewardItemResponsive = {
-  superLargeDesktop: {
-    breakpoint: { max: 4000, min: 2300 },
-    items: 8,
-    slidesToSlide: 8,
-    partialVisibilityGutter: 20,
-  },
   desktop: {
     breakpoint: { max: 2300, min: 1300 },
-    items: 6,
-    slidesToSlide: 6,
+    items: 7,
+    slidesToSlide: 7,
     partialVisibilityGutter: 20,
   },
   tablet: {
     breakpoint: { max: 1300, min: 900 },
-    items: 4,
-    slidesToSlide: 4,
+    items: 5,
+    slidesToSlide: 5,
     partialVisibilityGutter: 20,
   },
   tabletSmall: {
@@ -67,7 +67,7 @@ export const rewardItemResponsive = {
 
 interface Props extends WithStyles<typeof styles> {
   title?: string
-  onViewMore?: (title?: string) => void
+  viewAllRoute?: string
 }
 
 interface State {
@@ -109,28 +109,24 @@ class _RewardSlider extends Component<Props, State> {
     })
   }
 
-  handleViewMore = () => {
-    const { title, onViewMore } = this.props
-
-    onViewMore?.(title)
-  }
-
   render() {
-    const { title, classes, children } = this.props
+    const { title, viewAllRoute, classes, children } = this.props
     const { isHovering, isHoveringRewards } = this.state
     return (
       <div className={classes.container} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
-        <div className={classes.titleContainer}>
-          {title}
-          {isHovering && (
-            <div className={classes.viewMoreText} onClick={this.handleViewMore}>
-              Explore All
-              <div className={classes.arrow}>
-                <IconArrowRight />
+        <SmartLink to={viewAllRoute}>
+          <div className={classes.titleContainer}>
+            <div className={classes.titleText}>{title}</div>
+            {isHovering && (
+              <div className={classes.viewMoreText}>
+                Explore All
+                <div className={classes.arrow}>
+                  <IconArrowRight />
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}{' '}
+          </div>
+        </SmartLink>
         <div onMouseEnter={this.handleMouseEnterRewards} onMouseLeave={this.handleMouseLeaveRewards}>
           <Carousel
             keyBoardControl={false}

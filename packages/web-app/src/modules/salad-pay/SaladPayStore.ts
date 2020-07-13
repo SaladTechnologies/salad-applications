@@ -1,7 +1,7 @@
-import { action, observable, computed } from 'mobx'
-import { SaladPaymentRequestOptions } from './models'
+import { action, computed, observable } from 'mobx'
 import { getStore } from '../../Store'
 import { SaladAppPaymentRequest } from './handlers'
+import { SaladPaymentRequestOptions } from './models'
 
 let sharedStore: SaladPayStore
 
@@ -56,9 +56,10 @@ export class SaladPayStore {
   @action
   abort = () => {
     console.log('Aborting request')
-    this.hide()
+
     this.processing = false
     if (this.currentRequest) {
+      this.hide()
       let req = this.currentRequest
 
       this.currentRequest = undefined

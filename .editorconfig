@@ -1,0 +1,63 @@
+root = true
+
+[*]
+charset = utf-8
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+##### Documents #####
+
+[*.code-workspace]
+indent_size = 2
+
+[*.{css,less,sass,scss,styl}]
+indent_size = 2
+max_line_length = 120
+
+[*.{html,htm,xhtml}]
+indent_size = 2
+max_line_length = 120
+
+[*.{js,jsx,ts,tsx}]
+indent_size = 2
+max_line_length = 120
+
+[*.json]
+indent_size = 2
+max_line_length = 120
+
+[*.md]
+indent_size = 2
+
+[*.svg]
+indent_size = 2
+max_line_length = 120
+
+[*.{xml,xslt}]
+indent_size = 2
+max_line_length = 120
+
+[*.{yml,yaml}]
+indent_size = 2
+max_line_length = 120
+
+[.nvmrc]
+insert_final_newline = false
+
+##### Shell Scripts #####
+
+[*.{bat,cmd}]
+end_of_line = crlf
+indent_size = 2
+max_line_length = 120
+
+[*.ps1]
+end_of_line = lf
+max_line_length = 120
+
+[*.sh]
+end_of_line = lf
+indent_size = 2
+max_line_length = 120

@@ -1,16 +1,17 @@
+import classNames from 'classnames'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import classNames from 'classnames'
+import { SaladTheme } from '../SaladTheme'
 
-const styles = ({
+const styles = (theme: SaladTheme) => ({
   container: {
-    position: 'absolute',
+    position: 'fixed',
     top: 0,
     bottom: 0,
     left: 0,
     right: 0,
-    zIndex: 5000,
-    backgroundColor: 'rgba(0, 0, 0, .9)',
+    zIndex: 90000,
+    backgroundColor: theme.darkBlue,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

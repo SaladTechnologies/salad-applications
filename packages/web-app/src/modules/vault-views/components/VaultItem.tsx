@@ -4,12 +4,12 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 
-import { P, Divider, Username, ExternalLink } from '../../../components'
+import { P, Divider, Username, SmartLink } from '../../../components'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClipboard } from '@fortawesome/free-solid-svg-icons'
 
-const styles = ({
+const styles = {
   container: {
     userSelect: 'none',
   },
@@ -26,7 +26,7 @@ const styles = ({
       opacity: 0.75,
     },
   },
-})
+}
 
 interface Props extends WithStyles<typeof styles> {
   id?: string
@@ -41,14 +41,12 @@ class _VaultItem extends Component<Props> {
     const { id, name, price, timestamp, code, classes } = this.props
     return (
       <div key={id} className={classnames(classes.container)}>
-        <Username blue>{name}</Username>
+        <Username>{name}</Username>
         <div className={classes.rightContent}>
-          <Username blue className={classes.rightText}>
-            ${price?.toFixed(2)}
-          </Username>
-          <Username blue className={classes.rightText}>
-            {timestamp?.toLocaleDateString()}
-          </Username>
+          {/* TODO: Add custom classname */}
+          <Username>${price?.toFixed(2)}</Username>
+          {/* TODO: Add custom classname */}
+          <Username>{timestamp?.toLocaleDateString()}</Username>
         </div>
         {code && !code.startsWith('https') && (
           <P>
@@ -60,7 +58,7 @@ class _VaultItem extends Component<Props> {
         )}
         {code && code.startsWith('https') && (
           <P>
-            <ExternalLink path={code}>Click here to claim</ExternalLink>
+            <SmartLink to={code}>Click here to claim</SmartLink>
           </P>
         )}
         <Divider />
