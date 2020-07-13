@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
 import { P, Username } from '../../../components'
+import { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -85,9 +85,10 @@ class _LoginPanel extends Component<Props> {
             <div className={classes.button} onClick={this.handleLogin}>
               Login
             </div>
-            <div className={classes.button} onClick={this.handleRegister}>
+            {/* TODO: Add back in once we can open directly to the register page */}
+            {/* <div className={classes.button} onClick={this.handleRegister}>
               Register
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
