@@ -23,14 +23,25 @@ export class VersionStore {
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     //Check to see if this is part of an automatic app refresh where we need to start the miner again
-    const startMiner = getItem(VERSION_RELOAD_MINING_STATUS)
+    let startMinerValue = getItem(VERSION_RELOAD_MINING_STATUS)
+
+    let startMiner = startMinerValue ? startMinerValue.toLowerCase() === 'true' : false
 
     if (startMiner) {
-      //Resumes mining
-      store.saladBowl.start(StartReason.Refresh)
+      autorun(() => {
+        if (!store.auth.isAuthenticated) return
 
-      //Removes the flag from local storage
-      removeItem(VERSION_RELOAD_MINING_STATUS)
+        if (!startMiner) return
+
+        if (!store.saladBowl.canRun) return
+
+        //Resumes mining
+        store.saladBowl.start(StartReason.Refresh)
+
+        //Removes the flag from local storage
+        removeItem(VERSION_RELOAD_MINING_STATUS)
+        startMiner = false
+      })
     }
 
     autorun(() => {
@@ -88,10 +99,13 @@ export class VersionStore {
     try {
       let response = yield this.axios.get<DesktopVersionResource>(`/version.txt`, { baseURL: window.location.origin })
 
-      let currentVersion = response.data
+      const currentVersion = response.data.trim()
+      const localVersion = config.appBuild.trim() + 'abc'
 
-      if (currentVersion !== config.appBuild) {
-        console.error('Different version')
+      if (currentVersion !== localVersion) {
+        console.error('Different version found. Restarting...')
+        console.log('Current: ' + currentVersion)
+        console.log('Local: ' + localVersion)
 
         let mining = this.store.saladBowl.isRunning
 
