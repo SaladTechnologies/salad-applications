@@ -100,7 +100,7 @@ export class VersionStore {
       let response = yield this.axios.get<DesktopVersionResource>(`/version.txt`, { baseURL: window.location.origin })
 
       const currentVersion = response.data.trim()
-      const localVersion = config.appBuild.trim() + 'abc'
+      const localVersion = config.appBuild.trim()
 
       if (currentVersion !== localVersion) {
         console.error('Different version found. Restarting...')
