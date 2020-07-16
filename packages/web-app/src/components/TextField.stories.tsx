@@ -9,8 +9,8 @@ storiesOf('Components/Text Field', module)
         <div style={{ padding: '1rem' }}>
           <TextField />
         </div>
-        <div style={{ backgroundColor: '#B2D530', padding: '1rem' }}>
-          <TextField dark />
+        <div style={{ padding: '1rem' }}>
+          <TextField />
         </div>
       </div>
     )
@@ -21,8 +21,8 @@ storiesOf('Components/Text Field', module)
         <div style={{ padding: '1rem' }}>
           <TextField placeholder="Hello world" />
         </div>
-        <div style={{ backgroundColor: '#B2D530', padding: '1rem' }}>
-          <TextField placeholder="Hello world" dark />
+        <div style={{ padding: '1rem' }}>
+          <TextField placeholder="Hello world" />
         </div>
       </div>
     )
@@ -33,8 +33,8 @@ storiesOf('Components/Text Field', module)
         <div style={{ padding: '1rem' }}>
           <TextField errorText="Required field" />
         </div>
-        <div style={{ backgroundColor: '#B2D530', padding: '1rem' }}>
-          <TextField errorText="Required field" dark />
+        <div style={{ padding: '1rem' }}>
+          <TextField errorText="Required field" />
         </div>
       </div>
     )

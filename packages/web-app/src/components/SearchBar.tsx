@@ -8,24 +8,32 @@ import { ChangeEvent } from 'react'
 
 const styles = (theme: SaladTheme) => ({
   container: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    zIndex: 100,
     display: 'inline-flex',
-    // borderBottom: `2px solid ${theme.lightGreen}`,
-    paddingBottom: 4,
+    padding: '10px 10px 10px 5px',
     flexWrap: 'nowrap',
     alignItems: 'baseline',
     color: theme.lightGreen,
+    backgroundColor: `${theme.darkBlue}CC`,
   },
   icon: {
     margin: 5,
+    height: 10,
   },
   textInput: {
     fontFamily: theme.fontGroteskLight25,
-    fontSize: 10,
+    fontSize: 12,
     background: 'transparent',
     border: 'none',
     outline: 'none',
     letterSpacing: 1,
     color: theme.lightGreen,
+    paddingBottom: 5,
+    borderBottom: `1px solid ${theme.lightGreen}`,
+    opacity: 1,
     width: 200, //This is used to drive the width of the entire search bar
     '&::placeholder': {
       opacity: 0.5,

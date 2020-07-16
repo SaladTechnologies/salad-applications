@@ -1,35 +1,60 @@
-import React, { Component } from 'react'
-
-// Packages
+import React, { Component, MouseEvent } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import classnames from 'classnames'
+import { SaladTheme } from '../SaladTheme'
 
-const styles = {
-  overlayContainer: {
-    backgroundColor: 'rgba(10, 33, 51, 0.9)',
-    backdropFilter: 'blur(8.57952px)',
-    display: 'flex',
-    position: 'fixed',
-    top: '33px', //Allows the menu bar to still be shown
-    right: 0,
+const styles = (theme: SaladTheme) => ({
+  overlay: {
+    backdropFilter: 'blur(25px)',
+    backgroundColor: theme.darkBlue,
+    backgroundBlendMode: 'multiply',
     bottom: 0,
+    display: 'flex',
     left: 0,
-    userSelect: 'none',
-    zIndex: 5000,
+    opacity: '75%',
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    // TODO: Remove z-indexes!!!
+    zIndex: 9999999998,
   },
+})
+
+export interface OverlayProps extends WithStyles<typeof styles> {
+  onCloseRequested?: () => void
 }
 
-interface Props extends WithStyles<typeof styles> {
-  onCloseClicked?: () => void
-  onCloseKeyPress?: (e: any) => void
-}
+export const Overlay = withStyles(styles)(
+  class Overlay extends Component<OverlayProps> {
+    componentDidMount() {
+      document.addEventListener('keydown', this.onKeyDown)
+    }
 
-class _Overlay extends Component<Props> {
-  render() {
-    const { children, classes } = this.props
+    componentWillUnmount() {
+      document.removeEventListener('keydown', this.onKeyDown)
+    }
 
-    return <div className={classnames(classes.overlayContainer)}>{children}</div>
-  }
-}
+    onClick = (event: MouseEvent<HTMLDivElement>) => {
+      if (event.currentTarget !== event.target) {
+        // Ignore clicks on descendent elements.
+        return
+      }
 
-export const Overlay = withStyles(styles)(_Overlay)
+      this.props.onCloseRequested?.()
+    }
+
+    onKeyDown = (event: KeyboardEvent) => {
+      // Detect "Escape" key presses.
+      if (event.keyCode === 27) {
+        this.props.onCloseRequested?.()
+      }
+    }
+
+    render() {
+      return (
+        <div className={this.props.classes.overlay} onClick={this.onClick}>
+          {this.props.children}
+        </div>
+      )
+    }
+  },
+)

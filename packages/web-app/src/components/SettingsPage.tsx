@@ -1,20 +1,11 @@
-import React, { Component } from 'react'
-
-// Styles
-import { styles } from './SettingsPage.styles'
-
-// UI
-import { LinkListUnstyled, MenuTitle, Button, Divider } from '.'
-
-// Packages
-import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
+import React, { Component } from 'react'
+import withStyles, { WithStyles } from 'react-jss'
 import { Route } from 'react-router'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes } from '@fortawesome/free-solid-svg-icons'
-
-// Components
-import { Overlay } from '.'
+import { Button, Divider, Head, LinkListUnstyled, MenuTitle } from '.'
+import { DesktopRoute } from '../DesktopRoute'
+import { IconArrowLeft } from '../modules/reward-views/components/assets'
+import { styles } from './SettingsPage.styles'
 
 export interface MenuItem {
   url: string
@@ -24,13 +15,21 @@ export interface MenuItem {
   divider?: boolean
   /** Is the item clickable */
   enabled?: boolean
+  inset?: boolean
+  desktopOnly?: boolean
+}
+
+export interface MenuButton {
+  text: string
+  onClick: () => void
 }
 
 interface Props extends WithStyles<typeof styles> {
-  onCloseClicked?: () => void
-  onCloseKeyPress?: () => void
+  pageTitle?: string
+  onClose?: () => void
   onSendBug?: () => void
   menuItems?: MenuItem[]
+  menuButtons?: MenuButton[]
   appVersion?: string
   appBuild?: string
   onSendLog?: () => void
@@ -68,15 +67,15 @@ class _Settings extends Component<Props> {
   }
 
   handleCloseClicked = () => {
-    const { onCloseClicked } = this.props
+    const { onClose } = this.props
 
-    if (onCloseClicked) onCloseClicked()
+    onClose?.()
   }
 
   handleCloseKeyPress = (e: any) => {
     if (e.key === 'Escape') {
-      const { onCloseKeyPress } = this.props
-      if (onCloseKeyPress) onCloseKeyPress()
+      const { onClose } = this.props
+      onClose?.()
     }
   }
 
@@ -92,15 +91,30 @@ class _Settings extends Component<Props> {
       appBuild,
       classes,
       menuItems,
+      menuButtons,
       latestDesktop,
       onSendBug,
       onSendLog,
       onDownloadLatestDesktop,
+      onClose,
+      pageTitle,
     } = this.props
 
     return (
-      <Overlay>
+      <div className={classes.container}>
+        <Head title={pageTitle} />
         <div className={classnames(classes.menu, classes.menuItems)}>
+          {onClose && (
+            <>
+              <div className={classes.menuItem} onClick={this.handleCloseClicked}>
+                <div className={classes.backButton}>
+                  <IconArrowLeft />
+                </div>
+                Back
+              </div>
+              <Divider />
+            </>
+          )}
           {menuItems && <LinkListUnstyled list={menuItems} />}
 
           <div className={classes.buttonContainer}>
@@ -108,6 +122,7 @@ class _Settings extends Component<Props> {
             {onSendLog && (
               <Button onClick={this.handleLogClicked}>{this.state.buttonToggle ? 'Logs sent' : 'Send logs'}</Button>
             )}
+            {menuButtons && menuButtons.map((x) => <Button onClick={x.onClick}>{x.text}</Button>)}
           </div>
           <div className={classes.versionContainer}>
             {appVersion !== undefined && (
@@ -120,21 +135,21 @@ class _Settings extends Component<Props> {
           {!latestDesktop && onDownloadLatestDesktop && (
             <div className={classes.updateSalad}>
               <Divider />
-              <Button onClick={this.handleDownloadLatest}>Download Latest Version</Button>
+              <Button onClick={this.handleDownloadLatest}>Get Latest Version</Button>
             </div>
           )}
         </div>
         <div className={classnames(classes.settings)}>
           {/* Adds each path */}
-          {menuItems?.map(x => (
-            <Route path={x.url} component={x.component} />
-          ))}
-
-          <div onClick={this.handleCloseClicked}>
-            <FontAwesomeIcon className={classes.closeButton} icon={faTimes} />
-          </div>
+          {menuItems?.map((x) =>
+            x.desktopOnly ? (
+              <DesktopRoute key={x.url} exact path={x.url} component={x.component} />
+            ) : (
+              <Route key={x.url} exact path={x.url} component={x.component} />
+            ),
+          )}
         </div>
-      </Overlay>
+      </div>
     )
   }
 }

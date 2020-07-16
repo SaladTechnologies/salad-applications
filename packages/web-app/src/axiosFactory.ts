@@ -1,7 +1,8 @@
-import axios, { AxiosInstance, AxiosError } from 'axios'
-import { Config } from './config'
+import axios, { AxiosError, AxiosInstance } from 'axios'
 import axiosRetry, { exponentialDelay } from 'axios-retry'
 import isRetryAllowed from 'is-retry-allowed'
+import { config } from './config'
+import { AuthStore } from './modules/auth'
 
 /**
  * The list of safe HTTP request methods. HTTP requests using these methods may be retried.
@@ -24,13 +25,39 @@ const shouldRetryDownload = (error: any): boolean => {
         (axiosError.response.status >= 500 && axiosError.response.status <= 599))
     )
   }
-
   return isRetryAllowed(error)
+}
+
+/**
+ * Adds an auth interceptor that forces uses to re-login if we get a 401
+ * @param httpClient
+ * @param authStore
+ */
+export const addAuthInterceptor = (httpClient: AxiosInstance, authStore: AuthStore) => {
+  httpClient.interceptors.response.use(
+    (response) => {
+      return response
+    },
+    async (error) => {
+      if (error.isAxiosError === true) {
+        const axiosError: AxiosError<any> = error
+        if (axiosError.response && axiosError.response.status === 401) {
+          if (!authStore.isAuthenticationPending) {
+            try {
+              await authStore.forceLogin()
+            } catch {}
+          }
+        }
+      }
+
+      throw error
+    },
+  )
 }
 
 export const createClient = (): AxiosInstance => {
   let httpClient = axios.create({
-    baseURL: Config.baseAPIUrl,
+    baseURL: config.apiBaseUrl,
   })
 
   httpClient.interceptors.response.use(
@@ -41,9 +68,7 @@ export const createClient = (): AxiosInstance => {
     },
     (error) => {
       let a = onError(error)
-      // Any status codes that falls outside the range of 2xx cause this function to trigger
-      // Do something with response error
-      // return Promise.reject(a)
+
       throw a
     },
   )
@@ -88,7 +113,7 @@ const getMessage = (type: string): string => {
   }
 }
 
-export class SaladError extends Error {
+class SaladError extends Error {
   // You have to extend Error, set the __proto__ to Error, and use
   // Object.setPrototypeOf in order to have a proper custom error type in JS.
   // Because JS/TS are dumb sometimes, and all three are needed to make this

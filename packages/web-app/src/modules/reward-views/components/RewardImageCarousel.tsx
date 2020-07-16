@@ -1,32 +1,29 @@
-import React, { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
-import { Reward } from '../../reward/models'
-import Carousel from 'react-multi-carousel'
+import React, { Component } from 'react'
 import Img from 'react-image'
+import withStyles, { WithStyles } from 'react-jss'
+import Carousel from 'react-multi-carousel'
 import { Divider } from '../../../components'
+import { Reward } from '../../reward/models'
+import { RewardImageDot } from './RewardImageDot'
 
-const styles = ({
+const styles = {
   container: {
     paddingTop: 18,
   },
-  imageContainer: {
-    padding: '0px 10px',
-  },
-  singleImage: {
-    paddingTop: 18,
-    height: 'auto',
-    width: '25%',
-    display: 'block',
-    marginLeft: 'auto',
-    marginRight: 'auto',
+  carouselContainer: {
+    position: 'relative',
+    paddingBottom: 30,
   },
   image: {
-    height: 'auto',
-    width: '100%',
+    display: 'block',
+    height: '100%',
+    margin: 'auto',
+    width: 'auto',
+    maxHeight: '50vh',
     border: '1px solid rgba(255, 255, 255, 0.10)',
   },
-})
+}
 
 interface Props extends WithStyles<typeof styles> {
   reward?: Reward
@@ -39,36 +36,64 @@ const responsive = {
   },
 }
 
+const renderImageComponent = (props: Props) => {
+  const { reward, classes } = props
+
+  if (!reward) {
+    return null
+  }
+
+  //Other images as a default
+  if (!reward.images || reward.images.length === 0) {
+    if (reward.heroImage) {
+      return <Img className={classes.image} src={reward.heroImage} alt="" />
+    } else if (reward.coverImage) {
+      return <Img className={classes.image} src={reward.coverImage} alt="" />
+    } else if (reward.image) {
+      return <Img className={classes.image} src={reward.image} alt="" />
+    } else {
+      return null
+    }
+  }
+
+  //Single reward image
+  if (reward.images && reward.images.length === 1) {
+    return <Img className={classes.image} src={reward.images[0]} alt="" />
+  }
+
+  //Collection of images
+  return (
+    <div className={classes.carouselContainer}>
+      <Carousel
+        keyBoardControl={false}
+        responsive={responsive}
+        arrows
+        showDots
+        customDot={<RewardImageDot />}
+        renderDotsOutside
+      >
+        {reward?.images?.map((x) => (
+          <Img key={x} className={classes.image} src={x} alt="" />
+        ))}
+      </Carousel>
+    </div>
+  )
+}
+
 class _RewardImageCarousel extends Component<Props> {
   render() {
     const { reward, classes } = this.props
 
-    if (!reward) {
-      return null
-    }
+    const image = renderImageComponent(this.props)
 
-    if (!reward.images || reward.images.length === 0) {
-      if (reward.heroImage) {
-        return <Img className={classes.singleImage} src={reward.heroImage} alt="" />
-      } else if (reward.coverImage) {
-        return <Img className={classes.singleImage} src={reward.coverImage} alt="" />
-      } else if (reward.image) {
-        return <Img className={classes.singleImage} src={reward.image} alt="" />
-      } else {
-        return null
-      }
+    if (!reward || !image) {
+      return null
     }
 
     return (
       <div className={classnames(classes.container)}>
-        <Carousel keyBoardControl={false} responsive={responsive} autoPlay arrows centerMode infinite>
-          {reward?.images?.map(x => (
-            <div className={classes.imageContainer}>
-              <Img className={classes.image} src={x} alt="" />
-            </div>
-          ))}
-        </Carousel>
-        <Divider />
+        {image}
+        {image && <Divider />}
       </div>
     )
   }

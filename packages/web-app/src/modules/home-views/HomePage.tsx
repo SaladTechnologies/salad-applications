@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Route, Switch } from 'react-router'
-import { MainStorefrontContainer, RewardSearchResultContainer, RewardBrowseCategoryContainer } from '../reward-views'
-import { getStore } from '../../Store'
-import { ProfileMenuItemContainer } from '../profile-views'
-import { StartButtonContainer } from '../machine-views'
-import { MainTitlebarContainer } from './MainTitlebarContainer'
-import { NotificationBannerContainer } from './NotificationBannerContainer'
 import { SaladTheme } from '../../SaladTheme'
+import {
+  MainStorefrontContainer,
+  RewardBrowseCategoryContainer,
+  RewardSearchBarContainer,
+  RewardSearchResultContainer,
+} from '../reward-views'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -43,33 +43,17 @@ const styles = (theme: SaladTheme) => ({
 })
 
 class _HomePage extends Component<WithStyles<typeof styles>> {
-  store = getStore()
-
-  componentWillUnmount() {
-    this.store.refresh.stop()
-  }
-
   render() {
     const { classes } = this.props
     return (
       <div className={classes.container}>
-        <MainTitlebarContainer />
         <div className={classes.appContainer}>
-          <div className={classes.header}>
-            <ProfileMenuItemContainer />
-            <div style={{ marginLeft: 'auto', marginTop: '-1px' }}>
-              <NotificationBannerContainer />
-            </div>
-            <div style={{ marginLeft: 'auto', marginTop: '-1px' }}>
-              <StartButtonContainer />
-            </div>
-          </div>
-
+          <RewardSearchBarContainer />
           <div className={classes.main}>
             <Switch>
+              <Route exact path="/" component={MainStorefrontContainer} />
               <Route exact path="/search" component={RewardSearchResultContainer} />
               <Route exact path="/browse/category/:category" component={RewardBrowseCategoryContainer} />
-              <Route path="/" component={MainStorefrontContainer} />
             </Switch>
           </div>
         </div>

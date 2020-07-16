@@ -12,7 +12,7 @@ export class ExperienceStore {
   public levels: Level[] = []
 
   @computed get currentLevel(): Level {
-    let matchingLevel = this.levels.find(l => {
+    let matchingLevel = this.levels.find((l) => {
       return this.currentXp > l.minXp && this.currentXp <= l.maxXp
     })
 
@@ -39,7 +39,7 @@ export class ExperienceStore {
   }
 
   @action loadInitialLevels() {
-    this.levels = defaultLevels
+    this.levels = defaultLevels()
   }
 
   @action
@@ -48,9 +48,9 @@ export class ExperienceStore {
   }
 
   @action.bound
-  refreshXp = flow(function*(this: ExperienceStore) {
+  refreshXp = flow(function* (this: ExperienceStore) {
     try {
-      let res = yield this.axios.get('/profile/xp')
+      let res = yield this.axios.get('/api/v1/profile/xp')
 
       let newXp = res.data.lifetimeXp
 

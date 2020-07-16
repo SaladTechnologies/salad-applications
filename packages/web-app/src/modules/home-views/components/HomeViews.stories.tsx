@@ -1,9 +1,8 @@
-import React from 'react'
 import { storiesOf } from '@storybook/react'
-import { Titlebar } from './Titlebar'
-import { OfflineModal } from './OfflineModal'
-import { NotificationBanner } from './NotificationBanner'
+import React from 'react'
 import { BannerInfo } from '../../home/models/BannerInfo'
+import { NotificationBanner } from './NotificationBanner'
+import { Titlebar } from './Titlebar'
 
 storiesOf('Modules/Home', module)
   .add('Title Bar', () => {
@@ -53,7 +52,4 @@ storiesOf('Modules/Home', module)
         </div>
       </>
     )
-  })
-  .add('Offline Modal', () => {
-    return <OfflineModal />
   })

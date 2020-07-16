@@ -22,5 +22,5 @@ const stories = [
 ]
 
 // @ts-ignore
-addStories(VaultList, stories, storiesOf('Modules|Vault/Vault List', module), '#B2D530')
+addStories(VaultList, stories, storiesOf('Modules|Vault/Vault List', module))
 // storiesOf('Components/ToggleSwitch', module).addStories(ToggleSwitch,stories)

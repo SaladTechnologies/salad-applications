@@ -1,23 +1,25 @@
+import { MenuItem, SettingsPage } from '../../components'
+import { config } from '../../config'
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
-import { SettingsPage, MenuItem } from '../../components'
-import { Config } from '../../config'
 import { WindowsSettingsContainer } from './windows-settings-views'
 
 const mapStoreToProps = (store: RootStore): any => {
   const menuItems: MenuItem[] = [
-    { url: '/settings/windows-settings', text: 'Windows Settings', component: WindowsSettingsContainer },
+    {
+      url: '/settings/windows-settings',
+      text: 'Windows Settings',
+      component: WindowsSettingsContainer,
+      desktopOnly: true,
+    },
   ]
 
   return {
-    onCloseClicked: () => store.ui.hideModal(),
-    onCloseKeyPress: () => store.ui.hideModal(),
-    onListItemClick: (url: string) => store.routing.push(url),
+    onClose: () => store.ui.hideModal(),
     onSendBug: store.ui.openNewBug,
     menuItems: menuItems,
     appVersion: store.native.desktopVersion,
-    appBuild: Config.appBuild,
-    onSendLog: store.native.sendLog,
+    appBuild: config.appBuild,
     latestDesktop: store.version.onLatestDesktop,
     onDownloadLatestDesktop: store.version.downloadLatestDesktop,
   }

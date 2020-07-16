@@ -1,11 +1,9 @@
-import { action, observable, computed, runInAction, flow } from 'mobx'
-import { RootStore } from '../../Store'
+import { action, computed, observable, toJS } from 'mobx'
 import * as Storage from '../../Storage'
-import { MachineInfo } from './models'
-import { AxiosInstance } from 'axios'
-
-import { Machine } from './models/Machine'
+import { RootStore } from '../../Store'
+// import { Machine } from './models/Machine'
 import { Profile } from '../profile/models'
+import { MachineInfo } from './models'
 
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
@@ -13,7 +11,7 @@ const minimize = 'minimize-window'
 const maximize = 'maximize-window'
 const close = 'close-window'
 const hide = 'hide-window'
-const sendLog = 'send-log'
+// const sendLog = 'send-log'
 const getDesktopVersion = 'get-desktop-version'
 const setDesktopVersion = 'set-desktop-version'
 const enableAutoLaunch = 'enable-auto-launch'
@@ -21,7 +19,6 @@ const disableAutoLaunch = 'disable-auto-launch'
 const login = 'login'
 const logout = 'logout'
 
-const compatibilityKey = 'SKIPPED_COMPAT_CHECK'
 const AUTO_LAUNCH = 'AUTO_LAUNCH'
 const MINIMIZE_TO_TRAY = 'MINIMIZE_TO_TRAY'
 
@@ -39,26 +36,13 @@ declare global {
 export class NativeStore {
   private callbacks = new Map<string, Function>()
 
-  private failedCount: number = 0
+  private machineInfoRetry?: NodeJS.Timeout
 
-  //#region Observables
   @observable
   public desktopVersion: string = ''
 
   @observable
-  public isOnline: boolean = true
-
-  @observable
-  public skippedCompatCheck: boolean = false
-
-  @observable
   public loadingMachineInfo: boolean = false
-
-  @observable
-  public validOperatingSystem: boolean = false
-
-  @observable
-  public validGPUs: boolean = false
 
   @observable
   public machineInfo?: MachineInfo
@@ -69,7 +53,6 @@ export class NativeStore {
   @observable
   public minimizeToTray: boolean = true
 
-  //#endregion
   @computed
   get canMinimizeToTray(): boolean {
     return this.isNative && this.apiVersion >= 8
@@ -91,27 +74,12 @@ export class NativeStore {
   }
 
   @computed
-  get isCompatible(): boolean {
-    return this.isNative && this.validOperatingSystem && this.validGPUs
-  }
-
-  @computed
   get gpuNames(): string[] | undefined {
     if (this.machineInfo === undefined) return undefined
     return this.machineInfo.graphics.controllers.map((x) => x.model)
   }
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
-    //Starts the timer to check for online/offline status
-    setInterval(this.checkOnlineStatus, 5000)
-    this.checkOnlineStatus()
-
-    runInAction(() => {
-      this.skippedCompatCheck = Storage.getOrSetDefault(compatibilityKey, 'false') === 'true'
-    })
-
-    console.log('Initial compat check: ' + this.skippedCompatCheck)
-
+  constructor(private readonly store: RootStore) {
     if (this.isNative) {
       window.salad.onNative = this.onNative
 
@@ -126,6 +94,9 @@ export class NativeStore {
       })
 
       this.send(getDesktopVersion)
+      this.loadMachineInfo()
+
+      this.machineInfoRetry = setInterval(this.loadMachineInfo, 1000)
     }
   }
 
@@ -151,35 +122,10 @@ export class NativeStore {
   /** Sends a message to the native code */
   public send = (type: string, payload?: any) => {
     if (!this.isNative) {
-      console.warn(`Unable to send ${type}. Not running in electron env.`)
       return
     }
-    console.log(`Sending ${type} to native with ${payload}`)
-    window.salad.dispatch(type, payload)
+    window.salad.dispatch(type, payload && toJS(payload))
   }
-
-  @action.bound
-  private checkOnlineStatus = flow(function* (this: NativeStore) {
-    var prevOnline = this.isOnline
-    try {
-      yield this.axios.get('online')
-      this.failedCount = 0
-      this.isOnline = true
-    } catch (err) {
-      //TODO: Remove these checks once we have an unauthenticated API to check
-      if (err.response === undefined || err.response.status !== 401) {
-        console.log(err)
-        this.failedCount += 1
-
-        if (this.failedCount >= 3) {
-          this.isOnline = false
-        }
-      }
-    }
-    if (this.isOnline !== prevOnline) {
-      this.store.routing.replace('/')
-    }
-  })
 
   @action
   setDesktopVersion = (version: string) => {
@@ -192,15 +138,20 @@ export class NativeStore {
   loadMachineInfo = () => {
     if (this.machineInfo) {
       console.log('Machine info already loaded. Skipping...')
+      if (this.machineInfoRetry) {
+        clearInterval(this.machineInfoRetry)
+        this.machineInfoRetry = undefined
+      }
       return
     }
+    console.log('Getting machine info')
     this.loadingMachineInfo = true
     this.send(getMachineInfo)
   }
 
   @action
   sendLog = () => {
-    this.send(sendLog, this.store.token.machineId)
+    // this.send(sendLog, this.store.token.machineId)
   }
 
   @action
@@ -222,60 +173,21 @@ export class NativeStore {
     }
   }
 
-  @action.bound
-  registerMachine = flow(function* (this: NativeStore) {
-    if (!this.machineInfo) {
-      console.warn('No valid machine info found. Unable to register.')
-      return
-    }
-
-    if (!this.store.token.machineId) {
-      console.warn('No valid machine id found. Unable to register')
-      return
-    }
-
-    try {
-      console.log('Registering machine with salad')
-      let res: any = yield this.axios.post(`machines/${this.store.token.machineId}/data`, this.machineInfo)
-      let machine: Machine = res.data
-
-      this.validGPUs = machine.validGpus
-      this.validOperatingSystem = machine.validOs
-      this.store.machine.setCurrentMachine(machine)
-      this.store.analytics.trackMachine(machine)
-      this.store.routing.replace('/')
-    } catch (err) {
-      this.store.analytics.captureException(new Error(`register-machine error: ${err}`))
-      this.validGPUs = false
-      throw err
-    }
-  })
-
   @action
   setMachineInfo = (info: MachineInfo) => {
     console.log('Received machine info')
     if (this.machineInfo) {
       console.log('Already received machine info. Skipping...')
+
+      if (this.machineInfoRetry) {
+        clearInterval(this.machineInfoRetry)
+        this.machineInfoRetry = undefined
+      }
       return
     }
 
     this.machineInfo = info
-
-    this.skippedCompatCheck = this.validOperatingSystem && this.validGPUs
     this.loadingMachineInfo = false
-
-    this.store.routing.replace('/')
-  }
-
-  @action
-  skipCompatibility = () => {
-    console.log('Updating compatibility check')
-
-    this.skippedCompatCheck = true
-
-    Storage.setItem(compatibilityKey, 'true')
-
-    this.store.routing.replace('/')
   }
 
   @action

@@ -1,25 +1,33 @@
-import { observable, action, flow, computed } from 'mobx'
-import { PluginInfo } from './models/PluginInfo'
-import { StatusMessage } from './models/StatusMessage'
-import { PluginStatus } from './models/PluginStatus'
-import { AxiosInstance, AxiosError } from 'axios'
-import { Config } from '../../config'
+import { action, computed, flow, observable, runInAction } from 'mobx'
 import { RootStore } from '../../Store'
 import { MiningStatus } from '../machine/models'
-import { ErrorMessage } from './models/ErrorMessage'
-import { ErrorCategory } from './models/ErrorCategory'
-import { MachineStatus } from './models/MachineStatus'
-import { getPluginDefinitions } from './PluginDefinitionFactory'
 import { PluginDefinition, StartReason, StopReason } from './models'
+import { ErrorCategory } from './models/ErrorCategory'
+import { ErrorMessage } from './models/ErrorMessage'
+import { PluginInfo } from './models/PluginInfo'
+import { PluginStatus } from './models/PluginStatus'
+import { StatusMessage } from './models/StatusMessage'
+import { getPluginDefinitions } from './PluginDefinitionFactory'
 
 export class SaladBowlStore {
   private currentPluginDefinition?: PluginDefinition
   private currentPluginDefinitionIndex: number = 0
   private currentPluginRetries: number = 0
-  private heartbeatTimer?: NodeJS.Timeout
+  private runningTimer?: NodeJS.Timeout
   private pluginDefinitions?: PluginDefinition[]
   private somethingWorks: boolean = false
   private timeoutTimer?: NodeJS.Timeout
+
+  /** The timestamp last time that start was pressed */
+
+  private startTimestamp?: Date
+
+  /** The time since the start button was pressed (ms) */
+  @observable
+  public runningTime?: number = undefined
+
+  /** The total time we have been in the chopping state since the start button was pressed (ms) */
+  private choppingTime?: number = undefined
 
   @observable
   public plugin: PluginInfo = new PluginInfo()
@@ -30,7 +38,6 @@ export class SaladBowlStore {
     return (
       this.store.machine &&
       this.store.machine.currentMachine !== undefined &&
-      this.store.machine.currentMachine.qualifying &&
       this.store.native &&
       this.store.native.machineInfo !== undefined &&
       cachedPluginDefinitions.length > 0
@@ -50,30 +57,14 @@ export class SaladBowlStore {
       case PluginStatus.Initializing:
         return MiningStatus.Initializing
       case PluginStatus.Running:
-        if (this.store.balance.lastDeltaBalance > 0) return MiningStatus.Earning
-        else return MiningStatus.Running
+        return MiningStatus.Running
       case PluginStatus.Unknown:
       default:
         return MiningStatus.Stopped
     }
   }
 
-  /** Returns the summary status for the machine */
-  @computed
-  get machineStatus(): MachineStatus {
-    switch (this.plugin.status) {
-      case PluginStatus.Installing:
-      case PluginStatus.Initializing:
-        return MachineStatus.Initializing
-      case PluginStatus.Running:
-        return MachineStatus.Running
-      case PluginStatus.Unknown:
-      default:
-        return MachineStatus.Stopped
-    }
-  }
-
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
+  constructor(private readonly store: RootStore) {
     this.store.native.on('mining-status', this.onReceiveStatus)
     this.store.native.on('mining-error', this.onReceiveError)
   }
@@ -142,23 +133,29 @@ export class SaladBowlStore {
   }
 
   @action.bound
-  start = flow(function*(this: SaladBowlStore, reason: StartReason) {
+  start = flow(function* (this: SaladBowlStore, reason: StartReason) {
     if (this.isRunning) {
       return
     }
+
     if (!this.canRun) {
       console.log('This machine is not able to run.')
       return
     }
+
+    //Ensures that the user is logged in
+    yield this.store.auth.login()
 
     if (this.timeoutTimer != null) {
       clearTimeout(this.timeoutTimer)
       this.timeoutTimer = undefined
     }
 
-    if (this.heartbeatTimer != null) {
-      clearInterval(this.heartbeatTimer)
-      this.heartbeatTimer = undefined
+    if (this.runningTimer) {
+      clearInterval(this.runningTimer)
+      this.runningTimer = undefined
+      this.runningTime = undefined
+      this.choppingTime = undefined
     }
 
     this.currentPluginDefinition = undefined
@@ -184,6 +181,8 @@ export class SaladBowlStore {
       errors: this.currentPluginDefinition.errors,
     })
 
+    this.store.analytics.trackStart(reason)
+
     //Show a notification reminding users to use auto start
     if (reason === StartReason.Manual && this.store.autoStart.canAutoStart && !this.store.autoStart.autoStart) {
       this.store.notifications.sendNotification({
@@ -194,21 +193,43 @@ export class SaladBowlStore {
       })
     }
 
+    this.startTimestamp = new Date(Date.now())
+    this.runningTime = 0
+    this.choppingTime = 0
+
+    this.runningTimer = setInterval(() => {
+      runInAction(() => {
+        if (!this.startTimestamp) {
+          this.runningTime = 0
+        } else {
+          //Calculates the new total time since we started
+          const totalTime = Date.now() - this.startTimestamp.getTime()
+
+          //Checks to see if the miner is confirmed to be running and adds to the chopping time if it is
+          if (this.status === MiningStatus.Running) {
+            //Calculates the delta since the last timer
+            const deltaTime = totalTime - (this.runningTime || 0)
+
+            if (this.choppingTime) {
+              this.choppingTime += deltaTime
+            } else {
+              this.choppingTime = deltaTime
+            }
+          }
+
+          this.runningTime = totalTime
+        }
+      })
+    }, 1000)
+
     this.timeoutTimer = setTimeout(() => {
       this.timeoutTimer = undefined
       this.startNext()
     }, this.currentPluginDefinition.initialTimeout)
-
-    this.heartbeatTimer = setInterval(() => {
-      this.sendRunningStatus()
-    }, Config.statusHeartbeatRate)
-
-    this.sendRunningStatus()
-    this.store.analytics.trackStart(reason)
   })
 
   @action.bound
-  startNext = flow(function*(this: SaladBowlStore) {
+  startNext = flow(function* (this: SaladBowlStore) {
     if (this.pluginDefinitions == null) {
       return
     }
@@ -241,56 +262,29 @@ export class SaladBowlStore {
         this.timeoutTimer = undefined
         this.startNext()
       }, this.currentPluginDefinition.initialTimeout)
-
-      this.sendRunningStatus()
     }
   })
 
   @action.bound
-  stop = flow(function*(this: SaladBowlStore, reason: StopReason) {
+  stop = flow(function* (this: SaladBowlStore, reason: StopReason) {
     if (this.timeoutTimer != null) {
       clearTimeout(this.timeoutTimer)
       this.timeoutTimer = undefined
     }
 
-    if (this.heartbeatTimer != null) {
-      clearInterval(this.heartbeatTimer)
-      this.heartbeatTimer = undefined
+    if (this.runningTimer) {
+      clearInterval(this.runningTimer)
+      this.runningTimer = undefined
     }
 
     this.plugin.status = PluginStatus.Stopped
     yield this.store.native.send('stop-salad')
 
-    this.sendRunningStatus()
-    this.store.analytics.trackStop(reason)
-  })
+    this.store.analytics.trackStop(reason, this.runningTime || 0, this.choppingTime || 0)
 
-  @action.bound
-  sendRunningStatus = flow(function*(this: SaladBowlStore, retry?: boolean) {
-    const machineId = this.store.token.machineId
-
-    if (!machineId) {
-      console.warn('No machineId found. Unable to send running status')
-      return
-    }
-
-    const data = {
-      status: this.machineStatus,
-    }
-
-    try {
-      yield this.axios.post(`machines/${machineId}/status`, data)
-    } catch (e) {
-      let err: AxiosError = e
-      if (err.response && err.response.status === 409) {
-        console.log('Machine status conflict. Restarting')
-        if (!retry) {
-          this.plugin.status = PluginStatus.Initializing
-          this.sendRunningStatus(true)
-        }
-      } else {
-        throw e
-      }
-    }
+    this.startTimestamp = undefined
+    console.log('Stopping after running for: ' + this.runningTime)
+    this.runningTime = undefined
+    this.choppingTime = undefined
   })
 }

@@ -9,6 +9,7 @@ import { SaladTheme } from '../../../SaladTheme'
 const styles = (theme: SaladTheme) => ({
   btn: {
     border: '1px solid ' + theme.lightGreen,
+    color: theme.lightGreen,
     display: 'inline-block',
     padding: '6px 2px',
     position: 'relative',
@@ -23,13 +24,11 @@ const styles = (theme: SaladTheme) => ({
   },
   active: {
     backgroundColor: theme.mediumGreen,
-    color: theme.lightGreen,
     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
     cursor: 'default',
     transition: 'color 200ms',
   },
   inactive: {
-    color: theme.darkGreen,
     cursor: 'pointer',
   },
   disabled: {

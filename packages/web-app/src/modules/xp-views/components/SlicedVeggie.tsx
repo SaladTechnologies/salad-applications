@@ -3,12 +3,10 @@ import withStyles, { WithStyles } from 'react-jss'
 import { Level } from '../../xp/models/Level'
 import classnames from 'classnames'
 
-const gridSize = 1
-
-const styles = ({
+const styles = {
   container: {
     whiteSpace: 'nowrap',
-    userSelect: 'none',
+    height: 0,
   },
   slice: {
     display: 'inline-block',
@@ -17,9 +15,8 @@ const styles = ({
   },
   sliceImage: {
     position: 'absolute',
-    // border: '1px green solid',
   },
-})
+}
 
 interface Props extends WithStyles<typeof styles> {
   level?: Level
@@ -37,7 +34,7 @@ class _SlicedVeggie extends Component<Props> {
   render() {
     const { percent, level, classes } = this.props
 
-    if (!level || percent === undefined) return <div />
+    if (!level || percent === undefined) return null
 
     const positions = this.getColumnPositions(percent)
 
@@ -48,7 +45,7 @@ class _SlicedVeggie extends Component<Props> {
             <div className={classnames(classes.slice)} key={i}>
               <img
                 className={classes.sliceImage}
-                style={{ top: `${pos * gridSize}rem` }}
+                style={{ top: `${pos * 16 - 568 / 2.0}px` }}
                 src={getImage(level.key, i + 1)}
                 draggable={false}
                 alt=""

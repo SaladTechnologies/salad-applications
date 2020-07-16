@@ -1,56 +1,51 @@
-import { Config } from '../../config'
+import { config } from '../../config'
 import { RootStore } from '../../Store'
 
 export class RefreshService {
-  private dataTimer?: NodeJS.Timeout
-  private xpTimer?: NodeJS.Timeout
-  private rewardsTimer?: NodeJS.Timeout
-
   constructor(private store: RootStore) {}
 
   start() {
     console.log('Starting refresh service')
 
     //Start a timer to poll for data
-    this.dataTimer = setInterval(() => {
+    setInterval(() => {
       this.refreshData()
-    }, Config.dataRefreshRate)
+    }, config.dataRefreshRate)
 
-    this.xpTimer = setInterval(() => {
-      this.store.xp.refreshXp()
-    }, Config.xpRefreshRate)
-
-    this.rewardsTimer = setInterval(() => {
+    setInterval(() => {
       this.store.rewards.refreshRewards()
-    }, Config.rewardsRefreshRate)
+    }, config.rewardRefreshRate)
 
     //Do the initial data pull
     this.refreshData()
     this.store.rewards.refreshRewards()
-    this.store.xp.refreshXp()
-    this.store.vault.loadVault()
+
+    if (this.store.auth.isAuthenticated) {
+      this.store.vault.loadVault()
+    }
   }
 
   refreshData = () => {
-    if (!this.store.auth.isAuthenticated()) {
-      return
-    }
+    // Load unauthenticated data
     try {
-      this.store.balance.refreshBalance()
-      this.store.rewards.loadSelectedReward()
-      this.store.referral.loadReferrals()
       this.store.home.loadBannerInfo()
-      this.store.vault.loadVault()
     } catch (error) {
       console.error(error)
     }
-  }
 
-  stop() {
-    console.log('Stopping refresh service')
+    if (!this.store.auth.isAuthenticated) {
+      return
+    }
 
-    if (this.dataTimer) clearInterval(this.dataTimer)
-    if (this.rewardsTimer) clearInterval(this.rewardsTimer)
-    if (this.xpTimer) clearInterval(this.xpTimer)
+    // Load authenticated data
+    try {
+      this.store.balance.refreshBalanceAndHistory()
+      this.store.rewards.loadSelectedReward()
+      this.store.referral.loadReferrals()
+      this.store.vault.loadVault()
+      this.store.xp.refreshXp()
+    } catch (error) {
+      console.error(error)
+    }
   }
 }

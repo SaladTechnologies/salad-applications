@@ -1,15 +1,29 @@
-import { computed, autorun } from 'mobx'
+import { autorun, computed } from 'mobx'
+import { config } from '../../config'
 import { RootStore } from '../../Store'
-import { Config } from '../../config'
+import { HeroType } from './models/HeroType'
 
 export class EngagementStore {
   @computed
   public get showWhatsNew(): boolean {
     const show =
       this.store?.profile?.currentProfile !== undefined &&
-      this.store?.profile?.currentProfile.lastSeenApplicationVersion !== Config.whatsNewVersion
-
+      this.store?.profile?.currentProfile.lastSeenApplicationVersion !== config.whatsNewVersion
     return show
+  }
+
+  @computed
+  public get heroes(): Map<number, HeroType> {
+    const heroes = new Map<number, HeroType>()
+
+    heroes.set(2, HeroType.Mining)
+    heroes.set(4, HeroType.Offerwall)
+
+    if (!this.store.referral.currentReferral) {
+      heroes.set(6, HeroType.ReferralEntry)
+    }
+
+    return heroes
   }
 
   /** A flag indicating if the initial notification has already been sent */
@@ -17,7 +31,7 @@ export class EngagementStore {
 
   constructor(private readonly store: RootStore) {
     autorun(() => {
-      if (!this.store.auth.isAuth) {
+      if (!this.store.auth.isAuthenticated) {
         return
       }
 
@@ -25,7 +39,27 @@ export class EngagementStore {
         return
       }
 
+      if (!this.store?.profile?.currentProfile) {
+        return
+      }
+
       this.showedInitialNotification = true
+
+      //Check to see if we should add the What's New notification
+      if (this.showWhatsNew) {
+        this.store.notifications.sendNotification({
+          title: 'Salad was Updated',
+          message: 'Something new just came out from the kitchen. Click here to learn more.',
+          autoClose: false,
+          onClick: () => this.store.ui.showModal('/whats-new'),
+        })
+
+        return
+      }
+
+      if (!this.store.machine.currentMachine) {
+        return
+      }
 
       if (this.store.saladBowl.canRun && this.store.xp.currentXp <= 10) {
         //Link to the mining page
@@ -36,8 +70,9 @@ export class EngagementStore {
           onClick: () => this.store.routing.push('/earn/mine'),
         })
       }
+
       //Incompatible machine and offerwalls are disabled
-      else if (!this.store.saladBowl.canRun && !this.store.offerwall.offerwall) {
+      else if (!this.store.saladBowl.canRun && this.store.balance.lifetimeBalance === 0) {
         //Link to offerwall page
         this.store.notifications.sendNotification({
           title: `Can't Chop? Try Offerwalls!`,
@@ -46,13 +81,13 @@ export class EngagementStore {
           onClick: () => this.store.routing.push('/earn/offerwall'),
         })
       }
-      //Check to see if we should add the What's New notification
-      else if (this.showWhatsNew) {
+      //Remind users to mine
+      else if (this.store.saladBowl.canRun) {
         this.store.notifications.sendNotification({
-          title: 'Salad was Updated',
-          message: 'Something new just came out from the kitchen. Click here to learn more.',
+          title: 'Time to get Chopping',
+          message: 'Welcome back to the kitchen. Click here to get chopping again.',
           autoClose: false,
-          onClick: () => this.store.ui.showModal('/whats-new'),
+          onClick: () => this.store.ui.showModal('/earn/mine'),
         })
       }
     })

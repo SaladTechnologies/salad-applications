@@ -1,85 +1,133 @@
-import { action, observable, flow, autorun } from 'mobx'
-import { RootStore } from '../../Store'
 import { AxiosInstance } from 'axios'
-import { Config } from '../../config'
-import { MiningStatus } from '../machine/models/MiningStatus'
+import { action, autorun, computed, flow, observable } from 'mobx'
+import moment from 'moment'
+import { RootStore } from '../../Store'
+import { EarningWindow } from './models'
 
 export class BalanceStore {
-  private estimateTimer?: NodeJS.Timeout
-
-  private interpolRate: number = 0
-
   @observable
   public currentBalance: number = 0
 
   @observable
-  public actualBalance: number = 0
-
-  @observable
   public lifetimeBalance: number = 0
 
-  /** What was the balance increase at the last refresh (USD) */
   @observable
-  public lastDeltaBalance: number = 0
+  private earningHistory: Map<number, number> = new Map()
 
-  private lastUpdateTime: number = Date.now()
+  @computed
+  public get lastDayEarningWindows(): EarningWindow[] {
+    return this.getEarningWindows(1)
+  }
+
+  /** Total earnings for the last 24 hours */
+  @observable
+  public lastDayEarnings: number = 0
+
+  /** Total earnings for the last 7 days */
+  @observable
+  public lastWeekEarnings: number = 0
+
+  /** Total earnings for the last 30 days */
+  @observable
+  public lastMonthEarnings: number = 0
+
+  private getEarningWindows = (numberOfDays: number): EarningWindow[] => {
+    const windows: EarningWindow[] = []
+
+    const now = moment.utc()
+
+    const threshold = moment(now).subtract(numberOfDays, 'days')
+
+    for (let [unixTime, earning] of this.earningHistory) {
+      const time = moment.unix(unixTime)
+
+      if (time >= threshold) {
+        windows.push({
+          timestamp: time,
+          earnings: earning,
+        })
+      }
+    }
+
+    return windows.sort((a, b) => a.timestamp.diff(b.timestamp))
+  }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
-    autorun(() => {
-      if (store.saladBowl.isRunning) {
-        if (this.estimateTimer) clearInterval(this.estimateTimer)
-        this.lastUpdateTime = Date.now()
-        this.estimateTimer = setInterval(this.updateEstimate, Config.balanceEstimateRate)
-      } else {
-        if (this.estimateTimer) {
-          clearInterval(this.estimateTimer)
-          this.estimateTimer = undefined
-        }
-      }
-    })
-
     autorun(() => {
       this.store?.analytics?.trackLifetimeBalance?.(this.lifetimeBalance)
     })
   }
 
   @action.bound
-  refreshBalance = flow(function*(this: BalanceStore) {
+  refreshBalanceAndHistory = flow(function* (this: BalanceStore) {
+    yield Promise.allSettled([this.refreshBalance(), this.refreshBalanceHistory()])
+  })
+
+  @action.bound
+  refreshBalance = flow(function* (this: BalanceStore) {
     try {
-      let balance = yield this.axios.get('profile/balance')
-      this.lastDeltaBalance = balance.data.currentBalance - this.currentBalance
-      const maxDelta = Config.maxBalanceDelta
-
-      if (this.lastDeltaBalance > maxDelta || this.lastDeltaBalance < 0) {
-        this.interpolRate = 0
-        this.currentBalance = balance.data.currentBalance
-      } else {
-        this.interpolRate = this.lastDeltaBalance / Config.dataRefreshRate
-      }
-
-      // Clears out a check on 'Stopped' so mining status is not changed to 'Earning'
-      if (this.store.saladBowl.status === MiningStatus.Stopped) {
-        this.lastDeltaBalance = 0
-      }
-
-      this.actualBalance = balance.data.currentBalance
-      this.lifetimeBalance = balance.data.lifetimeBalance
+      const response = yield this.axios.get('/api/v1/profile/balance')
+      this.currentBalance = response.data.currentBalance
+      this.lifetimeBalance = response.data.lifetimeBalance
     } catch (error) {
       console.error('Balance error: ')
       console.error(error)
     }
   })
 
-  @action
-  updateEstimate = () => {
-    let curTime = Date.now()
+  @action.bound
+  refreshBalanceHistory = flow(function* (this: BalanceStore) {
+    try {
+      const response = yield this.axios.get('/api/v2/reports/30-day-earning-history')
 
-    let dt = curTime - this.lastUpdateTime
+      const earningData = response.data
 
-    let dBal = dt * this.interpolRate
+      const roundedDown = Math.floor(moment().minute() / 15) * 15
 
-    this.currentBalance = Math.min(this.actualBalance, this.currentBalance + dBal)
+      const now = moment().minute(roundedDown).second(0).millisecond(0)
 
-    this.lastUpdateTime = curTime
-  }
+      const threshold24Hrs = moment(now).subtract(24, 'hours')
+      const threshold7Days = moment(now).subtract(7, 'days')
+
+      const earningValues: Map<number, number> = new Map()
+
+      let total24Hrs = 0
+      let total7Days = 0
+      let total30Days = 0
+
+      //Process the input data into a usable format
+      for (let key in earningData) {
+        const timestamp = moment(key)
+        const earnings: number = earningData[key]
+        earningValues.set(timestamp.unix(), earnings)
+
+        if (timestamp >= threshold24Hrs) {
+          total24Hrs += earnings
+        }
+
+        if (timestamp >= threshold7Days) {
+          total7Days += earnings
+        }
+
+        total30Days += earnings
+      }
+
+      this.lastMonthEarnings = total30Days
+      this.lastWeekEarnings = total7Days
+      this.lastDayEarnings = total24Hrs
+
+      const history = new Map<number, number>()
+
+      for (let i = 0; i < 2880; ++i) {
+        const earning = earningValues.get(now.unix())
+        history.set(now.unix(), earning || 0)
+        now.subtract(15, 'minutes')
+      }
+
+      this.earningHistory = history
+    } catch (error) {
+      console.error('Balance history error: ')
+      console.error(error)
+    }
+  })
 }

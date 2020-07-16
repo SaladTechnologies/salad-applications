@@ -1,10 +1,8 @@
-import React from 'react'
+import { action } from '@storybook/addon-actions'
 import { storiesOf } from '@storybook/react'
 import { LoremIpsum } from 'lorem-ipsum'
-import skyrimHero from '../../../../.storybook/assets/skyrim.jpg'
-import witcherHero from '../../../../.storybook/assets/witcher.jpg'
-import skyrimCover from '../../../../.storybook/assets/skyrim-cover.jpg'
-import witcherCover from '../../../../.storybook/assets/witcher-cover.jpg'
+import React from 'react'
+import { RewardDescriptionPanel, RewardHeaderBar, RewardInfoPanel, RewardRequirementsPanel } from '.'
 import gta1 from '../../../../.storybook/assets/gta-1.jpg'
 import gta2 from '../../../../.storybook/assets/gta-2.jpg'
 import gta3 from '../../../../.storybook/assets/gta-3.jpg'
@@ -13,17 +11,19 @@ import gta5 from '../../../../.storybook/assets/gta-5.jpg'
 import gta6 from '../../../../.storybook/assets/gta-6.jpg'
 import gta7 from '../../../../.storybook/assets/gta-7.jpg'
 import gta8 from '../../../../.storybook/assets/gta-8.jpg'
-import { action } from '@storybook/addon-actions'
+import skyrimCover from '../../../../.storybook/assets/skyrim-cover.jpg'
+import skyrimHero from '../../../../.storybook/assets/skyrim.jpg'
+import witcherCover from '../../../../.storybook/assets/witcher-cover.jpg'
+import witcherHero from '../../../../.storybook/assets/witcher.jpg'
+import { RewardPlatform } from '../../reward/models'
 import { Reward } from '../../reward/models/Reward'
+import { RewardHero } from './RewardHero'
+import { RewardHeroButtonGroup } from './RewardHeroButtonGroup'
+import { RewardHeroItem } from './RewardHeroItem'
+import { RewardImageCarousel } from './RewardImageCarousel'
 import { RewardItem } from './RewardItem'
 import { RewardSlider } from './RewardSlider'
 import { RewardSliderButton } from './RewardSliderButton'
-import { RewardHeroItem } from './RewardHeroItem'
-import { RewardHero } from './RewardHero'
-import { RewardHeroButtonGroup } from './RewardHeroButtonGroup'
-import { RewardHeaderBar, RewardInfoPanel, RewardDescriptionPanel, RewardRequirementsPanel } from '.'
-import { RewardImageCarousel } from './RewardImageCarousel'
-import { RewardPlatform } from '../../reward/models'
 
 const lorem = new LoremIpsum({
   sentencesPerParagraph: {
@@ -121,51 +121,51 @@ export const generateRewards = (count: number): Reward[] => {
 storiesOf('Modules/Rewards/Reward Item', module)
   .add('complete reward', () => {
     let reward = generateRewards(1)[0]
-    return <RewardItem reward={reward} onViewReward={action('view reward')} />
+    return <RewardItem reward={reward} />
   })
   .add('complete reward (long name)', () => {
     let reward = generateRewards(2)[1]
-    return <RewardItem reward={reward} onViewReward={action('view reward')} />
+    return <RewardItem reward={reward} />
   })
   .add('out of stock', () => {
     let reward = generateRewards(2)[1]
     reward.quantity = 0
-    return <RewardItem reward={reward} onViewReward={action('view reward')} />
+    return <RewardItem reward={reward} />
   })
   .add('low stock (n=1)', () => {
     let reward = generateRewards(2)[1]
     reward.quantity = 1
-    return <RewardItem reward={reward} onViewReward={action('view reward')} />
+    return <RewardItem reward={reward} />
   })
   .add('low stock (n=3)', () => {
     let reward = generateRewards(2)[1]
     reward.quantity = 3
-    return <RewardItem reward={reward} onViewReward={action('view reward')} />
+    return <RewardItem reward={reward} />
   })
   .add('missing reward', () => {
-    return <RewardItem onViewReward={action('view reward')} />
+    return <RewardItem />
   })
   .add('no reward image', () => {
     let reward = generateRewards(1)[0]
     reward.coverImage = ''
-    return <RewardItem reward={reward} onViewReward={action('view reward')} />
+    return <RewardItem reward={reward} />
   })
 
 storiesOf('Modules/Rewards/Reward Slider', module)
   .add('item (n=1)', () => {
     let reward = generateRewards(1)[0]
     return (
-      <RewardSlider onViewMore={action('view more')}>
-        <RewardItem reward={reward} onViewReward={action('view reward')} />
+      <RewardSlider viewAllRoute={'view more'}>
+        <RewardItem reward={reward} />
       </RewardSlider>
     )
   })
   .add('items (n=10)', () => {
     let rewards = generateRewards(10)
     return (
-      <RewardSlider onViewMore={action('view more')}>
-        {rewards.map(x => (
-          <RewardItem reward={x} onViewReward={action('view reward')} />
+      <RewardSlider viewAllRoute={'view more'}>
+        {rewards.map((x) => (
+          <RewardItem reward={x} />
         ))}
       </RewardSlider>
     )
@@ -173,9 +173,9 @@ storiesOf('Modules/Rewards/Reward Slider', module)
   .add('with multiple items', () => {
     let rewards = generateRewards(10)
     return (
-      <RewardSlider onViewMore={action('view more')}>
-        {rewards.map(x => (
-          <RewardItem reward={x} onViewReward={action('view reward')} />
+      <RewardSlider viewAllRoute={'view more'}>
+        {rewards.map((x) => (
+          <RewardItem reward={x} />
         ))}
       </RewardSlider>
     )
@@ -184,19 +184,19 @@ storiesOf('Modules/Rewards/Reward Slider', module)
     let rewards = generateRewards(10)
     return (
       <>
-        <RewardSlider title={'Category 1'} onViewMore={action('view more')}>
-          {rewards.map(x => (
-            <RewardItem reward={x} onViewReward={action('view reward')} />
+        <RewardSlider title={'Category 1'} viewAllRoute={'view more'}>
+          {rewards.map((x) => (
+            <RewardItem reward={x} />
           ))}
         </RewardSlider>
-        <RewardSlider title={'Category 2'} onViewMore={action('view more')}>
-          {rewards.map(x => (
-            <RewardItem reward={x} onViewReward={action('view reward')} />
+        <RewardSlider title={'Category 2'} viewAllRoute={'view more'}>
+          {rewards.map((x) => (
+            <RewardItem reward={x} />
           ))}
         </RewardSlider>
-        <RewardSlider title={'Category 3'} onViewMore={action('view more')}>
-          {rewards.map(x => (
-            <RewardItem reward={x} onViewReward={action('view reward')} />
+        <RewardSlider title={'Category 3'} viewAllRoute={'view more'}>
+          {rewards.map((x) => (
+            <RewardItem reward={x} />
           ))}
         </RewardSlider>
       </>
@@ -206,39 +206,39 @@ storiesOf('Modules/Rewards/Reward Slider', module)
 storiesOf('Modules/Rewards/Reward Hero Item', module)
   .add('complete reward', () => {
     let reward = generateRewards(1)[0]
-    return <RewardHeroItem reward={reward} onViewReward={action('view reward')} />
+    return <RewardHeroItem reward={reward} />
   })
   .add('complete reward (long name)', () => {
     let reward = generateRewards(2)[1]
-    return <RewardHeroItem reward={reward} onViewReward={action('view reward')} />
+    return <RewardHeroItem reward={reward} />
   })
   .add('missing reward', () => {
-    return <RewardHeroItem onViewReward={action('view reward')} />
+    return <RewardHeroItem />
   })
   .add('no reward image', () => {
     let reward = generateRewards(1)[0]
     reward.heroImage = ''
-    return <RewardHeroItem reward={reward} onViewReward={action('view reward')} />
+    return <RewardHeroItem reward={reward} />
   })
   .add('no headline', () => {
     let reward = generateRewards(1)[0]
     reward.headline = undefined
-    return <RewardHeroItem reward={reward} onViewReward={action('view reward')} />
+    return <RewardHeroItem reward={reward} />
   })
   .add('out of stock', () => {
     let reward = generateRewards(2)[1]
     reward.quantity = 0
-    return <RewardHeroItem reward={reward} onViewReward={action('view reward')} />
+    return <RewardHeroItem reward={reward} />
   })
   .add('low stock (n=1)', () => {
     let reward = generateRewards(2)[1]
     reward.quantity = 1
-    return <RewardHeroItem reward={reward} onViewReward={action('view reward')} />
+    return <RewardHeroItem reward={reward} />
   })
   .add('low stock (n=3)', () => {
     let reward = generateRewards(2)[1]
     reward.quantity = 3
-    return <RewardHeroItem reward={reward} onViewReward={action('view reward')} />
+    return <RewardHeroItem reward={reward} />
   })
 
 storiesOf('Modules/Rewards/Reward Hero', module)
@@ -246,7 +246,7 @@ storiesOf('Modules/Rewards/Reward Hero', module)
     let reward = generateRewards(1)[0]
     return (
       <RewardHero>
-        <RewardHeroItem reward={reward} onViewReward={action('view reward')} />
+        <RewardHeroItem reward={reward} />
       </RewardHero>
     )
   })
@@ -254,8 +254,8 @@ storiesOf('Modules/Rewards/Reward Hero', module)
     let rewards = generateRewards(10)
     return (
       <RewardHero>
-        {rewards.map(x => (
-          <RewardHeroItem reward={x} onViewReward={action('view reward')} />
+        {rewards.map((x) => (
+          <RewardHeroItem reward={x} />
         ))}
       </RewardHero>
     )
@@ -264,8 +264,8 @@ storiesOf('Modules/Rewards/Reward Hero', module)
     let rewards = generateRewards(10)
     return (
       <RewardHero title="Hero Title">
-        {rewards.map(x => (
-          <RewardHeroItem reward={x} onViewReward={action('view reward')} />
+        {rewards.map((x) => (
+          <RewardHeroItem reward={x} />
         ))}
       </RewardHero>
     )
@@ -275,18 +275,18 @@ storiesOf('Modules/Rewards/Reward Hero', module)
     return (
       <>
         <RewardHero title={'Category 1'}>
-          {rewards.map(x => (
-            <RewardHeroItem reward={x} onViewReward={action('view reward')} />
+          {rewards.map((x) => (
+            <RewardHeroItem reward={x} />
           ))}
         </RewardHero>
         <RewardHero title={'Category 2'}>
-          {rewards.map(x => (
-            <RewardHeroItem reward={x} onViewReward={action('view reward')} />
+          {rewards.map((x) => (
+            <RewardHeroItem reward={x} />
           ))}
         </RewardHero>
         <RewardHero title={'Category 3'}>
-          {rewards.map(x => (
-            <RewardHeroItem reward={x} onViewReward={action('view reward')} />
+          {rewards.map((x) => (
+            <RewardHeroItem reward={x} />
           ))}
         </RewardHero>
       </>
@@ -363,7 +363,16 @@ storiesOf('Modules/Rewards/Reward Image Carousel', module)
     let reward = generateRewards(2)[1]
     reward.images = []
     reward.videos = []
+    reward.heroImage = undefined
+    reward.image = undefined
+    reward.coverImage = undefined
     return <RewardImageCarousel reward={reward} />
+  })
+  .add('empty', () => {
+    let reward = generateRewards(2)[1]
+    reward.images = []
+    reward.videos = []
+    return <RewardImageCarousel />
   })
 
 storiesOf('Modules/Rewards/Reward Info Panel', module)

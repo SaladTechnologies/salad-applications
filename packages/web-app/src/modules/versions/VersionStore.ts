@@ -1,9 +1,14 @@
-import { observable, action, flow, autorun, runInAction } from 'mobx'
 import { AxiosInstance } from 'axios'
 import compareVersions from 'compare-versions'
-import { convertHours } from '../../utils'
-import { DesktopVersionResource } from './models'
+import { action, autorun, flow, observable, runInAction } from 'mobx'
+import { config } from '../../config'
+import { getItem, removeItem, setItem } from '../../Storage'
 import { RootStore } from '../../Store'
+import { convertHours } from '../../utils'
+import { StartReason } from '../salad-bowl/models'
+import { DesktopVersionResource } from './models'
+
+const VERSION_RELOAD_MINING_STATUS = 'VERSION_RELOAD_MINING_STATUS'
 
 export class VersionStore {
   @observable
@@ -12,9 +17,33 @@ export class VersionStore {
   @observable
   public latestDesktopVersion?: string
 
-  private desktopCheckHeartbeat?: NodeJS.Timeout
+  public latestWebVersion?: string
+
+  private versionCheckTimer?: NodeJS.Timeout
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
+    //Check to see if this is part of an automatic app refresh where we need to start the miner again
+    let startMinerValue = getItem(VERSION_RELOAD_MINING_STATUS)
+
+    let startMiner = startMinerValue ? startMinerValue.toLowerCase() === 'true' : false
+
+    if (startMiner) {
+      autorun(() => {
+        if (!store.auth.isAuthenticated) return
+
+        if (!startMiner) return
+
+        if (!store.saladBowl.canRun) return
+
+        //Resumes mining
+        store.saladBowl.start(StartReason.Refresh)
+
+        //Removes the flag from local storage
+        removeItem(VERSION_RELOAD_MINING_STATUS)
+        startMiner = false
+      })
+    }
+
     autorun(() => {
       console.log('Checking desktop version')
       if (this.latestDesktopVersion && this.store.native.desktopVersion) {
@@ -28,35 +57,35 @@ export class VersionStore {
 
   startVersionChecks = () => {
     //Clear any previous timers
-    if (this.desktopCheckHeartbeat) {
-      clearInterval(this.desktopCheckHeartbeat)
-      this.desktopCheckHeartbeat = undefined
+    if (this.versionCheckTimer) {
+      clearInterval(this.versionCheckTimer)
+      this.versionCheckTimer = undefined
     }
 
     //Start a new timer
-    this.desktopCheckHeartbeat = setInterval(this.checkDesktopVersion, convertHours(1))
-
-    //Runs the check immediately
-    this.checkDesktopVersion()
+    this.versionCheckTimer = setInterval(() => {
+      this.checkDesktopVersion()
+      this.checkWebVersion()
+    }, convertHours(12))
   }
 
   stopVersionChecks = () => {
     //Clears any previous timers
-    if (this.desktopCheckHeartbeat) {
-      clearInterval(this.desktopCheckHeartbeat)
-      this.desktopCheckHeartbeat = undefined
+    if (this.versionCheckTimer) {
+      clearInterval(this.versionCheckTimer)
+      this.versionCheckTimer = undefined
     }
   }
 
   @action.bound
-  private checkDesktopVersion = flow(function*(this: VersionStore) {
+  private checkDesktopVersion = flow(function* (this: VersionStore) {
     if (!this.store.native.desktopVersion) {
       this.onLatestDesktop = false
       return
     }
 
     try {
-      let response = yield this.axios.get<DesktopVersionResource>('desktop-app/version')
+      let response = yield this.axios.get<DesktopVersionResource>('/api/v1/desktop-app/version')
 
       let versionData: DesktopVersionResource = response.data
 
@@ -66,8 +95,31 @@ export class VersionStore {
     }
   })
 
+  private checkWebVersion = flow(function* (this: VersionStore) {
+    try {
+      let response = yield this.axios.get<DesktopVersionResource>(`/version.txt`, { baseURL: window.location.origin })
+
+      const currentVersion = response.data.trim()
+      const localVersion = config.appBuild.trim()
+
+      if (currentVersion !== localVersion) {
+        console.error('Different version found. Restarting...')
+        console.log('Current: ' + currentVersion)
+        console.log('Local: ' + localVersion)
+
+        let mining = this.store.saladBowl.isRunning
+
+        if (mining) {
+          setItem(VERSION_RELOAD_MINING_STATUS, true)
+        }
+        window.location.reload()
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  })
+
   downloadLatestDesktop = () => {
-    console.log('Downloading latest version of the desktop app')
-    window.open('https://getsalad.io', '_blank')
+    window.open('https://www.salad.io/download', '_blank')
   }
 }

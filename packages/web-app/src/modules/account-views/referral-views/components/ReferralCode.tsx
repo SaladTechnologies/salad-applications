@@ -8,7 +8,7 @@ import { faClipboard } from '@fortawesome/free-solid-svg-icons'
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    color: theme.darkBlue,
+    color: 'inherit',
     userSelect: 'none',
     display: 'inline-flex',
     flexDirection: 'column',
@@ -19,6 +19,7 @@ const styles = (theme: SaladTheme) => ({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    color: theme.green,
   },
   iconButton: {
     cursor: 'pointer',
@@ -43,7 +44,7 @@ class _ReferralCode extends Component<Props> {
           This is your permanent, unique referral code to share <b>anywhere</b> you can think of.
         </P>
         <div className={classes.codeContainer}>
-          <Username blue>{code}</Username>
+          <Username>{code}</Username>
           <CopyToClipboard
             text={`Join me on Salad and use code ${code} for a 2x earning rate bonus! https://www.salad.io` || ''}
           >

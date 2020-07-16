@@ -21,7 +21,7 @@ const styles = (theme: SaladTheme) => ({
   },
   progressBackground: {
     borderRadius: 0,
-    backgroundColor: theme.darkGreen,
+    backgroundColor: 'rgba(0, 0, 0, 0.20)',
     height: '4px',
   },
   progressBar: {

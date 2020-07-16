@@ -12,7 +12,7 @@ export class VaultStore {
   @action.bound
   loadVault = flow(function*(this: VaultStore) {
     try {
-      var response = yield this.axios.get<RewardVaultResource[]>('reward-vault')
+      var response = yield this.axios.get<RewardVaultResource[]>('/api/v1/reward-vault')
 
       this.redemptions = response.data
         .map(this.rewardVaultFromResource)

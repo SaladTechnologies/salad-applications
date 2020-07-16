@@ -6,5 +6,5 @@ interface Props {
 }
 
 export const OfferToroPage = ({ userId }: Props) => (
-  <IFramePage src={`https://www.offertoro.com/ifr/show/23252/${userId}/9598`} />
+  <IFramePage pageTitle="Offerwalls - AdGate" src={`https://www.offertoro.com/ifr/show/23252/${userId}/9598`} />
 )

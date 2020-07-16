@@ -3,12 +3,12 @@ import withStyles, { WithStyles } from 'react-jss'
 import { IconTriangleRight, IconTriangleLeft } from './assets'
 import { ButtonGroupProps } from 'react-multi-carousel/lib/types'
 
-const styles = ({
+const styles = {
   container: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingTop: 8,
+    paddingTop: 20,
   },
   button: {
     outline: 'none',
@@ -21,7 +21,7 @@ const styles = ({
       opacity: 0.7,
     },
   },
-})
+}
 
 interface Props extends ButtonGroupProps, WithStyles<typeof styles> {}
 

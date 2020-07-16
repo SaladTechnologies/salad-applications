@@ -8,24 +8,20 @@ const styles = (theme: SaladTheme) => ({
   container: {
     display: 'inline-block',
   },
-  text: (props: Props) => {
-    const c = props.dark ? theme.darkBlue : theme.lightGreen
-
-    return {
-      backgroundColor: 'transparent',
-      border: `1px solid ${c}`,
-      padding: '.5rem',
-      color: c,
-      fontSize: '.625rem',
-      fontFamily: 'sharpGroteskLight25',
-      '&::placeholder': {
-        opacity: 0.5,
-        color: c,
-      },
-      '&:focus': {
-        outlineColor: theme.mediumGreen,
-      },
-    }
+  text: {
+    backgroundColor: 'transparent',
+    border: `1px solid ${theme.lightGreen}`,
+    padding: '.5rem',
+    color: theme.lightGreen,
+    fontSize: '.625rem',
+    fontFamily: 'sharpGroteskLight25',
+    '&::placeholder': {
+      opacity: 0.5,
+      color: theme.lightGreen,
+    },
+    '&:focus': {
+      outlineColor: theme.mediumGreen,
+    },
   },
   errorBorder: {
     borderColor: `${theme.red} !important`,
@@ -49,13 +45,12 @@ interface Props extends WithStyles<typeof styles> {
   onChange?: (event: React.ChangeEvent<any>) => void
   onFocus?: (event?: React.FocusEvent<any>) => void
   value?: any
-  dark?: boolean
   errorText?: string
 }
 
 class _TextField extends Component<Props> {
   render() {
-    const { className, errorText, classes, dark, ...input } = this.props
+    const { className, errorText, classes, ...input } = this.props
     return (
       <div className={classes.container}>
         <input

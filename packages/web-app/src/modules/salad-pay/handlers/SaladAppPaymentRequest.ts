@@ -75,7 +75,7 @@ export class SaladAppPaymentRequest implements SaladPaymentRequest {
     // includes a user that closes the window in the middle of a transaction. If
     // the window was closed before the merchant site received payment
     // credentials, the transaction may be pending and holding onto funds. This
-    // server-side timeout ensures the transaction is cancelled and the funds
+    // server-side timeout ensures the transaction is canceled and the funds
     // returned to the user.
   }
 }

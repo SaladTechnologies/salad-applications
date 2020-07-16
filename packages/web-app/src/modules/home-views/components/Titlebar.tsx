@@ -1,15 +1,14 @@
-import React, { Component } from 'react'
-import icon from '../assets/favicon-32x32.png'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
+import { faClone, faMinus, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMinus, faClone, faTimes, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import classnames from 'classnames'
-import { ChoppingCartButtonContainer } from '../../chopping-cart-views'
-import { RewardSearchBarContainer } from '../../reward-views'
-import { InternalLink, ExternalLink } from '../../../components'
-import GearIcon from '../assets/GearIcon.svg'
+import React, { Component } from 'react'
 import Img from 'react-image'
+import withStyles, { WithStyles } from 'react-jss'
+import { SmartLink } from '../../../components'
+import { SaladTheme } from '../../../SaladTheme'
+import { AccountMenuContainer } from '../../account-views/account-menu'
+import { SettingsButtonContainer } from '../../settings-views'
+import icon from '../assets/favicon-32x32.png'
 
 export class MenuItem {
   constructor(public readonly name: string, public readonly url: string, public readonly showNotification?: boolean) {}
@@ -26,6 +25,7 @@ const styles = (theme: SaladTheme) => ({
     paddingLeft: 10,
     margin: 0,
     '-webkit-app-region': 'drag',
+    zIndex: 9999,
   },
   bottomBorder: {
     borderBottom: `1px solid ${theme.green}`,
@@ -53,7 +53,7 @@ const styles = (theme: SaladTheme) => ({
     padding: '.5rem .75rem',
     textDecoration: 'none',
     fontFamily: 'sharpGroteskLight25',
-    fontSize: '0.7rem',
+    fontSize: 12,
     letterSpacing: '1.3px',
     cursor: 'pointer',
     position: 'relative',
@@ -75,6 +75,7 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
     alignItems: 'center',
     '-webkit-app-region': 'none',
+    paddingRight: 10,
   },
   closeButton: {
     '&:hover': {
@@ -131,35 +132,25 @@ class _Titlebar extends Component<Props> {
       <div className={classnames(classes.container, { [classes.bottomBorder]: bottomBorder })}>
         <div className={classes.leftItems}>
           <div className={classes.icon}>
-            <Img height={24} src={icon} />
+            <SmartLink to="/">
+              <Img height={24} src={icon} />
+            </SmartLink>
           </div>
           {menuItems &&
             menuItems.map((x) => (
-              <InternalLink key={x.name} className={classes.menuItem} to={x.url}>
+              <SmartLink key={x.name} className={classes.menuItem} to={x.url}>
                 {x.showNotification && <div className={classes.menuItemNotification}></div>}
                 {x.name}
-              </InternalLink>
+              </SmartLink>
             ))}
         </div>
 
         {menuItems && (
           <div className={classes.componentContainer}>
-            <RewardSearchBarContainer />
-            <ChoppingCartButtonContainer />
-            {isDesktop && (
-              <InternalLink
-                className={classnames(classes.settingsButton, classes.buttons)}
-                to={'/settings/windows-settings'}
-              >
-                <Img height={16} src={GearIcon} />
-              </InternalLink>
-            )}
+            <AccountMenuContainer />
+            {isDesktop && <SettingsButtonContainer />}
           </div>
         )}
-
-        <ExternalLink path={'https://www.salad.io/support'}>
-          <FontAwesomeIcon size="xs" className={classes.buttons} icon={faQuestionCircle} />
-        </ExternalLink>
 
         {isDesktop && (
           <>
