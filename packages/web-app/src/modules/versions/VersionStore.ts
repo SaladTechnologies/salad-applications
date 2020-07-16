@@ -5,10 +5,10 @@ import { config } from '../../config'
 import { getItem, removeItem, setItem } from '../../Storage'
 import { RootStore } from '../../Store'
 import { convertHours } from '../../utils'
-import { StartReason } from '../salad-bowl/models'
+import { IPersistentStore } from './IPersistentStore'
 import { DesktopVersionResource } from './models'
 
-const VERSION_RELOAD_MINING_STATUS = 'VERSION_RELOAD_MINING_STATUS'
+const VERSION_RELOAD_DATA = 'VERSION_RELOAD_DATA'
 
 export class VersionStore {
   @observable
@@ -21,27 +21,27 @@ export class VersionStore {
 
   private versionCheckTimer?: NodeJS.Timeout
 
+  private readonly persistentStores: Array<IPersistentStore>
+
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
+    this.persistentStores = [store.saladBowl]
+
     //Check to see if this is part of an automatic app refresh where we need to start the miner again
-    let startMinerValue = getItem(VERSION_RELOAD_MINING_STATUS)
+    const dataString = getItem(VERSION_RELOAD_DATA)
 
-    let startMiner = startMinerValue ? startMinerValue.toLowerCase() === 'true' : false
+    if (dataString) {
+      const dataObj: any = JSON.parse(dataString || '')
 
-    if (startMiner) {
-      autorun(() => {
-        if (!store.auth.isAuthenticated) return
+      //Check the persistent data to see if anything needs to be loaded
+      if (!VersionStore.isEmpty(dataObj)) {
+        this.persistentStores.forEach((x) => {
+          const name = x.constructor.name
+          const data: object = dataObj[name]
+          x.onDataLoaded(data)
+        })
 
-        if (!startMiner) return
-
-        if (!store.saladBowl.canRun) return
-
-        //Resumes mining
-        store.saladBowl.start(StartReason.Refresh)
-
-        //Removes the flag from local storage
-        removeItem(VERSION_RELOAD_MINING_STATUS)
-        startMiner = false
-      })
+        removeItem(VERSION_RELOAD_DATA)
+      }
     }
 
     autorun(() => {
@@ -107,11 +107,23 @@ export class VersionStore {
         console.log('Current: ' + currentVersion)
         console.log('Local: ' + localVersion)
 
-        let mining = this.store.saladBowl.isRunning
+        const dataObj: any = {}
 
-        if (mining) {
-          setItem(VERSION_RELOAD_MINING_STATUS, true)
+        this.persistentStores.forEach((x) => {
+          const data = x.getSavedData()
+
+          if (!VersionStore.isEmpty(data)) {
+            dataObj[x.constructor.name] = data
+          }
+        })
+
+        //If any stores had data, save it to local storage, otherwise remove all persistent data
+        if (!VersionStore.isEmpty(dataObj)) {
+          setItem(VERSION_RELOAD_DATA, JSON.stringify(dataObj))
+        } else {
+          removeItem(VERSION_RELOAD_DATA)
         }
+
         window.location.reload()
       }
     } catch (error) {
@@ -122,4 +134,6 @@ export class VersionStore {
   downloadLatestDesktop = () => {
     window.open('https://www.salad.io/download', '_blank')
   }
+
+  static isEmpty = (data: {}): boolean => Object.keys(data).length === 0
 }

@@ -112,7 +112,7 @@ class _StartButton extends Component<Props> {
           </div>
         </div>
         <StatElement
-          title={runningTime !== undefined ? formatDuration(runningTime) : 'Status'}
+          title={runningTime ? formatDuration(runningTime) : 'Status'}
           values={[`${(status || MiningStatus.Stopped).toUpperCase()}`]}
         />
       </div>
