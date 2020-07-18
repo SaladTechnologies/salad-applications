@@ -45,6 +45,12 @@ export class SaladBowlStore {
   }
 
   @computed
+  get pluginCount(): number {
+    let cachedPluginDefinitions = getPluginDefinitions(this.store)
+    return cachedPluginDefinitions.length
+  }
+
+  @computed
   get isRunning(): boolean {
     return this.plugin.status !== PluginStatus.Stopped && this.plugin.status !== PluginStatus.Unknown
   }
