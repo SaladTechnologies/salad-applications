@@ -1,13 +1,18 @@
 import classnames from 'classnames'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { StatElement } from '../../../components'
+import { P, StatElement } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { formatDuration } from '../../../utils'
 import { MiningStatus } from '../../machine/models'
 
 const styles = (theme: SaladTheme) => ({
   container: {
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'column',
+  },
+  row: {
     display: 'flex',
     alignItems: 'center',
   },
@@ -71,6 +76,9 @@ const styles = (theme: SaladTheme) => ({
       'linear-gradient(96deg, rgba(201, 240, 55, 0.24) 5.38%, rgba(175, 214, 28, 0.64) 47.76%, rgba(178, 213, 48, 0.571429) 68.71%, rgba(178, 213, 48, 0.24) 101.12%)',
     animation: '$animated 10s linear infinite',
   },
+  warningText: {
+    color: theme.orange,
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -78,6 +86,8 @@ interface Props extends WithStyles<typeof styles> {
   runningTime?: number
   isEnabled?: boolean
   onClick?: () => void
+  pluginCount?: number
+  isDesktop?: boolean
 }
 
 class _StartButton extends Component<Props> {
@@ -89,32 +99,36 @@ class _StartButton extends Component<Props> {
     onClick?.()
   }
   render() {
-    const { status, runningTime, isEnabled, classes } = this.props
+    const { status, runningTime, isEnabled, pluginCount, isDesktop, classes } = this.props
     const isRunning =
       status === MiningStatus.Installing || status === MiningStatus.Initializing || status === MiningStatus.Running
 
     return (
       <div className={classes.container}>
-        <div className={classes.buttonContainer}>
-          <div className={classes.buttonBorder}>
-            <div className={classes.buttonBorderInner}>
-              <div
-                className={classnames(classes.button, {
-                  [classes.running]: isRunning,
-                  [classes.enabledButton]: isEnabled,
-                  [classes.disabledButton]: !isEnabled,
-                })}
-                onClick={this.handleClick}
-              >
-                {isRunning ? 'Stop' : 'Start'}
+        <div className={classes.row}>
+          <div className={classes.buttonContainer}>
+            <div className={classes.buttonBorder}>
+              <div className={classes.buttonBorderInner}>
+                <div
+                  className={classnames(classes.button, {
+                    [classes.running]: isRunning,
+                    [classes.enabledButton]: isEnabled,
+                    [classes.disabledButton]: !isEnabled,
+                  })}
+                  onClick={this.handleClick}
+                >
+                  {isRunning ? 'Stop' : 'Start'}
+                </div>
               </div>
             </div>
           </div>
+          <StatElement
+            title={runningTime ? formatDuration(runningTime) : 'Status'}
+            values={[`${(status || MiningStatus.Stopped).toUpperCase()}`]}
+          />
         </div>
-        <StatElement
-          title={runningTime ? formatDuration(runningTime) : 'Status'}
-          values={[`${(status || MiningStatus.Stopped).toUpperCase()}`]}
-        />
+        {!isDesktop && <P>Mining is not currently supported in browsers</P>}
+        {isDesktop && pluginCount === 0 && <P className={classes.warningText}>Unable to find any compatible miners</P>}
       </div>
     )
   }

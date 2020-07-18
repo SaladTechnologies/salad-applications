@@ -7,6 +7,8 @@ const mapStoreToProps = (store: RootStore): any => ({
   status: store.saladBowl.status,
   isEnabled: store.saladBowl.canRun,
   runningTime: store.saladBowl.runningTime,
+  pluginCount: store.saladBowl.pluginCount,
+  isDesktop: store.native.isNative,
 })
 
 export const StartButtonContainer = connect(mapStoreToProps, StartButton)
