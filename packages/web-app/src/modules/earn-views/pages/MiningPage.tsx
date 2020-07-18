@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Divider, Head, P, Scrollbar, SectionHeader, SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
+import { withLogin } from '../../auth-views'
 import { PantryContainer, SlicedVeggieContainer } from '../../xp-views'
 import { MiningSummary } from '../components'
 import { DesktopDownloadContainer } from '../DesktopDownloadContainer'
@@ -102,4 +103,4 @@ class _MiningPage extends Component<Props> {
   }
 }
 
-export const MiningPage = withStyles(styles)(_MiningPage)
+export const MiningPage = withLogin(withStyles(styles)(_MiningPage))

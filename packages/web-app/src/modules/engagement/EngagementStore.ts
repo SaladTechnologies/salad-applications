@@ -14,16 +14,19 @@ export class EngagementStore {
 
   @computed
   public get heroes(): Map<number, HeroType> {
-    const heroes = new Map<number, HeroType>()
+    const heroes = []
 
-    heroes.set(2, HeroType.Mining)
-    heroes.set(4, HeroType.Offerwall)
-
-    if (!this.store.referral.currentReferral) {
-      heroes.set(6, HeroType.ReferralEntry)
+    if (this.store.saladBowl.canRun) {
+      heroes.push(HeroType.Mining)
     }
 
-    return heroes
+    heroes.push(HeroType.Offerwall)
+
+    if (!this.store.referral.currentReferral) {
+      heroes.push(HeroType.ReferralEntry)
+    }
+
+    return new Map<number, HeroType>(heroes.map((v, i) => [(i + 1) * 2, v]))
   }
 
   /** A flag indicating if the initial notification has already been sent */
