@@ -1,6 +1,7 @@
-import { action, computed, flow, observable, runInAction } from 'mobx'
+import { action, autorun, computed, flow, observable, runInAction } from 'mobx'
 import { RootStore } from '../../Store'
 import { MiningStatus } from '../machine/models'
+import { IPersistentStore } from '../versions/IPersistentStore'
 import { PluginDefinition, StartReason, StopReason } from './models'
 import { ErrorCategory } from './models/ErrorCategory'
 import { ErrorMessage } from './models/ErrorMessage'
@@ -9,7 +10,7 @@ import { PluginStatus } from './models/PluginStatus'
 import { StatusMessage } from './models/StatusMessage'
 import { getPluginDefinitions } from './PluginDefinitionFactory'
 
-export class SaladBowlStore {
+export class SaladBowlStore implements IPersistentStore {
   private currentPluginDefinition?: PluginDefinition
   private currentPluginDefinitionIndex: number = 0
   private currentPluginRetries: number = 0
@@ -73,6 +74,31 @@ export class SaladBowlStore {
   constructor(private readonly store: RootStore) {
     this.store.native.on('mining-status', this.onReceiveStatus)
     this.store.native.on('mining-error', this.onReceiveError)
+  }
+
+  getSavedData(): object {
+    if (!this.isRunning) {
+      return {}
+    }
+
+    return {
+      isRunning: this.isRunning,
+      startTimestamp: this.startTimestamp,
+      choppingTime: this.choppingTime,
+    }
+  }
+  onDataLoaded(data: any): void {
+    let startMiner = data.isRunning
+    if (startMiner) {
+      autorun(() => {
+        if (!this.store.auth.isAuthenticated) return
+        if (!startMiner) return
+        if (!this.canRun) return
+
+        //Resumes mining
+        this.start(StartReason.Refresh, new Date(data.startTimestamp), data.choppingTime)
+      })
+    }
   }
 
   @action
@@ -139,7 +165,7 @@ export class SaladBowlStore {
   }
 
   @action.bound
-  start = flow(function* (this: SaladBowlStore, reason: StartReason) {
+  start = flow(function* (this: SaladBowlStore, reason: StartReason, startTimestamp?: Date, choppingTime?: number) {
     if (this.isRunning) {
       return
     }
@@ -199,9 +225,9 @@ export class SaladBowlStore {
       })
     }
 
-    this.startTimestamp = new Date(Date.now())
+    this.startTimestamp = startTimestamp || new Date(Date.now())
     this.runningTime = 0
-    this.choppingTime = 0
+    this.choppingTime = choppingTime || 0
 
     this.runningTimer = setInterval(() => {
       runInAction(() => {
@@ -289,7 +315,7 @@ export class SaladBowlStore {
     this.store.analytics.trackStop(reason, this.runningTime || 0, this.choppingTime || 0)
 
     this.startTimestamp = undefined
-    console.log('Stopping after running for: ' + this.runningTime)
+    console.log('Stopping after running for: ' + this.runningTime + 'and chopping for: ' + this.choppingTime)
     this.runningTime = undefined
     this.choppingTime = undefined
   })
