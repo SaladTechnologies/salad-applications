@@ -57,8 +57,8 @@ export const formatBalance = (balance?: number): string => {
 
   let balanceStr: string
 
-  if (balance < 0.01) {
-    balanceStr = balance.toPrecision(2)
+  if (balance < 0.1) {
+    balanceStr = balance.toPrecision(3)
   } else {
     balanceStr = balance.toFixed(2)
   }
