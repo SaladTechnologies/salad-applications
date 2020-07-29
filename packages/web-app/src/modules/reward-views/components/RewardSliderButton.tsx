@@ -1,8 +1,8 @@
+import classnames from 'classnames'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
-import classnames from 'classnames'
-import { IconArrowRight, IconArrowLeft } from './assets'
+import { IconArrowLeft, IconArrowRight } from './assets'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -19,6 +19,7 @@ const styles = (theme: SaladTheme) => ({
     cursor: 'pointer',
     display: 'flex',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   arrow: {
     width: 15,

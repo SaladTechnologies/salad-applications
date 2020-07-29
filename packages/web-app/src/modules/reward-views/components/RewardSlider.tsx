@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
-import { RewardSliderButton } from './RewardSliderButton'
 import Carousel from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
-import { IconArrowRight } from './assets'
 import { SmartLink } from '../../../components'
+import { SaladTheme } from '../../../SaladTheme'
+import { IconArrowRight } from './assets'
+import { RewardSliderButton } from './RewardSliderButton'
 
 const styles = (theme: SaladTheme) => ({
   container: { color: theme.lightGreen, paddingBottom: 64 },
@@ -111,20 +111,18 @@ class _RewardSlider extends Component<Props, State> {
 
   render() {
     const { title, viewAllRoute, classes, children } = this.props
-    const { isHovering, isHoveringRewards } = this.state
+    const { isHoveringRewards } = this.state
     return (
       <div className={classes.container} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
         <SmartLink to={viewAllRoute}>
           <div className={classes.titleContainer}>
             <div className={classes.titleText}>{title}</div>
-            {isHovering && (
-              <div className={classes.viewMoreText}>
-                Explore All
-                <div className={classes.arrow}>
-                  <IconArrowRight />
-                </div>
+            <div className={classes.viewMoreText}>
+              Explore All
+              <div className={classes.arrow}>
+                <IconArrowRight />
               </div>
-            )}{' '}
+            </div>
           </div>
         </SmartLink>
         <div onMouseEnter={this.handleMouseEnterRewards} onMouseLeave={this.handleMouseLeaveRewards}>
