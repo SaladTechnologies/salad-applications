@@ -244,6 +244,8 @@ export class RewardStore {
 
     this.isRedeeming = true
 
+    let response: SaladPaymentResponse | undefined
+
     try {
       //Creates a new SaladPay payment request
       let request = this.saladPay.paymentRequest({
@@ -260,14 +262,14 @@ export class RewardStore {
       })
 
       //Shows the SaladPay UI
-      let response: SaladPaymentResponse = yield request.show()
+      response = yield request.show()
 
-      console.log(`Completed SaladPay transaction ${response.details.transactionToken}`)
+      console.log(`Completed SaladPay transaction ${response?.details.transactionToken}`)
 
       yield this.axios.post(`/api/v1/rewards/${reward.id}/redemptions`, {})
 
       //Completes the transaction and closes SaladPay
-      response.complete('success')
+      response?.complete('success')
 
       //Track the redemption in mixpanel
       this.store.analytics.trackRewardRedeemed(reward)
@@ -280,6 +282,7 @@ export class RewardStore {
         autoClose: false,
       })
     } catch (error) {
+      response?.complete('fail')
       if (!(error instanceof AbortError)) {
         //Show an error notification
         this.store.notifications.sendNotification({
