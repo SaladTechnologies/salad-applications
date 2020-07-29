@@ -1,13 +1,11 @@
+import { faClipboard } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import classnames from 'classnames'
 import React, { Component } from 'react'
-
+import CopyToClipboard from 'react-copy-to-clipboard'
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
-import classnames from 'classnames'
-
-import { P, Divider, Username, SmartLink } from '../../../components'
-import CopyToClipboard from 'react-copy-to-clipboard'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faClipboard } from '@fortawesome/free-solid-svg-icons'
+import { Divider, P, SmartLink, Username } from '../../../components'
 
 const styles = {
   container: {
@@ -15,6 +13,7 @@ const styles = {
   },
   rightContent: {
     float: 'right',
+    display: 'flex',
   },
   rightText: {
     paddingLeft: 20,
@@ -25,6 +24,9 @@ const styles = {
     '&:active': {
       opacity: 0.75,
     },
+  },
+  padding: {
+    width: 40,
   },
 }
 
@@ -43,9 +45,8 @@ class _VaultItem extends Component<Props> {
       <div key={id} className={classnames(classes.container)}>
         <Username>{name}</Username>
         <div className={classes.rightContent}>
-          {/* TODO: Add custom classname */}
           <Username>${price?.toFixed(2)}</Username>
-          {/* TODO: Add custom classname */}
+          <div className={classes.padding} />
           <Username>{timestamp?.toLocaleDateString()}</Username>
         </div>
         {code && !code.startsWith('https') && (
