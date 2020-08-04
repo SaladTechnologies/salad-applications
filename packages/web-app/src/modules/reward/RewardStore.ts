@@ -1,13 +1,12 @@
 import { AxiosInstance } from 'axios'
 import { action, computed, flow, observable } from 'mobx'
-import { RouteComponentProps } from 'react-router'
 import { RootStore } from '../../Store'
 import { AbortError, SaladPaymentResponse } from '../salad-pay'
 import { SaladPay } from '../salad-pay/SaladPay'
 import { RewardQuery, RewardSort } from './models'
 import { Reward } from './models/Reward'
 import { RewardsResource } from './models/RewardsResource'
-import { parseRewardQuery, rewardFromResource, sortRewards, stringifyRewardQuery } from './utils'
+import { rewardFromResource, sortRewards } from './utils'
 
 type RewardId = string
 
@@ -66,12 +65,6 @@ export class RewardStore {
   getReward = (id?: string): Reward | undefined => {
     if (id === undefined) return undefined
     return this.rewards.get(id)
-  }
-
-  getRewardsByUrl = (route: RouteComponentProps<{ category?: string }>): Reward[] | undefined => {
-    let query: RewardQuery = parseRewardQuery(route)
-
-    return this.getRewards(query)
   }
 
   availableFilter = (x: Reward): boolean => x.quantity === undefined || x.quantity > 0
@@ -301,27 +294,27 @@ export class RewardStore {
     }
   })
 
-  /** Updates the current search text */
-  @action
-  updateSearch = (searchText: string) => {
-    if (searchText) {
-      const searchPath = '/search'
+  // /** Updates the current search text */
+  // @action
+  // updateSearch = (searchText: string) => {
+  //   if (searchText) {
+  //     const searchPath = '/search'
 
-      //TODO:DRS Get the current route as an arg for this function, update just the q parameter and then stringify it so we can search and use filters at the same time.
-      //We can do this once we have moved the search bar down to main page content
-      const query: RewardQuery = {} // parseRewardQuery(this.store.routing.location)
-      query.q = searchText
-      const search = stringifyRewardQuery(query)
+  //     //TODO:DRS Get the current route as an arg for this function, update just the q parameter and then stringify it so we can search and use filters at the same time.
+  //     //We can do this once we have moved the search bar down to main page content
+  //     const query: RewardQuery = {} // parseRewardQuery(this.store.routing.location)
+  //     query.q = searchText
+  //     const search = stringifyRewardQuery(query)
 
-      if (this.store.routing.location.pathname.includes(searchPath)) {
-        this.store.routing.replace({ pathname: searchPath, search: search })
-      } else {
-        this.store.routing.push({ pathname: searchPath, search: search })
-      }
+  //     if (this.store.routing.location.pathname.includes(searchPath)) {
+  //       this.store.routing.replace({ pathname: searchPath, search: search })
+  //     } else {
+  //       this.store.routing.push({ pathname: searchPath, search: search })
+  //     }
 
-      this.store.analytics.trackRewardSearch(searchText)
-    } else {
-      this.store.routing.push('/')
-    }
-  }
+  //     this.store.analytics.trackRewardSearch(searchText)
+  //   } else {
+  //     this.store.routing.push('/')
+  //   }
+  // }
 }

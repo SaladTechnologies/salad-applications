@@ -1,3 +1,5 @@
+import { SearchProvider } from '@elastic/react-search-ui'
+import AppSearchAPIConnector from '@elastic/search-ui-app-search-connector'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { ToastContainer } from 'react-toastify'
@@ -35,6 +37,17 @@ const styles = {
 
 interface Props extends WithStyles<typeof styles> {}
 
+//TODO: Get all these values from our config
+// const connector = )
+
+const searchConfig = {
+  apiConnector: new AppSearchAPIConnector({
+    searchKey: 'search-371auk61r2bwqtdzocdgutmg',
+    engineName: 'search-ui-examples',
+    hostIdentifier: 'host-2376rb',
+  }),
+}
+
 export const App = withStyles(styles)(
   class App extends Component<Props> {
     store = getStore()
@@ -69,7 +82,9 @@ export const App = withStyles(styles)(
               <MainTitlebarContainer />
               <div className={classes.container}>
                 <div className={classes.content}>
-                  <Routes />
+                  <SearchProvider config={searchConfig}>
+                    <Routes />
+                  </SearchProvider>
                 </div>
                 <ToastContainer />
               </div>

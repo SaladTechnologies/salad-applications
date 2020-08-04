@@ -1,9 +1,9 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
-import { SearchBar } from '../../components'
+import { RewardSearchBar } from './components'
 
 const mapStoreToProps = (store: RootStore): any => ({
-  onTextEntered: store.rewards.updateSearch,
+  setUrl: store.routing.push,
 })
 
-export const RewardSearchBarContainer = connect(mapStoreToProps, SearchBar)
+export const RewardSearchBarContainer = connect(mapStoreToProps, RewardSearchBar)

@@ -1,15 +1,14 @@
 import React, { Component } from 'react'
+import { Scrollbars } from 'react-custom-scrollbars'
 import withStyles, { WithStyles } from 'react-jss'
+import { P, Scrollbar } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { Reward } from '../../reward/models'
 import { RewardDisclaimers } from '../components'
-import { Scrollbars } from 'react-custom-scrollbars'
-import { P, Scrollbar } from '../../../components'
+import { IconArrowLeft } from '../components/assets'
 import { RewardItem } from '../components/RewardItem'
 import { rewardItemResponsive } from '../components/RewardSlider'
-import { IconArrowLeft } from '../components/assets'
 import { RewardFilterContainer } from '../RewardFilterContainer'
-import { RouteComponentProps } from 'react-router'
 
 const styles = (theme: SaladTheme) => {
   let style = {
@@ -89,7 +88,6 @@ interface Props extends WithStyles<typeof styles> {
   rewards?: Reward[]
   onViewReward?: (reward?: Reward) => void
   onBack?: () => void
-  route?: RouteComponentProps<{ category: string }>
 }
 
 class _BrowseRewardsPage extends Component<Props> {
@@ -99,7 +97,7 @@ class _BrowseRewardsPage extends Component<Props> {
     onBack?.()
   }
   render() {
-    const { rewards, title, onViewReward, route, classes } = this.props
+    const { rewards, title, onViewReward, classes } = this.props
     const hasRewards = rewards && rewards.length > 0
 
     return (
@@ -133,7 +131,7 @@ class _BrowseRewardsPage extends Component<Props> {
           <div style={{ flex: '0 0 250px' }}>
             <Scrollbars>
               <div className={classes.filterContainer}>
-                <RewardFilterContainer route={route} />
+                <RewardFilterContainer />
               </div>
             </Scrollbars>
           </div>
