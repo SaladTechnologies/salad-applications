@@ -3,7 +3,7 @@ import { Scrollbars } from 'react-custom-scrollbars'
 import withStyles, { WithStyles } from 'react-jss'
 import { P, Scrollbar } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
-import { Reward } from '../../reward/models'
+import { SearchResult } from '../../reward/models'
 import { RewardDisclaimers } from '../components'
 import { IconArrowLeft } from '../components/assets'
 import { RewardItem } from '../components/RewardItem'
@@ -85,8 +85,7 @@ const styles = (theme: SaladTheme) => {
 
 interface Props extends WithStyles<typeof styles> {
   title?: string
-  rewards?: Reward[]
-  onViewReward?: (reward?: Reward) => void
+  rewards?: SearchResult[]
   onBack?: () => void
 }
 
@@ -97,7 +96,7 @@ class _BrowseRewardsPage extends Component<Props> {
     onBack?.()
   }
   render() {
-    const { rewards, title, onViewReward, classes } = this.props
+    const { rewards, title, classes } = this.props
     const hasRewards = rewards && rewards.length > 0
 
     return (
@@ -118,7 +117,7 @@ class _BrowseRewardsPage extends Component<Props> {
                     <div className={classes.rewardContainer}>
                       {rewards?.map((x) => (
                         <div key={x.id} className={classes.rewardItem}>
-                          <RewardItem reward={x} onViewReward={onViewReward} />
+                          <RewardItem reward={x} />
                         </div>
                       ))}
                     </div>

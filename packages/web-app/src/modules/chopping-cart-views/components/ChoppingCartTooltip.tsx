@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
+import Img from 'react-image'
 import withStyles, { WithStyles } from 'react-jss'
+import { P, SmartLink } from '../../../components'
+import { rewardRoute } from '../../../RouteUtils'
 import { SaladTheme } from '../../../SaladTheme'
 import { Reward } from '../../reward/models'
-import { P, SmartLink } from '../../../components'
-import Img from 'react-image'
-import { rewardRoute } from '../../../RouteUtils'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -83,7 +83,7 @@ class _ChoppingCartTooltip extends Component<Props> {
         {!hasRewards && <P>Your Chopping Cart is Empty</P>}
         {hasRewards &&
           rewards?.map((x) => (
-            <SmartLink to={rewardRoute(x)}>
+            <SmartLink to={rewardRoute(x.id)}>
               <div className={classes.rewardItem}>
                 <Img
                   className={classes.rewardImage}

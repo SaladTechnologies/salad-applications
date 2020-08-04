@@ -1,15 +1,14 @@
-import React, { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import Img from 'react-image'
-import { SaladTheme } from '../../../SaladTheme'
 import classnames from 'classnames'
-import { Reward } from '../../reward/models'
-import { RewardMissingImage } from './RewardMissingImage'
-import Skeleton from 'react-loading-skeleton'
+import React, { Component } from 'react'
 //@ts-ignore
 import AspectRatio from 'react-aspect-ratio'
+import Img from 'react-image'
+import withStyles, { WithStyles } from 'react-jss'
+import Skeleton from 'react-loading-skeleton'
 import { SmartLink } from '../../../components'
-import { rewardRoute } from '../../../RouteUtils'
+import { SaladTheme } from '../../../SaladTheme'
+import { SearchResult } from '../../reward/models'
+import { RewardMissingImage } from './RewardMissingImage'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -94,31 +93,22 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  reward?: Reward
-  onViewReward?: (reward?: Reward) => void
+  reward?: SearchResult
 }
 
 class _RewardItem extends Component<Props> {
-  handleViewReward = () => {
-    const { onViewReward, reward } = this.props
-
-    if (onViewReward) {
-      onViewReward(reward)
-    }
-  }
-
   render() {
     const { reward, classes } = this.props
     let outOfStock = reward?.quantity === 0
     let lowQuanity = reward?.quantity !== undefined && reward?.quantity > 0
     return (
-      <div key={reward?.id} className={classnames(classes.container)} onClick={this.handleViewReward}>
-        <SmartLink to={rewardRoute(reward)}>
+      <div key={reward?.id} className={classnames(classes.container)}>
+        <SmartLink to={reward?.url}>
           <AspectRatio ratio={'323/433'}>
             {reward ? (
               <Img
                 className={classes.image}
-                src={reward?.coverImage}
+                src={reward?.image}
                 draggable={false}
                 alt=""
                 loader={<Skeleton height={'100%'} />}

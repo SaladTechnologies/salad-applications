@@ -1,16 +1,16 @@
+import classnames from 'classnames'
 import React, { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import 'react-aspect-ratio/aspect-ratio.css'
 //@ts-ignore
 import AspectRatio from 'react-aspect-ratio'
-import { SaladTheme } from '../../../SaladTheme'
-import classnames from 'classnames'
-import { Reward } from '../../reward/models'
-import { Button, SmartLink } from '../../../components'
+import 'react-aspect-ratio/aspect-ratio.css'
 import Img from 'react-image'
-import { RewardMissingImage } from './RewardMissingImage'
+import withStyles, { WithStyles } from 'react-jss'
 import Skeleton from 'react-loading-skeleton'
+import { Button, SmartLink } from '../../../components'
 import { rewardRoute } from '../../../RouteUtils'
+import { SaladTheme } from '../../../SaladTheme'
+import { Reward } from '../../reward/models'
+import { RewardMissingImage } from './RewardMissingImage'
 
 const styles = (theme: SaladTheme) => ({
   container: {},
@@ -123,7 +123,7 @@ class _RewardHeroItem extends Component<Props> {
     return (
       <div key={reward?.id} className={classnames(classes.container)}>
         <div className={classes.content}>
-          <SmartLink to={rewardRoute(reward)}>
+          <SmartLink to={rewardRoute(reward?.id)}>
             <div className={classes.imageContainer}>
               <AspectRatio ratio={'800/450'}>
                 {reward ? (
@@ -163,7 +163,7 @@ class _RewardHeroItem extends Component<Props> {
                 </div>
                 <div className={classes.headlineText}>{reward?.headline}</div>
                 <div className={classes.buttonContainer}>
-                  <SmartLink to={rewardRoute(reward)}>
+                  <SmartLink to={rewardRoute(reward.id)}>
                     <Button disabled={reward === undefined}>GET IT NOW</Button>
                   </SmartLink>
                 </div>

@@ -5,7 +5,6 @@ import { SearchBar } from '../../../components'
 interface Props {
   searchTerm?: string
   setSearchTerm?: (text: string) => void
-  setUrl?: (url: string) => void
 }
 
 class _RewardSearchBar extends Component<Props> {

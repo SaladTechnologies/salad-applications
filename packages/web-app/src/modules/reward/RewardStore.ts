@@ -62,6 +62,23 @@ export class RewardStore {
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
+  loadReward = flow(
+    function* (this: RewardStore, rewardId?: string) {
+      console.log('Loading reward ' + rewardId)
+
+      try {
+        console.log('Registering machine with salad')
+        let res: any = yield this.axios.get(`/api/v1/rewards/${rewardId}`)
+        let reward: Reward = rewardFromResource(res.data)
+        console.log(reward)
+        this.rewards.set(reward.id, reward)
+      } catch (err) {
+        debugger
+        throw err
+      }
+    }.bind(this),
+  )
+
   getReward = (id?: string): Reward | undefined => {
     if (id === undefined) return undefined
     return this.rewards.get(id)
@@ -112,6 +129,7 @@ export class RewardStore {
     return this.selectedRewardId === id
   }
 
+  //TODO: Remove this once we have moved the store to the new CMS system
   @action.bound
   refreshRewards = flow(function* (this: RewardStore) {
     try {

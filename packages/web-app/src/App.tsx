@@ -38,14 +38,15 @@ const styles = {
 interface Props extends WithStyles<typeof styles> {}
 
 //TODO: Get all these values from our config
-// const connector = )
-
 const searchConfig = {
   apiConnector: new AppSearchAPIConnector({
-    searchKey: 'search-371auk61r2bwqtdzocdgutmg',
-    engineName: 'search-ui-examples',
-    hostIdentifier: 'host-2376rb',
+    endpointBase: 'http://localhost:3002',
+    engineName: 'salad-rewards',
+    searchKey: 'search-7ezfca6rid8xgyggzs7nxnhq',
   }),
+  initialState: {
+    resultsPerPage: 40,
+  },
 }
 
 export const App = withStyles(styles)(

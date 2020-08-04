@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
+import { Head, Scrollbar } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { Reward } from '../../reward/models'
 import {
+  RewardDescriptionPanel,
+  RewardDisclaimers,
   RewardHeaderBar,
   RewardImageCarousel,
   RewardInfoPanel,
-  RewardDescriptionPanel,
   RewardRequirementsPanel,
-  RewardDisclaimers,
 } from '../components'
-import { Scrollbar, Head } from '../../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -29,6 +29,8 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
+  loadReward?: (id?: string) => void
+  rewardId?: string
   reward?: Reward
   onRedeem?: (reward?: Reward) => void
   onBack?: () => void
@@ -38,6 +40,10 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _RewardDetailsPage extends Component<Props> {
+  componentDidMount = () => {
+    const { rewardId, loadReward } = this.props
+    loadReward?.(rewardId)
+  }
   render() {
     const { reward, onRedeem, onBack, classes, ...rest } = this.props
     return (

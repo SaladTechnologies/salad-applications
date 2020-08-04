@@ -1,5 +1,4 @@
 import { encodeCategory } from './modules/reward/utils'
-import { Reward } from './modules/reward/models'
 
 /**
  * Returns the route to view all rewards in a specific category
@@ -16,6 +15,6 @@ export const rewardCategoryRoute = (category: string): string => {
  * Returns the route to view all rewards in a specific category
  * @param category The category to view
  */
-export const rewardRoute = (reward?: Reward): string => {
-  return reward ? `/rewards/${reward.id}` : ''
+export const rewardRoute = (rewardId?: string): string => {
+  return `/rewards/${rewardId}`
 }
