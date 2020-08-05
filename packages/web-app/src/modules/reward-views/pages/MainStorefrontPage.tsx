@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { RewardSearchBarContainer } from '..'
 import { Head, Scrollbar } from '../../../components'
 import { rewardCategoryRoute } from '../../../RouteUtils'
 import { HeroType } from '../../engagement/models/HeroType'
@@ -54,7 +53,6 @@ class _MainStorefrontPage extends Component<Props> {
 
     return (
       <>
-        <RewardSearchBarContainer />
         <Scrollbar>
           <Head title="Official Store" />
           <div className={classes.content}>

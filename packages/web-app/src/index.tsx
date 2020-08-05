@@ -74,7 +74,7 @@ ReactDOM.render(
           {/* Default page title for any page that doesn't specify one */}
           <Head title="Salad Technologies" />
           <Tooltips />
-          <App />
+          <App history={history} />
         </>
       </SkeletonTheme>
     </ThemeProvider>

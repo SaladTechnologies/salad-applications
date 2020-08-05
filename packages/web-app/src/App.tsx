@@ -1,5 +1,6 @@
 import { SearchProvider } from '@elastic/react-search-ui'
 import AppSearchAPIConnector from '@elastic/search-ui-app-search-connector'
+import { History } from 'history'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { ToastContainer } from 'react-toastify'
@@ -35,7 +36,9 @@ const styles = {
   },
 }
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  history: History
+}
 
 //TODO: Get all these values from our config
 const searchConfig = {
@@ -47,6 +50,7 @@ const searchConfig = {
   initialState: {
     resultsPerPage: 40,
   },
+  pathname: '/search',
 }
 
 export const App = withStyles(styles)(
@@ -83,7 +87,12 @@ export const App = withStyles(styles)(
               <MainTitlebarContainer />
               <div className={classes.container}>
                 <div className={classes.content}>
-                  <SearchProvider config={searchConfig}>
+                  <SearchProvider
+                    config={{
+                      ...searchConfig,
+                      history: this.props.history,
+                    }}
+                  >
                     <Routes />
                   </SearchProvider>
                 </div>
