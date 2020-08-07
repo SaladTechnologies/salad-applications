@@ -41,7 +41,7 @@
     "systeminformation": "4.26.9"
   },
   "devDependencies": {
-    "@types/node": "12.12.47",
+    "@types/node": "12.12.50",
     "@types/node-notifier": "6.0.1",
     "electron": "9.0.5",
     "electron-builder": "22.7.0",
