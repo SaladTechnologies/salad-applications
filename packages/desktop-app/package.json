@@ -38,7 +38,7 @@
     "is-online": "8.4.0",
     "node-notifier": "7.0.1",
     "source-map-support": "0.5.19",
-    "systeminformation": "4.26.9"
+    "systeminformation": "4.26.10"
   },
   "devDependencies": {
     "@types/node": "12.12.47",
