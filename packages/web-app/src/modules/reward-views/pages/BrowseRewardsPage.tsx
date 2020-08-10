@@ -85,7 +85,7 @@ const styles = (theme: SaladTheme) => {
 
 interface Props extends WithStyles<typeof styles> {
   title?: string
-  rewards?: SearchResult[]
+  results?: SearchResult[]
   onBack?: () => void
 }
 
@@ -96,8 +96,8 @@ class _BrowseRewardsPage extends Component<Props> {
     onBack?.()
   }
   render() {
-    const { rewards, title, classes } = this.props
-    const hasRewards = rewards && rewards.length > 0
+    const { results, title, classes } = this.props
+    const hasRewards = results && results.length > 0
 
     return (
       <div className={classes.container}>
@@ -115,9 +115,9 @@ class _BrowseRewardsPage extends Component<Props> {
                 {hasRewards && (
                   <div>
                     <div className={classes.rewardContainer}>
-                      {rewards?.map((x) => (
+                      {results?.map((x) => (
                         <div key={x.id} className={classes.rewardItem}>
-                          <RewardItem reward={x} />
+                          <RewardItem result={x} />
                         </div>
                       ))}
                     </div>

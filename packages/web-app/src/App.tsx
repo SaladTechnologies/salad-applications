@@ -50,6 +50,28 @@ const searchConfig = {
   initialState: {
     resultsPerPage: 40,
   },
+  searchQuery: {
+    facets: {
+      category: {
+        type: 'value',
+        size: 100,
+      },
+      platform: {
+        type: 'value',
+        size: 100,
+      },
+      price: {
+        type: 'range',
+        ranges: [
+          { from: 0, to: 0.5, name: 'Under $0.50' },
+          { from: 0.5, to: 1, name: '$0.50 to $1' },
+          { from: 1, to: 5, name: '$1 to $5' },
+          { from: 5, to: 10, name: '$5 to $10' },
+          { from: 10, name: '$10 & Above' },
+        ],
+      },
+    },
+  },
   pathname: '/search',
 }
 

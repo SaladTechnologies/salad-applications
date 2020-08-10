@@ -10,7 +10,6 @@
       "request": "launch",
       "runtimeArgs": ["--disable-web-security"],
       "url": "http://localhost:3000",
-      "webRoot": "${workspaceRoot}/src",
       "sourceMapPathOverrides": {
         "webpack:///src/*": "${webRoot}/*"
       }

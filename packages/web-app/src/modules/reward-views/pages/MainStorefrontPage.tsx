@@ -4,7 +4,7 @@ import { Head, Scrollbar } from '../../../components'
 import { rewardCategoryRoute } from '../../../RouteUtils'
 import { HeroType } from '../../engagement/models/HeroType'
 import { NotificationBannerContainer } from '../../home-views/NotificationBannerContainer'
-import { Reward } from '../../reward/models'
+import { SearchResult } from '../../reward/models'
 import { RewardDisclaimers, RewardHero, RewardSlider } from '../components'
 import { RewardHeroItem } from '../components/RewardHeroItem'
 import { RewardItem } from '../components/RewardItem'
@@ -20,7 +20,7 @@ const styles = {
 }
 
 interface Props extends WithStyles<typeof styles> {
-  categories?: Map<string, Reward[]>
+  categories?: Map<string, SearchResult[]>
   heroes?: Map<number, HeroType>
 }
 
@@ -65,7 +65,7 @@ class _MainStorefrontPage extends Component<Props> {
                   return (
                     <RewardHero key={category} title={category}>
                       {rewards.map((x) => (
-                        <RewardHeroItem key={x.id} reward={x} />
+                        <RewardHeroItem key={x.id} result={x} />
                       ))}
                     </RewardHero>
                   )
@@ -74,7 +74,7 @@ class _MainStorefrontPage extends Component<Props> {
                     <React.Fragment key={category}>
                       <RewardSlider key={category} title={category} viewAllRoute={rewardCategoryRoute(category)}>
                         {rewards.slice(0, maxRowSize).map((x) => (
-                          <RewardItem key={x.id} reward={x} />
+                          <RewardItem key={x.id} result={x} />
                         ))}
                       </RewardSlider>
                       {this.getHero(i)}

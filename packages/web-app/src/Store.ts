@@ -22,10 +22,10 @@ import { ExperienceStore } from './modules/xp'
 import { UIStore } from './UIStore'
 
 configure({
-  computedRequiresReaction: process.env.NODE_ENV === 'development',
+  // computedRequiresReaction: process.env.NODE_ENV === 'development',
   enforceActions: 'always',
-  observableRequiresReaction: process.env.NODE_ENV === 'development',
-  reactionRequiresObservable: process.env.NODE_ENV === 'development',
+  // observableRequiresReaction: process.env.NODE_ENV === 'development',
+  // reactionRequiresObservable: process.env.NODE_ENV === 'development',
 })
 
 let sharedStore: RootStore

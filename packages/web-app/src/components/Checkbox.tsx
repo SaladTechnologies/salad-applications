@@ -1,9 +1,9 @@
+import { faCheck } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import classnames from 'classnames'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck } from '@fortawesome/free-solid-svg-icons'
-import classnames from 'classnames'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -63,16 +63,16 @@ interface Props extends WithStyles<typeof styles> {
   errorText?: string
   textClassName?: string
   className?: string
-  onClick?: () => void
+  onClick?: (newState: boolean) => void
 }
 
 class _Checkbox extends Component<Props> {
   handleClick = () => {
-    const { onClick, disabled } = this.props
+    const { checked, onClick, disabled } = this.props
 
     if (disabled) return
 
-    onClick?.()
+    onClick?.(!checked)
   }
 
   render() {

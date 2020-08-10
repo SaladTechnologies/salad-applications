@@ -1,4 +1,4 @@
-import { Result, withSearch } from '@elastic/react-search-ui'
+import { Result } from '@elastic/react-search-ui'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { BrowseRewardsPage } from '.'
@@ -16,10 +16,8 @@ class _SearchResultsPage extends Component<Props> {
   render() {
     const { results, ...rest } = this.props
     const searchResults = results?.map(SearchResult.parseSearchResult)
-    return <BrowseRewardsPage rewards={searchResults} {...rest} />
+    return <BrowseRewardsPage results={searchResults} {...rest} />
   }
 }
 
-export const SearchResultsPage = withSearch(({ results }) => ({
-  results,
-}))(withStyles(styles)(_SearchResultsPage))
+export const SearchResultsPage = withStyles(styles)(_SearchResultsPage)
