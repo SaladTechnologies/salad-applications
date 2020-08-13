@@ -6,7 +6,8 @@ const mapStoreToProps = (): any => ({})
 
 export const RewardSearchBarContainer = connect(
   mapStoreToProps,
-  withSearch(({ searchTerm, setSearchTerm }) => ({
+  withSearch(({ searchTerm, setSearchTerm, error }) => ({
+    error,
     searchTerm,
     setSearchTerm,
   }))(RewardSearchBar),

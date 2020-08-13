@@ -9,7 +9,8 @@ const mapStoreToProps = (store: RootStore): any => ({
 
 export const RewardSearchResultContainer = connect(
   mapStoreToProps,
-  withSearch(({ results, clearFilters }) => ({
+  withSearch(({ error, results, clearFilters }) => ({
+    error,
     results,
     clearFilters,
   }))(SearchResultsPage),

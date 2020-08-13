@@ -40,12 +40,16 @@ const styles = (theme: SaladTheme) => {
       display: 'flex',
       alignItems: 'center',
       padding: '20px 0px',
+    },
+    backButton: {
+      display: 'flex',
+      alignItems: 'center',
       cursor: 'pointer',
       '&:hover': {
         opacity: 0.5,
       },
     },
-    backButton: {
+    backIcon: {
       width: 15,
       padding: 10,
     },
@@ -85,6 +89,7 @@ const styles = (theme: SaladTheme) => {
 
 interface Props extends WithStyles<typeof styles> {
   title?: string
+  error?: string
   results?: SearchResult[]
   onBack?: () => void
 }
@@ -95,22 +100,25 @@ class _BrowseRewardsPage extends Component<Props> {
   }
 
   render() {
-    const { results, title, classes } = this.props
+    const { results, error, title, classes } = this.props
     const hasRewards = results && results.length > 0
 
     return (
       <div className={classes.container}>
-        <div className={classes.titleBar} onClick={this.handleBack}>
-          <div className={classes.backButton}>
-            <IconArrowLeft />
+        <div className={classes.titleBar}>
+          <div className={classes.backButton} onClick={this.handleBack}>
+            <div className={classes.backIcon}>
+              <IconArrowLeft />
+            </div>
+            <div className={classes.titleText}>{title || 'Back'}</div>
           </div>
-          <div className={classes.titleText}>{title || 'Back'}</div>
         </div>
         <div className={classes.columnContainer}>
           <div style={{ flex: 1 }}>
             <Scrollbar>
               <div className={classes.contentContainer}>
-                {!hasRewards && <P className={classes.placeholderText}>No Rewards Found</P>}
+                {!hasRewards && error && <P className={classes.placeholderText}>Error Finding Rewards</P>}
+                {!hasRewards && !error && <P className={classes.placeholderText}>No Rewards Found</P>}
                 {hasRewards && (
                   <div>
                     <div className={classes.rewardContainer}>

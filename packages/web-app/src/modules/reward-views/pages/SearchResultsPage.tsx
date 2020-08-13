@@ -8,6 +8,7 @@ const styles = {}
 
 interface Props extends WithStyles<typeof styles> {
   title?: string
+  error?: string
   results?: Result[]
   clearFilters?: () => void
   onBack?: () => void

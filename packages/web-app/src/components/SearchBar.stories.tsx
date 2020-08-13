@@ -1,6 +1,6 @@
-import React from 'react'
-import { storiesOf } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
+import { storiesOf } from '@storybook/react'
+import React from 'react'
 import { SearchBar } from '.'
 
 storiesOf('Components/Search Bar', module)
@@ -9,4 +9,7 @@ storiesOf('Components/Search Bar', module)
   })
   .add('with text', () => {
     return <SearchBar text={'hello world'} onTextEntered={action('text entered')} />
+  })
+  .add('with error', () => {
+    return <SearchBar text={'hello world'} onTextEntered={action('text entered')} error="Search unavailable" />
   })

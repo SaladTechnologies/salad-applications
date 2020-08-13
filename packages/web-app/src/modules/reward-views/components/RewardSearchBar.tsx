@@ -4,6 +4,7 @@ import { SearchBar } from '../../../components'
 interface Props {
   searchTerm?: string
   setSearchTerm?: (text: string, options: {}) => void
+  error?: string
 }
 
 class _RewardSearchBar extends Component<Props> {
@@ -13,8 +14,8 @@ class _RewardSearchBar extends Component<Props> {
     setSearchTerm?.(text, { shouldClearFilters: false })
   }
   render() {
-    const { searchTerm } = this.props
-    return <SearchBar text={searchTerm} onTextEntered={this.handleText} />
+    const { error, searchTerm } = this.props
+    return <SearchBar error={error && 'Search Unavailable'} text={searchTerm} onTextEntered={this.handleText} />
   }
 }
 

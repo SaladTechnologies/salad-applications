@@ -1,10 +1,9 @@
-import React, { Component } from 'react'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import classnames from 'classnames'
+import React, { ChangeEvent, Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch } from '@fortawesome/free-solid-svg-icons'
-import classnames from 'classnames'
-import { ChangeEvent } from 'react'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -15,13 +14,23 @@ const styles = (theme: SaladTheme) => ({
     display: 'inline-flex',
     padding: '10px 10px 10px 5px',
     flexWrap: 'nowrap',
-    alignItems: 'baseline',
     color: theme.lightGreen,
+    flexDirection: 'column',
     backgroundColor: `${theme.darkBlue}CC`,
+  },
+  row: {
+    display: 'flex',
+    alignItems: 'baseline',
   },
   icon: {
     margin: 5,
     height: 10,
+  },
+  errorText: {
+    color: theme.orange,
+    marginLeft: 28,
+    fontFamily: theme.fontGroteskLight25,
+    fontSize: 12,
   },
   textInput: {
     fontFamily: theme.fontGroteskLight25,
@@ -44,6 +53,7 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   text?: string
+  error?: string
   onTextEntered?: (txt: string) => void
 }
 
@@ -55,18 +65,21 @@ class _SearchBar extends Component<Props> {
     }
   }
   render() {
-    const { text, classes } = this.props
+    const { text, error, classes } = this.props
 
     return (
       <div className={classnames(classes.container)}>
-        <FontAwesomeIcon className={classes.icon} icon={faSearch} />
-        <input
-          className={classes.textInput}
-          type="text"
-          value={text}
-          placeholder="SEARCH"
-          onChange={this.handleTextEntry}
-        />
+        <div className={classnames(classes.row)}>
+          <FontAwesomeIcon className={classes.icon} icon={faSearch} />
+          <input
+            className={classes.textInput}
+            type="text"
+            value={text}
+            placeholder="SEARCH"
+            onChange={this.handleTextEntry}
+          />
+        </div>
+        {error && <div className={classes.errorText}>{error}</div>}
       </div>
     )
   }
