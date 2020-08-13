@@ -2,12 +2,7 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Route, Switch } from 'react-router'
 import { SaladTheme } from '../../SaladTheme'
-import {
-  MainStorefrontContainer,
-  RewardBrowseCategoryContainer,
-  RewardSearchBarContainer,
-  RewardSearchResultContainer,
-} from '../reward-views'
+import { MainStorefrontContainer, RewardSearchBarContainer, RewardSearchResultContainer } from '../reward-views'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -53,7 +48,7 @@ class _HomePage extends Component<WithStyles<typeof styles>> {
             <Switch>
               <Route exact path="/" component={MainStorefrontContainer} />
               <Route exact path="/search" component={RewardSearchResultContainer} />
-              <Route exact path="/browse/category/:category" component={RewardBrowseCategoryContainer} />
+              {/* <Route exact path="/browse/category/:category" component={RewardBrowseCategoryContainer} /> */}
             </Switch>
           </div>
         </div>

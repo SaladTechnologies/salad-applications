@@ -4,7 +4,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import { RewardFilterPanel } from './RewardFilterPanel'
 import { RewardPriceFilter } from './RewardPriceFilter'
 
-const styles = () => ({})
+const styles = {}
 
 interface Props extends WithStyles<typeof styles> {}
 
@@ -13,7 +13,12 @@ class _RewardFilterList extends Component<Props> {
     return (
       <div>
         <Facet field="price" label="Price" filterType="all" view={(props) => <RewardPriceFilter {...props} />} />
-        <Facet field="category" label="Category" filterType="all" view={(props) => <RewardFilterPanel {...props} />} />
+        <Facet
+          field="tags"
+          label="Category"
+          filterType="all"
+          view={(props) => <RewardFilterPanel {...props} multiSelect />}
+        />
         <Facet field="platform" label="Platform" filterType="all" view={(props) => <RewardFilterPanel {...props} />} />
       </div>
     )

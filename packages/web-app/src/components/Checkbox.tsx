@@ -14,6 +14,9 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
     alignItems: 'center',
     color: theme.lightGreen,
+    '&:hover': {
+      opacity: 0.7,
+    },
   },
   checkBox: {
     width: '1rem',
@@ -25,6 +28,7 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: 8,
   },
   enabled: {
     cursor: 'pointer',
@@ -38,7 +42,6 @@ const styles = (theme: SaladTheme) => ({
     position: 'absolute',
   },
   text: {
-    paddingLeft: 8,
     fontFamily: 'sharpGroteskBook19',
     margin: 0,
     whiteSpace: 'nowrap',
@@ -58,6 +61,7 @@ interface Props extends WithStyles<typeof styles> {
   name?: string
   value?: any
   checked?: boolean
+  hideCheckbox?: boolean
   disabled?: boolean
   text?: string
   errorText?: string
@@ -76,7 +80,7 @@ class _Checkbox extends Component<Props> {
   }
 
   render() {
-    const { textClassName, disabled, className, text, errorText, checked, classes } = this.props
+    const { textClassName, disabled, hideCheckbox, className, text, errorText, checked, classes } = this.props
     return (
       <div className={classnames(classes.container, className)}>
         <label
@@ -85,9 +89,11 @@ class _Checkbox extends Component<Props> {
             [classes.disabled]: disabled,
           })}
         >
-          <div className={classes.checkBox} onClick={this.handleClick}>
-            {checked && <FontAwesomeIcon size="xs" className={classes.checkmark} icon={faCheck} />}
-          </div>
+          {!hideCheckbox && (
+            <div className={classes.checkBox} onClick={this.handleClick}>
+              {checked && <FontAwesomeIcon size="xs" className={classes.checkmark} icon={faCheck} />}
+            </div>
+          )}
           <p className={classnames(textClassName, classes.text)} onClick={this.handleClick}>
             {text}
           </p>

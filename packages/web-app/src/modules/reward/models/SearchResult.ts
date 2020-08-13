@@ -5,7 +5,6 @@ export class SearchResult {
   /** The quantity of rewards remaining.
    *  A value means stock is getting low.
    *  Undefined means we have "significant" stock */
-  quantity?: number
 
   constructor(
     public readonly id: string,
@@ -15,6 +14,7 @@ export class SearchResult {
     public readonly image?: string,
     public readonly heroImage?: string,
     public readonly description?: string,
+    public readonly quantity?: number,
   ) {}
 
   public static parseSearchResult = (result: any): SearchResult => {
@@ -22,8 +22,9 @@ export class SearchResult {
     const name = result['name'].raw
     const price = parseFloat(result['price'].raw)
     const image = result['cover_image']?.raw
+    const quantity = parseInt(result['quantity']?.raw)
     const url = rewardRoute(id)
-    return new SearchResult(id, name, price, url, image)
+    return new SearchResult(id, name, price, url, image, undefined, undefined, quantity)
   }
 
   public static fromReward = (reward: Reward): SearchResult => {
@@ -35,6 +36,7 @@ export class SearchResult {
       reward.coverImage,
       reward.heroImage,
       reward.headline,
+      reward.quantity,
     )
   }
 }

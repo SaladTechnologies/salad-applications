@@ -48,11 +48,11 @@ const searchConfig = {
     searchKey: 'search-7ezfca6rid8xgyggzs7nxnhq',
   }),
   initialState: {
-    resultsPerPage: 40,
+    resultsPerPage: 100,
   },
   searchQuery: {
     facets: {
-      category: {
+      tags: {
         type: 'value',
         size: 100,
       },

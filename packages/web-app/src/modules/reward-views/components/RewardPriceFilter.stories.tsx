@@ -1,22 +1,11 @@
 import { action } from '@storybook/addon-actions'
 import React from 'react'
-import { PriceFilterOption, RewardPriceFilter } from './RewardPriceFilter'
+import { RangeFilterOption, RewardPriceFilter } from './RewardPriceFilter'
 
 export default {
   title: 'Modules/Rewards/Reward Price Filter',
   component: RewardPriceFilter,
 }
-
-// const categoryFilter = {
-//   type: FilterType.Value,
-//   field: 'categories',
-//   data: [
-//     { value: 'games', count: 123 },
-//     { value: 'gift card', count: 3 },
-//   ],
-// }
-
-// const emptyCategory = { type: FilterType.Value, field: 'empty things', data: [] }
 
 const createOption = (
   name: string,
@@ -24,7 +13,7 @@ const createOption = (
   to?: number,
   count: number = 10,
   selected: boolean = false,
-): PriceFilterOption => {
+): RangeFilterOption => {
   return {
     value: { from: from, to: to, name: name },
     count: count,
@@ -43,6 +32,7 @@ export const NoneSelected = () => (
     ]}
     onSelect={action('Select')}
     onRemove={action('Remove')}
+    onChange={action('Change')}
   />
 )
 
@@ -57,5 +47,6 @@ export const ItemSelected = () => (
     ]}
     onSelect={action('Select')}
     onRemove={action('Remove')}
+    onChange={action('Change')}
   />
 )

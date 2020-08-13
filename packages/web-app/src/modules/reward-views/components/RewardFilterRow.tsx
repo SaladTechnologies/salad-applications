@@ -1,24 +1,8 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Checkbox } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
 
-const styles = (theme: SaladTheme) => ({
-  container: {
-    fontFamily: theme.fontGroteskBook19,
-    fontSize: 12,
-    color: theme.lightGreen,
-    padding: 10,
-  },
-  sortContainer: {
-    padding: 5,
-  },
-  sortLabel: {
-    paddingBottom: 5,
-  },
-  sectionContainer: {
-    padding: 10,
-  },
+const styles = {
   row: {
     display: 'flex',
     alignItems: 'center',
@@ -26,22 +10,23 @@ const styles = (theme: SaladTheme) => ({
   countLabel: {
     marginLeft: 'auto',
   },
-})
+}
 
 interface Props extends WithStyles<typeof styles> {
   text?: string
   selected?: boolean
   count?: number
+  hideCheckbox?: boolean
   onClick?: (newState: boolean) => void
 }
 
 class _RewardFilterRow extends Component<Props> {
   render() {
-    const { text, selected, count, onClick, classes } = this.props
+    const { text, selected, count, hideCheckbox, onClick, classes } = this.props
 
     return (
       <div className={classes.row}>
-        <Checkbox text={text} checked={selected} onClick={onClick} />
+        <Checkbox text={text} checked={selected} onClick={onClick} hideCheckbox={hideCheckbox} />
         <div className={classes.countLabel}>{count}</div>
       </div>
     )

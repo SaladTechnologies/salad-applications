@@ -91,10 +91,9 @@ interface Props extends WithStyles<typeof styles> {
 
 class _BrowseRewardsPage extends Component<Props> {
   handleBack = () => {
-    const { onBack } = this.props
-
-    onBack?.()
+    this.props.onBack?.()
   }
+
   render() {
     const { results, title, classes } = this.props
     const hasRewards = results && results.length > 0

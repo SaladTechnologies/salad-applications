@@ -341,6 +341,7 @@ declare module '@elastic/react-search-ui' {
     resultsPerPage?: number
     searchTerm?: string
     setSearchTerm?: func
+    clearFilters?: func
     sortDirection?: SortDirection
     sortField?: string
 

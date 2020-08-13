@@ -4,12 +4,13 @@ import { RootStore } from '../../Store'
 import { SearchResultsPage } from './pages'
 
 const mapStoreToProps = (store: RootStore): any => ({
-  onBack: store.routing.goBack,
+  onBack: () => store.routing.push(''),
 })
 
 export const RewardSearchResultContainer = connect(
   mapStoreToProps,
-  withSearch(({ results }) => ({
+  withSearch(({ results, clearFilters }) => ({
     results,
+    clearFilters,
   }))(SearchResultsPage),
 )
