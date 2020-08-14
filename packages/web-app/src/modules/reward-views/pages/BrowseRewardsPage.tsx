@@ -1,3 +1,4 @@
+import { Result } from '@elastic/react-search-ui'
 import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import withStyles, { WithStyles } from 'react-jss'
@@ -123,9 +124,21 @@ class _BrowseRewardsPage extends Component<Props> {
                   <div>
                     <div className={classes.rewardContainer}>
                       {results?.map((x) => (
-                        <div key={x.id} className={classes.rewardItem}>
-                          <RewardItem result={x} />
-                        </div>
+                        <Result
+                          key={x.id}
+                          // This component assumes you pass the full 'raw' result in, we are
+                          // faking this right now by populating the id
+                          result={{
+                            id: {
+                              raw: x.id,
+                            },
+                          }}
+                          view={() => (
+                            <div className={classes.rewardItem}>
+                              <RewardItem result={x} />
+                            </div>
+                          )}
+                        />
                       ))}
                     </div>
                     <RewardDisclaimers />

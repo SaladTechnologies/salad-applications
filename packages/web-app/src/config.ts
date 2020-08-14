@@ -1,5 +1,5 @@
-import { convertMinutes } from './utils'
 import * as Storage from './Storage'
+import { convertMinutes } from './utils'
 
 interface ProcessEnv {
   [key: string]: string | undefined
@@ -45,6 +45,9 @@ export class Config {
   public readonly rewardRefreshRate: number = numberOrDefault('REACT_APP_REWARD_REFRESH_RATE', convertMinutes(5))
   public readonly sentryDSN?: string = optionalString('REACT_APP_SENTRY_DSN')
   public readonly whatsNewVersion: string = requiredString('REACT_APP_WHATS_NEW_VERSION')
+  public readonly searchUrl: string = requiredString('REACT_APP_SEARCH_URL')
+  public readonly searchKey: string = requiredString('REACT_APP_SEARCH_KEY')
+  public readonly searchEngine: string = requiredString('REACT_APP_SEARCH_ENGINE')
 
   public get apiBaseUrl(): string {
     const override = Storage.getItem('OVERRIDE_APP_API_URL')

@@ -22,8 +22,17 @@ export class SearchResult {
     const name = result['name'].raw
     const price = parseFloat(result['price'].raw)
     const image = result['cover_image']?.raw
-    const quantity = parseInt(result['quantity']?.raw)
+    let quantity: number | undefined = parseInt(result['quantity']?.raw)
+    const inStock = result['in_stock']?.raw === 'true'
     const url = rewardRoute(id)
+
+    if (!inStock) {
+      quantity = 0
+    } else if (quantity > 0) {
+    } else {
+      quantity = undefined
+    }
+
     return new SearchResult(id, name, price, url, image, undefined, undefined, quantity)
   }
 

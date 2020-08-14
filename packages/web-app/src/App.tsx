@@ -5,6 +5,7 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { ToastContainer } from 'react-toastify'
 import { LoadingPage, MobileDevice, NotMobile } from './components'
+import { config } from './config'
 import { FooterBarContainer } from './modules/home-views'
 import { MainTitlebarContainer } from './modules/home-views/MainTitlebarContainer'
 import { Routes } from './Routes'
@@ -43,9 +44,9 @@ interface Props extends WithStyles<typeof styles> {
 //TODO: Get all these values from our config
 const searchConfig = {
   apiConnector: new AppSearchAPIConnector({
-    endpointBase: 'http://localhost:3002',
-    engineName: 'salad-rewards',
-    searchKey: 'search-7ezfca6rid8xgyggzs7nxnhq',
+    endpointBase: config.searchUrl,
+    engineName: config.searchEngine,
+    searchKey: config.searchKey,
   }),
   searchQuery: {
     resultsPerPage: 200,
