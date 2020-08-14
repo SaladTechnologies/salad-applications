@@ -67,7 +67,6 @@ export class RewardStore {
       console.log('Loading reward ' + rewardId)
 
       try {
-        console.log('Registering machine with salad')
         let res: any = yield this.axios.get(`/api/v1/rewards/${rewardId}`)
         let reward: Reward = rewardFromResource(res.data)
         console.log(reward)

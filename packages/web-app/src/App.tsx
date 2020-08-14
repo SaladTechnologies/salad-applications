@@ -47,10 +47,8 @@ const searchConfig = {
     engineName: 'salad-rewards',
     searchKey: 'search-7ezfca6rid8xgyggzs7nxnhq',
   }),
-  initialState: {
-    resultsPerPage: 100,
-  },
   searchQuery: {
+    resultsPerPage: 200,
     facets: {
       tags: {
         type: 'value',
