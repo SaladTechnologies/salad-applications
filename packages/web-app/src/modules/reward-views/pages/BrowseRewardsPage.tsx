@@ -1,15 +1,15 @@
+import { Result } from '@elastic/react-search-ui'
 import React, { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
-import { Reward } from '../../reward/models'
-import { RewardDisclaimers } from '../components'
 import { Scrollbars } from 'react-custom-scrollbars'
+import withStyles, { WithStyles } from 'react-jss'
 import { P, Scrollbar } from '../../../components'
+import { SaladTheme } from '../../../SaladTheme'
+import { SearchResult } from '../../reward/models'
+import { RewardDisclaimers } from '../components'
+import { IconArrowLeft } from '../components/assets'
 import { RewardItem } from '../components/RewardItem'
 import { rewardItemResponsive } from '../components/RewardSlider'
-import { IconArrowLeft } from '../components/assets'
 import { RewardFilterContainer } from '../RewardFilterContainer'
-import { RouteComponentProps } from 'react-router'
 
 const styles = (theme: SaladTheme) => {
   let style = {
@@ -41,12 +41,16 @@ const styles = (theme: SaladTheme) => {
       display: 'flex',
       alignItems: 'center',
       padding: '20px 0px',
+    },
+    backButton: {
+      display: 'flex',
+      alignItems: 'center',
       cursor: 'pointer',
       '&:hover': {
         opacity: 0.5,
       },
     },
-    backButton: {
+    backIcon: {
       width: 15,
       padding: 10,
     },
@@ -86,42 +90,55 @@ const styles = (theme: SaladTheme) => {
 
 interface Props extends WithStyles<typeof styles> {
   title?: string
-  rewards?: Reward[]
-  onViewReward?: (reward?: Reward) => void
+  error?: string
+  results?: SearchResult[]
   onBack?: () => void
-  route?: RouteComponentProps<{ category: string }>
 }
 
 class _BrowseRewardsPage extends Component<Props> {
   handleBack = () => {
-    const { onBack } = this.props
-
-    onBack?.()
+    this.props.onBack?.()
   }
+
   render() {
-    const { rewards, title, onViewReward, route, classes } = this.props
-    const hasRewards = rewards && rewards.length > 0
+    const { results, error, title, classes } = this.props
+    const hasRewards = results && results.length > 0
 
     return (
       <div className={classes.container}>
-        <div className={classes.titleBar} onClick={this.handleBack}>
-          <div className={classes.backButton}>
-            <IconArrowLeft />
+        <div className={classes.titleBar}>
+          <div className={classes.backButton} onClick={this.handleBack}>
+            <div className={classes.backIcon}>
+              <IconArrowLeft />
+            </div>
+            <div className={classes.titleText}>{title || 'Back'}</div>
           </div>
-          <div className={classes.titleText}>{title || 'Back'}</div>
         </div>
         <div className={classes.columnContainer}>
           <div style={{ flex: 1 }}>
             <Scrollbar>
               <div className={classes.contentContainer}>
-                {!hasRewards && <P className={classes.placeholderText}>No Rewards Found</P>}
+                {!hasRewards && error && <P className={classes.placeholderText}>Error Finding Rewards</P>}
+                {!hasRewards && !error && <P className={classes.placeholderText}>No Rewards Found</P>}
                 {hasRewards && (
                   <div>
                     <div className={classes.rewardContainer}>
-                      {rewards?.map((x) => (
-                        <div key={x.id} className={classes.rewardItem}>
-                          <RewardItem reward={x} onViewReward={onViewReward} />
-                        </div>
+                      {results?.map((x) => (
+                        <Result
+                          key={x.id}
+                          // This component assumes you pass the full 'raw' result in, we are
+                          // faking this right now by populating the id
+                          result={{
+                            id: {
+                              raw: x.id,
+                            },
+                          }}
+                          view={() => (
+                            <div className={classes.rewardItem}>
+                              <RewardItem result={x} />
+                            </div>
+                          )}
+                        />
                       ))}
                     </div>
                     <RewardDisclaimers />
@@ -133,7 +150,7 @@ class _BrowseRewardsPage extends Component<Props> {
           <div style={{ flex: '0 0 250px' }}>
             <Scrollbars>
               <div className={classes.filterContainer}>
-                <RewardFilterContainer route={route} />
+                <RewardFilterContainer />
               </div>
             </Scrollbars>
           </div>

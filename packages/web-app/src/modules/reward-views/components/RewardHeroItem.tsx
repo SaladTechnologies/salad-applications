@@ -1,16 +1,16 @@
+import classnames from 'classnames'
 import React, { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import 'react-aspect-ratio/aspect-ratio.css'
 //@ts-ignore
 import AspectRatio from 'react-aspect-ratio'
-import { SaladTheme } from '../../../SaladTheme'
-import classnames from 'classnames'
-import { Reward } from '../../reward/models'
-import { Button, SmartLink } from '../../../components'
+import 'react-aspect-ratio/aspect-ratio.css'
 import Img from 'react-image'
-import { RewardMissingImage } from './RewardMissingImage'
+import withStyles, { WithStyles } from 'react-jss'
 import Skeleton from 'react-loading-skeleton'
+import { Button, SmartLink } from '../../../components'
 import { rewardRoute } from '../../../RouteUtils'
+import { SaladTheme } from '../../../SaladTheme'
+import { SearchResult } from '../../reward/models'
+import { RewardMissingImage } from './RewardMissingImage'
 
 const styles = (theme: SaladTheme) => ({
   container: {},
@@ -110,30 +110,30 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  reward?: Reward
+  result?: SearchResult
 }
 
 class _RewardHeroItem extends Component<Props> {
   render() {
-    const { reward, classes } = this.props
+    const { result, classes } = this.props
 
-    let outOfStock = reward?.quantity === 0
-    let lowQuanity = reward?.quantity !== undefined && reward?.quantity > 0
+    let outOfStock = result?.quantity === 0
+    let lowQuanity = result?.quantity !== undefined && result?.quantity > 0
 
     return (
-      <div key={reward?.id} className={classnames(classes.container)}>
+      <div key={result?.id} className={classnames(classes.container)}>
         <div className={classes.content}>
-          <SmartLink to={rewardRoute(reward)}>
+          <SmartLink to={rewardRoute(result?.id)}>
             <div className={classes.imageContainer}>
               <AspectRatio ratio={'800/450'}>
-                {reward ? (
+                {result ? (
                   <Img
                     className={classes.image}
-                    src={reward?.heroImage}
+                    src={result?.heroImage}
                     draggable={false}
                     alt=""
                     loader={<Skeleton height={'100%'} />}
-                    unloader={<RewardMissingImage text={reward?.name} />}
+                    unloader={<RewardMissingImage text={result?.name} />}
                   />
                 ) : (
                   <Skeleton height={'100%'} />
@@ -143,12 +143,12 @@ class _RewardHeroItem extends Component<Props> {
           </SmartLink>
 
           <div className={classes.infoContainer}>
-            {reward ? (
+            {result ? (
               <div className={classes.infoContent}>
-                <div className={classes.nameText}>{reward?.name}</div>
+                <div className={classes.nameText}>{result?.name}</div>
                 <div className={classes.priceContainer}>
                   <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
-                    {reward?.price ? `$${reward?.price.toFixed(2)}` : 'FREE'}
+                    {result?.price ? `$${result?.price.toFixed(2)}` : 'FREE'}
                   </div>
                   {outOfStock && (
                     <div className={classnames(classes.priceText, classes.stockLabel, classes.outOfStockLabel)}>
@@ -157,14 +157,14 @@ class _RewardHeroItem extends Component<Props> {
                   )}
                   {lowQuanity && (
                     <div className={classnames(classes.priceText, classes.stockLabel, classes.lowQuanityLabel)}>
-                      {`${reward?.quantity} Remaining`}
+                      {`${result?.quantity} Remaining`}
                     </div>
                   )}
                 </div>
-                <div className={classes.headlineText}>{reward?.headline}</div>
+                <div className={classes.headlineText}>{result?.description}</div>
                 <div className={classes.buttonContainer}>
-                  <SmartLink to={rewardRoute(reward)}>
-                    <Button disabled={reward === undefined}>GET IT NOW</Button>
+                  <SmartLink to={rewardRoute(result.id)}>
+                    <Button disabled={result === undefined}>GET IT NOW</Button>
                   </SmartLink>
                 </div>
               </div>

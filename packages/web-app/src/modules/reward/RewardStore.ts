@@ -1,13 +1,12 @@
 import { AxiosInstance } from 'axios'
 import { action, computed, flow, observable } from 'mobx'
-import { RouteComponentProps } from 'react-router'
 import { RootStore } from '../../Store'
 import { AbortError, SaladPaymentResponse } from '../salad-pay'
 import { SaladPay } from '../salad-pay/SaladPay'
-import { RewardQuery, RewardSort } from './models'
+import { SearchResult } from './models'
 import { Reward } from './models/Reward'
 import { RewardsResource } from './models/RewardsResource'
-import { parseRewardQuery, rewardFromResource, sortRewards, stringifyRewardQuery } from './utils'
+import { rewardFromResource, sortRewards } from './utils'
 
 type RewardId = string
 
@@ -38,15 +37,15 @@ export class RewardStore {
     return [selectedReward]
   }
 
-  @computed get categorizedRewards(): Map<string, Reward[]> {
-    let result = new Map<string, Reward[]>()
+  @computed get categorizedRewards(): Map<string, SearchResult[]> {
+    let result = new Map<string, SearchResult[]>()
 
     this.categoryData.forEach((rewardIds, c) => {
       let rewards = []
       for (let id of rewardIds) {
         let r = this.rewards.get(id)
-        if (r !== undefined) {
-          rewards.push(r)
+        if (r) {
+          rewards.push(SearchResult.fromReward(r))
         }
       }
       if (rewards.length > 0) {
@@ -63,62 +62,32 @@ export class RewardStore {
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
+  loadReward = flow(
+    function* (this: RewardStore, rewardId?: string) {
+      console.log('Loading reward ' + rewardId)
+
+      try {
+        let res: any = yield this.axios.get(`/api/v1/rewards/${rewardId}`)
+        let reward: Reward = rewardFromResource(res.data)
+        console.log(reward)
+        this.rewards.set(reward.id, reward)
+      } catch (err) {
+        debugger
+        throw err
+      }
+    }.bind(this),
+  )
+
   getReward = (id?: string): Reward | undefined => {
     if (id === undefined) return undefined
     return this.rewards.get(id)
-  }
-
-  getRewardsByUrl = (route: RouteComponentProps<{ category?: string }>): Reward[] | undefined => {
-    let query: RewardQuery = parseRewardQuery(route)
-
-    return this.getRewards(query)
-  }
-
-  availableFilter = (x: Reward): boolean => x.quantity === undefined || x.quantity > 0
-
-  getRewards = (query: RewardQuery): Reward[] | undefined => {
-    //TODO: Figure out how to make this be computed and to memoize it
-    let rewards = [...this.rewards.values()]
-
-    return this.filterRewards(query, rewards)
-  }
-
-  filterRewards = (query: RewardQuery, rewards?: Reward[]): Reward[] => {
-    if (rewards === undefined) {
-      return []
-    }
-
-    if (query.available) {
-      rewards = rewards.filter((x) => x.quantity === undefined || x.quantity === null || x.quantity > 0)
-    }
-
-    if (query.redeemable) {
-      const currentBalance = this.store.balance.currentBalance
-      rewards = rewards.filter((x) => x.price <= currentBalance)
-    }
-
-    if (query.maxPrice !== undefined) {
-      rewards = rewards.filter((x) => x.price <= (query.maxPrice === undefined ? Number.MAX_VALUE : query.maxPrice))
-    }
-
-    if (query.category) {
-      rewards = rewards.filter((x) => query.category && [...query.category].every((y) => x.tags.includes(y)))
-    }
-
-    if (query.q) {
-      rewards = rewards.filter((x) => query.q && x.name.toLowerCase().includes(query.q.toLowerCase()))
-    }
-
-    //Sorts the rewards based on the query
-    rewards = sortRewards(rewards, (query.sort as RewardSort) || RewardSort.Default)
-
-    return rewards
   }
 
   isInChoppingCart = (id?: string): boolean => {
     return this.selectedRewardId === id
   }
 
+  //TODO: Remove this once we have moved the store to the new CMS system
   @action.bound
   refreshRewards = flow(function* (this: RewardStore) {
     try {
@@ -177,7 +146,7 @@ export class RewardStore {
 
       const rewards = [...rewardIds].map((x) => this.getReward(x)).filter((x): x is Reward => x !== undefined)
 
-      let sortedIds = sortRewards(rewards, RewardSort.Default).map((x: Reward) => x.id)
+      let sortedIds = sortRewards(rewards).map((x: Reward) => x.id)
 
       categories.set(category, new Set(sortedIds))
     }
@@ -300,28 +269,4 @@ export class RewardStore {
       console.error('Cleared isRedeeming flag')
     }
   })
-
-  /** Updates the current search text */
-  @action
-  updateSearch = (searchText: string) => {
-    if (searchText) {
-      const searchPath = '/search'
-
-      //TODO:DRS Get the current route as an arg for this function, update just the q parameter and then stringify it so we can search and use filters at the same time.
-      //We can do this once we have moved the search bar down to main page content
-      const query: RewardQuery = {} // parseRewardQuery(this.store.routing.location)
-      query.q = searchText
-      const search = stringifyRewardQuery(query)
-
-      if (this.store.routing.location.pathname.includes(searchPath)) {
-        this.store.routing.replace({ pathname: searchPath, search: search })
-      } else {
-        this.store.routing.push({ pathname: searchPath, search: search })
-      }
-
-      this.store.analytics.trackRewardSearch(searchText)
-    } else {
-      this.store.routing.push('/')
-    }
-  }
 }

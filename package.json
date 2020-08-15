@@ -1,10 +1,5 @@
 {
   "name": "@saladtech/salad-applications",
   "version": "1.0.0",
-  "private": true,
-  "engineStrict": true,
-  "engines": {
-    "node": "12.18.2",
-    "yarn": ">=1.22.0"
-  }
+  "private": true
 }

@@ -1,21 +1,73 @@
-import React from 'react'
-import { RewardFilterPanel } from './RewardFilterPanel'
 import { action } from '@storybook/addon-actions'
+import React from 'react'
+import { RewardFilterPanel, ValueFilterOption } from './RewardFilterPanel'
 
 export default {
   title: 'Modules/Rewards/Reward Filter Panel',
   component: RewardFilterPanel,
 }
 
-export const Basic = () => (
+export const createOption = (value: string, count: number = 10, selected: boolean = false): ValueFilterOption => {
+  return {
+    value: value,
+    count: count,
+    selected: selected,
+  }
+}
+
+export const SingleSelect = () => (
   <RewardFilterPanel
-    priceFilter={{ label: 'Free', value: 5, onChance: action('price') }}
-    stockFilter={{ label: 'In Stock', active: true, count: 10, onToggle: action('stock') }}
-    redeemableFilter={{ label: 'Redeemable', active: false, count: 5, onToggle: action('redeemable') }}
-    tagFilters={[
-      { label: 'Tag 1', active: false, count: 3, onToggle: action('tag1') },
-      { label: 'Tag 2', active: false, count: 100, onToggle: action('tag2') },
-      { label: 'This is a really really long tag', active: false, count: 11, onToggle: action('long tag') },
+    label="Category"
+    options={[createOption('Game'), createOption('Gift Card'), createOption('Donation'), createOption('Physical Good')]}
+    onSelect={action('Select')}
+    onRemove={action('Remove')}
+    onChange={action('Change')}
+    onMoreClick={action('More')}
+  />
+)
+
+export const MultiSelectNoneSelected = () => (
+  <RewardFilterPanel
+    label="Category"
+    options={[createOption('Game'), createOption('Gift Card'), createOption('Donation'), createOption('Physical Good')]}
+    onSelect={action('Select')}
+    onRemove={action('Remove')}
+    onChange={action('Change')}
+    onMoreClick={action('More')}
+    multiSelect
+  />
+)
+export const MultiSelectOneSelected = () => (
+  <RewardFilterPanel
+    label="Category"
+    options={[
+      createOption('Game', 22, true),
+      createOption('Gift Card'),
+      createOption('Donation'),
+      createOption('Physical Good'),
     ]}
+    onSelect={action('Select')}
+    onRemove={action('Remove')}
+    onChange={action('Change')}
+    onMoreClick={action('More')}
+    multiSelect
+  />
+)
+
+export const MoreOptions = () => (
+  <RewardFilterPanel
+    label="Category"
+    options={[
+      createOption('Game', 22, true),
+      createOption('Gift Card'),
+      createOption('Donation'),
+      createOption('Physical Good'),
+    ]}
+    onSelect={action('Select')}
+    onRemove={action('Remove')}
+    onChange={action('Change')}
+    onMoreClick={action('More')}
+    multiSelect
+    showMore
   />
 )

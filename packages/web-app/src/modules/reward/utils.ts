@@ -1,11 +1,12 @@
-import { RewardResource } from './models/RewardResource'
-import { Reward } from './models/Reward'
-import { config } from '../../config'
-import { RewardQuery, RewardSort } from './models'
 import queryString from 'query-string'
 import { RouteComponentProps } from 'react-router'
+import { config } from '../../config'
+import { RewardQuery } from './models'
+import { Reward } from './models/Reward'
+import { RewardResource } from './models/RewardResource'
 
-const toFullImageUrl = (url?: string): string | undefined => (url ? new URL(url, config.apiBaseUrl).href : undefined)
+export const toFullImageUrl = (url?: string): string | undefined =>
+  url ? new URL(url, config.apiBaseUrl).href : undefined
 
 export const rewardFromResource = (r: RewardResource): Reward => ({
   //Reward data
@@ -73,40 +74,22 @@ export const parseRewardQuery = (route: RouteComponentProps<{ category?: string 
   return query
 }
 
-export const sortRewards = (rewards: Reward[], sort: RewardSort): Reward[] => {
-  switch (sort) {
-    case RewardSort.Alphabetical:
-      return rewards.sort((a, b) => {
-        let rewardAName = a?.name || ''
-        let rewardBName = b?.name || ''
+export const sortRewards = (rewards: Reward[]): Reward[] => {
+  return rewards.sort((a, b) => {
+    let rewardAName = a?.name || ''
+    let rewardBName = b?.name || ''
 
-        return rewardAName > rewardBName ? 1 : rewardBName > rewardAName ? -1 : 0
-      })
+    //If we are out of stock, make them the lowest priority
+    let rewardAStock = a?.quantity === 0 ? Number.MIN_VALUE : Number.MAX_VALUE
+    let rewardBStock = b?.quantity === 0 ? Number.MIN_VALUE : Number.MAX_VALUE
 
-    case RewardSort.PriceAscending:
-      return rewards.sort((a, b) => a.price - b.price)
+    let stockDiff = rewardBStock - rewardAStock
 
-    case RewardSort.PriceDescending:
-      return rewards.sort((a, b) => b.price - a.price)
+    //If the stock status is the same, sort by name
+    if (stockDiff === 0) {
+      return rewardAName > rewardBName ? 1 : rewardBName > rewardAName ? -1 : 0
+    }
 
-    case RewardSort.Default:
-    default:
-      return rewards.sort((a, b) => {
-        let rewardAName = a?.name || ''
-        let rewardBName = b?.name || ''
-
-        //If we are out of stock, make them the lowest priority
-        let rewardAStock = a?.quantity === 0 ? Number.MIN_VALUE : Number.MAX_VALUE
-        let rewardBStock = b?.quantity === 0 ? Number.MIN_VALUE : Number.MAX_VALUE
-
-        let stockDiff = rewardBStock - rewardAStock
-
-        //If the stock status is the same, sort by name
-        if (stockDiff === 0) {
-          return rewardAName > rewardBName ? 1 : rewardBName > rewardAName ? -1 : 0
-        }
-
-        return stockDiff
-      })
-  }
+    return stockDiff
+  })
 }

@@ -1,8 +1,8 @@
-import React from 'react'
-import { storiesOf } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
-import { RewardDetailsPage, BrowseRewardsPage, MainStorefrontPage } from '.'
-import { generateRewards } from '../components/RewardComponents.stories'
+import { storiesOf } from '@storybook/react'
+import React from 'react'
+import { BrowseRewardsPage, MainStorefrontPage, RewardDetailsPage } from '.'
+import { generateResults, generateRewards } from '../components/RewardComponents.stories'
 
 storiesOf('Modules/Reward Pages/Main Storefront Page', module)
   .addDecorator((storyFn) => (
@@ -58,33 +58,33 @@ storiesOf('Modules/Reward Pages/Reward Details Page', module)
 
 storiesOf('Modules/Reward Pages/Browse Rewards Page', module)
   .add('with rewards (n=1)', () => {
-    let rewards = generateRewards(1)
-    return <BrowseRewardsPage rewards={rewards} onBack={action('back')} />
+    let results = generateResults(1)
+    return <BrowseRewardsPage results={results} onBack={action('back')} />
   })
   .add('with rewards (n=4)', () => {
-    let rewards = generateRewards(4)
-    return <BrowseRewardsPage rewards={rewards} onBack={action('back')} />
+    let results = generateResults(4)
+    return <BrowseRewardsPage results={results} onBack={action('back')} />
   })
   .add('with rewards (n=10)', () => {
-    let rewards = generateRewards(10)
-    return <BrowseRewardsPage rewards={rewards} onBack={action('back')} />
+    let results = generateResults(10)
+    return <BrowseRewardsPage results={results} onBack={action('back')} />
   })
   .add('with rewards & title (n=50)', () => {
-    let rewards = generateRewards(50)
-    return <BrowseRewardsPage title={'Amazing Games'} rewards={rewards} onBack={action('back')} />
+    let results = generateResults(50)
+    return <BrowseRewardsPage title={'Amazing Games'} results={results} onBack={action('back')} />
   })
   .add('no rewards w/ title', () => {
-    return <BrowseRewardsPage title={'Amazing Games'} rewards={undefined} onBack={action('back')} />
+    return <BrowseRewardsPage title={'Amazing Games'} results={undefined} onBack={action('back')} />
   })
   .add('no rewards (undefined)', () => {
-    return <BrowseRewardsPage rewards={undefined} onBack={action('back')} />
+    return <BrowseRewardsPage results={undefined} onBack={action('back')} />
   })
   .add('no rewards (empty)', () => {
-    return <BrowseRewardsPage rewards={[]} onBack={action('back')} />
+    return <BrowseRewardsPage results={[]} onBack={action('back')} />
   })
   .add('with title', () => {
-    return <BrowseRewardsPage title={'Amazing Games'} rewards={[]} onBack={action('back')} />
+    return <BrowseRewardsPage title={'Amazing Games'} results={[]} onBack={action('back')} />
   })
   .add('no title', () => {
-    return <BrowseRewardsPage title={undefined} rewards={[]} onBack={action('back')} />
+    return <BrowseRewardsPage title={undefined} results={[]} onBack={action('back')} />
   })

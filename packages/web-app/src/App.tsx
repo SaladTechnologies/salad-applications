@@ -1,7 +1,11 @@
+import { SearchProvider } from '@elastic/react-search-ui'
+import AppSearchAPIConnector from '@elastic/search-ui-app-search-connector'
+import { History } from 'history'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { ToastContainer } from 'react-toastify'
 import { LoadingPage, MobileDevice, NotMobile } from './components'
+import { config } from './config'
 import { FooterBarContainer } from './modules/home-views'
 import { MainTitlebarContainer } from './modules/home-views/MainTitlebarContainer'
 import { Routes } from './Routes'
@@ -33,7 +37,42 @@ const styles = {
   },
 }
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  history: History
+}
+
+//TODO: Get all these values from our config
+const searchConfig = {
+  apiConnector: new AppSearchAPIConnector({
+    endpointBase: config.searchUrl,
+    engineName: config.searchEngine,
+    searchKey: config.searchKey,
+  }),
+  searchQuery: {
+    resultsPerPage: 200,
+    facets: {
+      tags: {
+        type: 'value',
+        size: 100,
+      },
+      platform: {
+        type: 'value',
+        size: 100,
+      },
+      price: {
+        type: 'range',
+        ranges: [
+          { from: 0, to: 0.5, name: 'Under $0.50' },
+          { from: 0.5, to: 1, name: '$0.50 to $1' },
+          { from: 1, to: 5, name: '$1 to $5' },
+          { from: 5, to: 10, name: '$5 to $10' },
+          { from: 10, name: '$10 & Above' },
+        ],
+      },
+    },
+  },
+  pathname: '/search',
+}
 
 export const App = withStyles(styles)(
   class App extends Component<Props> {
@@ -69,7 +108,14 @@ export const App = withStyles(styles)(
               <MainTitlebarContainer />
               <div className={classes.container}>
                 <div className={classes.content}>
-                  <Routes />
+                  <SearchProvider
+                    config={{
+                      ...searchConfig,
+                      history: this.props.history,
+                    }}
+                  >
+                    <Routes />
+                  </SearchProvider>
                 </div>
                 <ToastContainer />
               </div>

@@ -3,14 +3,14 @@ import withStyles, { WithStyles } from 'react-jss'
 import { StatElement } from '../../../components'
 import { StartButtonContainer } from '../../machine-views'
 
-const styles = () => ({
+const styles = {
   container: {},
   row: {
     display: 'flex',
     justifyContent: 'space-evenly',
     alignItems: 'center',
   },
-})
+}
 
 interface Props extends WithStyles<typeof styles> {
   lifetimeXp?: number
