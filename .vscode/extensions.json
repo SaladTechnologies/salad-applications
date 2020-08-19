@@ -4,6 +4,5 @@
     "editorconfig.editorconfig",
     "esbenp.prettier-vscode"
   ],
-  "unwantedRecommendations": [
-  ]
+  "unwantedRecommendations": []
 }

@@ -1,0 +1,181 @@
+*                       text=auto
+*.7z                    binary
+*.ada                   text diff=ada
+*.ai                    binary
+*.bat                   text eol=crlf
+*.bib                   text diff=bibtex
+*.bmp                   binary
+*.c                     text diff=cpp
+*.class                 binary
+*.cmd                   text eol=crlf
+*.code-workspace        text
+*.cpp                   text diff=cpp
+*.cs                    text diff=csharp
+*.csproj                text
+*.css                   text diff=css
+*.csv                   text
+*.dcproj                text
+*.dll                   binary
+*.doc                   binary diff=astextplain
+*.Dockerfile            text
+*.docm                  binary diff=astextplain
+*.docx                  binary diff=astextplain
+*.dot                   binary diff=astextplain
+*.dotm                  binary diff=astextplain
+*.dotx                  binary diff=astextplain
+*.env                   text
+*.eot                   binary
+*.eps                   binary
+*.exe                   binary
+*.f                     text diff=fortran
+*.f90                   text diff=fortran
+*.for                   text diff=fortran
+*.gif                   binary
+*.go                    text diff=golang
+*.gz                    binary
+*.h                     text diff=cpp
+*.htm                   text diff=html
+*.html                  text diff=html
+*.ico                   binary
+*.ini                   text
+*.jar                   binary
+*.java                  text diff=java
+*.jpeg                  binary
+*.jpg                   binary
+*.js                    text
+*.json                  text
+*.jsp                   text
+*.jsx                   text
+*.less                  text
+*.m                     text diff=matlab
+*.m4a                   binary
+*.m4v                   binary
+*.md                    text
+*.mid                   binary
+*.midi                  binary
+*.mov                   binary
+*.mp3                   binary
+*.mp4                   binary
+*.mpeg                  binary
+*.mpg                   binary
+*.o                     binary
+*.odf                   binary diff=astextplain
+*.odp                   binary
+*.ods                   binary diff=astextplain
+*.odt                   binary diff=astextplain
+*.ogg                   binary
+*.otf                   binary
+*.pas                   text diff=pascal
+*.pbxproj               binary
+*.pdb                   binary
+*.pdf                   binary diff=astextplain
+*.php                   text diff=php
+*.pl                    text diff=perl
+*.pm                    text diff=perl
+*.png                   binary
+*.pot                   binary
+*.potx                  binary
+*.pp                    text diff=pascal
+*.ppt                   binary
+*.pptx                  binary
+*.properties            text
+*.props                 text
+*.proto                 text
+*.ps1                   text eol=lf
+*.psd                   binary
+*.pxd                   text
+*.py                    text diff=python
+*.py3                   text diff=python
+*.pyc                   binary
+*.pyd                   binary
+*.pyo                   binary
+*.pyw                   text diff=python
+*.pywz                  binary
+*.pyx                   text
+*.pyz                   binary
+*.rake                  text diff=ruby
+*.rar                   binary
+*.rb                    text diff=ruby
+*.rtf                   text diff=astextplain
+*.ruleset               text
+*.sass                  text
+*.scss                  text
+*.sh                    text eol=lf
+*.sln                   text
+*.so                    binary
+*.sql                   text
+*.styl                  text
+*.svg                   text
+*.svgz                  binary
+*.tar                   binary
+*.targets               text
+*.tex                   text diff=tex
+*.tif                   binary
+*.tiff                  binary
+*.ts                    text
+*.tsv                   text
+*.tsx                   text
+*.ttf                   binary
+*.txt                   text
+*.vbproj                text
+*.war                   binary
+*.wav                   binary
+*.wbmp                  binary
+*.webm                  binary
+*.webp                  binary
+*.woff                  binary
+*.woff2                 binary
+*.xhtml                 text diff=html
+*.xls                   binary
+*.xlsx                  binary
+*.xlt                   binary
+*.xltx                  binary
+*.xml                   text
+*.xslt                  text
+*.xz                    binary
+*.yaml                  text
+*.yml                   text
+*.zip                   binary
+.babelrc                text
+.dockerignore           text
+.editorconfig           text
+.eslintrc               text
+.gitattributes          text
+.gitconfig              text
+.gitignore              text
+.helmignore             text
+.htaccess               text
+.nvmrc                  text eol=lf
+.prettierignore         text
+.prettierrc             text
+.yarnclean              text
+.yarnrc                 text
+ACKNOWLEDGMENTS*        text
+AUTHORS*                text
+CHANGELOG*              text
+CHANGES*                text
+CODE_OF_CONDUCT*        text
+CodeMaid.config         text
+CODEOWNERS*             text
+CONTRIBUTING*           text
+CONTRIBUTORS*           text
+COPYING*                text
+COPYRIGHT*              text
+Dockerfile*             text
+HISTORY*                text
+INSTALL*                text
+ISSUE_TEMPLATE*         text
+LICENSE*                text
+Makefile                text
+makefile                text
+NEWS*                   text
+paket.dependencies      text
+paket.references        text
+PULL_REQUEST_TEMPLATE*  text
+README*                 text
+RELEASES*               text
+SUPPORT*                text
+TODO*                   text
+yarn.lock               text
+/.pnp.js                binary linguist-generated
+/.yarn/**               linguist-vendored
