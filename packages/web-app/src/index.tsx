@@ -1,28 +1,33 @@
 // Import CSS. Order is important!
-// Import dependencies.
-import * as Sentry from '@sentry/browser'
-import 'abortcontroller-polyfill'
-import { createBrowserHistory } from 'history'
-import { syncHistoryWithStore } from 'mobx-react-router'
-import React from 'react'
+import './index.css'
+import 'react-hint/css/index.css'
+import 'react-toastify/dist/ReactToastify.css'
+
 // Import polyfills. Order is important!
 import 'react-app-polyfill/stable'
+import 'whatwg-fetch'
+import 'abortcontroller-polyfill'
+
+// Import dependencies.
+import * as Sentry from '@sentry/browser'
+import { createBrowserHistory } from 'history'
+import { syncHistoryWithStore } from 'mobx-react-router'
+import allSettled from 'promise.allsettled'
+import React from 'react'
 import ReactDOM from 'react-dom'
-import 'react-hint/css/index.css'
 import { ThemeProvider } from 'react-jss'
 import { SkeletonTheme } from 'react-loading-skeleton'
 import { Router } from 'react-router-dom'
-import 'react-toastify/dist/ReactToastify.css'
-import 'whatwg-fetch'
 import { App } from './App'
 import { createClient } from './axiosFactory'
 import { Head } from './components'
 import { config } from './config'
-import './index.css'
 import { DefaultTheme } from './SaladTheme'
 import * as serviceWorker from './serviceWorker'
 import { createStore } from './Store'
 import { Tooltips } from './Tooltips'
+
+allSettled.shim()
 
 Sentry.init({
   dsn: config.sentryDSN,
