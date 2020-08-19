@@ -87,18 +87,55 @@ export class SaladBowlStore implements IPersistentStore {
       choppingTime: this.choppingTime,
     }
   }
-  onDataLoaded(data: any): void {
-    let startMiner = data.isRunning
-    if (startMiner) {
-      autorun(() => {
-        if (!this.store.auth.isAuthenticated) return
-        if (!startMiner) return
-        if (!this.canRun) return
 
-        //Resumes mining
-        this.start(StartReason.Refresh, new Date(data.startTimestamp), data.choppingTime)
-      })
+  onDataLoaded(data: unknown): void {
+    if (typeof data !== 'object' || data == null) {
+      return
     }
+
+    autorun(() => {
+      if (!this.store.auth.isAuthenticated || !this.canRun) {
+        return
+      }
+
+      const isRunning = (data as { isRunning?: unknown }).isRunning
+      if (isRunning !== true && isRunning !== 'true') {
+        return
+      }
+
+      const startTimestamp = (data as { startTimestamp?: unknown }).startTimestamp
+      let start: Date
+      if (typeof startTimestamp === 'number' || typeof startTimestamp === 'string') {
+        start = new Date(startTimestamp)
+        if (isNaN(start.valueOf())) {
+          start = new Date()
+        }
+      } else {
+        start = new Date()
+      }
+
+      const choppingTime = (data as { choppingTime?: unknown }).choppingTime
+      let time: number
+      if (typeof choppingTime === 'number') {
+        time = Math.floor(choppingTime)
+      } else if (typeof choppingTime === 'string') {
+        time = parseInt(choppingTime)
+        if (isNaN(time)) {
+          time = 0
+        }
+      } else {
+        time = 0
+      }
+
+      if (time < 0) {
+        time = 0
+      } else if (time > Number.MAX_SAFE_INTEGER) {
+        time = Number.MAX_SAFE_INTEGER
+      }
+
+      // Resume mining.
+      this.start(StartReason.Refresh, start, time)
+    })
   }
 
   @action
