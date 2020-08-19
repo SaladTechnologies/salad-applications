@@ -26,22 +26,23 @@ export class VersionStore {
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     this.persistentStores = [store.saladBowl]
 
-    //Check to see if this is part of an automatic app refresh where we need to start the miner again
+    // Check to see if this is part of an automatic app refresh where we need to start the miner again.
     const dataString = getItem(VERSION_RELOAD_DATA)
-
     if (dataString) {
-      const dataObj: any = JSON.parse(dataString || '')
-
-      //Check the persistent data to see if anything needs to be loaded
-      if (!VersionStore.isEmpty(dataObj)) {
-        this.persistentStores.forEach((x) => {
-          const name = x.constructor.name
-          const data: object = dataObj[name]
-          x.onDataLoaded(data)
-        })
-
-        removeItem(VERSION_RELOAD_DATA)
+      try {
+        const dataObj: any = JSON.parse(dataString)
+        if (!VersionStore.isEmpty(dataObj)) {
+          this.persistentStores.forEach((x) => {
+            const name = x.constructor.name
+            const data: object = dataObj[name]
+            x.onDataLoaded(data)
+          })
+        }
+      } catch (error) {
+        // A SyntaxError. The `VERSION_RELOAD_DATA` is invalid.
       }
+
+      removeItem(VERSION_RELOAD_DATA)
     }
 
     autorun(() => {

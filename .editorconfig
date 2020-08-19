@@ -9,14 +9,11 @@ trim_trailing_whitespace = true
 
 ##### Documents #####
 
-[*.code-workspace]
-indent_size = 2
-
-[*.{css,less,sass,scss,styl}]
+[*.css]
 indent_size = 2
 max_line_length = 120
 
-[*.{html,htm,xhtml}]
+[*.{htm,html,xhtml}]
 indent_size = 2
 max_line_length = 120
 
@@ -26,14 +23,25 @@ max_line_length = 120
 
 [*.json]
 indent_size = 2
-max_line_length = 120
 
 [*.md]
+indent_size = 2
+
+[*.{nsh,nsi}]
+indent_size = 2
+
+[*.pro]
 indent_size = 2
 
 [*.svg]
 indent_size = 2
 max_line_length = 120
+
+[*.toml]
+indent_size = 2
+
+[*.webmanifest]
+indent_size = 2
 
 [*.{xml,xslt}]
 indent_size = 2
@@ -41,7 +49,6 @@ max_line_length = 120
 
 [*.{yml,yaml}]
 indent_size = 2
-max_line_length = 120
 
 [.nvmrc]
 insert_final_newline = false
