@@ -22,6 +22,7 @@ import { App } from './App'
 import { createClient } from './axiosFactory'
 import { Head } from './components'
 import { config } from './config'
+import { ErrorBoundary } from './ErrorBoundary'
 import { DefaultTheme } from './SaladTheme'
 import * as serviceWorker from './serviceWorker'
 import { createStore } from './Store'
@@ -76,12 +77,12 @@ ReactDOM.render(
   <Router history={history}>
     <ThemeProvider theme={DefaultTheme}>
       <SkeletonTheme color={'#172E40'} highlightColor="#304759">
-        <>
+        <ErrorBoundary>
           {/* Default page title for any page that doesn't specify one */}
           <Head title="Salad Technologies" />
           <Tooltips />
           <App history={history} />
-        </>
+        </ErrorBoundary>
       </SkeletonTheme>
     </ThemeProvider>
   </Router>,
