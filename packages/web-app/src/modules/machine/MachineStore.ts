@@ -44,7 +44,11 @@ export class MachineStore {
         let machine: Machine = res.data
         this.currentMachine = machine
       } catch (err) {
-        this.store.analytics.captureException(new Error(`register-machine error: ${err}`))
+        this.store.analytics.captureException(new Error(`register-machine error: ${err}`), {
+          contexts: {
+            machineInfo: this.store.native.machineInfo,
+          },
+        })
         throw err
       }
     }.bind(this),

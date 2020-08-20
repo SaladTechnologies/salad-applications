@@ -9,7 +9,7 @@ import 'whatwg-fetch'
 import 'abortcontroller-polyfill'
 
 // Import dependencies.
-import * as Sentry from '@sentry/browser'
+import * as Sentry from '@sentry/react'
 import { createBrowserHistory } from 'history'
 import { syncHistoryWithStore } from 'mobx-react-router'
 import allSettled from 'promise.allsettled'

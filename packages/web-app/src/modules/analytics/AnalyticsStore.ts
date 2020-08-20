@@ -1,4 +1,5 @@
-import * as Sentry from '@sentry/browser'
+import * as Sentry from '@sentry/react'
+import { CaptureContext } from '@sentry/types'
 import mixpanel from 'mixpanel-browser'
 import { autorun } from 'mobx'
 import { config } from '../../config'
@@ -15,7 +16,11 @@ export class AnalyticsStore {
   constructor(private readonly store: RootStore) {
     autorun(() => {
       console.log(`Detected change in status:${this.store.saladBowl.status}`)
-      this.trackMiningStatus(this.store.saladBowl.status, this.store.saladBowl.plugin.name, this.store.saladBowl.plugin.version)
+      this.trackMiningStatus(
+        this.store.saladBowl.status,
+        this.store.saladBowl.plugin.name,
+        this.store.saladBowl.plugin.version,
+      )
     })
   }
 
@@ -262,11 +267,11 @@ export class AnalyticsStore {
     mixpanel.track(event, properties)
   }
 
-  public captureException = (err: Error) => {
+  public captureException = (err: Error, scope?: CaptureContext) => {
     console.error(err)
-    Sentry.withScope((scope) => {
-      scope.setFingerprint([err.name, err.message])
-      Sentry.captureException(err)
+    Sentry.withScope((s) => {
+      s.setFingerprint([err.name, err.message])
+      Sentry.captureException(err, scope)
     })
   }
 }
