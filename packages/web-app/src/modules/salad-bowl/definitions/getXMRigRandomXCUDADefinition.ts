@@ -8,9 +8,9 @@ const xmrigRegion = (address: string, location: string, minerId: string) =>
 export const getXMRigRandomXCUDADefinition = (nicehashAddress: string, machine: Machine): PluginDefinition => {
   let def = {
     name: 'XMRig-CUDA',
-    version: '6.2.2',
+    version: '6.3.2',
     downloadUrl:
-      'https://github.com/SaladTechnologies/plugin-downloads/releases/download/xmrig-6.2.2/xmrig-6.2.2-windows-cuda.zip',
+      'https://github.com/SaladTechnologies/plugin-downloads/releases/download/xmrig-6.3.2/xmrig-6.3.2-windows-cuda.zip',
     exe: 'xmrig.exe',
     args: `${xmrigRegion(nicehashAddress, 'usa', machine.minerId)} ${xmrigRegion(
       nicehashAddress,

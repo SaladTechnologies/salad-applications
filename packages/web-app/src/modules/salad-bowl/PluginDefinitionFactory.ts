@@ -7,6 +7,7 @@ import { getGminerCuckARoom29Definition } from './definitions/getGminerCuckARoom
 import { getGminerZHashDefinition } from './definitions/getGminerZHashDefinition'
 import { getPhoenixMinerEthashBitflyDefinition } from './definitions/getPhoenixMinerEthashBitflyDefinition'
 import { getPhoenixMinerEthashDefinition } from './definitions/getPhoenixMinerEthashDefinition'
+import { getTrexRavencoinNiceHashDefinition } from './definitions/getTrexRavencoinNiceHashDefinition'
 import { getXMRigRandomXCUDADefinition } from './definitions/getXMRigRandomXCUDADefinition'
 import { getXMRigRandomXOpenCLDefinition } from './definitions/getXMRigRandomXOpenCLDefinition'
 import { PluginDefinition } from './models'
@@ -82,6 +83,11 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
   // Grin / cuckARoom29
   if (has('*', 6)(machineVram)) {
     pluginDefinitions.push(getGminerCuckARoom29Definition(niceHashMiningAddress, machine)) // NiceHash
+  }
+
+  // Ravencoin / KawPow
+  if (has('cuda', 3)(machineVram)) {
+    pluginDefinitions.push(getTrexRavencoinNiceHashDefinition(niceHashMiningAddress, machine)) // NiceHash
   }
 
   // BitCoinGold / ZHash
