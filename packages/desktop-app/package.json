@@ -26,7 +26,8 @@
     "build": "electron-webpack",
     "dist": "yarn build && electron-builder",
     "release": "yarn build && electron-builder --publish always",
-    "start": "electron-webpack dev"
+    "start": "electron-webpack dev",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@sentry/electron": "2.0.0",
@@ -38,7 +39,7 @@
     "is-online": "8.4.0",
     "node-notifier": "8.0.0",
     "source-map-support": "0.5.19",
-    "systeminformation": "4.26.10"
+    "systeminformation": "4.26.11"
   },
   "devDependencies": {
     "@types/node": "14.6.0",
@@ -65,5 +66,8 @@
     "renderer": {
       "sourceDirectory": null
     }
+  },
+  "resolutions": {
+    "systeminformation": "../../libs/systeminformation-4.26.11+salad.tgz"
   }
 }

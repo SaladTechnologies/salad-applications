@@ -1,15 +1,13 @@
 import * as Sentry from '@sentry/electron'
-import { exec } from 'child_process'
 import { app, BrowserWindow, Input, ipcMain, powerMonitor, shell } from 'electron'
 import { autoUpdater } from 'electron-updater'
-import * as fs from 'fs'
 import isOnline from 'is-online'
 import * as notifier from 'node-notifier'
 import * as path from 'path'
 import * as si from 'systeminformation'
 import { Config } from './config'
 import * as Logger from './Logger'
-import { MachineInfo } from './models/machine/MachineInfo'
+import { MachineInfo } from './models/MachineInfo'
 import { Profile } from './models/Profile'
 import { PluginDefinition } from './salad-bowl/models/PluginDefinition'
 import { PluginManager } from './salad-bowl/PluginManager'
@@ -48,20 +46,42 @@ let updateChecked = false
 
 let pluginManager: PluginManager | undefined
 
-const getMachineInfo = () =>
-  new Promise<MachineInfo>(() => {
-    si.osInfo((os) => {
-      si.system((system) => {
-        si.graphics((graphics) => {
-          machineInfo = {
-            system: system,
-            os: os,
-            graphics: graphics,
-          }
-        })
-      })
-    })
+const getMachineInfo = (): Promise<MachineInfo> => {
+  return Promise.allSettled([
+    si.cpu(),
+    si.cpuFlags(),
+    si.graphics(),
+    si.memLayout(),
+    si.osInfo(),
+    si.services('*'),
+    si.system(),
+    si.uuid(),
+    si.version(),
+  ]).then(([cpu, cpuFlags, graphics, memLayout, osInfo, services, system, uuid, version]) => {
+    let cpuData: si.Systeminformation.CpuData | si.Systeminformation.CpuWithFlagsData | undefined
+    if (cpu.status === 'fulfilled') {
+      if (cpuFlags.status === 'fulfilled') {
+        cpuData = {
+          ...cpu.value,
+          flags: cpuFlags.value,
+        }
+      } else {
+        cpuData = cpu.value
+      }
+    }
+
+    return {
+      version: version.status === 'fulfilled' ? version.value : undefined,
+      system: system.status === 'fulfilled' ? system.value : undefined,
+      cpu: cpuData,
+      memLayout: memLayout.status === 'fulfilled' ? memLayout.value : undefined,
+      graphics: graphics.status === 'fulfilled' ? graphics.value : undefined,
+      os: osInfo.status === 'fulfilled' ? osInfo.value : undefined,
+      uuid: uuid.status === 'fulfilled' ? uuid.value : undefined,
+      services: services.status === 'fulfilled' ? services.value : undefined,
+    }
   })
+}
 
 /** Ensure only 1 instance of the app ever run */
 const checkForMultipleInstance = () => {
@@ -336,31 +356,6 @@ const onReady = async () => {
     //Not online
     createOfflineWindow()
   }
-}
-
-const getCudaData = () => {
-  const System32Path = 'C:\\Windows\\System32'
-  const ProgramFilesPath = 'C:\\Program Files\\NVIDIA Corporation\\NVSMI'
-  let path: string | undefined = undefined
-
-  // TODO:  Possibly need to find where other sources of nvidia-smi.exe live
-  //        if it's not in the current directories.
-  if (fs.existsSync(`${System32Path}\\nvidia-smi.exe`)) {
-    path = System32Path
-  } else if (fs.existsSync(`${ProgramFilesPath}\\nvidia-smi.exe`)) {
-    path = ProgramFilesPath
-  } else {
-    return
-  }
-
-  // Useful nvidia-smi Queries: https://nvidia.custhelp.com/app/answers/detail/a_id/3751/~/useful-nvidia-smi-queries
-  const query_gpu = '--query-gpu=name,temperature.gpu,utilization.gpu,utilization.memory,driver_version'
-  const cmd = `nvidia-smi.exe ${query_gpu} --format=csv`
-
-  exec(cmd, { cwd: path }, (error, data) => {
-    console.log('cuda error: ', error)
-    console.log('cuda data: ', data)
-  })
 }
 
 checkForMultipleInstance()

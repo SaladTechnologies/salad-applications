@@ -25,5 +25,8 @@
   },
   "include": [
     "./src/**/*"
+  ],
+  "exclude": [
+    "./src/preload.js"
   ]
 }

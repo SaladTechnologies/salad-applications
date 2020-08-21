@@ -75,7 +75,10 @@ export class NativeStore {
 
   @computed
   get gpuNames(): string[] | undefined {
-    if (this.machineInfo === undefined) return undefined
+    if (this.machineInfo?.graphics === undefined) {
+      return undefined
+    }
+
     return this.machineInfo.graphics.controllers.map((x) => x.model)
   }
 
