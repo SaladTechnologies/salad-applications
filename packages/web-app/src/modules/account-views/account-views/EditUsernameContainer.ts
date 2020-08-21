@@ -8,7 +8,4 @@ const mapStoreToProps = (store: RootStore): any => ({
   onSend: store.profile.updateUsername,
 })
 
-export const EditUsernameContainer = connect(
-  mapStoreToProps,
-  EditUsername,
-)
+export const EditUsernameContainer = connect(mapStoreToProps, EditUsername)

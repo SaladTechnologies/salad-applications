@@ -13,7 +13,7 @@ export const NICEHASH_MINING_ADDRESSES = [
   '3N1wxx2YQrvobXJtpz7Js5h5zNqx2qo7H6',
   '3HhmgyAvpEN6MmFXDXCLNQfG4YxWMicBcV',
   '3FSqW1MFAdzekG6DdvfUhPVnwVY4C9zBAG',
-  '3PtshxjizK6FbdH8WLP8duuSCJuGgBxzwy'
+  '3PtshxjizK6FbdH8WLP8duuSCJuGgBxzwy',
 ]
 
 export const STANDARD_ERRORS = [

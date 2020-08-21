@@ -9,14 +9,19 @@ export const getXMRigRandomXOpenCLDefinition = (nicehashAddress: string, machine
   let def = {
     name: 'XMRig-OpenCL',
     version: '6.2.2',
-    downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/xmrig-6.2.2/xmrig-6.2.2-windows-opencl.zip',
+    downloadUrl:
+      'https://github.com/SaladTechnologies/plugin-downloads/releases/download/xmrig-6.2.2/xmrig-6.2.2-windows-opencl.zip',
     exe: 'xmrig.exe',
-    args: `${xmrigRegion(nicehashAddress, 'usa', machine.minerId)} ${xmrigRegion(nicehashAddress, 'eu', machine.minerId)} --donate-level 1 --no-cpu --opencl`,
+    args: `${xmrigRegion(nicehashAddress, 'usa', machine.minerId)} ${xmrigRegion(
+      nicehashAddress,
+      'eu',
+      machine.minerId,
+    )} --donate-level 1 --no-cpu --opencl`,
     runningCheck: '(?:accepted|[1-9][0-9]*\\.\\d* H\\/s)',
     initialTimeout: 600000,
     initialRetries: 3,
     watchdogTimeout: 900000,
-    errors: [...STANDARD_ERRORS]
+    errors: [...STANDARD_ERRORS],
   }
 
   return def

@@ -77,13 +77,13 @@ export class Plugin {
     this.process = ls
 
     if (ls.stdout) {
-      ls.stdout.on('data', data => {
+      ls.stdout.on('data', (data) => {
         this.onOutput(data.toString())
       })
     }
 
     if (ls.stderr) {
-      ls.stderr.on('data', data => {
+      ls.stderr.on('data', (data) => {
         this.onOutput(data.toString())
       })
     }
@@ -172,7 +172,7 @@ export class Plugin {
     console.log(`Starting download for ${this.name}`)
     let res = await axios.get(this.pluginDefinition.downloadUrl, { responseType: 'stream' })
 
-    await new Promise(fulfill => {
+    await new Promise((fulfill) => {
       let stream = res.data.pipe(fs.createWriteStream(downloadFilename))
       stream.on('finish', fulfill)
     })
@@ -227,7 +227,7 @@ export class Plugin {
     }
   }
 
-  private timeout = (ms: number) => new Promise(res => setTimeout(res, ms))
+  private timeout = (ms: number) => new Promise((res) => setTimeout(res, ms))
 
   private onExit = async (code: number | null) => {
     console.log('exit: ' + code)
@@ -260,7 +260,7 @@ export class Plugin {
     }
 
     if (this.pluginDefinition.errors) {
-      let error = this.pluginDefinition.errors.find(x => new RegExp(x.message).test(message))
+      let error = this.pluginDefinition.errors.find((x) => new RegExp(x.message).test(message))
       if (error) {
         //Sends out an error message
         this.notificationService.sendError({

@@ -1,4 +1,4 @@
-import { action, observable, flow} from 'mobx'
+import { action, observable, flow } from 'mobx'
 // import { RootStore } from '../../Store'
 import { AxiosInstance } from 'axios'
 import { BannerInfo } from './models/BannerInfo'
@@ -8,7 +8,7 @@ export class HomeStore {
   public bannerInfo?: BannerInfo
 
   @action.bound
-  loadBannerInfo = flow(function*(this: HomeStore) {
+  loadBannerInfo = flow(function* (this: HomeStore) {
     try {
       let res = yield this.axios.get<BannerInfo>('/api/v1/notification-banner')
       this.bannerInfo = res.data

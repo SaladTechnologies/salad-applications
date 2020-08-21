@@ -8,7 +8,4 @@ const mapStoreToProps = (store: RootStore): any => ({
   showSendLog: store.native.canSendLogs,
 })
 
-export const UnknownErrorContainer = connect(
-  mapStoreToProps,
-  UnknownErrorPage,
-)
+export const UnknownErrorContainer = connect(mapStoreToProps, UnknownErrorPage)

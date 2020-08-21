@@ -7,7 +7,4 @@ const mapStoreToProps = (store: RootStore): any => ({
   onSend: store.referral.sendReferral,
 })
 
-export const SendReferralContainer = connect(
-  mapStoreToProps,
-  SendReferral,
-)
+export const SendReferralContainer = connect(mapStoreToProps, SendReferral)

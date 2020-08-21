@@ -6,7 +6,4 @@ const mapStoreToProps = (store: RootStore): any => ({
   referrals: store.referral.referrals,
 })
 
-export const ReferralListContainer = connect(
-  mapStoreToProps,
-  ReferralList,
-)
+export const ReferralListContainer = connect(mapStoreToProps, ReferralList)

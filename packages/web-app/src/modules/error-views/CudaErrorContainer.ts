@@ -8,7 +8,4 @@ const mapStoreToProps = (store: RootStore): any => ({
   showSendLog: store.native.canSendLogs,
 })
 
-export const CudaErrorContainer = connect(
-  mapStoreToProps,
-  CudaErrorPage,
-)
+export const CudaErrorContainer = connect(mapStoreToProps, CudaErrorPage)

@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 
-const styles = ({})
+const styles = {}
 
 interface Props extends WithStyles<typeof styles> {
   className?: string
