@@ -8,9 +8,9 @@ const zhashUser = (address: string, location: string, minerId: string) =>
 export const getGminerZHashDefinition = (nicehashAddress: string, machine: Machine): PluginDefinition => {
   let def = {
     name: 'GMiner',
-    version: '2.15',
+    version: '2.21',
     downloadUrl:
-      'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer2.15/gminer-2-15-windows.zip',
+      'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer2.21/gminer-2-21-windows.zip',
     exe: 'miner.exe',
     args: `-a 144_5 ${zhashUser(nicehashAddress, 'usa', machine.minerId)} ${zhashUser(
       nicehashAddress,
