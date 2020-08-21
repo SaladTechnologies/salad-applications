@@ -27,7 +27,7 @@ Download and install the [latest release](https://github.com/SaladTechnologies/s
 
 ## Community
 
-- Chatting on [Discord](https://discord.gg/7tmU8pj)
+- Chatting on [Discord](https://discord.gg/TsZrHWV)
 - Blogging at [Medium](https://medium.com/@saladchefs)
 - Tweeting via [@saladtech](https://twitter.com/saladtech)
 - Posting on [@salad.tech](https://www.instagram.com/salad.tech)
