@@ -31,3 +31,13 @@ export const STANDARD_ERRORS = [
     errorAction: ErrorAction.Stop,
   },
 ]
+
+export const getNiceHashMiningAddress = (machineId: string): string => {
+  let uuidHashCode = 0
+  for (let i = 0; i < machineId.length; i++) {
+    uuidHashCode = (Math.imul(31, uuidHashCode) + machineId.charCodeAt(i)) | 0
+  }
+
+  const partition = Math.abs(uuidHashCode) % NICEHASH_MINING_ADDRESSES.length
+  return NICEHASH_MINING_ADDRESSES[partition]
+}

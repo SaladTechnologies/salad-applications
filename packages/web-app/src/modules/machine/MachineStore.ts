@@ -37,16 +37,34 @@ export class MachineStore {
         return
       }
 
+      const { cpu, graphics, memLayout, os, system, uuid, version } = this.store.native.machineInfo
       try {
         console.log('Registering machine with salad')
-        let req = { systemInfo: this.store.native.machineInfo }
-        let res: any = yield this.axios.post(`/api/v2/machines`, req)
+        let res: any = yield this.axios.post(`/api/v2/machines`, {
+          systemInfo: {
+            cpu,
+            graphics,
+            memLayout,
+            os,
+            system,
+            uuid,
+            version,
+          },
+        })
         let machine: Machine = res.data
         this.currentMachine = machine
       } catch (err) {
         this.store.analytics.captureException(new Error(`register-machine error: ${err}`), {
           contexts: {
-            machineInfo: this.store.native.machineInfo,
+            machineInfo: {
+              cpu,
+              graphics,
+              memLayout,
+              os,
+              system,
+              uuid,
+              version,
+            },
           },
         })
         throw err
