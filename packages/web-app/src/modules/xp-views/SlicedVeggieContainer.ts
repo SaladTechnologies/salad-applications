@@ -7,7 +7,4 @@ const mapStoreToProps = (store: RootStore): any => ({
   level: store.xp.currentLevel,
 })
 
-export const SlicedVeggieContainer = connect(
-  mapStoreToProps,
-  SlicedVeggie,
-)
+export const SlicedVeggieContainer = connect(mapStoreToProps, SlicedVeggie)

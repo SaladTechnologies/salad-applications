@@ -4,7 +4,7 @@ import saladPayLogo from '../assets/saladpay.png'
 import Img from 'react-image'
 import { ModalPage } from '../../../components'
 
-const styles = ({
+const styles = {
   container: {
     width: 516,
     minHeight: 100,
@@ -28,7 +28,7 @@ const styles = ({
   content: {
     overflow: 'hidden',
   },
-})
+}
 
 interface Props extends WithStyles<typeof styles> {
   onClose?: () => void

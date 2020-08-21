@@ -5,7 +5,7 @@ import { Switch, Route } from 'react-router'
 
 const animationTime = 1000
 
-const styles = ({
+const styles = {
   enter: {
     transform: 'translate(100%)',
   },
@@ -20,7 +20,7 @@ const styles = ({
     transform: 'translate(-100%)',
     transition: `transform  ${animationTime}ms ease-in-out`,
   },
-})
+}
 
 interface Props extends WithStyles<typeof styles> {}
 

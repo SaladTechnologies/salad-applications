@@ -7,7 +7,4 @@ const mapStoreToProps = (store: RootStore): any => ({
   potentialEarned: store.referral.potentialEarnings,
 })
 
-export const ReferralStatsContainer = connect(
-  mapStoreToProps,
-  ReferralStats,
-)
+export const ReferralStatsContainer = connect(mapStoreToProps, ReferralStats)

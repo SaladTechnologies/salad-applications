@@ -1,6 +1,5 @@
-export interface BannerInfo
-{
+export interface BannerInfo {
   startDate: string
-  endDate:string
-  text:string
+  endDate: string
+  text: string
 }

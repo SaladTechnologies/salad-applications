@@ -9,9 +9,14 @@ export const getGminerZHashDefinition = (nicehashAddress: string, machine: Machi
   let def = {
     name: 'GMiner',
     version: '2.15',
-    downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer2.15/gminer-2-15-windows.zip',
+    downloadUrl:
+      'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer2.15/gminer-2-15-windows.zip',
     exe: 'miner.exe',
-    args: `-a 144_5 ${zhashUser(nicehashAddress, 'usa', machine.minerId)} ${zhashUser(nicehashAddress, 'eu', machine.minerId)} -w 0 --pers auto`,
+    args: `-a 144_5 ${zhashUser(nicehashAddress, 'usa', machine.minerId)} ${zhashUser(
+      nicehashAddress,
+      'eu',
+      machine.minerId,
+    )} -w 0 --pers auto`,
     runningCheck: '(?:Share Accepted|[1-9][0-9]*\\.\\d* Sol\\/s)',
     initialTimeout: 600000,
     initialRetries: 1,

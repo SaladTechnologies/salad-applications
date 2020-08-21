@@ -2,7 +2,7 @@ import React, { CSSProperties } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 
-const styles = ({
+const styles = {
   container: {
     position: 'relative',
     backgroundColor: 'lightGrey',
@@ -16,7 +16,7 @@ const styles = ({
     width: (props: Props) => (props.progress ? `${props.progress}%` : '0'),
     backgroundColor: (props: Props) => (props.barColor ? props.barColor : 'grey'),
   },
-})
+}
 
 interface Props extends WithStyles<typeof styles> {
   barColor?: string

@@ -4,12 +4,12 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
 
-const styles = ({
+const styles = {
   listUnstyled: {
     paddingLeft: 0,
     listStyle: 'none',
   },
-})
+}
 
 interface Props extends WithStyles<typeof styles> {
   list: string[]

@@ -48,7 +48,4 @@ const mapStoreToProps = (store: RootStore): any => {
   }
 }
 
-export const AntiVirusErrorContainer = connect(
-  mapStoreToProps,
-  AntiVirusErrorPage,
-)
+export const AntiVirusErrorContainer = connect(mapStoreToProps, AntiVirusErrorPage)

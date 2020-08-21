@@ -10,7 +10,7 @@ export class VaultStore {
   constructor(private readonly axios: AxiosInstance) {}
 
   @action.bound
-  loadVault = flow(function*(this: VaultStore) {
+  loadVault = flow(function* (this: VaultStore) {
     try {
       var response = yield this.axios.get<RewardVaultResource[]>('/api/v1/reward-vault')
 

@@ -8,7 +8,4 @@ const mapStoreToProps = (store: RootStore): any => ({
   showSendLog: store.native.canSendLogs,
 })
 
-export const FallbackErrorContainer = connect(
-  mapStoreToProps,
-  FallbackErrorPage,
-)
+export const FallbackErrorContainer = connect(mapStoreToProps, FallbackErrorPage)

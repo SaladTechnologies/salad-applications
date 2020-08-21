@@ -9,9 +9,14 @@ export const getGminerBeamNiceHashDefinition = (nicehashAddress: string, machine
   let def = {
     name: 'GMiner',
     version: '2.15',
-    downloadUrl: 'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer2.15/gminer-2-15-windows.zip',
+    downloadUrl:
+      'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer2.15/gminer-2-15-windows.zip',
     exe: 'miner.exe',
-    args: `-a beamhashIII ${beamUser(nicehashAddress, 'usa', machine.minerId)} ${beamUser(nicehashAddress, 'eu', machine.minerId)} -w 0`,
+    args: `-a beamhashIII ${beamUser(nicehashAddress, 'usa', machine.minerId)} ${beamUser(
+      nicehashAddress,
+      'eu',
+      machine.minerId,
+    )} -w 0`,
     runningCheck: '(?:Share Accepted|[1-9][0-9]*\\.\\d* Sol\\/s)',
     initialTimeout: 600000,
     initialRetries: 1,

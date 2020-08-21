@@ -109,7 +109,7 @@ storiesOf('Salad Pay/Components/Order Summary Page', module)
  * SaladPayCheckoutButton
  */
 storiesOf('Salad Pay/Components/Checkout Button', module)
-  .addDecorator(storyFn => <div style={{ backgroundColor: 'white' }}>{storyFn()}</div>)
+  .addDecorator((storyFn) => <div style={{ backgroundColor: 'white' }}>{storyFn()}</div>)
   .add('default', () => {
     return <SaladPayCheckoutButton enabled={true} onClick={action('click')} />
   })
