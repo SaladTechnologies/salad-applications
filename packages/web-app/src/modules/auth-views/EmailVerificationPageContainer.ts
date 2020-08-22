@@ -3,6 +3,7 @@ import { RootStore } from '../../Store'
 import { EmailVerificationPage } from './components/EmailVerificationPage'
 
 const mapStoreToProps = (store: RootStore): any => ({
+  canLogin: !store.auth.isAuthenticationPending,
   canResendVerificationEmail: store.auth.canResendVerificationEmail,
   emailAddress: store.auth.emailAddress,
   onCheckEmailVerification: store.auth.checkEmailVerification,

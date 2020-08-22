@@ -131,7 +131,11 @@ export class ReferralStore {
     }
 
     //Ensures that the user is logged in
-    yield this.store.auth.login()
+    try {
+      yield this.store.auth.login()
+    } catch {
+      return
+    }
 
     console.log('Sending referral code ' + code)
 

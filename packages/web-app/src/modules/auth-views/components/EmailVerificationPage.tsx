@@ -51,6 +51,7 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface EmailVerificationProps extends WithStyles<typeof styles> {
+  canLogin: boolean
   canResendVerificationEmail: boolean
   emailAddress?: string
   onCheckEmailVerification: () => Promise<boolean>
@@ -158,7 +159,7 @@ export const EmailVerificationPage = withStyles(styles)(
             return
           }
 
-          if (result) {
+          if (result && this.props.canLogin) {
             if (this.pollAuth0Interval !== undefined) {
               clearInterval(this.pollAuth0Interval)
             }

@@ -4,10 +4,11 @@ import { AccountMenu } from './components'
 
 const mapStoreToProps = (store: RootStore): any => ({
   authenticated: store.auth.isAuthenticated,
-  onLogin: store.auth.login,
-  username: store.profile.currentProfile?.username,
+  canLogin: !store.auth.isAuthenticationPending,
   currentBalance: store.balance.currentBalance,
   onClick: () => store.routing.push('/account/summary'),
+  onLogin: store.auth.login,
+  username: store.profile.currentProfile?.username,
 })
 
 export const AccountMenuContainer = connect(mapStoreToProps, AccountMenu)

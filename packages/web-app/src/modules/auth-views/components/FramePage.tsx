@@ -60,7 +60,11 @@ export const FramePage = withStyles(styles)(
         throw new TypeError('The iframe element must not be null.')
       }
 
-      this.cancelFrameListener = this.props.createFrameListener(this.frame.current)
+      try {
+        this.cancelFrameListener = this.props.createFrameListener(this.frame.current)
+      } catch {
+        this.props.onCloseRequested()
+      }
     }
 
     componentWillUnmount() {

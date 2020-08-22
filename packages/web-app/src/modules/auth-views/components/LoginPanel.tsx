@@ -50,31 +50,35 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  authenticated?: boolean
+  authenticated: boolean
+  canLogin: boolean
+  onLogin: () => void
+  onRegister: () => void
   text?: string
-  onRegister?: () => void
-  onLogin?: () => void
 }
 
 class _LoginPanel extends Component<Props> {
   handleLogin = () => {
-    const { onLogin } = this.props
-
-    onLogin?.()
+    const { canLogin, onLogin } = this.props
+    if (canLogin) {
+      onLogin()
+    }
   }
-  handleRegister = () => {
-    const { onRegister } = this.props
 
-    onRegister?.()
+  handleRegister = () => {
+    const { canLogin, onRegister } = this.props
+    if (canLogin) {
+      onRegister()
+    }
   }
 
   render() {
-    const { authenticated, text, classes } = this.props
-
+    const { authenticated } = this.props
     if (authenticated) {
       return null
     }
 
+    const { canLogin, text, classes } = this.props
     return (
       <div className={classes.container}>
         <div className={classes.content}>
@@ -82,13 +86,15 @@ class _LoginPanel extends Component<Props> {
           <P>This page requires you to be logged in. Register or login now to start using Salad.</P>
           {text && <P>{text}</P>}
           <div className={classes.buttonContainer}>
-            <div className={classes.button} onClick={this.handleLogin}>
+            <div className={classes.button} onClick={canLogin ? this.handleLogin : undefined}>
               Login
             </div>
-            {/* TODO: Add back in once we can open directly to the register page */}
-            {/* <div className={classes.button} onClick={this.handleRegister}>
-              Register
-            </div> */}
+            {/*
+              TODO: Add back in once we can open directly to the register page
+              <div className={classes.button} onClick={canLogin ? this.handleRegister : undefined}>
+                Register
+              </div>
+            */}
           </div>
         </div>
       </div>

@@ -75,7 +75,7 @@ export class AuthStore {
     return this.apiBaseUrl + '/login'
   }
 
-  public get silentLoginUrl(): string {
+  private get silentLoginUrl(): string {
     return this.apiBaseUrl + '/login?prompt=none'
   }
 
@@ -89,6 +89,20 @@ export class AuthStore {
 
   private get verificationEmailsUrl(): string {
     return this.apiBaseUrl + '/api/v2/verification-emails'
+  }
+
+  public static isStateWithPreviousLocation(
+    state: any,
+  ): state is { previousLocation?: Location<History.PoorMansUnknown> } {
+    if (typeof state != 'object' || state == null) {
+      return false
+    }
+
+    if (!('previousLocation' in state)) {
+      return false
+    }
+
+    return true
   }
 
   public checkEmailVerification = flow(
@@ -291,7 +305,7 @@ export class AuthStore {
       })
 
     // Load the silent login page.
-    this.createLoginFrameListener(frame, 10000)
+    this.createLogoutFrameListener(frame, 10000)
     window.document.body.appendChild(frame)
     frame.setAttribute('src', this.logoutUrl)
     return promise
@@ -350,20 +364,6 @@ export class AuthStore {
         typeof (data as { error: unknown }).error === 'undefined'
       )
     ) {
-      return false
-    }
-
-    return true
-  }
-
-  private static isStateWithPreviousLocation(
-    state: any,
-  ): state is { previousLocation?: Location<History.PoorMansUnknown> } {
-    if (typeof state != 'object' || state == null) {
-      return false
-    }
-
-    if (!('previousLocation' in state)) {
       return false
     }
 
