@@ -77,12 +77,28 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
   // Ethereum / Ethash
   if (has('*', 4)(machineVram)) {
     pluginDefinitions.push(getPhoenixMinerEthashDefinition(niceHashMiningAddress, machine)) // NiceHash
+    let fallback = getPhoenixMinerEthashDefinition(niceHashMiningAddress, machine)
+    fallback.version = '5.0e'
+    fallback.downloadUrl =
+      'https://github.com/SaladTechnologies/plugin-downloads/releases/download/phoenixminer-5-0-e/phoenixminer-5-0-e-windows.zip'
+    pluginDefinitions.push(fallback)
+
     pluginDefinitions.push(getPhoenixMinerEthashBitflyDefinition(machine)) // Bitfly's Ethermine
+    fallback = getPhoenixMinerEthashBitflyDefinition(machine)
+    fallback.version = '5.0e'
+    fallback.downloadUrl =
+      'https://github.com/SaladTechnologies/plugin-downloads/releases/download/phoenixminer-5-0-e/phoenixminer-5-0-e-windows.zip'
+    pluginDefinitions.push(fallback)
   }
 
   // Grin / cuckARoom29
   if (has('*', 6)(machineVram)) {
     pluginDefinitions.push(getGminerCuckARoom29Definition(niceHashMiningAddress, machine)) // NiceHash
+    let fallback = getGminerCuckARoom29Definition(niceHashMiningAddress, machine)
+    fallback.version = '2.15'
+    fallback.downloadUrl =
+      'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer2.15/gminer-2-15-windows.zip'
+    pluginDefinitions.push(fallback)
   }
 
   // Ravencoin / KawPow
@@ -93,12 +109,28 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
   // BitCoinGold / ZHash
   if (has('*', 2)(machineVram)) {
     pluginDefinitions.push(getGminerZHashDefinition(niceHashMiningAddress, machine)) // NiceHash
+    let fallback = getGminerZHashDefinition(niceHashMiningAddress, machine)
+    fallback.version = '2.15'
+    fallback.downloadUrl =
+      'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer2.15/gminer-2-15-windows.zip'
+    pluginDefinitions.push(fallback)
   }
 
   // Beam // BeamHashIII
   if (has('*', 4)(machineVram)) {
     pluginDefinitions.push(getGminerBeamNiceHashDefinition(niceHashMiningAddress, machine)) // NiceHash
+    let fallback = getGminerBeamNiceHashDefinition(niceHashMiningAddress, machine)
+    fallback.version = '2.15'
+    fallback.downloadUrl =
+      'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer2.15/gminer-2-15-windows.zip'
+    pluginDefinitions.push(fallback)
+
     pluginDefinitions.push(getGminerBeamBitflyDefinition(machine)) // Bitfly's Flypool
+    fallback = getGminerBeamBitflyDefinition(machine)
+    fallback.version = '2.15'
+    fallback.downloadUrl =
+      'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer2.15/gminer-2-15-windows.zip'
+    pluginDefinitions.push(fallback)
   }
 
   // Monero / RandomX
