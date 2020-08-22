@@ -213,7 +213,11 @@ export class SaladBowlStore implements IPersistentStore {
     }
 
     //Ensures that the user is logged in
-    yield this.store.auth.login()
+    try {
+      yield this.store.auth.login()
+    } catch {
+      return
+    }
 
     if (this.timeoutTimer != null) {
       clearTimeout(this.timeoutTimer)

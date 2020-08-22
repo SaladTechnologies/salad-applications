@@ -54,27 +54,26 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  authenticated?: boolean
-  username?: string
+  authenticated: boolean
+  canLogin: boolean
   currentBalance?: number
-  onClick?: () => void
-  onLogin?: () => void
+  onClick: () => void
+  onLogin: () => void
+  username?: string
 }
 
 class _AccountMenu extends Component<Props> {
   handleClick = () => {
-    const { authenticated, onLogin, onClick } = this.props
-
+    const { authenticated, canLogin, onLogin, onClick } = this.props
     if (authenticated) {
-      onClick?.()
-    } else {
-      onLogin?.()
+      onClick()
+    } else if (canLogin) {
+      onLogin()
     }
   }
 
   render() {
-    const { authenticated, username, currentBalance, classes } = this.props
-
+    const { authenticated, canLogin, classes, currentBalance, username } = this.props
     if (authenticated) {
       return (
         <>
@@ -85,18 +84,21 @@ class _AccountMenu extends Component<Props> {
           <ChoppingCartButtonContainer />
         </>
       )
-    }
-    return (
-      <div className={classes.container}>
-        <div className={classes.signUpButton} onClick={this.handleClick}>
-          Login
+    } else {
+      return (
+        <div className={classes.container}>
+          <div className={classes.signUpButton} onClick={canLogin ? this.handleClick : undefined}>
+            Login
+          </div>
+          {/*
+            TODO: Add back in once we can open directly to the register page
+            <div className={classes.signUpButton} onClick={canLogin ? this.handleClick : undefined}>
+              Register
+            </div>
+          */}
         </div>
-        {/* TODO: Add back in once we can open directly to the register page */}
-        {/* <div className={classes.signUpButton} onClick={this.handleClick}>
-          Register
-        </div> */}
-      </div>
-    )
+      )
+    }
   }
 }
 

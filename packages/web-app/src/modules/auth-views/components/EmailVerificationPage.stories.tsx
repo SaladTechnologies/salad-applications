@@ -24,6 +24,7 @@ const handleResendVerificationEmail = (...args: any[]) => {
 
 export const WithoutEmailAndWithoutResend = () => (
   <EmailVerificationPage
+    canLogin
     canResendVerificationEmail={false}
     onCheckEmailVerification={handleCheckEmailVerification}
     onCloseRequested={action('Close')}
@@ -34,6 +35,7 @@ export const WithoutEmailAndWithoutResend = () => (
 
 export const WithoutEmailAndWithResend = () => (
   <EmailVerificationPage
+    canLogin
     canResendVerificationEmail
     onCheckEmailVerification={handleCheckEmailVerification}
     onCloseRequested={action('Close')}
@@ -44,6 +46,7 @@ export const WithoutEmailAndWithResend = () => (
 
 export const WithEmailAndWithoutResend = () => (
   <EmailVerificationPage
+    canLogin
     canResendVerificationEmail={false}
     emailAddress="user@example.com"
     onCheckEmailVerification={handleCheckEmailVerification}
@@ -55,6 +58,7 @@ export const WithEmailAndWithoutResend = () => (
 
 export const WithEmailAndWithResend = () => (
   <EmailVerificationPage
+    canLogin
     canResendVerificationEmail
     emailAddress="user@example.com"
     onCheckEmailVerification={handleCheckEmailVerification}

@@ -1,5 +1,6 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
+import { AuthStore } from '../auth/AuthStore'
 import { FramePage } from './components/FramePage'
 
 const mapStoreToProps = (store: RootStore): any => ({
@@ -7,7 +8,16 @@ const mapStoreToProps = (store: RootStore): any => ({
   frameSandbox: 'allow-same-origin allow-scripts allow-forms',
   frameTitle: 'Login - Salad',
   frameUrl: store.auth.loginUrl,
-  onCloseRequested: store.routing.goBack,
+  onCloseRequested: () => {
+    if (
+      AuthStore.isStateWithPreviousLocation(store.routing.location.state) &&
+      store.routing.location.state.previousLocation !== undefined
+    ) {
+      store.routing.goBack()
+    } else {
+      store.routing.push('/')
+    }
+  },
 })
 
 export const LoginPageContainer = connect(mapStoreToProps, FramePage)

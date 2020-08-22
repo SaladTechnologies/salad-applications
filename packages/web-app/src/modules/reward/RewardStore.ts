@@ -163,7 +163,11 @@ export class RewardStore {
   @action.bound
   addToChoppingCart = flow(function* (this: RewardStore, reward: Reward) {
     //Ensures that the user is logged in
-    yield this.store.auth.login()
+    try {
+      yield this.store.auth.login()
+    } catch {
+      return
+    }
 
     const request = {
       rewardId: reward.id,
@@ -209,7 +213,11 @@ export class RewardStore {
     }
 
     //Ensures that the user is logged in
-    yield this.store.auth.login()
+    try {
+      yield this.store.auth.login()
+    } catch {
+      return
+    }
 
     this.isRedeeming = true
 
