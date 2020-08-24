@@ -111,6 +111,7 @@ class _RewardHeaderBar extends Component<Props> {
   render() {
     const { reward, classes, ...rest } = this.props
 
+    let donation = reward?.tags.includes('donations')
     let outOfStock = reward?.quantity === 0
     let lowQuanity = reward?.quantity !== undefined && reward?.quantity > 0
 
@@ -144,7 +145,7 @@ class _RewardHeaderBar extends Component<Props> {
               )}
             </div>
             <Button className={classes.buyButton} onClick={this.handleRedeem} disabled={outOfStock || promoGame}>
-              <div className={classes.buyText}>BUY NOW</div>
+              <div className={classes.buyText}>{donation ? 'DONATE' : 'BUY'} NOW</div>
             </Button>
             <AddToCartButton reward={reward} {...rest} />
           </>
