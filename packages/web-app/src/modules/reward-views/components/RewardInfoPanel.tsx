@@ -3,6 +3,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import classnames from 'classnames'
 import { Reward, RewardPlatform } from '../../reward/models'
+import origin from './assets/logos/origin.png'
 import steam from './assets/logos/steam.png'
 import Img from 'react-image'
 import { Divider } from '../../../components'
@@ -60,6 +61,8 @@ const getPlatformIcon = (platform?: RewardPlatform): string | undefined => {
   switch (platform) {
     case RewardPlatform.Steam:
       return steam
+    case RewardPlatform.Origin:
+      return origin
     default:
       return undefined
   }
