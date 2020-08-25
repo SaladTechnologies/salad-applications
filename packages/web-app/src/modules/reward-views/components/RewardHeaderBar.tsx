@@ -111,7 +111,7 @@ class _RewardHeaderBar extends Component<Props> {
   render() {
     const { reward, classes, ...rest } = this.props
 
-    let donation = reward?.tags.includes('donations')
+    let donation = reward?.category === "donation"
     let outOfStock = reward?.quantity === 0
     let lowQuanity = reward?.quantity !== undefined && reward?.quantity > 0
 
