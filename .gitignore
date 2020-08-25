@@ -206,3 +206,5 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+packages/desktop-app/*.txt

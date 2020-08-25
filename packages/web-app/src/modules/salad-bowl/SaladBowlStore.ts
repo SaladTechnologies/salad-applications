@@ -37,6 +37,7 @@ export class SaladBowlStore implements IPersistentStore {
   get canRun(): boolean {
     let cachedPluginDefinitions = getPluginDefinitions(this.store)
     return (
+      this.store.auth.isAuthenticated &&
       this.store.machine &&
       this.store.machine.currentMachine !== undefined &&
       this.store.native &&
