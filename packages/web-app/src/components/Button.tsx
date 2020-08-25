@@ -1,7 +1,7 @@
-import React, { ReactNode, Component } from 'react'
+import classnames from 'classnames'
+import React, { Component, ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
-import classnames from 'classnames'
 import { AnimatedBorder } from './AnimatedBorder'
 
 const styles = (theme: SaladTheme) => ({
@@ -49,8 +49,9 @@ interface Props extends WithStyles<typeof styles> {
 class _Button extends Component<Props> {
   handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const { loading, disabled, onClick } = this.props
-    event.stopPropagation()
-    if (loading !== true && !disabled && onClick != null) {
+
+    if (loading !== true && !disabled && onClick) {
+      event.stopPropagation()
       onClick()
     }
   }
