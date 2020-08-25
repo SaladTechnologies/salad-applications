@@ -254,7 +254,7 @@ export class RewardStore {
       //Show a notification
       this.store.notifications.sendNotification({
         title: `You redeemed ${reward.name}!`,
-        message: `Congrats on your pick! We've sent your reward to your email.`,
+        message: `Congrats on your pick! We've sent your reward to your email - you should see it soon!`,
         autoClose: false,
       })
     } catch (error) {
