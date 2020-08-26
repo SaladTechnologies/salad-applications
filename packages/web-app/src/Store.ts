@@ -12,6 +12,7 @@ import { HomeStore } from './modules/home/HomeStore'
 import { AutoStartStore, MachineStore, NativeStore } from './modules/machine'
 import { NotificationStore } from './modules/notifications'
 import { ProfileStore } from './modules/profile'
+import { Profile } from './modules/profile/models'
 import { ReferralStore } from './modules/referral'
 import { RewardStore } from './modules/reward'
 import { SaladBowlStore } from './modules/salad-bowl'
@@ -97,10 +98,27 @@ export class RootStore {
 
   onLogin = flow(
     function* (this: RootStore) {
-      var profile = yield this.profile.loadProfile()
+      var profile: Profile = yield this.profile.loadProfile()
       if (!profile) {
         this.auth.logout()
         return
+      }
+
+      try {
+        //@ts-ignore
+        zE('webWidget', 'prefill', {
+          name: {
+            value: profile.username,
+            readOnly: true, // optional
+          },
+          email: {
+            value: profile.email.toLocaleLowerCase(),
+            readOnly: true, // optional
+          },
+        })
+      } catch (e) {
+        console.error('Unable to prefill Zendesk')
+        console.error(e)
       }
 
       yield Promise.allSettled([
@@ -118,6 +136,14 @@ export class RootStore {
     function* (this: RootStore) {
       this.referral.currentReferral = undefined
       this.referral.referralCode = ''
+
+      try {
+        //@ts-ignore
+        zE('webWidget', 'reset')
+      } catch (e) {
+        console.error('Unable to reset Zendesk')
+        console.error(e)
+      }
 
       yield Promise.allSettled([
         this.analytics.trackLogout(),
