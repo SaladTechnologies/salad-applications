@@ -4,6 +4,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import { Divider, Head, P, Scrollbar, SectionHeader, SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { withLogin } from '../../auth-views'
+import { GpuSummaryContainer } from '../../machine-views'
 import { PantryContainer, SlicedVeggieContainer } from '../../xp-views'
 import { MiningSummary } from '../components'
 import { DesktopDownloadContainer } from '../DesktopDownloadContainer'
@@ -60,11 +61,15 @@ class _MiningPage extends Component<Props> {
               <MiningSummary lifetimeXp={lifetimeXp} />
               <Divider />
 
-              <SectionHeader>Pantry</SectionHeader>
-              <PantryContainer />
+              <SectionHeader>GPU Summary</SectionHeader>
+              <GpuSummaryContainer />
               <Divider />
 
               <EarningHistoryContainer />
+              <Divider />
+
+              <SectionHeader>Pantry</SectionHeader>
+              <PantryContainer />
               <Divider />
 
               <SectionHeader>More Information</SectionHeader>
