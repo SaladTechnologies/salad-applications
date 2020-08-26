@@ -1,12 +1,14 @@
-import React, { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
 import classnames from 'classnames'
+import React, { Component } from 'react'
+import Img from 'react-image'
+import withStyles, { WithStyles } from 'react-jss'
+import { Divider } from '../../../components'
+import { SaladTheme } from '../../../SaladTheme'
 import { Reward, RewardPlatform } from '../../reward/models'
+import apple from './assets/logos/apple.png'
 import origin from './assets/logos/origin.png'
 import steam from './assets/logos/steam.png'
-import Img from 'react-image'
-import { Divider } from '../../../components'
+import xbox from './assets/logos/xbox.png'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -63,6 +65,10 @@ const getPlatformIcon = (platform?: RewardPlatform): string | undefined => {
       return steam
     case RewardPlatform.Origin:
       return origin
+    case RewardPlatform.Xbox:
+      return xbox
+    case RewardPlatform.Apple:
+      return apple
     default:
       return undefined
   }
