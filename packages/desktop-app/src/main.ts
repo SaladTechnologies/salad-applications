@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/electron'
-import { app, BrowserWindow, Input, ipcMain, powerMonitor, shell } from 'electron'
+import { app, BrowserWindow, Input, ipcMain, Menu, powerMonitor, shell, Tray } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import isOnline from 'is-online'
 import * as notifier from 'node-notifier'
@@ -40,6 +40,7 @@ const stop = 'stop-salad'
 
 let mainWindow: BrowserWindow
 let offlineWindow: BrowserWindow
+let tray: Tray
 
 let machineInfo: MachineInfo
 let updateChecked = false
@@ -133,6 +134,10 @@ const createOfflineWindow = () => {
 
 const createMainWindow = () => {
   if (mainWindow) {
+    if (tray) {
+      tray.setContextMenu(createSystemTrayMenu(true))
+    }
+
     mainWindow.show()
     return
   }
@@ -168,6 +173,21 @@ const createMainWindow = () => {
   })
 
   mainWindow.once('ready-to-show', () => {
+    tray = new Tray(path.join(__static, 'salad-tray-logo.png'), 'fd20c206-759f-4107-90a2-bec8a3ed34aa')
+    tray.setContextMenu(createSystemTrayMenu(true))
+    tray.setToolTip('Salad')
+    tray.on('double-click', () => {
+      if (mainWindow) {
+        if (mainWindow.isVisible()) {
+          tray.setContextMenu(createSystemTrayMenu(false))
+          mainWindow.hide()
+        } else {
+          tray.setContextMenu(createSystemTrayMenu(true))
+          mainWindow.show()
+        }
+      }
+    })
+
     mainWindow.show()
     if (offlineWindow) {
       offlineWindow.destroy()
@@ -226,9 +246,10 @@ const createMainWindow = () => {
   })
 
   bridge.on('hide-window', () => {
-    // TODO: Fix minimizing to the system tray.
-    console.log('Closing main window')
-    app.quit()
+    if (mainWindow && mainWindow.isVisible) {
+      tray.setContextMenu(createSystemTrayMenu(false))
+      mainWindow.hide()
+    }
   })
 
   bridge.on(start, (pluginDefinition: PluginDefinition) => {
@@ -343,17 +364,10 @@ const checkForUpdates = () => {
 }
 
 const onReady = async () => {
-  //Check to see if we are online
-  let online = await isOnline()
-
-  if (online) {
+  if (await isOnline({ timeout: 10000 })) {
     createMainWindow()
-
     checkForUpdates()
-
-    //Online
   } else {
-    //Not online
     createOfflineWindow()
   }
 }
@@ -388,3 +402,31 @@ const cleanExit = () => {
 process.on('SIGINT', cleanExit) // catch ctrl-c
 process.on('SIGTERM', cleanExit) // catch kill
 console.log(`Running ${app.name} ${appVersion}`)
+
+function createSystemTrayMenu(isVisible: boolean): Menu {
+  return Menu.buildFromTemplate([
+    {
+      label: isVisible ? 'Minimize to Tray' : 'Show Salad',
+      click: isVisible
+        ? () => {
+            if (mainWindow) {
+              tray.setContextMenu(createSystemTrayMenu(false))
+              mainWindow.hide()
+            }
+          }
+        : () => {
+            if (mainWindow) {
+              tray.setContextMenu(createSystemTrayMenu(true))
+              mainWindow.show()
+            }
+          },
+    },
+    { type: 'separator' },
+    {
+      label: 'Exit',
+      click: () => {
+        app.quit()
+      },
+    },
+  ])
+}
