@@ -32,7 +32,7 @@ const mapStoreToProps = (store: RootStore): any => {
     },
     {
       url: 'https://salad.zendesk.com/hc/en-us/articles/360033124692-How-to-Whitelist-Salad-in-Windows-Defender',
-      text: 'Windows Defender',
+      text: 'Microsoft Defender',
     },
     {
       url: 'https://salad.zendesk.com/hc/en-us/articles/360033487211-How-to-Whitelist-Salad-in-Avast-Antivirus',
