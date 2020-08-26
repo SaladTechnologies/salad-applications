@@ -88,6 +88,7 @@ interface Props extends WithStyles<typeof styles> {
   onClick?: () => void
   pluginCount?: number
   isDesktop?: boolean
+  isAuth?: boolean
 }
 
 class _StartButton extends Component<Props> {
@@ -128,7 +129,9 @@ class _StartButton extends Component<Props> {
           />
         </div>
         {!isDesktop && <P>Mining is not currently supported in browsers</P>}
-        {isDesktop && pluginCount === 0 && <P className={classes.warningText}>Unable to find any compatible miners</P>}
+        {isDesktop && isEnabled && pluginCount === 0 && (
+          <P className={classes.warningText}>Unable to find any compatible miners</P>
+        )}
       </div>
     )
   }
