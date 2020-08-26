@@ -129,9 +129,7 @@ class _StartButton extends Component<Props> {
           />
         </div>
         {!isDesktop && <P>Mining is not currently supported in browsers</P>}
-        {isDesktop && isEnabled && pluginCount === 0 && (
-          <P className={classes.warningText}>Unable to find any compatible miners</P>
-        )}
+        {isDesktop && pluginCount === 0 && <P className={classes.warningText}>Unable to find any compatible miners</P>}
       </div>
     )
   }
