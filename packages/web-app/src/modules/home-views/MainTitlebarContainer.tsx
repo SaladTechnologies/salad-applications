@@ -2,12 +2,13 @@ import { connect } from '../../connect'
 import { RootStore } from '../../Store'
 import { MenuItem, Titlebar } from './components/Titlebar'
 
+const menuItems: MenuItem[] = [
+  new MenuItem('Store', '/'),
+  new MenuItem('Earn', '/earn/summary'),
+  new MenuItem('Help', 'https://www.salad.io/support'),
+]
+
 const mapStoreToProps = (store: RootStore): any => {
-  const menuItems: MenuItem[] = [
-    new MenuItem('Store', '/'),
-    new MenuItem('Earn', '/earn/summary'),
-    new MenuItem('Help', 'https://www.salad.io/support'),
-  ]
   return {
     isDesktop: store.native.isNative,
     onMinimize: store.native.minimizeWindow,
@@ -17,7 +18,7 @@ const mapStoreToProps = (store: RootStore): any => {
     menuItems: menuItems,
     onStart: store.saladBowl.toggleRunning,
     status: store.saladBowl.status,
-    startEnabled: store.saladBowl.canRun,
+    startEnabled: !store.auth.isAuthenticated || store.saladBowl.canRun,
   }
 }
 
