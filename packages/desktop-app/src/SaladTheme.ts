@@ -1,4 +1,4 @@
-export interface SaladTheme {
+interface SaladTheme {
   //Colors
   darkBlue: string
   darkGreen: string
