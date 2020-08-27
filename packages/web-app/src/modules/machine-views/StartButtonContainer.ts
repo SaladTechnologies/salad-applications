@@ -5,7 +5,7 @@ import { StartButton } from './components/StartButton'
 const mapStoreToProps = (store: RootStore): any => ({
   onClick: store.saladBowl.toggleRunning,
   status: store.saladBowl.status,
-  isEnabled: store.saladBowl.canRun,
+  isEnabled: !store.auth.isAuthenticated || store.saladBowl.canRun,
   runningTime: store.saladBowl.runningTime,
   pluginCount: store.saladBowl.pluginCount,
   isDesktop: store.native.isNative,

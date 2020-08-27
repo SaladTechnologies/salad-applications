@@ -204,19 +204,19 @@ export class SaladBowlStore implements IPersistentStore {
 
   @action.bound
   start = flow(function* (this: SaladBowlStore, reason: StartReason, startTimestamp?: Date, choppingTime?: number) {
+    //Ensures that the user is logged in
+    try {
+      yield this.store.auth.login()
+    } catch {
+      return
+    }
+
     if (this.isRunning) {
       return
     }
 
     if (!this.canRun) {
       console.log('This machine is not able to run.')
-      return
-    }
-
-    //Ensures that the user is logged in
-    try {
-      yield this.store.auth.login()
-    } catch {
       return
     }
 
