@@ -171,6 +171,12 @@ export class NativeStore {
   closeWindow = () => {
     if (this.canMinimizeToTray && this.minimizeToTray) {
       this.send(hide)
+      this.store.notifications.sendNotification({
+        title: 'Salad is running in the background',
+        message: 'When you have the "Close to Tray" option enabled, Salad will continue to run in the background.',
+        id: 33,
+        showDesktop: true,
+      })
     } else {
       this.send(close)
     }
