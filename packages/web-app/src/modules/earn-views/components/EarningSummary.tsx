@@ -23,11 +23,12 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   currentBalance?: number
   lifetimeBalance?: number
+  totalXp?: number
 }
 
 class _EarningSummary extends Component<Props> {
   render() {
-    const { currentBalance, lifetimeBalance, classes } = this.props
+    const { currentBalance, lifetimeBalance, totalXp, classes } = this.props
 
     return (
       <div className={classes.container}>
@@ -42,6 +43,11 @@ class _EarningSummary extends Component<Props> {
             title={'Lifetime Balance'}
             values={[formatBalance(lifetimeBalance)]}
             infoText={'Total balance earned'}
+          />
+          <StatElement
+            title={'Total XP'}
+            values={[Math.round(totalXp || 0).toLocaleString() || '0']}
+            infoText={`XP stands for "Experience Points". You are awarded 1 XP per minute of confirmed mining time. The more XP you have, the more veggies you will unlock in the Pantry.`}
           />
         </div>
       </div>

@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { Divider, Scrollbar } from '../../../components'
+import { Divider, Scrollbar, SectionHeader } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
-import { EarningSummary, EarningHistory } from '../components'
-import { EarningWindow } from '../../balance/models'
 import { withLogin } from '../../auth-views'
+import { EarningWindow } from '../../balance/models'
+import { PantryContainer } from '../../xp-views'
+import { EarningHistory, EarningSummary } from '../components'
 import { EarningInformationContainer } from '../EarningInformationContainer'
 
 const styles = (theme: SaladTheme) => ({
@@ -36,6 +37,7 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   currentBalance?: number
   lifetimeBalance?: number
+  totalXp?: number
   last24Hr?: number
   last7Day?: number
   last30Day?: number
@@ -52,6 +54,9 @@ class _EarningSummaryPage extends Component<Props> {
           <EarningSummary {...rest} />
           <Divider />
           <EarningHistory {...rest} />
+          <Divider />
+          <SectionHeader>Pantry</SectionHeader>
+          <PantryContainer />
         </div>
       </Scrollbar>
     )

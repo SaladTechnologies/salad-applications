@@ -100,15 +100,7 @@ class _MiningInformation extends Component<Props> {
             <Divider />
 
             <div className={classes.splitContainer}>
-              <div className={classes.column} style={{ paddingRight: 20 }}>
-                <SectionHeader>What is XP?</SectionHeader>
-                <P>
-                  XP stands for "Experience Points," and simply denotes how much you've mined with Salad. You are
-                  awarded 1 XP per minute of confirmed mining time. The more you run, the more XP you will accrue and
-                  the more veggies you will unlock in the Pantry.
-                </P>
-              </div>
-              <div className={classes.column} style={{ paddingLeft: 20 }}>
+              <div className={classes.column}>
                 <SectionHeader>More Information</SectionHeader>
                 <br />
                 <P>
@@ -132,6 +124,7 @@ class _MiningInformation extends Component<Props> {
                   </SmartLink>
                 </P>
               </div>
+              <div className={classes.column} style={{ paddingRight: 20 }}></div>
             </div>
           </div>
         </Scrollbar>

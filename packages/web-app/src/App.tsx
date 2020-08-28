@@ -6,7 +6,6 @@ import withStyles, { WithStyles } from 'react-jss'
 import { ToastContainer } from 'react-toastify'
 import { LoadingPage, MobileDevice, NotMobile } from './components'
 import { config } from './config'
-import { FooterBarContainer } from './modules/home-views'
 import { MainTitlebarContainer } from './modules/home-views/MainTitlebarContainer'
 import { Routes } from './Routes'
 import { getStore } from './Store'
@@ -98,7 +97,6 @@ export const App = withStyles(styles)(
 
     render() {
       const { classes } = this.props
-      const isNative = this.store.native.isNative
 
       return (
         <>
@@ -121,7 +119,6 @@ export const App = withStyles(styles)(
                 </div>
                 <ToastContainer />
               </div>
-              {isNative && <FooterBarContainer />}
             </div>
           </NotMobile>
         </>
