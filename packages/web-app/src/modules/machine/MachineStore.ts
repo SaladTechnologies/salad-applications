@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios'
 import { autorun, computed, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
-import { getPluginDefinitionsForGraphics } from '../salad-bowl/PluginDefinitionFactory'
+import { getPluginDefinitions, getPluginDefinitionsForGraphics } from '../salad-bowl/PluginDefinitionFactory'
 import { GpuInformation } from './models'
 import { Machine } from './models/Machine'
 
@@ -55,6 +55,20 @@ export class MachineStore {
         })
         let machine: Machine = res.data
         this.currentMachine = machine
+
+        //Check the machine for compatibility
+        const pluginCount = getPluginDefinitions(this.store).length
+
+        if (pluginCount === 0) {
+          //Show an error notification
+          this.store.notifications.sendNotification({
+            title: `Machine is Incompatible`,
+            message: 'Salad was unable to detect a compatible graphics card. Click here for more details.',
+            autoClose: false,
+            type: 'error',
+            onClick: () => this.store.routing.push('/earn/mine/miner-details'),
+          })
+        }
       } catch (err) {
         this.store.analytics.captureException(new Error(`register-machine error: ${err}`), {
           contexts: {

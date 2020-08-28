@@ -68,7 +68,7 @@ class _GpuSummary extends Component<Props> {
           <div className={classes.column}>
             Driver Version
             <InfoButton
-              text={'Driver version are not available on all GPUs. \n No need to worry if it is not listed below'}
+              text={'Driver version are not available on all GPUs. No need to worry if it is not listed below.'}
             />
           </div>
         </div>
