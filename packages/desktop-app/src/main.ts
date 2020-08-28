@@ -2,7 +2,8 @@ import * as Sentry from '@sentry/electron'
 import { app, BrowserWindow, Input, ipcMain, Menu, nativeImage, powerMonitor, shell, Tray } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import isOnline from 'is-online'
-import * as notifier from 'node-notifier'
+import { WindowsToaster } from 'node-notifier'
+import * as os from 'os'
 import * as path from 'path'
 import * as si from 'systeminformation'
 import { Config } from './config'
@@ -16,18 +17,31 @@ import { SaladBridgeNotificationService } from './salad-bowl/SaladBridgeNotifica
 import { SaladBridge } from './SaladBridge'
 import { DefaultTheme as theme } from './SaladTheme'
 
-const appVersion = app.getVersion()
-
-Sentry.init({
-  dsn: 'https://0a70874cde284d838a378e1cc3bbd963@sentry.io/1804227',
-  release: appVersion,
-})
-
-/** Path to the /static folder. Provided via electron-webpack */
+// The path to the `/static` folder. This is provided by electron-webpack.
 declare const __static: string
 
-//Overrides the console.log behavior
+// Register to send Windows 10 notifications.
+app.setAppUserModelId('salad-technologies-desktop-app')
+
+// Capture unhandled errors.
+Sentry.init({
+  dsn: 'https://0a70874cde284d838a378e1cc3bbd963@sentry.io/1804227',
+  release: app.getVersion(),
+})
+
+// Redirect `console` to the application log file.
 Logger.connect()
+
+// Ensure we have the correct path to `snoretoast.exe`. Note: Kyle _hates_ this.
+var notifier = new WindowsToaster({
+  withFallback: false,
+  customPath: path
+    .resolve(
+      app.getAppPath(),
+      'node_modules/node-notifier/vendor/snoreToast/snoretoast-x' + (os.arch() === 'x64' ? '64' : '86') + '.exe',
+    )
+    .replace('app.asar', 'app.asar.unpacked'),
+})
 
 const AutoLaunch = require('auto-launch')
 
@@ -392,11 +406,6 @@ const checkForUpdates = () => {
 }
 
 const onReady = async () => {
-  // TODO: Determine if this is necessary to get Windows 10 notifications working.
-  // if (process.platform === 'win32') {
-  //   app.setAppUserModelId('salad-technologies-desktop-app')
-  // }
-
   if (await isOnline({ timeout: 10000 })) {
     createMainWindow()
     checkForUpdates()
@@ -434,7 +443,7 @@ const cleanExit = () => {
 
 process.on('SIGINT', cleanExit) // catch ctrl-c
 process.on('SIGTERM', cleanExit) // catch kill
-console.log(`Running ${app.name} ${appVersion}`)
+console.log(`Running ${app.name} ${app.getVersion()}`)
 
 function createSystemTrayMenu(isVisible: boolean): Menu {
   return Menu.buildFromTemplate([
