@@ -184,7 +184,8 @@ export class NativeStore {
 
   @action
   setMachineInfo = (info: MachineInfo) => {
-    console.log('Received machine info')
+    const { services: _, ...logInfo } = info
+    console.log(`Received machine info: ${JSON.stringify(logInfo)}`)
     if (this.machineInfo) {
       console.log('Already received machine info. Skipping...')
 
