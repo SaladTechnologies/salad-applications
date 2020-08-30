@@ -108,7 +108,14 @@ const checkForMultipleInstance = () => {
     app.on('second-instance', () => {
       // Someone tried to run a second instance, we should focus our window.
       if (mainWindow) {
-        if (mainWindow.isMinimized()) mainWindow.restore()
+        if (!mainWindow.isVisible()) {
+          mainWindow.show()
+        }
+
+        if (mainWindow.isMinimized()) {
+          mainWindow.restore()
+        }
+
         mainWindow.focus()
       }
     })
