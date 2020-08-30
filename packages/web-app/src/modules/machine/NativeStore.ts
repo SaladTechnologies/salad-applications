@@ -1,7 +1,6 @@
 import { action, computed, observable, toJS } from 'mobx'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
-// import { Machine } from './models/Machine'
 import { Profile } from '../profile/models'
 import { MachineInfo } from './models'
 
@@ -11,7 +10,6 @@ const minimize = 'minimize-window'
 const maximize = 'maximize-window'
 const close = 'close-window'
 const hide = 'hide-window'
-// const sendLog = 'send-log'
 const getDesktopVersion = 'get-desktop-version'
 const setDesktopVersion = 'set-desktop-version'
 const enableAutoLaunch = 'enable-auto-launch'
@@ -21,6 +19,7 @@ const logout = 'logout'
 
 const AUTO_LAUNCH = 'AUTO_LAUNCH'
 const MINIMIZE_TO_TRAY = 'MINIMIZE_TO_TRAY'
+const NOTIFY_ON_MINIMIZE_TO_TRAY = 'NOTIFY_ON_MINIMIZE_TO_TRAY'
 
 declare global {
   interface Window {
@@ -52,6 +51,9 @@ export class NativeStore {
 
   @observable
   public minimizeToTray: boolean = true
+
+  @observable
+  public notifyOnMinimizeToTray: boolean = true
 
   @computed
   get canMinimizeToTray(): boolean {
@@ -86,7 +88,7 @@ export class NativeStore {
     if (this.isNative) {
       window.salad.onNative = this.onNative
 
-      this.checkAutoLaunch()
+      this.restore()
 
       this.on(setDesktopVersion, (version: string) => {
         this.setDesktopVersion(version)
@@ -171,12 +173,14 @@ export class NativeStore {
   closeWindow = () => {
     if (this.canMinimizeToTray && this.minimizeToTray) {
       this.send(hide)
-      this.store.notifications.sendNotification({
-        title: 'Salad is running in the background',
-        message: 'When you have the "Close to Tray" option enabled, Salad will continue to run in the background.',
-        id: 33,
-        showDesktop: true,
-      })
+      if (this.notifyOnMinimizeToTray) {
+        this.store.notifications.sendNotification({
+          title: 'Salad is running in the background',
+          message: 'When you have the "Close to Tray" option enabled, Salad will continue to run in the background.',
+          id: 33,
+          showDesktop: true,
+        })
+      }
     } else {
       this.send(close)
     }
@@ -213,8 +217,18 @@ export class NativeStore {
   toggleMinimizeToTray = () => {
     if (this.minimizeToTray) {
       this.disableMinimizeToTray()
+      this.enableNotifyOnMinimizeToTray()
     } else {
       this.enableMinimizeToTray()
+    }
+  }
+
+  @action
+  toggleNotifyOnMinimizeToTray = () => {
+    if (this.notifyOnMinimizeToTray) {
+      this.disableNotifyOnMinimizeToTray()
+    } else {
+      this.enableNotifyOnMinimizeToTray()
     }
   }
 
@@ -247,14 +261,29 @@ export class NativeStore {
   }
 
   @action
-  checkAutoLaunch = () => {
+  enableNotifyOnMinimizeToTray = () => {
+    this.notifyOnMinimizeToTray = true
+    Storage.setItem(NOTIFY_ON_MINIMIZE_TO_TRAY, 'true')
+  }
+
+  @action
+  disableNotifyOnMinimizeToTray = () => {
+    this.notifyOnMinimizeToTray = false
+    Storage.setItem(NOTIFY_ON_MINIMIZE_TO_TRAY, 'false')
+  }
+
+  @action
+  restore = () => {
     if (window.salad.apiVersion <= 1) {
       this.autoLaunch = false
-      return
+    } else {
+      this.autoLaunch = Storage.getOrSetDefault(AUTO_LAUNCH, this.autoLaunch.toString()) === 'true'
+      this.autoLaunch && this.enableAutoLaunch()
     }
 
-    this.autoLaunch = Storage.getOrSetDefault(AUTO_LAUNCH, this.autoLaunch.toString()) === 'true'
-    this.autoLaunch && this.enableAutoLaunch()
+    this.minimizeToTray = Storage.getOrSetDefault(MINIMIZE_TO_TRAY, this.minimizeToTray.toString()) === 'true'
+    this.notifyOnMinimizeToTray =
+      Storage.getOrSetDefault(NOTIFY_ON_MINIMIZE_TO_TRAY, this.minimizeToTray.toString()) === 'true'
   }
 
   @action
