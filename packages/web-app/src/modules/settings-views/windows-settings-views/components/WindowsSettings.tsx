@@ -22,13 +22,15 @@ interface Props extends WithStyles<typeof styles> {
   autoLaunch?: boolean
   autoLaunchToggle?: () => void
   autoStart?: boolean
-  autoStartToggle?: () => void
-  autoStartEnabled?: boolean
   autoStartDelay?: number
+  autoStartEnabled?: boolean
+  autoStartToggle?: () => void
   autoStartUpdate?: (value: number) => void
-  minimizeToTrayToggle?: () => void
-  minimizeToTray?: boolean
   canMinimizeToTray?: boolean
+  minimizeToTray?: boolean
+  minimizeToTrayToggle?: () => void
+  notifyOnMinimizeToTray?: boolean
+  notifyOnMinimizeToTrayToggle?: () => void
 }
 
 class _WindowsSettings extends Component<Props> {
@@ -37,14 +39,16 @@ class _WindowsSettings extends Component<Props> {
       autoLaunch,
       autoLaunchToggle,
       autoStart,
-      autoStartToggle,
-      autoStartEnabled,
       autoStartDelay,
+      autoStartEnabled,
+      autoStartToggle,
       autoStartUpdate,
-      minimizeToTrayToggle,
-      minimizeToTray,
       canMinimizeToTray,
       classes,
+      minimizeToTray,
+      minimizeToTrayToggle,
+      notifyOnMinimizeToTray,
+      notifyOnMinimizeToTrayToggle,
     } = this.props
 
     return (
@@ -98,6 +102,19 @@ class _WindowsSettings extends Component<Props> {
               toggled={minimizeToTray}
               onToggle={minimizeToTrayToggle}
             />
+            {minimizeToTray && (
+              <>
+                <Divider />
+                <ToggleSetting
+                  title={'Notify on Close to Tray'}
+                  description={
+                    'Salad will use a Windows desktop notification to remind you when it hides in the tray and continues to run in the background.'
+                  }
+                  toggled={notifyOnMinimizeToTray}
+                  onToggle={notifyOnMinimizeToTrayToggle}
+                />
+              </>
+            )}
           </>
         )}
       </div>
