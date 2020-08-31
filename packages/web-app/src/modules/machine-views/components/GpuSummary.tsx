@@ -1,7 +1,7 @@
 import classnames from 'classnames'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { InfoButton } from '../../../components'
+import { InfoButton, SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { GpuInformation } from '../../machine/models'
 
@@ -45,6 +45,15 @@ const styles = (theme: SaladTheme) => ({
     opacity: 0.3,
     textDecoration: 'line-through',
   },
+  warningText: {
+    color: theme.orange,
+    fontFamily: theme.fontGroteskBook25,
+    fontSize: 10,
+    letterSpacing: '1.5px',
+    textTransform: 'uppercase',
+    paddingTop: 25,
+    textAlign: 'center',
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -85,6 +94,15 @@ class _GpuSummary extends Component<Props> {
               <div className={classes.column}>{x.driverVersion || '-'}</div>
             </div>
           ))}
+
+        {(!gpus || !gpus.some((x) => x.compatible)) && (
+          <div className={classes.warningText}>
+            No compatible GPUs found. Learn more{' '}
+            <SmartLink to="https://support.salad.io/hc/en-us/articles/360028479492-How-do-I-find-my-GPU-name-">
+              here
+            </SmartLink>
+          </div>
+        )}
       </div>
     )
   }
