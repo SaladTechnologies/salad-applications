@@ -13,7 +13,10 @@ export const getTrexRavencoinNiceHashDefinition = (nicehashAddress: string, mach
     downloadUrl:
       'https://github.com/SaladTechnologies/plugin-downloads/releases/download/trex0.16.1/t-rex-0-16-1-windows-cuda.zip',
     exe: 't-rex.exe',
-    args: `-a kawpow ${getServer('usa')} ${getUser(nicehashAddress, machine.minerId)}`,
+    args: `-a kawpow ${getServer('usa')} ${getUser(
+      nicehashAddress,
+      machine.minerId,
+    )} --exit-on-connection-lost --exit-on-cuda-error`,
     runningCheck: '(?:\\[ OK \\]|[1-9][0-9]*\\.\\d* (?:h|H|kh|kH|Kh|KH|mh|mH|Mh|MH))',
     initialTimeout: 600000,
     initialRetries: 1,
