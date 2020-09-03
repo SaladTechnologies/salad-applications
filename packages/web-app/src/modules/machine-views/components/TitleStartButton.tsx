@@ -10,7 +10,8 @@ const buttonWidth = 120
 const styles = (theme: SaladTheme) => ({
   startButtonContainer: {
     position: 'relative',
-    width: buttonWidth + 20,
+    width: buttonWidth + 15,
+    paddingLeft: 10,
     height: '2rem',
   },
   startButton: {
