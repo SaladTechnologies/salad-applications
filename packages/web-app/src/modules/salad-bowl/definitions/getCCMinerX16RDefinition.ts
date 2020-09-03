@@ -8,6 +8,7 @@ export const getCCMinerX16RDefinition = (nicehashAddress: string, machine: Machi
   let def = {
     name: 'CCMiner',
     version: '2.31',
+    algorithm: 'X16R',
     downloadUrl:
       'https://github.com/SaladTechnologies/plugin-downloads/releases/download/ccminer-2.31/ccminer-2-3-1-windows.zip',
     exe: 'ccminer-x64.exe',

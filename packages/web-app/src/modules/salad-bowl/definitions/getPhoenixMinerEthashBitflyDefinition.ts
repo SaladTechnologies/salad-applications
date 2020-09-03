@@ -6,6 +6,7 @@ export const getPhoenixMinerEthashBitflyDefinition = (machine: Machine): PluginD
   let def = {
     name: 'PhoenixMiner',
     version: '5.1c',
+    algorithm: 'Ethash',
     downloadUrl:
       'https://github.com/SaladTechnologies/plugin-downloads/releases/download/phoenixminer-5-1-c/phoenixminer-5-1-c-windows.zip',
     exe: 'PhoenixMiner.exe',

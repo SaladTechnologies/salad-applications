@@ -10,6 +10,7 @@ export const getTrexRavencoinNiceHashDefinition = (nicehashAddress: string, mach
   let def = {
     name: 'T-Rex',
     version: '0.16.1',
+    algorithm: 'Raven',
     downloadUrl:
       'https://github.com/SaladTechnologies/plugin-downloads/releases/download/trex0.16.1/t-rex-0-16-1-windows-cuda.zip',
     exe: 't-rex.exe',

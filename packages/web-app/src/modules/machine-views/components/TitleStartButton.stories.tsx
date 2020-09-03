@@ -4,7 +4,7 @@ import { MiningStatus } from '../../machine/models'
 import { TitleStartButton } from './TitleStartButton'
 
 export default {
-  title: 'Modules|Machine/Title Start Button',
+  title: 'Modules/Machine/Title Start Button',
   component: TitleStartButton,
 }
 

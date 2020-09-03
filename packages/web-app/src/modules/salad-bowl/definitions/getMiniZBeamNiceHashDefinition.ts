@@ -6,6 +6,7 @@ export const getMiniZBeamNiceHashDefinition = (nicehashAddress: string, machine:
   let def = {
     name: 'MiniZ',
     version: '1.6v3',
+    algorithm: 'Beam',
     downloadUrl:
       'https://github.com/SaladTechnologies/plugin-downloads/releases/download/miniz-1.6v3/miniz-1.6v3-cuda.zip',
     exe: 'miniZ.exe',

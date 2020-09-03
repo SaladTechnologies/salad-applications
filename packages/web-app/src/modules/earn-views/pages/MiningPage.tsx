@@ -4,8 +4,9 @@ import withStyles, { WithStyles } from 'react-jss'
 import { Divider, Head, Scrollbar, SectionHeader } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { withLogin } from '../../auth-views'
-import { GpuSummaryContainer } from '../../machine-views'
+import { GpuSummaryContainer, MinerListContainer } from '../../machine-views'
 import { DesktopDownloadContainer } from '../DesktopDownloadContainer'
+import { EarningHistoryContainer } from '../EarningHistoryContainer'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -60,7 +61,11 @@ class _MiningPage extends Component<Props> {
               <GpuSummaryContainer />
               <Divider />
 
-              {/* TODO:DRS Add miner plugin list */}
+              <SectionHeader>Current Miner</SectionHeader>
+              <MinerListContainer />
+              <Divider />
+
+              <EarningHistoryContainer />
             </div>
           </div>
         </Scrollbar>
@@ -70,3 +75,4 @@ class _MiningPage extends Component<Props> {
 }
 
 export const MiningPage = withLogin(withStyles(styles)(_MiningPage))
+// export const MiningPage = withStyles(styles)(_MiningPage)
