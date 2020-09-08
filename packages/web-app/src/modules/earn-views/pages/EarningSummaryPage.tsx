@@ -13,7 +13,7 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
     flexDirection: 'column',
     padding: 20,
-    marginRight: 250,
+    marginRight: 225,
   },
   splitContainer: {
     display: 'flex',
