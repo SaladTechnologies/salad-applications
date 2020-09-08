@@ -9,6 +9,7 @@ const buttonWidth = 120
 
 const styles = (theme: SaladTheme) => ({
   startButtonContainer: {
+    '-webkit-app-region': 'none',
     position: 'relative',
     width: buttonWidth + 15,
     paddingLeft: 10,
@@ -58,13 +59,39 @@ const styles = (theme: SaladTheme) => ({
     fontSize: 8,
     textAlign: 'center',
   },
+  errorNotification: {
+    // backgroundColor: theme.orange,
+    position: 'absolute',
+    top: 0,
+    right: -12.5,
+    cursor: 'pointer',
+    '&:hover': {
+      opacity: 0.8,
+    },
+
+    // Triangle generated from http://apps.eky.hk/css-triangle-generator/
+    width: 0,
+    height: 0,
+    borderStyle: 'solid',
+    borderWidth: '19.1px 11px 0 11px',
+    borderColor: `${theme.orange} transparent transparent transparent`,
+  },
+  errorIcon: {
+    position: 'absolute',
+    color: 'white',
+    top: -20,
+    left: -2,
+    fontWeight: 'bold',
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
   onClick?: () => void
+  onClickError?: () => void
   status?: MiningStatus
   isEnabled?: boolean
   runningTime?: number
+  errorMessage?: string
 }
 
 interface State {
@@ -88,6 +115,12 @@ class _TitleStartButton extends Component<Props, State> {
     onClick?.()
   }
 
+  handleErrorClick = () => {
+    const { onClickError } = this.props
+
+    onClickError?.()
+  }
+
   handleMouseEnter = () => {
     this.setState({
       isHovering: true,
@@ -101,8 +134,10 @@ class _TitleStartButton extends Component<Props, State> {
   }
 
   render() {
-    const { isEnabled, runningTime, status, classes } = this.props
+    const { isEnabled, errorMessage, runningTime, status, classes } = this.props
     const { isHovering } = this.state
+
+    const isError = errorMessage && 0 !== errorMessage.length
 
     const isRunning =
       status === MiningStatus.Installing || status === MiningStatus.Initializing || status === MiningStatus.Running
@@ -112,6 +147,7 @@ class _TitleStartButton extends Component<Props, State> {
     return (
       <div className={classes.startButtonContainer}>
         <div className={classnames(classes.startButton, { [classes.startButtonRunning]: isRunning })} />
+
         <div
           className={classnames(classes.startButtonText, { [classes.startButtonTextEnabled]: isEnabled })}
           onClick={this.handleStart}
@@ -123,6 +159,11 @@ class _TitleStartButton extends Component<Props, State> {
             <div>
               {status}
               <div className={classes.runningTimeText}>{runningTime !== undefined && formatDuration(runningTime)}</div>
+            </div>
+          )}
+          {isError && (
+            <div className={classes.errorNotification} data-rh={errorMessage} onClick={this.handleErrorClick}>
+              <div className={classes.errorIcon}>!</div>
             </div>
           )}
         </div>

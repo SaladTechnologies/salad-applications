@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
+import Img from 'react-image'
 import withStyles, { WithStyles } from 'react-jss'
 import { Divider, Head, P, Scrollbar, SectionHeader, SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
-import { StartButtonContainer } from '../../machine-views'
+import miningOverview from '../assets/mining-overview.svg'
+import mining from '../assets/mining.svg'
 import { DesktopDownloadContainer } from '../DesktopDownloadContainer'
 
 const styles = (theme: SaladTheme) => ({
@@ -27,11 +29,10 @@ const styles = (theme: SaladTheme) => ({
     flex: 1,
     flexBasis: '50%',
   },
-  startContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
+  overviewImage: {
+    maxWidth: 600,
+    padding: 40,
+    margin: 'auto',
   },
 })
 
@@ -57,18 +58,32 @@ class _MiningInformation extends Component<Props> {
                   start and you'll begin earning Salad balance, we'll take care of the rest.
                 </P>
               </div>
-              <div className={classes.column}></div>
+              <div className={classes.column}>
+                <Img src={mining} />
+              </div>
             </div>
             <Divider />
             <SectionHeader>Getting Started</SectionHeader>
+            <P>
+              Mining is easy, simply press the "Start" button and Salad will automatically start mining for you. In many
+              cases it will take your machine some time to get to the "Chopping" status while Salad finds the best miner
+              to run on your machine.
+              <b> Remember, Salad is best left AFK!!!</b>
+            </P>
+
+            <Img className={classes.overviewImage} src={miningOverview} />
+
+            <P>
+              Don't forget to enable{' '}
+              <b>
+                <SmartLink to="/settings/windows-settings">Auto Start</SmartLink>
+              </b>
+              , this will allow Salad to automatically start when you step away from your machine.
+            </P>
+            <Divider />
+            <SectionHeader>What Does the Status Mean?</SectionHeader>
             <div className={classes.splitContainer}>
               <div className={classes.column}>
-                <P>
-                  Mining is easy, simply press the "Start" button and Salad will automatically start mining for you. In
-                  many cases it will take your machine some time to get to the "Chopping" status while Salad finds the
-                  best miner to run on your machine.
-                  <b> Remember, Salad is best left AFK!!!</b>
-                </P>
                 <P>There are 3 states of Salad that you should be aware of:</P>
                 <P>
                   <b>STOPPED</b>
@@ -83,19 +98,8 @@ class _MiningInformation extends Component<Props> {
                   <b>CHOPPING</b>
                   <br /> Salad has now confirmed that your miner is running correctly and you will start to earn soon.
                 </P>
-                <P>
-                  Don't forget to enable{' '}
-                  <b>
-                    <SmartLink to="/settings/windows-settings">Auto Start</SmartLink>
-                  </b>
-                  , this will allow Salad to automatically start when you step away from your machine.
-                </P>
               </div>
-              <div className={classes.column}>
-                <div className={classes.startContainer}>
-                  <StartButtonContainer />
-                </div>
-              </div>
+              <div className={classes.column}></div>
             </div>
             <Divider />
 
@@ -126,6 +130,7 @@ class _MiningInformation extends Component<Props> {
               </div>
               <div className={classes.column} style={{ paddingRight: 20 }}></div>
             </div>
+            <Divider />
           </div>
         </Scrollbar>
       </div>

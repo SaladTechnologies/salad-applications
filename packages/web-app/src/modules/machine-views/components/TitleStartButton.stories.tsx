@@ -32,3 +32,13 @@ export const Initializing = () => (
 export const Running = () => (
   <TitleStartButton onClick={action('click')} isEnabled={true} status={MiningStatus.Running} runningTime={6000000} />
 )
+
+export const WithError = () => (
+  <TitleStartButton
+    onClick={action('click')}
+    onClickError={action('click error')}
+    isEnabled={false}
+    status={MiningStatus.Stopped}
+    errorMessage="No compatible GPUs found. Click for more details."
+  />
+)
