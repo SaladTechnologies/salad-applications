@@ -69,11 +69,6 @@ export class NativeStore {
   }
 
   @computed
-  get canSendLogs(): boolean {
-    return this.apiVersion >= 2
-  }
-
-  @computed
   get gpuNames(): string[] | undefined {
     if (this.machineInfo?.graphics === undefined) {
       return undefined
@@ -150,11 +145,6 @@ export class NativeStore {
     console.log('Getting machine info')
     this.loadingMachineInfo = true
     this.send(getMachineInfo)
-  }
-
-  @action
-  sendLog = () => {
-    // this.send(sendLog, this.store.token.machineId)
   }
 
   @action

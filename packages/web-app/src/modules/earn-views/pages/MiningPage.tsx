@@ -41,29 +41,34 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  isNative?: boolean
+}
 
 class _MiningPage extends Component<Props> {
   render() {
-    const { classes } = this.props
+    const { isNative, classes } = this.props
 
     return (
       <div className={classNames(classes.container, classes.splitContainer)}>
-        <Head title="Mining" />
+        <Head title="Mining - Details" />
         <Scrollbar>
           <div className={classNames(classes.content, classes.splitContainer)}>
             <div className={classNames(classes.column, classes.mainColumn)}>
               <DesktopDownloadContainer />
 
               {/* TODO:DRS Add an error message panel. This could be for incompatible machine, AV issues... */}
+              {isNative && (
+                <>
+                  <SectionHeader>Machine Information</SectionHeader>
+                  <GpuSummaryContainer />
+                  <Divider />
 
-              <SectionHeader>Machine Information</SectionHeader>
-              <GpuSummaryContainer />
-              <Divider />
-
-              <SectionHeader>Current Miner</SectionHeader>
-              <MinerListContainer />
-              <Divider />
+                  <SectionHeader>Current Miner</SectionHeader>
+                  <MinerListContainer />
+                  <Divider />
+                </>
+              )}
 
               <EarningHistoryContainer />
             </div>
@@ -75,4 +80,3 @@ class _MiningPage extends Component<Props> {
 }
 
 export const MiningPage = withLogin(withStyles(styles)(_MiningPage))
-// export const MiningPage = withStyles(styles)(_MiningPage)

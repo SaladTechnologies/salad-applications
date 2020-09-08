@@ -98,7 +98,7 @@ class _GpuSummary extends Component<Props> {
         {(!gpus || !gpus.some((x) => x.compatible)) && (
           <div className={classes.warningText}>
             No compatible GPUs found. Learn more{' '}
-            <SmartLink to="https://support.salad.io/hc/en-us/articles/360028479492-How-do-I-find-my-GPU-name-">
+            <SmartLink to="https://support.salad.io/hc/en-us/articles/360048320131-Is-My-Machine-Compatible-With-Salad-">
               here
             </SmartLink>
           </div>

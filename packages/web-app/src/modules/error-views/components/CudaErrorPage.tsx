@@ -1,32 +1,18 @@
 import React, { Component } from 'react'
-
+import { SmartLink } from '../../../components'
 // Components
 import { ErrorPage } from '../../../components/ErrorPage'
-import { SmartLink } from '../../../components'
 
 interface Props {
   onCloseClicked?: () => void
-  showSendLog?: boolean
-  onSendLog?: () => void
 }
 
 export class CudaErrorPage extends Component<Props> {
-  handleSendLogClicked = () => {
-    const { onSendLog } = this.props
-
-    if (onSendLog) onSendLog()
-  }
-
   render() {
-    const { showSendLog, onCloseClicked } = this.props
+    const { onCloseClicked } = this.props
 
     return (
-      <ErrorPage
-        title="Incompatible Drivers"
-        onCloseClicked={onCloseClicked}
-        showSendLog={showSendLog}
-        onSendLog={this.handleSendLogClicked}
-      >
+      <ErrorPage title="Incompatible Drivers" onCloseClicked={onCloseClicked}>
         <div>
           We’re detecting that your GPU drivers are incompatible with Salad. In order to get chopping you will need to
           update your drivers to the latest version.{' '}

@@ -4,7 +4,7 @@ import { Divider, Scrollbar, SectionHeader } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { withLogin } from '../../auth-views'
 import { EarningWindow } from '../../balance/models'
-import { PantryContainer } from '../../xp-views'
+import { PantryContainer, SlicedVeggieContainer } from '../../xp-views'
 import { EarningHistory, EarningSummary } from '../components'
 import { EarningInformationContainer } from '../EarningInformationContainer'
 
@@ -13,6 +13,7 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
     flexDirection: 'column',
     padding: 20,
+    marginRight: 250,
   },
   splitContainer: {
     display: 'flex',
@@ -49,16 +50,19 @@ class _EarningSummaryPage extends Component<Props> {
     const { classes, ...rest } = this.props
 
     return (
-      <Scrollbar>
-        <div className={classes.content}>
-          <EarningSummary {...rest} />
-          <Divider />
-          <EarningHistory {...rest} />
-          <Divider />
-          <SectionHeader>Pantry</SectionHeader>
-          <PantryContainer />
-        </div>
-      </Scrollbar>
+      <>
+        <SlicedVeggieContainer />
+        <Scrollbar>
+          <div className={classes.content}>
+            <EarningSummary {...rest} />
+            <Divider />
+            <EarningHistory {...rest} />
+            <Divider />
+            <SectionHeader>Pantry</SectionHeader>
+            <PantryContainer />
+          </div>
+        </Scrollbar>
+      </>
     )
   }
 }

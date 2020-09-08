@@ -8,7 +8,8 @@ const mapStoreToProps = (store: RootStore): any => ({
   status: store.saladBowl.status,
   isEnabled: !store.auth.isAuthenticated || store.saladBowl.canRun,
   runningTime: store.saladBowl.runningTime,
-  errorMessage: !store.saladBowl.canRun && 'No compatible GPUs found. Click for more details.',
+  errorMessage:
+    store.auth.isAuthenticated && !store.saladBowl.canRun && 'No compatible GPUs found. Click for more details.',
 })
 
 export const TitleStartButtonContainer = connect(mapStoreToProps, TitleStartButton)

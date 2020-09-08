@@ -30,7 +30,6 @@ const mapStoreToProps = (): any => {
         component: OfferToroContainer,
         inset: true,
       },
-
       { text: 'Referrals', url: '/earn/referrals', component: ReferralSettingsContainer, divider: true },
     ],
   }

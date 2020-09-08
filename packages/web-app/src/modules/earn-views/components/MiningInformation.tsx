@@ -44,7 +44,7 @@ class _MiningInformation extends Component<Props> {
 
     return (
       <div className={classes.container}>
-        <Head title="Mining - How it Works" />
+        <Head title="Mining" />
         <Scrollbar>
           <div className={classes.content}>
             <DesktopDownloadContainer />

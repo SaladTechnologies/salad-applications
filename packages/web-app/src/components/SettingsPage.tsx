@@ -32,7 +32,6 @@ interface Props extends WithStyles<typeof styles> {
   menuButtons?: MenuButton[]
   appVersion?: string
   appBuild?: string
-  onSendLog?: () => void
   latestDesktop?: boolean
   onDownloadLatestDesktop?: () => void
 }
@@ -54,16 +53,6 @@ class _Settings extends Component<Props> {
     const { onSendBug } = this.props
 
     if (onSendBug) onSendBug()
-  }
-
-  handleLogClicked = () => {
-    const { onSendLog } = this.props
-
-    this.setState({
-      buttonToggle: !this.state.buttonToggle,
-    })
-
-    if (onSendLog) onSendLog()
   }
 
   handleCloseClicked = () => {
@@ -94,7 +83,6 @@ class _Settings extends Component<Props> {
       menuButtons,
       latestDesktop,
       onSendBug,
-      onSendLog,
       onDownloadLatestDesktop,
       onClose,
       pageTitle,
@@ -119,9 +107,6 @@ class _Settings extends Component<Props> {
 
           <div className={classes.buttonContainer}>
             {onSendBug && <Button onClick={this.handleBugClicked}>Submit Bug</Button>}
-            {onSendLog && (
-              <Button onClick={this.handleLogClicked}>{this.state.buttonToggle ? 'Logs sent' : 'Send logs'}</Button>
-            )}
             {menuButtons && menuButtons.map((x) => <Button onClick={x.onClick}>{x.text}</Button>)}
           </div>
           <div className={classes.versionContainer}>
