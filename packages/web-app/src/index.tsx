@@ -33,6 +33,7 @@ allSettled.shim()
 Sentry.init({
   dsn: config.sentryDSN,
   ignoreErrors: ['ResizeObserver loop limit exceeded'],
+  normalizeDepth: 5,
   release: config.appBuild,
 })
 
