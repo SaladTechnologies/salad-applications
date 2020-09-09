@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
-
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
-
-import { P, Head } from '../../../components'
+import { Head, P } from '../../../components'
+import { withLogin } from '../../auth-views'
 import { RewardVaultItem } from '../../vault/models'
 import { VaultItem } from './VaultItem'
-import { withLogin } from '../../auth-views'
 
 const styles = {
   container: {
@@ -30,9 +28,23 @@ const styles = {
 
 interface Props extends WithStyles<typeof styles> {
   redemptions?: RewardVaultItem[]
+  startRefresh?: () => void
+  stopRefresh?: () => void
 }
 
 class _VaultList extends Component<Props> {
+  componentDidMount = () => {
+    const { startRefresh } = this.props
+
+    startRefresh?.()
+  }
+
+  componentWillUnmount = () => {
+    const { stopRefresh } = this.props
+
+    stopRefresh?.()
+  }
+
   render() {
     const { redemptions, classes } = this.props
     return (
