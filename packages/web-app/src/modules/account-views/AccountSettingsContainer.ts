@@ -1,9 +1,9 @@
+import { MenuButton, MenuItem, SettingsPage } from '../../components'
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
-import { SettingsPage, MenuItem, MenuButton } from '../../components'
-import { ReferralSettingsContainer } from './referral-views'
 import { VaultListContainer } from '../vault-views'
 import { AccountContainer } from './account-views'
+import { ReferralSettingsContainer } from './referral-views'
 
 const mapStoreToProps = (store: RootStore): any => {
   const menuItems: MenuItem[] = [
@@ -12,10 +12,7 @@ const mapStoreToProps = (store: RootStore): any => {
     { url: '/account/reward-vault', text: 'Reward Vault', component: VaultListContainer },
   ]
 
-  const buttons: MenuButton[] = [
-    { text: 'Log out', onClick: store.auth.logout },
-    { text: 'Send Bug', onClick: store.ui.openNewBug },
-  ]
+  const buttons: MenuButton[] = [{ text: 'Log out', onClick: store.auth.logout }]
 
   return {
     pageTitle: 'Account',

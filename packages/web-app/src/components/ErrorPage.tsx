@@ -1,7 +1,7 @@
 import React, { Component, ReactNode } from 'react'
-import { SaladTheme } from '../SaladTheme'
 import withStyles, { WithStyles } from 'react-jss'
 import { Modal, ModalPage } from '.'
+import { SaladTheme } from '../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   contentContainer: {
@@ -39,27 +39,11 @@ interface Props extends WithStyles<typeof styles> {
   title?: string
   children?: ReactNode
   onCloseClicked?: () => void
-  showSendLog?: boolean
-  onSendLog?: () => void
 }
 
 class _ErrorPage extends Component<Props> {
-  state = {
-    buttonToggle: false,
-  }
-
-  handleSendLogClicked = () => {
-    const { onSendLog } = this.props
-
-    this.setState({
-      buttonToggle: !this.state.buttonToggle,
-    })
-
-    if (onSendLog) onSendLog()
-  }
-
   render() {
-    const { title, onCloseClicked, showSendLog, children, classes } = this.props
+    const { title, onCloseClicked, children, classes } = this.props
 
     return (
       <ModalPage onCloseClicked={onCloseClicked}>
@@ -67,14 +51,6 @@ class _ErrorPage extends Component<Props> {
           <div className={classes.contentContainer}>
             <div className={classes.title}>{title}</div>
             <div className={classes.description}>{children}</div>
-
-            {showSendLog && (
-              <div style={{ marginTop: '1rem' }}>
-                <div className={classes.bugButton} style={{ marginLeft: 0 }} onClick={this.handleSendLogClicked}>
-                  {this.state.buttonToggle ? 'Logs sent' : 'Send logs'}
-                </div>
-              </div>
-            )}
           </div>
         </Modal>
       </ModalPage>

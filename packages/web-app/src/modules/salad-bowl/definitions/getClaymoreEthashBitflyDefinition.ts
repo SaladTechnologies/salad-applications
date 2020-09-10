@@ -8,6 +8,7 @@ export const getClaymoreEthashBitflyDefinition = (machine: Machine): PluginDefin
   let def = {
     name: 'Claymore',
     version: '15',
+    algorithm: 'Ethash',
     downloadUrl:
       'https://github.com/SaladTechnologies/plugin-downloads/releases/download/claymore15/claymore-15-windows.zip',
     exe: 'EthDcrMiner64.exe',

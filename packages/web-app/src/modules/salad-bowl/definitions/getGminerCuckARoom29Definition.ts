@@ -9,6 +9,7 @@ export const getGminerCuckARoom29Definition = (nicehashAddress: string, machine:
   let def = {
     name: 'GMiner',
     version: '2.21',
+    algorithm: 'CuckARoom29',
     downloadUrl:
       'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer2.21/gminer-2-21-windows.zip',
     exe: 'miner.exe',

@@ -16,7 +16,6 @@ const mapStoreToProps = (store: RootStore): any => {
 
   return {
     onClose: () => store.ui.hideModal(),
-    onSendBug: store.ui.openNewBug,
     menuItems: menuItems,
     appVersion: store.native.desktopVersion,
     appBuild: config.appBuild,

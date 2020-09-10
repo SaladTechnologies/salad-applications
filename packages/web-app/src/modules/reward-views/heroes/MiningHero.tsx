@@ -1,9 +1,9 @@
+import classnames from 'classnames'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
+import { HeroTitle, SmartLink } from '../../../components'
 import { HeroPanel } from '../../../components/HeroPanel'
 import { StartButtonContainer } from '../../machine-views'
-import { HeroTitle, SmartLink } from '../../../components'
-import classnames from 'classnames'
 
 const styles = {
   column: {
@@ -29,7 +29,7 @@ class _MiningHero extends Component<Props> {
           <SmartLink to="/earn/mine">Mining page</SmartLink> to learn more and earn some sweet Salad balance!
           <br />
           <br />
-          <SmartLink to="/earn/mine/how-it-works">Learn More</SmartLink>
+          <SmartLink to="/earn/mine">Learn More</SmartLink>
         </div>
         <div className={classnames(classes.column, classes.startColumn)}>
           <StartButtonContainer />

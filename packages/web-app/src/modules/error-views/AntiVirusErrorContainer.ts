@@ -42,8 +42,6 @@ const mapStoreToProps = (store: RootStore): any => {
 
   return {
     onCloseClicked: () => store.ui.hideModal(),
-    onSendLog: store.native.sendLog,
-    showSendLog: store.native.canSendLogs,
     avLinks: avLinks,
   }
 }

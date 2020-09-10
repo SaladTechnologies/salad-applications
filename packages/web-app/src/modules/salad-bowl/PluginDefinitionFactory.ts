@@ -1,4 +1,6 @@
+import { Systeminformation } from 'systeminformation'
 import { RootStore } from '../../Store'
+import { Machine } from '../machine/models'
 import { getNiceHashMiningAddress } from './definitions/constants'
 import { getCCMinerLyra2REv3Definition } from './definitions/getCCMinerLyra2REv3Definition'
 import { getGminerBeamBitflyDefinition } from './definitions/getGminerBeamBitflyDefinition'
@@ -48,7 +50,17 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
     return []
   }
 
-  let machineVram: MachineVram = machineInfo.graphics.controllers.reduce((state, controller) => {
+  const pluginDefinitions = getPluginDefinitionsForGraphics(machine, machineInfo.graphics.controllers)
+
+  cachedPluginDefinitions = pluginDefinitions
+  return pluginDefinitions
+}
+
+export const getPluginDefinitionsForGraphics = (
+  machine: Machine,
+  graphicsControllers: Systeminformation.GraphicsControllerData[],
+): PluginDefinition[] => {
+  let machineVram: MachineVram = graphicsControllers.reduce((state, controller) => {
     const vram = controller.memoryTotal !== undefined ? controller.memoryTotal : controller.vram
     if (controller.vendor.toLowerCase().includes('nvidia')) {
       if (state.cuda === undefined || state.cuda === undefined || vram > state.cuda) {
@@ -147,6 +159,5 @@ export const getPluginDefinitions = (store: RootStore): PluginDefinition[] => {
     pluginDefinitions.push(getCCMinerLyra2REv3Definition(niceHashMiningAddress, machine)) // NiceHash
   }
 
-  cachedPluginDefinitions = pluginDefinitions
   return pluginDefinitions
 }

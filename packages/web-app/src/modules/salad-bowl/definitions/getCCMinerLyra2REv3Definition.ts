@@ -8,6 +8,7 @@ export const getCCMinerLyra2REv3Definition = (nicehashAddress: string, machine: 
   let def = {
     name: 'CCMiner',
     version: '2.31',
+    algorithm: 'Lyra2REv3',
     downloadUrl:
       'https://github.com/SaladTechnologies/plugin-downloads/releases/download/ccminer-2.31/ccminer-2-3-1-windows.zip',
     exe: 'ccminer-x64.exe',

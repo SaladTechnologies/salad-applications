@@ -10,6 +10,8 @@ import { rewardFromResource, sortRewards } from './utils'
 
 type RewardId = string
 
+const timeoutMessage = 'request-timeout'
+
 export class RewardStore {
   private readonly saladPay = new SaladPay('43e8e26fa9077bb9c932d1849f52ef68e89c3ca39287c949275e0f18be6d074b')
 
@@ -243,7 +245,7 @@ export class RewardStore {
 
       console.log(`Completed SaladPay transaction ${response?.details.transactionToken}`)
 
-      yield this.axios.post(`/api/v1/rewards/${reward.id}/redemptions`, {})
+      yield this.axios.post(`/api/v1/rewards/${reward.id}/redemptions`, {}, { timeoutErrorMessage: timeoutMessage })
 
       //Completes the transaction and closes SaladPay
       response?.complete('success')
@@ -261,13 +263,24 @@ export class RewardStore {
     } catch (error) {
       response?.complete('fail')
       if (!(error instanceof AbortError)) {
-        //Show an error notification
-        this.store.notifications.sendNotification({
-          title: `Uh Oh. Something went wrong.`,
-          message: error.message || 'Please try again later',
-          autoClose: false,
-          type: 'error',
-        })
+        //Hack since we getting tons of false negatives during redemptions
+        if (error.message === timeoutMessage) {
+          //Show an order processing notification
+          this.store.notifications.sendNotification({
+            title: `Your order is being processed.`,
+            message: 'Check the reward vault for more details.',
+            autoClose: false,
+            onClick: () => this.store.routing.push('/account/reward-vault'),
+          })
+        } else {
+          //Show an error notification
+          this.store.notifications.sendNotification({
+            title: `Uh Oh. Something went wrong.`,
+            message: error.message || 'Please try again later',
+            autoClose: false,
+            type: 'error',
+          })
+        }
       }
     } finally {
       yield this.store.balance.refreshBalance()

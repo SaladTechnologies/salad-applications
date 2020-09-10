@@ -11,11 +11,9 @@ export const Tooltips = () => (
     <ReactHint
       events
       autoPosition
-      onRenderContent={(target: any, content: string) => {
-        console.error(target)
+      onRenderContent={(_: any, content: string) => {
         return <Tooltip text={content} />
       }}
-      // onRenderContent={() => tooltip || (text && <Tooltip width={'14rem'} text={text} />)}
     />
 
     {/* TODO: Add in any custom tooltips that should be accessible to components within the app */}
