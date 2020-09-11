@@ -58,7 +58,7 @@ class _Pantry extends Component<Props> {
               <div className={classnames(classes.veggie)} key={x.key}>
                 {levelComplete && (
                   <Img
-                    data-rh={`${x.key}\n(${x.maxXp} XP)`}
+                    data-rh={`${x.key.replace('-',' ')}\n(${x.maxXp} XP)`}
                     className={classes.image}
                     src={getImage(x.key)}
                     draggable={false}
