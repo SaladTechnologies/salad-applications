@@ -8,12 +8,15 @@ export default {
   component: EarningHistory,
 }
 
-const data: EarningWindow[] = [...Array(96)].map((_, i) => ({
-  timestamp: moment().add(i * 15, 'm'),
-  earnings: Math.random(),
-}))
+const generateData = (earningScale: number = 1): EarningWindow[] => {
+  return [...Array(96)].map((_, i) => ({
+    timestamp: moment().add(i * 15, 'm'),
+    earnings: Math.random() * earningScale,
+  }))
+}
 
-export const Empty = () => <EarningHistory />
+export const Empty = () => <EarningHistory earningHistory={[]} />
+export const Zeros = () => <EarningHistory earningHistory={generateData(0)} />
 export const Complete = () => (
-  <EarningHistory last24Hr={0.56789} last7Day={5.6789} last30Day={15.6789} earningHistory={data} />
+  <EarningHistory last24Hr={0.56789} last7Day={5.6789} last30Day={15.6789} earningHistory={generateData()} />
 )

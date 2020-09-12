@@ -14,23 +14,22 @@ const mapStoreToProps = (): any => {
     pageTitle: 'Earn',
     menuItems: [
       { text: 'Summary', url: '/earn/summary', component: EarningSummaryContainer },
-      { text: 'Mining', url: '/earn/mine', component: MiningContainer, divider: true },
-      { text: 'How It Works', url: '/earn/mine/how-it-works', component: MiningInformationContainer, inset: true },
+      { text: 'Mining', url: '/earn/mine', component: MiningInformationContainer, divider: true },
+      { text: 'Miner Details', url: '/earn/mine/miner-details', component: MiningContainer, inset: true },
       { text: 'Offerwalls', url: '/earn/offerwall', component: OfferwallContainer, divider: true },
       {
         text: 'AdGate',
-        url: '/earn/adgate',
+        url: '/earn/offerwall/adgate',
         component: AdGateContainer,
         inset: true,
       },
-      { text: 'AdGem', url: '/earn/adgem', component: AdGemContainer, inset: true },
+      { text: 'AdGem', url: '/earn/offerwall/adgem', component: AdGemContainer, inset: true },
       {
         text: 'OfferToro',
-        url: '/earn/offer-toro',
+        url: '/earn/offerwall/offer-toro',
         component: OfferToroContainer,
         inset: true,
       },
-
       { text: 'Referrals', url: '/earn/referrals', component: ReferralSettingsContainer, divider: true },
     ],
   }

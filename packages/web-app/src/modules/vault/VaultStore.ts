@@ -1,9 +1,11 @@
-import { action, observable, flow } from 'mobx'
 import { AxiosInstance } from 'axios'
-
+import { action, flow, observable } from 'mobx'
+import { convertMinutes } from '../../utils'
 import { RewardVaultItem, RewardVaultResource } from './models'
 
 export class VaultStore {
+  private refreshTimer?: NodeJS.Timeout
+
   @observable
   public redemptions: RewardVaultItem[] = []
 
@@ -27,4 +29,27 @@ export class VaultStore {
     timestamp: new Date(r.timestamp),
     code: r.code,
   })
+
+  @action.bound
+  startRefresh = flow(function* (this: VaultStore) {
+    //Reload the vault
+    yield this.loadVault()
+
+    // Start a timer to keep the vault refreshed
+    this.refreshTimer = setInterval(async () => {
+      await this.loadVault()
+    }, convertMinutes(2))
+
+    console.log('Started reward vault refresh')
+  })
+
+  @action
+  stopRefresh = () => {
+    console.log('Stopping reward vault refresh')
+
+    if (this.refreshTimer) {
+      clearInterval(this.refreshTimer)
+      this.refreshTimer = undefined
+    }
+  }
 }

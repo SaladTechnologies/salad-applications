@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
+import Img from 'react-image'
 import withStyles, { WithStyles } from 'react-jss'
-import { Divider, Scrollbar, SectionHeader, P, SmartLink, Li } from '../../../components'
+import { Divider, Li, P, Scrollbar, SectionHeader, SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
-import { StartButtonContainer } from '../../machine-views'
+import earningOverview from '../assets/earning-overview.svg'
+import mining from '../assets/mining.svg'
+import offerwall from '../assets/offerwall.svg'
+import referral from '../assets/referral.svg'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -25,6 +29,7 @@ const styles = (theme: SaladTheme) => ({
     flexDirection: 'column',
     flex: 1,
     flexBasis: '50%',
+    justifyContent: 'center',
   },
   startContainer: {
     display: 'flex',
@@ -55,25 +60,7 @@ class _EarningInformationPage extends Component<Props> {
               </div>
               <div className={classes.column}></div>
             </div>
-            <Divider />
-            <SectionHeader>Offerwalls</SectionHeader>
-            <div className={classes.splitContainer}>
-              <div className={classes.column}>
-                <P>Earn Salad Balance by completing offers such as:</P>
-                <Li>Downloading and playing mobile games</Li>
-                <Li>Filling out surveys</Li>
-                <Li>Watching advertisements</Li>
-                <P>
-                  Offers payout anywhere from $0.01 - $20.00+, depending on the task. Whether you want to top off your
-                  balance, boost your typical earnings, or can't mine with Salad, Offerwalls allow you to make more
-                  money.
-                </P>
-                <P>
-                  <SmartLink to="/earn/offerwall">Learn More</SmartLink>
-                </P>
-              </div>
-              <div className={classes.column}>{/* TODO: Add some sort of content */}</div>
-            </div>
+            <Img style={{ width: '100%' }} src={earningOverview} />
             <Divider />
 
             <SectionHeader>Mining</SectionHeader>
@@ -90,12 +77,33 @@ class _EarningInformationPage extends Component<Props> {
                 </P>
               </div>
               <div className={classes.column}>
-                <div className={classes.startContainer}>
-                  <StartButtonContainer />
-                </div>
+                <Img src={mining} />
               </div>
             </div>
             <Divider />
+
+            <div className={classes.splitContainer}>
+              <div className={classes.column}>
+                <Img src={offerwall} />
+              </div>
+              <div className={classes.column}>
+                <SectionHeader>Offerwalls</SectionHeader>
+                <P>Earn Salad Balance by completing offers such as:</P>
+                <Li>Downloading and playing mobile games</Li>
+                <Li>Filling out surveys</Li>
+                <Li>Watching advertisements</Li>
+                <P>
+                  Offers payout anywhere from $0.01 - $20.00+, depending on the task. Whether you want to top off your
+                  balance, boost your typical earnings, or can't mine with Salad, Offerwalls allow you to make more
+                  money.
+                </P>
+                <P>
+                  <SmartLink to="/earn/offerwall">Learn More</SmartLink>
+                </P>
+              </div>
+            </div>
+            <Divider />
+
             <SectionHeader>Referrals</SectionHeader>
             <div className={classes.splitContainer}>
               <div className={classes.column}>
@@ -109,8 +117,11 @@ class _EarningInformationPage extends Component<Props> {
                   <SmartLink to="/earn/referrals">Learn More</SmartLink>
                 </P>
               </div>
-              <div className={classes.column}>{/* TODO: Add some sort of content */}</div>
+              <div className={classes.column}>
+                <Img src={referral} />
+              </div>
             </div>
+            <Divider />
           </div>
         </Scrollbar>
       </div>

@@ -3,10 +3,13 @@ import { PluginStatus } from './PluginStatus'
 
 export class PluginInfo {
   @observable
-  public name: string = 'Unknown'
+  public name?: string
 
   @observable
-  public version: string = ''
+  public version?: string
+
+  @observable
+  public algorithm?: string
 
   @observable
   public status: PluginStatus = PluginStatus.Unknown

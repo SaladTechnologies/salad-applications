@@ -1,10 +1,6 @@
 import React, { Component } from 'react'
-
-// UI
-import { CondensedHeader, Divider, Slider, P, ToggleSetting } from '../../../../components'
-
-// Packages
 import withStyles, { WithStyles } from 'react-jss'
+import { CondensedHeader, Divider, P, Slider, ToggleSetting } from '../../../../components'
 import { withLogin } from '../../../auth-views'
 
 const styles = {
@@ -26,13 +22,15 @@ interface Props extends WithStyles<typeof styles> {
   autoLaunch?: boolean
   autoLaunchToggle?: () => void
   autoStart?: boolean
-  autoStartToggle?: () => void
-  autoStartEnabled?: boolean
   autoStartDelay?: number
+  autoStartEnabled?: boolean
+  autoStartToggle?: () => void
   autoStartUpdate?: (value: number) => void
-  minimizeToTrayToggle?: () => void
-  minimizeToTray?: boolean
   canMinimizeToTray?: boolean
+  minimizeToTray?: boolean
+  minimizeToTrayToggle?: () => void
+  notifyOnMinimizeToTray?: boolean
+  notifyOnMinimizeToTrayToggle?: () => void
 }
 
 class _WindowsSettings extends Component<Props> {
@@ -41,14 +39,16 @@ class _WindowsSettings extends Component<Props> {
       autoLaunch,
       autoLaunchToggle,
       autoStart,
-      autoStartToggle,
-      autoStartEnabled,
       autoStartDelay,
+      autoStartEnabled,
+      autoStartToggle,
       autoStartUpdate,
-      minimizeToTrayToggle,
-      minimizeToTray,
       canMinimizeToTray,
       classes,
+      minimizeToTray,
+      minimizeToTrayToggle,
+      notifyOnMinimizeToTray,
+      notifyOnMinimizeToTrayToggle,
     } = this.props
 
     return (
@@ -60,7 +60,7 @@ class _WindowsSettings extends Component<Props> {
         <ToggleSetting
           title={'Auto Launch'}
           description={
-            "Auto Launch opens Salad once you log into Windows, getting the Kitchen warmed up for when you're ready to start chopping."
+            "Salad will automatically launch as soon as you log into Windows, getting the Kitchen warmed up for when you're ready to start chopping."
           }
           toggled={autoLaunch}
           onToggle={autoLaunchToggle}
@@ -71,7 +71,7 @@ class _WindowsSettings extends Component<Props> {
             <ToggleSetting
               title={'Auto Start'}
               description={
-                'Salad will automatically start to run after being AFK a determined amount of time *and* will automatically stop when you return.'
+                'Salad will automatically start chopping after being AFK a determined amount of time *and* will automatically stop chopping when you return.'
               }
               toggled={autoStart}
               onToggle={autoStartToggle}
@@ -95,13 +95,26 @@ class _WindowsSettings extends Component<Props> {
           <>
             <Divider />
             <ToggleSetting
-              title={'Minimize to Tray'}
+              title={'Close to Tray'}
               description={
-                "Salad's minimize to tray feature streamlines your time spent launching the app. With it easily accessible in your computer's tray, you can start your chopping with even more ease."
+                'Salad will hide in the tray and continue to run in the background when you select the Close (X) button. Use the tray icon to quit Salad.'
               }
               toggled={minimizeToTray}
               onToggle={minimizeToTrayToggle}
             />
+            {minimizeToTray && (
+              <>
+                <Divider />
+                <ToggleSetting
+                  title={'Notify on Close to Tray'}
+                  description={
+                    'Salad will use a Windows desktop notification to remind you when it hides in the tray and continues to run in the background.'
+                  }
+                  toggled={notifyOnMinimizeToTray}
+                  onToggle={notifyOnMinimizeToTrayToggle}
+                />
+              </>
+            )}
           </>
         )}
       </div>

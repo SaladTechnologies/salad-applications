@@ -1,6 +1,4 @@
-import { action } from '@storybook/addon-actions'
 import React from 'react'
-import { MiningStatus } from '../../machine/models'
 import { MenuItem, Titlebar } from './Titlebar'
 
 export default {
@@ -16,24 +14,8 @@ const menuItems: MenuItem[] = [
 export const IsDesktop = () => (
   <>
     Desktop
-    <Titlebar isDesktop />
+    <Titlebar menuItems={menuItems} isDesktop />
     Not Desktop
-    <Titlebar />
-  </>
-)
-
-export const WithStart = () => (
-  <>
-    Desktop
-    <Titlebar isDesktop onStart={action('start')} startEnabled menuItems={menuItems} />
-    Not Desktop
-    <Titlebar onStart={action('start')} startEnabled menuItems={menuItems} />
-  </>
-)
-
-export const RunningStatus = () => (
-  <>
-    <Titlebar isDesktop onStart={action('start')} menuItems={menuItems} status={MiningStatus.Stopped} />
-    <Titlebar isDesktop onStart={action('start')} menuItems={menuItems} status={MiningStatus.Initializing} />
+    <Titlebar menuItems={menuItems} />
   </>
 )

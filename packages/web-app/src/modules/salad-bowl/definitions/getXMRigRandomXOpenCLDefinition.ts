@@ -9,6 +9,7 @@ export const getXMRigRandomXOpenCLDefinition = (nicehashAddress: string, machine
   let def = {
     name: 'XMRig-OpenCL',
     version: '6.3.2',
+    algorithm: 'RandomX',
     downloadUrl:
       'https://github.com/SaladTechnologies/plugin-downloads/releases/download/xmrig-6.3.2/xmrig-6.3.2-windows-opencl.zip',
     exe: 'xmrig.exe',

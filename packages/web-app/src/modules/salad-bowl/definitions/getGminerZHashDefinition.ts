@@ -9,6 +9,7 @@ export const getGminerZHashDefinition = (nicehashAddress: string, machine: Machi
   let def = {
     name: 'GMiner',
     version: '2.21',
+    algorithm: 'ZHash',
     downloadUrl:
       'https://github.com/SaladTechnologies/plugin-downloads/releases/download/gminer2.21/gminer-2-21-windows.zip',
     exe: 'miner.exe',

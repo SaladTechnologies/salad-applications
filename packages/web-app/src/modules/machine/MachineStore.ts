@@ -1,6 +1,8 @@
 import { AxiosInstance } from 'axios'
 import { autorun, computed, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
+import { getPluginDefinitions, getPluginDefinitionsForGraphics } from '../salad-bowl/PluginDefinitionFactory'
+import { GpuInformation } from './models'
 import { Machine } from './models/Machine'
 
 export class MachineStore {
@@ -53,6 +55,20 @@ export class MachineStore {
         })
         let machine: Machine = res.data
         this.currentMachine = machine
+
+        //Check the machine for compatibility
+        const pluginCount = getPluginDefinitions(this.store).length
+
+        if (pluginCount === 0) {
+          //Show an error notification
+          this.store.notifications.sendNotification({
+            title: `Machine is Incompatible`,
+            message: 'Salad was unable to detect a compatible graphics card. Click here for more details.',
+            autoClose: false,
+            type: 'error',
+            onClick: () => this.store.routing.push('/earn/mine/miner-details'),
+          })
+        }
       } catch (err) {
         this.store.analytics.captureException(new Error(`register-machine error: ${err}`), {
           contexts: {
@@ -71,4 +87,31 @@ export class MachineStore {
       }
     }.bind(this),
   )
+
+  @computed
+  get gpus(): GpuInformation[] {
+    if (!this.store.native.machineInfo) return []
+    if (!this.currentMachine) return []
+
+    const gpus = this.store.native.machineInfo.graphics?.controllers.map((x) => {
+      let compatible = false
+
+      if (this.currentMachine) {
+        //Get all the miner plugins for each graphics card
+        const plugins = getPluginDefinitionsForGraphics(this.currentMachine, [x])
+
+        compatible = plugins.length > 0
+      }
+
+      //Return the GPU information for this graphics card
+      return {
+        model: x.model,
+        vram: x.memoryTotal || x.vram,
+        driverVersion: x.driverVersion,
+        compatible: compatible,
+      }
+    })
+
+    return gpus || []
+  }
 }

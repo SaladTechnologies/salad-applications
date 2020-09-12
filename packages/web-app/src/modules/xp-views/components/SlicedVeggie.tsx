@@ -1,10 +1,13 @@
+import classnames from 'classnames'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Level } from '../../xp/models/Level'
-import classnames from 'classnames'
 
 const styles = {
   container: {
+    position: 'absolute',
+    right: 0,
+    top: '50%',
     whiteSpace: 'nowrap',
     height: 0,
   },

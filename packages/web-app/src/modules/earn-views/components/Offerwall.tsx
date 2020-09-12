@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SmartLink, P, SectionHeader, Scrollbar, Head } from '../../../components'
-import offerWallExample from '../assets/AdGem.png'
 import Img from 'react-image'
+import withStyles, { WithStyles } from 'react-jss'
+import { Divider, Head, P, Scrollbar, SectionHeader, SmartLink } from '../../../components'
+import offerWallExample from '../assets/offerwall-overview.svg'
+import offerWall from '../assets/offerwall.svg'
 
 const styles = {
   container: {
@@ -15,23 +16,30 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     padding: 20,
-    maxWidth: 800,
-  },
-  fullHeight: {
-    height: '100%',
   },
   descriptionContainer: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
   },
   offerwallWrapper: {
     position: 'relative',
     flexGrow: 1,
   },
-  exampleImage: {
-    width: '95%',
-    maxWidth: 700,
+  splitContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  column: {
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
+    flexBasis: '50%',
+  },
+
+  overviewImage: {
+    maxWidth: 600,
+    padding: 40,
+    margin: 'auto',
   },
 }
 
@@ -47,26 +55,39 @@ class _Offerwall extends Component<Props> {
         <div className={classes.container}>
           <div className={classes.content}>
             <div className={classes.descriptionContainer}>
-              <div>
-                <SectionHeader>Getting Started</SectionHeader>
-                <P>
-                  Offerwalls are easy, simply browse our collection of offerwall partners to find an offer. Click on any
-                  of the offers to learn more about what is required to complete the offer. Once you have completed an
-                  offer, you will automatically be rewarded with your new Salad balance.
-                </P>
-                <P>
-                  <SmartLink
-                    to={
-                      'https://salad.zendesk.com/hc/en-us/articles/360041472991-The-Salad-Guide-to-AdGem-and-Offerwalls'
-                    }
-                  >
-                    Check out our FAQ for more info!
-                  </SmartLink>
-                </P>
+              <SectionHeader>What Are Offerwalls?</SectionHeader>
+              <div className={classes.splitContainer}>
+                <div className={classes.column} style={{ paddingRight: 20 }}>
+                  <P>
+                    Offerwalls are easy, simply browse our collection of offerwall partners to find an offer. Click on
+                    any of the offers to learn more about what is required to complete the offer. Once you have
+                    completed an offer, you will automatically be rewarded with your new Salad balance.
+                  </P>
+                </div>
+                <div className={classes.column}>
+                  <Img src={offerWall} />
+                </div>
               </div>
-              <br />
-              <P>Example AdGem Offers</P>
-              <Img className={classes.exampleImage} src={offerWallExample} />
+              <Divider />
+              <SectionHeader>Getting Started</SectionHeader>
+              <Img className={classes.overviewImage} src={offerWallExample} />
+              <Divider />
+              <SectionHeader>More Information</SectionHeader>
+              <P>
+                <SmartLink
+                  to={
+                    'https://salad.zendesk.com/hc/en-us/articles/360041472991-The-Salad-Guide-to-AdGem-and-Offerwalls'
+                  }
+                >
+                  Learn More About Offerwalls
+                </SmartLink>
+              </P>
+              <P>
+                <SmartLink to="https://support.salad.io/hc/en-us/articles/360042454192-I-Need-Help-with-Offerwalls">
+                  Having Issues With an Offerwall?
+                </SmartLink>
+              </P>
+              <Divider />
               <P>
                 <P>
                   <i>
@@ -81,6 +102,7 @@ class _Offerwall extends Component<Props> {
                   <br />- The use of a VPN may result in a ban by the offerwall provider
                 </i>
               </P>
+              <Divider />
             </div>
           </div>
         </div>

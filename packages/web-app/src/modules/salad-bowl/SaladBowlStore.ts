@@ -204,19 +204,19 @@ export class SaladBowlStore implements IPersistentStore {
 
   @action.bound
   start = flow(function* (this: SaladBowlStore, reason: StartReason, startTimestamp?: Date, choppingTime?: number) {
+    //Ensures that the user is logged in
+    try {
+      yield this.store.auth.login()
+    } catch {
+      return
+    }
+
     if (this.isRunning) {
       return
     }
 
     if (!this.canRun) {
       console.log('This machine is not able to run.')
-      return
-    }
-
-    //Ensures that the user is logged in
-    try {
-      yield this.store.auth.login()
-    } catch {
       return
     }
 
@@ -245,6 +245,7 @@ export class SaladBowlStore implements IPersistentStore {
     this.currentPluginDefinition = this.pluginDefinitions[this.currentPluginDefinitionIndex]
     this.plugin.name = this.currentPluginDefinition.name
     this.plugin.version = this.currentPluginDefinition.version
+    this.plugin.algorithm = this.currentPluginDefinition.algorithm
     this.plugin.status = PluginStatus.Initializing
     yield this.store.native.send('start-salad', {
       name: `${this.currentPluginDefinition.name}-${this.currentPluginDefinition.version}`,
@@ -322,7 +323,9 @@ export class SaladBowlStore implements IPersistentStore {
       this.currentPluginDefinition = this.pluginDefinitions[this.currentPluginDefinitionIndex]
       this.plugin.name = this.currentPluginDefinition.name
       this.plugin.version = this.currentPluginDefinition.version
+      this.plugin.algorithm = this.currentPluginDefinition.algorithm
       this.plugin.status = PluginStatus.Initializing
+
       yield this.store.native.send('start-salad', {
         name: `${this.currentPluginDefinition.name}-${this.currentPluginDefinition.version}`,
         downloadUrl: this.currentPluginDefinition.downloadUrl,
@@ -351,6 +354,9 @@ export class SaladBowlStore implements IPersistentStore {
       this.runningTimer = undefined
     }
 
+    this.plugin.name = undefined
+    this.plugin.version = undefined
+    this.plugin.algorithm = undefined
     this.plugin.status = PluginStatus.Stopped
     yield this.store.native.send('stop-salad')
 

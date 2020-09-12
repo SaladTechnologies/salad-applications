@@ -67,7 +67,7 @@ export class VersionStore {
     this.versionCheckTimer = setInterval(() => {
       this.checkDesktopVersion()
       this.checkWebVersion()
-    }, convertHours(12))
+    }, convertHours(1))
   }
 
   stopVersionChecks = () => {

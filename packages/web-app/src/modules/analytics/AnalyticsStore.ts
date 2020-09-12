@@ -18,8 +18,8 @@ export class AnalyticsStore {
       console.log(`Detected change in status:${this.store.saladBowl.status}`)
       this.trackMiningStatus(
         this.store.saladBowl.status,
-        this.store.saladBowl.plugin.name,
-        this.store.saladBowl.plugin.version,
+        this.store.saladBowl.plugin.name || '-',
+        this.store.saladBowl.plugin.version || '-',
       )
     })
   }

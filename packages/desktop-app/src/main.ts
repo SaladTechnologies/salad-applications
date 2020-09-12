@@ -1,8 +1,9 @@
 import * as Sentry from '@sentry/electron'
-import { app, BrowserWindow, Input, ipcMain, Menu, powerMonitor, shell, Tray } from 'electron'
+import { app, BrowserWindow, Input, ipcMain, Menu, nativeImage, powerMonitor, shell, Tray } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import isOnline from 'is-online'
-import * as notifier from 'node-notifier'
+import { WindowsToaster } from 'node-notifier'
+import * as os from 'os'
 import * as path from 'path'
 import * as si from 'systeminformation'
 import { Config } from './config'
@@ -10,23 +11,37 @@ import * as Logger from './Logger'
 import { MachineInfo } from './models/MachineInfo'
 import { Profile } from './models/Profile'
 import { PluginDefinition } from './salad-bowl/models/PluginDefinition'
+import { PluginStatus } from './salad-bowl/models/PluginStatus'
 import { PluginManager } from './salad-bowl/PluginManager'
 import { SaladBridgeNotificationService } from './salad-bowl/SaladBridgeNotificationService'
 import { SaladBridge } from './SaladBridge'
 import { DefaultTheme as theme } from './SaladTheme'
 
-const appVersion = app.getVersion()
-
-Sentry.init({
-  dsn: 'https://0a70874cde284d838a378e1cc3bbd963@sentry.io/1804227',
-  release: appVersion,
-})
-
-/** Path to the /static folder. Provided via electron-webpack */
+// The path to the `/static` folder. This is provided by electron-webpack.
 declare const __static: string
 
-//Overrides the console.log behavior
+// Register to send Windows 10 notifications.
+app.setAppUserModelId('salad-technologies-desktop-app')
+
+// Capture unhandled errors.
+Sentry.init({
+  dsn: 'https://0a70874cde284d838a378e1cc3bbd963@sentry.io/1804227',
+  release: app.getVersion(),
+})
+
+// Redirect `console` to the application log file.
 Logger.connect()
+
+// Ensure we have the correct path to `snoretoast.exe`. Note: Kyle _hates_ this.
+var notifier = new WindowsToaster({
+  withFallback: false,
+  customPath: path
+    .resolve(
+      app.getAppPath(),
+      'node_modules/node-notifier/vendor/snoreToast/snoretoast-x' + (os.arch() === 'x64' ? '64' : '86') + '.exe',
+    )
+    .replace('app.asar', 'app.asar.unpacked'),
+})
 
 const AutoLaunch = require('auto-launch')
 
@@ -38,14 +53,13 @@ const showNotification = 'show-notification'
 const start = 'start-salad'
 const stop = 'stop-salad'
 
+let machineInfo: MachineInfo
 let mainWindow: BrowserWindow
 let offlineWindow: BrowserWindow
-let tray: Tray
-
-let machineInfo: MachineInfo
-let updateChecked = false
-
 let pluginManager: PluginManager | undefined
+let activeIconEnabled = false
+let tray: Tray
+let updateChecked = false
 
 const getMachineInfo = (): Promise<MachineInfo> => {
   return Promise.allSettled([
@@ -94,7 +108,14 @@ const checkForMultipleInstance = () => {
     app.on('second-instance', () => {
       // Someone tried to run a second instance, we should focus our window.
       if (mainWindow) {
-        if (mainWindow.isMinimized()) mainWindow.restore()
+        if (!mainWindow.isVisible()) {
+          mainWindow.show()
+        }
+
+        if (mainWindow.isMinimized()) {
+          mainWindow.restore()
+        }
+
         mainWindow.focus()
       }
     })
@@ -115,7 +136,7 @@ const createOfflineWindow = () => {
     center: true,
     frame: false,
     height: 350,
-    icon: './assets/favicon.ico',
+    icon: path.join(__static, 'logo.ico'),
     resizable: false,
     title: 'Salad',
     webPreferences: {
@@ -151,7 +172,7 @@ const createMainWindow = () => {
     backgroundColor: theme.darkBlue,
     center: true,
     frame: false,
-    icon: './assets/favicon.ico',
+    icon: path.join(__static, 'logo.ico'),
     minHeight: 766,
     minWidth: 1216,
     show: false,
@@ -173,7 +194,7 @@ const createMainWindow = () => {
   })
 
   mainWindow.once('ready-to-show', () => {
-    tray = new Tray(path.join(__static, 'salad-tray-logo.png'), 'fd20c206-759f-4107-90a2-bec8a3ed34aa')
+    tray = new Tray(path.join(__static, 'logo.ico'))
     tray.setContextMenu(createSystemTrayMenu(true))
     tray.setToolTip('Salad')
     tray.on('double-click', () => {
@@ -196,7 +217,35 @@ const createMainWindow = () => {
 
   //Create the bridge to listen to messages from the web-app
   let bridge = new SaladBridge(mainWindow)
-  let notificationService = new SaladBridgeNotificationService(bridge)
+  let notificationService = new SaladBridgeNotificationService(bridge, (status) => {
+    if (status === PluginStatus.Initializing || status === PluginStatus.Installing || status === PluginStatus.Running) {
+      if (!activeIconEnabled) {
+        activeIconEnabled = true
+        if (mainWindow) {
+          mainWindow.setOverlayIcon(
+            nativeImage.createFromPath(path.join(__static, 'taskbar-overlay-active.png')),
+            'Background Tasks Running',
+          )
+        }
+
+        if (tray) {
+          tray.setImage(path.join(__static, 'logo-active.ico'))
+        }
+      }
+    } else {
+      if (activeIconEnabled) {
+        activeIconEnabled = false
+        if (mainWindow) {
+          mainWindow.setOverlayIcon(null, '')
+        }
+
+        if (tray) {
+          tray.setImage(path.join(__static, 'logo.ico'))
+        }
+      }
+    }
+  })
+
   let dataFolder = app.getPath('userData')
   console.log(`Path to Salad plugins:${dataFolder}`)
   pluginManager = new PluginManager(dataFolder, notificationService)
@@ -305,7 +354,7 @@ const createMainWindow = () => {
     notifier.notify(
       {
         ...message,
-        icon: path.join(__static, 'salad-logo.png'),
+        icon: path.join(__static, 'logo.png'),
         appID: 'salad-technologies-desktop-app',
       },
       (err) => {
@@ -401,12 +450,12 @@ const cleanExit = () => {
 
 process.on('SIGINT', cleanExit) // catch ctrl-c
 process.on('SIGTERM', cleanExit) // catch kill
-console.log(`Running ${app.name} ${appVersion}`)
+console.log(`Running ${app.name} ${app.getVersion()}`)
 
 function createSystemTrayMenu(isVisible: boolean): Menu {
   return Menu.buildFromTemplate([
     {
-      label: isVisible ? 'Minimize to Tray' : 'Show Salad',
+      label: isVisible ? 'Hide Salad Window' : 'Show Salad Window',
       click: isVisible
         ? () => {
             if (mainWindow) {

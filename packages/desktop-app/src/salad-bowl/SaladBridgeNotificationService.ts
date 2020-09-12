@@ -1,12 +1,14 @@
 import { SaladBridge } from '../SaladBridge'
-import { StatusMessage } from './models/StatusMessage'
-import { ErrorMessage } from './models/ErrorMessage'
 import { INotificationService } from './INotificationService'
+import { ErrorMessage } from './models/ErrorMessage'
+import { PluginStatus } from './models/PluginStatus'
+import { StatusMessage } from './models/StatusMessage'
 
 export class SaladBridgeNotificationService implements INotificationService {
-  constructor(private readonly bridge: SaladBridge) {}
+  constructor(private readonly bridge: SaladBridge, private readonly onStatusChange?: (status: PluginStatus) => void) {}
 
   sendStatus = (message: StatusMessage) => {
+    this.onStatusChange?.(message.status)
     this.bridge.send('mining-status', message)
   }
 

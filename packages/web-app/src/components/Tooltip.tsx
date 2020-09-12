@@ -12,6 +12,7 @@ const styles = (theme: SaladTheme) => ({
     pointerEvents: 'none',
     boxShadow: '8px 14px 22px rgba(0, 0, 0, 0.45)',
     border: `1px solid ${theme.darkBlue}`,
+    maxWidth: 250,
   },
   title: {
     fontFamily: 'sharpGroteskLight09',

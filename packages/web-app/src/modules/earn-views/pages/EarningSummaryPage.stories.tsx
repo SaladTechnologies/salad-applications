@@ -21,6 +21,7 @@ export const Complete = () => (
   <EarningSummaryPage
     currentBalance={456.789}
     lifetimeBalance={12345.678}
+    totalXp={123456}
     last24Hr={0.56789}
     last7Day={5.6789}
     last30Day={15.6789}

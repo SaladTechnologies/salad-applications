@@ -13,13 +13,4 @@ export class UIStore {
   hideModal = () => {
     this.store.routing.replace('/')
   }
-
-  @action
-  openNewBug = () => {
-    const openLink = (url: string) => {
-      window.open(url, '_blank')
-    }
-
-    openLink('https://salad.zendesk.com/hc/en-us/requests/new')
-  }
 }

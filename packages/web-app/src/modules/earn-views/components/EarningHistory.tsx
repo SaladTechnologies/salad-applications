@@ -3,7 +3,7 @@ import moment from 'moment'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis } from 'recharts'
-import { SectionHeader, StatElement } from '../../../components'
+import { P, SectionHeader, StatElement } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { formatBalance } from '../../../utils'
 import { EarningWindow } from '../../balance/models'
@@ -31,6 +31,9 @@ const styles = (theme: SaladTheme) => ({
     fontFamily: theme.fontGroteskBook25,
     color: theme.lightGreen,
     fontSize: 10,
+  },
+  placeholderText: {
+    textAlign: 'center',
   },
 })
 
@@ -96,6 +99,8 @@ class _EarningHistory extends Component<Props, State> {
   render() {
     const { last24Hr, last7Day, last30Day, earningHistory, classes } = this.props
     const { hoverIndex } = this.state
+    const isZero: boolean =
+      !earningHistory || earningHistory.length === 0 || !earningHistory.some((x) => x.earnings > 0)
     return (
       <div className={classes.container}>
         <div className={classes.row}>
@@ -120,6 +125,11 @@ class _EarningHistory extends Component<Props, State> {
         </div>
         <div className={classes.row}>
           <div className={classes.chartContainer}>
+            {isZero && (
+              <div className={classes.placeholderText}>
+                <P>No Earning History. Get Chopping to See Those Earnings!</P>
+              </div>
+            )}
             {earningHistory && (
               <ResponsiveContainer>
                 <BarChart

@@ -1,6 +1,6 @@
 {
   "name": "Salad",
-  "version": "0.4.0",
+  "version": "0.4.2",
   "description": "Salad Technologies Desktop Application",
   "homepage": "https://www.salad.io/",
   "bugs": {
@@ -14,8 +14,8 @@
   },
   "license": "MIT",
   "author": {
-    "name": "Salad Chefs",
-    "email": "dev@salad.io",
+    "name": "Salad Technologies",
+    "email": "support@salad.io",
     "url": "https://www.salad.io"
   },
   "main": "dist/main/main.js",
@@ -23,33 +23,41 @@
     "lib"
   ],
   "scripts": {
-    "build": "electron-webpack",
-    "dist": "yarn build && electron-builder",
-    "release": "yarn build && electron-builder --publish always",
-    "start": "electron-webpack dev",
-    "type-check": "tsc --noEmit"
+    "build": "npm-run-all lint build-app build-installer",
+    "build-and-publish-installer": "electron-builder --publish always",
+    "build-app": "electron-webpack",
+    "build-installer": "electron-builder",
+    "clean": "rimraf dist *.txt",
+    "lint": "npm-run-all --continue-on-error lint-ts lint-ts-unused",
+    "lint-ts": "tsc --noEmit",
+    "lint-ts-unused": "ts-unused-exports ./tsconfig.json",
+    "release": "npm-run-all lint build-app build-and-publish-installer",
+    "start": "electron-webpack dev"
   },
   "dependencies": {
     "@sentry/electron": "2.0.0",
     "auto-launch": "5.0.5",
-    "axios": "0.19.2",
+    "axios": "0.20.0",
     "decompress-zip": "0.2.2",
     "electron-log": "4.2.4",
     "electron-updater": "4.3.4",
     "is-online": "8.4.0",
     "node-notifier": "8.0.0",
     "source-map-support": "0.5.19",
-    "systeminformation": "4.26.11"
+    "systeminformation": "4.27.3"
   },
   "devDependencies": {
-    "@types/node": "14.6.0",
+    "@types/node": "14.6.2",
     "@types/node-notifier": "6.0.1",
-    "electron": "9.2.1",
+    "electron": "10.1.0",
     "electron-builder": "22.8.0",
     "electron-reload": "1.5.0",
     "electron-webpack": "2.8.2",
     "electron-webpack-ts": "4.0.1",
-    "ts-loader": "8.0.2",
+    "npm-run-all": "4.1.5",
+    "rimraf": "3.0.2",
+    "ts-loader": "8.0.3",
+    "ts-unused-exports": "6.2.3",
     "typescript": "3.9.7",
     "webpack": "4.44.1",
     "webpack-cli": "3.3.12"
@@ -68,6 +76,6 @@
     }
   },
   "resolutions": {
-    "systeminformation": "../../libs/systeminformation-4.26.11+salad.tgz"
+    "systeminformation": "../../libs/systeminformation-4.27.3+salad.tgz"
   }
 }
