@@ -60,7 +60,7 @@ interface Props extends WithStyles<typeof styles> {
   gpus?: GpuInformation[]
 }
 
-const compatibleTooltip = 'This graphics card has the chops. Start Salad Now'
+const compatibleTooltip = 'This graphics card has the chops. Start Salad now to get earning'
 const incompatibleTooltip = `This graphics card doesn't have the chops to run Salad`
 
 class _GpuSummary extends Component<Props> {
@@ -77,7 +77,7 @@ class _GpuSummary extends Component<Props> {
           <div className={classes.column}>
             Driver Version
             <InfoButton
-              text={'Driver version are not available on all GPUs. No need to worry if it is not listed below.'}
+              text={"The driver version isn't available for all GPUs. Don't worry if it isn't listed below."}
             />
           </div>
         </div>
