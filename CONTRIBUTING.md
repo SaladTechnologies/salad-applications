@@ -21,7 +21,7 @@ _Please don't use GitHub issues to ask a question._ We will politely close a Git
 
 We're sorry if this happened to you!
 
-Consider jumping into the [#tech-support channel on the SaladChefs Discord server](https://discord.gg/TsZrHWV). The community may have already found a solution.
+Consider jumping into the [#official-support or #community-support channel in the SaladChefs Discord server](https://discord.gg/TsZrHWV). The community may have already found a solution.
 
 You can also create a [support ticket](https://salad.zendesk.com/hc/en-us/requests/new) to report any problems or concerns.
 
