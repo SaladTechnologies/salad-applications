@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SmartLink } from '../../../components'
+import { NavLink } from 'react-router-dom'
 import { SaladTheme } from '../../../SaladTheme'
 
 export class MobileNavItem {
@@ -14,7 +14,6 @@ export class MobileNavItem {
 
 const styles = (theme: SaladTheme) => ({
   container: {
-    color: theme.green,
     height: 64,
     display: 'flex',
 
@@ -29,6 +28,11 @@ const styles = (theme: SaladTheme) => ({
     flex: 1,
     fontFamily: theme.fontGroteskLight25,
     fontSize: 8,
+    color: theme.green,
+    textDecoration: 'none',
+  },
+  activeItem: {
+    color: theme.lightGreen,
   },
 })
 
@@ -43,14 +47,23 @@ class _MobileNavbar extends Component<Props> {
     return (
       <div className={classes.container}>
         {navItems &&
-          navItems.map((x) => (
-            <SmartLink to={x.linkUrl} className={classes.item}>
-              <div onClick={x.callback} className={classes.item}>
-                <div className={classes.icon}>{x.icon} </div>
-                {x.name}
-              </div>
-            </SmartLink>
-          ))}
+          navItems.map((x) => {
+            if (x.linkUrl) {
+              return (
+                <NavLink key={x.name} to={x.linkUrl} className={classes.item} activeClassName={classes.activeItem}>
+                  <div className={classes.icon}>{x.icon} </div>
+                  {x.name}
+                </NavLink>
+              )
+            } else {
+              return (
+                <div onClick={x.callback} className={classes.item}>
+                  <div className={classes.icon}>{x.icon} </div>
+                  {x.name}
+                </div>
+              )
+            }
+          })}
       </div>
     )
   }

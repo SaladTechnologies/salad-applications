@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import Img from 'react-image'
 import withStyles, { WithStyles } from 'react-jss'
-import { SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import icon from '../assets/favicon-32x32.png'
 
@@ -32,9 +31,7 @@ class _MobileTitlebar extends Component<Props> {
     return (
       <div className={classes.container}>
         <div className={classes.icon}>
-          <SmartLink to="/">
-            <Img src={icon} />
-          </SmartLink>
+          <Img src={icon} />
         </div>
       </div>
     )

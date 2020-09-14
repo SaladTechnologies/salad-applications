@@ -1,6 +1,6 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
-import { EarningSummary } from './components/EarningSummary'
+import { MobileEarningSummary } from './components/MobileEarningSummary'
 
 const mapStoreToProps = (store: RootStore): any => ({
   currentBalance: store.balance.currentBalance,
@@ -12,4 +12,4 @@ const mapStoreToProps = (store: RootStore): any => ({
   earningHistory: store.balance.lastDayEarningWindows,
 })
 
-export const MobileEarningSummaryContainer = connect(mapStoreToProps, EarningSummary)
+export const MobileEarningSummaryContainer = connect(mapStoreToProps, MobileEarningSummary)

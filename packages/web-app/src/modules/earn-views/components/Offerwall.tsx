@@ -10,6 +10,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
+    overflowX: 'hidden',
     alignItems: 'center',
   },
   content: {
@@ -38,7 +39,8 @@ const styles = {
 
   overviewImage: {
     maxWidth: 600,
-    padding: 40,
+    width: '100%',
+    padding: '40px 0px',
     margin: 'auto',
   },
 }

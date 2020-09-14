@@ -1,1 +1,1 @@
-export * from './EarningSummary'
+export * from './MobileEarningSummary'

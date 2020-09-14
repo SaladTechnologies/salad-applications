@@ -17,7 +17,7 @@ interface Props extends WithStyles<typeof styles> {
   totalXp?: number
 }
 
-class _EarningSummary extends Component<Props> {
+class _MobileEarningSummary extends Component<Props> {
   render() {
     const { currentBalance, lifetimeBalance, totalXp, classes } = this.props
 
@@ -54,4 +54,4 @@ class _EarningSummary extends Component<Props> {
   }
 }
 
-export const EarningSummary = withStyles(styles)(_EarningSummary)
+export const MobileEarningSummary = withStyles(styles)(_MobileEarningSummary)

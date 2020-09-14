@@ -8,7 +8,7 @@ import { MobileNavbar, MobileNavItem } from './components/MobileNavbar'
 const size = '3x'
 
 const menuItems: MobileNavItem[] = [
-  new MobileNavItem('Home', <FontAwesomeIcon size={size} icon={faHome} />, '/'),
+  new MobileNavItem('Earnings', <FontAwesomeIcon size={size} icon={faHome} />, '/earn/summary'),
   new MobileNavItem('Offerwalls', <FontAwesomeIcon size={size} icon={faListUl} />, '/earn/offerwall'),
   new MobileNavItem('Account', <FontAwesomeIcon size={size} icon={faUser} />, '/account/summary'),
   new MobileNavItem('Support', <FontAwesomeIcon size={size} icon={faQuestionCircle} />, undefined, () => {
