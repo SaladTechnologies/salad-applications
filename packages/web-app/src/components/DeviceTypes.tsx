@@ -2,19 +2,16 @@ import React, { ReactNode } from 'react'
 import MediaQuery from 'react-responsive'
 
 interface Props {
+  orientation?: 'portrait' | 'landscape'
   children?: ReactNode
 }
 
-export const DesktopDevice = ({ children }: Props) => <MediaQuery minWidth={992}>{children}</MediaQuery>
+const mobileSize = 812
 
-export const MobileOrTableDevice = ({ children }: Props) => <MediaQuery maxWidth={991}>{children}</MediaQuery>
-
-export const TabletDevice = ({ children }: Props) => (
-  <MediaQuery minWidth={768} maxWidth={991}>
+export const MobileDevice = ({ orientation, children }: Props) => (
+  <MediaQuery maxWidth={mobileSize} orientation={orientation}>
     {children}
   </MediaQuery>
 )
 
-export const MobileDevice = ({ children }: Props) => <MediaQuery maxWidth={767}>{children}</MediaQuery>
-
-export const NotMobile = ({ children }: Props) => <MediaQuery minWidth={767}>{children}</MediaQuery>
+export const NotMobile = ({ children }: Props) => <MediaQuery minWidth={mobileSize + 1}>{children}</MediaQuery>

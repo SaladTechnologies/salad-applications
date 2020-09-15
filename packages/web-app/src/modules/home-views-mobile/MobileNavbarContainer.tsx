@@ -1,18 +1,16 @@
-import { faQuestionCircle, faUser } from '@fortawesome/free-regular-svg-icons'
-import { faDollarSign, faListUl } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
+import accountIcon from './assets/account-icon.svg'
+import earnIcon from './assets/earn-icon.svg'
+import offerwallIcon from './assets/offerwall-icon.svg'
+import supportIcon from './assets/support-icon.svg'
 import { MobileNavbar, MobileNavItem } from './components/MobileNavbar'
 
-const size = '3x'
-
 const menuItems: MobileNavItem[] = [
-  new MobileNavItem('Earnings', <FontAwesomeIcon size={size} icon={faDollarSign} />, '/earn/summary'),
-  new MobileNavItem('Offerwalls', <FontAwesomeIcon size={size} icon={faListUl} />, '/earn/offerwall'),
-  new MobileNavItem('Account', <FontAwesomeIcon size={size} icon={faUser} />, '/account/summary'),
-  new MobileNavItem('Support', <FontAwesomeIcon size={size} icon={faQuestionCircle} />, undefined, () => {
+  new MobileNavItem('Earnings', earnIcon, '/earn/summary'),
+  new MobileNavItem('Offerwalls', offerwallIcon, '/earn/offerwall'),
+  new MobileNavItem('Account', accountIcon, '/account/summary'),
+  new MobileNavItem('Support', supportIcon, undefined, () => {
     //@ts-ignore
     if (zE) {
       //@ts-ignore

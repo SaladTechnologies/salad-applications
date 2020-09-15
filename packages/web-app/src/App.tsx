@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
 import withStyles, { WithStyles } from 'react-jss'
 import { ToastContainer } from 'react-toastify'
-import { MobileDevice, NotMobile } from './components'
+import { LoadingPage, MobileDevice, NotMobile } from './components'
 import { config } from './config'
 import { MobileRoutes } from './MobileRoutes'
 import { MobileNavbarContainer, MobileTitlebarContainer } from './modules/home-views-mobile'
@@ -118,7 +118,10 @@ export const App = withStyles(styles)(
 
       return (
         <>
-          <MobileDevice>
+          <MobileDevice orientation="landscape">
+            <LoadingPage text={`Landscape Not Supported. Please rotate your device.`} />
+          </MobileDevice>
+          <MobileDevice orientation="portrait">
             <div className={classes.mobileMainWindow}>
               <MobileTitlebarContainer />
               <Scrollbars>
