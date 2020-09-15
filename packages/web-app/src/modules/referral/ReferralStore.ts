@@ -127,7 +127,7 @@ export class ReferralStore {
 
     //TODO: Remove this ASAP
     if (code.toUpperCase() === 'ISAAC') {
-      code = 'ISAAC2'
+      code = 'ISAAC3'
     }
 
     //Ensures that the user is logged in
