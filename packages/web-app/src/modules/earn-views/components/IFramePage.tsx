@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { Head } from '../../../components'
+import { Head, LoadingPage } from '../../../components'
 import { withLogin } from '../../auth-views'
 
 const styles = {
@@ -40,6 +40,7 @@ class _IFramePage extends Component<Props> {
     return (
       <div className={classes.container}>
         <Head title={pageTitle} />
+        <LoadingPage />
         <iframe
           src={src}
           style={{

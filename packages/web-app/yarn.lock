@@ -1444,6 +1444,13 @@
   dependencies:
     "@fortawesome/fontawesome-common-types" "^0.2.30"
 
+"@fortawesome/free-regular-svg-icons@^5.14.0":
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/@fortawesome/free-regular-svg-icons/-/free-regular-svg-icons-5.14.0.tgz#ca513ac7699625af42938744297ac483361da043"
+  integrity sha512-6LCFvjGSMPoUQbn3NVlgiG4CY5iIY8fOm+to/D6QS/GvdqhDt+xZklQeERdCvVRbnFa1ITc1rJHPRXqkX5wztQ==
+  dependencies:
+    "@fortawesome/fontawesome-common-types" "^0.2.30"
+
 "@fortawesome/free-solid-svg-icons@5.14.0":
   version "5.14.0"
   resolved "https://registry.yarnpkg.com/@fortawesome/free-solid-svg-icons/-/free-solid-svg-icons-5.14.0.tgz#970453f5e8c4915ad57856c3a0252ac63f6fec18"
@@ -1836,6 +1843,23 @@
     qs "^6.6.0"
     regenerator-runtime "^0.13.3"
     ts-dedent "^1.1.1"
+
+"@storybook/addon-viewport@^6.0.21":
+  version "6.0.21"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-viewport/-/addon-viewport-6.0.21.tgz#d765921244f9e000209833c8cc05064e767894c2"
+  integrity sha512-FFUkhpZy7npRTaqX9SwMz5Yzo0/ivuApwr47xqblDEEyq7edWqo7YKsPnpAGeM9MlRpQNf6aU9huwDqKeRfKuQ==
+  dependencies:
+    "@storybook/addons" "6.0.21"
+    "@storybook/api" "6.0.21"
+    "@storybook/client-logger" "6.0.21"
+    "@storybook/components" "6.0.21"
+    "@storybook/core-events" "6.0.21"
+    "@storybook/theming" "6.0.21"
+    core-js "^3.0.1"
+    global "^4.3.2"
+    memoizerific "^1.11.3"
+    prop-types "^15.7.2"
+    regenerator-runtime "^0.13.3"
 
 "@storybook/addons@6.0.21":
   version "6.0.21"

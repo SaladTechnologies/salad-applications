@@ -10,6 +10,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
+    overflowX: 'hidden',
     alignItems: 'center',
   },
   content: {
@@ -38,7 +39,8 @@ const styles = {
 
   overviewImage: {
     maxWidth: 600,
-    padding: 40,
+    width: '100%',
+    padding: '40px 0px',
     margin: 'auto',
   },
 }
@@ -89,16 +91,16 @@ class _Offerwall extends Component<Props> {
               </P>
               <Divider />
               <P>
-                <P>
-                  <i>
-                    Note: These services are run by third-party sites and you should practice absolute security and
-                    awareness while using it. Salad does not condone the collection of private information. If you
-                    encounter anything suspicious, please let us know immediately.
-                  </i>
-                </P>
                 <i>
-                  - It may take up to 24 hours to receive your balance <br />
-                  - BlueStacks or other device emulators may not be supported by offerwall providers
+                  Note: These services are run by third-party sites and you should practice absolute security and
+                  awareness while using it. Salad does not condone the collection of private information. If you
+                  encounter anything suspicious, please let us know immediately.
+                </i>
+                <br />
+                <br />
+                <i>
+                  - It may take up to 24 hours to receive your balance
+                  <br /> - BlueStacks or other device emulators may not be supported by offerwall providers
                   <br />- The use of a VPN may result in a ban by the offerwall provider
                 </i>
               </P>
