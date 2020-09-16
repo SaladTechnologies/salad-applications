@@ -24,6 +24,6 @@ export const DOCK_LOGO_ACTIVE_PATH = path.join(__static, 'logo-active.png')
 // [Placeholder] For MacOS Dock
 export const DOCK_LOGO_ALERT_PATH = path.join(__static, 'logo-alert.png')
 
-export const TASKBAR_OVERLAY_ACTIVE_PATH = path.join(__static, 'taskbar-overlay-active.png')
+export const TAKSBAR_ACTIVE_OVERLAY_ICON_PATH = path.join(__static, 'taskbar-overlay-active.png')
 
 export const NOTIFICATION_ICON_PATH = path.join(__static, 'logo.png')
