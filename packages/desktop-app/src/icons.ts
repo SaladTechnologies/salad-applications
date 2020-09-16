@@ -5,8 +5,6 @@ declare const __static: string
 
 export const LOGO_PATH = path.join(__static, process.platform === 'win32' ? 'logo.ico' : 'logo.png')
 
-export const LOGO_ANIMATED_PATH = path.join(__static, 'logo.gif')
-
 export const TRAY_ICON_PATH = LOGO_PATH
 
 export const TRAY_ACTIVE_ICON_PATH = path.join(
