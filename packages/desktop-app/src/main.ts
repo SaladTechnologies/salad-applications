@@ -356,7 +356,7 @@ const createMainWindow = () => {
     notifier.notify(
       {
         ...message,
-        icon: icons.TRAY_ICON_PATH,
+        icon: icons.NOTIFICATION_ICON_PATH,
         appID: 'salad-technologies-desktop-app',
       },
       (err) => {
