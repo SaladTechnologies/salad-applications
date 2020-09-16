@@ -116,22 +116,28 @@ export const App = withStyles(styles)(
     render() {
       const { classes } = this.props
 
+      const isDesktop = this.store.native.isNative
+
       return (
         <>
-          <MobileDevice orientation="landscape">
-            <LoadingPage text={`Landscape Not Supported. Please rotate your device.`} />
-          </MobileDevice>
-          <MobileDevice orientation="portrait">
-            <div className={classes.mobileMainWindow}>
-              <MobileTitlebarContainer />
-              <Scrollbars>
-                <div className={classes.mobileContent}>
-                  <MobileRoutes />
+          {!isDesktop && (
+            <>
+              <MobileDevice orientation="landscape">
+                <LoadingPage text={`Landscape Not Supported. Please rotate your device.`} />
+              </MobileDevice>
+              <MobileDevice orientation="portrait">
+                <div className={classes.mobileMainWindow}>
+                  <MobileTitlebarContainer />
+                  <Scrollbars>
+                    <div className={classes.mobileContent}>
+                      <MobileRoutes />
+                    </div>
+                  </Scrollbars>
+                  <MobileNavbarContainer />
                 </div>
-              </Scrollbars>
-              <MobileNavbarContainer />
-            </div>
-          </MobileDevice>
+              </MobileDevice>
+            </>
+          )}
           <NotMobile>
             <div className={classes.mainWindow}>
               <MainTitlebarContainer />
