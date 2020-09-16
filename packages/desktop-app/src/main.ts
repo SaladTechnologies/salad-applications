@@ -5,6 +5,7 @@ import isOnline from 'is-online'
 import { WindowsToaster } from 'node-notifier'
 import * as os from 'os'
 import * as path from 'path'
+import process from 'process'
 import * as si from 'systeminformation'
 import { Config } from './config'
 import * as icons from './icons'
@@ -224,10 +225,16 @@ const createMainWindow = () => {
       if (!activeIconEnabled) {
         activeIconEnabled = true
         if (mainWindow) {
-          mainWindow.setOverlayIcon(
-            nativeImage.createFromPath(icons.TASKBAR_OVERLAY_ACTIVE_PATH),
-            'Background Tasks Running',
-          )
+          if (process.platform === 'win32') {
+            mainWindow.setOverlayIcon(
+              nativeImage.createFromPath(icons.TAKSBAR_ACTIVE_OVERLAY_ICON_PATH),
+              'Background Tasks Running',
+            )
+          } else if (process.platform === 'linux') {
+            // Placeholder for Linux-specific icon management
+          } else if (process.platform === 'darwin') {
+            // Placeholder for macOS-specific icon management
+          }
         }
 
         if (tray) {
@@ -238,7 +245,13 @@ const createMainWindow = () => {
       if (activeIconEnabled) {
         activeIconEnabled = false
         if (mainWindow) {
-          mainWindow.setOverlayIcon(null, '')
+          if (process.platform === 'win32') {
+            mainWindow.setOverlayIcon(null, '')
+          } else if (process.platform === 'linux') {
+            // Placeholder for Linux-specific icon management
+          } else if (process.platform === 'darwin') {
+            // Placeholder for macOS-specific icon management
+          }
         }
 
         if (tray) {
