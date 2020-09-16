@@ -7,6 +7,7 @@ import * as os from 'os'
 import * as path from 'path'
 import * as si from 'systeminformation'
 import { Config } from './config'
+import * as icons from './icons'
 import * as Logger from './Logger'
 import { MachineInfo } from './models/MachineInfo'
 import { Profile } from './models/Profile'
@@ -136,7 +137,7 @@ const createOfflineWindow = () => {
     center: true,
     frame: false,
     height: 350,
-    icon: path.join(__static, 'logo.ico'),
+    icon: icons.LOGO_PATH,
     resizable: false,
     title: 'Salad',
     webPreferences: {
@@ -172,7 +173,7 @@ const createMainWindow = () => {
     backgroundColor: theme.darkBlue,
     center: true,
     frame: false,
-    icon: path.join(__static, 'logo.ico'),
+    icon: icons.LOGO_PATH,
     minHeight: 766,
     minWidth: 1216,
     show: false,
@@ -194,7 +195,7 @@ const createMainWindow = () => {
   })
 
   mainWindow.once('ready-to-show', () => {
-    tray = new Tray(path.join(__static, 'logo.ico'))
+    tray = new Tray(icons.TRAY_ICON_PATH)
     tray.setContextMenu(createSystemTrayMenu(true))
     tray.setToolTip('Salad')
     tray.on('double-click', () => {
@@ -210,6 +211,7 @@ const createMainWindow = () => {
     })
 
     mainWindow.show()
+
     if (offlineWindow) {
       offlineWindow.destroy()
     }
@@ -223,13 +225,13 @@ const createMainWindow = () => {
         activeIconEnabled = true
         if (mainWindow) {
           mainWindow.setOverlayIcon(
-            nativeImage.createFromPath(path.join(__static, 'taskbar-overlay-active.png')),
+            nativeImage.createFromPath(icons.TASKBAR_OVERLAY_ACTIVE_PATH),
             'Background Tasks Running',
           )
         }
 
         if (tray) {
-          tray.setImage(path.join(__static, 'logo-active.ico'))
+          tray.setImage(icons.TRAY_ACTIVE_ICON_PATH)
         }
       }
     } else {
@@ -240,7 +242,7 @@ const createMainWindow = () => {
         }
 
         if (tray) {
-          tray.setImage(path.join(__static, 'logo.ico'))
+          tray.setImage(icons.TRAY_ICON_PATH)
         }
       }
     }
@@ -354,7 +356,7 @@ const createMainWindow = () => {
     notifier.notify(
       {
         ...message,
-        icon: path.join(__static, 'logo.png'),
+        icon: icons.TRAY_ICON_PATH,
         appID: 'salad-technologies-desktop-app',
       },
       (err) => {
