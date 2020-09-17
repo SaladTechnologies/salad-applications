@@ -392,8 +392,6 @@ const createMainWindow = () => {
         },
       )
     } else {
-      console.log('creating new notification', message)
-
       let notification = new Notification({
         title: message.title,
         body: message.message,
