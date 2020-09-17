@@ -391,7 +391,7 @@ const createMainWindow = () => {
           }
         },
       )
-    } else {
+    } else if (Notification.isSupported()) {
       let notification = new Notification({
         title: message.title,
         body: message.message,
