@@ -391,7 +391,7 @@ const createMainWindow = () => {
           }
         },
       )
-    } else {
+    } else if (Notification.isSupported()) {
       console.log('creating new notification', message)
 
       let notification = new Notification({
