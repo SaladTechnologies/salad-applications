@@ -1,5 +1,16 @@
 import * as Sentry from '@sentry/electron'
-import { app, BrowserWindow, Input, ipcMain, Menu, nativeImage, powerMonitor, shell, Tray } from 'electron'
+import {
+  app,
+  BrowserWindow,
+  Input,
+  ipcMain,
+  Menu,
+  nativeImage,
+  Notification,
+  powerMonitor,
+  shell,
+  Tray,
+} from 'electron'
 import { autoUpdater } from 'electron-updater'
 import isOnline from 'is-online'
 import { WindowsToaster } from 'node-notifier'
@@ -366,19 +377,28 @@ const createMainWindow = () => {
   })
 
   bridge.on(showNotification, (message: {}) => {
-    notifier.notify(
-      {
-        ...message,
+    if (process.platform === 'win32') {
+      notifier.notify(
+        {
+          ...message,
+          icon: icons.NOTIFICATION_ICON_PATH,
+          appID: 'salad-technologies-desktop-app',
+        },
+        (err) => {
+          if (err) {
+            console.warn('Notification error')
+            console.warn(err)
+          }
+        },
+      )
+    } else if (Notification.isSupported()) {
+      let notification = new Notification({
+        title: message.title,
+        body: message.message,
         icon: icons.NOTIFICATION_ICON_PATH,
-        appID: 'salad-technologies-desktop-app',
-      },
-      (err) => {
-        if (err) {
-          console.warn('Notification error')
-          console.warn(err)
-        }
-      },
-    )
+      })
+      notification.show()
+    }
   })
 
   mainWindow.webContents.on('new-window', (e: Electron.Event, url: string) => {
