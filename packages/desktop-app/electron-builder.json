@@ -16,5 +16,15 @@
     "artifactName": "${productName} Installer ${version}.${ext}",
     "license": "LICENSE.md",
     "oneClick": false
+  },
+  "linux": {
+    "target": ["deb", "rpm", "snap"],
+    "category": "Utility"
+  },
+  "deb": {
+    "depends": ["libappindicator1", "libnotify-bin"]
+  },
+  "rpm": {
+    "depends": ["libappindicator1", "libnotify-bin"]
   }
 }
