@@ -21,9 +21,6 @@
     "target": ["deb", "rpm", "snap"],
     "category": "Utility"
   },
-  "deb": {
-    "depends": ["libappindicator1", "libnotify-bin"]
-  },
   "rpm": {
     "depends": ["libappindicator1", "libnotify-bin"]
   }
