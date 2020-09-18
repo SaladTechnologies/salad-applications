@@ -1,4 +1,5 @@
 const { ipcRenderer: ipc } = require('electron')
+const process = require('process')
 
 init()
 
@@ -17,7 +18,7 @@ function init() {
   console.log('Injecting Salad bridge')
 
   window.salad = {
-    platform: 'electron',
+    platform: process.platform,
     apiVersion: 8,
     dispatch: dispatch,
   }

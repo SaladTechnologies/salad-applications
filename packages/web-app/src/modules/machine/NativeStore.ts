@@ -62,7 +62,14 @@ export class NativeStore {
 
   @computed
   get isNative(): boolean {
-    return window.salad && window.salad.platform === 'electron'
+    // The `electron` value is injected by older versions of the desktop application.
+    return (
+      window.salad &&
+      (window.salad.platform === 'electron' ||
+        window.salad.platform === 'darwin' ||
+        window.salad.platform === 'linux' ||
+        window.salad.platform === 'win32')
+    )
   }
 
   @computed
