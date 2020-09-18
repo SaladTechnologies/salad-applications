@@ -5,6 +5,10 @@
     "output": "dist/app"
   },
   "files": ["dist/main/*"],
+  "mac": {
+    "appId": "io.salad.desktop",
+    "category": "public.app-category.utilities"
+  },
   "win": {
     "publish": {
       "provider": "s3",

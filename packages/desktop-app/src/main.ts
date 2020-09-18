@@ -123,6 +123,9 @@ const checkForMultipleInstance = () => {
       if (mainWindow) {
         if (!mainWindow.isVisible()) {
           mainWindow.show()
+          if (process.platform === 'darwin') {
+            app.dock.show()
+          }
         }
 
         if (mainWindow.isMinimized()) {
@@ -149,7 +152,7 @@ const createOfflineWindow = () => {
     center: true,
     frame: false,
     height: 350,
-    icon: icons.LOGO_PATH,
+    icon: icons.WINDOW_ICON_PATH,
     resizable: false,
     title: 'Salad',
     webPreferences: {
@@ -185,7 +188,7 @@ const createMainWindow = () => {
     backgroundColor: theme.darkBlue,
     center: true,
     frame: false,
-    icon: icons.LOGO_PATH,
+    icon: icons.WINDOW_ICON_PATH,
     minHeight: 766,
     minWidth: 1216,
     show: false,
@@ -207,7 +210,7 @@ const createMainWindow = () => {
   })
 
   mainWindow.once('ready-to-show', () => {
-    tray = new Tray(icons.TRAY_ICON_PATH)
+    tray = new Tray(nativeImage.createFromPath(icons.TRAY_ICON_PATH))
     tray.setContextMenu(createSystemTrayMenu(true))
     tray.setToolTip('Salad')
     tray.on('double-click', () => {
@@ -215,9 +218,15 @@ const createMainWindow = () => {
         if (mainWindow.isVisible()) {
           tray.setContextMenu(createSystemTrayMenu(false))
           mainWindow.hide()
+          if (process.platform === 'darwin') {
+            app.dock.hide()
+          }
         } else {
           tray.setContextMenu(createSystemTrayMenu(true))
           mainWindow.show()
+          if (process.platform === 'darwin') {
+            app.dock.show()
+          }
         }
       }
     })
@@ -238,18 +247,18 @@ const createMainWindow = () => {
         if (mainWindow) {
           if (process.platform === 'win32') {
             mainWindow.setOverlayIcon(
-              nativeImage.createFromPath(icons.TAKSBAR_ACTIVE_OVERLAY_ICON_PATH),
+              nativeImage.createFromPath(icons.TASKBAR_ACTIVE_OVERLAY_ICON_PATH),
               'Background Tasks Running',
             )
           } else if (process.platform === 'linux') {
-            // Placeholder for Linux-specific icon management
+            // TODO: Add Linux-specific icon management
           } else if (process.platform === 'darwin') {
-            // Placeholder for macOS-specific icon management
+            app.dock.setIcon(nativeImage.createFromPath(icons.DOCK_ACTIVE_ICON_PATH))
           }
         }
 
         if (tray) {
-          tray.setImage(icons.TRAY_ACTIVE_ICON_PATH)
+          tray.setImage(nativeImage.createFromPath(icons.TRAY_ACTIVE_ICON_PATH))
         }
       }
     } else {
@@ -259,14 +268,14 @@ const createMainWindow = () => {
           if (process.platform === 'win32') {
             mainWindow.setOverlayIcon(null, '')
           } else if (process.platform === 'linux') {
-            // Placeholder for Linux-specific icon management
+            // TODO: Add Linux-specific icon management
           } else if (process.platform === 'darwin') {
-            // Placeholder for macOS-specific icon management
+            app.dock.setIcon(nativeImage.createFromPath(icons.DOCK_ICON_PATH))
           }
         }
 
         if (tray) {
-          tray.setImage(icons.TRAY_ICON_PATH)
+          tray.setImage(nativeImage.createFromPath(icons.TRAY_ICON_PATH))
         }
       }
     }
@@ -324,6 +333,9 @@ const createMainWindow = () => {
     if (mainWindow && mainWindow.isVisible) {
       tray.setContextMenu(createSystemTrayMenu(false))
       mainWindow.hide()
+      if (process.platform === 'darwin') {
+        app.dock.hide()
+      }
     }
   })
 
@@ -376,7 +388,7 @@ const createMainWindow = () => {
     })
   })
 
-  bridge.on(showNotification, (message: {}) => {
+  bridge.on(showNotification, (message: { title: string; message: string }) => {
     if (process.platform === 'win32') {
       notifier.notify(
         {
@@ -496,12 +508,18 @@ function createSystemTrayMenu(isVisible: boolean): Menu {
             if (mainWindow) {
               tray.setContextMenu(createSystemTrayMenu(false))
               mainWindow.hide()
+              if (process.platform === 'darwin') {
+                app.dock.hide()
+              }
             }
           }
         : () => {
             if (mainWindow) {
               tray.setContextMenu(createSystemTrayMenu(true))
               mainWindow.show()
+              if (process.platform === 'darwin') {
+                app.dock.show()
+              }
             }
           },
     },
