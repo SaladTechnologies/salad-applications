@@ -1,50 +1,25 @@
-import classnames from 'classnames'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { Checkbox, InfoButton } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
+import { Divider, Li, P, SectionHeader, SmartLink, ToggleSetting } from '../../../components'
 
-const styles = (theme: SaladTheme) => ({
-  container: {
-    padding: 10,
-    overflow: 'hidden',
+const styles = {
+  container: {},
+  content: {
+    padding: '0 10px',
   },
-  row: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  firstColumn: {
-    flex: '2 1',
-    padding: 5,
+  splitContainer: {
     display: 'flex',
     flexDirection: 'row',
   },
   column: {
-    flex: '1 1',
-    padding: 5,
-    display: 'flex',
-    flexDirection: 'row',
+    flex: 1,
   },
-  titleRow: {
-    color: theme.mediumGreen,
-    fontFamily: theme.fontGroteskBook25,
-    fontSize: 10,
-    letterSpacing: '1.5px',
-    textTransform: 'uppercase',
-    whiteSpace: 'nowrap',
-  },
-  contentRow: {
-    color: theme.green,
-    fontFamily: theme.fontGroteskLight09,
-    fontSize: 48,
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-  },
-})
+}
 
 interface Props extends WithStyles<typeof styles> {
   compatibleGpus?: boolean
   cpuEnabled?: boolean
+  isRunning?: boolean
   onSetCpuEnabled?: (value: boolean) => void
 }
 
@@ -56,34 +31,42 @@ class _CpuSummary extends Component<Props> {
   }
 
   render() {
-    const { compatibleGpus, cpuEnabled, classes } = this.props
+    const { compatibleGpus, cpuEnabled, isRunning, classes } = this.props
 
     //Hide the panel if there are compatible GPUs
-    if (compatibleGpus) return null
+    if (compatibleGpus !== false) return null
 
     return (
       <div className={classes.container}>
-        <div className={classnames(classes.row, classes.titleRow)}>
-          <div className={classes.firstColumn}>Graphics Card</div>
-          <div className={classes.column}>VRAM</div>
-          <div className={classes.column}>
-            Driver Version
-            <InfoButton
-              text={"The driver version isn't available for all GPUs. Don't worry if it isn't listed below."}
-            />
+        <SectionHeader>CPU Mining</SectionHeader>
+        <div className={classes.content}>
+          <P>Despite your machine lacking compatible GPUs, Salad can use your CPU to earn Salad Balance as well.</P>
+          <div className={classes.splitContainer}>
+            <div className={classes.column}>
+              <ToggleSetting
+                title={'CPU Mining'}
+                disabled={isRunning}
+                description={'Use your CPU to mine Salad Balance.'}
+                toggled={cpuEnabled}
+                onToggle={this.handleToggle}
+              />
+            </div>
+            <div className={classes.column}>
+              <P>CPU Mining Disclaimers:</P>
+              <ul>
+                <Li>Background processes with significantly affect earning rates. Use while AFK.</Li>
+                <Li>Earning rates will vary widely from machine to machine</Li>
+                <Li>Proper cooling and maintenance is vital for performance and safety</Li>
+                <Li>
+                  <SmartLink to="https://support.salad.io/hc/en-us/articles/360050102351-Does-CPU-Mining-Harm-My-Computer-">
+                    Does CPU Mining Harm My Computer?
+                  </SmartLink>
+                </Li>
+              </ul>
+            </div>
           </div>
         </div>
-
-        <Checkbox checked={cpuEnabled} onClick={this.handleToggle} text={'Allow Salad to use my CPU'} />
-
-        {/* {(!gpus || !gpus.some((x) => x.compatible)) && (
-          <div className={classes.warningText}>
-            No compatible GPUs found. Learn more{' '}
-            <SmartLink to="https://support.salad.io/hc/en-us/articles/360048320131-Is-My-Machine-Compatible-With-Salad-">
-              here
-            </SmartLink>
-          </div>
-        )} */}
+        <Divider />
       </div>
     )
   }

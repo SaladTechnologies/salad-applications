@@ -121,19 +121,17 @@ export const App = withStyles(styles)(
       return (
         <>
           {!isDesktop && (
-            <>
-              <MobileDevice>
-                <div className={classes.mobileMainWindow}>
-                  <MobileTitlebarContainer />
-                  <Scrollbars>
-                    <div className={classes.mobileContent}>
-                      <MobileRoutes />
-                    </div>
-                  </Scrollbars>
-                  <MobileNavbarContainer />
-                </div>
-              </MobileDevice>
-            </>
+            <MobileDevice>
+              <div className={classes.mobileMainWindow}>
+                <MobileTitlebarContainer />
+                <Scrollbars>
+                  <div className={classes.mobileContent}>
+                    <MobileRoutes />
+                  </div>
+                </Scrollbars>
+                <MobileNavbarContainer />
+              </div>
+            </MobileDevice>
           )}
           <NotMobile>
             <div className={classes.mainWindow}>

@@ -49,10 +49,7 @@ export class MachineStore {
         let machine: Machine = res.data
         this.currentMachine = machine
 
-        //Check the machine for compatibility
-        const pluginCount = getPluginDefinitions(this.currentMachine, machineInfo).length
-
-        if (pluginCount === 0) {
+        if (!this.store.saladBowl.canRun) {
           //Show an error notification
           this.store.notifications.sendNotification({
             title: `Machine is Incompatible`,

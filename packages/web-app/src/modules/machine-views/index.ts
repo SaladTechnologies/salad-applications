@@ -1,3 +1,4 @@
+export * from './CpuSummaryContainer'
 export * from './GpuSummaryContainer'
 export * from './MinerListContainer'
 export * from './StartButtonContainer'

@@ -1,9 +1,7 @@
+import classnames from 'classnames'
 import React, { Component } from 'react'
-
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
-import classnames from 'classnames'
-
 import { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
@@ -33,7 +31,7 @@ const styles = (theme: SaladTheme) => ({
   },
   disabled: {
     boxShadow: 'none',
-    backgroundColor: 'initial',
+    opacity: 0.5,
     color: theme.lightGreen,
     cursor: 'not-allowed',
   },
@@ -49,12 +47,13 @@ interface Props extends WithStyles<typeof styles> {
 
 class _ToggleSwitch extends Component<Props> {
   onToggle = () => {
-    const { toggleClick } = this.props
+    const { disabled, toggleClick } = this.props
 
-    if (toggleClick) {
-      toggleClick()
-    }
+    if (disabled) return
+
+    toggleClick?.()
   }
+
   render() {
     const { toggleOn, classes, toggleLeft, toggleRight, disabled } = this.props
     return (

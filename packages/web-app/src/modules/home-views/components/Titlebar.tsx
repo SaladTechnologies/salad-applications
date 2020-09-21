@@ -29,6 +29,7 @@ const styles = (theme: SaladTheme) => ({
     zIndex: 9999,
     position: 'relative',
     fontFamily: theme.fontGroteskLight25,
+    marginTop: 2,
   },
   bottomBorder: {
     borderBottom: `1px solid ${theme.green}`,
