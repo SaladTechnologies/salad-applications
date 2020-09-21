@@ -77,7 +77,7 @@ class _AccountMenu extends Component<Props> {
     if (authenticated) {
       return (
         <>
-          <div className={classes.container} onClick={this.handleClick}>
+          <div id="account-menu" className={classes.container} onClick={this.handleClick}>
             <div className={classes.username}>{username}</div>
             {currentBalance !== undefined && <div className={classes.balance}>{formatBalance(currentBalance)}</div>}
           </div>
@@ -87,7 +87,11 @@ class _AccountMenu extends Component<Props> {
     } else {
       return (
         <div className={classes.container}>
-          <div className={classes.signUpButton} onClick={canLogin ? this.handleClick : undefined}>
+          <div
+            id="account-menu-signin"
+            className={classes.signUpButton}
+            onClick={canLogin ? this.handleClick : undefined}
+          >
             Login
           </div>
           {/*
