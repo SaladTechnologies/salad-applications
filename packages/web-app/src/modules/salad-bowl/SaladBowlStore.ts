@@ -1,14 +1,15 @@
 import { action, autorun, computed, flow, observable, runInAction } from 'mobx'
+import { EOL } from 'os'
 import { RootStore } from '../../Store'
 import { MiningStatus } from '../machine/models'
 import { IPersistentStore } from '../versions/IPersistentStore'
+import { getPluginDefinitions } from './definitions'
 import { PluginDefinition, StartReason, StopReason } from './models'
 import { ErrorCategory } from './models/ErrorCategory'
 import { ErrorMessage } from './models/ErrorMessage'
 import { PluginInfo } from './models/PluginInfo'
 import { PluginStatus } from './models/PluginStatus'
 import { StatusMessage } from './models/StatusMessage'
-import { getPluginDefinitions } from './PluginDefinitionFactory'
 
 export class SaladBowlStore implements IPersistentStore {
   private currentPluginDefinition?: PluginDefinition
@@ -35,21 +36,39 @@ export class SaladBowlStore implements IPersistentStore {
 
   @computed
   get canRun(): boolean {
-    let cachedPluginDefinitions = getPluginDefinitions(this.store)
+    const machine = this.store.machine.currentMachine
+    const machineInfo = this.store.native.machineInfo
+    if (machine === undefined || machineInfo === undefined) {
+      return false
+    }
+
+    // TODO: Feed user preferences into the requirements check.
+    const pluginDefinitions = getPluginDefinitions(machine, machineInfo).filter((pluginDefinition) =>
+      pluginDefinition.requirements.every((requirement) => requirement(machineInfo, { cpu: false, gpu: true })),
+    )
     return (
       this.store.auth.isAuthenticated &&
       this.store.machine &&
       this.store.machine.currentMachine !== undefined &&
       this.store.native &&
       this.store.native.machineInfo !== undefined &&
-      cachedPluginDefinitions.length > 0
+      pluginDefinitions.length > 0
     )
   }
 
   @computed
   get pluginCount(): number {
-    let cachedPluginDefinitions = getPluginDefinitions(this.store)
-    return cachedPluginDefinitions.length
+    const machine = this.store.machine.currentMachine
+    const machineInfo = this.store.native.machineInfo
+    if (machine === undefined || machineInfo === undefined) {
+      return 0
+    }
+
+    // TODO: Feed user preferences into the requirements check.
+    const pluginDefinitions = getPluginDefinitions(machine, machineInfo).filter((pluginDefinition) =>
+      pluginDefinition.requirements.every((requirement) => requirement(machineInfo, { cpu: false, gpu: true })),
+    )
+    return pluginDefinitions.length
   }
 
   @computed
@@ -236,9 +255,26 @@ export class SaladBowlStore implements IPersistentStore {
     this.currentPluginDefinitionIndex = 0
     this.currentPluginRetries = 0
     this.somethingWorks = false
-    this.pluginDefinitions = getPluginDefinitions(this.store)
+    const machine = this.store.machine.currentMachine
+    const machineInfo = this.store.native.machineInfo
+    if (machine === undefined || machineInfo === undefined) {
+      this.pluginDefinitions = undefined
+      return
+    }
+
+    this.pluginDefinitions = getPluginDefinitions(machine, machineInfo).filter((pluginDefinition) =>
+      pluginDefinition.requirements.every((requirement) => requirement(machineInfo, { cpu: false, gpu: true })),
+    )
+    console.log(
+      `========== Supported Plugins ==========${EOL}${
+        this.pluginDefinitions.length === 0
+          ? 'No plugins are available to support the hardware in this machine. :-('
+          : this.pluginDefinitions.reduce((output, pluginDefinition) => {
+              return output + `${pluginDefinition.name} ${pluginDefinition.version} ${pluginDefinition.algorithm}${EOL}`
+            }, '')
+      }=======================================`,
+    )
     if (this.pluginDefinitions.length === 0) {
-      console.log('Unable to find a valid plugin definition for this machine. Unable to start.')
       return
     }
 

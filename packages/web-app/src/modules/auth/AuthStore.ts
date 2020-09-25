@@ -1,6 +1,6 @@
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js'
 import { AxiosInstance } from 'axios'
-import { History, Location } from 'history'
+import { Location } from 'history'
 import { action, computed, flow, observable, toJS } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
 import { Cancelable, once, ResponseMessageEvent } from 'post-robot'
@@ -91,9 +91,7 @@ export class AuthStore {
     return this.apiBaseUrl + '/api/v2/verification-emails'
   }
 
-  public static isStateWithPreviousLocation(
-    state: any,
-  ): state is { previousLocation?: Location<History.PoorMansUnknown> } {
+  public static isStateWithPreviousLocation(state: any): state is { previousLocation?: Location } {
     if (typeof state != 'object' || state == null) {
       return false
     }
