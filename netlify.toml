@@ -9,17 +9,30 @@ ID = "salad-web-app"
   to = "/index.html"
   status = 200
 
+# Environment variables defined when building the `main` branch.
 [context.production.environment]
+  REACT_APP_API_URL='https://app-api.salad.io'
   REACT_APP_AUTH0_CLIENT_ID='SQdPtFw6MfYEYA1ETGaNfe5uP6vK0z3r'
+  REACT_APP_AUTH0_DOMAIN='login.salad.io'
   REACT_APP_MIXPANEL_TOKEN='68db9194f229525012624f3cf368921f'
   REACT_APP_SENTRY_DSN='https://15f1024783af4b60a295b04ace0bbd2a@sentry.io/1424792'
 
+# Environment variables defined when building the `main-prime` branch.
+[context.main-prime.environment]
+  REACT_APP_API_URL='https://app-api.salad.io'
+  REACT_APP_AUTH0_CLIENT_ID='SQdPtFw6MfYEYA1ETGaNfe5uP6vK0z3r'
+  REACT_APP_AUTH0_DOMAIN='login.salad.io'
+  REACT_APP_MIXPANEL_TOKEN='68db9194f229525012624f3cf368921f'
+  REACT_APP_SENTRY_DSN='https://15f1024783af4b60a295b04ace0bbd2a@sentry.io/1424792'
+
+# Environment variables defined when building any other branch.
 [context.branch-deploy.environment]
   REACT_APP_API_URL='https://app-api-testing.salad.io'
   REACT_APP_AUTH0_CLIENT_ID='MuyOVLwIinvcKb505k3nUScwPB75snYp'
   REACT_APP_AUTH0_DOMAIN='login-test.salad.io'
   REACT_APP_MIXPANEL_TOKEN='4b245bace4eed86ffdfa35efc3addf1d'
 
+# Environment variables defined when building a pull request.
 [context.deploy-preview.environment]
   REACT_APP_API_URL='https://app-api-testing.salad.io'
   REACT_APP_AUTH0_CLIENT_ID='MuyOVLwIinvcKb505k3nUScwPB75snYp'

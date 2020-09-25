@@ -105,6 +105,7 @@ const getMachineInfo = (): Promise<MachineInfo> => {
       memLayout: memLayout.status === 'fulfilled' ? memLayout.value : undefined,
       graphics: graphics.status === 'fulfilled' ? graphics.value : undefined,
       os: osInfo.status === 'fulfilled' ? osInfo.value : undefined,
+      platform: process.platform,
       uuid: uuid.status === 'fulfilled' ? uuid.value : undefined,
       services: services.status === 'fulfilled' ? services.value : undefined,
     }
@@ -188,6 +189,7 @@ const createMainWindow = () => {
     backgroundColor: theme.darkBlue,
     center: true,
     frame: false,
+    height: 1216,
     icon: icons.WINDOW_ICON_PATH,
     minHeight: 766,
     minWidth: 1216,
@@ -199,6 +201,7 @@ const createMainWindow = () => {
       nodeIntegration: false,
       preload: path.resolve(__dirname, './preload.js'),
     },
+    width: 1216,
   })
 
   mainWindow.loadURL(Config.appUrl)

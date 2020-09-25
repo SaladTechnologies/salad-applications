@@ -1,14 +1,15 @@
 import axios from 'axios'
+import { ChildProcess, execSync, spawn } from 'child_process'
 //@ts-ignore
 import DecompressZip from 'decompress-zip'
-import { spawn, ChildProcess, execSync } from 'child_process'
-import { PluginDefinition } from './models/PluginDefinition'
-import { FileDefinition } from './models/FileDefinition'
-import { PluginStatus } from './models/PluginStatus'
-import { ErrorAction } from './models/ErrorAction'
-import * as path from 'path'
 import * as fs from 'fs'
+import * as path from 'path'
+import tar from 'tar'
 import { INotificationService } from './INotificationService'
+import { ErrorAction } from './models/ErrorAction'
+import { FileDefinition } from './models/FileDefinition'
+import { PluginDefinition } from './models/PluginDefinition'
+import { PluginStatus } from './models/PluginStatus'
 
 export class Plugin {
   private _status: PluginStatus = PluginStatus.Unknown
@@ -97,11 +98,15 @@ export class Plugin {
     this.stopCalled = true
 
     if (this.process && !this.process.killed) {
-      let processName = path.basename(this.pluginDefinition.exe)
-      try {
-        execSync(`taskkill /im ${processName} /t /f`)
-      } catch {}
-      // this.process.kill()
+      this.process.kill()
+      if (process.platform === 'win32') {
+        const processName = path.basename(this.pluginDefinition.exe)
+        setTimeout(() => {
+          try {
+            execSync(`taskkill /im ${processName} /t /f`)
+          } catch {}
+        }, 200)
+      }
     } else {
       console.log('No process to kill.')
     }
@@ -181,21 +186,42 @@ export class Plugin {
     console.log(`Extracting ${this.name}`)
 
     await new Promise((fulfill, reject) => {
-      let unzipper = new DecompressZip(downloadFilename)
-
-      unzipper.on('error', (err: any) => {
-        console.log(`Unzipping failed for ${this.name}`, err)
-        reject(err)
-      })
-
-      unzipper.on('extract', () => {
-        console.log('Finished extracting')
-        fulfill()
-      })
-
-      unzipper.extract({
-        path: this.pluginDirectory,
-      })
+      if (downloadFilename.endsWith('.tar.gz')) {
+        fs.promises
+          .mkdir(this.pluginDirectory)
+          .catch((err) => {
+            if (err.code !== 'EEXIST') {
+              throw err
+            }
+          })
+          .then(() =>
+            tar.extract({
+              cwd: this.pluginDirectory,
+              file: downloadFilename,
+            }),
+          )
+          .then(() => {
+            console.log('Finished extracting')
+            fulfill()
+          })
+          .catch((err: any) => {
+            console.log(`Extracting ${this.name} failed`, err)
+            reject(err)
+          })
+      } else {
+        let unzipper = new DecompressZip(downloadFilename)
+        unzipper.on('error', (err: any) => {
+          console.log(`Extracting ${this.name} failed`, err)
+          reject(err)
+        })
+        unzipper.on('extract', () => {
+          console.log('Finished extracting')
+          fulfill()
+        })
+        unzipper.extract({
+          path: this.pluginDirectory,
+        })
+      }
     })
 
     console.log(`Finished extracting ${this.name}`)

@@ -1,8 +1,8 @@
 import { AxiosInstance } from 'axios'
 import { autorun, computed, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
-import { getPluginDefinitions, getPluginDefinitionsForGraphics } from '../salad-bowl/PluginDefinitionFactory'
-import { GpuInformation } from './models'
+import { getPluginDefinitions } from '../salad-bowl/definitions'
+import { GpuInformation, MachineInfo } from './models'
 import { Machine } from './models/Machine'
 
 export class MachineStore {
@@ -34,30 +34,23 @@ export class MachineStore {
 
   registerMachine = flow(
     function* (this: MachineStore) {
-      if (!this.store.native.machineInfo) {
+      const machineInfo = this.store.native.machineInfo
+      if (!machineInfo) {
         console.warn('No valid machine info found. Unable to register.')
         return
       }
 
-      const { cpu, graphics, memLayout, os, system, uuid, version } = this.store.native.machineInfo
+      const { services: _, ...machineWithoutServices } = machineInfo
       try {
         console.log('Registering machine with salad')
         let res: any = yield this.axios.post(`/api/v2/machines`, {
-          systemInfo: {
-            cpu,
-            graphics,
-            memLayout,
-            os,
-            system,
-            uuid,
-            version,
-          },
+          systemInfo: machineWithoutServices,
         })
         let machine: Machine = res.data
         this.currentMachine = machine
 
         //Check the machine for compatibility
-        const pluginCount = getPluginDefinitions(this.store).length
+        const pluginCount = getPluginDefinitions(this.currentMachine, machineInfo).length
 
         if (pluginCount === 0) {
           //Show an error notification
@@ -72,15 +65,7 @@ export class MachineStore {
       } catch (err) {
         this.store.analytics.captureException(new Error(`register-machine error: ${err}`), {
           contexts: {
-            machineInfo: {
-              cpu,
-              graphics,
-              memLayout,
-              os,
-              system,
-              uuid,
-              version,
-            },
+            machineInfo: machineWithoutServices,
           },
         })
         throw err
@@ -90,25 +75,36 @@ export class MachineStore {
 
   @computed
   get gpus(): GpuInformation[] {
-    if (!this.store.native.machineInfo) return []
-    if (!this.currentMachine) return []
+    const machine = this.currentMachine
+    const machineInfo = this.store.native.machineInfo
+    if (
+      machine === undefined ||
+      machineInfo?.graphics?.controllers === undefined ||
+      machineInfo?.graphics?.displays === undefined
+    ) {
+      return []
+    }
 
-    const gpus = this.store.native.machineInfo.graphics?.controllers.map((x) => {
-      let compatible = false
-
-      if (this.currentMachine) {
-        //Get all the miner plugins for each graphics card
-        const plugins = getPluginDefinitionsForGraphics(this.currentMachine, [x])
-
-        compatible = plugins.length > 0
+    const pluginDefinitions = getPluginDefinitions(machine, machineInfo)
+    const gpus = machineInfo.graphics.controllers.map((gpu) => {
+      const gpuMachineInfo: MachineInfo = {
+        ...machineInfo,
+        graphics: {
+          ...machineInfo.graphics!,
+          controllers: [gpu],
+        },
       }
 
-      //Return the GPU information for this graphics card
+      // TODO: Feed user preferences into the requirements check.
+      const gpuPluginDefinitions = pluginDefinitions.filter((pluginDefinition) =>
+        pluginDefinition.requirements.every((requirement) => requirement(gpuMachineInfo, { cpu: false, gpu: true })),
+      )
+
       return {
-        model: x.model,
-        vram: x.memoryTotal || x.vram,
-        driverVersion: x.driverVersion,
-        compatible: compatible,
+        model: gpu.model,
+        vram: gpu.memoryTotal || gpu.vram,
+        driverVersion: gpu.driverVersion,
+        compatible: gpuPluginDefinitions.length > 0,
       }
     })
 

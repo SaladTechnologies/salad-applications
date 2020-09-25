@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { ExternalLinkListUnstyled } from '../../../components'
-// Components
 import { ErrorPage } from '../../../components/ErrorPage'
 
 interface Props {
@@ -15,10 +14,10 @@ export class AntiVirusErrorPage extends Component<Props> {
     return (
       <ErrorPage title="Anti-Virus is Blocking Salad" onCloseClicked={onCloseClicked}>
         <div style={{ paddingBottom: '1rem' }}>
-          Uh oh, looks like your anti-virus is blocking our miner from running. Follow the link below for a guide on how
-          to whitelist Salad in your anti-virus.
+          Uh oh! It looks like your anti-virus software is blocking one or more of our miners. We may be able to get
+          another miner running, but you're not in tip-top shape! You should expect lower earnings until this issue is
+          resolved. You can find helpful details and walkthroughs on our support website:
         </div>
-
         <ExternalLinkListUnstyled list={avLinks} />
       </ErrorPage>
     )
