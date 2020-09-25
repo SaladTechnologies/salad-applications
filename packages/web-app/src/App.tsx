@@ -91,6 +91,25 @@ const searchConfig = {
   pathname: '/search',
 }
 
+const DesktopLayout = ({ history, classes }: Props) => (
+  <div className={classes.mainWindow}>
+    <MainTitlebarContainer />
+    <div className={classes.container}>
+      <div className={classes.content}>
+        <SearchProvider
+          config={{
+            ...searchConfig,
+            history: history,
+          }}
+        >
+          <Routes />
+        </SearchProvider>
+      </div>
+      <ToastContainer />
+    </div>
+  </div>
+)
+
 export const App = withStyles(styles)(
   class App extends Component<Props> {
     store = getStore()
@@ -133,26 +152,12 @@ export const App = withStyles(styles)(
                   <MobileNavbarContainer />
                 </div>
               </MobileDevice>
+              <NotMobile>
+                <DesktopLayout {...this.props} />
+              </NotMobile>
             </>
           )}
-          <NotMobile>
-            <div className={classes.mainWindow}>
-              <MainTitlebarContainer />
-              <div className={classes.container}>
-                <div className={classes.content}>
-                  <SearchProvider
-                    config={{
-                      ...searchConfig,
-                      history: this.props.history,
-                    }}
-                  >
-                    <Routes />
-                  </SearchProvider>
-                </div>
-                <ToastContainer />
-              </div>
-            </div>
-          </NotMobile>
+          {isDesktop && <DesktopLayout {...this.props} />}
         </>
       )
     }
