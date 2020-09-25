@@ -1,5 +1,6 @@
 import { action, autorun, computed, flow, observable, runInAction } from 'mobx'
 import { EOL } from 'os'
+import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
 import { MiningStatus } from '../machine/models'
 import { IPersistentStore } from '../versions/IPersistentStore'
@@ -11,12 +12,13 @@ import { PluginInfo } from './models/PluginInfo'
 import { PluginStatus } from './models/PluginStatus'
 import { StatusMessage } from './models/StatusMessage'
 
+const CPU_MINING_ENABLED = 'CPU_MINING_ENABLED'
+
 export class SaladBowlStore implements IPersistentStore {
   private currentPluginDefinition?: PluginDefinition
   private currentPluginDefinitionIndex: number = 0
   private currentPluginRetries: number = 0
   private runningTimer?: NodeJS.Timeout
-  private pluginDefinitions?: PluginDefinition[]
   private somethingWorks: boolean = false
   private timeoutTimer?: NodeJS.Timeout
 
@@ -34,41 +36,57 @@ export class SaladBowlStore implements IPersistentStore {
   @observable
   public plugin: PluginInfo = new PluginInfo()
 
+  @observable
+  public cpuMiningEnabled: boolean = false
+
+  @observable
+  public gpuMiningEnabled: boolean = true
+
   @computed
-  get canRun(): boolean {
+  get pluginDefinitions(): PluginDefinition[] {
     const machine = this.store.machine.currentMachine
     const machineInfo = this.store.native.machineInfo
     if (machine === undefined || machineInfo === undefined) {
-      return false
+      return []
     }
 
     // TODO: Feed user preferences into the requirements check.
     const pluginDefinitions = getPluginDefinitions(machine, machineInfo).filter((pluginDefinition) =>
-      pluginDefinition.requirements.every((requirement) => requirement(machineInfo, { cpu: false, gpu: true })),
+      pluginDefinition.requirements.every((requirement) =>
+        requirement(machineInfo, { cpu: this.cpuMiningEnabled, gpu: this.gpuMiningEnabled }),
+      ),
     )
+
+    console.log(
+      `========== Supported Plugins ==========${EOL}CPU Enabled:${this.cpuMiningEnabled}${EOL}GPU Enabled:${
+        this.gpuMiningEnabled
+      }${EOL}${
+        pluginDefinitions.length === 0
+          ? 'No plugins are available to support the hardware in this machine. :-('
+          : pluginDefinitions.reduce((output, pluginDefinition) => {
+              return output + `${pluginDefinition.name} ${pluginDefinition.version} ${pluginDefinition.algorithm}${EOL}`
+            }, '')
+      }=======================================`,
+    )
+
+    return pluginDefinitions
+  }
+
+  @computed
+  get canRun(): boolean {
     return (
       this.store.auth.isAuthenticated &&
       this.store.machine &&
       this.store.machine.currentMachine !== undefined &&
       this.store.native &&
       this.store.native.machineInfo !== undefined &&
-      pluginDefinitions.length > 0
+      this.pluginDefinitions.length > 0
     )
   }
 
   @computed
   get pluginCount(): number {
-    const machine = this.store.machine.currentMachine
-    const machineInfo = this.store.native.machineInfo
-    if (machine === undefined || machineInfo === undefined) {
-      return 0
-    }
-
-    // TODO: Feed user preferences into the requirements check.
-    const pluginDefinitions = getPluginDefinitions(machine, machineInfo).filter((pluginDefinition) =>
-      pluginDefinition.requirements.every((requirement) => requirement(machineInfo, { cpu: false, gpu: true })),
-    )
-    return pluginDefinitions.length
+    return this.pluginDefinitions.length
   }
 
   @computed
@@ -94,6 +112,11 @@ export class SaladBowlStore implements IPersistentStore {
   constructor(private readonly store: RootStore) {
     this.store.native.on('mining-status', this.onReceiveStatus)
     this.store.native.on('mining-error', this.onReceiveError)
+
+    //Loads the initial CPU mining flag
+    runInAction(() => {
+      this.cpuMiningEnabled = Storage.getItem(CPU_MINING_ENABLED) === 'true'
+    })
   }
 
   getSavedData(): object {
@@ -255,28 +278,6 @@ export class SaladBowlStore implements IPersistentStore {
     this.currentPluginDefinitionIndex = 0
     this.currentPluginRetries = 0
     this.somethingWorks = false
-    const machine = this.store.machine.currentMachine
-    const machineInfo = this.store.native.machineInfo
-    if (machine === undefined || machineInfo === undefined) {
-      this.pluginDefinitions = undefined
-      return
-    }
-
-    this.pluginDefinitions = getPluginDefinitions(machine, machineInfo).filter((pluginDefinition) =>
-      pluginDefinition.requirements.every((requirement) => requirement(machineInfo, { cpu: false, gpu: true })),
-    )
-    console.log(
-      `========== Supported Plugins ==========${EOL}${
-        this.pluginDefinitions.length === 0
-          ? 'No plugins are available to support the hardware in this machine. :-('
-          : this.pluginDefinitions.reduce((output, pluginDefinition) => {
-              return output + `${pluginDefinition.name} ${pluginDefinition.version} ${pluginDefinition.algorithm}${EOL}`
-            }, '')
-      }=======================================`,
-    )
-    if (this.pluginDefinitions.length === 0) {
-      return
-    }
 
     this.currentPluginDefinition = this.pluginDefinitions[this.currentPluginDefinitionIndex]
     this.plugin.name = this.currentPluginDefinition.name
@@ -403,4 +404,12 @@ export class SaladBowlStore implements IPersistentStore {
     this.runningTime = undefined
     this.choppingTime = undefined
   })
+
+  @action
+  setCpuMiningEnabled = (value: boolean) => {
+    this.cpuMiningEnabled = value
+
+    //Saves the new value locally so it will automatically be loaded next time
+    Storage.setItem(CPU_MINING_ENABLED, value)
+  }
 }

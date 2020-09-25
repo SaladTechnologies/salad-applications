@@ -1,17 +1,16 @@
+import classnames from 'classnames'
 import React, { Component } from 'react'
-
-// Theme
-import { SaladTheme } from '../../../SaladTheme'
-
 // Packages
 import withStyles, { WithStyles } from 'react-jss'
-import classnames from 'classnames'
+// Theme
+import { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   appBody: {
     fontFamily: theme.fontGroteskBook19,
     fontSize: theme.small,
     lineHeight: theme.medium,
+    paddingBottom: 6,
   },
   bold: {
     fontWeight: 'bold',
