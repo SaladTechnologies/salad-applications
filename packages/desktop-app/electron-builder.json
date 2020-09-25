@@ -20,5 +20,22 @@
     "artifactName": "${productName} Installer ${version}.${ext}",
     "license": "LICENSE.md",
     "oneClick": false
+  },
+  "linux": {
+    "target": ["rpm", "deb", "snap"],
+    "category": "Utility"
+  },
+  "rpm": {
+    "depends": [
+      "at-spi2-core",
+      "gtk3",
+      "libappindicator1",
+      "libnotify",
+      "libXtst6",
+      "libXScrnSaver",
+      "libuuid-devel",
+      "mozilla-nss",
+      "xdg-utils"
+    ]
   }
 }
