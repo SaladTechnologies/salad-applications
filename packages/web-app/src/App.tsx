@@ -91,6 +91,25 @@ const searchConfig = {
   pathname: '/search',
 }
 
+const DesktopLayout = ({ history, classes }: Props) => (
+  <div className={classes.mainWindow}>
+    <MainTitlebarContainer />
+    <div className={classes.container}>
+      <div className={classes.content}>
+        <SearchProvider
+          config={{
+            ...searchConfig,
+            history: history,
+          }}
+        >
+          <Routes />
+        </SearchProvider>
+      </div>
+      <ToastContainer />
+    </div>
+  </div>
+)
+
 export const App = withStyles(styles)(
   class App extends Component<Props> {
     store = getStore()
@@ -121,36 +140,24 @@ export const App = withStyles(styles)(
       return (
         <>
           {!isDesktop && (
-            <MobileDevice>
-              <div className={classes.mobileMainWindow}>
-                <MobileTitlebarContainer />
-                <Scrollbars>
-                  <div className={classes.mobileContent}>
-                    <MobileRoutes />
-                  </div>
-                </Scrollbars>
-                <MobileNavbarContainer />
-              </div>
-            </MobileDevice>
-          )}
-          <NotMobile>
-            <div className={classes.mainWindow}>
-              <MainTitlebarContainer />
-              <div className={classes.container}>
-                <div className={classes.content}>
-                  <SearchProvider
-                    config={{
-                      ...searchConfig,
-                      history: this.props.history,
-                    }}
-                  >
-                    <Routes />
-                  </SearchProvider>
+            <>
+              <MobileDevice>
+                <div className={classes.mobileMainWindow}>
+                  <MobileTitlebarContainer />
+                  <Scrollbars>
+                    <div className={classes.mobileContent}>
+                      <MobileRoutes />
+                    </div>
+                  </Scrollbars>
+                  <MobileNavbarContainer />
                 </div>
-                <ToastContainer />
-              </div>
-            </div>
-          </NotMobile>
+              </MobileDevice>
+              <NotMobile>
+                <DesktopLayout {...this.props} />
+              </NotMobile>
+            </>
+          )}
+          {isDesktop && <DesktopLayout {...this.props} />}
         </>
       )
     }
