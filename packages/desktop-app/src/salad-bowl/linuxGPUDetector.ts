@@ -50,30 +50,33 @@ function getVramFromClinfo() {
 
 function getVramFromGlxinfo() {
   return new Promise<LinuxGraphicsController[]>((resolve, reject) => {
-    exec("glxinfo -B | egrep -i 'vendor|renderer|VBO free memory'", (err, stdout: string, stderr: string) => {
-      if (err) {
-        reject(err)
-      }
-      if (stderr) {
-        reject(err)
-      }
-      var device: LinuxGraphicsController = {}
-      stdout.split('\n').forEach((line) => {
-        try {
-          if (line.includes('renderer')) {
-            device['model'] = line.match('OpenGL renderer string: (.+)')![1]
-          }
-          if (line.includes('vendor')) {
-            device['vendor'] = line.match('OpenGL vendor string: (.+)')![1]
-          }
-          // VBO for AMD, Dedicated video memory for Nvidia
-          if (line.includes('VBO free memory') || line.includes('Dedicated video memory')) {
-            device['vram'] = parseInt(line.match(/\d+/)![0])
-          }
-        } catch (err) {}
-      })
-      resolve([device])
-    })
+    exec(
+      "glxinfo -B | egrep 'vendor|renderer|VBO free memory|Dedicated video memory:'",
+      (err, stdout: string, stderr: string) => {
+        if (err) {
+          reject(err)
+        }
+        if (stderr) {
+          reject(err)
+        }
+        var device: LinuxGraphicsController = {}
+        stdout.split('\n').forEach((line) => {
+          try {
+            if (line.includes('renderer')) {
+              device['model'] = line.match('OpenGL renderer string: (.+)')![1]
+            }
+            if (line.includes('vendor')) {
+              device['vendor'] = line.match('OpenGL vendor string: (.+)')![1]
+            }
+            // VBO for AMD, Dedicated video memory for Nvidia
+            if (line.includes('VBO free memory') || line.includes('Dedicated video memory')) {
+              device['vram'] = parseInt(line.match(/\d+/)![0])
+            }
+          } catch (err) {}
+        })
+        resolve([device])
+      },
+    )
   })
 }
 
