@@ -2,7 +2,7 @@ import * as si from 'systeminformation'
 
 export interface LinuxGraphicsController {
   vendor?: string
-  name?: string
+  model?: string
   vram?: number
   driverVersion?: string
 }
