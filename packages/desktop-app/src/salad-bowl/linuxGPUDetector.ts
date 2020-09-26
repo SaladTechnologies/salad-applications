@@ -26,10 +26,10 @@ function getVramFromClinfo() {
         // Switch and store useful device information for each line in output
         switch (m[2]) {
           case 'CL_DEVICE_NAME':
-            controllers[m[1]]['name'] = m[3]
+            controllers[m[1]]['model'] = m[3]
             break
           case 'CL_DEVICE_BOARD_NAME_AMD':
-            controllers[m[1]]['name'] = m[3]
+            controllers[m[1]]['model'] = m[3]
             break
           case 'CL_DEVICE_VENDOR':
             controllers[m[1]]['vendor'] = m[3]
@@ -49,10 +49,19 @@ function getVramFromClinfo() {
 }
 
 export function getLinuxGraphics() {
-  return new Promise<LinuxGraphicsData>(function (resolve, reject) {
+  return new Promise<LinuxGraphicsData>(function (resolve) {
     Promise.allSettled([si.graphics(), getVramFromClinfo()]).then(([graphics, clinfoOutput]) => {
+      var controllerInfo = undefined
+
+      if (clinfoOutput.status === 'fulfilled' && controllerInfo === undefined) {
+        controllerInfo = clinfoOutput.value
+      }
+      if (graphics.status === 'fulfilled' && controllerInfo === undefined) {
+        controllerInfo = graphics.value.controllers
+      }
+
       resolve({
-        controllers: clinfoOutput.status === 'fulfilled' ? clinfoOutput.value : undefined,
+        controllers: controllerInfo,
         displays: graphics.status === 'fulfilled' ? graphics.value.displays : undefined,
       })
     })
