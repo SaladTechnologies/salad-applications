@@ -4,14 +4,14 @@ import { LinuxGraphicsController, LinuxGraphicsData } from './models/LinuxGraphi
 
 function getVramFromClinfo() {
   return new Promise<LinuxGraphicsController[]>(function (resolve, reject) {
-    exec('clinfo --raw', function (err: Error, stdout: string, stderr: string) {
+    exec('clinfo --raw', function (err, stdout: string, stderr: string) {
       if (err) {
         reject(err)
       }
       if (stderr) {
         reject(stderr)
       }
-      var regex = /\[\w+\/(\d+)\]\s*(\w+)\s*(.+)/gm
+      var regex = /\[(\w+\/\d+)\]\s*(\w+)\s*(.+)/gm
       var controllers: { [key: string]: LinuxGraphicsController } = {}
       var m
       while ((m = regex.exec(stdout))) {
