@@ -48,22 +48,56 @@ function getVramFromClinfo() {
   })
 }
 
+function getVramFromGlxinfo() {
+  return new Promise<LinuxGraphicsController[]>((resolve, reject) => {
+    exec("glxinfo -B | egrep -i 'vendor|renderer|VBO free memory'", (err, stdout: string, stderr: string) => {
+      if (err) {
+        reject(err)
+      }
+      if (stderr) {
+        reject(err)
+      }
+      var device: LinuxGraphicsController = {}
+      stdout.split('\n').forEach((line) => {
+        try {
+          if (line.includes('renderer')) {
+            device['model'] = line.match('OpenGL renderer string: (.+)')![1]
+          }
+          if (line.includes('vendor')) {
+            device['vendor'] = line.match('OpenGL vendor string: (.+)')![1]
+          }
+          // VBO for AMD, Dedicated video memory for Nvidia
+          if (line.includes('VBO free memory') || line.includes('Dedicated video memory')) {
+            device['vram'] = parseInt(line.match(/\d+/)![0])
+          }
+        } catch (err) {}
+      })
+      resolve([device])
+    })
+  })
+}
+
 export function getLinuxGraphics() {
   return new Promise<LinuxGraphicsData>(function (resolve) {
-    Promise.allSettled([si.graphics(), getVramFromClinfo()]).then(([graphics, clinfoOutput]) => {
-      var controllerInfo = undefined
+    Promise.allSettled([si.graphics(), getVramFromClinfo(), getVramFromGlxinfo()]).then(
+      ([graphics, clinfoOutput, glxinfoOutput]) => {
+        var controllerInfo = undefined
 
-      if (clinfoOutput.status === 'fulfilled' && controllerInfo === undefined) {
-        controllerInfo = clinfoOutput.value
-      }
-      if (graphics.status === 'fulfilled' && controllerInfo === undefined) {
-        controllerInfo = graphics.value.controllers
-      }
+        if (clinfoOutput.status === 'fulfilled' && controllerInfo === undefined) {
+          controllerInfo = clinfoOutput.value
+        }
+        if (glxinfoOutput.status === 'fulfilled' && controllerInfo === undefined) {
+          controllerInfo = glxinfoOutput.value
+        }
+        if (graphics.status === 'fulfilled' && controllerInfo === undefined) {
+          controllerInfo = graphics.value.controllers
+        }
 
-      resolve({
-        controllers: controllerInfo,
-        displays: graphics.status === 'fulfilled' ? graphics.value.displays : undefined,
-      })
-    })
+        resolve({
+          controllers: controllerInfo,
+          displays: graphics.status === 'fulfilled' ? graphics.value.displays : undefined,
+        })
+      },
+    )
   })
 }
