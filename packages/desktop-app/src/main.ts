@@ -23,6 +23,7 @@ import * as icons from './icons'
 import * as Logger from './Logger'
 import { MachineInfo } from './models/MachineInfo'
 import { Profile } from './models/Profile'
+import { getLinuxGraphics } from './salad-bowl/linuxGPUDetector'
 import { PluginDefinition } from './salad-bowl/models/PluginDefinition'
 import { PluginStatus } from './salad-bowl/models/PluginStatus'
 import { PluginManager } from './salad-bowl/PluginManager'
@@ -78,7 +79,7 @@ const getMachineInfo = (): Promise<MachineInfo> => {
   return Promise.allSettled([
     si.cpu(),
     si.cpuFlags(),
-    si.graphics(),
+    process.platform === 'linux' ? getLinuxGraphics() : si.graphics(),
     si.memLayout(),
     si.osInfo(),
     si.services('*'),
