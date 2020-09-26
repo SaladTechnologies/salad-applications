@@ -106,6 +106,13 @@ export class Plugin {
             execSync(`taskkill /im ${processName} /t /f`)
           } catch {}
         }, 200)
+      } else if (process.platform === 'linux') {
+        const processName = path.basename(this.pluginDefinition.exe)
+        setTimeout(() => {
+          try {
+            execSync(`pkill ${processName}`)
+          } catch {}
+        }, 200)
       }
     } else {
       console.log('No process to kill.')
