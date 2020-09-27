@@ -8,6 +8,7 @@ export default {
 const menuItems: MenuItem[] = [
   new MenuItem('Store', '/'),
   new MenuItem('Earn', '/earn/summary'),
+  new MenuItem('Reward Vault', '/account/reward-vault'),
   new MenuItem('Help', 'https://www.salad.io/support'),
 ]
 
