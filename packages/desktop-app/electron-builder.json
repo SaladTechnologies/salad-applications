@@ -8,7 +8,12 @@
   "mac": {
     "appId": "io.salad.desktop",
     "category": "public.app-category.utilities",
-    "darkModeSupport": true
+    "darkModeSupport": true,
+    "entitlements": "build/entitlements.mac.plist",
+    "entitlementsInherit": "build/entitlements.mac.plist",
+    "gatekeeperAssess": false,
+    "hardenedRuntime": true,
+    "target": ["dmg"]
   },
   "win": {
     "publish": {
@@ -38,5 +43,6 @@
       "mozilla-nss",
       "xdg-utils"
     ]
-  }
+  },
+  "afterSign": "build/notarize.js"
 }
