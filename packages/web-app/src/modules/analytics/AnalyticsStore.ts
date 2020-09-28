@@ -50,6 +50,7 @@ export class AnalyticsStore {
 
     mixpanel.register({
       $app_build_number: config.appBuild,
+      Platform: this.store.native.platform,
     })
 
     if (this.store.native.desktopVersion) {
