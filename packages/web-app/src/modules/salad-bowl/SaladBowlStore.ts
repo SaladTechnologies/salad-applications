@@ -293,7 +293,7 @@ export class SaladBowlStore implements IPersistentStore {
       errors: this.currentPluginDefinition.errors,
     })
 
-    this.store.analytics.trackStart(reason)
+    this.store.analytics.trackStart(reason, this.gpuMiningEnabled, this.cpuMiningEnabled)
 
     //Show a notification reminding users to use auto start
     if (reason === StartReason.Manual && this.store.autoStart.canAutoStart && !this.store.autoStart.autoStart) {

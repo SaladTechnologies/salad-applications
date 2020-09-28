@@ -78,6 +78,11 @@ export class NativeStore {
   }
 
   @computed
+  get platform(): string {
+    return window.salad.platform
+  }
+
+  @computed
   get gpuNames(): string[] | undefined {
     if (this.machineInfo?.graphics === undefined) {
       return undefined
