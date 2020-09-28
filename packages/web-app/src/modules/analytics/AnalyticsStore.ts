@@ -20,6 +20,7 @@ export class AnalyticsStore {
         this.store.saladBowl.status,
         this.store.saladBowl.plugin.name || '-',
         this.store.saladBowl.plugin.version || '-',
+        this.store.saladBowl.plugin.algorithm || '-',
       )
     })
   }
@@ -105,11 +106,13 @@ export class AnalyticsStore {
   }
 
   /** Track when mining starts */
-  public trackStart = (reason: string) => {
+  public trackStart = (reason: string, gpuEnabled: boolean, cpuEnabled: boolean) => {
     if (!this.started) return
 
     this.track('Start', {
       Reason: reason,
+      GpuEnabled: gpuEnabled,
+      CpuEnabled: cpuEnabled,
     })
   }
 
@@ -141,7 +144,7 @@ export class AnalyticsStore {
     })
   }
 
-  public trackMiningStatus = (status: MiningStatus, pluginName: string, pluginVersion: string) => {
+  public trackMiningStatus = (status: MiningStatus, pluginName: string, pluginVersion: string, algorithm: string) => {
     if (!this.started) return
 
     const now = Date.now()
@@ -158,6 +161,7 @@ export class AnalyticsStore {
       PluginName: pluginName,
       PluginVersion: pluginVersion,
       PrevTime: previousTotalTime,
+      Algorithm: algorithm,
     })
 
     if (status === MiningStatus.Stopped) {
