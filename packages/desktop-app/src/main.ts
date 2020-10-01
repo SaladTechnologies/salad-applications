@@ -6,6 +6,7 @@ import {
   ipcMain,
   Menu,
   nativeImage,
+  nativeTheme,
   Notification,
   powerMonitor,
   shell,
@@ -73,6 +74,7 @@ let pluginManager: PluginManager | undefined
 let activeIconEnabled = false
 let tray: Tray
 let updateChecked = false
+let darkTheme = false
 
 const getMachineInfo = (): Promise<MachineInfo> => {
   return Promise.allSettled([
@@ -213,7 +215,7 @@ const createMainWindow = () => {
   })
 
   mainWindow.once('ready-to-show', () => {
-    tray = new Tray(nativeImage.createFromPath(icons.TRAY_ICON_PATH))
+    tray = new Tray(nativeImage.createFromPath(darkTheme ? icons.DARK_TRAY_ICON_PATH : icons.TRAY_ICON_PATH))
     tray.setContextMenu(createSystemTrayMenu(true))
     tray.setToolTip('Salad')
     tray.on('double-click', () => {
@@ -261,7 +263,9 @@ const createMainWindow = () => {
         }
 
         if (tray) {
-          tray.setImage(nativeImage.createFromPath(icons.TRAY_ACTIVE_ICON_PATH))
+          tray.setImage(
+            nativeImage.createFromPath(darkTheme ? icons.DARK_TRAY_ACTIVE_ICON_PATH : icons.TRAY_ACTIVE_ICON_PATH),
+          )
         }
       }
     } else {
@@ -278,7 +282,7 @@ const createMainWindow = () => {
         }
 
         if (tray) {
-          tray.setImage(nativeImage.createFromPath(icons.TRAY_ICON_PATH))
+          tray.setImage(nativeImage.createFromPath(darkTheme ? icons.DARK_TRAY_ICON_PATH : icons.TRAY_ICON_PATH))
         }
       }
     }
@@ -535,3 +539,16 @@ function createSystemTrayMenu(isVisible: boolean): Menu {
     },
   ])
 }
+
+nativeTheme.on('updated', () => {
+  darkTheme = nativeTheme.shouldUseDarkColors
+  if (tray) {
+    if (activeIconEnabled) {
+      tray.setImage(
+        nativeImage.createFromPath(darkTheme ? icons.DARK_TRAY_ACTIVE_ICON_PATH : icons.TRAY_ACTIVE_ICON_PATH),
+      )
+    } else {
+      tray.setImage(nativeImage.createFromPath(darkTheme ? icons.DARK_TRAY_ICON_PATH : icons.TRAY_ICON_PATH))
+    }
+  }
+})
