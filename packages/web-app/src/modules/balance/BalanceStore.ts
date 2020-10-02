@@ -1,7 +1,6 @@
 import { AxiosInstance } from 'axios'
-import { action, autorun, computed, flow, observable } from 'mobx'
+import { action, computed, flow, observable } from 'mobx'
 import moment from 'moment'
-import { RootStore } from '../../Store'
 import { EarningWindow } from './models'
 
 export class BalanceStore {
@@ -52,11 +51,7 @@ export class BalanceStore {
     return windows.sort((a, b) => a.timestamp.diff(b.timestamp))
   }
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
-    autorun(() => {
-      this.store?.analytics?.trackLifetimeBalance?.(this.lifetimeBalance)
-    })
-  }
+  constructor(private readonly axios: AxiosInstance) {}
 
   @action.bound
   refreshBalanceAndHistory = flow(function* (this: BalanceStore) {

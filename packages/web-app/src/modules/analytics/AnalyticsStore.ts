@@ -205,15 +205,6 @@ export class AnalyticsStore {
   }
 
   /** Track when a reward category is viewed */
-  public trackRewardCategoryViewed = (category: string) => {
-    if (!this.started) return
-
-    this.track('Reward Category Viewed', {
-      Category: category,
-    })
-  }
-
-  /** Track when a reward category is viewed */
   public trackRewardSearch = (searchTerm: string) => {
     if (!this.started) return
 
@@ -246,24 +237,6 @@ export class AnalyticsStore {
     if (!this.started) return
 
     this.track('Referral Entered', { Code: code.toUpperCase() })
-  }
-
-  public trackLifetimeXp = (lifetimeXp: number) => {
-    if (!this.started) return
-
-    mixpanel.people.set({
-      LifetimeXp: lifetimeXp,
-    })
-  }
-
-  public trackLifetimeBalance = (lifetimeBalance: number) => {
-    if (!this.started) return
-
-    if (lifetimeBalance === 0) return
-
-    mixpanel.people.set({
-      LifetimeBalance: lifetimeBalance,
-    })
   }
 
   private track = (event: string, properties?: { [key: string]: any }) => {
