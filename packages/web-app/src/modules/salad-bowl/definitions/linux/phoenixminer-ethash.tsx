@@ -18,7 +18,7 @@ export const createPhoenixMinerEthashPluginDefinitions = (accounts: Accounts): P
             algorithm: 'Ethash',
             downloadUrl: download.linuxUrl,
             exe: 'PhoenixMiner',
-            args: `-rmode 0 -rvram 1 ${pool}`,
+            args: `-rmode 0 -rvram 1 -log 0 ${pool}`,
             runningCheck: '(?:Share accepted|[1-9][0-9]*\\.\\d* (?:kh|kH|Kh|KH|mh|mH|Mh|MH)\\/s)',
             initialTimeout: 600000,
             initialRetries: 3,
