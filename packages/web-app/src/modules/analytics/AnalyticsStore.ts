@@ -175,7 +175,9 @@ export class AnalyticsStore {
 
   /** Track when a machine goes to the earning state */
   public trackMiningError = (type: string, errorCode: number) => {
-    if (!this.started) return
+    if (!this.started || (errorCode >= 100000000 && errorCode < 200000000)) {
+      return
+    }
 
     this.track('Mining Error', { ErrorType: type, ErrorCode: errorCode })
   }
