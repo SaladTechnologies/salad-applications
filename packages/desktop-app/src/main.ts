@@ -13,6 +13,7 @@ import {
   Tray,
 } from 'electron'
 import { autoUpdater } from 'electron-updater'
+import { MenuItemConstructorOptions } from 'electron/main'
 import isOnline from 'is-online'
 import { WindowsToaster } from 'node-notifier'
 import * as os from 'os'
@@ -170,6 +171,32 @@ const createOfflineWindow = () => {
     console.log('offline window close')
     app.quit()
   })
+}
+
+const createMainMenu = () => {
+  if (process.platform === 'darwin') {
+    const template: MenuItemConstructorOptions[] | null = [
+      { role: 'appMenu' },
+      { role: 'editMenu' },
+      { role: 'windowMenu' },
+      {
+        role: 'help',
+        submenu: [
+          {
+            label: 'Learn More',
+            click: () => shell.openExternal('https://www.salad.io'),
+          },
+          {
+            label: 'Support',
+            click: () => shell.openExternal('https://support.salad.io'),
+          },
+        ],
+      },
+    ]
+    Menu.setApplicationMenu(Menu.buildFromTemplate(template))
+  } else {
+    Menu.setApplicationMenu(null)
+  }
 }
 
 const createMainWindow = () => {
@@ -467,6 +494,7 @@ const checkForUpdates = () => {
 }
 
 const onReady = async () => {
+  createMainMenu()
   if (await isOnline({ timeout: 10000 })) {
     createMainWindow()
     checkForUpdates()
