@@ -40,7 +40,7 @@ const styles = (theme: SaladTheme) => ({
 
 export const rewardItemResponsive = {
   desktop: {
-    breakpoint: { max: 2300, min: 1300 },
+    breakpoint: { max: Number.MAX_SAFE_INTEGER, min: 1300 },
     items: 7,
     slidesToSlide: 7,
     partialVisibilityGutter: 20,

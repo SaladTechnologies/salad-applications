@@ -1,9 +1,9 @@
+import classnames from 'classnames'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
-import classnames from 'classnames'
 import Carousel from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
+import { SaladTheme } from '../../../SaladTheme'
 import { RewardHeroButtonGroup } from './RewardHeroButtonGroup'
 
 const styles = (theme: SaladTheme) => ({
@@ -18,7 +18,7 @@ const styles = (theme: SaladTheme) => ({
 
 const responsive = {
   all: {
-    breakpoint: { max: 400000, min: 1 },
+    breakpoint: { max: Number.MAX_SAFE_INTEGER, min: 1 },
     items: 1,
   },
 }
