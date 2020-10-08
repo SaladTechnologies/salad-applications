@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Divider, Head, Scrollbar, SectionHeader } from '../../../components'
 import { withLogin } from '../../auth-views'
-import { CpuSummaryContainer, GpuSummaryContainer, MinerListContainer } from '../../machine-views'
+import { MachineInfoContainer, MinerListContainer, MinerTypeContainer } from '../../machine-views'
 import { DesktopDownloadContainer } from '../DesktopDownloadContainer'
 import { EarningHistoryContainer } from '../EarningHistoryContainer'
 
@@ -39,12 +39,12 @@ class _MiningPage extends Component<Props> {
             {/* TODO:DRS Add an error message panel. This could be for incompatible machine, AV issues... */}
             {isNative && (
               <>
-                <SectionHeader>Machine Information</SectionHeader>
-                <GpuSummaryContainer />
+                <SectionHeader>Miner Type</SectionHeader>
+                <MinerTypeContainer />
                 <Divider />
-
-                <CpuSummaryContainer />
-
+                <SectionHeader>Machine Information</SectionHeader>
+                <MachineInfoContainer />
+                <Divider />
                 <SectionHeader>Current Miner</SectionHeader>
                 <MinerListContainer />
                 <Divider />
