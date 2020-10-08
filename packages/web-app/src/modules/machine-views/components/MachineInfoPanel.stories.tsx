@@ -1,10 +1,10 @@
 import React from 'react'
 import { GpuInformation } from '../../machine/models'
-import { GpuSummary } from './GpuSummary'
+import { MachineInfoPanel } from './MachineInfoPanel'
 
 export default {
-  title: 'Modules/Machine/GPU Summary',
-  component: GpuSummary,
+  title: 'Modules/Machine/Machine Info Panel',
+  component: MachineInfoPanel,
 }
 
 const compatibleGpu: GpuInformation = { model: 'NVIDIA GeForce GTX 970', vram: 3585, compatible: true }
@@ -16,7 +16,7 @@ const compatibleGpuWithDriver: GpuInformation = {
 }
 const incompatibleGpu: GpuInformation = { model: 'Inter(R) UHD Graphics 630', vram: 1024, compatible: false }
 
-export const Empty = () => <GpuSummary />
-export const All = () => <GpuSummary gpus={[compatibleGpu, compatibleGpuWithDriver, incompatibleGpu]} />
-export const OnlyIncompatible = () => <GpuSummary gpus={[incompatibleGpu]} />
-export const NoDriver = () => <GpuSummary gpus={[compatibleGpu]} />
+export const Empty = () => <MachineInfoPanel />
+export const All = () => <MachineInfoPanel gpus={[compatibleGpu, compatibleGpuWithDriver, incompatibleGpu]} />
+export const OnlyIncompatible = () => <MachineInfoPanel gpus={[incompatibleGpu]} />
+export const NoDriver = () => <MachineInfoPanel gpus={[compatibleGpu]} />

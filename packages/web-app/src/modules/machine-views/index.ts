@@ -1,5 +1,5 @@
-export * from './CpuSummaryContainer'
-export * from './GpuSummaryContainer'
+export * from './MachineInfoContainer'
 export * from './MinerListContainer'
+export * from './MinerTypeContainer'
 export * from './StartButtonContainer'
 export * from './TitleStartButtonContainer'

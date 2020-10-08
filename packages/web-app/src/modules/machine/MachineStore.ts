@@ -107,4 +107,27 @@ export class MachineStore {
 
     return gpus || []
   }
+
+  @computed
+  get cpuCompatible(): boolean {
+    const machine = this.currentMachine
+    const machineInfo = this.store.native.machineInfo
+    if (
+      machine === undefined ||
+      machineInfo?.cpu?.brand === undefined ||
+      machineInfo?.memLayout === undefined ||
+      machineInfo?.memLayout?.length === 0
+    ) {
+      return false
+    }
+
+    const pluginDefinitions = getPluginDefinitions(machine, machineInfo)
+
+    //Get all the CPU only plugin definitions
+    const cpuPlugins = pluginDefinitions.filter((pluginDefinition) =>
+      pluginDefinition.requirements.every((requirement) => requirement(machineInfo, { cpu: true, gpu: false })),
+    )
+
+    return cpuPlugins.length > 0
+  }
 }

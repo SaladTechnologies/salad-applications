@@ -114,9 +114,7 @@ export class SaladBowlStore implements IPersistentStore {
     this.store.native.on('mining-error', this.onReceiveError)
 
     //Loads the initial CPU mining flag
-    runInAction(() => {
-      this.cpuMiningEnabled = Storage.getItem(CPU_MINING_ENABLED) === 'true'
-    })
+    this.setGpuOnly(!(Storage.getItem(CPU_MINING_ENABLED) === 'true'))
   }
 
   getSavedData(): object {
@@ -406,10 +404,11 @@ export class SaladBowlStore implements IPersistentStore {
   })
 
   @action
-  setCpuMiningEnabled = (value: boolean) => {
-    this.cpuMiningEnabled = value
+  setGpuOnly = (value: boolean) => {
+    this.cpuMiningEnabled = !value
+    this.gpuMiningEnabled = value
 
     //Saves the new value locally so it will automatically be loaded next time
-    Storage.setItem(CPU_MINING_ENABLED, value)
+    Storage.setItem(CPU_MINING_ENABLED, !value)
   }
 }
