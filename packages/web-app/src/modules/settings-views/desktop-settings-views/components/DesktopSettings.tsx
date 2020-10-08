@@ -33,7 +33,7 @@ interface Props extends WithStyles<typeof styles> {
   notifyOnMinimizeToTrayToggle?: () => void
 }
 
-class _WindowsSettings extends Component<Props> {
+class _DesktopSettings extends Component<Props> {
   render() {
     const {
       autoLaunch,
@@ -54,14 +54,12 @@ class _WindowsSettings extends Component<Props> {
     return (
       <div className={classes.container}>
         <div className="header">
-          <CondensedHeader>Windows Settings</CondensedHeader>
+          <CondensedHeader>Desktop App Settings</CondensedHeader>
         </div>
         <Divider />
         <ToggleSetting
-          title={'Auto Launch'}
-          description={
-            "Salad will automatically launch as soon as you log into Windows, getting the Kitchen warmed up for when you're ready to start chopping."
-          }
+          title="Auto Launch"
+          description="Salad will automatically launch when you log in to your computer."
           toggled={autoLaunch}
           onToggle={autoLaunchToggle}
         />
@@ -69,10 +67,8 @@ class _WindowsSettings extends Component<Props> {
           <>
             <Divider />
             <ToggleSetting
-              title={'Auto Start'}
-              description={
-                'Salad will automatically start chopping after being AFK a determined amount of time *and* will automatically stop chopping when you return.'
-              }
+              title="Auto Start"
+              description="Salad will automatically start chopping after being AFK for a period of time. Salad will also automatically stop chopping when you return."
               toggled={autoStart}
               onToggle={autoStartToggle}
             >
@@ -95,10 +91,8 @@ class _WindowsSettings extends Component<Props> {
           <>
             <Divider />
             <ToggleSetting
-              title={'Close to Tray'}
-              description={
-                'Salad will hide in the tray and continue to run in the background when you select the Close (X) button. Use the tray icon to quit Salad.'
-              }
+              title="Close to Tray"
+              description="Salad will hide in the tray and continue to run in the background when you select the Close (X) button. Use the tray icon to quit Salad."
               toggled={minimizeToTray}
               onToggle={minimizeToTrayToggle}
             />
@@ -106,10 +100,8 @@ class _WindowsSettings extends Component<Props> {
               <>
                 <Divider />
                 <ToggleSetting
-                  title={'Notify on Close to Tray'}
-                  description={
-                    'Salad will use a Windows desktop notification to remind you when it hides in the tray and continues to run in the background.'
-                  }
+                  title="Notify on Close to Tray"
+                  description="Salad will use a desktop notification to remind you when it hides in the tray and continues to run in the background."
                   toggled={notifyOnMinimizeToTray}
                   onToggle={notifyOnMinimizeToTrayToggle}
                 />
@@ -122,4 +114,4 @@ class _WindowsSettings extends Component<Props> {
   }
 }
 
-export const WindowsSettings = withLogin(withStyles(styles)(_WindowsSettings))
+export const DesktopSettings = withLogin(withStyles(styles)(_DesktopSettings))

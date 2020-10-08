@@ -1,6 +1,6 @@
 import { connect } from '../../../connect'
 import { RootStore } from '../../../Store'
-import { WindowsSettings } from './components'
+import { DesktopSettings } from './components'
 
 const mapStoreToProps = (store: RootStore): any => ({
   autoLaunch: store.native.autoLaunch,
@@ -17,4 +17,4 @@ const mapStoreToProps = (store: RootStore): any => ({
   notifyOnMinimizeToTrayToggle: store.native.toggleNotifyOnMinimizeToTray,
 })
 
-export const WindowsSettingsContainer = connect(mapStoreToProps, WindowsSettings)
+export const DesktopSettingsContainer = connect(mapStoreToProps, DesktopSettings)
