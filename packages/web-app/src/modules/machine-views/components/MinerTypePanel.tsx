@@ -46,7 +46,7 @@ class _MinerTypePanel extends Component<Props> {
         <div className={classes.column}>
           <P>Mining Disclaimers:</P>
           <ul>
-            <Li>Background processes with significantly affect earning rates. Use while AFK.</Li>
+            <Li>Background processes will significantly affect earning rates. Use while AFK.</Li>
             <Li>Earning rates may vary widely from machine to machine</Li>
             <Li>Proper cooling and maintenance is vital for performance and safety</Li>
             {!gpuOnly && (

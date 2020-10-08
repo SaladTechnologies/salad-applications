@@ -2,14 +2,14 @@ import { MenuItem, SettingsPage } from '../../components'
 import { config } from '../../config'
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
-import { WindowsSettingsContainer } from './windows-settings-views'
+import { DesktopSettingsContainer } from './desktop-settings-views'
 
 const mapStoreToProps = (store: RootStore): any => {
   const menuItems: MenuItem[] = [
     {
-      url: '/settings/windows-settings',
-      text: 'Windows Settings',
-      component: WindowsSettingsContainer,
+      url: '/settings/desktop-settings',
+      text: 'Desktop App Settings',
+      component: DesktopSettingsContainer,
       desktopOnly: true,
     },
   ]

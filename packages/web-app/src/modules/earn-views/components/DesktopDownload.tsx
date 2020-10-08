@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
 import { Divider, P, SectionHeader } from '../../../components'
+import { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -71,7 +71,7 @@ class _DesktopDownload extends Component<Props> {
           <div className={classes.row}>
             <div className={classes.column}>
               <SectionHeader>Download Required</SectionHeader>
-              <P>Mining only works on Windows machines, requiring the Salad App and a qualifying GPU</P>
+              <P>Mining requires the Salad desktop app and qualifying hardware</P>
             </div>
             <div className={classes.column}>
               <div className={classes.downloadButton} onClick={this.handleDownload}>

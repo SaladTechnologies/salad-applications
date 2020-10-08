@@ -62,7 +62,7 @@ export class MachineStore {
       } catch (err) {
         this.store.analytics.captureException(new Error(`register-machine error: ${err}`), {
           contexts: {
-            machineInfo: machineWithoutServices,
+            machineInfo: machineWithoutServices as Record<string, unknown>,
           },
         })
         throw err

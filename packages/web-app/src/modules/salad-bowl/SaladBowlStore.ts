@@ -299,7 +299,7 @@ export class SaladBowlStore implements IPersistentStore {
         title: 'Salad is best run AFK',
         message: `Don't forget to enable auto start in Settings`,
         id: 123456,
-        onClick: () => this.store.routing.push('/settings/windows-settings'),
+        onClick: () => this.store.routing.push('/settings/desktop-settings'),
       })
     }
 

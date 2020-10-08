@@ -42,7 +42,7 @@ export const stringifyRewardQuery = (query: RewardQuery): string => {
     query.category = query.category.map((x) => encodeCategory(x)).sort()
   }
 
-  return queryString.stringify(query)
+  return queryString.stringify(query as Record<string, boolean | number | string | string[]>)
 }
 
 export const parseRewardQuery = (route: RouteComponentProps<{ category?: string }>): RewardQuery => {
