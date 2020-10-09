@@ -75,7 +75,7 @@ let pluginManager: PluginManager | undefined
 let activeIconEnabled = false
 let tray: Tray
 let updateChecked = false
-let darkTheme = false
+let darkTheme = nativeTheme.shouldUseDarkColors
 
 const getMachineInfo = (): Promise<MachineInfo> => {
   return Promise.allSettled([
