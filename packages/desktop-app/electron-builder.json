@@ -31,6 +31,9 @@
     "target": ["rpm", "deb", "snap"],
     "category": "Utility"
   },
+  "deb": {
+    "depends": ["gconf2", "gconf-service", "libnotify4", "libappindicator1", "libxtst6", "libnss3", "clinfo"]
+  },
   "rpm": {
     "depends": [
       "at-spi2-core",
@@ -41,7 +44,8 @@
       "libXScrnSaver",
       "libuuid-devel",
       "mozilla-nss",
-      "xdg-utils"
+      "xdg-utils",
+      "clinfo"
     ]
   },
   "afterSign": "build/notarize.js"
