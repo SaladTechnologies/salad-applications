@@ -13,13 +13,18 @@
     "entitlementsInherit": "build/entitlements.mac.plist",
     "gatekeeperAssess": false,
     "hardenedRuntime": true,
+    "publish": {
+      "provider": "s3",
+      "bucket": "salad-app-releases"
+    },
     "target": ["dmg"]
   },
   "win": {
     "publish": {
       "provider": "s3",
       "bucket": "salad-app-releases"
-    }
+    },
+    "target": ["nsis"]
   },
   "nsis": {
     "allowToChangeInstallationDirectory": true,
