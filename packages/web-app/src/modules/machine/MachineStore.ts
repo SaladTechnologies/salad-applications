@@ -1,9 +1,13 @@
 import { AxiosInstance } from 'axios'
 import { autorun, computed, flow, observable } from 'mobx'
+import { v4 as uuidv4 } from 'uuid'
+import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
 import { getPluginDefinitions } from '../salad-bowl/definitions'
 import { GpuInformation, MachineInfo } from './models'
 import { Machine } from './models/Machine'
+
+const SYSTEM_ID = 'SYSTEM_UUID'
 
 export class MachineStore {
   @observable
@@ -41,6 +45,10 @@ export class MachineStore {
       }
 
       const { services: _, ...machineWithoutServices } = machineInfo
+      if (machineWithoutServices.system != null) {
+        machineWithoutServices.system.uuid = Storage.getOrSetDefault(SYSTEM_ID, uuidv4())
+      }
+
       try {
         console.log('Registering machine with salad')
         let res: any = yield this.axios.post(`/api/v2/machines`, {
