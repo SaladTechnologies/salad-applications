@@ -68,7 +68,7 @@ const showNotification = 'show-notification'
 const start = 'start-salad'
 const stop = 'stop-salad'
 
-let machineInfo: MachineInfo
+let machineInfo: Promise<MachineInfo> | undefined
 let mainWindow: BrowserWindow
 let offlineWindow: BrowserWindow
 let pluginManager: PluginManager | undefined
@@ -321,23 +321,14 @@ const createMainWindow = () => {
 
   ipcMain.on('js-dispatch', bridge.receiveMessage)
 
-  var getMachineInfoPromise: Promise<void> | undefined = undefined
-
   //Listen for machine info requests
   bridge.on('get-machine-info', () => {
-    //Return the cached machine info
-    if (machineInfo) {
-      bridge.send('set-machine-info', machineInfo)
+    if (machineInfo === undefined) {
+      machineInfo = getMachineInfo()
     }
 
-    //Prevent multiple `getMachineInfo` from being called at the same time
-    if (getMachineInfoPromise !== undefined) return
-
-    //Fetch the machine info
-    getMachineInfoPromise = getMachineInfo().then((info) => {
-      machineInfo = info
-      bridge.send('set-machine-info', machineInfo)
-      getMachineInfoPromise = undefined
+    machineInfo.then((info) => {
+      bridge.send('set-machine-info', info)
     })
   })
 
