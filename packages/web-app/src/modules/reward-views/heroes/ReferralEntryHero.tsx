@@ -1,10 +1,10 @@
-import classnames from 'classnames'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { HeroTitle, P, SectionHeader, SmartLink } from '../../../components'
 import { HeroPanel } from '../../../components/HeroPanel'
-import { SaladTheme } from '../../../SaladTheme'
+import { HeroTitle, SmartLink, SectionHeader, P } from '../../../components'
+import classnames from 'classnames'
 import { ReferralCodeEntryContainer } from '../../account-views'
+import { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   column: {

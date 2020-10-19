@@ -21,7 +21,7 @@ class _ReferralDescription extends Component<Props> {
         <P>
           <b>What Does The Person Using My Code Get?</b>
         </P>
-        <P>Using your referral code will grant your referee a 2x earning rate bonus until they've reached $4 earned.</P>
+        <P>Using your promo code will grant your referee a 2x earning rate bonus until they've reached $4 earned.</P>
       </div>
     )
   }
