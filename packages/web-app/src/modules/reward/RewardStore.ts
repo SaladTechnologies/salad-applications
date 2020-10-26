@@ -153,6 +153,12 @@ export class RewardStore {
       categories.set(category, new Set(sortedIds))
     }
 
+    //Remove blacklisted categories
+    const blacklist = ['', 'creators']
+    for (let category of blacklist) {
+      categories.delete(category)
+    }
+
     return categories
   }
 
