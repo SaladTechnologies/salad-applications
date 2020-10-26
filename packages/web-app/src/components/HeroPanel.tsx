@@ -1,3 +1,4 @@
+import classnames from 'classnames'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
@@ -39,13 +40,14 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   color: 'red' | 'purple' | 'green' | 'cyan'
+  className?: string
 }
 
 class _HeroPanel extends Component<Props> {
   render() {
-    const { classes, children } = this.props
+    const { className, classes, children } = this.props
 
-    return <div className={classes.container}>{children}</div>
+    return <div className={classnames(classes.container, className)}>{children}</div>
   }
 }
 
