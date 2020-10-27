@@ -23,6 +23,23 @@ export class AnalyticsStore {
         this.store.saladBowl.plugin.algorithm || '-',
       )
     })
+  }
+
+  public start = (profile: Profile) => {
+    if (this.started) {
+      console.warn('Already started analytics. Skipping...')
+      return
+    }
+
+    this.started = true
+
+    Sentry.configureScope((scope) => {
+      scope.setUser({
+        id: profile.id,
+        email: profile.email,
+        username: profile.username,
+      })
+    })
 
     const token = config.mixpanelToken
 
@@ -42,44 +59,6 @@ export class AnalyticsStore {
         $app_version_string: this.store.native.desktopVersion,
       })
     }
-
-    this.started = true
-  }
-
-  public start = (profile: Profile) => {
-    if (this.started) {
-      console.warn('Already started analytics. Skipping...')
-      return
-    }
-
-    // this.started = true
-
-    Sentry.configureScope((scope) => {
-      scope.setUser({
-        id: profile.id,
-        email: profile.email,
-        username: profile.username,
-      })
-    })
-
-    // const token = config.mixpanelToken
-
-    // if (!token) {
-    //   return
-    // }
-
-    // mixpanel.init(token, {})
-
-    // mixpanel.register({
-    //   $app_build_number: config.appBuild,
-    //   Platform: this.store.native.platform,
-    // })
-
-    // if (this.store.native.desktopVersion) {
-    //   mixpanel.register({
-    //     $app_version_string: this.store.native.desktopVersion,
-    //   })
-    // }
 
     mixpanel.people.set({
       Id: profile.id,

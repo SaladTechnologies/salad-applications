@@ -89,6 +89,7 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   reward?: Reward
   currentBalance?: number
+  authenticated?: boolean
   onBack?: () => void
   onRedeem?: (reward?: Reward) => void
   isInCart?: boolean
@@ -114,7 +115,7 @@ class _RewardHeaderBar extends Component<Props> {
   }
 
   render() {
-    const { reward, currentBalance, classes, ...rest } = this.props
+    const { reward, authenticated, currentBalance, classes, ...rest } = this.props
 
     const balance = currentBalance || 0
 
@@ -157,16 +158,16 @@ class _RewardHeaderBar extends Component<Props> {
                   {`${reward?.quantity} Remaining`}
                 </div>
               )}
-              {!hasBalance && (
+              {!hasBalance && authenticated && (
                 <div className={classnames(classes.priceText, classes.stockLabel, classes.insufficientBalanceLabel)}>
-                  <SmartLink to="/earn/summary">More Balance Needed</SmartLink>
+                  <SmartLink to="/earn/summary">Earn More Balance</SmartLink>
                 </div>
               )}
             </div>
             <Button
               className={classes.buyButton}
               onClick={this.handleRedeem}
-              disabled={outOfStock || promoGame || !hasBalance}
+              disabled={outOfStock || promoGame || (authenticated && !hasBalance)}
             >
               <div className={classes.buyText}>{donation ? 'DONATE' : 'BUY'} NOW</div>
             </Button>

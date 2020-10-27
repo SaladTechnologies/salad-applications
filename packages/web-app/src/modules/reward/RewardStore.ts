@@ -259,6 +259,11 @@ export class RewardStore {
 
       this.store.analytics.trackSaladPayOpened(reward)
 
+      //Automatically add the reward to the chopping cart if they don't have one selected
+      if (!this.choppingCart || this.choppingCart.length === 0) {
+        this.addToChoppingCart(reward)
+      }
+
       //Shows the SaladPay UI
       response = yield request.show()
 

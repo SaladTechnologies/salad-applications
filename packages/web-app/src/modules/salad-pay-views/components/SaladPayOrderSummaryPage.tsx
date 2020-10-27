@@ -1,11 +1,12 @@
+import classNames from 'classnames'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
+import { SaladPayPage } from '.'
+import { SmartLink } from '../../../components'
+import { currencyFormatter } from '../../../formatters'
 import { SaladTheme } from '../../../SaladTheme'
 import { SaladPaymentRequestOptions } from '../../salad-pay/models'
-import classNames from 'classnames'
-import { SaladPayPage } from '.'
 import { SaladPayCheckoutButton } from './SaladPayCheckoutButton'
-import { currencyFormatter } from '../../../formatters'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -53,6 +54,13 @@ const styles = (theme: SaladTheme) => ({
   },
   missingBalance: {
     color: theme.red,
+  },
+  earnBalanceLink: {
+    fontFamily: theme.fontGroteskBook25,
+    letterSpacing: 1,
+    fontSize: 8,
+    color: theme.red,
+    paddingTop: 4,
   },
   disclaimer: {
     fontFamily: theme.fontGroteskBook25,
@@ -131,6 +139,11 @@ class _SaladPayOrderSummaryPage extends Component<Props> {
               >
                 {moneyFormat(availableBalance)}
               </div>
+              {!hasBalance && (
+                <div className={classes.earnBalanceLink}>
+                  <SmartLink to="/earn/summary">Earn More Balance</SmartLink>
+                </div>
+              )}
             </div>
             <div>
               <SaladPayCheckoutButton onClick={this.handleConfirm} loading={processing} enabled={hasBalance} />
