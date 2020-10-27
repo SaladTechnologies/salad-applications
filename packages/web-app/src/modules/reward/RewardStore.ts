@@ -80,6 +80,17 @@ export class RewardStore {
     }.bind(this),
   )
 
+  loadAndTrackReward = flow(
+    function* (this: RewardStore, rewardId?: string) {
+      try {
+        yield this.loadReward(rewardId)
+        const reward = this.getReward(rewardId)
+
+        if (reward) this.store.analytics.trackRewardView(reward)
+      } catch {}
+    }.bind(this),
+  )
+
   getReward = (id?: string): Reward | undefined => {
     if (id === undefined) return undefined
     return this.rewards.get(id)
@@ -245,6 +256,8 @@ export class RewardStore {
           },
         ],
       })
+
+      this.store.analytics.trackSaladPayOpened(reward)
 
       //Shows the SaladPay UI
       response = yield request.show()

@@ -39,6 +39,7 @@ interface Props extends WithStyles<typeof styles> {
   onBack?: () => void
   isInCart?: boolean
   onAddToCart?: (reward: Reward) => void
+  rewardViewed?: (reward: Reward) => void
   onRemoveFromCart?: (reward: Reward) => void
 }
 
@@ -47,6 +48,7 @@ class _RewardDetailsPage extends Component<Props> {
     const { rewardId, loadReward } = this.props
     loadReward?.(rewardId)
   }
+
   render() {
     const { reward, onRedeem, onBack, classes, ...rest } = this.props
     return (
