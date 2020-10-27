@@ -44,7 +44,7 @@
     "is-online": "8.5.0",
     "node-notifier": "8.0.0",
     "source-map-support": "0.5.19",
-    "systeminformation": "4.27.8",
+    "systeminformation": "4.27.11",
     "tar": "6.0.5"
   },
   "devDependencies": {
