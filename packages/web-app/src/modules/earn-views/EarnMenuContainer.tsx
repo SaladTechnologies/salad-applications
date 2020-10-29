@@ -1,7 +1,6 @@
 import { SettingsPage } from '../../components'
 import { connect } from '../../connect'
 import { ReferralSettingsContainer } from '../account-views/referral-views'
-import { AdGateContainer } from './AdGateContainer'
 import { AdGemContainer } from './AdGemContainer'
 import { EarningSummaryContainer } from './EarningSummaryContainer'
 import { MiningContainer } from './MiningContainer'
@@ -17,12 +16,6 @@ const mapStoreToProps = (): any => {
       { text: 'Mining', url: '/earn/mine', component: MiningInformationContainer, divider: true },
       { text: 'Miner Details', url: '/earn/mine/miner-details', component: MiningContainer, inset: true },
       { text: 'Offerwalls', url: '/earn/offerwall', component: OfferwallContainer, divider: true },
-      {
-        text: 'AdGate',
-        url: '/earn/offerwall/adgate',
-        component: AdGateContainer,
-        inset: true,
-      },
       { text: 'AdGem', url: '/earn/offerwall/adgem', component: AdGemContainer, inset: true },
       {
         text: 'OfferToro',
