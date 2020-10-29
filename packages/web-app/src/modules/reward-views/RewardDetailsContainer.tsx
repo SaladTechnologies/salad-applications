@@ -4,8 +4,11 @@ import { RootStore } from '../../Store'
 import { RewardDetailsPage } from './pages'
 
 const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ id: string }>): any => ({
-  loadReward: store.rewards.loadReward,
+  loadReward: store.rewards.loadAndTrackReward,
+  rewardViewed: store.analytics.trackRewardView,
+  authenticated: store.auth.isAuthenticated,
   rewardId: props.match.params.id,
+  currentBalance: store.balance.currentBalance,
   reward: store.rewards.getReward(props.match.params.id),
   onBack: store.routing.goBack,
   onRedeem: store.rewards.redeemReward,

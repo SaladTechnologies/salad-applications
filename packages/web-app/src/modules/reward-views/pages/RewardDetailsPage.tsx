@@ -7,6 +7,7 @@ import {
   RewardDescriptionPanel,
   RewardDisclaimers,
   RewardHeaderBar,
+  RewardHowToPanel,
   RewardImageCarousel,
   RewardInfoPanel,
   RewardRequirementsPanel,
@@ -32,10 +33,13 @@ interface Props extends WithStyles<typeof styles> {
   loadReward?: (id?: string) => void
   rewardId?: string
   reward?: Reward
+  currentBalance?: number
+  authenticated?: boolean
   onRedeem?: (reward?: Reward) => void
   onBack?: () => void
   isInCart?: boolean
   onAddToCart?: (reward: Reward) => void
+  rewardViewed?: (reward: Reward) => void
   onRemoveFromCart?: (reward: Reward) => void
 }
 
@@ -44,6 +48,7 @@ class _RewardDetailsPage extends Component<Props> {
     const { rewardId, loadReward } = this.props
     loadReward?.(rewardId)
   }
+
   render() {
     const { reward, onRedeem, onBack, classes, ...rest } = this.props
     return (
@@ -54,6 +59,7 @@ class _RewardDetailsPage extends Component<Props> {
           <div className={classes.scrollContent}>
             <RewardImageCarousel reward={reward} />
             <RewardInfoPanel reward={reward} />
+            <RewardHowToPanel reward={reward} {...rest} />
             <RewardDescriptionPanel reward={reward} />
             <RewardRequirementsPanel reward={reward} />
             <RewardDisclaimers />

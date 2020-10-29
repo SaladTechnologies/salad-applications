@@ -1,6 +1,6 @@
 import { Location } from 'history'
 import React, { Component } from 'react'
-import { Route, RouteComponentProps, Switch, withRouter } from 'react-router'
+import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router'
 import { LoadingPage } from './components'
 import { AccountSettingsContainer } from './modules/account-views'
 import { EmailVerificationPageContainer, LoginPageContainer, LogoutPageContainer } from './modules/auth-views'
@@ -56,7 +56,7 @@ class _Routes extends Component<RouteComponentProps> {
           <Route path="/settings" component={SettingsContainer} />
           <Route path="/earn" component={EarnMenuContainer} />
           <Route path="/" render={() => <HomePage />} />
-          <Route render={() => <LoadingPage text="Page Not Found" />} />
+          <Redirect to="/" />
         </Switch>
         <Route path="/login" exact component={LoginPageContainer} />
         <Route path="/login/email-verification" exact component={EmailVerificationPageContainer} />

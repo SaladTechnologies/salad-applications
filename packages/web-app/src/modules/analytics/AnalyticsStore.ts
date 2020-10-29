@@ -215,6 +215,16 @@ export class AnalyticsStore {
     })
   }
 
+  /** Track when a SaladPay is opened for a reward */
+  public trackSaladPayOpened = (reward: Reward) => {
+    this.track('SaladPay Opened', {
+      RewardId: reward.id,
+      RewardName: reward.name,
+      RewardPrice: reward.price,
+      RewardCategory: reward.tags,
+    })
+  }
+
   /** Track when a reward is redeemed */
   public trackRewardRedeemed = (reward: Reward) => {
     if (!this.started) return

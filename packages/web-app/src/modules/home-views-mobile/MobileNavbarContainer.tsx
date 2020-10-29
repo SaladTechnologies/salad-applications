@@ -7,8 +7,8 @@ import supportIcon from './assets/support-icon.svg'
 import { MobileNavbar, MobileNavItem } from './components/MobileNavbar'
 
 const menuItems: MobileNavItem[] = [
-  new MobileNavItem('Earnings', earnIcon, '/earn/summary'),
   new MobileNavItem('Offerwalls', offerwallIcon, '/earn/offerwall'),
+  new MobileNavItem('Earnings', earnIcon, '/earn/summary'),
   new MobileNavItem('Account', accountIcon, '/account/summary'),
   new MobileNavItem('Support', supportIcon, undefined, () => {
     //@ts-ignore
