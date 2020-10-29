@@ -29,12 +29,12 @@ ID = "salad-web-app"
 [context.branch-deploy.environment]
   REACT_APP_API_URL='https://app-api-testing.salad.io'
   REACT_APP_AUTH0_CLIENT_ID='MuyOVLwIinvcKb505k3nUScwPB75snYp'
-  REACT_APP_AUTH0_DOMAIN='login-test.salad.io'
+  REACT_APP_AUTH0_DOMAIN='salad-test.auth0.com'
   REACT_APP_MIXPANEL_TOKEN='4b245bace4eed86ffdfa35efc3addf1d'
 
 # Environment variables defined when building a pull request.
 [context.deploy-preview.environment]
   REACT_APP_API_URL='https://app-api-testing.salad.io'
   REACT_APP_AUTH0_CLIENT_ID='MuyOVLwIinvcKb505k3nUScwPB75snYp'
-  REACT_APP_AUTH0_DOMAIN='login-test.salad.io'
+  REACT_APP_AUTH0_DOMAIN='salad-test.auth0.com'
   REACT_APP_MIXPANEL_TOKEN='4b245bace4eed86ffdfa35efc3addf1d'
