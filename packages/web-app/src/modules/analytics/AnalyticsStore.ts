@@ -198,8 +198,6 @@ export class AnalyticsStore {
   public trackRewardView = (reward: Reward) => {
     if (!this.started) return
 
-    debugger
-
     this.track('Reward Viewed', {
       RewardId: reward.id,
       RewardName: reward.name,
