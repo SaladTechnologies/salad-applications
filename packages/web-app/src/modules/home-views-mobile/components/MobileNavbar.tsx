@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Img from 'react-image'
+import { Img } from 'react-image'
 import withStyles, { WithStyles } from 'react-jss'
 import { NavLink } from 'react-router-dom'
 import { SaladTheme } from '../../../SaladTheme'

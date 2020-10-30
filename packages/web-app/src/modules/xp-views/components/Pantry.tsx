@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { Level } from '../../xp/models/Level'
 import classnames from 'classnames'
-import Img from 'react-image'
+import React, { Component } from 'react'
+import { Img } from 'react-image'
+import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
+import { Level } from '../../xp/models/Level'
 
 const styles = (theme: SaladTheme) => ({
   content: {
@@ -58,7 +58,7 @@ class _Pantry extends Component<Props> {
               <div className={classnames(classes.veggie)} key={x.key}>
                 {levelComplete && (
                   <Img
-                    data-rh={`${x.key.replace('-',' ')}\n(${x.maxXp} XP)`}
+                    data-rh={`${x.key.replace('-', ' ')}\n(${x.maxXp} XP)`}
                     className={classes.image}
                     src={getImage(x.key)}
                     draggable={false}

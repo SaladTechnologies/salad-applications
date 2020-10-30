@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
+import { Img } from 'react-image'
 import withStyles, { WithStyles } from 'react-jss'
-import Img from 'react-image'
 import { SaladTheme } from '../../../SaladTheme'
 import logo from './assets/default-image.png'
 

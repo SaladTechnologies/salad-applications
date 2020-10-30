@@ -1,4 +1,5 @@
 import { action } from '@storybook/addon-actions'
+import { Meta } from '@storybook/react'
 import React from 'react'
 import { MiningStatus } from '../../machine/models'
 import { StartButton } from './StartButton'
@@ -6,7 +7,7 @@ import { StartButton } from './StartButton'
 export default {
   title: 'Modules/Machine/Start Button',
   component: StartButton,
-}
+} as Meta
 
 export const Status = () => (
   <div style={{ backgroundColor: '#092234', color: 'white', padding: '1rem', display: 'flex', flexWrap: 'wrap' }}>

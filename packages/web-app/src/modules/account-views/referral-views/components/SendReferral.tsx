@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
+import { Field, Form } from 'react-final-form'
 import withStyles, { WithStyles } from 'react-jss'
-import { Form, Field } from 'react-final-form'
-import { TextField, Button, P } from '../../../../components'
+import { Button, P, TextField } from '../../../../components'
 import { isEmailFormat } from '../../../../utils'
 
 const styles = {
@@ -56,9 +56,9 @@ class _SendReferral extends Component<Props> {
       <Form
         onSubmit={this.onSubmit}
         validate={this.validate}
-        render={({ handleSubmit }) => {
+        render={({ form }) => {
           return (
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={form.submit}>
               <P>
                 Salad will send an email to your friend that includes the referral code and a download link so they can
                 join you in the kitchen.

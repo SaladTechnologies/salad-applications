@@ -1,12 +1,13 @@
-import React from 'react'
 import { number } from '@storybook/addon-knobs'
-import { Pantry } from './Pantry'
+import { Meta } from '@storybook/react'
+import React from 'react'
 import { defaultLevels } from '../../xp/models/defaultLevels'
+import { Pantry } from './Pantry'
 
 export default {
   title: 'Modules/XP/Pantry',
   component: Pantry,
-}
+} as Meta
 
 const levels = defaultLevels()
 

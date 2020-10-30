@@ -1,3 +1,4 @@
+import { Meta } from '@storybook/react'
 import moment from 'moment'
 import React from 'react'
 import { EarningWindow } from '../../balance/models'
@@ -9,7 +10,7 @@ export default {
   decorators: [
     (storyFn: any) => <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}>{storyFn()}</div>,
   ],
-}
+} as Meta
 
 const data: EarningWindow[] = [...Array(96)].map((_, i) => ({
   timestamp: moment().add(i * 15, 'm'),

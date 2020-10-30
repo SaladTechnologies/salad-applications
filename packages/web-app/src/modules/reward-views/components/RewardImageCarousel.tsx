@@ -1,6 +1,6 @@
 import classnames from 'classnames'
 import React, { Component } from 'react'
-import Img from 'react-image'
+import { Img } from 'react-image'
 import withStyles, { WithStyles } from 'react-jss'
 import Carousel from 'react-multi-carousel'
 import { Divider } from '../../../components'
@@ -57,7 +57,7 @@ const renderImageComponent = (props: Props) => {
   }
 
   //Single reward image
-  if (reward.images && reward.images.length === 1) {
+  if (reward.images && reward.images.length === 1 && reward.images[0]) {
     return <Img className={classes.image} src={reward.images[0]} alt="" />
   }
 
@@ -72,9 +72,7 @@ const renderImageComponent = (props: Props) => {
         customDot={<RewardImageDot />}
         renderDotsOutside
       >
-        {reward?.images?.map((x) => (
-          <Img key={x} className={classes.image} src={x} alt="" />
-        ))}
+        {reward?.images?.map((x) => (x ? <Img key={x} className={classes.image} src={x} alt="" /> : null))}
       </Carousel>
     </div>
   )

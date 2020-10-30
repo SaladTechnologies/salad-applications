@@ -1,13 +1,14 @@
-import React from 'react'
-import { Level } from '../../xp/models/Level'
 import { number, select } from '@storybook/addon-knobs'
-import { SlicedVeggie } from './SlicedVeggie'
+import { Meta } from '@storybook/react'
+import React from 'react'
 import { defaultLevels } from '../../xp/models/defaultLevels'
+import { Level } from '../../xp/models/Level'
+import { SlicedVeggie } from './SlicedVeggie'
 
 export default {
   title: 'Modules/XP/Sliced Veggie',
   component: SlicedVeggie,
-}
+} as Meta
 
 const levels = defaultLevels()
 

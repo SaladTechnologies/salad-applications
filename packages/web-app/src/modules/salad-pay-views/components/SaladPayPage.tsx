@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
+import { Img } from 'react-image'
 import withStyles, { WithStyles } from 'react-jss'
-import saladPayLogo from '../assets/saladpay.png'
-import Img from 'react-image'
 import { ModalPage } from '../../../components'
+import saladPayLogo from '../assets/saladpay.png'
 
 const styles = {
   container: {

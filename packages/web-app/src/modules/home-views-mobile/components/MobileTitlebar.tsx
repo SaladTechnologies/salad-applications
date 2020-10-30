@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Img from 'react-image'
+import { Img } from 'react-image'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 import icon from '../assets/favicon-32x32.png'

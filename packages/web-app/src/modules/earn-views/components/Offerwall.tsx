@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Img from 'react-image'
+import { Img } from 'react-image'
 import withStyles, { WithStyles } from 'react-jss'
 import { Divider, Head, P, Scrollbar, SectionHeader, SmartLink } from '../../../components'
 import offerWallExample from '../assets/offerwall-overview.svg'

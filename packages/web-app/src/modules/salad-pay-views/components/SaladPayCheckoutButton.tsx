@@ -1,9 +1,9 @@
+import classNames from 'classnames'
 import React, { Component } from 'react'
+import { Img } from 'react-image'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
-import classNames from 'classnames'
 import animatedLogo from '../assets/animated-logo-lg.gif'
-import Img from 'react-image'
 
 const styles = (theme: SaladTheme) => ({
   button: {

@@ -1,10 +1,12 @@
+import { Meta } from '@storybook/react'
 import React from 'react'
 import { MenuItem, Titlebar } from './Titlebar'
 
 export default {
   title: 'Modules/Home/Title Bar',
   component: Titlebar,
-}
+} as Meta
+
 const menuItems: MenuItem[] = [
   new MenuItem('Store', '/'),
   new MenuItem('Earn', '/earn/summary'),
