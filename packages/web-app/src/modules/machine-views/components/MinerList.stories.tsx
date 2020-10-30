@@ -1,10 +1,11 @@
+import { Meta } from '@storybook/react'
 import React from 'react'
 import { MinerList } from './MinerList'
 
 export default {
   title: 'Modules/Machine/Miner List',
   component: MinerList,
-}
+} as Meta
 
 // const installingPlugin = new PluginHistory('1', 'PhoenixMiner', '5.1c', 'Installing')
 // const initializingPlugin = new PluginHistory('2', 'GMiner', '2.21', 'Prepping')

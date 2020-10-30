@@ -1,4 +1,5 @@
 import { action } from '@storybook/addon-actions'
+import { Meta } from '@storybook/react'
 import React from 'react'
 import { ClearFilterItem } from './ClearFilterItem'
 import { createOption } from './RewardFilterPanel.stories'
@@ -6,7 +7,7 @@ import { createOption } from './RewardFilterPanel.stories'
 export default {
   title: 'Modules/Rewards/Clear Filter Item',
   component: ClearFilterItem,
-}
+} as Meta
 
 export const ClearItems = () => (
   <ClearFilterItem

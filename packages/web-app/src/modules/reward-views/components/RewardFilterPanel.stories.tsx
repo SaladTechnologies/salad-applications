@@ -1,11 +1,12 @@
 import { action } from '@storybook/addon-actions'
+import { Meta } from '@storybook/react'
 import React from 'react'
 import { RewardFilterPanel, ValueFilterOption } from './RewardFilterPanel'
 
 export default {
   title: 'Modules/Rewards/Reward Filter Panel',
   component: RewardFilterPanel,
-}
+} as Meta
 
 export const createOption = (value: string, count: number = 10, selected: boolean = false): ValueFilterOption => {
   return {

@@ -1,11 +1,12 @@
 import { action } from '@storybook/addon-actions'
+import { Meta } from '@storybook/react'
 import React from 'react'
 import { AccountMenu } from '.'
 
 export default {
   title: 'Modules/Account/Account Menu',
   component: AccountMenu,
-}
+} as Meta
 
 export const Complete = () => (
   <AccountMenu

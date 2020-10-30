@@ -1,11 +1,10 @@
-import React, { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { Form, Field } from 'react-final-form'
-import { TextField, Button, Username, ComputerName, P } from '../../../../components'
-import { Profile } from '../../../profile/models'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import React, { Component } from 'react'
+import { Field, Form } from 'react-final-form'
+import withStyles, { WithStyles } from 'react-jss'
+import { Button, ComputerName, P, TextField, Username } from '../../../../components'
+import { Profile } from '../../../profile/models'
 // Styles
 import { styles } from './EditUsername.styles'
 
@@ -90,9 +89,9 @@ class _EditUsername extends Component<Props, State> {
           <Form
             onSubmit={this.onSubmit}
             validate={this.validate}
-            render={({ handleSubmit }) => {
+            render={({ form }) => {
               return (
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={form.submit}>
                   <Field name="username" type="text">
                     {({ input, meta }) => (
                       <div className={classes.textFieldContainer}>

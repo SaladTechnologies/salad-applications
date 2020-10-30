@@ -14,7 +14,6 @@ import {
 } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import { MenuItemConstructorOptions } from 'electron/main'
-import isOnline from 'is-online'
 import { WindowsToaster } from 'node-notifier'
 import * as os from 'os'
 import * as path from 'path'
@@ -31,6 +30,7 @@ import { PluginManager } from './salad-bowl/PluginManager'
 import { SaladBridgeNotificationService } from './salad-bowl/SaladBridgeNotificationService'
 import { SaladBridge } from './SaladBridge'
 import { DefaultTheme as theme } from './SaladTheme'
+import isOnline = require('is-online')
 
 // The path to the `/static` folder. This is provided by electron-webpack.
 declare const __static: string

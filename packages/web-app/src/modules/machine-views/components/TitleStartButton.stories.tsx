@@ -1,4 +1,5 @@
 import { action } from '@storybook/addon-actions'
+import { Meta } from '@storybook/react'
 import React from 'react'
 import { MiningStatus } from '../../machine/models'
 import { TitleStartButton } from './TitleStartButton'
@@ -6,7 +7,7 @@ import { TitleStartButton } from './TitleStartButton'
 export default {
   title: 'Modules/Machine/Title Start Button',
   component: TitleStartButton,
-}
+} as Meta
 
 export const Enabled = () => <TitleStartButton onClick={action('click')} isEnabled={true} />
 

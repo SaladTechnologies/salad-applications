@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Img from 'react-image'
+import { Img } from 'react-image'
 import withStyles, { WithStyles } from 'react-jss'
 import { P, SmartLink } from '../../../components'
 import { rewardRoute } from '../../../RouteUtils'
@@ -87,7 +87,7 @@ class _ChoppingCartTooltip extends Component<Props> {
               <div className={classes.rewardItem}>
                 <Img
                   className={classes.rewardImage}
-                  src={x.coverImage}
+                  src={x.coverImage || ''}
                   draggable={false}
                   alt=""
                   unloader={<div className={classes.missingRewardImage}></div>}

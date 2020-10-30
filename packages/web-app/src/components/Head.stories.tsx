@@ -1,10 +1,11 @@
+import { Meta } from '@storybook/react'
 import React from 'react'
 import { SmartLink } from '.'
 
 export default {
   title: 'Components/Smart Link',
   component: SmartLink,
-}
+} as Meta
 
 export const TextExternalLink = () => <SmartLink to="https://www.google.com/">Google</SmartLink>
 export const TextInternalLink = () => <SmartLink to="/help">Help</SmartLink>

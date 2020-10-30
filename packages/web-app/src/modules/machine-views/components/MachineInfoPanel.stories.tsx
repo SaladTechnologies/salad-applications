@@ -1,3 +1,4 @@
+import { Meta } from '@storybook/react'
 import React from 'react'
 import { GpuInformation } from '../../machine/models'
 import { MachineInfoPanel } from './MachineInfoPanel'
@@ -5,7 +6,7 @@ import { MachineInfoPanel } from './MachineInfoPanel'
 export default {
   title: 'Modules/Machine/Machine Info Panel',
   component: MachineInfoPanel,
-}
+} as Meta
 
 const compatibleGpu: GpuInformation = { model: 'NVIDIA GeForce GTX 970', vram: 3585, compatible: true }
 const compatibleGpuWithDriver: GpuInformation = {

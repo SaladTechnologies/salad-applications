@@ -1,11 +1,12 @@
-import React from 'react'
 import { action } from '@storybook/addon-actions'
-import { SettingsPage, MenuItem } from './SettingsPage'
+import { Meta } from '@storybook/react'
+import React from 'react'
+import { MenuItem, SettingsPage } from './SettingsPage'
 
 export default {
   title: 'Components/Settings Page',
   component: SettingsPage,
-}
+} as Meta
 
 const menuItems: MenuItem[] = [
   { url: '/account/summary', text: 'Page 1', component: () => <div>Page 1</div> },

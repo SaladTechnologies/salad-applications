@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
+import { Field, Form } from 'react-final-form'
 import withStyles, { WithStyles } from 'react-jss'
-import { Form, Field } from 'react-final-form'
-import { TextField, Button, ErrorText } from '../../../../components'
+import { Button, ErrorText, TextField } from '../../../../components'
 
 const styles = {
   container: {
@@ -76,9 +76,9 @@ class _ReferralCodeEntryComponent extends Component<Props, State> {
     return (
       <Form
         onSubmit={this.onSubmit}
-        render={({ handleSubmit }) => {
+        render={({ form }) => {
           return (
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={form.submit}>
               <Field name="code">
                 {({ input, meta }) => (
                   <div className={classes.container}>

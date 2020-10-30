@@ -2,7 +2,7 @@ import classnames from 'classnames'
 import React, { Component } from 'react'
 //@ts-ignore
 import AspectRatio from 'react-aspect-ratio'
-import Img from 'react-image'
+import { Img } from 'react-image'
 import withStyles, { WithStyles } from 'react-jss'
 import Skeleton from 'react-loading-skeleton'
 import { SmartLink } from '../../../components'
@@ -108,7 +108,7 @@ class _RewardItem extends Component<Props> {
             {result ? (
               <Img
                 className={classes.image}
-                src={result?.image}
+                src={result?.image || ''}
                 draggable={false}
                 alt=""
                 loader={<Skeleton height={'100%'} />}

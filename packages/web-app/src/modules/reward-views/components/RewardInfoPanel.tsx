@@ -1,6 +1,6 @@
 import classnames from 'classnames'
 import React, { Component } from 'react'
-import Img from 'react-image'
+import { Img } from 'react-image'
 import withStyles, { WithStyles } from 'react-jss'
 import { Divider } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
