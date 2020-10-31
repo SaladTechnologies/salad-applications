@@ -38,7 +38,7 @@ interface Props extends WithStyles<typeof styles> {
   currentXp?: number
 }
 
-const getImage = (key: string) => require(`../assets/${key}/complete.png`)
+const getImage = (key: string) => require(`../assets/${key}/complete.png`).default
 
 class _Pantry extends Component<Props> {
   getColumnPositions = (percent: number): number[] =>
