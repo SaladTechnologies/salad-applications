@@ -26,7 +26,7 @@ interface Props extends WithStyles<typeof styles> {
   percent?: number
 }
 
-const getImage = (key: string, slice: number) => require(`../assets/${key}/${slice}.svg`)
+const getImage = (key: string, slice: number) => require(`../assets/${key}/${slice}.svg`).default
 
 class _SlicedVeggie extends Component<Props> {
   getColumnPositions = (percent: number): number[] =>
