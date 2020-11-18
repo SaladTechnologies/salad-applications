@@ -1,6 +1,6 @@
 import { Location } from 'history'
 import React, { Component } from 'react'
-import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router'
+import { Route, RouteComponentProps, Switch, withRouter } from 'react-router'
 import { MobileAccountSummaryContainer } from './modules/account-views-mobile'
 import { EmailVerificationPageContainer, LoginPageContainer, LogoutPageContainer } from './modules/auth-views'
 import { MobileEarningSummaryContainer, MobileOfferwallPageContainer } from './modules/earn-views-mobile'
@@ -22,7 +22,6 @@ class _Routes extends Component<RouteComponentProps> {
           <Route exact path="/earn/summary" component={MobileEarningSummaryContainer} />
           <Route path="/account/summary" component={MobileAccountSummaryContainer} />
           <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
-          <Redirect to="/earn/offerwall" />
         </Switch>
         <Route path="/login" exact component={LoginPageContainer} />
         <Route path="/login/email-verification" exact component={EmailVerificationPageContainer} />
