@@ -154,7 +154,10 @@ export interface ZendeskSettings {
   };
 }
 
-export interface Window {
-  zESettings?: ZendeskSettings;
-  zE?: ZendeskWidget;
+
+declare global {
+  interface Window {
+    zESettings?: ZendeskSettings;
+    zE?: ZendeskWidget;
+  }
 }
