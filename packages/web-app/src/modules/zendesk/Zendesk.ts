@@ -48,11 +48,11 @@ export class Zendesk {
     }
   }
 
-
   authenticateUser(profile: Profile) {
     if (this.store.auth.isAuthenticated) {
       // Trigger reauthentication after web widget page load.
       window.zE && window.zE('webWidget', 'helpCenter:reauthenticate');
+      this.intializeZendesk();
 
       try {
         window.zE && window.zE('webWidget', 'prefill', {
