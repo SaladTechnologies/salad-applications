@@ -1,6 +1,5 @@
 import { AxiosInstance } from 'axios'
 import { RootStore } from '../../Store'
-import { Profile } from '../profile/models'
 
 export class Zendesk {
   constructor(private store: RootStore, private readonly axios: AxiosInstance) { }
@@ -18,16 +17,18 @@ export class Zendesk {
     return jwtToken
   }
 
-  async intializeZendesk() {
+  intializeZendesk() {
     if (typeof window !== "undefined") {
-      let token = await this.getJWTToken()
+      const getToken = this.store.auth.isAuthenticated && this.getJWTToken()
       window.zESettings = {
         webWidget: {
           authenticate: {
             jwtFn: function (callback) {
-              if (token) {
-                callback(token);
-              }
+              getToken && getToken.then((token: string | undefined) => {
+                if (token) {
+                  return callback(token)
+                }
+              });
             }
           },
           offset: {
