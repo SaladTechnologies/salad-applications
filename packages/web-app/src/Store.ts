@@ -61,7 +61,7 @@ export class RootStore {
   public readonly vault: VaultStore
   public readonly version: VersionStore
   public readonly engagement: EngagementStore
-  private readonly zendesk : Zendesk;
+  private readonly zendesk: Zendesk;
 
   constructor(readonly axios: AxiosInstance) {
     this.routing = new RouterStore()
@@ -90,10 +90,9 @@ export class RootStore {
     // Start refreshing data
     this.refresh.start()
 
-    // initialize Zendesk
-    this.zendesk.intializeZendesk();
-
     autorun(() => {
+      // initialize Zendesk
+      this.zendesk.intializeZendesk();
       if (this.auth.isAuthenticated) {
         this.onLogin()
       } else {
