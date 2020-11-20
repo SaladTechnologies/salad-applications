@@ -54,7 +54,6 @@ export class Zendesk {
       // Trigger reauthentication after web widget page load.
       try {
         window.zE && window.zE('webWidget', 'helpCenter:reauthenticate');
-        this.intializeZendesk();
       } catch (e) {
         console.log("Unable to reauthenticate Zendesk web widget");
         console.log(e)
