@@ -48,27 +48,34 @@ export class Zendesk {
     }
   }
 
-  authenticateUser(profile: Profile) {
+  authenticateUser() {
     if (this.store.auth.isAuthenticated) {
       // Trigger reauthentication after web widget page load.
-      window.zE && window.zE('webWidget', 'helpCenter:reauthenticate');
-      this.intializeZendesk();
-
       try {
-        window.zE && window.zE('webWidget', 'prefill', {
-          name: {
-            value: profile.username,
-            readOnly: true, // optional
-          },
-          email: {
-            value: profile.email.toLocaleLowerCase(),
-            readOnly: true, // optional
-          },
-        })
+        window.zE && window.zE('webWidget', 'helpCenter:reauthenticate');
+        this.intializeZendesk();
       } catch (e) {
-        console.error('Unable to prefill Zendesk')
-        console.error(e)
+        console.log("Unable to reauthenticate Zendesk web widget");
+        console.log(e)
       }
+    }
+  }
+
+  prefillProfile(username: string, email: string) {
+    try {
+      window.zE && window.zE('webWidget', 'prefill', {
+        name: {
+          value: username,
+          readOnly: true, // optional
+        },
+        email: {
+          value: email.toLocaleLowerCase(),
+          readOnly: true, // optional
+        },
+      })
+    } catch (e) {
+      console.error('Unable to prefill Zendesk')
+      console.error(e)
     }
   }
 

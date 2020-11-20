@@ -109,6 +109,9 @@ export class RootStore {
         return
       }
 
+      // prefill profile data to zendesk
+      this.zendesk.prefillProfile(profile.username, profile.email)
+
       yield Promise.allSettled([
         this.analytics.start(profile),
         this.native.login(profile),
@@ -116,7 +119,7 @@ export class RootStore {
         this.referral.loadReferralCode(),
         this.version.startVersionChecks(),
         this.refresh.refreshData(),
-        this.zendesk.authenticateUser(profile)
+        this.zendesk.authenticateUser()
       ])
     }.bind(this),
   )
