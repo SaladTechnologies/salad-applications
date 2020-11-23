@@ -90,9 +90,10 @@ export class RootStore {
     // Start refreshing data
     this.refresh.start()
 
+    this.zendesk.injectZendesk();
+
     autorun(() => {
-      // initialize Zendesk
-      this.zendesk.intializeZendesk();
+      this.zendesk.intializeSettings();
       if (this.auth.isAuthenticated) {
         this.onLogin()
       } else {
@@ -109,9 +110,6 @@ export class RootStore {
         return
       }
 
-      // prefill profile data to zendesk
-      this.zendesk.prefillProfile(profile.username, profile.email)
-
       yield Promise.allSettled([
         this.analytics.start(profile),
         this.native.login(profile),
@@ -119,7 +117,7 @@ export class RootStore {
         this.referral.loadReferralCode(),
         this.version.startVersionChecks(),
         this.refresh.refreshData(),
-        this.zendesk.authenticateUser()
+        this.zendesk.authenticateUser(profile.username, profile.email)
       ])
     }.bind(this),
   )

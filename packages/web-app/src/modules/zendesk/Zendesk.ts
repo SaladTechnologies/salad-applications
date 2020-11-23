@@ -17,7 +17,18 @@ export class Zendesk {
     return jwtToken
   }
 
-  intializeZendesk() {
+  injectZendesk() {
+    if (typeof window !== "undefined") {
+      // Append Zendesk snippet to body tag.
+      const zendeskSnippetScript = document.createElement("script");
+      zendeskSnippetScript.async = true;
+      zendeskSnippetScript.id = "ze-snippet";
+      zendeskSnippetScript.src = "https://static.zdassets.com/ekr/snippet.js?key=36be7184-2a3f-4bec-9bb2-758e7c9036d0"
+      document.body.appendChild(zendeskSnippetScript);
+    }
+  }
+
+  intializeSettings() {
     if (typeof window !== "undefined") {
       const getToken = this.store.auth.isAuthenticated && this.getJWTToken()
       window.zESettings = {
@@ -39,18 +50,12 @@ export class Zendesk {
           }
         }
       }
-
-      // Append Zendesk snippet to body tag.
-      const zendeskSnippetScript = document.createElement("script");
-      zendeskSnippetScript.async = true;
-      zendeskSnippetScript.id = "ze-snippet";
-      zendeskSnippetScript.src = "https://static.zdassets.com/ekr/snippet.js?key=36be7184-2a3f-4bec-9bb2-758e7c9036d0"
-      document.body.appendChild(zendeskSnippetScript);
     }
   }
 
-  authenticateUser() {
+  authenticateUser(username: string, email: string) {
     if (this.store.auth.isAuthenticated) {
+      this.prefillProfile(username, email);
       // Trigger reauthentication after web widget page load.
       try {
         window.zE && window.zE('webWidget', 'helpCenter:reauthenticate');
