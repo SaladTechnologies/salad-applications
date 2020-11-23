@@ -30,14 +30,14 @@ class _MobileOfferwallPage extends Component<Props> {
         <TabControl
           tabs={[
             new TabItem('AdGem', '/earn/offerwall/adgem'),
-            new TabItem('Offer Toro', '/earn/offerwall/offer-toro'),
+            new TabItem('Offer Toro', '/earn/offerwall/offertoro'),
           ]}
         />
         <div className={classes.fullPage}>
           <Switch>
             <Route exact path="/earn/offerwall" component={OfferwallContainer} />
             <Route exact path="/earn/offerwall/adgem" component={AdGemContainer} />
-            <Route exact path="/earn/offerwall/offer-toro" component={OfferToroContainer} />
+            <Route exact path="/earn/offerwall/offertoro" component={OfferToroContainer} />
           </Switch>
         </div>
       </div>

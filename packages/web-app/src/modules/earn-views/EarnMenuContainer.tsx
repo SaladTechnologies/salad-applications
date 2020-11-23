@@ -19,7 +19,7 @@ const mapStoreToProps = (): any => {
       { text: 'AdGem', url: '/earn/offerwall/adgem', component: AdGemContainer, inset: true },
       {
         text: 'OfferToro',
-        url: '/earn/offerwall/offer-toro',
+        url: '/earn/offerwall/offertoro',
         component: OfferToroContainer,
         inset: true,
       },
