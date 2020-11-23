@@ -30,7 +30,7 @@ class _MobileOfferwallPage extends Component<Props> {
         <TabControl
           tabs={[
             new TabItem('AdGem', '/earn/offerwall/adgem'),
-            new TabItem('Offer Toro', '/earn/offerwall/offer-toro'),
+            new TabItem('OfferToro', '/earn/offerwall/offer-toro'),
           ]}
         />
         <div className={classes.fullPage}>
