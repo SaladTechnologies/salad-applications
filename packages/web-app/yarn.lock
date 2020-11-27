@@ -13979,9 +13979,14 @@ symbol.prototype.description@^1.0.0:
     es-abstract "^1.17.0-next.1"
     has-symbols "^1.0.1"
 
-systeminformation@../../libs/systeminformation-4.27.11+salad.tgz, systeminformation@4.27.11:
+systeminformation@../../libs/systeminformation-4.27.11+salad.tgz:
   version "4.27.11"
   resolved "../../libs/systeminformation-4.27.11+salad.tgz#ed684510fa760cf80358e146e16bf776fc90196f"
+
+systeminformation@4.30.5:
+  version "4.30.5"
+  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-4.30.5.tgz#2219c305c8be56a2cfa527a5519c45bc81d4916c"
+  integrity sha512-aYWs8yttl8ePpr6VOQ/Ak8cznuc9L/NQODVhbOKhInX73ZMLvV2BS86Mzr7LLfmUteVFR36CTDNQgiJgRqq+SQ==
 
 table@^5.2.3:
   version "5.4.6"
