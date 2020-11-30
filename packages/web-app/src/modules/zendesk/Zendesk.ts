@@ -136,6 +136,11 @@ export class Zendesk {
       return
     }
 
+    if (this.reauthenticateRetryTimeout) {
+      clearTimeout(this.reauthenticateRetryTimeout)
+      this.reauthenticateRetryTimeout = undefined
+    }
+
     try {
       window.zE.logout()
       if (this.initializeRetryTimeout !== undefined) {
