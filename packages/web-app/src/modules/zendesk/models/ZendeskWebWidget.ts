@@ -1,163 +1,155 @@
 export interface ZendeskWidget {
-  (
-    type: 'webWidget:on' | 'webWidget' | 'webWidget:get',
-    command: string,
-    payload?: any,
-  ): void;
-  (
-    type: 'webWidget',
-    command: 'updateSettings',
-    payload: ZendeskSettings,
-  ): void;
+  (type: 'webWidget:on' | 'webWidget' | 'webWidget:get', command: string, payload?: any): void
+  (type: 'webWidget', command: 'updateSettings', payload: ZendeskSettings): void
+  logout(): void
 }
 
 export interface ZendeskUIString {
-  [locale: string]: string;
+  [locale: string]: string
 }
 
 export interface ZendeskField {
-  id: string | number;
-  prefill: ZendeskUIString;
+  id: string | number
+  prefill: ZendeskUIString
 }
 
 export interface ZendeskSettings {
-  analytics?: boolean;
-  cookies?: boolean;
-  errorReporting?: boolean;
+  analytics?: boolean
+  cookies?: boolean
+  errorReporting?: boolean
   webWidget?: {
     answerBot?: {
       avatar?: {
-        url: string;
-        name: ZendeskUIString;
-      };
-      suppress?: boolean;
-      title?: ZendeskUIString;
-      contactOnlyAfterQuery?: boolean;
+        url: string
+        name: ZendeskUIString
+      }
+      suppress?: boolean
+      title?: ZendeskUIString
+      contactOnlyAfterQuery?: boolean
       search?: {
-        labels: string[];
-      };
-    };
+        labels: string[]
+      }
+    }
     authenticate?: {
       chat?: {
-        jwtFn: (callback: (jwtToken: string) => void) => void;
-      };
-      jwtFn?: (callback: (jwtToken: string) => void) => void;
-    };
+        jwtFn: (callback: (jwtToken: string) => void) => void
+      }
+      jwtFn?: (callback: (jwtToken: string) => void) => void
+    }
     contactForm?: {
-      attachments?: boolean;
-      fields?: ZendeskField[];
-      selectTicketForm?: ZendeskUIString;
-      subject?: boolean;
-      suppress?: boolean;
-      title?: ZendeskUIString;
-      ticketForms?: Array<{ id: number; fields?: ZendeskField[] }>;
-    };
+      attachments?: boolean
+      fields?: ZendeskField[]
+      selectTicketForm?: ZendeskUIString
+      subject?: boolean
+      suppress?: boolean
+      title?: ZendeskUIString
+      ticketForms?: Array<{ id: number; fields?: ZendeskField[] }>
+    }
     contactOptions?: {
-      enabled?: boolean;
-      contactButton?: ZendeskUIString;
-      contactFormLabel?: ZendeskUIString;
-      chatLabelOnline?: ZendeskUIString;
-      chatLabelOffline?: ZendeskUIString;
-    };
+      enabled?: boolean
+      contactButton?: ZendeskUIString
+      contactFormLabel?: ZendeskUIString
+      chatLabelOnline?: ZendeskUIString
+      chatLabelOffline?: ZendeskUIString
+    }
     chat?: {
       concierge?: {
-        avatarPath: string;
-        name: string;
-        title: ZendeskUIString;
-      };
+        avatarPath: string
+        name: string
+        title: ZendeskUIString
+      }
       departments?: {
-        enabled: string[];
-        select?: string;
-      };
-      hideWhenOffline?: boolean;
+        enabled: string[]
+        select?: string
+      }
+      hideWhenOffline?: boolean
       menuOptions?: {
-        emailTranscript?: boolean;
-      };
+        emailTranscript?: boolean
+      }
       notifications?: {
         mobile?: {
-          disable?: boolean;
-        };
-      };
+          disable?: boolean
+        }
+      }
       offlineForm?: {
-        greeting?: ZendeskUIString;
-      };
+        greeting?: ZendeskUIString
+      }
       prechatForm?: {
-        greeting?: ZendeskUIString;
-        departmentLabel?: ZendeskUIString;
-      };
+        greeting?: ZendeskUIString
+        departmentLabel?: ZendeskUIString
+      }
       profileCard?: {
-        avatar?: boolean;
-        rating?: boolean;
-        title?: boolean;
-      };
-      suppress?: boolean;
-      tags?: string;
-      title?: ZendeskUIString;
-    };
+        avatar?: boolean
+        rating?: boolean
+        title?: boolean
+      }
+      suppress?: boolean
+      tags?: string
+      title?: ZendeskUIString
+    }
     color?: {
-      theme?: string;
-      launcher?: string;
-      launcherText?: string;
-      button?: string;
-      resultLists?: string;
-      header?: string;
-      articleLinks?: string;
-    };
+      theme?: string
+      launcher?: string
+      launcherText?: string
+      button?: string
+      resultLists?: string
+      header?: string
+      articleLinks?: string
+    }
     helpCenter?: {
-      messageButton?: ZendeskUIString;
-      originalArticleButton?: boolean;
-      searchPlaceholder?: ZendeskUIString;
-      suppress?: boolean;
-      title?: ZendeskUIString;
-      chatButton?: ZendeskUIString;
+      messageButton?: ZendeskUIString
+      originalArticleButton?: boolean
+      searchPlaceholder?: ZendeskUIString
+      suppress?: boolean
+      title?: ZendeskUIString
+      chatButton?: ZendeskUIString
       filter?: {
-        category?: string;
-        section?: string;
-        label_names?: string;
-      };
-    };
+        category?: string
+        section?: string
+        label_names?: string
+      }
+    }
     launcher?: {
-      label?: ZendeskUIString;
+      label?: ZendeskUIString
       mobile?: {
-        labelVisible?: boolean;
-      };
+        labelVisible?: boolean
+      }
       badge?: {
-        label?: ZendeskUIString;
-        image?: string;
-        layout?: 'image_right' | 'image_left' | 'image_only' | 'text_only';
-      };
-      chatLabel?: ZendeskUIString;
-    };
+        label?: ZendeskUIString
+        image?: string
+        layout?: 'image_right' | 'image_left' | 'image_only' | 'text_only'
+      }
+      chatLabel?: ZendeskUIString
+    }
     navigation?: {
       popoutButton?: {
-        enabled?: boolean;
-      };
-    };
+        enabled?: boolean
+      }
+    }
     offset?: {
-      horizontal?: string;
-      vertical?: string;
+      horizontal?: string
+      vertical?: string
       mobile?: {
-        horizontal?: string;
-        vertical?: string;
-      };
-    };
+        horizontal?: string
+        vertical?: string
+      }
+    }
     position?: {
-      horizontal: 'left' | 'right';
-      vertical: 'top' | 'bottom';
-    };
+      horizontal: 'left' | 'right'
+      vertical: 'top' | 'bottom'
+    }
     talk?: {
-      nickname?: string;
-      suppress?: boolean;
-      title?: ZendeskUIString;
-    };
-    zIndex?: number;
-  };
+      nickname?: string
+      suppress?: boolean
+      title?: ZendeskUIString
+    }
+    zIndex?: number
+  }
 }
-
 
 declare global {
   interface Window {
-    zESettings?: ZendeskSettings;
-    zE?: ZendeskWidget;
+    zESettings?: ZendeskSettings
+    zE?: ZendeskWidget
   }
 }

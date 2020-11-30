@@ -20,8 +20,8 @@ import { StopReason } from './modules/salad-bowl/models'
 import { VaultStore } from './modules/vault'
 import { VersionStore } from './modules/versions'
 import { ExperienceStore } from './modules/xp'
-import { UIStore } from './UIStore'
 import { Zendesk } from './modules/zendesk'
+import { UIStore } from './UIStore'
 
 configure({
   // computedRequiresReaction: process.env.NODE_ENV === 'development',
@@ -61,7 +61,7 @@ export class RootStore {
   public readonly vault: VaultStore
   public readonly version: VersionStore
   public readonly engagement: EngagementStore
-  private readonly zendesk: Zendesk;
+  private readonly zendesk: Zendesk
 
   constructor(readonly axios: AxiosInstance) {
     this.routing = new RouterStore()
@@ -83,17 +83,14 @@ export class RootStore {
     this.vault = new VaultStore(axios)
     this.version = new VersionStore(this, axios)
     this.engagement = new EngagementStore(this)
-    this.zendesk = new Zendesk(this, axios)
+    this.zendesk = new Zendesk(axios, this.auth)
 
     addAuthInterceptor(axios, this.auth)
 
     // Start refreshing data
     this.refresh.start()
 
-    this.zendesk.injectZendesk();
-
     autorun(() => {
-      this.zendesk.intializeSettings();
       if (this.auth.isAuthenticated) {
         this.onLogin()
       } else {
@@ -117,7 +114,7 @@ export class RootStore {
         this.referral.loadReferralCode(),
         this.version.startVersionChecks(),
         this.refresh.refreshData(),
-        this.zendesk.authenticateUser(profile.username, profile.email)
+        this.zendesk.login(profile.username, profile.email),
       ])
     }.bind(this),
   )
@@ -132,7 +129,7 @@ export class RootStore {
         this.saladBowl.stop(StopReason.Logout),
         this.version.stopVersionChecks(),
         this.native.logout(),
-        this.zendesk.logout()
+        this.zendesk.logout(),
       ])
     }.bind(this),
   )

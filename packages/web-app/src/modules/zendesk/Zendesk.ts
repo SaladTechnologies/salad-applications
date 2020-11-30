@@ -1,95 +1,101 @@
 import { AxiosInstance } from 'axios'
-import { RootStore } from '../../Store'
+import { AuthStore } from '../auth'
 
 export class Zendesk {
-  constructor(private store: RootStore, private readonly axios: AxiosInstance) { }
+  private static injected: boolean = false
+
+  constructor(private readonly axios: AxiosInstance, private readonly auth: AuthStore) {
+    this.inject()
+  }
 
   private async getJWTToken(): Promise<string | undefined> {
     let jwtToken: string | undefined = undefined
-    try {
-      let response = await this.axios.post(`/api/v2/zendesk-tokens`);
-      jwtToken = response.data.token
-    } catch (e) {
-      console.log("Unable to retrieve JWT for Zendesk Authentication");
-      console.log(e);
+    if (this.auth.isAuthenticated) {
+      try {
+        let response = await this.axios.post(`/api/v2/zendesk-tokens`)
+        jwtToken = response.data.token
+      } catch (e) {
+        console.log('Unable to retrieve JWT for Zendesk Authentication')
+        console.log(e)
+      }
     }
 
     return jwtToken
   }
 
-  injectZendesk() {
-    if (typeof window !== "undefined") {
-      // Append Zendesk snippet to body tag.
-      const zendeskSnippetScript = document.createElement("script");
-      zendeskSnippetScript.async = true;
-      zendeskSnippetScript.id = "ze-snippet";
-      zendeskSnippetScript.src = "https://static.zdassets.com/ekr/snippet.js?key=36be7184-2a3f-4bec-9bb2-758e7c9036d0"
-      document.body.appendChild(zendeskSnippetScript);
-    }
-  }
+  private inject() {
+    if (typeof window !== 'undefined') {
+      if (Zendesk.injected) {
+        return
+      }
 
-  intializeSettings() {
-    if (typeof window !== "undefined") {
-      const getToken = this.store.auth.isAuthenticated && this.getJWTToken()
+      // Add `zESettings` before injecting the web widget script.
       window.zESettings = {
         webWidget: {
           authenticate: {
-            jwtFn: function (callback) {
-              getToken && getToken.then((token: string | undefined) => {
-                if (token) {
-                  return callback(token)
-                }
-              });
-            }
+            jwtFn: async (callback) => {
+              const jwtToken = await this.getJWTToken()
+              if (jwtToken) {
+                callback(jwtToken)
+              }
+            },
           },
           offset: {
             mobile: {
               horizontal: '-530px',
-              vertical: '-100px'
-            }
-          }
-        }
+              vertical: '-100px',
+            },
+          },
+        },
       }
+
+      // Append Zendesk script to body.
+      const zendeskSnippetScript = document.createElement('script')
+      zendeskSnippetScript.async = true
+      zendeskSnippetScript.id = 'ze-snippet'
+      zendeskSnippetScript.src = 'https://static.zdassets.com/ekr/snippet.js?key=36be7184-2a3f-4bec-9bb2-758e7c9036d0'
+      document.body.appendChild(zendeskSnippetScript)
+
+      Zendesk.injected = true
     }
   }
 
-  authenticateUser(username: string, email: string) {
-    if (this.store.auth.isAuthenticated) {
-      this.prefillProfile(username, email);
-      // Trigger reauthentication after web widget page load.
-      try {
-        window.zE && window.zE('webWidget', 'helpCenter:reauthenticate');
-      } catch (e) {
-        console.log("Unable to reauthenticate Zendesk web widget");
-        console.log(e)
-      }
+  login(username: string, email: string) {
+    if (!window.zE) {
+      return
     }
-  }
 
-  prefillProfile(username: string, email: string) {
     try {
-      window.zE && window.zE('webWidget', 'prefill', {
+      window.zE('webWidget', 'prefill', {
         name: {
           value: username,
-          readOnly: true, // optional
+          readOnly: true,
         },
         email: {
           value: email.toLocaleLowerCase(),
-          readOnly: true, // optional
+          readOnly: true,
         },
       })
     } catch (e) {
       console.error('Unable to prefill Zendesk')
       console.error(e)
     }
+
+    try {
+      window.zE('webWidget', 'helpCenter:reauthenticate')
+    } catch (e) {
+      console.log('Unable to authenticate Zendesk web widget')
+      console.log(e)
+    }
   }
 
-
-
   logout() {
+    if (!window.zE) {
+      return
+    }
+
     try {
-      // @ts-ignore
-      window.zE && window.zE.logout()
+      window.zE.logout()
     } catch (e) {
       console.error('Unable to logout of Zendesk')
       console.error(e)
