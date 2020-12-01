@@ -20,6 +20,7 @@ import { StopReason } from './modules/salad-bowl/models'
 import { VaultStore } from './modules/vault'
 import { VersionStore } from './modules/versions'
 import { ExperienceStore } from './modules/xp'
+import { Zendesk } from './modules/zendesk'
 import { UIStore } from './UIStore'
 
 configure({
@@ -60,6 +61,7 @@ export class RootStore {
   public readonly vault: VaultStore
   public readonly version: VersionStore
   public readonly engagement: EngagementStore
+  private readonly zendesk: Zendesk
 
   constructor(readonly axios: AxiosInstance) {
     this.routing = new RouterStore()
@@ -81,6 +83,7 @@ export class RootStore {
     this.vault = new VaultStore(axios)
     this.version = new VersionStore(this, axios)
     this.engagement = new EngagementStore(this)
+    this.zendesk = new Zendesk(axios, this.auth)
 
     addAuthInterceptor(axios, this.auth)
 
@@ -104,23 +107,6 @@ export class RootStore {
         return
       }
 
-      try {
-        //@ts-ignore
-        zE('webWidget', 'prefill', {
-          name: {
-            value: profile.username,
-            readOnly: true, // optional
-          },
-          email: {
-            value: profile.email.toLocaleLowerCase(),
-            readOnly: true, // optional
-          },
-        })
-      } catch (e) {
-        console.error('Unable to prefill Zendesk')
-        console.error(e)
-      }
-
       yield Promise.allSettled([
         this.analytics.start(profile),
         this.native.login(profile),
@@ -128,6 +114,7 @@ export class RootStore {
         this.referral.loadReferralCode(),
         this.version.startVersionChecks(),
         this.refresh.refreshData(),
+        this.zendesk.login(profile.username, profile.email),
       ])
     }.bind(this),
   )
@@ -137,19 +124,12 @@ export class RootStore {
       this.referral.currentReferral = undefined
       this.referral.referralCode = ''
 
-      try {
-        //@ts-ignore
-        zE('webWidget', 'reset')
-      } catch (e) {
-        console.error('Unable to reset Zendesk')
-        console.error(e)
-      }
-
       yield Promise.allSettled([
         this.analytics.trackLogout(),
         this.saladBowl.stop(StopReason.Logout),
         this.version.stopVersionChecks(),
         this.native.logout(),
+        this.zendesk.logout(),
       ])
     }.bind(this),
   )
