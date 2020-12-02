@@ -1,6 +1,8 @@
 import moment from 'moment'
+import { uniq } from 'lodash'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
+import classnames from 'classnames'
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis } from 'recharts'
 import { P } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
@@ -25,6 +27,14 @@ const styles = (theme: SaladTheme) => ({
     textAlign: 'center',
     padding: 20,
   },
+  earningsRangeContainer: {
+    marginLeft: -60,
+    marginTop: -25,
+    textAlign: 'center'
+  },
+  rangeSum: {
+    fontSize: theme.medium,
+  }
 })
 
 const CustomizedCursor = (props: any) => {
@@ -65,27 +75,191 @@ interface Props extends WithStyles<typeof styles> {
   earningHistory?: EarningWindow[]
 }
 
+interface RangeTooltipProps extends WithStyles<typeof styles> {
+  rangeStartTime?: string
+  rangeEndTime?: string
+  rangeSum?: string
+  leftToRight?: boolean
+}
+
+
+const _CustomRangeTooltip = ({ classes, leftToRight, rangeStartTime, rangeEndTime, rangeSum }: RangeTooltipProps) => {
+  if (!rangeStartTime || !rangeEndTime || !rangeSum) {
+    return null
+  }
+
+  return (
+    <div className={classnames(classes.tooltipContainer, classes.earningsRangeContainer)}>
+      <div className={classes.rangeSum}>{rangeSum}</div>
+      {leftToRight ? (
+        <div>{rangeStartTime} - {rangeEndTime}</div>
+      ) : (
+          <div>{rangeEndTime} - {rangeStartTime}</div>
+        )}
+
+    </div>
+  )
+}
+
+const CustomRangeTooltip = withStyles(styles)(_CustomRangeTooltip)
+
+interface EarningRange {
+  chartX: number
+  chartY: number
+  index: number
+  timestamp: string
+}
+
+interface ChartMouseEvent {
+  activeLabel: string
+  activeCoordinate: {
+    x: number
+    y: number
+  }
+  activePayload: [
+    {
+      color: string
+      datakey: string
+      fill: string
+      formatter: string
+      name: string
+      payload: {
+        earnings: number
+        unit: number
+        timestamp: Object
+      }
+      type?: string
+      value: number
+    }
+  ]
+  activeTooltipIndex: number
+  chartX: number
+  chartY: number
+  isTooltipActive: boolean
+}
+
 interface State {
+  earningsRangeEnd?: EarningRange
+  earningsRangeStart?: EarningRange
+  earningsRangeSum?: string
   hoverIndex?: number
+  selectingRangeInProgress?: boolean
+  rangeCenterCoordinate?: number
+  selectedLeftToRight?: boolean
+  selectedRangeIndexes: number[]
+  showEarningsRange?: boolean
 }
 
 class _EarningChart extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    this.state = {}
+    this.state = {
+      selectedRangeIndexes: []
+    }
   }
 
-  handleMouseEvent = (a: { isTooltipActive: boolean; activeTooltipIndex: number }) => {
-    if (!a.isTooltipActive) {
-      this.setState({ hoverIndex: undefined })
-    } else {
-      this.setState({ hoverIndex: a.activeTooltipIndex })
+
+  setEarningsRangeSum = (rangeStartIndex: number | undefined, rangeEndIndex: number | undefined) => {
+    const { earningHistory } = this.props
+
+    if (earningHistory && rangeStartIndex && rangeEndIndex && rangeStartIndex !== rangeEndIndex) {
+      const selectedLeftToRight = rangeStartIndex < rangeEndIndex
+      let start: number = selectedLeftToRight ? rangeStartIndex : rangeEndIndex
+      let end: number = selectedLeftToRight ? rangeEndIndex : rangeStartIndex
+
+      const selectedEarnings = earningHistory.slice(start, end + 1);
+      let balance: number = 0
+      selectedEarnings.map((e) => (balance += e.earnings))
+      const earningsRangeSum = formatBalance(balance)
+
+      this.setState({
+        earningsRangeSum,
+        showEarningsRange: true,
+        selectedLeftToRight
+      })
+    }
+  }
+
+  getEarningsRangeCenterCoordinate = (rangeStart: EarningRange | undefined, rangeEnd: EarningRange | undefined) => {
+    if (rangeStart && rangeEnd && (rangeStart.chartX !== rangeEnd.chartX)) {
+      const centerCoordinate: number = Math.round((rangeEnd.chartX + rangeStart?.chartX) / 2)
+      this.setState({
+        rangeCenterCoordinate: centerCoordinate
+      })
+    }
+  }
+
+  handleMouseEvent = (a: ChartMouseEvent) => {
+    if (a) {
+      const { selectingRangeInProgress, selectedRangeIndexes } = this.state
+
+      if (selectingRangeInProgress) {
+        const uniqueIndexes = uniq(selectedRangeIndexes.concat(a.activeTooltipIndex))
+        for (var i = 1; i < uniqueIndexes.length; i++) {
+          if (uniqueIndexes[i] - uniqueIndexes[i - 1] !== 1) {
+            let missingSequenceNum: number = uniqueIndexes[i - 1] + 1
+            while (missingSequenceNum < uniqueIndexes[i]) {
+              uniqueIndexes.push(missingSequenceNum)
+              missingSequenceNum++
+            }
+          }
+        }
+        this.setState({ selectedRangeIndexes: uniqueIndexes.sort() })
+      }
+
+      if (!a.isTooltipActive) {
+        this.setState({ hoverIndex: undefined, selectedRangeIndexes: [], showEarningsRange: false })
+      } else {
+        this.setState({ hoverIndex: a.activeTooltipIndex })
+      }
+    }
+  }
+
+  handleMouseDown = (a: ChartMouseEvent) => {
+    if (a) {
+      const timestamp = moment(a.activePayload[0].payload.timestamp).add(15, 'minute').format('LT')
+      if (this.state.selectedRangeIndexes.length > 0) {
+        this.setState({ selectedRangeIndexes: [], earningsRangeStart: undefined, earningsRangeEnd: undefined, showEarningsRange: false })
+      }
+      this.setState({
+        earningsRangeStart: {
+          chartX: a.chartX,
+          chartY: a.chartY,
+          index: a.activeTooltipIndex,
+          timestamp
+        },
+        selectingRangeInProgress: true
+      })
+    }
+  }
+
+  handleMouseUp = (a: ChartMouseEvent) => {
+    if (a) {
+      const timestamp = moment(a.activePayload[0].payload.timestamp).add(15, 'minute').format('LT')
+      const earningsRangeEnd = {
+        chartX: a.chartX,
+        chartY: a.chartY,
+        index: a.activeTooltipIndex,
+        timestamp
+      }
+      this.setState({ earningsRangeEnd, selectingRangeInProgress: false })
+      this.setEarningsRangeSum(this.state.earningsRangeStart?.index, earningsRangeEnd.index)
+      this.getEarningsRangeCenterCoordinate(this.state.earningsRangeStart, earningsRangeEnd)
     }
   }
 
   render() {
     const { earningHistory, classes } = this.props
-    const { hoverIndex } = this.state
+    const {
+      hoverIndex,
+      showEarningsRange,
+      earningsRangeStart,
+      earningsRangeEnd,
+      earningsRangeSum,
+      rangeCenterCoordinate,
+      selectedLeftToRight,
+      selectedRangeIndexes
+    } = this.state
     const isZero: boolean =
       !earningHistory || earningHistory.length === 0 || !earningHistory.some((x) => x.earnings > 0)
     return (
@@ -102,15 +276,26 @@ class _EarningChart extends Component<Props, State> {
               margin={{ top: 30, left: 10, right: 10, bottom: 0 }}
               onMouseMove={this.handleMouseEvent}
               onMouseLeave={this.handleMouseEvent}
+              onMouseDown={this.handleMouseDown}
+              onMouseUp={this.handleMouseUp}
               barGap={10}
             >
-              <Tooltip
-                cursor={<CustomizedCursor />}
-                content={<CustomTooltip nowWindow={earningHistory[earningHistory.length - 1]} />}
-                isAnimationActive={false}
-                //@ts-ignore
-                position={{ y: 0, x: 'auto' }}
-              />
+              {showEarningsRange ? (
+                <Tooltip
+                  content={<CustomRangeTooltip rangeStartTime={earningsRangeStart?.timestamp} rangeEndTime={earningsRangeEnd?.timestamp} rangeSum={earningsRangeSum} leftToRight={selectedLeftToRight} />}
+                  cursor={false}
+                  isAnimationActive={false}
+                  position={{ y: 0, x: rangeCenterCoordinate || 0 }}
+                />
+              ) : (
+                  <Tooltip
+                    cursor={<CustomizedCursor />}
+                    content={<CustomTooltip nowWindow={earningHistory[earningHistory.length - 1]} />}
+                    isAnimationActive={false}
+                    //@ts-ignore
+                    position={{ y: 0, x: 'auto' }}
+                  />
+                )}
               <Bar dataKey="earnings" fill="#B2D530">
                 {earningHistory &&
                   earningHistory.map((window, index) => {
@@ -120,6 +305,11 @@ class _EarningChart extends Component<Props, State> {
 
                     if (index === hoverIndex) {
                       color = '#DBF1C1'
+                    }
+
+                    if (selectedRangeIndexes.length > 0 && !selectedRangeIndexes.includes(index)) {
+                      color = '#0A2133'
+                      border = '#B2D530'
                     }
 
                     if (index === earningHistory.length - 1) {
