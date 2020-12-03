@@ -3,7 +3,7 @@ import { uniq } from 'lodash'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
-import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis } from 'recharts'
+import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { P } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { formatBalance } from '../../../utils'
@@ -17,6 +17,9 @@ const styles = (theme: SaladTheme) => ({
     width: '100%',
     position: 'relative',
     flexDirection: 'column',
+  },
+  tickFont: {
+    fontSize: theme.small
   },
   tooltipContainer: {
     fontFamily: theme.fontGroteskBook25,
@@ -70,10 +73,6 @@ const _CustomTooltip = ({ active, payload, classes, nowWindow }: TooltipProps) =
 }
 
 const CustomTooltip = withStyles(styles)(_CustomTooltip)
-
-interface Props extends WithStyles<typeof styles> {
-  earningHistory?: EarningWindow[]
-}
 
 interface RangeTooltipProps extends WithStyles<typeof styles> {
   rangeStartTime?: string
@@ -136,6 +135,53 @@ interface ChartMouseEvent {
   chartX: number
   chartY: number
   isTooltipActive: boolean
+}
+
+interface CustomTick extends WithStyles<typeof styles> {
+  fill: string
+  payload: {
+    coordinate: number
+    isShow: boolean
+    offset: number
+    tickCoord: number
+    value: number
+  }
+  textAnchor: "start" | "middle" | "end"
+  x: string
+  y: string
+}
+
+const _CustomizedXAxisTick = (props: CustomTick) => {
+  const { classes, fill, payload, textAnchor, x, y } = props
+
+  const timestamp = moment(payload.value).add(15, 'minute').format('hh:mm')
+  return (
+    <g transform={`translate(${x},${y})`} className={classes.tickFont}>
+      <text x={0} y={0} dy={12} fill={fill} textAnchor={textAnchor}>{timestamp}</text>
+    </g>
+  );
+}
+
+const CustomizedXAxisTick = withStyles(styles)(_CustomizedXAxisTick)
+
+const _CustomizedYAxisTick = (props: CustomTick) => {
+  const { classes, fill, payload, textAnchor, x, y } = props
+
+  if (payload.value === 0) {
+    return null
+  }
+
+  return (
+    <g transform={`translate(${x},${y})`} className={classes.tickFont}>
+      <text x={-5} y={0} dy={0} fill={fill} textAnchor={textAnchor}>${payload.value}</text>
+    </g>
+  );
+}
+
+const CustomizedYAxisTick = withStyles(styles)(_CustomizedYAxisTick)
+
+interface Props extends WithStyles<typeof styles> {
+  earningHistory?: EarningWindow[]
 }
 
 interface State {
@@ -248,6 +294,8 @@ class _EarningChart extends Component<Props, State> {
     }
   }
 
+  getTimeValue = (earningWindow: EarningWindow) => moment(earningWindow.timestamp).valueOf()
+
   render() {
     const { earningHistory, classes } = this.props
     const {
@@ -296,6 +344,25 @@ class _EarningChart extends Component<Props, State> {
                     position={{ y: 0, x: 'auto' }}
                   />
                 )}
+              <CartesianGrid vertical={false} stroke="#1F4F22" />
+              <XAxis
+                dataKey={this.getTimeValue}
+                domain={['auto', 'auto']}
+                interval={3}
+                scale='time'
+                stroke="#B2D530"
+                //@ts-ignore
+                tick={<CustomizedXAxisTick />}
+                type='number'
+              />
+              <YAxis
+                axisLine={false}
+                minTickGap={2}
+                stroke="#1F4F22"
+                //@ts-ignore
+                tick={<CustomizedYAxisTick />}
+                tickLine={false}
+              />
               <Bar dataKey="earnings" fill="#B2D530">
                 {earningHistory &&
                   earningHistory.map((window, index) => {
@@ -322,7 +389,6 @@ class _EarningChart extends Component<Props, State> {
                     )
                   })}
               </Bar>
-              <XAxis dataKey="timestamp" tickLine={false} stroke="#B2D530" tick={false} />
             </BarChart>
           </ResponsiveContainer>
         )}
