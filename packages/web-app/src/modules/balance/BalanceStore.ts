@@ -1,6 +1,7 @@
 import { AxiosInstance } from 'axios'
 import { action, computed, flow, observable } from 'mobx'
 import moment from 'moment'
+import { batchEarningsWindow } from './utils'
 import { EarningWindow } from './models'
 
 export class BalanceStore {
@@ -13,9 +14,32 @@ export class BalanceStore {
   @observable
   private earningHistory: Map<number, number> = new Map()
 
+  @observable
+  private daysShowingEarnings: 1 | 7 | 30 = 1
+
   @computed
-  public get lastDayEarningWindows(): EarningWindow[] {
-    return this.getEarningWindows(1)
+  public get earningsHistory(): EarningWindow[] {
+    return this.getEarningWindows(this.daysShowingEarnings)
+  }
+
+  @computed
+  public get getDaysShowingEarnings(): number {
+    return this.daysShowingEarnings
+  }
+
+  @action
+  viewLast24Hours = () => {
+    this.daysShowingEarnings = 1
+  }
+
+  @action
+  viewLast7Days = () => {
+    this.daysShowingEarnings = 7
+  }
+
+  @action
+  viewLast30Days = () => {
+    this.daysShowingEarnings = 30
   }
 
   /** Total earnings for the last 24 hours */
@@ -30,14 +54,29 @@ export class BalanceStore {
   @observable
   public lastMonthEarnings: number = 0
 
-  private getEarningWindows = (numberOfDays: number): EarningWindow[] => {
+  private getEarningWindows = (numberOfDays: 1 | 7 | 30): EarningWindow[] => {
     const windows: EarningWindow[] = []
 
     const now = moment.utc()
 
     const threshold = moment(now).subtract(numberOfDays, 'days')
 
-    for (let [unixTime, earning] of this.earningHistory) {
+    let batchedEarningWindows = new Map<number, number>()
+    switch (numberOfDays) {
+      case 1:
+        batchedEarningWindows = this.earningHistory
+        break
+      case 7:
+        batchedEarningWindows = batchEarningsWindow(this.earningHistory, 8)
+        break
+      case 30:
+        batchedEarningWindows = batchEarningsWindow(this.earningHistory, 48)
+        break
+      default:
+        batchedEarningWindows = this.earningHistory
+    }
+
+    for (let [unixTime, earning] of batchedEarningWindows) {
       const time = moment.unix(unixTime)
 
       if (time >= threshold) {

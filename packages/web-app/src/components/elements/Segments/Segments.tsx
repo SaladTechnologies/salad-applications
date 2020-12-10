@@ -1,4 +1,3 @@
-
 import classnames from 'classnames'
 import React, { Component } from 'react'
 // Packages
@@ -10,7 +9,7 @@ const styles = (theme: SaladTheme) => ({
     border: '1px solid ' + theme.lightGreen,
     color: theme.lightGreen,
     display: 'inline-block',
-    padding: '6px 2px',
+    padding: '6px',
     position: 'relative',
     textAlign: 'center',
     transition: 'background 600ms ease, color 600ms ease',
@@ -39,7 +38,7 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  options: { name: string, action: () => void }[]
+  options: { name: string; action: () => void }[]
 }
 
 interface State {
@@ -47,13 +46,16 @@ interface State {
 }
 
 class _Segments extends Component<Props, State> {
-  state = {}
+  constructor(props: Props) {
+    super(props)
+    this.state = {}
+  }
 
   componentDidMount() {
     const options = this.props.options
     options.forEach((option, index) => {
       this.setState({
-        [option.name]: index === 0
+        [option.name]: index === 0,
       })
     })
   }
@@ -61,30 +63,28 @@ class _Segments extends Component<Props, State> {
   onSelect = (action: () => void, name: string) => {
     for (const [key] of Object.entries(this.state)) {
       this.setState({
-        [key]: key === name
+        [key]: key === name,
       })
     }
-    action();
+    action()
   }
 
   render() {
     const { classes, options } = this.props
     return (
       <>
-        {options.map((option, index) =>
+        {options.map((option, index) => (
           <label
             className={classnames(classes.btn, {
-              // @ts-ignore
               [classes.active]: this.state[option.name],
-              // @ts-ignore
-              [classes.inactive]: !this.state[option.name]
+              [classes.inactive]: !this.state[option.name],
             })}
             onClick={() => this.onSelect(option.action, option.name)}
             key={index}
           >
             {option.name}
           </label>
-        )}
+        ))}
       </>
     )
   }

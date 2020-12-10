@@ -5,7 +5,7 @@ import { SectionHeader, StatElement } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { formatBalance } from '../../../utils'
 import { EarningWindow } from '../../balance/models'
-import { EarningChart } from './EarningChart'
+import { EarningChartContainer } from '../EarningChartContainer'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -62,7 +62,7 @@ class _EarningHistory extends Component<Props, State> {
   }
 
   render() {
-    const { last24Hr, last7Day, last30Day, earningHistory, classes } = this.props
+    const { last24Hr, last7Day, last30Day, classes } = this.props
     return (
       <div className={classes.container}>
         <div className={classes.row}>
@@ -86,7 +86,7 @@ class _EarningHistory extends Component<Props, State> {
           />
         </div>
         <div className={classes.row}>
-          <EarningChart earningHistory={earningHistory} />
+          <EarningChartContainer />
         </div>
       </div>
     )
