@@ -1,15 +1,15 @@
-import moment from 'moment'
+import classnames from 'classnames'
 import { uniq } from 'lodash'
+import moment from 'moment'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import classnames from 'classnames'
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { P } from '../../../components'
+import { Segments } from '../../../components/elements/Segments'
 import { SaladTheme } from '../../../SaladTheme'
 import { formatBalance } from '../../../utils'
-import { getRangeTooltipTimestamp, getTooltipTimestamp } from '../utils'
 import { EarningWindow } from '../../balance/models'
-import { Segments } from '../../../components/elements/Segments'
+import { getRangeTooltipTimestamp, getTooltipTimestamp } from '../utils'
 
 const styles = (theme: SaladTheme) => ({
   buttonContainer: {
@@ -44,6 +44,20 @@ const styles = (theme: SaladTheme) => ({
   },
   rangeSum: {
     fontSize: theme.medium,
+  },
+  tickDesktop: {
+    display: 'none',
+  },
+  tickMobile: {
+    display: 'block',
+  },
+  '@media screen and (min-width: 1025px)': {
+    tickDesktop: {
+      display: 'block',
+    },
+    tickMobile: {
+      display: 'none',
+    },
   },
 })
 
@@ -158,6 +172,7 @@ interface ChartMouseEvent {
 }
 
 interface CustomTick extends WithStyles<typeof styles> {
+  daysShowing: 1 | 7 | 30
   fill: string
   payload: {
     coordinate: number
@@ -172,18 +187,30 @@ interface CustomTick extends WithStyles<typeof styles> {
 }
 
 const _CustomizedXAxisTick = (props: CustomTick) => {
-  const { classes, fill, payload, textAnchor, x, y } = props
+  const { classes, daysShowing, fill, payload, textAnchor, x, y } = props
   if (!payload) {
     return null
   }
 
-  const timestamp = moment(payload.value).add(15, 'minute').format('hh:mm')
+  const timestamp =
+    daysShowing === 30
+      ? moment(payload.value).add(15, 'minute').format('M/D') +
+        ' ' +
+        moment(payload.value).add(15, 'minute').format('A')
+      : moment(payload.value).add(15, 'minute').format('hh:mm')
   return (
-    <g transform={`translate(${x},${y})`} className={classes.tickFont}>
-      <text x={0} y={0} dy={12} fill={fill} textAnchor={textAnchor}>
-        {timestamp}
-      </text>
-    </g>
+    <>
+      <g transform={`translate(${x},${y})`} className={classnames(classes.tickFont, classes.tickMobile)}>
+        <text x={0} y={0} dy={4} fill={fill} textAnchor="end" transform="rotate(-25)">
+          {timestamp}
+        </text>
+      </g>
+      <g transform={`translate(${x},${y})`} className={classnames(classes.tickFont, classes.tickDesktop)}>
+        <text x={0} y={0} dy={12} fill={fill} textAnchor={textAnchor}>
+          {timestamp}
+        </text>
+      </g>
+    </>
   )
 }
 
@@ -399,6 +426,7 @@ class _EarningChart extends Component<Props, State> {
                 onMouseUp={this.handleMouseUp}
                 barGap={10}
               >
+                <CartesianGrid vertical={false} stroke="#1F4F22" />
                 {showEarningsRange ? (
                   <Tooltip
                     content={
@@ -425,21 +453,20 @@ class _EarningChart extends Component<Props, State> {
                     position={{ y: 0, x: 'auto' }}
                   />
                 )}
-                <CartesianGrid vertical={false} stroke="#1F4F22" />
                 <XAxis
                   dataKey={this.getTimeValue}
                   domain={['auto', 'auto']}
-                  interval={3}
+                  interval={7}
                   scale="time"
                   stroke="#B2D530"
                   //@ts-ignore
-                  tick={<CustomizedXAxisTick />}
+                  tick={<CustomizedXAxisTick daysShowing={daysShowing} />}
                   type="number"
                 />
                 <YAxis
                   axisLine={false}
                   minTickGap={2}
-                  stroke="#1F4F22"
+                  stroke="#B2D530"
                   //@ts-ignore
                   tick={<CustomizedYAxisTick />}
                   tickLine={false}
