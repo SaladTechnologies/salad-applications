@@ -1,8 +1,7 @@
-import { observable, action, flow } from 'mobx'
-import { Profile } from './models'
-import { config } from '../../config'
-import { RootStore } from '../../Store'
 import { AxiosInstance } from 'axios'
+import { action, flow, observable } from 'mobx'
+import { RootStore } from '../../Store'
+import { Profile } from './models'
 
 export class ProfileStore {
   @observable
@@ -39,22 +38,25 @@ export class ProfileStore {
 
   @action.bound
   setWhatsNewViewed = flow(function* (this: ProfileStore) {
-    if (this.currentProfile === undefined) return
+    if (this.currentProfile === undefined) {
+      return
+    }
+
+    const whatsNewVersion = this.store.engagement.whatsNewVersion
+    if (whatsNewVersion === undefined) {
+      return
+    }
 
     this.isUpdating = true
-
     try {
-      let patch = yield this.axios.patch('/api/v1/profile', {
-        lastSeenApplicationVersion: config.whatsNewVersion,
+      const response = yield this.axios.patch('/api/v1/profile', {
+        lastSeenApplicationVersion: whatsNewVersion,
       })
-      let profile = patch.data
 
-      this.currentProfile = profile
-
-      this.store.analytics.trackWhatsNew(config.whatsNewVersion)
+      this.currentProfile = response.data
+      this.store.analytics.trackWhatsNew(whatsNewVersion)
     } finally {
       this.isUpdating = false
-      this.store.routing.goBack()
     }
   })
 

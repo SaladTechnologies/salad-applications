@@ -82,7 +82,7 @@ export class RootStore {
     this.autoStart = new AutoStartStore(this)
     this.vault = new VaultStore(axios)
     this.version = new VersionStore(this, axios)
-    this.engagement = new EngagementStore(this)
+    this.engagement = new EngagementStore(this, axios)
     this.zendesk = new Zendesk(axios, this.auth)
 
     addAuthInterceptor(axios, this.auth)
