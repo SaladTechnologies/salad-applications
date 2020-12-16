@@ -13,7 +13,6 @@ import {
   UnknownErrorContainer,
 } from './modules/error-views'
 import { HomePage } from './modules/home-views'
-import { WhatsNewPageContainer } from './modules/onboarding-views'
 import { RewardDetailsContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
 import { SettingsContainer } from './modules/settings-views'
@@ -45,7 +44,7 @@ class _Routes extends Component<RouteComponentProps> {
           <Route exact path="/errors/network" component={NetworkErrorContainer} />
           <Route exact path="/errors/unknown" component={UnknownErrorContainer} />
           <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
-          <Route exact path="/whats-new" component={WhatsNewPageContainer} />
+          <Redirect exact from="/whats-new" to="/" />
           {/* SaladPay: This is stand in until we figure out iFrames, popups... */}
           <Route exact path="/salad-pay/order-summary" component={SaladPayOrderSummaryContainer} />
           <PrivateRoute

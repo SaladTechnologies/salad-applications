@@ -44,7 +44,6 @@ export class Config {
   public readonly mixpanelToken?: string = optionalString('REACT_APP_MIXPANEL_TOKEN')
   public readonly rewardRefreshRate: number = numberOrDefault('REACT_APP_REWARD_REFRESH_RATE', convertMinutes(5))
   public readonly sentryDSN?: string = optionalString('REACT_APP_SENTRY_DSN')
-  public readonly whatsNewVersion: string = requiredString('REACT_APP_WHATS_NEW_VERSION')
   public readonly searchUrl: string = requiredString('REACT_APP_SEARCH_URL')
   public readonly searchKey: string = requiredString('REACT_APP_SEARCH_KEY')
   public readonly searchEngine: string = requiredString('REACT_APP_SEARCH_ENGINE')

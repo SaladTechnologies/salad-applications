@@ -1,14 +1,21 @@
-import { autorun, computed } from 'mobx'
-import { config } from '../../config'
+import { AxiosInstance } from 'axios'
+import { action, autorun, computed, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
+import { ChangelogMetadata } from './models/ChangelogMetadata'
 import { HeroType } from './models/HeroType'
 
 export class EngagementStore {
+  public static readonly CHANGELOG_URL = 'https://www.notion.so/saladtech/What-s-New-d79aa0dde8874f1eaf88c65185b181a0'
+
+  @observable
+  public whatsNewVersion?: string
+
   @computed
   public get showWhatsNew(): boolean {
     const show =
+      this.whatsNewVersion !== undefined &&
       this.store?.profile?.currentProfile !== undefined &&
-      this.store?.profile?.currentProfile.lastSeenApplicationVersion !== config.whatsNewVersion
+      this.store?.profile?.currentProfile.lastSeenApplicationVersion !== this.whatsNewVersion
     return show
   }
 
@@ -32,13 +39,18 @@ export class EngagementStore {
   /** A flag indicating if the initial notification has already been sent */
   private showedInitialNotification = false
 
-  constructor(private readonly store: RootStore) {
+  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
+    this.loadChangelogMetadata()
     autorun(() => {
-      if (!this.store.auth.isAuthenticated) {
+      if (this.showedInitialNotification) {
         return
       }
 
-      if (this.showedInitialNotification) {
+      if (this.whatsNewVersion === undefined) {
+        return
+      }
+
+      if (!this.store.auth.isAuthenticated) {
         return
       }
 
@@ -54,9 +66,12 @@ export class EngagementStore {
           title: 'Salad was Updated',
           message: 'Something new just came out from the kitchen. Click here to learn more.',
           autoClose: false,
-          onClick: () => this.store.ui.showModal('/whats-new'),
+          onClick: () => {
+            window.open(EngagementStore.CHANGELOG_URL, '_blank')
+          },
         })
 
+        store.profile.setWhatsNewViewed()
         return
       }
 
@@ -95,4 +110,14 @@ export class EngagementStore {
       }
     })
   }
+
+  @action.bound
+  loadChangelogMetadata = flow(function* (this: EngagementStore) {
+    try {
+      const response = yield this.axios.get<ChangelogMetadata>('/api/v2/changelog')
+      this.whatsNewVersion = (response.data as ChangelogMetadata).lastUpdated
+    } catch (err) {
+      console.log(err)
+    }
+  })
 }

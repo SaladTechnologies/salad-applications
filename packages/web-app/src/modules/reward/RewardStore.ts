@@ -74,7 +74,6 @@ export class RewardStore {
         console.log(reward)
         this.rewards.set(reward.id, reward)
       } catch (err) {
-        debugger
         throw err
       }
     }.bind(this),
