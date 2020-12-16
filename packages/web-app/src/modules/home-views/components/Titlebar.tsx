@@ -153,7 +153,7 @@ class _Titlebar extends Component<Props> {
         {menuItems && (
           <div className={classes.componentContainer}>
             <AccountMenuContainer />
-            {isDesktop && <SettingsButtonContainer />}
+            <SettingsButtonContainer />
           </div>
         )}
 

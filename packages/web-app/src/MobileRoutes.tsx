@@ -21,8 +21,9 @@ class _Routes extends Component<RouteComponentProps> {
         <Switch location={currentLocation}>
           <Route path="/earn/offerwall" component={MobileOfferwallPageContainer} />
           <Route exact path="/earn/summary" component={MobileEarningSummaryContainer} />
-          <Route path="/account/summary" component={MobileAccountSummaryContainer} />
+          <Route path="/settings/summary" component={MobileAccountSummaryContainer} />
           <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
+          <Redirect exact from="/account/summary" to="/settings/summary" />
           <Redirect exact from="/" to="/earn/offerwall" />
           <Route component={MobilePageNotFound} />
         </Switch>

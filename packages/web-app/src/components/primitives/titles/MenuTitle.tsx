@@ -1,8 +1,9 @@
+import classNames from 'classnames'
 import React, { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { NavLink } from 'react-router-dom'
-import classNames from 'classnames'
 import { SaladTheme } from '../../../SaladTheme'
+import { SmartLink } from '../../SmartLink'
 
 const styles = (theme: SaladTheme) => ({
   menuTitle: {
@@ -39,6 +40,7 @@ interface Props extends WithStyles<typeof styles> {
   path?: string
   className?: string
   enabled?: boolean
+  externalLink?: boolean
 }
 
 class _MenuTitle extends Component<Props> {
@@ -53,7 +55,7 @@ class _MenuTitle extends Component<Props> {
   }
 
   render() {
-    const { path, children, className, classes, enabled } = this.props
+    const { path, children, className, classes, enabled, externalLink } = this.props
 
     const elements = path ? (
       <label
@@ -61,7 +63,9 @@ class _MenuTitle extends Component<Props> {
           [classes.disabledItem]: enabled === false,
         })}
       >
-        {enabled !== false ? (
+        {externalLink ? (
+          <SmartLink to={path}>{children}</SmartLink>
+        ) : enabled !== false ? (
           <NavLink to={path} activeClassName="active">
             {children}
           </NavLink>

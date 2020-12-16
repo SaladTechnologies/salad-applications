@@ -34,7 +34,7 @@ class _SettingsButton extends Component<Props> {
     const { onLatestDesktop, classes } = this.props
     return (
       <div className={classes.container}>
-        <SmartLink className={classes.settingsButton} to={'/settings/desktop-settings'}>
+        <SmartLink className={classes.settingsButton} to={'/settings/summary'}>
           <Img height={16} src={GearIcon} />
           {!onLatestDesktop && <div className={classes.menuItemNotification}></div>}
         </SmartLink>
