@@ -5,7 +5,7 @@ import { ChangelogMetadata } from './models/ChangelogMetadata'
 import { HeroType } from './models/HeroType'
 
 export class EngagementStore {
-  public static readonly CHANGELOG_URL = 'https://www.notion.so/saladtech/What-s-New-d79aa0dde8874f1eaf88c65185b181a0'
+  public static readonly CHANGELOG_URL = 'https://public.salad.io/whats-new'
 
   @observable
   public whatsNewVersion?: string

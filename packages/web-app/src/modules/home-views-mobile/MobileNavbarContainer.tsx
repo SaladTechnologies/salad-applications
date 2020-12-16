@@ -9,7 +9,7 @@ import { MobileNavbar, MobileNavItem } from './components/MobileNavbar'
 const menuItems: MobileNavItem[] = [
   new MobileNavItem('Offerwalls', offerwallIcon, '/earn/offerwall'),
   new MobileNavItem('Earnings', earnIcon, '/earn/summary'),
-  new MobileNavItem('Account', accountIcon, '/account/summary'),
+  new MobileNavItem('Account', accountIcon, '/settings/summary'),
   new MobileNavItem('Support', supportIcon, undefined, () => {
     //@ts-ignore
     if (zE) {

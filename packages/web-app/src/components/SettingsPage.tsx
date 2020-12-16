@@ -10,13 +10,14 @@ import { styles } from './SettingsPage.styles'
 export interface MenuItem {
   url: string
   text: string
-  component: React.ComponentType<any>
+  component?: React.ComponentType<any>
   /** Should a divider be drawn before this item */
   divider?: boolean
   /** Is the item clickable */
   enabled?: boolean
   inset?: boolean
   desktopOnly?: boolean
+  externalLink?: boolean
 }
 
 export interface MenuButton {
