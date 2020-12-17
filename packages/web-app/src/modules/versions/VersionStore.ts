@@ -45,7 +45,9 @@ export class VersionStore {
       removeItem(VERSION_RELOAD_DATA)
     }
 
-    this.checkDesktopVersion()
+    if (this.store.native.isNative) {
+      this.checkDesktopVersion()
+    }
 
     autorun(() => {
       console.log('Checking desktop version')

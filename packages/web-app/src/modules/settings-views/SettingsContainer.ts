@@ -50,7 +50,6 @@ const mapStoreToProps = (store: RootStore): any => {
     latestDesktop: store.version.onLatestDesktop,
     onDownloadLatestDesktop: store.version.downloadLatestDesktop,
     menuButtons: store.auth.isAuthenticated ? buttons : [],
-    isAuthenticated: store.auth.isAuthenticated,
   }
 }
 
