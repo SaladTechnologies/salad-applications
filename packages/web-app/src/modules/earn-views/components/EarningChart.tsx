@@ -19,14 +19,16 @@ const styles = (theme: SaladTheme) => ({
   container: {
     display: 'flex',
     paddingTop: 75,
-    height: 200,
+    minHeight: 250,
     width: '100%',
     position: 'relative',
     flexDirection: 'column',
   },
   placeholderText: {
     textAlign: 'center',
-    padding: 20,
+  },
+  placeholderTextHidden: {
+    visibility: 'hidden',
   },
   earningsRangeContainer: {
     marginLeft: -60,
@@ -407,13 +409,29 @@ class _EarningChart extends Component<Props, State> {
       { name: '7 Days', action: viewLast7Days },
       { name: '30 Days', action: viewLast30Days },
     ]
+
+    let timePeriod: string
+    switch (daysShowing) {
+      case 1:
+        timePeriod = '24 Hours'
+        break
+      case 7:
+        timePeriod = '7 Days'
+        break
+      case 30:
+        timePeriod = '30 Days'
+        break
+    }
+
     return (
       <div className={classes.container}>
-        {isZero && (
-          <div className={classes.placeholderText}>
-            <P>No Earning History. Get Chopping to See Those Earnings!</P>
-          </div>
-        )}
+        <div
+          className={classnames(classes.placeholderText, {
+            [classes.placeholderTextHidden]: !isZero,
+          })}
+        >
+          <P>No Earning History During the Last {timePeriod}. Get Chopping to See Those Earnings!</P>
+        </div>
         {earningHistory && (
           <>
             <ResponsiveContainer>
@@ -427,7 +445,7 @@ class _EarningChart extends Component<Props, State> {
                 barGap={10}
               >
                 <CartesianGrid vertical={false} stroke="#1F4F22" />
-                {showEarningsRange ? (
+                {showEarningsRange && !isZero ? (
                   <Tooltip
                     content={
                       <CustomRangeTooltip
