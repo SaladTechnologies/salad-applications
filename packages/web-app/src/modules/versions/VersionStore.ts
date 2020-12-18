@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios'
 import compareVersions from 'compare-versions'
-import { action, autorun, flow, observable, runInAction } from 'mobx'
+import { action, flow, observable, reaction, runInAction } from 'mobx'
 import { config } from '../../config'
 import { getItem, removeItem, setItem } from '../../Storage'
 import { RootStore } from '../../Store'
@@ -46,18 +46,24 @@ export class VersionStore {
     }
 
     if (this.store.native.isNative) {
+      reaction(
+        () => ({
+          currentDesktopVersion: this.store.native.desktopVersion,
+          latestDesktopVersion: this.latestDesktopVersion,
+        }),
+        ({ currentDesktopVersion, latestDesktopVersion }, reaction) => {
+          if (currentDesktopVersion !== undefined && latestDesktopVersion !== undefined) {
+            const onLatest = compareVersions.compare(currentDesktopVersion, latestDesktopVersion, '>=')
+            runInAction(() => {
+              this.onLatestDesktop = onLatest
+            })
+            reaction.dispose()
+          }
+        },
+      )
+
       this.checkDesktopVersion()
     }
-
-    autorun(() => {
-      console.log('Checking desktop version')
-      if (this.latestDesktopVersion && this.store.native.desktopVersion) {
-        let onLatest = compareVersions.compare(this.store.native.desktopVersion, this.latestDesktopVersion, '>=')
-        runInAction(() => {
-          this.onLatestDesktop = onLatest
-        })
-      }
-    })
   }
 
   startVersionChecks = () => {
@@ -84,11 +90,6 @@ export class VersionStore {
 
   @action.bound
   private checkDesktopVersion = flow(function* (this: VersionStore) {
-    if (!this.store.native.desktopVersion) {
-      this.onLatestDesktop = false
-      return
-    }
-
     try {
       let response = yield this.axios.get<DesktopVersionResource>('/api/v1/desktop-app/version')
 
