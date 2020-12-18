@@ -19,7 +19,7 @@ const styles = (theme: SaladTheme) => ({
   container: {
     display: 'flex',
     paddingTop: 75,
-    minHeight: 250,
+    height: 250,
     width: '100%',
     position: 'relative',
     flexDirection: 'column',
