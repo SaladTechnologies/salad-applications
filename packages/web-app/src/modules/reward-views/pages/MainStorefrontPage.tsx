@@ -59,7 +59,7 @@ class _MainStorefrontPage extends Component<Props> {
             <NotificationBannerContainer />
             {categories && categories.size > 0 ? (
               Array.from(categories).map(([category, rewards], i) => {
-                if (!rewards || rewards.length === 0) {
+                if (!rewards || rewards.length < 5 ) { // The minimum number of items to show on the store
                   return null
                 } else if (heroCategories.includes(category)) {
                   return (
