@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
 import classnames from 'classnames'
-import { RewardSystemDetails } from '../../reward/models'
+import { Component } from 'react'
+import withStyles, { WithStyles } from 'react-jss'
 import { InfoItem } from '.'
+import { SaladTheme } from '../../../SaladTheme'
+import { RewardSystemDetails } from '../../reward/models'
 
 const styles = (theme: SaladTheme) => ({
   container: {

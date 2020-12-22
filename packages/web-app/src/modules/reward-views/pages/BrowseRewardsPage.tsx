@@ -1,5 +1,5 @@
 import { Result } from '@elastic/react-search-ui'
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import withStyles, { WithStyles } from 'react-jss'
 import { P, Scrollbar } from '../../../components'

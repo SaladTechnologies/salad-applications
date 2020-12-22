@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
+import { Reward } from '../../reward/models'
 import { CartIcon } from '../assets/cart-icon'
 import { CartIconOutline } from '../assets/cart-icon-outline'
-import { Reward } from '../../reward/models'
 
 const styles = (theme: SaladTheme) => ({
   container: {

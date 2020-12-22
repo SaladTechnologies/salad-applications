@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { HeroPanel } from '../../../components/HeroPanel'
-import { HeroTitle, SmartLink } from '../../../components'
 import classnames from 'classnames'
+import { Component } from 'react'
+import withStyles, { WithStyles } from 'react-jss'
+import { HeroTitle, SmartLink } from '../../../components'
+import { HeroPanel } from '../../../components/HeroPanel'
 
 const styles = {
   column: {

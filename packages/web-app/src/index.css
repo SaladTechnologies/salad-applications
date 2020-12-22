@@ -1,10 +1,12 @@
 html {
   background-color: #0a2133;
 }
+
 body {
   overflow: hidden;
   margin: 0;
 }
+
 .hide-toast {
   background-color: transparent !important;
   box-shadow: none !important;

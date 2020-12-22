@@ -184,7 +184,7 @@ export class Plugin {
     console.log(`Starting download for ${this.name}`)
     let res = await axios.get(this.pluginDefinition.downloadUrl, { responseType: 'stream' })
 
-    await new Promise((fulfill) => {
+    await new Promise<void>((fulfill) => {
       let stream = res.data.pipe(fs.createWriteStream(downloadFilename))
       stream.on('finish', fulfill)
     })
@@ -192,7 +192,7 @@ export class Plugin {
     console.log(`Download complete ${this.name}`)
     console.log(`Extracting ${this.name}`)
 
-    await new Promise((fulfill, reject) => {
+    await new Promise<void>((fulfill, reject) => {
       if (downloadFilename.endsWith('.tar.gz')) {
         fs.promises
           .mkdir(this.pluginDirectory)

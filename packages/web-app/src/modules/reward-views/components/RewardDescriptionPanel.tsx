@@ -1,11 +1,11 @@
-import React, { Component, ReactElement } from 'react'
+import { DomElement } from 'htmlparser2'
+import { Component, ReactElement } from 'react'
+import ReactHtmlParser from 'react-html-parser'
 import withStyles, { WithStyles } from 'react-jss'
+import { SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { Reward } from '../../reward/models'
-import { SmartLink } from '../../../components'
 import { RewardDetailsContentPanel } from './RewardDetailsContentPanel'
-import ReactHtmlParser from 'react-html-parser'
-import { DomElement } from 'htmlparser2'
 
 const styles = (theme: SaladTheme) => ({
   titleText: {

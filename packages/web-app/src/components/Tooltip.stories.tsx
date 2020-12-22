@@ -1,8 +1,7 @@
-import React from 'react'
-import { storiesOf } from '@storybook/react'
 import { number } from '@storybook/addon-knobs'
-import { Tooltip } from './Tooltip'
+import { storiesOf } from '@storybook/react'
 import { loremIpsum } from 'lorem-ipsum'
+import { Tooltip } from './Tooltip'
 
 storiesOf('Components/Tooltip', module)
   .add('with text and title', () => {

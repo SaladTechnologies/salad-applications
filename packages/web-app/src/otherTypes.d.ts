@@ -4,6 +4,11 @@ declare module 'is-retry-allowed' {
   export = isRetryAllowed
 }
 
+declare module 'react-hint' {
+  const x: any
+  export = x
+}
+
 //Stolen from a WIP PR - https://github.com/elastic/search-ui/pull/458/files
 declare module '@elastic/search-ui-app-search-connector' {
   class AppSearchAPIConnector {

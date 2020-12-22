@@ -1,5 +1,3 @@
-import React from 'react'
-
 export const CartIconOutline = () => (
   <svg width="35" height="34" viewBox="0 0 35 34" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g filter="url(#filter0_ddi)">

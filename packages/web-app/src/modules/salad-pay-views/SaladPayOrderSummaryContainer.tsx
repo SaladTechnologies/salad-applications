@@ -1,5 +1,5 @@
-import { SaladPayOrderSummaryPage } from './components'
 import { SaladPayStore } from '../salad-pay/SaladPayStore'
+import { SaladPayOrderSummaryPage } from './components'
 import { connectSaladPay } from './connectSaladPay'
 
 const mapStoreToProps = (store: SaladPayStore): any => ({

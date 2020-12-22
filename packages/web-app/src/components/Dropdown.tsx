@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import Select, { OptionTypeBase } from 'react-select'
 import { SaladTheme } from '../SaladTheme'

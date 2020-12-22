@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Img } from 'react-image'
 import withStyles, { WithStyles } from 'react-jss'
 import { Divider, Li, P, Scrollbar, SectionHeader, SmartLink } from '../../../components'

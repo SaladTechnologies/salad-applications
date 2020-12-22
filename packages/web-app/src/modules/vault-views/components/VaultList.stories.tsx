@@ -1,6 +1,6 @@
 import { storiesOf } from '@storybook/react'
-import { VaultList } from './VaultList'
 import { addStories } from '../../../../.storybook/addStories'
+import { VaultList } from './VaultList'
 
 const redemptions = [
   { id: 'abc', name: 'Reward ABC', price: 22.2656514654, timestamp: new Date(), code: 'ABC-DEF-GHI' },

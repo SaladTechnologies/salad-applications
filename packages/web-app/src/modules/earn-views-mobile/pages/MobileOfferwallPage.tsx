@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Route, Switch } from 'react-router'
 import { TabControl, TabItem } from '../../../components/TabControl'
@@ -28,10 +28,7 @@ class _MobileOfferwallPage extends Component<Props> {
     return (
       <div className={classes.container}>
         <TabControl
-          tabs={[
-            new TabItem('AdGem', '/earn/offerwall/adgem'),
-            new TabItem('OfferToro', '/earn/offerwall/offer-toro'),
-          ]}
+          tabs={[new TabItem('AdGem', '/earn/offerwall/adgem'), new TabItem('OfferToro', '/earn/offerwall/offer-toro')]}
         />
         <div className={classes.fullPage}>
           <Switch>

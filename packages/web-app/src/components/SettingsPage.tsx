@@ -1,5 +1,5 @@
 import classnames from 'classnames'
-import React, { Component } from 'react'
+import { Component, ComponentType } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Route } from 'react-router'
 import { Button, Divider, Head, LinkListUnstyled, MenuTitle } from '.'
@@ -10,7 +10,7 @@ import { styles } from './SettingsPage.styles'
 export interface MenuItem {
   url: string
   text: string
-  component?: React.ComponentType<any>
+  component?: ComponentType<any>
   /** Should a divider be drawn before this item */
   divider?: boolean
   /** Is the item clickable */

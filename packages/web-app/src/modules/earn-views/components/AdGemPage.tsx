@@ -1,4 +1,3 @@
-import React from 'react'
 import { IFramePage } from './IFramePage'
 
 interface Props {

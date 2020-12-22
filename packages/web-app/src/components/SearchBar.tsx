@@ -1,7 +1,7 @@
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classnames from 'classnames'
-import React, { ChangeEvent, Component } from 'react'
+import { ChangeEvent, Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
 

@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
-import { SaladTheme } from '../../../../SaladTheme'
-import withStyles, { WithStyles } from 'react-jss'
-import { Username, P } from '../../../../components'
-import CopyToClipboard from 'react-copy-to-clipboard'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClipboard } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Component } from 'react'
+import CopyToClipboard from 'react-copy-to-clipboard'
+import withStyles, { WithStyles } from 'react-jss'
+import { P, Username } from '../../../../components'
+import { SaladTheme } from '../../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   container: {

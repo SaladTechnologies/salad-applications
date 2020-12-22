@@ -1,5 +1,3 @@
-import React from 'react'
-// Packages
 import withStyles, { WithStyles } from 'react-jss'
 import { InfoButton } from '../..'
 import { SaladTheme } from '../../../SaladTheme'

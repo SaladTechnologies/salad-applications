@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import Carousel from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'

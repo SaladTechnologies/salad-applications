@@ -1,8 +1,8 @@
 import { AxiosInstance } from 'axios'
 import { action, computed, flow, observable } from 'mobx'
 import moment from 'moment'
-import { batchEarningsWindow } from './utils'
 import { EarningWindow } from './models'
+import { batchEarningsWindow } from './utils'
 
 export class BalanceStore {
   @observable

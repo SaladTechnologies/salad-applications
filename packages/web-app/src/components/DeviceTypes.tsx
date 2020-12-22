@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import MediaQuery from 'react-responsive'
 
 interface Props {

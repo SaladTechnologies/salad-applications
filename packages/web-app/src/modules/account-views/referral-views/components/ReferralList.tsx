@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
+import Scrollbars from 'react-custom-scrollbars'
 import withStyles, { WithStyles } from 'react-jss'
+import { P, SectionHeader } from '../../../../components'
 import { Referral } from '../../../referral/models'
 import { ReferralItem } from './ReferralItem'
-import { SectionHeader, P } from '../../../../components'
-import Scrollbars from 'react-custom-scrollbars'
 
 const styles = {
   container: {

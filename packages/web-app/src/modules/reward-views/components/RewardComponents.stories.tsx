@@ -1,7 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { storiesOf } from '@storybook/react'
 import { LoremIpsum } from 'lorem-ipsum'
-import React from 'react'
 import { RewardDescriptionPanel, RewardHeaderBar, RewardInfoPanel, RewardRequirementsPanel } from '.'
 import gta1 from '../../../../.storybook/assets/gta-1.jpg'
 import gta2 from '../../../../.storybook/assets/gta-2.jpg'

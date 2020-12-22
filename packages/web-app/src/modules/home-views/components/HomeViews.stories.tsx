@@ -1,5 +1,4 @@
 import { storiesOf } from '@storybook/react'
-import React from 'react'
 import { BannerInfo } from '../../home/models/BannerInfo'
 import { NotificationBanner } from './NotificationBanner'
 

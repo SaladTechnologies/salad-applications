@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
-import { CartIcon } from '../assets/cart-icon'
-import { Reward } from '../../reward/models'
-// @ts-ignore
+import * as React from 'react'
+import { Component } from 'react'
 import ReactHintFactory from 'react-hint'
+import withStyles, { WithStyles } from 'react-jss'
 import { ChoppingCartTooltip } from '.'
+import { SaladTheme } from '../../../SaladTheme'
+import { Reward } from '../../reward/models'
+import { CartIcon } from '../assets/cart-icon'
 
 const ReactHint = ReactHintFactory(React)
 

@@ -6,9 +6,7 @@
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "preserve",
-    "lib": [
-      "es2020"
-    ],
+    "lib": ["es2020"],
     "module": "commonjs",
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
@@ -18,15 +16,9 @@
     "sourceMap": true,
     "strict": true,
     "target": "es2019",
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "useDefineForClassFields": true
   },
-  "include": [
-    "./src/**/*"
-  ],
-  "exclude": [
-    "./src/preload.js"
-  ]
+  "include": ["./src/**/*"],
+  "exclude": ["./src/preload.js"]
 }

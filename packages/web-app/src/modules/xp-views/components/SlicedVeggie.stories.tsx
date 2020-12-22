@@ -1,6 +1,5 @@
 import { number, select } from '@storybook/addon-knobs'
 import { Meta } from '@storybook/react'
-import React from 'react'
 import { defaultLevels } from '../../xp/models/defaultLevels'
 import { Level } from '../../xp/models/Level'
 import { SlicedVeggie } from './SlicedVeggie'

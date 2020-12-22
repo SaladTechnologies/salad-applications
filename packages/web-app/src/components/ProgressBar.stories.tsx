@@ -1,8 +1,7 @@
-import React from 'react'
-import { storiesOf } from '@storybook/react'
 import { number } from '@storybook/addon-knobs'
-import { VerticalProgress } from './VerticalProgress'
+import { storiesOf } from '@storybook/react'
 import { ProgressBar } from './ProgressBar'
+import { VerticalProgress } from './VerticalProgress'
 
 storiesOf('Components/Progress', module)
   .add('vertical progress bar ', () => {

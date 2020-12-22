@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import React, { Component } from 'react'
+import { Component, createRef, RefObject } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Overlay, Portal } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
@@ -44,12 +44,12 @@ interface FramePageState {
 
 export const FramePage = withStyles(styles)(
   class FramePage extends Component<FramePageProps, FramePageState> {
-    private readonly frame: React.RefObject<HTMLIFrameElement>
+    private readonly frame: RefObject<HTMLIFrameElement>
     private cancelFrameListener?: () => void
 
     constructor(props: FramePageProps) {
       super(props)
-      this.frame = React.createRef()
+      this.frame = createRef()
       this.state = {
         frameLoaded: false,
       }

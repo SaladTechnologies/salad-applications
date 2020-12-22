@@ -1,8 +1,7 @@
-import React from 'react'
-import { storiesOf } from '@storybook/react'
-import { ChoppingCartButton, ChoppingCartTooltip, AddToCartButton } from '.'
-import { generateRewards } from '../../reward-views/components/RewardComponents.stories'
 import { action } from '@storybook/addon-actions'
+import { storiesOf } from '@storybook/react'
+import { AddToCartButton, ChoppingCartButton, ChoppingCartTooltip } from '.'
+import { generateRewards } from '../../reward-views/components/RewardComponents.stories'
 
 storiesOf('Modules/Chopping Cart/Button', module)
   .add('with rewards (n=1)', () => {

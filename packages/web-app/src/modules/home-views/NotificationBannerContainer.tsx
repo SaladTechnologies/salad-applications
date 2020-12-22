@@ -1,6 +1,6 @@
 import { connect } from '../../connect'
-import { NotificationBanner } from './components/NotificationBanner'
 import { RootStore } from '../../Store'
+import { NotificationBanner } from './components/NotificationBanner'
 
 const mapStoreToProps = (store: RootStore): any => ({
   bannerInfo: store.home.bannerInfo,

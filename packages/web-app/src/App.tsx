@@ -1,7 +1,7 @@
 import { SearchProvider } from '@elastic/react-search-ui'
 import AppSearchAPIConnector from '@elastic/search-ui-app-search-connector'
 import { History } from 'history'
-import React, { Component } from 'react'
+import { Component } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
 import withStyles, { WithStyles } from 'react-jss'
 import { ToastContainer } from 'react-toastify'

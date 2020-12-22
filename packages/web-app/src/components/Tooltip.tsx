@@ -1,4 +1,4 @@
-import React from 'react'
+import { ReactNode, StatelessComponent } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
 
@@ -32,10 +32,10 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   title?: string
   text?: string
-  children?: React.ReactNode
+  children?: ReactNode
 }
 
-const _Tooltip: React.StatelessComponent<Props> = ({ text, title, classes, children }) => (
+const _Tooltip: StatelessComponent<Props> = ({ text, title, classes, children }) => (
   <div className={classes.container}>
     {title && <div className={classes.title}>{title}</div>}
     <div className={classes.text}>

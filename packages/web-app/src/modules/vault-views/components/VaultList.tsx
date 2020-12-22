@@ -1,5 +1,4 @@
-import React, { Component } from 'react'
-// Packages
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Head, P } from '../../../components'
 import { withLogin } from '../../auth-views'

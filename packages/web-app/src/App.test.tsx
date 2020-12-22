@@ -1,7 +1,6 @@
-import React from 'react'
+import { createMemoryHistory } from 'history'
 import ReactDOM from 'react-dom'
 import { App } from './App'
-import { createMemoryHistory } from 'history'
 
 const history = createMemoryHistory()
 

@@ -1,7 +1,7 @@
-import React, { ReactNode } from 'react'
+import classnames from 'classnames'
+import { ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Link } from 'react-router-dom'
-import classnames from 'classnames'
 
 const styles = {
   link: {

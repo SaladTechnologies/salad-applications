@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { ExternalLinkListUnstyled } from '../../../components'
 import { ErrorPage } from '../../../components/ErrorPage'
 

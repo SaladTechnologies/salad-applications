@@ -1,12 +1,14 @@
-import React from 'react'
+import { withKnobs } from '@storybook/addon-knobs'
 import { addDecorator } from '@storybook/react'
+import React from 'react'
+import { MemoryRouter } from 'react-router-dom'
 import { Border } from './decorators/Border'
 import { DisableUserSelect } from './decorators/DisableUserSelect'
 import { SaladTheme } from './decorators/SaladTheme'
-import { TooltipDecorator } from './decorators/TooltipDecorator'
 import { StoreDecorator } from './decorators/StoreDecorator'
-import { MemoryRouter } from 'react-router-dom'
-import { withKnobs } from '@storybook/addon-knobs'
+import { TooltipDecorator } from './decorators/TooltipDecorator'
+
+// Import CSS. Order is important!
 import '../src/index.css'
 import 'react-hint/css/index.css'
 

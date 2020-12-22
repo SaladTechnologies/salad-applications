@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { TransitionGroup, CSSTransition } from 'react-transition-group'
-import { Switch, Route } from 'react-router'
+import { Route, Switch } from 'react-router'
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 const animationTime = 1000
 

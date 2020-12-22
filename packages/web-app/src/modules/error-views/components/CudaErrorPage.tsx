@@ -1,6 +1,5 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { SmartLink } from '../../../components'
-// Components
 import { ErrorPage } from '../../../components/ErrorPage'
 
 interface Props {

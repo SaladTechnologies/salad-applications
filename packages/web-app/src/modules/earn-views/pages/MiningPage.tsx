@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import React, { Component } from 'react'
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Divider, Head, Scrollbar, SectionHeader } from '../../../components'
 import { withLogin } from '../../auth-views'

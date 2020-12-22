@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
 import classnames from 'classnames'
+import { Component } from 'react'
+import withStyles, { WithStyles } from 'react-jss'
+import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
+import { SaladTheme } from '../../../SaladTheme'
 import { Reward } from '../../reward/models'
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
-import { RewardSystemDetailsList } from './RewardSystemDetailsList'
 import { RewardDetailsContentPanel } from './RewardDetailsContentPanel'
+import { RewardSystemDetailsList } from './RewardSystemDetailsList'
 
 const styles = (theme: SaladTheme) => ({
   titleText: {

@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/react'
-import React, { FC, PureComponent } from 'react'
+import { FC, PureComponent } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Button } from './components/Button'
 import { SmartLink } from './components/SmartLink'

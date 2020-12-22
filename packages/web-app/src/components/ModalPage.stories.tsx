@@ -1,8 +1,7 @@
-import React from 'react'
-import { storiesOf } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
-import { ModalPage } from './ModalPage'
+import { storiesOf } from '@storybook/react'
 import { Modal } from './Modal'
+import { ModalPage } from './ModalPage'
 
 storiesOf('Components/Modals', module)
   .add('Modal Page', () => {

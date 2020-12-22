@@ -1,4 +1,4 @@
-import { ReferralDefinition, maximumReferrerBonus } from './ReferralDefinition'
+import { maximumReferrerBonus, ReferralDefinition } from './ReferralDefinition'
 
 export interface Referral {
   refereeId: string

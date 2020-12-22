@@ -84,8 +84,8 @@ export class Zendesk {
       if (!Zendesk.injectionError) {
         this.initializeRetryTimeout = setTimeout(() => {
           this.initializeRetryTimeout = undefined
-          this.login(username, email);
-        }, 1000);
+          this.login(username, email)
+        }, 1000)
       }
 
       return
@@ -129,8 +129,8 @@ export class Zendesk {
       if (!Zendesk.injectionError) {
         this.initializeRetryTimeout = setTimeout(() => {
           this.initializeRetryTimeout = undefined
-          this.logout();
-        }, 1000);
+          this.logout()
+        }, 1000)
       }
 
       return

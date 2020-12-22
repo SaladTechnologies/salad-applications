@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { NavLink } from 'react-router-dom'
 import { SaladTheme } from '../SaladTheme'

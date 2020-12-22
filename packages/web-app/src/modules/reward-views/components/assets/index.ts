@@ -1,5 +1,5 @@
 export * from './IconArrowDown'
 export * from './IconArrowLeft'
 export * from './IconArrowRight'
-export * from './IconTriangleRight'
 export * from './IconTriangleLeft'
+export * from './IconTriangleRight'

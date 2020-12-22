@@ -1,5 +1,5 @@
 import { Result } from '@elastic/react-search-ui'
-import React, { Component } from 'react'
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { BrowseRewardsPage } from '.'
 import { SearchResult } from '../../reward/models'

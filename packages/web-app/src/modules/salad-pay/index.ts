@@ -1,2 +1,2 @@
-export * from './SaladPayStore'
 export * from './models'
+export * from './SaladPayStore'

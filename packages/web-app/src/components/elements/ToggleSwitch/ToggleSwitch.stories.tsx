@@ -1,7 +1,7 @@
-import { storiesOf } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
-import { ToggleSwitch } from './ToggleSwitch'
+import { storiesOf } from '@storybook/react'
 import { addStories } from '../../../../.storybook/addStories'
+import { ToggleSwitch } from './ToggleSwitch'
 
 const stories = [
   {

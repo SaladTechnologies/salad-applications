@@ -1,7 +1,7 @@
-import React from 'react'
-// @ts-ignore
+import * as React from 'react'
 import ReactHintFactory from 'react-hint'
 import { Tooltip } from './components'
+
 const ReactHint = ReactHintFactory(React)
 
 /** The collection of all tooltips that are available to the app */

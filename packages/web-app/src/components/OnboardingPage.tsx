@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../SaladTheme'
 import classnames from 'classnames'
-import logo from './assets/SaladLockup-BlueBg.svg'
+import { Component, ReactNode } from 'react'
+import withStyles, { WithStyles } from 'react-jss'
 import { Button } from '.'
+import { SaladTheme } from '../SaladTheme'
+import logo from './assets/SaladLockup-BlueBg.svg'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -74,7 +74,7 @@ interface Props extends WithStyles<typeof styles> {
   title?: string
   subtitle?: string
   image?: string
-  rightContent?: React.ReactNode
+  rightContent?: ReactNode
   hasBack?: boolean
   nextText?: string
   nextSubmitting?: boolean

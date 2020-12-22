@@ -1,5 +1,5 @@
 import { Location } from 'history'
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router'
 import { MobilePageNotFound } from './components/MobilePageNotFound'
 import { MobileAccountSummaryContainer } from './modules/account-views-mobile'

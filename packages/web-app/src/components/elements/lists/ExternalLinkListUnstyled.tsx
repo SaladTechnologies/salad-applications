@@ -1,14 +1,8 @@
-import React, { Component } from 'react'
-
-// Store
-import { getStore } from '../../../Store'
-
-// UI
-import { SmartLink } from '../..'
-
-// Packages
-import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
+import { Component } from 'react'
+import withStyles, { WithStyles } from 'react-jss'
+import { SmartLink } from '../..'
+import { getStore } from '../../../Store'
 
 const styles = {
   linkListUnstyled: {

@@ -1,5 +1,5 @@
-import { SaladPaymentResponse } from './SaladPaymentResponse'
 import { SaladPaymentRequestEvents } from './SaladPaymentRequestEvents'
+import { SaladPaymentResponse } from './SaladPaymentResponse'
 
 export interface SaladPaymentRequest {
   /** Indicates whether the PaymentRequest object can make a payment before calling show(). */

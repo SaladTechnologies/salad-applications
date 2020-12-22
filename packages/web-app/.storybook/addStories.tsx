@@ -1,6 +1,6 @@
-import React from 'react'
 import { StoryApi } from '@storybook/addons'
 import { StoryFnReactReturnType } from '@storybook/react/dist/client/preview/types'
+import React from 'react'
 
 export interface StoryData {
   name: string
@@ -26,7 +26,7 @@ export const addStories = (
         padding: 20,
       }}
     >
-      {storyList.map(x => (
+      {storyList.map((x) => (
         <div key={x.name} style={{ marginBottom: '60px' }}>
           <div
             style={{
@@ -45,7 +45,7 @@ export const addStories = (
     </div>
   ))
 
-  storyList.forEach(x => {
+  storyList.forEach((x) => {
     stories.add(x.name, () => (
       <div style={{ backgroundColor: backgroundColor }}>{React.createElement(component, x.props)}</div>
     ))

@@ -1,5 +1,5 @@
 import { Location } from 'history'
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router'
 import { LoadingPage } from './components'
 import { EmailVerificationPageContainer, LoginPageContainer, LogoutPageContainer } from './modules/auth-views'
