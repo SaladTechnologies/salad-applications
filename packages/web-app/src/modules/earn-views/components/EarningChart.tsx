@@ -1,7 +1,7 @@
 import classnames from 'classnames'
 import { uniq } from 'lodash'
 import moment from 'moment'
-import React, { Component } from 'react'
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { P } from '../../../components'

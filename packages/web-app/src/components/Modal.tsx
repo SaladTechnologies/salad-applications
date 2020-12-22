@@ -1,10 +1,9 @@
-import React, { Component } from 'react'
-import { SaladTheme } from '../SaladTheme'
-import withStyles, { WithStyles } from 'react-jss'
-import classNames from 'classnames'
-import { ReactNode } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import classNames from 'classnames'
+import { Component, ReactNode } from 'react'
+import withStyles, { WithStyles } from 'react-jss'
+import { SaladTheme } from '../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   container: {

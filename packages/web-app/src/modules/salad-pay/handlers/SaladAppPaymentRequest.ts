@@ -1,17 +1,17 @@
+import { getSaladPayStore, SaladPayStore } from '..'
 import {
+  AbortError,
   SaladPaymentRequest,
+  SaladPaymentRequestEvents,
   SaladPaymentRequestOptions,
   SaladPaymentResponse,
-  AbortError,
-  SaladPaymentRequestEvents,
 } from '../models'
-import { SaladPayStore, getSaladPayStore } from '..'
 
 // TODO: Add support for events when details (such as address, email, or phone number) change.
 export class SaladAppPaymentRequest implements SaladPaymentRequest {
   private readonly saladPayStore: SaladPayStore = getSaladPayStore()
   private showReject?: (reason?: any) => void
-  private showResolve?: (value?: SaladPaymentResponse | PromiseLike<SaladPaymentResponse> | undefined) => void
+  private showResolve?: (value: SaladPaymentResponse | PromiseLike<SaladPaymentResponse>) => void
   private callbacks = new Map<string, (() => void)[]>()
 
   constructor(public readonly options: SaladPaymentRequestOptions) {

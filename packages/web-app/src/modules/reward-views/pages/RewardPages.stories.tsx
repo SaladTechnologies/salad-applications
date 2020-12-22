@@ -1,6 +1,5 @@
 import { action } from '@storybook/addon-actions'
 import { storiesOf } from '@storybook/react'
-import React from 'react'
 import { BrowseRewardsPage, MainStorefrontPage, RewardDetailsPage } from '.'
 import { generateResults, generateRewards } from '../components/RewardComponents.stories'
 

@@ -1,7 +1,7 @@
-import React, { Component, CSSProperties } from 'react'
+import classNames from 'classnames'
+import { Component, CSSProperties } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
-import classNames from 'classnames'
 
 const styles = (theme: SaladTheme) => ({
   container: {

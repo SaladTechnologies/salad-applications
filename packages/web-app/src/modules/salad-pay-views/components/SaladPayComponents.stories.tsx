@@ -1,10 +1,9 @@
-import React from 'react'
+import { action } from '@storybook/addon-actions'
 import { storiesOf } from '@storybook/react'
-import { SaladPayPage } from './SaladPayPage'
 import { SaladPayOrderSummaryPage } from '.'
 import { SaladPaymentRequestOptions } from '../../salad-pay/models'
-import { action } from '@storybook/addon-actions'
 import { SaladPayCheckoutButton } from './SaladPayCheckoutButton'
+import { SaladPayPage } from './SaladPayPage'
 
 export const fullRequest: SaladPaymentRequestOptions = {
   total: {

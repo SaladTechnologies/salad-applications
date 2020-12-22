@@ -1,11 +1,7 @@
-import React, { Component } from 'react'
-
-// Theme
-import { SaladTheme } from '../../../SaladTheme'
-
-// Packages
-import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
+import { Component } from 'react'
+import withStyles, { WithStyles } from 'react-jss'
+import { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   errorText: {

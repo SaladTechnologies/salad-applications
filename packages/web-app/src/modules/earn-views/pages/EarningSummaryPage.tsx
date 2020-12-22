@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Divider, Scrollbar, SectionHeader } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'

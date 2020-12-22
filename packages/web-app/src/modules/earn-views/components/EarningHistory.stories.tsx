@@ -1,6 +1,5 @@
 import { Meta } from '@storybook/react'
 import moment from 'moment'
-import React from 'react'
 import { EarningHistory } from '.'
 import { EarningWindow } from '../../balance/models'
 

@@ -1,5 +1,5 @@
-import { SaladPaymentRequest, SaladPaymentRequestOptions } from './models'
 import { SaladAppPaymentRequest, UnsupportedPaymentRequest } from './handlers'
+import { SaladPaymentRequest, SaladPaymentRequestOptions } from './models'
 
 export class SaladPay {
   private currentRequest?: SaladPaymentRequest

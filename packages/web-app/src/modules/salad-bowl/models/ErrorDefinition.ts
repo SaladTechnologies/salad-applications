@@ -1,5 +1,6 @@
-import { ErrorCategory } from './ErrorCategory'
 import { ErrorAction } from './ErrorAction'
+import { ErrorCategory } from './ErrorCategory'
+
 export interface ErrorDefinition {
   /** The log message to look for */
   message: string

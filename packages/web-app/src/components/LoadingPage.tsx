@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
+import classNames from 'classnames'
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
 import logo from './assets/animated-logo-lg.gif'
-import classNames from 'classnames'
 
 const styles = (theme: SaladTheme) => ({
   container: {

@@ -1,5 +1,4 @@
 import { Meta } from '@storybook/react'
-import React from 'react'
 import { GpuInformation } from '../../machine/models'
 import { MachineInfoPanel } from './MachineInfoPanel'
 

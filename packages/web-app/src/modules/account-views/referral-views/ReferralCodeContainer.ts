@@ -1,6 +1,6 @@
 import { connect } from '../../../connect'
-import { ReferralCode } from './components/ReferralCode'
 import { RootStore } from '../../../Store'
+import { ReferralCode } from './components/ReferralCode'
 
 const mapStoreToProps = (store: RootStore): any => ({
   code: store.referral.referralCode,

@@ -1,6 +1,6 @@
-import { action, observable, runInAction, autorun } from 'mobx'
-import { RootStore } from '../../Store'
+import { action, autorun, observable, runInAction } from 'mobx'
 import * as Storage from '../../Storage'
+import { RootStore } from '../../Store'
 import { StartReason, StopReason } from '../salad-bowl/models'
 
 const getIdleTime = 'get-idle-time'

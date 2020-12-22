@@ -1,7 +1,7 @@
-import { storiesOf } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
-import { Slider } from './Slider'
+import { storiesOf } from '@storybook/react'
 import { addStories } from '../../../../.storybook/addStories'
+import { Slider } from './Slider'
 
 const stories = [
   {

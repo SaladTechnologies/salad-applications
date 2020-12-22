@@ -1,10 +1,7 @@
 import classnames from 'classnames'
-import React, { Component } from 'react'
-// Packages
+import { Component, Fragment } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-// UI
 import { Divider, MenuTitle } from '../../'
-// Store
 import { getStore } from '../../../Store'
 
 const styles = {
@@ -46,14 +43,14 @@ class _LinkListUnstyled extends Component<Props> {
       <ul className={classnames('linkListUnstyled', classes.linkListUnstyled)}>
         {list.map((item) => {
           return (
-            <React.Fragment key={item.url}>
+            <Fragment key={item.url}>
               {item.divider && <Divider className={classes.divider} />}
               <li className={classnames('linkListItem', classes.linkListItem, { [classes.inset]: item.inset })}>
                 <MenuTitle path={item.url} enabled={item.enabled} externalLink={item.externalLink}>
                   {item.text}
                 </MenuTitle>
               </li>
-            </React.Fragment>
+            </Fragment>
           )
         })}
       </ul>

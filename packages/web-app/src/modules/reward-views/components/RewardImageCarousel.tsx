@@ -1,5 +1,5 @@
 import classnames from 'classnames'
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Img } from 'react-image'
 import withStyles, { WithStyles } from 'react-jss'
 import Carousel from 'react-multi-carousel'

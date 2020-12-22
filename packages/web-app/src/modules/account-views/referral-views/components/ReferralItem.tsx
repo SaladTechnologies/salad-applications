@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { SaladTheme } from '../../../../SaladTheme'
-import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
-import { Referral, percentComplete, currentEarned } from '../../../referral/models'
+import { Component } from 'react'
+import withStyles, { WithStyles } from 'react-jss'
 import { P, ProgressBar } from '../../../../components'
+import { SaladTheme } from '../../../../SaladTheme'
+import { currentEarned, percentComplete, Referral } from '../../../referral/models'
 import { maximumReferrerBonus } from '../../../referral/models/ReferralDefinition'
 
 const styles = (theme: SaladTheme) => ({

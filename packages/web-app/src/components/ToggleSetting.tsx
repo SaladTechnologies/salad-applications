@@ -1,7 +1,5 @@
 import classnames from 'classnames'
-import React, { Component } from 'react'
-// UI
-// Packages
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { P, ToggleSwitch, Username } from '.'
 

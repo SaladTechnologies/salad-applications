@@ -1,5 +1,5 @@
 import classnames from 'classnames'
-import React, { Component, ReactNode } from 'react'
+import { Component, ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
 import { AnimatedBorder } from './AnimatedBorder'

@@ -1,6 +1,5 @@
-import { action, observable, flow } from 'mobx'
-// import { RootStore } from '../../Store'
 import { AxiosInstance } from 'axios'
+import { action, flow, observable } from 'mobx'
 import { BannerInfo } from './models/BannerInfo'
 
 export class HomeStore {

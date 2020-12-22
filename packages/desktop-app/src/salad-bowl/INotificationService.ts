@@ -1,5 +1,5 @@
-import { StatusMessage } from './models/StatusMessage'
 import { ErrorMessage } from './models/ErrorMessage'
+import { StatusMessage } from './models/StatusMessage'
 
 export interface INotificationService {
   /** Sends a status message */

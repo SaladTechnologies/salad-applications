@@ -1,6 +1,5 @@
 import classnames from 'classnames'
-import React, { Component } from 'react'
-//@ts-ignore
+import { Component } from 'react'
 import AspectRatio from 'react-aspect-ratio'
 import 'react-aspect-ratio/aspect-ratio.css'
 import { Img } from 'react-image'

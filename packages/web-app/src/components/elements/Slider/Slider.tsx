@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import { Range, getTrackBackground } from 'react-range'
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
+import { getTrackBackground, Range } from 'react-range'
 import { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({

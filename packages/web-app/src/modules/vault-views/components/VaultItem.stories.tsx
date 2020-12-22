@@ -1,6 +1,6 @@
 import { storiesOf } from '@storybook/react'
-import { VaultItem } from './VaultItem'
 import { addStories } from '../../../../.storybook/addStories'
+import { VaultItem } from './VaultItem'
 
 const stories = [
   {

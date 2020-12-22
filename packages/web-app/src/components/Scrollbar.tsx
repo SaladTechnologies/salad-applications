@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import { Component } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
+import withStyles, { WithStyles } from 'react-jss'
 
 const styles = {
   scrollThumb: {

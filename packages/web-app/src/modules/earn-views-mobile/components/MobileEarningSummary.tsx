@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Divider, SectionHeader, StatElement } from '../../../components'
 import { formatBalance } from '../../../utils'

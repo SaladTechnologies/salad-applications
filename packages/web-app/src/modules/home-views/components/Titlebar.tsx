@@ -1,7 +1,7 @@
 import { faClone, faMinus, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classnames from 'classnames'
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Img } from 'react-image'
 import withStyles, { WithStyles } from 'react-jss'
 import { SmartLink } from '../../../components'

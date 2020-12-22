@@ -1,8 +1,8 @@
 import * as path from 'path'
+import { INotificationService } from './INotificationService'
 import { PluginDefinition } from './models/PluginDefinition'
 import { PluginStatus } from './models/PluginStatus'
 import { Plugin } from './Plugin'
-import { INotificationService } from './INotificationService'
 
 export class PluginManager {
   private plugin?: Plugin

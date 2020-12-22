@@ -1,5 +1,5 @@
 import { Facet, Sorting } from '@elastic/react-search-ui'
-import React, { Component } from 'react'
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Dropdown } from '../../../components/Dropdown'
 import { RewardFilterPanel } from './RewardFilterPanel'

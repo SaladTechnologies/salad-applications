@@ -1,5 +1,5 @@
 import classnames from 'classnames'
-import React, { Component } from 'react'
+import { ChangeEvent, Component, FocusEvent } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { ErrorText } from '.'
 import { SaladTheme } from '../SaladTheme'
@@ -41,9 +41,9 @@ interface Props extends WithStyles<typeof styles> {
   name?: string
   placeholder?: string
   className?: string
-  onBlur?: (event?: React.FocusEvent<any>) => void
-  onChange?: (event: React.ChangeEvent<any>) => void
-  onFocus?: (event?: React.FocusEvent<any>) => void
+  onBlur?: (event?: FocusEvent<any>) => void
+  onChange?: (event: ChangeEvent<any>) => void
+  onFocus?: (event?: FocusEvent<any>) => void
   value?: any
   errorText?: string
 }

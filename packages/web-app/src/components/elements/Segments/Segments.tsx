@@ -1,6 +1,5 @@
 import classnames from 'classnames'
-import React, { Component } from 'react'
-// Packages
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 

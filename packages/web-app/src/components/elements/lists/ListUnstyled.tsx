@@ -1,8 +1,6 @@
-import React, { Component } from 'react'
-
-// Packages
-import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
+import { Component } from 'react'
+import withStyles, { WithStyles } from 'react-jss'
 
 const styles = {
   listUnstyled: {

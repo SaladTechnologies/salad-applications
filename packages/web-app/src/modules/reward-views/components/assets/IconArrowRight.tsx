@@ -1,4 +1,3 @@
-import React from 'react'
 import { IconArrowDown } from './IconArrowDown'
 
 export const IconArrowRight = () => (

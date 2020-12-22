@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 
 const styles = {}

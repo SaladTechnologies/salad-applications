@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { SaladTheme } from '../../../../SaladTheme'
-import withStyles, { WithStyles } from 'react-jss'
 import classnames from 'classnames'
-import { Referral, percentComplete } from '../../../referral/models'
-import { P, SectionHeader, ProgressBar } from '../../../../components'
+import { Component } from 'react'
+import withStyles, { WithStyles } from 'react-jss'
+import { P, ProgressBar, SectionHeader } from '../../../../components'
+import { SaladTheme } from '../../../../SaladTheme'
+import { percentComplete, Referral } from '../../../referral/models'
 
 const styles = (theme: SaladTheme) => ({
   container: {

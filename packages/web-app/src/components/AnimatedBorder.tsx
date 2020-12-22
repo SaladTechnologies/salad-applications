@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
+import classnames from 'classnames'
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
-import classnames from 'classnames'
 
 const animationTime = 3
 const borderWidth = 1

@@ -1,5 +1,4 @@
-import React, { Component } from 'react'
-// Components
+import { Component } from 'react'
 import { ErrorPage } from '../../../components/ErrorPage'
 
 interface Props {

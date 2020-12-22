@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import React, { Component } from 'react'
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Button, Overlay, Portal } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'

@@ -1,11 +1,10 @@
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Field, Form } from 'react-final-form'
 import withStyles, { WithStyles } from 'react-jss'
 import { Button, ComputerName, P, TextField, Username } from '../../../../components'
 import { Profile } from '../../../profile/models'
-// Styles
 import { styles } from './EditUsername.styles'
 
 interface Props extends WithStyles<typeof styles> {

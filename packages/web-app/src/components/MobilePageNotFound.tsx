@@ -1,4 +1,3 @@
-import React from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
 
@@ -14,12 +13,11 @@ const styles = (theme: SaladTheme) => ({
   },
   text: {
     fontSize: theme.medium,
-    fontFamily: theme.fontGroteskBook19
-  }
+    fontFamily: theme.fontGroteskBook19,
+  },
 })
 
-interface Props extends WithStyles<typeof styles> { }
-
+interface Props extends WithStyles<typeof styles> {}
 
 const _MobilePageNotFound = ({ classes }: Props) => {
   return (
@@ -30,4 +28,3 @@ const _MobilePageNotFound = ({ classes }: Props) => {
 }
 
 export const MobilePageNotFound = withStyles(styles)(_MobilePageNotFound)
-

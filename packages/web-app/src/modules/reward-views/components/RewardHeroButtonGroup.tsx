@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { IconTriangleRight, IconTriangleLeft } from './assets'
 import { ButtonGroupProps } from 'react-multi-carousel/lib/types'
+import { IconTriangleLeft, IconTriangleRight } from './assets'
 
 const styles = {
   container: {

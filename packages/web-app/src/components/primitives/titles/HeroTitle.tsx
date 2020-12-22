@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import { SaladTheme } from '../../../SaladTheme'
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
+import { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   header: {

@@ -1,8 +1,7 @@
-import React from 'react'
-import { RootStore } from '../../Store'
-import { NotificationMessage } from './models'
 import { toast } from 'react-toastify'
+import { RootStore } from '../../Store'
 import { NotificationToast } from './components/NotificationToast'
+import { NotificationMessage } from './models'
 
 export class NotificationStore {
   constructor(private readonly store: RootStore) {}

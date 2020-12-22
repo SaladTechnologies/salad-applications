@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
+import classnames from 'classnames'
+import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
+import { ReferralCodeEntryContainer } from '../..'
+import { P, SectionHeader } from '../../../../components'
 import { Referral } from '../../../referral/models'
 import { CurrentReferralProgress } from './CurrentReferralProgress'
-import classnames from 'classnames'
-import { P, SectionHeader } from '../../../../components'
-import { ReferralCodeEntryContainer } from '../..'
 
 const styles = {
   container: {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component, Fragment } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Head, Scrollbar } from '../../../components'
 import { rewardCategoryRoute } from '../../../RouteUtils'
@@ -71,14 +71,14 @@ class _MainStorefrontPage extends Component<Props> {
                   )
                 } else {
                   return (
-                    <React.Fragment key={category}>
+                    <Fragment key={category}>
                       <RewardSlider key={category} title={category} viewAllRoute={rewardCategoryRoute(category)}>
                         {rewards.slice(0, maxRowSize).map((x) => (
                           <RewardItem key={x.id} result={x} />
                         ))}
                       </RewardSlider>
                       {this.getHero(i)}
-                    </React.Fragment>
+                    </Fragment>
                   )
                 }
               })

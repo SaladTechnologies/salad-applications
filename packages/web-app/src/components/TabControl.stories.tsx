@@ -1,5 +1,4 @@
 import { Meta } from '@storybook/react'
-import React from 'react'
 import { TabControl, TabItem } from './TabControl'
 
 export default {

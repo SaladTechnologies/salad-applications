@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Redirect, Route, RouteProps } from 'react-router-dom'
 
 interface Props extends RouteProps {

@@ -1,4 +1,4 @@
-import { SaladPaymentRequest, SaladPaymentResponse, SaladPaymentRequestEvents } from '../models'
+import { SaladPaymentRequest, SaladPaymentRequestEvents, SaladPaymentResponse } from '../models'
 
 export class UnsupportedPaymentRequest implements SaladPaymentRequest {
   canMakePayment = (): boolean => {

@@ -1,8 +1,7 @@
-import React from 'react'
-import { storiesOf } from '@storybook/react'
-import { OnboardingPage } from './OnboardingPage'
 import { action } from '@storybook/addon-actions'
+import { storiesOf } from '@storybook/react'
 import howItWorks from '../../.storybook/assets/Home - How it Works.svg'
+import { OnboardingPage } from './OnboardingPage'
 
 storiesOf('Components/Onboarding Page', module)
   .add('with image', () => {
