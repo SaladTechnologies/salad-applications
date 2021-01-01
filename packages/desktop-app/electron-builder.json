@@ -33,20 +33,35 @@
     "oneClick": false
   },
   "linux": {
-    "target": ["rpm", "deb", "snap"],
+    "target": ["rpm", "deb"],
     "category": "Utility"
+  },
+  "deb": {
+    "depends": [
+      "libgtk-3-0",
+      "libnotify4",
+      "libnss3",
+      "libxss1",
+      "libxtst6",
+      "xdg-utils",
+      "libatspi2.0-0",
+      "libuuid1",
+      "libappindicator3-1",
+      "libsecret-1-0",
+      "clinfo"
+    ]
   },
   "rpm": {
     "depends": [
       "at-spi2-core",
       "gtk3",
-      "libappindicator1",
-      "libnotify",
-      "libXtst6",
       "libXScrnSaver",
-      "libuuid-devel",
-      "mozilla-nss",
-      "xdg-utils"
+      "libXtst",
+      "libnotify",
+      "libuuid",
+      "nss",
+      "xdg-utils",
+      "clinfo"
     ]
   },
   "afterSign": "build/notarize.js"
