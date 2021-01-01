@@ -1,0 +1,19 @@
+diff --git a/packages/desktop-app/electron-builder.json b/packages/desktop-app/electron-builder.json
+index 6755db9..cf9f5fa 100644
+--- a/packages/desktop-app/electron-builder.json
++++ b/packages/desktop-app/electron-builder.json
+@@ -56,10 +56,10 @@
+       "at-spi2-core",
+       "gtk3",
+       "libXScrnSaver",
+-      "libXtst",
+-      "libnotify",
+-      "libuuid",
+-      "nss",
++      "libXtst6",
++      "libnotify4",
++      "libuuid1",
++      "mozilla-nss",
+       "xdg-utils",
+       "clinfo"
+     ]
