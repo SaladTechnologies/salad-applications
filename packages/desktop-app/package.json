@@ -23,7 +23,7 @@
     "lib"
   ],
   "scripts": {
-    "build": "npm-run-all lint build-app build-installer",
+    "build": "cross-env NODE_ENV=production npm-run-all lint build-app build-installer",
     "build-and-publish-installer": "electron-builder --publish always",
     "build-app": "electron-webpack",
     "build-installer": "electron-builder",
@@ -31,8 +31,8 @@
     "lint": "npm-run-all --continue-on-error lint-ts lint-ts-unused",
     "lint-ts": "tsc --noEmit",
     "lint-ts-unused": "ts-unused-exports ./tsconfig.json",
-    "release": "npm-run-all lint build-app build-and-publish-installer",
-    "start": "electron-webpack dev"
+    "release": "cross-env NODE_ENV=production npm-run-all lint build-app build-and-publish-installer",
+    "start": "cross-env NODE_ENV=development electron-webpack dev"
   },
   "dependencies": {
     "@sentry/electron": "2.0.4",
@@ -51,6 +51,7 @@
     "@types/node": "14.14.17",
     "@types/node-notifier": "8.0.0",
     "@types/tar": "4.0.4",
+    "cross-env": "7.0.3",
     "electron": "10.2.0",
     "electron-builder": "22.9.1",
     "electron-notarize": "1.0.0",

@@ -1,9 +1,4 @@
-class Config {
-  // public readonly appUrl: string = 'https://app.salad.io'
-  public readonly appUrl: string = 'https://canary-app.salad.io/'
-  // public readonly appUrl: string = 'http://localhost:3000/'
-}
-
-const instance = new Config()
-
-export { instance as Config }
+export const APP_URL =
+  typeof process.env.ELECTRON_WEBPACK_APP_URL === 'string' && process.env.ELECTRON_WEBPACK_APP_URL.length > 0
+    ? process.env.ELECTRON_WEBPACK_APP_URL
+    : 'http://localhost:3000'

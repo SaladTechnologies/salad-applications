@@ -19,7 +19,7 @@ import * as os from 'os'
 import * as path from 'path'
 import process from 'process'
 import * as si from 'systeminformation'
-import { Config } from './config'
+import { APP_URL } from './config'
 import * as icons from './icons'
 import * as Logger from './Logger'
 import { MachineInfo } from './models/MachineInfo'
@@ -233,7 +233,7 @@ const createMainWindow = () => {
     width: 1216,
   })
 
-  mainWindow.loadURL(Config.appUrl)
+  mainWindow.loadURL(APP_URL)
   mainWindow.on('close', () => app.quit())
 
   mainWindow.webContents.on('before-input-event', (_: any, input: Input) => {
