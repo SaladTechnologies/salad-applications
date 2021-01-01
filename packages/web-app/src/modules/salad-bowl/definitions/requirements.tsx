@@ -36,7 +36,6 @@ export const hasGpu = (framework: '*' | 'cuda' | 'opencl', vram: number): Requir
       return false
     }
 
-    // @ts-ignore
     const amount = controller.memoryTotal !== undefined ? controller.memoryTotal : controller.vram
     return amount >= vram * 0.9
   })
