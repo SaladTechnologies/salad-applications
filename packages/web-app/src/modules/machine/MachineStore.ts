@@ -107,9 +107,7 @@ export class MachineStore {
 
       return {
         model: gpu.model,
-        // @ts-ignore
         vram: gpu.memoryTotal || gpu.vram,
-        // @ts-ignore
         driverVersion: gpu.driverVersion,
         compatible: gpuPluginDefinitions.length > 0,
       }
