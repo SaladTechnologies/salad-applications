@@ -26,14 +26,10 @@ export const TRAY_ICON_PATH = path.join(
   process.platform === 'darwin' ? 'menu-bar.png' : process.platform === 'win32' ? 'logo.ico' : 'logo.png',
 )
 
-export const DARK_TRAY_ACTIVE_ICON_PATH = path.join(
-  __static,
-  process.platform === 'darwin' ? 'menu-bar-dark-active.png' : TRAY_ACTIVE_ICON_PATH,
-)
+export const DARK_TRAY_ACTIVE_ICON_PATH =
+  process.platform === 'darwin' ? path.join(__static, 'menu-bar-dark-active.png') : TRAY_ACTIVE_ICON_PATH
 
-export const DARK_TRAY_ICON_PATH = path.join(
-  __static,
-  process.platform === 'darwin' ? 'menu-bar-dark.png' : TRAY_ICON_PATH,
-)
+export const DARK_TRAY_ICON_PATH =
+  process.platform === 'darwin' ? path.join(__static, 'menu-bar-dark.png') : TRAY_ICON_PATH
 
 export const WINDOW_ICON_PATH = path.join(__static, process.platform === 'win32' ? 'logo.ico' : 'logo.png')
