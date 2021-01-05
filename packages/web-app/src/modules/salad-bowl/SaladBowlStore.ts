@@ -5,6 +5,7 @@ import { RootStore } from '../../Store'
 import { MiningStatus } from '../machine/models'
 import { IPersistentStore } from '../versions/IPersistentStore'
 import { getPluginDefinitions } from './definitions'
+import { Accounts, BEAM_WALLET_ADDRESS, ETH_WALLET_ADDRESS, getNiceHashMiningAddress } from './definitions/accounts'
 import { PluginDefinition, StartReason, StopReason } from './models'
 import { ErrorCategory } from './models/ErrorCategory'
 import { ErrorMessage } from './models/ErrorMessage'
@@ -50,17 +51,38 @@ export class SaladBowlStore implements IPersistentStore {
       return []
     }
 
-    // TODO: Feed user preferences into the requirements check.
-    const pluginDefinitions = getPluginDefinitions(machine, machineInfo).filter((pluginDefinition) =>
+    const accounts: Accounts = {
+      ethermine: {
+        address: ETH_WALLET_ADDRESS,
+        workerId: machine.minerId,
+      },
+      flypoolBeam: {
+        address: BEAM_WALLET_ADDRESS,
+        workerId: machine.minerId,
+      },
+      nicehash: {
+        address: getNiceHashMiningAddress(machine.id),
+        rigId: machine.minerId,
+      },
+    }
+    const pluginDefinitions = getPluginDefinitions(
+      accounts,
+      machineInfo.platform ?? window.salad.platform,
+    ).filter((pluginDefinition) =>
       pluginDefinition.requirements.every((requirement) =>
         requirement(machineInfo, { cpu: this.cpuMiningEnabled, gpu: this.gpuMiningEnabled }),
       ),
     )
-
     console.log(
-      `========== Supported Plugins ==========${EOL}CPU Enabled:${this.cpuMiningEnabled}${EOL}GPU Enabled:${
+      `${EOL}========== Supported Plugins ==========${EOL}CPU Enabled:${this.cpuMiningEnabled}${EOL}GPU Enabled:${
         this.gpuMiningEnabled
-      }${EOL}${
+      }${EOL}---------------------------------------${EOL}NiceHash wallet address: ${
+        accounts.nicehash.address
+      }${EOL}NiceHash rig ID: ${
+        accounts.nicehash.rigId
+      }${EOL}---------------------------------------${EOL}Ethermine wallet address: ${
+        accounts.ethermine.address
+      }${EOL}Ethermine worker ID: ${accounts.ethermine.workerId}${EOL}---------------------------------------${EOL}${
         pluginDefinitions.length === 0
           ? 'No plugins are available to support the hardware in this machine. :-('
           : pluginDefinitions.reduce((output, pluginDefinition) => {

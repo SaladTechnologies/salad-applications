@@ -8,13 +8,13 @@ import { hasGpu } from '../requirements'
 const nicehashServer = (accounts: Accounts, location: string): string =>
   `-s beamv3.${location}.nicehash.com -n 3387 -u ${accounts.nicehash.address}.${accounts.nicehash.rigId}`
 
-const ethermineServer = (accounts: Accounts, location: string): string =>
-  `-s ${location}-beam.flypool.org -n 3443 -u ${accounts.flypoolBeam.address}.${accounts.flypoolBeam.workerId} --ssl 1`
+// const ethermineServer = (accounts: Accounts, location: string): string =>
+//   `-s ${location}-beam.flypool.org -n 3443 -u ${accounts.flypoolBeam.address}.${accounts.flypoolBeam.workerId} --ssl 1`
 
 export const createGMinerBeamHashPluginDefinitions = (accounts: Accounts): PluginDefinition[] =>
   [
     `${nicehashServer(accounts, 'usa')} ${nicehashServer(accounts, 'eu')}`,
-    `${ethermineServer(accounts, 'us1')} ${ethermineServer(accounts, 'eu1')}`,
+    // TODO: `${ethermineServer(accounts, 'us1')} ${ethermineServer(accounts, 'eu1')}`,
   ].reduce(
     (definitions, pool) =>
       downloads
