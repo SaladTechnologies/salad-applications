@@ -290,6 +290,7 @@ export class RewardStore {
       if (!(error instanceof AbortError)) {
         //Hack since we getting tons of false negatives during redemptions
         if (error.message === timeoutMessage) {
+          this.store.analytics.trackRewardRedeemed(reward, true)
           //Show an order processing notification
           this.store.notifications.sendNotification({
             title: `Your order is being processed.`,
