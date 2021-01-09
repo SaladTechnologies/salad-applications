@@ -226,10 +226,11 @@ export class AnalyticsStore {
   }
 
   /** Track when a reward is redeemed */
-  public trackRewardRedeemed = (reward: Reward) => {
+  public trackRewardRedeemed = (reward: Reward, inProcess?: boolean) => {
     if (!this.started) return
 
-    this.track('Reward Redeemed', {
+    const trackingEvent = inProcess ? 'Reward Redemption In Process' : 'Reward Redeemed'
+    this.track(trackingEvent, {
       RewardId: reward.id,
       RewardName: reward.name,
       RewardPrice: reward.price,
