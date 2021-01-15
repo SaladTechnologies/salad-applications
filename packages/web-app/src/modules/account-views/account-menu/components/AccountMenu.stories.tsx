@@ -3,7 +3,7 @@ import { Meta } from '@storybook/react'
 import { AccountMenu } from '.'
 
 export default {
-  title: 'Modules/Account/Account Menu',
+  title: 'Modules/Account/AccountMenu/components/Account Menu',
   component: AccountMenu,
 } as Meta
 

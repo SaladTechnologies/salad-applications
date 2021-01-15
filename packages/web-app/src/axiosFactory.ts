@@ -4,6 +4,8 @@ import isRetryAllowed from 'is-retry-allowed'
 import { config } from './config'
 import { AuthStore } from './modules/auth'
 
+export const REQUIRES_MINECRAFT_USERNAME = 'Redemption requires a Minecraft Username.'
+
 /**
  * The list of safe HTTP request methods. HTTP requests using these methods may be retried.
  */
@@ -97,6 +99,8 @@ const getMessage = (type: string): string => {
       return `Must construct additional pylons ...just kidding! You balance isn't enough to redeem this reward, try again after you’ve earned some more`
     case 'redemptions:disabled':
       return `Redemptions are currently disabled, please try again later.`
+    case 'redemeptions:requires:minecraftUsername':
+      return REQUIRES_MINECRAFT_USERNAME
 
     //Rewards
     case 'rewards:notFound':

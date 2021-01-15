@@ -5,7 +5,8 @@ import { Account } from './components'
 const mapStoreToProps = (store: RootStore): any => ({
   profile: store.profile.currentProfile,
   isUpdating: store.profile.isUpdating,
-  onSend: store.profile.updateUsername,
+  onUpdateUsername: store.profile.updateUsername,
+  onUpdateMinecraftUsername: store.profile.updateMinecraftUsername,
 })
 
 export const AccountContainer = connect(mapStoreToProps, Account)

@@ -76,4 +76,33 @@ export class ProfileStore {
       // this.store.routing.replace('/')
     }
   })
+
+  @action.bound
+  updateMinecraftUsername = flow(function* (this: ProfileStore, minecraftUsername: string) {
+    if (this.currentProfile === undefined) {
+      return
+    }
+
+    this.isUpdating = true
+
+    try {
+      let patch = yield this.axios.patch('/api/v1/profile', {
+        extensions: {
+          minecraftUsername: minecraftUsername,
+        },
+      })
+      let profile = patch.data
+
+      this.currentProfile = profile
+    } catch (error) {
+      this.store.notifications.sendNotification({
+        title: 'Unable to update your Minecraft Username',
+        message: 'Please try again.',
+        autoClose: false,
+        type: 'error',
+      })
+    } finally {
+      this.isUpdating = false
+    }
+  })
 }

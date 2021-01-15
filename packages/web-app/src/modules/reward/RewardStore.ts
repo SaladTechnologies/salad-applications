@@ -1,6 +1,8 @@
 import { AxiosInstance } from 'axios'
 import { action, computed, flow, observable } from 'mobx'
+import { REQUIRES_MINECRAFT_USERNAME } from '../../axiosFactory'
 import { RootStore } from '../../Store'
+import { ProfileStore } from '../profile'
 import { AbortError, SaladPaymentResponse } from '../salad-pay'
 import { SaladPay } from '../salad-pay/SaladPay'
 import { SearchResult } from './models'
@@ -23,6 +25,9 @@ export class RewardStore {
 
   @observable
   private selectedRewardId?: string
+
+  @observable
+  private requiresFurtherAction: boolean = false
 
   @observable
   public isRedeeming: boolean = false
@@ -62,7 +67,27 @@ export class RewardStore {
     return [...this.categoryData.keys()].filter((x) => x)
   }
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
+  private checkIfFurtherActionIsRequired(reward: Reward) {
+    const hasMinecraftUsername = this.profile.currentProfile?.extensions?.minecraftUsername != null
+    const requiresMinecraft = reward?.tags?.includes('requires-minecraft-username') && !hasMinecraftUsername
+
+    if (requiresMinecraft) {
+      this.requiresFurtherAction = true
+      this.store.notifications.sendNotification({
+        title: 'You need a Minecraft Username to redeem this reward.',
+        message: 'Go to your account page to add your Minecraft Username.',
+        autoClose: false,
+        onClick: () => this.store.routing.push('/settings/summary'),
+        type: 'error',
+      })
+    }
+  }
+
+  constructor(
+    private readonly store: RootStore,
+    private readonly axios: AxiosInstance,
+    private readonly profile: ProfileStore,
+  ) {}
 
   loadReward = flow(
     function* (this: RewardStore, rewardId?: string) {
@@ -167,8 +192,10 @@ export class RewardStore {
 
     //Remove blacklisted categories
     const blacklist = ['', 'creators']
-    for (let category of blacklist) {
-      categories.delete(category)
+    for (let category of categories) {
+      if (blacklist.includes(category[0]) || category[0].startsWith('requires-')) {
+        categories.delete(category[0])
+      }
     }
 
     return categories
@@ -227,6 +254,12 @@ export class RewardStore {
 
   @action.bound
   redeemReward = flow(function* (this: RewardStore, reward: Reward) {
+    this.checkIfFurtherActionIsRequired(reward)
+    if (this.requiresFurtherAction) {
+      this.requiresFurtherAction = false
+      return
+    }
+
     if (this.isRedeeming) {
       console.log('Already redeeming reward, skipping')
       return
@@ -296,6 +329,14 @@ export class RewardStore {
             message: 'Check the reward vault for more details.',
             autoClose: false,
             onClick: () => this.store.routing.push('/account/reward-vault'),
+          })
+        } else if (error.message === REQUIRES_MINECRAFT_USERNAME) {
+          this.store.notifications.sendNotification({
+            title: 'You need a Minecraft Username to redeem this reward.',
+            message: 'Go to your account page to add your Minecraft Username.',
+            autoClose: false,
+            onClick: () => this.store.routing.push('/settings/summary'),
+            type: 'error',
           })
         } else {
           //Show an error notification

@@ -9,8 +9,8 @@ import { styles } from './EditUsername.styles'
 
 interface Props extends WithStyles<typeof styles> {
   profile?: Profile
-  sending?: boolean
-  onSend?: (username: string) => void
+  isUpdating?: boolean
+  onUpdate?: (username: string) => void
 }
 
 interface FormTypes {
@@ -30,9 +30,9 @@ class _EditUsername extends Component<Props, State> {
   }
 
   onSubmit = async (values: {}) => {
-    const { onSend } = this.props
+    const { onUpdate } = this.props
     let v = values as FormTypes
-    if (onSend && v.username) await onSend(v.username)
+    if (onUpdate && v.username) await onUpdate(v.username)
     this.setState({ isEdit: false })
   }
 
@@ -57,10 +57,10 @@ class _EditUsername extends Component<Props, State> {
   }
 
   render() {
-    const { sending, classes, profile } = this.props
+    const { isUpdating, classes, profile } = this.props
 
     return (
-      <>
+      <div className={classes.container}>
         <Username>Username</Username>
         <P>
           Spice up your Salad account with a unique, personalized username. This username is what we’ll refer to you as
@@ -101,14 +101,14 @@ class _EditUsername extends Component<Props, State> {
                           errorText={meta.error && meta.touched && meta.error}
                         />
                         <div className={classes.buttonContainer}>
-                          <Button type="submit" uppercase loading={sending} disabled={sending}>
+                          <Button type="submit" uppercase loading={isUpdating} disabled={isUpdating}>
                             Update
                           </Button>
                           <Button
                             onClick={() => this.setState({ isEdit: false })}
                             uppercase
-                            loading={sending}
-                            disabled={sending}
+                            loading={isUpdating}
+                            disabled={isUpdating}
                           >
                             Cancel
                           </Button>
@@ -132,7 +132,7 @@ class _EditUsername extends Component<Props, State> {
             }}
           />
         )}
-      </>
+      </div>
     )
   }
 }
