@@ -1,16 +1,15 @@
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Component } from 'react'
+import React, { Component } from 'react'
 import { Field, Form } from 'react-final-form'
 import withStyles, { WithStyles } from 'react-jss'
 import { Button, ComputerName, P, TextField, Username } from '../../../../components'
-import { Profile } from '../../../profile/models'
 import { styles } from './EditUsername.styles'
 
 interface Props extends WithStyles<typeof styles> {
-  profile?: Profile
+  username?: string
   isUpdating?: boolean
-  onUpdate?: (username: string) => void
+  onUpdate: (username: string) => void
 }
 
 interface FormTypes {
@@ -21,7 +20,7 @@ interface State {
   isEdit: boolean
 }
 
-class _EditUsername extends Component<Props, State> {
+class _MinecraftUsername extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -32,45 +31,39 @@ class _EditUsername extends Component<Props, State> {
   onSubmit = (values: {}) => {
     const { onUpdate } = this.props
     let v = values as FormTypes
-    if (onUpdate && v.username) onUpdate(v.username)
-    this.setState({ isEdit: false })
+    if (v.username) {
+      onUpdate(v.username)
+      this.setState({ isEdit: false })
+    }
   }
 
   validate = (values: {}) => {
     let v = values as FormTypes
+    const regex = /^\w{3,16}$/i
 
     const errors: FormTypes = {}
-    if (v.username && v.username.length < 2) {
-      errors.username = 'Username must be at least 2 characters!'
-    }
-    if (v.username === undefined || v.username.length === 0) {
-      errors.username = 'Username is required!'
-    }
-    if (v.username && v.username.length > 32) {
-      errors.username = `Username can't be more than 32 characters!`
-    }
-    if (v.username && v.username.includes(' ')) {
-      errors.username = `Username can't contain spaces!`
+    if (v.username && regex.exec(v.username) === null) {
+      errors.username = 'Not a valid Minecraft username!'
     }
 
     return errors
   }
 
   render() {
-    const { isUpdating, classes, profile } = this.props
+    const { isUpdating, classes, username } = this.props
 
     return (
       <div className={classes.container}>
-        <Username>Username</Username>
+        <Username>Minecraft Username</Username>
         <P>
-          Spice up your Salad account with a unique, personalized username. This username is what we’ll refer to you as
-          in reward emails and will be what your friends see when you refer them to Salad via email.
+          Connect your Salad account to your Minecraft account. A Minecraft username is required to purchase most
+          Minecraft items
         </P>
 
-        {!this.state.isEdit && profile && (
+        {username && !this.state.isEdit && (
           <div className={classes.row}>
             <P>
-              <ComputerName>{profile.username}</ComputerName>
+              <ComputerName>{username}</ComputerName>
             </P>
             <div
               className={classes.editIcon}
@@ -84,7 +77,7 @@ class _EditUsername extends Component<Props, State> {
             </div>
           </div>
         )}
-        {this.state.isEdit && (
+        {(!username || this.state.isEdit) && (
           <Form
             onSubmit={this.onSubmit}
             validate={this.validate}
@@ -97,36 +90,33 @@ class _EditUsername extends Component<Props, State> {
                         <TextField
                           className={classes.input}
                           {...input}
-                          placeholder={profile && profile.username}
+                          placeholder={username}
                           errorText={meta.error && meta.touched && meta.error}
                         />
                         <div className={classes.buttonContainer}>
-                          <Button type="submit" uppercase loading={isUpdating} disabled={isUpdating}>
-                            Update
-                          </Button>
-                          <Button
-                            onClick={() => this.setState({ isEdit: false })}
-                            uppercase
-                            loading={isUpdating}
-                            disabled={isUpdating}
-                          >
-                            Cancel
-                          </Button>
+                          {username ? (
+                            <>
+                              <Button type="submit" uppercase loading={isUpdating} disabled={isUpdating}>
+                                Update
+                              </Button>
+                              <Button
+                                onClick={() => this.setState({ isEdit: false })}
+                                uppercase
+                                loading={isUpdating}
+                                disabled={isUpdating}
+                              >
+                                Cancel
+                              </Button>
+                            </>
+                          ) : (
+                            <Button type="submit" uppercase loading={isUpdating} disabled={isUpdating}>
+                              Submit
+                            </Button>
+                          )}
                         </div>
                       </div>
                     )}
                   </Field>
-                  <ul className={classes.passwordRequirements}>
-                    <li>
-                      <P>2-32 characters</P>
-                    </li>
-                    <li>
-                      <P>Numbers and letters only</P>
-                    </li>
-                    <li>
-                      <P>No whitespace</P>
-                    </li>
-                  </ul>
                 </form>
               )
             }}
@@ -137,4 +127,4 @@ class _EditUsername extends Component<Props, State> {
   }
 }
 
-export const EditUsername = withStyles(styles)(_EditUsername)
+export const MinecraftUsername = withStyles(styles)(_MinecraftUsername)

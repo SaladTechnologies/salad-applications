@@ -1,4 +1,5 @@
 import { action } from '@storybook/addon-actions'
+import { boolean } from '@storybook/addon-knobs'
 import { storiesOf } from '@storybook/react'
 import { LoremIpsum } from 'lorem-ipsum'
 import { RewardDescriptionPanel, RewardHeaderBar, RewardInfoPanel, RewardRequirementsPanel } from '.'
@@ -320,26 +321,61 @@ storiesOf('Modules/Rewards/Reward Hero Button Group', module).add('both', () => 
 storiesOf('Modules/Rewards/Reward Header Bar', module)
   .add('complete reward', () => {
     let reward = generateRewards(1)[0]
-    return <RewardHeaderBar reward={reward} onBack={action('back')} onRedeem={action('redeem')} />
+    return (
+      <RewardHeaderBar
+        reward={reward}
+        onBack={action('back')}
+        onRedeem={action('redeem')}
+        requiresMinecraftUsername={boolean('Requires Minecraft Username', false)}
+      />
+    )
   })
   .add('complete reward (long name)', () => {
     let reward = generateRewards(2)[1]
-    return <RewardHeaderBar reward={reward} onBack={action('back')} onRedeem={action('redeem')} />
+    return (
+      <RewardHeaderBar
+        reward={reward}
+        onBack={action('back')}
+        onRedeem={action('redeem')}
+        requiresMinecraftUsername={boolean('Requires Minecraft Username', false)}
+      />
+    )
   })
   .add('out of stock', () => {
     let reward = generateRewards(2)[1]
     reward.quantity = 0
-    return <RewardHeaderBar reward={reward} onBack={action('back')} onRedeem={action('redeem')} />
+    return (
+      <RewardHeaderBar
+        reward={reward}
+        onBack={action('back')}
+        onRedeem={action('redeem')}
+        requiresMinecraftUsername={boolean('Requires Minecraft Username', false)}
+      />
+    )
   })
   .add('low stock', () => {
     let reward = generateRewards(2)[1]
     reward.quantity = 2
-    return <RewardHeaderBar reward={reward} onBack={action('back')} onRedeem={action('redeem')} />
+    return (
+      <RewardHeaderBar
+        reward={reward}
+        onBack={action('back')}
+        onRedeem={action('redeem')}
+        requiresMinecraftUsername={boolean('Requires Minecraft Username', false)}
+      />
+    )
   })
   .add('blank name', () => {
     let reward = generateRewards(2)[1]
     reward.name = ''
-    return <RewardHeaderBar reward={reward} onBack={action('back')} onRedeem={action('redeem')} />
+    return (
+      <RewardHeaderBar
+        reward={reward}
+        onBack={action('back')}
+        onRedeem={action('redeem')}
+        requiresMinecraftUsername={boolean('Requires Minecraft Username', false)}
+      />
+    )
   })
 
 storiesOf('Modules/Rewards/Reward Image Carousel', module)

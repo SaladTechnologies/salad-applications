@@ -1,10 +1,11 @@
 import classnames from 'classnames'
 import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { Head } from '../../../../components'
+import { Divider, Head } from '../../../../components'
 import { withLogin } from '../../../auth-views'
 import { Profile } from '../../../profile/models'
 import { EditUsername } from './EditUsername'
+import { MinecraftUsername } from './MinecraftUsername'
 
 const styles = {
   container: {
@@ -14,19 +15,26 @@ const styles = {
 
 interface Props extends WithStyles<typeof styles> {
   profile?: Profile
-  sending?: boolean
-  onSend?: (username: string) => void
+  isUpdating?: boolean
+  onUpdateUsername: (username: string) => void
+  onUpdateMinecraftUsername: (username: string) => void
 }
 
 class _Account extends Component<Props> {
   render() {
-    const { profile, onSend, sending, classes } = this.props
+    const { profile, onUpdateUsername, onUpdateMinecraftUsername, isUpdating, classes } = this.props
 
     return (
       <div className={classes.container}>
         <Head title="Account" />
         <div className={classnames(classes.container)}>
-          <EditUsername profile={profile} onSend={onSend} sending={sending} />
+          <EditUsername profile={profile} onUpdate={onUpdateUsername} isUpdating={isUpdating} />
+          <Divider />
+          <MinecraftUsername
+            username={profile?.extensions?.minecraftUsername}
+            onUpdate={onUpdateMinecraftUsername}
+            isUpdating={isUpdating}
+          />
         </div>
       </div>
     )

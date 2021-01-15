@@ -56,9 +56,9 @@ class _SendReferral extends Component<Props> {
       <Form
         onSubmit={this.onSubmit}
         validate={this.validate}
-        render={({ form }) => {
+        render={({ handleSubmit }) => {
           return (
-            <form onSubmit={form.submit}>
+            <form onSubmit={handleSubmit}>
               <P>
                 Salad will send an email to your friend that includes the referral code and a download link so they can
                 join you in the kitchen.
