@@ -93,3 +93,11 @@ export const sortRewards = (rewards: Reward[]): Reward[] => {
     return stockDiff
   })
 }
+
+export const getRewardAvailability = (reward?: Partial<Reward>): 'Out of Stock' | 'Low Quantity' | 'In Stock' => {
+  return reward?.quantity === 0
+    ? 'Out of Stock'
+    : reward?.quantity !== undefined && reward?.quantity > 0
+    ? 'Low Quantity'
+    : 'In Stock'
+}

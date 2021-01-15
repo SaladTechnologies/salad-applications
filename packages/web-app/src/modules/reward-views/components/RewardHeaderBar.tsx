@@ -96,12 +96,12 @@ interface Props extends WithStyles<typeof styles> {
   onAddToCart?: (reward: Reward) => void
   onRemoveFromCart?: (reward: Reward) => void
   requiresMinecraftUsername: boolean
+  trackDisabledBuyNowClick: () => void
 }
 
 class _RewardHeaderBar extends Component<Props> {
   handleRedeem = () => {
     const { reward, onRedeem } = this.props
-
     if (onRedeem) {
       onRedeem(reward)
     }
@@ -116,7 +116,15 @@ class _RewardHeaderBar extends Component<Props> {
   }
 
   render() {
-    const { reward, authenticated, currentBalance, requiresMinecraftUsername, classes, ...rest } = this.props
+    const {
+      reward,
+      authenticated,
+      currentBalance,
+      requiresMinecraftUsername,
+      trackDisabledBuyNowClick,
+      classes,
+      ...rest
+    } = this.props
 
     const balance = currentBalance || 0
 
@@ -127,6 +135,8 @@ class _RewardHeaderBar extends Component<Props> {
     //Flag indicating if this is a promo only game and cannot be redeemed
     const promoGame: boolean = reward ? reward?.price === 0 : false
     const hasBalance = reward ? reward?.price <= balance : false
+
+    const disabled = outOfStock || promoGame || (authenticated && !hasBalance)
 
     return (
       <div className={classnames(classes.container)}>
@@ -173,7 +183,8 @@ class _RewardHeaderBar extends Component<Props> {
             <Button
               className={classes.buyButton}
               onClick={this.handleRedeem}
-              disabled={outOfStock || promoGame || (authenticated && !hasBalance)}
+              disabled={disabled}
+              trackDisabledButtonClick={trackDisabledBuyNowClick}
             >
               <div className={classes.buyText}>{donation ? 'DONATE' : 'BUY'} NOW</div>
             </Button>

@@ -2,7 +2,6 @@ import classnames from 'classnames'
 import { Component, Fragment } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Divider, MenuTitle } from '../../'
-import { getStore } from '../../../Store'
 
 const styles = {
   linkListUnstyled: {
@@ -31,13 +30,12 @@ interface Props extends WithStyles<typeof styles> {
     inset?: boolean
     externalLink?: boolean
   }[]
+  trackingType?: 'sidebar' | 'header'
 }
 
 class _LinkListUnstyled extends Component<Props> {
-  store = getStore()
-
   render() {
-    const { list, classes } = this.props
+    const { list, trackingType, classes } = this.props
 
     return (
       <ul className={classnames('linkListUnstyled', classes.linkListUnstyled)}>
@@ -46,7 +44,12 @@ class _LinkListUnstyled extends Component<Props> {
             <Fragment key={item.url}>
               {item.divider && <Divider className={classes.divider} />}
               <li className={classnames('linkListItem', classes.linkListItem, { [classes.inset]: item.inset })}>
-                <MenuTitle path={item.url} enabled={item.enabled} externalLink={item.externalLink}>
+                <MenuTitle
+                  path={item.url}
+                  enabled={item.enabled}
+                  externalLink={item.externalLink}
+                  trackingInfo={trackingType ? { label: item.text, type: trackingType } : undefined}
+                >
                   {item.text}
                 </MenuTitle>
               </li>

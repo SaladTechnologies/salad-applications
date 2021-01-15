@@ -39,9 +39,9 @@ interface Props extends WithStyles<typeof styles> {
   onBack?: () => void
   isInCart?: boolean
   onAddToCart?: (reward: Reward) => void
-  rewardViewed?: (reward: Reward) => void
   onRemoveFromCart?: (reward: Reward) => void
   requiresMinecraftUsername: boolean
+  trackDisabledBuyNowClick: () => void
 }
 
 class _RewardDetailsPage extends Component<Props> {
@@ -51,7 +51,15 @@ class _RewardDetailsPage extends Component<Props> {
   }
 
   render() {
-    const { reward, onRedeem, onBack, requiresMinecraftUsername, classes, ...rest } = this.props
+    const {
+      reward,
+      onRedeem,
+      onBack,
+      requiresMinecraftUsername,
+      trackDisabledBuyNowClick,
+      classes,
+      ...rest
+    } = this.props
     return (
       <div className={classes.container}>
         <Head title={reward?.name} />
@@ -60,6 +68,7 @@ class _RewardDetailsPage extends Component<Props> {
           onBack={onBack}
           onRedeem={onRedeem}
           requiresMinecraftUsername={requiresMinecraftUsername}
+          trackDisabledBuyNowClick={trackDisabledBuyNowClick}
           {...rest}
         />
         <Scrollbar>

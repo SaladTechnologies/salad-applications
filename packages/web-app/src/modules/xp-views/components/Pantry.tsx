@@ -36,6 +36,7 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   levels?: Level[]
   currentXp?: number
+  onPantryClicked: (key: string) => void
 }
 
 const getImage = (key: string) => require(`../assets/${key}/complete.png`).default
@@ -47,7 +48,7 @@ class _Pantry extends Component<Props> {
     })
 
   render() {
-    const { currentXp, levels, classes } = this.props
+    const { currentXp, levels, onPantryClicked, classes } = this.props
 
     return (
       <div className={classnames(classes.content)}>
@@ -63,6 +64,7 @@ class _Pantry extends Component<Props> {
                     src={getImage(x.key)}
                     draggable={false}
                     alt=""
+                    onClick={() => onPantryClicked(x.key)}
                   />
                 )}
                 {!levelComplete && (

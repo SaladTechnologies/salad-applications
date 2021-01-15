@@ -136,14 +136,19 @@ class _Titlebar extends Component<Props> {
       <div className={classnames(classes.container, { [classes.bottomBorder]: bottomBorder })}>
         <div className={classes.leftItems}>
           <div className={classes.icon}>
-            <SmartLink to="/">
+            <SmartLink to="/" trackingInfo={{ label: 'Salad Logo Icon' }}>
               <Img height={24} src={icon} />
             </SmartLink>
           </div>
           {isDesktop && menuItems && <TitleStartButtonContainer />}
           {menuItems &&
             menuItems.map((x) => (
-              <SmartLink key={x.name} className={classes.menuItem} to={x.url}>
+              <SmartLink
+                key={x.name}
+                className={classes.menuItem}
+                to={x.url}
+                trackingInfo={{ label: x.name, type: 'header' }}
+              >
                 {x.showNotification && <div className={classes.menuItemNotification}></div>}
                 {x.name}
               </SmartLink>
