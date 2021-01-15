@@ -29,10 +29,10 @@ class _EditUsername extends Component<Props, State> {
     }
   }
 
-  onSubmit = async (values: {}) => {
+  onSubmit = (values: {}) => {
     const { onUpdate } = this.props
     let v = values as FormTypes
-    if (onUpdate && v.username) await onUpdate(v.username)
+    if (onUpdate && v.username) onUpdate(v.username)
     this.setState({ isEdit: false })
   }
 
@@ -88,9 +88,9 @@ class _EditUsername extends Component<Props, State> {
           <Form
             onSubmit={this.onSubmit}
             validate={this.validate}
-            render={({ form }) => {
+            render={({ handleSubmit }) => {
               return (
-                <form onSubmit={form.submit}>
+                <form onSubmit={handleSubmit}>
                   <Field name="username" type="text">
                     {({ input, meta }) => (
                       <div className={classes.textFieldContainer}>

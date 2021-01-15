@@ -87,9 +87,15 @@ export class ProfileStore {
 
     try {
       let patch = yield this.axios.patch('/api/v1/profile', {
-        extensions: {
-          minecraftUsername: minecraftUsername,
-        },
+        extensions:
+          this.currentProfile.extensions === undefined
+            ? {
+                minecraftUsername: minecraftUsername,
+              }
+            : {
+                ...this.currentProfile.extensions,
+                minecraftUsername: minecraftUsername,
+              },
       })
       let profile = patch.data
 

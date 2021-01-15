@@ -76,9 +76,9 @@ class _ReferralCodeEntryComponent extends Component<Props, State> {
     return (
       <Form
         onSubmit={this.onSubmit}
-        render={({ form }) => {
+        render={({ handleSubmit }) => {
           return (
-            <form onSubmit={form.submit}>
+            <form onSubmit={handleSubmit}>
               <Field name="code">
                 {({ input, meta }) => (
                   <div className={classes.container}>
