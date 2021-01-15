@@ -108,10 +108,7 @@ class _TitleStartButton extends Component<Props, State> {
   }
 
   handleStart = () => {
-    const { isEnabled, onClick } = this.props
-
-    if (!isEnabled) return
-
+    const { onClick } = this.props
     onClick?.()
   }
 

@@ -28,7 +28,9 @@ class _OfferwallHero extends Component<Props> {
           money.
           <br />
           <br />
-          <SmartLink to="/earn/offerwall">Take Me There</SmartLink>
+          <SmartLink to="/earn/offerwall" trackingInfo={{ label: 'Take Me There' }}>
+            Take Me There
+          </SmartLink>
         </div>
         <div className={classnames(classes.column, classes.startColumn)}></div>
       </HeroPanel>

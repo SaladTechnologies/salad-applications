@@ -327,6 +327,7 @@ storiesOf('Modules/Rewards/Reward Header Bar', module)
         onBack={action('back')}
         onRedeem={action('redeem')}
         requiresMinecraftUsername={boolean('Requires Minecraft Username', false)}
+        trackDisabledBuyNowClick={action('Tracks Disabled Button Click')}
       />
     )
   })
@@ -338,6 +339,7 @@ storiesOf('Modules/Rewards/Reward Header Bar', module)
         onBack={action('back')}
         onRedeem={action('redeem')}
         requiresMinecraftUsername={boolean('Requires Minecraft Username', false)}
+        trackDisabledBuyNowClick={action('Tracks Disabled Button Click')}
       />
     )
   })
@@ -350,6 +352,7 @@ storiesOf('Modules/Rewards/Reward Header Bar', module)
         onBack={action('back')}
         onRedeem={action('redeem')}
         requiresMinecraftUsername={boolean('Requires Minecraft Username', false)}
+        trackDisabledBuyNowClick={action('Tracks Disabled Button Click')}
       />
     )
   })
@@ -362,6 +365,7 @@ storiesOf('Modules/Rewards/Reward Header Bar', module)
         onBack={action('back')}
         onRedeem={action('redeem')}
         requiresMinecraftUsername={boolean('Requires Minecraft Username', false)}
+        trackDisabledBuyNowClick={action('Tracks Disabled Button Click')}
       />
     )
   })
@@ -374,6 +378,7 @@ storiesOf('Modules/Rewards/Reward Header Bar', module)
         onBack={action('back')}
         onRedeem={action('redeem')}
         requiresMinecraftUsername={boolean('Requires Minecraft Username', false)}
+        trackDisabledBuyNowClick={action('Tracks Disabled Button Click')}
       />
     )
   })

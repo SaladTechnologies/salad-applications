@@ -162,7 +162,7 @@ class _RewardHeroItem extends Component<Props> {
                 </div>
                 <div className={classes.headlineText}>{result?.description}</div>
                 <div className={classes.buttonContainer}>
-                  <SmartLink to={rewardRoute(result.id)}>
+                  <SmartLink to={rewardRoute(result.id)} trackingInfo={{ label: 'Get it Now' }}>
                     <Button disabled={result === undefined}>GET IT NOW</Button>
                   </SmartLink>
                 </div>

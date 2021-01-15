@@ -34,11 +34,12 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   rewards?: Reward[]
+  onClickChoppingCartIcon: () => void
 }
 
 class _ChoppingCartButton extends Component<Props> {
   render() {
-    const { rewards, classes } = this.props
+    const { onClickChoppingCartIcon, rewards, classes } = this.props
 
     return (
       <>
@@ -49,7 +50,7 @@ class _ChoppingCartButton extends Component<Props> {
           attribute="data-chopping-cart-button"
           onRenderContent={() => <ChoppingCartTooltip rewards={rewards} />}
         />
-        <div className={classes.container} data-chopping-cart-button>
+        <div className={classes.container} data-chopping-cart-button onClick={onClickChoppingCartIcon}>
           {rewards && rewards.length !== 0 && <div className={classes.notificationDot}>{rewards.length}</div>}
           <CartIcon />
         </div>

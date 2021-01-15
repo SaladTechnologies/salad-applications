@@ -104,7 +104,7 @@ class _Settings extends Component<Props> {
               <Divider />
             </>
           )}
-          {menuItems && <LinkListUnstyled list={menuItems} />}
+          {menuItems && <LinkListUnstyled list={menuItems} trackingType="sidebar" />}
 
           <div className={classes.buttonContainer}>
             {onSendBug && <Button onClick={this.handleBugClicked}>Submit Bug</Button>}

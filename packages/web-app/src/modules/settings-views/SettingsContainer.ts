@@ -40,10 +40,22 @@ const mapStoreToProps = (store: RootStore): any => {
     },
   ]
 
-  const buttons: MenuButton[] = [{ text: 'Log out', onClick: store.auth.logout }]
+  const handleLogout = () => {
+    const currentPath = window && window.location.pathname
+    store.analytics.trackButtonClicked(currentPath, 'logout_button', 'Log Out', 'enabled')
+    store.auth.logout()
+  }
+
+  const handleClose = () => {
+    const currentPath = window && window.location.pathname
+    store.analytics.trackSmartLink(currentPath, '/', 'Back')
+    store.ui.hideModal()
+  }
+
+  const buttons: MenuButton[] = [{ text: 'Log out', onClick: handleLogout }]
 
   return {
-    onClose: () => store.ui.hideModal(),
+    onClose: () => handleClose(),
     menuItems: store.native.isNative ? nativeMenuItems : menuItems,
     appVersion: store.native.desktopVersion,
     appBuild: config.appBuild,

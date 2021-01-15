@@ -44,11 +44,16 @@ interface Props extends WithStyles<typeof styles> {
   children?: ReactNode
   className?: string
   onClick?: () => void
+  trackDisabledButtonClick?: () => void
 }
 
 class _Button extends Component<Props> {
   handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    const { loading, disabled, onClick } = this.props
+    const { loading, disabled, onClick, trackDisabledButtonClick } = this.props
+
+    if (disabled && trackDisabledButtonClick) {
+      trackDisabledButtonClick()
+    }
 
     if (loading !== true && !disabled && onClick) {
       event.stopPropagation()

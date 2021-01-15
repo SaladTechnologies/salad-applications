@@ -3,6 +3,7 @@ import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { NavLink } from 'react-router-dom'
 import { SaladTheme } from '../../../SaladTheme'
+import { getStore } from '../../../Store'
 import { SmartLink } from '../../SmartLink'
 
 const styles = (theme: SaladTheme) => ({
@@ -41,6 +42,18 @@ interface Props extends WithStyles<typeof styles> {
   className?: string
   enabled?: boolean
   externalLink?: boolean
+  trackingInfo?: {
+    type?: 'header' | 'sidebar'
+    label?: string
+  }
+}
+
+const handleClickTracking = (to?: string, trackingInfo?: any) => {
+  if (to) {
+    const store = getStore()
+    const currentPath = window && window.location.pathname
+    store.analytics.trackSmartLink(currentPath, to, trackingInfo.label, trackingInfo.type)
+  }
 }
 
 class _MenuTitle extends Component<Props> {
@@ -55,7 +68,7 @@ class _MenuTitle extends Component<Props> {
   }
 
   render() {
-    const { path, children, className, classes, enabled, externalLink } = this.props
+    const { path, children, className, classes, enabled, externalLink, trackingInfo } = this.props
 
     const elements = path ? (
       <label
@@ -64,9 +77,15 @@ class _MenuTitle extends Component<Props> {
         })}
       >
         {externalLink ? (
-          <SmartLink to={path}>{children}</SmartLink>
+          <SmartLink to={path} trackingInfo={trackingInfo}>
+            {children}
+          </SmartLink>
         ) : enabled !== false ? (
-          <NavLink to={path} activeClassName="active">
+          <NavLink
+            to={path}
+            activeClassName="active"
+            onClick={trackingInfo ? () => handleClickTracking(path, trackingInfo) : undefined}
+          >
             {children}
           </NavLink>
         ) : (
