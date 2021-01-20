@@ -22,6 +22,7 @@ const styles = {
 interface Props extends WithStyles<typeof styles> {
   categories?: Map<string, SearchResult[]>
   heroes?: Map<number, HeroType>
+  onClickReward: (to: string, action?: Function) => void
 }
 
 /** List of categories that should be displayed as heros, all others are regular rewards */
@@ -47,7 +48,7 @@ class _MainStorefrontPage extends Component<Props> {
   }
 
   render() {
-    const { categories, classes } = this.props
+    const { categories, onClickReward, classes } = this.props
     //Maximum number of rewards to show in a single row
     const maxRowSize = 20
 
@@ -59,7 +60,8 @@ class _MainStorefrontPage extends Component<Props> {
             <NotificationBannerContainer />
             {categories && categories.size > 0 ? (
               Array.from(categories).map(([category, rewards], i) => {
-                if (!rewards || rewards.length < 5 ) { // The minimum number of items to show on the store
+                if (!rewards || rewards.length < 5) {
+                  // The minimum number of items to show on the store
                   return null
                 } else if (heroCategories.includes(category)) {
                   return (
@@ -74,7 +76,7 @@ class _MainStorefrontPage extends Component<Props> {
                     <Fragment key={category}>
                       <RewardSlider key={category} title={category} viewAllRoute={rewardCategoryRoute(category)}>
                         {rewards.slice(0, maxRowSize).map((x) => (
-                          <RewardItem key={x.id} result={x} />
+                          <RewardItem key={x.id} reward={x} onClick={() => onClickReward(x.url)} />
                         ))}
                       </RewardSlider>
                       {this.getHero(i)}
@@ -89,9 +91,9 @@ class _MainStorefrontPage extends Component<Props> {
                 </RewardHero>
                 {[...Array(3)].map((_v, i) => (
                   <RewardSlider key={i} title={'Games'}>
-                    {[...Array(maxRowSize / 2)].map((_v, i) => (
-                      <RewardItem key={i} />
-                    ))}
+                    {[...Array(maxRowSize / 2)].map((_v, i) => {
+                      return <RewardItem key={i} />
+                    })}
                   </RewardSlider>
                 ))}
               </div>

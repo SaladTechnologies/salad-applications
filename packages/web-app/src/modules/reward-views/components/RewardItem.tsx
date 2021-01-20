@@ -4,7 +4,6 @@ import AspectRatio from 'react-aspect-ratio'
 import { Img } from 'react-image'
 import withStyles, { WithStyles } from 'react-jss'
 import Skeleton from 'react-loading-skeleton'
-import { SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { SearchResult } from '../../reward/models'
 import { RewardMissingImage } from './RewardMissingImage'
@@ -92,50 +91,49 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  result?: SearchResult
+  reward?: SearchResult
+  onClick?: () => void
 }
 
 class _RewardItem extends Component<Props> {
   render() {
-    const { result, classes } = this.props
-    let outOfStock = result?.quantity === 0
-    let lowQuanity = result?.quantity !== undefined && result?.quantity > 0
+    const { reward, onClick, classes } = this.props
+    let outOfStock = reward?.quantity === 0
+    let lowQuanity = reward?.quantity !== undefined && reward?.quantity > 0
     return (
-      <div key={result?.id} className={classnames(classes.container)}>
-        <SmartLink to={result?.url}>
-          <AspectRatio ratio={'323/433'}>
-            {result ? (
-              <Img
-                className={classes.image}
-                src={result?.image || ''}
-                draggable={false}
-                alt=""
-                loader={<Skeleton height={'100%'} />}
-                unloader={<RewardMissingImage text={result?.name} />}
-              />
-            ) : (
-              <Skeleton height={'100%'} />
-            )}
-          </AspectRatio>
-          <div className={classes.textContainer}>
-            <div className={classes.nameText}>{result ? result.name : <Skeleton />}</div>
-            <div className={classes.subTextContainer}>
-              <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
-                {result ? result?.price ? `$${result?.price.toFixed(2)}` : 'FREE' : <Skeleton width={100} />}
-              </div>
-              {outOfStock && (
-                <div className={classnames(classes.priceText, classes.stockLabel, classes.outOfStockLabel)}>
-                  Out of Stock
-                </div>
-              )}
-              {lowQuanity && (
-                <div className={classnames(classes.priceText, classes.stockLabel, classes.lowQuanityLabel)}>
-                  {`${result?.quantity} Remaining`}
-                </div>
-              )}
+      <div key={reward?.id} className={classnames(classes.container)} onClick={onClick}>
+        <AspectRatio ratio={'323/433'}>
+          {reward ? (
+            <Img
+              className={classes.image}
+              src={reward?.image || ''}
+              draggable={false}
+              alt=""
+              loader={<Skeleton height={'100%'} />}
+              unloader={<RewardMissingImage text={reward?.name} />}
+            />
+          ) : (
+            <Skeleton height={'100%'} />
+          )}
+        </AspectRatio>
+        <div className={classes.textContainer}>
+          <div className={classes.nameText}>{reward ? reward.name : <Skeleton />}</div>
+          <div className={classes.subTextContainer}>
+            <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
+              {reward ? reward?.price ? `$${reward?.price.toFixed(2)}` : 'FREE' : <Skeleton width={100} />}
             </div>
+            {outOfStock && (
+              <div className={classnames(classes.priceText, classes.stockLabel, classes.outOfStockLabel)}>
+                Out of Stock
+              </div>
+            )}
+            {lowQuanity && (
+              <div className={classnames(classes.priceText, classes.stockLabel, classes.lowQuanityLabel)}>
+                {`${reward?.quantity} Remaining`}
+              </div>
+            )}
           </div>
-        </SmartLink>
+        </div>
       </div>
     )
   }

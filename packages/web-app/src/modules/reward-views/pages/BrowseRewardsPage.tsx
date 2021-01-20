@@ -93,6 +93,7 @@ interface Props extends WithStyles<typeof styles> {
   error?: string
   results?: SearchResult[]
   onBack?: () => void
+  onClickReward: (to: string, action?: Function) => void
 }
 
 class _BrowseRewardsPage extends Component<Props> {
@@ -101,7 +102,7 @@ class _BrowseRewardsPage extends Component<Props> {
   }
 
   render() {
-    const { results, error, title, classes } = this.props
+    const { results, error, title, onClickReward, classes } = this.props
     const hasRewards = results && results.length > 0
 
     return (
@@ -123,23 +124,28 @@ class _BrowseRewardsPage extends Component<Props> {
                 {hasRewards && (
                   <div>
                     <div className={classes.rewardContainer}>
-                      {results?.map((x) => (
-                        <Result
-                          key={x.id}
-                          // This component assumes you pass the full 'raw' result in, we are
-                          // faking this right now by populating the id
-                          result={{
-                            id: {
-                              raw: x.id,
-                            },
-                          }}
-                          view={() => (
-                            <div className={classes.rewardItem}>
-                              <RewardItem result={x} />
-                            </div>
-                          )}
-                        />
-                      ))}
+                      {results?.map((x) => {
+                        return (
+                          <Result
+                            key={x.id}
+                            // This component assumes you pass the full 'raw' result in, we are
+                            // faking this right now by populating the id
+                            result={{
+                              id: {
+                                raw: x.id,
+                              },
+                            }}
+                            shouldTrackClickThrough={true}
+                            view={({ onClickLink, ...props }) => {
+                              return (
+                                <div className={classes.rewardItem}>
+                                  <RewardItem {...props} reward={x} onClick={() => onClickReward(x.url, onClickLink)} />
+                                </div>
+                              )
+                            }}
+                          />
+                        )
+                      })}
                     </div>
                     <RewardDisclaimers />
                   </div>
