@@ -22,6 +22,7 @@ const styles = {
 interface Props extends WithStyles<typeof styles> {
   categories?: Map<string, SearchResult[]>
   heroes?: Map<number, HeroType>
+  isRunning: boolean
   onClickReward: (to: string, action?: Function) => void
 }
 
@@ -30,13 +31,13 @@ const heroCategories = ['top chops']
 
 class _MainStorefrontPage extends Component<Props> {
   getHero = (index: number) => {
-    const { heroes } = this.props
+    const { heroes, isRunning } = this.props
 
     const type = heroes?.get(index + 1)
 
     switch (type) {
       case HeroType.Mining:
-        return <MiningHero key={index} />
+        return <MiningHero key={index} isRunning={isRunning} />
       case HeroType.Offerwall:
         return <OfferwallHero key={index} />
       case HeroType.ReferralEntry:

@@ -13,7 +13,13 @@ storiesOf('Modules/Reward Pages/Main Storefront Page', module)
     let categories = new Map()
     categories.set('category 1', rewards)
     categories.set('category 2', rewards)
-    return <MainStorefrontPage categories={categories} onClickReward={action('Reward Item Clicked Event')} />
+    return (
+      <MainStorefrontPage
+        categories={categories}
+        onClickReward={action('Reward Item Clicked Event')}
+        isRunning={boolean('Is Salad Running', false)}
+      />
+    )
   })
   .add('with rewards (w/ hero)', () => {
     let rewards = generateRewards(8)
@@ -21,13 +27,31 @@ storiesOf('Modules/Reward Pages/Main Storefront Page', module)
     categories.set('top chops', rewards)
     categories.set('category 1', rewards)
     categories.set('category 2', rewards)
-    return <MainStorefrontPage categories={categories} onClickReward={action('Reward Item Clicked Event')} />
+    return (
+      <MainStorefrontPage
+        categories={categories}
+        onClickReward={action('Reward Item Clicked Event')}
+        isRunning={boolean('Is Salad Running', false)}
+      />
+    )
   })
   .add('without rewards (undefined)', () => {
-    return <MainStorefrontPage categories={undefined} onClickReward={action('Reward Item Clicked Event')} />
+    return (
+      <MainStorefrontPage
+        categories={undefined}
+        onClickReward={action('Reward Item Clicked Event')}
+        isRunning={boolean('Is Salad Running', false)}
+      />
+    )
   })
   .add('without rewards (empty)', () => {
-    return <MainStorefrontPage categories={new Map()} onClickReward={action('Reward Item Clicked Event')} />
+    return (
+      <MainStorefrontPage
+        categories={new Map()}
+        onClickReward={action('Reward Item Clicked Event')}
+        isRunning={boolean('Is Salad Running', false)}
+      />
+    )
   })
 
 storiesOf('Modules/Reward Pages/Reward Details Page', module)
