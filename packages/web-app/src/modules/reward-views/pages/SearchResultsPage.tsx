@@ -12,6 +12,7 @@ interface Props extends WithStyles<typeof styles> {
   results?: Result[]
   clearFilters?: () => void
   onBack?: () => void
+  onClickReward: (to: string, action?: Function) => void
 }
 
 class _SearchResultsPage extends Component<Props> {
@@ -24,10 +25,12 @@ class _SearchResultsPage extends Component<Props> {
   }
 
   render() {
-    const { results, ...rest } = this.props
+    const { results, onClickReward, ...rest } = this.props
 
     const searchResults = results?.map(SearchResult.parseSearchResult)
-    return <BrowseRewardsPage results={searchResults} onBack={this.handleBack} {...rest} />
+    return (
+      <BrowseRewardsPage results={searchResults} onBack={this.handleBack} onClickReward={onClickReward} {...rest} />
+    )
   }
 }
 

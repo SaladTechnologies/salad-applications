@@ -126,34 +126,34 @@ export const generateRewards = (count: number): Reward[] => {
 storiesOf('Modules/Rewards/Reward Item', module)
   .add('complete reward', () => {
     let result = generateResults(1)[0]
-    return <RewardItem result={result} />
+    return <RewardItem reward={result} onClick={action('Reward Item Clicked')} />
   })
   .add('complete reward (long name)', () => {
     let result = generateResults(2)[1]
-    return <RewardItem result={result} />
+    return <RewardItem reward={result} onClick={action('Reward Item Clicked')} />
   })
   .add('out of stock', () => {
     let result = generateResults(2)[1]
     //TODO: result.quantity = 0
-    return <RewardItem result={result} />
+    return <RewardItem reward={result} onClick={action('Reward Item Clicked')} />
   })
   .add('low stock (n=1)', () => {
     let result = generateResults(2)[1]
     //TODO:result.quantity = 1
-    return <RewardItem result={result} />
+    return <RewardItem reward={result} onClick={action('Reward Item Clicked')} />
   })
   .add('low stock (n=3)', () => {
     let result = generateResults(2)[1]
     //TODO:result.quantity = 3
-    return <RewardItem result={result} />
+    return <RewardItem reward={result} onClick={action('Reward Item Clicked')} />
   })
   .add('missing reward', () => {
-    return <RewardItem />
+    return <RewardItem onClick={action('Reward Item Clicked')} />
   })
   .add('no reward image', () => {
     let result = generateResults(1)[0]
     //TODO:result.coverImage = ''
-    return <RewardItem result={result} />
+    return <RewardItem reward={result} onClick={action('Reward Item Clicked')} />
   })
 
 storiesOf('Modules/Rewards/Reward Slider', module)
@@ -161,7 +161,7 @@ storiesOf('Modules/Rewards/Reward Slider', module)
     let result = generateResults(1)[0]
     return (
       <RewardSlider viewAllRoute={'view more'}>
-        <RewardItem result={result} />
+        <RewardItem reward={result} onClick={action('Reward Item Clicked')} />
       </RewardSlider>
     )
   })
@@ -170,7 +170,7 @@ storiesOf('Modules/Rewards/Reward Slider', module)
     return (
       <RewardSlider viewAllRoute={'view more'}>
         {results.map((x) => (
-          <RewardItem result={x} />
+          <RewardItem reward={x} onClick={action('Reward Item Clicked')} />
         ))}
       </RewardSlider>
     )
@@ -180,7 +180,7 @@ storiesOf('Modules/Rewards/Reward Slider', module)
     return (
       <RewardSlider viewAllRoute={'view more'}>
         {results.map((x) => (
-          <RewardItem result={x} />
+          <RewardItem reward={x} onClick={action('Reward Item Clicked')} />
         ))}
       </RewardSlider>
     )
@@ -191,17 +191,17 @@ storiesOf('Modules/Rewards/Reward Slider', module)
       <>
         <RewardSlider title={'Category 1'} viewAllRoute={'view more'}>
           {results.map((x) => (
-            <RewardItem result={x} />
+            <RewardItem reward={x} onClick={action('Reward Item Clicked')} />
           ))}
         </RewardSlider>
         <RewardSlider title={'Category 2'} viewAllRoute={'view more'}>
           {results.map((x) => (
-            <RewardItem result={x} />
+            <RewardItem reward={x} onClick={action('Reward Item Clicked')} />
           ))}
         </RewardSlider>
         <RewardSlider title={'Category 3'} viewAllRoute={'view more'}>
           {results.map((x) => (
-            <RewardItem result={x} />
+            <RewardItem reward={x} onClick={action('Reward Item Clicked')} />
           ))}
         </RewardSlider>
       </>

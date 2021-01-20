@@ -1,3 +1,5 @@
+import { RootStore } from './Store'
+
 /** Convert hours to ms */
 export const convertHours = (hours: number): number => hours * 3.6e6
 
@@ -64,4 +66,18 @@ export const formatBalance = (balance?: number): string => {
   }
 
   return '$' + balanceStr
+}
+
+/**
+ * Takes path and determines route action based on
+ * whether the route is internal or external.
+ * @param store The routing store
+ * @param path The url path
+ */
+export const routeLink = (store: RootStore, path: string) => {
+  if (path.startsWith('http') && typeof window !== undefined) {
+    window.open(path, '_blank', 'rel=noopener noreferrer')
+  } else {
+    store.routing.push(path)
+  }
 }
