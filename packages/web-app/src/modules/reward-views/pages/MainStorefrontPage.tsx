@@ -63,14 +63,17 @@ class _MainStorefrontPage extends Component<Props> {
               Array.from(categories).map(([category, rewards], i) => {
                 if (!rewards || rewards.length < 5) {
                   // The minimum number of items to show on the store
-                  return null
+                  return this.getHero(i)
                 } else if (heroCategories.includes(category)) {
                   return (
-                    <RewardHero key={category} title={category}>
-                      {rewards.map((x) => (
-                        <RewardHeroItem key={x.id} result={x} />
-                      ))}
-                    </RewardHero>
+                    <>
+                      <RewardHero key={category} title={category}>
+                        {rewards.map((x) => (
+                          <RewardHeroItem key={x.id} result={x} />
+                        ))}
+                      </RewardHero>
+                      {this.getHero(i)}
+                    </>
                   )
                 } else {
                   return (
