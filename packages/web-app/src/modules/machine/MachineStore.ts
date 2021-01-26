@@ -123,7 +123,9 @@ export class MachineStore {
 
       // TODO: Feed user preferences into the requirements check.
       const gpuPluginDefinitions = pluginDefinitions.filter((pluginDefinition) =>
-        pluginDefinition.requirements.every((requirement) => requirement(gpuMachineInfo, { cpu: false, gpu: true })),
+        pluginDefinition.requirements.every((requirement) =>
+          requirement(gpuMachineInfo, { cpu: false, gpu: true, cpuOverridden: false, gpuOverridden: false }),
+        ),
       )
 
       return {
@@ -169,7 +171,9 @@ export class MachineStore {
 
     //Get all the CPU only plugin definitions
     const cpuPlugins = pluginDefinitions.filter((pluginDefinition) =>
-      pluginDefinition.requirements.every((requirement) => requirement(machineInfo, { cpu: true, gpu: false })),
+      pluginDefinition.requirements.every((requirement) =>
+        requirement(machineInfo, { cpu: true, gpu: false, cpuOverridden: false, gpuOverridden: false }),
+      ),
     )
 
     return cpuPlugins.length > 0

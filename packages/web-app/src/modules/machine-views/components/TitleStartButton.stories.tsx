@@ -1,4 +1,5 @@
 import { action } from '@storybook/addon-actions'
+import { boolean } from '@storybook/addon-knobs'
 import { Meta } from '@storybook/react'
 import { MiningStatus } from '../../machine/models'
 import { TitleStartButton } from './TitleStartButton'
@@ -8,37 +9,74 @@ export default {
   component: TitleStartButton,
 } as Meta
 
-export const Enabled = () => <TitleStartButton onClick={action('click')} isEnabled={true} />
+export const Enabled = () => (
+  <TitleStartButton
+    onClick={action('click')}
+    isDisabled={boolean('Is Disabled', false)}
+    isRunning={boolean('Is Running', false)}
+    notCompatible={boolean('Not Compatible', false)}
+  />
+)
 
-export const Disabled = () => <TitleStartButton onClick={action('click')} isEnabled={false} />
+export const Disabled = () => (
+  <TitleStartButton
+    onClick={action('click')}
+    isDisabled={boolean('Is Disabled', true)}
+    isRunning={boolean('Is Running', false)}
+    notCompatible={boolean('Not Compatible', false)}
+  />
+)
 
 export const Stopped = () => (
-  <TitleStartButton onClick={action('click')} isEnabled={true} status={MiningStatus.Stopped} />
+  <TitleStartButton
+    onClick={action('click')}
+    isDisabled={boolean('Is Disabled', false)}
+    status={MiningStatus.Stopped}
+    isRunning={boolean('Is Running', false)}
+    notCompatible={boolean('Not Compatible', false)}
+  />
 )
 
 export const Installing = () => (
-  <TitleStartButton onClick={action('click')} isEnabled={true} status={MiningStatus.Installing} runningTime={10000} />
+  <TitleStartButton
+    onClick={action('click')}
+    status={MiningStatus.Installing}
+    runningTime={10000}
+    isDisabled={boolean('Is Disabled', false)}
+    isRunning={boolean('Is Running', false)}
+    notCompatible={boolean('Not Compatible', false)}
+  />
 )
 
 export const Initializing = () => (
   <TitleStartButton
     onClick={action('click')}
-    isEnabled={true}
     status={MiningStatus.Initializing}
     runningTime={300000}
+    isDisabled={boolean('Is Disabled', false)}
+    isRunning={boolean('Is Running', false)}
+    notCompatible={boolean('Not Compatible', false)}
   />
 )
 
 export const Running = () => (
-  <TitleStartButton onClick={action('click')} isEnabled={true} status={MiningStatus.Running} runningTime={6000000} />
+  <TitleStartButton
+    onClick={action('click')}
+    status={MiningStatus.Running}
+    runningTime={6000000}
+    isDisabled={boolean('Is Disabled', false)}
+    isRunning={boolean('Is Running', false)}
+    notCompatible={boolean('Not Compatible', false)}
+  />
 )
 
 export const WithError = () => (
   <TitleStartButton
     onClick={action('click')}
     onClickError={action('click error')}
-    isEnabled={false}
+    isDisabled={boolean('Is Disabled', false)}
+    isRunning={boolean('Is Running', false)}
+    notCompatible={boolean('Not Compatible', true)}
     status={MiningStatus.Stopped}
-    errorMessage="No compatible GPUs found. Click for more details."
   />
 )

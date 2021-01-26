@@ -2,7 +2,7 @@ import { Accounts } from '../accounts'
 import { downloads } from '../ccminer'
 import { STANDARD_ERRORS } from '../errors'
 import { PluginDefinition } from '../plugin-definitions'
-import { hasGpu, not } from '../requirements'
+import { hasGpu, negateGpuRequirement } from '../requirements'
 
 export const createCCminerLyra2REv3PluginDefinitions = (accounts: Accounts): PluginDefinition[] =>
   downloads.reduce((definitions, download) => {
@@ -23,7 +23,7 @@ export const createCCminerLyra2REv3PluginDefinitions = (accounts: Accounts): Plu
         initialRetries: 3,
         watchdogTimeout: 900000,
         errors: [...STANDARD_ERRORS],
-        requirements: [not(hasGpu('*', 4096)), hasGpu('*', 2048)],
+        requirements: [negateGpuRequirement('*', 4096), hasGpu('*', 2048)],
       })
     }
 
