@@ -152,4 +152,37 @@ export class Zendesk {
       console.error(e)
     }
   }
+
+  openSupportTicket() {
+    if (window && window.zE) {
+      try {
+        // Don't skip the Help Center every time...
+        window.zE('webWidget:on', 'close', () => {
+          window &&
+            window.zE &&
+            window.zE('webWidget', 'updateSettings', {
+              webWidget: {
+                helpCenter: {
+                  suppress: false,
+                },
+              },
+            })
+        })
+
+        // But skip the Help Center this time.
+        window.zE('webWidget', 'updateSettings', {
+          webWidget: {
+            helpCenter: {
+              suppress: true,
+            },
+          },
+        })
+
+        // Show the contact form!
+        window.zE('webWidget', 'open')
+      } catch (e) {
+        console.log(e)
+      }
+    }
+  }
 }

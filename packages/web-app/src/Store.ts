@@ -61,7 +61,7 @@ export class RootStore {
   public readonly vault: VaultStore
   public readonly version: VersionStore
   public readonly engagement: EngagementStore
-  private readonly zendesk: Zendesk
+  public readonly zendesk: Zendesk
 
   constructor(readonly axios: AxiosInstance) {
     this.routing = new RouterStore()
