@@ -42,18 +42,18 @@ const styles = (theme: SaladTheme) => ({
     fontFamily: theme.fontGroteskBook25,
     fontSize: 12,
     '-webkit-app-region': 'none',
-    cursor: 'not-allowed',
+    cursor: 'pointer',
+    '&:hover': {
+      opacity: 0.7,
+    },
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     textTransform: 'uppercase',
     flexDirection: 'column',
   },
-  startButtonTextEnabled: {
-    cursor: 'pointer',
-    '&:hover': {
-      opacity: 0.7,
-    },
+  startButtonTextDisabled: {
+    cursor: 'not-allowed',
   },
   runningTimeText: {
     fontSize: 8,
@@ -89,9 +89,10 @@ interface Props extends WithStyles<typeof styles> {
   onClick?: () => void
   onClickError?: () => void
   status?: MiningStatus
-  isEnabled?: boolean
+  isDisabled: boolean
+  isRunning: boolean
   runningTime?: number
-  errorMessage?: string
+  notCompatible: boolean
 }
 
 interface State {
@@ -131,13 +132,8 @@ class _TitleStartButton extends Component<Props, State> {
   }
 
   render() {
-    const { isEnabled, errorMessage, runningTime, status, classes } = this.props
+    const { notCompatible, isDisabled, isRunning, runningTime, status, classes } = this.props
     const { isHovering } = this.state
-
-    const isError = errorMessage && 0 !== errorMessage.length
-
-    const isRunning =
-      status === MiningStatus.Installing || status === MiningStatus.Initializing || status === MiningStatus.Running
 
     const showStatus = isRunning && !isHovering
 
@@ -146,7 +142,7 @@ class _TitleStartButton extends Component<Props, State> {
         <div className={classnames(classes.startButton, { [classes.startButtonRunning]: isRunning })} />
 
         <div
-          className={classnames(classes.startButtonText, { [classes.startButtonTextEnabled]: isEnabled })}
+          className={classnames(classes.startButtonText, { [classes.startButtonTextDisabled]: isDisabled })}
           onClick={this.handleStart}
           onMouseEnter={this.handleMouseEnter}
           onMouseLeave={this.handleMouseLeave}
@@ -158,8 +154,8 @@ class _TitleStartButton extends Component<Props, State> {
               <div className={classes.runningTimeText}>{runningTime !== undefined && formatDuration(runningTime)}</div>
             </div>
           )}
-          {isError && (
-            <div className={classes.errorNotification} data-rh={errorMessage} onClick={this.handleErrorClick}>
+          {notCompatible && (
+            <div className={classes.errorNotification} onClick={this.handleErrorClick}>
               <div className={classes.errorIcon}>!</div>
             </div>
           )}

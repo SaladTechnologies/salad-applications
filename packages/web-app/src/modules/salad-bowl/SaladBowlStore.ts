@@ -14,6 +14,8 @@ import { PluginStatus } from './models/PluginStatus'
 import { StatusMessage } from './models/StatusMessage'
 
 const CPU_MINING_ENABLED = 'CPU_MINING_ENABLED'
+const GPU_MINING_OVERRIDDEN = 'GPU_MINING_OVERRIDDEN'
+const CPU_MINING_OVERRIDDEN = 'CPU_MINING_OVERRIDDEN'
 
 export class SaladBowlStore implements IPersistentStore {
   private currentPluginDefinition?: PluginDefinition
@@ -43,6 +45,12 @@ export class SaladBowlStore implements IPersistentStore {
   @observable
   public gpuMiningEnabled: boolean = true
 
+  @observable
+  public cpuMiningOverridden: boolean = false
+
+  @observable
+  public gpuMiningOverridden: boolean = false
+
   @computed
   get pluginDefinitions(): PluginDefinition[] {
     const machine = this.store.machine.currentMachine
@@ -65,13 +73,16 @@ export class SaladBowlStore implements IPersistentStore {
         rigId: machine.minerId,
       },
     }
-    const pluginDefinitions = getPluginDefinitions(
-      accounts,
-      machineInfo.platform ?? window.salad.platform,
-    ).filter((pluginDefinition) =>
-      pluginDefinition.requirements.every((requirement) =>
-        requirement(machineInfo, { cpu: this.cpuMiningEnabled, gpu: this.gpuMiningEnabled }),
-      ),
+    const pluginDefinitions = getPluginDefinitions(accounts, machineInfo.platform ?? window.salad.platform).filter(
+      (pluginDefinition) =>
+        pluginDefinition.requirements.every((requirement) =>
+          requirement(machineInfo, {
+            cpu: this.cpuMiningEnabled,
+            gpu: this.gpuMiningEnabled,
+            cpuOverridden: this.cpuMiningOverridden,
+            gpuOverridden: this.cpuMiningOverridden,
+          }),
+        ),
     )
     console.log(
       `${EOL}========== Supported Plugins ==========${EOL}CPU Enabled:${this.cpuMiningEnabled}${EOL}GPU Enabled:${
@@ -137,6 +148,12 @@ export class SaladBowlStore implements IPersistentStore {
 
     //Loads the initial CPU mining flag
     this.setGpuOnly(!(Storage.getItem(CPU_MINING_ENABLED) === 'true'))
+
+    //Loads initial CPU mining overridden flag
+    this.setCpuOverride(Storage.getItem(CPU_MINING_OVERRIDDEN) === 'true')
+
+    //Loads initial GPU mining overridden flag
+    this.setGpuOverride(Storage.getItem(GPU_MINING_OVERRIDDEN) === 'true')
   }
 
   getSavedData(): object {
@@ -432,5 +449,21 @@ export class SaladBowlStore implements IPersistentStore {
 
     //Saves the new value locally so it will automatically be loaded next time
     Storage.setItem(CPU_MINING_ENABLED, !value)
+  }
+
+  @action
+  setGpuOverride = (value: boolean) => {
+    this.gpuMiningOverridden = value
+
+    //Saves the new value locally so it will automatically be loaded next time
+    Storage.setItem(GPU_MINING_OVERRIDDEN, value)
+  }
+
+  @action
+  setCpuOverride = (value: boolean) => {
+    this.cpuMiningOverridden = value
+
+    //Saves the new value locally so it will automatically be loaded next time
+    Storage.setItem(CPU_MINING_OVERRIDDEN, value)
   }
 }

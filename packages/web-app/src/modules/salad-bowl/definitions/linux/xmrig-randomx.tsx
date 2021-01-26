@@ -1,7 +1,7 @@
 import { Accounts } from '../accounts'
 import { STANDARD_ERRORS } from '../errors'
 import { PluginDefinition } from '../plugin-definitions'
-import { hasCpu, hasGpu, not } from '../requirements'
+import { hasCpu, hasGpu, negateGpuRequirement } from '../requirements'
 import { downloads } from '../xmrig'
 
 export const createXMRigRandomXPluginDefinitions = (accounts: Accounts): PluginDefinition[] =>
@@ -22,7 +22,7 @@ export const createXMRigRandomXPluginDefinitions = (accounts: Accounts): PluginD
         initialRetries: 3,
         watchdogTimeout: 900000,
         errors: [...STANDARD_ERRORS],
-        requirements: [not(hasGpu('*', 4096)), hasGpu('*', 2048)],
+        requirements: [negateGpuRequirement('*', 4096), hasGpu('*', 2048)],
       })
 
       definitions.push({

@@ -1,8 +1,16 @@
 import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { Li, P, SmartLink, ToggleSetting } from '../../../components'
+import { Checkbox, InfoButton, Li, P, SmartLink, ToggleSetting } from '../../../components'
+import { SaladTheme } from '../../../SaladTheme'
 
-const styles = {
+const styles = (theme: SaladTheme) => ({
+  checkBox: {
+    fontSize: theme.small,
+  },
+  checkboxContainer: {
+    alignItems: 'flex-end',
+    display: 'flex',
+  },
   container: {
     display: 'flex',
     flexDirection: 'row',
@@ -10,16 +18,23 @@ const styles = {
   column: {
     flex: 1,
   },
-}
+})
 
 interface Props extends WithStyles<typeof styles> {
   gpuOnly?: boolean
+  infoButtonText: string
   isRunning?: boolean
+  compatibilityDetectionOverridden: boolean
   onSetGpuOnly?: (value: boolean) => void
+  onSetOverride: (value: boolean) => void
 }
 
 const gpuDescription = 'Use your GPU to earn Salad Balance'
 const cpuDescription = 'Use your CPU to earn Salad Balance'
+const gpuOverrideInfo =
+  'If Salad Is Unable To Detect A Compatible GPU, You Can Choose To Override GPU Detection. This Takes Longer To Start And Can Be Less Profitable.'
+const cpuOverrideInfo =
+  'If Salad Is Unable To Detect A Compatible CPU, You Can Choose To Override CPU Detection. This Takes Longer To Start And Can Be Less Profitable.'
 
 class _MinerTypePanel extends Component<Props> {
   handleToggle = () => {
@@ -28,7 +43,7 @@ class _MinerTypePanel extends Component<Props> {
   }
 
   render() {
-    const { isRunning, gpuOnly, classes } = this.props
+    const { isRunning, gpuOnly, onSetOverride, compatibilityDetectionOverridden, classes } = this.props
 
     return (
       <div className={classes.container}>
@@ -42,6 +57,16 @@ class _MinerTypePanel extends Component<Props> {
             toggleLeft="GPU"
             toggleRight="CPU"
           />
+          <div className={classes.checkboxContainer}>
+            <Checkbox
+              checked={compatibilityDetectionOverridden}
+              className={classes.checkBox}
+              disabled={!compatibilityDetectionOverridden}
+              onClick={onSetOverride}
+              text={`Override ${gpuOnly ? 'GPU' : 'CPU'} Compatibilty Detection`}
+            />
+            <InfoButton text={gpuOnly ? gpuOverrideInfo : cpuOverrideInfo} />
+          </div>
         </div>
         <div className={classes.column}>
           <P>Mining Disclaimers:</P>
