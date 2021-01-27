@@ -3,6 +3,7 @@ import { autorun, computed, flow, observable } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
+import { NotificationMessageCategory } from '../notifications/models'
 import { getPluginDefinitions } from '../salad-bowl/definitions'
 import {
   Accounts,
@@ -66,6 +67,7 @@ export class MachineStore {
         if (!this.store.saladBowl.canRun) {
           //Show an error notification
           this.store.notifications.sendNotification({
+            category: NotificationMessageCategory.MachineIncompatible,
             title: `Machine is Incompatible`,
             message: 'Salad was unable to detect a compatible graphics card. Click here for more details.',
             autoClose: false,

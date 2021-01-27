@@ -1,6 +1,7 @@
 import { action, computed, observable, toJS } from 'mobx'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
+import { NotificationMessageCategory } from '../notifications/models'
 import { Profile } from '../profile/models'
 import { MachineInfo } from './models'
 
@@ -177,6 +178,7 @@ export class NativeStore {
       this.send(hide)
       if (this.notifyOnMinimizeToTray) {
         this.store.notifications.sendNotification({
+          category: NotificationMessageCategory.AutoStart,
           title: 'Salad is running in the background',
           message: 'When you have the "Close to Tray" option enabled, Salad will continue to run in the background.',
           id: 33,

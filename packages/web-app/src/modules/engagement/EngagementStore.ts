@@ -1,6 +1,7 @@
 import { AxiosInstance } from 'axios'
 import { action, autorun, computed, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
+import { NotificationMessageCategory } from '../notifications/models'
 import { ChangelogMetadata } from './models/ChangelogMetadata'
 import { HeroType } from './models/HeroType'
 
@@ -63,6 +64,7 @@ export class EngagementStore {
       //Check to see if we should add the What's New notification
       if (this.showWhatsNew) {
         this.store.notifications.sendNotification({
+          category: NotificationMessageCategory.AppUpdate,
           title: 'Salad was Updated',
           message: 'Something new just came out from the kitchen. Click here to learn more.',
           autoClose: false,
@@ -82,6 +84,7 @@ export class EngagementStore {
       if (this.store.saladBowl.canRun && this.store.xp.currentXp <= 10) {
         //Link to the mining page
         this.store.notifications.sendNotification({
+          category: NotificationMessageCategory.Incentive,
           title: `Redemptions and Rewards Await`,
           message: `Your machine has the chops, but you haven't gotten chopping yet! Click here for a quick tutorial on how to mine with Salad and start earning now!`,
           autoClose: false,
@@ -93,6 +96,7 @@ export class EngagementStore {
       else if (!this.store.saladBowl.canRun && this.store.balance.lifetimeBalance === 0) {
         //Link to offerwall page
         this.store.notifications.sendNotification({
+          category: NotificationMessageCategory.Incentive,
           title: `Can't Chop? Try Offerwalls!`,
           message: `Not every machine can chop Salad - but we've got good news for you. Click here to check out our offerwalls, where you can perform easy tasks and start earning now!`,
           autoClose: false,
@@ -102,6 +106,7 @@ export class EngagementStore {
       //Remind users to mine
       else if (this.store.saladBowl.canRun) {
         this.store.notifications.sendNotification({
+          category: NotificationMessageCategory.Incentive,
           title: 'Time to get Chopping',
           message: 'Welcome back to the kitchen. Click here to get chopping again.',
           autoClose: false,

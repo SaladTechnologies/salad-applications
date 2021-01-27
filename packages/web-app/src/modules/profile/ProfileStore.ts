@@ -1,6 +1,7 @@
 import { AxiosInstance } from 'axios'
 import { action, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
+import { NotificationMessageCategory } from '../notifications/models'
 import { Profile } from './models'
 
 export class ProfileStore {
@@ -102,6 +103,7 @@ export class ProfileStore {
       this.currentProfile = profile
     } catch (error) {
       this.store.notifications.sendNotification({
+        category: NotificationMessageCategory.FurtherActionRequired,
         title: 'Unable to update your Minecraft Username',
         message: 'Please try again.',
         autoClose: false,

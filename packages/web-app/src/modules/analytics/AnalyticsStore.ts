@@ -345,28 +345,34 @@ export class AnalyticsStore {
 
   /** Track when a toast notification is shown */
   public trackToastNotificationShown = (message: NotificationMessage) => {
+    const type = message.type ? message.type : 'normal'
     this.track('Toast Notification Shown', {
+      Category: message.category,
       Title: message.title,
       Message: message.message,
-      Type: message.type,
+      Type: type,
     })
   }
 
   /** Track when a toast notification is clicked */
   public trackToastNotificationClicked = (message: NotificationMessage) => {
+    const type = message.type ? message.type : 'normal'
     this.track('Toast Notification Clicked', {
+      Category: message.category,
       Title: message.title,
       Message: message.message,
-      Type: message.type,
+      Type: type,
     })
   }
 
   /** Track when a toast notification is clicked */
   public trackToastNotificationClosed = (message: NotificationMessage) => {
+    const type = message.type ? message.type : 'normal'
     this.track('Toast Notification Closed', {
+      Category: message.category,
       Title: message.title,
       Message: message.message,
-      Type: message.type,
+      Type: type,
     })
   }
 
