@@ -52,9 +52,6 @@ const styles = (theme: SaladTheme) => ({
     textTransform: 'uppercase',
     flexDirection: 'column',
   },
-  startButtonTextDisabled: {
-    cursor: 'not-allowed',
-  },
   runningTimeText: {
     fontSize: 8,
     textAlign: 'center',
@@ -89,7 +86,6 @@ interface Props extends WithStyles<typeof styles> {
   onClick?: () => void
   onClickError?: () => void
   status?: MiningStatus
-  isDisabled: boolean
   isRunning: boolean
   runningTime?: number
   notCompatible: boolean
@@ -132,7 +128,7 @@ class _TitleStartButton extends Component<Props, State> {
   }
 
   render() {
-    const { notCompatible, isDisabled, isRunning, runningTime, status, classes } = this.props
+    const { notCompatible, isRunning, runningTime, status, classes } = this.props
     const { isHovering } = this.state
 
     const showStatus = isRunning && !isHovering
@@ -142,7 +138,7 @@ class _TitleStartButton extends Component<Props, State> {
         <div className={classnames(classes.startButton, { [classes.startButtonRunning]: isRunning })} />
 
         <div
-          className={classnames(classes.startButtonText, { [classes.startButtonTextDisabled]: isDisabled })}
+          className={classes.startButtonText}
           onClick={this.handleStart}
           onMouseEnter={this.handleMouseEnter}
           onMouseLeave={this.handleMouseLeave}

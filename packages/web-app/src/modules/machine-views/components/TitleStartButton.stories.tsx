@@ -12,7 +12,6 @@ export default {
 export const Enabled = () => (
   <TitleStartButton
     onClick={action('click')}
-    isDisabled={boolean('Is Disabled', false)}
     isRunning={boolean('Is Running', false)}
     notCompatible={boolean('Not Compatible', false)}
   />
@@ -21,7 +20,6 @@ export const Enabled = () => (
 export const Disabled = () => (
   <TitleStartButton
     onClick={action('click')}
-    isDisabled={boolean('Is Disabled', true)}
     isRunning={boolean('Is Running', false)}
     notCompatible={boolean('Not Compatible', false)}
   />
@@ -30,7 +28,6 @@ export const Disabled = () => (
 export const Stopped = () => (
   <TitleStartButton
     onClick={action('click')}
-    isDisabled={boolean('Is Disabled', false)}
     status={MiningStatus.Stopped}
     isRunning={boolean('Is Running', false)}
     notCompatible={boolean('Not Compatible', false)}
@@ -42,7 +39,6 @@ export const Installing = () => (
     onClick={action('click')}
     status={MiningStatus.Installing}
     runningTime={10000}
-    isDisabled={boolean('Is Disabled', false)}
     isRunning={boolean('Is Running', false)}
     notCompatible={boolean('Not Compatible', false)}
   />
@@ -53,7 +49,6 @@ export const Initializing = () => (
     onClick={action('click')}
     status={MiningStatus.Initializing}
     runningTime={300000}
-    isDisabled={boolean('Is Disabled', false)}
     isRunning={boolean('Is Running', false)}
     notCompatible={boolean('Not Compatible', false)}
   />
@@ -64,7 +59,6 @@ export const Running = () => (
     onClick={action('click')}
     status={MiningStatus.Running}
     runningTime={6000000}
-    isDisabled={boolean('Is Disabled', false)}
     isRunning={boolean('Is Running', false)}
     notCompatible={boolean('Not Compatible', false)}
   />
@@ -74,7 +68,6 @@ export const WithError = () => (
   <TitleStartButton
     onClick={action('click')}
     onClickError={action('click error')}
-    isDisabled={boolean('Is Disabled', false)}
     isRunning={boolean('Is Running', false)}
     notCompatible={boolean('Not Compatible', true)}
     status={MiningStatus.Stopped}
