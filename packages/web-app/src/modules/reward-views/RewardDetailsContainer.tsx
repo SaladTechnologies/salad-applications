@@ -6,14 +6,12 @@ import { RewardDetailsPage } from './pages'
 
 const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ id: string }>): any => {
   const onRedeem = (reward: Reward) => {
-    const currentPath = window && window.location.pathname
-    store.analytics.trackButtonClicked(currentPath, 'buy_now', 'Buy Now', 'enabled')
+    store.analytics.trackButtonClicked('buy_now', 'Buy Now', 'enabled')
     store.rewards.redeemReward(reward)
   }
 
   const trackDisabledBuyNowClick = () => {
-    const currentPath = window && window.location.pathname
-    store.analytics.trackButtonClicked(currentPath, 'buy_now', 'Buy Now', 'disabled')
+    store.analytics.trackButtonClicked('buy_now', 'Buy Now', 'disabled')
   }
 
   const extensions = store.profile.currentProfile?.extensions

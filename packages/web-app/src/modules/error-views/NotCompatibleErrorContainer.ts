@@ -17,16 +17,14 @@ const mapStoreToProps = (store: RootStore): any => {
   }
 
   const onSwitchMiningType = () => {
-    const currentPath = window && window.location.pathname
-    store.analytics.trackButtonClicked(currentPath, 'switch_mining_type_button', 'Switch Mining Type Button', 'enabled')
+    store.analytics.trackButtonClicked('switch_mining_type_button', 'Switch Mining Type Button', 'enabled')
     store.ui.hideModal()
     store.saladBowl.setGpuOnly(!gpuMiningEnabled)
     store.saladBowl.start(StartReason.Manual)
   }
 
   const onOverride = () => {
-    const currentPath = window && window.location.pathname
-    store.analytics.trackButtonClicked(currentPath, 'override_button', 'Override Button', 'enabled')
+    store.analytics.trackButtonClicked('override_button', 'Override Button', 'enabled')
     store.ui.hideModal()
     gpuMiningEnabled ? store.saladBowl.setGpuOverride(true) : store.saladBowl.setCpuOverride(true)
     store.saladBowl.start(StartReason.Manual)

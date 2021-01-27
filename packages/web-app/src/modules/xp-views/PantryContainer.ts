@@ -4,8 +4,7 @@ import { Pantry } from './components/Pantry'
 
 const mapStoreToProps = (store: RootStore): any => {
   const onPantryClicked = (key: string) => {
-    const currentPath = window && window.location.pathname
-    store.analytics.trackElementClicked(currentPath, 'pantry_element', key)
+    store.analytics.trackElementClicked('pantry_element', key)
   }
   return {
     levels: store.xp.levels,

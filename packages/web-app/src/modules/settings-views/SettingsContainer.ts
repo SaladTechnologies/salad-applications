@@ -41,14 +41,12 @@ const mapStoreToProps = (store: RootStore): any => {
   ]
 
   const handleLogout = () => {
-    const currentPath = window && window.location.pathname
-    store.analytics.trackButtonClicked(currentPath, 'logout_button', 'Log Out', 'enabled')
+    store.analytics.trackButtonClicked('logout_button', 'Log Out', 'enabled')
     store.auth.logout()
   }
 
   const handleClose = () => {
-    const currentPath = window && window.location.pathname
-    store.analytics.trackSmartLink(currentPath, '/', 'Back')
+    store.analytics.trackSmartLink('/', 'Back')
     store.ui.hideModal()
   }
 
