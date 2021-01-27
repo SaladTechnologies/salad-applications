@@ -307,7 +307,8 @@ export class AnalyticsStore {
   }
 
   /** Track samrt link based on what type was clicked */
-  public trackSmartLink = (currentPath: string, to: string, label: string, type?: 'header' | 'sidebar') => {
+  public trackSmartLink = (to: string, label: string, type?: 'header' | 'sidebar') => {
+    const currentPath = window && window.location.pathname
     switch (type) {
       case 'header':
         this.trackHeaderLinkClicked(currentPath, to, label)
@@ -322,7 +323,8 @@ export class AnalyticsStore {
   }
 
   /** Track when an element is clicked */
-  public trackElementClicked = (currentPath: string, id: string, label: string) => {
+  public trackElementClicked = (id: string, label: string) => {
+    const currentPath = window && window.location.pathname
     this.track('Element Clicked', {
       CurrentPath: currentPath,
       Id: id,
@@ -331,7 +333,8 @@ export class AnalyticsStore {
   }
 
   /** Track when a button is clicked */
-  public trackButtonClicked = (currentPath: string, id: string, label: string, state: 'enabled' | 'disabled') => {
+  public trackButtonClicked = (id: string, label: string, state: 'enabled' | 'disabled') => {
+    const currentPath = window && window.location.pathname
     this.track('Button Clicked', {
       CurrentPath: currentPath,
       Id: id,

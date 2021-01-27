@@ -51,8 +51,7 @@ interface Props extends WithStyles<typeof styles> {
 const handleClickTracking = (to?: string, trackingInfo?: any) => {
   if (to) {
     const store = getStore()
-    const currentPath = window && window.location.pathname
-    store.analytics.trackSmartLink(currentPath, to, trackingInfo.label, trackingInfo.type)
+    store.analytics.trackSmartLink(to, trackingInfo.label, trackingInfo.type)
   }
 }
 

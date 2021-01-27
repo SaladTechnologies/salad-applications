@@ -4,8 +4,7 @@ import { AccountMenu } from './components'
 
 const mapStoreToProps = (store: RootStore): any => {
   const handleLogin = () => {
-    const currentPath = window && window.location.pathname
-    store.analytics.trackButtonClicked(currentPath, 'login_button', 'Log In Button', 'enabled')
+    store.analytics.trackButtonClicked('login_button', 'Log In Button', 'enabled')
     store.auth.login()
   }
 

@@ -1,7 +1,7 @@
 import classnames from 'classnames'
 import { ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { getStore, RootStore } from '../Store'
 
 const styles = {
@@ -27,17 +27,16 @@ interface Props extends WithStyles<typeof styles> {
   }
 }
 
-const handleClickTracking = (currentPath: string, to?: string, trackingInfo?: any) => {
+const handleClickTracking = (to?: string, trackingInfo?: any) => {
   if (to) {
     const store: RootStore = getStore()
-    store.analytics.trackSmartLink(currentPath, to, trackingInfo.label, trackingInfo.type)
+    store.analytics.trackSmartLink(to, trackingInfo.label, trackingInfo.type)
   }
 }
 
 const _SmartLink = ({ to, children, classes, className, trackingInfo }: Props) => {
   const isTextChild = typeof children === 'string'
   const finalClassName = classnames(classes.link, className, { [classes.hideUnderline]: !isTextChild })
-  const location = useLocation().pathname
 
   if (to === undefined || to.startsWith('http')) {
     return (
@@ -46,7 +45,7 @@ const _SmartLink = ({ to, children, classes, className, trackingInfo }: Props) =
         href={to}
         target="_blank"
         rel="noopener noreferrer"
-        onClick={trackingInfo ? () => handleClickTracking(location, to, trackingInfo) : undefined}
+        onClick={trackingInfo ? () => handleClickTracking(to, trackingInfo) : undefined}
       >
         {children}
       </a>
@@ -56,7 +55,7 @@ const _SmartLink = ({ to, children, classes, className, trackingInfo }: Props) =
       <Link
         to={to}
         className={finalClassName}
-        onClick={trackingInfo ? () => handleClickTracking(location, to, trackingInfo) : undefined}
+        onClick={trackingInfo ? () => handleClickTracking(to, trackingInfo) : undefined}
       >
         {children}
       </Link>

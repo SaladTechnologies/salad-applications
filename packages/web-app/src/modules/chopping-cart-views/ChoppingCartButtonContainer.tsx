@@ -4,8 +4,7 @@ import { ChoppingCartButton } from './components'
 
 const mapStoreToProps = (store: RootStore): any => {
   const onClickChoppingCartIcon = () => {
-    const currentPath = window && window.location.pathname
-    store.analytics.trackElementClicked(currentPath, 'chopping_knife_icon', 'Chopping Knife Icon')
+    store.analytics.trackElementClicked('chopping_knife_icon', 'Chopping Knife Icon')
   }
   return {
     rewards: store.rewards.choppingCart,

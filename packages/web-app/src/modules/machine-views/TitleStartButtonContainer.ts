@@ -10,8 +10,7 @@ const mapStoreToProps = (store: RootStore): any => {
     status === MiningStatus.Installing || status === MiningStatus.Initializing || status === MiningStatus.Running
 
   const onClick = () => {
-    const currentPath = window && window.location.pathname
-    store.analytics.trackButtonClicked(currentPath, 'start_button', 'Start Button', 'enabled')
+    store.analytics.trackButtonClicked('start_button', 'Start Button', 'enabled')
     if (notCompatible && !isRunning) {
       store.ui.showModal('/errors/not-compatible')
     } else {
