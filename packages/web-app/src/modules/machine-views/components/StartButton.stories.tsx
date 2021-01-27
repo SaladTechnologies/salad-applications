@@ -1,4 +1,5 @@
 import { action } from '@storybook/addon-actions'
+import { boolean } from '@storybook/addon-knobs'
 import { Meta } from '@storybook/react'
 import { MiningStatus } from '../../machine/models'
 import { StartButton } from './StartButton'
@@ -12,33 +13,120 @@ export const Status = () => (
   <div style={{ backgroundColor: '#092234', color: 'white', padding: '1rem', display: 'flex', flexWrap: 'wrap' }}>
     <div>
       Stopped
-      <StartButton isEnabled={true} status={MiningStatus.Stopped} onClick={action('click')} />
+      <StartButton
+        notCompatible={boolean('Not Compatible', false)}
+        isRunning={boolean('Is Running', false)}
+        status={MiningStatus.Stopped}
+        onClick={action('click')}
+      />
     </div>
     <div>
       Installing
-      <StartButton isEnabled={true} status={MiningStatus.Installing} onClick={action('click')} />
+      <StartButton
+        notCompatible={boolean('Not Compatible', false)}
+        isRunning={boolean('Is Running', false)}
+        status={MiningStatus.Installing}
+        onClick={action('click')}
+      />
     </div>
     <div>
       Initializing
-      <StartButton isEnabled={true} status={MiningStatus.Initializing} onClick={action('click')} />
+      <StartButton
+        notCompatible={boolean('Not Compatible', false)}
+        isRunning={boolean('Is Running', false)}
+        status={MiningStatus.Initializing}
+        onClick={action('click')}
+      />
     </div>
     <div>
       Running
-      <StartButton isEnabled={true} status={MiningStatus.Running} onClick={action('click')} />
+      <StartButton
+        notCompatible={boolean('Not Compatible', false)}
+        isRunning={boolean('Is Running', false)}
+        status={MiningStatus.Running}
+        onClick={action('click')}
+      />
     </div>
     <div>
       Disabled
-      <StartButton onClick={action('should not happen!!')} />
+      <StartButton
+        notCompatible={true}
+        isRunning={boolean('Is Running', false)}
+        onClick={action('should not happen!!')}
+      />
     </div>
   </div>
 )
 
-export const Example0Sec = () => <StartButton runningTime={0} status={MiningStatus.Running} />
-export const Example1Sec = () => <StartButton runningTime={1000} status={MiningStatus.Running} />
-export const Example2Sec = () => <StartButton runningTime={1000 * 2} status={MiningStatus.Running} />
-export const Example1Min = () => <StartButton runningTime={1000 * 60} status={MiningStatus.Running} />
-export const Example2Min = () => <StartButton runningTime={1000 * 60 * 2} status={MiningStatus.Running} />
-export const Example1Hr = () => <StartButton runningTime={1000 * 60 * 60} status={MiningStatus.Running} />
-export const Example2Hr = () => <StartButton runningTime={1000 * 60 * 60 * 2} status={MiningStatus.Running} />
-export const Example1Day = () => <StartButton runningTime={1000 * 60 * 60 * 24} status={MiningStatus.Running} />
-export const Example2Day = () => <StartButton runningTime={1000 * 60 * 60 * 24 * 2} status={MiningStatus.Running} />
+export const Example0Sec = () => (
+  <StartButton
+    notCompatible={boolean('Not Compatible', false)}
+    runningTime={0}
+    isRunning={boolean('Is Running', false)}
+    status={MiningStatus.Running}
+  />
+)
+export const Example1Sec = () => (
+  <StartButton
+    notCompatible={boolean('Not Compatible', false)}
+    runningTime={1000}
+    isRunning={boolean('Is Running', true)}
+    status={MiningStatus.Running}
+  />
+)
+export const Example2Sec = () => (
+  <StartButton
+    notCompatible={boolean('Not Compatible', false)}
+    runningTime={1000 * 2}
+    isRunning={boolean('Is Running', true)}
+    status={MiningStatus.Running}
+  />
+)
+export const Example1Min = () => (
+  <StartButton
+    notCompatible={boolean('Not Compatible', false)}
+    runningTime={1000 * 60}
+    isRunning={boolean('Is Running', true)}
+    status={MiningStatus.Running}
+  />
+)
+export const Example2Min = () => (
+  <StartButton
+    notCompatible={boolean('Not Compatible', false)}
+    runningTime={1000 * 60 * 2}
+    isRunning={boolean('Is Running', true)}
+    status={MiningStatus.Running}
+  />
+)
+export const Example1Hr = () => (
+  <StartButton
+    notCompatible={boolean('Not Compatible', false)}
+    runningTime={1000 * 60 * 60}
+    isRunning={boolean('Is Running', true)}
+    status={MiningStatus.Running}
+  />
+)
+export const Example2Hr = () => (
+  <StartButton
+    notCompatible={boolean('Not Compatible', false)}
+    runningTime={1000 * 60 * 60 * 2}
+    isRunning={boolean('Is Running', true)}
+    status={MiningStatus.Running}
+  />
+)
+export const Example1Day = () => (
+  <StartButton
+    notCompatible={boolean('Not Compatible', false)}
+    runningTime={1000 * 60 * 60 * 24}
+    isRunning={boolean('Is Running', true)}
+    status={MiningStatus.Running}
+  />
+)
+export const Example2Day = () => (
+  <StartButton
+    notCompatible={boolean('Not Compatible', false)}
+    runningTime={1000 * 60 * 60 * 24 * 2}
+    isRunning={boolean('Is Running', true)}
+    status={MiningStatus.Running}
+  />
+)

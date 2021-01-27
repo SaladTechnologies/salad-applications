@@ -39,6 +39,10 @@ const styles = (theme: SaladTheme) => ({
   button: {
     background:
       'linear-gradient(75.49deg, rgba(201, 240, 55, 0.24) -16.36%, rgba(175, 214, 28, 0.64) 58.63%, rgba(178, 213, 48, 0.571429) 95.69%, rgba(178, 213, 48, 0.24) 153.04%)',
+    cursor: 'pointer',
+    '&:hover': {
+      opacity: 0.9,
+    },
     fontFamily: theme.fontGroteskBook25,
     fontSize: 18,
     textTransform: 'uppercase',
@@ -47,12 +51,6 @@ const styles = (theme: SaladTheme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     boxShadow: '8px 14px 22px rgba(0, 0, 0, 0.45)',
-  },
-  enabledButton: {
-    cursor: 'pointer',
-    '&:hover': {
-      opacity: 0.9,
-    },
   },
   disabledButton: {
     cursor: 'not-allowed',
@@ -84,7 +82,8 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   status?: MiningStatus
   runningTime?: number
-  isEnabled?: boolean
+  isRunning: boolean
+  notCompatible: boolean
   onClick?: () => void
   pluginCount?: number
   isDesktop?: boolean
@@ -92,17 +91,8 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _StartButton extends Component<Props> {
-  handleClick = () => {
-    const { onClick, isEnabled } = this.props
-
-    if (!isEnabled) return
-
-    onClick?.()
-  }
   render() {
-    const { status, runningTime, isEnabled, pluginCount, isDesktop, classes } = this.props
-    const isRunning =
-      status === MiningStatus.Installing || status === MiningStatus.Initializing || status === MiningStatus.Running
+    const { status, runningTime, notCompatible, pluginCount, onClick, isRunning, isDesktop, classes } = this.props
 
     return (
       <div className={classes.container}>
@@ -113,10 +103,9 @@ class _StartButton extends Component<Props> {
                 <div
                   className={classnames(classes.button, {
                     [classes.running]: isRunning,
-                    [classes.enabledButton]: isEnabled,
-                    [classes.disabledButton]: !isEnabled,
+                    [classes.disabledButton]: notCompatible && !isRunning,
                   })}
-                  onClick={this.handleClick}
+                  onClick={onClick}
                 >
                   {isRunning ? 'Stop' : 'Start'}
                 </div>
