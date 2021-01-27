@@ -3,6 +3,7 @@ import { EOL } from 'os'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
 import { MiningStatus } from '../machine/models'
+import { NotificationMessageCategory } from '../notifications/models'
 import { IPersistentStore } from '../versions/IPersistentStore'
 import { getPluginDefinitions } from './definitions'
 import { Accounts, BEAM_WALLET_ADDRESS, ETH_WALLET_ADDRESS, getNiceHashMiningAddress } from './definitions/accounts'
@@ -335,6 +336,7 @@ export class SaladBowlStore implements IPersistentStore {
     //Show a notification reminding users to use auto start
     if (reason === StartReason.Manual && this.store.autoStart.canAutoStart && !this.store.autoStart.autoStart) {
       this.store.notifications.sendNotification({
+        category: NotificationMessageCategory.AutoStart,
         title: 'Salad is best run AFK',
         message: `Don't forget to enable auto start in Settings`,
         id: 123456,

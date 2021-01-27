@@ -1,4 +1,17 @@
+export enum NotificationMessageCategory {
+  AppUpdate = 'App Update',
+  AutoStart = 'Auto Start',
+  Error = 'Error',
+  FurtherActionRequired = 'Further Action Required',
+  Incentive = 'Incentive',
+  MachineIncompatible = 'Machine Incompatible',
+  Redemption = 'Redemption',
+}
+
 export interface NotificationMessage {
+  /** An identifying category for the type of toast shown for analytics tracking */
+  category: NotificationMessageCategory
+
   /** The notification id. Use for closing notification.*/
   id?: number
 

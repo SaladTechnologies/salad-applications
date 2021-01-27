@@ -1,6 +1,7 @@
 import { action, autorun, observable, runInAction } from 'mobx'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
+import { NotificationMessageCategory } from '../notifications/models'
 import { StartReason, StopReason } from '../salad-bowl/models'
 
 const getIdleTime = 'get-idle-time'
@@ -114,6 +115,7 @@ export class AutoStartStore {
 
           //Send a notification that we are going to start soon
           this.store.notifications.sendNotification({
+            category: NotificationMessageCategory.AutoStart,
             title: 'Salad is About to Start',
             message: 'Looks like you are AFK, Salad is getting warmed up to start running',
             id: notificationId,
@@ -137,6 +139,7 @@ export class AutoStartStore {
 
         //Send a notification that we auto started
         this.store.notifications.sendNotification({
+          category: NotificationMessageCategory.AutoStart,
           title: 'Salad is Running',
           message: 'Salad detected you were AFK and started automatically',
           id: notificationId,
