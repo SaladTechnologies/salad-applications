@@ -22,7 +22,7 @@ interface Props extends WithStyles<typeof styles> {}
 const _MobilePageNotFound = ({ classes }: Props) => {
   return (
     <div className={classes.container}>
-      <p className={classes.text}>Sorry, the page you were looking for may not exist on the mobile app.</p>
+      <p className={classes.text}>Sorry, Chef! Couldn't serve up that page. Some fare is desktop only.</p>
     </div>
   )
 }
