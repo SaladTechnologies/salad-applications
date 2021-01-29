@@ -16,11 +16,11 @@ const mapStoreToProps = (store: RootStore): any => {
     alternativeMinerType = 'GPU'
   }
 
+  store.analytics.trackErrorPageViewed(`No Compatible ${currentMinerType} Error`)
+
   const onSwitchMiningType = () => {
-    store.analytics.trackButtonClicked('switch_mining_type_button', 'Switch Mining Type Button', 'enabled')
+    store.saladBowl.switchMiningTypeAndStart(true)
     store.ui.hideModal()
-    store.saladBowl.setGpuOnly(!gpuMiningEnabled)
-    store.saladBowl.start(StartReason.Manual)
   }
 
   const onOverride = () => {
@@ -33,7 +33,7 @@ const mapStoreToProps = (store: RootStore): any => {
   return {
     alternativeMinerType,
     currentMinerType,
-    onCloseClicked: () => store.ui.hideModal(),
+    onCloseClicked: () => store.ui.hideModal(true),
     onOverride,
     onSwitchMiningType,
   }

@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { NavLink } from 'react-router-dom'
+import { LinkTrackingInfo } from '../../../modules/analytics/models'
 import { SaladTheme } from '../../../SaladTheme'
 import { getStore } from '../../../Store'
 import { SmartLink } from '../../SmartLink'
@@ -42,10 +43,7 @@ interface Props extends WithStyles<typeof styles> {
   className?: string
   enabled?: boolean
   externalLink?: boolean
-  trackingInfo?: {
-    type?: 'header' | 'sidebar'
-    label?: string
-  }
+  trackingInfo?: LinkTrackingInfo
 }
 
 const handleClickTracking = (to?: string, trackingInfo?: any) => {

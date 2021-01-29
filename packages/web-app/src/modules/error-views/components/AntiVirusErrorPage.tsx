@@ -1,10 +1,15 @@
 import { Component } from 'react'
 import { ExternalLinkListUnstyled } from '../../../components'
 import { ErrorPage } from '../../../components/ErrorPage'
+import { LinkTrackingInfo } from '../../analytics/models'
 
 interface Props {
   onCloseClicked?: () => void
-  avLinks: { readonly url: string; readonly text: string }[]
+  avLinks: {
+    readonly url: string
+    readonly text: string
+    trackingInfo?: LinkTrackingInfo
+  }[]
 }
 
 export class AntiVirusErrorPage extends Component<Props> {

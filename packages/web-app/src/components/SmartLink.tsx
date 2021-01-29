@@ -2,6 +2,7 @@ import classnames from 'classnames'
 import { ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Link } from 'react-router-dom'
+import { LinkTrackingInfo } from '../modules/analytics/models'
 import { getStore, RootStore } from '../Store'
 
 const styles = {
@@ -21,10 +22,7 @@ interface Props extends WithStyles<typeof styles> {
   to?: string
   children?: ReactNode
   className?: string
-  trackingInfo?: {
-    type?: 'header' | 'sidebar'
-    label?: string
-  }
+  trackingInfo?: LinkTrackingInfo
 }
 
 const handleClickTracking = (to?: string, trackingInfo?: any) => {
