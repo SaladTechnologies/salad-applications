@@ -180,10 +180,6 @@ export class AnalyticsStore {
 
   /** Track when a machine goes to the earning state */
   public trackMiningError = (type: string, errorCode: number) => {
-    if (!this.started || (errorCode >= 100000000 && errorCode < 200000000)) {
-      return
-    }
-
     this.track('Mining Error', { ErrorType: type, ErrorCode: errorCode })
   }
 
@@ -373,6 +369,15 @@ export class AnalyticsStore {
       Title: message.title,
       Message: message.message,
       Type: type,
+    })
+  }
+
+  /** Track when an Error Page is viewed by the user */
+  public trackErrorPageViewed = (name: string) => {
+    const currentPath = window && window.location.pathname
+    this.track('Error Page Viewed', {
+      CurrentPath: currentPath,
+      ErrorPage: name,
     })
   }
 

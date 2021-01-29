@@ -2,6 +2,7 @@ import { action, autorun, computed, flow, observable, runInAction } from 'mobx'
 import { EOL } from 'os'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
+import { ErrorPageType } from '../../UIStore'
 import { MiningStatus } from '../machine/models'
 import { NotificationMessageCategory } from '../notifications/models'
 import { IPersistentStore } from '../versions/IPersistentStore'
@@ -25,6 +26,7 @@ export class SaladBowlStore implements IPersistentStore {
   private runningTimer?: NodeJS.Timeout
   private somethingWorks: boolean = false
   private timeoutTimer?: NodeJS.Timeout
+  private hasViewedAVErrorPage: boolean = false
 
   /** The timestamp last time that start was pressed */
 
@@ -252,23 +254,27 @@ export class SaladBowlStore implements IPersistentStore {
 
   @action
   onReceiveError = (message: ErrorMessage) => {
-    this.store.analytics.trackMiningError(message.errorCategory, message.errorCode)
+    if (!this.hasViewedAVErrorPage) {
+      this.store.analytics.trackMiningError(message.errorCategory, message.errorCode)
+      this.hasViewedAVErrorPage = true
+    }
+
     // Show the error modal
     switch (message.errorCategory) {
       case ErrorCategory.AntiVirus:
-        this.store.ui.showModal('/errors/anti-virus')
+        this.store.ui.showErrorPage(ErrorPageType.AntiVirus)
         break
       // case ErrorCategory.Driver:
-      //   this.store.ui.showModal('/errors/cuda')
+      // this.store.ui.showErrorPage(ErrorPageType.Cuda)
       //   break
       // case ErrorCategory.Network:
-      //   this.store.ui.showModal('/errors/network')
+      // this.store.ui.showErrorPage(ErrorPageType.Network)
       //   break
       // case ErrorCategory.Silent:
       //   console.log('Ignoring silent error')
       //   break
       // case ErrorCategory.Unknown:
-      //   this.store.ui.showModal('/errors/unknown')
+      // this.store.ui.showErrorPage(ErrorPageType.Unknown)
       //   break
     }
   }
@@ -294,6 +300,8 @@ export class SaladBowlStore implements IPersistentStore {
     if (this.isRunning) {
       return
     }
+
+    this.hasViewedAVErrorPage = false
 
     if (!this.canRun) {
       console.log('This machine is not able to run.')
@@ -394,7 +402,7 @@ export class SaladBowlStore implements IPersistentStore {
     this.currentPluginRetries = 0
     if (this.currentPluginDefinitionIndex >= this.pluginDefinitions.length) {
       this.stop(StopReason.Fallthrough)
-      this.store.ui.showModal('/errors/fallback')
+      this.store.ui.showErrorPage(ErrorPageType.Fallback)
     } else {
       this.currentPluginDefinition = this.pluginDefinitions[this.currentPluginDefinitionIndex]
       this.plugin.name = this.currentPluginDefinition.name
@@ -467,5 +475,29 @@ export class SaladBowlStore implements IPersistentStore {
 
     //Saves the new value locally so it will automatically be loaded next time
     Storage.setItem(CPU_MINING_OVERRIDDEN, value)
+  }
+
+  @action
+  switchMiningTypeAndStart = (trackEvent?: boolean) => {
+    this.setGpuOnly(!this.gpuMiningEnabled)
+    this.start(StartReason.Manual)
+    if (trackEvent) {
+      this.store.analytics.trackButtonClicked('switch_mining_type_button', 'Switch Mining Type Button', 'enabled')
+    }
+  }
+
+  @action
+  onStartButtonClicked = () => {
+    const notCompatible = !this.canRun
+    const status = this.status
+    const isRunning =
+      status === MiningStatus.Installing || status === MiningStatus.Initializing || status === MiningStatus.Running
+
+    this.store.analytics.trackButtonClicked('start_button', 'Start Button', 'enabled')
+    if (notCompatible && !isRunning) {
+      this.store.ui.showErrorPage(ErrorPageType.NotCompatible)
+    } else {
+      this.toggleRunning()
+    }
   }
 }

@@ -1,6 +1,5 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
-import { StartReason } from '../salad-bowl/models'
 import { FallbackErrorPage } from './components/FallbackErrorPage'
 
 const mapStoreToProps = (store: RootStore): any => {
@@ -17,16 +16,14 @@ const mapStoreToProps = (store: RootStore): any => {
   }
 
   const onSwitchMiningType = () => {
-    store.analytics.trackButtonClicked('switch_mining_type_button', 'Switch Mining Type Button', 'enabled')
-    store.saladBowl.setGpuOnly(!gpuMiningEnabled)
+    store.saladBowl.switchMiningTypeAndStart(true)
     store.ui.hideModal()
-    store.saladBowl.start(StartReason.Manual)
   }
 
   return {
     alternativeMinerType,
     currentMinerType,
-    onCloseClicked: () => store.ui.hideModal(),
+    onCloseClicked: () => store.ui.hideModal(true),
     onOpenSupportTicket: () => store.zendesk.openSupportTicket(),
     onSwitchMiningType,
     gpuMiningEnabled,

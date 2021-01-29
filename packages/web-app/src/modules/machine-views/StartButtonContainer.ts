@@ -8,16 +8,9 @@ const mapStoreToProps = (store: RootStore): any => {
   const status = store.saladBowl.status
   const isRunning =
     status === MiningStatus.Installing || status === MiningStatus.Initializing || status === MiningStatus.Running
-  const onClick = () => {
-    store.analytics.trackButtonClicked('start_button', 'Start Button', 'enabled')
-    if (notCompatible && !isRunning) {
-      store.ui.showModal('/errors/not-compatible')
-    } else {
-      store.saladBowl.toggleRunning()
-    }
-  }
+
   return {
-    onClick,
+    onClick: () => store.saladBowl.onStartButtonClicked(),
     isRunning,
     status,
     notCompatible,

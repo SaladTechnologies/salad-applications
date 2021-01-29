@@ -31,6 +31,8 @@ interface Props extends WithStyles<typeof styles> {
   onSwitchMiningType: () => void
 }
 
+const specsLabel = 'these Specs'
+
 export class _NotCompatibleErrorPage extends Component<Props> {
   render() {
     const {
@@ -46,8 +48,11 @@ export class _NotCompatibleErrorPage extends Component<Props> {
       <ErrorPage title={`Salad is Unable to Run on your ${currentMinerType}`} onCloseClicked={onCloseClicked}>
         <div className={classes.padding}>
           Salad was unable to detect a compatible {currentMinerType}, but don't worry - if you know your machine meets{' '}
-          <SmartLink to="https://support.salad.io/hc/en-us/articles/360048320131-Is-My-Machine-Compatible-With-Salad">
-            these specs
+          <SmartLink
+            to="https://support.salad.io/hc/en-us/articles/360048320131-Is-My-Machine-Compatible-With-Salad"
+            trackingInfo={{ label: 'These Specs' }}
+          >
+            {specsLabel}
           </SmartLink>
           , click 'Override Compatibility Detection'. Salad will attempt to download backup miners and still use your{' '}
           {currentMinerType}.

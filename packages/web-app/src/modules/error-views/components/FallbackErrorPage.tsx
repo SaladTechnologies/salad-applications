@@ -36,6 +36,8 @@ interface Props extends WithStyles<typeof styles> {
   gpuMiningEnabled: boolean
 }
 
+const forumLabel = 'Support Forum'
+
 class _FallbackErrorPage extends Component<Props> {
   render() {
     const {
@@ -54,7 +56,10 @@ class _FallbackErrorPage extends Component<Props> {
             opening a Support Ticket
           </span>{' '}
           or getting help from our{' '}
-          <SmartLink to="https://forum.salad.io/c/community-support/6">Support Forum</SmartLink>.
+          <SmartLink to="https://forum.salad.io/c/community-support/6" trackingInfo={{ label: forumLabel }}>
+            {forumLabel}
+          </SmartLink>
+          .
         </div>
         <div className={classes.padding}>
           In the meantime, try switching to {alternativeMinerType} mining so that you keep earning while we work to

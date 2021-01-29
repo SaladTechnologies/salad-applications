@@ -1,5 +1,6 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
+import { ErrorPageType } from '../../UIStore'
 import { MiningStatus } from '../machine/models'
 import { TitleStartButton } from './components/TitleStartButton'
 
@@ -9,20 +10,11 @@ const mapStoreToProps = (store: RootStore): any => {
   const isRunning =
     status === MiningStatus.Installing || status === MiningStatus.Initializing || status === MiningStatus.Running
 
-  const onClick = () => {
-    store.analytics.trackButtonClicked('start_button', 'Start Button', 'enabled')
-    if (notCompatible && !isRunning) {
-      store.ui.showModal('/errors/not-compatible')
-    } else {
-      store.saladBowl.toggleRunning()
-    }
-  }
-
   return {
     isRunning,
     notCompatible,
-    onClick,
-    onClickError: () => store.ui.showModal('/errors/not-compatible'),
+    onClick: () => store.saladBowl.onStartButtonClicked(),
+    onClickError: () => store.ui.showErrorPage(ErrorPageType.NotCompatible),
     runningTime: store.saladBowl.runningTime,
     status,
   }
