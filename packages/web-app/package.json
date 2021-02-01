@@ -122,6 +122,7 @@
     "react-final-form": "6.5.2",
     "react-helmet": "6.1.0",
     "react-hint": "3.2.0",
+    "react-hotjar": "^2.2.1",
     "react-html-parser": "2.0.2",
     "react-image": "4.0.3",
     "react-jss": "10.0.0-alpha.10",
