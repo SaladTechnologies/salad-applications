@@ -2,6 +2,7 @@ import * as Sentry from '@sentry/react'
 import { CaptureContext } from '@sentry/types'
 import mixpanel from 'mixpanel-browser'
 import { autorun } from 'mobx'
+import { hotjar } from 'react-hotjar'
 import { config } from '../../config'
 import { RootStore } from '../../Store'
 import { MiningStatus } from '../machine/models'
@@ -25,6 +26,8 @@ export class AnalyticsStore {
         this.store.saladBowl.plugin.algorithm || '-',
       )
     })
+
+    hotjar.initialize(2225817, 6)
   }
 
   public start = (profile: Profile) => {

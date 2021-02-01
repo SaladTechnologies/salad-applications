@@ -12353,6 +12353,11 @@ react-hint@3.2.0:
   resolved "https://registry.yarnpkg.com/react-hint/-/react-hint-3.2.0.tgz#ca805a18330f03fb71bb7a96a34931598899e67d"
   integrity sha512-ceKa6GaWtXEvj9eb1eOIpRouurb6WLV5fmApKNcxNbpY9xQkO6++1mXij9tlwGh4Ad/Vvv2pqlmoW17LIn1QTA==
 
+react-hotjar@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/react-hotjar/-/react-hotjar-2.2.1.tgz#5f06d15a146960262dba612657c828c8b58da8a3"
+  integrity sha512-rkHdsFDfI7HCKeAwkHPf8Vq7ZbpX0oE4/5GgVvNambWw8z0PSKKxi59qWYX7H+dDYjchiL3z3hrAFQ+PohgQOA==
+
 react-hotkeys@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/react-hotkeys/-/react-hotkeys-2.0.0.tgz#a7719c7340cbba888b0e9184f806a9ec0ac2c53f"
