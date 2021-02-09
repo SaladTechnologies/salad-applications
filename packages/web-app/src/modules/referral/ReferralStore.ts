@@ -130,6 +130,11 @@ export class ReferralStore {
       code = 'ISAAC3'
     }
 
+    //TODO: Remove this ASAP
+    if (code.toUpperCase() === 'CUSTOM') {
+      code = 'CUSTOM2'
+    }
+
     //Ensures that the user is logged in
     try {
       yield this.store.auth.login()
