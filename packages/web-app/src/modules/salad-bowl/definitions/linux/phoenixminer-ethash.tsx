@@ -6,8 +6,8 @@ import { hasGpu } from '../requirements'
 
 export const createPhoenixMinerEthashPluginDefinitions = (accounts: Accounts): PluginDefinition[] =>
   [
-    `-pool stratum+tcp://daggerhashimoto.usa.nicehash.com:3353 -pool2 stratum+tcp://daggerhashimoto.eu.nicehash.com:3353 -ewal ${accounts.nicehash.address}.${accounts.nicehash.rigId} -esm 3 -allpools 1 -allcoins 0`,
     `-pool ssl://us1.ethermine.org:5555 -pool2 ssl://eu1.ethermine.org:5555 -ewal ${accounts.ethermine.address}.${accounts.ethermine.workerId}`,
+    `-pool stratum+tcp://daggerhashimoto.usa.nicehash.com:3353 -pool2 stratum+tcp://daggerhashimoto.eu.nicehash.com:3353 -ewal ${accounts.nicehash.address}.${accounts.nicehash.rigId} -esm 3 -allpools 1 -allcoins 0`,
   ].reduce(
     (definitions, pool) =>
       downloads.reduce((definitions, download) => {
