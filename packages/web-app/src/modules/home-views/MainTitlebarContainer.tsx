@@ -16,7 +16,6 @@ const mapStoreToProps = (store: RootStore): any => {
     onClose: store.native.closeWindow,
     bottomBorder: true,
     menuItems: menuItems,
-    onStart: store.saladBowl.toggleRunning,
     status: store.saladBowl.status,
     startEnabled: !store.auth.isAuthenticated || store.saladBowl.canRun,
   }
