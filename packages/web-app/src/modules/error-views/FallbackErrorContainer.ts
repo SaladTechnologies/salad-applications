@@ -1,5 +1,6 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
+import { StartActionType } from '../salad-bowl/models'
 import { FallbackErrorPage } from './components/FallbackErrorPage'
 
 const mapStoreToProps = (store: RootStore): any => {
@@ -16,7 +17,7 @@ const mapStoreToProps = (store: RootStore): any => {
   }
 
   const onSwitchMiningType = () => {
-    store.saladBowl.switchMiningTypeAndStart(true)
+    store.saladBowl.toggleRunning(StartActionType.SwitchMiner)
     store.ui.hideModal()
   }
 
