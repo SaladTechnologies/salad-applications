@@ -1,3 +1,4 @@
+import sanitizeHtml from 'sanitize-html'
 import { RootStore } from './Store'
 
 /** Convert hours to ms */
@@ -80,4 +81,26 @@ export const routeLink = (store: RootStore, path: string) => {
   } else {
     store.routing.push(path)
   }
+}
+
+export const getSanitizedHTML = (html: string) => {
+  const sanitizedHTML = sanitizeHtml(html, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+    allowedAttributes: {
+      img: ['src', 'alt'],
+      a: ['href', 'target', 'rel'],
+    },
+    transformTags: {
+      a: function (tagName, attribs) {
+        attribs.rel = 'noopener noreferrer'
+        attribs.target = '_blank'
+
+        return {
+          tagName,
+          attribs,
+        }
+      },
+    },
+  })
+  return sanitizedHTML
 }

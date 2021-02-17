@@ -26,7 +26,7 @@ const styles = (theme: SaladTheme) => ({
     paddingLeft: 10,
     margin: 0,
     '-webkit-app-region': 'drag',
-    zIndex: 9999,
+    zIndex: 1000,
     position: 'relative',
     fontFamily: theme.fontGroteskLight25,
     marginTop: 2,

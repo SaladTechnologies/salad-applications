@@ -9,6 +9,8 @@ const styles = (theme: SaladTheme) => ({
     cursor: 'help',
     height: 18,
     width: 18,
+    zIndex: 3000,
+    position: 'relative',
   },
 })
 
