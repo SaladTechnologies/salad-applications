@@ -10,7 +10,7 @@ const styles = (theme: SaladTheme) => ({
     bottom: 0,
     left: 0,
     right: 0,
-    zIndex: 90000,
+    zIndex: 2000,
     backgroundColor: theme.darkBlue,
     display: 'flex',
     alignItems: 'center',
