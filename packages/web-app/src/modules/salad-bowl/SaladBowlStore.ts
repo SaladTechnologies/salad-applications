@@ -380,6 +380,10 @@ export class SaladBowlStore implements IPersistentStore {
       errors: this.currentPluginDefinition.errors,
     })
 
+    console.log(
+      `Starting plugin ${this.currentPluginDefinition.name}-${this.currentPluginDefinition.version}: ${this.currentPluginDefinition.exe} ${this.currentPluginDefinition.args}`,
+    )
+
     this.store.analytics.trackStart(reason, this.gpuMiningEnabled, this.cpuMiningEnabled)
 
     //Show a notification reminding users to use auto start
@@ -459,6 +463,10 @@ export class SaladBowlStore implements IPersistentStore {
         runningCheck: this.currentPluginDefinition.runningCheck,
         errors: this.currentPluginDefinition.errors,
       })
+
+      console.log(
+        `Starting plugin ${this.currentPluginDefinition.name}-${this.currentPluginDefinition.version}: ${this.currentPluginDefinition.exe} ${this.currentPluginDefinition.args}`,
+      )
 
       this.timeoutTimer = setTimeout(() => {
         this.timeoutTimer = undefined
