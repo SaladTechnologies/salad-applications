@@ -88,7 +88,8 @@ const getMachineInfo = (): Promise<MachineInfo> => {
     si.system(),
     si.uuid(),
     si.version(),
-  ]).then(([cpu, cpuFlags, graphics, memLayout, osInfo, services, system, uuid, version]) => {
+    si.processes(),
+  ]).then(([cpu, cpuFlags, graphics, memLayout, osInfo, services, system, uuid, version, processes]) => {
     let cpuData: si.Systeminformation.CpuData | si.Systeminformation.CpuWithFlagsData | undefined
     if (cpu.status === 'fulfilled') {
       if (cpuFlags.status === 'fulfilled') {
@@ -109,6 +110,7 @@ const getMachineInfo = (): Promise<MachineInfo> => {
       graphics: graphics.status === 'fulfilled' ? graphics.value : undefined,
       os: osInfo.status === 'fulfilled' ? osInfo.value : undefined,
       platform: process.platform,
+      processes: processes.status === 'fulfilled' ? processes.value : undefined,
       uuid: uuid.status === 'fulfilled' ? uuid.value : undefined,
       services: services.status === 'fulfilled' ? services.value : undefined,
     }
