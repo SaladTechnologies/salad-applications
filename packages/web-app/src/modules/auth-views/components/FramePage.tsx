@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { Component, createRef, RefObject } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { Overlay, Portal } from '../../../components'
+import { NotMobile, Overlay, P, Portal } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import logo from '../assets/animated-logo-lg.gif'
 
@@ -17,16 +17,31 @@ const styles = (theme: SaladTheme) => ({
     border: 'none',
     boxShadow: 'none',
     color: 'white',
-    height: 450,
-    margin: 0,
-    padding: 0,
-    width: 300,
-    // TODO: Remove z-indexes!!!
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
     zIndex: 9999999999,
+  },
+  iframeContainer: {
+    height: 450,
+    width: 300,
   },
   spinner: {
     width: '2vw',
     zIndex: 99999999999,
+  },
+  subtitle: {
+    color: theme.lightGreen,
+    fontSize: theme.medium,
+    lineHeight: '20.4px',
+    marginTop: 50,
+    textAlign: 'center',
+  },
+  title: {
+    color: theme.lightGreen,
+    fontFamily: theme.fontGroteskLight25,
+    marginBottom: 75,
+    textAlign: 'center',
   },
 })
 
@@ -86,24 +101,33 @@ export const FramePage = withStyles(styles)(
     }
 
     render() {
+      const { onCloseRequested, frameSandbox, frameTitle, frameUrl, classes } = this.props
+      const { frameLoaded } = this.state
       return (
         <Portal>
-          <Overlay onCloseRequested={this.props.onCloseRequested} />
-          <iframe
-            ref={this.frame}
-            className={classNames(this.props.classes.absoluteCenter, this.props.classes.container)}
-            onLoad={this.handleLoaded}
-            sandbox={this.props.frameSandbox}
-            src={this.props.frameUrl}
-            title={this.props.frameTitle}
-          />
-          {this.state.frameLoaded ? null : (
-            <img
-              alt="Loading..."
-              className={classNames(this.props.classes.absoluteCenter, this.props.classes.spinner)}
-              src={logo}
+          <Overlay onCloseRequested={onCloseRequested} />
+          <div className={classNames(classes.absoluteCenter, classes.container)}>
+            <NotMobile>{this.state.frameLoaded && <h1 className={classes.title}>Welcome to Salad!</h1>}</NotMobile>
+            <iframe
+              ref={this.frame}
+              className={classNames(classes.container, classes.iframeContainer)}
+              onLoad={this.handleLoaded}
+              sandbox={frameSandbox}
+              src={frameUrl}
+              title={frameTitle}
             />
-          )}
+            <NotMobile>
+              {frameLoaded && (
+                <P className={classes.subtitle}>
+                  Each time you sign in to Salad, you’ll receive a fresh <br /> one-time code in your email. Using these
+                  one-time codes helps <br /> protect your Salad balance and rewards.
+                </P>
+              )}
+            </NotMobile>
+            {frameLoaded ? null : (
+              <img alt="Loading..." className={classNames(classes.absoluteCenter, classes.spinner)} src={logo} />
+            )}
+          </div>
         </Portal>
       )
     }
