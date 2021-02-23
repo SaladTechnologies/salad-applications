@@ -1,5 +1,9 @@
 import { AxiosInstance } from 'axios'
+import { action, flow, observable } from 'mobx'
 import { AuthStore } from '../auth'
+import { NativeStore } from '../machine'
+import { AntiVirusSoftware, ZendeskArticle } from './models'
+import { getAntiVirusSoftware, getZendeskAVData } from './utils'
 
 export class Zendesk {
   private static injected: boolean = false
@@ -7,7 +11,25 @@ export class Zendesk {
   private initializeRetryTimeout?: NodeJS.Timeout
   private reauthenticateRetryTimeout?: NodeJS.Timeout
 
-  constructor(private readonly axios: AxiosInstance, private readonly auth: AuthStore) {
+  private detectedAntiVirus?: AntiVirusSoftware
+
+  @observable
+  public selectedAntiVirusGuide?: AntiVirusSoftware
+
+  @observable
+  public helpCenterArticle?: string
+
+  @observable
+  public loadingArticle: boolean = false
+
+  @observable
+  public antiVirusArticleList?: ZendeskArticle[]
+
+  constructor(
+    private readonly axios: AxiosInstance,
+    private readonly auth: AuthStore,
+    private readonly native: NativeStore,
+  ) {
     this.inject()
   }
 
@@ -185,4 +207,57 @@ export class Zendesk {
       }
     }
   }
+
+  public get detectedAV() {
+    if (this.detectedAntiVirus === undefined) {
+      this.detectedAntiVirus =
+        this.native.machineInfo?.processes && getAntiVirusSoftware(this.native.machineInfo?.processes)
+    }
+
+    return this.detectedAntiVirus
+  }
+
+  @action.bound
+  loadArticle = flow(
+    function* (this: Zendesk, articleID: number) {
+      const avSoftwareName = getZendeskAVData(articleID).name
+      if (avSoftwareName === this.selectedAntiVirusGuide && this.helpCenterArticle !== undefined) {
+        return
+      }
+
+      this.loadingArticle = true
+      try {
+        let res = yield fetch(`https://salad.zendesk.com/api/v2/help_center/en-us/articles/${articleID}`, {
+          credentials: 'omit',
+        })
+        const data = yield res.json()
+        this.helpCenterArticle = data.article.body
+        this.selectedAntiVirusGuide = avSoftwareName
+      } catch (err) {
+        throw err
+      }
+      this.loadingArticle = false
+    }.bind(this),
+  )
+
+  @action.bound
+  loadAntiVirusArticleList = flow(
+    function* (this: Zendesk) {
+      if (this.antiVirusArticleList !== undefined) {
+        return
+      }
+
+      this.loadingArticle = true
+      try {
+        let res = yield fetch('https://salad.zendesk.com/api/v2/help_center/en-us/sections/360008458292/articles', {
+          credentials: 'omit',
+        })
+        const data = yield res.json()
+        this.antiVirusArticleList = data.articles
+      } catch (err) {
+        throw err
+      }
+      this.loadingArticle = false
+    }.bind(this),
+  )
 }

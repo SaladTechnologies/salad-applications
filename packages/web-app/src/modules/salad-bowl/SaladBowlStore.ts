@@ -26,7 +26,6 @@ export class SaladBowlStore implements IPersistentStore {
   private runningTimer?: NodeJS.Timeout
   private somethingWorks: boolean = false
   private timeoutTimer?: NodeJS.Timeout
-  private hasViewedAVErrorPage: boolean = false
 
   /** The timestamp last time that start was pressed */
 
@@ -53,6 +52,9 @@ export class SaladBowlStore implements IPersistentStore {
 
   @observable
   public gpuMiningOverridden: boolean = false
+
+  @observable
+  public hasViewedAVErrorPage: boolean = false
 
   @computed
   get pluginDefinitions(): PluginDefinition[] {

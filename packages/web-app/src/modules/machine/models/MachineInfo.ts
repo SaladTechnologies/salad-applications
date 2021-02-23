@@ -6,6 +6,7 @@ export interface MachineInfo {
   memLayout?: si.Systeminformation.MemLayoutData[]
   os?: si.Systeminformation.OsData
   platform?: 'aix' | 'android' | 'cygwin' | 'darwin' | 'freebsd' | 'linux' | 'netbsd' | 'openbsd' | 'sunos' | 'win32'
+  processes?: si.Systeminformation.ProcessesData
   services?: si.Systeminformation.ServicesData[]
   system?: si.Systeminformation.SystemData
   uuid?: si.Systeminformation.UuidData
