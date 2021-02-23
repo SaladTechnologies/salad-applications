@@ -2,7 +2,7 @@ import { action } from '@storybook/addon-actions'
 import { linkTo } from '@storybook/addon-links'
 import { storiesOf } from '@storybook/react'
 import { getSanitizedHTML } from '../../../utils'
-import { AntiVirusErrorPage } from './NewAntiVirusErrorPage'
+import { AntiVirusErrorPage } from './AntiVirusErrorPage'
 
 storiesOf('Modules/Error Pages/Pages', module)
   .addDecorator((storyFn) => (

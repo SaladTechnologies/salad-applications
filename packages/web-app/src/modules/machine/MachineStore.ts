@@ -51,7 +51,7 @@ export class MachineStore {
         return
       }
 
-      const { services: _, ...machineWithoutServices } = machineInfo
+      const { services: _, processes, ...machineWithoutServices } = machineInfo
       if (machineWithoutServices.system != null) {
         machineWithoutServices.system.uuid = Storage.getOrSetDefault(SYSTEM_ID, uuidv4())
       }
