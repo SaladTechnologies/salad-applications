@@ -289,66 +289,66 @@ export class SaladBowlStore implements IPersistentStore {
     }
   }
 
-  checkCompatibilityBeforeMining = (startReason: StartReason) => {
-    if (this.isNotCompatible && !this.isOverriding) {
-      this.store.ui.showErrorPage(ErrorPageType.NotCompatible)
-      return
-    }
-
-    this.start(startReason)
-  }
-
-  @action
-  toggleRunning = (startAction: StartActionType) => {
-    if (startAction !== StartActionType.StartButton && this.isRunning) {
-      return
-    }
-
-    switch (startAction) {
-      case StartActionType.StartButton:
-        if (this.isRunning) {
-          this.stop(StopReason.Manual)
-        } else {
-          this.store.analytics.trackButtonClicked('start_button', 'Start Button', 'enabled')
-          this.checkCompatibilityBeforeMining(StartReason.Manual)
+  public toggleRunning = flow(
+    function* (this: SaladBowlStore, startAction: StartActionType) {
+      if (startAction !== StartActionType.Automatic) {
+        try {
+          yield this.store.auth.login()
+        } catch {
+          return
         }
-        break
-      case StartActionType.Override:
-        this.store.analytics.trackButtonClicked('override_button', 'Override Button', 'enabled')
-        this.gpuMiningEnabled ? this.store.saladBowl.setGpuOverride(true) : this.store.saladBowl.setCpuOverride(true)
-        this.checkCompatibilityBeforeMining(StartReason.Manual)
-        break
-      case StartActionType.SwitchMiner:
-        this.store.analytics.trackButtonClicked('switch_mining_type_button', 'Switch Mining Type Button', 'enabled')
-        this.setGpuOnly(!this.gpuMiningEnabled)
-        this.checkCompatibilityBeforeMining(StartReason.Manual)
-        break
-      case StartActionType.Automatic:
-        this.checkCompatibilityBeforeMining(StartReason.Automatic)
-        break
-    }
-  }
+      }
+
+      if (startAction !== StartActionType.StartButton && this.isRunning) {
+        return
+      }
+
+      switch (startAction) {
+        case StartActionType.StartButton:
+          if (this.isRunning) {
+            this.stop(StopReason.Manual)
+          } else {
+            this.store.analytics.trackButtonClicked('start_button', 'Start Button', 'enabled')
+            this.start(StartReason.Manual)
+          }
+          break
+        case StartActionType.Override:
+          this.store.analytics.trackButtonClicked('override_button', 'Override Button', 'enabled')
+          this.gpuMiningEnabled ? this.store.saladBowl.setGpuOverride(true) : this.store.saladBowl.setCpuOverride(true)
+          this.start(StartReason.Manual)
+          break
+        case StartActionType.SwitchMiner:
+          this.store.analytics.trackButtonClicked('switch_mining_type_button', 'Switch Mining Type Button', 'enabled')
+          this.setGpuOnly(!this.gpuMiningEnabled)
+          this.start(StartReason.Manual)
+          break
+        case StartActionType.Automatic:
+          this.start(StartReason.Automatic)
+          break
+      }
+    }.bind(this),
+  )
 
   @action.bound
-  start = flow(function* (this: SaladBowlStore, reason: StartReason, startTimestamp?: Date, choppingTime?: number) {
-    //Ensures that the user is logged in
-    try {
-      yield this.store.auth.login()
-    } catch {
-      return
-    }
-
+  private start = flow(function* (
+    this: SaladBowlStore,
+    reason: StartReason,
+    startTimestamp?: Date,
+    choppingTime?: number,
+  ) {
     if (this.isRunning) {
       return
     }
 
-    this.hasViewedAVErrorPage = false
-
     if (!this.canRun) {
+      if (this.store.auth.isAuthenticated && !this.isOverriding) {
+        this.store.ui.showErrorPage(ErrorPageType.NotCompatible)
+      }
       console.log('This machine is not able to run.')
       return
     }
 
+    this.hasViewedAVErrorPage = false
     if (this.timeoutTimer != null) {
       clearTimeout(this.timeoutTimer)
       this.timeoutTimer = undefined
