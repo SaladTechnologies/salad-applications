@@ -4,6 +4,7 @@ import { AuthStore } from '../auth/AuthStore'
 import { FramePage } from './components/FramePage'
 
 const mapStoreToProps = (store: RootStore): any => ({
+  showWelcomeText: true,
   createFrameListener: store.auth.createLoginFrameListener,
   frameSandbox: 'allow-same-origin allow-scripts allow-forms',
   frameTitle: 'Login - Salad',

@@ -51,6 +51,7 @@ interface FramePageProps extends WithStyles<typeof styles> {
   frameTitle: string
   frameUrl: string
   onCloseRequested: () => void
+  showWelcomeText?: boolean
 }
 
 interface FramePageState {
@@ -101,13 +102,17 @@ export const FramePage = withStyles(styles)(
     }
 
     render() {
-      const { onCloseRequested, frameSandbox, frameTitle, frameUrl, classes } = this.props
+      const { onCloseRequested, frameSandbox, frameTitle, frameUrl, showWelcomeText, classes } = this.props
       const { frameLoaded } = this.state
       return (
         <Portal>
           <Overlay onCloseRequested={onCloseRequested} />
           <div className={classNames(classes.absoluteCenter, classes.container)}>
-            <NotMobile>{this.state.frameLoaded && <h1 className={classes.title}>Welcome to Salad!</h1>}</NotMobile>
+            {frameLoaded && showWelcomeText && (
+              <NotMobile>
+                <h1 className={classes.title}>Welcome to Salad!</h1>
+              </NotMobile>
+            )}
             <iframe
               ref={this.frame}
               className={classNames(classes.container, classes.iframeContainer)}
@@ -116,14 +121,14 @@ export const FramePage = withStyles(styles)(
               src={frameUrl}
               title={frameTitle}
             />
-            <NotMobile>
-              {frameLoaded && (
+            {frameLoaded && showWelcomeText && (
+              <NotMobile>
                 <P className={classes.subtitle}>
                   Each time you sign in to Salad, you’ll receive a fresh <br /> one-time code in your email. Using these
                   one-time codes helps <br /> protect your Salad balance and rewards.
                 </P>
-              )}
-            </NotMobile>
+              </NotMobile>
+            )}
             {frameLoaded ? null : (
               <img alt="Loading..." className={classNames(classes.absoluteCenter, classes.spinner)} src={logo} />
             )}
