@@ -1,3 +1,4 @@
+import moment from 'moment'
 import sanitizeHtml from 'sanitize-html'
 import { RootStore } from './Store'
 
@@ -51,6 +52,19 @@ export const formatDuration = (duration: number): string => {
     return interval + ' mins'
   }
   return Math.floor(seconds) + ' sec'
+}
+
+/**
+ * Formats the duration in a human readable way based
+ * on military time (00 hrs 12 min 32 sec)
+ * @param duration Duration in ms
+ */
+export const formatDurationInMilitaryTime = (duration: number) => {
+  const prepDuration = moment.duration(duration)
+  return `${prepDuration.hours().toString().padStart(2, '0')} hrs ${prepDuration
+    .minutes()
+    .toString()
+    .padStart(2, '0')} min ${prepDuration.seconds().toString().padStart(2, '0')} sec`
 }
 
 export const formatBalance = (balance?: number): string => {
