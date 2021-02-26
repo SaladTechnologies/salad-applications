@@ -1,5 +1,6 @@
 import { AxiosInstance } from 'axios'
 import { action, flow, observable } from 'mobx'
+import { AnalyticsStore } from '../analytics'
 import { AuthStore } from '../auth'
 import { NativeStore } from '../machine'
 import { AntiVirusSoftware, ZendeskArticle } from './models'
@@ -29,6 +30,7 @@ export class Zendesk {
     private readonly axios: AxiosInstance,
     private readonly auth: AuthStore,
     private readonly native: NativeStore,
+    private readonly analytics: AnalyticsStore,
   ) {
     this.inject()
   }
@@ -176,6 +178,7 @@ export class Zendesk {
   }
 
   openSupportTicket() {
+    this.analytics.trackButtonClicked('opened_support_ticket_widget', 'Opened Support Ticket Widget', 'enabled')
     if (window && window.zE) {
       try {
         // Don't skip the Help Center every time...

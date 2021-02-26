@@ -157,6 +157,32 @@ export class SaladBowlStore implements IPersistentStore {
     }
   }
 
+  @computed
+  get preppingProgress(): number {
+    let progress: number = 0
+    const runningTime = this.runningTime
+
+    if (runningTime) {
+      if (runningTime <= 60000) {
+        progress = 0.1
+      }
+
+      if (runningTime > 60000 && runningTime <= 600000) {
+        progress = 0.2
+      }
+
+      if (runningTime > 600000 && runningTime <= 1200000) {
+        progress = 0.3
+      }
+
+      if (runningTime > 1200000) {
+        progress = 0.4
+      }
+    }
+
+    return progress
+  }
+
   constructor(private readonly store: RootStore) {
     this.store.native.on('mining-status', this.onReceiveStatus)
     this.store.native.on('mining-error', this.onReceiveError)
@@ -301,16 +327,36 @@ export class SaladBowlStore implements IPersistentStore {
         }
       }
 
-      if (startAction !== StartActionType.StartButton && this.isRunning) {
+      if (
+        startAction !== StartActionType.StartButton &&
+        startAction !== StartActionType.StopPrepping &&
+        this.isRunning
+      ) {
         return
       }
 
       switch (startAction) {
+        case StartActionType.TimeToChopStartButton:
         case StartActionType.StartButton:
           if (this.isRunning) {
+            if (this.status === MiningStatus.Initializing || this.status === MiningStatus.Installing) {
+              this.store.ui.showModal('/warnings/dont-lose-progress')
+              return
+            }
             this.stop(StopReason.Manual)
           } else {
-            this.store.analytics.trackButtonClicked('start_button', 'Start Button', 'enabled')
+            if (startAction === StartActionType.TimeToChopStartButton) {
+              this.store.analytics.trackButtonClicked(
+                'time_to_chop_start_button',
+                'Time To Chop Start Button',
+                'enabled',
+              )
+            }
+
+            if (startAction === StartActionType.StartButton) {
+              this.store.analytics.trackButtonClicked('start_button', 'Start Button', 'enabled')
+            }
+
             this.start(StartReason.Manual)
           }
           break
@@ -323,6 +369,11 @@ export class SaladBowlStore implements IPersistentStore {
           this.store.analytics.trackButtonClicked('switch_mining_type_button', 'Switch Mining Type Button', 'enabled')
           this.setGpuOnly(!this.gpuMiningEnabled)
           this.start(StartReason.Manual)
+          break
+        case StartActionType.StopPrepping:
+          this.store.analytics.trackButtonClicked('stop_prepping_button', 'Stop Prepping Button', 'enabled')
+          this.store.ui.hideModal()
+          this.stop(StopReason.Manual)
           break
         case StartActionType.Automatic:
           this.start(StartReason.Automatic)
