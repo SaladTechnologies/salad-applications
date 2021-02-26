@@ -14,6 +14,7 @@ import {
   UnknownErrorContainer,
 } from './modules/error-views'
 import { HomePage } from './modules/home-views'
+import { DontLoseProgressPageContainer } from './modules/machine-views'
 import { RewardDetailsContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
 import { SettingsContainer } from './modules/settings-views'
@@ -47,6 +48,7 @@ class _Routes extends Component<RouteComponentProps> {
           <Route exact path="/errors/unknown" component={UnknownErrorContainer} />
           <Route exact path="/errors/anti-virus/:id" component={SpecificAntiVirusErrorContainer} />
           <Route exact path="/errors/anti-virus" component={GenericAntiVirusErrorContainer} />
+          <Route exact path="/warnings/dont-lose-progress" component={DontLoseProgressPageContainer} />
           <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
           <Redirect exact from="/whats-new" to="/" />
           <Redirect exact from="/account/summary" to="/settings/summary" />

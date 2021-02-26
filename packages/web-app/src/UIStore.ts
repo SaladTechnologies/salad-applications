@@ -1,4 +1,6 @@
-import { action } from 'mobx'
+import { action, autorun } from 'mobx'
+import { MiningStatus } from './modules/machine/models'
+import { NotificationMessageCategory } from './modules/notifications/models'
 import { getZendeskAVData } from './modules/zendesk/utils'
 import { RootStore } from './Store'
 
@@ -12,7 +14,26 @@ export enum ErrorPageType {
 }
 
 export class UIStore {
-  constructor(private readonly store: RootStore) {}
+  constructor(private readonly store: RootStore) {
+    autorun(() => {
+      const status = this.store.saladBowl.status
+      if (status) {
+        if (
+          status === MiningStatus.Running &&
+          this.store.routing.location.pathname === '/warnings/dont-lose-progress'
+        ) {
+          this.hideModal()
+          this.store.notifications.sendNotification({
+            category: NotificationMessageCategory.Success,
+            title: 'Chopping Started Successfully',
+            message:
+              'Congratulations! Your machine is successfully chopping. You should see your first balance within 1-30 minutes.',
+            id: 123456789,
+          })
+        }
+      }
+    })
+  }
 
   @action
   showModal = (url: string) => {

@@ -6,6 +6,7 @@ export enum NotificationMessageCategory {
   Incentive = 'Incentive',
   MachineIncompatible = 'Machine Incompatible',
   Redemption = 'Redemption',
+  Success = 'Success',
 }
 
 export interface NotificationMessage {
