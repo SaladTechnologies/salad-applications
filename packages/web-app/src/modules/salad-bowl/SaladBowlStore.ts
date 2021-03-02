@@ -293,6 +293,7 @@ export class SaladBowlStore implements IPersistentStore {
   @action
   onReceiveError = (message: ErrorMessage) => {
     if (!this.hasViewedAVErrorPage) {
+      console.log('test av error page')
       this.store.analytics.trackMiningError(message.errorCategory, message.errorCode)
       this.hasViewedAVErrorPage = true
     }
@@ -401,7 +402,7 @@ export class SaladBowlStore implements IPersistentStore {
       return
     }
 
-    this.hasViewedAVErrorPage = false
+    // this.hasViewedAVErrorPage = false
     if (this.timeoutTimer != null) {
       clearTimeout(this.timeoutTimer)
       this.timeoutTimer = undefined

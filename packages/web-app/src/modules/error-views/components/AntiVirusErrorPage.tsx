@@ -179,6 +179,7 @@ class _AntiVirusErrorPage extends Component<Props, State> {
     } = this.props
 
     const { webWidgetShowing } = this.state
+    console.log('AV Error page is shown')
 
     return (
       <ModalPage>
