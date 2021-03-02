@@ -396,9 +396,9 @@ export class SaladBowlStore implements IPersistentStore {
     if (!this.canRun) {
       if (this.store.auth.isAuthenticated && !this.isOverriding) {
         this.store.ui.showErrorPage(ErrorPageType.NotCompatible)
+        return
       }
-      console.log('This machine is not able to run.')
-      return
+      console.log('Overriding Salad compatibility detection.')
     }
 
     this.hasViewedAVErrorPage = false
