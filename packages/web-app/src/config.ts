@@ -47,6 +47,7 @@ export class Config {
   public readonly searchUrl: string = requiredString('REACT_APP_SEARCH_URL')
   public readonly searchKey: string = requiredString('REACT_APP_SEARCH_KEY')
   public readonly searchEngine: string = requiredString('REACT_APP_SEARCH_ENGINE')
+  public readonly strapiUploadUrl?: string = optionalString('STRAPI_UPLOAD_API_URL')
 
   public get apiBaseUrl(): string {
     const override = Storage.getItem('OVERRIDE_APP_API_URL')
