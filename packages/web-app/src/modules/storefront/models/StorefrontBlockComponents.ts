@@ -20,7 +20,7 @@ export interface StorefrontContentBlockProps extends StrapiBlock {
   color: 'red' | 'purple' | 'green' | 'cyan'
   image?: {
     id: number
-    postion?: 'left' | 'right' | 'top' | 'bottom'
+    position?: 'left' | 'right' | 'top' | 'bottom'
     image: StorefrontImageProps
   }
 }

@@ -6,6 +6,7 @@ const styles = (theme: SaladTheme) => ({
   header: {
     fontFamily: theme.fontGroteskLight25,
     textTransform: 'capitalize',
+    lineHeight: '150%',
     fontSize: 36,
     paddingBottom: 20,
   },

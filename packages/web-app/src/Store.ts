@@ -17,6 +17,7 @@ import { ReferralStore } from './modules/referral'
 import { RewardStore } from './modules/reward'
 import { SaladBowlStore } from './modules/salad-bowl'
 import { StopReason } from './modules/salad-bowl/models'
+import { StorefrontStore } from './modules/storefront/StorefrontStore'
 import { VaultStore } from './modules/vault'
 import { VersionStore } from './modules/versions'
 import { ExperienceStore } from './modules/xp'
@@ -62,6 +63,7 @@ export class RootStore {
   public readonly version: VersionStore
   public readonly engagement: EngagementStore
   public readonly zendesk: Zendesk
+  public readonly storefront: StorefrontStore
 
   constructor(readonly axios: AxiosInstance) {
     this.routing = new RouterStore()
@@ -84,6 +86,7 @@ export class RootStore {
     this.version = new VersionStore(this, axios)
     this.engagement = new EngagementStore(this, axios)
     this.zendesk = new Zendesk(axios, this.auth, this.native, this.analytics)
+    this.storefront = new StorefrontStore(axios)
 
     addAuthInterceptor(axios, this.auth)
 

@@ -112,7 +112,10 @@ export class RewardStore {
         yield this.loadReward(rewardId)
         const reward = this.getReward(rewardId)
 
-        if (reward) this.store.analytics.trackRewardView(reward)
+        if (reward) {
+          this.store.analytics.trackRewardView(reward)
+          this.store.storefront.checkRewardForUpdate(reward)
+        }
       } catch {}
     }.bind(this),
   )
