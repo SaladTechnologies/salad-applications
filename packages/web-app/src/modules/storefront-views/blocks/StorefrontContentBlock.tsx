@@ -14,7 +14,7 @@ export const StorefrontContentBlock = ({ block }: Props) => {
       color={block.color}
       title={block.title}
       image={image}
-      imagePosition={block.image?.postion}
+      imagePosition={block.image?.position}
     />
   )
 }

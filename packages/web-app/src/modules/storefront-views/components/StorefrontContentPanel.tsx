@@ -11,6 +11,7 @@ const styles = {
   container: {
     alignItems: 'center',
     display: 'flex',
+    flexWrap: 'wrap',
   },
   containerRowReverse: {
     flexDirection: 'row-reverse',
@@ -80,7 +81,7 @@ export const _StorefrontContentPanel = ({ body, color, image, imagePosition, tit
       </div>
       <div
         className={classnames(classes.column, {
-          [classes.columnSideBySide]: imagePosition === ('left' || 'right'),
+          [classes.columnSideBySide]: imagePosition === 'left' || imagePosition === 'right',
           [classes.imageColumnBottom]: imagePosition === 'bottom',
           [classes.imageColumnTop]: imagePosition === 'top',
         })}

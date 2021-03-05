@@ -18,6 +18,7 @@ import { DontLoseProgressPageContainer } from './modules/machine-views'
 import { RewardDetailsContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
 import { SettingsContainer } from './modules/settings-views'
+import { StorefrontHomePage } from './modules/storefront-views/pages/StorefrontHomePage'
 import { PrivateRoute } from './PrivateRoute'
 import { getStore } from './Store'
 
@@ -56,6 +57,7 @@ class _Routes extends Component<RouteComponentProps> {
           <Redirect exact from="/account/reward-vault" to="/settings/reward-vault" />
           {/* SaladPay: This is stand in until we figure out iFrames, popups... */}
           <Route exact path="/salad-pay/order-summary" component={SaladPayOrderSummaryContainer} />
+          <Route path="/storefront" render={() => <StorefrontHomePage />} />
           <PrivateRoute
             path="/account"
             component={SettingsContainer}

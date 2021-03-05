@@ -91,12 +91,12 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  name: string
+  name?: string
   image: string
   lowQuantity: boolean
   outOfStock: boolean
   link: string
-  price: string
+  price?: string
   quantity?: number
 }
 
