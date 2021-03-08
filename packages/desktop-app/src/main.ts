@@ -80,7 +80,6 @@ let darkTheme = nativeTheme.shouldUseDarkColors
 const getMachineInfo = (): Promise<MachineInfo> => {
   return Promise.allSettled([
     si.cpu(),
-    si.cpuFlags(),
     si.graphics(),
     si.memLayout(),
     si.osInfo(),
@@ -89,23 +88,11 @@ const getMachineInfo = (): Promise<MachineInfo> => {
     si.uuid(),
     si.version(),
     si.processes(),
-  ]).then(([cpu, cpuFlags, graphics, memLayout, osInfo, services, system, uuid, version, processes]) => {
-    let cpuData: si.Systeminformation.CpuData | si.Systeminformation.CpuWithFlagsData | undefined
-    if (cpu.status === 'fulfilled') {
-      if (cpuFlags.status === 'fulfilled') {
-        cpuData = {
-          ...cpu.value,
-          flags: cpuFlags.value,
-        }
-      } else {
-        cpuData = cpu.value
-      }
-    }
-
+  ]).then(([cpu, graphics, memLayout, osInfo, services, system, uuid, version, processes]) => {
     return {
       version: version.status === 'fulfilled' ? version.value : undefined,
       system: system.status === 'fulfilled' ? system.value : undefined,
-      cpu: cpuData,
+      cpu: cpu.status === 'fulfilled' ? cpu.value : undefined,
       memLayout: memLayout.status === 'fulfilled' ? memLayout.value : undefined,
       graphics: graphics.status === 'fulfilled' ? graphics.value : undefined,
       os: osInfo.status === 'fulfilled' ? osInfo.value : undefined,
@@ -357,7 +344,7 @@ const createMainWindow = () => {
   })
 
   bridge.on('hide-window', () => {
-    if (mainWindow && mainWindow.isVisible) {
+    if (mainWindow && mainWindow.isVisible()) {
       tray.setContextMenu(createSystemTrayMenu(false))
       mainWindow.hide()
       if (process.platform === 'darwin') {
@@ -374,13 +361,13 @@ const createMainWindow = () => {
     if (pluginManager) pluginManager.stop()
   })
 
-  bridge.on('send-log', (id: string) => {
-    console.log('Sending logs')
-    Logger.sendLog(id)
-  })
-
   bridge.on(getDesktopVersion, () => {
     bridge.send(setDesktopVersion, app.getVersion())
+  })
+
+  bridge.on('open-log-folder', () => {
+    const path = Logger.getLogFolder()
+    shell.showItemInFolder(path)
   })
 
   bridge.on('enable-auto-launch', () => {

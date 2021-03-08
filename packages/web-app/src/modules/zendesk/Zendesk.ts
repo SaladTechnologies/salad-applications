@@ -3,7 +3,7 @@ import { action, flow, observable } from 'mobx'
 import { AnalyticsStore } from '../analytics'
 import { AuthStore } from '../auth'
 import { NativeStore } from '../machine'
-import { AntiVirusSoftware, ZendeskArticle } from './models'
+import { AntiVirusSoftware, ZendeskArticle, ZendeskArticleList, ZendeskArticleResource } from './models'
 import { getAntiVirusSoftware, getZendeskAVData } from './utils'
 
 export class Zendesk {
@@ -230,10 +230,10 @@ export class Zendesk {
 
       this.loadingArticle = true
       try {
-        let res = yield fetch(`https://salad.zendesk.com/api/v2/help_center/en-us/articles/${articleID}`, {
+        let res: Response = yield fetch(`https://salad.zendesk.com/api/v2/help_center/en-us/articles/${articleID}`, {
           credentials: 'omit',
         })
-        const data = yield res.json()
+        const data: ZendeskArticleResource = yield res.json()
         this.helpCenterArticle = data.article.body
         this.selectedAntiVirusGuide = avSoftwareName
       } catch (err) {
@@ -252,10 +252,13 @@ export class Zendesk {
 
       this.loadingArticle = true
       try {
-        let res = yield fetch('https://salad.zendesk.com/api/v2/help_center/en-us/sections/360008458292/articles', {
-          credentials: 'omit',
-        })
-        const data = yield res.json()
+        let res: Response = yield fetch(
+          'https://salad.zendesk.com/api/v2/help_center/en-us/sections/360008458292/articles',
+          {
+            credentials: 'omit',
+          },
+        )
+        const data: ZendeskArticleList = yield res.json()
         this.antiVirusArticleList = data.articles
       } catch (err) {
         throw err

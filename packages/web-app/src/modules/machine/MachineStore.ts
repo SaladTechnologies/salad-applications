@@ -1,4 +1,4 @@
-import { AxiosInstance } from 'axios'
+import { AxiosInstance, AxiosResponse } from 'axios'
 import { autorun, computed, flow, observable } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
 import * as Storage from '../../Storage'
@@ -58,11 +58,10 @@ export class MachineStore {
 
       try {
         console.log('Registering machine with salad')
-        let res: any = yield this.axios.post(`/api/v2/machines`, {
+        let res: AxiosResponse<Machine> = yield this.axios.post(`/api/v2/machines`, {
           systemInfo: machineWithoutServices,
         })
-        let machine: Machine = res.data
-        this.currentMachine = machine
+        this.currentMachine = res.data
 
         if (!this.store.saladBowl.canRun) {
           //Show an error notification
