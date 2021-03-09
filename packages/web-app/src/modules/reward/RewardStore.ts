@@ -1,4 +1,4 @@
-import { AxiosInstance } from 'axios'
+import { AxiosInstance, AxiosResponse } from 'axios'
 import { action, computed, flow, observable } from 'mobx'
 import { REQUIRES_MINECRAFT_USERNAME } from '../../axiosFactory'
 import { RootStore } from '../../Store'
@@ -8,6 +8,7 @@ import { AbortError, SaladPaymentResponse } from '../salad-pay'
 import { SaladPay } from '../salad-pay/SaladPay'
 import { SearchResult } from './models'
 import { Reward } from './models/Reward'
+import { RewardResource } from './models/RewardResource'
 import { RewardsResource } from './models/RewardsResource'
 import { rewardFromResource, sortRewards } from './utils'
 
@@ -96,7 +97,7 @@ export class RewardStore {
       console.log('Loading reward ' + rewardId)
 
       try {
-        let res: any = yield this.axios.get(`/api/v1/rewards/${rewardId}`)
+        let res: AxiosResponse<RewardResource> = yield this.axios.get(`/api/v1/rewards/${rewardId}`)
         let reward: Reward = rewardFromResource(res.data)
         console.log(reward)
         this.rewards.set(reward.id, reward)

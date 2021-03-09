@@ -122,7 +122,7 @@ export class AuthStore {
           this.auth0Token = yield this.auth0Client.getTokenSilently({ ignoreCache: true })
         }
 
-        const user: any = yield this.auth0Client!.getUser()
+        const user: { email_verified: boolean } | undefined = yield this.auth0Client!.getUser()
         return typeof user?.email_verified === 'boolean' && user.email_verified === true
       } catch {
         return false
@@ -404,10 +404,10 @@ export class AuthStore {
           })
         }
 
-        const [tokenResult, userResult]: PromiseSettledResult<any>[] = yield Promise.allSettled([
-          yield this.auth0Client!.getTokenSilently(),
-          yield this.auth0Client!.getUser(),
-        ])
+        const [tokenResult, userResult]: [
+          PromiseSettledResult<string>,
+          PromiseSettledResult<{ email?: string }>,
+        ] = yield Promise.allSettled([this.auth0Client!.getTokenSilently(), this.auth0Client!.getUser()])
 
         if (tokenResult.status === 'fulfilled') {
           this.auth0Token = tokenResult.value

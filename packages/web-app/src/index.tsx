@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import 'react-app-polyfill/stable'
 import 'whatwg-fetch'
 import 'abortcontroller-polyfill'
+import 'url-polyfill'
 
 // Import dependencies.
 import * as Sentry from '@sentry/react'
