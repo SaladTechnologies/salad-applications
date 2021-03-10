@@ -1,5 +1,5 @@
 export enum RewardVaultStatus {
-  CANCELLED = 'cancelled',
+  CANCELED = 'canceled',
   COMPLETED = 'completed',
   PENDING = 'pending',
 }

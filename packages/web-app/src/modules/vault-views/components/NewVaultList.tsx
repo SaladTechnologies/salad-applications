@@ -218,9 +218,9 @@ class _NewVaultList extends Component<Props, State> {
 
                 {redemptions.map((reward) => {
                   const { id, name, price, timestamp, code, status } = reward
-                  const incompleteItem = status === RewardVaultStatus.CANCELLED || status === RewardVaultStatus.PENDING
+                  const incompleteItem = status === RewardVaultStatus.CANCELED || status === RewardVaultStatus.PENDING
                   const isPending = status === RewardVaultStatus.PENDING
-                  const isCancelled = status === RewardVaultStatus.CANCELLED
+                  const isCancelled = status === RewardVaultStatus.CANCELED
 
                   return (
                     <div className={classes.gridContainer}>

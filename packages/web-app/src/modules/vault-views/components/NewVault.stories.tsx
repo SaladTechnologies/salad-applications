@@ -53,7 +53,7 @@ const redemptions = [
     name: 'Reward MNO',
     price: 0.07,
     timestamp: today,
-    status: RewardVaultStatus.CANCELLED,
+    status: RewardVaultStatus.CANCELED,
   },
   {
     id: 'def',
@@ -75,7 +75,7 @@ const redemptions = [
     name: 'Grand Theft Auto V',
     price: 43.07,
     timestamp: new Date(new Date().setDate(new Date().getDate() - 3)),
-    status: RewardVaultStatus.CANCELLED,
+    status: RewardVaultStatus.CANCELED,
   },
   {
     id: 'defsasas',
