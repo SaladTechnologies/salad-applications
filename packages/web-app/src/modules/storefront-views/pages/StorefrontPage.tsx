@@ -1,5 +1,6 @@
 import withStyles, { WithStyles } from 'react-jss'
 import { Head, Scrollbar } from '../../../components'
+import { NotificationBannerContainer } from '../../home-views/NotificationBannerContainer'
 import {
   StorefrontBlockComponent,
   StorefrontContentBlockProps,
@@ -20,15 +21,15 @@ const styles = {
 
 interface Props extends WithStyles<typeof styles> {
   data: StorefrontPageProps
-  isLoading: boolean
 }
 
-const _StorefrontPage = ({ data, isLoading, classes }: Props) => {
+const _StorefrontPage = ({ data, classes }: Props) => {
   return (
     <Scrollbar>
       <Head title="Official Store" />
       <div className={classes.content}>
-        {!isLoading && data?.blocks.length > 0 ? (
+        <NotificationBannerContainer />
+        {data?.blocks.length > 0 ? (
           data?.blocks?.map((block, index) =>
             block.__component === StorefrontBlockComponent.Hero ? (
               <StorefrontHeroBlock key={index} block={block as StorefrontHeroBlockProps} />

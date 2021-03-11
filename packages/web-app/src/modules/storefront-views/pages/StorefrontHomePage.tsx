@@ -47,7 +47,7 @@ class _StorefrontHomePage extends Component<WithStyles<typeof styles>> {
           <RewardSearchBarContainer />
           <div className={classes.main}>
             <Switch>
-              <Route exact path="/storefront" component={StorefrontPageContainer} />
+              <Route exact path="/" component={StorefrontPageContainer} />
               <Route exact path="/search" component={RewardSearchResultContainer} />
             </Switch>
           </div>

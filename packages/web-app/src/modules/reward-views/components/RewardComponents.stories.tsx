@@ -17,9 +17,6 @@ import witcherCover from '../../../../.storybook/assets/witcher-cover.jpg'
 import witcherHero from '../../../../.storybook/assets/witcher.jpg'
 import { RewardPlatform, SearchResult } from '../../reward/models'
 import { Reward } from '../../reward/models/Reward'
-import { RewardHero } from './RewardHero'
-import { RewardHeroButtonGroup } from './RewardHeroButtonGroup'
-import { RewardHeroItem } from './RewardHeroItem'
 import { RewardImageCarousel } from './RewardImageCarousel'
 import { RewardItem } from './RewardItem'
 import { RewardSlider } from './RewardSlider'
@@ -208,96 +205,6 @@ storiesOf('Modules/Rewards/Reward Slider', module)
     )
   })
 
-storiesOf('Modules/Rewards/Reward Hero Item', module)
-  .add('complete reward', () => {
-    let result = generateResults(1)[0]
-    return <RewardHeroItem result={result} />
-  })
-  .add('complete reward (long name)', () => {
-    let result = generateResults(2)[1]
-    return <RewardHeroItem result={result} />
-  })
-  .add('missing reward', () => {
-    return <RewardHeroItem />
-  })
-  .add('no reward image', () => {
-    let result = generateResults(1)[0]
-    //TODO: result.heroImage = ''
-    return <RewardHeroItem result={result} />
-  })
-  .add('no headline', () => {
-    let result = generateResults(1)[0]
-    //TODO: result.headline = undefined
-    return <RewardHeroItem result={result} />
-  })
-  .add('out of stock', () => {
-    let result = generateResults(2)[1]
-    //TODO: result.quantity = 0
-    return <RewardHeroItem result={result} />
-  })
-  .add('low stock (n=1)', () => {
-    let result = generateResults(2)[1]
-    //TODO: result.quantity = 1
-    return <RewardHeroItem result={result} />
-  })
-  .add('low stock (n=3)', () => {
-    let result = generateResults(2)[1]
-    //TODO: result.quantity = 3
-    return <RewardHeroItem result={result} />
-  })
-
-storiesOf('Modules/Rewards/Reward Hero', module)
-  .add('with 1 item', () => {
-    let result = generateResults(1)[0]
-    return (
-      <RewardHero>
-        <RewardHeroItem result={result} />
-      </RewardHero>
-    )
-  })
-  .add('with multiple items (no title)', () => {
-    let results = generateResults(10)
-    return (
-      <RewardHero>
-        {results.map((x) => (
-          <RewardHeroItem result={x} />
-        ))}
-      </RewardHero>
-    )
-  })
-  .add('with multiple items (w/ title)', () => {
-    let results = generateResults(10)
-    return (
-      <RewardHero title="Hero Title">
-        {results.map((x) => (
-          <RewardHeroItem result={x} />
-        ))}
-      </RewardHero>
-    )
-  })
-  .add('multiple sliders', () => {
-    let results = generateResults(10)
-    return (
-      <>
-        <RewardHero title={'Category 1'}>
-          {results.map((x) => (
-            <RewardHeroItem result={x} />
-          ))}
-        </RewardHero>
-        <RewardHero title={'Category 2'}>
-          {results.map((x) => (
-            <RewardHeroItem result={x} />
-          ))}
-        </RewardHero>
-        <RewardHero title={'Category 3'}>
-          {results.map((x) => (
-            <RewardHeroItem result={x} />
-          ))}
-        </RewardHero>
-      </>
-    )
-  })
-
 storiesOf('Modules/Rewards/Reward Slider Button', module)
   .add('both', () => {
     return (
@@ -313,10 +220,6 @@ storiesOf('Modules/Rewards/Reward Slider Button', module)
   .add('right', () => {
     return <RewardSliderButton onClick={action('click')} direction={'right'} />
   })
-
-storiesOf('Modules/Rewards/Reward Hero Button Group', module).add('both', () => {
-  return <RewardHeroButtonGroup next={action('next')} previous={action('prev')} />
-})
 
 storiesOf('Modules/Rewards/Reward Header Bar', module)
   .add('complete reward', () => {

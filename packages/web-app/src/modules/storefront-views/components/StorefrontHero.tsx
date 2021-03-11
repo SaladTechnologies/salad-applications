@@ -9,6 +9,7 @@ import { StorefrontHeroButtonGroup } from './StorefrontHeroButtonGroup'
 const styles = (theme: SaladTheme) => ({
   container: {
     color: theme.lightGreen,
+    marginBottom: '60px',
   },
   titleText: {
     fontFamily: theme.fontGroteskBook19,

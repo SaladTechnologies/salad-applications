@@ -13,7 +13,6 @@ import {
   SpecificAntiVirusErrorContainer,
   UnknownErrorContainer,
 } from './modules/error-views'
-import { HomePage } from './modules/home-views'
 import { DontLoseProgressPageContainer } from './modules/machine-views'
 import { RewardDetailsContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
@@ -57,7 +56,6 @@ class _Routes extends Component<RouteComponentProps> {
           <Redirect exact from="/account/reward-vault" to="/settings/reward-vault" />
           {/* SaladPay: This is stand in until we figure out iFrames, popups... */}
           <Route exact path="/salad-pay/order-summary" component={SaladPayOrderSummaryContainer} />
-          <Route path="/storefront" render={() => <StorefrontHomePage />} />
           <PrivateRoute
             path="/account"
             component={SettingsContainer}
@@ -66,7 +64,7 @@ class _Routes extends Component<RouteComponentProps> {
           />
           <Route path="/settings" component={SettingsContainer} />
           <Route path="/earn" component={EarnMenuContainer} />
-          <Route path="/" render={() => <HomePage />} />
+          <Route path="/" render={() => <StorefrontHomePage />} />
           <Redirect to="/" />
         </Switch>
         <Route path="/login" exact component={LoginPageContainer} />

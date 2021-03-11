@@ -19,12 +19,6 @@ const styles = (theme: SaladTheme) => ({
     fontSize: 20,
     padding: '12px 6px',
     textTransform: 'capitalize',
-    cursor: 'pointer',
-  },
-  titleText: {
-    '&:hover': {
-      opacity: 0.8,
-    },
   },
   viewMoreText: {
     paddingLeft: 10,
@@ -118,27 +112,19 @@ class _StorefrontRewardSlider extends Component<Props, State> {
     const { isHoveringRewards } = this.state
     return (
       <div className={classes.container} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
-        {viewAllRoute ? (
-          <SmartLink to={viewAllRoute}>
-            <div className={classes.titleContainer}>
-              <div className={classes.titleText}>{title}</div>
-              <div className={classes.viewMoreText}>
-                {viewAllTitle ? viewAllTitle : 'Explore All'}
-                <div className={classes.arrow}>
-                  <IconArrowRight />
-                </div>
-              </div>
-            </div>
-          </SmartLink>
-        ) : (
+        {(viewAllRoute || viewAllTitle || title) && (
           <div className={classes.titleContainer}>
-            <div className={classes.titleText}>{title}</div>
-            <div className={classes.viewMoreText}>
-              {viewAllTitle ? viewAllTitle : 'Explore All'}
-              <div className={classes.arrow}>
-                <IconArrowRight />
-              </div>
-            </div>
+            {title && <div>{title}</div>}
+            {viewAllRoute && viewAllTitle && (
+              <SmartLink to={viewAllRoute}>
+                <div className={classes.viewMoreText}>
+                  {viewAllTitle}
+                  <div className={classes.arrow}>
+                    <IconArrowRight />
+                  </div>
+                </div>
+              </SmartLink>
+            )}
           </div>
         )}
         <div onMouseEnter={this.handleMouseEnterRewards} onMouseLeave={this.handleMouseLeaveRewards}>
