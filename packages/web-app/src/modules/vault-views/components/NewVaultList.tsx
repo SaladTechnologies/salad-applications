@@ -4,7 +4,7 @@ import classnames from 'classnames'
 import { Component } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import withStyles, { WithStyles } from 'react-jss'
-import { Divider, Head, InfoButton, P, SmartLink, Username } from '../../../components'
+import { Divider, Head, InfoButton, P, SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { RewardVaultItem, RewardVaultStatus } from '../../vault/models'
 import { VaultListHeaderItem } from './VaultListHeaderItem'
@@ -34,8 +34,8 @@ const styles = (theme: SaladTheme) => ({
     display: 'grid',
     gridTemplateColumns: '25% 25% 25% 25%',
     gridTemplateRows: 'auto',
-    '@media screen and (min-width: 1025px)': {
-      gridTemplateColumns: '45% 30% 12.5% 12.5%',
+    '@media screen and (min-width: 1200px)': {
+      gridTemplateColumns: '40% 30% 15% 15%',
     },
   },
   gridContainer: {
@@ -57,6 +57,19 @@ const styles = (theme: SaladTheme) => ({
     width: '100%',
     overflow: 'auto',
     paddingRight: '20px',
+  },
+  label: {
+    fontFamily: theme.fontGroteskLight25,
+    fontSize: theme.small,
+    lineHeight: theme.small,
+    '@media screen and (min-width: 900px)': {
+      fontSize: theme.medium,
+      lineHeight: theme.medium,
+    },
+  },
+  labelNameContainer: {
+    maxWidth: 400,
+    wordWrap: 'break-word',
   },
   listContainer: {
     overflow: 'hidden',
@@ -268,6 +281,10 @@ class _NewVaultList extends Component<Props, State> {
 
     this.sortRedemptionsByRedeemedDate(true)
 
+    this.setState({
+      redemptions: this.props.redemptions,
+    })
+
     startRefresh?.()
   }
 
@@ -275,6 +292,12 @@ class _NewVaultList extends Component<Props, State> {
     const { stopRefresh } = this.props
 
     stopRefresh?.()
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.redemptions !== prevProps.redemptions) {
+      this.setState({ redemptions: this.props.redemptions })
+    }
   }
 
   render() {
@@ -327,7 +350,9 @@ class _NewVaultList extends Component<Props, State> {
                     <div className={classes.gridContainer}>
                       <div key={id} className={classnames(classes.grid)}>
                         <div className={incompleteItem ? classes.incompleteItem : ''}>
-                          <Username>{name}</Username>
+                          <div className={classes.labelNameContainer}>
+                            <label className={classes.label}>{name}</label>
+                          </div>
                           {code && !code.startsWith('https') && (
                             <P>
                               {code}
@@ -343,7 +368,7 @@ class _NewVaultList extends Component<Props, State> {
                           )}
                           {isPending && <P>Awaiting Code</P>}
                           {isCancelled && (
-                            <P>Order Cancelled. Don't worry though, we've refunded your Salad balance!.</P>
+                            <P>Order Canceled. Don't worry though, we've refunded your Salad balance!.</P>
                           )}
                         </div>
                         <div className={classes.statusContainer}>
@@ -372,10 +397,10 @@ class _NewVaultList extends Component<Props, State> {
                           )}
                         </div>
                         <div className={incompleteItem ? classes.incompleteItem : ''}>
-                          <Username>${price?.toFixed(2)}</Username>
+                          <label className={classes.label}>${price?.toFixed(2)}</label>
                         </div>
                         <div className={incompleteItem ? classes.incompleteItem : ''}>
-                          <Username>{timestamp?.toLocaleDateString()}</Username>
+                          <label className={classes.label}>{timestamp?.toLocaleDateString()}</label>
                         </div>
                       </div>
                       <Divider />
