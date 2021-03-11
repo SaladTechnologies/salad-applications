@@ -6,13 +6,9 @@ import { NotificationMessageCategory } from '../notifications/models'
 import { ProfileStore } from '../profile'
 import { AbortError, SaladPaymentResponse } from '../salad-pay'
 import { SaladPay } from '../salad-pay/SaladPay'
-import { SearchResult } from './models'
 import { Reward } from './models/Reward'
 import { RewardResource } from './models/RewardResource'
-import { RewardsResource } from './models/RewardsResource'
-import { rewardFromResource, sortRewards } from './utils'
-
-type RewardId = string
+import { rewardFromResource } from './utils'
 
 const timeoutMessage = 'request-timeout'
 
@@ -21,9 +17,6 @@ export class RewardStore {
 
   @observable
   private rewards: Map<string, Reward> = new Map<string, Reward>()
-
-  @observable
-  private categoryData: Map<string, Set<RewardId>> = new Map<string, Set<RewardId>>()
 
   @observable
   private selectedRewardId?: string
@@ -44,29 +37,6 @@ export class RewardStore {
     let selectedReward = this.getReward(this.selectedRewardId)
     if (selectedReward === undefined) return undefined
     return [selectedReward]
-  }
-
-  @computed get categorizedRewards(): Map<string, SearchResult[]> {
-    let result = new Map<string, SearchResult[]>()
-
-    this.categoryData.forEach((rewardIds, c) => {
-      let rewards = []
-      for (let id of rewardIds) {
-        let r = this.rewards.get(id)
-        if (r) {
-          rewards.push(SearchResult.fromReward(r))
-        }
-      }
-      if (rewards.length > 0) {
-        result.set(c, rewards)
-      }
-    })
-
-    return result
-  }
-
-  @computed get categories(): string[] {
-    return [...this.categoryData.keys()].filter((x) => x)
   }
 
   private checkIfFurtherActionIsRequired(reward: Reward) {
@@ -128,82 +98,6 @@ export class RewardStore {
 
   isInChoppingCart = (id?: string): boolean => {
     return this.selectedRewardId === id
-  }
-
-  //TODO: Remove this once we have moved the store to the new CMS system
-  @action.bound
-  refreshRewards = flow(function* (this: RewardStore) {
-    try {
-      this.isLoading = true
-      const response = yield this.axios.get<RewardsResource[]>('/api/v1/rewards')
-      if (response.data === undefined) return
-
-      //Convert from the resource to the models
-      let rewardList: Reward[] = response.data.map(rewardFromResource)
-
-      // Updates the list of rewards
-      for (let x of rewardList) {
-        this.rewards.set(x.id, x)
-      }
-
-      this.categoryData = this.categorizeRewards(rewardList)
-    } catch (error) {
-      console.error(error)
-    } finally {
-      this.isLoading = false
-    }
-  })
-
-  private categorizeRewards = (rewards: Reward[]): Map<string, Set<RewardId>> => {
-    let categories = new Map<string, Set<RewardId>>()
-
-    //Adds the top chops category as the first category so it will always be the first row
-    categories.set('top chops', new Set())
-    categories.set('fresh loot friday', new Set())
-    categories.set('other gift cards', new Set())
-    categories.set('games', new Set())
-    categories.set('gaming gift cards', new Set())
-    categories.set('hardware', new Set())
-    categories.set('donations', new Set())
-
-    //Group the rewards by category
-    for (let r of rewards) {
-      if (r.tags) {
-        for (let t of r.tags) {
-          let categoryIds: Set<RewardId> | undefined = categories.get(t)
-          if (!categoryIds) {
-            categoryIds = new Set()
-            categories.set(t, categoryIds)
-          }
-          categoryIds.add(r.id)
-        }
-      }
-    }
-
-    //Sorts each category
-    for (let [category, rewardIds] of categories) {
-      //Remove any unused categories
-      if (rewardIds.size === 0) {
-        categories.delete(category)
-        break
-      }
-
-      const rewards = [...rewardIds].map((x) => this.getReward(x)).filter((x): x is Reward => x !== undefined)
-
-      let sortedIds = sortRewards(rewards).map((x: Reward) => x.id)
-
-      categories.set(category, new Set(sortedIds))
-    }
-
-    //Remove blacklisted categories
-    const blacklist = ['', 'creators']
-    for (let category of categories) {
-      if (blacklist.includes(category[0]) || category[0].startsWith('requires-')) {
-        categories.delete(category[0])
-      }
-    }
-
-    return categories
   }
 
   @action.bound

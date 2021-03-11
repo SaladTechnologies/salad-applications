@@ -1,58 +1,8 @@
 import { action } from '@storybook/addon-actions'
 import { boolean } from '@storybook/addon-knobs'
 import { storiesOf } from '@storybook/react'
-import { BrowseRewardsPage, MainStorefrontPage, RewardDetailsPage } from '.'
+import { BrowseRewardsPage, RewardDetailsPage } from '.'
 import { generateResults, generateRewards } from '../components/RewardComponents.stories'
-
-storiesOf('Modules/Reward Pages/Main Storefront Page', module)
-  .addDecorator((storyFn) => (
-    <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}>{storyFn()}</div>
-  ))
-  .add('with rewards (no hero)', () => {
-    let rewards = generateRewards(8)
-    let categories = new Map()
-    categories.set('category 1', rewards)
-    categories.set('category 2', rewards)
-    return (
-      <MainStorefrontPage
-        categories={categories}
-        onClickReward={action('Reward Item Clicked Event')}
-        isRunning={boolean('Is Salad Running', false)}
-      />
-    )
-  })
-  .add('with rewards (w/ hero)', () => {
-    let rewards = generateRewards(8)
-    let categories = new Map()
-    categories.set('top chops', rewards)
-    categories.set('category 1', rewards)
-    categories.set('category 2', rewards)
-    return (
-      <MainStorefrontPage
-        categories={categories}
-        onClickReward={action('Reward Item Clicked Event')}
-        isRunning={boolean('Is Salad Running', false)}
-      />
-    )
-  })
-  .add('without rewards (undefined)', () => {
-    return (
-      <MainStorefrontPage
-        categories={undefined}
-        onClickReward={action('Reward Item Clicked Event')}
-        isRunning={boolean('Is Salad Running', false)}
-      />
-    )
-  })
-  .add('without rewards (empty)', () => {
-    return (
-      <MainStorefrontPage
-        categories={new Map()}
-        onClickReward={action('Reward Item Clicked Event')}
-        isRunning={boolean('Is Salad Running', false)}
-      />
-    )
-  })
 
 storiesOf('Modules/Reward Pages/Reward Details Page', module)
   .add('complete reward (in cart)', () => {

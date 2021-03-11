@@ -4,5 +4,4 @@ export enum StartActionType {
   StartButton = 'Start Button',
   StopPrepping = 'Stop Prepping',
   SwitchMiner = 'Switch Miner',
-  TimeToChopStartButton = 'Time To Chop Start Button',
 }

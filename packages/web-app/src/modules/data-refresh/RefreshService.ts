@@ -13,13 +13,11 @@ export class RefreshService {
     }, config.dataRefreshRate)
 
     setInterval(() => {
-      this.store.rewards.refreshRewards()
       this.store.storefront.refreshStorefront()
     }, config.rewardRefreshRate)
 
     //Do the initial data pull
     this.refreshData()
-    this.store.rewards.refreshRewards()
     this.store.storefront.refreshStorefront()
 
     if (this.store.auth.isAuthenticated) {

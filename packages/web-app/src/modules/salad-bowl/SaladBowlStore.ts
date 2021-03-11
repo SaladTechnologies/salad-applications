@@ -336,7 +336,6 @@ export class SaladBowlStore implements IPersistentStore {
       }
 
       switch (startAction) {
-        case StartActionType.TimeToChopStartButton:
         case StartActionType.StartButton:
           if (this.isRunning) {
             if (this.status === MiningStatus.Initializing || this.status === MiningStatus.Installing) {
@@ -345,17 +344,7 @@ export class SaladBowlStore implements IPersistentStore {
             }
             this.stop(StopReason.Manual)
           } else {
-            if (startAction === StartActionType.TimeToChopStartButton) {
-              this.store.analytics.trackButtonClicked(
-                'time_to_chop_start_button',
-                'Time To Chop Start Button',
-                'enabled',
-              )
-            }
-
-            if (startAction === StartActionType.StartButton) {
-              this.store.analytics.trackButtonClicked('start_button', 'Start Button', 'enabled')
-            }
+            this.store.analytics.trackButtonClicked('start_button', 'Start Button', 'enabled')
 
             this.start(StartReason.Manual)
           }

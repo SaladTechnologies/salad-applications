@@ -3,7 +3,6 @@ import { action, autorun, computed, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { NotificationMessageCategory } from '../notifications/models'
 import { ChangelogMetadata } from './models/ChangelogMetadata'
-import { HeroType } from './models/HeroType'
 
 export class EngagementStore {
   public static readonly CHANGELOG_URL = 'https://public.salad.io/whats-new'
@@ -18,23 +17,6 @@ export class EngagementStore {
       this.store?.profile?.currentProfile !== undefined &&
       this.store?.profile?.currentProfile.lastSeenApplicationVersion !== this.whatsNewVersion
     return show
-  }
-
-  @computed
-  public get heroes(): Map<number, HeroType> {
-    const heroes = []
-
-    if (this.store.saladBowl.canRun) {
-      heroes.push(HeroType.Mining)
-    }
-
-    heroes.push(HeroType.Offerwall)
-
-    if (!this.store.referral.currentReferral) {
-      heroes.push(HeroType.ReferralEntry)
-    }
-
-    return new Map<number, HeroType>(heroes.map((v, i) => [(i + 1) * 2, v]))
   }
 
   /** A flag indicating if the initial notification has already been sent */

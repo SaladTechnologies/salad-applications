@@ -12,6 +12,7 @@ const styles = {
     alignItems: 'center',
     display: 'flex',
     flexWrap: 'wrap',
+    marginTop: 30,
   },
   containerRowReverse: {
     flexDirection: 'row-reverse',
