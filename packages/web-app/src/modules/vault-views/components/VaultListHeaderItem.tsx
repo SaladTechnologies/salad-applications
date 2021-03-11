@@ -6,11 +6,14 @@ import { IconArrowDown } from '../../reward-views/components/assets'
 const styles = (theme: SaladTheme) => ({
   arrow: {
     marginLeft: 10,
-    opacity: 0.5,
+    opacity: 0.25,
     width: 15,
   },
   arrowActive: {
     opacity: 1,
+  },
+  arrowReverse: {
+    transform: 'rotate(180deg)',
   },
   label: {
     cursor: 'pointer',
@@ -19,6 +22,7 @@ const styles = (theme: SaladTheme) => ({
     lineHeight: theme.mediumLarge,
   },
   tableHeader: {
+    alignItems: 'center',
     cursor: 'pointer',
     display: 'flex',
   },
@@ -28,13 +32,14 @@ interface Props extends WithStyles<typeof styles> {
   active: boolean
   header: string
   onClick?: () => void
+  reverse: boolean
 }
 
-const _VaultListHeaderItem = ({ active, header, onClick, classes }: Props) => {
+const _VaultListHeaderItem = ({ active, header, onClick, reverse, classes }: Props) => {
   return (
     <div className={classes.tableHeader} onClick={onClick}>
       <label className={classes.label}>{header}</label>
-      <div className={classnames(classes.arrow, { [classes.arrowActive]: active })}>
+      <div className={classnames(classes.arrow, { [classes.arrowActive]: active, [classes.arrowReverse]: reverse })}>
         <IconArrowDown />
       </div>
     </div>

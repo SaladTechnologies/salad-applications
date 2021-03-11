@@ -1,5 +1,6 @@
 export enum RewardVaultStatus {
-  CANCELED = 'canceled',
+  UNKNOWN = 'unknown',
+  CREATED = 'created',
+  FAILED = 'failed',
   COMPLETED = 'completed',
-  PENDING = 'pending',
 }

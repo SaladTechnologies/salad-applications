@@ -9,6 +9,16 @@ import { SaladTheme } from '../../../SaladTheme'
 import { RewardVaultItem, RewardVaultStatus } from '../../vault/models'
 import { VaultListHeaderItem } from './VaultListHeaderItem'
 
+const convertStatus = (status: RewardVaultStatus) => {
+  if (status === RewardVaultStatus.CREATED) {
+    return 'pending'
+  } else if (status === RewardVaultStatus.FAILED) {
+    return 'canceled'
+  } else {
+    return status
+  }
+}
+
 const styles = (theme: SaladTheme) => ({
   container: {
     height: '100%',
@@ -18,7 +28,6 @@ const styles = (theme: SaladTheme) => ({
   },
   getHelpLink: {
     fontSize: theme.small,
-    textDecorationStyle: 'dotted',
   },
   grid: {
     alignItems: 'center',
@@ -71,7 +80,6 @@ const styles = (theme: SaladTheme) => ({
   },
   statusPending: {
     color: theme.orange,
-    textDecoration: 'underline dotted',
   },
   tableHeader: {
     cursor: 'pointer',
@@ -90,7 +98,28 @@ interface Props extends WithStyles<typeof styles> {
 
 interface State {
   redemptions?: RewardVaultItem[]
-  activeFilter: 'name' | 'price' | 'status' | 'redeemDate'
+  dropdown: {
+    name: {
+      active: boolean
+      reverse: boolean
+      hasBeenClicked: boolean
+    }
+    price: {
+      active: boolean
+      reverse: boolean
+      hasBeenClicked: boolean
+    }
+    status: {
+      active: boolean
+      reverse: boolean
+      hasBeenClicked: boolean
+    }
+    redeemDate: {
+      active: boolean
+      reverse: boolean
+      hasBeenClicked: boolean
+    }
+  }
 }
 
 class _NewVaultList extends Component<Props, State> {
@@ -98,78 +127,146 @@ class _NewVaultList extends Component<Props, State> {
     super(props)
     this.state = {
       redemptions: props.redemptions?.slice(),
-      activeFilter: 'redeemDate',
+      dropdown: {
+        name: {
+          active: false,
+          reverse: false,
+          hasBeenClicked: false,
+        },
+        price: {
+          active: false,
+          reverse: false,
+          hasBeenClicked: false,
+        },
+        status: {
+          active: false,
+          reverse: false,
+          hasBeenClicked: false,
+        },
+        redeemDate: {
+          active: true,
+          reverse: false,
+          hasBeenClicked: false,
+        },
+      },
     }
   }
 
-  updateActiveFilter = (newActiveFilter: 'name' | 'price' | 'status' | 'redeemDate') => {
-    const { activeFilter } = this.state
+  updateActiveDropdown = (activeDropdown: keyof State['dropdown'], initialLoad?: boolean) => {
+    const { dropdown } = this.state
 
-    if (activeFilter === newActiveFilter) {
-      return
-    } else {
-      this.setState({
-        activeFilter: newActiveFilter,
-      })
-    }
+    const updatedDropdown = Object.keys(dropdown).reduce((newDropdown, filter) => {
+      switch (filter) {
+        case activeDropdown:
+          newDropdown[filter] = {
+            active: true,
+            reverse:
+              dropdown[filter].hasBeenClicked && typeof initialLoad !== 'boolean' ? !dropdown[filter].reverse : false,
+            hasBeenClicked: typeof initialLoad !== 'boolean' ? true : false,
+          }
+          break
+        case 'name':
+        case 'price':
+        case 'status':
+        case 'redeemDate':
+          newDropdown[filter] = {
+            active: false,
+            reverse: false,
+            hasBeenClicked: dropdown[filter].hasBeenClicked,
+          }
+          break
+      }
+
+      return newDropdown
+    }, {} as State['dropdown'])
+
+    return updatedDropdown
   }
 
   sortRedemptionsByName = () => {
     const { redemptions } = this.state
+    const updatedDropdown = this.updateActiveDropdown('name')
+    const reversed = updatedDropdown.name.reverse
     if (redemptions && redemptions?.length > 0) {
-      const sortedRedemptions: RewardVaultItem[] = redemptions.sort((a, b) =>
-        a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1,
-      )
+      const sortedRedemptions: RewardVaultItem[] = redemptions
+        .slice()
+        .sort((a, b) =>
+          reversed
+            ? a.name.toUpperCase() > b.name.toUpperCase()
+              ? -1
+              : 1
+            : a.name.toUpperCase() > b.name.toUpperCase()
+            ? 1
+            : -1,
+        )
+
       this.setState({
+        dropdown: updatedDropdown,
         redemptions: sortedRedemptions,
       })
-      this.updateActiveFilter('name')
     }
   }
 
   sortRedemptionsByPrice = () => {
     const { redemptions } = this.state
+    const updateDropdown = this.updateActiveDropdown('price')
+    const reversed = updateDropdown.price.reverse
     if (redemptions && redemptions?.length > 0) {
-      const sortedRedemptions: RewardVaultItem[] = redemptions.sort((a, b) => (a.price > b.price ? -1 : 1))
+      const sortedRedemptions: RewardVaultItem[] = redemptions
+        .slice()
+        .sort((a, b) => (reversed ? (a.price > b.price ? 1 : -1) : a.price > b.price ? -1 : 1))
       this.setState({
+        dropdown: updateDropdown,
         redemptions: sortedRedemptions,
       })
-      this.updateActiveFilter('price')
     }
   }
 
-  sortRedemptionsByRedeemedDate = () => {
+  sortRedemptionsByRedeemedDate = (initialLoad?: boolean) => {
     const { redemptions } = this.state
+    const updatedDropdown = this.updateActiveDropdown('redeemDate', initialLoad)
+    const reversed = updatedDropdown.redeemDate.reverse
     if (redemptions && redemptions?.length > 0) {
-      const sortedRedemptions: RewardVaultItem[] = redemptions.sort((a, b) =>
-        new Date(a.timestamp) > new Date(b.timestamp) ? -1 : 1,
-      )
+      const sortedRedemptions: RewardVaultItem[] = redemptions
+        .slice()
+        .sort((a, b) =>
+          reversed
+            ? new Date(a.timestamp) > new Date(b.timestamp)
+              ? 1
+              : -1
+            : new Date(a.timestamp) > new Date(b.timestamp)
+            ? -1
+            : 1,
+        )
       this.setState({
+        dropdown: updatedDropdown,
         redemptions: sortedRedemptions,
       })
-      this.updateActiveFilter('redeemDate')
     }
   }
 
   sortRedemptionsByStatus = () => {
     const { redemptions } = this.state
+    const updatedDropdown = this.updateActiveDropdown('status')
+    const reversed = updatedDropdown.status.reverse
     if (redemptions && redemptions?.length > 0) {
-      const sortedRedemptions: RewardVaultItem[] = redemptions.sort((a, b) => {
-        const aStatus = a.status === RewardVaultStatus.COMPLETED ? 1 : a.status === RewardVaultStatus.PENDING ? 0 : -1
-        const bStatus = b.status === RewardVaultStatus.COMPLETED ? 1 : b.status === RewardVaultStatus.PENDING ? 0 : -1
+      const sortedRedemptions: RewardVaultItem[] = redemptions.slice().sort((a, b) => {
+        const aStatus = a.status === RewardVaultStatus.COMPLETED ? 1 : a.status === RewardVaultStatus.CREATED ? 0 : -1
+        const bStatus = b.status === RewardVaultStatus.COMPLETED ? 1 : b.status === RewardVaultStatus.CREATED ? 0 : -1
 
-        return aStatus < bStatus ? 1 : -1
+        return reversed ? (aStatus < bStatus ? -1 : 1) : aStatus < bStatus ? 1 : -1
       })
       this.setState({
+        dropdown: updatedDropdown,
         redemptions: sortedRedemptions,
       })
-      this.updateActiveFilter('status')
     }
   }
 
   componentDidMount = () => {
     const { startRefresh } = this.props
-    this.sortRedemptionsByRedeemedDate()
+
+    this.sortRedemptionsByRedeemedDate(true)
 
     startRefresh?.()
   }
@@ -182,7 +279,7 @@ class _NewVaultList extends Component<Props, State> {
 
   render() {
     const { classes } = this.props
-    const { activeFilter, redemptions } = this.state
+    const { dropdown, redemptions } = this.state
     return (
       <div className={classes.container}>
         <Head title="Reward Vault" />
@@ -193,24 +290,28 @@ class _NewVaultList extends Component<Props, State> {
                 <div className={classes.gridContainer}>
                   <div className={classes.grid}>
                     <VaultListHeaderItem
-                      active={activeFilter === 'name'}
+                      active={dropdown['name'].active}
                       header="Item Name and Code"
                       onClick={this.sortRedemptionsByName}
+                      reverse={dropdown['name'].reverse}
                     />
                     <VaultListHeaderItem
-                      active={activeFilter === 'status'}
+                      active={dropdown['status'].active}
                       header="Order Status"
                       onClick={this.sortRedemptionsByStatus}
+                      reverse={dropdown['status'].reverse}
                     />
                     <VaultListHeaderItem
-                      active={activeFilter === 'price'}
+                      active={dropdown['price'].active}
                       header="Price"
                       onClick={this.sortRedemptionsByPrice}
+                      reverse={dropdown['price'].reverse}
                     />
                     <VaultListHeaderItem
-                      active={activeFilter === 'redeemDate'}
+                      active={dropdown['redeemDate'].active}
                       header="Redeemed On"
                       onClick={this.sortRedemptionsByRedeemedDate}
+                      reverse={dropdown['redeemDate'].reverse}
                     />
                   </div>
                   <Divider className={classes.tableHeaderDivider} />
@@ -218,9 +319,9 @@ class _NewVaultList extends Component<Props, State> {
 
                 {redemptions.map((reward) => {
                   const { id, name, price, timestamp, code, status } = reward
-                  const incompleteItem = status === RewardVaultStatus.CANCELED || status === RewardVaultStatus.PENDING
-                  const isPending = status === RewardVaultStatus.PENDING
-                  const isCancelled = status === RewardVaultStatus.CANCELED
+                  const incompleteItem = status === RewardVaultStatus.FAILED || status === RewardVaultStatus.CREATED
+                  const isPending = status === RewardVaultStatus.CREATED
+                  const isCancelled = status === RewardVaultStatus.FAILED
 
                   return (
                     <div className={classes.gridContainer}>
@@ -252,7 +353,7 @@ class _NewVaultList extends Component<Props, State> {
                               [classes.statusCancelled]: isCancelled,
                             })}
                           >
-                            {status?.toUpperCase()}
+                            {convertStatus(status).toUpperCase()}
                           </label>
                           {isPending && (
                             <InfoButton

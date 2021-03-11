@@ -10,7 +10,14 @@ const redemptions = [
     name: 'Reward ABC',
     price: 22.2656514654,
     timestamp: today,
-    status: RewardVaultStatus.PENDING,
+    status: RewardVaultStatus.CREATED,
+  },
+  {
+    id: 'abcsss',
+    name: 'Dreamscaper',
+    price: 13.75,
+    timestamp: today,
+    status: RewardVaultStatus.CREATED,
   },
   {
     id: 'def',
@@ -53,7 +60,7 @@ const redemptions = [
     name: 'Reward MNO',
     price: 0.07,
     timestamp: today,
-    status: RewardVaultStatus.CANCELED,
+    status: RewardVaultStatus.FAILED,
   },
   {
     id: 'def',
@@ -75,7 +82,7 @@ const redemptions = [
     name: 'Grand Theft Auto V',
     price: 43.07,
     timestamp: new Date(new Date().setDate(new Date().getDate() - 3)),
-    status: RewardVaultStatus.CANCELED,
+    status: RewardVaultStatus.FAILED,
   },
   {
     id: 'defsasas',
