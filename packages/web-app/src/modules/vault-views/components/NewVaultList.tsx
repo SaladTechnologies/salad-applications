@@ -4,7 +4,7 @@ import classnames from 'classnames'
 import { Component } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import withStyles, { WithStyles } from 'react-jss'
-import { Divider, Head, InfoButton, P, SmartLink, Username } from '../../../components'
+import { Divider, Head, InfoButton, P, SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { RewardVaultItem, RewardVaultStatus } from '../../vault/models'
 import { VaultListHeaderItem } from './VaultListHeaderItem'
@@ -27,20 +27,39 @@ const styles = (theme: SaladTheme) => ({
     padding: 20,
   },
   getHelpLink: {
+    fontFamily: theme.fontGroteskLight25,
     fontSize: theme.small,
+    marginTop: 5,
   },
   grid: {
     alignItems: 'center',
     display: 'grid',
     gridTemplateColumns: '25% 25% 25% 25%',
-    gridTemplateRows: 'auto',
+    '@media screen and (min-width: 600px)': {
+      gridTemplateColumns: 'auto 22% 19% 17%',
+    },
     '@media screen and (min-width: 1025px)': {
-      gridTemplateColumns: '45% 30% 12.5% 12.5%',
+      gridTemplateColumns: 'auto 15% 12% 10%',
+    },
+    '& > div': {
+      alignItems: 'center',
+      display: 'flex',
+      height: 50,
     },
   },
   gridContainer: {
     userSelect: 'none',
     color: theme.lightGreen,
+  },
+  gridContainerSticky: {
+    background: theme.darkBlue,
+    position: 'sticky',
+    top: 0,
+    zIndex: 10000,
+  },
+  gridColumnContent: {
+    display: 'flex',
+    flexDirection: 'column',
   },
   iconButton: {
     cursor: 'pointer',
@@ -57,6 +76,27 @@ const styles = (theme: SaladTheme) => ({
     width: '100%',
     overflow: 'auto',
     paddingRight: '20px',
+  },
+  label: {
+    fontFamily: theme.fontGroteskLight25,
+    fontSize: theme.small,
+    lineHeight: theme.small,
+    '@media screen and (min-width: 1025px)': {
+      fontSize: theme.medium,
+      lineHeight: theme.medium,
+    },
+  },
+  labelNameContainer: {
+    maxWidth: 100,
+    '@media screen and (min-width: 600px)': {
+      maxWidth: 200,
+    },
+    '@media screen and (min-width: 1025px)': {
+      maxWidth: 450,
+    },
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
   listContainer: {
     overflow: 'hidden',
@@ -77,6 +117,8 @@ const styles = (theme: SaladTheme) => ({
   },
   statusCancelled: {
     color: theme.red,
+    display: 'flex',
+    flexDirection: 'column',
   },
   statusPending: {
     color: theme.orange,
@@ -268,6 +310,10 @@ class _NewVaultList extends Component<Props, State> {
 
     this.sortRedemptionsByRedeemedDate(true)
 
+    this.setState({
+      redemptions: this.props.redemptions,
+    })
+
     startRefresh?.()
   }
 
@@ -275,6 +321,12 @@ class _NewVaultList extends Component<Props, State> {
     const { stopRefresh } = this.props
 
     stopRefresh?.()
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.redemptions !== prevProps.redemptions) {
+      this.setState({ redemptions: this.props.redemptions })
+    }
   }
 
   render() {
@@ -287,17 +339,17 @@ class _NewVaultList extends Component<Props, State> {
           <div className={classes.innerListContainer}>
             {redemptions && redemptions.length > 0 && (
               <>
-                <div className={classes.gridContainer}>
+                <div className={classnames(classes.gridContainer, classes.gridContainerSticky)}>
                   <div className={classes.grid}>
                     <VaultListHeaderItem
                       active={dropdown['name'].active}
-                      header="Item Name and Code"
+                      header="Reward"
                       onClick={this.sortRedemptionsByName}
                       reverse={dropdown['name'].reverse}
                     />
                     <VaultListHeaderItem
                       active={dropdown['status'].active}
-                      header="Order Status"
+                      header="Status"
                       onClick={this.sortRedemptionsByStatus}
                       reverse={dropdown['status'].reverse}
                     />
@@ -309,7 +361,7 @@ class _NewVaultList extends Component<Props, State> {
                     />
                     <VaultListHeaderItem
                       active={dropdown['redeemDate'].active}
-                      header="Redeemed On"
+                      header="Date"
                       onClick={this.sortRedemptionsByRedeemedDate}
                       reverse={dropdown['redeemDate'].reverse}
                     />
@@ -319,7 +371,7 @@ class _NewVaultList extends Component<Props, State> {
 
                 {redemptions.map((reward) => {
                   const { id, name, price, timestamp, code, status } = reward
-                  const incompleteItem = status === RewardVaultStatus.FAILED || status === RewardVaultStatus.CREATED
+                  const incompleteItem = status === RewardVaultStatus.FAILED
                   const isPending = status === RewardVaultStatus.CREATED
                   const isCancelled = status === RewardVaultStatus.FAILED
 
@@ -327,34 +379,47 @@ class _NewVaultList extends Component<Props, State> {
                     <div className={classes.gridContainer}>
                       <div key={id} className={classnames(classes.grid)}>
                         <div className={incompleteItem ? classes.incompleteItem : ''}>
-                          <Username>{name}</Username>
-                          {code && !code.startsWith('https') && (
-                            <P>
-                              {code}
-                              <CopyToClipboard text={code}>
-                                <FontAwesomeIcon className={classes.iconButton} icon={faClipboard} size={'lg'} />
-                              </CopyToClipboard>
-                            </P>
-                          )}
-                          {code && code.startsWith('https') && (
-                            <P>
-                              <SmartLink to={code}>Click here to claim</SmartLink>
-                            </P>
-                          )}
-                          {isPending && <P>Awaiting Code</P>}
-                          {isCancelled && (
-                            <P>Order Cancelled. Don't worry though, we've refunded your Salad balance!.</P>
-                          )}
+                          <div className={classes.gridColumnContent}>
+                            <div className={classes.labelNameContainer}>
+                              <label className={classes.label}>{name}</label>
+                            </div>
+                            {code && !code.startsWith('https') && (
+                              <P>
+                                {code}
+                                <CopyToClipboard text={code}>
+                                  <FontAwesomeIcon className={classes.iconButton} icon={faClipboard} size={'lg'} />
+                                </CopyToClipboard>
+                              </P>
+                            )}
+                            {code && code.startsWith('https') && (
+                              <P>
+                                <SmartLink to={code}>Click here to claim</SmartLink>
+                              </P>
+                            )}
+                            {isCancelled && (
+                              <P>Order Canceled. Don't worry though, we've refunded your Salad balance!</P>
+                            )}
+                          </div>
                         </div>
                         <div className={classes.statusContainer}>
-                          <label
-                            className={classnames(classes.status, {
-                              [classes.statusPending]: isPending,
-                              [classes.statusCancelled]: isCancelled,
-                            })}
-                          >
-                            {convertStatus(status).toUpperCase()}
-                          </label>
+                          <div>
+                            <label
+                              className={classnames(classes.status, {
+                                [classes.statusPending]: isPending,
+                                [classes.statusCancelled]: isCancelled,
+                              })}
+                            >
+                              {convertStatus(status).toUpperCase()}
+                            </label>
+                            {isCancelled && (
+                              <SmartLink
+                                className={classes.getHelpLink}
+                                to="https://support.salad.io/hc/en-us/articles/360028479532-I-redeemed-an-item-and-haven-t-gotten-it-yet-What-s-going-on-"
+                              >
+                                Get help
+                              </SmartLink>
+                            )}
+                          </div>
                           {isPending && (
                             <InfoButton
                               text={
@@ -362,20 +427,12 @@ class _NewVaultList extends Component<Props, State> {
                               }
                             />
                           )}
-                          {isCancelled && (
-                            <SmartLink
-                              className={classes.getHelpLink}
-                              to="https://support.salad.io/hc/en-us/articles/360028479532-I-redeemed-an-item-and-haven-t-gotten-it-yet-What-s-going-on-"
-                            >
-                              Get help
-                            </SmartLink>
-                          )}
                         </div>
-                        <div className={incompleteItem ? classes.incompleteItem : ''}>
-                          <Username>${price?.toFixed(2)}</Username>
+                        <div className={classnames({ [classes.incompleteItem]: incompleteItem })}>
+                          <label className={classes.label}>${price?.toFixed(2)}</label>
                         </div>
-                        <div className={incompleteItem ? classes.incompleteItem : ''}>
-                          <Username>{timestamp?.toLocaleDateString()}</Username>
+                        <div className={classnames({ [classes.incompleteItem]: incompleteItem })}>
+                          <label className={classes.label}>{timestamp?.toLocaleDateString()}</label>
                         </div>
                       </div>
                       <Divider />

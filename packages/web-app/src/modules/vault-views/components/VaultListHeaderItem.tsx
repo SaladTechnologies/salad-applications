@@ -5,7 +5,7 @@ import { IconArrowDown } from '../../reward-views/components/assets'
 
 const styles = (theme: SaladTheme) => ({
   arrow: {
-    marginLeft: 10,
+    margin: '0 10px',
     opacity: 0.25,
     width: 15,
   },
@@ -13,13 +13,17 @@ const styles = (theme: SaladTheme) => ({
     opacity: 1,
   },
   arrowReverse: {
-    transform: 'rotate(180deg)',
+    transform: 'rotateZ(180deg)',
   },
   label: {
     cursor: 'pointer',
     fontFamily: theme.fontGroteskLight25,
-    fontSize: theme.mediumLarge,
-    lineHeight: theme.mediumLarge,
+    fontSize: theme.small,
+    lineHeight: theme.small,
+    '@media screen and (min-width: 1025px)': {
+      fontSize: theme.medium,
+      lineHeight: theme.medium,
+    },
   },
   tableHeader: {
     alignItems: 'center',
