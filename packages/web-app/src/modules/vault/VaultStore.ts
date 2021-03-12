@@ -1,6 +1,7 @@
 import { AxiosInstance } from 'axios'
 import { action, flow, observable } from 'mobx'
 import { convertMinutes } from '../../utils'
+import { BalanceStore } from '../balance'
 import { RewardVaultItem, RewardVaultResource } from './models'
 
 export class VaultStore {
@@ -9,7 +10,7 @@ export class VaultStore {
   @observable
   public redemptions: RewardVaultItem[] = []
 
-  constructor(private readonly axios: AxiosInstance) {}
+  constructor(private readonly axios: AxiosInstance, private readonly balance: BalanceStore) {}
 
   @action.bound
   loadVault = flow(function* (this: VaultStore) {
@@ -36,17 +37,21 @@ export class VaultStore {
     //Reload the vault
     yield this.loadVault()
 
+    // Reload balance
+    yield this.balance.refreshBalance()
+
     // Start a timer to keep the vault refreshed
     this.refreshTimer = setInterval(async () => {
       await this.loadVault()
+      await this.balance.refreshBalance()
     }, convertMinutes(2))
 
-    console.log('Started reward vault refresh')
+    console.log('Started reward vault and balance refresh')
   })
 
   @action
   stopRefresh = () => {
-    console.log('Stopping reward vault refresh')
+    console.log('Stopping reward vault and balance refresh')
 
     if (this.refreshTimer) {
       clearInterval(this.refreshTimer)

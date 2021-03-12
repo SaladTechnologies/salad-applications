@@ -213,8 +213,8 @@ export class RewardStore {
       //Show a notification
       this.store.notifications.sendNotification({
         category: NotificationMessageCategory.Redemption,
-        title: `You redeemed ${reward.name}!`,
-        message: `Congrats on your pick! Your reward is available in the reward vault!`,
+        title: `Thank you for ordering ${reward.name}!`,
+        message: 'Congrats on your pick! Your item is on its way. Check your reward vault for more details.',
         onClick: () => this.store.routing.push('/account/reward-vault'),
         autoClose: false,
       })
@@ -227,8 +227,8 @@ export class RewardStore {
           //Show an order processing notification
           this.store.notifications.sendNotification({
             category: NotificationMessageCategory.Redemption,
-            title: `Your order is being processed.`,
-            message: 'Check the reward vault for more details.',
+            title: `Thank you for ordering ${reward.name}!`,
+            message: 'Congrats on your pick! Your item is on its way. Check your reward vault for more details.',
             autoClose: false,
             onClick: () => this.store.routing.push('/account/reward-vault'),
           })
