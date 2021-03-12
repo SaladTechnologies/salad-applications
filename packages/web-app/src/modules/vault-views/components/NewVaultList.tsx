@@ -315,7 +315,7 @@ class _NewVaultList extends Component<Props, State> {
                             )}
                             {code && code.startsWith('https') && (
                               <P>
-                                <SmartLink to={code}>Click here to claim</SmartLink>
+                                <SmartLink to={code}>Redeem Reward</SmartLink>
                               </P>
                             )}
                             {isCancelled && (
