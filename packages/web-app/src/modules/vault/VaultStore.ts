@@ -28,6 +28,7 @@ export class VaultStore {
     price: r.price,
     timestamp: new Date(r.timestamp),
     code: r.code,
+    status: r.status,
   })
 
   @action.bound
