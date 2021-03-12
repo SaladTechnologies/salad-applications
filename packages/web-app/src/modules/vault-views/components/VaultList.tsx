@@ -419,8 +419,8 @@ function sortByPrice(a: RewardVaultItem, b: RewardVaultItem): number {
 }
 
 function sortByStatus(a: RewardVaultItem, b: RewardVaultItem): number {
-  const aStatus = a.status === RewardVaultStatus.COMPLETED ? 1 : a.status === RewardVaultStatus.CREATED ? 0 : -1
-  const bStatus = b.status === RewardVaultStatus.COMPLETED ? 1 : b.status === RewardVaultStatus.CREATED ? 0 : -1
+  const aStatus = a.status === RewardVaultStatus.COMPLETE ? 1 : a.status === RewardVaultStatus.CREATED ? 0 : -1
+  const bStatus = b.status === RewardVaultStatus.COMPLETE ? 1 : b.status === RewardVaultStatus.CREATED ? 0 : -1
   if (aStatus > bStatus) {
     return -1
   } else if (aStatus < bStatus) {
