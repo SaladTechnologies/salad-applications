@@ -133,33 +133,29 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  redemptions?: RewardVaultItem[]
+  redemptions: RewardVaultItem[]
   startRefresh?: () => void
   stopRefresh?: () => void
 }
 
 interface State {
-  redemptions?: RewardVaultItem[]
+  redemptions: RewardVaultItem[]
   dropdown: {
     name: {
       active: boolean
       reverse: boolean
-      hasBeenClicked: boolean
     }
     price: {
       active: boolean
       reverse: boolean
-      hasBeenClicked: boolean
     }
     status: {
       active: boolean
       reverse: boolean
-      hasBeenClicked: boolean
     }
     redeemDate: {
       active: boolean
       reverse: boolean
-      hasBeenClicked: boolean
     }
   }
 }
@@ -168,164 +164,90 @@ class _NewVaultList extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      redemptions: props.redemptions?.slice(),
+      redemptions: props.redemptions.slice().sort(sortByDate),
       dropdown: {
         name: {
           active: false,
           reverse: false,
-          hasBeenClicked: false,
         },
         price: {
           active: false,
           reverse: false,
-          hasBeenClicked: false,
         },
         status: {
           active: false,
           reverse: false,
-          hasBeenClicked: false,
         },
         redeemDate: {
           active: true,
           reverse: false,
-          hasBeenClicked: false,
         },
       },
     }
   }
 
-  updateActiveDropdown = (activeDropdown: keyof State['dropdown'], initialLoad?: boolean) => {
-    const { dropdown } = this.state
+  updateActiveDropdown = (activeDropdown: keyof State['dropdown']): void => {
+    this.setState((state, props) => {
+      const currentDropdown = state.dropdown
+      const nextDropdown = Object.keys(currentDropdown).reduce((nextDropdown, filter) => {
+        switch (filter) {
+          case activeDropdown:
+            nextDropdown[filter] = {
+              active: true,
+              reverse: currentDropdown[filter].active ? !currentDropdown[filter].reverse : false,
+            }
+            break
+          case 'name':
+          case 'price':
+          case 'status':
+          case 'redeemDate':
+            nextDropdown[filter] = {
+              active: false,
+              reverse: false,
+            }
+            break
+        }
 
-    const updatedDropdown = Object.keys(dropdown).reduce((newDropdown, filter) => {
-      switch (filter) {
-        case activeDropdown:
-          newDropdown[filter] = {
-            active: true,
-            reverse:
-              dropdown[filter].hasBeenClicked && typeof initialLoad !== 'boolean' ? !dropdown[filter].reverse : false,
-            hasBeenClicked: typeof initialLoad !== 'boolean' ? true : false,
-          }
-          break
-        case 'name':
-        case 'price':
-        case 'status':
-        case 'redeemDate':
-          newDropdown[filter] = {
-            active: false,
-            reverse: false,
-            hasBeenClicked: dropdown[filter].hasBeenClicked,
-          }
-          break
+        return nextDropdown
+      }, {} as State['dropdown'])
+      return {
+        dropdown: nextDropdown,
+        redemptions: sort(nextDropdown, props.redemptions),
       }
-
-      return newDropdown
-    }, {} as State['dropdown'])
-
-    return updatedDropdown
+    })
   }
 
   sortRedemptionsByName = () => {
-    const { redemptions } = this.state
-    const updatedDropdown = this.updateActiveDropdown('name')
-    const reversed = updatedDropdown.name.reverse
-    if (redemptions && redemptions?.length > 0) {
-      const sortedRedemptions: RewardVaultItem[] = redemptions
-        .slice()
-        .sort((a, b) =>
-          reversed
-            ? a.name.toUpperCase() > b.name.toUpperCase()
-              ? -1
-              : 1
-            : a.name.toUpperCase() > b.name.toUpperCase()
-            ? 1
-            : -1,
-        )
-
-      this.setState({
-        dropdown: updatedDropdown,
-        redemptions: sortedRedemptions,
-      })
-    }
+    this.updateActiveDropdown('name')
   }
 
   sortRedemptionsByPrice = () => {
-    const { redemptions } = this.state
-    const updateDropdown = this.updateActiveDropdown('price')
-    const reversed = updateDropdown.price.reverse
-    if (redemptions && redemptions?.length > 0) {
-      const sortedRedemptions: RewardVaultItem[] = redemptions
-        .slice()
-        .sort((a, b) => (reversed ? (a.price > b.price ? 1 : -1) : a.price > b.price ? -1 : 1))
-      this.setState({
-        dropdown: updateDropdown,
-        redemptions: sortedRedemptions,
-      })
-    }
+    this.updateActiveDropdown('price')
   }
 
-  sortRedemptionsByRedeemedDate = (initialLoad?: boolean) => {
-    const { redemptions } = this.state
-    const updatedDropdown = this.updateActiveDropdown('redeemDate', initialLoad)
-    const reversed = updatedDropdown.redeemDate.reverse
-    if (redemptions && redemptions?.length > 0) {
-      const sortedRedemptions: RewardVaultItem[] = redemptions
-        .slice()
-        .sort((a, b) =>
-          reversed
-            ? new Date(a.timestamp) > new Date(b.timestamp)
-              ? 1
-              : -1
-            : new Date(a.timestamp) > new Date(b.timestamp)
-            ? -1
-            : 1,
-        )
-      this.setState({
-        dropdown: updatedDropdown,
-        redemptions: sortedRedemptions,
-      })
-    }
+  sortRedemptionsByRedeemedDate = () => {
+    this.updateActiveDropdown('redeemDate')
   }
 
   sortRedemptionsByStatus = () => {
-    const { redemptions } = this.state
-    const updatedDropdown = this.updateActiveDropdown('status')
-    const reversed = updatedDropdown.status.reverse
-    if (redemptions && redemptions?.length > 0) {
-      const sortedRedemptions: RewardVaultItem[] = redemptions.slice().sort((a, b) => {
-        const aStatus = a.status === RewardVaultStatus.COMPLETED ? 1 : a.status === RewardVaultStatus.CREATED ? 0 : -1
-        const bStatus = b.status === RewardVaultStatus.COMPLETED ? 1 : b.status === RewardVaultStatus.CREATED ? 0 : -1
-
-        return reversed ? (aStatus < bStatus ? -1 : 1) : aStatus < bStatus ? 1 : -1
-      })
-      this.setState({
-        dropdown: updatedDropdown,
-        redemptions: sortedRedemptions,
-      })
-    }
+    this.updateActiveDropdown('status')
   }
 
   componentDidMount = () => {
     const { startRefresh } = this.props
-
-    this.sortRedemptionsByRedeemedDate(true)
-
-    this.setState({
-      redemptions: this.props.redemptions,
-    })
-
     startRefresh?.()
   }
 
   componentWillUnmount = () => {
     const { stopRefresh } = this.props
-
     stopRefresh?.()
   }
 
   componentDidUpdate(prevProps: Props) {
     if (this.props.redemptions !== prevProps.redemptions) {
-      this.setState({ redemptions: this.props.redemptions })
+      this.setState({
+        redemptions: sort(this.state.dropdown, this.props.redemptions),
+      })
     }
   }
 
@@ -450,3 +372,59 @@ class _NewVaultList extends Component<Props, State> {
 }
 
 export const NewVaultList = withStyles(styles)(_NewVaultList)
+
+function sort(dropdown: State['dropdown'], redemptions: RewardVaultItem[]): RewardVaultItem[] {
+  let sortBy: (a: RewardVaultItem, b: RewardVaultItem) => number
+  let reverse: boolean
+  if (dropdown.name.active) {
+    sortBy = sortByName
+    reverse = dropdown.name.reverse
+  } else if (dropdown.price.active) {
+    sortBy = sortByPrice
+    reverse = dropdown.price.reverse
+  } else if (dropdown.status.active) {
+    sortBy = sortByStatus
+    reverse = dropdown.status.reverse
+  } else {
+    sortBy = sortByDate
+    reverse = dropdown.redeemDate.reverse
+  }
+
+  let sortedRedemptions = redemptions.slice().sort(sortBy)
+  if (reverse) {
+    sortedRedemptions = sortedRedemptions.reverse()
+  }
+
+  return sortedRedemptions
+}
+
+function sortByDate(a: RewardVaultItem, b: RewardVaultItem): number {
+  return new Date(a.timestamp) > new Date(b.timestamp) ? -1 : 1
+}
+
+function sortByName(a: RewardVaultItem, b: RewardVaultItem): number {
+  const compare = a.name.localeCompare(b.name)
+  return compare === 0 ? sortByDate(a, b) : compare
+}
+
+function sortByPrice(a: RewardVaultItem, b: RewardVaultItem): number {
+  if (a.price > b.price) {
+    return -1
+  } else if (a.price < b.price) {
+    return 1
+  }
+
+  return sortByDate(a, b)
+}
+
+function sortByStatus(a: RewardVaultItem, b: RewardVaultItem): number {
+  const aStatus = a.status === RewardVaultStatus.COMPLETED ? 1 : a.status === RewardVaultStatus.CREATED ? 0 : -1
+  const bStatus = b.status === RewardVaultStatus.COMPLETED ? 1 : b.status === RewardVaultStatus.CREATED ? 0 : -1
+  if (aStatus > bStatus) {
+    return -1
+  } else if (aStatus < bStatus) {
+    return 1
+  }
+
+  return sortByDate(a, b)
+}
