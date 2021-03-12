@@ -17,9 +17,7 @@ export class VaultStore {
     try {
       var response = yield this.axios.get<RewardVaultResource[]>('/api/v1/reward-vault')
 
-      this.redemptions = response.data
-        .map(this.rewardVaultFromResource)
-        .sort((a: RewardVaultItem, b: RewardVaultItem) => b.timestamp.getTime() - a.timestamp.getTime())
+      this.redemptions = response.data.map(this.rewardVaultFromResource)
     } catch {}
   })
 
