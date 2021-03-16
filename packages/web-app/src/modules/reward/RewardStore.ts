@@ -202,13 +202,19 @@ export class RewardStore {
 
       console.log(`Completed SaladPay transaction ${response?.details.transactionToken}`)
 
-      yield this.axios.post(`/api/v1/rewards/${reward.id}/redemptions`, {}, { timeoutErrorMessage: timeoutMessage })
+      const newRedemption = yield this.axios.post(
+        `/api/v1/rewards/${reward.id}/redemptions`,
+        { price: reward.price },
+        { timeoutErrorMessage: timeoutMessage },
+      )
+
+      // Will need to check the properties of what is returned when working with actual API.
+      if (newRedemption) {
+        this.store.vault.addRewardToRedemptionsList(newRedemption)
+      }
 
       //Completes the transaction and closes SaladPay
       response?.complete('success')
-
-      //Track the redemption in mixpanel
-      this.store.analytics.trackRewardRedeemed(reward)
 
       //Show a notification
       this.store.notifications.sendNotification({
@@ -221,18 +227,7 @@ export class RewardStore {
     } catch (error) {
       response?.complete('fail')
       if (!(error instanceof AbortError)) {
-        //Hack since we getting tons of false negatives during redemptions
-        if (error.message === timeoutMessage) {
-          this.store.analytics.trackRewardRedeemed(reward, true)
-          //Show an order processing notification
-          this.store.notifications.sendNotification({
-            category: NotificationMessageCategory.Redemption,
-            title: `Thank you for ordering ${reward.name}!`,
-            message: 'Congrats on your pick! Your item is on its way. Check your reward vault for more details.',
-            autoClose: false,
-            onClick: () => this.store.routing.push('/account/reward-vault'),
-          })
-        } else if (error.message === REQUIRES_MINECRAFT_USERNAME) {
+        if (error.message === REQUIRES_MINECRAFT_USERNAME) {
           this.store.notifications.sendNotification({
             category: NotificationMessageCategory.FurtherActionRequired,
             title: 'You need a Minecraft Username to redeem this reward.',
@@ -241,6 +236,8 @@ export class RewardStore {
             onClick: () => this.store.routing.push('/settings/summary'),
             type: 'error',
           })
+        } else if ('') {
+          // TODO: Problem Details error handling
         } else {
           //Show an error notification
           this.store.notifications.sendNotification({
@@ -255,7 +252,6 @@ export class RewardStore {
     } finally {
       yield this.store.balance.refreshBalance()
       yield this.store.balance.refreshBalanceHistory()
-      yield this.store.vault.loadVault()
       this.isRedeeming = false
       console.error('Cleared isRedeeming flag')
     }

@@ -56,4 +56,9 @@ export class VaultStore {
       this.refreshTimer = undefined
     }
   }
+
+  @action
+  addRewardToRedemptionsList = (reward: RewardVaultItem) => {
+    this.redemptions.push(reward)
+  }
 }
