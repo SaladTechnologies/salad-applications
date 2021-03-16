@@ -4,8 +4,9 @@ import type { ReactChild } from 'react'
 import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import Skeleton from 'react-loading-skeleton'
-import { InfoButton, ModalPage, ScrollableContent, SmartLink } from '../../../components'
+import { InfoButton, ModalPage, SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
+import { AntiVirusScrollbar } from './AntiVirusScrollbar'
 
 const styles = (theme: SaladTheme) => ({
   bottomMessage: {
@@ -31,15 +32,20 @@ const styles = (theme: SaladTheme) => ({
     '&:hover': {
       opacity: 0.7,
     },
+    zIndex: 1,
   },
   container: {
     alignItems: 'center',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    marginTop: 50,
+    margin: '100px 0',
+    marginRight: 250,
     maxWidth: 800,
     padding: '0 25px',
+    '@media screen and (min-width: 1300px)': {
+      marginRight: 0,
+    },
   },
   content: {
     '& a': {
@@ -68,7 +74,8 @@ const styles = (theme: SaladTheme) => ({
   list: {
     fontSize: theme.small,
     listStyleType: 'none',
-    paddingLeft: 5,
+    paddingLeft: 20,
+    width: '100%',
   },
   listItem: {
     cursor: 'pointer',
@@ -82,6 +89,9 @@ const styles = (theme: SaladTheme) => ({
     justifyContent: 'center',
     lineHeight: '150%',
   },
+  selectFromList: {
+    fontSize: theme.small,
+  },
   subtitle: {
     fontSize: theme.medium,
   },
@@ -91,7 +101,10 @@ const styles = (theme: SaladTheme) => ({
   },
   supportReminder: {
     animation: '$fadeIn 1s ease-in',
+    color: theme.lightGreen,
+    fontFamily: theme.fontGroteskLight25,
     fontSize: theme.small,
+    lineHeight: '150%',
     position: 'absolute',
     right: '1.5rem',
     bottom: '5rem',
@@ -101,6 +114,10 @@ const styles = (theme: SaladTheme) => ({
     alignItems: 'center',
     display: 'flex',
     lineHeight: '250%',
+  },
+  tooltip: {
+    height: 40,
+    width: 40,
   },
 })
 
@@ -182,71 +199,89 @@ class _AntiVirusErrorPage extends Component<Props, State> {
 
     return (
       <ModalPage>
-        <div className={classes.page}>
-          <div className={classes.closeButton} onClick={onCloseClicked}>
-            <FontAwesomeIcon icon={faTimes} size="lg" />
-          </div>
-          <div className={classes.container}>
-            {loading ? (
-              <Skeleton height={'100%'} />
-            ) : (
-              <>
-                <div className={classes.heading}>
-                  <div className={classes.title}>
-                    {fallthrough ? (
-                      <h1>{antivirus ? `Whitelist Salad in ${antivirus}` : 'Whitelist Salad in your anti-virus'}</h1>
-                    ) : (
-                      <h1>{antivirus ? `${antivirus} is Blocking Salad` : 'Anti-Virus is Blocking Salad'}</h1>
-                    )}
-                    <InfoButton
-                      text={
-                        "Don't worry! Most anti-virus programs block cryptominers. This is to protect you from having other people install miners on your computer without you knowing - a process called 'cryptojacking'. As long as you are allowed to use this machine, you're fine! Check out the Salad blog to learn more."
-                      }
-                    />
+        <div className={classes.closeButton} onClick={onCloseClicked}>
+          <FontAwesomeIcon icon={faTimes} size="lg" />
+        </div>
+        <AntiVirusScrollbar>
+          <div className={classes.page}>
+            <div className={classes.container}>
+              {loading ? (
+                <Skeleton height={'100%'} />
+              ) : (
+                <>
+                  <div className={classes.heading}>
+                    <div className={classes.title}>
+                      {fallthrough ? (
+                        <h1>{antivirus ? `Whitelist Salad in ${antivirus}` : 'Whitelist Salad in your anti-virus'}</h1>
+                      ) : (
+                        <h1>{antivirus ? `${antivirus} is Blocking Salad` : 'Anti-Virus is Blocking Salad'}</h1>
+                      )}
+                      <InfoButton
+                        className={classes.tooltip}
+                        text={
+                          "Don't worry! Most anti-virus programs block cryptominers. This is to protect you from having other people install miners on your computer without you knowing - a process called 'cryptojacking'. As long as you are allowed to use this machine, you're fine! Check out the Salad blog to learn more."
+                        }
+                      />
+                    </div>
+                    <div className={classes.subtitle}>
+                      {fallthrough ? (
+                        <>
+                          {antivirus ? (
+                            <>
+                              <p>
+                                Your anti-virus software is still blocking Salad, and none of our miners will work until
+                                you whitelist Salad with {antivirus}. Can't whitelist? Earn anyway using{' '}
+                                <SmartLink to="/earn/offerwall">Offerwalls</SmartLink>, or reach out to the{' '}
+                                <SmartLink to="https://forum.salad.io/">support forum</SmartLink> for help!
+                              </p>
+                              <p className={classes.selectFromList}>
+                                {' '}
+                                Use a different anti-virus provider?{' '}
+                                <span className={classes.link} onClick={onViewAVList}>
+                                  Select it from this list
+                                </span>
+                                .
+                              </p>
+                            </>
+                          ) : (
+                            <p>
+                              Your anti-virus has blocked all of our miners. so you'll need to whitelist Salad with your
+                              anti-virus in order to get chopping. Can't whitelist? Earn anyway using{' '}
+                              <SmartLink to="/earn/offerwall">Offerwalls</SmartLink>, or reach out to the{' '}
+                              <SmartLink to="https://forum.salad.io/">support forum</SmartLink> for help!
+                            </p>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          {antivirus ? (
+                            <>
+                              <p>
+                                Your anti-virus software is blocking Salad, but there's an easy fix: whitelist Salad
+                                with {antivirus}.
+                              </p>
+                              <p className={classes.selectFromList}>
+                                {' '}
+                                Use a different anti-virus provider?{' '}
+                                <span className={classes.link} onClick={onViewAVList}>
+                                  Select it from this list
+                                </span>
+                                .
+                              </p>
+                            </>
+                          ) : (
+                            <p>
+                              It looks likes your anti-virus is blocking you from chopping. Select one of the guides
+                              below to fix this issue for your specific anti-virus program.
+                            </p>
+                          )}
+                        </>
+                      )}
+                    </div>
                   </div>
-                  <div className={classes.subtitle}>
-                    {fallthrough ? (
-                      <>
-                        {antivirus ? (
-                          <p>
-                            Your anti-virus software is still blocking Salad, and none of our miners will work until you
-                            whitelist Salad with {antivirus}. Can't whitelist? Earn anyway using{' '}
-                            <SmartLink to="/earn/offerwall">Offerwalls</SmartLink>, or reach out to the{' '}
-                            <SmartLink to="https://forum.salad.io/">support forum</SmartLink> for help!
-                          </p>
-                        ) : (
-                          <p>
-                            Your anti-virus has blocked all of our miners. so you'll need to whitelist Salad with your
-                            anti-virus in order to get chopping. Can't whitelist? Earn anyway using{' '}
-                            <SmartLink to="/earn/offerwall">Offerwalls</SmartLink>, or reach out to the{' '}
-                            <SmartLink to="https://forum.salad.io/">support forum</SmartLink> for help!
-                          </p>
-                        )}
-                      </>
-                    ) : (
-                      <>
-                        {antivirus ? (
-                          <p>
-                            Your anti-virus software is blocking Salad, but there's an easy fix: whitelist Salad with{' '}
-                            {antivirus}. We'll keep testing other miners to try and keep you chopping, but your earning
-                            rates could be lower.
-                          </p>
-                        ) : (
-                          <p>
-                            It looks likes your anti-virus is blocking you from chopping. We'll keep testing other
-                            miners, but your earning rates could be lower until this issue is resolved.
-                          </p>
-                        )}
-                      </>
-                    )}
-                  </div>
-                </div>
-                {article ? (
-                  <ScrollableContent maxWidth={650}>
+                  {article ? (
                     <div className={classes.content} dangerouslySetInnerHTML={{ __html: article }} />
-                  </ScrollableContent>
-                ) : articleList && onViewArticle ? (
-                  <ScrollableContent maxWidth={650}>
+                  ) : articleList && onViewArticle ? (
                     <ul className={classes.list}>
                       {articleList.map((article) => (
                         <li key={article.id} className={classes.listItem} onClick={() => onViewArticle(article.id)}>
@@ -254,26 +289,17 @@ class _AntiVirusErrorPage extends Component<Props, State> {
                         </li>
                       ))}
                     </ul>
-                  </ScrollableContent>
-                ) : null}
-                {antivirus && (
-                  <div className={classes.bottomMessage}>
-                    Use a different anti-virus provider?{' '}
-                    <span className={classes.link} onClick={onViewAVList}>
-                      Select it from this list
-                    </span>
-                    .
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-          {webWidgetShowing && (
-            <div className={classes.supportReminder}>
-              This information can also be found by clicking the support button and searching for 'anti-virus'.
+                  ) : null}
+                </>
+              )}
             </div>
-          )}
-        </div>
+          </div>
+        </AntiVirusScrollbar>
+        {webWidgetShowing && (
+          <div className={classes.supportReminder}>
+            This information can also be found by clicking the support button and searching for 'anti-virus'.
+          </div>
+        )}
       </ModalPage>
     )
   }
