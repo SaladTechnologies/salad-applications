@@ -32,6 +32,7 @@ const styles = (theme: SaladTheme) => ({
     '&:hover': {
       opacity: 0.7,
     },
+    zIndex: 1,
   },
   container: {
     alignItems: 'center',
@@ -198,11 +199,11 @@ class _AntiVirusErrorPage extends Component<Props, State> {
 
     return (
       <ModalPage>
+        <div className={classes.closeButton} onClick={onCloseClicked}>
+          <FontAwesomeIcon icon={faTimes} size="lg" />
+        </div>
         <AntiVirusScrollbar>
           <div className={classes.page}>
-            <div className={classes.closeButton} onClick={onCloseClicked}>
-              <FontAwesomeIcon icon={faTimes} size="lg" />
-            </div>
             <div className={classes.container}>
               {loading ? (
                 <Skeleton height={'100%'} />

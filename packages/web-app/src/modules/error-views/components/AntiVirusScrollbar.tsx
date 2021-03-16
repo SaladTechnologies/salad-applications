@@ -11,7 +11,6 @@ const styles = (theme: SaladTheme) => ({
     border: `solid 1px ${theme.lightGreen}`,
     cursor: 'pointer',
     borderRadius: 3,
-    zIndex: 3001,
     position: 'fixed !important',
     right: rightPosition - 2,
     width: '8px !important',
