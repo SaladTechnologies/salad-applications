@@ -203,8 +203,8 @@ export class RewardStore {
       console.log(`Completed SaladPay transaction ${response?.details.transactionToken}`)
 
       const newRedemption = yield this.axios.post(
-        `/api/v1/rewards/${reward.id}/redemptions`,
-        { price: reward.price },
+        'api/v2/redemptions',
+        { price: reward.price, rewardId: reward.id },
         { timeoutErrorMessage: timeoutMessage },
       )
 
