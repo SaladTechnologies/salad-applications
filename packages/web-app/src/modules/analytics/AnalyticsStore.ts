@@ -339,6 +339,17 @@ export class AnalyticsStore {
     })
   }
 
+  /** Track when the close app button is clicked */
+  public trackCloseAppClicked = (minimizeToTray: 'enabled' | 'disabled') => {
+    const currentPath = window && window.location.pathname
+    this.track('Close App Button Clicked', {
+      CurrentPath: currentPath,
+      Id: 'close_app_button_clicked',
+      Label: 'Closed App',
+      MinimizeToTray: minimizeToTray,
+    })
+  }
+
   /** Track when a toast notification is shown */
   public trackToastNotificationShown = (message: NotificationMessage) => {
     const type = message.type ? message.type : 'normal'

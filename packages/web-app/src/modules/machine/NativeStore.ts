@@ -164,6 +164,7 @@ export class NativeStore {
 
   @action
   minimizeWindow = () => {
+    this.store.analytics.trackButtonClicked('minimize_window', 'Minimize Window', 'enabled')
     this.send(minimize)
   }
 
@@ -175,6 +176,7 @@ export class NativeStore {
   @action
   closeWindow = () => {
     if (this.canMinimizeToTray && this.minimizeToTray) {
+      this.store.analytics.trackCloseAppClicked('enabled')
       this.send(hide)
       if (this.notifyOnMinimizeToTray) {
         this.store.notifications.sendNotification({
@@ -186,6 +188,7 @@ export class NativeStore {
         })
       }
     } else {
+      this.store.analytics.trackCloseAppClicked('disabled')
       this.send(close)
     }
   }
