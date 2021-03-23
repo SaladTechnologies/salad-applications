@@ -5,7 +5,10 @@ import withStyles, { WithStyles } from 'react-jss'
 import { Divider } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { Reward, RewardPlatform } from '../../reward/models'
+import android from './assets/logos/android.png'
 import apple from './assets/logos/apple.png'
+import epicGames from './assets/logos/epicGames.png'
+import nintendo from './assets/logos/nintendo.png'
 import origin from './assets/logos/origin.png'
 import steam from './assets/logos/steam.png'
 import xbox from './assets/logos/xbox.png'
@@ -69,6 +72,12 @@ const getPlatformIcon = (platform?: RewardPlatform): string | undefined => {
       return xbox
     case RewardPlatform.Apple:
       return apple
+    case RewardPlatform.Android:
+      return android
+    case RewardPlatform.EpicGames:
+      return epicGames
+    case RewardPlatform.Nintendo:
+      return nintendo
     default:
       return undefined
   }

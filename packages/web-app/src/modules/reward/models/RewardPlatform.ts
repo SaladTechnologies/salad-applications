@@ -3,4 +3,7 @@ export enum RewardPlatform {
   Origin = 'origin',
   Xbox = 'xbox',
   Apple = 'apple',
+  Android = 'android',
+  EpicGames = 'epicGames',
+  Nintendo = 'nintendo',
 }
