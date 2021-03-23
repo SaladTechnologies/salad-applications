@@ -292,15 +292,10 @@ export class SaladBowlStore implements IPersistentStore {
 
   @action
   onReceiveError = (message: ErrorMessage) => {
-    if (!this.hasViewedAVErrorPage) {
-      this.store.analytics.trackMiningError(message.errorCategory, message.errorCode)
-      this.hasViewedAVErrorPage = true
-    }
-
     // Show the error modal
     switch (message.errorCategory) {
       case ErrorCategory.AntiVirus:
-        this.store.ui.showErrorPage(ErrorPageType.AntiVirus)
+        this.store.ui.showErrorPage(ErrorPageType.AntiVirus, message)
         break
       // case ErrorCategory.Driver:
       // this.store.ui.showErrorPage(ErrorPageType.Cuda)
@@ -566,5 +561,10 @@ export class SaladBowlStore implements IPersistentStore {
 
     //Saves the new value locally so it will automatically be loaded next time
     Storage.setItem(CPU_MINING_OVERRIDDEN, value)
+  }
+
+  @action
+  updateViewedAVErrorPage = (value: boolean) => {
+    this.hasViewedAVErrorPage = value
   }
 }

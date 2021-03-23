@@ -116,8 +116,8 @@ const styles = (theme: SaladTheme) => ({
     lineHeight: '250%',
   },
   tooltip: {
-    height: 40,
-    width: 40,
+    height: 30,
+    width: 30,
   },
 })
 
