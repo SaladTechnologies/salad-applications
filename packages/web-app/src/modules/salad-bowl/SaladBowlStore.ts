@@ -53,9 +53,6 @@ export class SaladBowlStore implements IPersistentStore {
   @observable
   public gpuMiningOverridden: boolean = false
 
-  @observable
-  public hasViewedAVErrorPage: boolean = false
-
   @computed
   get pluginDefinitions(): PluginDefinition[] {
     const machine = this.store.machine.currentMachine
@@ -385,7 +382,7 @@ export class SaladBowlStore implements IPersistentStore {
       return
     }
 
-    this.hasViewedAVErrorPage = false
+    this.store.ui.updateViewedAVErrorPage(false)
     if (this.timeoutTimer != null) {
       clearTimeout(this.timeoutTimer)
       this.timeoutTimer = undefined
@@ -561,10 +558,5 @@ export class SaladBowlStore implements IPersistentStore {
 
     //Saves the new value locally so it will automatically be loaded next time
     Storage.setItem(CPU_MINING_OVERRIDDEN, value)
-  }
-
-  @action
-  updateViewedAVErrorPage = (value: boolean) => {
-    this.hasViewedAVErrorPage = value
   }
 }
