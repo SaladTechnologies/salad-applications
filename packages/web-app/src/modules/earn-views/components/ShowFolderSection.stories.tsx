@@ -3,7 +3,7 @@ import { Meta } from '@storybook/react'
 import { ShowFolderSection } from './index'
 
 export default {
-  title: 'Modules/Earn/components/ShowFolderSection',
+  title: 'Modules/Earn/components/Show Folder Section',
   component: ShowFolderSection,
 } as Meta
 
