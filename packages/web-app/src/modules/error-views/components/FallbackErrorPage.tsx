@@ -33,6 +33,7 @@ interface Props extends WithStyles<typeof styles> {
   onCloseClicked: () => void
   onOpenSupportTicket: () => void
   onSwitchMiningType: () => void
+  onViewAVGuide: () => void
   gpuMiningEnabled: boolean
 }
 
@@ -46,23 +47,29 @@ class _FallbackErrorPage extends Component<Props> {
       onCloseClicked,
       onOpenSupportTicket,
       onSwitchMiningType,
+      onViewAVGuide,
       classes,
     } = this.props
     return (
       <ErrorPage title={`Salad is Unable to Run on your ${currentMinerType}`} onCloseClicked={onCloseClicked}>
         <div className={classes.padding}>
-          Salad is still unable to get chopping with your {currentMinerType}. We recommend{' '}
+          Salad is still unable to chop with your {currentMinerType}. This may be caused by your anti-virus program, but
+          we'll show you how to{' '}
+          <span className={classes.link} onClick={onViewAVGuide}>
+            fix that issue here
+          </span>
+          .
+        </div>
+        <div className={classes.padding}>
+          Already tried that? Try opening a{' '}
           <span className={classes.link} onClick={onOpenSupportTicket}>
-            opening a Support Ticket
+            Support Ticket
           </span>{' '}
           or getting help from our{' '}
           <SmartLink to="https://forum.salad.io/c/community-support/6" trackingInfo={{ label: forumLabel }}>
             {forumLabel}
           </SmartLink>
-          .
-        </div>
-        <div className={classes.padding}>
-          In the meantime, try switching to {alternativeMinerType} mining so that you keep earning while we work to
+          . In the meantime, try switching to {alternativeMinerType} mining so that you keep earning while we work to
           resolve your issue.
         </div>
         <Button className={classes.button} onClick={onSwitchMiningType}>

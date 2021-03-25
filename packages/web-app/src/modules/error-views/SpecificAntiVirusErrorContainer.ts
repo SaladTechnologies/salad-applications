@@ -7,7 +7,7 @@ import { AntiVirusErrorPage } from './components/AntiVirusErrorPage'
 const mapStoreToProps = (store: RootStore, ownProps: any): any => ({
   antivirus: store.zendesk.selectedAntiVirusGuide,
   article: store.zendesk.helpCenterArticle ? getSanitizedHTML(store.zendesk.helpCenterArticle) : undefined,
-  fallthrough: store.saladBowl.hasViewedAVErrorPage,
+  fallthrough: store.ui.hasViewedAVErrorPage,
   loading: store.zendesk.loadingArticle,
   loadArticle: () => store.zendesk.loadArticle(parseInt(ownProps.match.params.id)),
   onCloseClicked: () => store.ui.hideModal(),

@@ -9,7 +9,7 @@ const mapStoreToProps = (store: RootStore): any => {
   }
   return {
     articleList: store.zendesk.antiVirusArticleList,
-    fallthrough: store.saladBowl.hasViewedAVErrorPage,
+    fallthrough: store.ui.hasViewedAVErrorPage,
     loading: store.zendesk.loadingArticle,
     loadArticle: () => store.zendesk.loadAntiVirusArticleList(),
     onCloseClicked: () => store.ui.hideModal(true),

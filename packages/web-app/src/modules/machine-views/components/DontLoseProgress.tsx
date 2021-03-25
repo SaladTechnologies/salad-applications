@@ -57,11 +57,12 @@ export class _DontLoseProgressPage extends Component<Props> {
           best earning rates. You won't see any balance until Prepping is complete.
         </div>
         <div className={classes.padding}>
-          Stopping and starting over will reset the whole process, so we recomment you let Prepping finish! If it's
+          Stopping and starting over will reset the whole process, so we recommend you let Prepping finish! If it's
           taking more than 30 minutes,{' '}
           <span className={classes.link} onClick={onSubmitSupportTicket}>
             submit a support ticket
           </span>
+          .
         </div>
         <div className={classes.buttons}>
           <Button className={classes.button} onClick={onStopPrepping}>

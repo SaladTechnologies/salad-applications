@@ -53,9 +53,6 @@ export class SaladBowlStore implements IPersistentStore {
   @observable
   public gpuMiningOverridden: boolean = false
 
-  @observable
-  public hasViewedAVErrorPage: boolean = false
-
   @computed
   get pluginDefinitions(): PluginDefinition[] {
     const machine = this.store.machine.currentMachine
@@ -292,15 +289,10 @@ export class SaladBowlStore implements IPersistentStore {
 
   @action
   onReceiveError = (message: ErrorMessage) => {
-    if (!this.hasViewedAVErrorPage) {
-      this.store.analytics.trackMiningError(message.errorCategory, message.errorCode)
-      this.hasViewedAVErrorPage = true
-    }
-
     // Show the error modal
     switch (message.errorCategory) {
       case ErrorCategory.AntiVirus:
-        this.store.ui.showErrorPage(ErrorPageType.AntiVirus)
+        this.store.ui.showErrorPage(ErrorPageType.AntiVirus, message)
         break
       // case ErrorCategory.Driver:
       // this.store.ui.showErrorPage(ErrorPageType.Cuda)
@@ -390,7 +382,7 @@ export class SaladBowlStore implements IPersistentStore {
       return
     }
 
-    this.hasViewedAVErrorPage = false
+    this.store.ui.updateViewedAVErrorPage(false)
     if (this.timeoutTimer != null) {
       clearTimeout(this.timeoutTimer)
       this.timeoutTimer = undefined

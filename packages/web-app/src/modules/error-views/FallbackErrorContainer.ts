@@ -27,6 +27,7 @@ const mapStoreToProps = (store: RootStore): any => {
     onCloseClicked: () => store.ui.hideModal(true),
     onOpenSupportTicket: () => store.zendesk.openSupportTicket(),
     onSwitchMiningType,
+    onViewAVGuide: () => store.ui.navigateToAVPage(),
     gpuMiningEnabled,
   }
 }

@@ -1,6 +1,7 @@
-import { action, autorun } from 'mobx'
+import { action, autorun, observable } from 'mobx'
 import { MiningStatus } from './modules/machine/models'
 import { NotificationMessageCategory } from './modules/notifications/models'
+import { ErrorMessage } from './modules/salad-bowl/models/ErrorMessage'
 import { getZendeskAVData } from './modules/zendesk/utils'
 import { RootStore } from './Store'
 
@@ -35,6 +36,9 @@ export class UIStore {
     })
   }
 
+  @observable
+  public hasViewedAVErrorPage: boolean = false
+
   @action
   showModal = (url: string) => {
     this.store.routing.push(url)
@@ -49,17 +53,24 @@ export class UIStore {
   }
 
   @action
-  showErrorPage = (type: ErrorPageType) => {
+  showErrorPage = (type: ErrorPageType, errorMessage?: ErrorMessage) => {
     switch (type) {
       case ErrorPageType.AntiVirus:
-        const antiVirusSoftware = this.store.zendesk.detectedAV
-        if (antiVirusSoftware) {
-          this.store.analytics.trackErrorPageViewed(`${antiVirusSoftware} Anti-Virus Error`)
-          const articleId = getZendeskAVData(antiVirusSoftware).id
-          this.showModal(`/errors/anti-virus/${articleId}`)
-        } else {
-          this.store.analytics.trackErrorPageViewed('Generic Anti-Virus Error')
-          this.showModal('/errors/anti-virus')
+        const hasViewedAVErrorPage = this.hasViewedAVErrorPage
+        if (!hasViewedAVErrorPage && errorMessage) {
+          this.store.analytics.trackMiningError(errorMessage.errorCategory, errorMessage.errorCode)
+
+          const antiVirusSoftware = this.store.zendesk.detectedAV
+          if (antiVirusSoftware) {
+            const articleId = getZendeskAVData(antiVirusSoftware).id
+            this.showModal(`/errors/anti-virus/${articleId}`)
+            this.updateViewedAVErrorPage(true)
+            this.store.analytics.trackErrorPageViewed(`${antiVirusSoftware} Anti-Virus Error`)
+          } else {
+            this.showModal('/errors/anti-virus')
+            this.updateViewedAVErrorPage(true)
+            this.store.analytics.trackErrorPageViewed('Generic Anti-Virus Error')
+          }
         }
         break
       case ErrorPageType.Cuda:
@@ -83,6 +94,24 @@ export class UIStore {
       case ErrorPageType.Unknown:
         this.showModal('/errors/unknown')
         break
+    }
+  }
+
+  @action
+  updateViewedAVErrorPage = (value: boolean) => {
+    this.hasViewedAVErrorPage = value
+  }
+
+  @action
+  navigateToAVPage = () => {
+    const antiVirusSoftware = this.store.zendesk.detectedAV
+    if (antiVirusSoftware) {
+      const articleId = getZendeskAVData(antiVirusSoftware).id
+      this.showModal(`/errors/anti-virus/${articleId}`)
+      this.store.analytics.trackErrorPageViewed(`${antiVirusSoftware} Anti-Virus Error`)
+    } else {
+      this.showModal('/errors/anti-virus')
+      this.store.analytics.trackErrorPageViewed('Generic Anti-Virus Error')
     }
   }
 

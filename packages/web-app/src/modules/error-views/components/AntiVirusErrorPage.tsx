@@ -4,7 +4,7 @@ import type { ReactChild } from 'react'
 import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import Skeleton from 'react-loading-skeleton'
-import { InfoButton, ModalPage, SmartLink } from '../../../components'
+import { Button, InfoButton, ModalPage, SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { AntiVirusScrollbar } from './AntiVirusScrollbar'
 
@@ -116,8 +116,8 @@ const styles = (theme: SaladTheme) => ({
     lineHeight: '250%',
   },
   tooltip: {
-    height: 40,
-    width: 40,
+    height: 30,
+    width: 30,
   },
 })
 
@@ -290,6 +290,7 @@ class _AntiVirusErrorPage extends Component<Props, State> {
                       ))}
                     </ul>
                   ) : null}
+                  <Button onClick={onCloseClicked}>Close</Button>
                 </>
               )}
             </div>
