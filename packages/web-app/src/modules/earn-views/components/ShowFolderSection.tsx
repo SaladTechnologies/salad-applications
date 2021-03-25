@@ -10,6 +10,7 @@ const styles = (theme: SaladTheme) => ({
   },
   content: {
     padding: 20,
+    paddingRight: 20,
     color: theme.lightGreen,
   },
 })
@@ -31,12 +32,12 @@ class _ShowFolderSection extends Component<Props> {
       <div className={classes.container}>
         <Divider />
         <SectionHeader>Show Application Log Folder</SectionHeader>
-        <div className={classes.content} style={{ paddingRight: 20 }}>
+        <div className={classes.content}>
           <P>
             If you're having issues with Salad, our Support team may request that you upload your log files. Press "Show
             Folder", drag both files onto your open support ticket, and press "Send".
           </P>
-          <Button onClick={this.handleOpenFolder}> Show Folder </Button>
+          <Button onClick={this.handleOpenFolder}>Show Folder</Button>
         </div>
       </div>
     )
