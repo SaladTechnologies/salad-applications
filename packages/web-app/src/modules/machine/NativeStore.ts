@@ -15,6 +15,7 @@ const getDesktopVersion = 'get-desktop-version'
 const setDesktopVersion = 'set-desktop-version'
 const enableAutoLaunch = 'enable-auto-launch'
 const disableAutoLaunch = 'disable-auto-launch'
+const openLogFolder = 'open-log-folder'
 const login = 'login'
 const logout = 'logout'
 
@@ -277,6 +278,11 @@ export class NativeStore {
   disableNotifyOnMinimizeToTray = () => {
     this.notifyOnMinimizeToTray = false
     Storage.setItem(NOTIFY_ON_MINIMIZE_TO_TRAY, 'false')
+  }
+
+  @action
+  openFolderLog = () => {
+    this.send(openLogFolder)
   }
 
   @action

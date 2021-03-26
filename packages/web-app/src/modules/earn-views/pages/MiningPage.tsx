@@ -6,6 +6,7 @@ import { withLogin } from '../../auth-views'
 import { MachineInfoContainer, MinerListContainer, MinerTypeContainer } from '../../machine-views'
 import { DesktopDownloadContainer } from '../DesktopDownloadContainer'
 import { EarningHistoryContainer } from '../EarningHistoryContainer'
+import { ShowFolderContainer } from '../ShowFolderContainer'
 
 const styles = {
   container: {
@@ -52,6 +53,7 @@ class _MiningPage extends Component<Props> {
             )}
 
             <EarningHistoryContainer />
+            {isNative && <ShowFolderContainer />}
           </div>
         </Scrollbar>
       </div>
