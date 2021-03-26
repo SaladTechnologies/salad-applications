@@ -14,6 +14,7 @@ import { ErrorMessage } from './models/ErrorMessage'
 import { PluginInfo } from './models/PluginInfo'
 import { PluginStatus } from './models/PluginStatus'
 import { StatusMessage } from './models/StatusMessage'
+import { getPreppingPercentage } from './utils'
 
 const CPU_MINING_ENABLED = 'CPU_MINING_ENABLED'
 const GPU_MINING_OVERRIDDEN = 'GPU_MINING_OVERRIDDEN'
@@ -156,28 +157,7 @@ export class SaladBowlStore implements IPersistentStore {
 
   @computed
   get preppingProgress(): number {
-    let progress: number = 0
-    const runningTime = this.runningTime
-
-    if (runningTime) {
-      if (runningTime <= 60000) {
-        progress = 0.1
-      }
-
-      if (runningTime > 60000 && runningTime <= 600000) {
-        progress = 0.2
-      }
-
-      if (runningTime > 600000 && runningTime <= 1200000) {
-        progress = 0.3
-      }
-
-      if (runningTime > 1200000) {
-        progress = 0.4
-      }
-    }
-
-    return progress
+    return getPreppingPercentage(this.runningTime)
   }
 
   constructor(private readonly store: RootStore) {
