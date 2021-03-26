@@ -8,7 +8,7 @@ const mapStoreToProps = (store: RootStore): any => ({
   isRunning: store.saladBowl.isRunning,
   onClick: () => store.saladBowl.toggleRunning(StartActionType.StartButton),
   onClickError: store.saladBowl.isNotCompatible ? () => store.ui.showErrorPage(ErrorPageType.NotCompatible) : undefined,
-  progress: store.saladBowl.preppingProgress,
+  percentage: store.saladBowl.preppingProgress,
   runningTime: store.saladBowl.runningTime,
   status: store.saladBowl.status,
 })
