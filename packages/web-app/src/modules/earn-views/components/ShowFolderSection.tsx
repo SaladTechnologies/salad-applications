@@ -25,7 +25,7 @@ const _ShowFolderSection = ({ classes, openFolder }: Props) => {
       <div className={classes.content}>
         <P>
           If you're having issues with Salad, our Support team may request that you upload your log files. Press "Show
-          Folder", drag both files onto your open support ticket, and press "Send".
+          Folder", attach both files to your open support ticket, and press "Send".
         </P>
         <Button onClick={openFolder}>Show Folder</Button>
       </div>
