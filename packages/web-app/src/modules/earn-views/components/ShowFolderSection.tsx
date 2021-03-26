@@ -10,7 +10,6 @@ const styles = (theme: SaladTheme) => ({
   },
   content: {
     padding: 20,
-    paddingRight: 20,
     color: theme.lightGreen,
   },
 })
