@@ -1,4 +1,3 @@
-import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Button, Divider, P, SectionHeader } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
@@ -18,29 +17,20 @@ interface Props extends WithStyles<typeof styles> {
   openFolder: () => void
 }
 
-class _ShowFolderSection extends Component<Props> {
-  handleOpenFolder = () => {
-    const { openFolder } = this.props
-    openFolder()
-  }
-
-  render() {
-    const { classes } = this.props
-
-    return (
-      <div className={classes.container}>
-        <Divider />
-        <SectionHeader>Show Application Log Folder</SectionHeader>
-        <div className={classes.content}>
-          <P>
-            If you're having issues with Salad, our Support team may request that you upload your log files. Press "Show
-            Folder", drag both files onto your open support ticket, and press "Send".
-          </P>
-          <Button onClick={this.handleOpenFolder}>Show Folder</Button>
-        </div>
+const _ShowFolderSection = ({ classes, openFolder }: Props) => {
+  return (
+    <div className={classes.container}>
+      <Divider />
+      <SectionHeader>Show Application Log Folder</SectionHeader>
+      <div className={classes.content}>
+        <P>
+          If you're having issues with Salad, our Support team may request that you upload your log files. Press "Show
+          Folder", drag both files onto your open support ticket, and press "Send".
+        </P>
+        <Button onClick={openFolder}>Show Folder</Button>
       </div>
-    )
-  }
+    </div>
+  )
 }
 
 export const ShowFolderSection = withStyles(styles)(_ShowFolderSection)
