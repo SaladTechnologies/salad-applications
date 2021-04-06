@@ -66,7 +66,7 @@ const searchConfig = {
     searchKey: config.searchKey,
   }),
   searchQuery: {
-    resultsPerPage: 200,
+    resultsPerPage: 100,
     facets: {
       tags: {
         type: 'value',

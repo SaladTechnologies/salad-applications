@@ -1,4 +1,4 @@
-import { Result } from '@elastic/react-search-ui'
+import { Paging, Result } from '@elastic/react-search-ui'
 import { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import withStyles, { WithStyles } from 'react-jss'
@@ -7,6 +7,8 @@ import { SaladTheme } from '../../../SaladTheme'
 import { SearchResult } from '../../reward/models'
 import { RewardDisclaimers } from '../components'
 import { IconArrowLeft } from '../components/assets'
+import LeftArrow from '../components/assets/pagination/left-arrow.svg'
+import RightArrow from '../components/assets/pagination/right-arrow.svg'
 import { RewardItem } from '../components/RewardItem'
 import { rewardItemResponsive } from '../components/RewardSlider'
 import { RewardFilterContainer } from '../RewardFilterContainer'
@@ -75,6 +77,65 @@ const styles = (theme: SaladTheme) => {
       paddingBottom: 30,
       width: 0, //This is magic and somehow makes the flex work
     },
+    paginationContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+    },
+    pagination: {
+      alignItems: 'center',
+      display: 'flex',
+      listStyle: 'none',
+      paddingLeft: 0,
+      fontFamily: theme.fontGroteskBook19,
+
+      '& li': {
+        cursor: 'pointer',
+        display: 'inline-block',
+        marginRight: 10,
+        opacity: 0.5,
+        textAlign: 'center',
+        outline: 'none',
+      },
+
+      '& .rc-pagination-prev': {
+        display: 'flex',
+        opacity: 1,
+
+        '&:after': {
+          background: `url(${LeftArrow})`,
+          content: '""',
+          width: 25,
+          height: 25,
+        },
+      },
+
+      '& .rc-pagination-next': {
+        display: 'flex',
+        opacity: 1,
+
+        '&:after': {
+          background: `url(${RightArrow})`,
+          content: '""',
+          width: 25,
+          height: 25,
+        },
+      },
+
+      '& .rc-pagination-item-active': {
+        opacity: 1,
+      },
+
+      '& .rc-pagination-jump-prev, & .rc-pagination-jump-next': {
+        '&:after': {
+          content: '"..."',
+          opacity: 0.5,
+        },
+      },
+
+      '& .rc-pagination-disabled': {
+        display: 'none',
+      },
+    },
   }
 
   let a = style as any
@@ -97,6 +158,13 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _BrowseRewardsPage extends Component<Props> {
+  componentDidMount() {
+    const paginationListItems = document.querySelectorAll('.rc-pagination > li')
+    if (paginationListItems) {
+      paginationListItems.forEach((listItem) => listItem.removeAttribute('title'))
+    }
+  }
+
   handleBack = () => {
     this.props.onBack?.()
   }
@@ -146,6 +214,9 @@ class _BrowseRewardsPage extends Component<Props> {
                           />
                         )
                       })}
+                    </div>
+                    <div className={classes.paginationContainer}>
+                      <Paging className={classes.pagination} />
                     </div>
                     <RewardDisclaimers />
                   </div>
