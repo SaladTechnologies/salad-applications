@@ -135,6 +135,11 @@ export class ReferralStore {
       code = 'CUSTOM2'
     }
 
+    //TODO: Remove this ASAP
+    if (code.toUpperCase() === 'PHROG') {
+      code = 'PHROG2'
+    }
+
     //Ensures that the user is logged in
     try {
       yield this.store.auth.login()
