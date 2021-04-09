@@ -33,6 +33,7 @@ const styles = (theme: SaladTheme) => ({
     maxWidth: 600,
     padding: 40,
     margin: 'auto',
+    height: '100%',
   },
 })
 
@@ -59,7 +60,7 @@ class _MiningInformation extends Component<Props> {
                 </P>
               </div>
               <div className={classes.column}>
-                <Img src={mining} />
+                <Img className={classes.overviewImage} src={mining} />
               </div>
             </div>
             <Divider />

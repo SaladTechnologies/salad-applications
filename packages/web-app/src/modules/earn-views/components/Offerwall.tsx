@@ -39,7 +39,7 @@ const styles = {
 
   overviewImage: {
     maxWidth: 600,
-    width: '100%',
+    height: '100%',
     padding: '40px 0px',
     margin: 'auto',
   },
@@ -67,7 +67,7 @@ class _Offerwall extends Component<Props> {
                   </P>
                 </div>
                 <div className={classes.column}>
-                  <Img src={offerWall} />
+                  <Img className={classes.overviewImage}  src={offerWall} />
                 </div>
               </div>
               <Divider />

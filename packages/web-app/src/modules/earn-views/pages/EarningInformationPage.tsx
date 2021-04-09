@@ -37,6 +37,9 @@ const styles = (theme: SaladTheme) => ({
     alignItems: 'center',
     flex: 1,
   },
+  responsiveImage:{
+    height: '100%',
+  }
 })
 
 interface Props extends WithStyles<typeof styles> {}
@@ -60,7 +63,7 @@ class _EarningInformationPage extends Component<Props> {
               </div>
               <div className={classes.column}></div>
             </div>
-            <Img style={{ width: '100%' }} src={earningOverview} />
+            <Img  className={classes.responsiveImage} src={earningOverview} />
             <Divider />
 
             <SectionHeader>Mining</SectionHeader>
@@ -77,14 +80,14 @@ class _EarningInformationPage extends Component<Props> {
                 </P>
               </div>
               <div className={classes.column}>
-                <Img src={mining} />
+                <Img className={classes.responsiveImage} src={mining} />
               </div>
             </div>
             <Divider />
 
             <div className={classes.splitContainer}>
               <div className={classes.column}>
-                <Img src={offerwall} />
+                <Img className={classes.responsiveImage} src={offerwall} />
               </div>
               <div className={classes.column}>
                 <SectionHeader>Offerwalls</SectionHeader>
@@ -118,7 +121,7 @@ class _EarningInformationPage extends Component<Props> {
                 </P>
               </div>
               <div className={classes.column}>
-                <Img src={referral} />
+                <Img className={classes.responsiveImage} src={referral} />
               </div>
             </div>
             <Divider />
