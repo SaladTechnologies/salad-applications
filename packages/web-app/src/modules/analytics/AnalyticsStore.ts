@@ -111,13 +111,21 @@ export class AnalyticsStore {
   }
 
   /** Track when mining starts */
-  public trackStart = (reason: string, gpuEnabled: boolean, cpuEnabled: boolean) => {
+  public trackStart = (
+    reason: string,
+    gpuEnabled: boolean,
+    cpuEnabled: boolean,
+    gpuNames: string[],
+    cpuName: string,
+  ) => {
     if (!this.started) return
 
     this.track('Start', {
       Reason: reason,
       GpuEnabled: gpuEnabled,
       CpuEnabled: cpuEnabled,
+      GPUNames: gpuNames,
+      CPUName: cpuName,
     })
   }
 
