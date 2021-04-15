@@ -398,7 +398,11 @@ export class SaladBowlStore implements IPersistentStore {
       `Starting plugin ${this.currentPluginDefinition.name}-${this.currentPluginDefinition.version}: ${this.currentPluginDefinition.exe} ${this.currentPluginDefinition.args}`,
     )
 
-    this.store.analytics.trackStart(reason, this.gpuMiningEnabled, this.cpuMiningEnabled)
+    const gpusNames = this.store.machine.gpus.filter((x) => x && x.model).map((x) => x.model)
+    const cpu = this.store.native.machineInfo?.cpu
+    const cpuName = `${cpu?.manufacturer} ${cpu?.brand}`
+
+    this.store.analytics.trackStart(reason, this.gpuMiningEnabled, this.cpuMiningEnabled, gpusNames, cpuName)
 
     //Show a notification reminding users to use auto start
     if (reason === StartReason.Manual && this.store.autoStart.canAutoStart && !this.store.autoStart.autoStart) {
