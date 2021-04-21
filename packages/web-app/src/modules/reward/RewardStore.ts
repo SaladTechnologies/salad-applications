@@ -1,5 +1,6 @@
 import { AxiosInstance, AxiosResponse } from 'axios'
 import { action, computed, flow, observable } from 'mobx'
+import { v4 as uuidv4 } from 'uuid'
 import { REQUIRES_MINECRAFT_USERNAME } from '../../axiosFactory'
 import { RootStore } from '../../Store'
 import { NotificationMessageCategory } from '../notifications/models'
@@ -204,13 +205,15 @@ export class RewardStore {
 
       const newRedemption = yield this.axios.post(
         'api/v2/redemptions',
-        { price: reward.price, rewardId: reward.id },
+        { id: uuidv4(), price: reward.price, rewardId: reward.id },
         { timeoutErrorMessage: timeoutMessage },
       )
 
-      // Will need to check the properties of what is returned when working with actual API.
       if (newRedemption) {
-        this.store.vault.addRewardToRedemptionsList(newRedemption)
+        const reward = newRedemption.data
+        reward.timestamp = new Date(reward.timestamp)
+
+        this.store.vault.addRewardToRedemptionsList(reward)
       }
 
       //Completes the transaction and closes SaladPay
