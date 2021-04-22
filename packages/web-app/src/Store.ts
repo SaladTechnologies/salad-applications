@@ -82,7 +82,7 @@ export class RootStore {
     this.home = new HomeStore(axios)
     this.refresh = new RefreshService(this)
     this.autoStart = new AutoStartStore(this)
-    this.vault = new VaultStore(axios, this.balance)
+    this.vault = new VaultStore(axios, this.balance, this.rewards)
     this.version = new VersionStore(this, axios)
     this.engagement = new EngagementStore(this, axios)
     this.zendesk = new Zendesk(axios, this.auth, this.native, this.analytics)

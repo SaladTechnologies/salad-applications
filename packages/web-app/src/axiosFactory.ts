@@ -5,6 +5,7 @@ import { config } from './config'
 import { AuthStore } from './modules/auth'
 
 export const REQUIRES_MINECRAFT_USERNAME = 'Redemption requires a Minecraft Username.'
+export const REDEMPTIONS_INVALID_PRICE = 'The client reward price is out of sync.'
 
 /**
  * The list of safe HTTP request methods. HTTP requests using these methods may be retried.
@@ -101,6 +102,8 @@ const getMessage = (type: string): string => {
       return `Redemptions are currently disabled, please try again later.`
     case 'redemeptions:requires:minecraftUsername':
       return REQUIRES_MINECRAFT_USERNAME
+    case 'redemptions:invalid:price':
+      return REDEMPTIONS_INVALID_PRICE
 
     //Rewards
     case 'rewards:notFound':
@@ -132,6 +135,9 @@ class SaladError extends Error {
   ) {
     super('')
     this.message = getMessage(type)
+    this.status = status
+    this.type = type
+    this.detail = detail
 
     // See https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
     Object.setPrototypeOf(this, SaladError.prototype)

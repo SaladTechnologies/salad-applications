@@ -2,6 +2,7 @@ import { AxiosInstance } from 'axios'
 import { action, flow, observable } from 'mobx'
 import { convertMinutes } from '../../utils'
 import { BalanceStore } from '../balance'
+import { RewardStore } from '../reward'
 import { RewardVaultItem, RewardVaultResource } from './models'
 
 export class VaultStore {
@@ -10,7 +11,11 @@ export class VaultStore {
   @observable
   public redemptions: RewardVaultItem[] = []
 
-  constructor(private readonly axios: AxiosInstance, private readonly balance: BalanceStore) {}
+  constructor(
+    private readonly axios: AxiosInstance,
+    private readonly balance: BalanceStore,
+    private readonly rewards: RewardStore,
+  ) {}
 
   @action.bound
   loadVault = flow(function* (this: VaultStore) {
@@ -18,6 +23,7 @@ export class VaultStore {
       var response = yield this.axios.get<RewardVaultResource[]>('/api/v1/reward-vault')
 
       this.redemptions = response.data.map(this.rewardVaultFromResource)
+      this.checkForCurrentRedemption(this.redemptions)
     } catch {}
   })
 
@@ -60,5 +66,13 @@ export class VaultStore {
   @action
   addRewardToRedemptionsList = (reward: RewardVaultItem) => {
     this.redemptions.push(reward)
+  }
+
+  checkForCurrentRedemption = (redemptions: RewardVaultItem[]) => {
+    const redemptionAcquired = redemptions.find((redemption) => redemption.id === this.rewards.currentRedemptionId)
+
+    if (redemptionAcquired) {
+      this.rewards.clearRedemptionId()
+    }
   }
 }

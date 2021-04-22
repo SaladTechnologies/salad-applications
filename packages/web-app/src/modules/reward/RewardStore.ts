@@ -1,7 +1,7 @@
 import { AxiosInstance, AxiosResponse } from 'axios'
 import { action, computed, flow, observable } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
-import { REQUIRES_MINECRAFT_USERNAME } from '../../axiosFactory'
+import { REDEMPTIONS_INVALID_PRICE, REQUIRES_MINECRAFT_USERNAME } from '../../axiosFactory'
 import { RootStore } from '../../Store'
 import { NotificationMessageCategory } from '../notifications/models'
 import { ProfileStore } from '../profile'
@@ -34,10 +34,17 @@ export class RewardStore {
   @observable
   public isSelecting: boolean = false
 
+  @observable
+  private redemptionId?: string = undefined
+
   @computed get choppingCart(): Reward[] | undefined {
     let selectedReward = this.getReward(this.selectedRewardId)
     if (selectedReward === undefined) return undefined
     return [selectedReward]
+  }
+
+  @computed get currentRedemptionId(): string | undefined {
+    return this.redemptionId
   }
 
   private checkIfFurtherActionIsRequired(reward: Reward) {
@@ -160,6 +167,10 @@ export class RewardStore {
       return
     }
 
+    if (this.redemptionId === undefined) {
+      this.redemptionId = uuidv4()
+    }
+
     if (this.isRedeeming) {
       console.log('Already redeeming reward, skipping')
       return
@@ -205,7 +216,7 @@ export class RewardStore {
 
       const newRedemption = yield this.axios.post(
         'api/v2/redemptions',
-        { id: uuidv4(), price: reward.price, rewardId: reward.id },
+        { id: this.redemptionId, price: reward.price, rewardId: reward.id },
         { timeoutErrorMessage: timeoutMessage },
       )
 
@@ -218,6 +229,7 @@ export class RewardStore {
 
       //Completes the transaction and closes SaladPay
       response?.complete('success')
+      this.clearRedemptionId()
 
       //Show a notification
       this.store.notifications.sendNotification({
@@ -239,8 +251,37 @@ export class RewardStore {
             onClick: () => this.store.routing.push('/settings/summary'),
             type: 'error',
           })
-        } else if ('') {
-          // TODO: Problem Details error handling
+        } else if (error.message === REDEMPTIONS_INVALID_PRICE) {
+          this.clearRedemptionId()
+          this.loadReward(reward.id)
+
+          this.store.notifications.sendNotification({
+            category: NotificationMessageCategory.Error,
+            title: 'The reward price is incorrect.',
+            message: 'We just updated the reward price, try purchasing again.',
+            autoClose: false,
+            onClick: () => this.store.routing.push(`/rewards/${reward.id}`),
+            type: 'error',
+          })
+        } else if (error.status === 404) {
+          this.clearRedemptionId()
+          this.store.notifications.sendNotification({
+            category: NotificationMessageCategory.Error,
+            title: 'Sorry, this reward no longer exists.',
+            message: 'Go to our storefront page to view all our other great rewards!',
+            autoClose: false,
+            onClick: () => this.store.routing.push('/'),
+            type: 'error',
+          })
+        } else if (error.status === 409 || error.response?.status === 409) {
+          this.clearRedemptionId()
+          this.store.notifications.sendNotification({
+            category: NotificationMessageCategory.Redemption,
+            title: `Thank you for ordering ${reward.name}!`,
+            message: 'Congrats on your pick! Your item is on its way. Check your reward vault for more details.',
+            onClick: () => this.store.routing.push('/account/reward-vault'),
+            autoClose: false,
+          })
         } else {
           //Show an error notification
           this.store.notifications.sendNotification({
@@ -259,4 +300,9 @@ export class RewardStore {
       console.error('Cleared isRedeeming flag')
     }
   })
+
+  @action
+  clearRedemptionId() {
+    this.redemptionId = undefined
+  }
 }
