@@ -1,6 +1,7 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
-import { AntiVirusErrorPage } from './components/AntiVirusErrorPage'
+import { AntiVirusFirewallErrorPage } from './components/AntiVirusFirewallErrorPage'
+
 
 const mapStoreToProps = (store: RootStore): any => {
   const onViewArticle = (id: number) => {
@@ -8,6 +9,7 @@ const mapStoreToProps = (store: RootStore): any => {
     store.ui.trackAntiVirusGuideLinkClick(id)
   }
   return {
+    errorType: store.zendesk.errorType,
     articleList: store.zendesk.antiVirusArticleList,
     fallthrough: store.ui.hasViewedAVErrorPage,
     loading: store.zendesk.loadingArticle,
@@ -18,4 +20,4 @@ const mapStoreToProps = (store: RootStore): any => {
   }
 }
 
-export const GenericAntiVirusErrorContainer = connect(mapStoreToProps, AntiVirusErrorPage)
+export const GenericAntiVirusErrorContainer = connect(mapStoreToProps, AntiVirusFirewallErrorPage)

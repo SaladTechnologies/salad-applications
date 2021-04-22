@@ -5,6 +5,7 @@ import { AuthStore } from '../auth'
 import { NativeStore } from '../machine'
 import { AntiVirusSoftware, ZendeskArticle, ZendeskArticleList, ZendeskArticleResource } from './models'
 import { getAntiVirusSoftware, getZendeskAVData } from './utils'
+import { ErrorPageType } from '../../UIStore'
 
 export class Zendesk {
   private static injected: boolean = false
@@ -25,6 +26,9 @@ export class Zendesk {
 
   @observable
   public antiVirusArticleList?: ZendeskArticle[]
+
+  @observable
+  public errorType: ErrorPageType = ErrorPageType.Unknown
 
   constructor(
     private readonly axios: AxiosInstance,
@@ -220,9 +224,15 @@ export class Zendesk {
     return this.detectedAntiVirus
   }
 
+  @action
+  setErrorType = (errorType: ErrorPageType) => {
+    this.errorType = errorType
+  }
+
   @action.bound
   loadArticle = flow(
     function* (this: Zendesk, articleID: number) {
+      this.setErrorType(ErrorPageType.AntiVirus)
       const avSoftwareName = getZendeskAVData(articleID).name
       if (avSoftwareName === this.selectedAntiVirusGuide && this.helpCenterArticle !== undefined) {
         return
@@ -246,6 +256,7 @@ export class Zendesk {
   @action.bound
   loadAntiVirusArticleList = flow(
     function* (this: Zendesk) {
+      this.setErrorType(ErrorPageType.AntiVirus)
       if (this.antiVirusArticleList !== undefined) {
         return
       }
@@ -260,6 +271,28 @@ export class Zendesk {
         )
         const data: ZendeskArticleList = yield res.json()
         this.antiVirusArticleList = data.articles
+      } catch (err) {
+        throw err
+      }
+      this.loadingArticle = false
+    }.bind(this),
+  )
+
+
+  @action.bound
+  loadFirewallArticle = flow(
+    function* (this: Zendesk) {
+      this.setErrorType(ErrorPageType.FireWall)
+      this.loadingArticle = true
+      try {
+        let res: Response = yield fetch(
+          'https://salad.zendesk.com/api/v2/help_center/en-us/articles/360058674291',
+          {
+            credentials: 'omit',
+          },
+        )
+        const data: ZendeskArticleResource = yield res.json()
+        this.helpCenterArticle = data.article.body
       } catch (err) {
         throw err
       }

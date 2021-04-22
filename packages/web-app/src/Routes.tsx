@@ -7,6 +7,7 @@ import { EarnMenuContainer } from './modules/earn-views'
 import {
   CudaErrorContainer,
   FallbackErrorContainer,
+  FirewallErrorContainer,
   GenericAntiVirusErrorContainer,
   NetworkErrorContainer,
   NotCompatibleErrorContainer,
@@ -48,6 +49,7 @@ class _Routes extends Component<RouteComponentProps> {
           <Route exact path="/errors/unknown" component={UnknownErrorContainer} />
           <Route exact path="/errors/anti-virus/:id" component={SpecificAntiVirusErrorContainer} />
           <Route exact path="/errors/anti-virus" component={GenericAntiVirusErrorContainer} />
+          <Route exact path="/errors/firewall" component={FirewallErrorContainer} />
           <Route exact path="/warnings/dont-lose-progress" component={DontLoseProgressPageContainer} />
           <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
           <Redirect exact from="/whats-new" to="/" />

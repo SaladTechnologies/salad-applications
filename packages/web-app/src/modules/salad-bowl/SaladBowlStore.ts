@@ -274,6 +274,9 @@ export class SaladBowlStore implements IPersistentStore {
       case ErrorCategory.AntiVirus:
         this.store.ui.showErrorPage(ErrorPageType.AntiVirus, message)
         break
+      case ErrorCategory.Firewall:
+        this.store.ui.showErrorPage(ErrorPageType.FireWall, message)
+        break
       // case ErrorCategory.Driver:
       // this.store.ui.showErrorPage(ErrorPageType.Cuda)
       //   break
