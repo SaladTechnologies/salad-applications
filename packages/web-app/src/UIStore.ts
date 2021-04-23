@@ -7,6 +7,7 @@ import { RootStore } from './Store'
 
 export enum ErrorPageType {
   AntiVirus = 'antivirus',
+  Firewall = 'firewall',
   Cuda = 'cuda',
   Fallback = 'fallback',
   Network = 'network',
@@ -38,6 +39,9 @@ export class UIStore {
 
   @observable
   public hasViewedAVErrorPage: boolean = false
+
+  @observable
+  public hasViewedFirewallErrorPage: boolean = false
 
   @action
   showModal = (url: string) => {
@@ -73,6 +77,15 @@ export class UIStore {
           }
         }
         break
+      case ErrorPageType.Firewall:
+        const hasViewedFirewallErrorPage = this.hasViewedFirewallErrorPage
+        if (!hasViewedFirewallErrorPage && errorMessage) {
+          this.store.analytics.trackMiningError(errorMessage.errorCategory, errorMessage.errorCode)
+          this.showModal('/errors/firewall')
+          this.updateViewedFirewallErrorPage(true)
+          this.store.analytics.trackErrorPageViewed('Firewall Error')
+        }
+        break
       case ErrorPageType.Cuda:
         this.showModal('/errors/cuda')
         break
@@ -100,6 +113,11 @@ export class UIStore {
   @action
   updateViewedAVErrorPage = (value: boolean) => {
     this.hasViewedAVErrorPage = value
+  }
+
+  @action
+  updateViewedFirewallErrorPage = (value: boolean) => {
+    this.hasViewedFirewallErrorPage = value
   }
 
   @action

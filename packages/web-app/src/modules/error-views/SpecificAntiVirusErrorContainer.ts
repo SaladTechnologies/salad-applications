@@ -2,10 +2,11 @@ import { withRouter } from 'react-router'
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
 import { getSanitizedHTML } from '../../utils'
-import { AntiVirusErrorPage } from './components/AntiVirusErrorPage'
+import { AntiVirusFirewallErrorPage } from './components/AntiVirusFirewallErrorPage'
 
 const mapStoreToProps = (store: RootStore, ownProps: any): any => ({
-  antivirus: store.zendesk.selectedAntiVirusGuide,
+  errorType: store.zendesk.errorType,
+  antivirusName: store.zendesk.selectedAntiVirusGuide,
   article: store.zendesk.helpCenterArticle ? getSanitizedHTML(store.zendesk.helpCenterArticle) : undefined,
   fallthrough: store.ui.hasViewedAVErrorPage,
   loading: store.zendesk.loadingArticle,
@@ -14,4 +15,4 @@ const mapStoreToProps = (store: RootStore, ownProps: any): any => ({
   onViewAVList: () => store.routing.push('/errors/anti-virus'),
 })
 
-export const SpecificAntiVirusErrorContainer = withRouter(connect(mapStoreToProps, AntiVirusErrorPage))
+export const SpecificAntiVirusErrorContainer = withRouter(connect(mapStoreToProps, AntiVirusFirewallErrorPage))
