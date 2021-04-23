@@ -72,7 +72,7 @@ export class VaultStore {
     const redemptionAcquired = redemptions.find((redemption) => redemption.id === this.rewards.currentRedemptionId)
 
     if (redemptionAcquired) {
-      this.rewards.clearRedemptionId()
+      this.rewards.clearRedemptionInfo()
     }
   }
 }

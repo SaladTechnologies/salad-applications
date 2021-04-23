@@ -1,9 +1,8 @@
 import { AxiosInstance, AxiosResponse } from 'axios'
 import { action, computed, flow, observable } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
-import { REDEMPTIONS_INVALID_PRICE, REQUIRES_MINECRAFT_USERNAME } from '../../axiosFactory'
 import { RootStore } from '../../Store'
-import { NotificationMessageCategory } from '../notifications/models'
+import { NotificationMessage, NotificationMessageCategory } from '../notifications/models'
 import { ProfileStore } from '../profile'
 import { AbortError, SaladPaymentResponse } from '../salad-pay'
 import { SaladPay } from '../salad-pay/SaladPay'
@@ -34,8 +33,9 @@ export class RewardStore {
   @observable
   public isSelecting: boolean = false
 
-  @observable
-  private redemptionId?: string = undefined
+  private lastRedemptionId?: string = undefined
+
+  private lastRewardId?: string = undefined
 
   @computed get choppingCart(): Reward[] | undefined {
     let selectedReward = this.getReward(this.selectedRewardId)
@@ -43,8 +43,8 @@ export class RewardStore {
     return [selectedReward]
   }
 
-  @computed get currentRedemptionId(): string | undefined {
-    return this.redemptionId
+  get currentRedemptionId(): string | undefined {
+    return this.lastRedemptionId
   }
 
   private checkIfFurtherActionIsRequired(reward: Reward) {
@@ -167,8 +167,9 @@ export class RewardStore {
       return
     }
 
-    if (this.redemptionId === undefined) {
-      this.redemptionId = uuidv4()
+    if (this.lastRedemptionId === undefined || this.lastRewardId !== reward.id) {
+      this.lastRedemptionId = uuidv4()
+      this.lastRewardId = reward.id
     }
 
     if (this.isRedeeming) {
@@ -216,7 +217,7 @@ export class RewardStore {
 
       const newRedemption = yield this.axios.post(
         'api/v2/redemptions',
-        { id: this.redemptionId, price: reward.price, rewardId: reward.id },
+        { id: this.lastRedemptionId, price: reward.price, rewardId: reward.id },
         { timeoutErrorMessage: timeoutMessage },
       )
 
@@ -229,7 +230,7 @@ export class RewardStore {
 
       //Completes the transaction and closes SaladPay
       response?.complete('success')
-      this.clearRedemptionId()
+      this.clearRedemptionInfo()
 
       //Show a notification
       this.store.notifications.sendNotification({
@@ -242,56 +243,67 @@ export class RewardStore {
     } catch (error) {
       response?.complete('fail')
       if (!(error instanceof AbortError)) {
-        if (error.message === REQUIRES_MINECRAFT_USERNAME) {
-          this.store.notifications.sendNotification({
-            category: NotificationMessageCategory.FurtherActionRequired,
-            title: 'You need a Minecraft Username to redeem this reward.',
-            message: 'Go to your account page to add your Minecraft Username.',
-            autoClose: false,
-            onClick: () => this.store.routing.push('/settings/summary'),
-            type: 'error',
-          })
-        } else if (error.message === REDEMPTIONS_INVALID_PRICE) {
-          this.clearRedemptionId()
-          this.loadReward(reward.id)
+        const response: AxiosResponse | undefined = error.response
+        let notification: NotificationMessage | undefined
 
-          this.store.notifications.sendNotification({
-            category: NotificationMessageCategory.Error,
-            title: 'The reward price is incorrect.',
-            message: 'We just updated the reward price, try purchasing again.',
-            autoClose: false,
-            onClick: () => this.store.routing.push(`/rewards/${reward.id}`),
-            type: 'error',
-          })
-        } else if (error.status === 404) {
-          this.clearRedemptionId()
-          this.store.notifications.sendNotification({
-            category: NotificationMessageCategory.Error,
-            title: 'Sorry, this reward no longer exists.',
-            message: 'Go to our storefront page to view all our other great rewards!',
-            autoClose: false,
-            onClick: () => this.store.routing.push('/'),
-            type: 'error',
-          })
-        } else if (error.status === 409 || error.response?.status === 409) {
-          this.clearRedemptionId()
-          this.store.notifications.sendNotification({
-            category: NotificationMessageCategory.Redemption,
-            title: `Thank you for ordering ${reward.name}!`,
-            message: 'Congrats on your pick! Your item is on its way. Check your reward vault for more details.',
-            onClick: () => this.store.routing.push('/account/reward-vault'),
-            autoClose: false,
-          })
-        } else {
-          //Show an error notification
-          this.store.notifications.sendNotification({
+        switch (response?.status) {
+          case 404:
+            this.clearRedemptionInfo()
+            notification = {
+              category: NotificationMessageCategory.Error,
+              title: 'Sorry, Chef! This reward is unavailable.',
+              message: "Looks like we're fresh out of that. Head to the Storefront to browse more great rewards.",
+              autoClose: false,
+              onClick: () => this.store.routing.push('/'),
+              type: 'error',
+            }
+            break
+          case 409:
+            this.clearRedemptionInfo()
+            notification = {
+              category: NotificationMessageCategory.Redemption,
+              title: `Thank you for ordering ${reward.name}!`,
+              message: 'Congrats on your pick! Your item is on its way. Check your reward vault for more details.',
+              onClick: () => this.store.routing.push('/account/reward-vault'),
+              autoClose: false,
+            }
+            break
+          case 400:
+            this.clearRedemptionInfo()
+            if (response.data?.type === 'redemptions:invalid:price') {
+              this.loadReward(reward.id)
+              notification = {
+                category: NotificationMessageCategory.Error,
+                title: 'Uh-oh! The reward price has changed.',
+                message: 'Our vendors updated the price of this item. Please try again or return to the Storefront.',
+                autoClose: false,
+                onClick: () => this.store.routing.push(`/rewards/${reward.id}`),
+                type: 'error',
+              }
+            } else if (response.data?.type === 'redemptions:requires:minecraftUsername') {
+              notification = {
+                category: NotificationMessageCategory.FurtherActionRequired,
+                title: 'You need a Minecraft Username to redeem this reward.',
+                message: 'Go to your account page to add your Minecraft Username.',
+                autoClose: false,
+                onClick: () => this.store.routing.push('/settings/summary'),
+                type: 'error',
+              }
+            }
+            break
+        }
+
+        if (notification == null) {
+          notification = {
             category: NotificationMessageCategory.Error,
             title: `Uh Oh. Something went wrong.`,
             message: error.message || 'Please try again later',
             autoClose: false,
             type: 'error',
-          })
+          }
         }
+
+        this.store.notifications.sendNotification(notification)
       }
     } finally {
       yield this.store.balance.refreshBalance()
@@ -302,7 +314,8 @@ export class RewardStore {
   })
 
   @action
-  clearRedemptionId() {
-    this.redemptionId = undefined
+  clearRedemptionInfo() {
+    this.lastRedemptionId = undefined
+    this.lastRewardId = undefined
   }
 }
