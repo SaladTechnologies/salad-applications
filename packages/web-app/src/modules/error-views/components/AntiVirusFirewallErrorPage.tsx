@@ -313,7 +313,7 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
             )}
           </ModalPage>
         )
-      case ErrorPageType.FireWall:
+      case ErrorPageType.Firewall:
         return (
           <ModalPage>
             <div className={classes.closeButton} onClick={onCloseClicked}>

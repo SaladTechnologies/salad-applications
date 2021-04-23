@@ -7,7 +7,7 @@ import { RootStore } from './Store'
 
 export enum ErrorPageType {
   AntiVirus = 'antivirus',
-  FireWall = 'firewall',
+  Firewall = 'firewall',
   Cuda = 'cuda',
   Fallback = 'fallback',
   Network = 'network',
@@ -77,7 +77,7 @@ export class UIStore {
           }
         }
         break
-      case ErrorPageType.FireWall:
+      case ErrorPageType.Firewall:
         const hasViewedFirewallErrorPage = this.hasViewedFirewallErrorPage
         if (!hasViewedFirewallErrorPage && errorMessage) {
           this.store.analytics.trackMiningError(errorMessage.errorCategory, errorMessage.errorCode)

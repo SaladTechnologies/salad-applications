@@ -58,7 +58,7 @@ storiesOf('Modules/Error Pages/Pages', module)
   .add('Firewall Error - Initial', () => {
     return (
       <AntiVirusFirewallErrorPage
-        errorType={ErrorPageType.FireWall}
+        errorType={ErrorPageType.Firewall}
         article={firewallArticle}
         onCloseClicked={action('On Close Clicked')}
       />
@@ -67,7 +67,7 @@ storiesOf('Modules/Error Pages/Pages', module)
   .add('Firewall Error - Fallthrough', () => {
     return (
       <AntiVirusFirewallErrorPage
-        errorType={ErrorPageType.FireWall}
+        errorType={ErrorPageType.Firewall}
         fallthrough={true}
         article={firewallArticle}
         onCloseClicked={action('On Close Clicked')}

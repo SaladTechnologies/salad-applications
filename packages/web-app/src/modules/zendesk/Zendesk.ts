@@ -282,7 +282,7 @@ export class Zendesk {
   @action.bound
   loadFirewallArticle = flow(
     function* (this: Zendesk) {
-      this.setErrorType(ErrorPageType.FireWall)
+      this.setErrorType(ErrorPageType.Firewall)
       this.loadingArticle = true
       try {
         let res: Response = yield fetch(
