@@ -6,4 +6,4 @@ We only support the latest version of the Salad desktop and web applications. Th
 
 ## Reporting a Vulnerability
 
-Please report security vulnerabilities to dev@salad.io.
+Please report security vulnerabilities to dev@salad.com.

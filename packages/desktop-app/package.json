@@ -2,10 +2,10 @@
   "name": "Salad",
   "version": "0.5.2",
   "description": "Salad Technologies Desktop Application",
-  "homepage": "https://www.salad.io/",
+  "homepage": "https://salad.com",
   "bugs": {
-    "url": "https://feedback.salad.io/bugs",
-    "email": "support@salad.io"
+    "url": "https://support.salad.com",
+    "email": "support@salad.com"
   },
   "repository": {
     "type": "git",
@@ -15,8 +15,8 @@
   "license": "MIT",
   "author": {
     "name": "Salad Technologies",
-    "email": "support@salad.io",
-    "url": "https://www.salad.io"
+    "email": "support@salad.com",
+    "url": "https://salad.com"
   },
   "main": "dist/main/main.js",
   "files": [
