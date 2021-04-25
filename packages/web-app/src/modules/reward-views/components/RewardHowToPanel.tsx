@@ -53,7 +53,7 @@ class _RewardHowToPanel extends Component<Props> {
         <HeroPanel color="cyan" className={classes.container}>
           <div className={classes.title}>How Salad Works</div>
           <Img className={classes.img} src={howItWorks} />
-          <SmartLink to="https://www.salad.io/">Learn More</SmartLink>
+          <SmartLink to="https://salad.com">Learn More</SmartLink>
         </HeroPanel>
       )
 

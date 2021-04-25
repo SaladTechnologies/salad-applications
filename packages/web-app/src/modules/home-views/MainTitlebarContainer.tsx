@@ -5,7 +5,7 @@ import { MenuItem, Titlebar } from './components/Titlebar'
 const menuItems: MenuItem[] = [
   new MenuItem('Store', '/'),
   new MenuItem('Earn', '/earn/summary'),
-  new MenuItem('About', 'https://www.salad.io'),
+  new MenuItem('About', 'https://salad.com'),
 ]
 
 const mapStoreToProps = (store: RootStore): any => {

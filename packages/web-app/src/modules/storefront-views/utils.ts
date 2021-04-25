@@ -100,7 +100,7 @@ export const strapiJSON = {
           subheading: 'Screengrab for cash!',
           body: 'Take the best screengrab while playing Star Wars: Jedi Fallen Order and receive $100 in Salad Balance',
           button_label: 'Learn More',
-          button_link: 'https://www.salad.io',
+          button_link: 'https://salad.com',
           reward: null,
           image: {
             id: 3,

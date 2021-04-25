@@ -108,7 +108,7 @@ class _MachineInfoPanel extends Component<Props> {
             {(!gpus || !gpus.some((x) => x.compatible)) && (
               <div className={classes.warningText}>
                 No compatible GPUs found. Learn more{' '}
-                <SmartLink to="https://support.salad.io/hc/en-us/articles/360048320131-Is-My-Machine-Compatible-With-Salad-">
+                <SmartLink to="https://support.salad.com/hc/en-us/articles/360048320131-Is-My-Machine-Compatible-With-Salad-">
                   here
                 </SmartLink>
               </div>
@@ -136,7 +136,7 @@ class _MachineInfoPanel extends Component<Props> {
             {!cpuCompatible && (
               <div className={classes.warningText}>
                 No compatible CPU found. Learn more{' '}
-                <SmartLink to="https://support.salad.io/hc/en-us/articles/360048320131-Is-My-Machine-Compatible-With-Salad-">
+                <SmartLink to="https://support.salad.com/hc/en-us/articles/360048320131-Is-My-Machine-Compatible-With-Salad-">
                   here
                 </SmartLink>
               </div>

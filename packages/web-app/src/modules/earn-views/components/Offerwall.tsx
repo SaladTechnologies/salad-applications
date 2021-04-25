@@ -78,14 +78,14 @@ class _Offerwall extends Component<Props> {
               <P>
                 <SmartLink
                   to={
-                    'https://salad.zendesk.com/hc/en-us/articles/360041472991-The-Salad-Guide-to-AdGem-and-Offerwalls'
+                    'https://support.salad.com/hc/en-us/articles/360041472991-The-Salad-Guide-to-AdGem-and-Offerwalls'
                   }
                 >
                   Learn More About Offerwalls
                 </SmartLink>
               </P>
               <P>
-                <SmartLink to="https://support.salad.io/hc/en-us/articles/360042454192-I-Need-Help-with-Offerwalls">
+                <SmartLink to="https://support.salad.com/hc/en-us/articles/360042454192-I-Need-Help-with-Offerwalls">
                   Having Issues With an Offerwall?
                 </SmartLink>
               </P>

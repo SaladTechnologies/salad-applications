@@ -138,7 +138,7 @@ export class VersionStore {
   })
 
   downloadLatestDesktop = () => {
-    window.open('https://www.salad.io/download', '_blank')
+    window.open('https://getsalad.io', '_blank')
   }
 
   static isEmpty = (data: {}): boolean => Object.keys(data).length === 0

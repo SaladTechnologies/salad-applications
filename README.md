@@ -1,18 +1,18 @@
 # Salad
 
 <p align="center">
-    <a href="https://app.netlify.com/sites/salad-web-app/deploys"><img src="https://api.netlify.com/api/v1/badges/fce3950b-4efe-43db-9242-37d3204b7ce1/deploy-status" /></a> <a href="https://discord.gg/xcvmgQk"><img src="https://img.shields.io/badge/discord-join-7289DA.svg?logo=discord&longCache=true&style=flat" /></a>
+    <a href="https://app.netlify.com/sites/salad-web-app/deploys"><img src="https://api.netlify.com/api/v1/badges/fce3950b-4efe-43db-9242-37d3204b7ce1/deploy-status" /></a> <a href="https://discord.gg/salad"><img src="https://img.shields.io/badge/discord-join-7289DA.svg?logo=discord&longCache=true&style=flat" /></a>
 </p>
 
 ## Intro
 
 <center>
-  <a href="https://www.salad.io/"><img src="./docs/banner.png" width="100%" /></a>
+  <a href="https://salad.com"><img src="./docs/banner.png" width="100%" /></a>
 </center>
 
 Salad allows gamers to mine crypto in their downtime. We turn your GPU power into credits you can spend on items like subscriptions, games, gift cards, and more from our curated storefront.
 
-Our applications [mine cryptocurrency](https://www.salad.io/blog/a-gamers-guide-to-blockchain-and-crypto/) and the mining software is downloaded from our ["plugin" repository](https://github.com/SaladTechnologies/plugin-downloads/).
+Our applications [mine cryptocurrency](https://salad.com/blog/gamers-guide-blockchain-crypto) and the mining software is downloaded from our ["plugin" repository](https://github.com/SaladTechnologies/plugin-downloads/).
 
 **Table of contents**
 
@@ -27,8 +27,8 @@ Download and install the [latest release](https://github.com/SaladTechnologies/s
 
 ## Community
 
-- Chatting on [Discord](https://discord.gg/TsZrHWV)
-- Blogging at [Medium](https://medium.com/@saladchefs)
+- Chatting on [Discord](https://discord.gg/salad)
+- Blogging at [salad.com/blog](https://salad.com/blog)
 - Tweeting via [@saladtech](https://twitter.com/saladtech) & [@Salad_Chefs](https://twitter.com/Salad_Chefs)
 - Posting on [@salad.tech](https://www.instagram.com/salad.tech) & [@saladchefs](https://www.instagram.com/saladchefs/)
 
