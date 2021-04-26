@@ -9,7 +9,7 @@ export default {
 const menuItems: MenuItem[] = [
   new MenuItem('Store', '/'),
   new MenuItem('Earn', '/earn/summary'),
-  new MenuItem('Help', 'https://www.salad.io/support'),
+  new MenuItem('Help', 'https://support.salad.com'),
 ]
 
 export const IsDesktop = () => (

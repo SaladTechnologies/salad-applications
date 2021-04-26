@@ -243,7 +243,7 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
                                     Your anti-virus software is still blocking Salad, and none of our miners will work
                                     until you whitelist Salad with {antivirusName}. Can't whitelist? Earn anyway using{' '}
                                     <SmartLink to="/earn/offerwall">Offerwalls</SmartLink>, or reach out to the{' '}
-                                    <SmartLink to="https://forum.salad.io/">support forum</SmartLink> for help!
+                                    <SmartLink to="https://forums.salad.com">support forum</SmartLink> for help!
                                   </p>
                                   <p className={classes.selectFromList}>
                                     {' '}
@@ -259,7 +259,7 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
                                   Your anti-virus has blocked all of our miners. so you'll need to whitelist Salad with
                                   your anti-virus in order to get chopping. Can't whitelist? Earn anyway using{' '}
                                   <SmartLink to="/earn/offerwall">Offerwalls</SmartLink>, or reach out to the{' '}
-                                  <SmartLink to="https://forum.salad.io/">support forum</SmartLink> for help!
+                                  <SmartLink to="https://forums.salad.com">support forum</SmartLink> for help!
                                 </p>
                               )}
                             </>
@@ -346,7 +346,7 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
                               Your Firewall is still blocking Salad, and none of our miners will work until this issue
                               is resolved. Can't add an exception? Earn anyway using{' '}
                               <SmartLink to="/earn/offerwall">Offerwalls</SmartLink>, or reach out to the{' '}
-                              <SmartLink to="https://forum.salad.io/">Support Forum</SmartLink>{' '}
+                              <SmartLink to="https://forums.salad.com">Support Forum</SmartLink>{' '}
                               for help!
                             </p>
                           ) : (

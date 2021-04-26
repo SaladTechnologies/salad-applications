@@ -173,11 +173,11 @@ const createMainMenu = () => {
         submenu: [
           {
             label: 'Learn More',
-            click: () => shell.openExternal('https://www.salad.io'),
+            click: () => shell.openExternal('https://salad.com'),
           },
           {
             label: 'Support',
-            click: () => shell.openExternal('https://support.salad.io'),
+            click: () => shell.openExternal('https://support.salad.com'),
           },
         ],
       },

@@ -76,14 +76,14 @@ class _MinerTypePanel extends Component<Props> {
             <Li>Proper cooling and maintenance is vital for performance and safety</Li>
             {!gpuOnly && (
               <Li>
-                <SmartLink to="https://support.salad.io/hc/en-us/articles/360050102351-Does-CPU-Mining-Harm-My-Computer-">
+                <SmartLink to="https://support.salad.com/hc/en-us/articles/360050102351-Does-CPU-Mining-Harm-My-Computer-">
                   Does CPU Mining Harm My Computer?
                 </SmartLink>
               </Li>
             )}
             {gpuOnly && (
               <Li>
-                <SmartLink to="https://support.salad.io/hc/en-us/articles/360028479072-Is-Salad-healthy-for-my-PC-Yes-">
+                <SmartLink to="https://support.salad.com/hc/en-us/articles/360028479072-Is-Salad-healthy-for-my-PC-Yes-">
                   Does GPU Mining Harm My Computer?
                 </SmartLink>
               </Li>

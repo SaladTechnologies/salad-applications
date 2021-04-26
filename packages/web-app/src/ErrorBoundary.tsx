@@ -101,11 +101,11 @@ class ErrorPage extends PureComponent<ErrorProps, ErrorState> {
             <p>
               Salad has encountered an unknown error and cannot continue. Please restart the app to try again. If you
               encounter further issues, please send us a crash report by clicking below and{' '}
-              <SmartLink to="https://www.salad.io/support/">submit a support ticket</SmartLink>.
+              <SmartLink to="https://support.salad.com">submit a support ticket</SmartLink>.
             </p>
             <p>
               If you'd like live help from both fellow chefs and Salad support representatives, feel free to drop by our{' '}
-              <SmartLink to="https://discord.gg/29Sgfq3">Discord</SmartLink> and post your error in the support channel.
+              <SmartLink to="https://discord.gg/salad">Discord</SmartLink> and post your error in the support channel.
             </p>
             {!this.state.canShowReportDialog && this.state.reportDialogShown ? (
               <p>We appreciate the help, thanks for keeping Salad fresh!</p>

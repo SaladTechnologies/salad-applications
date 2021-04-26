@@ -49,7 +49,7 @@ export class _NotCompatibleErrorPage extends Component<Props> {
         <div className={classes.padding}>
           Salad was unable to detect a compatible {currentMinerType}, but don't worry - if you know your machine meets{' '}
           <SmartLink
-            to="https://support.salad.io/hc/en-us/articles/360048320131-Is-My-Machine-Compatible-With-Salad"
+            to="https://support.salad.com/hc/en-us/articles/360048320131-Is-My-Machine-Compatible-With-Salad"
             trackingInfo={{ label: 'These Specs' }}
           >
             {specsLabel}

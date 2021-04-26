@@ -2,10 +2,10 @@
   "name": "@saladtech/web-app",
   "version": "0.1.0",
   "description": "Salad Technologies Web Application",
-  "homepage": "https://www.salad.io/",
+  "homepage": "https://salad.com",
   "bugs": {
-    "url": "https://feedback.salad.io/bugs",
-    "email": "support@salad.io"
+    "url": "https://support.salad.com",
+    "email": "support@salad.com"
   },
   "repository": {
     "type": "git",
@@ -15,8 +15,8 @@
   "license": "MIT",
   "author": {
     "name": "Salad Chefs",
-    "email": "dev@salad.io",
-    "url": "https://www.salad.io"
+    "email": "dev@salad.com",
+    "url": "https://salad.com"
   },
   "main": "lib/web-app.js",
   "directories": {
