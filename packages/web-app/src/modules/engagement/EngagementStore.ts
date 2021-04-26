@@ -74,17 +74,6 @@ export class EngagementStore {
         })
       }
 
-      //Incompatible machine and offerwalls are disabled
-      else if (!this.store.saladBowl.canRun && this.store.balance.lifetimeBalance === 0) {
-        //Link to offerwall page
-        this.store.notifications.sendNotification({
-          category: NotificationMessageCategory.Incentive,
-          title: `Can't Chop? Try Offerwalls!`,
-          message: `Not every machine can chop Salad - but we've got good news for you. Click here to check out our offerwalls, where you can perform easy tasks and start earning now!`,
-          autoClose: false,
-          onClick: () => this.store.routing.push('/earn/offerwall'),
-        })
-      }
       //Remind users to mine
       else if (this.store.saladBowl.canRun) {
         this.store.notifications.sendNotification({

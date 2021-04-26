@@ -1,11 +1,10 @@
 import { Component } from 'react'
 import { Img } from 'react-image'
 import withStyles, { WithStyles } from 'react-jss'
-import { Divider, Li, P, Scrollbar, SectionHeader, SmartLink } from '../../../components'
+import { Divider, P, Scrollbar, SectionHeader, SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import earningOverview from '../assets/earning-overview.svg'
 import mining from '../assets/mining.svg'
-import offerwall from '../assets/offerwall.svg'
 import referral from '../assets/referral.svg'
 
 const styles = (theme: SaladTheme) => ({
@@ -37,9 +36,9 @@ const styles = (theme: SaladTheme) => ({
     alignItems: 'center',
     flex: 1,
   },
-  responsiveImage:{
+  responsiveImage: {
     height: '100%',
-  }
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {}
@@ -63,7 +62,7 @@ class _EarningInformationPage extends Component<Props> {
               </div>
               <div className={classes.column}></div>
             </div>
-            <Img  className={classes.responsiveImage} src={earningOverview} />
+            <Img className={classes.responsiveImage} src={earningOverview} />
             <Divider />
 
             <SectionHeader>Mining</SectionHeader>
@@ -87,28 +86,8 @@ class _EarningInformationPage extends Component<Props> {
 
             <div className={classes.splitContainer}>
               <div className={classes.column}>
-                <Img className={classes.responsiveImage} src={offerwall} />
+                <Img className={classes.responsiveImage} src={referral} />
               </div>
-              <div className={classes.column}>
-                <SectionHeader>Offerwalls</SectionHeader>
-                <P>Earn Salad Balance by completing offers such as:</P>
-                <Li>Downloading and playing mobile games</Li>
-                <Li>Filling out surveys</Li>
-                <Li>Watching advertisements</Li>
-                <P>
-                  Offers payout anywhere from $0.01 - $20.00+, depending on the task. Whether you want to top off your
-                  balance, boost your typical earnings, or can't mine with Salad, Offerwalls allow you to make more
-                  money.
-                </P>
-                <P>
-                  <SmartLink to="/earn/offerwall">Learn More</SmartLink>
-                </P>
-              </div>
-            </div>
-            <Divider />
-
-            <SectionHeader>Referrals</SectionHeader>
-            <div className={classes.splitContainer}>
               <div className={classes.column}>
                 <P>
                   Referrals allow you to easily invite friends, family, and acquaintances to join you in Salad. You
@@ -119,9 +98,6 @@ class _EarningInformationPage extends Component<Props> {
                 <P>
                   <SmartLink to="/earn/referrals">Learn More</SmartLink>
                 </P>
-              </div>
-              <div className={classes.column}>
-                <Img className={classes.responsiveImage} src={referral} />
               </div>
             </div>
             <Divider />

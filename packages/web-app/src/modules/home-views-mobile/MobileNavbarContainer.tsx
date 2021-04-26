@@ -2,12 +2,10 @@ import { connect } from '../../connect'
 import { RootStore } from '../../Store'
 import accountIcon from './assets/account-icon.svg'
 import earnIcon from './assets/earn-icon.svg'
-import offerwallIcon from './assets/offerwall-icon.svg'
 import supportIcon from './assets/support-icon.svg'
 import { MobileNavbar, MobileNavItem } from './components/MobileNavbar'
 
 const menuItems: MobileNavItem[] = [
-  new MobileNavItem('Offerwalls', offerwallIcon, '/earn/offerwall'),
   new MobileNavItem('Earnings', earnIcon, '/earn/summary'),
   new MobileNavItem('Account', accountIcon, '/settings/summary'),
   new MobileNavItem('Support', supportIcon, undefined, () => {
