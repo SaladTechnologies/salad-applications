@@ -132,7 +132,7 @@ export class ReferralStore {
 
     //TODO: Remove this ASAP
     if (code.toUpperCase() === 'CUSTOM') {
-      code = 'CUSTOM2'
+      code = 'CUSTOM3'
     }
 
     //TODO: Remove this ASAP

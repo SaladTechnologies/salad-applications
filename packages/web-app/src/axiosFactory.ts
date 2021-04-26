@@ -1,10 +1,8 @@
-import axios, { AxiosError, AxiosInstance } from 'axios'
+import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios'
 import axiosRetry, { exponentialDelay } from 'axios-retry'
 import isRetryAllowed from 'is-retry-allowed'
 import { config } from './config'
 import { AuthStore } from './modules/auth'
-
-export const REQUIRES_MINECRAFT_USERNAME = 'Redemption requires a Minecraft Username.'
 
 /**
  * The list of safe HTTP request methods. HTTP requests using these methods may be retried.
@@ -99,8 +97,6 @@ const getMessage = (type: string): string => {
       return `Must construct additional pylons ...just kidding! You balance isn't enough to redeem this reward, try again after you’ve earned some more`
     case 'redemptions:disabled':
       return `Redemptions are currently disabled, please try again later.`
-    case 'redemeptions:requires:minecraftUsername':
-      return REQUIRES_MINECRAFT_USERNAME
 
     //Rewards
     case 'rewards:notFound':
@@ -117,7 +113,7 @@ const getMessage = (type: string): string => {
   }
 }
 
-class SaladError extends Error {
+export class SaladError extends Error {
   // You have to extend Error, set the __proto__ to Error, and use
   // Object.setPrototypeOf in order to have a proper custom error type in JS.
   // Because JS/TS are dumb sometimes, and all three are needed to make this
@@ -129,9 +125,11 @@ class SaladError extends Error {
     public readonly type: string,
     public readonly title?: string,
     public readonly detail?: string,
+    public readonly response?: AxiosResponse,
   ) {
     super('')
     this.message = getMessage(type)
+    this.status = status
 
     // See https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
     Object.setPrototypeOf(this, SaladError.prototype)
@@ -145,7 +143,7 @@ const onError = (error: any): Error | undefined => {
 
   if (!data.type || !data.status) return error
 
-  let e = new SaladError(data.status, data.type, data.title, data.detail)
+  let e = new SaladError(data.status, data.type, data.title, data.detail, error.response)
 
   return e
 }
