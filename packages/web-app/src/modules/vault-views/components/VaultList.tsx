@@ -299,8 +299,8 @@ class _VaultList extends Component<Props, State> {
                   const isCancelled = status === RewardVaultStatus.FAILED
 
                   return (
-                    <div className={classes.gridContainer}>
-                      <div key={id} className={classnames(classes.grid)}>
+                    <div key={id} className={classes.gridContainer}>
+                      <div className={classnames(classes.grid)}>
                         <div className={incompleteItem ? classes.incompleteItem : ''}>
                           <div className={classes.gridColumnContent}>
                             <div className={classes.labelNameContainer}>
