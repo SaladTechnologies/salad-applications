@@ -7,7 +7,7 @@ import Skeleton from 'react-loading-skeleton'
 import { Button, InfoButton, ModalPage, SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { ErrorPageType } from '../../../UIStore'
-import { AntiVirusScrollbar } from './AntiVirusScrollbar'
+import { AntiVirusFirewallScrollbar } from './AntiVirusFirewallScrollbar'
 
 const styles = (theme: SaladTheme) => ({
   bottomMessage: {
@@ -207,7 +207,7 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
             <div className={classes.closeButton} onClick={onCloseClicked}>
               <FontAwesomeIcon icon={faTimes} size="lg" />
             </div>
-            <AntiVirusScrollbar>
+            <AntiVirusFirewallScrollbar>
               <div className={classes.page}>
                 <div className={classes.container}>
                   {loading ? (
@@ -305,7 +305,7 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
                   )}
                 </div>
               </div>
-            </AntiVirusScrollbar>
+            </AntiVirusFirewallScrollbar>
             {webWidgetShowing && (
               <div className={classes.supportReminder}>
                 This information can also be found by clicking the support button and searching for 'anti-virus'.
@@ -319,7 +319,7 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
             <div className={classes.closeButton} onClick={onCloseClicked}>
               <FontAwesomeIcon icon={faTimes} size="lg" />
             </div>
-            <AntiVirusScrollbar>
+            <AntiVirusFirewallScrollbar>
               <div className={classes.page}>
                 <div className={classes.container}>
                   {loading ? (
@@ -333,7 +333,6 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
                           ) : (
                             <h1>Firewall is blocking Salad</h1>
                           )}
-
                           <InfoButton
                             className={classes.tooltip}
                             text={
@@ -366,13 +365,12 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
                   )}
                 </div>
               </div>
-            </AntiVirusScrollbar>
+            </AntiVirusFirewallScrollbar>
             {webWidgetShowing && (
               <div className={classes.supportReminder}>
                 This information can also be found by clicking the support button and searching for 'Firewall'.
               </div>
             )}
-            )
           </ModalPage>
         )
       default:

@@ -26,7 +26,7 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {}
 
-class _AntiVirusScrollbar extends Component<Props> {
+class _AntiVirusFirewallScrollbar extends Component<Props> {
   render() {
     const { classes, children } = this.props
     const renderThumb = (props: any) => <div {...props} className={classes.scrollThumb} />
@@ -40,4 +40,4 @@ class _AntiVirusScrollbar extends Component<Props> {
   }
 }
 
-export const AntiVirusScrollbar = withStyles(styles)(_AntiVirusScrollbar)
+export const AntiVirusFirewallScrollbar = withStyles(styles)(_AntiVirusFirewallScrollbar)
