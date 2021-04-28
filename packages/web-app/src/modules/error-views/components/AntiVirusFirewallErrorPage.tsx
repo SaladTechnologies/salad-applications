@@ -347,7 +347,7 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
                             </p>
                           ) : (
                             <p>
-                              Your Firewall is blocking you from chopping. We'll keep testing other miners, but your
+                              Your Anti-Virus is blocking you from chopping. We'll keep testing other miners, but your
                               earning rates could be lower until this issue is resolved.
                             </p>
                           )}
