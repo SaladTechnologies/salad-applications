@@ -346,12 +346,11 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
                               Your Firewall is still blocking Salad, and none of our miners will work until this issue
                               is resolved. Can't add an exception? Earn anyway using{' '}
                               <SmartLink to="/earn/offerwall">Offerwalls</SmartLink>, or reach out to the{' '}
-                              <SmartLink to="https://forums.salad.com">Support Forum</SmartLink>{' '}
-                              for help!
+                              <SmartLink to="https://forums.salad.com">Support Forum</SmartLink> for help!
                             </p>
                           ) : (
                             <p>
-                              Your Anti-Virus is blocking you from chopping. We'll keep testing other miners, but your
+                              Your Firewall is blocking you from chopping. We'll keep testing other miners, but your
                               earning rates could be lower until this issue is resolved.
                             </p>
                           )}
