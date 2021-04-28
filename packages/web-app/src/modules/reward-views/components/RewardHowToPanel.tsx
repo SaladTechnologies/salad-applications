@@ -4,8 +4,8 @@ import withStyles, { WithStyles } from 'react-jss'
 import { SmartLink } from '../../../components'
 import { HeroPanel } from '../../../components/HeroPanel'
 import { SaladTheme } from '../../../SaladTheme'
+import earningOverview from '../../earn-views/assets/earning-overview.svg'
 import { Reward } from '../../reward/models'
-import howItWorks from './assets/how-salad-works-rewards.svg'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -52,7 +52,7 @@ class _RewardHowToPanel extends Component<Props> {
       return (
         <HeroPanel color="cyan" className={classes.container}>
           <div className={classes.title}>How Salad Works</div>
-          <Img className={classes.img} src={howItWorks} />
+          <Img className={classes.img} src={earningOverview} />
           <SmartLink to="https://salad.com">Learn More</SmartLink>
         </HeroPanel>
       )
