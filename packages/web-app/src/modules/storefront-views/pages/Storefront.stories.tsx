@@ -1,5 +1,5 @@
 import { storiesOf } from '@storybook/react'
-import { strapiJSON } from '../utils'
+import { strapiJSON } from '../storybookUtils'
 import { StorefrontPage } from './StorefrontPage'
 
 storiesOf('Modules/Storefront/Pages', module)
