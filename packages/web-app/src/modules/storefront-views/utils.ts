@@ -5,21 +5,8 @@ import { StorefrontBlockComponent } from '../storefront/models'
  * requested.
  * @param blockType The Strapi Storefront Block Type
  */
-export const getMockStrapiBlockData = (blockType: StorefrontBlockComponent) => {
-  let block: any
-  switch (blockType) {
-    case StorefrontBlockComponent.Content:
-      block = strapiJSON.blocks.find((block) => block.__component === StorefrontBlockComponent.Content)
-      break
-    case StorefrontBlockComponent.Hero:
-      block = strapiJSON.blocks.find((block) => block.__component === StorefrontBlockComponent.Hero)
-      break
-    case StorefrontBlockComponent.Reward:
-      block = strapiJSON.blocks.find((block) => block.__component === StorefrontBlockComponent.Reward)
-      break
-  }
-
-  return block
+export const getMockStrapiBlockData = (blockType: StorefrontBlockComponent): {} | undefined => {
+  return strapiJSON.blocks.find((block) => block.__component === blockType)
 }
 
 export const strapiJSON = {
@@ -309,6 +296,18 @@ export const strapiJSON = {
         'Earn Salad Balance by completing tasks such as downloading and playing mobile games. Whether you just want to top off your balance, boost your regular earnings, or can’t mine with Salad, offerwalls allow you to make more money.\n\n[Take Me There](/earn/offerwall)',
       color: 'cyan',
       image: null,
+    },
+    {
+      __component: 'storefront.community-challenge-block',
+      id: 1,
+      heading: 'Community Challenge #1',
+      content:
+        'Community Challenges are a series of collaborative missions for every Chef to participate and unlock bonuses for the whole Kitchen. Donate $200 to One Percent for the Planet, and everyone scores 2X earnings for the next 2 days!',
+      data: {
+        progress: {
+          all: 0.5075,
+        },
+      },
     },
   ],
 }

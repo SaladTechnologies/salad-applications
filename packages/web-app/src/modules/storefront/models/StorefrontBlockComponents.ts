@@ -25,8 +25,19 @@ export interface StorefrontContentBlockProps extends StrapiBlock {
   }
 }
 
+export interface StorefrontCommunityChallengeProps {
+  __component: string
+  id: number
+  heading?: string
+  content?: string
+  data?: {
+    data?: string
+  }
+}
+
 export enum StorefrontBlockComponent {
   Content = 'storefront.content-block',
   Hero = 'storefront.carousel-block',
   Reward = 'storefront.reward-list-block',
+  CommunityChallenge = 'storefront.community-challenge-block',
 }
