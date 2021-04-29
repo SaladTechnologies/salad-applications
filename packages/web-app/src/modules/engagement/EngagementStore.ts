@@ -5,7 +5,7 @@ import { NotificationMessageCategory } from '../notifications/models'
 import { ChangelogMetadata } from './models/ChangelogMetadata'
 
 export class EngagementStore {
-  public static readonly CHANGELOG_URL = 'https://public.salad.io/whats-new'
+  public static readonly CHANGELOG_URL = 'https://salad.com/whats-new'
 
   @observable
   public whatsNewVersion?: string
