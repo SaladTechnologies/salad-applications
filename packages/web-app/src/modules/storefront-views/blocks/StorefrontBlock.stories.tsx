@@ -1,6 +1,6 @@
 import { storiesOf } from '@storybook/react'
 import { StorefrontBlockComponent } from '../../storefront/models'
-import { getMockStrapiBlockData } from '../utils'
+import { getMockStrapiBlockData } from '../storybookUtils'
 import { StorefrontContentBlock, StorefrontHeroBlock, StorefrontRewardBlock } from './'
 import { StorefrontCommunityChallengeBlock } from './StorefrontCommunityChallengeBlock'
 

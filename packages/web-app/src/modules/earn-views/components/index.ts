@@ -1,10 +1,5 @@
-export * from './AdGatePage'
-export * from './AdGemPage'
 export * from './DesktopDownload'
 export * from './EarningHistory'
 export * from './EarningSummary'
 export * from './MiningInformation'
-export * from './OfferToroPage'
-export * from './Offerwall'
 export * from './ShowFolderSection'
-
