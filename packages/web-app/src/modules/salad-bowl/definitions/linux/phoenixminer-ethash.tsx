@@ -24,7 +24,7 @@ export const createPhoenixMinerEthashPluginDefinitions = (accounts: Accounts): P
             initialRetries: 3,
             watchdogTimeout: 900000,
             errors: [...STANDARD_ERRORS],
-            requirements: [hasGpu('*', 4096)],
+            requirements: [hasGpu('*', 5120)],
           })
         }
 
