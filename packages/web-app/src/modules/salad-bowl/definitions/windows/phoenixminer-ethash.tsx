@@ -18,13 +18,13 @@ export const createPhoenixMinerEthashPluginDefinitions = (accounts: Accounts): P
             algorithm: 'Ethash',
             downloadUrl: download.windowsUrl,
             exe: 'PhoenixMiner.exe',
-            args: `-rmode 0 -rvram 1 ${pool}`,
+            args: `-rmode 0 -rvram 1 -log 0 ${pool}`,
             runningCheck: '(?:Share accepted|[1-9][0-9]*\\.\\d* (?:kh|kH|Kh|KH|mh|mH|Mh|MH)\\/s)',
             initialTimeout: 600000,
             initialRetries: 3,
             watchdogTimeout: 900000,
             errors: [...STANDARD_ERRORS],
-            requirements: [hasGpu('*', 4096)],
+            requirements: [hasGpu('*', 5120)],
           })
         }
 
