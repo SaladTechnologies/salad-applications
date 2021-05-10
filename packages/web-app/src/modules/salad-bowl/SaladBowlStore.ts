@@ -83,7 +83,7 @@ export class SaladBowlStore implements IPersistentStore {
             cpu: this.cpuMiningEnabled,
             gpu: this.gpuMiningEnabled,
             cpuOverridden: this.cpuMiningOverridden,
-            gpuOverridden: this.cpuMiningOverridden,
+            gpuOverridden: this.gpuMiningOverridden,
           }),
         ),
     )
