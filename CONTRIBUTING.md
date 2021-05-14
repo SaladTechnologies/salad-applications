@@ -29,7 +29,7 @@ You can also create a [support ticket](https://support.salad.com/hc/en-us/reques
 
 We love a good idea. Do you have one?
 
-Consider jumping into the [Feature Requests category on our community forums](https://forums.salad.com/c/feature-requests) or the [#feature-requests channel on the SaladChefs Discord server](https://discord.gg/salad). The community may have some interesting insights.
+Consider jumping into the [Feature Requests category on our community forums](https://forums.salad.com/c/feature-requests). You may submit your ideas or upvote existing suggestions there. The community may have some interesting insights.
 
 ## Changing Code
 
