@@ -32,7 +32,7 @@ export class VaultStore {
     name: r.name,
     price: r.price,
     timestamp: new Date(r.timestamp),
-    code: r.code,
+    code: r.code ? r.code.trim() : r.code,
     status: r.status,
   })
 
