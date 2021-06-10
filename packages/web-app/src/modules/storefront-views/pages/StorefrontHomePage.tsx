@@ -1,3 +1,4 @@
+import { Button } from '@saladtechnologies/garden-components'
 import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Route, Switch } from 'react-router'
@@ -43,6 +44,9 @@ class _StorefrontHomePage extends Component<WithStyles<typeof styles>> {
     const { classes } = this.props
     return (
       <div className={classes.container}>
+        <div>
+          <Button label="Hello Jason" onClick={() => alert('Good luck jason')} variant="secondary" />
+        </div>
         <div className={classes.appContainer}>
           <RewardSearchBarContainer />
           <div className={classes.main}>
