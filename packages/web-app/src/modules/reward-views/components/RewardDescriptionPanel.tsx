@@ -1,4 +1,4 @@
-// import type { ElementType } from 'htmlparser2'
+// import type { Element } from 'htmlparser2'
 import { Component, ReactElement } from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import withStyles, { WithStyles } from 'react-jss'
