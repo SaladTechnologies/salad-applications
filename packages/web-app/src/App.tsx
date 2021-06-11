@@ -1,6 +1,7 @@
 import { SearchProvider } from '@elastic/react-search-ui'
 import AppSearchAPIConnector from '@elastic/search-ui-app-search-connector'
 import { ThemeProvider } from '@emotion/react'
+import { DefaultTheme } from '@saladtechnologies/garden-components'
 import { History } from 'history'
 import { Component } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
@@ -14,7 +15,6 @@ import { MainTitlebarContainer } from './modules/home-views/MainTitlebarContaine
 import { Routes } from './Routes'
 import { SaladTheme } from './SaladTheme'
 import { getStore } from './Store'
-import { DefaultTheme } from './Theme'
 
 const styles = (theme: SaladTheme) => ({
   mainWindow: {
