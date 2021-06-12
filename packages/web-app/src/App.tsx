@@ -1,5 +1,7 @@
 import { SearchProvider } from '@elastic/react-search-ui'
 import AppSearchAPIConnector from '@elastic/search-ui-app-search-connector'
+import { ThemeProvider } from '@emotion/react'
+import { DefaultTheme } from '@saladtechnologies/garden-components'
 import { History } from 'history'
 import { Component } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
@@ -138,7 +140,7 @@ export const App = withStyles(styles)(
       const isDesktop = this.store.native.isNative
 
       return (
-        <>
+        <ThemeProvider theme={DefaultTheme}>
           {!isDesktop && (
             <>
               <MobileDevice>
@@ -158,7 +160,7 @@ export const App = withStyles(styles)(
             </>
           )}
           {isDesktop && <DesktopLayout {...this.props} />}
-        </>
+        </ThemeProvider>
       )
     }
   },
