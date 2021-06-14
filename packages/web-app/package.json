@@ -171,8 +171,6 @@
   },
   "resolutions": {
     "@elastic/search-ui": "../../libs/elastic-search-ui-1.5.1+salad.tgz",
-    "@saladtechnologies/garden-components": "../../libs/saladtechnologies-garden-components-1.0.0.tgz",
-    "@saladtechnologies/garden-icons": "../../libs/saladtechnologies-garden-icons-1.0.0.tgz",
     "babel-loader": "8.1.0",
     "systeminformation": "../../libs/systeminformation-5.6.20+salad.tgz"
   }
