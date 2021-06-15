@@ -44,6 +44,8 @@ export class RefreshService {
       this.store.referral.loadReferrals()
       this.store.vault.loadVault()
       this.store.xp.refreshXp()
+      this.store.profile.loadAvatars()
+      this.store.profile.loadSelectedAvatar()
     } catch (error) {
       console.error(error)
     }

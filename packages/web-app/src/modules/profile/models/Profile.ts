@@ -8,6 +8,15 @@ export interface Profile {
   lastSeenApplicationVersion: string | undefined
 }
 
+export interface Avatar {
+  name: string
+  description: string
+  id: string
+  imageUrl: string
+  selected?: boolean | null
+  errorMessage?: string
+}
+
 export enum ReferredStatus {
   CanEnter, //joined within the last week, could still enter a referral code
   Test, //Testing state

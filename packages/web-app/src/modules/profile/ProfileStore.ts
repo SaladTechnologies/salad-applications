@@ -2,8 +2,8 @@ import { AxiosInstance } from 'axios'
 import { action, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { NotificationMessageCategory } from '../notifications/models'
-import { Profile } from './models'
-
+import { Avatar, Profile } from './models'
+import { FormValues} from '../account-views/account-views/components/'
 export class ProfileStore {
   @observable
   public currentProfile?: Profile
@@ -17,12 +17,18 @@ export class ProfileStore {
   @observable
   public isLoading: boolean = false
 
+  @observable
+  public avatars?: Avatar[] = []
+
+  @observable
+  public selectedAvatar?: Avatar
+
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   @action.bound
   loadProfile = flow(function* (this: ProfileStore) {
     console.log('Loading the user profile')
-
+    // debugger;
     this.isLoading = true
     try {
       let profile = yield this.axios.get('/api/v1/profile')
@@ -35,6 +41,43 @@ export class ProfileStore {
       this.isLoading = false
     }
     return this.currentProfile
+  })
+
+  @action.bound
+  loadAvatars = flow(function* (this: ProfileStore) {
+    console.log('Loading avatars')
+    // debugger;
+
+    this.isLoading = true
+    try {
+      let avatar = yield this.axios.get('/api/v2/avatars')
+      this.avatars = avatar.data
+    } catch (err) {
+      console.error('Avatars error: ', err)
+      this.avatars = undefined
+      // this.store.routing.replace('/avatars-error')
+    } finally {
+      this.isLoading = false
+    }
+    return this.avatars
+  })
+
+  @action.bound
+  loadSelectedAvatar = flow(function* (this: ProfileStore) {
+    console.log('Loading selected avatar')
+
+    this.isLoading = true
+    try {
+      let selectedAvatar = yield this.axios.get('/api/v2/avatars/selected')
+      console.log(selectedAvatar, 'SELECTED AVATAR')
+      this.selectedAvatar = selectedAvatar.data
+    } catch (err) {
+      console.error('selectedAvatars error: ', err)
+      this.selectedAvatar = undefined
+    } finally {
+      this.isLoading = false
+    }
+    return this.selectedAvatar
   })
 
   @action.bound
@@ -62,13 +105,14 @@ export class ProfileStore {
   })
 
   @action.bound
-  updateUsername = flow(function* (this: ProfileStore, username: string) {
+  updateUsername = flow(function* (this: ProfileStore, username: FormValues) {
     if (this.currentProfile === undefined) return
+
 
     this.isUpdating = true
 
     try {
-      let patch = yield this.axios.patch('/api/v1/profile', { username: username })
+      let patch = yield this.axios.patch('/api/v1/profile', { username: username.input })
       let profile = patch.data
 
       this.currentProfile = profile
@@ -79,7 +123,8 @@ export class ProfileStore {
   })
 
   @action.bound
-  updateMinecraftUsername = flow(function* (this: ProfileStore, minecraftUsername: string) {
+  updateMinecraftUsername = flow(function* (this: ProfileStore, minecraftUsername: FormValues) {
+
     if (this.currentProfile === undefined) {
       return
     }
@@ -91,11 +136,11 @@ export class ProfileStore {
         extensions:
           this.currentProfile.extensions === undefined
             ? {
-                minecraftUsername: minecraftUsername,
+                minecraftUsername: minecraftUsername.input,
               }
             : {
                 ...this.currentProfile.extensions,
-                minecraftUsername: minecraftUsername,
+                minecraftUsername: minecraftUsername.input,
               },
       })
       let profile = patch.data
