@@ -3,6 +3,7 @@ import { Component } from 'react'
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router'
 import { LoadingPage } from './components'
 import { EmailVerificationPageContainer, LoginPageContainer, LogoutPageContainer } from './modules/auth-views'
+import { BonusPageContainer } from './modules/bonus-views'
 import { EarnMenuContainer } from './modules/earn-views'
 import {
   CudaErrorContainer,
@@ -52,6 +53,7 @@ class _Routes extends Component<RouteComponentProps> {
           <Route exact path="/errors/firewall" component={FirewallErrorContainer} />
           <Route exact path="/warnings/dont-lose-progress" component={DontLoseProgressPageContainer} />
           <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
+          <Route exact path="/bonuses" component={BonusPageContainer} />
           <Redirect exact from="/whats-new" to="/" />
           <Redirect exact from="/account/summary" to="/settings/summary" />
           <Redirect exact from="/account/referrals" to="/settings/referrals" />
