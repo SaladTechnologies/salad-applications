@@ -62,8 +62,8 @@
     "@fortawesome/free-regular-svg-icons": "5.15.3",
     "@fortawesome/free-solid-svg-icons": "5.15.3",
     "@fortawesome/react-fontawesome": "0.1.14",
-    "@saladtechnologies/garden-components": "file:../../libs/saladtechnologies-garden-components-1.0.0.tgz",
-    "@saladtechnologies/garden-icons": "file:../../libs/saladtechnologies-garden-icons-1.0.0.tgz",
+    "@saladtechnologies/garden-components": "file:../../libs/saladtechnologies-garden-components-1.0.1.tgz",
+    "@saladtechnologies/garden-icons": "file:../../libs/saladtechnologies-garden-icons-1.0.1.tgz",
     "@sentry/react": "6.3.6",
     "@sentry/types": "6.3.6",
     "@storybook/addon-actions": "6.2.9",
@@ -171,8 +171,6 @@
   },
   "resolutions": {
     "@elastic/search-ui": "../../libs/elastic-search-ui-1.5.1+salad.tgz",
-    "@saladtechnologies/garden-components": "../../libs/saladtechnologies-garden-components-1.0.0.tgz",
-    "@saladtechnologies/garden-icons": "../../libs/saladtechnologies-garden-icons-1.0.0.tgz",
     "babel-loader": "8.1.0",
     "systeminformation": "../../libs/systeminformation-5.6.20+salad.tgz"
   }
