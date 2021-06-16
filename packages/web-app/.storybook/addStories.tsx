@@ -1,5 +1,4 @@
 import { StoryApi } from '@storybook/addons'
-import { StoryFnReactReturnType } from '@storybook/react/dist/client/preview/types'
 import React from 'react'
 
 export interface StoryData {
@@ -10,9 +9,9 @@ export interface StoryData {
 export const addStories = (
   component: React.FunctionComponent | React.ComponentClass,
   storyList: [StoryData],
-  stories: StoryApi<StoryFnReactReturnType>,
+  stories: StoryApi<unknown>,
   backgroundColor?: string,
-): StoryApi<StoryFnReactReturnType> => {
+): StoryApi<unknown> => {
   stories.add('(all)', () => (
     <div
       style={{

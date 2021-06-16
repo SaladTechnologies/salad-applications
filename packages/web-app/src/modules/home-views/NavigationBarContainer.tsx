@@ -1,4 +1,4 @@
-import { AvatarDefault, NavigationBar } from '@saladtechnologies/garden-components'
+import { AvatarDefault, NavigationBar, Avatar } from '@saladtechnologies/garden-components'
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
 import { ErrorPageType } from '../../UIStore'
@@ -23,8 +23,20 @@ const mapStoreToProps = (store: RootStore): any => {
       : MiningStatus.Initializing
     : status
 
+  const goToAccount = () => store.routing.push('/settings/summary')
+
   return {
-    avatar: isAuthenticated ? <AvatarDefault /> : undefined, // Will Pull correct after profile page is merged in
+    avatar: isAuthenticated ? (
+      store.profile.selectedAvatar ? (
+        <Avatar
+          alt={store.profile.selectedAvatar.name}
+          src={store.profile.selectedAvatar.imageUrl}
+          onClick={goToAccount}
+        />
+      ) : (
+        <AvatarDefault onClick={goToAccount} />
+      )
+    ) : undefined,
     balance: isAuthenticated ? store.balance.currentBalance : undefined,
     rightSideButtonLabel: isAuthenticated ? undefined : 'Login',
     rightSideButtonClick: isAuthenticated ? undefined : handleLogin,
