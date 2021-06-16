@@ -1,11 +1,8 @@
 import { SearchProvider } from '@elastic/react-search-ui'
 import AppSearchAPIConnector from '@elastic/search-ui-app-search-connector'
-import { ThemeProvider } from '@emotion/react'
-import { DefaultTheme } from '@saladtechnologies/garden-components'
 import { History } from 'history'
 import { Component } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
-import { createIntl, createIntlCache, RawIntlProvider } from 'react-intl'
 import withStyles, { WithStyles } from 'react-jss'
 import { ToastContainer } from 'react-toastify'
 import { MobileDevice, NotMobile } from './components'
@@ -15,15 +12,6 @@ import { NavigationBarContainer } from './modules/home-views'
 import { Routes } from './Routes'
 import { SaladTheme } from './SaladTheme'
 import { getStore } from './Store'
-
-const cache = createIntlCache()
-const intl = createIntl(
-  {
-    locale: 'en-US',
-    messages: {},
-  },
-  cache,
-)
 
 const styles = (theme: SaladTheme) => ({
   mainWindow: {
@@ -153,37 +141,31 @@ export const App = withStyles(styles)(
     }
 
     render() {
-      const { classes } = this.props
-
-      const isDesktop = this.store.native.isNative
-
-      return (
-        <RawIntlProvider value={intl}>
-          <ThemeProvider theme={DefaultTheme}>
-            {!isDesktop && (
-              <>
-                <MobileDevice>
-                  <div className={classes.mobileMainWindow}>
-                    <div>
-                      <NavigationBarContainer />
-                      <hr className={classes.navBarLine} />
-                    </div>
-                    <Scrollbars>
-                      <div className={classes.mobileContent}>
-                        <MobileRoutes />
-                      </div>
-                    </Scrollbars>
+      if (this.store.native.isNative) {
+        return <DesktopLayout {...this.props} />
+      } else {
+        const { classes } = this.props
+        return (
+          <>
+            <MobileDevice>
+              <div className={classes.mobileMainWindow}>
+                <div>
+                  <NavigationBarContainer />
+                  <hr className={classes.navBarLine} />
+                </div>
+                <Scrollbars>
+                  <div className={classes.mobileContent}>
+                    <MobileRoutes />
                   </div>
-                </MobileDevice>
-                <NotMobile>
-                  <DesktopLayout {...this.props} />
-                </NotMobile>
-              </>
-            )}
-            {isDesktop && <DesktopLayout {...this.props} />}
-          </ThemeProvider>
-        </RawIntlProvider>
-      )
+                </Scrollbars>
+              </div>
+            </MobileDevice>
+            <NotMobile>
+              <DesktopLayout {...this.props} />
+            </NotMobile>
+          </>
+        )
+      }
     }
   },
 )
