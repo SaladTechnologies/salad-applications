@@ -10,7 +10,9 @@ const styles = (theme: SaladTheme) => ({
     color: theme.darkBlue,
     display: 'flex',
     flexDirection: 'column',
-    height: '100vh',
+  },
+  levels: {
+    display: 'flex',
   },
   subtitle: {
     alignItems: 'center',
@@ -39,35 +41,37 @@ interface Props extends WithStyles<typeof styles> {
 
 const _CurrentSeasonPage = ({ classes, duration, levels, timeLeft, totalXP }: Props) => {
   return (
-    <Layout title="Current Season">
-      <Head title="Current Season" />
-      <div className={classes.container}>
-        {duration.length && timeLeft.length ? (
-          <div className={classes.subtitle}>
-            <Text variant="baseL">{duration}</Text>
-            <div className={classes.timeLeft}>
-              <Text variant="baseS">{timeLeft}</Text>
-            </div>
-          </div>
-        ) : null}
-        <Text variant="baseXL">Season XP</Text>
-        <Text variant="baseL">For every minute that you run Salad, you earn 1 XP</Text>
-        <div className={classes.xp}>
-          <Text variant="base4XL">{totalXP}</Text>
-        </div>
-        {levels.length > 0 && (
-          <div>
-            {levels.map((level) => (
-              <div key={level.id}>
-                <p>{level.bonusImageUrl}</p>
-                <p>{level.earnedAt}</p>
-                <p>{level.xpRequired}</p>
+    <div style={{ flex: 1, backgroundImage: 'linear-gradient(to right, #56A431 , #AACF40)' }}>
+      <Layout title="Current Season">
+        <Head title="Current Season" />
+        <div className={classes.container}>
+          {duration.length && timeLeft.length ? (
+            <div className={classes.subtitle}>
+              <Text variant="baseL">{duration}</Text>
+              <div className={classes.timeLeft}>
+                <Text variant="baseS">{timeLeft}</Text>
               </div>
-            ))}
+            </div>
+          ) : null}
+          <Text variant="baseXL">Season XP</Text>
+          <Text variant="baseL">For every minute that you run Salad, you earn 1 XP</Text>
+          <div className={classes.xp}>
+            <Text variant="base4XL">{totalXP}</Text>
           </div>
-        )}
-      </div>
-    </Layout>
+          {levels.length > 0 && (
+            <div className={classes.levels}>
+              {levels.map((level) => (
+                <div key={level.id}>
+                  <p>{level.bonusImageUrl}</p>
+                  <p>{level.earnedAt}</p>
+                  <p>{level.xpRequired}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </Layout>
+    </div>
   )
 }
 
