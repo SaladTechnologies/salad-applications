@@ -18,6 +18,7 @@ import { ReferralStore } from './modules/referral'
 import { RewardStore } from './modules/reward'
 import { SaladBowlStore } from './modules/salad-bowl'
 import { StopReason } from './modules/salad-bowl/models'
+import { SeasonsStore } from './modules/seasons'
 import { StorefrontStore } from './modules/storefront/StorefrontStore'
 import { VaultStore } from './modules/vault'
 import { VersionStore } from './modules/versions'
@@ -66,6 +67,7 @@ export class RootStore {
   public readonly zendesk: Zendesk
   public readonly storefront: StorefrontStore
   public readonly bonuses: BonusStore
+  public readonly seasons: SeasonsStore
 
   constructor(readonly axios: AxiosInstance) {
     this.routing = new RouterStore()
@@ -90,6 +92,7 @@ export class RootStore {
     this.zendesk = new Zendesk(axios, this.auth, this.native, this.analytics)
     this.storefront = new StorefrontStore(axios)
     this.bonuses = new BonusStore(this, axios)
+    this.seasons = new SeasonsStore(axios)
 
     addAuthInterceptor(axios, this.auth)
 
