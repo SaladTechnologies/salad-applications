@@ -1,25 +1,28 @@
 import { AvatarSelectionForm, Text } from '@saladtechnologies/garden-components'
-import { FunctionComponent } from 'react'
+import { FunctionComponent, useState } from 'react'
 import { Avatar } from '../../../profile/models'
-import { useState } from 'react'
 
 interface AvatarProps {
   avatars?: Avatar[]
-  onSelectAvatar:(id: string) => void
+  onSelectAvatar: (id: string) => void
   selectedAvatar?: Avatar
   errorAvatarId?: string
-  clearAvatarError:() => void
+  clearAvatarError: () => void
 }
 
-export const AvatarSelect: FunctionComponent<AvatarProps> = ({ avatars, clearAvatarError,  onSelectAvatar, selectedAvatar }) => {
+export const AvatarSelect: FunctionComponent<AvatarProps> = ({
+  avatars,
+  clearAvatarError,
+  onSelectAvatar,
+  selectedAvatar,
+}) => {
   const [activeAvatar, setActiveAvatar] = useState<string | undefined>(undefined)
   const [submitting, toggleSubmittingState] = useState<boolean>(false)
   const handleClearError = () => {
     clearAvatarError()
   }
   const handleAvatarSelect = (id: string) => {
-    activeAvatar !== id &&
-    onSelectAvatar(id)
+    activeAvatar !== id && onSelectAvatar(id)
     setActiveAvatar(id)
     toggleSubmittingState(true)
     setTimeout(function () {
@@ -27,7 +30,7 @@ export const AvatarSelect: FunctionComponent<AvatarProps> = ({ avatars, clearAva
     }, 3000)
   }
 
-  const avatarList  = avatars?.map((avatar) => ({
+  const avatarList = avatars?.map((avatar) => ({
     alt: avatar.description,
     src: avatar.imageUrl,
     id: avatar.id,
@@ -37,13 +40,15 @@ export const AvatarSelect: FunctionComponent<AvatarProps> = ({ avatars, clearAva
   const emptyAvatar = [{ alt: '', src: '', id: '' }]
 
   return (
-   <><Text as="p">Avatar</Text> <AvatarSelectionForm
-      onSelect={handleAvatarSelect}
-      isSubmitting={submitting}
-      onClearError={handleClearError}
-      avatars={avatarList ? avatarList : emptyAvatar}
-    ></AvatarSelectionForm>
-</>
+    <>
+      <Text as="p">Avatar</Text>{' '}
+      <AvatarSelectionForm
+        onSelect={handleAvatarSelect}
+        isSubmitting={submitting}
+        onClearError={handleClearError}
+        avatars={avatarList ? avatarList : emptyAvatar}
+      ></AvatarSelectionForm>
+    </>
   )
 }
 

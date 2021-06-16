@@ -1,9 +1,9 @@
 import { AxiosInstance } from 'axios'
 import { action, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
-import { NotificationMessageCategory } from '../notifications/models'
-import { Avatar, Profile, AvatarForm } from './models'
 import { FormValues } from '../account-views/account-views/components/'
+import { NotificationMessageCategory } from '../notifications/models'
+import { Avatar, AvatarForm, Profile } from './models'
 export class ProfileStore {
   @observable
   public currentProfile?: Profile
@@ -34,7 +34,6 @@ export class ProfileStore {
   @action.bound
   loadProfile = flow(function* (this: ProfileStore) {
     console.log('Loading the user profile')
-    // debugger;
     this.isLoading = true
     try {
       let profile = yield this.axios.get('/api/v1/profile')
@@ -52,8 +51,6 @@ export class ProfileStore {
   @action.bound
   loadAvatars = flow(function* (this: ProfileStore) {
     console.log('Loading avatars')
-    // debugger;
-
     this.isLoading = true
     try {
       let avatar = yield this.axios.get('/api/v2/avatars')
@@ -112,7 +109,6 @@ export class ProfileStore {
 
   @action.bound
   selectAvatar = flow(function* (this: ProfileStore, id: string) {
-
     this.isUpdating = true
 
     try {
@@ -137,7 +133,7 @@ export class ProfileStore {
 
   @action
   clearAvatarError = (avatars: any) => {
-    this.avatars = avatars ? avatars.map((avatar : Avatar) => (avatar.errorMessage = undefined)) : this.formAvatars
+    this.avatars = avatars ? avatars.map((avatar: Avatar) => (avatar.errorMessage = undefined)) : this.formAvatars
   }
 
   @action.bound

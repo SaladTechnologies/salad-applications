@@ -10,7 +10,7 @@ const mapStoreToProps = (store: RootStore): any => ({
   onUpdateUsername: store.profile.updateUsername,
   onUpdateMinecraftUsername: store.profile.updateMinecraftUsername,
   onSelectAvatar: store.profile.selectAvatar,
-  clearAvatarError: store.profile.clearAvatarError
+  clearAvatarError: store.profile.clearAvatarError,
 })
 
 export const AccountContainer = connect(mapStoreToProps, Account)

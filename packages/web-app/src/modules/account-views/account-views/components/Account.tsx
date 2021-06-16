@@ -30,12 +30,22 @@ export type FormValues = {
 }
 class _Account extends Component<Props> {
   render() {
-    const { profile, onUpdateUsername, errorAvatarId, clearAvatarError, onUpdateMinecraftUsername, onSelectAvatar, classes, avatars, selectedAvatar } =
-      this.props
+    const {
+      profile,
+      onUpdateUsername,
+      errorAvatarId,
+      clearAvatarError,
+      onUpdateMinecraftUsername,
+      onSelectAvatar,
+      classes,
+      avatars,
+      selectedAvatar,
+    } = this.props
 
     return (
       <div className={classes.container}>
         <Layout title="Profile">
+          <Head title="Profile" />
           <TextField
             placeholder={profile?.username}
             errorMessage="Username must be between 2 - 32 characters and can not contain spaces!"
@@ -46,7 +56,13 @@ class _Account extends Component<Props> {
           <Divider />
           {avatars && (
             <>
-              <AvatarSelect clearAvatarError={clearAvatarError} avatars={avatars} onSelectAvatar={onSelectAvatar} errorAvatarId={errorAvatarId} selectedAvatar={selectedAvatar} />
+              <AvatarSelect
+                clearAvatarError={clearAvatarError}
+                avatars={avatars}
+                onSelectAvatar={onSelectAvatar}
+                errorAvatarId={errorAvatarId}
+                selectedAvatar={selectedAvatar}
+              />
               <Divider />
             </>
           )}
