@@ -1,6 +1,6 @@
 export interface Level {
   bonusImageUrl: string
-  earnedAt: string
+  earnedAt?: string
   id: number
   xpRequired: number
 }
