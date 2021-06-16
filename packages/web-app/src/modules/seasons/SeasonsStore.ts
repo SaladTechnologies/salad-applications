@@ -12,7 +12,7 @@ export class SeasonsStore {
   get duration(): string {
     if (this.currentSeason?.startAbsolute && this.currentSeason.startAbsolute) {
       const startDateTime = DateTime.fromISO(this.currentSeason?.startAbsolute)
-      const endDateTime = DateTime.fromISO(this.currentSeason.startAbsolute)
+      const endDateTime = DateTime.fromISO(this.currentSeason.endAbsolute)
       return startDateTime.monthShort + ' ' + startDateTime.day + ' - ' + endDateTime.monthShort + ' ' + endDateTime.day
     } else {
       return ''
@@ -25,7 +25,7 @@ export class SeasonsStore {
       const startDate = DateTime.now()
       const endDate = DateTime.fromISO(this.currentSeason?.endAbsolute)
 
-      const timeDifference = startDate.diff(endDate, ['years', 'months', 'days', 'hours'])
+      const timeDifference = endDate.diff(startDate, ['years', 'months', 'days', 'hours'])
       const timeDifferenceObject = timeDifference.toObject()
 
       const dayPluralForm = timeDifferenceObject.days && timeDifferenceObject.days <= 1 ? 'day' : 'days'
