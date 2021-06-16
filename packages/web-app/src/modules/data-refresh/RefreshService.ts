@@ -44,6 +44,7 @@ export class RefreshService {
       this.store.referral.loadReferrals()
       this.store.vault.loadVault()
       this.store.xp.refreshXp()
+      this.store.bonuses.loadBonuses()
     } catch (error) {
       console.error(error)
     }

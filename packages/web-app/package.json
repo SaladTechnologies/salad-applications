@@ -79,7 +79,7 @@
     "@types/classnames": "2.3.1",
     "@types/jest": "26.0.23",
     "@types/lodash": "4.14.168",
-    "@types/luxon": "^1",
+    "@types/luxon": "1.27.0",
     "@types/mixpanel-browser": "2.35.6",
     "@types/node": "14.14.44",
     "@types/promise.allsettled": "1.0.3",

@@ -3051,7 +3051,7 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.168.tgz#fe24632e79b7ade3f132891afff86caa5e5ce008"
   integrity sha512-oVfRvqHV/V6D1yifJbVRU3TMp8OT6o6BG+U9MkwuJ3U8/CsDHvalRpsxBqivn71ztOFZBTfJMvETbqHiaNSj7Q==
 
-"@types/luxon@^1":
+"@types/luxon@1.27.0":
   version "1.27.0"
   resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-1.27.0.tgz#1e3b5a7f8ca6944349c43498b4442b742c71ab0b"
   integrity sha512-rr2lNXsErnA/ARtgFn46NtQjUa66cuwZYeo/2K7oqqxhJErhXgHBPyNKCo+pfOC3L7HFwtao8ebViiU9h4iAxA==
