@@ -18,6 +18,7 @@ import {
 import { DontLoseProgressPageContainer } from './modules/machine-views'
 import { RewardDetailsContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
+import { CurrentSeasonPageContainer } from './modules/seasons-views'
 import { SettingsContainer } from './modules/settings-views'
 import { StorefrontHomePage } from './modules/storefront-views/pages/StorefrontHomePage'
 import { PrivateRoute } from './PrivateRoute'
@@ -54,6 +55,7 @@ class _Routes extends Component<RouteComponentProps> {
           <Route exact path="/warnings/dont-lose-progress" component={DontLoseProgressPageContainer} />
           <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
           <Route exact path="/bonuses" component={BonusPageContainer} />
+          <Route exact path="/seasons" component={CurrentSeasonPageContainer} />
           <Redirect exact from="/whats-new" to="/" />
           <Redirect exact from="/account/summary" to="/settings/summary" />
           <Redirect exact from="/account/referrals" to="/settings/referrals" />

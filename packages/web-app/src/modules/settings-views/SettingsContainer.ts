@@ -15,7 +15,7 @@ const mapStoreToProps = (store: RootStore): any => {
     { url: '/settings/summary', text: 'Account', component: AccountContainer },
     { url: '/settings/referrals', text: 'Referrals', component: ReferralSettingsContainer },
     { url: '/settings/reward-vault', text: 'Reward Vault', component: VaultListContainer },
-    { url: '/settings/current-season', text: 'Current Season', component: CurrentSeasonPageContainer },
+    { url: '/seasons', text: 'Seasons', component: CurrentSeasonPageContainer },
     { url: '/bonuses', text: 'Bonuses', component: BonusPageContainer },
     {
       url: EngagementStore.CHANGELOG_URL,
@@ -29,7 +29,7 @@ const mapStoreToProps = (store: RootStore): any => {
     { url: '/settings/summary', text: 'Account', component: AccountContainer },
     { url: '/settings/referrals', text: 'Referrals', component: ReferralSettingsContainer },
     { url: '/settings/reward-vault', text: 'Reward Vault', component: VaultListContainer },
-    { url: '/settings/current-season', text: 'Current Season', component: CurrentSeasonPageContainer },
+    { url: '/seasons', text: 'Seasons', component: CurrentSeasonPageContainer },
     { url: '/bonuses', text: 'Bonuses', component: BonusPageContainer },
     {
       url: '/settings/desktop-settings',
