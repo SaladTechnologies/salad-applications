@@ -44,12 +44,9 @@ export class RefreshService {
       this.store.referral.loadReferrals()
       this.store.vault.loadVault()
       this.store.xp.refreshXp()
-<<<<<<< HEAD
       this.store.profile.loadAvatars()
       this.store.profile.loadSelectedAvatar()
-=======
       this.store.bonuses.loadBonuses()
->>>>>>> operation-avalanche
     } catch (error) {
       console.error(error)
     }
