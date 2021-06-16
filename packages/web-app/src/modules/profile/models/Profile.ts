@@ -17,6 +17,14 @@ export interface Avatar {
   errorMessage?: string
 }
 
+export interface AvatarForm {
+  alt: string
+  src: string
+  id: string
+  errorMessage?: string
+  selected?: boolean
+}
+
 export enum ReferredStatus {
   CanEnter, //joined within the last week, could still enter a referral code
   Test, //Testing state

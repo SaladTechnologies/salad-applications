@@ -2,8 +2,8 @@ import { AxiosInstance } from 'axios'
 import { action, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { NotificationMessageCategory } from '../notifications/models'
-import { Avatar, Profile } from './models'
-import { FormValues} from '../account-views/account-views/components/'
+import { Avatar, Profile, AvatarForm } from './models'
+import { FormValues } from '../account-views/account-views/components/'
 export class ProfileStore {
   @observable
   public currentProfile?: Profile
@@ -22,6 +22,12 @@ export class ProfileStore {
 
   @observable
   public selectedAvatar?: Avatar
+
+  @observable
+  public errorAvatarId?: string
+
+  @observable
+  private formAvatars: AvatarForm[] = []
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
@@ -52,6 +58,7 @@ export class ProfileStore {
     try {
       let avatar = yield this.axios.get('/api/v2/avatars')
       this.avatars = avatar.data
+      this.formAvatars = avatar.data.slice()
     } catch (err) {
       console.error('Avatars error: ', err)
       this.avatars = undefined
@@ -59,7 +66,6 @@ export class ProfileStore {
     } finally {
       this.isLoading = false
     }
-    return this.avatars
   })
 
   @action.bound
@@ -73,7 +79,7 @@ export class ProfileStore {
       this.selectedAvatar = selectedAvatar.data
     } catch (err) {
       console.error('selectedAvatars error: ', err)
-      this.selectedAvatar = undefined
+      this.selectedAvatar = undefined // TODO: change this to an defaultAvatar object
     } finally {
       this.isLoading = false
     }
@@ -105,9 +111,38 @@ export class ProfileStore {
   })
 
   @action.bound
+  selectAvatar = flow(function* (this: ProfileStore, id: string) {
+
+    this.isUpdating = true
+
+    try {
+      let patch = yield this.axios.patch('/api/v2/avatars/selected', { avatarId: id })
+      let selectedAvatar = patch.data
+
+      this.selectedAvatar = selectedAvatar
+    } catch (err) {
+      console.error('select avatar error: ', err)
+      this.errorAvatarId = id
+      this.avatars?.forEach((avatar) => {
+        if (avatar.id === id) {
+          avatar.errorMessage = 'Unable to select avatar'
+        } else {
+          avatar.errorMessage = undefined
+        }
+      })
+    } finally {
+      this.isUpdating = false
+    }
+  })
+
+  @action
+  clearAvatarError = (avatars: any) => {
+    this.avatars = avatars ? avatars.map((avatar : Avatar) => (avatar.errorMessage = undefined)) : this.formAvatars
+  }
+
+  @action.bound
   updateUsername = flow(function* (this: ProfileStore, username: FormValues) {
     if (this.currentProfile === undefined) return
-
 
     this.isUpdating = true
 
@@ -124,7 +159,6 @@ export class ProfileStore {
 
   @action.bound
   updateMinecraftUsername = flow(function* (this: ProfileStore, minecraftUsername: FormValues) {
-
     if (this.currentProfile === undefined) {
       return
     }
