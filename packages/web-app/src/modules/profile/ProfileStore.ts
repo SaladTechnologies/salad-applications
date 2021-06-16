@@ -39,7 +39,6 @@ export class ProfileStore {
       let profile = yield this.axios.get('/api/v1/profile')
       this.currentProfile = profile.data
     } catch (err) {
-      console.error('Profile error: ', err)
       this.currentProfile = undefined
       this.store.routing.replace('/profile-error')
     } finally {
@@ -57,9 +56,7 @@ export class ProfileStore {
       this.avatars = avatar.data
       this.formAvatars = avatar.data.slice()
     } catch (err) {
-      console.error('Avatars error: ', err)
       this.avatars = undefined
-      // this.store.routing.replace('/avatars-error')
     } finally {
       this.isLoading = false
     }
@@ -72,10 +69,8 @@ export class ProfileStore {
     this.isLoading = true
     try {
       let selectedAvatar = yield this.axios.get('/api/v2/avatars/selected')
-      console.log(selectedAvatar, 'SELECTED AVATAR')
       this.selectedAvatar = selectedAvatar.data
     } catch (err) {
-      console.error('selectedAvatars error: ', err)
       this.selectedAvatar = undefined // TODO: change this to an defaultAvatar object
     } finally {
       this.isLoading = false
@@ -117,7 +112,6 @@ export class ProfileStore {
 
       this.selectedAvatar = selectedAvatar
     } catch (err) {
-      console.error('select avatar error: ', err)
       this.errorAvatarId = id
       this.avatars?.forEach((avatar) => {
         if (avatar.id === id) {
@@ -149,7 +143,6 @@ export class ProfileStore {
       this.currentProfile = profile
     } finally {
       this.isUpdating = false
-      // this.store.routing.replace('/')
     }
   })
 
