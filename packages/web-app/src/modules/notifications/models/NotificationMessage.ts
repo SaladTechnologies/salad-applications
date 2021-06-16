@@ -7,6 +7,8 @@ export enum NotificationMessageCategory {
   MachineIncompatible = 'Machine Incompatible',
   Redemption = 'Redemption',
   Success = 'Success',
+  BonusClaimedSuccess = 'Bonus Claimed Success',
+  BonusClaimedError = 'Bonus Claimed Error',
 }
 
 export interface NotificationMessage {
