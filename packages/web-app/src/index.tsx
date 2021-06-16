@@ -1,27 +1,29 @@
 // Import CSS. Order is important!
+import './index.css'
+import 'react-hint/css/index.css'
+import 'react-toastify/dist/ReactToastify.css'
+
+// Import polyfills. Order is important!
+import 'react-app-polyfill/stable'
+import 'whatwg-fetch'
+import 'abortcontroller-polyfill'
+import 'url-polyfill'
+
 // Import dependencies.
 import * as Sentry from '@sentry/react'
-import 'abortcontroller-polyfill'
 import { createBrowserHistory } from 'history'
 import { syncHistoryWithStore } from 'mobx-react-router'
 import allSettled from 'promise.allsettled'
-// Import polyfills. Order is important!
-import 'react-app-polyfill/stable'
 import ReactDOM from 'react-dom'
-import 'react-hint/css/index.css'
 import { createIntl, createIntlCache, RawIntlProvider } from 'react-intl'
 import { ThemeProvider } from 'react-jss'
 import { SkeletonTheme } from 'react-loading-skeleton'
 import { Router } from 'react-router-dom'
-import 'react-toastify/dist/ReactToastify.css'
-import 'url-polyfill'
-import 'whatwg-fetch'
 import { App } from './App'
 import { createClient } from './axiosFactory'
 import { Head } from './components'
 import { config } from './config'
 import { ErrorBoundary } from './ErrorBoundary'
-import './index.css'
 import { DefaultTheme } from './SaladTheme'
 import { createStore } from './Store'
 import { Tooltips } from './Tooltips'
