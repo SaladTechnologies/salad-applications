@@ -13,8 +13,6 @@ export interface Avatar {
   description: string
   id: string
   imageUrl: string
-  selected?: boolean | null
-  errorMessage?: string
 }
 
 export interface AvatarForm {

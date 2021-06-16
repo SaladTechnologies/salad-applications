@@ -3,14 +3,15 @@ import { RootStore } from '../../../Store'
 import { Account } from './components'
 
 const mapStoreToProps = (store: RootStore): any => ({
-  profile: store.profile.currentProfile,
+  avatarError: store.profile.avatarError,
   avatars: store.profile.avatars,
-  selectedAvatar: store.profile.selectedAvatar,
-  isUpdating: store.profile.isUpdating,
-  onUpdateUsername: store.profile.updateUsername,
-  onUpdateMinecraftUsername: store.profile.updateMinecraftUsername,
+  isAvatarSubmitting: store.profile.isAvatarSubmitting,
+  onClearAvatarError: store.profile.clearAvatarError,
   onSelectAvatar: store.profile.selectAvatar,
-  clearAvatarError: store.profile.clearAvatarError,
+  onUpdateMinecraftUsername: store.profile.updateMinecraftUsername,
+  onUpdateUsername: store.profile.updateUsername,
+  profile: store.profile.currentProfile,
+  selectedAvatar: store.profile.selectedAvatar,
 })
 
 export const AccountContainer = connect(mapStoreToProps, Account)

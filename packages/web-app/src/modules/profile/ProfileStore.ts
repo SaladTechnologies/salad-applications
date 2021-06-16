@@ -3,79 +3,59 @@ import { action, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { FormValues } from '../account-views/account-views/components/'
 import { NotificationMessageCategory } from '../notifications/models'
-import { Avatar, AvatarForm, Profile } from './models'
+import { Avatar, Profile } from './models'
+
 export class ProfileStore {
+  private currentSelectedAvatar?: Avatar
+
+  @observable
+  public avatarError?: {
+    avatarId: string
+    message: string
+  }
+
+  @observable
+  public avatars?: Avatar[]
+
   @observable
   public currentProfile?: Profile
 
   @observable
-  public isUpdating: boolean = false
-
-  @observable
-  public isFirstLogin: boolean = false
-
-  @observable
-  public isLoading: boolean = false
-
-  @observable
-  public avatars?: Avatar[] = []
+  public isAvatarSubmitting: boolean = false
 
   @observable
   public selectedAvatar?: Avatar
-
-  @observable
-  public errorAvatarId?: string
-
-  @observable
-  private formAvatars: AvatarForm[] = []
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   @action.bound
   loadProfile = flow(function* (this: ProfileStore) {
-    console.log('Loading the user profile')
-    this.isLoading = true
     try {
       let profile = yield this.axios.get('/api/v1/profile')
       this.currentProfile = profile.data
     } catch (err) {
       this.currentProfile = undefined
       this.store.routing.replace('/profile-error')
-    } finally {
-      this.isLoading = false
     }
     return this.currentProfile
   })
 
   @action.bound
   loadAvatars = flow(function* (this: ProfileStore) {
-    console.log('Loading avatars')
-    this.isLoading = true
     try {
       let avatar = yield this.axios.get('/api/v2/avatars')
       this.avatars = avatar.data
-      this.formAvatars = avatar.data.slice()
     } catch (err) {
-      this.avatars = undefined
-    } finally {
-      this.isLoading = false
     }
   })
 
   @action.bound
   loadSelectedAvatar = flow(function* (this: ProfileStore) {
-    console.log('Loading selected avatar')
-
-    this.isLoading = true
     try {
       let selectedAvatar = yield this.axios.get('/api/v2/avatars/selected')
-      this.selectedAvatar = selectedAvatar.data
+      this.currentSelectedAvatar = this.selectedAvatar = selectedAvatar.data
     } catch (err) {
-      this.selectedAvatar = undefined // TODO: change this to an defaultAvatar object
-    } finally {
-      this.isLoading = false
     }
-    return this.selectedAvatar
   })
 
   @action.bound
@@ -89,7 +69,6 @@ export class ProfileStore {
       return
     }
 
-    this.isUpdating = true
     try {
       const response = yield this.axios.patch('/api/v1/profile', {
         lastSeenApplicationVersion: whatsNewVersion,
@@ -97,53 +76,51 @@ export class ProfileStore {
 
       this.currentProfile = response.data
       this.store.analytics.trackWhatsNew(whatsNewVersion)
-    } finally {
-      this.isUpdating = false
+    } catch (err) {
     }
   })
 
   @action.bound
   selectAvatar = flow(function* (this: ProfileStore, id: string) {
-    this.isUpdating = true
+    if (this.isAvatarSubmitting || !this.avatars || (this.selectedAvatar && this.selectedAvatar.id === id)) {
+      return
+    }
 
+    this.avatarError = undefined
+    this.isAvatarSubmitting = true
+    this.selectedAvatar = this.avatars.find(avatar => avatar.id === id)
     try {
-      let patch = yield this.axios.patch('/api/v2/avatars/selected', { avatarId: id })
-      let selectedAvatar = patch.data
-
-      this.selectedAvatar = selectedAvatar
-    } catch (err) {
-      this.errorAvatarId = id
-      this.avatars?.forEach((avatar) => {
-        if (avatar.id === id) {
-          avatar.errorMessage = 'Unable to select avatar'
-        } else {
-          avatar.errorMessage = undefined
-        }
+      yield new Promise((resolve) => {
+        setTimeout(resolve, 5000)
       })
+      let patch = yield this.axios.patch('/api/v2/avatars/selected', { avatarId: id })
+      this.currentSelectedAvatar = this.selectedAvatar = patch.data
+    } catch (err) {
+      this.avatarError = {
+        avatarId: id,
+        message: 'Unable to select avatar'
+      }
+      this.selectedAvatar = this.currentSelectedAvatar
     } finally {
-      this.isUpdating = false
+      this.isAvatarSubmitting = false
     }
   })
 
   @action
-  clearAvatarError = (avatars: any) => {
-    this.avatars = avatars ? avatars.map((avatar: Avatar) => (avatar.errorMessage = undefined)) : this.formAvatars
+  clearAvatarError = () => {
+    this.avatarError = undefined
   }
 
   @action.bound
   updateUsername = flow(function* (this: ProfileStore, username: FormValues) {
     if (this.currentProfile === undefined) return
 
-    this.isUpdating = true
-
     try {
       let patch = yield this.axios.patch('/api/v1/profile', { username: username.input })
       let profile = patch.data
 
       this.currentProfile = profile
-    } finally {
-      this.isUpdating = false
-    }
+    } catch (err) {}
   })
 
   @action.bound
@@ -151,8 +128,6 @@ export class ProfileStore {
     if (this.currentProfile === undefined) {
       return
     }
-
-    this.isUpdating = true
 
     try {
       let patch = yield this.axios.patch('/api/v1/profile', {
@@ -177,8 +152,6 @@ export class ProfileStore {
         autoClose: false,
         type: 'error',
       })
-    } finally {
-      this.isUpdating = false
     }
   })
 }

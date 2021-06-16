@@ -14,15 +14,18 @@ const styles = {
 }
 
 interface Props extends WithStyles<typeof styles> {
-  profile?: Profile
+  avatarError?: {
+    avatarId: string
+    message: string
+  }
   avatars?: Avatar[]
-  isUpdating?: boolean
-  selectedAvatar?: Avatar
-  errorAvatarId?: string
-  onUpdateUsername: (data: FormValues) => void
-  onUpdateMinecraftUsername: (data: FormValues) => void
+  isAvatarSubmitting: boolean
+  onClearAvatarError: () => void
   onSelectAvatar: (id: string) => void
-  clearAvatarError: () => void
+  onUpdateMinecraftUsername: (data: FormValues) => void
+  onUpdateUsername: (data: FormValues) => void
+  profile?: Profile
+  selectedAvatar?: Avatar
 }
 
 export type FormValues = {
@@ -33,8 +36,9 @@ class _Account extends Component<Props> {
     const {
       profile,
       onUpdateUsername,
-      errorAvatarId,
-      clearAvatarError,
+      avatarError,
+      isAvatarSubmitting,
+      onClearAvatarError,
       onUpdateMinecraftUsername,
       onSelectAvatar,
       classes,
@@ -57,10 +61,11 @@ class _Account extends Component<Props> {
           {avatars && (
             <>
               <AvatarSelect
-                clearAvatarError={clearAvatarError}
                 avatars={avatars}
+                error={avatarError}
+                isSubmitting={isAvatarSubmitting}
+                onClearError={onClearAvatarError}
                 onSelectAvatar={onSelectAvatar}
-                errorAvatarId={errorAvatarId}
                 selectedAvatar={selectedAvatar}
               />
               <Divider />
