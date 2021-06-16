@@ -10,12 +10,15 @@ import 'abortcontroller-polyfill'
 import 'url-polyfill'
 
 // Import dependencies.
+import { ThemeProvider as EmotionThemeProvider } from '@emotion/react'
+import { DefaultTheme as EmotionTheme } from '@saladtechnologies/garden-components'
 import * as Sentry from '@sentry/react'
 import { createBrowserHistory } from 'history'
 import { syncHistoryWithStore } from 'mobx-react-router'
 import allSettled from 'promise.allsettled'
 import ReactDOM from 'react-dom'
-import { ThemeProvider } from 'react-jss'
+import { createIntl, createIntlCache, RawIntlProvider } from 'react-intl'
+import { ThemeProvider as JSSThemeProvider } from 'react-jss'
 import { SkeletonTheme } from 'react-loading-skeleton'
 import { Router } from 'react-router-dom'
 import { App } from './App'
@@ -23,7 +26,7 @@ import { createClient } from './axiosFactory'
 import { Head } from './components'
 import { config } from './config'
 import { ErrorBoundary } from './ErrorBoundary'
-import { DefaultTheme } from './SaladTheme'
+import { DefaultTheme as JSSTheme } from './SaladTheme'
 import { createStore } from './Store'
 import { Tooltips } from './Tooltips'
 
@@ -73,18 +76,31 @@ routerHistory.block((location, action) => {
 
 const history = syncHistoryWithStore(routerHistory, rootStore.routing)
 
+const cache = createIntlCache()
+const intl = createIntl(
+  {
+    locale: 'en-US',
+    messages: {},
+  },
+  cache,
+)
+
 ReactDOM.render(
   <Router history={history}>
-    <ThemeProvider theme={DefaultTheme}>
-      <SkeletonTheme color={'#172E40'} highlightColor="#304759">
-        <ErrorBoundary>
-          {/* Default page title for any page that doesn't specify one */}
-          <Head title="Salad Technologies" />
-          <Tooltips />
-          <App history={history} />
-        </ErrorBoundary>
-      </SkeletonTheme>
-    </ThemeProvider>
+    <RawIntlProvider value={intl}>
+      <EmotionThemeProvider theme={EmotionTheme}>
+        <JSSThemeProvider theme={JSSTheme}>
+          <SkeletonTheme color={'#172E40'} highlightColor="#304759">
+            <ErrorBoundary>
+              {/* Default page title for any page that doesn't specify one */}
+              <Head title="Salad Technologies" />
+              <Tooltips />
+              <App history={history} />
+            </ErrorBoundary>
+          </SkeletonTheme>
+        </JSSThemeProvider>
+      </EmotionThemeProvider>
+    </RawIntlProvider>
   </Router>,
   document.getElementById('root'),
 )

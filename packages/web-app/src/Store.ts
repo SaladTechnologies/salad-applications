@@ -6,6 +6,7 @@ import { config } from './config'
 import { AnalyticsStore } from './modules/analytics'
 import { AuthStore } from './modules/auth'
 import { BalanceStore } from './modules/balance'
+import { BonusStore } from './modules/bonus'
 import { RefreshService } from './modules/data-refresh'
 import { EngagementStore } from './modules/engagement'
 import { HomeStore } from './modules/home/HomeStore'
@@ -64,6 +65,7 @@ export class RootStore {
   public readonly engagement: EngagementStore
   public readonly zendesk: Zendesk
   public readonly storefront: StorefrontStore
+  public readonly bonuses: BonusStore
 
   constructor(readonly axios: AxiosInstance) {
     this.routing = new RouterStore()
@@ -87,6 +89,7 @@ export class RootStore {
     this.engagement = new EngagementStore(this, axios)
     this.zendesk = new Zendesk(axios, this.auth, this.native, this.analytics)
     this.storefront = new StorefrontStore(axios)
+    this.bonuses = new BonusStore(this, axios)
 
     addAuthInterceptor(axios, this.auth)
 

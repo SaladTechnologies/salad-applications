@@ -62,7 +62,11 @@
     "@fortawesome/free-regular-svg-icons": "5.15.3",
     "@fortawesome/free-solid-svg-icons": "5.15.3",
     "@fortawesome/react-fontawesome": "0.1.14",
+<<<<<<< HEAD
     "@saladtechnologies/garden-components": "file:../../libs/saladtechnologies-garden-components-1.0.18.tgz",
+=======
+    "@saladtechnologies/garden-components": "file:../../libs/saladtechnologies-garden-components-1.0.3.tgz",
+>>>>>>> operation-avalanche
     "@saladtechnologies/garden-icons": "file:../../libs/saladtechnologies-garden-icons-1.0.1.tgz",
     "@sentry/react": "6.3.6",
     "@sentry/types": "6.3.6",
@@ -79,6 +83,7 @@
     "@types/classnames": "2.3.1",
     "@types/jest": "26.0.23",
     "@types/lodash": "4.14.168",
+    "@types/luxon": "1.27.0",
     "@types/mixpanel-browser": "2.35.6",
     "@types/node": "14.14.44",
     "@types/promise.allsettled": "1.0.3",
