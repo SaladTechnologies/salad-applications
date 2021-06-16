@@ -3,18 +3,40 @@ import { DateTime } from 'luxon'
 import { action, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { NotificationMessage, NotificationMessageCategory } from '../notifications/models'
-import { Bonus, BonusType } from './models'
+import { Bonus, BonusEarningRate, BonusType } from './models'
 
 export class BonusStore {
   /** A collection of all unclaimed bonuses */
   @observable
   public unclaimedBonuses: Bonus[] = []
 
+  @observable
+  public currentEarningBonus: BonusEarningRate | undefined
+
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
-  /** (Re)Loads all bonuses */
+  /** (Re)Loads the current active bonuses */
+  loadBonuses = () => {
+    this.loadEarningRates()
+    this.loadUnclaimedBonuses()
+  }
+
+  /** (Re)Loads the active earning rate bonuses */
   @action.bound
-  loadBonuses = flow(function* (this: BonusStore) {
+  loadEarningRates = flow(function* (this: BonusStore) {
+    try {
+      let res = yield this.axios.get('/api/v2/bonuses/earning-rate')
+
+      this.currentEarningBonus = res.data
+    } catch (error) {
+      this.currentEarningBonus = undefined
+      console.error(error)
+    }
+  })
+
+  /** (Re)Loads all unclaimed bonuses */
+  @action.bound
+  loadUnclaimedBonuses = flow(function* (this: BonusStore) {
     try {
       let res = yield this.axios.get('/api/v2/bonuses')
 
@@ -41,6 +63,14 @@ export class BonusStore {
 
     try {
       const bonus = this.unclaimedBonuses.find((x) => x.id === bonusId)
+
+      if (!bonus) throw Error('Bonus not found')
+
+      // Check to see if we are overriding a current earning rate bonus
+      if (bonus.blockType === BonusType.EarningRate && this.currentEarningBonus !== undefined) {
+        // TODO: Scott. Show a modal here warning the user that they are going to replace {this.currentEarningBonus.multiplier}x with a new bonus {bonus.multiplier}x
+        console.error('TODO: Need confirmation that the user wants to replace their earning rate')
+      }
 
       yield this.axios.post(`/api/v2/bonuses/${bonusId}/claim`)
 
