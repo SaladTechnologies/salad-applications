@@ -2039,9 +2039,9 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@saladtechnologies/garden-components@file:../../libs/saladtechnologies-garden-components-1.0.1.tgz":
-  version "1.0.1"
-  resolved "file:../../libs/saladtechnologies-garden-components-1.0.1.tgz#4804be0c270d1ce036aeca03bcb7d05b1861e001"
+"@saladtechnologies/garden-components@file:../../libs/saladtechnologies-garden-components-1.0.3.tgz":
+  version "1.0.3"
+  resolved "file:../../libs/saladtechnologies-garden-components-1.0.3.tgz#e2ae55e83743dc1e6de2019a9bb4ab6c458814a9"
 
 "@saladtechnologies/garden-icons@file:../../libs/saladtechnologies-garden-icons-1.0.1.tgz":
   version "1.0.1"
@@ -3051,7 +3051,7 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.168.tgz#fe24632e79b7ade3f132891afff86caa5e5ce008"
   integrity sha512-oVfRvqHV/V6D1yifJbVRU3TMp8OT6o6BG+U9MkwuJ3U8/CsDHvalRpsxBqivn71ztOFZBTfJMvETbqHiaNSj7Q==
 
-"@types/luxon@^1.27.0":
+"@types/luxon@1.27.0":
   version "1.27.0"
   resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-1.27.0.tgz#1e3b5a7f8ca6944349c43498b4442b742c71ab0b"
   integrity sha512-rr2lNXsErnA/ARtgFn46NtQjUa66cuwZYeo/2K7oqqxhJErhXgHBPyNKCo+pfOC3L7HFwtao8ebViiU9h4iAxA==

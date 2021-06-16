@@ -5,16 +5,25 @@ import { DefaultTheme } from '@saladtechnologies/garden-components'
 import { History } from 'history'
 import { Component } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
+import { createIntl, createIntlCache, RawIntlProvider } from 'react-intl'
 import withStyles, { WithStyles } from 'react-jss'
 import { ToastContainer } from 'react-toastify'
 import { MobileDevice, NotMobile } from './components'
 import { config } from './config'
 import { MobileRoutes } from './MobileRoutes'
-import { MobileNavbarContainer, MobileTitlebarContainer } from './modules/home-views-mobile'
-import { MainTitlebarContainer } from './modules/home-views/MainTitlebarContainer'
+import { NavigationBarContainer } from './modules/home-views'
 import { Routes } from './Routes'
 import { SaladTheme } from './SaladTheme'
 import { getStore } from './Store'
+
+const cache = createIntlCache()
+const intl = createIntl(
+  {
+    locale: 'en-US',
+    messages: {},
+  },
+  cache,
+)
 
 const styles = (theme: SaladTheme) => ({
   mainWindow: {
@@ -39,8 +48,9 @@ const styles = (theme: SaladTheme) => ({
     left: 0,
   },
   mobileContent: {
-    padding: 20,
     flex: 1,
+    padding: 20,
+    paddingBottom: 100,
   },
   container: {
     display: 'flex',
@@ -54,6 +64,11 @@ const styles = (theme: SaladTheme) => ({
     flex: 1,
     maxWidth: 1600,
     position: 'relative',
+    paddingBottom: 100,
+  },
+  navBarLine: {
+    borderTop: `1px solid ${theme.green}`,
+    marginTop: 60,
   },
 })
 
@@ -95,7 +110,10 @@ const searchConfig = {
 
 const DesktopLayout = ({ history, classes }: Props) => (
   <div className={classes.mainWindow}>
-    <MainTitlebarContainer />
+    <div>
+      <NavigationBarContainer />
+      <hr className={classes.navBarLine} />
+    </div>
     <div className={classes.container}>
       <div className={classes.content}>
         <SearchProvider
@@ -140,27 +158,31 @@ export const App = withStyles(styles)(
       const isDesktop = this.store.native.isNative
 
       return (
-        <ThemeProvider theme={DefaultTheme}>
-          {!isDesktop && (
-            <>
-              <MobileDevice>
-                <div className={classes.mobileMainWindow}>
-                  <MobileTitlebarContainer />
-                  <Scrollbars>
-                    <div className={classes.mobileContent}>
-                      <MobileRoutes />
+        <RawIntlProvider value={intl}>
+          <ThemeProvider theme={DefaultTheme}>
+            {!isDesktop && (
+              <>
+                <MobileDevice>
+                  <div className={classes.mobileMainWindow}>
+                    <div>
+                      <NavigationBarContainer />
+                      <hr className={classes.navBarLine} />
                     </div>
-                  </Scrollbars>
-                  <MobileNavbarContainer />
-                </div>
-              </MobileDevice>
-              <NotMobile>
-                <DesktopLayout {...this.props} />
-              </NotMobile>
-            </>
-          )}
-          {isDesktop && <DesktopLayout {...this.props} />}
-        </ThemeProvider>
+                    <Scrollbars>
+                      <div className={classes.mobileContent}>
+                        <MobileRoutes />
+                      </div>
+                    </Scrollbars>
+                  </div>
+                </MobileDevice>
+                <NotMobile>
+                  <DesktopLayout {...this.props} />
+                </NotMobile>
+              </>
+            )}
+            {isDesktop && <DesktopLayout {...this.props} />}
+          </ThemeProvider>
+        </RawIntlProvider>
       )
     }
   },

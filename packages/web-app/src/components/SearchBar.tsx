@@ -10,7 +10,7 @@ const styles = (theme: SaladTheme) => ({
     position: 'absolute',
     top: 0,
     right: 0,
-    zIndex: 100,
+    zIndex: 2,
     display: 'inline-flex',
     padding: '10px 10px 10px 5px',
     flexWrap: 'nowrap',
