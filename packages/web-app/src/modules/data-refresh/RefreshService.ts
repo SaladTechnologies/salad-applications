@@ -45,6 +45,7 @@ export class RefreshService {
       this.store.vault.loadVault()
       this.store.xp.refreshXp()
       this.store.bonuses.loadBonuses()
+      this.store.seasons.loadCurrentSeason()
     } catch (error) {
       console.error(error)
     }
