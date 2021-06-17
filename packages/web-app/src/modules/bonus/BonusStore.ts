@@ -91,6 +91,8 @@ export class BonusStore {
         case BonusType.Balance:
           break
         case BonusType.EarningRate:
+          notification.message = 'Your bonus earning rate is now active. Check your earnings for more details.'
+          notification.onClick = () => this.store.routing.push('/earn/summary')
           break
         case BonusType.Reward:
           // NOTE: These should be kept in sync with the notification for successful reward redemptions
