@@ -1,5 +1,6 @@
 // Import CSS. Order is important!
 import './index.css'
+import '@saladtechnologies/garden-fonts'
 import 'react-hint/css/index.css'
 import 'react-toastify/dist/ReactToastify.css'
 
