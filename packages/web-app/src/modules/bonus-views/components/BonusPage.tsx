@@ -1,4 +1,5 @@
 import { BonusCard, Layout, Text } from '@saladtechnologies/garden-components'
+import { Observer } from 'mobx-react'
 import { Component } from 'react'
 import type { IntlShape } from 'react-intl'
 import { injectIntl } from 'react-intl'
@@ -19,14 +20,15 @@ const styles = () => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  unclaimedBonuses: Bonus[]
-  claimBonus: (id: string) => void
+  unclaimedBonuses?: Bonus[]
+  pendingBonuses?: Set<string>
+  claimBonus?: (id: string) => void
   intl: IntlShape
 }
 
 class _BonusPage extends Component<Props> {
   render() {
-    const { unclaimedBonuses, claimBonus, intl, classes } = this.props
+    const { unclaimedBonuses, pendingBonuses, claimBonus, intl, classes } = this.props
     const hasBonuses = unclaimedBonuses && unclaimedBonuses.length !== 0
 
     return (
@@ -36,20 +38,28 @@ class _BonusPage extends Component<Props> {
           {!hasBonuses && <Text variant="baseM">No unclaimed bonuses available</Text>}
           {hasBonuses && (
             <div className={classes.cardContainer}>
-              {unclaimedBonuses.map((x) => (
-                <div className={classes.cardWraper} key={x.id}>
-                  <BonusCard
-                    key={x.id}
-                    buttonLabel="Claim"
-                    description={`Expires on ${intl.formatDate(x.expiresAt)}`}
-                    header={x.reason || ''}
-                    image={x.iconImageUrl || ''}
-                    imageAlt={x.name || 'bonus image'}
-                    onClick={() => claimBonus(x.id)}
-                    title={x.name || ''}
-                    variant="large"
-                  />
-                </div>
+              {unclaimedBonuses?.map((x) => (
+                <Observer>
+                  {() => {
+                    let pending = pendingBonuses?.has(x.id)
+                    return (
+                      <div className={classes.cardWraper} key={x.id}>
+                        <BonusCard
+                          key={x.id}
+                          buttonLabel="Claim"
+                          description={`Expires on ${intl.formatDate(x.expiresAt)}`}
+                          header={x.reason || ''}
+                          image={x.iconImageUrl || ''}
+                          imageAlt={x.name || 'bonus image'}
+                          onClick={() => claimBonus?.(x.id)}
+                          title={x.name || ''}
+                          variant="large"
+                          isLoading={pending}
+                        />
+                      </div>
+                    )
+                  }}
+                </Observer>
               ))}
             </div>
           )}
