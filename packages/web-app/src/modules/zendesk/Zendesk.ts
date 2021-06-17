@@ -1,17 +1,22 @@
 import { AxiosInstance } from 'axios'
 import { action, flow, observable } from 'mobx'
+import { ErrorPageType } from '../../UIStore'
 import { AnalyticsStore } from '../analytics'
 import { AuthStore } from '../auth'
 import { NativeStore } from '../machine'
 import { AntiVirusSoftware, ZendeskArticle, ZendeskArticleList, ZendeskArticleResource } from './models'
 import { getAntiVirusSoftware, getZendeskAVData } from './utils'
-import { ErrorPageType } from '../../UIStore'
 
 export class Zendesk {
   private static injected: boolean = false
+
   private static injectionError: boolean = false
+
+  private chatAuthRetryTimeout?: NodeJS.Timeout
+
+  private helpCenterAuthRetryTimeout?: NodeJS.Timeout
+
   private initializeRetryTimeout?: NodeJS.Timeout
-  private reauthenticateRetryTimeout?: NodeJS.Timeout
 
   private detectedAntiVirus?: AntiVirusSoftware
 
@@ -39,20 +44,43 @@ export class Zendesk {
     this.inject()
   }
 
-  private async getJWTToken(): Promise<string | undefined> {
-    if (this.reauthenticateRetryTimeout) {
-      clearTimeout(this.reauthenticateRetryTimeout)
-      this.reauthenticateRetryTimeout = undefined
+  private async getChatToken(): Promise<string | undefined> {
+    if (this.chatAuthRetryTimeout) {
+      clearTimeout(this.chatAuthRetryTimeout)
+      this.chatAuthRetryTimeout = undefined
     }
 
     let jwtToken: string | undefined
     if (this.auth.isAuthenticated) {
       try {
-        let response = await this.axios.post(`/api/v2/zendesk-tokens`)
+        let response = await this.axios.post(`/api/v2/zendesk-tokens/chat`)
         jwtToken = response.data.token
       } catch (e) {
         if (e.response == null || e.response.status !== 404) {
-          this.reauthenticateRetryTimeout = setTimeout(() => {
+          this.chatAuthRetryTimeout = setTimeout(() => {
+            window.zE!('webWidget', 'chat:reauthenticate')
+          }, 30000)
+        }
+      }
+    }
+
+    return jwtToken
+  }
+
+  private async getHelpCenterToken(): Promise<string | undefined> {
+    if (this.helpCenterAuthRetryTimeout) {
+      clearTimeout(this.helpCenterAuthRetryTimeout)
+      this.helpCenterAuthRetryTimeout = undefined
+    }
+
+    let jwtToken: string | undefined
+    if (this.auth.isAuthenticated) {
+      try {
+        let response = await this.axios.post(`/api/v2/zendesk-tokens/help-center`)
+        jwtToken = response.data.token
+      } catch (e) {
+        if (e.response == null || e.response.status !== 404) {
+          this.helpCenterAuthRetryTimeout = setTimeout(() => {
             window.zE!('webWidget', 'helpCenter:reauthenticate')
           }, 30000)
         }
@@ -72,11 +100,69 @@ export class Zendesk {
       window.zESettings = {
         webWidget: {
           authenticate: {
+            chat: {
+              jwtFn: async (callback) => {
+                const jwtToken = await this.getChatToken()
+                if (jwtToken) {
+                  callback(jwtToken)
+                }
+              },
+            },
             jwtFn: async (callback) => {
-              const jwtToken = await this.getJWTToken()
+              const jwtToken = await this.getHelpCenterToken()
               if (jwtToken) {
                 callback(jwtToken)
               }
+            },
+          },
+          chat: {
+            title: {
+              '*': 'Live Chat',
+            },
+            menuOptions: {
+              emailTranscript: false,
+            },
+            notifications: {
+              mobile: {
+                disable: true,
+              },
+            },
+            profileCard: {
+              avatar: true,
+              rating: false,
+              title: true,
+            },
+          },
+          contactForm: {
+            title: {
+              '*': 'Support Ticket',
+            },
+            attachments: true,
+          },
+          contactOptions: {
+            enabled: true,
+            contactButton: {
+              '*': 'Contact Us',
+            },
+            chatLabelOnline: {
+              '*': 'Live Chat',
+            },
+            chatLabelOffline: {
+              '*': 'Live Chat (Offline)',
+            },
+            contactFormLabel: {
+              '*': 'Support Ticket',
+            },
+          },
+          helpCenter: {
+            title: {
+              '*': 'Support',
+            },
+            originalArticleButton: false,
+          },
+          navigation: {
+            popoutButton: {
+              enabled: false,
             },
           },
           offset: {
@@ -119,6 +205,9 @@ export class Zendesk {
       return
     }
 
+    let initialized = true
+
+    // Initialize contact form.
     try {
       window.zE('webWidget', 'prefill', {
         name: {
@@ -131,19 +220,32 @@ export class Zendesk {
         },
       })
     } catch (e) {
-      console.error('Unable to prefill Zendesk')
+      console.error('Failed to prefill Zendesk contact form')
       console.error(e)
+      initialized = false
     }
 
+    // Initialize chat.
+    try {
+      window.zE('webWidget', 'chat:reauthenticate')
+    } catch (e) {
+      console.error('Failed to authenticate Zendesk chat')
+      console.error(e)
+      initialized = false
+    }
+
+    // Initialize help center.
     try {
       window.zE('webWidget', 'helpCenter:reauthenticate')
-      if (this.initializeRetryTimeout !== undefined) {
-        clearTimeout(this.initializeRetryTimeout)
-        this.initializeRetryTimeout = undefined
-      }
     } catch (e) {
-      console.log('Unable to authenticate Zendesk web widget')
-      console.log(e)
+      console.error('Unable to authenticate Zendesk help center')
+      console.error(e)
+      initialized = false
+    }
+
+    if (initialized && this.initializeRetryTimeout !== undefined) {
+      clearTimeout(this.initializeRetryTimeout)
+      this.initializeRetryTimeout = undefined
     }
   }
 
@@ -164,13 +266,23 @@ export class Zendesk {
       return
     }
 
-    if (this.reauthenticateRetryTimeout) {
-      clearTimeout(this.reauthenticateRetryTimeout)
-      this.reauthenticateRetryTimeout = undefined
+    if (this.chatAuthRetryTimeout) {
+      clearTimeout(this.chatAuthRetryTimeout)
+      this.chatAuthRetryTimeout = undefined
+    }
+
+    if (this.helpCenterAuthRetryTimeout) {
+      clearTimeout(this.helpCenterAuthRetryTimeout)
+      this.helpCenterAuthRetryTimeout = undefined
     }
 
     try {
-      window.zE.logout()
+      if (typeof window.zE.logout === 'function') {
+        window.zE.logout()
+      } else {
+        window.zE('webWidget', 'logout')
+      }
+
       if (this.initializeRetryTimeout !== undefined) {
         clearTimeout(this.initializeRetryTimeout)
         this.initializeRetryTimeout = undefined
@@ -278,19 +390,15 @@ export class Zendesk {
     }.bind(this),
   )
 
-
   @action.bound
   loadFirewallArticle = flow(
     function* (this: Zendesk) {
       this.setErrorType(ErrorPageType.Firewall)
       this.loadingArticle = true
       try {
-        let res: Response = yield fetch(
-          'https://salad.zendesk.com/api/v2/help_center/en-us/articles/360058674291',
-          {
-            credentials: 'omit',
-          },
-        )
+        let res: Response = yield fetch('https://salad.zendesk.com/api/v2/help_center/en-us/articles/360058674291', {
+          credentials: 'omit',
+        })
         const data: ZendeskArticleResource = yield res.json()
         this.helpCenterArticle = data.article.body
       } catch (err) {
