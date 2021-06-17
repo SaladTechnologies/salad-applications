@@ -1,4 +1,4 @@
-import { AvatarSelectionForm, Text } from '@saladtechnologies/garden-components'
+import { AvatarSelectionForm } from '@saladtechnologies/garden-components'
 import { FunctionComponent, useMemo } from 'react'
 import { Avatar } from '../../../profile/models'
 
@@ -35,15 +35,12 @@ export const AvatarSelect: FunctionComponent<AvatarProps> = ({
   }, [avatars, error, selectedAvatar])
 
   return (
-    <>
-      <Text as="p">Avatar</Text>{' '}
-      <AvatarSelectionForm
-        avatars={avatarFormItems}
-        isSubmitting={isSubmitting}
-        onClearError={onClearError}
-        onSelect={onSelectAvatar}
-      ></AvatarSelectionForm>
-    </>
+    <AvatarSelectionForm
+      avatars={avatarFormItems}
+      isSubmitting={isSubmitting}
+      onClearError={onClearError}
+      onSelect={onSelectAvatar}
+    ></AvatarSelectionForm>
   )
 }
 
