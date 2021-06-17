@@ -1,4 +1,4 @@
-import { AvatarDefault, NavigationBar, Avatar } from '@saladtechnologies/garden-components'
+import { Avatar, AvatarDefault, NavigationBar } from '@saladtechnologies/garden-components'
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
 import { ErrorPageType } from '../../UIStore'
@@ -32,9 +32,10 @@ const mapStoreToProps = (store: RootStore): any => {
           alt={store.profile.selectedAvatar.name}
           src={store.profile.selectedAvatar.imageUrl}
           onClick={goToAccount}
+          variant="highlighted"
         />
       ) : (
-        <AvatarDefault onClick={goToAccount} />
+        <AvatarDefault onClick={goToAccount} variant="highlighted" />
       )
     ) : undefined,
     balance: isAuthenticated ? store.balance.currentBalance : undefined,
