@@ -277,19 +277,6 @@ export class Zendesk {
     }
 
     try {
-      window.zE!('webWidget', 'updateSettings', {
-        webWidget: {
-          chat: {
-            suppress: true,
-          },
-        },
-      })
-    } catch (e) {
-      console.error('Unable to logout of Zendesk')
-      console.error(e)
-    }
-
-    try {
       if (typeof window.zE.logout === 'function') {
         window.zE.logout()
       } else {
