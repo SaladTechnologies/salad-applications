@@ -14,9 +14,9 @@ const mapStoreToProps = (store: RootStore): any => {
   const menuItems: MenuItem[] = [
     { url: '/settings/summary', text: 'Account', component: AccountContainer },
     { url: '/settings/referrals', text: 'Referrals', component: ReferralSettingsContainer },
-    { url: '/settings/reward-vault', text: 'Reward Vault', component: VaultListContainer },
-    { url: '/seasons', text: 'Seasons', component: CurrentSeasonPageContainer },
-    { url: '/bonuses', text: 'Bonuses', component: BonusPageContainer },
+    { url: '/settings/reward-vault', text: 'Reward Vault', component: VaultListContainer, divider: true },
+    { url: '/settings/seasons', text: 'Seasons', component: CurrentSeasonPageContainer },
+    { url: '/settings/bonuses', text: 'Bonuses', component: BonusPageContainer },
     {
       url: EngagementStore.CHANGELOG_URL,
       text: "What's New",
@@ -28,9 +28,9 @@ const mapStoreToProps = (store: RootStore): any => {
   const nativeMenuItems: MenuItem[] = [
     { url: '/settings/summary', text: 'Account', component: AccountContainer },
     { url: '/settings/referrals', text: 'Referrals', component: ReferralSettingsContainer },
-    { url: '/settings/reward-vault', text: 'Reward Vault', component: VaultListContainer },
-    { url: '/seasons', text: 'Seasons', component: CurrentSeasonPageContainer },
-    { url: '/bonuses', text: 'Bonuses', component: BonusPageContainer },
+    { url: '/settings/reward-vault', text: 'Reward Vault', component: VaultListContainer, divider: true },
+    { url: '/settings/seasons', text: 'Seasons', component: CurrentSeasonPageContainer },
+    { url: '/settings/bonuses', text: 'Bonuses', component: BonusPageContainer },
     {
       url: '/settings/desktop-settings',
       text: 'Desktop App Settings',
