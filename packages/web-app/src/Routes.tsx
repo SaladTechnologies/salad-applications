@@ -3,7 +3,6 @@ import { Component } from 'react'
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router'
 import { LoadingPage } from './components'
 import { EmailVerificationPageContainer, LoginPageContainer, LogoutPageContainer } from './modules/auth-views'
-import { BonusPageContainer } from './modules/bonus-views'
 import { EarnMenuContainer } from './modules/earn-views'
 import {
   CudaErrorContainer,
@@ -18,7 +17,6 @@ import {
 import { DontLoseProgressPageContainer } from './modules/machine-views'
 import { RewardDetailsContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
-import { CurrentSeasonPageContainer } from './modules/seasons-views'
 import { SettingsContainer } from './modules/settings-views'
 import { StorefrontHomePage } from './modules/storefront-views/pages/StorefrontHomePage'
 import { PrivateRoute } from './PrivateRoute'
@@ -54,8 +52,6 @@ class _Routes extends Component<RouteComponentProps> {
           <Route exact path="/errors/firewall" component={FirewallErrorContainer} />
           <Route exact path="/warnings/dont-lose-progress" component={DontLoseProgressPageContainer} />
           <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
-          <Route exact path="/bonuses" component={BonusPageContainer} />
-          <Route exact path="/seasons" component={CurrentSeasonPageContainer} />
           <Redirect exact from="/whats-new" to="/" />
           <Redirect exact from="/account/summary" to="/settings/summary" />
           <Redirect exact from="/account/referrals" to="/settings/referrals" />
