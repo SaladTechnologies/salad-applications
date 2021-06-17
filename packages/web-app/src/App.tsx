@@ -1,5 +1,6 @@
 import { SearchProvider } from '@elastic/react-search-ui'
 import AppSearchAPIConnector from '@elastic/search-ui-app-search-connector'
+import classnames from 'classnames'
 import { History } from 'history'
 import { Component } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
@@ -8,7 +9,7 @@ import { ToastContainer } from 'react-toastify'
 import { MobileDevice, NotMobile } from './components'
 import { config } from './config'
 import { MobileRoutes } from './MobileRoutes'
-import { NavigationBarContainer } from './modules/home-views'
+import { NavigationBarContainer, WindowBarContainer } from './modules/home-views'
 import { Routes } from './Routes'
 import { SaladTheme } from './SaladTheme'
 import { getStore } from './Store'
@@ -39,6 +40,34 @@ const styles = (theme: SaladTheme) => ({
     flex: 1,
     padding: 20,
     paddingBottom: 100,
+    marginTop: 60,
+  },
+  appNavigationContainer: {
+    position: 'relative',
+    '& > div': {
+      borderBottom: `solid 1px ${theme.lightGreen}`,
+      paddingTop: 10,
+      top: 30,
+    },
+  },
+  navigationContainer: {
+    position: 'relative',
+    '& > div': {
+      borderBottom: `solid 1px ${theme.lightGreen}`,
+    },
+  },
+  mobileNavigationContainer: {
+    position: 'relative',
+    '& > div > div': {
+      borderBottom: `solid 1px ${theme.lightGreen}`,
+    },
+  },
+  appContainer: {
+    display: 'flex',
+    flex: 1,
+    justifyContent: 'center',
+    position: 'relative',
+    overflow: 'hidden',
   },
   container: {
     display: 'flex',
@@ -53,10 +82,10 @@ const styles = (theme: SaladTheme) => ({
     maxWidth: 1600,
     position: 'relative',
     paddingBottom: 100,
-  },
-  navBarLine: {
-    borderTop: `1px solid ${theme.green}`,
     marginTop: 60,
+  },
+  appContent: {
+    marginTop: 100,
   },
 })
 
@@ -98,12 +127,35 @@ const searchConfig = {
 
 const DesktopLayout = ({ history, classes }: Props) => (
   <div className={classes.mainWindow}>
-    <div>
+    <div className={classes.navigationContainer}>
       <NavigationBarContainer />
-      <hr className={classes.navBarLine} />
     </div>
     <div className={classes.container}>
       <div className={classes.content}>
+        <SearchProvider
+          config={{
+            ...searchConfig,
+            history: history,
+          }}
+        >
+          <Routes />
+        </SearchProvider>
+      </div>
+      <ToastContainer />
+    </div>
+  </div>
+)
+
+const AppLayout = ({ history, classes }: Props) => (
+  <div className={classes.mainWindow}>
+    <div>
+      <WindowBarContainer />
+      <div className={classes.appNavigationContainer}>
+        <NavigationBarContainer />
+      </div>
+    </div>
+    <div className={classes.appContainer}>
+      <div className={classnames(classes.content, classes.appContent)}>
         <SearchProvider
           config={{
             ...searchConfig,
@@ -142,16 +194,15 @@ export const App = withStyles(styles)(
 
     render() {
       if (this.store.native.isNative) {
-        return <DesktopLayout {...this.props} />
+        return <AppLayout {...this.props} />
       } else {
         const { classes } = this.props
         return (
           <>
             <MobileDevice>
               <div className={classes.mobileMainWindow}>
-                <div>
+                <div className={classes.mobileNavigationContainer}>
                   <NavigationBarContainer />
-                  <hr className={classes.navBarLine} />
                 </div>
                 <Scrollbars>
                   <div className={classes.mobileContent}>
