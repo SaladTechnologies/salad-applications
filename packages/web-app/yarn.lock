@@ -2039,13 +2039,17 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@saladtechnologies/garden-components@file:../../libs/saladtechnologies-garden-components-1.0.4.tgz":
-  version "1.0.4"
-  resolved "file:../../libs/saladtechnologies-garden-components-1.0.4.tgz#1e8cc17f6106abee67997d9950b38ef809667cdb"
+"@saladtechnologies/garden-components@file:../../libs/saladtechnologies-garden-components-1.0.5.tgz":
+  version "1.0.5"
+  resolved "file:../../libs/saladtechnologies-garden-components-1.0.5.tgz#35fe744198031bb7268baf4c46d989a60b82a858"
 
-"@saladtechnologies/garden-icons@file:../../libs/saladtechnologies-garden-icons-1.0.1.tgz":
-  version "1.0.1"
-  resolved "file:../../libs/saladtechnologies-garden-icons-1.0.1.tgz#6e17eb3af1817bd7399da4ce213148fa6687ce8c"
+"@saladtechnologies/garden-fonts@file:../../libs/saladtechnologies-garden-fonts-1.0.0.tgz":
+  version "1.0.0"
+  resolved "file:../../libs/saladtechnologies-garden-fonts-1.0.0.tgz#efbb3ce488fba99d8a9144aa291d19f25d51a4d8"
+
+"@saladtechnologies/garden-icons@file:../../libs/saladtechnologies-garden-icons-1.0.2.tgz":
+  version "1.0.2"
+  resolved "file:../../libs/saladtechnologies-garden-icons-1.0.2.tgz#2e5a00a8b17b8f8ed968df28bb1ad731cfd4c743"
 
 "@sentry/browser@6.3.6":
   version "6.3.6"
