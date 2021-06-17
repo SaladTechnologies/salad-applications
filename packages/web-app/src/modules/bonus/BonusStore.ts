@@ -10,6 +10,10 @@ export class BonusStore {
   @observable
   public unclaimedBonuses: Bonus[] = []
 
+  /** A collection of bonus ids that are pending being claimed */
+  @observable
+  public pendingBonuses = new Set<string>()
+
   @observable
   public currentEarningBonus: BonusEarningRate | undefined
 
@@ -61,6 +65,11 @@ export class BonusStore {
   claimBonus = flow(function* (this: BonusStore, bonusId: string) {
     console.log('Claiming bonus ' + bonusId)
 
+    if (this.pendingBonuses.has(bonusId)) {
+      console.warn('Bonus is already being claimed')
+      return
+    }
+
     try {
       const bonus = this.unclaimedBonuses.find((x) => x.id === bonusId)
 
@@ -71,6 +80,9 @@ export class BonusStore {
         // TODO: Scott. Show a modal here warning the user that they are going to replace {this.currentEarningBonus.multiplier}x with a new bonus {bonus.multiplier}x
         console.error('TODO: Need confirmation that the user wants to replace their earning rate')
       }
+
+      // Mark the reward as pending
+      this.pendingBonuses.add(bonusId)
 
       yield this.axios.post(`/api/v2/bonuses/${bonusId}/claim`)
 
@@ -118,6 +130,8 @@ export class BonusStore {
     } finally {
       // Refresh the list of bonuses
       yield this.store.refresh.refreshData()
+
+      this.pendingBonuses.delete(bonusId)
     }
   })
 }

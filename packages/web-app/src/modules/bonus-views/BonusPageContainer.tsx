@@ -4,6 +4,7 @@ import { BonusPage } from './components/BonusPage'
 
 const mapStoreToProps = (store: RootStore): any => ({
   unclaimedBonuses: store.bonuses.unclaimedBonuses,
+  pendingBonuses: store.bonuses.pendingBonuses,
   claimBonus: store.bonuses.claimBonus,
 })
 
