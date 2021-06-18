@@ -45,8 +45,7 @@ export class ProfileStore {
     try {
       let avatar = yield this.axios.get('/api/v2/avatars')
       this.avatars = avatar.data
-    } catch (err) {
-    }
+    } catch (err) {}
   })
 
   @action.bound
@@ -54,8 +53,7 @@ export class ProfileStore {
     try {
       let selectedAvatar = yield this.axios.get('/api/v2/avatars/selected')
       this.currentSelectedAvatar = this.selectedAvatar = selectedAvatar.data
-    } catch (err) {
-    }
+    } catch (err) {}
   })
 
   @action.bound
@@ -76,8 +74,7 @@ export class ProfileStore {
 
       this.currentProfile = response.data
       this.store.analytics.trackWhatsNew(whatsNewVersion)
-    } catch (err) {
-    }
+    } catch (err) {}
   })
 
   @action.bound
@@ -85,20 +82,16 @@ export class ProfileStore {
     if (this.isAvatarSubmitting || !this.avatars || (this.selectedAvatar && this.selectedAvatar.id === id)) {
       return
     }
-
     this.avatarError = undefined
     this.isAvatarSubmitting = true
-    this.selectedAvatar = this.avatars.find(avatar => avatar.id === id)
+    this.selectedAvatar = this.avatars.find((avatar) => avatar.id === id)
     try {
-      yield new Promise((resolve) => {
-        setTimeout(resolve, 5000)
-      })
       let patch = yield this.axios.patch('/api/v2/avatars/selected', { avatarId: id })
       this.currentSelectedAvatar = this.selectedAvatar = patch.data
     } catch (err) {
       this.avatarError = {
         avatarId: id,
-        message: 'Unable to select avatar'
+        message: 'Unable to select avatar',
       }
       this.selectedAvatar = this.currentSelectedAvatar
     } finally {
