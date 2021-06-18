@@ -1,4 +1,4 @@
-import { Avatar, AvatarDefault, NavigationBar } from '@saladtechnologies/garden-components'
+import { Avatar, AvatarDefault, BonusCard, NavigationBar } from '@saladtechnologies/garden-components'
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
 import { ErrorPageType } from '../../UIStore'
@@ -24,6 +24,7 @@ const mapStoreToProps = (store: RootStore): any => {
     : status
 
   const goToAccount = () => store.routing.push('/settings/summary')
+  const bonus = store.bonuses.firstExpiringUnclaimedBonus
 
   return {
     avatar: isAuthenticated ? (
@@ -38,8 +39,23 @@ const mapStoreToProps = (store: RootStore): any => {
       )
     ) : undefined,
     balance: isAuthenticated ? store.balance.currentBalance : undefined,
+    bonusCard: bonus ? (
+      <BonusCard
+        key={bonus.id}
+        buttonLabel="Claim"
+        description="" // description doesn't show in small variant
+        header={bonus.reason || ''}
+        image={bonus.iconImageUrl || ''}
+        imageAlt={bonus.name || 'bonus image'}
+        onClick={() => store.bonuses.claimBonus(bonus.id)}
+        title={bonus.name || ''}
+        variant="small"
+        isLoading={store.bonuses.pendingBonuses?.has(bonus.id)}
+      />
+    ) : undefined,
     onClickAvatar: goToAccount,
     onClickUsername: goToAccount,
+    onClickViewAllBonuses: () => store.routing.push('/settings/bonuses'),
     onLogOut: store.auth.logout,
     rightSideButtonLabel: isAuthenticated ? undefined : 'Login',
     rightSideButtonClick: isAuthenticated ? undefined : handleLogin,
