@@ -59,6 +59,7 @@ const mapStoreToProps = (store: RootStore): any => {
     onClickAvatar: goToAccount,
     onClickUsername: goToAccount,
     onClickViewAllBonuses: () => store.routing.push('/settings/bonuses'),
+    onInternalRoute: (path: string) => store.routing.push(path),
     onLogOut: store.auth.logout,
     rightSideButtonLabel: isAuthenticated ? undefined : 'Login',
     rightSideButtonClick: isAuthenticated ? undefined : handleLogin,
