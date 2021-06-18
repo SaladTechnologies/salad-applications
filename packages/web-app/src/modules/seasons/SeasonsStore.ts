@@ -11,8 +11,11 @@ export class SeasonsStore {
   @computed
   get duration(): string {
     if (this.currentSeason?.startAbsolute && this.currentSeason.startAbsolute) {
-      const startDateTime = DateTime.fromISO(this.currentSeason?.startAbsolute)
-      const endDateTime = DateTime.fromISO(this.currentSeason.endAbsolute)
+      const startDateTime = this.currentSeason?.startAbsolute
+      const endDateTime = this.currentSeason.endAbsolute
+
+      if (!startDateTime || !endDateTime) return ''
+
       return startDateTime.monthShort + ' ' + startDateTime.day + ' - ' + endDateTime.monthShort + ' ' + endDateTime.day
     } else {
       return ''
@@ -21,18 +24,28 @@ export class SeasonsStore {
 
   @computed
   get timeLeft(): string {
-    if (this.currentSeason?.endAbsolute) {
-      const startDate = DateTime.now()
-      const endDate = DateTime.fromISO(this.currentSeason?.endAbsolute)
+    const now = DateTime.now()
 
-      const timeDifference = endDate.diff(startDate, ['years', 'months', 'days', 'hours'])
+    if (!this.currentSeason || !this.currentSeason.startAbsolute || !this.currentSeason.endAbsolute) {
+      return ''
+    } else if (now < this.currentSeason?.startAbsolute) {
+      const endDate = this.currentSeason.startAbsolute
+
+      const timeDifference = endDate.diff(now, ['years', 'months', 'days', 'hours'])
+      const timeDifferenceObject = timeDifference.toObject()
+
+      const dayPluralForm = timeDifferenceObject.hours && timeDifferenceObject.hours <= 1 ? 'hour' : 'hours'
+      const timeRemaining = dayPluralForm ? `Starts in ${timeDifferenceObject.hours} ${dayPluralForm}` : ''
+      return timeRemaining
+    } else {
+      const endDate = this.currentSeason.endAbsolute
+
+      const timeDifference = endDate.diff(now, ['days', 'hours'])
       const timeDifferenceObject = timeDifference.toObject()
 
       const dayPluralForm = timeDifferenceObject.days && timeDifferenceObject.days <= 1 ? 'day' : 'days'
       const timeRemaining = dayPluralForm ? `${timeDifferenceObject.days} ${dayPluralForm} remaining` : ''
       return timeRemaining
-    } else {
-      return ''
     }
   }
 
@@ -64,7 +77,10 @@ export class SeasonsStore {
     try {
       let res = yield this.axios.get('/api/v2/seasons/current')
 
-      let data = res?.data as CurrentSeason
+      let data = res?.data
+
+      data.startAbsolute = DateTime.fromISO(data?.startAbsolute)
+      data.endAbsolute = DateTime.fromISO(data?.endAbsolute)
 
       this.currentSeason = data
     } catch (error) {
