@@ -7,6 +7,8 @@ const mapStoreToProps = (store: RootStore): any => ({
   levels: store.seasons.levels,
   timeLeft: store.seasons.timeLeft,
   totalXP: store.seasons.totalXP,
+  currentLevelXP: store.seasons.currentLevelXP,
+  nextLevel: store.seasons.nextLevel,
 })
 
 export const CurrentSeasonPageContainer = connect(mapStoreToProps, CurrentSeasonPage)
