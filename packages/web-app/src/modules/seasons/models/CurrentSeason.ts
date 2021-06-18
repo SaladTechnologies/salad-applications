@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon'
+
 export interface Level {
   bonusImageUrl: string
   earnedAt?: string
@@ -7,11 +9,11 @@ export interface Level {
 
 export interface CurrentSeason {
   currentLevelId: number
-  endAbsolute: string
+  endAbsolute?: DateTime
   levels: Level[]
   levelXp: number
   name: string
   nextLevelId: number
-  startAbsolute: string
+  startAbsolute?: DateTime
   totalXp: number
 }
