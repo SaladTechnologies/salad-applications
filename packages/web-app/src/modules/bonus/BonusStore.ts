@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios'
 import { DateTime } from 'luxon'
-import { action, flow, observable } from 'mobx'
+import { action, computed, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { NotificationMessage, NotificationMessageCategory } from '../notifications/models'
 import { Bonus, BonusEarningRate, BonusType } from './models'
@@ -16,6 +16,11 @@ export class BonusStore {
 
   @observable
   public currentEarningBonus: BonusEarningRate | undefined
+
+  @computed
+  get firstExpiringUnclaimedBonus(): Bonus | undefined {
+    return this.unclaimedBonuses.length > 0 ? this.unclaimedBonuses[0] : undefined
+  }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
@@ -46,6 +51,16 @@ export class BonusStore {
 
       let data = res.data as Bonus[]
 
+      const sortByDate = (a: Bonus, b: Bonus): number => {
+        if (a.expiresAt && b.expiresAt) {
+          return DateTime.fromJSDate(a.expiresAt).startOf('day') < DateTime.fromJSDate(b.expiresAt).startOf('day')
+            ? -1
+            : 1
+        } else {
+          return a.name && b.name ? a.name.localeCompare(b.name) : 0
+        }
+      }
+
       data.forEach((x) => {
         // @ts-ignore This data comes in as a string, so we can safely ignore the types since this is parsing it
         const timeString: string = x.expiresAt
@@ -54,7 +69,9 @@ export class BonusStore {
         console.log(x.iconImageUrl)
       })
 
-      this.unclaimedBonuses = data
+      const sortedBonuses = data.sort(sortByDate)
+
+      this.unclaimedBonuses = sortedBonuses
     } catch (error) {
       console.error(error)
       throw error
