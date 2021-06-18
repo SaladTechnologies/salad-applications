@@ -56,7 +56,6 @@ const styles = (theme: SaladTheme) => ({
     background: theme.darkBlue,
     position: 'sticky',
     top: 0,
-    zIndex: 10000,
   },
   gridColumnContent: {
     display: 'flex',

@@ -17,6 +17,7 @@ const styles = (theme: SaladTheme) => ({
     color: theme.lightGreen,
     flexDirection: 'column',
     backgroundColor: `${theme.darkBlue}CC`,
+    marginTop: 10,
   },
   row: {
     display: 'flex',
