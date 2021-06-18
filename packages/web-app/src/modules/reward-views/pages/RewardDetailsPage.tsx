@@ -22,7 +22,6 @@ const styles = (theme: SaladTheme) => ({
     right: 0,
     backgroundColor: theme.darkBlue,
     color: theme.lightGreen,
-    zIndex: 5000,
   },
   scrollContent: {
     paddingBottom: 100,
