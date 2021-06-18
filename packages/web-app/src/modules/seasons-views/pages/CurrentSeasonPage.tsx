@@ -8,75 +8,75 @@ import { withLogin } from '../../auth-views'
 import { Level } from '../../seasons/models'
 
 const styles = (theme: SaladTheme) => ({
-  levelsContainer: {
+  levels: {
+    alignItems: 'flex-end',
     display: 'flex',
     overflowX: 'scroll',
-    scrollbarWidth: 'thin',
-    scrollbarColor: 'light',
     paddingTop: '64px',
+    scrollbarColor: 'light',
+    scrollbarWidth: 'thin',
     '&::-webkit-scrollbar': {
       height: '10px',
       color: '#DBF1C1',
     },
-
-    // Track
-    '&::-webkit-scrollbar-track': {
-      borderBottom: 'solid 3px',
-      color: '#DBF1C1',
-    },
-
-    // handle
     '&::-webkit-scrollbar-thumb': {
       backgroundColor: '#DBF1C1',
       width: '10px',
       height: '10px',
     },
+    '&::-webkit-scrollbar-track': {
+      borderBottom: 'solid 3px',
+      color: '#DBF1C1',
+    },
+    '& > div:first-child': {
+      paddingLeft: 25,
+    },
+    '& > div': {
+      paddingBottom: 12,
+      paddingRight: 25,
+    },
+  },
+  page: {
+    backgroundImage: 'linear-gradient(to right, #56A431 , #AACF40)',
+    color: theme.darkBlue,
+    flex: 1,
   },
   subtitle: {
-    display: '-webkit-inline-box',
     paddingBottom: '48px',
   },
-  timeLeft: {
+  subtitleLabel: {
+    display: 'inline-block',
+  },
+  subtitleTime: {
     background: theme.darkBlue,
-    color: '#FFF',
-    height: 20,
+    color: '#ffffff',
+    display: 'inline-block',
     marginLeft: 15,
     padding: '2px 8px',
   },
   xp: {
     fontWeight: 'bold',
     marginTop: 16,
-    color: theme.darkBlue,
-  },
-  cardContainer: {
-    display: 'flex',
-    alignItems: 'flex-end',
-    paddingRight: '25px',
-    paddingBottom: '12px',
-    color: theme.darkBlue,
-  },
-  darkColor: {
-    color: theme.darkBlue,
   },
 })
 
 interface CurrentSeasonPageProps extends WithStyles<typeof styles> {
+  currentLevelXP: number
   duration: string
   levels: Level[]
+  nextLevel: number
   timeLeft: string
   totalXP: number
-  currentLevelXP: number
-  nextLevel: number
 }
 
 const _CurrentSeasonPage = ({
   classes,
+  currentLevelXP,
   duration,
   levels,
+  nextLevel,
   timeLeft,
   totalXP,
-  currentLevelXP,
-  nextLevel,
 }: CurrentSeasonPageProps) => {
   const intl = useIntl()
 
@@ -93,43 +93,39 @@ const _CurrentSeasonPage = ({
       : []
   }, [levels, nextLevel, currentLevelXP])
   return (
-    <div style={{ flex: 1, backgroundImage: 'linear-gradient(to right, #56A431 , #AACF40)' }}>
+    <div className={classes.page}>
       <Layout title="Current Season">
         <Head title="Current Season" />
-        <div style={{ display: 'block' }}>
-          {duration.length && timeLeft.length ? (
-            <div className={classes.subtitle}>
-              <div className={classes.darkColor}>
-                <Text variant="baseL">{duration}</Text>
-              </div>
-              <div className={classes.timeLeft}>
-                <Text variant="baseS">{timeLeft}</Text>
-              </div>
+        {duration.length && timeLeft.length ? (
+          <div className={classes.subtitle}>
+            <div className={classes.subtitleLabel}>
+              <Text variant="baseL">{duration}</Text>
             </div>
-          ) : null}
-        </div>
-        <div className={classes.darkColor}>
+            <div className={classes.subtitleTime}>
+              <Text variant="baseS">{timeLeft}</Text>
+            </div>
+          </div>
+        ) : null}
+        <div>
           <Text variant="baseXL">Season XP</Text>
         </div>
-        <div className={classes.darkColor}>
+        <div>
           <Text variant="baseL">For every minute that you run Salad, you earn 1 XP</Text>
         </div>
         <div className={classes.xp}>
           <Text variant="base4XL">{intl.formatNumber(totalXP)}</Text>
         </div>
         {levelCards.length > 0 && (
-          <div className={classes.levelsContainer}>
+          <div className={classes.levels}>
             {levelCards.map((levelCard) => (
-              <div className={classes.cardContainer}>
-                <LevelCard
-                  level={levelCard.level}
-                  src={levelCard.src}
-                  alt={levelCard.alt}
-                  earnedAt={levelCard.earnedAt}
-                  xpRequired={levelCard.xpRequired}
-                  xpCurrent={levelCard.xpCurrent}
-                />
-              </div>
+              <LevelCard
+                alt={levelCard.alt}
+                earnedAt={levelCard.earnedAt}
+                level={levelCard.level}
+                src={levelCard.src}
+                xpCurrent={levelCard.xpCurrent}
+                xpRequired={levelCard.xpRequired}
+              />
             ))}
           </div>
         )}
