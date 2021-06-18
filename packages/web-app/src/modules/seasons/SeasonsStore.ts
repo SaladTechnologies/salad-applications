@@ -35,7 +35,9 @@ export class SeasonsStore {
       const timeDifferenceObject = timeDifference.toObject()
 
       const dayPluralForm = timeDifferenceObject.hours && timeDifferenceObject.hours <= 1 ? 'hour' : 'hours'
-      const timeRemaining = dayPluralForm ? `Starts in ${timeDifferenceObject.hours} ${dayPluralForm}` : ''
+      const timeRemaining = dayPluralForm
+        ? `Starts in ${Math.floor(timeDifferenceObject.hours || 0)} ${dayPluralForm}`
+        : ''
       return timeRemaining
     } else {
       const endDate = this.currentSeason.endAbsolute
