@@ -46,6 +46,16 @@ export class SeasonsStore {
     return this.currentSeason?.levels || []
   }
 
+  @computed
+  get currentLevelXP(): number {
+    return this.currentSeason?.levelXp || 0
+  }
+
+  @computed
+  get nextLevel(): number {
+    return this.currentSeason?.nextLevelId || 0
+  }
+
   constructor(private readonly axios: AxiosInstance) {}
 
   /** (Re)Loads the current season data */
