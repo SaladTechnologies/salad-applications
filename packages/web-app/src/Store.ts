@@ -6,6 +6,7 @@ import { config } from './config'
 import { AnalyticsStore } from './modules/analytics'
 import { AuthStore } from './modules/auth'
 import { BalanceStore } from './modules/balance'
+import { BonusStore } from './modules/bonus'
 import { RefreshService } from './modules/data-refresh'
 import { EngagementStore } from './modules/engagement'
 import { HomeStore } from './modules/home/HomeStore'
@@ -17,6 +18,7 @@ import { ReferralStore } from './modules/referral'
 import { RewardStore } from './modules/reward'
 import { SaladBowlStore } from './modules/salad-bowl'
 import { StopReason } from './modules/salad-bowl/models'
+import { SeasonsStore } from './modules/seasons'
 import { StorefrontStore } from './modules/storefront/StorefrontStore'
 import { VaultStore } from './modules/vault'
 import { VersionStore } from './modules/versions'
@@ -64,6 +66,8 @@ export class RootStore {
   public readonly engagement: EngagementStore
   public readonly zendesk: Zendesk
   public readonly storefront: StorefrontStore
+  public readonly bonuses: BonusStore
+  public readonly seasons: SeasonsStore
 
   constructor(readonly axios: AxiosInstance) {
     this.routing = new RouterStore()
@@ -87,6 +91,8 @@ export class RootStore {
     this.engagement = new EngagementStore(this, axios)
     this.zendesk = new Zendesk(axios, this.auth, this.native, this.analytics)
     this.storefront = new StorefrontStore(axios)
+    this.bonuses = new BonusStore(this, axios)
+    this.seasons = new SeasonsStore(axios)
 
     addAuthInterceptor(axios, this.auth)
 

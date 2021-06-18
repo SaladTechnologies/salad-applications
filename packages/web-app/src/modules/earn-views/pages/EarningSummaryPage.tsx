@@ -4,6 +4,7 @@ import { Divider, Scrollbar, SectionHeader } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { withLogin } from '../../auth-views'
 import { EarningWindow } from '../../balance/models'
+import { BonusEarningRate } from '../../bonus/models'
 import { PantryContainer, SlicedVeggieContainer } from '../../xp-views'
 import { EarningHistory, EarningSummary } from '../components'
 import { EarningInformationContainer } from '../EarningInformationContainer'
@@ -43,6 +44,7 @@ interface Props extends WithStyles<typeof styles> {
   last7Day?: number
   last30Day?: number
   earningHistory?: EarningWindow[]
+  bonusEarningRate?: BonusEarningRate
 }
 
 class _EarningSummaryPage extends Component<Props> {

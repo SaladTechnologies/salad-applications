@@ -3,6 +3,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import { SectionHeader, StatElement } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { formatBalance } from '../../../utils'
+import { BonusEarningRate } from '../../bonus/models'
 
 const styles = (theme: SaladTheme) => ({
   container: {},
@@ -24,11 +25,12 @@ interface Props extends WithStyles<typeof styles> {
   currentBalance?: number
   lifetimeBalance?: number
   totalXp?: number
+  bonusEarningRate?: BonusEarningRate
 }
 
 class _EarningSummary extends Component<Props> {
   render() {
-    const { currentBalance, lifetimeBalance, totalXp, classes } = this.props
+    const { currentBalance, lifetimeBalance, totalXp, bonusEarningRate, classes } = this.props
 
     return (
       <div className={classes.container}>
@@ -49,6 +51,17 @@ class _EarningSummary extends Component<Props> {
             values={[Math.round(totalXp || 0).toLocaleString() || '0']}
             infoText={`XP stands for "Experience Points". You are awarded 1 XP per minute of confirmed mining time. The more XP you have, the more veggies you will unlock in the Pantry.`}
           />
+          {bonusEarningRate && (
+            <StatElement
+              title={'Earning Bonus'}
+              values={[`${Math.round(bonusEarningRate?.multiplier || 0).toLocaleString()}x`]}
+              infoText={`You are currently earning ${
+                bonusEarningRate.multiplier
+              }x your normal earning rate. You have already earned ${formatBalance(
+                bonusEarningRate.earnedAmount,
+              )}/${formatBalance(bonusEarningRate.earnedAmountLimit)} of your bonus amount`}
+            />
+          )}
         </div>
       </div>
     )

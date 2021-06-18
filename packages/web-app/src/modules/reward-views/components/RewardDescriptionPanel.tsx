@@ -1,4 +1,3 @@
-import { DomElement } from 'htmlparser2'
 import { Component, ReactElement } from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import withStyles, { WithStyles } from 'react-jss'
@@ -26,7 +25,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _RewardDescriptionPanel extends Component<Props> {
-  transform = (node: DomElement): ReactElement | void | null => {
+  transform = (node: any): ReactElement | void | null => {
     //Transform a tags to external links
     if (node.type === 'tag' && node.name === 'a') {
       return (

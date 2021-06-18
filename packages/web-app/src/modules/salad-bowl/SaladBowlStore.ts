@@ -1,3 +1,4 @@
+import { Duration } from 'luxon'
 import { action, autorun, computed, flow, observable, runInAction } from 'mobx'
 import { EOL } from 'os'
 import * as Storage from '../../Storage'
@@ -158,6 +159,36 @@ export class SaladBowlStore implements IPersistentStore {
   @computed
   get preppingProgress(): number {
     return getPreppingPercentage(this.runningTime)
+  }
+
+  @computed
+  get runningTimeDisplay():
+    | {
+        value: number
+        unit: 'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'second'
+      }
+    | undefined {
+    if (this.runningTime === undefined) {
+      return undefined
+    }
+
+    const duration: Duration = Duration.fromMillis(this.runningTime)
+    const interval = duration.shiftTo('years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds').toObject()
+    if (interval.years !== undefined && interval.years >= 1) {
+      return { value: interval.years, unit: 'year' }
+    } else if (interval.months !== undefined && interval.months >= 1) {
+      return { value: interval.months, unit: 'month' }
+    } else if (interval.weeks !== undefined && interval.weeks >= 1) {
+      return { value: interval.weeks, unit: 'week' }
+    } else if (interval.days !== undefined && interval.days >= 1) {
+      return { value: interval.days, unit: 'day' }
+    } else if (interval.hours !== undefined && interval.hours >= 1) {
+      return { value: interval.hours, unit: 'hour' }
+    } else if (interval.minutes !== undefined && interval.minutes >= 1) {
+      return { value: Math.ceil(interval.minutes), unit: 'minute' }
+    } else {
+      return { value: interval.seconds ? Math.ceil(interval.seconds) : 0, unit: 'second' }
+    }
   }
 
   constructor(private readonly store: RootStore) {

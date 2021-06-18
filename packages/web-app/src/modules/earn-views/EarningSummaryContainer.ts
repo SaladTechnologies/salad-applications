@@ -10,6 +10,7 @@ const mapStoreToProps = (store: RootStore): any => ({
   last7Day: store.balance.lastWeekEarnings,
   last30Day: store.balance.lastMonthEarnings,
   earningHistory: store.balance.earningsHistory,
+  bonusEarningRate: store.bonuses.currentEarningBonus,
 })
 
 export const EarningSummaryContainer = connect(mapStoreToProps, EarningSummaryPage)
