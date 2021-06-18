@@ -7,6 +7,7 @@ import { StartActionType } from '../salad-bowl/models'
 
 const mapStoreToProps = (store: RootStore): any => {
   const isAuthenticated = store.auth.isAuthenticated
+  const isNative = store.native.isNative
   const handleLogin = () => {
     store.analytics.trackButtonClicked('login_button', 'Log In Button', 'enabled')
     store.auth.login()
@@ -15,13 +16,15 @@ const mapStoreToProps = (store: RootStore): any => {
   const status = store.saladBowl.status
   const isRunning = store.saladBowl.isRunning
   const isPrepping = status !== MiningStatus.Running && store.saladBowl.runningTime !== undefined
-  const label = !store.saladBowl.isRunning
+  const nativeLabel = !store.saladBowl.isRunning
     ? 'Start'
     : isPrepping
     ? status === MiningStatus.Installing
       ? MiningStatus.Installing
       : MiningStatus.Initializing
     : status
+
+  const label = isNative ? nativeLabel : 'Download'
 
   const goToAccount = () => store.routing.push('/settings/summary')
   const bonus = store.bonuses.firstExpiringUnclaimedBonus
@@ -60,10 +63,14 @@ const mapStoreToProps = (store: RootStore): any => {
     rightSideButtonLabel: isAuthenticated ? undefined : 'Login',
     rightSideButtonClick: isAuthenticated ? undefined : handleLogin,
     startButtonLabel: isAuthenticated ? label : 'Login',
-    startButtonClick: isAuthenticated ? () => store.saladBowl.toggleRunning(StartActionType.StartButton) : handleLogin,
+    startButtonClick: isNative
+      ? () => store.saladBowl.toggleRunning(StartActionType.StartButton)
+      : isAuthenticated
+      ? () => window.open('https://getsalad.io/', '_blank')
+      : handleLogin,
     startButtonHoverLabel: isAuthenticated && isRunning ? 'Stop' : undefined,
     startButtonErrorClick:
-      isAuthenticated && store.saladBowl.isNotCompatible
+      isAuthenticated && isNative && store.saladBowl.isNotCompatible
         ? () => store.ui.showErrorPage(ErrorPageType.NotCompatible)
         : undefined,
     startButtonProgress: isPrepping ? store.saladBowl.preppingProgress : isRunning ? 1 : undefined,
