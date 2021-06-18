@@ -31,14 +31,16 @@ const mapStoreToProps = (store: RootStore): any => {
         <Avatar
           alt={store.profile.selectedAvatar.name}
           src={store.profile.selectedAvatar.imageUrl}
-          onClick={goToAccount}
           variant="highlighted"
         />
       ) : (
-        <AvatarDefault onClick={goToAccount} variant="highlighted" />
+        <AvatarDefault variant="highlighted" />
       )
     ) : undefined,
     balance: isAuthenticated ? store.balance.currentBalance : undefined,
+    onClickAvatar: goToAccount,
+    onClickUsername: goToAccount,
+    onLogOut: store.auth.logout,
     rightSideButtonLabel: isAuthenticated ? undefined : 'Login',
     rightSideButtonClick: isAuthenticated ? undefined : handleLogin,
     startButtonLabel: isAuthenticated ? label : 'Login',
