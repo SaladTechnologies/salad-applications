@@ -68,10 +68,7 @@ class _Account extends Component<Props> {
 
     return (
       <div className={classes.container}>
-        <Layout>
-          <div className={classes.titleContainer}>
-            <Text variant="baseXXL"> Profile </Text>
-          </div>
+        <Layout title="Profile">
           <Head title="Profile" />
           <div className={classes.textFieldContainer}>
             <TextField
