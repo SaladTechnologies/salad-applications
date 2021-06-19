@@ -35,6 +35,9 @@ import isOnline = require('is-online')
 // The path to the `/static` folder. This is provided by electron-webpack.
 declare const __static: string
 
+// Disable GPU acceleration.
+app.disableHardwareAcceleration()
+
 // Register to send Windows 10 notifications.
 app.setAppUserModelId('salad-technologies-desktop-app')
 
