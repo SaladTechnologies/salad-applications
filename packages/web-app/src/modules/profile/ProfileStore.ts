@@ -142,7 +142,8 @@ export class ProfileStore {
     if (this.currentProfile === undefined) {
       return
     }
-
+    this.isMinecraftUserNameSubmitting = true
+    this.isMinecraftUserNameSubmitSuccess = false
     try {
       let patch = yield this.axios.patch('/api/v1/profile', {
         extensions:
@@ -156,7 +157,8 @@ export class ProfileStore {
               },
       })
       let profile = patch.data
-
+      this.isMinecraftUserNameSubmitting = false
+      this.isMinecraftUserNameSubmitSuccess = true
       this.currentProfile = profile
     } catch (error) {
       this.store.notifications.sendNotification({
@@ -166,6 +168,8 @@ export class ProfileStore {
         autoClose: false,
         type: 'error',
       })
+
+      this.isMinecraftUserNameSubmitting = false
     }
   })
 
