@@ -47,7 +47,7 @@ class _EarningSummary extends Component<Props> {
             infoText={'Total balance earned'}
           />
           <StatElement
-            title={'Total XP'}
+            title={'Lifetime XP'}
             values={[Math.round(totalXp || 0).toLocaleString() || '0']}
             infoText={`XP stands for "Experience Points". You are awarded 1 XP per minute of confirmed mining time. The more XP you have, the more veggies you will unlock in the Pantry.`}
           />
