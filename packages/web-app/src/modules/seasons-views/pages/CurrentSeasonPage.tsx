@@ -1,5 +1,6 @@
 import { Layout, LevelCard, Text } from '@saladtechnologies/garden-components'
 import { useMemo } from 'react'
+import Scrollbars from 'react-custom-scrollbars'
 import { useIntl } from 'react-intl'
 import withStyles, { WithStyles } from 'react-jss'
 import { Head } from '../../../components'
@@ -94,42 +95,44 @@ const _CurrentSeasonPage = ({
   }, [levels, nextLevel, currentLevelXP])
   return (
     <div className={classes.page}>
-      <Layout title="Current Season">
-        <Head title="Current Season" />
-        {duration.length && timeLeft.length ? (
-          <div className={classes.subtitle}>
-            <div className={classes.subtitleLabel}>
-              <Text variant="baseL">{duration}</Text>
+      <Scrollbars>
+        <Layout title="Current Season">
+          <Head title="Current Season" />
+          {duration.length && timeLeft.length ? (
+            <div className={classes.subtitle}>
+              <div className={classes.subtitleLabel}>
+                <Text variant="baseL">{duration}</Text>
+              </div>
+              <div className={classes.subtitleTime}>
+                <Text variant="baseS">{timeLeft}</Text>
+              </div>
             </div>
-            <div className={classes.subtitleTime}>
-              <Text variant="baseS">{timeLeft}</Text>
+          ) : null}
+          <div>
+            <Text variant="baseXL">Season XP</Text>
+          </div>
+          <div>
+            <Text variant="baseL">For every minute that you run Salad, you earn 1 XP</Text>
+          </div>
+          <div className={classes.xp}>
+            <Text variant="base4XL">{intl.formatNumber(totalXP)}</Text>
+          </div>
+          {levelCards.length > 0 && (
+            <div className={classes.levels}>
+              {levelCards.map((levelCard) => (
+                <LevelCard
+                  alt={levelCard.alt}
+                  earnedAt={levelCard.earnedAt}
+                  level={levelCard.level}
+                  src={levelCard.src}
+                  xpCurrent={levelCard.xpCurrent}
+                  xpRequired={levelCard.xpRequired}
+                />
+              ))}
             </div>
-          </div>
-        ) : null}
-        <div>
-          <Text variant="baseXL">Season XP</Text>
-        </div>
-        <div>
-          <Text variant="baseL">For every minute that you run Salad, you earn 1 XP</Text>
-        </div>
-        <div className={classes.xp}>
-          <Text variant="base4XL">{intl.formatNumber(totalXP)}</Text>
-        </div>
-        {levelCards.length > 0 && (
-          <div className={classes.levels}>
-            {levelCards.map((levelCard) => (
-              <LevelCard
-                alt={levelCard.alt}
-                earnedAt={levelCard.earnedAt}
-                level={levelCard.level}
-                src={levelCard.src}
-                xpCurrent={levelCard.xpCurrent}
-                xpRequired={levelCard.xpRequired}
-              />
-            ))}
-          </div>
-        )}
-      </Layout>
+          )}
+        </Layout>
+      </Scrollbars>
     </div>
   )
 }
