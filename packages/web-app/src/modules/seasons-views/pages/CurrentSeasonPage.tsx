@@ -14,6 +14,7 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
     overflowX: 'scroll',
     paddingTop: '64px',
+    paddingBottom: '24px',
     scrollbarColor: 'light',
     scrollbarWidth: 'thin',
     '&::-webkit-scrollbar': {
