@@ -22,6 +22,7 @@ const styles = {
     width: 'auto',
     maxHeight: '50vh',
     border: '1px solid rgba(255, 255, 255, 0.10)',
+    objectFit: 'scale-down',
   },
 }
 
