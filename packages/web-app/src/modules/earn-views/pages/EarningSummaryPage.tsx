@@ -15,6 +15,7 @@ const styles = (theme: SaladTheme) => ({
     flexDirection: 'column',
     padding: 20,
     marginRight: 225,
+    paddingTop: '32px',
   },
   splitContainer: {
     display: 'flex',

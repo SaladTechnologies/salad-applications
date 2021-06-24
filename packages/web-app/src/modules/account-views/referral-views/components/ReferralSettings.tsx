@@ -15,6 +15,7 @@ import { ReferralDescription } from './ReferralDescription'
 const styles = (theme: SaladTheme) => ({
   container: {
     padding: 20,
+    paddingTop: '32px',
   },
   content: {
     display: 'flex',

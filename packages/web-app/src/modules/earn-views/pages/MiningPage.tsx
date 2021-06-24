@@ -19,6 +19,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     padding: 20,
+    paddingTop: '32px',
   },
 }
 

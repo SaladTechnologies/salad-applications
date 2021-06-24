@@ -18,6 +18,7 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
     flexDirection: 'column',
     padding: 20,
+    paddingTop: '32px',
   },
   splitContainer: {
     display: 'flex',
