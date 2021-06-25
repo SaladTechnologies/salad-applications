@@ -1,8 +1,6 @@
 import { AxiosInstance } from 'axios'
 import { autorun, configure, flow } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
-import { addAuthInterceptor } from './axiosFactory'
-import { config } from './config'
 import { AnalyticsStore } from './modules/analytics'
 import { AuthStore } from './modules/auth'
 import { BalanceStore } from './modules/balance'
@@ -71,11 +69,12 @@ export class RootStore {
 
   constructor(readonly axios: AxiosInstance) {
     this.routing = new RouterStore()
+    this.auth = new AuthStore(axios, this.routing)
     this.notifications = new NotificationStore(this)
     this.xp = new ExperienceStore(this, axios)
     this.native = new NativeStore(this)
     this.saladBowl = new SaladBowlStore(this)
-    this.auth = new AuthStore(config, axios, this.routing)
+
     this.machine = new MachineStore(this, axios)
     this.profile = new ProfileStore(this, axios)
     this.rewards = new RewardStore(this, axios, this.profile)
@@ -94,11 +93,10 @@ export class RootStore {
     this.bonuses = new BonusStore(this, axios)
     this.seasons = new SeasonsStore(axios)
 
-    addAuthInterceptor(axios, this.auth)
-
     // Start refreshing data
     this.refresh.start()
 
+    // TODO:DRS Replace this with a this.auth.onLogin callback
     autorun(() => {
       if (this.auth.isAuthenticated) {
         this.onLogin()

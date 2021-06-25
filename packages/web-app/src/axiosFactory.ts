@@ -2,7 +2,6 @@ import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios'
 import axiosRetry, { exponentialDelay } from 'axios-retry'
 import isRetryAllowed from 'is-retry-allowed'
 import { config } from './config'
-import { AuthStore } from './modules/auth'
 
 /**
  * The list of safe HTTP request methods. HTTP requests using these methods may be retried.
@@ -26,33 +25,6 @@ const shouldRetryDownload = (error: any): boolean => {
     )
   }
   return isRetryAllowed(error)
-}
-
-/**
- * Adds an auth interceptor that forces uses to re-login if we get a 401
- * @param httpClient
- * @param authStore
- */
-export const addAuthInterceptor = (httpClient: AxiosInstance, authStore: AuthStore) => {
-  httpClient.interceptors.response.use(
-    (response) => {
-      return response
-    },
-    async (error) => {
-      if (error.isAxiosError === true) {
-        const axiosError: AxiosError<any> = error
-        if (axiosError.response && axiosError.response.status === 401) {
-          if (!authStore.isAuthenticationPending) {
-            try {
-              await authStore.forceLogin()
-            } catch {}
-          }
-        }
-      }
-
-      throw error
-    },
-  )
 }
 
 export const createClient = (): AxiosInstance => {

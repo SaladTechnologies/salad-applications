@@ -1,666 +1,170 @@
-import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js'
-import { AxiosInstance } from 'axios'
-import { Location } from 'history'
-import { action, computed, flow, observable, toJS } from 'mobx'
+import { AxiosError, AxiosInstance } from 'axios'
+import { action, flow, observable } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
-import { Cancelable, once, ResponseMessageEvent } from 'post-robot'
-import { Config } from '../../config'
-import { TooManyRequestsError } from './TooManyRequestsError'
+import SuperTokens from 'supertokens-website'
 
-interface LoginResponse {
-  action: 'login'
-  error?: string
+export enum FormSteps {
+  Email,
+  Code,
 }
 
 export class AuthStore {
-  private readonly apiBaseUrl: string
-
-  private readonly auth0Audience: string
-
-  private readonly auth0ClientId: string
-
-  private readonly auth0Domain: string
-
-  /**
-   * The Auth0 client. This is only created when the user's email address is not verified.
-   */
-  private auth0Client?: Auth0Client
-
-  /**
-   * The Auth0 access token. This is only obtained from Auth0 when the user's email address is not verified.
-   */
-  @observable
-  private auth0Token?: string
-
-  private frameListener?: Cancelable & Promise<ResponseMessageEvent>
-
-  private framePromise?: {
-    reject: (reason?: any) => void
-    resolve: (value?: any) => void
-  }
-
-  private frameTimeout?: NodeJS.Timeout
-
-  /**
-   * The user's email address. This is only obtained from Auth0 when the user's email address is not verified.
-   */
-  @observable
-  public emailAddress?: string = undefined
-
-  /**
-   * A value indicating whether the user is authenticated.
-   */
+  /** A value indicating whether the user is authenticated. */
   @observable
   public isAuthenticated: boolean = false
 
-  /**
-   * A value indicating whether the user is currently logging in or logging out.
-   */
+  /** A value indicating whether a value is being submitted. */
   @observable
-  public isAuthenticationPending: boolean = false
+  public isSubmitting: boolean = false
 
-  constructor(config: Config, private readonly axios: AxiosInstance, private readonly router: RouterStore) {
-    this.apiBaseUrl = config.apiBaseUrl
-    this.auth0Audience = config.auth0Audience
-    this.auth0ClientId = config.auth0ClientId
-    this.auth0Domain = config.auth0Domain
-  }
+  /** A value indicating whether the user is authenticated. */
+  @observable
+  public errorMessage?: string
 
-  @computed
-  public get canResendVerificationEmail() {
-    return this.auth0Token !== undefined
-  }
+  /** A value indicating whether the user is authenticated. */
+  @observable
+  public currentStep: FormSteps = FormSteps.Email
 
-  public get loginUrl(): string {
-    return this.apiBaseUrl + '/login'
-  }
+  private loginPromise?: Promise<void>
 
-  private get silentLoginUrl(): string {
-    return this.apiBaseUrl + '/login?prompt=none'
-  }
+  /**
+   * Path to where we started the login process.
+   */
+  private startingRoute?: string
 
-  public get logoutUrl(): string {
-    return this.apiBaseUrl + '/logout'
-  }
+  private loginResolve?: () => void
+  private loginReject?: () => void
 
-  private get antiforgeryTokensUrl(): string {
-    return this.apiBaseUrl + '/api/v2/antiforgery-tokens'
-  }
-
-  private get verificationEmailsUrl(): string {
-    return this.apiBaseUrl + '/api/v2/verification-emails'
-  }
-
-  public static isStateWithPreviousLocation(state: any): state is { previousLocation?: Location } {
-    if (typeof state != 'object' || state == null) {
-      return false
-    }
-
-    if (!('previousLocation' in state)) {
-      return false
-    }
-
-    return true
-  }
-
-  public checkEmailVerification = flow(
-    function* (this: AuthStore) {
-      try {
-        if (this.auth0Client === undefined) {
-          // This automatically attempts a silent login.
-          this.auth0Client = yield createAuth0Client({
-            audience: this.auth0Audience,
-            authorizeTimeoutInSeconds: 10,
-            advancedOptions: {
-              defaultScope: 'email',
-            },
-            client_id: this.auth0ClientId,
-            domain: this.auth0Domain,
-            redirect_uri: `${window.location.origin}/login/callback`,
-          })
-        } else {
-          this.auth0Token = yield this.auth0Client.getTokenSilently({ ignoreCache: true })
-        }
-
-        const user: { email_verified: boolean } | undefined = yield this.auth0Client!.getUser()
-        return typeof user?.email_verified === 'boolean' && user.email_verified === true
-      } catch {
-        return false
-      }
-    }.bind(this),
-  )
-
-  public createLoginFrameListener = (frame: HTMLIFrameElement, timeout?: number): (() => void) => {
-    if (this.frameListener !== undefined) {
-      throw new Error('A login or logout frame already exists.')
-    }
-
-    if (this.frameTimeout !== undefined) {
-      clearTimeout(this.frameTimeout)
-    }
-
-    this.frameListener = once('authentication', {
-      domain: this.apiBaseUrl,
-      errorOnClose: true,
-      window: frame.contentWindow!,
-    })
-    this.frameListener.then(this.handleLoginResponseMessageEvent).catch(this.handleError)
-
-    if (timeout !== undefined) {
-      this.frameTimeout = setTimeout(this.handleTimeout, timeout)
-    }
-
-    return this.cancel
-  }
-
-  public createLogoutFrameListener = (frame: HTMLIFrameElement, timeout?: number): (() => void) => {
-    if (this.frameListener !== undefined) {
-      throw new Error('A login or logout frame already exists.')
-    }
-
-    if (this.frameTimeout !== undefined) {
-      clearTimeout(this.frameTimeout)
-    }
-
-    this.frameListener = once('authentication', {
-      domain: this.apiBaseUrl,
-      errorOnClose: true,
-      window: frame.contentWindow!,
-    })
-    this.frameListener.then(this.handleLogoutResponseMessageEvent).catch(this.handleError)
-
-    if (timeout !== undefined) {
-      this.frameTimeout = setTimeout(this.handleTimeout, timeout)
-    }
-
-    return this.cancel
-  }
-
-  @action
-  public forceLogin = (): Promise<void> => {
-    if (this.isAuthenticationPending) {
-      throw new Error('A login or logout attempt is already pending.')
-    }
-
-    this.isAuthenticationPending = true
-    if (localStorage.getItem('salad.isAuthenticated') === 'true') {
-      return this.refreshXsrfTokens().then((xsrfToken) => {
-        if (xsrfToken) {
-          this.onLogin(xsrfToken)
-          return Promise.resolve()
-        } else {
-          return this.loginRequired()
-        }
-      })
-    } else {
-      return this.loginRequired()
-    }
-  }
-
-  @action
-  public login = (): Promise<void> => {
-    if (this.isAuthenticated) {
-      return Promise.resolve()
-    }
-
-    if (this.isAuthenticationPending) {
-      throw new Error('A login or logout attempt is already pending.')
-    }
-
-    this.isAuthenticationPending = true
-    if (localStorage.getItem('salad.isAuthenticated') === 'true') {
-      return this.refreshXsrfTokens().then((xsrfToken) => {
-        if (xsrfToken) {
-          this.onLogin(xsrfToken)
-          return Promise.resolve()
-        } else {
-          return this.loginRequired()
-        }
-      })
-    } else {
-      return this.loginRequired()
-    }
-  }
-
-  @action
-  public loginSilently = (): Promise<void> => {
-    if (this.isAuthenticationPending) {
-      throw new Error('A login or logout attempt is already pending.')
-    }
-
-    this.isAuthenticationPending = true
-    if (localStorage.getItem('salad.isAuthenticated') === 'true') {
-      return this.refreshXsrfTokens().then((xsrfToken) => {
-        if (xsrfToken) {
-          this.onLogin(xsrfToken)
-          return Promise.resolve()
-        } else {
-          return this.loginSilentlyRequired()
-        }
-      })
-    } else {
-      return this.loginSilentlyRequired()
-    }
-  }
-
-  @action
-  public logout = (): Promise<void> => {
-    if (this.isAuthenticationPending) {
-      throw new Error('A login or logout attempt is already pending.')
-    }
-
-    this.isAuthenticationPending = true
-
-    const promise = new Promise<void>((resolve, reject) => {
-      this.framePromise = {
-        reject,
-        resolve,
-      }
+  constructor(axios: AxiosInstance, private readonly router: RouterStore) {
+    // TODO: Get this url from config
+    SuperTokens.init({
+      apiDomain: 'https://api.example.com',
     })
 
-    const pathname = this.router.location.pathname.toLowerCase()
-    if (pathname === '/login' || pathname.startsWith('/login/')) {
-      if (
-        AuthStore.isStateWithPreviousLocation(this.router.location.state) &&
-        this.router.location.state.previousLocation !== undefined
-      ) {
-        this.router.replace('/logout', { previousLocation: toJS(this.router.location.state.previousLocation) })
-      } else {
-        this.router.replace('/logout')
-      }
-    } else {
-      this.router.push('/logout', { previousLocation: toJS(this.router.location) })
-    }
-
-    return promise
+    SuperTokens.addAxiosInterceptors(axios)
   }
 
   @action
-  public logoutSilently = (): Promise<void> => {
-    if (this.isAuthenticationPending) {
-      throw new Error('A login or logout attempt is already pending.')
+  public login = async (): Promise<void> => {
+    // Don't do anything if we are already logged in
+    if (await SuperTokens.doesSessionExist()) {
+      this.isAuthenticated = true
+      return
     }
 
-    this.isAuthenticationPending = true
-
-    const frame = window.document.createElement('iframe')
-    frame.setAttribute('height', '0')
-    frame.setAttribute('width', '0')
-    frame.style.display = 'none'
-
-    const promise = new Promise<void>((resolve, reject) => {
-      this.framePromise = {
-        reject,
-        resolve,
-      }
-    })
-      .then(() => {})
-      .catch(() => {})
-      .finally(() => {
-        if (window.document.body.contains(frame)) {
-          window.document.body.removeChild(frame)
-        }
-      })
-
-    // Load the silent login page.
-    this.createLogoutFrameListener(frame, 10000)
-    window.document.body.appendChild(frame)
-    frame.setAttribute('src', this.logoutUrl)
-    return promise
-  }
-
-  public resendVerificationEmail = flow(
-    function* (this: AuthStore) {
-      let response: Response
-      try {
-        response = yield fetch(this.verificationEmailsUrl, {
-          headers: {
-            Authorization: `Bearer ${this.auth0Token}`,
-          },
-          method: 'POST',
-        })
-      } catch {
-        throw new Error('Failed to connect to Salad. Please check your network connection and try again.')
-      }
-
-      if (!response.ok) {
-        switch (response.status) {
-          case 400:
-            // The email address is already verified.
-            break
-          case 429:
-            let retryAfter: number = NaN
-            if (response.headers.has('Retry-After')) {
-              retryAfter = parseInt(response.headers.get('Retry-After') || '')
-            }
-
-            if (isNaN(retryAfter) || retryAfter < 0) {
-              retryAfter = 60
-            }
-
-            throw new TooManyRequestsError('Please wait before sending another verification email.', retryAfter)
-          default:
-            throw new Error('Failed to send the verification email.')
-        }
-      }
-    }.bind(this),
-  )
-
-  private static isLoginResponse(data: unknown): data is LoginResponse {
-    if (typeof data !== 'object' || data == null) {
-      return false
+    if (this.loginPromise) {
+      return this.loginPromise
     }
 
-    if (!('action' in data) || (data as { action: unknown }).action !== 'login') {
-      return false
-    }
+    // TODO: Create a promise that we will return
+    this.loginPromise = new Promise(async (resolve, reject) => {
+      // Save the promise data to reject
+      this.loginResolve = resolve
+      this.loginReject = reject
 
-    if (
-      'error' in data &&
-      !(
-        typeof (data as { error: unknown }).error === 'string' ||
-        typeof (data as { error: unknown }).error === 'undefined'
-      )
-    ) {
-      return false
-    }
+      // Save current route so we can go back to it later once it is resolved
+      this.startingRoute = this.router.location.pathname
 
-    return true
-  }
-
-  @action
-  private cancel = (): void => {
-    if (this.frameTimeout !== undefined) {
-      clearTimeout(this.frameTimeout)
-      this.frameTimeout = undefined
-    }
-
-    if (this.frameListener !== undefined) {
-      this.frameListener.cancel()
-      this.frameListener = undefined
-    }
-
-    this.isAuthenticationPending = false
-    if (this.framePromise !== undefined) {
-      this.framePromise.reject()
-      this.framePromise = undefined
-    }
-  }
-
-  private handleEmailNotVerified = flow(
-    function* (this: AuthStore) {
-      try {
-        if (this.auth0Client === undefined) {
-          // This automatically attempts a silent login.
-          this.auth0Client = yield createAuth0Client({
-            audience: this.auth0Audience,
-            authorizeTimeoutInSeconds: 10,
-            advancedOptions: {
-              defaultScope: 'email',
-            },
-            client_id: this.auth0ClientId,
-            domain: this.auth0Domain,
-            redirect_uri: `${window.location.origin}/login/callback`,
-          })
-        }
-
-        const [tokenResult, userResult]: [
-          PromiseSettledResult<string>,
-          PromiseSettledResult<{ email?: string }>,
-        ] = yield Promise.allSettled([this.auth0Client!.getTokenSilently(), this.auth0Client!.getUser()])
-
-        if (tokenResult.status === 'fulfilled') {
-          this.auth0Token = tokenResult.value
-        }
-
-        if (userResult.status === 'fulfilled' && typeof userResult.value?.email === 'string') {
-          this.emailAddress = userResult.value.email
-        }
-      } catch {}
-
-      const pathname = this.router.location.pathname.toLowerCase()
-      if (pathname === '/login' || pathname.startsWith('/login/')) {
-        if (
-          AuthStore.isStateWithPreviousLocation(this.router.location.state) &&
-          this.router.location.state.previousLocation !== undefined
-        ) {
-          this.router.replace('/login/email-verification', {
-            previousLocation: toJS(this.router.location.state.previousLocation),
-          })
-        } else {
-          this.router.replace('/login/email-verification')
-        }
-      } else {
-        this.router.push('/login/email-verification', { previousLocation: toJS(this.router.location) })
-      }
-    }.bind(this),
-  )
-
-  private handleError = (): void => {
-    if (this.frameTimeout !== undefined) {
-      clearTimeout(this.frameTimeout)
-      this.frameTimeout = undefined
-    }
-
-    if (this.frameListener !== undefined) {
-      this.frameListener.cancel()
-      this.frameListener = undefined
-    }
-
-    // Let's be safe and force a logout.
-    this.onLogout()
-    if (this.framePromise !== undefined) {
-      this.framePromise.reject()
-      this.framePromise = undefined
-    }
-
-    // TODO: Show an error page.
-    this.router.replace('/')
-  }
-
-  private handleLoginResponseMessageEvent = async (event: ResponseMessageEvent): Promise<void> => {
-    if (this.frameTimeout !== undefined) {
-      clearTimeout(this.frameTimeout)
-      this.frameTimeout = undefined
-    }
-
-    if (this.frameListener !== undefined) {
-      this.frameListener.cancel()
-      this.frameListener = undefined
-    }
-
-    let error: string = ''
-    if (AuthStore.isLoginResponse(event.data)) {
-      if (event.data.error === undefined) {
-        const xsrfToken = await this.refreshXsrfTokens()
-        if (xsrfToken) {
-          this.onLogin(xsrfToken)
-
-          if (this.framePromise !== undefined) {
-            this.framePromise.resolve()
-            this.framePromise = undefined
-          }
-
-          if (
-            AuthStore.isStateWithPreviousLocation(this.router.location.state) &&
-            this.router.location.state.previousLocation !== undefined
-          ) {
-            this.router.replace(this.router.location.state.previousLocation)
-          } else {
-            this.router.replace('/')
-          }
-
-          return
-        } else {
-          error = 'login_required'
-        }
-      } else {
-        error = event.data.error
-      }
-    }
-
-    // Let's be safe and force a logout.
-    this.onLogout()
-    if (this.framePromise !== undefined) {
-      this.framePromise.reject()
-      this.framePromise = undefined
-    }
-
-    switch (error) {
-      case 'email_not_verified':
-        this.handleEmailNotVerified()
-        break
-      case 'login_required':
-        // This is common when attempting a silent login. It confirms that the user must login interactively.
-        break
-      default:
-        // TODO: Show an error page.
-        this.router.replace('/')
-        break
-    }
-  }
-
-  private handleLogoutResponseMessageEvent = (_event: ResponseMessageEvent): void => {
-    if (this.frameTimeout !== undefined) {
-      clearTimeout(this.frameTimeout)
-      this.frameTimeout = undefined
-    }
-
-    if (this.frameListener !== undefined) {
-      this.frameListener.cancel()
-      this.frameListener = undefined
-    }
-
-    this.onLogout()
-    if (this.framePromise !== undefined) {
-      this.framePromise.resolve()
-      this.framePromise = undefined
-    }
-
-    this.router.replace('/')
-  }
-
-  private handleTimeout = (): void => {
-    if (this.frameTimeout !== undefined) {
-      clearTimeout(this.frameTimeout)
-      this.frameTimeout = undefined
-    }
-
-    if (this.frameListener !== undefined) {
-      this.frameListener.cancel()
-      this.frameListener = undefined
-    }
-
-    // Let's be safe and force a logout.
-    this.onLogout()
-    if (this.framePromise !== undefined) {
-      this.framePromise.reject()
-      this.framePromise = undefined
-    }
-
-    // TODO: Show an error page.
-    this.router.replace('/')
-  }
-
-  private loginRequired(): Promise<void> {
-    const promise = new Promise<void>((resolve, reject) => {
-      this.framePromise = {
-        reject,
-        resolve,
-      }
+      this.router.replace('/login')
     })
 
-    const pathname = this.router.location.pathname.toLowerCase()
-    if (pathname === '/login' || pathname.startsWith('/login/')) {
-      if (
-        AuthStore.isStateWithPreviousLocation(this.router.location.state) &&
-        this.router.location.state.previousLocation !== undefined
-      ) {
-        this.router.replace('/login', { previousLocation: toJS(this.router.location.state.previousLocation) })
-      } else {
-        this.router.replace('/login')
-      }
-    } else {
-      this.router.push('/login', { previousLocation: toJS(this.router.location) })
-    }
-
-    return promise
-  }
-
-  private loginSilentlyRequired(): Promise<void> {
-    const frame = window.document.createElement('iframe')
-    frame.setAttribute('height', '0')
-    frame.setAttribute('width', '0')
-    frame.style.display = 'none'
-
-    const promise = new Promise<void>((resolve, reject) => {
-      this.framePromise = {
-        reject,
-        resolve,
-      }
-    })
-      .then(() => {})
-      .catch(() => {})
-      .finally(() => {
-        if (window.document.body.contains(frame)) {
-          window.document.body.removeChild(frame)
-        }
-      })
-
-    // Load the silent login page.
-    this.createLoginFrameListener(frame, 10000)
-    window.document.body.appendChild(frame)
-    frame.setAttribute('src', this.silentLoginUrl)
-    return promise
+    await this.loginPromise
   }
 
   @action
-  private onLogin = (xsrfToken: string) => {
-    this.axios.defaults.headers.common['X-XSRF-TOKEN'] = xsrfToken
-    this.axios.defaults.withCredentials = true
-
-    this.auth0Client = undefined
-    this.auth0Token = undefined
-    this.emailAddress = undefined
-    this.isAuthenticated = true
-    this.isAuthenticationPending = false
-
-    localStorage.setItem('salad.isAuthenticated', 'true')
+  public logout = async (): Promise<void> => {
+    await SuperTokens.signOut()
   }
 
-  @action
-  private onLogout = () => {
-    delete this.axios.defaults.headers.common['X-XSRF-TOKEN']
-    this.axios.defaults.withCredentials = false
-
-    this.auth0Client = undefined
-    this.auth0Token = undefined
-    this.emailAddress = undefined
-    this.isAuthenticated = false
-    this.isAuthenticationPending = false
-
-    this.auth0Token = undefined
-    this.emailAddress = undefined
-
-    localStorage.removeItem('salad.isAuthenticated')
-  }
-
-  private async refreshXsrfTokens(): Promise<string | undefined> {
-    let xsrfToken: string | undefined = undefined
+  /** Called when a user enters their email address */
+  @action.bound
+  public submitEmail = flow(function* (this: AuthStore, email: string) {
     try {
-      const response = await fetch(this.antiforgeryTokensUrl, {
-        credentials: 'include',
-      })
-      if (response.ok && response.headers.has('X-XSRF-TOKEN')) {
-        xsrfToken = response.headers.get('X-XSRF-TOKEN') || ''
-      }
-    } catch {}
+      this.errorMessage = undefined
 
-    if (!xsrfToken) {
-      // Let's be safe and force a logout.
-      this.onLogout()
+      const request = {
+        email: email.trim(),
+      }
+
+      console.log(request)
+
+      this.isSubmitting = true
+
+      // TODO: POST /auth/login
+      yield this.sleep(1000)
+
+      this.currentStep = FormSteps.Code
+    } catch (e) {
+      let err: AxiosError = e
+      if (err.response && err.response.status === 400) {
+        this.errorMessage = 'Invalid email address'
+      } else {
+        throw e
+      }
+    } finally {
+      this.isSubmitting = false
+    }
+  })
+
+  /** Called when a user enters their email address */
+  @action.bound
+  public submitCode = flow(function* (this: AuthStore, code: string) {
+    try {
+      console.log(code)
+
+      this.isSubmitting = true
+
+      const request = {
+        passcode: code.trim(),
+      }
+
+      console.log(request)
+
+      // TODO: POST /auth/login/code
+      yield this.sleep(1000)
+
+      this.closeLoginProcess(true)
+    } catch (e) {
+      let err: AxiosError = e
+      if (err.response && err.response.status === 400) {
+        this.errorMessage = 'Incorrect code'
+      } else {
+        throw e
+      }
+    } finally {
+      this.isSubmitting = false
+    }
+  })
+
+  @action
+  public backToEmail = () => {
+    this.currentStep = FormSteps.Email
+  }
+
+  @action
+  public cancelLogin = async (): Promise<void> => {
+    this.closeLoginProcess(false)
+  }
+
+  private closeLoginProcess = (success: boolean) => {
+    // Route back to the location we started the login flow from
+    if (this.startingRoute) this.router.replace(this.startingRoute)
+
+    if (success) {
+      this.loginResolve?.()
+    } else {
+      this.loginReject?.()
     }
 
-    return xsrfToken
+    this.loginPromise = undefined
+    this.startingRoute = undefined
+    this.currentStep = FormSteps.Email
+    this.isSubmitting = false
   }
+
+  sleep = (ms: number) => {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+  }
+
+  // public resendVerificationEmail = flow(function* (this: AuthStore) {}.bind(this))
 }

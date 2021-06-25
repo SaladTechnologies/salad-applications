@@ -8,7 +8,9 @@ interface Props {
 
 const mapStoreToProps = (store: RootStore, props: Props): any => ({
   authenticated: store.auth.isAuthenticated,
-  canLogin: !store.auth.isAuthenticationPending,
+  // TODO:
+  // canLogin: !store.auth.isAuthenticationPending,
+  canLogin: true,
   onLogin: store.auth.login,
   onRegister: store.auth.login,
   text: props.text,
