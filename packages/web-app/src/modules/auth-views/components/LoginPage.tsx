@@ -2,7 +2,7 @@ import { Button, Layout, Text, TextField } from '@saladtechnologies/garden-compo
 import { FormValues } from '@saladtechnologies/garden-components/lib/components/TextField/TextField'
 import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import { Head } from '../../../components'
+import { Checkbox, Head } from '../../../components'
 import { FormSteps } from '../../auth/AuthStore'
 
 const styles = {
@@ -11,7 +11,7 @@ const styles = {
     backgroundImage: 'linear-gradient(to right, #56A431 , #AACF40)',
   },
   content: {
-    maxWidth: 392,
+    maxWidth: 396,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -20,11 +20,15 @@ const styles = {
 
 interface Props extends WithStyles<typeof styles> {
   currentStep?: FormSteps
+  currentEmail?: string
   isSubmitting?: boolean
+  acceptedTerms?: boolean
   errorMessage?: string
   onSubmitEmail?: (email: string) => void
   onSubmitCode?: (code: string) => void
   onBackToEmail?: () => void
+  onCancelLogin?: () => void
+  onToggleAccept?: (accepted: boolean) => void
 }
 
 export const LoginPage = withStyles(styles)(
@@ -41,14 +45,29 @@ export const LoginPage = withStyles(styles)(
       onSubmitCode?.(data.input)
     }
 
+    handleResendCode = () => {
+      const { currentEmail, onSubmitEmail } = this.props
+
+      if (!currentEmail) return
+
+      onSubmitEmail?.(currentEmail)
+    }
+
     handleBackToEmail = () => {
       const { onBackToEmail } = this.props
 
       onBackToEmail?.()
     }
 
+    handleCancelLogin = () => {
+      const { onCancelLogin } = this.props
+
+      onCancelLogin?.()
+    }
+
     render() {
-      const { currentStep, isSubmitting, errorMessage, classes } = this.props
+      const { currentStep, acceptedTerms, onToggleAccept, isSubmitting, currentEmail, errorMessage, classes } =
+        this.props
       console.log('Submitting:' + isSubmitting)
       return (
         <div className={classes.page}>
@@ -61,9 +80,14 @@ export const LoginPage = withStyles(styles)(
                     You’re plugged into the world’s easiest and most trusted way to convert your idle computer into
                     sweet rewards!
                   </Text>
-
+                  <Checkbox
+                    text="I agree to the Terms of Service and Privacy Policy"
+                    onClick={onToggleAccept}
+                    checked={acceptedTerms}
+                  />
                   <TextField
                     label="Email"
+                    disabled={!acceptedTerms}
                     errorMessage={'Invalid email'}
                     onSubmit={this.handleSubmitEmail}
                     validationRegex={
@@ -75,12 +99,21 @@ export const LoginPage = withStyles(styles)(
                     to access your account.
                   </Text>
                   {errorMessage}
+                  <Button
+                    label="Back"
+                    type="button"
+                    variant="primary"
+                    isLoading={false}
+                    onClick={this.handleCancelLogin}
+                  />
                 </>
               )}
               {currentStep === FormSteps.Code && (
                 <>
+                  <Text variant="baseL">A verification code was sent to your email address {currentEmail}</Text>
+
                   <TextField
-                    label="/Code"
+                    label="Code"
                     errorMessage={'Invalid code format'}
                     onSubmit={this.handleSubmitCode}
                     validationRegex={/^\d{4}$/}
@@ -92,6 +125,13 @@ export const LoginPage = withStyles(styles)(
                     variant="primary"
                     isLoading={false}
                     onClick={this.handleBackToEmail}
+                  />
+                  <Button
+                    label="Resend Code"
+                    type="button"
+                    variant="primary"
+                    isLoading={false}
+                    onClick={this.handleResendCode}
                   />
                 </>
               )}

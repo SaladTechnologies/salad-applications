@@ -1,4 +1,5 @@
 import { AxiosError, AxiosInstance } from 'axios'
+import { DateTime } from 'luxon'
 import { action, flow, observable } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
 import SuperTokens from 'supertokens-website'
@@ -17,13 +18,21 @@ export class AuthStore {
   @observable
   public isSubmitting: boolean = false
 
-  /** A value indicating whether the user is authenticated. */
+  /** The current error message. */
   @observable
   public errorMessage?: string
+
+  /** The email address for the current login session. */
+  @observable
+  public currentEmail?: string
 
   /** A value indicating whether the user is authenticated. */
   @observable
   public currentStep: FormSteps = FormSteps.Email
+
+  /** A value indicating whether the user is authenticated. */
+  @observable
+  public acceptedTerms: boolean = false
 
   private loginPromise?: Promise<void>
 
@@ -39,6 +48,18 @@ export class AuthStore {
     // TODO: Get this url from config
     SuperTokens.init({
       apiDomain: 'https://api.example.com',
+      onHandleEvent: (context) => {
+        if (context.action === 'SIGN_OUT') {
+          this.isAuthenticated = false
+          // called when the user clicks on sign out
+        } else if (context.action === 'REFRESH_SESSION') {
+          // called with refreshing a session
+          // NOTE: This is an undeterministic event
+        } else if (context.action === 'UNAUTHORISED') {
+          // called when the session has expired
+          this.isAuthenticated = false
+        }
+      },
     })
 
     SuperTokens.addAxiosInterceptors(axios)
@@ -56,7 +77,7 @@ export class AuthStore {
       return this.loginPromise
     }
 
-    // TODO: Create a promise that we will return
+    // Create a promise that we will return
     this.loginPromise = new Promise(async (resolve, reject) => {
       // Save the promise data to reject
       this.loginResolve = resolve
@@ -74,6 +95,13 @@ export class AuthStore {
   @action
   public logout = async (): Promise<void> => {
     await SuperTokens.signOut()
+    this.isAuthenticated = false
+  }
+
+  /** Toggles if the user accepted terms */
+  @action
+  public toggleAcceptTerms = (accepted: boolean) => {
+    this.acceptedTerms = accepted
   }
 
   /** Called when a user enters their email address */
@@ -82,8 +110,12 @@ export class AuthStore {
     try {
       this.errorMessage = undefined
 
+      // Add any other validation or clean up here
+      email = email.trim()
+
       const request = {
-        email: email.trim(),
+        email: email,
+        termsDate: DateTime.now().toISO(),
       }
 
       console.log(request)
@@ -93,6 +125,7 @@ export class AuthStore {
       // TODO: POST /auth/login
       yield this.sleep(1000)
 
+      this.currentEmail = email
       this.currentStep = FormSteps.Code
     } catch (e) {
       let err: AxiosError = e
@@ -138,7 +171,7 @@ export class AuthStore {
 
   @action
   public backToEmail = () => {
-    this.currentStep = FormSteps.Email
+    this.resetLoginProcess()
   }
 
   @action
@@ -150,21 +183,26 @@ export class AuthStore {
     // Route back to the location we started the login flow from
     if (this.startingRoute) this.router.replace(this.startingRoute)
 
+    this.isAuthenticated = success
+
     if (success) {
       this.loginResolve?.()
     } else {
       this.loginReject?.()
     }
 
+    this.resetLoginProcess()
+  }
+
+  private resetLoginProcess = () => {
     this.loginPromise = undefined
     this.startingRoute = undefined
     this.currentStep = FormSteps.Email
     this.isSubmitting = false
+    this.currentEmail = undefined
   }
 
   sleep = (ms: number) => {
     return new Promise((resolve) => setTimeout(resolve, ms))
   }
-
-  // public resendVerificationEmail = flow(function* (this: AuthStore) {}.bind(this))
 }

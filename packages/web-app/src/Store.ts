@@ -96,7 +96,6 @@ export class RootStore {
     // Start refreshing data
     this.refresh.start()
 
-    // TODO:DRS Replace this with a this.auth.onLogin callback
     autorun(() => {
       if (this.auth.isAuthenticated) {
         this.onLogin()
