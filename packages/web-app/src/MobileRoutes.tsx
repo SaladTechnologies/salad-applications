@@ -3,7 +3,7 @@ import { Component } from 'react'
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router'
 import { MobilePageNotFound } from './components/MobilePageNotFound'
 import { MobileAccountSummaryContainer } from './modules/account-views-mobile'
-import { EmailVerificationPageContainer, LoginPageContainer, LogoutPageContainer } from './modules/auth-views'
+import { EmailVerificationPageContainer, LoginPageContainer } from './modules/auth-views'
 import { MobileEarningSummaryContainer } from './modules/earn-views-mobile'
 import { RewardDetailsContainer } from './modules/reward-views'
 import { getStore } from './Store'
@@ -27,7 +27,6 @@ class _Routes extends Component<RouteComponentProps> {
         </Switch>
         <Route path="/login" exact component={LoginPageContainer} />
         <Route path="/login/email-verification" exact component={EmailVerificationPageContainer} />
-        <Route path="/logout" exact component={LogoutPageContainer} />
       </>
     )
   }

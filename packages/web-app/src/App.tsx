@@ -175,14 +175,10 @@ export const App = withStyles(styles)(
     store = getStore()
 
     componentDidMount = async () => {
-      if (!this.store.auth.isAuthenticationPending) {
-        try {
-          this.store.auth.loginSilently().catch(() => {
-            console.log('Failed to login silently')
-          })
-        } catch (error) {
-          console.log('Failed to login silently')
-        }
+      try {
+        this.store.auth.login()
+      } catch (error) {
+        console.log('Failed to login silently')
       }
 
       if (this.store.native.isNative) {
