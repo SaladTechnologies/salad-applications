@@ -52,7 +52,6 @@
     ]
   },
   "dependencies": {
-    "@auth0/auth0-spa-js": "1.15.0",
     "@babel/core": "7.14.6",
     "@elastic/react-search-ui": "1.6.0",
     "@elastic/search-ui-app-search-connector": "1.6.0",
@@ -150,6 +149,7 @@
     "recharts": "2.0.9",
     "sanitize-html": "2.4.0",
     "semver": "7.3.5",
+    "supertokens-website": "^8.0.0",
     "systeminformation": "5.7.7",
     "ts-unused-exports": "7.0.3",
     "typescript": "4.3.4",

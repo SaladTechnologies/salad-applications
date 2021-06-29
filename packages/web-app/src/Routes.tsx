@@ -3,7 +3,7 @@ import { Component } from 'react'
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router'
 import { LoadingPage } from './components'
 import { ReferralOnboardingContainer } from './modules/account-views/referral-views'
-import { EmailVerificationPageContainer, LoginPageContainer, LogoutPageContainer } from './modules/auth-views'
+import { EmailVerificationPageContainer, LoginPageContainer } from './modules/auth-views'
 import { ReplaceBonusModalContainer } from './modules/bonus-views'
 import { EarnMenuContainer } from './modules/earn-views'
 import {
@@ -74,7 +74,8 @@ class _Routes extends Component<RouteComponentProps> {
             path="/account"
             component={SettingsContainer}
             isSignedIn={this.store.auth.isAuthenticated}
-            isAuthPending={this.store.auth.isAuthenticationPending}
+            isAuthPending={this.store.auth.isAuthenticated}
+            // TODO: Do we still need this?? isAuthPending={this.store.auth.isAuthenticationPending}
           />
           <Route path="/settings" component={SettingsContainer} />
           <Route path="/earn" component={EarnMenuContainer} />
@@ -83,7 +84,6 @@ class _Routes extends Component<RouteComponentProps> {
         </Switch>
         <Route path="/login" exact component={LoginPageContainer} />
         <Route path="/login/email-verification" exact component={EmailVerificationPageContainer} />
-        <Route path="/logout" exact component={LogoutPageContainer} />
       </>
     )
   }

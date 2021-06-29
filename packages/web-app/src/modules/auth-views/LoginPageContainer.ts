@@ -1,24 +1,18 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
-import { AuthStore } from '../auth/AuthStore'
-import { FramePage } from './components/FramePage'
+import { LoginPage } from './components/LoginPage'
 
 const mapStoreToProps = (store: RootStore): any => ({
-  showWelcomeText: true,
-  createFrameListener: store.auth.createLoginFrameListener,
-  frameSandbox: 'allow-same-origin allow-scripts allow-forms',
-  frameTitle: 'Login - Salad',
-  frameUrl: store.auth.loginUrl,
-  onCloseRequested: () => {
-    if (
-      AuthStore.isStateWithPreviousLocation(store.routing.location.state) &&
-      store.routing.location.state.previousLocation !== undefined
-    ) {
-      store.routing.goBack()
-    } else {
-      store.routing.push('/')
-    }
-  },
+  currentStep: store.auth.currentStep,
+  currentEmail: store.auth.currentEmail,
+  isSubmitting: store.auth.isSubmitting,
+  errorMessage: store.auth.errorMessage,
+  acceptedTerms: store.auth.acceptedTerms,
+  onSubmitEmail: store.auth.submitEmail,
+  onSubmitCode: store.auth.submitCode,
+  onBackToEmail: store.auth.backToEmail,
+  onCancelLogin: store.auth.cancelLogin,
+  onToggleAccept: store.auth.toggleAcceptTerms,
 })
 
-export const LoginPageContainer = connect(mapStoreToProps, FramePage)
+export const LoginPageContainer = connect(mapStoreToProps, LoginPage)
