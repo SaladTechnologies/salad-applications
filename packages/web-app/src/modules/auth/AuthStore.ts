@@ -1,8 +1,8 @@
 import { AxiosError, AxiosInstance } from 'axios'
-import { DateTime } from 'luxon'
 import { action, flow, observable } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
 import SuperTokens from 'supertokens-website'
+import { config } from '../../config'
 
 export enum FormSteps {
   Email,
@@ -44,10 +44,10 @@ export class AuthStore {
   private loginResolve?: () => void
   private loginReject?: () => void
 
-  constructor(axios: AxiosInstance, private readonly router: RouterStore) {
+  constructor(private readonly axios: AxiosInstance, private readonly router: RouterStore) {
     // TODO: Get this url from config
     SuperTokens.init({
-      apiDomain: 'https://api.example.com',
+      apiDomain: config.apiBaseUrl,
       onHandleEvent: (context) => {
         if (context.action === 'SIGN_OUT') {
           this.isAuthenticated = false
@@ -110,20 +110,24 @@ export class AuthStore {
     try {
       this.errorMessage = undefined
 
+      if (!this.acceptedTerms) {
+        this.errorMessage = 'Terms must be first accepted'
+        return
+      }
+
       // Add any other validation or clean up here
       email = email.trim()
 
       const request = {
         email: email,
-        termsDate: DateTime.now().toISO(),
+        termsAccepted: true,
       }
 
       console.log(request)
 
       this.isSubmitting = true
 
-      // TODO: POST /auth/login
-      yield this.sleep(1000)
+      yield this.axios.post('/api/v2/authentication-sessions', request)
 
       this.currentEmail = email
       this.currentStep = FormSteps.Code
@@ -131,6 +135,8 @@ export class AuthStore {
       let err: AxiosError = e
       if (err.response && err.response.status === 400) {
         this.errorMessage = 'Invalid email address'
+      } else if (err.message) {
+        this.errorMessage = err.message
       } else {
         throw e
       }
@@ -151,10 +157,8 @@ export class AuthStore {
         passcode: code.trim(),
       }
 
-      console.log(request)
-
       // TODO: POST /auth/login/code
-      yield this.sleep(1000)
+      yield this.axios.post('/api/v2/authentication-sessions/verification', request)
 
       this.closeLoginProcess(true)
     } catch (e) {
@@ -180,10 +184,11 @@ export class AuthStore {
   }
 
   private closeLoginProcess = (success: boolean) => {
+    debugger
+    this.isAuthenticated = success
+
     // Route back to the location we started the login flow from
     if (this.startingRoute) this.router.replace(this.startingRoute)
-
-    this.isAuthenticated = success
 
     if (success) {
       this.loginResolve?.()
@@ -200,9 +205,5 @@ export class AuthStore {
     this.currentStep = FormSteps.Email
     this.isSubmitting = false
     this.currentEmail = undefined
-  }
-
-  sleep = (ms: number) => {
-    return new Promise((resolve) => setTimeout(resolve, ms))
   }
 }
