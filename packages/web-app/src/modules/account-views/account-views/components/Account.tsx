@@ -45,8 +45,14 @@ interface Props extends WithStyles<typeof styles> {
   onSelectAvatar: (id: string) => void
   onUpdateMinecraftUsername: (data: FormValues) => void
   onUpdateUsername: (data: FormValues) => void
+  onResetMinecraftUsernameSuccess: () => void
+  onResetUsernameSuccess: () => void
   profile?: Profile
   selectedAvatar?: Avatar
+  isUserNameSubmitting: boolean
+  isUserNameSubmitSuccess: boolean
+  isMinecraftUserNameSubmitting: boolean
+  isMinecraftUserNameSubmitSuccess: boolean
 }
 
 export type FormValues = {
@@ -62,11 +68,20 @@ class _Account extends Component<Props> {
       onClearAvatarError,
       onUpdateMinecraftUsername,
       onSelectAvatar,
+      onResetUsernameSuccess,
+      onResetMinecraftUsernameSuccess,
       classes,
       avatars,
       selectedAvatar,
+      isUserNameSubmitting,
+      isUserNameSubmitSuccess,
+      isMinecraftUserNameSubmitting,
+      isMinecraftUserNameSubmitSuccess,
     } = this.props
-
+    const handleSubmitButtonReset = () => {
+      isUserNameSubmitSuccess && onResetUsernameSuccess()
+      isMinecraftUserNameSubmitSuccess && onResetMinecraftUsernameSuccess()
+    }
     return (
       <div className={classes.container}>
         <Scrollbars>
@@ -74,12 +89,15 @@ class _Account extends Component<Props> {
             <Head title="Profile" />
             <div className={classes.textFieldContainer}>
               <TextField
-                placeholder={profile?.username}
+                isSubmitting={isUserNameSubmitting}
+                isSubmitSuccess={isUserNameSubmitSuccess}
                 errorMessage="Username must be between 2 - 32 characters and can not contain spaces!"
                 label="Username"
                 onSubmit={onUpdateUsername}
                 validationRegex={/^\w{2,32}$/}
                 width={396}
+                onFocus={handleSubmitButtonReset}
+                defaultValue={profile?.username}
               />
             </div>
 
@@ -98,18 +116,20 @@ class _Account extends Component<Props> {
                 />
               </div>
             )}
-
             <div className={classes.textContainer}>
               <Text variant="baseXXL"> Extras</Text>
             </div>
             <div className={classes.textFieldContainer}>
               <TextField
-                placeholder={profile?.extensions?.minecraftUsername}
+                isSubmitting={isMinecraftUserNameSubmitting}
+                isSubmitSuccess={isMinecraftUserNameSubmitSuccess}
                 errorMessage="Not a valid Minecraft username!"
                 label="Minecraft Username"
                 onSubmit={onUpdateMinecraftUsername}
                 validationRegex={/^\w{3,16}$/}
                 width={396}
+                onFocus={handleSubmitButtonReset}
+                defaultValue={profile?.extensions?.minecraftUsername}
               />
             </div>
             <div className={classes.minecraftInfoContainer}>

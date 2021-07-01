@@ -34,6 +34,18 @@ export class ProfileStore {
   @observable
   public selectedAvatar?: Avatar
 
+  @observable
+  public isUserNameSubmitting: boolean = false
+
+  @observable
+  public isUserNameSubmitSuccess: boolean = false
+
+  @observable
+  public isMinecraftUserNameSubmitting: boolean = false
+
+  @observable
+  public isMinecraftUserNameSubmitSuccess: boolean = false
+
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   @action.bound
@@ -121,21 +133,31 @@ export class ProfileStore {
   @action.bound
   updateUsername = flow(function* (this: ProfileStore, username: FormValues) {
     if (this.currentProfile === undefined) return
-
+    this.isUserNameSubmitting = true
+    this.isUserNameSubmitSuccess = false
     try {
       let patch = yield this.axios.patch('/api/v1/profile', { username: username.input })
       let profile = patch.data
-
+      this.isUserNameSubmitting = false
+      this.isUserNameSubmitSuccess = true
       this.currentProfile = profile
-    } catch (err) {}
+    } catch (err) {
+      this.isUserNameSubmitting = false
+    }
   })
+
+  @action.bound
+  resetUsernameSuccess = () => {
+    this.isUserNameSubmitSuccess = false
+  }
 
   @action.bound
   updateMinecraftUsername = flow(function* (this: ProfileStore, minecraftUsername: FormValues) {
     if (this.currentProfile === undefined) {
       return
     }
-
+    this.isMinecraftUserNameSubmitting = true
+    this.isMinecraftUserNameSubmitSuccess = false
     try {
       let patch = yield this.axios.patch('/api/v1/profile', {
         extensions:
@@ -149,7 +171,8 @@ export class ProfileStore {
               },
       })
       let profile = patch.data
-
+      this.isMinecraftUserNameSubmitting = false
+      this.isMinecraftUserNameSubmitSuccess = true
       this.currentProfile = profile
     } catch (error) {
       this.store.notifications.sendNotification({
@@ -159,6 +182,13 @@ export class ProfileStore {
         autoClose: false,
         type: 'error',
       })
+
+      this.isMinecraftUserNameSubmitting = false
     }
   })
+
+  @action.bound
+  resetMinecraftUsernameSuccess = () => {
+    this.isMinecraftUserNameSubmitSuccess = false
+  }
 }
