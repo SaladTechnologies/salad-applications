@@ -1,5 +1,6 @@
 import { Layout, Text, TextField } from '@saladtechnologies/garden-components'
 import { Component } from 'react'
+import Scrollbars from 'react-custom-scrollbars'
 import withStyles, { WithStyles } from 'react-jss'
 import { Head } from '../../../../components'
 import { SaladTheme } from '../../../../SaladTheme'
@@ -83,60 +84,62 @@ class _Account extends Component<Props> {
     }
     return (
       <div className={classes.container}>
-        <Layout title="Profile">
-          <Head title="Profile" />
-          <div className={classes.textFieldContainer}>
-            <TextField
-              isSubmitting={isUserNameSubmitting}
-              isSubmitSuccess={isUserNameSubmitSuccess}
-              errorMessage="Username must be between 2 - 32 characters and can not contain spaces!"
-              label="Username"
-              onSubmit={onUpdateUsername}
-              validationRegex={/^\w{2,32}$/}
-              width={396}
-              onFocus={handleSubmitButtonReset}
-              defaultValue={profile?.username}
-            />
-          </div>
-
-          {avatars && (
-            <div className={classes.avatarContainer}>
-              <div className={classes.textContainer}>
-                <Text variant="baseM"> Avatar </Text>
-              </div>
-              <AvatarSelect
-                avatars={avatars}
-                error={avatarError}
-                isSubmitting={isAvatarSubmitting}
-                onClearError={onClearAvatarError}
-                onSelectAvatar={onSelectAvatar}
-                selectedAvatar={selectedAvatar}
+        <Scrollbars>
+          <Layout title="Profile">
+            <Head title="Profile" />
+            <div className={classes.textFieldContainer}>
+              <TextField
+                isSubmitting={isUserNameSubmitting}
+                isSubmitSuccess={isUserNameSubmitSuccess}
+                errorMessage="Username must be between 2 - 32 characters and can not contain spaces!"
+                label="Username"
+                onSubmit={onUpdateUsername}
+                validationRegex={/^\w{2,32}$/}
+                width={396}
+                onFocus={handleSubmitButtonReset}
+                defaultValue={profile?.username}
               />
             </div>
-          )}
 
-          <div className={classes.textContainer}>
-            <Text variant="baseXXL"> Extras</Text>
-          </div>
-          <div className={classes.textFieldContainer}>
-            <TextField
-              isSubmitting={isMinecraftUserNameSubmitting}
-              isSubmitSuccess={isMinecraftUserNameSubmitSuccess}
-              errorMessage="Not a valid Minecraft username!"
-              label="Minecraft Username"
-              onSubmit={onUpdateMinecraftUsername}
-              validationRegex={/^\w{3,16}$/}
-              width={396}
-              onFocus={handleSubmitButtonReset}
-              defaultValue={profile?.extensions?.minecraftUsername}
-            />
-          </div>
-          <div className={classes.minecraftInfoContainer}>
-            <Text variant="baseS">
-              Connect Salad to your Minecraft account. A Minecraft username is required to purchase many Minecraft items
-            </Text>
-          </div>
-        </Layout>
+            {avatars && (
+              <div className={classes.avatarContainer}>
+                <div className={classes.textContainer}>
+                  <Text variant="baseM"> Avatar </Text>
+                </div>
+                <AvatarSelect
+                  avatars={avatars}
+                  error={avatarError}
+                  isSubmitting={isAvatarSubmitting}
+                  onClearError={onClearAvatarError}
+                  onSelectAvatar={onSelectAvatar}
+                  selectedAvatar={selectedAvatar}
+                />
+              </div>
+            )}
+            <div className={classes.textContainer}>
+              <Text variant="baseXXL"> Extras</Text>
+            </div>
+            <div className={classes.textFieldContainer}>
+              <TextField
+                isSubmitting={isMinecraftUserNameSubmitting}
+                isSubmitSuccess={isMinecraftUserNameSubmitSuccess}
+                errorMessage="Not a valid Minecraft username!"
+                label="Minecraft Username"
+                onSubmit={onUpdateMinecraftUsername}
+                validationRegex={/^\w{3,16}$/}
+                width={396}
+                onFocus={handleSubmitButtonReset}
+                defaultValue={profile?.extensions?.minecraftUsername}
+              />
+            </div>
+            <div className={classes.minecraftInfoContainer}>
+              <Text variant="baseS">
+                Connect Salad to your Minecraft account. A Minecraft username is required to purchase many Minecraft
+                items
+              </Text>
+            </div>
+          </Layout>
+        </Scrollbars>
       </div>
     )
   }
