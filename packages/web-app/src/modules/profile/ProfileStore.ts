@@ -4,6 +4,14 @@ import { RootStore } from '../../Store'
 import { FormValues } from '../account-views/account-views/components/'
 import { NotificationMessageCategory } from '../notifications/models'
 import { Avatar, Profile } from './models'
+import SaladDefaultAvatarSrc from '@saladtechnologies/garden-components/lib/components/Avatar/assets/SaladAvatar.png'
+
+const SaladDefaultAvatar :Avatar  ={
+  name: 'Default',
+  description: 'Salad Default Avatar',
+  imageUrl: SaladDefaultAvatarSrc,
+  id: '0',
+ }
 
 export class ProfileStore {
   private currentSelectedAvatar?: Avatar
@@ -45,6 +53,7 @@ export class ProfileStore {
     try {
       let avatar = yield this.axios.get('/api/v2/avatars')
       this.avatars = avatar.data
+      this.avatars?.unshift(SaladDefaultAvatar)
     } catch (err) {}
   })
 
@@ -80,6 +89,11 @@ export class ProfileStore {
   @action.bound
   selectAvatar = flow(function* (this: ProfileStore, id: string) {
     if (this.isAvatarSubmitting || !this.avatars || (this.selectedAvatar && this.selectedAvatar.id === id)) {
+      return
+    }
+    if (id === '0') {
+      this.currentSelectedAvatar=SaladDefaultAvatar
+      this.selectedAvatar=SaladDefaultAvatar
       return
     }
     this.avatarError = undefined
