@@ -56,6 +56,7 @@ const mapStoreToProps = (store: RootStore): any => {
         isLoading={store.bonuses.pendingBonuses?.has(bonus.id)}
       />
     ) : undefined,
+    isNative: isNative,
     onClickAvatar: goToAccount,
     onClickUsername: goToAccount,
     onClickViewAllBonuses: () => store.routing.push('/settings/bonuses'),
