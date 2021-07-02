@@ -13,7 +13,6 @@ const styles = () => ({
   cardContainer: {
     display: 'flex',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
   },
   cardWraper: {
     padding: '20px 8px',
