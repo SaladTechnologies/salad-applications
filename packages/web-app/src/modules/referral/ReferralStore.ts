@@ -107,6 +107,11 @@ export class ReferralStore {
     try {
       let res = yield this.axios.get<Referral>('/api/v1/profile/referral')
       this.currentReferral = res.data
+
+      //If we haven't entered a referral code, show the onboarding page
+      if (!this.currentReferral) {
+        this.store.ui.showModal('/onboarding/referral')
+      }
     } catch (e) {
       let err: AxiosError = e
       if (err.response && err.response.status === 404) {
@@ -115,6 +120,12 @@ export class ReferralStore {
         throw e
       }
     }
+  })
+
+  /** Called when a user enters in a referral code */
+  @action.bound
+  submitDefaultReferralCode = flow(function* (this: ReferralStore) {
+    yield this.submitReferralCode('SALAD')
   })
 
   /** Called when a user enters in a referral code */
