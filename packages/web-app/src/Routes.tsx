@@ -2,6 +2,7 @@ import { Location } from 'history'
 import { Component } from 'react'
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router'
 import { LoadingPage } from './components'
+import { ReferralOnboardingContainer } from './modules/account-views/referral-views'
 import { EmailVerificationPageContainer, LoginPageContainer, LogoutPageContainer } from './modules/auth-views'
 import { EarnMenuContainer } from './modules/earn-views'
 import {
@@ -39,9 +40,14 @@ class _Routes extends Component<RouteComponentProps> {
     const currentLocation =
       (location.state as { currentLocation: Location | undefined } | undefined)?.currentLocation || location
 
+    if (this.store.auth.isAuthenticated && !this.store.referral.currentReferral) {
+      this.store.ui.showModal('/onboarding/referral')
+    }
+
     return (
       <>
         <Switch location={currentLocation}>
+          <Route exact path="/onboarding/referral" component={ReferralOnboardingContainer} />
           <Route exact path="/errors/cuda" component={CudaErrorContainer} />
           <Route exact path="/errors/fallback" component={FallbackErrorContainer} />
           <Route exact path="/errors/network" component={NetworkErrorContainer} />
