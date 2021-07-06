@@ -79,11 +79,11 @@ class _Routes extends Component<RouteComponentProps> {
           />
           <Route path="/settings" component={SettingsContainer} />
           <Route path="/earn" component={EarnMenuContainer} />
+          <Route path="/login" exact component={LoginPageContainer} />
+          <Route path="/login/email-verification" exact component={EmailVerificationPageContainer} />
           <Route path="/" render={() => <StorefrontHomePage />} />
           <Redirect to="/" />
         </Switch>
-        <Route path="/login" exact component={LoginPageContainer} />
-        <Route path="/login/email-verification" exact component={EmailVerificationPageContainer} />
       </>
     )
   }
