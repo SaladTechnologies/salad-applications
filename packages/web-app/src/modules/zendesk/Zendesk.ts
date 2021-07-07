@@ -171,6 +171,9 @@ export class Zendesk {
               vertical: '-100px',
             },
           },
+          color: {
+            theme: '#DBF1C1',
+          },
         },
       }
 
