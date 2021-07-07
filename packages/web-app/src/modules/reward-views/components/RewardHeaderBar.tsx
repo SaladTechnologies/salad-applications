@@ -3,7 +3,6 @@ import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Button, SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
-import { AddToCartButton } from '../../chopping-cart-views/components'
 import { Reward } from '../../reward/models'
 import { IconArrowLeft } from './assets'
 
@@ -116,15 +115,8 @@ class _RewardHeaderBar extends Component<Props> {
   }
 
   render() {
-    const {
-      reward,
-      authenticated,
-      currentBalance,
-      requiresMinecraftUsername,
-      trackDisabledBuyNowClick,
-      classes,
-      ...rest
-    } = this.props
+    const { reward, authenticated, currentBalance, requiresMinecraftUsername, trackDisabledBuyNowClick, classes } =
+      this.props
 
     const balance = currentBalance || 0
 
@@ -188,7 +180,6 @@ class _RewardHeaderBar extends Component<Props> {
             >
               <div className={classes.buyText}>{donation ? 'DONATE' : 'BUY'} NOW</div>
             </Button>
-            <AddToCartButton reward={reward} {...rest} />
           </>
         )}
       </div>
