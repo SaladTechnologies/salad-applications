@@ -280,7 +280,10 @@ export class AnalyticsStore {
   public trackReferralEntered = (code: string) => {
     if (!this.started) return
 
-    this.track('Referral Entered', { Code: code.toUpperCase() })
+    this.track('Referral Entered', {
+      Code: code.toUpperCase(),
+      $insert_id: "119c1faf-8708-4605-914b-dc30782ea269", // constant id to prevent event duplication
+    })
   }
 
   /** Track when a header link is clicked */
