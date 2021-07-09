@@ -20,6 +20,10 @@ export class ReferralStore {
   @observable
   public referralCode: string = ''
 
+  /** Indicates if the entered referral code has been loaded */
+  @observable
+  public isReferralLoaded: boolean = false
+
   /** Total number of referrals */
   @computed
   get totalCount(): number {
@@ -107,6 +111,7 @@ export class ReferralStore {
     try {
       let res = yield this.axios.get<Referral>('/api/v1/profile/referral')
       this.currentReferral = res.data
+      this.isReferralLoaded = true
 
       //If we haven't entered a referral code, show the onboarding page
       if (!this.currentReferral) {
