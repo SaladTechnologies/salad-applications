@@ -1,4 +1,4 @@
-import { Layout, Text, TextField } from '@saladtechnologies/garden-components'
+import { AvatarSelectionForm, Layout, Text, TextField } from '@saladtechnologies/garden-components'
 import { Component } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
 import withStyles, { WithStyles } from 'react-jss'
@@ -6,7 +6,6 @@ import { Head } from '../../../../components'
 import { SaladTheme } from '../../../../SaladTheme'
 import { withLogin } from '../../../auth-views'
 import { Avatar, Profile } from '../../../profile/models'
-import { AvatarSelect } from './AvatarSelect'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -36,19 +35,19 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   avatarError?: {
-    avatarId: string
+    avatar: string
     message: string
   }
   avatars?: Avatar[]
-  isAvatarSubmitting: boolean
+  submittingAvatar?: string
   onClearAvatarError: () => void
-  onSelectAvatar: (id: string) => void
+  onSelectAvatar: (id?: string) => void
   onUpdateMinecraftUsername: (data: FormValues) => void
   onUpdateUsername: (data: FormValues) => void
   onResetMinecraftUsernameSuccess: () => void
   onResetUsernameSuccess: () => void
   profile?: Profile
-  selectedAvatar?: Avatar
+  selectedAvatar?: string
   isUserNameSubmitting: boolean
   isUserNameSubmitSuccess: boolean
   isMinecraftUserNameSubmitting: boolean
@@ -64,7 +63,7 @@ class _Account extends Component<Props> {
       profile,
       onUpdateUsername,
       avatarError,
-      isAvatarSubmitting,
+      submittingAvatar,
       onClearAvatarError,
       onUpdateMinecraftUsername,
       onSelectAvatar,
@@ -106,11 +105,11 @@ class _Account extends Component<Props> {
                 <div className={classes.textContainer}>
                   <Text variant="baseM"> Avatar </Text>
                 </div>
-                <AvatarSelect
+                <AvatarSelectionForm
                   avatars={avatars}
                   error={avatarError}
-                  isSubmitting={isAvatarSubmitting}
-                  onClearError={onClearAvatarError}
+                  submittingAvatar={submittingAvatar}
+                  onResetError={onClearAvatarError}
                   onSelectAvatar={onSelectAvatar}
                   selectedAvatar={selectedAvatar}
                 />
