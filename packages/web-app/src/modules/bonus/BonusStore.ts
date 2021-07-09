@@ -107,7 +107,7 @@ export class BonusStore {
         category: NotificationMessageCategory.BonusClaimedSuccess,
         title: `Claimed ${bonus?.name}!`,
         message: 'Congrats on your new bonus!',
-        onClick: () => this.store.routing.push('/bonuses'),
+        onClick: () => this.store.routing.push('/settings/bonuses'),
         autoClose: false,
       }
 
