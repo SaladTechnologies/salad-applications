@@ -5,7 +5,7 @@ import { Account } from './components'
 const mapStoreToProps = (store: RootStore): any => ({
   avatarError: store.profile.avatarError,
   avatars: store.profile.avatars,
-  isAvatarSubmitting: store.profile.isAvatarSubmitting,
+  submittingAvatar: store.profile.submittingAvatar,
   onClearAvatarError: store.profile.clearAvatarError,
   onSelectAvatar: store.profile.selectAvatar,
   onUpdateMinecraftUsername: store.profile.updateMinecraftUsername,

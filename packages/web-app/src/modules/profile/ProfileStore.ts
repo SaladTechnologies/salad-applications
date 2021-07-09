@@ -1,24 +1,25 @@
+import SaladDefaultAvatarSrc from '@saladtechnologies/garden-components/lib/components/Avatar/assets/SaladAvatar.png'
 import { AxiosInstance } from 'axios'
-import { action, flow, observable } from 'mobx'
+import { action, computed, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { FormValues } from '../account-views/account-views/components/'
 import { NotificationMessageCategory } from '../notifications/models'
 import { Avatar, Profile } from './models'
-import SaladDefaultAvatarSrc from '@saladtechnologies/garden-components/lib/components/Avatar/assets/SaladAvatar.png'
 
-const SaladDefaultAvatar :Avatar  ={
+const SaladDefaultAvatar: Avatar = {
   name: 'Default',
   description: 'Salad Default Avatar',
   imageUrl: SaladDefaultAvatarSrc,
   id: '0',
- }
+}
 
 export class ProfileStore {
-  private currentSelectedAvatar?: Avatar
+  @observable
+  public currentSelectedAvatar?: string
 
   @observable
   public avatarError?: {
-    avatarId: string
+    avatar: string
     message: string
   }
 
@@ -29,10 +30,10 @@ export class ProfileStore {
   public currentProfile?: Profile
 
   @observable
-  public isAvatarSubmitting: boolean = false
+  public submittingAvatar?: string
 
   @observable
-  public selectedAvatar?: Avatar
+  public selectedAvatar?: string
 
   @observable
   public isUserNameSubmitting: boolean = false
@@ -45,6 +46,11 @@ export class ProfileStore {
 
   @observable
   public isMinecraftUserNameSubmitSuccess: boolean = false
+
+  @computed
+  get profileAvatar(): Avatar | undefined {
+    return this.avatars?.find((avatar) => avatar.id === this.currentSelectedAvatar)
+  }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
@@ -73,7 +79,7 @@ export class ProfileStore {
   loadSelectedAvatar = flow(function* (this: ProfileStore) {
     try {
       let selectedAvatar = yield this.axios.get('/api/v2/avatars/selected')
-      this.currentSelectedAvatar = this.selectedAvatar = selectedAvatar.data
+      this.currentSelectedAvatar = this.selectedAvatar = selectedAvatar.data?.id
     } catch (err) {}
   })
 
@@ -100,28 +106,26 @@ export class ProfileStore {
 
   @action.bound
   selectAvatar = flow(function* (this: ProfileStore, id: string) {
-    if (this.isAvatarSubmitting || !this.avatars || (this.selectedAvatar && this.selectedAvatar.id === id)) {
+    if (this.submittingAvatar !== undefined || !this.avatars || this.selectedAvatar === id) {
       return
     }
     if (id === '0') {
-      this.currentSelectedAvatar=SaladDefaultAvatar
-      this.selectedAvatar=SaladDefaultAvatar
+      this.currentSelectedAvatar = this.selectedAvatar = SaladDefaultAvatar.id
       return
     }
     this.avatarError = undefined
-    this.isAvatarSubmitting = true
-    this.selectedAvatar = this.avatars.find((avatar) => avatar.id === id)
+    this.selectedAvatar = this.submittingAvatar = this.avatars.find((avatar) => avatar.id === id)?.id
     try {
       let patch = yield this.axios.patch('/api/v2/avatars/selected', { avatarId: id })
-      this.currentSelectedAvatar = this.selectedAvatar = patch.data
+      this.currentSelectedAvatar = this.selectedAvatar = patch.data?.id
     } catch (err) {
       this.avatarError = {
-        avatarId: id,
+        avatar: id,
         message: 'Unable to select avatar',
       }
       this.selectedAvatar = this.currentSelectedAvatar
     } finally {
-      this.isAvatarSubmitting = false
+      this.submittingAvatar = undefined
     }
   })
 

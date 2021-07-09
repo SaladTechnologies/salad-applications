@@ -29,14 +29,12 @@ const mapStoreToProps = (store: RootStore): any => {
   const goToAccount = () => store.routing.push('/settings/summary')
   const bonus = store.bonuses.firstExpiringUnclaimedBonus
 
+  const selectedAvatar = store.profile.profileAvatar
+
   return {
     avatar: isAuthenticated ? (
-      store.profile.selectedAvatar ? (
-        <Avatar
-          alt={store.profile.selectedAvatar.name}
-          src={store.profile.selectedAvatar.imageUrl}
-          variant="highlighted"
-        />
+      selectedAvatar ? (
+        <Avatar alt={selectedAvatar.name} src={selectedAvatar.imageUrl} variant="highlighted" />
       ) : (
         <AvatarDefault variant="highlighted" />
       )
