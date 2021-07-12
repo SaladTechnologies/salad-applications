@@ -17,6 +17,12 @@ export class BonusStore {
   @observable
   public currentEarningBonus: BonusEarningRate | undefined
 
+  @observable
+  public replacementEarningRateBonusId?: string
+
+  @observable
+  private replaceEarningRate: boolean = false
+
   @computed
   get firstExpiringUnclaimedBonus(): Bonus | undefined {
     return this.unclaimedBonuses.length > 0 ? this.unclaimedBonuses[0] : undefined
@@ -93,9 +99,14 @@ export class BonusStore {
       if (!bonus) throw Error('Bonus not found')
 
       // Check to see if we are overriding a current earning rate bonus
-      if (bonus.blockType === BonusType.EarningRate && this.currentEarningBonus !== undefined) {
-        // TODO: Scott. Show a modal here warning the user that they are going to replace {this.currentEarningBonus.multiplier}x with a new bonus {bonus.multiplier}x
-        console.error('TODO: Need confirmation that the user wants to replace their earning rate')
+      if (
+        bonus.blockType === BonusType.EarningRate &&
+        this.currentEarningBonus !== undefined &&
+        !this.replaceEarningRate
+      ) {
+        this.replacementEarningRateBonusId = bonus.id
+        this.store.ui.showModal('/bonuses/replace-bonus')
+        return
       }
 
       // Mark the reward as pending
@@ -149,6 +160,20 @@ export class BonusStore {
       yield this.store.refresh.refreshData()
 
       this.pendingBonuses.delete(bonusId)
+      this.replaceEarningRate = false
     }
   })
+
+  @action
+  public clearReplacementEarningRateBonusId = () => {
+    this.replacementEarningRateBonusId = undefined
+  }
+
+  @action
+  public replaceCurrentEarningRate = () => {
+    if (this.replacementEarningRateBonusId) {
+      this.replaceEarningRate = true
+      this.claimBonus(this.replacementEarningRateBonusId)
+    }
+  }
 }
