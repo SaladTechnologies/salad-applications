@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
 import { useIntl } from 'react-intl'
 import withStyles, { WithStyles } from 'react-jss'
+import Carousel from 'react-multi-carousel'
 import { Head } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { withLogin } from '../../auth-views'
@@ -12,32 +13,19 @@ const styles = (theme: SaladTheme) => ({
   levels: {
     alignItems: 'flex-end',
     display: 'flex',
-    overflowX: 'scroll',
     paddingTop: '64px',
     paddingBottom: '24px',
-    scrollbarColor: 'light',
-    scrollbarWidth: 'thin',
-    '&::-webkit-scrollbar': {
-      height: '10px',
-      color: '#DBF1C1',
-    },
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '#DBF1C1',
-      width: '10px',
-      height: '10px',
-    },
-    '&::-webkit-scrollbar-track': {
-      borderBottom: 'solid 3px',
-      color: '#DBF1C1',
-    },
-    '& > div:first-child': {
-      paddingLeft: 25,
-    },
     '& > div': {
+      paddingTop: 20,
       paddingBottom: 12,
       paddingRight: 25,
     },
   },
+  level: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+
   page: {
     backgroundImage: 'linear-gradient(to right, #56A431 , #AACF40)',
     color: theme.darkBlue,
@@ -61,6 +49,23 @@ const styles = (theme: SaladTheme) => ({
     marginTop: 16,
   },
 })
+
+const responsive = {
+  desktop: {
+    breakpoint: { max: Number.MAX_SAFE_INTEGER, min: 1400 },
+    items: 3,
+    slidesToSlide: 3,
+  },
+  tablet: {
+    breakpoint: { max: 1400, min: 1000 },
+    items: 2,
+    slidesToSlide: 2,
+  },
+  mobile: {
+    breakpoint: { max: 1000, min: 0 },
+    items: 1,
+  },
+}
 
 interface CurrentSeasonPageProps extends WithStyles<typeof styles> {
   currentLevelXP: number
@@ -94,6 +99,9 @@ const _CurrentSeasonPage = ({
         }))
       : []
   }, [levels, nextLevel, currentLevelXP])
+
+  nextLevel >= 2 && levelCards.push(...levelCards.splice(0, nextLevel - 1))
+
   return (
     <div className={classes.page}>
       <Scrollbars>
@@ -120,16 +128,20 @@ const _CurrentSeasonPage = ({
           </div>
           {levelCards.length > 0 && (
             <div className={classes.levels}>
-              {levelCards.map((levelCard) => (
-                <LevelCard
-                  alt={levelCard.alt}
-                  earnedAt={levelCard.earnedAt}
-                  level={levelCard.level}
-                  src={levelCard.src}
-                  xpCurrent={levelCard.xpCurrent}
-                  xpRequired={levelCard.xpRequired}
-                />
-              ))}
+              <Carousel infinite keyBoardControl={false} responsive={responsive} arrows renderDotsOutside>
+                {levelCards.map((levelCard) => (
+                  <div key={levelCard.level} className={classes.level}>
+                    <LevelCard
+                      alt={levelCard.alt}
+                      earnedAt={levelCard.earnedAt}
+                      level={levelCard.level}
+                      src={levelCard.src}
+                      xpCurrent={levelCard.xpCurrent}
+                      xpRequired={levelCard.xpRequired}
+                    />
+                  </div>
+                ))}
+              </Carousel>
             </div>
           )}
         </Layout>
