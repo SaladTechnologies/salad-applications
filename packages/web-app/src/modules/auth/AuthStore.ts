@@ -63,6 +63,11 @@ export class AuthStore {
     })
 
     SuperTokens.addAxiosInterceptors(axios)
+    SuperTokens.doesSessionExist()
+      .then((result) => {
+        this.isAuthenticated = result
+      })
+      .catch(() => {})
   }
 
   @action

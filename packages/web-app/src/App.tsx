@@ -174,20 +174,6 @@ export const App = withStyles(styles)(
   class App extends Component<Props> {
     store = getStore()
 
-    componentDidMount = async () => {
-      try {
-        this.store.auth.login()
-      } catch (error) {
-        console.log('Failed to login silently')
-      }
-
-      if (this.store.native.isNative) {
-        console.log('Running in native env')
-      } else {
-        console.log('Running in web env')
-      }
-    }
-
     render() {
       if (this.store.native.isNative) {
         return <AppLayout {...this.props} />
