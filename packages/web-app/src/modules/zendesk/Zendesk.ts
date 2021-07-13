@@ -172,7 +172,7 @@ export class Zendesk {
             },
           },
           color: {
-            theme: '#DBF1C1',
+            theme: '#B2D530',
           },
         },
       }
