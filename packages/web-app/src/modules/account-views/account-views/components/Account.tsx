@@ -90,7 +90,7 @@ class _Account extends Component<Props> {
               <TextField
                 isSubmitting={isUserNameSubmitting}
                 isSubmitSuccess={isUserNameSubmitSuccess}
-                errorMessage="Username must be between 2 - 32 characters and can not contain spaces!"
+                validationRegexErrorMessage="Username must be between 2 - 32 characters and can not contain spaces!"
                 label="Username"
                 onSubmit={onUpdateUsername}
                 validationRegex={/^\w{2,32}$/}
@@ -122,7 +122,7 @@ class _Account extends Component<Props> {
               <TextField
                 isSubmitting={isMinecraftUserNameSubmitting}
                 isSubmitSuccess={isMinecraftUserNameSubmitSuccess}
-                errorMessage="Not a valid Minecraft username!"
+                validationRegexErrorMessage="Not a valid Minecraft username!"
                 label="Minecraft Username"
                 onSubmit={onUpdateMinecraftUsername}
                 validationRegex={/^\w{3,16}$/}

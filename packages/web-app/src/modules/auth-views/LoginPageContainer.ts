@@ -6,6 +6,7 @@ const mapStoreToProps = (store: RootStore): any => ({
   currentStep: store.auth.currentStep,
   currentEmail: store.auth.currentEmail,
   isSubmitting: store.auth.isSubmitting,
+  isSubmitSuccess: store.auth.isSubmitSuccess,
   errorMessage: store.auth.errorMessage,
   acceptedTerms: store.auth.acceptedTerms,
   onSubmitEmail: store.auth.submitEmail,
@@ -13,6 +14,7 @@ const mapStoreToProps = (store: RootStore): any => ({
   onBackToEmail: store.auth.backToEmail,
   onCancelLogin: store.auth.cancelLogin,
   onToggleAccept: store.auth.toggleAcceptTerms,
+  onResetSubmitSuccess: store.auth.resetSubmitSuccess,
 })
 
 export const LoginPageContainer = connect(mapStoreToProps, LoginPage)

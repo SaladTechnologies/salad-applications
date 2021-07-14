@@ -18,6 +18,10 @@ export class AuthStore {
   @observable
   public isSubmitting: boolean = false
 
+  /** A value indicating whether submit is successful */
+  @observable
+  public isSubmitSuccess: boolean = false
+
   /** The current error message. */
   @observable
   public errorMessage?: string
@@ -112,6 +116,7 @@ export class AuthStore {
   /** Called when a user enters their email address */
   @action.bound
   public submitEmail = flow(function* (this: AuthStore, email: string) {
+    this.isSubmitSuccess = false
     try {
       this.errorMessage = undefined
 
@@ -135,9 +140,11 @@ export class AuthStore {
       yield this.axios.post('/api/v2/authentication-sessions', request)
 
       this.currentEmail = email
+      this.isSubmitSuccess = true
       this.currentStep = FormSteps.Code
     } catch (e) {
       let err: AxiosError = e
+      this.isSubmitSuccess = false
       if (err.response && err.response.status === 400) {
         this.errorMessage = 'Invalid email address'
       } else if (err.message) {
@@ -153,6 +160,8 @@ export class AuthStore {
   /** Called when a user enters their email address */
   @action.bound
   public submitCode = flow(function* (this: AuthStore, code: string) {
+    this.isSubmitSuccess = false
+
     try {
       console.log(code)
 
@@ -164,9 +173,10 @@ export class AuthStore {
 
       // TODO: POST /auth/login/code
       yield this.axios.post('/api/v2/authentication-sessions/verification', request)
-
+      this.isSubmitSuccess = true
       this.closeLoginProcess(true)
     } catch (e) {
+      this.isSubmitSuccess = false
       let err: AxiosError = e
       if (err.response && err.response.status === 400) {
         this.errorMessage = 'Incorrect code'
@@ -181,6 +191,11 @@ export class AuthStore {
   @action
   public backToEmail = () => {
     this.resetLoginProcess()
+  }
+
+  @action
+  public resetSubmitSuccess = () => {
+    this.isSubmitSuccess = false
   }
 
   @action

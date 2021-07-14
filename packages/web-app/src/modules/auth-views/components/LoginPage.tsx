@@ -1,4 +1,4 @@
-import { Layout, SvgIcon, Text, TextField } from '@saladtechnologies/garden-components'
+import { FieldContainer, Layout, SvgIcon, Text, TextField } from '@saladtechnologies/garden-components'
 import { FormValues } from '@saladtechnologies/garden-components/lib/components/TextField/TextField'
 import { Key, Mail } from '@saladtechnologies/garden-icons'
 import { Component } from 'react'
@@ -56,7 +56,8 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   currentStep?: FormSteps
   currentEmail?: string
-  isSubmitting?: boolean
+  isSubmitting: boolean
+  isSubmitSuccess: boolean
   acceptedTerms?: boolean
   errorMessage?: string
   onSubmitEmail?: (email: string) => void
@@ -64,6 +65,7 @@ interface Props extends WithStyles<typeof styles> {
   onBackToEmail?: () => void
   onCancelLogin?: () => void
   onToggleAccept?: (accepted: boolean) => void
+  onResetSubmitSuccess?: () => void
 }
 
 export const LoginPage = withStyles(styles)(
@@ -99,10 +101,23 @@ export const LoginPage = withStyles(styles)(
       onCancelLogin?.()
     }
 
+    handleResetSubmitSuccess = () => {
+      const { onResetSubmitSuccess, isSubmitSuccess } = this.props
+
+      isSubmitSuccess && onResetSubmitSuccess?.()
+    }
     render() {
-      const { currentStep, acceptedTerms, onToggleAccept, isSubmitting, currentEmail, errorMessage, classes } =
-        this.props
+      const {
+        currentStep,
+        acceptedTerms,
+        onToggleAccept,
+        isSubmitting,
+        currentEmail,
+        errorMessage,
+        classes,
+      } = this.props
       console.log('Submitting:' + isSubmitting)
+
       return (
         <div className={classes.page}>
           <Layout background="undefined">
@@ -126,22 +141,28 @@ export const LoginPage = withStyles(styles)(
                       checked={acceptedTerms}
                     />
                   </div>
-                  <div className={classes.emailInputContainer}>
-                    <TextField
-                      label="Email"
-                      disabled={!acceptedTerms}
-                      errorMessage={'Invalid email'}
-                      onSubmit={this.handleSubmitEmail}
-                      validationRegex={
-                        /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
-                      }
-                      leadingIcon={
-                        <SvgIcon size={'large'} stroke="dark">
-                          <Mail />
-                        </SvgIcon>
-                      }
-                    />
-                  </div>
+                  <FieldContainer>
+                    <div className={classes.emailInputContainer}>
+                      <TextField
+                        label="Email"
+                        disabled={!acceptedTerms}
+                        validationRegexErrorMessage={'Invalid email'}
+                        serverSideErrorMessage={errorMessage}
+                        onSubmit={this.handleSubmitEmail}
+                        isSubmitting={isSubmitting}
+                        isSubmitSuccess={false}
+                        onFocus={this.handleResetSubmitSuccess}
+                        validationRegex={
+                          /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
+                        }
+                        leadingIcon={
+                          <SvgIcon size={'large'} stroke="dark">
+                            <Mail />
+                          </SvgIcon>
+                        }
+                      />
+                    </div>
+                  </FieldContainer>
 
                   <Text variant="baseXS">
                     Enter your email to create a secure account. Already have an account, enter the same email address
@@ -168,9 +189,13 @@ export const LoginPage = withStyles(styles)(
                   <div className={classes.codeInputContainer}>
                     <TextField
                       label="Code"
-                      errorMessage={'Invalid code format'}
+                      validationRegexErrorMessage={'Invalid code format'}
+                      serverSideErrorMessage={errorMessage}
                       onSubmit={this.handleSubmitCode}
                       validationRegex={/^\d{4}$/}
+                      isSubmitting={isSubmitting}
+                      onFocus={this.handleResetSubmitSuccess}
+                      isSubmitSuccess={false}
                       width={400}
                       leadingIcon={
                         <SvgIcon size={'large'} stroke="dark">
