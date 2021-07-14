@@ -13,10 +13,8 @@ const styles = (theme: SaladTheme) => ({
   levels: {
     alignItems: 'flex-end',
     display: 'flex',
-    paddingTop: '64px',
     paddingBottom: '24px',
     '& > div': {
-      paddingTop: 20,
       paddingBottom: 12,
       paddingRight: 25,
     },
@@ -24,6 +22,7 @@ const styles = (theme: SaladTheme) => ({
   level: {
     display: 'flex',
     justifyContent: 'center',
+    paddingTop: 150,
   },
 
   page: {
