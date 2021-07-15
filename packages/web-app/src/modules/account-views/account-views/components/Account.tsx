@@ -94,7 +94,6 @@ class _Account extends Component<Props> {
                 label="Username"
                 onSubmit={onUpdateUsername}
                 validationRegex={/^\w{2,32}$/}
-                width={396}
                 onFocus={handleSubmitButtonReset}
                 defaultValue={profile?.username}
               />
@@ -126,7 +125,6 @@ class _Account extends Component<Props> {
                 label="Minecraft Username"
                 onSubmit={onUpdateMinecraftUsername}
                 validationRegex={/^\w{3,16}$/}
-                width={396}
                 onFocus={handleSubmitButtonReset}
                 defaultValue={profile?.extensions?.minecraftUsername}
               />

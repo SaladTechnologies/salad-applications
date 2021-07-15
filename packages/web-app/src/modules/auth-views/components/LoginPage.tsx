@@ -107,15 +107,8 @@ export const LoginPage = withStyles(styles)(
       isSubmitSuccess && onResetSubmitSuccess?.()
     }
     render() {
-      const {
-        currentStep,
-        acceptedTerms,
-        onToggleAccept,
-        isSubmitting,
-        currentEmail,
-        errorMessage,
-        classes,
-      } = this.props
+      const { currentStep, acceptedTerms, onToggleAccept, isSubmitting, currentEmail, errorMessage, classes } =
+        this.props
       console.log('Submitting:' + isSubmitting)
 
       return (
@@ -123,7 +116,7 @@ export const LoginPage = withStyles(styles)(
           <Layout background="undefined">
             <Head title="Login" />
             <div className={classes.content}>
-              {currentStep === FormSteps.Email && (
+              {currentStep === FormSteps.Code && (
                 <>
                   <div className={classes.logoContainer}>
                     <SvgPrimaryLogoLockup alt="Salad logo" width={208} height={100} />
@@ -168,10 +161,9 @@ export const LoginPage = withStyles(styles)(
                     Enter your email to create a secure account. Already have an account, enter the same email address
                     to access your account.
                   </Text>
-                  {errorMessage}
                 </>
               )}
-              {currentStep === FormSteps.Code && (
+              {currentStep === FormSteps.Email && (
                 <div className={classes.codeContainer}>
                   <div className={classes.codeTextContainer}>
                     <Text variant="baseXL"> Enter the 4-Digit Code</Text>
@@ -186,25 +178,25 @@ export const LoginPage = withStyles(styles)(
                       </Text>
                     </span>
                   </div>
-                  <div className={classes.codeInputContainer}>
-                    <TextField
-                      label="Code"
-                      validationRegexErrorMessage={'Invalid code format'}
-                      serverSideErrorMessage={errorMessage}
-                      onSubmit={this.handleSubmitCode}
-                      validationRegex={/^\d{4}$/}
-                      isSubmitting={isSubmitting}
-                      onFocus={this.handleResetSubmitSuccess}
-                      isSubmitSuccess={false}
-                      width={400}
-                      leadingIcon={
-                        <SvgIcon size={'large'} stroke="dark">
-                          <Key />
-                        </SvgIcon>
-                      }
-                    />
-                    {errorMessage}
-                  </div>
+                  <FieldContainer>
+                    <div className={classes.codeInputContainer}>
+                      <TextField
+                        label="Code"
+                        validationRegexErrorMessage={'Invalid code format'}
+                        serverSideErrorMessage={errorMessage}
+                        onSubmit={this.handleSubmitCode}
+                        validationRegex={/^\d{4}$/}
+                        isSubmitting={isSubmitting}
+                        onFocus={this.handleResetSubmitSuccess}
+                        isSubmitSuccess={false}
+                        leadingIcon={
+                          <SvgIcon size={'large'} stroke="dark">
+                            <Key />
+                          </SvgIcon>
+                        }
+                      />
+                    </div>
+                  </FieldContainer>
                   <div>
                     <span onClick={this.handleBackToEmail} className={classes.link}>
                       <Text variant="baseL">
