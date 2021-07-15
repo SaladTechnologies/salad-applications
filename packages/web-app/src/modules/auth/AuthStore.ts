@@ -88,9 +88,10 @@ export class AuthStore {
       return
     }
 
-    if (this.loginPromise) {
-      return this.loginPromise
-    }
+    // TODO: on unmout of login page throw away this.loginPromise
+    // if (this.loginPromise) {
+    //   return this.loginPromise
+    // }
 
     // Create a promise that we will return
     this.loginPromise = new Promise(async (resolve, reject) => {
@@ -141,8 +142,6 @@ export class AuthStore {
         termsAccepted: true,
       }
 
-      console.log(request)
-
       this.isSubmitting = true
 
       yield this.axios.post('/api/v2/authentication-sessions', request)
@@ -171,8 +170,6 @@ export class AuthStore {
     this.isSubmitSuccess = false
 
     try {
-      console.log(code)
-
       this.isSubmitting = true
 
       const request = {
@@ -232,5 +229,6 @@ export class AuthStore {
     this.currentStep = FormSteps.Email
     this.isSubmitting = false
     this.currentEmail = undefined
+    this.toggleAcceptTerms(false)
   }
 }

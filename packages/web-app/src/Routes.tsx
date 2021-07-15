@@ -41,14 +41,6 @@ class _Routes extends Component<RouteComponentProps> {
     const currentLocation =
       (location.state as { currentLocation: Location | undefined } | undefined)?.currentLocation || location
 
-    if (
-      this.store.auth.isAuthenticated &&
-      this.store.referral.isReferralLoaded &&
-      !this.store.referral.currentReferral
-    ) {
-      this.store.ui.showModal('/onboarding/referral')
-    }
-
     return (
       <>
         <Switch location={currentLocation}>
