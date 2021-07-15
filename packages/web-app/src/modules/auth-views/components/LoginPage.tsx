@@ -116,7 +116,7 @@ export const LoginPage = withStyles(styles)(
           <Layout background="undefined">
             <Head title="Login" />
             <div className={classes.content}>
-              {currentStep === FormSteps.Code && (
+              {currentStep === FormSteps.Email && (
                 <>
                   <div className={classes.logoContainer}>
                     <SvgPrimaryLogoLockup alt="Salad logo" width={208} height={100} />
@@ -163,7 +163,7 @@ export const LoginPage = withStyles(styles)(
                   </Text>
                 </>
               )}
-              {currentStep === FormSteps.Email && (
+              {currentStep === FormSteps.Code && (
                 <div className={classes.codeContainer}>
                   <div className={classes.codeTextContainer}>
                     <Text variant="baseXL"> Enter the 4-Digit Code</Text>
