@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios'
 import axiosRetry, { exponentialDelay } from 'axios-retry'
 import isRetryAllowed from 'is-retry-allowed'
+import SuperTokens from 'supertokens-website'
 import { config } from './config'
 
 /**
@@ -32,6 +33,7 @@ export const createClient = (): AxiosInstance => {
     baseURL: config.apiBaseUrl,
   })
 
+  SuperTokens.addAxiosInterceptors(httpClient)
   httpClient.interceptors.response.use(
     (response) => {
       // Any status code that lie within the range of 2xx cause this function to trigger

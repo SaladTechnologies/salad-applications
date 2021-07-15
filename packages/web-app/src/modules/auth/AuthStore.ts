@@ -1,5 +1,5 @@
 import { AxiosError, AxiosInstance } from 'axios'
-import { action, flow, observable } from 'mobx'
+import { action, flow, observable, runInAction } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
 import SuperTokens from 'supertokens-website'
 import { config } from '../../config'
@@ -53,23 +53,27 @@ export class AuthStore {
     SuperTokens.init({
       apiDomain: config.apiBaseUrl,
       onHandleEvent: (context) => {
-        if (context.action === 'SIGN_OUT') {
-          this.isAuthenticated = false
-          // called when the user clicks on sign out
-        } else if (context.action === 'REFRESH_SESSION') {
-          // called with refreshing a session
-          // NOTE: This is an undeterministic event
-        } else if (context.action === 'UNAUTHORISED') {
-          // called when the session has expired
-          this.isAuthenticated = false
+        switch (context.action) {
+          // case 'SESSION_CREATED':
+          //   runInAction(() => {
+          //     this.isAuthenticated = true
+          //   })
+          //   break
+          case 'SIGN_OUT':
+          case 'UNAUTHORISED':
+            runInAction(() => {
+              this.isAuthenticated = false
+            })
+            break
         }
       },
     })
 
-    SuperTokens.addAxiosInterceptors(axios)
     SuperTokens.doesSessionExist()
       .then((result) => {
-        this.isAuthenticated = result
+        runInAction(() => {
+          this.isAuthenticated = result
+        })
       })
       .catch(() => {})
   }
@@ -78,7 +82,9 @@ export class AuthStore {
   public login = async (): Promise<void> => {
     // Don't do anything if we are already logged in
     if (await SuperTokens.doesSessionExist()) {
-      this.isAuthenticated = true
+      runInAction(() => {
+        this.isAuthenticated = true
+      })
       return
     }
 
@@ -104,7 +110,9 @@ export class AuthStore {
   @action
   public logout = async (): Promise<void> => {
     await SuperTokens.signOut()
-    this.isAuthenticated = false
+    runInAction(() => {
+      this.isAuthenticated = false
+    })
   }
 
   /** Toggles if the user accepted terms */
@@ -204,7 +212,6 @@ export class AuthStore {
   }
 
   private closeLoginProcess = (success: boolean) => {
-    debugger
     this.isAuthenticated = success
 
     // Route back to the location we started the login flow from
