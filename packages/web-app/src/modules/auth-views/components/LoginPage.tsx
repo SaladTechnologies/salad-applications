@@ -73,6 +73,7 @@ interface Props extends WithStyles<typeof styles> {
   onCancelLogin?: () => void
   onToggleAccept?: (accepted: boolean) => void
   onResetSubmitSuccess?: () => void
+  onUnmount: () => void
 }
 
 export const LoginPage = withStyles(styles)(
@@ -113,6 +114,12 @@ export const LoginPage = withStyles(styles)(
 
       isSubmitSuccess && onResetSubmitSuccess?.()
     }
+
+    componentWillUnmount() {
+      const { onUnmount } = this.props
+      onUnmount()
+    }
+
     render() {
       const { currentStep, acceptedTerms, onToggleAccept, isSubmitting, currentEmail, errorMessage, classes } =
         this.props

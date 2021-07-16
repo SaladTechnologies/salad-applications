@@ -88,10 +88,9 @@ export class AuthStore {
       return
     }
 
-    // TODO: on unmout of login page throw away this.loginPromise
-    // if (this.loginPromise) {
-    //   return this.loginPromise
-    // }
+    if (this.loginPromise) {
+      return this.loginPromise
+    }
 
     // Create a promise that we will return
     this.loginPromise = new Promise(async (resolve, reject) => {
@@ -223,7 +222,8 @@ export class AuthStore {
     this.resetLoginProcess()
   }
 
-  private resetLoginProcess = () => {
+  @action
+  public resetLoginProcess = () => {
     this.loginPromise = undefined
     this.startingRoute = undefined
     this.currentStep = FormSteps.Email

@@ -15,6 +15,7 @@ const mapStoreToProps = (store: RootStore): any => ({
   onCancelLogin: store.auth.cancelLogin,
   onToggleAccept: store.auth.toggleAcceptTerms,
   onResetSubmitSuccess: store.auth.resetSubmitSuccess,
+  onUnmount: store.auth.resetLoginProcess,
 })
 
 export const LoginPageContainer = connect(mapStoreToProps, LoginPage)
