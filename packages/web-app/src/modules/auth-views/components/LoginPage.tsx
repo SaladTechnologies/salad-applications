@@ -15,8 +15,11 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
     justifyContent: 'center',
     height: '100vh',
+    position: 'relative',
+    zIndex: 1,
   },
   content: {
+    color: theme.darkBlue,
     maxWidth: 396,
     display: 'flex',
     flexDirection: 'column',
@@ -31,7 +34,11 @@ const styles = (theme: SaladTheme) => ({
   },
   checkBoxContainer: {
     paddingBottom: 26,
-    color: theme.darkBlue,
+    fontSize: 12,
+    color: theme.lightGreen,
+    '@media (min-width:500px)': {
+      fontSize: 16,
+    },
   },
   emailInputContainer: {
     paddingBottom: 40,
@@ -109,7 +116,6 @@ export const LoginPage = withStyles(styles)(
     render() {
       const { currentStep, acceptedTerms, onToggleAccept, isSubmitting, currentEmail, errorMessage, classes } =
         this.props
-      console.log('Submitting:' + isSubmitting)
 
       return (
         <div className={classes.page}>
