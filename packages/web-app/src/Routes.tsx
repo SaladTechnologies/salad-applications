@@ -3,7 +3,7 @@ import { Component } from 'react'
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router'
 import { LoadingPage } from './components'
 import { ReferralOnboardingContainer } from './modules/account-views/referral-views'
-import { EmailVerificationPageContainer, LoginPageContainer } from './modules/auth-views'
+import { LoginPageContainer } from './modules/auth-views'
 import { ReplaceBonusModalContainer } from './modules/bonus-views'
 import { EarnMenuContainer } from './modules/earn-views'
 import {
@@ -72,7 +72,6 @@ class _Routes extends Component<RouteComponentProps> {
           <Route path="/settings" component={SettingsContainer} />
           <Route path="/earn" component={EarnMenuContainer} />
           <Route path="/login" exact component={LoginPageContainer} />
-          <Route path="/login/email-verification" exact component={EmailVerificationPageContainer} />
           <Route path="/" render={() => <StorefrontHomePage />} />
           <Redirect to="/" />
         </Switch>
