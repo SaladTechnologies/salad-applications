@@ -183,7 +183,11 @@ export class AuthStore {
       this.isSubmitSuccess = false
       let err: AxiosError = e
       if (err.response && err.response.status === 400) {
-        this.errorMessage = 'Incorrect code'
+        if (err.response.data?.type === 'invalid_session') {
+          this.errorMessage = 'The code has expired, resend the code to continue.'
+        } else {
+          this.errorMessage = 'Incorrect code'
+        }
       } else {
         throw e
       }
