@@ -1,8 +1,9 @@
-import { FieldContainer, Layout, SvgIcon, Text, TextField } from '@saladtechnologies/garden-components'
+import { FieldContainer, SvgIcon, Text, TextField } from '@saladtechnologies/garden-components'
 import { FormValues } from '@saladtechnologies/garden-components/lib/components/TextField/TextField'
 import { Key, Mail } from '@saladtechnologies/garden-icons'
 import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
+import MediaQuery from 'react-responsive'
 import { Checkbox, Head } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { FormSteps } from '../../auth/AuthStore'
@@ -13,10 +14,21 @@ const styles = (theme: SaladTheme) => ({
     flex: 1,
     backgroundImage: 'linear-gradient(to right, #56A431 , #AACF40)',
     display: 'flex',
-    justifyContent: 'center',
     height: '100vh',
     position: 'relative',
     zIndex: 1,
+  },
+  contentContainer: {
+    maxWidth: 1280,
+    margin: '0 auto',
+    padding: '25px 15px 25px',
+    width: '100%',
+    '@media (min-width:600px)': {
+      padding: '50px 62px 50px',
+    },
+    '@media (min-width:1200px)': {
+      padding: '74px 104px 74px 135px',
+    },
   },
   content: {
     color: theme.darkBlue,
@@ -133,7 +145,7 @@ export const LoginPage = withStyles(styles)(
 
       return (
         <div className={classes.page}>
-          <Layout background="undefined">
+          <div className={classes.contentContainer}>
             <Head title="Login" />
             <div className={classes.content}>
               {currentStep === FormSteps.Email && (
@@ -150,26 +162,52 @@ export const LoginPage = withStyles(styles)(
                   <div className={classes.checkBoxContainer}>
                     <Checkbox
                       textElement={
-                        <Text variant="baseL">
-                          I agree to the{' '}
-                          <a
-                            className={classes.termLink}
-                            href="https://salad.com/terms-and-conditions"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Terms of Service
-                          </a>{' '}
-                          and{' '}
-                          <a
-                            className={classes.termLink}
-                            href="https://salad.com/privacy-policy"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Privacy Policy
-                          </a>
-                        </Text>
+                        <>
+                          <MediaQuery maxWidth={600}>
+                            <Text variant="baseM">
+                              I agree to the{' '}
+                              <a
+                                className={classes.termLink}
+                                href="https://salad.com/terms-and-conditions"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                Terms of Service
+                              </a>{' '}
+                              and{' '}
+                              <a
+                                className={classes.termLink}
+                                href="https://salad.com/privacy-policy"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                Privacy Policy
+                              </a>
+                            </Text>
+                          </MediaQuery>
+                          <MediaQuery minWidth={601}>
+                            <Text variant="baseL">
+                              I agree to the{' '}
+                              <a
+                                className={classes.termLink}
+                                href="https://salad.com/terms-and-conditions"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                Terms of Service
+                              </a>{' '}
+                              and{' '}
+                              <a
+                                className={classes.termLink}
+                                href="https://salad.com/privacy-policy"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                Privacy Policy
+                              </a>
+                            </Text>
+                          </MediaQuery>
+                        </>
                       }
                       onClick={onToggleAccept}
                       checked={acceptedTerms}
@@ -252,7 +290,7 @@ export const LoginPage = withStyles(styles)(
                 </div>
               )}
             </div>
-          </Layout>
+          </div>
         </div>
       )
     }

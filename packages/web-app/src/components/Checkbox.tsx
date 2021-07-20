@@ -106,7 +106,7 @@ class _Checkbox extends Component<Props> {
               {text}
             </p>
           )}
-          {textElement && <div className={classnames(textClassName, classes.text)}>{textElement}</div>}
+          {textElement && <div className={classnames(textClassName)}>{textElement}</div>}
         </label>
         {errorText && <div className={classes.errorText}>{errorText}</div>}
       </div>
