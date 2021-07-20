@@ -145,6 +145,7 @@ export const LoginPage = withStyles(styles)(
                       text="I agree to the Terms of Service and Privacy Policy"
                       onClick={onToggleAccept}
                       checked={acceptedTerms}
+                      dark={true}
                     />
                   </div>
                   <FieldContainer>

@@ -42,6 +42,9 @@ const styles = (theme: SaladTheme) => ({
     paddingBottom: 100,
     marginTop: 60,
   },
+  mobileLoginPage: {
+    padding: 0,
+  },
   appNavigationContainer: {
     position: 'relative',
     '& > div': {
@@ -187,7 +190,11 @@ export const App = withStyles(styles)(
                   <NavigationBarContainer />
                 </div>
                 <Scrollbars>
-                  <div className={classes.mobileContent}>
+                  <div
+                    className={classnames(classes.mobileContent, {
+                      [classes.mobileLoginPage]: this.store.routing.location.pathname === '/login',
+                    })}
+                  >
                     <MobileRoutes />
                   </div>
                 </Scrollbars>

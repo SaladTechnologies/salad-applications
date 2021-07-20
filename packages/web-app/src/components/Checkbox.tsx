@@ -18,6 +18,9 @@ const styles = (theme: SaladTheme) => ({
       opacity: 0.7,
     },
   },
+  checkboxDark: {
+    color: theme.darkBlue,
+  },
   checkBox: {
     width: '1rem',
     height: '1rem',
@@ -68,6 +71,7 @@ interface Props extends WithStyles<typeof styles> {
   textClassName?: string
   className?: string
   onClick?: (newState: boolean) => void
+  dark?: boolean
 }
 
 class _Checkbox extends Component<Props> {
@@ -80,13 +84,14 @@ class _Checkbox extends Component<Props> {
   }
 
   render() {
-    const { textClassName, disabled, hideCheckbox, className, text, errorText, checked, classes } = this.props
+    const { textClassName, disabled, hideCheckbox, className, text, errorText, checked, dark, classes } = this.props
     return (
       <div className={classnames(classes.container, className)}>
         <label
           className={classnames(classes.checkboxContainer, {
             [classes.enabled]: !disabled,
             [classes.disabled]: disabled,
+            [classes.checkboxDark]: dark,
           })}
         >
           {!hideCheckbox && (
