@@ -24,7 +24,7 @@ export class AuthStore {
 
   /** The current error message. */
   @observable
-  public errorMessage?: string
+  public errorMessage?: string = undefined
 
   /** The email address for the current login session. */
   @observable
@@ -167,6 +167,7 @@ export class AuthStore {
   @action.bound
   public submitCode = flow(function* (this: AuthStore, code: string) {
     this.isSubmitSuccess = false
+    this.errorMessage = undefined
 
     try {
       this.isSubmitting = true
@@ -232,6 +233,7 @@ export class AuthStore {
     this.startingRoute = undefined
     this.currentStep = FormSteps.Email
     this.isSubmitting = false
+    this.errorMessage = undefined
     this.currentEmail = undefined
     this.toggleAcceptTerms(false)
   }
