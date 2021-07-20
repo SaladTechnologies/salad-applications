@@ -9,6 +9,9 @@ export enum NotificationMessageCategory {
   Success = 'Success',
   BonusClaimedSuccess = 'Bonus Claimed Success',
   BonusClaimedError = 'Bonus Claimed Error',
+  ReferralCodeInvalid = 'Referral Code Invalid',
+  ReferralCodeDoesNotExist = 'Referral Code Does Not Exist',
+  ReferralCodeError = 'Referral Code Error',
 }
 
 export interface NotificationMessage {

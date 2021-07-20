@@ -1,6 +1,7 @@
 import { AxiosError, AxiosInstance } from 'axios'
 import { action, computed, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
+import { NotificationMessage, NotificationMessageCategory } from '../notifications/models'
 import { completed, percentComplete, Referral } from './models'
 import { maximumReferrerBonus } from './models/ReferralDefinition'
 
@@ -154,15 +155,55 @@ export class ReferralStore {
       this.store.analytics.trackReferralEntered(code)
     } catch (e) {
       let err: AxiosError = e
-      if (!err.response || err.response.status === 500) throw new Error('Unknown error')
-      if (err.response.status === 400) throw new Error('Invalid code')
-      if (err.response.status === 409) {
-        if (err.response.data) {
-          throw new Error(err.response.data)
-        } else {
-          throw new Error('You have already entered a code')
-        }
+
+      let notification: NotificationMessage | undefined
+      let errorMessage: string = 'Unknown Error.'
+
+      switch (err.response?.status) {
+        case 400:
+          notification = {
+            category: NotificationMessageCategory.ReferralCodeInvalid,
+            title: 'Sorry, Chef! The code you entered is not valid.',
+            message: 'Check to see if you have entered the code correctly, and try again.',
+            autoClose: false,
+            type: 'error',
+          }
+          errorMessage = 'Code is invalid.'
+          break
+        case 409:
+          notification = {
+            category: NotificationMessageCategory.ReferralCodeDoesNotExist,
+            title: 'Sorry, Chef! That code does not exist.',
+            message: 'Check to see if you have entered the code correctly, and try again.',
+            autoClose: false,
+            type: 'error',
+          }
+          errorMessage = 'Code does not exist.'
+          break
+        case 500:
+          notification = {
+            category: NotificationMessageCategory.ReferralCodeError,
+            title: 'Uh oh, something went wrong.',
+            message: 'Try entering your referral code again.',
+            autoClose: false,
+            type: 'error',
+          }
+          errorMessage = 'Unknown Error.'
+          break
+        default:
+          notification = {
+            category: NotificationMessageCategory.ReferralCodeError,
+            title: 'Uh oh, something went wrong.',
+            message: 'Try entering your referral code again.',
+            autoClose: false,
+            type: 'error',
+          }
+          errorMessage = 'Unknown Error.'
+          break
       }
+
+      this.store.notifications.sendNotification(notification)
+      throw new Error(errorMessage)
     }
   })
 
