@@ -20,11 +20,10 @@ const styles = (theme: SaladTheme) => ({
   },
   content: {
     color: theme.darkBlue,
-    maxWidth: 396,
+    maxWidth: 505,
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
-    textAlign: 'center',
+    textAlign: 'left',
   },
   logoContainer: {
     paddingBottom: 50,
@@ -57,6 +56,9 @@ const styles = (theme: SaladTheme) => ({
   link: {
     paddingBottom: 14,
     cursor: 'pointer',
+  },
+  termLink: {
+    color: theme.darkBlue,
   },
   wrongEmail: {
     cursor: 'pointer',
@@ -147,7 +149,28 @@ export const LoginPage = withStyles(styles)(
                   </div>
                   <div className={classes.checkBoxContainer}>
                     <Checkbox
-                      text="I agree to the Terms of Service and Privacy Policy"
+                      textElement={
+                        <Text variant="baseL">
+                          I agree to the{' '}
+                          <a
+                            className={classes.termLink}
+                            href="https://salad.com/terms-and-conditions"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Terms of Service
+                          </a>{' '}
+                          and{' '}
+                          <a
+                            className={classes.termLink}
+                            href="https://salad.com/privacy-policy"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Privacy Policy
+                          </a>
+                        </Text>
+                      }
                       onClick={onToggleAccept}
                       checked={acceptedTerms}
                       dark={true}

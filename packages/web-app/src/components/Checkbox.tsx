@@ -67,6 +67,7 @@ interface Props extends WithStyles<typeof styles> {
   hideCheckbox?: boolean
   disabled?: boolean
   text?: string
+  textElement?: React.ReactElement
   errorText?: string
   textClassName?: string
   className?: string
@@ -84,7 +85,8 @@ class _Checkbox extends Component<Props> {
   }
 
   render() {
-    const { textClassName, disabled, hideCheckbox, className, text, errorText, checked, dark, classes } = this.props
+    const { textClassName, disabled, hideCheckbox, className, text, textElement, errorText, checked, dark, classes } =
+      this.props
     return (
       <div className={classnames(classes.container, className)}>
         <label
@@ -99,9 +101,12 @@ class _Checkbox extends Component<Props> {
               {checked && <FontAwesomeIcon size="xs" className={classes.checkmark} icon={faCheck} />}
             </div>
           )}
-          <p className={classnames(textClassName, classes.text)} onClick={this.handleClick}>
-            {text}
-          </p>
+          {text && (
+            <p className={classnames(textClassName, classes.text)} onClick={this.handleClick}>
+              {text}
+            </p>
+          )}
+          {textElement && <div className={classnames(textClassName, classes.text)}>{textElement}</div>}
         </label>
         {errorText && <div className={classes.errorText}>{errorText}</div>}
       </div>
