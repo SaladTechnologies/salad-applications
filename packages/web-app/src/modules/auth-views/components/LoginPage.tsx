@@ -203,6 +203,7 @@ export const LoginPage = withStyles(styles)(
                         validationRegex={/^\d{4}$/}
                         isSubmitting={isSubmitting}
                         onFocus={this.handleResetSubmitSuccess}
+                        autoFocus
                         isSubmitSuccess={false}
                         leadingIcon={
                           <SvgIcon size={'large'} stroke="dark">
