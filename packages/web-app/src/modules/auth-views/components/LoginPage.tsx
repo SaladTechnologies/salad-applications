@@ -58,6 +58,11 @@ const styles = (theme: SaladTheme) => ({
     paddingBottom: 14,
     cursor: 'pointer',
   },
+  wrongEmail: {
+    cursor: 'pointer',
+    display: 'block',
+    paddingTop: 14,
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -215,7 +220,7 @@ export const LoginPage = withStyles(styles)(
                     </div>
                   </FieldContainer>
                   <div>
-                    <span onClick={this.handleBackToEmail} className={classes.link}>
+                    <span onClick={this.handleBackToEmail} className={classes.wrongEmail}>
                       <Text variant="baseL">
                         <u> Enter the wrong email?</u>
                       </Text>
