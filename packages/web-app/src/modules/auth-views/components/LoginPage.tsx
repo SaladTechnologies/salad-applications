@@ -1,4 +1,4 @@
-import { FieldContainer, SvgIcon, Text, TextField } from '@saladtechnologies/garden-components'
+import { FieldContainer, SvgIcon, SvgSecondaryLogoLockup, Text, TextField } from '@saladtechnologies/garden-components'
 import { FormValues } from '@saladtechnologies/garden-components/lib/components/TextField/TextField'
 import { Key, Mail } from '@saladtechnologies/garden-icons'
 import { Component } from 'react'
@@ -7,7 +7,6 @@ import MediaQuery from 'react-responsive'
 import { Checkbox, Head } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { FormSteps } from '../../auth/AuthStore'
-import SvgPrimaryLogoLockup from '../assets/SvgPrimaryLogoLockup'
 
 const styles = (theme: SaladTheme) => ({
   page: {
@@ -151,7 +150,7 @@ export const LoginPage = withStyles(styles)(
               {currentStep === FormSteps.Email && (
                 <>
                   <div className={classes.logoContainer}>
-                    <SvgPrimaryLogoLockup alt="Salad logo" width={208} height={100} />
+                    <SvgSecondaryLogoLockup alt="Salad logo" width={208} height={100} />
                   </div>
                   <div className={classes.emailTextContainer}>
                     <Text variant="baseL">
