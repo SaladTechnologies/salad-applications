@@ -9,7 +9,6 @@ import { Checkbox, Head } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { FormSteps } from '../../auth/AuthStore'
 import LoginPageRewards from '../assets/login-screen-rewards.png'
-import SvgPrimaryLogoLockup from '../assets/SvgPrimaryLogoLockup'
 
 const styles = (theme: SaladTheme) => ({
   page: {
@@ -134,7 +133,7 @@ export const LoginPage = withStyles(styles)(
               {currentStep === FormSteps.Email && (
                 <>
                   <div className={classes.mb48}>
-                    <SvgPrimaryLogoLockup alt="Salad logo" width={208} height={100} />
+                    <SvgSecondaryLogoLockup alt="Salad logo" width={208} height={100} />
                   </div>
                   <FieldContainer>
                     <div className={classes.mb48}>
