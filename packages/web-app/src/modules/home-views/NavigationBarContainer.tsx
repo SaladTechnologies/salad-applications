@@ -60,6 +60,7 @@ const mapStoreToProps = (store: RootStore): any => {
     onClickViewAllBonuses: () => store.routing.push('/settings/bonuses'),
     onInternalRoute: (path: string) => store.routing.push(path),
     onLogOut: store.auth.logout,
+    onLogin: handleLogin,
     rightSideButtonLabel: isAuthenticated ? undefined : 'Login',
     rightSideButtonClick: isAuthenticated ? undefined : handleLogin,
     startButtonLabel: isAuthenticated ? label : 'Login',
