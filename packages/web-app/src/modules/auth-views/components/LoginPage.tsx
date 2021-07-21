@@ -1,12 +1,15 @@
 import { FieldContainer, SvgIcon, SvgSecondaryLogoLockup, Text, TextField } from '@saladtechnologies/garden-components'
 import { FormValues } from '@saladtechnologies/garden-components/lib/components/TextField/TextField'
 import { Key, Mail } from '@saladtechnologies/garden-icons'
+import classnames from 'classnames'
 import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import MediaQuery from 'react-responsive'
 import { Checkbox, Head } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { FormSteps } from '../../auth/AuthStore'
+import LoginPageRewards from '../assets/login-screen-rewards.png'
+import SvgPrimaryLogoLockup from '../assets/SvgPrimaryLogoLockup'
 
 const styles = (theme: SaladTheme) => ({
   page: {
@@ -20,61 +23,42 @@ const styles = (theme: SaladTheme) => ({
   contentContainer: {
     maxWidth: 1280,
     margin: '0 auto',
-    padding: '25px 15px 25px',
+    display: 'flex',
+    justifyContent: 'space-between',
     width: '100%',
-    '@media (min-width:600px)': {
-      padding: '50px 62px 50px',
-    },
-    '@media (min-width:1200px)': {
-      padding: '74px 104px 74px 135px',
-    },
   },
   content: {
     color: theme.darkBlue,
-    maxWidth: 505,
+    marginTop: 96,
+    maxWidth: 560,
     display: 'flex',
     flexDirection: 'column',
+    flex: 1,
     textAlign: 'left',
+    padding: '0 15px',
   },
-  logoContainer: {
-    paddingBottom: 50,
-  },
-  emailTextContainer: {
-    paddingBottom: 57,
-  },
-  checkBoxContainer: {
-    paddingBottom: 26,
-    fontSize: 12,
+  header: {
     color: theme.lightGreen,
-    '@media (min-width:500px)': {
-      fontSize: 16,
-    },
   },
-  emailInputContainer: {
-    paddingBottom: 40,
-    textAlign: 'left',
+  mb48: {
+    marginBottom: 48,
   },
-  codeContainer: {
-    paddingTop: 57,
+  mb24: {
+    marginBottom: 24,
   },
-  codeTextContainer: {
-    paddingBottom: 14,
-  },
-  codeInputContainer: {
-    textAlign: 'left',
-    paddingBottom: 14,
+  mb14: {
+    marginBottom: 14,
   },
   link: {
-    paddingBottom: 14,
-    cursor: 'pointer',
-  },
-  termLink: {
     color: theme.darkBlue,
-  },
-  wrongEmail: {
     cursor: 'pointer',
-    display: 'block',
-    paddingTop: 14,
+  },
+  rewardImage: {
+    display: 'flex',
+    flex: 1,
+    maxWidth: 560,
+    height: 'auto',
+    width: '100%',
   },
 })
 
@@ -149,72 +133,46 @@ export const LoginPage = withStyles(styles)(
             <div className={classes.content}>
               {currentStep === FormSteps.Email && (
                 <>
-                  <div className={classes.logoContainer}>
-                    <SvgSecondaryLogoLockup alt="Salad logo" width={208} height={100} />
-                  </div>
-                  <div className={classes.emailTextContainer}>
-                    <Text variant="baseL">
-                      You’re plugged into the world’s easiest and most trusted way to convert your idle computer into
-                      sweet rewards!
-                    </Text>
-                  </div>
-                  <div className={classes.checkBoxContainer}>
-                    <Checkbox
-                      textElement={
-                        <>
-                          <MediaQuery maxWidth={600}>
-                            <Text variant="baseM">
-                              I agree to the{' '}
-                              <a
-                                className={classes.termLink}
-                                href="https://salad.com/terms-and-conditions"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                Terms of Service
-                              </a>{' '}
-                              and{' '}
-                              <a
-                                className={classes.termLink}
-                                href="https://salad.com/privacy-policy"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                Privacy Policy
-                              </a>
-                            </Text>
-                          </MediaQuery>
-                          <MediaQuery minWidth={601}>
-                            <Text variant="baseL">
-                              I agree to the{' '}
-                              <a
-                                className={classes.termLink}
-                                href="https://salad.com/terms-and-conditions"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                Terms of Service
-                              </a>{' '}
-                              and{' '}
-                              <a
-                                className={classes.termLink}
-                                href="https://salad.com/privacy-policy"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                Privacy Policy
-                              </a>
-                            </Text>
-                          </MediaQuery>
-                        </>
-                      }
-                      onClick={onToggleAccept}
-                      checked={acceptedTerms}
-                      dark={true}
-                    />
+                  <div className={classes.mb48}>
+                    <SvgPrimaryLogoLockup alt="Salad logo" width={208} height={100} />
                   </div>
                   <FieldContainer>
-                    <div className={classes.emailInputContainer}>
+                    <div className={classes.mb48}>
+                      <Text variant="baseL">
+                        You’re plugged into the world’s easiest and most trusted way to convert your idle computer into
+                        sweet rewards!
+                      </Text>
+                    </div>
+                    <div className={classes.mb24}>
+                      <Checkbox
+                        textElement={
+                          <Text variant="baseS">
+                            I agree to the{' '}
+                            <a
+                              className={classes.link}
+                              href="https://salad.com/terms-and-conditions"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Terms of Service
+                            </a>{' '}
+                            and{' '}
+                            <a
+                              className={classes.link}
+                              href="https://salad.com/privacy-policy"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Privacy Policy
+                            </a>
+                          </Text>
+                        }
+                        onClick={onToggleAccept}
+                        checked={acceptedTerms}
+                        dark={true}
+                      />
+                    </div>
+                    <div className={classes.mb48}>
                       <TextField
                         label="Email"
                         disabled={!acceptedTerms}
@@ -236,31 +194,30 @@ export const LoginPage = withStyles(styles)(
                         }
                       />
                     </div>
+                    <Text variant="baseXS">
+                      Enter your email to create a secure account. Already have an account, enter the same email address
+                      to access your account.
+                    </Text>
                   </FieldContainer>
-
-                  <Text variant="baseXS">
-                    Enter your email to create a secure account. Already have an account, enter the same email address
-                    to access your account.
-                  </Text>
                 </>
               )}
               {currentStep === FormSteps.Code && (
-                <div className={classes.codeContainer}>
-                  <div className={classes.codeTextContainer}>
-                    <Text variant="baseXL"> Enter the 4-Digit Code</Text>
-                  </div>
-                  <div className={classes.codeTextContainer}>
-                    <Text variant="baseL">A verification code was sent to your email address {currentEmail}</Text>
-                  </div>
-                  <div className={classes.codeTextContainer}>
-                    <span className={classes.link} onClick={this.handleResendCode}>
-                      <Text variant="baseL">
-                        <u> Send it Again?</u>
-                      </Text>
-                    </span>
+                <>
+                  <div className={classnames(classes.header, classes.mb48)}>
+                    <Text variant="headline">Enter your One-Time Login Code</Text>
                   </div>
                   <FieldContainer>
-                    <div className={classes.codeInputContainer}>
+                    <div className={classes.mb24}>
+                      <Text variant="baseL">A verification code was sent to your email address {currentEmail}</Text>
+                    </div>
+                    <div className={classes.mb24}>
+                      <span className={classnames(classes.link, classes.mb14)} onClick={this.handleResendCode}>
+                        <Text variant="baseL">
+                          <u>Send it Again?</u>
+                        </Text>
+                      </span>
+                    </div>
+                    <div className={classes.mb48}>
                       <TextField
                         label="Code"
                         validationRegexErrorMessage={'Invalid code format'}
@@ -278,17 +235,18 @@ export const LoginPage = withStyles(styles)(
                         }
                       />
                     </div>
-                  </FieldContainer>
-                  <div>
-                    <span onClick={this.handleBackToEmail} className={classes.wrongEmail}>
+                    <span onClick={this.handleBackToEmail} className={classnames(classes.link, classes.mb14)}>
                       <Text variant="baseL">
-                        <u> Enter the wrong email?</u>
+                        <u>Enter the wrong email?</u>
                       </Text>
                     </span>
-                  </div>
-                </div>
+                  </FieldContainer>
+                </>
               )}
             </div>
+            <MediaQuery minWidth={767}>
+              <img className={classes.rewardImage} src={LoginPageRewards} alt="Salad Reward Items" />
+            </MediaQuery>
           </div>
         </div>
       )
