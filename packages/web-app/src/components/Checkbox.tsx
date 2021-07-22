@@ -18,6 +18,11 @@ const styles = (theme: SaladTheme) => ({
       opacity: 0.7,
     },
   },
+  notClickable: {
+    '&:hover': {
+      opacity: 1,
+    },
+  },
   checkboxDark: {
     color: theme.darkBlue,
   },
@@ -51,6 +56,14 @@ const styles = (theme: SaladTheme) => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     textTransform: 'capitalize',
+  },
+  textElementEnabled: {
+    '&:hover': {
+      opacity: 0.7,
+    },
+  },
+  textElementStyles: {
+    cursor: 'default',
   },
   errorText: {
     margin: '.25rem',
@@ -87,6 +100,8 @@ class _Checkbox extends Component<Props> {
   render() {
     const { textClassName, disabled, hideCheckbox, className, text, textElement, errorText, checked, dark, classes } =
       this.props
+
+    const hasTextElement = textElement !== undefined
     return (
       <div className={classnames(classes.container, className)}>
         <label
@@ -94,10 +109,14 @@ class _Checkbox extends Component<Props> {
             [classes.enabled]: !disabled,
             [classes.disabled]: disabled,
             [classes.checkboxDark]: dark,
+            [classes.notClickable]: hasTextElement,
           })}
         >
           {!hideCheckbox && (
-            <div className={classes.checkBox} onClick={this.handleClick}>
+            <div
+              className={classnames(classes.checkBox, { [classes.textElementEnabled]: hasTextElement })}
+              onClick={this.handleClick}
+            >
               {checked && <FontAwesomeIcon size="xs" className={classes.checkmark} icon={faCheck} />}
             </div>
           )}
@@ -106,7 +125,7 @@ class _Checkbox extends Component<Props> {
               {text}
             </p>
           )}
-          {textElement && <div className={classnames(textClassName)}>{textElement}</div>}
+          {hasTextElement && <div className={classes.textElementStyles}>{textElement}</div>}
         </label>
         {errorText && <div className={classes.errorText}>{errorText}</div>}
       </div>
