@@ -152,7 +152,6 @@ export class ReferralStore {
       }
       let res = yield this.axios.post<Referral>('/api/v1/profile/referral', request)
       this.currentReferral = res.data
-      this.store.analytics.trackReferralEntered(code)
     } catch (e) {
       let err: AxiosError = e
 

@@ -1,3 +1,4 @@
+import classnames from 'classnames'
 import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Button } from '../../../components/Button'
@@ -9,13 +10,19 @@ const styles = (theme: SaladTheme) => ({
     display: 'flex',
   },
   button: {
-    color: 'red',
+    border: `solid 1px ${theme.darkBlue}`,
     display: 'flex',
     flex: 1,
     justifyContent: 'center',
   },
+  buttonDark: {
+    background: theme.darkBlue,
+  },
   buttonText: {
     color: theme.darkBlue,
+  },
+  buttonTextLight: {
+    color: theme.green,
   },
   padding: {
     paddingBottom: '1rem',
@@ -32,17 +39,17 @@ class _ReplaceBonusModal extends Component<Props> {
   render() {
     const { currentEarningBonus, onCloseClicked, onReplaceCurrentBonus, classes } = this.props
     return (
-      <ErrorPage title="Replace Your Current Bonus?" onCloseClicked={onCloseClicked}>
+      <ErrorPage title="Replace Current Earning Rate?" onCloseClicked={onCloseClicked}>
         <div className={classes.padding}>
-          You currently have a bonus rate of {currentEarningBonus}x. Are you sure you want to replace your current
+          You currently have an earning rate of {currentEarningBonus}x, are you sure you want to replace it with a new
           bonus?
         </div>
         <div className={classes.buttons}>
           <Button className={classes.button} onClick={onReplaceCurrentBonus}>
-            <span className={classes.buttonText}>Replace</span>
+            <span className={classes.buttonText}>Replace my current bonus</span>
           </Button>
-          <Button className={classes.button} onClick={onCloseClicked}>
-            <span className={classes.buttonText}>Cancel</span>
+          <Button className={classnames(classes.button, classes.buttonDark)} onClick={onCloseClicked}>
+            <span className={classes.buttonTextLight}>Keep my current bonus</span>
           </Button>
         </div>
       </ErrorPage>
