@@ -194,8 +194,8 @@ export const LoginPage = withStyles(styles)(
                       />
                     </div>
                     <Text variant="baseXS">
-                      Enter your email to create a secure account. Already have an account, enter the same email address
-                      to access your account.
+                      Enter your email to create a secure account. Already have an account? Enter the email address
+                      you used to sign up.
                     </Text>
                   </FieldContainer>
                 </>
@@ -207,7 +207,7 @@ export const LoginPage = withStyles(styles)(
                   </div>
                   <FieldContainer>
                     <div className={classes.mb24}>
-                      <Text variant="baseL">A verification code was sent to your email address {currentEmail}</Text>
+                      <Text variant="baseL">A verification code was sent to {currentEmail}.</Text>
                     </div>
                     <div className={classes.mb24}>
                       <span className={classnames(classes.link, classes.mb14)} onClick={this.handleResendCode}>
@@ -236,7 +236,7 @@ export const LoginPage = withStyles(styles)(
                     </div>
                     <span onClick={this.handleBackToEmail} className={classnames(classes.link, classes.mb14)}>
                       <Text variant="baseL">
-                        <u>Enter the wrong email?</u>
+                        <u>Entered the wrong email?</u>
                       </Text>
                     </span>
                   </FieldContainer>
