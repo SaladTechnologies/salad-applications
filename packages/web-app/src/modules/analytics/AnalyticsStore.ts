@@ -27,6 +27,7 @@ export class AnalyticsStore {
     mixpanel.init(token, {
       api_host: `${config.apiBaseUrl}/api/v2/mixpanel`,
       ignore_dnt: true,
+      secure_cookie: true,
       xhr_headers: {
         rid: 'session',
       },
