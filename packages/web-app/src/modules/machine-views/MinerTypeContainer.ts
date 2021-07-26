@@ -10,7 +10,11 @@ const mapStoreToProps = (store: RootStore): any => {
     : store.saladBowl.cpuMiningOverridden
 
   const onSetOverride = (value: boolean) => {
-    gpuMiningEnabled ? store.saladBowl.setGpuOverride(value) : store.saladBowl.setCpuOverride(value)
+    if (!value) {
+      gpuMiningEnabled ? store.saladBowl.setGpuOverride(value) : store.saladBowl.setCpuOverride(value)
+    } else {
+      store.ui.showModal('/warnings/override-compatibility')
+    }
   }
 
   return {

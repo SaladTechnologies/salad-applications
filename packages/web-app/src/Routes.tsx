@@ -16,7 +16,7 @@ import {
   SpecificAntiVirusErrorContainer,
   UnknownErrorContainer,
 } from './modules/error-views'
-import { DontLoseProgressPageContainer } from './modules/machine-views'
+import { DontLoseProgressPageContainer, OverrideCompatibilityDetectionContainer } from './modules/machine-views'
 import { RewardDetailsContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
 import { SettingsContainer } from './modules/settings-views'
@@ -55,6 +55,7 @@ class _Routes extends Component<RouteComponentProps> {
           <Route exact path="/errors/firewall" component={FirewallErrorContainer} />
           <Route exact path="/bonuses/replace-bonus" component={ReplaceBonusModalContainer} />
           <Route exact path="/warnings/dont-lose-progress" component={DontLoseProgressPageContainer} />
+          <Route exact path="/warnings/override-compatibility" component={OverrideCompatibilityDetectionContainer} />
           <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
           <Redirect exact from="/whats-new" to="/" />
           <Redirect exact from="/account/summary" to="/settings/summary" />
