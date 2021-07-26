@@ -61,7 +61,6 @@ class _MinerTypePanel extends Component<Props> {
             <Checkbox
               checked={compatibilityDetectionOverridden}
               className={classes.checkBox}
-              disabled={!compatibilityDetectionOverridden}
               onClick={onSetOverride}
               text={`Override ${gpuOnly ? 'GPU' : 'CPU'} Compatibility Detection`}
             />
