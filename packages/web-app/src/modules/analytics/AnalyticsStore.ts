@@ -17,6 +17,22 @@ export class AnalyticsStore {
   private previousStatusTimestamp?: number
 
   constructor(private readonly store: RootStore) {
+    hotjar.initialize(2225817, 6)
+
+    const token = config.mixpanelToken
+    if (!token) {
+      return
+    }
+
+    mixpanel.init(token, {
+      api_host: `${config.apiBaseUrl}/api/v2/mixpanel`,
+      ignore_dnt: true,
+      secure_cookie: true,
+      xhr_headers: {
+        rid: 'session',
+      },
+    })
+
     autorun(() => {
       console.log(`Detected change in status:${this.store.saladBowl.status}`)
       this.trackMiningStatus(
@@ -26,8 +42,6 @@ export class AnalyticsStore {
         this.store.saladBowl.plugin.algorithm || '-',
       )
     })
-
-    hotjar.initialize(2225817, 6)
   }
 
   public start = (profile: Profile) => {
@@ -45,14 +59,6 @@ export class AnalyticsStore {
         username: profile.username,
       })
     })
-
-    const token = config.mixpanelToken
-
-    if (!token) {
-      return
-    }
-
-    mixpanel.init(token, {})
 
     mixpanel.register({
       $app_build_number: config.appBuild,
@@ -93,7 +99,6 @@ export class AnalyticsStore {
     if (!this.started) return
 
     this.track('Logout')
-
     mixpanel.reset()
   }
 
@@ -104,7 +109,6 @@ export class AnalyticsStore {
     this.track('Whats New', {
       Version: version,
     })
-
     mixpanel.people.set({
       'Whats New Version': version,
     })
@@ -118,8 +122,6 @@ export class AnalyticsStore {
     gpuNames: string[],
     cpuName: string,
   ) => {
-    if (!this.started) return
-
     this.track('Start', {
       Reason: reason,
       GpuEnabled: gpuEnabled,
@@ -136,8 +138,6 @@ export class AnalyticsStore {
    * @param choppingTime Total time in the chopping state (ms)
    */
   public trackStop = (reason: string, totalTime: number, choppingTime: number) => {
-    if (!this.started) return
-
     this.track('Stop', {
       Reason: reason,
       TotalTime: totalTime,
@@ -151,15 +151,12 @@ export class AnalyticsStore {
     this.track('AutoStart', {
       Enabled: enabled,
     })
-
     mixpanel.people.set({
       AutoStart: enabled,
     })
   }
 
   public trackMiningStatus = (status: MiningStatus, pluginName: string, pluginVersion: string, algorithm: string) => {
-    if (!this.started) return
-
     const now = Date.now()
 
     let previousTotalTime: number | undefined = undefined
@@ -194,7 +191,6 @@ export class AnalyticsStore {
   /** Track when a reward is clicked */
   public trackClickedReward = (reward: Partial<Reward>) => {
     const availability = getRewardAvailability(reward)
-
     this.track('Reward Clicked', {
       Availability: availability,
       RewardId: reward.id,
@@ -206,10 +202,7 @@ export class AnalyticsStore {
 
   /** Track when a reward is selected */
   public trackSelectedReward = (reward: Reward) => {
-    if (!this.started) return
-
     const availability = getRewardAvailability(reward)
-
     this.track('Reward Selected', {
       Availability: availability,
       RewardId: reward.id,
@@ -221,8 +214,6 @@ export class AnalyticsStore {
 
   /** Track when a reward is viewed */
   public trackRewardView = (reward: Reward) => {
-    if (!this.started) return
-
     const availability = getRewardAvailability(reward)
     this.track('Reward Viewed', {
       Availability: availability,
@@ -235,8 +226,6 @@ export class AnalyticsStore {
 
   /** Track when a reward category is viewed */
   public trackRewardSearch = (searchTerm: string) => {
-    if (!this.started) return
-
     this.track('Reward Search', {
       Term: searchTerm,
     })
@@ -256,8 +245,6 @@ export class AnalyticsStore {
 
   /** Track when a reward is redeemed */
   public trackRewardRedeemed = (reward: Reward, inProcess?: boolean) => {
-    if (!this.started) return
-
     const trackingEvent = inProcess ? 'Reward Redemption In Process' : 'Reward Redeemed'
     const availability = getRewardAvailability(reward)
     this.track(trackingEvent, {
@@ -271,11 +258,8 @@ export class AnalyticsStore {
 
   /** Track when a referral is sent */
   public trackReferralSent = () => {
-    if (!this.started) return
-
     this.track('Referral Sent')
   }
-
   /** Track when a header link is clicked */
   private trackHeaderLinkClicked = (currentPath: string, to: string, label: string) => {
     this.track('Header Link Clicked', {
