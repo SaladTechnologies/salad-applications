@@ -39,16 +39,17 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   title?: string
   children?: ReactNode
+  modalWidth?: number
   onCloseClicked?: () => void
 }
 
 class _ErrorPage extends Component<Props> {
   render() {
-    const { title, onCloseClicked, children, classes } = this.props
+    const { title, modalWidth, onCloseClicked, children, classes } = this.props
 
     return (
       <ModalPage onCloseClicked={onCloseClicked}>
-        <Modal onCloseClicked={onCloseClicked}>
+        <Modal onCloseClicked={onCloseClicked} width={modalWidth}>
           <div className={classes.contentContainer}>
             <div className={classes.title}>{title}</div>
             <div className={classes.description}>{children}</div>

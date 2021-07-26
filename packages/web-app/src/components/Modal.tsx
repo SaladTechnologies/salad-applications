@@ -29,6 +29,7 @@ interface Props extends WithStyles<typeof styles> {
   content?: ReactNode
   visible?: boolean
   onCloseClicked?: () => void
+  width?: number
 }
 
 class _Modal extends Component<Props> {
@@ -39,9 +40,9 @@ class _Modal extends Component<Props> {
     }
   }
   render() {
-    const { onCloseClicked, classes, children } = this.props
+    const { onCloseClicked, classes, children, width } = this.props
     return (
-      <div className={classNames(classes.container)}>
+      <div className={classNames(classes.container)} style={width ? { width: width } : undefined}>
         {onCloseClicked && (
           <div className={classes.closeButton} onClick={this.handleClose}>
             <FontAwesomeIcon icon={faTimes} />
