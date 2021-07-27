@@ -132,6 +132,7 @@ export class AnalyticsStore {
     cpuEnabled: boolean,
     gpuNames: string[],
     cpuName: string,
+    overridden: boolean,
   ) => {
     this.track('Start', {
       Reason: reason,
@@ -139,6 +140,7 @@ export class AnalyticsStore {
       CpuEnabled: cpuEnabled,
       GPUNames: gpuNames,
       CPUName: cpuName,
+      Overridden: overridden,
     })
   }
 
