@@ -42,13 +42,13 @@ const _OverrideCompatibilityDetection: FunctionComponent<Props> = ({ onCloseClic
       modalWidth={510}
     >
       <div className={classes.padding}>
-        If Salad is incorrectly detecting your hardware, you can enable compatibility detection. Warning: doing this
-        will cause Salad to try each miner until it finds once that successfully chops on your machine, this may lead to
-        a longer Prepping time.
+        If Salad is incorrectly detecting your hardware, you can override our compatibility detection. Warning: doing
+        this will cause Salad to try each miner until it finds one that successfully chops on your machine, this may
+        lead to a longer Prepping time.
       </div>
       <div className={classes.buttons}>
         <Button className={classes.button} onClick={onCloseClicked}>
-          <span className={classes.buttonText}>Don't override</span>
+          <span className={classes.buttonText}>Don't Override</span>
         </Button>
         <Button className={classnames(classes.button, classes.buttonDark)} onClick={onOverride}>
           <span className={classes.buttonTextLight}>Override Compatibility Detection</span>
