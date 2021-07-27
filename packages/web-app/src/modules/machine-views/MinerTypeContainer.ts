@@ -13,7 +13,7 @@ const mapStoreToProps = (store: RootStore): any => {
     if (!value) {
       gpuMiningEnabled ? store.saladBowl.setGpuOverride(value) : store.saladBowl.setCpuOverride(value)
     } else {
-      store.ui.showModal('/warnings/override-compatibility')
+      store.ui.showModal('/warnings/override-compatibility-detection')
     }
   }
 
