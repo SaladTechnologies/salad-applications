@@ -69,7 +69,6 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  className?: string
   currentStep?: FormSteps
   currentEmail?: string
   isSubmitting: boolean
