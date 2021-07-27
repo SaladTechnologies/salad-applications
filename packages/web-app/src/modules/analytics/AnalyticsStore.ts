@@ -21,6 +21,7 @@ export class AnalyticsStore {
 
     const token = config.mixpanelToken
     if (!token) {
+      mixpanel.init('TEST TOKEN')
       return
     }
 
