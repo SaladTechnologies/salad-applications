@@ -7,8 +7,7 @@ const mapStoreToProps = (store: RootStore): any => {
 
   const onOverride = () => {
     gpuMiningEnabled ? store.saladBowl.setGpuOverride(true) : store.saladBowl.setCpuOverride(true)
-    store.ui.hideModal() // possibly pass true here?
-    // TODO: In the machine store, add a mixpanel tracking event to let them know if there is an override
+    store.ui.hideModal(true)
   }
 
   return {
