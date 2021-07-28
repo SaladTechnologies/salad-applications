@@ -5,6 +5,11 @@ import { NotificationMessage, NotificationMessageCategory } from '../notificatio
 import { completed, percentComplete, Referral } from './models'
 import { maximumReferrerBonus } from './models/ReferralDefinition'
 
+export enum ReferralStep {
+  Initial,
+  Code,
+}
+
 export class ReferralStore {
   /** A collection of all referrals that this user referred */
   @observable
@@ -15,11 +20,27 @@ export class ReferralStore {
   public currentReferral: Referral | undefined
 
   @observable
-  public isSending: boolean = false
+  public isSendingReferral: boolean = false
 
   /** The current user's referral code */
   @observable
   public referralCode: string = ''
+
+  /** A value indicating whether a referral code is being submitted. */
+  @observable
+  public isSubmittingReferralCode: boolean = false
+
+  /** A value indicating whether referral code submit is successful */
+  @observable
+  public isReferralCodeSubmitSuccess: boolean = false
+
+  /** A value dicitating which referral step the user is on */
+  @observable
+  public currentStep: ReferralStep = ReferralStep.Initial
+
+  /** The current error message. */
+  @observable
+  public errorMessage?: string = undefined
 
   /** Total number of referrals */
   @computed
@@ -147,17 +168,20 @@ export class ReferralStore {
     console.log('Sending referral code ' + code)
 
     try {
+      this.isSubmittingReferralCode = true
       const request = {
         code: code,
       }
       let res = yield this.axios.post<Referral>('/api/v1/profile/referral', request)
       this.currentReferral = res.data
+      this.isSubmittingReferralCode = false
+      this.isReferralCodeSubmitSuccess = true
     } catch (e) {
       let err: AxiosError = e
 
       let notification: NotificationMessage | undefined
-      let errorMessage: string = 'Unknown Error.'
-
+      this.isSubmittingReferralCode = false
+      this.isReferralCodeSubmitSuccess = false
       switch (err.response?.status) {
         case 400:
           notification = {
@@ -167,7 +191,7 @@ export class ReferralStore {
             autoClose: false,
             type: 'error',
           }
-          errorMessage = 'Code is invalid.'
+          this.errorMessage = 'Code is invalid.'
           break
         case 409:
           notification = {
@@ -177,7 +201,7 @@ export class ReferralStore {
             autoClose: false,
             type: 'error',
           }
-          errorMessage = 'Code does not exist.'
+          this.errorMessage = 'Code does not exist.'
           break
         case 500:
           notification = {
@@ -187,7 +211,7 @@ export class ReferralStore {
             autoClose: false,
             type: 'error',
           }
-          errorMessage = 'Unknown Error.'
+          this.errorMessage = 'Unknown Error.'
           break
         default:
           notification = {
@@ -197,12 +221,13 @@ export class ReferralStore {
             autoClose: false,
             type: 'error',
           }
-          errorMessage = 'Unknown Error.'
+          this.errorMessage = 'Unknown Error.'
           break
       }
-
+      this.isSubmittingReferralCode = false
+      this.isReferralCodeSubmitSuccess = false
       this.store.notifications.sendNotification(notification)
-      throw new Error(errorMessage)
+      throw new Error(this.errorMessage)
     }
   })
 
@@ -211,7 +236,7 @@ export class ReferralStore {
   sendReferral = flow(function* (this: ReferralStore, email: string) {
     console.log('Sending Referral')
 
-    this.isSending = true
+    this.isSendingReferral = true
 
     const request = {
       email: email,
@@ -224,7 +249,12 @@ export class ReferralStore {
       console.error(error)
       throw error
     } finally {
-      this.isSending = false
+      this.isSendingReferral = false
     }
   })
+
+  @action
+  public nextPage = () => {
+    this.currentStep = ReferralStep.Code
+  }
 }
