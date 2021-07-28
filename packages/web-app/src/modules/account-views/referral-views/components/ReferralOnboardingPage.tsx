@@ -43,6 +43,9 @@ const styles = (theme: SaladTheme) => ({
   mb48: {
     marginBottom: 48,
   },
+  mb26: {
+    marginBottom: 26,
+  },
   rightSideImage: {
     display: 'flex',
     flex: 1,
@@ -95,7 +98,7 @@ class _ReferralOnboardingPage extends Component<Props> {
                 {console.log(username)}
                 <div className={classes.content}>
                   <div className={classnames(classes.header, classes.mb48)}>
-                    <Text variant="headline">Welcome to the Kitchen, {username} !</Text>
+                    <Text variant="headline">Welcome to the Kitchen, {username}!</Text>
                   </div>
                   <FieldContainer>
                     <div className={classes.mb48}>
@@ -126,7 +129,7 @@ class _ReferralOnboardingPage extends Component<Props> {
                     <Text variant="headline">Enter your Referral Code</Text>
                   </div>
                   <FieldContainer>
-                    <div className={classes.mb48}>
+                    <div className={classes.mb26}>
                       <Text variant="baseL">
                         If you received a promo code, enter it below. This boosts your earning rate and lets us give
                         credit to your referrer, too.
