@@ -1,4 +1,5 @@
 import {
+  Checkbox,
   FieldContainer,
   SvgIcon,
   SvgSecondaryLogoLockup,
@@ -12,7 +13,7 @@ import classnames from 'classnames'
 import { useEffect, useRef } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import MediaQuery from 'react-responsive'
-import { Checkbox, Head, ModalPage } from '../../../components'
+import { Head, ModalPage } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { FormSteps } from '../../auth/AuthStore'
 import LoginPageRewards from '../assets/login-screen-rewards.png'
@@ -78,7 +79,7 @@ interface Props extends WithStyles<typeof styles> {
   onSubmitEmail?: (email: string) => void
   onSubmitCode?: (code: string) => void
   onBackToEmail?: () => void
-  onToggleAccept?: (accepted: boolean) => void
+  onToggleAccept: (accepted: boolean) => void
   onResetSubmitSuccess?: () => void
   onUnmount: () => void
 }
@@ -149,33 +150,28 @@ const _LoginPage = ({
                     </Text>
                   </div>
                   <div className={classes.mb24}>
-                    <Checkbox
-                      textElement={
-                        <Text variant="baseS">
-                          I agree to the{' '}
-                          <a
-                            className={classes.link}
-                            href="https://salad.com/terms-and-conditions"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Terms of Service
-                          </a>{' '}
-                          and{' '}
-                          <a
-                            className={classes.link}
-                            href="https://salad.com/privacy-policy"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Privacy Policy
-                          </a>
-                        </Text>
-                      }
-                      onClick={onToggleAccept}
-                      checked={acceptedTerms}
-                      dark={true}
-                    />
+                    <Checkbox onChange={onToggleAccept} checked={acceptedTerms}>
+                      <Text variant="baseM">
+                        I agree to the{' '}
+                        <a
+                          className={classes.link}
+                          href="https://salad.com/terms-and-conditions"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Terms of Service
+                        </a>{' '}
+                        and{' '}
+                        <a
+                          className={classes.link}
+                          href="https://salad.com/privacy-policy"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Privacy Policy
+                        </a>
+                      </Text>
+                    </Checkbox>
                   </div>
                   <div className={classes.mb48}>
                     <TextField
