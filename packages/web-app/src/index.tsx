@@ -86,6 +86,11 @@ const intl = createIntl(
   cache,
 )
 
+// if not authenticated, 
+if (!rootStore.auth.isAuthenticated) {
+  rootStore.routing.replace('/login')
+}
+
 ReactDOM.render(
   <Router history={history}>
     <RawIntlProvider value={intl}>
