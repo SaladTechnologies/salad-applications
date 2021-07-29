@@ -34,10 +34,6 @@ export class ReferralStore {
   @observable
   public isReferralCodeSubmitSuccess: boolean = false
 
-  /** A value dicitating which referral step the user is on */
-  @observable
-  public currentStep: ReferralStep = ReferralStep.Initial
-
   /** The current error message. */
   @observable
   public errorMessage?: string = undefined
@@ -132,7 +128,7 @@ export class ReferralStore {
 
       //If we haven't entered a referral code, show the onboarding page
       if (!this.currentReferral) {
-        this.store.ui.showModal('/onboarding/referral')
+        this.store.ui.showModal('/onboarding/welcome')
       }
     } catch (e) {
       let err: AxiosError = e
@@ -255,6 +251,6 @@ export class ReferralStore {
 
   @action
   public nextPage = () => {
-    this.currentStep = ReferralStep.Code
+    this.store.routing.replace('/onboarding/referral')
   }
 }
