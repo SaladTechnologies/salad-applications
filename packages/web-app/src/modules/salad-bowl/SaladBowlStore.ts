@@ -435,7 +435,6 @@ export class SaladBowlStore implements IPersistentStore {
     const gpusNames = this.store.machine.gpus.filter((x) => x && x.model).map((x) => x.model)
     const cpu = this.store.native.machineInfo?.cpu
     const cpuName = `${cpu?.manufacturer} ${cpu?.brand}`
-    const overridden = this.gpuMiningOverridden || this.cpuMiningOverridden
 
     this.store.analytics.trackStart(
       reason,
@@ -443,7 +442,8 @@ export class SaladBowlStore implements IPersistentStore {
       this.cpuMiningEnabled,
       gpusNames,
       cpuName,
-      overridden,
+      this.gpuMiningOverridden,
+      this.cpuMiningOverridden,
     )
 
     //Show a notification reminding users to use auto start

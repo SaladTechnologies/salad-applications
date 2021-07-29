@@ -21,7 +21,6 @@ export class AnalyticsStore {
 
     const token = config.mixpanelToken
     if (!token) {
-      mixpanel.init('TEST TOKEN')
       return
     }
 
@@ -122,7 +121,8 @@ export class AnalyticsStore {
     cpuEnabled: boolean,
     gpuNames: string[],
     cpuName: string,
-    overridden: boolean,
+    gpuOverridden: boolean,
+    cpuOverridden: boolean,
   ) => {
     this.track('Start', {
       Reason: reason,
@@ -130,7 +130,8 @@ export class AnalyticsStore {
       CpuEnabled: cpuEnabled,
       GPUNames: gpuNames,
       CPUName: cpuName,
-      Overridden: overridden,
+      GPUOverridden: gpuOverridden,
+      CPUOverridden: cpuOverridden,
     })
   }
 
