@@ -13,6 +13,7 @@ import { getRewardAvailability } from '../reward/utils'
 
 export class AnalyticsStore {
   private started = false
+  private mixpanelInitialized = false
   private previousStatus?: MiningStatus
   private previousStatusTimestamp?: number
 
@@ -23,6 +24,8 @@ export class AnalyticsStore {
     if (!token) {
       return
     }
+
+    this.mixpanelInitialized = true
 
     mixpanel.init(token, {
       api_host: `${config.apiBaseUrl}/api/v2/mixpanel`,
@@ -60,35 +63,37 @@ export class AnalyticsStore {
       })
     })
 
-    mixpanel.register({
-      $app_build_number: config.appBuild,
-      Platform: this.store.native.platform,
-    })
-
-    if (this.store.native.desktopVersion) {
+    if (this.mixpanelInitialized) {
       mixpanel.register({
-        $app_version_string: this.store.native.desktopVersion,
+        $app_build_number: config.appBuild,
+        Platform: this.store.native.platform,
       })
+
+      if (this.store.native.desktopVersion) {
+        mixpanel.register({
+          $app_version_string: this.store.native.desktopVersion,
+        })
+      }
+
+      mixpanel.people.set({
+        Id: profile.id,
+        $email: profile.email,
+        $last_name: profile.username,
+        $last_login: new Date().toISOString(),
+      })
+
+      mixpanel.people.set_once({
+        'First login': new Date().toISOString(),
+      })
+
+      mixpanel.identify(profile.id)
+
+      this.track('Login')
     }
-
-    mixpanel.people.set({
-      Id: profile.id,
-      $email: profile.email,
-      $last_name: profile.username,
-      $last_login: new Date().toISOString(),
-    })
-
-    mixpanel.people.set_once({
-      'First login': new Date().toISOString(),
-    })
-
-    mixpanel.identify(profile.id)
-
-    this.track('Login')
   }
 
   public trackDesktopVersion = (version: string) => {
-    if (!this.started) return
+    if (!this.mixpanelInitialized) return
 
     mixpanel.register({
       $app_version_string: version,
@@ -98,13 +103,19 @@ export class AnalyticsStore {
   public trackLogout = () => {
     if (!this.started) return
 
-    this.track('Logout')
-    mixpanel.reset()
+    this.started = false
+
+    Sentry.configureScope((scope) => scope.setUser(null))
+
+    if (this.mixpanelInitialized) {
+      this.track('Logout')
+      mixpanel.reset()
+    }
   }
 
   /** Tracks when a user views the What's New page */
   public trackWhatsNew = (version: string) => {
-    if (!this.started) return
+    if (!this.mixpanelInitialized) return
 
     this.track('Whats New', {
       Version: version,
@@ -146,7 +157,7 @@ export class AnalyticsStore {
   }
 
   public trackAutoStart = (enabled: boolean) => {
-    if (!this.started) return
+    if (!this.mixpanelInitialized) return
 
     this.track('AutoStart', {
       Enabled: enabled,
@@ -378,7 +389,7 @@ export class AnalyticsStore {
   }
 
   private track = (event: string, properties?: { [key: string]: any }) => {
-    if (!this.started) return
+    if (!this.mixpanelInitialized) return
 
     mixpanel.track(event, properties)
   }
