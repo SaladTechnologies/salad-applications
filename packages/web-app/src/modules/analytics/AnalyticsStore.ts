@@ -328,7 +328,7 @@ export class AnalyticsStore {
     })
   }
 
-  /** Track when a button is clicked */
+  /** Track when a button is clicked */ // use this for button clicks
   public trackButtonClicked = (id: string, label: string, state: 'enabled' | 'disabled') => {
     const currentPath = window && window.location.pathname
     this.track('Button Clicked', {
@@ -389,6 +389,26 @@ export class AnalyticsStore {
     this.track('Error Page Viewed', {
       CurrentPath: currentPath,
       ErrorPage: name,
+    })
+  }
+
+  /** Track a user as they go through the onboarding flow. Types will only be used if there are different variations of pages that can be shown e.g. different AV guides. */
+  public trackOnboardingPageViewed = (page: string, order: number, type?: string) => {
+    const currentPath = window && window.location.pathname
+    this.track('Account Onboarding', {
+      CurrentPath: currentPath,
+      page: page,
+      order: order,
+      type: type,
+    })
+  }
+
+  /** Track when a referral code is entered in the onboarding flow */
+  public trackReferralCodeEntered = (code: string, isSuccess: boolean, errorMessage?: string) => {
+    this.track('Referral Code Entered On User Attribution Page', {
+      referralCode: code,
+      isSuccess: isSuccess,
+      errorMessage: errorMessage,
     })
   }
 

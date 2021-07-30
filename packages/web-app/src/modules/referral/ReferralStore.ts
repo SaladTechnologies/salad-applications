@@ -129,6 +129,7 @@ export class ReferralStore {
       //If we haven't entered a referral code, show the onboarding page
       if (!this.currentReferral) {
         this.store.ui.showModal('/onboarding/welcome')
+        this.store.analytics.trackOnboardingPageViewed('Onboarding Welcome', 1) // pass username through?
       }
     } catch (e) {
       let err: AxiosError = e
@@ -140,13 +141,97 @@ export class ReferralStore {
     }
   })
 
-  /** Called when a user enters in a referral code */
+  /** Called when a user enters in a referral code on Onboarding Page*/
   @action.bound
-  submitDefaultReferralCode = flow(function* (this: ReferralStore) {
+  submitDefaultReferralCodeOnboarding = flow(function* (this: ReferralStore) {
+    this.store.analytics.trackButtonClicked('give_me_a_bonus_button', `Give me a bonus! button`, 'enabled')
     yield this.submitReferralCode('SALAD')
   })
 
-  /** Called when a user enters in a referral code */
+  /** Called when a user enters in a referral code on Onboarding Page */
+  @action.bound
+  submitReferralCodeOnboarding = flow(function* (this: ReferralStore, code: string) {
+    if (this.currentReferral) {
+      console.log('The user has already entered a referral code')
+      return
+    }
+
+    //Ensures that the user is logged in
+    try {
+      yield this.store.auth.login()
+    } catch {
+      return
+    }
+
+    console.log('Sending referral code ' + code)
+
+    try {
+      this.isSubmittingReferralCode = true
+      const request = {
+        code: code,
+      }
+      let res = yield this.axios.post<Referral>('/api/v1/profile/referral', request)
+      this.currentReferral = res.data
+      this.isSubmittingReferralCode = false
+      this.isReferralCodeSubmitSuccess = true
+      this.store.analytics.trackReferralCodeEntered(code, true)
+    } catch (e) {
+      let err: AxiosError = e
+
+      let notification: NotificationMessage | undefined
+      this.isSubmittingReferralCode = false
+      this.isReferralCodeSubmitSuccess = false
+      switch (err.response?.status) {
+        case 400:
+          notification = {
+            category: NotificationMessageCategory.ReferralCodeInvalid,
+            title: 'Sorry, Chef! The code you entered is not valid.',
+            message: 'Check to see if you have entered the code correctly, and try again.',
+            autoClose: false,
+            type: 'error',
+          }
+          this.errorMessage = 'Code is invalid.'
+          break
+        case 409:
+          notification = {
+            category: NotificationMessageCategory.ReferralCodeDoesNotExist,
+            title: 'Sorry, Chef! That code does not exist.',
+            message: 'Check to see if you have entered the code correctly, and try again.',
+            autoClose: false,
+            type: 'error',
+          }
+          this.errorMessage = 'Code does not exist.'
+          break
+        case 500:
+          notification = {
+            category: NotificationMessageCategory.ReferralCodeError,
+            title: 'Uh oh, something went wrong.',
+            message: 'Try entering your referral code again.',
+            autoClose: false,
+            type: 'error',
+          }
+          this.errorMessage = 'Unknown Error'
+          break
+        default:
+          notification = {
+            category: NotificationMessageCategory.ReferralCodeError,
+            title: 'Uh oh, something went wrong.',
+            message: 'Try entering your referral code again.',
+            autoClose: false,
+            type: 'error',
+          }
+          this.errorMessage = 'Unknown Error.'
+          break
+      }
+      this.isSubmittingReferralCode = false
+      this.isReferralCodeSubmitSuccess = false
+      this.store.analytics.trackReferralCodeEntered(code, false, this.errorMessage)
+      this.store.notifications.sendNotification(notification)
+      throw new Error(this.errorMessage)
+    }
+  })
+
+  /** Called when a user enters in a referral code in Account page*/
   @action.bound
   submitReferralCode = flow(function* (this: ReferralStore, code: string) {
     if (this.currentReferral) {
@@ -252,5 +337,7 @@ export class ReferralStore {
   @action
   public nextPage = () => {
     this.store.routing.replace('/onboarding/referral')
+    this.store.analytics.trackButtonClicked(`let's_go_button`, `Let's Go Button`, 'enabled')
+    this.store.analytics.trackOnboardingPageViewed('Onboarding Enter Referral Code', 2)
   }
 }
