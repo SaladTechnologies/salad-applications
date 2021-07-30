@@ -5,11 +5,6 @@ import { NotificationMessage, NotificationMessageCategory } from '../notificatio
 import { completed, percentComplete, Referral } from './models'
 import { maximumReferrerBonus } from './models/ReferralDefinition'
 
-export enum ReferralStep {
-  Initial,
-  Code,
-}
-
 export class ReferralStore {
   /** A collection of all referrals that this user referred */
   @observable
