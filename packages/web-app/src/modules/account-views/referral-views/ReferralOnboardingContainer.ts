@@ -8,13 +8,13 @@ const mapStoreToProps = (store: RootStore): any => ({
   serverSideErrorMessage: store.referral.errorMessage,
   onSubmitCode: async (code: string) => {
     try {
-      await store.referral.submitReferralCodeOnboarding(code)
+      await store.referral.submitReferralCode(code)
       store.routing.replace('/')
     } catch {}
   },
   onEnterDefault: async () => {
     try {
-      await store.referral.submitDefaultReferralCodeOnboarding()
+      await store.referral.submitDefaultReferralCode()
       store.routing.replace('/')
     } catch {}
   },
