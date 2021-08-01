@@ -86,7 +86,7 @@ const intl = createIntl(
   cache,
 )
 
-if (!rootStore.auth.isAuthenticated) {
+if (window.salad.platform !== 'web' && !rootStore.auth.isAuthenticated) {
   rootStore.routing.replace('/login')
 }
 
