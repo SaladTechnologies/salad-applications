@@ -124,7 +124,7 @@ export class ReferralStore {
       //If we haven't entered a referral code, show the onboarding page
       if (!this.currentReferral) {
         this.store.ui.showModal('/onboarding/welcome')
-        this.store.analytics.trackOnboardingPageViewed('Onboarding Welcome', 1) // pass username through?
+        this.store.analytics.trackOnboardingPageViewed('Onboarding Welcome', 1)
       }
     } catch (e) {
       let err: AxiosError = e

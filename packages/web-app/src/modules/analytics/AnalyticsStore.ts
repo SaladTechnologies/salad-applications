@@ -328,7 +328,7 @@ export class AnalyticsStore {
     })
   }
 
-  /** Track when a button is clicked */ // use this for button clicks
+  /** Track when a button is clicked */
   public trackButtonClicked = (id: string, label: string, state: 'enabled' | 'disabled') => {
     const currentPath = window && window.location.pathname
     this.track('Button Clicked', {
