@@ -403,15 +403,6 @@ export class AnalyticsStore {
     })
   }
 
-  /** Track when a referral code is entered in the onboarding flow */
-  public trackReferralCodeEntered = (code: string, isSuccess: boolean, errorMessage?: string) => {
-    this.track('Referral Code Entered On User Attribution Page', {
-      referralCode: code,
-      isSuccess: isSuccess,
-      errorMessage: errorMessage,
-    })
-  }
-
   private track = (event: string, properties?: { [key: string]: any }) => {
     if (!this.mixpanelInitialized) return
 
