@@ -18,6 +18,9 @@ const styles = (theme: SaladTheme) => ({
   column: {
     flex: 1,
   },
+  antiVirusContainer: {
+    marginTop: 28,
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -65,6 +68,14 @@ class _MinerTypePanel extends Component<Props> {
               text={`Override ${gpuOnly ? 'GPU' : 'CPU'} Compatibility Detection`}
             />
             <InfoButton text={gpuOnly ? gpuOverrideInfo : cpuOverrideInfo} />
+          </div>
+          <div className={classes.antiVirusContainer}>
+            <P>
+              Having Antivirus issues?{' '}
+              <SmartLink to="https://support.salad.com/hc/en-us/sections/360008458292-Anti-Virus">
+                Open Antivirus guides
+              </SmartLink>
+            </P>
           </div>
         </div>
         <div className={classes.column}>
