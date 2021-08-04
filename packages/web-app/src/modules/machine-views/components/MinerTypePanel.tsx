@@ -71,10 +71,7 @@ class _MinerTypePanel extends Component<Props> {
           </div>
           <div className={classes.antiVirusContainer}>
             <P>
-              Having Antivirus issues?{' '}
-              <SmartLink to="https://support.salad.com/hc/en-us/sections/360008458292-Anti-Virus">
-                Open Antivirus guides
-              </SmartLink>
+              Having Antivirus issues? <SmartLink to={'/errors/anti-virus'}>Open Antivirus guides</SmartLink>
             </P>
           </div>
         </div>
