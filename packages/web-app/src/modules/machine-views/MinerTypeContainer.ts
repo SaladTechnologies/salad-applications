@@ -21,6 +21,7 @@ const mapStoreToProps = (store: RootStore): any => {
     compatibilityDetectionOverridden,
     gpuOnly: gpuMiningEnabled,
     isRunning: store.saladBowl.isRunning,
+    onViewAVGuide: () => store.ui.navigateToAVPage(),
     onSetGpuOnly: store.saladBowl.setGpuOnly,
     onSetOverride,
   }

@@ -21,6 +21,10 @@ const styles = (theme: SaladTheme) => ({
   antiVirusContainer: {
     marginTop: 28,
   },
+  link: {
+    cursor: 'pointer',
+    textDecoration: 'underline',
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -30,6 +34,7 @@ interface Props extends WithStyles<typeof styles> {
   compatibilityDetectionOverridden: boolean
   onSetGpuOnly?: (value: boolean) => void
   onSetOverride: (value: boolean) => void
+  onViewAVGuide: () => void
 }
 
 const gpuDescription = 'Use your GPU to earn Salad Balance'
@@ -46,7 +51,7 @@ class _MinerTypePanel extends Component<Props> {
   }
 
   render() {
-    const { isRunning, gpuOnly, onSetOverride, compatibilityDetectionOverridden, classes } = this.props
+    const { isRunning, gpuOnly, onSetOverride, onViewAVGuide, compatibilityDetectionOverridden, classes } = this.props
 
     return (
       <div className={classes.container}>
@@ -71,7 +76,10 @@ class _MinerTypePanel extends Component<Props> {
           </div>
           <div className={classes.antiVirusContainer}>
             <P>
-              Having Antivirus issues? <SmartLink to={'/errors/anti-virus'}>Open Antivirus guides</SmartLink>
+              Having Antivirus issues?{' '}
+              <span className={classes.link} onClick={onViewAVGuide}>
+                Open Antivirus guides
+              </span>
             </P>
           </div>
         </div>
