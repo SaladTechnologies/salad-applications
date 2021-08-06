@@ -99,7 +99,7 @@ ReactDOM.render(
               <div>
                 <Observer>
                   {() => {
-                    return rootStore.appLoaded ? (
+                    return rootStore.appLoading ? (
                       <LoadingScreen />
                     ) : (
                       <div>

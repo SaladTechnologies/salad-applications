@@ -44,7 +44,7 @@ export const getStore = (): RootStore => sharedStore
 
 export class RootStore {
   @observable
-  public appLoaded: boolean = true
+  public appLoading: boolean = true
   public appStartTime: Date = new Date()
   public readonly auth: AuthStore
   public readonly autoStart: AutoStartStore
@@ -110,7 +110,7 @@ export class RootStore {
 
   @action
   setAppLoadedStateFalse = () => {
-    this.appLoaded = false
+    this.appLoading = false
   }
 
   @action
