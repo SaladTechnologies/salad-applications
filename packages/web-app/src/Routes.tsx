@@ -3,6 +3,7 @@ import { Component } from 'react'
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router'
 import { LoadingPage } from './components'
 import { ReferralOnboardingContainer } from './modules/account-views/referral-views'
+import { ReferralWelcomeContainer } from './modules/account-views/referral-views/ReferralWelcomeContainer'
 import { LoginPageContainer } from './modules/auth-views'
 import { ReplaceBonusModalContainer } from './modules/bonus-views'
 import { EarnMenuContainer } from './modules/earn-views'
@@ -45,6 +46,7 @@ class _Routes extends Component<RouteComponentProps> {
       <>
         <Switch location={currentLocation}>
           <Route exact path="/onboarding/referral" component={ReferralOnboardingContainer} />
+          <Route exact path="/onboarding/welcome" component={ReferralWelcomeContainer} />
           <Route exact path="/errors/cuda" component={CudaErrorContainer} />
           <Route exact path="/errors/fallback" component={FallbackErrorContainer} />
           <Route exact path="/errors/network" component={NetworkErrorContainer} />

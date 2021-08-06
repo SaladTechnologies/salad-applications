@@ -15,11 +15,23 @@ export class ReferralStore {
   public currentReferral: Referral | undefined
 
   @observable
-  public isSending: boolean = false
+  public isSendingReferral: boolean = false
 
   /** The current user's referral code */
   @observable
   public referralCode: string = ''
+
+  /** A value indicating whether a referral code is being submitted. */
+  @observable
+  public isSubmittingReferralCode: boolean = false
+
+  /** A value indicating whether referral code submit is successful */
+  @observable
+  public isReferralCodeSubmitSuccess: boolean = false
+
+  /** The current error message. */
+  @observable
+  public errorMessage?: string = undefined
 
   /** Total number of referrals */
   @computed
@@ -111,7 +123,8 @@ export class ReferralStore {
 
       //If we haven't entered a referral code, show the onboarding page
       if (!this.currentReferral) {
-        this.store.ui.showModal('/onboarding/referral')
+        this.store.ui.showModal('/onboarding/welcome')
+        this.store.analytics.trackOnboardingPageViewed('Onboarding Welcome', 1)
       }
     } catch (e) {
       let err: AxiosError = e
@@ -147,17 +160,20 @@ export class ReferralStore {
     console.log('Sending referral code ' + code)
 
     try {
+      this.isSubmittingReferralCode = true
       const request = {
         code: code,
       }
       let res = yield this.axios.post<Referral>('/api/v1/profile/referral', request)
       this.currentReferral = res.data
+      this.isSubmittingReferralCode = false
+      this.isReferralCodeSubmitSuccess = true
     } catch (e) {
       let err: AxiosError = e
 
       let notification: NotificationMessage | undefined
-      let errorMessage: string = 'Unknown Error.'
-
+      this.isSubmittingReferralCode = false
+      this.isReferralCodeSubmitSuccess = false
       switch (err.response?.status) {
         case 400:
           notification = {
@@ -167,7 +183,7 @@ export class ReferralStore {
             autoClose: false,
             type: 'error',
           }
-          errorMessage = 'Code is invalid.'
+          this.errorMessage = 'Code is invalid.'
           break
         case 409:
           notification = {
@@ -177,7 +193,7 @@ export class ReferralStore {
             autoClose: false,
             type: 'error',
           }
-          errorMessage = 'Code does not exist.'
+          this.errorMessage = 'Code does not exist.'
           break
         case 500:
           notification = {
@@ -187,7 +203,7 @@ export class ReferralStore {
             autoClose: false,
             type: 'error',
           }
-          errorMessage = 'Unknown Error.'
+          this.errorMessage = 'Unknown Error.'
           break
         default:
           notification = {
@@ -197,12 +213,13 @@ export class ReferralStore {
             autoClose: false,
             type: 'error',
           }
-          errorMessage = 'Unknown Error.'
+          this.errorMessage = 'Unknown Error.'
           break
       }
-
+      this.isSubmittingReferralCode = false
+      this.isReferralCodeSubmitSuccess = false
       this.store.notifications.sendNotification(notification)
-      throw new Error(errorMessage)
+      throw new Error(this.errorMessage)
     }
   })
 
@@ -211,7 +228,7 @@ export class ReferralStore {
   sendReferral = flow(function* (this: ReferralStore, email: string) {
     console.log('Sending Referral')
 
-    this.isSending = true
+    this.isSendingReferral = true
 
     const request = {
       email: email,
@@ -224,7 +241,14 @@ export class ReferralStore {
       console.error(error)
       throw error
     } finally {
-      this.isSending = false
+      this.isSendingReferral = false
     }
   })
+
+  @action
+  public nextPage = () => {
+    this.store.routing.replace('/onboarding/referral')
+    this.store.analytics.trackButtonClicked(`let's_go_button`, `Let's Go Button`, 'enabled')
+    this.store.analytics.trackOnboardingPageViewed('Onboarding Enter Referral Code', 2)
+  }
 }

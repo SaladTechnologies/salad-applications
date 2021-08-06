@@ -392,6 +392,17 @@ export class AnalyticsStore {
     })
   }
 
+  /** Track a user as they go through the onboarding flow. Types will only be used if there are different variations of pages that can be shown e.g. different AV guides. */
+  public trackOnboardingPageViewed = (page: string, order: number, type?: string) => {
+    const currentPath = window && window.location.pathname
+    this.track('Account Onboarding', {
+      CurrentPath: currentPath,
+      page: page,
+      order: order,
+      type: type,
+    })
+  }
+
   private track = (event: string, properties?: { [key: string]: any }) => {
     if (!this.mixpanelInitialized) return
 

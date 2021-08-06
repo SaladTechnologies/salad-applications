@@ -44,5 +44,6 @@ wercker.yml
 # misc
 *.md
 
-# keep assets for instanbul HTML reports
+# keep garden assets
 !@saladtechnologies/garden-components/lib/components/Avatar/assets
+!@saladtechnologies/garden-components/lib/components/LoadingScreen/assets

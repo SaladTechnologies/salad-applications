@@ -12,9 +12,10 @@ import 'url-polyfill'
 
 // Import dependencies.
 import { ThemeProvider as EmotionThemeProvider } from '@emotion/react'
-import { DefaultTheme as EmotionTheme } from '@saladtechnologies/garden-components'
+import { DefaultTheme as EmotionTheme, LoadingScreen } from '@saladtechnologies/garden-components'
 import * as Sentry from '@sentry/react'
 import { createBrowserHistory } from 'history'
+import { Observer } from 'mobx-react'
 import { syncHistoryWithStore } from 'mobx-react-router'
 import allSettled from 'promise.allsettled'
 import ReactDOM from 'react-dom'
@@ -95,8 +96,20 @@ ReactDOM.render(
             <ErrorBoundary>
               {/* Default page title for any page that doesn't specify one */}
               <Head title="Salad Technologies" />
-              <Tooltips />
-              <App history={history} />
+              <div>
+                <Observer>
+                  {() => {
+                    return rootStore.appLoading ? (
+                      <LoadingScreen />
+                    ) : (
+                      <div>
+                        <Tooltips />
+                        <App history={history} />
+                      </div>
+                    )
+                  }}
+                </Observer>
+              </div>
             </ErrorBoundary>
           </SkeletonTheme>
         </JSSThemeProvider>

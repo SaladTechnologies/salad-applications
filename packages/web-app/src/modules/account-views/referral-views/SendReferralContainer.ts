@@ -3,7 +3,7 @@ import { RootStore } from '../../../Store'
 import { SendReferral } from './components/SendReferral'
 
 const mapStoreToProps = (store: RootStore): any => ({
-  sending: store.referral.isSending,
+  sending: store.referral.isSendingReferral,
   onSend: store.referral.sendReferral,
 })
 

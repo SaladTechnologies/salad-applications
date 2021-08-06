@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios'
-import { autorun, configure, flow } from 'mobx'
+import { action, autorun, configure, flow, observable } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
 import { AnalyticsStore } from './modules/analytics'
 import { AuthStore } from './modules/auth'
@@ -43,6 +43,9 @@ export const createStore = (axios: AxiosInstance): RootStore => {
 export const getStore = (): RootStore => sharedStore
 
 export class RootStore {
+  @observable
+  public appLoading: boolean = true
+  public appStartTime: Date = new Date()
   public readonly auth: AuthStore
   public readonly autoStart: AutoStartStore
   public readonly analytics: AnalyticsStore
@@ -105,6 +108,28 @@ export class RootStore {
     })
   }
 
+  @action
+  setAppLoadedStateFalse = () => {
+    this.appLoading = false
+  }
+
+  @action
+  finishInitialLoading = () => {
+    const appLoadFinishedTime = new Date()
+    const timeToLoadApp = +appLoadFinishedTime - +this.appStartTime
+
+    // ensures users see the load screen for at least 2 seconds so it doesn't just flash by
+    if (timeToLoadApp > 2000) {
+      this.setAppLoadedStateFalse()
+    } else {
+      setTimeout(this.setAppLoadedStateFalse, 2000 - timeToLoadApp)
+    }
+
+    if (this.native.isNative && !this.auth.isAuthenticated) {
+      this.routing.replace('/login')
+    }
+  }
+
   onLogin = flow(
     function* (this: RootStore) {
       var profile: Profile = yield this.profile.loadProfile()
@@ -121,6 +146,7 @@ export class RootStore {
         this.refresh.refreshData(),
         this.zendesk.login(profile.username, profile.email),
       ])
+      this.finishInitialLoading()
     }.bind(this),
   )
 
@@ -135,6 +161,7 @@ export class RootStore {
         this.native.logout(),
         this.zendesk.logout(),
       ])
+      this.finishInitialLoading()
     }.bind(this),
   )
 }
