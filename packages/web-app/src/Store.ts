@@ -125,9 +125,9 @@ export class RootStore {
       setTimeout(this.setAppLoadedStateFalse, 2000 - timeToLoadApp)
     }
 
-    if (this.native.isNative && !this.auth.isAuthenticated) {
-      this.routing.replace('/login')
-    }
+    // if (this.native.isNative && !this.auth.isAuthenticated) {
+    //   this.routing.replace('/login')
+    // }
   }
 
   onLogin = flow(
