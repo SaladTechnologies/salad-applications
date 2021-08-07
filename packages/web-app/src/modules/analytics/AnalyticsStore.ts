@@ -339,6 +339,17 @@ export class AnalyticsStore {
     })
   }
 
+  /** Track when a switch is toggled */
+  public trackSwitchToggle = (id: string, label: string, checked: boolean) => {
+    const currentPath = window && window.location.pathname
+    this.track('Switch Toggled', {
+      CurrentPath: currentPath,
+      Id: id,
+      Label: label,
+      Checked: checked,
+    })
+  }
+
   /** Track when the close app button is clicked */
   public trackCloseAppClicked = (minimizeToTray: 'enabled' | 'disabled') => {
     const currentPath = window && window.location.pathname
@@ -393,7 +404,7 @@ export class AnalyticsStore {
   }
 
   /** Track a user as they go through the onboarding flow. Types will only be used if there are different variations of pages that can be shown e.g. different AV guides. */
-  public trackOnboardingPageViewed = (page: string, order: number, type?: string) => {
+  public trackAccountOnboardingPageViewed = (page: string, order: number, type?: string) => {
     const currentPath = window && window.location.pathname
     this.track('Account Onboarding', {
       CurrentPath: currentPath,

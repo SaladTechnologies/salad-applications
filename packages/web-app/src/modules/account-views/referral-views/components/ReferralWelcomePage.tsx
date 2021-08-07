@@ -63,7 +63,6 @@ class _ReferralWelcomePage extends Component<Props> {
         <div className={classes.page}>
           <div className={classes.contentContainer}>
             <>
-              {console.log(username)}
               <div className={classes.content}>
                 <div className={classnames(classes.header, classes.mb48)}>
                   <Text variant="headline">Welcome to the Kitchen, {username}!</Text>
