@@ -120,12 +120,6 @@ export class ReferralStore {
     try {
       let res = yield this.axios.get<Referral>('/api/v1/profile/referral')
       this.currentReferral = res.data
-
-      //If we haven't entered a referral code, show the onboarding page
-      if (!this.currentReferral) {
-        this.store.ui.showModal('/onboarding/welcome')
-        this.store.analytics.trackOnboardingPageViewed('Onboarding Welcome', 1)
-      }
     } catch (e) {
       let err: AxiosError = e
       if (err.response && err.response.status === 404) {
@@ -244,11 +238,4 @@ export class ReferralStore {
       this.isSendingReferral = false
     }
   })
-
-  @action
-  public nextPage = () => {
-    this.store.routing.replace('/onboarding/referral')
-    this.store.analytics.trackButtonClicked(`let's_go_button`, `Let's Go Button`, 'enabled')
-    this.store.analytics.trackOnboardingPageViewed('Onboarding Enter Referral Code', 2)
-  }
 }

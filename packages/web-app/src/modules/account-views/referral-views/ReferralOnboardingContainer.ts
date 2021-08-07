@@ -1,5 +1,6 @@
 import { connect } from '../../../connect'
 import { RootStore } from '../../../Store'
+import { ONBOARDING_PAGE_NAMES } from '../../onboarding/models'
 import { ReferralOnboardingPage } from './components/ReferralOnboardingPage'
 
 const mapStoreToProps = (store: RootStore): any => ({
@@ -9,13 +10,13 @@ const mapStoreToProps = (store: RootStore): any => ({
   onSubmitCode: async (code: string) => {
     try {
       await store.referral.submitReferralCode(code)
-      store.routing.replace('/')
+      store.onboarding.viewNextPage(ONBOARDING_PAGE_NAMES.REFERRAL)
     } catch {}
   },
   onEnterDefault: async () => {
     try {
       await store.referral.submitDefaultReferralCode()
-      store.routing.replace('/')
+      store.onboarding.viewNextPage(ONBOARDING_PAGE_NAMES.REFERRAL)
     } catch {}
   },
 })

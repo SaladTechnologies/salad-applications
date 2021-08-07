@@ -113,6 +113,10 @@ export class AuthStore {
     runInAction(() => {
       this.isAuthenticated = false
     })
+
+    if (this.router.location.pathname.includes('onboarding')) {
+      this.router.replace('/')
+    }
   }
 
   /** Toggles if the user accepted terms */
