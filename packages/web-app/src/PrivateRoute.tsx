@@ -3,8 +3,8 @@ import { Redirect, Route, RouteProps } from 'react-router-dom'
 
 interface Props extends RouteProps {
   component: any
-  isSignedIn: boolean
-  isAuthPending: boolean
+  isSignedIn?: boolean
+  isAuthPending?: boolean
 }
 
 /**

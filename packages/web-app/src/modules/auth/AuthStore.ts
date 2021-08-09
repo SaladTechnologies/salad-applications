@@ -12,7 +12,7 @@ export enum FormSteps {
 export class AuthStore {
   /** A value indicating whether the user is authenticated. */
   @observable
-  public isAuthenticated: boolean = false
+  public isAuthenticated?: boolean = undefined
 
   /** A value indicating whether a value is being submitted. */
   @observable
