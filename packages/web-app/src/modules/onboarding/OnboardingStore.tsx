@@ -66,11 +66,6 @@ export class OnboardingStore {
     if (completedOnboardingPagesCopy.indexOf(onboardingPageName) === -1) {
       completedOnboardingPagesCopy.push(onboardingPageName)
       this.updateCompletedOnboardingPages(completedOnboardingPagesCopy)
-
-      const onboardingPage = this.getOnboardingPage(onboardingPageName)
-      if (onboardingPage) {
-        this.store.analytics.trackAccountOnboardingPageViewed(onboardingPage.NAME, onboardingPage.ORDER)
-      }
     }
   }
 
@@ -87,7 +82,7 @@ export class OnboardingStore {
     const currentOnboardingPageOrder: number | undefined = currentOnboardingPageName
       ? this.getOnboardingPage(currentOnboardingPageName)?.ORDER
       : 0
-    let nextOnboardingPageRoute = undefined
+    let nextOnboardingPage = undefined
 
     if (typeof currentOnboardingPageOrder === 'number') {
       const onboardingPagesCopy = [...ONBOARDING_PAGES]
@@ -107,7 +102,7 @@ export class OnboardingStore {
         if (nextPageByOrder) {
           const breakCondition = !completedPagesCopy.includes(nextPageByOrder.NAME)
           if (breakCondition) {
-            nextOnboardingPageRoute = nextPageByOrder.PATH
+            nextOnboardingPage = nextPageByOrder
             break
           }
 
@@ -118,8 +113,9 @@ export class OnboardingStore {
       }
     }
 
-    if (nextOnboardingPageRoute) {
-      this.store.routing.push(nextOnboardingPageRoute)
+    if (nextOnboardingPage) {
+      this.store.routing.push(nextOnboardingPage.PATH)
+      this.store.analytics.trackAccountOnboardingPageViewed(nextOnboardingPage.NAME, nextOnboardingPage.ORDER)
     } else {
       this.store.routing.push('/')
     }
