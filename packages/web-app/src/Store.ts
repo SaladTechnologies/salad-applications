@@ -100,7 +100,9 @@ export class RootStore {
     this.refresh.start()
 
     autorun(() => {
-      if (this.auth.isAuthenticated) {
+      if (this.auth.isAuthenticated === undefined) {
+        return
+      } else if (this.auth.isAuthenticated) {
         this.onLogin()
       } else {
         this.onLogout()

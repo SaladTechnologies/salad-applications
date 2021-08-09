@@ -110,7 +110,7 @@ export class SaladBowlStore implements IPersistentStore {
   }
 
   @computed
-  get canRun(): boolean {
+  get canRun(): boolean | undefined {
     return (
       this.store.auth.isAuthenticated &&
       this.store.machine &&
