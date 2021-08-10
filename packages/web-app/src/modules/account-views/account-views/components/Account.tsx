@@ -102,7 +102,7 @@ class _Account extends Component<Props> {
             {avatars && (
               <div className={classes.avatarContainer}>
                 <div className={classes.textContainer}>
-                  <Text variant="baseM"> Avatar </Text>
+                  <Text variant="baseXL"> Avatar </Text>
                 </div>
                 <AvatarSelectionForm
                   avatars={avatars}
@@ -115,7 +115,7 @@ class _Account extends Component<Props> {
               </div>
             )}
             <div className={classes.textContainer}>
-              <Text variant="baseXXL"> Extras</Text>
+              <Text variant="baseXL"> Extras</Text>
             </div>
             <div className={classes.textFieldContainer}>
               <TextField
