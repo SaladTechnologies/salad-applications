@@ -4,11 +4,22 @@ import classnames from 'classnames'
 import { useState } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import MediaQuery from 'react-responsive'
-import { Head, ModalPage } from '../../../components'
+import { Head } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import Carrot from '../assets/onboarding-afk-carrot.png'
 
 const styles = (theme: SaladTheme) => ({
+  container: {
+    position: 'fixed',
+    top: (props: Props) => (props.isNative ? '4.1rem' : 0),
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 2000,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   page: {
     flex: 1,
     backgroundImage: 'linear-gradient(to right, #56A431 , #AACF40)',
@@ -59,6 +70,7 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
+  isNative: boolean
   onContinue: (autoStartEnabled: boolean) => void
   onToggleAutoStart: (autoStartEnabled: boolean) => void
 }
@@ -72,7 +84,7 @@ const _AFKConfigurationPage = ({ classes, onContinue, onToggleAutoStart }: Props
   }
 
   return (
-    <ModalPage>
+    <div className={classes.container}>
       <div className={classes.page}>
         <div className={classes.contentContainer}>
           <Head title="AFK Configuration" />
@@ -112,7 +124,7 @@ const _AFKConfigurationPage = ({ classes, onContinue, onToggleAutoStart }: Props
           </MediaQuery>
         </div>
       </div>
-    </ModalPage>
+    </div>
   )
 }
 

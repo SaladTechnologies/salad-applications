@@ -4,11 +4,21 @@ import classnames from 'classnames'
 import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import MediaQuery from 'react-responsive'
-import { ModalPage } from '../../../../components'
 import { SaladTheme } from '../../../../SaladTheme'
 import ReferralsImageStatic from '../../../auth-views/assets/referrals-image-static.png'
 
 const styles = (theme: SaladTheme) => ({
+  container: {
+    position: 'fixed',
+    top: (props: Props) => (props.isNative ? '4.1rem' : 0),
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 2000,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   page: {
     flex: 1,
     backgroundImage: 'linear-gradient(to right, #56A431 , #AACF40)',
@@ -55,6 +65,7 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   isSubmittingReferralCode: boolean
   isReferralCodeSubmitSuccess: boolean
+  isNative: boolean
   serverSideErrorMessage?: string
   onSubmitCode?: (code: string) => Promise<void>
   onEnterDefault?: () => void
@@ -76,7 +87,7 @@ class _ReferralOnboardingPage extends Component<Props> {
     const { classes, isSubmittingReferralCode, serverSideErrorMessage, isReferralCodeSubmitSuccess } = this.props
 
     return (
-      <ModalPage>
+      <div className={classes.container}>
         <div className={classes.page}>
           <div className={classes.contentContainer}>
             <>
@@ -119,7 +130,7 @@ class _ReferralOnboardingPage extends Component<Props> {
             </>
           </div>
         </div>
-      </ModalPage>
+      </div>
     )
   }
 }
