@@ -70,7 +70,7 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  isNative: boolean
+  isNative?: boolean
   onContinue: (autoStartEnabled: boolean) => void
   onToggleAutoStart: (autoStartEnabled: boolean) => void
 }
