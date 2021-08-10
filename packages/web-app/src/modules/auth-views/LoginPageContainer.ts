@@ -7,6 +7,7 @@ const mapStoreToProps = (store: RootStore): any => ({
   currentEmail: store.auth.currentEmail,
   isSubmitting: store.auth.isSubmitting,
   isSubmitSuccess: store.auth.isSubmitSuccess,
+  isNative: store.native.isNative,
   errorMessage: store.auth.errorMessage,
   acceptedTerms: store.auth.acceptedTerms,
   onSubmitEmail: store.auth.submitEmail,

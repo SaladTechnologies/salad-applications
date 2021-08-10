@@ -13,12 +13,23 @@ import classnames from 'classnames'
 import { useEffect, useRef } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import MediaQuery from 'react-responsive'
-import { Head, ModalPage } from '../../../components'
+import { Head } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { FormSteps } from '../../auth/AuthStore'
 import LoginPageRewards from '../assets/login-screen-rewards.png'
 
 const styles = (theme: SaladTheme) => ({
+  container: {
+    position: 'fixed',
+    top: (props: Props) => (props.isNative ? '4.1rem' : 0),
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 2000,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   page: {
     flex: 1,
     backgroundImage: 'linear-gradient(to right, #56A431 , #AACF40)',
@@ -74,6 +85,7 @@ interface Props extends WithStyles<typeof styles> {
   currentEmail?: string
   isSubmitting: boolean
   isSubmitSuccess: boolean
+  isNative: boolean
   acceptedTerms?: boolean
   errorMessage?: string
   onSubmitEmail?: (email: string) => void
@@ -132,7 +144,7 @@ const _LoginPage = ({
   }, [onUnmount])
 
   return (
-    <ModalPage>
+    <div className={classes.container}>
       <div className={classes.page}>
         <div className={classes.contentContainer}>
           <Head title="Login" />
@@ -252,7 +264,7 @@ const _LoginPage = ({
           </MediaQuery>
         </div>
       </div>
-    </ModalPage>
+    </div>
   )
 }
 

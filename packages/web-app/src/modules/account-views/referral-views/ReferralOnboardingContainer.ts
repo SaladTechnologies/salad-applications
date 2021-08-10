@@ -6,6 +6,7 @@ import { ReferralOnboardingPage } from './components/ReferralOnboardingPage'
 const mapStoreToProps = (store: RootStore): any => ({
   isSubmittingReferralCode: store.referral.isSubmittingReferralCode,
   isReferralCodeSubmitSuccess: store.referral.isReferralCodeSubmitSuccess,
+  isNative: store.native.isNative,
   serverSideErrorMessage: store.referral.errorMessage,
   onSubmitCode: async (code: string) => {
     try {

@@ -11,6 +11,7 @@ const mapStoreToProps = (store: RootStore): any => {
 
   return {
     onContinue: handleContinueClick,
+    isNative: store.native.isNative,
     onToggleAutoStart: (autoStartEnabled: boolean) =>
       store.analytics.trackSwitchToggle('onboarding_auto_start_toggle', 'Toggle Auto Start', autoStartEnabled),
   }

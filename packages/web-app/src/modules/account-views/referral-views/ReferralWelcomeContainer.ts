@@ -10,6 +10,7 @@ const mapStoreToProps = (store: RootStore): any => {
   }
   return {
     onNextPage: onNextPage,
+    isNative: store.native.isNative,
     username: store.profile.currentProfile?.username,
   }
 }
