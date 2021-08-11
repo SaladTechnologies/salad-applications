@@ -1,3 +1,5 @@
+import type { Ref } from 'react'
+
 export interface ZendeskWidget {
   (type: 'webWidget:on' | 'webWidget' | 'webWidget:get', command: string, payload?: any): void
   (type: 'webWidget', command: 'updateSettings', payload: ZendeskSettings): void
@@ -151,5 +153,9 @@ declare global {
   interface Window {
     zESettings?: ZendeskSettings
     zE?: ZendeskWidget
+    // https://support.trustpilot.com/hc/en-us/articles/115011421468--Add-a-TrustBox-to-a-single-page-application
+    Trustpilot?: {
+      loadFromElement: (ref: Ref<any>, flag: boolean) => void
+    }
   }
 }
