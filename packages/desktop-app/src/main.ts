@@ -350,14 +350,14 @@ const createMainWindow = () => {
         GUIDS?.forEach((element) => {
           const GUID = element.substring(2, element.length - 3)
           const { exec } = require('child_process')
-          const spawnCommand = exec(
+          const disableSleepCommand = exec(
             `powercfg /setacvalueindex ${GUID} 238c9fa8-0aad-41ed-83f4-97be242c8f20 29f6c1db-86da-48c5-9fdb-f2b67b1f44da 0`,
             {
               shell: true,
               windowsHide: true,
             },
           )
-          spawnCommand.on('exit', function () {
+          disableSleepCommand.on('exit', function () {
             console.log('Child process exited with exit code ')
           })
         })
