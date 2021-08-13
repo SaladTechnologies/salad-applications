@@ -313,7 +313,6 @@ const createMainWindow = () => {
 
   ipcMain.on('js-dispatch', bridge.receiveMessage)
 
-  //Listen for machine info requests // add a new bridge.on()
   bridge.on('disable-sleep-mode', () => {
     async function spawnChild() {
       const { spawn } = require('child_process')
