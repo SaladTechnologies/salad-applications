@@ -313,7 +313,62 @@ const createMainWindow = () => {
 
   ipcMain.on('js-dispatch', bridge.receiveMessage)
 
-  //Listen for machine info requests
+  //Listen for machine info requests // add a new bridge.on()
+  bridge.on('disable-sleep-mode', () => {
+    async function spawnChild() {
+      const { spawn } = require('child_process')
+      // Initial command that prints off GUIDS of all power profiles
+      const child = spawn('powercfg /list', {
+        shell: true,
+        windowsHide: true,
+      })
+
+      let data = ''
+      for await (const chunk of child.stdout) {
+        console.log('stdout chunk: ' + chunk)
+        data += chunk
+      }
+      let error = ''
+      for await (const chunk of child.stderr) {
+        console.error('stderr chunk: ' + chunk)
+        error += chunk
+      }
+      const exitCode = await new Promise((resolve) => {
+        child.on('close', resolve)
+      })
+
+      if (exitCode) {
+        throw new Error(`subprocess error exit ${exitCode}, ${error}`)
+      }
+      return data
+    }
+
+    spawnChild().then(
+      (data) => {
+        const regex = /\:\s(.*?)\(/g
+        const GUIDS = data.match(regex)
+        // loops through all the GUIDS and executes process to disable sleepmode
+        GUIDS?.forEach((element) => {
+          const GUID = element.substring(2, element.length - 3)
+          const { exec } = require('child_process')
+          const spawnCommand = exec(
+            `powercfg /setacvalueindex ${GUID} 238c9fa8-0aad-41ed-83f4-97be242c8f20 29f6c1db-86da-48c5-9fdb-f2b67b1f44da 0`,
+            {
+              shell: true,
+              windowsHide: true,
+            },
+          )
+          spawnCommand.on('exit', function () {
+            console.log('Child process exited with exit code ')
+          })
+        })
+      },
+      (err) => {
+        console.error('async error:\n' + err)
+      },
+    )
+  })
+
   bridge.on('get-machine-info', () => {
     if (machineInfo === undefined) {
       machineInfo = getMachineInfo()

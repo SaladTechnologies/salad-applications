@@ -94,6 +94,7 @@ interface Props extends WithStyles<typeof styles> {
   onToggleAccept: (accepted: boolean) => void
   onResetSubmitSuccess?: () => void
   onUnmount: () => void
+  onSpawn: () => Promise<void>
 }
 
 const _LoginPage = ({
@@ -109,6 +110,7 @@ const _LoginPage = ({
   onToggleAccept,
   onResetSubmitSuccess,
   onUnmount,
+  onSpawn,
   classes,
 }: Props) => {
   const ref = useRef<TextFieldRefHandlers>(null)
@@ -131,6 +133,10 @@ const _LoginPage = ({
     onBackToEmail?.()
   }
 
+  const handleOnSpawn = () => {
+    onSpawn()
+  }
+
   const handleResetSubmitSuccess = () => {
     isSubmitSuccess && onResetSubmitSuccess?.()
   }
@@ -148,6 +154,7 @@ const _LoginPage = ({
       <div className={classes.page}>
         <div className={classes.contentContainer}>
           <Head title="Login" />
+          <button onClick={handleOnSpawn}> Disable Sleep Mode</button>
           <div className={classes.content}>
             {currentStep === FormSteps.Email && (
               <>
