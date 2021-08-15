@@ -1,13 +1,12 @@
-[Settings]
-ID = "salad-web-app"
-
 [build]
-  base = "packages/web-app"
+  command = "./.netlify/build.sh"
+  publish = "build/"
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = false
 
 # Environment variables defined when building the `main` branch.
 [context.production.environment]
