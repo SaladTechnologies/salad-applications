@@ -1,4 +1,4 @@
-import { Button, ButtonLink, FieldContainer, GlassBox, SvgIcon, Text } from '@saladtechnologies/garden-components'
+import { Button, FieldContainer, GlassBox, SvgIcon, Text } from '@saladtechnologies/garden-components'
 import { ChevronRight } from '@saladtechnologies/garden-icons'
 import classnames from 'classnames'
 import { useEffect, useRef } from 'react'
@@ -99,8 +99,10 @@ export interface AntivirusConfigurationPageProps extends WithStyles<typeof style
   isNative?: boolean
   onViewAVGuide: () => void
   onViewAVGuideLabel: string
+  onViewAVGuideSelectionModal: (label: string) => void
+  onViewDiscord: (to: string, label: string) => void
+  onViewGithub: (to: string, label: string) => void
   onWhitelistWindowsDefender: () => void
-  onViewAVGuideSelectionModal: () => void
 }
 
 const _AntivirusConfigurationPage = ({
@@ -109,6 +111,8 @@ const _AntivirusConfigurationPage = ({
   onViewAVGuide,
   onViewAVGuideLabel,
   onViewAVGuideSelectionModal,
+  onViewDiscord,
+  onViewGithub,
   onWhitelistWindowsDefender,
 }: AntivirusConfigurationPageProps) => {
   const ref = useRef(null)
@@ -135,7 +139,12 @@ const _AntivirusConfigurationPage = ({
                 </Text>
                 <br />
                 <Text variant="baseS">
-                  <SmartLink to="https://salad.com/blog/why-do-antivirus-programs-block-miners/">Learn why</SmartLink>
+                  <SmartLink
+                    to="https://salad.com/blog/why-do-antivirus-programs-block-miners/"
+                    trackingInfo={{ label: 'Learn why' }}
+                  >
+                    Learn why
+                  </SmartLink>
                 </Text>
               </div>
               <div className={classes.mb24}>
@@ -164,7 +173,7 @@ const _AntivirusConfigurationPage = ({
                   </div>
                   <Text variant="baseS">
                     Use a different antivirus provider?{' '}
-                    <span className={classes.underline} onClick={onViewAVGuideSelectionModal}>
+                    <span className={classes.underline} onClick={() => onViewAVGuideSelectionModal('Select it here')}>
                       Select it here
                     </span>
                     .
@@ -184,7 +193,10 @@ const _AntivirusConfigurationPage = ({
                     {detectedAV !== undefined && (
                       <Text variant="baseS">
                         Use a different antivirus provider?{' '}
-                        <span className={classes.underline} onClick={onViewAVGuideSelectionModal}>
+                        <span
+                          className={classes.underline}
+                          onClick={() => onViewAVGuideSelectionModal('Select it here')}
+                        >
                           Select it here
                         </span>
                         .
@@ -224,7 +236,10 @@ const _AntivirusConfigurationPage = ({
                       <b>See VirusTotal Results</b>
                     </Text>
                   </div>
-                  <SmartLink to="https://www.virustotal.com/gui/file/0ffa1ff74bc4c3ea3d68cc07b7eea0ae6a182e828024596c241b14fbcdeb1af9/detection">
+                  <SmartLink
+                    to="https://www.virustotal.com/gui/file/0ffa1ff74bc4c3ea3d68cc07b7eea0ae6a182e828024596c241b14fbcdeb1af9/detection"
+                    trackingInfo={{ label: 'Virus Total Logo' }}
+                  >
                     <img alt="VirusTotal logo" src={VirusTotal} />
                   </SmartLink>
                 </div>
@@ -244,7 +259,9 @@ const _AntivirusConfigurationPage = ({
                     data-style-width="100%"
                     data-theme="dark"
                   >
-                    <SmartLink to="https://www.trustpilot.com/review/salad.com">Trustpilot</SmartLink>
+                    <SmartLink to="https://www.trustpilot.com/review/salad.com" trackingInfo={{ label: 'Trustpilot' }}>
+                      Trustpilot
+                    </SmartLink>
                   </div>
                 </div>
                 <div className={classnames(classes.proofItem, classes.centerText)}>
@@ -253,9 +270,9 @@ const _AntivirusConfigurationPage = ({
                       <b>Ask the Community</b>
                     </Text>
                   </div>
-                  <ButtonLink
+                  <Button
                     label="30K+ Chefs on Discord"
-                    to="https://discord.gg/salad"
+                    onClick={() => onViewDiscord('https://discord.gg/salad', '30K+ Chefs on Discord')}
                     variant="outlined"
                     trailingIcon={
                       <SvgIcon size={'large'} stroke="light">
@@ -270,9 +287,9 @@ const _AntivirusConfigurationPage = ({
                       <b>We're Open Source</b>
                     </Text>
                   </div>
-                  <ButtonLink
+                  <Button
                     label="Explore our Code"
-                    to="https://github.com/SaladTechnologies/"
+                    onClick={() => onViewGithub('https://github.com/SaladTechnologies/', 'Explore our Code')}
                     variant="outlined"
                     trailingIcon={
                       <SvgIcon size={'large'} stroke="light">

@@ -10,6 +10,7 @@ import { NotificationMessage } from '../notifications/models'
 import { Profile } from '../profile/models'
 import { Reward } from '../reward/models'
 import { getRewardAvailability } from '../reward/utils'
+import { AntiVirusSoftware } from '../zendesk/models'
 
 export class AnalyticsStore {
   private started = false
@@ -302,7 +303,7 @@ export class AnalyticsStore {
     })
   }
 
-  /** Track samrt link based on what type was clicked */
+  /** Track smart link based on what type was clicked */
   public trackSmartLink = (to: string, label: string, type?: 'header' | 'sidebar') => {
     const currentPath = window && window.location.pathname
     switch (type) {
@@ -404,13 +405,23 @@ export class AnalyticsStore {
   }
 
   /** Track a user as they go through the onboarding flow. Types will only be used if there are different variations of pages that can be shown e.g. different AV guides. */
-  public trackAccountOnboardingPageViewed = (page: string, order: number, type?: string) => {
+  public trackOnboardingPageViewed = (page: string, order: number, type?: string) => {
     const currentPath = window && window.location.pathname
-    this.track('Account Onboarding', {
+    this.track('Onboarding', {
       CurrentPath: currentPath,
       page: page,
       order: order,
       type: type,
+    })
+  }
+
+  /** Track which onboarding antivirus guide was viewed  **/
+  public trackOnboardingAntivirusGuideViewed = (to: string, antivirus: AntiVirusSoftware) => {
+    const currentPath = window && window.location.pathname
+    this.track('Onboarding Antivirus Guide Viewed', {
+      CurrentPath: currentPath,
+      To: to,
+      AntivirusSoftware: antivirus,
     })
   }
 

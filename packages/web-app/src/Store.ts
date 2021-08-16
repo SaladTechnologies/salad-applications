@@ -10,7 +10,7 @@ import { EngagementStore } from './modules/engagement'
 import { HomeStore } from './modules/home/HomeStore'
 import { AutoStartStore, MachineStore, NativeStore } from './modules/machine'
 import { NotificationStore } from './modules/notifications'
-import { OnboardingStore } from './modules/onboarding'
+import { OnboardingAntivirusStore, OnboardingStore } from './modules/onboarding'
 import { ProfileStore } from './modules/profile'
 import { Profile } from './modules/profile/models'
 import { ReferralStore } from './modules/referral'
@@ -71,6 +71,7 @@ export class RootStore {
   public readonly bonuses: BonusStore
   public readonly seasons: SeasonsStore
   public readonly onboarding: OnboardingStore
+  public readonly onboardingAntivirus: OnboardingAntivirusStore
 
   constructor(readonly axios: AxiosInstance) {
     this.routing = new RouterStore()
@@ -98,6 +99,7 @@ export class RootStore {
     this.bonuses = new BonusStore(this, axios)
     this.seasons = new SeasonsStore(axios)
     this.onboarding = new OnboardingStore(this)
+    this.onboardingAntivirus = new OnboardingAntivirusStore(this)
 
     // Start refreshing data
     this.refresh.start()

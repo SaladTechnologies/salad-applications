@@ -85,12 +85,7 @@ export class OnboardingStore {
     let nextOnboardingPage = undefined
 
     if (typeof currentOnboardingPageOrder === 'number') {
-      const onboardingPagesCopy = [...ONBOARDING_PAGES]
-      const isNative = this.store.native.isNative
-
-      const filteredOnboardingPagesCopy = isNative
-        ? onboardingPagesCopy
-        : onboardingPagesCopy.filter((page) => page.NATIVE === false)
+      const filteredOnboardingPagesCopy = this.getFilteredOnboardingPages()
 
       const sortedOnboardingPages = filteredOnboardingPagesCopy.sort((a, b) => (a.ORDER > b.ORDER ? 1 : -1))
       const completedPagesCopy = [...this.completedOnboardingPages]
@@ -115,7 +110,16 @@ export class OnboardingStore {
 
     if (nextOnboardingPage) {
       this.store.routing.push(nextOnboardingPage.PATH)
-      this.store.analytics.trackAccountOnboardingPageViewed(nextOnboardingPage.NAME, nextOnboardingPage.ORDER)
+      if (nextOnboardingPage.NAME === ONBOARDING_PAGE_NAMES.ANTIVIRUS_CONFIGURATION) {
+        const antivirusConfigurationPageType = this.store.onboardingAntivirus.pageType
+        this.store.analytics.trackOnboardingPageViewed(
+          nextOnboardingPage.NAME,
+          nextOnboardingPage.ORDER,
+          antivirusConfigurationPageType,
+        )
+      } else {
+        this.store.analytics.trackOnboardingPageViewed(nextOnboardingPage.NAME, nextOnboardingPage.ORDER)
+      }
     } else {
       this.store.routing.push('/')
     }
@@ -128,17 +132,29 @@ export class OnboardingStore {
   private hasOnboardingPagesToComplete = (onboardingPagesCompletedInStorage: string | null): boolean => {
     const parsedStorageArray = onboardingPagesCompletedInStorage ? JSON.parse(onboardingPagesCompletedInStorage) : false
     if (parsedStorageArray) {
-      const onboardingPagesCopy = [...ONBOARDING_PAGES]
-      const isNative = this.store.native.isNative
-
-      const availableOnboardingPageNamesArray = isNative
-        ? onboardingPagesCopy
-        : onboardingPagesCopy.filter((page) => page.NATIVE === false).map((page) => page.NAME)
-
-      const availableOnboardingPagesArray = availableOnboardingPageNamesArray
-      return !isEqual(sortBy(parsedStorageArray), sortBy(availableOnboardingPagesArray))
+      const availableOnboardingPageNamesArray = this.getFilteredOnboardingPages().map((page) => page.NAME)
+      return !isEqual(sortBy(parsedStorageArray), sortBy(availableOnboardingPageNamesArray))
     } else {
       return true
     }
+  }
+
+  /**
+   * Returns available onboarding pages a user must go through based
+   * on whether they are in the web or native app.
+   */
+  private getFilteredOnboardingPages = (): OnboardingPageItemType[] => {
+    const onboardingPagesCopy = [...ONBOARDING_PAGES]
+    const isNative = this.store.native.isNative
+    const isWindows = this.store.native.platform === 'win32'
+
+    const availableOnboardingPageNamesArray =
+      isNative && isWindows
+        ? onboardingPagesCopy
+        : isNative && !isWindows
+        ? onboardingPagesCopy.filter((page) => page.WINDOWS_ONLY === false)
+        : onboardingPagesCopy.filter((page) => page.NATIVE === false)
+
+    return availableOnboardingPageNamesArray
   }
 }

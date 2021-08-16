@@ -7,6 +7,7 @@ const mapStoreToProps = (store: RootStore): any => {
   const handleContinueClick = (autoStartEnabled: boolean) => {
     store.autoStart.setAutoStart(autoStartEnabled)
     store.onboarding.viewNextPage(ONBOARDING_PAGE_NAMES.AFK_CONFIGURATION)
+    store.analytics.trackButtonClicked('onboarding_afk_continue', 'Continue', 'enabled')
   }
 
   return {
@@ -17,4 +18,4 @@ const mapStoreToProps = (store: RootStore): any => {
   }
 }
 
-export const AFKConfigurationPagePageContainer = connect(mapStoreToProps, AFKConfigurationPage)
+export const AFKConfigurationPageContainer = connect(mapStoreToProps, AFKConfigurationPage)
