@@ -323,7 +323,7 @@ const createMainWindow = () => {
         `"'`,
       (err: string, stdout: string) => {
         if (err) {
-          console.error(`exec error: ${err}`)
+          console.error(`Exec Error: ${err}`)
           return
         }
         console.log(`Successfully Whitelisted Windows Defender ${stdout}`)
