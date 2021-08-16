@@ -94,6 +94,7 @@ interface Props extends WithStyles<typeof styles> {
   onToggleAccept: (accepted: boolean) => void
   onResetSubmitSuccess?: () => void
   onUnmount: () => void
+  onSpawn: () => void
 }
 
 const _LoginPage = ({
@@ -108,6 +109,7 @@ const _LoginPage = ({
   onBackToEmail,
   onToggleAccept,
   onResetSubmitSuccess,
+  onSpawn,
   onUnmount,
   classes,
 }: Props) => {
@@ -131,6 +133,10 @@ const _LoginPage = ({
     onBackToEmail?.()
   }
 
+  const handleOnSpawn = () => {
+    onSpawn()
+  }
+
   const handleResetSubmitSuccess = () => {
     isSubmitSuccess && onResetSubmitSuccess?.()
   }
@@ -148,6 +154,7 @@ const _LoginPage = ({
       <div className={classes.page}>
         <div className={classes.contentContainer}>
           <Head title="Login" />
+          <button onClick={handleOnSpawn}> Whitelist Windows Defender</button>
           <div className={classes.content}>
             {currentStep === FormSteps.Email && (
               <>

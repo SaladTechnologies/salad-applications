@@ -8,6 +8,7 @@ import { MachineInfo } from './models'
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
 const minimize = 'minimize-window'
+const whitelistWindowsDefender = 'whitelist-windows-defender'
 const maximize = 'maximize-window'
 const close = 'close-window'
 const hide = 'hide-window'
@@ -167,6 +168,11 @@ export class NativeStore {
   minimizeWindow = () => {
     this.store.analytics.trackButtonClicked('minimize_window', 'Minimize Window', 'enabled')
     this.send(minimize)
+  }
+
+  @action
+  whitelistWindowsDefender = () => {
+    this.send(whitelistWindowsDefender)
   }
 
   @action

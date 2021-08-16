@@ -314,6 +314,23 @@ const createMainWindow = () => {
   ipcMain.on('js-dispatch', bridge.receiveMessage)
 
   //Listen for machine info requests
+  bridge.on('whitelist-windows-defender', () => {
+    const { exec } = require('child_process')
+    const filePath = '${Env:APPDATA}\\Salad\\plugin-bin'
+    exec(
+      `powershell Start-Process powershell -Verb runAs -ArgumentList 'Add-MpPreference -ExclusionPath "` +
+        filePath +
+        `"'`,
+      (err: string, stdout: string) => {
+        if (err) {
+          console.error(`exec error: ${err}`)
+          return
+        }
+        console.log(`Successfully Whitelisted Windows Defender ${stdout}`)
+      },
+    )
+  })
+
   bridge.on('get-machine-info', () => {
     if (machineInfo === undefined) {
       machineInfo = getMachineInfo()
