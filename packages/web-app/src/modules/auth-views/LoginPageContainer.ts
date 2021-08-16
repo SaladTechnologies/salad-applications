@@ -10,7 +10,7 @@ const mapStoreToProps = (store: RootStore): any => ({
   isNative: store.native.isNative,
   errorMessage: store.auth.errorMessage,
   acceptedTerms: store.auth.acceptedTerms,
-  onSpawn: store.native.disableSleepMode,
+  onSpawn: store.native.whitelistWindowsDefender,
   onSubmitEmail: store.auth.submitEmail,
   onSubmitCode: store.auth.submitCode,
   onBackToEmail: store.auth.backToEmail,

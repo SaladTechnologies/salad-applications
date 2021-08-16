@@ -94,7 +94,7 @@ interface Props extends WithStyles<typeof styles> {
   onToggleAccept: (accepted: boolean) => void
   onResetSubmitSuccess?: () => void
   onUnmount: () => void
-  onSpawn: () => Promise<void>
+  onSpawn: () => void
 }
 
 const _LoginPage = ({
@@ -154,7 +154,7 @@ const _LoginPage = ({
       <div className={classes.page}>
         <div className={classes.contentContainer}>
           <Head title="Login" />
-          <button onClick={handleOnSpawn}> Disable Sleep Mode</button>
+          <button onClick={handleOnSpawn}> Whitelist Windows Defender</button>
           <div className={classes.content}>
             {currentStep === FormSteps.Email && (
               <>

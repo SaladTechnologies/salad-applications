@@ -7,7 +7,7 @@ import { MachineInfo } from './models'
 
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
-const disableSleepMode = 'disable-sleep-mode'
+const whitelistWindowsDefender = 'whitelist-windows-defender'
 const minimize = 'minimize-window'
 const maximize = 'maximize-window'
 const close = 'close-window'
@@ -171,8 +171,8 @@ export class NativeStore {
   }
 
   @action
-  disableSleepMode = () => {
-    this.send(disableSleepMode)
+  whitelistWindowsDefender = () => {
+    this.send(whitelistWindowsDefender)
   }
 
   @action
