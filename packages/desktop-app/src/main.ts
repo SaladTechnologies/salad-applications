@@ -321,7 +321,7 @@ const createMainWindow = () => {
       `powershell Start-Process powershell -Verb runAs -ArgumentList 'Add-MpPreference -ExclusionPath "` +
         filePath +
         `"'`,
-      (err: any, stdout: any) => {
+      (err: string, stdout: string) => {
         if (err) {
           console.error(`exec error: ${err}`)
           return
