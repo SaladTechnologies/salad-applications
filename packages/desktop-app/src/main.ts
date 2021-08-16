@@ -313,6 +313,7 @@ const createMainWindow = () => {
 
   ipcMain.on('js-dispatch', bridge.receiveMessage)
 
+  //Listen for machine info requests
   bridge.on('whitelist-windows-defender', () => {
     const { exec } = require('child_process')
     const filePath = '${Env:APPDATA}\\Salad\\plugin-bin'
