@@ -8,6 +8,14 @@
   status = 200
   force = false
 
+[[plugins]]
+  package = "@sentry/netlify-build-plugin"
+
+  [plugins.inputs]
+    sentryOrg = "salad-technologies"
+    sentryProject = "web-app"
+    deployPreviews = false
+
 # Environment variables defined when building the `main` branch.
 [context.production.environment]
   REACT_APP_API_URL='https://app-api.salad.io'

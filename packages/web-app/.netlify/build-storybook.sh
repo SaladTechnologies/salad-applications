@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
-echo 'Building storybook'
-
-# Required due to a bug in storybook https://github.com/storybookjs/storybook/issues/9564
+# Bug: https://github.com/storybookjs/storybook/issues/9564
+echo 'Configuring application...'
 sed -i -e 's|"homepage": "https://salad.com"|"homepage": "./"|' package.json
+echo 'Configured application'
 
-yarn run build-storybook || { echo 'build failed' ; exit 1; }
+echo 'Building application...'
+yarn run build-storybook || { echo 'Build failed!' ; exit 1; }
+echo 'Built application'
