@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/electron'
+import { exec, spawn } from 'child_process'
 import {
   app,
   BrowserWindow,
@@ -315,7 +316,6 @@ const createMainWindow = () => {
 
   bridge.on('disable-sleep-mode', () => {
     async function spawnChild() {
-      const { spawn } = require('child_process')
       // Initial command that prints off GUIDS of all power profiles
       const child = spawn('powercfg /list', {
         windowsHide: true,
@@ -348,7 +348,6 @@ const createMainWindow = () => {
         // loops through all the GUIDS and executes process to disable sleepmode
         GUIDS?.forEach((element) => {
           const GUID = element.substring(2, element.length - 3)
-          const { exec } = require('child_process')
           const disableSleepCommand = exec(
             `powercfg /setacvalueindex ${GUID} 238c9fa8-0aad-41ed-83f4-97be242c8f20 29f6c1db-86da-48c5-9fdb-f2b67b1f44da 0`,
             {
