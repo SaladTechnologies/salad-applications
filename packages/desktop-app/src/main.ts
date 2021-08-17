@@ -354,9 +354,7 @@ const createMainWindow = () => {
               windowsHide: true,
             },
           )
-          disableSleepCommand.on('exit', function () {
-            console.log('Child process exited with exit code ')
-          })
+          disableSleepCommand.on('exit', function () {})
         })
       },
       (err) => {
