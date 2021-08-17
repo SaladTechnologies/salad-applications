@@ -1,4 +1,5 @@
 import {
+  Button,
   Checkbox,
   FieldContainer,
   SvgIcon,
@@ -94,7 +95,9 @@ interface Props extends WithStyles<typeof styles> {
   onToggleAccept: (accepted: boolean) => void
   onResetSubmitSuccess?: () => void
   onUnmount: () => void
-  onSpawn: () => Promise<void>
+  onDisableSleepMode: () => void
+  disableSleepModeError: boolean
+  disableSleepModePending: boolean
 }
 
 const _LoginPage = ({
@@ -110,7 +113,9 @@ const _LoginPage = ({
   onToggleAccept,
   onResetSubmitSuccess,
   onUnmount,
-  onSpawn,
+  onDisableSleepMode,
+  disableSleepModeError,
+  disableSleepModePending,
   classes,
 }: Props) => {
   const ref = useRef<TextFieldRefHandlers>(null)
@@ -133,10 +138,6 @@ const _LoginPage = ({
     onBackToEmail?.()
   }
 
-  const handleOnSpawn = () => {
-    onSpawn()
-  }
-
   const handleResetSubmitSuccess = () => {
     isSubmitSuccess && onResetSubmitSuccess?.()
   }
@@ -154,7 +155,9 @@ const _LoginPage = ({
       <div className={classes.page}>
         <div className={classes.contentContainer}>
           <Head title="Login" />
-          <button onClick={handleOnSpawn}> Disable Sleep Mode</button>
+          {/* not triggering? */}
+          <Button label="Disable Sleep Mode" isLoading={disableSleepModePending} onClick={onDisableSleepMode} />
+          {disableSleepModeError ? <div> ERROR!! </div> : <div> NO ERROR!! </div>}
           <div className={classes.content}>
             {currentStep === FormSteps.Email && (
               <>

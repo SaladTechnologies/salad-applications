@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/electron'
-import { exec, spawn } from 'child_process'
+import { exec } from 'child_process'
 import {
   app,
   BrowserWindow,
@@ -315,50 +315,60 @@ const createMainWindow = () => {
   ipcMain.on('js-dispatch', bridge.receiveMessage)
 
   bridge.on('disable-sleep-mode', () => {
-    async function spawnChild() {
-      // Initial command that prints off GUIDS of all power profiles
-      const child = spawn('powercfg /list', {
+    console.log('starting!')
+    const powercfg = 'C:\\Windows\\System32\\powercfg.exe'
+    exec(
+      `${powercfg} /list`,
+      {
+        env: {},
+        timeout: 60000,
         windowsHide: true,
-      })
-
-      let data = ''
-      for await (const chunk of child.stdout) {
-        console.log('stdout chunk: ' + chunk)
-        data += chunk
-      }
-      let error = ''
-      for await (const chunk of child.stderr) {
-        console.error('stderr chunk: ' + chunk)
-        error += chunk
-      }
-      const exitCode = await new Promise((resolve) => {
-        child.on('close', resolve)
-      })
-
-      if (exitCode) {
-        throw new Error(`subprocess error exit ${exitCode}, ${error}`)
-      }
-      return data
-    }
-
-    spawnChild().then(
-      (data) => {
-        const regex = /\:\s(.*?)\(/g
-        const GUIDS = data.match(regex)
-        // loops through all the GUIDS and executes process to disable sleepmode
-        GUIDS?.forEach((element) => {
-          const GUID = element.substring(2, element.length - 3)
-          const disableSleepCommand = exec(
-            `powercfg /setacvalueindex ${GUID} 238c9fa8-0aad-41ed-83f4-97be242c8f20 29f6c1db-86da-48c5-9fdb-f2b67b1f44da 0`,
-            {
-              windowsHide: true,
-            },
-          )
-          disableSleepCommand.on('exit', function () {})
-        })
       },
-      (err) => {
-        console.error('async error:\n' + err)
+      (error, stdout, stderr) => {
+        if (error == null) {
+          const profiles = [...stdout.matchAll(/\:\s+([^\s]+)/g)]
+          disableSleepMode(profiles.shift())
+
+          function disableSleepMode(profile: RegExpMatchArray | undefined) {
+            if (profile) {
+              exec(
+                `${powercfg} /setacvalueindex ${profile[1]} 238c9fa8-0aad-41ed-83f4-97be242c8f20 29f6c1db-86da-48c5-9fdb-f2b67b1f44da 0`,
+                {
+                  env: {},
+                  timeout: 60000,
+                  windowsHide: true,
+                },
+                (error, _stdout, stderr) => {
+                  if (error == null) {
+                    disableSleepMode(profiles.shift())
+                  } else {
+                    console.error(
+                      `Failed to set preference on Windows power profile ${profile[1]} (${error.message}${
+                        error.code == null ? '' : `, exit code ${error.code}`
+                      })${stderr ? `\n${stderr}` : ''}`,
+                    )
+                    bridge.send('disable-sleep-mode', {
+                      success: false,
+                    })
+                  }
+                },
+              )
+            } else {
+              bridge.send('disable-sleep-mode', {
+                success: true,
+              })
+            }
+          }
+        } else {
+          console.error(
+            `Failed to list Windows power profiles (${error.message}${
+              error.code == null ? '' : `, exit code ${error.code}`
+            })${stderr ? `\n${stderr}` : ''}`,
+          )
+          bridge.send('disable-sleep-mode', {
+            success: false,
+          })
+        }
       },
     )
   })
