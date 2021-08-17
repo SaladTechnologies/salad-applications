@@ -318,7 +318,6 @@ const createMainWindow = () => {
       const { spawn } = require('child_process')
       // Initial command that prints off GUIDS of all power profiles
       const child = spawn('powercfg /list', {
-        shell: true,
         windowsHide: true,
       })
 
@@ -353,7 +352,6 @@ const createMainWindow = () => {
           const disableSleepCommand = exec(
             `powercfg /setacvalueindex ${GUID} 238c9fa8-0aad-41ed-83f4-97be242c8f20 29f6c1db-86da-48c5-9fdb-f2b67b1f44da 0`,
             {
-              shell: true,
               windowsHide: true,
             },
           )
