@@ -317,6 +317,7 @@ const createMainWindow = () => {
   bridge.on('whitelist-windows-defender', () => {
     const { exec } = require('child_process')
     const filePath = '${Env:APPDATA}\\Salad\\plugin-bin'
+    let isWhitelistWindowsDefenderSuccess = undefined
     exec(
       `powershell Start-Process powershell -Verb runAs -ArgumentList 'Add-MpPreference -ExclusionPath "` +
         filePath +
@@ -324,9 +325,13 @@ const createMainWindow = () => {
       (err: string, stdout: string) => {
         if (err) {
           console.error(`Exec Error: ${err}`)
+          isWhitelistWindowsDefenderSuccess = false
+          bridge.send('set-whitelist-windows-defender-success', isWhitelistWindowsDefenderSuccess)
           return
         }
         console.log(`Successfully Whitelisted Windows Defender ${stdout}`)
+        isWhitelistWindowsDefenderSuccess = true
+        bridge.send('set-whitelist-windows-defender-success', isWhitelistWindowsDefenderSuccess)
       },
     )
   })

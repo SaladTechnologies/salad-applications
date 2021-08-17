@@ -9,6 +9,7 @@ const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
 const minimize = 'minimize-window'
 const whitelistWindowsDefender = 'whitelist-windows-defender'
+const setWhitelistWindowsDefenderSuccess = 'set-whitelist-windows-defender-success'
 const maximize = 'maximize-window'
 const close = 'close-window'
 const hide = 'hide-window'
@@ -54,6 +55,9 @@ export class NativeStore {
 
   @observable
   public minimizeToTray: boolean = true
+
+  @observable
+  public isWhitelistWindowsDefenderSuccess?: boolean = undefined
 
   @observable
   public notifyOnMinimizeToTray: boolean = true
@@ -173,6 +177,14 @@ export class NativeStore {
   @action
   whitelistWindowsDefender = () => {
     this.send(whitelistWindowsDefender)
+    this.on(setWhitelistWindowsDefenderSuccess, (isWhitelistWindowsDefenderSuccess: boolean) => {
+      this.setWhitelistWindowsDefenderSuccess(isWhitelistWindowsDefenderSuccess)
+    })
+  }
+
+  @action
+  setWhitelistWindowsDefenderSuccess = (isWhitelistWindowsDefenderSuccess: boolean) => {
+    this.isWhitelistWindowsDefenderSuccess = isWhitelistWindowsDefenderSuccess
   }
 
   @action
