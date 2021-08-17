@@ -175,8 +175,8 @@ export class NativeStore {
   }
 
   @action
-  whitelistWindowsDefender = () => {
-    this.send(whitelistWindowsDefender)
+  whitelistWindowsDefender = (nonDefaultFilePath?: string) => {
+    this.send(whitelistWindowsDefender, nonDefaultFilePath)
     this.on(setWhitelistWindowsDefenderSuccess, (isWhitelistWindowsDefenderSuccess: boolean) => {
       this.setWhitelistWindowsDefenderSuccess(isWhitelistWindowsDefenderSuccess)
     })

@@ -314,9 +314,11 @@ const createMainWindow = () => {
   ipcMain.on('js-dispatch', bridge.receiveMessage)
 
   //Listen for machine info requests
-  bridge.on('whitelist-windows-defender', () => {
+  bridge.on('whitelist-windows-defender', (nonDefaultFilePath?: string) => {
     const { exec } = require('child_process')
-    const filePath = '${Env:APPDATA}\\Salad\\plugin-bin'
+    const filePath = nonDefaultFilePath
+      ? `${nonDefaultFilePath}` + '\\Salad\\plugin-bin'
+      : '${Env:APPDATA}\\Salad\\plugin-bin'
     let isWhitelistWindowsDefenderSuccess = undefined
     exec(
       `powershell Start-Process powershell -Verb runAs -ArgumentList 'Add-MpPreference -ExclusionPath "` +

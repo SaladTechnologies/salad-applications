@@ -94,7 +94,7 @@ interface Props extends WithStyles<typeof styles> {
   onToggleAccept: (accepted: boolean) => void
   onResetSubmitSuccess?: () => void
   onUnmount: () => void
-  onSpawn: () => void
+  onSpawn: (nonDefaultFilePath?: string) => void
 }
 
 const _LoginPage = ({
