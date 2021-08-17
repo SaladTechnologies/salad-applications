@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/electron'
+import { exec } from 'child_process'
 import {
   app,
   BrowserWindow,
@@ -315,7 +316,6 @@ const createMainWindow = () => {
 
   //Listen for machine info requests
   bridge.on('whitelist-windows-defender', (nonDefaultFilePath?: string) => {
-    const { exec } = require('child_process')
     const filePath = nonDefaultFilePath
       ? `${nonDefaultFilePath}` + '\\Salad\\plugin-bin'
       : '${Env:APPDATA}\\Salad\\plugin-bin'
@@ -324,14 +324,13 @@ const createMainWindow = () => {
       `powershell Start-Process powershell -Verb runAs -ArgumentList 'Add-MpPreference -ExclusionPath "` +
         filePath +
         `"'`,
-      (err: string, stdout: string) => {
-        if (err) {
-          console.error(`Exec Error: ${err}`)
+      (error) => {
+        if (error) {
+          console.error(`Exec Error: ${error}`)
           isWhitelistWindowsDefenderSuccess = false
           bridge.send('set-whitelist-windows-defender-success', isWhitelistWindowsDefenderSuccess)
           return
         }
-        console.log(`Successfully Whitelisted Windows Defender ${stdout}`)
         isWhitelistWindowsDefenderSuccess = true
         bridge.send('set-whitelist-windows-defender-success', isWhitelistWindowsDefenderSuccess)
       },
