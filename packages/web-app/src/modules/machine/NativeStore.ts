@@ -7,6 +7,7 @@ import { MachineInfo } from './models'
 
 const getMachineInfo = 'get-machine-info'
 const setMachineInfo = 'set-machine-info'
+const disableSleepMode = 'disable-sleep-mode'
 const minimize = 'minimize-window'
 const maximize = 'maximize-window'
 const close = 'close-window'
@@ -139,6 +140,24 @@ export class NativeStore {
       return
     }
     window.salad.dispatch(type, payload && toJS(payload))
+  }
+
+  disableSleepMode = (): Promise<void> => {
+    if (!this.callbacks.has(disableSleepMode)) {
+      return new Promise((resolve, reject) => {
+        this.callbacks.set(disableSleepMode, (result: { success: boolean }) => {
+          this.callbacks.delete(disableSleepMode)
+          if (result.success) {
+            resolve()
+          } else {
+            reject()
+          }
+        })
+        this.send(disableSleepMode)
+      })
+    } else {
+      return Promise.reject('The process is already running.')
+    }
   }
 
   @action
