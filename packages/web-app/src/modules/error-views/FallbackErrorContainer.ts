@@ -4,7 +4,7 @@ import { StartActionType } from '../salad-bowl/models'
 import { FallbackErrorPage } from './components/FallbackErrorPage'
 
 const mapStoreToProps = (store: RootStore): any => {
-  const gpuMiningEnabled = store.saladBowl.gpuMiningEnabled
+  const gpuMiningEnabled = store.saladBowl?.gpuMiningEnabled
 
   let currentMinerType: string
   let alternativeMinerType: string
@@ -17,7 +17,7 @@ const mapStoreToProps = (store: RootStore): any => {
   }
 
   const onSwitchMiningType = () => {
-    store.saladBowl.toggleRunning(StartActionType.SwitchMiner)
+    store.saladBowl?.toggleRunning(StartActionType.SwitchMiner)
     store.ui.hideModal()
   }
 

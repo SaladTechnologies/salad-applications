@@ -21,10 +21,10 @@ export class VersionStore {
 
   private versionCheckTimer?: NodeJS.Timeout
 
-  private readonly persistentStores: Array<IPersistentStore>
+  private readonly persistentStores: Array<IPersistentStore> | undefined
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
-    this.persistentStores = [store.saladBowl]
+    this.persistentStores = store.saladBowl ? [store.saladBowl] : undefined
 
     // Check to see if this is part of an automatic app refresh where we need to start the miner again.
     const dataString = getItem(VERSION_RELOAD_DATA)
@@ -32,7 +32,7 @@ export class VersionStore {
       try {
         const dataObj: any = JSON.parse(dataString)
         if (!VersionStore.isEmpty(dataObj)) {
-          this.persistentStores.forEach((x) => {
+          this.persistentStores?.forEach((x) => {
             const name = x.constructor.name
             const data: object = dataObj[name]
             x.onDataLoaded(data)
@@ -115,7 +115,7 @@ export class VersionStore {
 
         const dataObj: any = {}
 
-        this.persistentStores.forEach((x) => {
+        this.persistentStores?.forEach((x) => {
           const data = x.getSavedData()
 
           if (!VersionStore.isEmpty(data)) {

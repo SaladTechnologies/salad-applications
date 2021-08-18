@@ -129,13 +129,13 @@ export class AutoStartStore {
 
       if (this.idleTime <= this.idleThreshold) {
         if (this.autoStarted) {
-          this.store.saladBowl.stop(StopReason.Automatic)
+          this.store.saladBowl?.stop(StopReason.Automatic)
           this.store.notifications.removeNotification(notificationId)
         }
         this.autoStarted = false
-      } else if (!this.store.saladBowl.isRunning && !this.autoStarted) {
+      } else if (!this.store.saladBowl?.isRunning && !this.autoStarted) {
         this.autoStarted = true
-        this.store.saladBowl.toggleRunning(StartActionType.Automatic)
+        this.store.saladBowl?.toggleRunning(StartActionType.Automatic)
 
         //Send a notification that we auto started
         this.store.notifications.sendNotification({
