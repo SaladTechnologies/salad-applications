@@ -171,7 +171,7 @@ export class NativeStore {
   }
 
   disableSleepMode = (): Promise<void> => {
-    if (this.callbacks.has(disableSleepMode)) {
+    if (!this.callbacks.has(disableSleepMode)) {
       return new Promise((resolve, reject) => {
         this.callbacks.set(disableSleepMode, (result: { success: boolean }) => {
           this.callbacks.delete(disableSleepMode)
