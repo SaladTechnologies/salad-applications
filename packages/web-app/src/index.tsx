@@ -28,6 +28,7 @@ import { createClient } from './axiosFactory'
 import { Head } from './components'
 import { config } from './config'
 import { ErrorBoundary } from './ErrorBoundary'
+import { FeatureManagerProvider, UnleashFeatureManager } from './FeatureManager'
 import { DefaultTheme as JSSTheme } from './SaladTheme'
 import { createStore } from './Store'
 import { Tooltips } from './Tooltips'
@@ -56,7 +57,8 @@ if (!window.salad) {
 console.log(`Running web app build:${config.appBuild}`)
 
 const client = createClient()
-const rootStore = createStore(client)
+const featureManager = new UnleashFeatureManager()
+const rootStore = createStore(client, featureManager)
 const routerHistory = createBrowserHistory()
 
 let currentLocation: any = null
@@ -88,33 +90,35 @@ const intl = createIntl(
 )
 
 ReactDOM.render(
-  <Router history={history}>
-    <RawIntlProvider value={intl}>
-      <EmotionThemeProvider theme={EmotionTheme}>
-        <JSSThemeProvider theme={JSSTheme}>
-          <SkeletonTheme color={'#172E40'} highlightColor="#304759">
-            <ErrorBoundary>
-              {/* Default page title for any page that doesn't specify one */}
-              <Head title="Salad Technologies" />
-              <div>
-                <Observer>
-                  {() => {
-                    return rootStore.appLoading ? (
-                      <LoadingScreen />
-                    ) : (
-                      <div>
-                        <Tooltips />
-                        <App history={history} />
-                      </div>
-                    )
-                  }}
-                </Observer>
-              </div>
-            </ErrorBoundary>
-          </SkeletonTheme>
-        </JSSThemeProvider>
-      </EmotionThemeProvider>
-    </RawIntlProvider>
-  </Router>,
+  <FeatureManagerProvider value={featureManager}>
+    <Router history={history}>
+      <RawIntlProvider value={intl}>
+        <EmotionThemeProvider theme={EmotionTheme}>
+          <JSSThemeProvider theme={JSSTheme}>
+            <SkeletonTheme color={'#172E40'} highlightColor="#304759">
+              <ErrorBoundary>
+                {/* Default page title for any page that doesn't specify one */}
+                <Head title="Salad Technologies" />
+                <div>
+                  <Observer>
+                    {() => {
+                      return rootStore.appLoading ? (
+                        <LoadingScreen />
+                      ) : (
+                        <div>
+                          <Tooltips />
+                          <App history={history} />
+                        </div>
+                      )
+                    }}
+                  </Observer>
+                </div>
+              </ErrorBoundary>
+            </SkeletonTheme>
+          </JSSThemeProvider>
+        </EmotionThemeProvider>
+      </RawIntlProvider>
+    </Router>
+  </FeatureManagerProvider>,
   document.getElementById('root'),
 )

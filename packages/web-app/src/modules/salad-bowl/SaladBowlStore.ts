@@ -358,7 +358,7 @@ export class SaladBowlStore implements IPersistentStore {
           break
         case StartActionType.Override:
           this.store.analytics.trackButtonClicked('override_button', 'Override Button', 'enabled')
-          this.gpuMiningEnabled ? this.store.saladBowl.setGpuOverride(true) : this.store.saladBowl.setCpuOverride(true)
+          this.gpuMiningEnabled ? this.setGpuOverride(true) : this.setCpuOverride(true)
           this.start(StartReason.Manual)
           break
         case StartActionType.SwitchMiner:
@@ -536,8 +536,8 @@ export class SaladBowlStore implements IPersistentStore {
     }
   })
 
-  @action.bound
-  stop = flow(function* (this: SaladBowlStore, reason: StopReason) {
+  @action
+  stop = (reason: StopReason) => {
     if (this.timeoutTimer != null) {
       clearTimeout(this.timeoutTimer)
       this.timeoutTimer = undefined
@@ -552,7 +552,7 @@ export class SaladBowlStore implements IPersistentStore {
     this.plugin.version = undefined
     this.plugin.algorithm = undefined
     this.plugin.status = PluginStatus.Stopped
-    yield this.store.native.send('stop-salad')
+    this.store.native.send('stop-salad')
 
     this.store.analytics.trackStop(reason, this.runningTime || 0, this.choppingTime || 0)
 
@@ -560,7 +560,7 @@ export class SaladBowlStore implements IPersistentStore {
     console.log('Stopping after running for: ' + this.runningTime + 'and chopping for: ' + this.choppingTime)
     this.runningTime = undefined
     this.choppingTime = undefined
-  })
+  }
 
   @action
   setGpuOnly = (value: boolean) => {
