@@ -57,8 +57,8 @@ export class NativeStore {
   @observable
   public minimizeToTray: boolean = true
 
-  @observable
-  public isWhitelistWindowsDefenderSuccess?: boolean = undefined
+  // @observable
+  // public isWhitelistWindowsDefenderSuccess?: boolean = undefined
 
   @observable
   public notifyOnMinimizeToTray: boolean = true
@@ -178,49 +178,19 @@ export class NativeStore {
   whitelistWindowsDefender = (): Promise<void> => {
     if (!this.callbacks.has(whitelistWindowsDefender)) {
       return new Promise((resolve, reject) => {
-        this.callbacks.set(
-          whitelistWindowsDefender,
-          (result: { success: boolean; errorType?: WHITELIST_WINDOWS_DEFENDER_ERRORS }) => {
-            this.callbacks.delete(whitelistWindowsDefender)
-            if (result.success) {
-              resolve()
-              console.log(result)
-            } else {
-              switch (result.errorType) {
-                case WHITELIST_WINDOWS_DEFENDER_ERRORS.USER_SELECTED_NO:
-                  console.log('SWITCH', WHITELIST_WINDOWS_DEFENDER_ERRORS.USER_SELECTED_NO)
-                  this.store.onboarding.setWhitelistWindowsErrorType(WHITELIST_WINDOWS_DEFENDER_ERRORS.USER_SELECTED_NO)
-                  break
-                case WHITELIST_WINDOWS_DEFENDER_ERRORS.GENERAL_SCRIPT_ERROR:
-                  this.store.onboarding.setWhitelistWindowsErrorType(
-                    WHITELIST_WINDOWS_DEFENDER_ERRORS.GENERAL_SCRIPT_ERROR,
-                  )
-                  console.log('SWITCH', WHITELIST_WINDOWS_DEFENDER_ERRORS.GENERAL_SCRIPT_ERROR)
-                  break
-              }
-              console.log('REJECT')
-              reject()
-            }
-          },
-        )
+        this.callbacks.set(whitelistWindowsDefender, (result: { errorType?: WHITELIST_WINDOWS_DEFENDER_ERRORS }) => {
+          this.callbacks.delete(whitelistWindowsDefender)
+          if (!result.errorType) {
+            resolve()
+          } else {
+            reject(result.errorType)
+          }
+        })
         this.send(whitelistWindowsDefender)
       })
     } else {
       return Promise.reject('The process is already running.')
     }
-  }
-
-  // @action
-  // whitelistWindowsDefender = (nonDefaultFilePath?: string) => {
-  //   this.send(whitelistWindowsDefender, nonDefaultFilePath)
-  //   this.on(setWhitelistWindowsDefenderSuccess, (isWhitelistWindowsDefenderSuccess: boolean) => {
-  //     this.setWhitelistWindowsDefenderSuccess(isWhitelistWindowsDefenderSuccess)
-  //   })
-  // }
-
-  @action
-  setWhitelistWindowsDefenderSuccess = (isWhitelistWindowsDefenderSuccess: boolean) => {
-    this.isWhitelistWindowsDefenderSuccess = isWhitelistWindowsDefenderSuccess
   }
 
   @action

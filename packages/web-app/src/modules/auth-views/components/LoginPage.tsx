@@ -96,7 +96,6 @@ interface Props extends WithStyles<typeof styles> {
   onResetSubmitSuccess?: () => void
   onUnmount: () => void
   onwhitelistWindowsDefender: (nonDefaultFilePath?: string) => void
-  whitelistWindowsDefenderError: boolean
   whitelistWindowsDefenderPending: boolean
   whitelistWindowsDefenderErrorType?: string
 }
@@ -114,7 +113,6 @@ const _LoginPage = ({
   onToggleAccept,
   onResetSubmitSuccess,
   onwhitelistWindowsDefender,
-  whitelistWindowsDefenderError,
   whitelistWindowsDefenderPending,
   whitelistWindowsDefenderErrorType,
   onUnmount,
@@ -162,8 +160,8 @@ const _LoginPage = ({
             label="Whitelist Windows Defender"
             isLoading={whitelistWindowsDefenderPending}
           />
-          {whitelistWindowsDefenderError ? (
-            <div> ERROR!! {whitelistWindowsDefenderErrorType} </div>
+          {whitelistWindowsDefenderErrorType ? (
+            <div> {whitelistWindowsDefenderErrorType} Error!</div>
           ) : (
             <div> NO ERROR!! </div>
           )}

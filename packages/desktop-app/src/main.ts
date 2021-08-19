@@ -320,7 +320,6 @@ const createMainWindow = () => {
     const filePath = nonDefaultFilePath
       ? `${nonDefaultFilePath}` + '\\Salad\\plugin-bin'
       : '${Env:APPDATA}\\Salad\\plugin-bin'
-    // let isWhitelistWindowsDefenderSuccess = undefined
     exec(
       `powershell Start-Process powershell -Verb runAs -ArgumentList 'Add-MpPreference -ExclusionPath "` +
         filePath +
@@ -337,26 +336,15 @@ const createMainWindow = () => {
           console.log(phrase.test(String(error)), 'string')
           if (phrase.test(String(error))) {
             bridge.send('whitelist-windows-defender', {
-              success: false,
               errorType: WHITELIST_WINDOWS_DEFENDER_ERRORS.USER_SELECTED_NO,
             })
           } else {
             bridge.send('whitelist-windows-defender', {
-              success: false,
               errorType: WHITELIST_WINDOWS_DEFENDER_ERRORS.GENERAL_SCRIPT_ERROR,
             })
           }
-
-          // console.log(stderr, 'STDERR')
-          // console.log(stdout, 'STDOUT')
-          // on fail
-          // isWhitelistWindowsDefenderSuccess = false
-          // bridge.send('set-whitelist-windows-defender-success', isWhitelistWindowsDefenderSuccess)
-          bridge.send('whitelist-windows-defender', { success: false })
+          bridge.send('whitelist-windows-defender', { errorType: undefined })
         } else {
-          // on success
-          // isWhitelistWindowsDefenderSuccess = true
-          // bridge.send('set-whitelist-windows-defender-success', isWhitelistWindowsDefenderSuccess)
           bridge.send('whitelist-windows-defender', { success: true })
         }
       },

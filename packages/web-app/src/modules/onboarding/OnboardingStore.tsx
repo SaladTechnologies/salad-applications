@@ -14,9 +14,6 @@ export class OnboardingStore {
   public whitelistWindowsDefenderPending: boolean = false
 
   @observable
-  public whitelistWindowsDefenderError: boolean = false
-
-  @observable
   public whitelistWindowsDefenderErrorType?: WHITELIST_WINDOWS_DEFENDER_ERRORS
 
   constructor(private readonly store: RootStore) {}
@@ -81,17 +78,14 @@ export class OnboardingStore {
 
   @action.bound
   public whitelistWindowsDefender = flow(function* (this: OnboardingStore) {
-    this.whitelistWindowsDefenderError = false
     this.whitelistWindowsDefenderErrorType = undefined
     this.whitelistWindowsDefenderPending = true
     try {
       yield this.store.native.whitelistWindowsDefender()
-    } catch {
-      // this catch isn't working
-      console.log('HAS ERROR')
-      this.whitelistWindowsDefenderError = true
+    } catch (error) {
+      console.log(error, 'catch error')
+      this.setWhitelistWindowsErrorType(error)
     } finally {
-      console.log('ERROR STATUS', this.whitelistWindowsDefenderError)
       this.whitelistWindowsDefenderPending = false
     }
   })
