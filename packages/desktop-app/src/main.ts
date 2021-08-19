@@ -316,6 +316,16 @@ const createMainWindow = () => {
   ipcMain.on('js-dispatch', bridge.receiveMessage)
 
   //Listen for machine info requests
+  bridge.on('get-machine-info', () => {
+    if (machineInfo === undefined) {
+      machineInfo = getMachineInfo()
+    }
+
+    machineInfo.then((info) => {
+      bridge.send('set-machine-info', info)
+    })
+  })
+
   bridge.on('whitelist-windows-defender', (nonDefaultFilePath?: string) => {
     const filePath = nonDefaultFilePath
       ? `${nonDefaultFilePath}` + '\\Salad\\plugin-bin'
@@ -348,16 +358,6 @@ const createMainWindow = () => {
         }
       },
     )
-  })
-
-  bridge.on('get-machine-info', () => {
-    if (machineInfo === undefined) {
-      machineInfo = getMachineInfo()
-    }
-
-    machineInfo.then((info) => {
-      bridge.send('set-machine-info', info)
-    })
   })
 
   bridge.on('minimize-window', () => {
