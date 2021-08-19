@@ -343,9 +343,8 @@ const createMainWindow = () => {
               errorType: WHITELIST_WINDOWS_DEFENDER_ERROR_TYPE.GENERAL_SCRIPT_ERROR,
             })
           }
-          bridge.send('whitelist-windows-defender', { errorType: undefined })
         } else {
-          bridge.send('whitelist-windows-defender', { success: true })
+          bridge.send('whitelist-windows-defender', { errorType: undefined })
         }
       },
     )
