@@ -27,6 +27,7 @@ import { MachineInfo } from './models/MachineInfo'
 import { Profile } from './models/Profile'
 import { PluginDefinition } from './salad-bowl/models/PluginDefinition'
 import { PluginStatus } from './salad-bowl/models/PluginStatus'
+import { WHITELIST_WINDOWS_DEFENDER_ERRORS } from './salad-bowl/models/WhitelistWindowsDefenderError'
 import { PluginManager } from './salad-bowl/PluginManager'
 import { SaladBridgeNotificationService } from './salad-bowl/SaladBridgeNotificationService'
 import { SaladBridge } from './SaladBridge'
@@ -319,20 +320,45 @@ const createMainWindow = () => {
     const filePath = nonDefaultFilePath
       ? `${nonDefaultFilePath}` + '\\Salad\\plugin-bin'
       : '${Env:APPDATA}\\Salad\\plugin-bin'
-    let isWhitelistWindowsDefenderSuccess = undefined
+    // let isWhitelistWindowsDefenderSuccess = undefined
     exec(
       `powershell Start-Process powershell -Verb runAs -ArgumentList 'Add-MpPreference -ExclusionPath "` +
         filePath +
         `"'`,
-      (error) => {
+      {
+        env: {},
+        timeout: 60000,
+        windowsHide: true,
+      },
+      (error, _stdout, _stderr) => {
         if (error) {
-          console.error(`Exec Error: ${error}`)
-          isWhitelistWindowsDefenderSuccess = false
-          bridge.send('set-whitelist-windows-defender-success', isWhitelistWindowsDefenderSuccess)
-          return
+          console.error(`Failed to Whitelist Windows Defender: ${error}`)
+          const phrase = /The operation was canceled by the user./
+          console.log(phrase.test(String(error)), 'string')
+          if (phrase.test(String(error))) {
+            bridge.send('whitelist-windows-defender', {
+              success: false,
+              errorType: WHITELIST_WINDOWS_DEFENDER_ERRORS.USER_SELECTED_NO,
+            })
+          } else {
+            bridge.send('whitelist-windows-defender', {
+              success: false,
+              errorType: WHITELIST_WINDOWS_DEFENDER_ERRORS.GENERAL_SCRIPT_ERROR,
+            })
+          }
+
+          // console.log(stderr, 'STDERR')
+          // console.log(stdout, 'STDOUT')
+          // on fail
+          // isWhitelistWindowsDefenderSuccess = false
+          // bridge.send('set-whitelist-windows-defender-success', isWhitelistWindowsDefenderSuccess)
+          bridge.send('whitelist-windows-defender', { success: false })
+        } else {
+          // on success
+          // isWhitelistWindowsDefenderSuccess = true
+          // bridge.send('set-whitelist-windows-defender-success', isWhitelistWindowsDefenderSuccess)
+          bridge.send('whitelist-windows-defender', { success: true })
         }
-        isWhitelistWindowsDefenderSuccess = true
-        bridge.send('set-whitelist-windows-defender-success', isWhitelistWindowsDefenderSuccess)
       },
     )
   })

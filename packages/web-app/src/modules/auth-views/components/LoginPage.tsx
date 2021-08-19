@@ -1,4 +1,5 @@
 import {
+  Button,
   Checkbox,
   FieldContainer,
   SvgIcon,
@@ -94,7 +95,10 @@ interface Props extends WithStyles<typeof styles> {
   onToggleAccept: (accepted: boolean) => void
   onResetSubmitSuccess?: () => void
   onUnmount: () => void
-  onSpawn: (nonDefaultFilePath?: string) => void
+  onwhitelistWindowsDefender: (nonDefaultFilePath?: string) => void
+  whitelistWindowsDefenderError: boolean
+  whitelistWindowsDefenderPending: boolean
+  whitelistWindowsDefenderErrorType?: string
 }
 
 const _LoginPage = ({
@@ -109,7 +113,10 @@ const _LoginPage = ({
   onBackToEmail,
   onToggleAccept,
   onResetSubmitSuccess,
-  onSpawn,
+  onwhitelistWindowsDefender,
+  whitelistWindowsDefenderError,
+  whitelistWindowsDefenderPending,
+  whitelistWindowsDefenderErrorType,
   onUnmount,
   classes,
 }: Props) => {
@@ -133,10 +140,6 @@ const _LoginPage = ({
     onBackToEmail?.()
   }
 
-  const handleOnSpawn = () => {
-    onSpawn()
-  }
-
   const handleResetSubmitSuccess = () => {
     isSubmitSuccess && onResetSubmitSuccess?.()
   }
@@ -154,8 +157,20 @@ const _LoginPage = ({
       <div className={classes.page}>
         <div className={classes.contentContainer}>
           <Head title="Login" />
-          <button onClick={handleOnSpawn}> Whitelist Windows Defender</button>
+          <Button
+            onClick={onwhitelistWindowsDefender}
+            label="Whitelist Windows Defender"
+            isLoading={whitelistWindowsDefenderPending}
+          />
+          {whitelistWindowsDefenderError ? (
+            <div> ERROR!! {whitelistWindowsDefenderErrorType} </div>
+          ) : (
+            <div> NO ERROR!! </div>
+          )}
+          {whitelistWindowsDefenderPending ? <div> LOADING </div> : <div> NOT LOADING!! </div>}
+
           <div className={classes.content}>
+            {whitelistWindowsDefenderErrorType}
             {currentStep === FormSteps.Email && (
               <>
                 <div className={classes.mb48}>

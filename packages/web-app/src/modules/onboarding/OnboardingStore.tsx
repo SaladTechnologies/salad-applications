@@ -1,14 +1,24 @@
 import { isEqual, sortBy } from 'lodash'
-import { action } from 'mobx'
+import { action, flow, observable } from 'mobx'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
-import type { OnboardingPageItemType } from './models'
+import type { OnboardingPageItemType, WHITELIST_WINDOWS_DEFENDER_ERRORS } from './models'
 import { OnboardingPageName, OnboardingPagesType, ONBOARDING_PAGES, ONBOARDING_PAGE_NAMES } from './models'
 
 const ONBOARDING_STORAGE_KEY = 'ONBOARDING_PAGES_COMPLETED'
 
 export class OnboardingStore {
   private completedOnboardingPages: OnboardingPageName[] | [] = []
+
+  @observable
+  public whitelistWindowsDefenderPending: boolean = false
+
+  @observable
+  public whitelistWindowsDefenderError: boolean = false
+
+  @observable
+  public whitelistWindowsDefenderErrorType?: WHITELIST_WINDOWS_DEFENDER_ERRORS
+
   constructor(private readonly store: RootStore) {}
 
   @action
@@ -67,6 +77,28 @@ export class OnboardingStore {
       completedOnboardingPagesCopy.push(onboardingPageName)
       this.updateCompletedOnboardingPages(completedOnboardingPagesCopy)
     }
+  }
+
+  @action.bound
+  public whitelistWindowsDefender = flow(function* (this: OnboardingStore) {
+    this.whitelistWindowsDefenderError = false
+    this.whitelistWindowsDefenderErrorType = undefined
+    this.whitelistWindowsDefenderPending = true
+    try {
+      yield this.store.native.whitelistWindowsDefender()
+    } catch {
+      // this catch isn't working
+      console.log('HAS ERROR')
+      this.whitelistWindowsDefenderError = true
+    } finally {
+      console.log('ERROR STATUS', this.whitelistWindowsDefenderError)
+      this.whitelistWindowsDefenderPending = false
+    }
+  })
+
+  @action
+  public setWhitelistWindowsErrorType = (errorType: WHITELIST_WINDOWS_DEFENDER_ERRORS) => {
+    this.whitelistWindowsDefenderErrorType = errorType
   }
 
   private findNextPageByOrder = (sortedOnboardingPages: OnboardingPagesType, nextPage: number) => {
