@@ -2,7 +2,7 @@ import { isEqual, sortBy } from 'lodash'
 import { action, flow, observable } from 'mobx'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
-import type { OnboardingPageItemType, WHITELIST_WINDOWS_DEFENDER_ERROR_TYPE } from './models'
+import type { OnboardingPageItemType, WhitelistWindowsDefenderErrorType } from './models'
 import { OnboardingPageName, OnboardingPagesType, ONBOARDING_PAGES, ONBOARDING_PAGE_NAMES } from './models'
 
 const ONBOARDING_STORAGE_KEY = 'ONBOARDING_PAGES_COMPLETED'
@@ -14,7 +14,7 @@ export class OnboardingStore {
   public whitelistWindowsDefenderPending: boolean = false
 
   @observable
-  public whitelistWindowsDefenderErrorType?: WHITELIST_WINDOWS_DEFENDER_ERROR_TYPE
+  public whitelistWindowsDefenderErrorType?: WhitelistWindowsDefenderErrorType
 
   constructor(private readonly store: RootStore) {}
 
@@ -94,7 +94,7 @@ export class OnboardingStore {
   })
 
   @action
-  public setWhitelistWindowsErrorType = (errorType: WHITELIST_WINDOWS_DEFENDER_ERROR_TYPE) => {
+  public setWhitelistWindowsErrorType = (errorType: WhitelistWindowsDefenderErrorType) => {
     this.whitelistWindowsDefenderErrorType = errorType
   }
 

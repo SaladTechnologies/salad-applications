@@ -25,7 +25,7 @@ import * as icons from './icons'
 import * as Logger from './Logger'
 import { MachineInfo } from './models/MachineInfo'
 import { Profile } from './models/Profile'
-import { WHITELIST_WINDOWS_DEFENDER_ERROR_TYPE } from './models/WhitelistWindowsDefenderErrorType'
+import { WhitelistWindowsDefenderErrorType } from './models/WhitelistWindowsDefenderErrorType'
 import { PluginDefinition } from './salad-bowl/models/PluginDefinition'
 import { PluginStatus } from './salad-bowl/models/PluginStatus'
 import { PluginManager } from './salad-bowl/PluginManager'
@@ -336,11 +336,11 @@ const createMainWindow = () => {
           console.log(phrase.test(String(error)), 'string')
           if (phrase.test(String(error))) {
             bridge.send('whitelist-windows-defender', {
-              errorType: WHITELIST_WINDOWS_DEFENDER_ERROR_TYPE.USER_SELECTED_NO,
+              errorType: WhitelistWindowsDefenderErrorType.USER_SELECTED_NO,
             })
           } else {
             bridge.send('whitelist-windows-defender', {
-              errorType: WHITELIST_WINDOWS_DEFENDER_ERROR_TYPE.GENERAL_SCRIPT_ERROR,
+              errorType: WhitelistWindowsDefenderErrorType.GENERAL_SCRIPT_ERROR,
             })
           }
         } else {

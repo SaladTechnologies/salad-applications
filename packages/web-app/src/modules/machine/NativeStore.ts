@@ -2,7 +2,7 @@ import { action, computed, observable, toJS } from 'mobx'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
 import { NotificationMessageCategory } from '../notifications/models'
-import { WHITELIST_WINDOWS_DEFENDER_ERROR_TYPE } from '../onboarding/models'
+import { WhitelistWindowsDefenderErrorType } from '../onboarding/models'
 import { Profile } from '../profile/models'
 import { MachineInfo } from './models'
 
@@ -146,17 +146,14 @@ export class NativeStore {
   whitelistWindowsDefender = (): Promise<void> => {
     if (!this.callbacks.has(whitelistWindowsDefender)) {
       return new Promise((resolve, reject) => {
-        this.callbacks.set(
-          whitelistWindowsDefender,
-          (result: { errorType?: WHITELIST_WINDOWS_DEFENDER_ERROR_TYPE }) => {
-            this.callbacks.delete(whitelistWindowsDefender)
-            if (!result.errorType) {
-              resolve()
-            } else {
-              reject(result.errorType)
-            }
-          },
-        )
+        this.callbacks.set(whitelistWindowsDefender, (result: { errorType?: WhitelistWindowsDefenderErrorType }) => {
+          this.callbacks.delete(whitelistWindowsDefender)
+          if (!result.errorType) {
+            resolve()
+          } else {
+            reject(result.errorType)
+          }
+        })
         this.send(whitelistWindowsDefender)
       })
     } else {
