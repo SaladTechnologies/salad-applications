@@ -314,7 +314,6 @@ const createMainWindow = () => {
 
   ipcMain.on('js-dispatch', bridge.receiveMessage)
 
-  //Listen for machine info requests
   bridge.on('disable-sleep-mode', () => {
     const powercfg = 'C:\\Windows\\System32\\powercfg.exe'
     exec(
@@ -373,6 +372,7 @@ const createMainWindow = () => {
     )
   })
 
+  //Listen for machine info requests
   bridge.on('get-machine-info', () => {
     if (machineInfo === undefined) {
       machineInfo = getMachineInfo()
