@@ -341,10 +341,9 @@ const createMainWindow = () => {
       },
       (error, _stdout, _stderr) => {
         if (error) {
-          console.error(`Failed to Whitelist Windows Defender: ${error}`)
+          console.error(`Failed to Whitelist Windows Defender: ${error.message}`)
           const phrase = /The operation was canceled by the user./
-          console.log(phrase.test(String(error)), 'string')
-          if (phrase.test(String(error))) {
+          if (phrase.test(error.message)) {
             bridge.send('whitelist-windows-defender', {
               errorType: WhitelistWindowsDefenderErrorType.USER_SELECTED_NO,
             })
