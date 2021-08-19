@@ -1,6 +1,7 @@
 import { AxiosInstance } from 'axios'
 import { action, autorun, configure, flow, observable } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
+import { FeatureManager } from './FeatureManager'
 import { AnalyticsStore } from './modules/analytics'
 import { AuthStore } from './modules/auth'
 import { BalanceStore } from './modules/balance'
@@ -34,8 +35,8 @@ configure({
 
 let sharedStore: RootStore
 
-export const createStore = (axios: AxiosInstance): RootStore => {
-  sharedStore = new RootStore(axios)
+export const createStore = (axios: AxiosInstance, featureManager: FeatureManager): RootStore => {
+  sharedStore = new RootStore(axios, featureManager)
   return sharedStore
 }
 
@@ -61,7 +62,7 @@ export class RootStore {
   public readonly home: HomeStore
   public readonly native: NativeStore
   public readonly refresh: RefreshService
-  public readonly saladBowl: SaladBowlStore
+  public readonly saladBowl: SaladBowlStore | undefined
   public readonly notifications: NotificationStore
   public readonly vault: VaultStore
   public readonly version: VersionStore
@@ -72,13 +73,18 @@ export class RootStore {
   public readonly seasons: SeasonsStore
   public readonly onboarding: OnboardingStore
 
-  constructor(readonly axios: AxiosInstance) {
+  constructor(axios: AxiosInstance, private readonly featureManager: FeatureManager) {
     this.routing = new RouterStore()
     this.auth = new AuthStore(axios, this.routing)
     this.notifications = new NotificationStore(this)
     this.xp = new ExperienceStore(this, axios)
     this.native = new NativeStore(this)
-    this.saladBowl = new SaladBowlStore(this)
+
+    if (featureManager.isEnabled('app_salad_bowl')) {
+      // TODO: Use gRPC version of Salad Bowl.
+    } else {
+      this.saladBowl = new SaladBowlStore(this)
+    }
 
     this.machine = new MachineStore(this, axios)
     this.profile = new ProfileStore(this, axios)
@@ -151,23 +157,27 @@ export class RootStore {
         this.refresh.refreshData(),
         this.zendesk.login(profile.username, profile.email),
       ])
+
+      this.featureManager.handleLogin(profile.id)
       this.finishInitialLoading()
       this.onboarding.showOnboardingIfNeeded()
     }.bind(this),
   )
 
-  onLogout = flow(
-    function* (this: RootStore) {
-      this.referral.currentReferral = undefined
-      this.referral.referralCode = ''
+  @action
+  onLogout = (): void => {
+    if (this.saladBowl) {
+      this.saladBowl.stop(StopReason.Logout)
+    }
 
-      yield Promise.allSettled([
-        this.analytics.trackLogout(),
-        this.saladBowl.stop(StopReason.Logout),
-        this.native.logout(),
-        this.zendesk.logout(),
-      ])
-      this.finishInitialLoading()
-    }.bind(this),
-  )
+    this.referral.currentReferral = undefined
+    this.referral.referralCode = ''
+
+    this.analytics.trackLogout()
+    this.native.logout()
+    this.zendesk.logout()
+
+    this.featureManager.handleLogout()
+    this.finishInitialLoading()
+  }
 }
