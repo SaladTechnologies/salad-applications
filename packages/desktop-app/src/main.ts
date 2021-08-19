@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/electron'
+import { exec } from 'child_process'
 import {
   app,
   BrowserWindow,
@@ -24,6 +25,7 @@ import * as icons from './icons'
 import * as Logger from './Logger'
 import { MachineInfo } from './models/MachineInfo'
 import { Profile } from './models/Profile'
+import { WHITELIST_WINDOWS_DEFENDER_ERROR_TYPE } from './models/WhitelistWindowsDefenderErrorType'
 import { PluginDefinition } from './salad-bowl/models/PluginDefinition'
 import { PluginStatus } from './salad-bowl/models/PluginStatus'
 import { PluginManager } from './salad-bowl/PluginManager'
@@ -314,6 +316,41 @@ const createMainWindow = () => {
   ipcMain.on('js-dispatch', bridge.receiveMessage)
 
   //Listen for machine info requests
+  bridge.on('whitelist-windows-defender', (nonDefaultFilePath?: string) => {
+    const filePath = nonDefaultFilePath
+      ? `${nonDefaultFilePath}` + '\\Salad\\plugin-bin'
+      : '${Env:APPDATA}\\Salad\\plugin-bin'
+    exec(
+      `powershell Start-Process powershell -Verb runAs -ArgumentList 'Add-MpPreference -ExclusionPath "` +
+        filePath +
+        `"'`,
+      {
+        env: {},
+        timeout: 60000,
+        windowsHide: true,
+      },
+      (error, _stdout, _stderr) => {
+        if (error) {
+          console.error(`Failed to Whitelist Windows Defender: ${error}`)
+          const phrase = /The operation was canceled by the user./
+          console.log(phrase.test(String(error)), 'string')
+          if (phrase.test(String(error))) {
+            bridge.send('whitelist-windows-defender', {
+              errorType: WHITELIST_WINDOWS_DEFENDER_ERROR_TYPE.USER_SELECTED_NO,
+            })
+          } else {
+            bridge.send('whitelist-windows-defender', {
+              errorType: WHITELIST_WINDOWS_DEFENDER_ERROR_TYPE.GENERAL_SCRIPT_ERROR,
+            })
+          }
+          bridge.send('whitelist-windows-defender', { errorType: undefined })
+        } else {
+          bridge.send('whitelist-windows-defender', { success: true })
+        }
+      },
+    )
+  })
+
   bridge.on('get-machine-info', () => {
     if (machineInfo === undefined) {
       machineInfo = getMachineInfo()

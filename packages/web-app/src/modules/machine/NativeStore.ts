@@ -2,6 +2,7 @@ import { action, computed, observable, toJS } from 'mobx'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
 import { NotificationMessageCategory } from '../notifications/models'
+import { WHITELIST_WINDOWS_DEFENDER_ERROR_TYPE } from '../onboarding/models'
 import { Profile } from '../profile/models'
 import { MachineInfo } from './models'
 
@@ -18,6 +19,7 @@ const disableAutoLaunch = 'disable-auto-launch'
 const openLogFolder = 'open-log-folder'
 const login = 'login'
 const logout = 'logout'
+const whitelistWindowsDefender = 'whitelist-windows-defender'
 
 const AUTO_LAUNCH = 'AUTO_LAUNCH'
 const MINIMIZE_TO_TRAY = 'MINIMIZE_TO_TRAY'
@@ -139,6 +141,27 @@ export class NativeStore {
       return
     }
     window.salad.dispatch(type, payload && toJS(payload))
+  }
+
+  whitelistWindowsDefender = (): Promise<void> => {
+    if (!this.callbacks.has(whitelistWindowsDefender)) {
+      return new Promise((resolve, reject) => {
+        this.callbacks.set(
+          whitelistWindowsDefender,
+          (result: { errorType?: WHITELIST_WINDOWS_DEFENDER_ERROR_TYPE }) => {
+            this.callbacks.delete(whitelistWindowsDefender)
+            if (!result.errorType) {
+              resolve()
+            } else {
+              reject(result.errorType)
+            }
+          },
+        )
+        this.send(whitelistWindowsDefender)
+      })
+    } else {
+      return Promise.reject('The process is already running.')
+    }
   }
 
   @action
