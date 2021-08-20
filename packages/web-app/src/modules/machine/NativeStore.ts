@@ -165,7 +165,7 @@ export class NativeStore {
       }
     } else {
       return Promise.reject(
-        'To whitelist Windows Defender, you must be running Windows and have the latest desktop version.',
+        'To whitelist Windows Defender, you must be running Windows and the latest version of Salad.',
       )
     }
   }
