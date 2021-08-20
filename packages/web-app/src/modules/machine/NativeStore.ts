@@ -59,12 +59,9 @@ export class NativeStore {
   @observable
   public notifyOnMinimizeToTray: boolean = true
 
+  @computed
   get canMinimizeToTray(): boolean {
     return this.isNative && this.apiVersion >= 8
-  }
-
-  get canWhitelistWindows(): boolean {
-    return window.salad && window.salad.platform === 'win32' && this.apiVersion >= 9
   }
 
   @computed
@@ -96,6 +93,10 @@ export class NativeStore {
     }
 
     return this.machineInfo.graphics.controllers.map((x) => x.model)
+  }
+
+  get canWhitelistWindows(): boolean {
+    return window.salad && window.salad.platform === 'win32' && this.apiVersion >= 9
   }
 
   constructor(private readonly store: RootStore) {
