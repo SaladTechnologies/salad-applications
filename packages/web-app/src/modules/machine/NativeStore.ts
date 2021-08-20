@@ -76,7 +76,6 @@ export class NativeStore {
     )
   }
 
-  @computed
   get apiVersion(): number {
     return window.salad && window.salad.apiVersion
   }
