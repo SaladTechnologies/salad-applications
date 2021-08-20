@@ -75,7 +75,6 @@ export class NativeStore {
     )
   }
 
-  @computed
   get apiVersion(): number {
     return window.salad && window.salad.apiVersion
   }
@@ -92,6 +91,10 @@ export class NativeStore {
     }
 
     return this.machineInfo.graphics.controllers.map((x) => x.model)
+  }
+
+  get canDisableSleepMode(): boolean {
+    return window.salad && window.salad.platform === 'win32' && this.apiVersion >= 9
   }
 
   constructor(private readonly store: RootStore) {
@@ -143,20 +146,24 @@ export class NativeStore {
   }
 
   disableSleepMode = (): Promise<void> => {
-    if (!this.callbacks.has(disableSleepMode)) {
-      return new Promise((resolve, reject) => {
-        this.callbacks.set(disableSleepMode, (result: { success: boolean }) => {
-          this.callbacks.delete(disableSleepMode)
-          if (result.success) {
-            resolve()
-          } else {
-            reject()
-          }
+    if (this.canDisableSleepMode) {
+      if (!this.callbacks.has(disableSleepMode)) {
+        return new Promise((resolve, reject) => {
+          this.callbacks.set(disableSleepMode, (result: { success: boolean }) => {
+            this.callbacks.delete(disableSleepMode)
+            if (result.success) {
+              resolve()
+            } else {
+              reject()
+            }
+          })
+          this.send(disableSleepMode)
         })
-        this.send(disableSleepMode)
-      })
+      } else {
+        return Promise.reject('The process is already running.')
+      }
     } else {
-      return Promise.reject('The process is already running.')
+      return Promise.reject('To disable sleepmode, you must be running Windows and the latest version of Salad.')
     }
   }
 
