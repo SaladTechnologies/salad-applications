@@ -59,9 +59,12 @@ export class NativeStore {
   @observable
   public notifyOnMinimizeToTray: boolean = true
 
-  @computed
   get canMinimizeToTray(): boolean {
     return this.isNative && this.apiVersion >= 8
+  }
+
+  get canWhitelistWindows(): boolean {
+    return window.salad && window.salad.platform === 'win32' && this.apiVersion >= 9
   }
 
   @computed
@@ -144,20 +147,26 @@ export class NativeStore {
   }
 
   whitelistWindowsDefender = (): Promise<void> => {
-    if (!this.callbacks.has(whitelistWindowsDefender)) {
-      return new Promise((resolve, reject) => {
-        this.callbacks.set(whitelistWindowsDefender, (result: { errorType?: WhitelistWindowsDefenderErrorType }) => {
-          this.callbacks.delete(whitelistWindowsDefender)
-          if (!result.errorType) {
-            resolve()
-          } else {
-            reject(result.errorType)
-          }
+    if (this.canWhitelistWindows) {
+      if (!this.callbacks.has(whitelistWindowsDefender)) {
+        return new Promise((resolve, reject) => {
+          this.callbacks.set(whitelistWindowsDefender, (result: { errorType?: WhitelistWindowsDefenderErrorType }) => {
+            this.callbacks.delete(whitelistWindowsDefender)
+            if (!result.errorType) {
+              resolve()
+            } else {
+              reject(result.errorType)
+            }
+          })
+          this.send(whitelistWindowsDefender)
         })
-        this.send(whitelistWindowsDefender)
-      })
+      } else {
+        return Promise.reject('The process is already running.')
+      }
     } else {
-      return Promise.reject('The process is already running.')
+      return Promise.reject(
+        'To whitelist Windows Defender, you must be running Windows and have the latest desktop version.',
+      )
     }
   }
 
