@@ -163,7 +163,7 @@ export class NativeStore {
         return Promise.reject('The process is already running.')
       }
     } else {
-      return Promise.reject('To disable sleepmode, you must be running Windows and the latest version of Salad.')
+      return Promise.reject('To disable sleep mode, you must be running Windows and the latest version of Salad.')
     }
   }
 
