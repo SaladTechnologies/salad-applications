@@ -330,6 +330,8 @@ const createMainWindow = () => {
 
           function disableSleepMode(profile: RegExpMatchArray | undefined) {
             if (profile) {
+              // 238c9fa8-0aad-41ed-83f4-97be242c8f20 = GUID that identifies the groups of settings related to sleep mode
+              // 29f6c1db-86da-48c5-9fdb-f2b67b1f44da = GUID that sets the sleep time in seconds. 0 disables completely
               exec(
                 `${powercfg} /setacvalueindex ${profile[1]} 238c9fa8-0aad-41ed-83f4-97be242c8f20 29f6c1db-86da-48c5-9fdb-f2b67b1f44da 0`,
                 {
