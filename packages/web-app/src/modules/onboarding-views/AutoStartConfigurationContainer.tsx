@@ -1,7 +1,7 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
 import { ONBOARDING_PAGE_NAMES } from '../onboarding/models'
-import { AFKConfigurationPage } from './pages/AFKConfigurationPage'
+import { AutoStartConfigurationPage } from './pages/AutoStartConfigurationPage'
 
 const mapStoreToProps = (store: RootStore): any => {
   const handleContinueClick = (autoStartEnabled: boolean) => {
@@ -17,4 +17,4 @@ const mapStoreToProps = (store: RootStore): any => {
   }
 }
 
-export const AFKConfigurationPagePageContainer = connect(mapStoreToProps, AFKConfigurationPage)
+export const AutoStartConfigurationPageContainer = connect(mapStoreToProps, AutoStartConfigurationPage)
