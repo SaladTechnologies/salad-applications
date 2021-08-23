@@ -28,6 +28,7 @@ import { createClient } from './axiosFactory'
 import { Head } from './components'
 import { config } from './config'
 import { ErrorBoundary } from './ErrorBoundary'
+import { FeatureManagerProvider, UnleashFeatureManager } from './FeatureManager'
 import { DefaultTheme as JSSTheme } from './SaladTheme'
 import { createStore } from './Store'
 import { Tooltips } from './Tooltips'
@@ -56,65 +57,71 @@ if (!window.salad) {
 console.log(`Running web app build:${config.appBuild}`)
 
 const client = createClient()
-const rootStore = createStore(client)
-const routerHistory = createBrowserHistory()
+const featureManager = new UnleashFeatureManager()
 
-let currentLocation: any = null
+setTimeout(() => {
+  const rootStore = createStore(client, featureManager)
+  const routerHistory = createBrowserHistory()
 
-// Ensures that the same url will not get "pushed" multiple times
-routerHistory.block((location, action) => {
-  const nextLocation = location.pathname + location.search
+  let currentLocation: any = null
 
-  if (action === 'PUSH') {
-    if (currentLocation === nextLocation) {
-      return false
+  // Ensures that the same url will not get "pushed" multiple times
+  routerHistory.block((location, action) => {
+    const nextLocation = location.pathname + location.search
+
+    if (action === 'PUSH') {
+      if (currentLocation === nextLocation) {
+        return false
+      }
     }
-  }
 
-  currentLocation = nextLocation
+    currentLocation = nextLocation
 
-  return undefined
-})
+    return undefined
+  })
 
-const history = syncHistoryWithStore(routerHistory, rootStore.routing)
+  const history = syncHistoryWithStore(routerHistory, rootStore.routing)
 
-const cache = createIntlCache()
-const intl = createIntl(
-  {
-    locale: 'en-US',
-    messages: {},
-  },
-  cache,
-)
+  const cache = createIntlCache()
+  const intl = createIntl(
+    {
+      locale: 'en-US',
+      messages: {},
+    },
+    cache,
+  )
 
-ReactDOM.render(
-  <Router history={history}>
-    <RawIntlProvider value={intl}>
-      <EmotionThemeProvider theme={EmotionTheme}>
-        <JSSThemeProvider theme={JSSTheme}>
-          <SkeletonTheme color={'#172E40'} highlightColor="#304759">
-            <ErrorBoundary>
-              {/* Default page title for any page that doesn't specify one */}
-              <Head title="Salad Technologies" />
-              <div>
-                <Observer>
-                  {() => {
-                    return rootStore.appLoading ? (
-                      <LoadingScreen />
-                    ) : (
-                      <div>
-                        <Tooltips />
-                        <App history={history} />
-                      </div>
-                    )
-                  }}
-                </Observer>
-              </div>
-            </ErrorBoundary>
-          </SkeletonTheme>
-        </JSSThemeProvider>
-      </EmotionThemeProvider>
-    </RawIntlProvider>
-  </Router>,
-  document.getElementById('root'),
-)
+  ReactDOM.render(
+    <FeatureManagerProvider value={featureManager}>
+      <Router history={history}>
+        <RawIntlProvider value={intl}>
+          <EmotionThemeProvider theme={EmotionTheme}>
+            <JSSThemeProvider theme={JSSTheme}>
+              <SkeletonTheme color={'#172E40'} highlightColor="#304759">
+                <ErrorBoundary>
+                  {/* Default page title for any page that doesn't specify one */}
+                  <Head title="Salad Technologies" />
+                  <div>
+                    <Observer>
+                      {() => {
+                        return rootStore.appLoading ? (
+                          <LoadingScreen />
+                        ) : (
+                          <div>
+                            <Tooltips />
+                            <App history={history} />
+                          </div>
+                        )
+                      }}
+                    </Observer>
+                  </div>
+                </ErrorBoundary>
+              </SkeletonTheme>
+            </JSSThemeProvider>
+          </EmotionThemeProvider>
+        </RawIntlProvider>
+      </Router>
+    </FeatureManagerProvider>,
+    document.getElementById('root'),
+  )
+}, 0)

@@ -13,10 +13,10 @@ const mapStoreToProps = (store: RootStore): any => {
     store.auth.login()
   }
 
-  const status = store.saladBowl.status
-  const isRunning = store.saladBowl.isRunning
-  const isPrepping = status !== MiningStatus.Running && store.saladBowl.runningTime !== undefined
-  const nativeLabel = !store.saladBowl.isRunning
+  const status = store.saladBowl?.status
+  const isRunning = store.saladBowl?.isRunning
+  const isPrepping = status !== MiningStatus.Running && store.saladBowl?.runningTime !== undefined
+  const nativeLabel = !store.saladBowl?.isRunning
     ? 'Start'
     : isPrepping
     ? status === MiningStatus.Installing
@@ -65,17 +65,17 @@ const mapStoreToProps = (store: RootStore): any => {
     rightSideButtonClick: isAuthenticated ? undefined : handleLogin,
     startButtonLabel: isAuthenticated ? label : 'Login',
     startButtonClick: isNative
-      ? () => store.saladBowl.toggleRunning(StartActionType.StartButton)
+      ? () => store.saladBowl?.toggleRunning(StartActionType.StartButton)
       : isAuthenticated
       ? () => window.open('https://getsalad.io/', '_blank')
       : handleLogin,
     startButtonHoverLabel: isAuthenticated && isRunning ? 'Stop' : undefined,
     startButtonErrorClick:
-      isAuthenticated && isNative && store.saladBowl.isNotCompatible
+      isAuthenticated && isNative && store.saladBowl?.isNotCompatible
         ? () => store.ui.showErrorPage(ErrorPageType.NotCompatible)
         : undefined,
-    startButtonProgress: isPrepping ? store.saladBowl.preppingProgress : isRunning ? 1 : undefined,
-    startButtonRunningTime: store.saladBowl.runningTimeDisplay,
+    startButtonProgress: isPrepping ? store.saladBowl?.preppingProgress : isRunning ? 1 : undefined,
+    startButtonRunningTime: store.saladBowl?.runningTimeDisplay,
     username: isAuthenticated ? store.profile.currentProfile?.username : undefined,
   }
 }
