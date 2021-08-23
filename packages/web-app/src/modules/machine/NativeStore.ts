@@ -154,7 +154,9 @@ export class NativeStore {
             if (result.success) {
               resolve()
             } else {
-              reject()
+              reject(
+                'An error occured and we were unable to complete the process. Please try again and if this continues, please contact support.',
+              )
             }
           })
           this.send(disableSleepMode)
