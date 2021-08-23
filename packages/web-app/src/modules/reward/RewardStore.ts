@@ -324,11 +324,6 @@ export class RewardStore {
   })
 
   @action
-  newLink() {
-    window.open('https://support.salad.com/hc/en-us/articles/4405644006932', '_blank')
-  }
-
-  @action
   clearRedemptionInfo() {
     this.lastRedemptionId = undefined
     this.lastRewardId = undefined
