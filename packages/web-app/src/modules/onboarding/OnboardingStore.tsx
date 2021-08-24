@@ -16,6 +16,11 @@ export class OnboardingStore {
   @observable
   public whitelistWindowsDefenderErrorType?: WhitelistWindowsDefenderErrorType
 
+  public disableSleepModePending: boolean = false
+
+  @observable
+  public disableSleepModeError: boolean = false
+
   constructor(private readonly store: RootStore) {}
 
   @action
@@ -75,6 +80,19 @@ export class OnboardingStore {
       this.updateCompletedOnboardingPages(completedOnboardingPagesCopy)
     }
   }
+
+  @action.bound
+  public disableSleepMode = flow(function* (this: OnboardingStore) {
+    this.disableSleepModeError = false
+    this.disableSleepModePending = true
+    try {
+      yield this.store.native.disableSleepMode()
+    } catch {
+      this.disableSleepModeError = true
+    } finally {
+      this.disableSleepModePending = false
+    }
+  })
 
   private findNextPageByOrder = (sortedOnboardingPages: OnboardingPagesType, nextPage: number) => {
     return sortedOnboardingPages.find((page) => page.ORDER === nextPage)

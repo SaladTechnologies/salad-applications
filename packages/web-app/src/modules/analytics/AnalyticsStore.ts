@@ -36,15 +36,18 @@ export class AnalyticsStore {
       },
     })
 
-    autorun(() => {
-      console.log(`Detected change in status:${this.store.saladBowl.status}`)
-      this.trackMiningStatus(
-        this.store.saladBowl.status,
-        this.store.saladBowl.plugin.name || '-',
-        this.store.saladBowl.plugin.version || '-',
-        this.store.saladBowl.plugin.algorithm || '-',
-      )
-    })
+    const saladBowl = this.store.saladBowl
+    if (saladBowl) {
+      autorun(() => {
+        console.log(`Detected change in status:${saladBowl.status}`)
+        this.trackMiningStatus(
+          saladBowl.status,
+          saladBowl.plugin.name || '-',
+          saladBowl.plugin.version || '-',
+          saladBowl.plugin.algorithm || '-',
+        )
+      })
+    }
   }
 
   public start = (profile: Profile) => {
