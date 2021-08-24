@@ -155,12 +155,12 @@ export class NativeStore {
     if (this.canWhitelistWindows) {
       if (!this.callbacks.has(whitelistWindowsDefender)) {
         return new Promise((resolve, reject) => {
-          this.callbacks.set(whitelistWindowsDefender, (result: { errorCode?: string }) => {
+          this.callbacks.set(whitelistWindowsDefender, (result: { errorCode?: number }) => {
             this.callbacks.delete(whitelistWindowsDefender)
             if (!result.errorCode) {
               resolve()
             } else {
-              if (result.errorCode === '1223') {
+              if (result.errorCode === 1223) {
                 reject(WhitelistWindowsDefenderErrorType.USER_SELECTED_NO)
               } else {
                 reject(WhitelistWindowsDefenderErrorType.GENERAL_SCRIPT_ERROR)
