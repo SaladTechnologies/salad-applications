@@ -1,5 +1,5 @@
 import { isEqual, sortBy } from 'lodash'
-import { action } from 'mobx'
+import { action, flow, observable } from 'mobx'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
 import type { OnboardingPageItemType } from './models'
@@ -9,6 +9,13 @@ const ONBOARDING_STORAGE_KEY = 'ONBOARDING_PAGES_COMPLETED'
 
 export class OnboardingStore {
   private completedOnboardingPages: OnboardingPageName[] | [] = []
+
+  @observable
+  public disableSleepModePending: boolean = false
+
+  @observable
+  public disableSleepModeError: boolean = false
+
   constructor(private readonly store: RootStore) {}
 
   @action
@@ -68,6 +75,19 @@ export class OnboardingStore {
       this.updateCompletedOnboardingPages(completedOnboardingPagesCopy)
     }
   }
+
+  @action.bound
+  public disableSleepMode = flow(function* (this: OnboardingStore) {
+    this.disableSleepModeError = false
+    this.disableSleepModePending = true
+    try {
+      yield this.store.native.disableSleepMode()
+    } catch {
+      this.disableSleepModeError = true
+    } finally {
+      this.disableSleepModePending = false
+    }
+  })
 
   private findNextPageByOrder = (sortedOnboardingPages: OnboardingPagesType, nextPage: number) => {
     return sortedOnboardingPages.find((page) => page.ORDER === nextPage)

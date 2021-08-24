@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/electron'
+import { exec } from 'child_process'
 import {
   app,
   BrowserWindow,
@@ -312,6 +313,66 @@ const createMainWindow = () => {
   pluginManager = new PluginManager(dataFolder, notificationService)
 
   ipcMain.on('js-dispatch', bridge.receiveMessage)
+
+  bridge.on('disable-sleep-mode', () => {
+    const powercfg = 'C:\\Windows\\System32\\powercfg.exe'
+    exec(
+      `${powercfg} /list`,
+      {
+        env: {},
+        timeout: 60000,
+        windowsHide: true,
+      },
+      (error, stdout, stderr) => {
+        if (error == null) {
+          const profiles = [...stdout.matchAll(/\:\s+([^\s]+)/g)]
+          disableSleepMode(profiles.shift())
+
+          function disableSleepMode(profile: RegExpMatchArray | undefined) {
+            if (profile) {
+              // 238c9fa8-0aad-41ed-83f4-97be242c8f20 = GUID that identifies the groups of settings related to sleep mode
+              // 29f6c1db-86da-48c5-9fdb-f2b67b1f44da = GUID that sets the sleep time in seconds. 0 disables completely
+              exec(
+                `${powercfg} /setacvalueindex ${profile[1]} 238c9fa8-0aad-41ed-83f4-97be242c8f20 29f6c1db-86da-48c5-9fdb-f2b67b1f44da 0`,
+                {
+                  env: {},
+                  timeout: 60000,
+                  windowsHide: true,
+                },
+                (error, _stdout, stderr) => {
+                  if (error == null) {
+                    disableSleepMode(profiles.shift())
+                  } else {
+                    console.error(
+                      `Failed to set preference on Windows power profile ${profile[1]} (${error.message}${
+                        error.code == null ? '' : `, exit code ${error.code}`
+                      })${stderr ? `\n${stderr}` : ''}`,
+                    )
+                    bridge.send('disable-sleep-mode', {
+                      success: false,
+                    })
+                  }
+                },
+              )
+            } else {
+              bridge.send('disable-sleep-mode', {
+                success: true,
+              })
+            }
+          }
+        } else {
+          console.error(
+            `Failed to list Windows power profiles (${error.message}${
+              error.code == null ? '' : `, exit code ${error.code}`
+            })${stderr ? `\n${stderr}` : ''}`,
+          )
+          bridge.send('disable-sleep-mode', {
+            success: false,
+          })
+        }
+      },
+    )
+  })
 
   //Listen for machine info requests
   bridge.on('get-machine-info', () => {
