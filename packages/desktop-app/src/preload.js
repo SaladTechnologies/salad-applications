@@ -12,6 +12,8 @@ init()
  * 5 - Salad Bowl (C#)
  * 6 - Salad Bowl (TS)
  * 7 - Get Idle Time
+ * 8 - Minimize to Tray
+ * 9 - Added Windows Defender Whitelist & Disable Sleep Mode
  */
 
 function init() {
@@ -19,7 +21,7 @@ function init() {
 
   window.salad = {
     platform: process.platform,
-    apiVersion: 8,
+    apiVersion: 9,
     dispatch: dispatch,
   }
 
