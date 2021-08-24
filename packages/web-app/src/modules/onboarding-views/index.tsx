@@ -1,1 +1,1 @@
-export * from './AutoStartConfigurationContainer'
+export * from './AFKConfigurationContainer'
