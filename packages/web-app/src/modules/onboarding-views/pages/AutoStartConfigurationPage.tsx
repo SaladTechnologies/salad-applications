@@ -93,7 +93,7 @@ const _AutoStartConfigurationPage = ({
             </div>
             <FieldContainer>
               <div className={classes.mb24}>
-                <Text variant="baseXL">Enabled Auto-Start</Text>
+                <Text variant="baseXL">Enable Auto-Start</Text>
               </div>
               <div className={classes.mb24}>
                 <Text variant="baseL">
