@@ -155,12 +155,17 @@ export class NativeStore {
     if (this.canWhitelistWindows) {
       if (!this.callbacks.has(whitelistWindowsDefender)) {
         return new Promise((resolve, reject) => {
-          this.callbacks.set(whitelistWindowsDefender, (result: { errorType?: WhitelistWindowsDefenderErrorType }) => {
+          this.callbacks.set(whitelistWindowsDefender, (result: { errorCode?: string }) => {
             this.callbacks.delete(whitelistWindowsDefender)
-            if (!result.errorType) {
+            if (!result.errorCode) {
               resolve()
             } else {
-              reject(result.errorType)
+              if (result.errorCode === '1223') {
+                reject(WhitelistWindowsDefenderErrorType.USER_SELECTED_NO)
+              } else {
+                reject(WhitelistWindowsDefenderErrorType.GENERAL_SCRIPT_ERROR)
+              }
+              reject(result.errorCode)
             }
           })
           this.send(whitelistWindowsDefender)
@@ -174,7 +179,6 @@ export class NativeStore {
       )
     }
   }
-
 
   disableSleepMode = (): Promise<void> => {
     if (this.canDisableSleepMode) {
@@ -197,8 +201,8 @@ export class NativeStore {
       }
     } else {
       return Promise.reject('To disable sleep mode, you must be running Windows and the latest version of Salad.')
-          }
-        }
+    }
+  }
 
   @action
   setDesktopVersion = (version: string) => {

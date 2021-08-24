@@ -25,7 +25,6 @@ import * as icons from './icons'
 import * as Logger from './Logger'
 import { MachineInfo } from './models/MachineInfo'
 import { Profile } from './models/Profile'
-import { WhitelistWindowsDefenderErrorType } from './models/WhitelistWindowsDefenderErrorType'
 import { PluginDefinition } from './salad-bowl/models/PluginDefinition'
 import { PluginStatus } from './salad-bowl/models/PluginStatus'
 import { PluginManager } from './salad-bowl/PluginManager'
@@ -402,17 +401,11 @@ const createMainWindow = () => {
       (error, _stdout, _stderr) => {
         if (error) {
           console.error(`Failed to Whitelist Windows Defender: ${error.message}`)
-          if (error.code === 1223) {
-            bridge.send('whitelist-windows-defender', {
-              errorType: WhitelistWindowsDefenderErrorType.USER_SELECTED_NO,
-            })
-          } else {
-            bridge.send('whitelist-windows-defender', {
-              errorType: WhitelistWindowsDefenderErrorType.GENERAL_SCRIPT_ERROR,
-            })
-          }
+          bridge.send('whitelist-windows-defender', {
+            errorCode: error.code,
+          })
         } else {
-          bridge.send('whitelist-windows-defender', { errorType: undefined })
+          bridge.send('whitelist-windows-defender', { errorCode: undefined })
         }
       },
     )
