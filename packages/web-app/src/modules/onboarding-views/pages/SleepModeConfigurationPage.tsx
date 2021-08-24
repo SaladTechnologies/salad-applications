@@ -75,12 +75,14 @@ export interface SleepModeConfigurationPageProps extends WithStyles<typeof style
   isNative: boolean
   onEnableAutoStart: () => void
   onSkipSleepModeConfiguration: () => void
+  sleepModeErrorMessage?: string
 }
 
 const _SleepModeConfigurationPage = ({
   classes,
   onSkipSleepModeConfiguration,
   onEnableAutoStart,
+  sleepModeErrorMessage,
 }: SleepModeConfigurationPageProps) => {
   return (
     <div className={classes.container}>
@@ -116,6 +118,7 @@ const _SleepModeConfigurationPage = ({
               </span>
               <span className={classes.enableButton}>
                 <Button
+                  errorMessage={sleepModeErrorMessage}
                   size="medium"
                   label="Disable Sleep Mode"
                   onClick={() => onEnableAutoStart}

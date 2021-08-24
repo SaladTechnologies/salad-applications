@@ -17,3 +17,9 @@ const Template: Story<SleepModeConfigurationPageProps> = (args) => <SleepModeCon
 
 export const Default: Story<SleepModeConfigurationPageProps> = Template.bind({})
 Default.args = {}
+
+export const ErrorMessage: Story<SleepModeConfigurationPageProps> = Template.bind({})
+ErrorMessage.args = {
+  sleepModeErrorMessage:
+    'Something went wrong and we were unable to adjust your sleep mode settings. You can adjust these settings yourself in Windows Settings, or contact support for assistance.',
+}
