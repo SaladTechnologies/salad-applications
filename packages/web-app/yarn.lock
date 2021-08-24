@@ -2108,9 +2108,9 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@saladtechnologies/garden-components@file:../../libs/saladtechnologies-garden-components-1.0.38.tgz":
-  version "1.0.38"
-  resolved "file:../../libs/saladtechnologies-garden-components-1.0.38.tgz#d4b830920d1850586a1f664b255d1104bda45928"
+"@saladtechnologies/garden-components@file:../../libs/saladtechnologies-garden-components-1.0.39.tgz":
+  version "1.0.39"
+  resolved "file:../../libs/saladtechnologies-garden-components-1.0.39.tgz#c89cd55977bf6e5490476163458e7d05b0448c4c"
 
 "@saladtechnologies/garden-fonts@file:../../libs/saladtechnologies-garden-fonts-1.0.0.tgz":
   version "1.0.0"
