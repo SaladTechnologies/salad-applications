@@ -44,10 +44,10 @@ export class RefreshService {
       this.store.referral.loadReferrals()
       this.store.vault.loadVault()
       this.store.xp.refreshXp()
-      this.store.profile.loadAvatars()
-      this.store.profile.loadSelectedAvatar()
-      this.store.bonuses.loadBonuses()
-      this.store.seasons.loadCurrentSeason()
+      // this.store.profile.loadAvatars()
+      // this.store.profile.loadSelectedAvatar()
+      // this.store.bonuses.loadBonuses()
+      // this.store.seasons.loadCurrentSeason()
     } catch (error) {
       console.error(error)
     }

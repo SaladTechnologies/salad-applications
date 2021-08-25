@@ -63,7 +63,7 @@ export class MachineStore {
         })
         this.currentMachine = res.data
 
-        if (!this.store.saladBowl?.canRun) {
+        if (!this.store.saladBowl.canRun) {
           //Show an error notification
           this.store.notifications.sendNotification({
             category: NotificationMessageCategory.MachineIncompatible,

@@ -63,7 +63,7 @@ export class EngagementStore {
         return
       }
 
-      if (this.store.saladBowl?.canRun && this.store.xp.currentXp <= 10) {
+      if (this.store.saladBowl.canRun && this.store.xp.currentXp <= 10) {
         //Link to the mining page
         this.store.notifications.sendNotification({
           category: NotificationMessageCategory.Incentive,
@@ -75,7 +75,7 @@ export class EngagementStore {
       }
 
       //Remind users to mine
-      else if (this.store.saladBowl?.canRun) {
+      else if (this.store.saladBowl.canRun) {
         this.store.notifications.sendNotification({
           category: NotificationMessageCategory.Incentive,
           title: 'Time to get Chopping',
