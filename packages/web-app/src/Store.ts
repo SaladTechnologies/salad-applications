@@ -80,11 +80,11 @@ export class RootStore {
     this.xp = new ExperienceStore(this, axios)
     this.native = new NativeStore(this)
 
-    // if (featureManager.isEnabled('app_salad_bowl')) {
-    //   // TODO: Use gRPC version of Salad Bowl.
-    // } else {
-    this.saladBowl = new SaladBowlStore(this)
-    // }
+    if (featureManager.isEnabled('app_salad_bowl')) {
+      // TODO: Use gRPC version of Salad Bowl.
+    } else {
+      this.saladBowl = new SaladBowlStore(this)
+    }
 
     this.machine = new MachineStore(this, axios)
     this.profile = new ProfileStore(this, axios)
