@@ -1,6 +1,7 @@
 import { action } from '@storybook/addon-actions'
 import type { Meta, Story } from '@storybook/react'
-import { AutoStartConfigurationPage, AutoStartConfigurationPageProps } from './AutoStartConfigurationPage'
+import type { AutoStartConfigurationPageProps } from './AutoStartConfigurationPage'
+import { AutoStartConfigurationPage } from './AutoStartConfigurationPage'
 
 export default {
   title: 'Modules/Onboarding/AutoStartConfigurationPage',

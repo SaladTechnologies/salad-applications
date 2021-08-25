@@ -3,7 +3,7 @@ import classnames from 'classnames'
 import withStyles, { WithStyles } from 'react-jss'
 import MediaQuery from 'react-responsive'
 import { Head } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 import Carrot from '../assets/onboarding-afk-carrot.png'
 
 const styles = (theme: SaladTheme) => ({

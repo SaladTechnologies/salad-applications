@@ -1,6 +1,7 @@
 import { action } from '@storybook/addon-actions'
 import type { Meta, Story } from '@storybook/react'
-import { SleepModeConfigurationPage, SleepModeConfigurationPageProps } from './SleepModeConfigurationPage'
+import type { SleepModeConfigurationPageProps } from './SleepModeConfigurationPage'
+import { SleepModeConfigurationPage } from './SleepModeConfigurationPage'
 
 export default {
   title: 'Modules/Onboarding/SleepModeConfigurationPage',
