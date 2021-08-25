@@ -387,38 +387,41 @@ const createMainWindow = () => {
   })
 
   bridge.on('whitelist-windows-defender', (filePath?: string) => {
-    if (filePath || process.env.APPDATA)
-      exec(
-        powershellWhitelistCommand,
-        {
-          env: {
-            WHITELIST_DIR: filePath ? filePath : path.join(process.env.APPDATA!, 'Salad/plugin-bin'),
-          },
-          timeout: 60000,
-          windowsHide: true,
-        },
-        (error, _stdout, stderr) => {
-          if (error) {
-            console.error(
-              `Failed to Whitelist Windows Defender (${error.message}${
-                error.code == null ? '' : `, exit code ${error.code}`
-              })${stderr ? `\n${stderr}` : ''}`,
-            )
-
-            bridge.send('whitelist-windows-defender', {
-              errorCode: error.code,
-            })
-          } else {
-            bridge.send('whitelist-windows-defender', { errorCode: undefined })
-          }
-        },
-      )
-    else {
-      console.error(
-        `Failed to Whitelist Windows Defender because the user's APPDATA environment variable has not been defined`,
-      )
-      bridge.send('whitelist-windows-defender', { errorCode: 1 })
+    if (!filePath) {
+      if (!process.env.APPDATA) {
+        console.error(
+          `Failed to Whitelist Windows Defender because the user's APPDATA environment variable has not been defined`,
+        )
+        bridge.send('whitelist-windows-defender', { error: true })
+        return
+      }
+      filePath = path.join(process.env.APPDATA, 'Salad/plugin-bin')
     }
+    exec(
+      powershellWhitelistCommand,
+      {
+        env: {
+          WHITELIST_DIR: filePath,
+        },
+        timeout: 60000,
+        windowsHide: true,
+      },
+      (error, _stdout, stderr) => {
+        if (error) {
+          console.error(
+            `Failed to Whitelist Windows Defender (${error.message}${
+              error.code == null ? '' : `, exit code ${error.code}`
+            })${stderr ? `\n${stderr}` : ''}`,
+          )
+          bridge.send('whitelist-windows-defender', {
+            error: true,
+            errorCode: error.code,
+          })
+        } else {
+          bridge.send('whitelist-windows-defender', {})
+        }
+      },
+    )
   })
 
   bridge.on('minimize-window', () => {
