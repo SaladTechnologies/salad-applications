@@ -392,19 +392,24 @@ const createMainWindow = () => {
       {
         env: {
           WHITELIST_DIR: nonDefaultFilePath
-            ? `${nonDefaultFilePath}\\Salad\\plugin-bin`
-            : `${process.env.APPDATA}\\Salad\\plugin-bin`,
+            ? path.join(nonDefaultFilePath, 'Salad/plugin-bin')
+            : path.join(process.env.APPDATA!, 'Salad/plugin-bin'),
         },
         timeout: 60000,
         windowsHide: true,
       },
       (error, _stdout, stderr) => {
         if (error) {
-          console.error(
-            `Failed to Whitelist Windows Defender (${error.message}${
-              error.code == null ? '' : `, exit code ${error.code}`
-            })${stderr ? `\n${stderr}` : ''}`,
-          )
+          if (process.env.APPDATA === undefined) {
+            console.error(`The command failed because the user's environment variable has not been defined`)
+          } else {
+            console.error(
+              `Failed to Whitelist Windows Defender (${error.message}${
+                error.code == null ? '' : `, exit code ${error.code}`
+              })${stderr ? `\n${stderr}` : ''}`,
+            )
+          }
+
           bridge.send('whitelist-windows-defender', {
             errorCode: error.code,
           })
