@@ -155,9 +155,9 @@ export class NativeStore {
     if (this.canWhitelistWindows) {
       if (!this.callbacks.has(whitelistWindowsDefender)) {
         return new Promise((resolve, reject) => {
-          this.callbacks.set(whitelistWindowsDefender, (result: { errorCode?: number }) => {
+          this.callbacks.set(whitelistWindowsDefender, (result: { error?: boolean; errorCode?: number }) => {
             this.callbacks.delete(whitelistWindowsDefender)
-            if (!result.errorCode) {
+            if (!result.error) {
               resolve()
             } else {
               if (result.errorCode === 1223) {
@@ -165,7 +165,6 @@ export class NativeStore {
               } else {
                 reject(WhitelistWindowsDefenderErrorType.GENERAL_SCRIPT_ERROR)
               }
-              reject(result.errorCode)
             }
           })
           this.send(whitelistWindowsDefender, filePath)
