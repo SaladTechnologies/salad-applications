@@ -5,12 +5,11 @@ import { AutoStartConfigurationPage, AutoStartConfigurationPageProps } from './A
 export default {
   title: 'Modules/Onboarding/AutoStartConfigurationPage',
   component: AutoStartConfigurationPage,
-  description: 'The Antivirus Configuration Onboaridng Page',
+  description: 'The Auto-Start Onboarding Page',
   args: {
     onSkipAutoStart: action('Skip Auto-Start Configuration'),
     onEnableAutoStart: action('Enabled Auto-Start'),
   },
-  decorators: [(Story) => <Story />],
 } as Meta
 
 const Template: Story<AutoStartConfigurationPageProps> = (args) => <AutoStartConfigurationPage {...args} />

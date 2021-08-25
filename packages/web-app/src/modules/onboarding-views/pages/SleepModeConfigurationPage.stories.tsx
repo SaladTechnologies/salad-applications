@@ -5,12 +5,11 @@ import { SleepModeConfigurationPage, SleepModeConfigurationPageProps } from './S
 export default {
   title: 'Modules/Onboarding/SleepModeConfigurationPage',
   component: SleepModeConfigurationPage,
-  description: 'The Antivirus Configuration Onboaridng Page',
+  description: 'The Sleep-Mode Onboarding Page',
   args: {
     onSkipSleepModeConfiguration: action('Skip Auto-Start Configuration'),
     onEnableAutoStart: action('Enabled Auto-Start'),
   },
-  decorators: [(Story) => <Story />],
 } as Meta
 
 const Template: Story<SleepModeConfigurationPageProps> = (args) => <SleepModeConfigurationPage {...args} />
