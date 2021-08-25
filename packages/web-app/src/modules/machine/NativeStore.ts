@@ -151,7 +151,7 @@ export class NativeStore {
     window.salad.dispatch(type, payload && toJS(payload))
   }
 
-  whitelistWindowsDefender = (): Promise<void> => {
+  whitelistWindowsDefender = (filePath?: string): Promise<void> => {
     if (this.canWhitelistWindows) {
       if (!this.callbacks.has(whitelistWindowsDefender)) {
         return new Promise((resolve, reject) => {
@@ -168,7 +168,7 @@ export class NativeStore {
               reject(result.errorCode)
             }
           })
-          this.send(whitelistWindowsDefender)
+          this.send(whitelistWindowsDefender, filePath)
         })
       } else {
         return Promise.reject('The process is already running.')
