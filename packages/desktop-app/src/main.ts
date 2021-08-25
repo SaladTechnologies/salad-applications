@@ -392,7 +392,7 @@ const createMainWindow = () => {
           powershellWhitelistCommand,
           {
             env: {
-              WHITELIST_DIR: path.join(filePath, 'Salad/plugin-bin'),
+              WHITELIST_DIR: filePath,
             },
             timeout: 60000,
             windowsHide: true,
