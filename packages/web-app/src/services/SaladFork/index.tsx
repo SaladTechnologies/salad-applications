@@ -1,1 +1,1 @@
-export * from './SaladFork'
+export { SaladFork } from './SaladFork'

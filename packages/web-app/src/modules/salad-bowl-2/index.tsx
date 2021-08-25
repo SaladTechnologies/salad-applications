@@ -1,1 +1,1 @@
-export * from './SaladBowlStore2'
+export { SaladBowlStore2 } from './SaladBowlStore2'
