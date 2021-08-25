@@ -3,7 +3,8 @@ import type { Meta, Story } from '@storybook/react'
 import type { ReactElement } from 'react'
 import { useEffect } from 'react'
 import { AntiVirusSoftware } from '../../zendesk/models'
-import { AntivirusConfigurationPage, AntivirusConfigurationPageProps } from './AntivirusConfigurationPage'
+import type { AntivirusConfigurationPageProps } from './AntivirusConfigurationPage'
+import { AntivirusConfigurationPage } from './AntivirusConfigurationPage'
 
 export default {
   title: 'Modules/Onboarding/AntivirusConfigurationPage',
