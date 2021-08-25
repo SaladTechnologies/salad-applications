@@ -69,6 +69,9 @@ const styles = (theme: SaladTheme) => ({
   leaveButton: {
     width: 240,
   },
+  buttonsContainer: {
+    display: 'flex',
+  },
 })
 
 export interface AutoStartConfigurationPageProps extends WithStyles<typeof styles> {
@@ -105,7 +108,7 @@ const _AutoStartConfigurationPage = ({
             <div className={classes.mb48}>
               <Text variant="baseS">Automatically chop when you are away from your PC</Text>
             </div>
-            <div style={{ display: 'flex' }}>
+            <div className={classes.buttonsContainer}>
               <span className={classes.leaveButton}>
                 <Button size="medium" label="Leave Auto-Start Disabled" onClick={onSkipAutoStart} variant="outlined" />
               </span>

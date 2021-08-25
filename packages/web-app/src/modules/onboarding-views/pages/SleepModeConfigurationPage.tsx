@@ -69,6 +69,9 @@ const styles = (theme: SaladTheme) => ({
   skipButton: {
     width: 145,
   },
+  buttonsContainer: {
+    display: 'flex',
+  },
 })
 
 export interface SleepModeConfigurationPageProps extends WithStyles<typeof styles> {
@@ -107,7 +110,7 @@ const _SleepModeConfigurationPage = ({
             <div className={classes.mb48}>
               <Text variant="baseS">You can always adjust sleep mode later in Windows settings.</Text>
             </div>
-            <div style={{ display: 'flex' }}>
+            <div className={classes.buttonsContainer}>
               <span className={classes.skipButton}>
                 <Button size="medium" label="Skip For Now" onClick={onSkipSleepModeConfiguration} variant="outlined" />
               </span>
