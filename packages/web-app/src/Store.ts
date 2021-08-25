@@ -153,6 +153,8 @@ export class RootStore {
         return
       }
 
+      const saladBowlEnabled = this.featureManager.isEnabled('app_salad_bowl')
+
       yield Promise.allSettled([
         this.analytics.start(profile),
         this.native.login(profile),
@@ -160,11 +162,8 @@ export class RootStore {
         this.referral.loadReferralCode(),
         this.refresh.refreshData(),
         this.zendesk.login(profile.username, profile.email),
+        saladBowlEnabled ? this.saladFork.login() : Promise.resolve(),
       ])
-
-      if (this.featureManager.isEnabled('app_salad_bowl')) {
-        this.saladFork.login()
-      }
 
       this.featureManager.handleLogin(profile.id)
       this.finishInitialLoading()
