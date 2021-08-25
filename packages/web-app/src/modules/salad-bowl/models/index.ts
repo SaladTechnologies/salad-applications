@@ -1,3 +1,4 @@
+export * from './ErrorMessage'
 export * from './PluginDefinition'
 export * from './PluginInfo'
 export * from './StartActionType'

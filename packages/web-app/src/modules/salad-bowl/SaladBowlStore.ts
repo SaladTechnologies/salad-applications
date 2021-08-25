@@ -6,7 +6,7 @@ import { RootStore } from '../../Store'
 import { ErrorPageType } from '../../UIStore'
 import { MiningStatus } from '../machine/models'
 import { NotificationMessageCategory } from '../notifications/models'
-import { IPersistentStore } from '../versions/IPersistentStore'
+import { SaladBowlStoreInterface } from '../salad-bowl-2/SaladBowlStore2'
 import { getPluginDefinitions } from './definitions'
 import { Accounts, BEAM_WALLET_ADDRESS, ETH_WALLET_ADDRESS, getNiceHashMiningAddress } from './definitions/accounts'
 import { PluginDefinition, StartActionType, StartReason, StopReason } from './models'
@@ -21,7 +21,7 @@ const CPU_MINING_ENABLED = 'CPU_MINING_ENABLED'
 const GPU_MINING_OVERRIDDEN = 'GPU_MINING_OVERRIDDEN'
 const CPU_MINING_OVERRIDDEN = 'CPU_MINING_OVERRIDDEN'
 
-export class SaladBowlStore implements IPersistentStore {
+export class SaladBowlStore implements SaladBowlStoreInterface {
   private currentPluginDefinition?: PluginDefinition
   private currentPluginDefinitionIndex: number = 0
   private currentPluginRetries: number = 0

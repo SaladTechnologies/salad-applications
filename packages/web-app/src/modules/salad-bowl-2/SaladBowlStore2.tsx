@@ -1,7 +1,7 @@
 import { computed, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { MiningStatus } from '../machine/models'
-import type { PluginDefinition, StatusMessage } from '../salad-bowl/models'
+import type { ErrorMessage, PluginDefinition, StartActionType, StatusMessage, StopReason } from '../salad-bowl/models'
 import { PluginInfo } from '../salad-bowl/models'
 
 export interface SaladBowlStoreInterface {
@@ -16,10 +16,10 @@ export interface SaladBowlStoreInterface {
   isRunning: boolean
   onDataLoaded: (data: unknown) => void
   onReceiveStatus: (message: StatusMessage) => void
-  onReceiveError: (message: StatusMessage) => void
-  setGpuOnly: () => void
-  setCpuOverride: () => void
-  setGpuOverride: () => void
+  onReceiveError: (message: ErrorMessage) => void
+  setGpuOnly: (value: boolean) => void
+  setCpuOverride: (value: boolean) => void
+  setGpuOverride: (value: boolean) => void
   plugin: PluginInfo
   pluginCount: number
   pluginDefinitions: PluginDefinition[]
@@ -32,12 +32,12 @@ export interface SaladBowlStoreInterface {
       }
     | undefined
   status: MiningStatus
-  toggleRunning: () => void
+  toggleRunning: (startAction: StartActionType) => void
 }
 
 export class SaladBowlStore2 implements SaladBowlStoreInterface {
   @observable
-  public runningTime = undefined
+  public runningTime?: number = undefined
 
   @observable
   public cpuMiningEnabled = false
@@ -55,7 +55,7 @@ export class SaladBowlStore2 implements SaladBowlStoreInterface {
   public plugin = new PluginInfo()
 
   @computed
-  get pluginDefinitions() {
+  get pluginDefinitions(): PluginDefinition[] {
     return []
   }
 
@@ -95,7 +95,12 @@ export class SaladBowlStore2 implements SaladBowlStoreInterface {
   }
 
   @computed
-  get runningTimeDisplay() {
+  get runningTimeDisplay():
+    | {
+        value: number
+        unit: 'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'second'
+      }
+    | undefined {
     return undefined
   }
 
@@ -105,7 +110,8 @@ export class SaladBowlStore2 implements SaladBowlStoreInterface {
 
   startNext = () => {}
 
-  stop = () => {
+  stop = (stopReason: StopReason) => {
+    console.log(stopReason)
     this.store.saladFork.logout()
   }
 
@@ -121,15 +127,23 @@ export class SaladBowlStore2 implements SaladBowlStoreInterface {
     console.log(message)
   }
 
-  onReceiveError = (message: StatusMessage) => {
+  onReceiveError = (message: ErrorMessage) => {
     console.log(message)
   }
 
-  toggleRunning = () => {}
+  toggleRunning = (startAction: StartActionType) => {
+    console.log(startAction)
+  }
 
-  setGpuOnly = () => {}
+  setGpuOnly = (value: boolean) => {
+    console.log(value)
+  }
 
-  setCpuOverride = () => {}
+  setCpuOverride = (value: boolean) => {
+    console.log(value)
+  }
 
-  setGpuOverride = () => {}
+  setGpuOverride = (value: boolean) => {
+    console.log(value)
+  }
 }

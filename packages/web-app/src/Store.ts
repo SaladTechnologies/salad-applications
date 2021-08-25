@@ -64,7 +64,7 @@ export class RootStore {
   public readonly home: HomeStore
   public readonly native: NativeStore
   public readonly refresh: RefreshService
-  public readonly saladBowl: SaladBowlStore | SaladBowlStore2
+  public readonly saladBowl: SaladBowlStore2
   public readonly notifications: NotificationStore
   public readonly vault: VaultStore
   public readonly version: VersionStore
@@ -87,6 +87,7 @@ export class RootStore {
     if (featureManager.isEnabled('app_salad_bowl')) {
       this.saladBowl = new SaladBowlStore2(this)
     } else {
+      // @ts-ignore
       this.saladBowl = new SaladBowlStore(this)
     }
 
@@ -153,8 +154,9 @@ export class RootStore {
         return
       }
 
-      const saladBowlEnabled = this.featureManager.isEnabled('app_salad_bowl')
+      this.featureManager.handleLogin(profile.id)
 
+      const saladBowlEnabled = this.featureManager.isEnabled('app_salad_bowl')
       yield Promise.allSettled([
         this.analytics.start(profile),
         this.native.login(profile),
@@ -165,7 +167,6 @@ export class RootStore {
         saladBowlEnabled ? this.saladFork.login() : Promise.resolve(),
       ])
 
-      this.featureManager.handleLogin(profile.id)
       this.finishInitialLoading()
       this.onboarding.showOnboardingIfNeeded()
     }.bind(this),

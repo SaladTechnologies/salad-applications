@@ -1,29 +1,24 @@
 import { SaladBowlMessages, SaladBowlServices } from '@saladtechnologies/salad-grpc-salad-bowl'
 import type { AxiosInstance } from 'axios'
+import type { SaladBowlLoginResponse } from './models/SaladBowlLoginResponse'
+import { SaladBowlLoginResponseError } from './models/SaladBowlLoginResponse'
+import { SaladBowlLogoutResponse, SaladBowlLogoutResponseError } from './models/SaladBowlLogoutResponse'
 
 export interface SaladForkInterface {
-  login: () => Promise<void>
-  logout: () => void
-  isAuthenticated: boolean
-  authenticationPending: boolean
-  authenticationError: boolean
+  login: () => Promise<SaladBowlLoginResponse>
+  logout: () => Promise<SaladBowlLogoutResponse>
 }
 
 export class SaladFork implements SaladForkInterface {
   readonly client: SaladBowlServices.SaladBowlServicePromiseClient
-
-  public isAuthenticated = false
-  public authenticationPending = false
-  public authenticationError = false
 
   constructor(private readonly axios: AxiosInstance) {
     const server: string = 'http://localhost:5000' // make env variable
     this.client = new SaladBowlServices.SaladBowlServicePromiseClient(server)
   }
 
-  public login = async () => {
+  public login = async (): Promise<SaladBowlLoginResponse> => {
     try {
-      this.authenticationPending = true
       const response = await this.axios.post('/api/v2/saladbowl/auth/login')
 
       if (response.data) {
@@ -34,24 +29,23 @@ export class SaladFork implements SaladForkInterface {
         const loginResponse = await this.client.login(request)
 
         if (loginResponse.getSuccess()) {
-          this.isAuthenticated = true
+          return Promise.resolve()
         } else {
-          this.isAuthenticated = false
+          return Promise.reject(SaladBowlLoginResponseError.unableToLoginToSaladBowl)
         }
+      } else {
+        return Promise.reject(SaladBowlLoginResponseError.unableToRetrieveJWT)
       }
     } catch (error) {
-      this.isAuthenticated = false
-      this.authenticationError = true
-      console.log(error)
-    } finally {
-      this.authenticationPending = false
-      this.authenticationError = false
+      return Promise.reject(SaladBowlLoginResponseError.unableToRetrieveJWT)
     }
   }
 
-  public logout = () => {
+  public logout = async (): Promise<SaladBowlLogoutResponse> => {
     const request = new SaladBowlMessages.LogoutRequest()
-    this.client.logout(request)
-    this.isAuthenticated = false
+    return await this.client
+      .logout(request)
+      .then(() => Promise.resolve())
+      .catch(() => Promise.reject(SaladBowlLogoutResponseError.unableToLoginToSaladBowl))
   }
 }
