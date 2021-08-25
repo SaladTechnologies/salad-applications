@@ -109,19 +109,14 @@ const _SleepModeConfigurationPage = ({
             </div>
             <div style={{ display: 'flex' }}>
               <span className={classes.skipButton}>
-                <Button
-                  size="medium"
-                  label="Skip For Now"
-                  onClick={() => onSkipSleepModeConfiguration}
-                  variant="outlined"
-                />
+                <Button size="medium" label="Skip For Now" onClick={onSkipSleepModeConfiguration} variant="outlined" />
               </span>
               <span className={classes.enableButton}>
                 <Button
                   errorMessage={sleepModeErrorMessage}
                   size="medium"
                   label="Disable Sleep Mode"
-                  onClick={() => onEnableAutoStart}
+                  onClick={onEnableAutoStart}
                   variant="primary-basic"
                 />
               </span>

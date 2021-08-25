@@ -74,12 +74,12 @@ const styles = (theme: SaladTheme) => ({
 export interface AutoStartConfigurationPageProps extends WithStyles<typeof styles> {
   isNative: boolean
   onEnableAutoStart: () => void
-  onSkipAutoStartConfiguration: () => void
+  onSkipAutoStart: () => void
 }
 
 const _AutoStartConfigurationPage = ({
   classes,
-  onSkipAutoStartConfiguration,
+  onSkipAutoStart,
   onEnableAutoStart,
 }: AutoStartConfigurationPageProps) => {
   return (
@@ -107,20 +107,10 @@ const _AutoStartConfigurationPage = ({
             </div>
             <div style={{ display: 'flex' }}>
               <span className={classes.leaveButton}>
-                <Button
-                  size="medium"
-                  label="Leave Auto-Start Disabled"
-                  onClick={() => onSkipAutoStartConfiguration}
-                  variant="outlined"
-                />
+                <Button size="medium" label="Leave Auto-Start Disabled" onClick={onSkipAutoStart} variant="outlined" />
               </span>
               <span className={classes.enableButton}>
-                <Button
-                  size="medium"
-                  label="Enable Auto-Start"
-                  onClick={() => onEnableAutoStart}
-                  variant="primary-basic"
-                />
+                <Button size="medium" label="Enable Auto-Start" onClick={onEnableAutoStart} variant="primary-basic" />
               </span>
             </div>
           </div>

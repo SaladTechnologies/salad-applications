@@ -7,7 +7,7 @@ export default {
   component: AutoStartConfigurationPage,
   description: 'The Antivirus Configuration Onboaridng Page',
   args: {
-    onSkipAutoStartConfiguration: action('Skip Auto-Start Configuration'),
+    onSkipAutoStart: action('Skip Auto-Start Configuration'),
     onEnableAutoStart: action('Enabled Auto-Start'),
   },
   decorators: [(Story) => <Story />],
