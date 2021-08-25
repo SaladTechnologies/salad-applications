@@ -386,38 +386,62 @@ const createMainWindow = () => {
     })
   })
 
-  bridge.on('whitelist-windows-defender', (nonDefaultFilePath?: string) => {
-    exec(
-      powershellWhitelistCommand,
-      {
-        env: {
-          WHITELIST_DIR: nonDefaultFilePath
-            ? path.join(nonDefaultFilePath, 'Salad/plugin-bin')
-            : path.join(process.env.APPDATA!, 'Salad/plugin-bin'),
-        },
-        timeout: 60000,
-        windowsHide: true,
-      },
-      (error, _stdout, stderr) => {
-        if (error) {
-          if (process.env.APPDATA === undefined) {
-            console.error(`The command failed because the user's environment variable has not been defined`)
-          } else {
-            console.error(
-              `Failed to Whitelist Windows Defender (${error.message}${
-                error.code == null ? '' : `, exit code ${error.code}`
-              })${stderr ? `\n${stderr}` : ''}`,
-            )
-          }
+  bridge.on('whitelist-windows-defender', (filePath?: string) => {
+    filePath
+      ? exec(
+          powershellWhitelistCommand,
+          {
+            env: {
+              WHITELIST_DIR: path.join(filePath, 'Salad/plugin-bin'),
+            },
+            timeout: 60000,
+            windowsHide: true,
+          },
+          (error, _stdout, stderr) => {
+            if (error) {
+              console.error(
+                `Failed to Whitelist Windows Defender (${error.message}${
+                  error.code == null ? '' : `, exit code ${error.code}`
+                })${stderr ? `\n${stderr}` : ''}`,
+              )
 
-          bridge.send('whitelist-windows-defender', {
-            errorCode: error.code,
-          })
-        } else {
-          bridge.send('whitelist-windows-defender', { errorCode: undefined })
-        }
-      },
-    )
+              bridge.send('whitelist-windows-defender', {
+                errorCode: error.code,
+              })
+            } else {
+              bridge.send('whitelist-windows-defender', { errorCode: undefined })
+            }
+          },
+        )
+      : process.env.APPDATA
+      ? exec(
+          powershellWhitelistCommand,
+          {
+            env: {
+              WHITELIST_DIR: path.join(process.env.APPDATA, 'Salad/plugin-bin'),
+            },
+            timeout: 60000,
+            windowsHide: true,
+          },
+          (error, _stdout, stderr) => {
+            if (error) {
+              console.error(
+                `Failed to Whitelist Windows Defender (${error.message}${
+                  error.code == null ? '' : `, exit code ${error.code}`
+                })${stderr ? `\n${stderr}` : ''}`,
+              )
+
+              bridge.send('whitelist-windows-defender', {
+                errorCode: error.code,
+              })
+            } else {
+              bridge.send('whitelist-windows-defender', { errorCode: undefined })
+            }
+          },
+        )
+      : console.error(
+          `Failed to Whitelist Windows Defender because the user's APPDATA environment variable has not been defined`,
+        )
   })
 
   bridge.on('minimize-window', () => {
