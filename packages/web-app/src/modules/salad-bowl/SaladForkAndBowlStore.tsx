@@ -1,41 +1,11 @@
 import { computed, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { MiningStatus } from '../machine/models'
-import type { ErrorMessage, PluginDefinition, StartActionType, StatusMessage, StopReason } from '../salad-bowl/models'
-import { PluginInfo } from '../salad-bowl/models'
+import type { ErrorMessage, PluginDefinition, StartActionType, StatusMessage, StopReason } from './models'
+import { PluginInfo, StartReason } from './models'
+import { SaladBowlStoreInterface } from './SaladBowlStoreInterface'
 
-export interface SaladBowlStoreInterface {
-  canRun: boolean
-  cpuMiningEnabled: boolean
-  cpuMiningOverridden: boolean
-  getSavedData: () => object
-  gpuMiningEnabled: boolean
-  gpuMiningOverridden: boolean
-  isNotCompatible: boolean
-  isOverriding: boolean
-  isRunning: boolean
-  onDataLoaded: (data: unknown) => void
-  onReceiveStatus: (message: StatusMessage) => void
-  onReceiveError: (message: ErrorMessage) => void
-  setGpuOnly: (value: boolean) => void
-  setCpuOverride: (value: boolean) => void
-  setGpuOverride: (value: boolean) => void
-  plugin: PluginInfo
-  pluginCount: number
-  pluginDefinitions: PluginDefinition[]
-  preppingProgress: number
-  runningTime?: number
-  runningTimeDisplay:
-    | {
-        value: number
-        unit: 'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'second'
-      }
-    | undefined
-  status: MiningStatus
-  toggleRunning: (startAction: StartActionType) => void
-}
-
-export class SaladBowlStore2 implements SaladBowlStoreInterface {
+export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
   @observable
   public runningTime?: number = undefined
 
@@ -106,7 +76,11 @@ export class SaladBowlStore2 implements SaladBowlStoreInterface {
 
   constructor(private readonly store: RootStore) {}
 
-  start = () => {}
+  private start = (reason: StartReason, startTimestamp?: Date, choppingTime?: number) => {
+    console.log(reason)
+    console.log(startTimestamp)
+    console.log(choppingTime)
+  }
 
   startNext = () => {}
 
@@ -132,6 +106,7 @@ export class SaladBowlStore2 implements SaladBowlStoreInterface {
   }
 
   toggleRunning = (startAction: StartActionType) => {
+    this.start(StartReason.Automatic, undefined, undefined)
     console.log(startAction)
   }
 

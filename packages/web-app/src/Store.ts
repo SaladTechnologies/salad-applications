@@ -17,8 +17,9 @@ import { Profile } from './modules/profile/models'
 import { ReferralStore } from './modules/referral'
 import { RewardStore } from './modules/reward'
 import { SaladBowlStore } from './modules/salad-bowl'
-import { SaladBowlStore2 } from './modules/salad-bowl-2/SaladBowlStore2'
 import { StopReason } from './modules/salad-bowl/models'
+import { SaladBowlStoreInterface } from './modules/salad-bowl/SaladBowlStoreInterface'
+import { SaladForkAndBowlStore } from './modules/salad-bowl/SaladForkAndBowlStore'
 import { SeasonsStore } from './modules/seasons'
 import { StorefrontStore } from './modules/storefront/StorefrontStore'
 import { VaultStore } from './modules/vault'
@@ -64,7 +65,7 @@ export class RootStore {
   public readonly home: HomeStore
   public readonly native: NativeStore
   public readonly refresh: RefreshService
-  public readonly saladBowl: SaladBowlStore2
+  public readonly saladBowl: SaladBowlStoreInterface
   public readonly notifications: NotificationStore
   public readonly vault: VaultStore
   public readonly version: VersionStore
@@ -85,9 +86,8 @@ export class RootStore {
     this.saladFork = new SaladFork(axios)
 
     if (featureManager.isEnabled('app_salad_bowl')) {
-      this.saladBowl = new SaladBowlStore2(this)
+      this.saladBowl = new SaladForkAndBowlStore(this)
     } else {
-      // @ts-ignore
       this.saladBowl = new SaladBowlStore(this)
     }
 
