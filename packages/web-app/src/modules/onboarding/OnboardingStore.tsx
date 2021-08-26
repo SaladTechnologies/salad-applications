@@ -16,6 +16,12 @@ export class OnboardingStore {
   @observable
   public disableSleepModeError: boolean = false
 
+  @observable
+  public disableAutoStartPending: boolean = false
+
+  @observable
+  public disableAutoStartErrorMessage?: string = undefined
+
   constructor(private readonly store: RootStore) {}
 
   @action
@@ -88,6 +94,25 @@ export class OnboardingStore {
       this.disableSleepModePending = false
     }
   })
+
+  @action.bound
+  public enableAutoStart = flow(function* (this: OnboardingStore) {
+    this.disableAutoStartErrorMessage = undefined
+    this.disableAutoStartPending = true
+    try {
+      yield this.store.autoStart.setAutoStart(true)
+    } catch {
+      this.disableAutoStartErrorMessage = 'There was an error while trying to set your sleep mode.'
+    } finally {
+      this.disableAutoStartPending = false
+      this.viewNextPage(ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION)
+    }
+  })
+
+  @action
+  public skipAutoStart = () => {
+    this.viewNextPage(ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION)
+  }
 
   private findNextPageByOrder = (sortedOnboardingPages: OnboardingPagesType, nextPage: number) => {
     return sortedOnboardingPages.find((page) => page.ORDER === nextPage)

@@ -1,7 +1,8 @@
 export enum ONBOARDING_PAGE_NAMES {
   WELCOME = 'Onboarding Welcome',
   REFERRAL = 'Onboarding Enter Referral Code',
-  AFK_CONFIGURATION = 'Onboarding AFK Configuration',
+  AUTO_START_CONFIGURATION = 'Onboarding Auto-Start Configuration',
+  SLEEP_MODE_CONFIGURATION = 'Onboarding Sleep-Mode Configuration',
 }
 
 export type OnboardingPageName = ONBOARDING_PAGE_NAMES
@@ -18,5 +19,5 @@ export type OnboardingPagesType = OnboardingPageItemType[]
 export const ONBOARDING_PAGES = [
   { NAME: ONBOARDING_PAGE_NAMES.WELCOME, PATH: '/onboarding/welcome', ORDER: 1, NATIVE: false },
   { NAME: ONBOARDING_PAGE_NAMES.REFERRAL, PATH: '/onboarding/referral', ORDER: 2, NATIVE: false },
-  { NAME: ONBOARDING_PAGE_NAMES.AFK_CONFIGURATION, PATH: '/onboarding/afk', ORDER: 3, NATIVE: true },
+  { NAME: ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION, PATH: '/onboarding/auto-start', ORDER: 3, NATIVE: true },
 ]
