@@ -18,12 +18,15 @@ import { ReferralStore } from './modules/referral'
 import { RewardStore } from './modules/reward'
 import { SaladBowlStore } from './modules/salad-bowl'
 import { StopReason } from './modules/salad-bowl/models'
+import { SaladBowlStoreInterface } from './modules/salad-bowl/SaladBowlStoreInterface'
+import { SaladForkAndBowlStore } from './modules/salad-bowl/SaladForkAndBowlStore'
 import { SeasonsStore } from './modules/seasons'
 import { StorefrontStore } from './modules/storefront/StorefrontStore'
 import { VaultStore } from './modules/vault'
 import { VersionStore } from './modules/versions'
 import { ExperienceStore } from './modules/xp'
 import { Zendesk } from './modules/zendesk'
+import { SaladFork } from './services/SaladFork/SaladFork'
 import { UIStore } from './UIStore'
 
 configure({
@@ -62,7 +65,7 @@ export class RootStore {
   public readonly home: HomeStore
   public readonly native: NativeStore
   public readonly refresh: RefreshService
-  public readonly saladBowl: SaladBowlStore | undefined
+  public readonly saladBowl: SaladBowlStoreInterface
   public readonly notifications: NotificationStore
   public readonly vault: VaultStore
   public readonly version: VersionStore
@@ -72,6 +75,7 @@ export class RootStore {
   public readonly bonuses: BonusStore
   public readonly seasons: SeasonsStore
   public readonly onboarding: OnboardingStore
+  public readonly saladFork: SaladFork
 
   constructor(axios: AxiosInstance, private readonly featureManager: FeatureManager) {
     this.routing = new RouterStore()
@@ -79,9 +83,10 @@ export class RootStore {
     this.notifications = new NotificationStore(this)
     this.xp = new ExperienceStore(this, axios)
     this.native = new NativeStore(this)
+    this.saladFork = new SaladFork(axios)
 
     if (featureManager.isEnabled('app_salad_bowl')) {
-      // TODO: Use gRPC version of Salad Bowl.
+      this.saladBowl = new SaladForkAndBowlStore(this)
     } else {
       this.saladBowl = new SaladBowlStore(this)
     }
@@ -149,6 +154,9 @@ export class RootStore {
         return
       }
 
+      this.featureManager.handleLogin(profile.id)
+
+      const saladBowlEnabled = this.featureManager.isEnabled('app_salad_bowl')
       yield Promise.allSettled([
         this.analytics.start(profile),
         this.native.login(profile),
@@ -156,9 +164,9 @@ export class RootStore {
         this.referral.loadReferralCode(),
         this.refresh.refreshData(),
         this.zendesk.login(profile.username, profile.email),
+        saladBowlEnabled ? this.saladFork.login() : Promise.resolve(),
       ])
 
-      this.featureManager.handleLogin(profile.id)
       this.finishInitialLoading()
       this.onboarding.showOnboardingIfNeeded()
     }.bind(this),
@@ -166,9 +174,7 @@ export class RootStore {
 
   @action
   onLogout = (): void => {
-    if (this.saladBowl) {
-      this.saladBowl.stop(StopReason.Logout)
-    }
+    this.saladBowl.stop(StopReason.Logout)
 
     this.referral.currentReferral = undefined
     this.referral.referralCode = ''

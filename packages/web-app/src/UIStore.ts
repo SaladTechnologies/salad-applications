@@ -18,7 +18,7 @@ export enum ErrorPageType {
 export class UIStore {
   constructor(private readonly store: RootStore) {
     autorun(() => {
-      const status = this.store.saladBowl?.status
+      const status = this.store.saladBowl.status
       if (status) {
         if (
           status === MiningStatus.Running &&
@@ -92,7 +92,7 @@ export class UIStore {
       case ErrorPageType.Fallback:
         this.showModal('/errors/fallback')
         this.store.analytics.trackErrorPageViewed(
-          `Fallback ${this.store.saladBowl?.gpuMiningEnabled ? 'GPU' : 'CPU'} Error`,
+          `Fallback ${this.store.saladBowl.gpuMiningEnabled ? 'GPU' : 'CPU'} Error`,
         )
         break
       case ErrorPageType.Network:
@@ -101,7 +101,7 @@ export class UIStore {
       case ErrorPageType.NotCompatible:
         this.showModal('/errors/not-compatible')
         this.store.analytics.trackErrorPageViewed(
-          `No Compatible ${this.store.saladBowl?.gpuMiningEnabled ? 'GPU' : 'CPU'} Error`,
+          `No Compatible ${this.store.saladBowl.gpuMiningEnabled ? 'GPU' : 'CPU'} Error`,
         )
         break
       case ErrorPageType.Unknown:

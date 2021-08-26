@@ -3,8 +3,8 @@ import { RootStore } from '../../Store'
 import { MachineInfoPanel } from './components/MachineInfoPanel'
 
 const mapStoreToProps = (store: RootStore): any => ({
-  gpuEnabled: store.saladBowl?.gpuMiningEnabled,
-  cpuEnabled: store.saladBowl?.cpuMiningEnabled,
+  gpuEnabled: store.saladBowl.gpuMiningEnabled,
+  cpuEnabled: store.saladBowl.cpuMiningEnabled,
   gpus: store.machine.gpus,
   cpu: store.native.machineInfo?.cpu,
   ram: store.native.machineInfo?.memLayout,

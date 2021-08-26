@@ -2120,6 +2120,13 @@
   version "1.0.2"
   resolved "file:../../libs/saladtechnologies-garden-icons-1.0.2.tgz#2e5a00a8b17b8f8ed968df28bb1ad731cfd4c743"
 
+"@saladtechnologies/salad-grpc-salad-bowl@file:../../libs/saladtechnologies-salad-grpc-salad-bowl-0.0.1-alpha2.tgz":
+  version "0.0.1-alpha2"
+  resolved "file:../../libs/saladtechnologies-salad-grpc-salad-bowl-0.0.1-alpha2.tgz#0c8cf0cde5818a911fdfa763b06e06f896566e98"
+  dependencies:
+    google-protobuf "3.17.3"
+    grpc-web "1.2.1"
+
 "@sentry/browser@6.11.0":
   version "6.11.0"
   resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-6.11.0.tgz#9e90bbc0488ebcdd1e67937d8d5b4f13c3f6dee0"
@@ -7991,6 +7998,11 @@ globby@^9.2.0:
     pify "^4.0.1"
     slash "^2.0.0"
 
+google-protobuf@3.17.3:
+  version "3.17.3"
+  resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.17.3.tgz#f87595073545a77946c8f0b67c302c5f7646d700"
+  integrity sha512-OVPzcSWIAJ+d5yiHyeaLrdufQtrvaBrF4JQg+z8ynTkbO3uFcujqXszTumqg1cGsAsjkWnI+M5B1xZ19yR4Wyg==
+
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.1.9, graceful-fs@^4.2.0, graceful-fs@^4.2.4:
   version "4.2.8"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.8.tgz#e412b8d33f5e006593cbd3cee6df9f2cebbe802a"
@@ -8000,6 +8012,11 @@ growly@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
   integrity sha1-8QdIy+dq+WS3yWyTxrzCivEgwIE=
+
+grpc-web@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/grpc-web/-/grpc-web-1.2.1.tgz#860051d705bf5baa7b81fcbd14030060bf16b7b9"
+  integrity sha512-ibBaJPzfMVuLPgaST9w0kZl60s+SnkPBQp6QKdpEr85tpc1gXW2QDqSne9xiyiym0logDfdUSm4aX5h9YBA2mw==
 
 gud@^1.0.0:
   version "1.0.0"

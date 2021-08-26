@@ -3,15 +3,15 @@ import { RootStore } from '../../Store'
 import { MinerTypePanel } from './components/MinerTypePanel'
 
 const mapStoreToProps = (store: RootStore): any => {
-  const gpuMiningEnabled = store.saladBowl?.gpuMiningEnabled
+  const gpuMiningEnabled = store.saladBowl.gpuMiningEnabled
 
   const compatibilityDetectionOverridden = gpuMiningEnabled
-    ? store.saladBowl?.gpuMiningOverridden
-    : store.saladBowl?.cpuMiningOverridden
+    ? store.saladBowl.gpuMiningOverridden
+    : store.saladBowl.cpuMiningOverridden
 
   const onSetOverride = (value: boolean) => {
     if (!value) {
-      gpuMiningEnabled ? store.saladBowl?.setGpuOverride(value) : store.saladBowl?.setCpuOverride(value)
+      gpuMiningEnabled ? store.saladBowl.setGpuOverride(value) : store.saladBowl.setCpuOverride(value)
     } else {
       store.ui.showModal('/warnings/override-compatibility-detection')
     }
@@ -20,9 +20,9 @@ const mapStoreToProps = (store: RootStore): any => {
   return {
     compatibilityDetectionOverridden,
     gpuOnly: gpuMiningEnabled,
-    isRunning: store.saladBowl?.isRunning,
+    isRunning: store.saladBowl.isRunning,
     onViewAVGuide: () => store.ui.navigateToAVPage(),
-    onSetGpuOnly: store.saladBowl?.setGpuOnly,
+    onSetGpuOnly: store.saladBowl.setGpuOnly,
     onSetOverride,
   }
 }

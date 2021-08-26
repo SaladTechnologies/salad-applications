@@ -4,7 +4,7 @@ import { StartActionType } from '../salad-bowl/models'
 import { NotCompatibleErrorPage } from './components/NotCompatibleErrorPage'
 
 const mapStoreToProps = (store: RootStore): any => {
-  const gpuMiningEnabled = store.saladBowl?.gpuMiningEnabled
+  const gpuMiningEnabled = store.saladBowl.gpuMiningEnabled
 
   let currentMinerType: string
   let alternativeMinerType: string
@@ -19,13 +19,13 @@ const mapStoreToProps = (store: RootStore): any => {
   store.analytics.trackErrorPageViewed(`No Compatible ${currentMinerType} Error`)
 
   const onSwitchMiningType = () => {
-    store.saladBowl?.toggleRunning(StartActionType.SwitchMiner)
+    store.saladBowl.toggleRunning(StartActionType.SwitchMiner)
     store.ui.hideModal()
   }
 
   const onOverride = () => {
     store.ui.hideModal()
-    store.saladBowl?.toggleRunning(StartActionType.Override)
+    store.saladBowl.toggleRunning(StartActionType.Override)
   }
 
   return {
