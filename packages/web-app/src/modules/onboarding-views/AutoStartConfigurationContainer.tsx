@@ -6,7 +6,7 @@ const mapStoreToProps = (store: RootStore): any => {
   return {
     onEnableAutoStart: store.onboarding.enableAutoStart,
     onSkipAutoStart: store.onboarding.skipAutoStart,
-    disableAutoStartErrorMessage: store.onboarding.enableAutoStart,
+    disableAutoStartErrorMessage: store.onboarding.disableAutoStartErrorMessage,
     disableAutoStartPending: store.onboarding.disableAutoStartPending,
     isNative: store.native.isNative,
   }
