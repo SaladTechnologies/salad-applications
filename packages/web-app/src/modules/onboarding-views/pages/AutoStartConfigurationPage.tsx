@@ -77,6 +77,7 @@ const styles = (theme: SaladTheme) => ({
 export interface AutoStartConfigurationPageProps extends WithStyles<typeof styles> {
   isNative: boolean
   disableAutoStartPending: boolean
+  disableAutoStartErrorMessage?: string
   onEnableAutoStart: () => void
   onSkipAutoStart: () => void
 }
@@ -86,6 +87,7 @@ const _AutoStartConfigurationPage = ({
   onSkipAutoStart,
   onEnableAutoStart,
   disableAutoStartPending,
+  disableAutoStartErrorMessage,
 }: AutoStartConfigurationPageProps) => {
   return (
     <div className={classes.container}>
@@ -119,6 +121,7 @@ const _AutoStartConfigurationPage = ({
                   isLoading={disableAutoStartPending}
                   size="medium"
                   label="Enable Auto-Start"
+                  errorMessage={disableAutoStartErrorMessage}
                   onClick={onEnableAutoStart}
                   variant="primary-basic"
                 />
