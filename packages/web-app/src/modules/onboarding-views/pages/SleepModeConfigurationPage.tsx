@@ -76,16 +76,18 @@ const styles = (theme: SaladTheme) => ({
 
 export interface SleepModeConfigurationPageProps extends WithStyles<typeof styles> {
   isNative: boolean
-  onEnableAutoStart: () => void
-  onSkipSleepModeConfiguration: () => void
+  disableSleepModePending: boolean
+  onDisableSleepMode: () => void
+  onSkipSleepMode: () => void
   sleepModeErrorMessage?: string
 }
 
 const _SleepModeConfigurationPage = ({
   classes,
-  onSkipSleepModeConfiguration,
-  onEnableAutoStart,
+  onDisableSleepMode,
+  onSkipSleepMode,
   sleepModeErrorMessage,
+  disableSleepModePending,
 }: SleepModeConfigurationPageProps) => {
   return (
     <div className={classes.container}>
@@ -112,14 +114,15 @@ const _SleepModeConfigurationPage = ({
             </div>
             <div className={classes.buttonsContainer}>
               <span className={classes.skipButton}>
-                <Button size="medium" label="Skip For Now" onClick={onSkipSleepModeConfiguration} variant="outlined" />
+                <Button size="medium" label="Skip For Now" onClick={onSkipSleepMode} variant="outlined" />
               </span>
               <span className={classes.enableButton}>
                 <Button
                   errorMessage={sleepModeErrorMessage}
                   size="medium"
                   label="Disable Sleep Mode"
-                  onClick={onEnableAutoStart}
+                  isLoading={disableSleepModePending}
+                  onClick={onDisableSleepMode}
                   variant="primary-basic"
                 />
               </span>

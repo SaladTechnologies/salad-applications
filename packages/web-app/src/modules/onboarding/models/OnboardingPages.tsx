@@ -20,4 +20,5 @@ export const ONBOARDING_PAGES = [
   { NAME: ONBOARDING_PAGE_NAMES.WELCOME, PATH: '/onboarding/welcome', ORDER: 1, NATIVE: false },
   { NAME: ONBOARDING_PAGE_NAMES.REFERRAL, PATH: '/onboarding/referral', ORDER: 2, NATIVE: false },
   { NAME: ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION, PATH: '/onboarding/auto-start', ORDER: 3, NATIVE: true },
+  { NAME: ONBOARDING_PAGE_NAMES.SLEEP_MODE_CONFIGURATION, PATH: '/onboarding/sleep-mode', ORDER: 4, NATIVE: true },
 ]

@@ -14,7 +14,7 @@ export class OnboardingStore {
   public disableSleepModePending: boolean = false
 
   @observable
-  public disableSleepModeError: boolean = false
+  public disableSleepModeErrorMessage?: string = undefined
 
   @observable
   public disableAutoStartPending: boolean = false
@@ -84,16 +84,23 @@ export class OnboardingStore {
 
   @action.bound
   public disableSleepMode = flow(function* (this: OnboardingStore) {
-    this.disableSleepModeError = false
+    this.disableSleepModeErrorMessage = undefined
     this.disableSleepModePending = true
     try {
       yield this.store.native.disableSleepMode()
     } catch {
-      this.disableSleepModeError = true
+      this.disableSleepModeErrorMessage =
+        'Something went wrong and we were unable to adjust your sleep mode settings. You can adjust these settings yourself in Windows Settings, or contact support for assistance.'
     } finally {
       this.disableSleepModePending = false
+      this.viewNextPage(ONBOARDING_PAGE_NAMES.SLEEP_MODE_CONFIGURATION)
     }
   })
+
+  @action
+  public skipSleepMode = () => {
+    this.viewNextPage(ONBOARDING_PAGE_NAMES.SLEEP_MODE_CONFIGURATION)
+  }
 
   @action.bound
   public enableAutoStart = flow(function* (this: OnboardingStore) {
