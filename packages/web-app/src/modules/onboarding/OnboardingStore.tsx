@@ -109,7 +109,8 @@ export class OnboardingStore {
     try {
       yield this.store.autoStart.setAutoStart(true)
     } catch {
-      this.disableAutoStartErrorMessage = 'There was an error while trying to set your sleep mode.'
+      this.disableAutoStartErrorMessage =
+        'Something went wrong and we were unable to adjust your auto start settings. You can adjust these settings yourself in the Desktop App Settings, or contact support for assistance.'
     } finally {
       this.disableAutoStartPending = false
       this.viewNextPage(ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION)
