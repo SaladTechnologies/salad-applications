@@ -31,6 +31,7 @@ import { PluginManager } from './salad-bowl/PluginManager'
 import { SaladBridgeNotificationService } from './salad-bowl/SaladBridgeNotificationService'
 import { SaladBridge } from './SaladBridge'
 import { DefaultTheme as theme } from './SaladTheme'
+import { powershellWhitelistCommand } from './whitelistWindowsScript'
 import isOnline = require('is-online')
 
 // The path to the `/static` folder. This is provided by electron-webpack.
@@ -383,6 +384,44 @@ const createMainWindow = () => {
     machineInfo.then((info) => {
       bridge.send('set-machine-info', info)
     })
+  })
+
+  bridge.on('whitelist-windows-defender', (filePath?: string) => {
+    if (!filePath) {
+      if (!process.env.APPDATA) {
+        console.error(
+          `Failed to Whitelist Windows Defender because the user's APPDATA environment variable has not been defined`,
+        )
+        bridge.send('whitelist-windows-defender', { error: true })
+        return
+      }
+      filePath = path.join(process.env.APPDATA, 'Salad/plugin-bin')
+    }
+    exec(
+      powershellWhitelistCommand,
+      {
+        env: {
+          WHITELIST_DIR: filePath,
+        },
+        timeout: 60000,
+        windowsHide: true,
+      },
+      (error, _stdout, stderr) => {
+        if (error) {
+          console.error(
+            `Failed to Whitelist Windows Defender (${error.message}${
+              error.code == null ? '' : `, exit code ${error.code}`
+            })${stderr ? `\n${stderr}` : ''}`,
+          )
+          bridge.send('whitelist-windows-defender', {
+            error: true,
+            errorCode: error.code,
+          })
+        } else {
+          bridge.send('whitelist-windows-defender', {})
+        }
+      },
+    )
   })
 
   bridge.on('minimize-window', () => {
