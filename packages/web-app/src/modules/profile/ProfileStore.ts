@@ -114,7 +114,7 @@ export class ProfileStore {
     this.avatarError = undefined
     let avatarId: string | undefined
     if (id === '00000000-0000-0000-0000-000000000000') {
-      this.selectedAvatar = SaladDefaultAvatar.id
+      this.selectedAvatar = this.submittingAvatar = SaladDefaultAvatar.id
       avatarId = '00000000-0000-0000-0000-000000000000'
     } else {
       this.selectedAvatar = this.submittingAvatar = this.avatars.find((avatar) => avatar.id === id)?.id
