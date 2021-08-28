@@ -29,6 +29,11 @@ export class OnboardingStore {
     const onboardingPagesCompleted = Storage.getItem(ONBOARDING_STORAGE_KEY)
     const currentReferral = this.store.referral.currentReferral?.code
 
+    /**
+     * Checks to see if users have gone through onboarding process.
+     * If they have not but already have a referral code, we skip the
+     * first two steps.
+     */
     if (onboardingPagesCompleted == null) {
       currentReferral
         ? this.updateCompletedOnboardingPages([ONBOARDING_PAGE_NAMES.WELCOME, ONBOARDING_PAGE_NAMES.REFERRAL])
@@ -39,6 +44,23 @@ export class OnboardingStore {
         this.markOnboardingPageAsCompleted(ONBOARDING_PAGE_NAMES.WELCOME)
         this.markOnboardingPageAsCompleted(ONBOARDING_PAGE_NAMES.REFERRAL)
       }
+    }
+
+    /**
+     * We renamed our AFK Configuration page to Auto Start so we are checking to
+     * see if users have seen the AFK Config page and if they have, we are swapping
+     * it out in our onboardingPagesCompleted array with our updated Auto Start page name
+     * so users do not see this page again.
+     * */
+    if (onboardingPagesCompleted?.includes(ONBOARDING_PAGE_NAMES.AFK_CONFIGURATION)) {
+      this.updateCompletedOnboardingPages(
+        JSON.parse(
+          onboardingPagesCompleted.replace(
+            ONBOARDING_PAGE_NAMES.AFK_CONFIGURATION,
+            ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION,
+          ),
+        ),
+      )
     }
 
     if (this.hasOnboardingPagesToComplete(onboardingPagesCompleted)) {
