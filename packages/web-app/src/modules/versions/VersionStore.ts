@@ -10,6 +10,15 @@ import { DesktopVersionResource } from './models'
 
 const VERSION_RELOAD_DATA = 'VERSION_RELOAD_DATA'
 
+function isPersistentStore(obj: unknown): obj is IPersistentStore {
+  return (
+    typeof obj === 'object' &&
+    obj != null &&
+    typeof (obj as any).getSavedData === 'function' &&
+    typeof (obj as any).onDataLoaded === 'function'
+  )
+}
+
 export class VersionStore {
   @observable
   public onLatestDesktop: boolean = true
@@ -24,7 +33,12 @@ export class VersionStore {
   private readonly persistentStores: Array<IPersistentStore>
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
-    this.persistentStores = [store.saladBowl]
+    this.persistentStores = []
+
+    const saladBowl = store.saladBowl
+    if (isPersistentStore(saladBowl)) {
+      this.persistentStores.push(saladBowl)
+    }
 
     // Check to see if this is part of an automatic app refresh where we need to start the miner again.
     const dataString = getItem(VERSION_RELOAD_DATA)
