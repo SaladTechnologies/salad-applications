@@ -27,10 +27,12 @@
     "target": ["nsis"]
   },
   "nsis": {
-    "allowToChangeInstallationDirectory": true,
-    "artifactName": "${productName} Installer ${version}.${ext}",
+    "artifactName": "${productName}-${version}.${ext}",
+    "createDesktopShortcut": "always",
+    "deleteAppDataOnUninstall": true,
     "license": "LICENSE.md",
-    "oneClick": false
+    "oneClick": true,
+    "perMachine": true
   },
   "linux": {
     "target": ["rpm", "deb"],

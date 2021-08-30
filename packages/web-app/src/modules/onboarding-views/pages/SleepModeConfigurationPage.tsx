@@ -1,7 +1,5 @@
-import { Button, FieldContainer, Switch, Text } from '@saladtechnologies/garden-components'
-import { ChevronRight } from '@saladtechnologies/garden-icons'
+import { Button, FieldContainer, Text } from '@saladtechnologies/garden-components'
 import classnames from 'classnames'
-import { useState } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import MediaQuery from 'react-responsive'
 import { Head } from '../../../components'
@@ -11,7 +9,7 @@ import Carrot from '../assets/onboarding-afk-carrot.png'
 const styles = (theme: SaladTheme) => ({
   container: {
     position: 'fixed',
-    top: (props: Props) => (props.isNative ? '4.1rem' : 0),
+    top: (props: SleepModeConfigurationPageProps) => (props.isNative ? '4.1rem' : 0),
     bottom: 0,
     left: 0,
     right: 0,
@@ -64,59 +62,67 @@ const styles = (theme: SaladTheme) => ({
     height: 'auto',
     width: '100%',
   },
-  button: {
-    width: 119,
+  enableButton: {
+    width: 175,
+    marginLeft: 24,
+  },
+  skipButton: {
+    width: 145,
+  },
+  buttonsContainer: {
+    display: 'flex',
   },
 })
 
-interface Props extends WithStyles<typeof styles> {
+export interface SleepModeConfigurationPageProps extends WithStyles<typeof styles> {
   isNative: boolean
-  onContinue: (autoStartEnabled: boolean) => void
-  onToggleAutoStart: (autoStartEnabled: boolean) => void
+  onEnableAutoStart: () => void
+  onSkipSleepModeConfiguration: () => void
+  sleepModeErrorMessage?: string
 }
 
-const _AFKConfigurationPage = ({ classes, onContinue, onToggleAutoStart }: Props) => {
-  const [autoStartEnabled, toggleAutoStartEnabled] = useState<boolean>(true)
-
-  const handleToggle = (autoStartEnabled: boolean) => {
-    toggleAutoStartEnabled(autoStartEnabled)
-    onToggleAutoStart(autoStartEnabled)
-  }
-
+const _SleepModeConfigurationPage = ({
+  classes,
+  onSkipSleepModeConfiguration,
+  onEnableAutoStart,
+  sleepModeErrorMessage,
+}: SleepModeConfigurationPageProps) => {
   return (
     <div className={classes.container}>
       <div className={classes.page}>
         <div className={classes.contentContainer}>
-          <Head title="AFK Configuration" />
+          <Head title="Sleep Configuration" />
           <div className={classes.content}>
             <div className={classnames(classes.header, classes.mb48)}>
-              <Text variant="headline">AFK Configuration</Text>
+              <Text variant="headline">Sleep Configuration</Text>
             </div>
             <FieldContainer>
               <div className={classes.mb24}>
-                <Text variant="baseXL">Auto-Start</Text>
+                <Text variant="baseXL">Disable Sleep Mode</Text>
               </div>
               <div className={classes.mb24}>
                 <Text variant="baseL">
-                  Salad always tries to fully utilize your PC to get you the highest earnings possible and is designed
-                  to be run when you are away from your machine (AFK).
+                  When your PC goes to sleep, Salad stops chopping and you’ll miss out on earnings. We recommend
+                  disabling sleep mode on your PC.
                 </Text>
               </div>
             </FieldContainer>
             <div className={classes.mb48}>
-              <Switch
-                checked={autoStartEnabled}
-                onChange={() => handleToggle(!autoStartEnabled)}
-                label="Automatically chop when you are away from your PC"
-              />
+              <Text variant="baseS">You can always adjust sleep mode later in Windows settings.</Text>
             </div>
-            <div className={classes.button}>
-              <Button
-                label="Continue"
-                onClick={() => onContinue(autoStartEnabled)}
-                variant="primary-basic"
-                trailingIcon={<ChevronRight />}
-              />
+            <div className={classes.buttonsContainer}>
+              <span className={classes.skipButton}>
+                <Button size="medium" label="Skip For Now" onClick={onSkipSleepModeConfiguration} variant="outlined" />
+              </span>
+              <span className={classes.enableButton}>
+                <Button
+                  errorMessage={sleepModeErrorMessage}
+                  size="medium"
+                  label="Disable Sleep Mode"
+                  onClick={onEnableAutoStart}
+                  variant="primary-basic"
+                />
+              </span>
             </div>
           </div>
           <MediaQuery minWidth={767}>
@@ -128,4 +134,4 @@ const _AFKConfigurationPage = ({ classes, onContinue, onToggleAutoStart }: Props
   )
 }
 
-export const AFKConfigurationPage = withStyles(styles)(_AFKConfigurationPage)
+export const SleepModeConfigurationPage = withStyles(styles)(_SleepModeConfigurationPage)
