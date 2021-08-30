@@ -343,8 +343,8 @@ export class NativeStore {
   }
 
   @action
-  openFolderLog = () => {
-    this.send(openLogFolder)
+  openFolderLog = (path?: string) => {
+    this.send(openLogFolder, path)
   }
 
   @action

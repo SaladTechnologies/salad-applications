@@ -468,8 +468,8 @@ const createMainWindow = () => {
     bridge.send(setDesktopVersion, app.getVersion())
   })
 
-  bridge.on('open-log-folder', () => {
-    const path = Logger.getLogFolder()
+  bridge.on('open-log-folder', (filePath?: string) => {
+    const path = filePath ? filePath : Logger.getLogFolder()
     shell.showItemInFolder(path)
   })
 
