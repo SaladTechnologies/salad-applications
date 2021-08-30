@@ -554,10 +554,12 @@ export class SaladBowlStore implements SaladBowlStoreInterface {
     this.plugin.status = PluginStatus.Stopped
     this.store.native.send('stop-salad')
 
-    this.store.analytics.trackStop(reason, this.runningTime || 0, this.choppingTime || 0)
+    if (this.isRunning) {
+      this.store.analytics.trackStop(reason, this.runningTime || 0, this.choppingTime || 0)
+      console.log('Stopping after running for: ' + this.runningTime + 'and chopping for: ' + this.choppingTime)
+    }
 
     this.startTimestamp = undefined
-    console.log('Stopping after running for: ' + this.runningTime + 'and chopping for: ' + this.choppingTime)
     this.runningTime = undefined
     this.choppingTime = undefined
   }
