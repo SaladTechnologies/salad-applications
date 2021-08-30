@@ -21,7 +21,7 @@ function init() {
 
   window.salad = {
     platform: process.platform,
-    apiVersion: 9,
+    apiVersion: 8,
     dispatch: dispatch,
   }
 
