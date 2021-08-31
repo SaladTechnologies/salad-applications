@@ -137,42 +137,48 @@ export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
   private streamWorkloadData = () => {
     this.store.saladFork
       .workloadStatuses$()
-      .pipe(map((js) => js.getEvent()!))
+      .pipe(map((js) => js.getEvent()))
       .pipe(
         map((event) => {
-          const topic = event.getTopic()
+          if (event !== undefined) {
+            const topic = event.getTopic()
 
-          let workloadData: { ethSpeed?: number; dagCompleted?: number; minerName: string } = {
-            ethSpeed: undefined,
-            dagCompleted: undefined,
-            minerName: topic.split('.')[1],
+            let workloadData: { ethSpeed?: number; dagCompleted?: number; minerName: string } = {
+              ethSpeed: undefined,
+              dagCompleted: undefined,
+              minerName: topic.split('.')[1],
+            }
+
+            if (topic.includes('eth.speed')) {
+              const message = event.getMessage()
+              workloadData.ethSpeed = parseInt(message.trim())
+            }
+
+            if (topic.includes('dag.complete')) {
+              const message = event.getMessage()
+              workloadData.dagCompleted = parseInt(message.trim())
+            }
+
+            return workloadData
+          } else {
+            return undefined
           }
-
-          if (topic.includes('eth.speed')) {
-            const message = event.getMessage()
-            workloadData.ethSpeed = parseInt(message.trim())
-          }
-
-          if (topic.includes('dag.complete')) {
-            const message = event.getMessage()
-            workloadData.dagCompleted = parseInt(message.trim())
-          }
-
-          return workloadData
         }),
       )
       .pipe(takeUntil(this.destroySubscription))
       .subscribe((workloadData) => {
-        if (this.plugin.name !== undefined && this.plugin.name !== workloadData.minerName) {
-          this.resetPluginInfo()
-        } else {
-          this.updatePluginName(workloadData.minerName)
-        }
+        if (workloadData !== undefined) {
+          if (this.plugin.name !== undefined && this.plugin.name !== workloadData.minerName) {
+            this.resetPluginInfo()
+          } else {
+            this.updatePluginName(workloadData.minerName)
+          }
 
-        if ((workloadData.ethSpeed && workloadData.ethSpeed > 0) || workloadData.dagCompleted !== undefined) {
-          this.updatePluginStatus(PluginStatus.Running)
-        } else if (this.plugin.status !== undefined) {
-          this.updatePluginStatus(PluginStatus.Initializing)
+          if ((workloadData.ethSpeed && workloadData.ethSpeed > 0) || workloadData.dagCompleted !== undefined) {
+            this.updatePluginStatus(PluginStatus.Running)
+          } else if (this.plugin.status !== undefined) {
+            this.updatePluginStatus(PluginStatus.Initializing)
+          }
         }
       })
   }

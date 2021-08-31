@@ -148,7 +148,7 @@
     "react-toastify": "7.0.4",
     "react-transition-group": "4.4.2",
     "recharts": "2.1.0",
-    "rxjs": "^7.3.0",
+    "rxjs": "7.3.0",
     "sanitize-html": "2.4.0",
     "semver": "7.3.5",
     "supertokens-website": "8.1.2",
