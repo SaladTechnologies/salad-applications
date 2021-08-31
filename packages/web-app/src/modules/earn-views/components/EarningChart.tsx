@@ -6,6 +6,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { P } from '../../../components'
 import { Segments } from '../../../components/elements/Segments'
+import { FeatureManagerConsumer } from '../../../FeatureManager'
 import { SaladTheme } from '../../../SaladTheme'
 import { formatBalance } from '../../../utils'
 import { EarningWindow } from '../../balance/models'
@@ -23,6 +24,9 @@ const styles = (theme: SaladTheme) => ({
     width: '100%',
     position: 'relative',
     flexDirection: 'column',
+  },
+  removeContainerPadding: {
+    paddingTop: 0,
   },
   placeholderText: {
     textAlign: 'center',
@@ -236,7 +240,7 @@ const _CustomizedYAxisTick = (props: CustomTick) => {
 const CustomizedYAxisTick = withStyles(styles)(_CustomizedYAxisTick)
 
 interface Props extends WithStyles<typeof styles> {
-  earningHistory?: EarningWindow[]
+  earningHistory: EarningWindow[]
   viewLast24Hours: () => void
   viewLast7Days: () => void
   viewLast30Days: () => void
@@ -423,106 +427,125 @@ class _EarningChart extends Component<Props, State> {
         break
     }
 
+    const saladBowlFeature = 'app_salad_bowl'
     return (
-      <div className={classes.container}>
-        <div
-          className={classnames(classes.placeholderText, {
-            [classes.placeholderTextHidden]: !isZero,
-          })}
-        >
-          <P>No Earning History During the Last {timePeriod}. Get Chopping to See Those Earnings!</P>
-        </div>
-        {earningHistory && (
-          <>
-            <ResponsiveContainer>
-              <BarChart
-                data={earningHistory}
-                margin={{ top: 30, left: 10, right: 10, bottom: 0 }}
-                onMouseMove={this.handleMouseEvent}
-                onMouseLeave={this.handleMouseEvent}
-                onMouseDown={this.handleMouseDown}
-                onMouseUp={this.handleMouseUp}
-                barGap={10}
-              >
-                <CartesianGrid vertical={false} stroke="#1F4F22" />
-                {showEarningsRange && !isZero ? (
-                  <Tooltip
-                    content={
-                      <CustomRangeTooltip
-                        rangeStartTime={earningsRangeStart?.timestamp}
-                        rangeEndTime={earningsRangeEnd?.timestamp}
-                        rangeSum={earningsRangeSum}
-                        leftToRight={selectedLeftToRight}
-                        daysShowing={daysShowing}
-                      />
-                    }
-                    cursor={false}
-                    isAnimationActive={false}
-                    position={{ y: 0, x: rangeCenterCoordinate || 0 }}
-                  />
-                ) : (
-                  <Tooltip
-                    cursor={<CustomizedCursor />}
-                    content={
-                      <CustomTooltip nowWindow={earningHistory[earningHistory.length - 1]} daysShowing={daysShowing} />
-                    }
-                    isAnimationActive={false}
-                    //@ts-ignore
-                    position={{ y: 0, x: 'auto' }}
-                  />
-                )}
-                <XAxis
-                  dataKey={this.getTimeValue}
-                  domain={['auto', 'auto']}
-                  interval={7}
-                  scale="time"
-                  stroke="#B2D530"
-                  //@ts-ignore
-                  tick={<CustomizedXAxisTick daysShowing={daysShowing} />}
-                  type="number"
-                />
-                <YAxis
-                  axisLine={false}
-                  minTickGap={2}
-                  stroke="#B2D530"
-                  //@ts-ignore
-                  tick={<CustomizedYAxisTick />}
-                  tickLine={false}
-                />
-                <Bar dataKey="earnings" fill="#B2D530">
-                  {earningHistory &&
-                    earningHistory.map((window, index) => {
-                      let color = '#B2D530'
-                      let border = ''
-                      let dash = ''
-
-                      if (index === hoverIndex) {
-                        color = '#DBF1C1'
-                      }
-
-                      if (selectedRangeIndexes.length > 0 && !selectedRangeIndexes.includes(index)) {
-                        color = '#0A2133'
-                        border = '#B2D530'
-                      }
-
-                      if (index === earningHistory.length - 1) {
-                        border = color
-                        color = '#0A2133'
-                        dash = '3 3'
-                      }
-                      return (
-                        <Cell key={window.timestamp.toString()} fill={color} stroke={border} strokeDasharray={dash} />
-                      )
-                    })}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-            <div className={classes.buttonContainer}>
-              <Segments options={segmentOptions} />
+      <FeatureManagerConsumer>
+        {(value) => (
+          <div
+            className={classnames(classes.container, {
+              [classes.removeContainerPadding]: value.isEnabled(saladBowlFeature),
+            })}
+          >
+            <div
+              className={classnames(classes.placeholderText, {
+                [classes.placeholderTextHidden]: !isZero,
+              })}
+            >
+              <P>No Earning History During the Last {timePeriod}. Get Chopping to See Those Earnings!</P>
             </div>
-          </>
+            {earningHistory && (
+              <>
+                <ResponsiveContainer>
+                  <BarChart
+                    data={earningHistory}
+                    margin={{ top: 30, left: 10, right: 10, bottom: 0 }}
+                    onMouseMove={this.handleMouseEvent}
+                    onMouseLeave={this.handleMouseEvent}
+                    onMouseDown={this.handleMouseDown}
+                    onMouseUp={this.handleMouseUp}
+                    barGap={10}
+                  >
+                    <CartesianGrid vertical={false} stroke="#1F4F22" />
+                    {showEarningsRange && !isZero ? (
+                      <Tooltip
+                        content={
+                          <CustomRangeTooltip
+                            rangeStartTime={earningsRangeStart?.timestamp}
+                            rangeEndTime={earningsRangeEnd?.timestamp}
+                            rangeSum={earningsRangeSum}
+                            leftToRight={selectedLeftToRight}
+                            daysShowing={daysShowing}
+                          />
+                        }
+                        cursor={false}
+                        isAnimationActive={false}
+                        position={{ y: 0, x: rangeCenterCoordinate || 0 }}
+                      />
+                    ) : (
+                      <Tooltip
+                        cursor={<CustomizedCursor />}
+                        content={
+                          <CustomTooltip
+                            nowWindow={earningHistory[earningHistory.length - 1]}
+                            daysShowing={daysShowing}
+                          />
+                        }
+                        isAnimationActive={false}
+                        //@ts-ignore
+                        position={{ y: 0, x: 'auto' }}
+                      />
+                    )}
+                    <XAxis
+                      dataKey={this.getTimeValue}
+                      domain={['auto', 'auto']}
+                      interval={7}
+                      scale="time"
+                      stroke="#B2D530"
+                      //@ts-ignore
+                      tick={<CustomizedXAxisTick daysShowing={daysShowing} />}
+                      type="number"
+                    />
+                    <YAxis
+                      axisLine={false}
+                      minTickGap={2}
+                      stroke="#B2D530"
+                      //@ts-ignore
+                      tick={<CustomizedYAxisTick />}
+                      tickLine={false}
+                    />
+                    <Bar dataKey="earnings" fill="#B2D530">
+                      {earningHistory &&
+                        earningHistory.map((window, index) => {
+                          let color = '#B2D530'
+                          let border = ''
+                          let dash = ''
+
+                          if (index === hoverIndex) {
+                            color = '#DBF1C1'
+                          }
+
+                          if (selectedRangeIndexes.length > 0 && !selectedRangeIndexes.includes(index)) {
+                            color = '#0A2133'
+                            border = '#B2D530'
+                          }
+
+                          if (index === earningHistory.length - 1) {
+                            border = color
+                            color = '#0A2133'
+                            dash = '3 3'
+                          }
+                          return (
+                            <Cell
+                              key={window.timestamp.toString()}
+                              fill={color}
+                              stroke={border}
+                              strokeDasharray={dash}
+                            />
+                          )
+                        })}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+                {!value.isEnabled(saladBowlFeature) && (
+                  <div className={classes.buttonContainer}>
+                    <Segments options={segmentOptions} />
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         )}
-      </div>
+      </FeatureManagerConsumer>
     )
   }
 }

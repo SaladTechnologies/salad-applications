@@ -6,6 +6,7 @@ import { Border } from './decorators/Border'
 import { DisableUserSelect } from './decorators/DisableUserSelect'
 import { SaladTheme } from './decorators/SaladTheme'
 import { GardenTheme } from './decorators/GardenTheme'
+import { RawIntl } from './decorators/RawIntl'
 import { StoreDecorator } from './decorators/StoreDecorator'
 import { TooltipDecorator } from './decorators/TooltipDecorator'
 
@@ -19,5 +20,6 @@ addDecorator((storyFn) => <TooltipDecorator>{storyFn()}</TooltipDecorator>)
 addDecorator((storyFn) => <MemoryRouter>{storyFn()}</MemoryRouter>)
 addDecorator((storyFn) => <DisableUserSelect>{storyFn()}</DisableUserSelect>)
 addDecorator((storyFn) => <SaladTheme>{storyFn()}</SaladTheme>)
+addDecorator((storyFn) => <RawIntl>{storyFn()}</RawIntl>)
 addDecorator((storyFn) => <GardenTheme>{storyFn()}</GardenTheme>)
 addDecorator((storyFn) => <Border>{storyFn()}</Border>)
