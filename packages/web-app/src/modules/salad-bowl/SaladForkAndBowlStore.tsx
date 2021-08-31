@@ -1,11 +1,26 @@
-import { computed, observable } from 'mobx'
+import { Duration } from 'luxon'
+import { action, computed, flow, observable, runInAction } from 'mobx'
+import { Subject } from 'rxjs'
+import { filter, map, takeUntil } from 'rxjs/operators'
 import { RootStore } from '../../Store'
+import { ErrorPageType } from '../../UIStore'
 import { MiningStatus } from '../machine/models'
-import type { ErrorMessage, PluginDefinition, StartActionType, StatusMessage, StopReason } from './models'
-import { PluginInfo, StartReason } from './models'
+import { NotificationMessageCategory } from '../notifications/models'
+import { PluginInfo, StartActionType, StartReason, StopReason } from './models'
+import { PluginStatus } from './models/PluginStatus'
 import { SaladBowlStoreInterface } from './SaladBowlStoreInterface'
+import { getPreppingPercentage } from './utils'
 
 export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
+  private runningTimer?: NodeJS.Timeout
+  private timeoutTimer?: NodeJS.Timeout
+  /** The timestamp last time that start was pressed */
+  private startTimestamp?: Date
+  /** The total time we have been in the chopping state since the start button was pressed (ms) */
+  private choppingTime?: number = undefined
+
+  private readonly destroySubscription = new Subject<void>()
+
   @observable
   public runningTime?: number = undefined
 
@@ -24,24 +39,23 @@ export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
   @observable
   public plugin = new PluginInfo()
 
-  @computed
-  get pluginDefinitions(): PluginDefinition[] {
-    return []
+  @action
+  private destroySaladBowlSubscriptions(): void {
+    this.destroySubscription.next()
   }
 
   @computed
   get canRun() {
-    return true
-  }
-
-  @computed
-  get pluginCount() {
-    return this.pluginDefinitions.length
+    // Should also have a check if we are connected to Salad Bowl 2.0
+    return (
+      this.store.auth.isAuthenticated !== undefined && this.store.auth.isAuthenticated && this.store.native.isNative
+    )
   }
 
   @computed
   get isRunning() {
-    return false
+    // Change this
+    return this.runningTime !== undefined
   }
 
   @computed
@@ -55,13 +69,23 @@ export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
   }
 
   @computed
-  get status() {
-    return MiningStatus.Stopped
+  get status(): MiningStatus {
+    switch (this.plugin.status) {
+      case PluginStatus.Installing:
+        return MiningStatus.Installing
+      case PluginStatus.Initializing:
+        return MiningStatus.Initializing
+      case PluginStatus.Running:
+        return MiningStatus.Running
+      case PluginStatus.Unknown:
+      default:
+        return MiningStatus.Stopped
+    }
   }
 
   @computed
   get preppingProgress() {
-    return 0
+    return getPreppingPercentage(this.runningTime)
   }
 
   @computed
@@ -71,54 +95,319 @@ export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
         unit: 'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'second'
       }
     | undefined {
-    return undefined
+    if (this.runningTime === undefined) {
+      return undefined
+    }
+
+    const duration: Duration = Duration.fromMillis(this.runningTime)
+    const interval = duration.shiftTo('years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds').toObject()
+    if (interval.years !== undefined && interval.years >= 1) {
+      return { value: interval.years, unit: 'year' }
+    } else if (interval.months !== undefined && interval.months >= 1) {
+      return { value: interval.months, unit: 'month' }
+    } else if (interval.weeks !== undefined && interval.weeks >= 1) {
+      return { value: interval.weeks, unit: 'week' }
+    } else if (interval.days !== undefined && interval.days >= 1) {
+      return { value: interval.days, unit: 'day' }
+    } else if (interval.hours !== undefined && interval.hours >= 1) {
+      return { value: interval.hours, unit: 'hour' }
+    } else if (interval.minutes !== undefined && interval.minutes >= 1) {
+      return { value: Math.ceil(interval.minutes), unit: 'minute' }
+    } else {
+      return { value: interval.seconds ? Math.ceil(interval.seconds) : 0, unit: 'second' }
+    }
+  }
+
+  @action private updatePluginStatus = (status: PluginStatus) => {
+    this.plugin.status = status
+  }
+
+  @action private updatePluginName = (name: string) => {
+    this.plugin.name = name
+  }
+
+  @action private updatePluginVersion = (version: string) => {
+    this.plugin.version = version
+  }
+
+  @action private resetPluginInfo = () => {
+    this.plugin = new PluginInfo()
+  }
+
+  private streamWorkloadData = () => {
+    this.store.saladFork
+      .workloadStatuses$()
+      .pipe(map((js) => js.getEvent()))
+      .pipe(
+        map((event) => {
+          if (event !== undefined) {
+            const topic = event.getTopic()
+
+            let workloadData: { ethSpeed?: number; dagCompleted?: number; minerName: string } = {
+              ethSpeed: undefined,
+              dagCompleted: undefined,
+              minerName: topic.split('.')[1],
+            }
+
+            if (topic.includes('eth.speed')) {
+              const message = event.getMessage()
+              workloadData.ethSpeed = parseInt(message.trim())
+            }
+
+            if (topic.includes('dag.complete')) {
+              const message = event.getMessage()
+              workloadData.dagCompleted = parseInt(message.trim())
+            }
+
+            return workloadData
+          } else {
+            return undefined
+          }
+        }),
+      )
+      .pipe(takeUntil(this.destroySubscription))
+      .subscribe((workloadData) => {
+        if (workloadData !== undefined) {
+          if (this.plugin.name !== undefined && this.plugin.name !== workloadData.minerName) {
+            this.resetPluginInfo()
+          } else {
+            this.updatePluginName(workloadData.minerName)
+          }
+
+          if ((workloadData.ethSpeed && workloadData.ethSpeed > 0) || workloadData.dagCompleted !== undefined) {
+            this.updatePluginStatus(PluginStatus.Running)
+          } else if (this.plugin.status !== undefined) {
+            this.updatePluginStatus(PluginStatus.Initializing)
+          }
+        }
+      })
+  }
+
+  private streamMinerData = () => {
+    this.store.saladFork
+      .minerStats$()
+      .pipe(map((resp) => resp.getStats()))
+      .pipe(filter((minerStats) => minerStats != null))
+      .pipe(takeUntil(this.destroySubscription))
+      .subscribe((minerStats) => {
+        const minerVersion = minerStats?.getMinerversion()
+        if (minerVersion) {
+          this.updatePluginVersion(minerVersion)
+        }
+      })
   }
 
   constructor(private readonly store: RootStore) {}
 
   private start = (reason: StartReason, startTimestamp?: Date, choppingTime?: number) => {
-    console.log(reason)
-    console.log(startTimestamp)
-    console.log(choppingTime)
+    if (this.isRunning) {
+      return
+    }
+
+    if (!this.canRun) {
+      if (this.store.auth.isAuthenticated && !this.isOverriding) {
+        this.store.ui.showErrorPage(ErrorPageType.NotCompatible)
+      }
+      console.log('This machine is not able to run.')
+      return
+    }
+
+    this.store.ui.updateViewedAVErrorPage(false)
+    if (this.timeoutTimer != null) {
+      clearTimeout(this.timeoutTimer)
+      this.timeoutTimer = undefined
+    }
+
+    if (this.runningTimer) {
+      clearInterval(this.runningTimer)
+      this.runningTimer = undefined
+      this.runningTime = undefined
+      this.choppingTime = undefined
+    }
+
+    // Start Salad Bowl 2.0
+    this.plugin.status = PluginStatus.Installing
+    this.store.saladFork.start()
+
+    // start streaming salad bowl data data
+    this.streamWorkloadData()
+    this.streamMinerData()
+
+    // TODO: this.plugin.algorithm = this.currentPluginDefinition.algorithm
+
+    // TODO: This anaytics metric is probably not going to work anymore?
+    // const gpusNames = this.store.machine.gpus.filter((x) => x && x.model).map((x) => x.model)
+    // const cpu = this.store.native.machineInfo?.cpu
+    // const cpuName = `${cpu?.manufacturer} ${cpu?.brand}`
+
+    // this.store.analytics.trackStart(
+    //   reason,
+    //   this.gpuMiningEnabled,
+    //   this.cpuMiningEnabled,
+    //   gpusNames,
+    //   cpuName,
+    //   this.gpuMiningOverridden,
+    //   this.cpuMiningOverridden,
+    // )
+
+    //Show a notification reminding chefs to use auto start
+    if (reason === StartReason.Manual && this.store.autoStart.canAutoStart && !this.store.autoStart.autoStart) {
+      this.store.notifications.sendNotification({
+        category: NotificationMessageCategory.AutoStart,
+        title: 'Salad is best run AFK',
+        message: "Don't forget to enable auto start in Settings",
+        id: 123456,
+        onClick: () => this.store.routing.push('/settings/desktop-settings'),
+      })
+    }
+
+    this.startTimestamp = startTimestamp || new Date(Date.now())
+    this.runningTime = 0
+    this.choppingTime = choppingTime || 0
+
+    this.runningTimer = setInterval(() => {
+      runInAction(() => {
+        if (!this.startTimestamp) {
+          this.runningTime = 0
+        } else {
+          //Calculates the new total time since we started
+          const totalTime = Date.now() - this.startTimestamp.getTime()
+
+          //Checks to see if the miner is confirmed to be running and adds to the chopping time if it is
+          if (this.status === MiningStatus.Running) {
+            //Calculates the delta since the last timer
+            const deltaTime = totalTime - (this.runningTime || 0)
+
+            if (this.choppingTime) {
+              this.choppingTime += deltaTime
+            } else {
+              this.choppingTime = deltaTime
+            }
+          }
+
+          this.runningTime = totalTime
+        }
+      })
+    }, 1000)
   }
 
-  startNext = () => {}
+  stop = (reason: StopReason) => {
+    if (this.timeoutTimer != null) {
+      clearTimeout(this.timeoutTimer)
+      this.timeoutTimer = undefined
+    }
 
-  stop = (stopReason: StopReason) => {
-    console.log(stopReason)
-    this.store.saladFork.logout()
+    if (this.runningTimer) {
+      clearInterval(this.runningTimer)
+      this.runningTimer = undefined
+    }
+
+    this.plugin.name = undefined
+    this.plugin.version = undefined
+    this.plugin.algorithm = undefined
+    this.plugin.status = PluginStatus.Stopped
+    this.store.saladFork.stop()
+    this.destroySaladBowlSubscriptions()
+
+    // should we remove this because it is a mixpanel tracking event
+    if (this.isRunning) {
+      this.store.analytics.trackStop(reason, this.runningTime || 0, this.choppingTime || 0)
+    }
+
+    this.startTimestamp = undefined
+    console.log('Stopping after running for: ' + this.runningTime + ' and chopping for: ' + this.choppingTime)
+    this.runningTime = undefined
+    this.choppingTime = undefined
   }
 
-  getSavedData = () => {
-    return {}
-  }
+  public toggleRunning = flow(
+    function* (this: SaladForkAndBowlStore, startAction: StartActionType) {
+      if (startAction !== StartActionType.Automatic) {
+        try {
+          yield this.store.auth.login()
+        } catch {
+          return
+        }
+      }
 
-  onDataLoaded = (data: unknown) => {
-    console.log(data)
-  }
+      if (
+        startAction !== StartActionType.StartButton &&
+        startAction !== StartActionType.StopPrepping &&
+        this.isRunning
+      ) {
+        return
+      }
 
-  onReceiveStatus = (message: StatusMessage) => {
-    console.log(message)
-  }
+      switch (startAction) {
+        case StartActionType.StartButton:
+          if (this.isRunning) {
+            if (this.status === MiningStatus.Initializing || this.status === MiningStatus.Installing) {
+              this.store.ui.showModal('/warnings/dont-lose-progress')
+              return
+            }
+            this.stop(StopReason.Manual)
+          } else {
+            this.store.analytics.trackButtonClicked('start_button', 'Start Button', 'enabled')
 
-  onReceiveError = (message: ErrorMessage) => {
-    console.log(message)
-  }
-
-  toggleRunning = (startAction: StartActionType) => {
-    this.start(StartReason.Automatic, undefined, undefined)
-    console.log(startAction)
-  }
+            this.start(StartReason.Manual)
+          }
+          break
+        case StartActionType.Override:
+          this.store.analytics.trackButtonClicked('override_button', 'Override Button', 'enabled')
+          this.gpuMiningEnabled ? this.setGpuOverride(true) : this.setCpuOverride(true)
+          this.start(StartReason.Manual)
+          break
+        case StartActionType.SwitchMiner:
+          this.store.analytics.trackButtonClicked('switch_mining_type_button', 'Switch Mining Type Button', 'enabled')
+          this.setGpuOnly(!this.gpuMiningEnabled)
+          this.start(StartReason.Manual)
+          break
+        case StartActionType.StopPrepping:
+          this.store.analytics.trackButtonClicked('stop_prepping_button', 'Stop Prepping Button', 'enabled')
+          this.store.ui.hideModal()
+          this.stop(StopReason.Manual)
+          break
+        case StartActionType.Automatic:
+          this.start(StartReason.Automatic)
+          break
+      }
+    }.bind(this),
+  )
 
   setGpuOnly = (value: boolean) => {
-    console.log(value)
+    this.gpuMiningEnabled = value
+    this.cpuMiningEnabled = !value
+
+    this.store.saladFork.setPreferences({
+      'mining/gpu': this.gpuMiningEnabled,
+      'mining/cpu': this.cpuMiningEnabled,
+      'mining/gpu-override': this.gpuMiningOverridden,
+      'mining/cpu-override': this.cpuMiningOverridden,
+      elevated: false,
+    })
   }
 
   setCpuOverride = (value: boolean) => {
-    console.log(value)
+    this.cpuMiningOverridden = value
+
+    this.store.saladFork.setPreferences({
+      'mining/gpu': this.gpuMiningEnabled,
+      'mining/cpu': this.cpuMiningEnabled,
+      'mining/gpu-override': this.gpuMiningOverridden,
+      'mining/cpu-override': this.cpuMiningOverridden,
+      elevated: false,
+    })
   }
 
   setGpuOverride = (value: boolean) => {
-    console.log(value)
+    this.gpuMiningOverridden = value
+
+    this.store.saladFork.setPreferences({
+      'mining/gpu': this.gpuMiningEnabled,
+      'mining/cpu': this.cpuMiningEnabled,
+      'mining/gpu-override': this.gpuMiningOverridden,
+      'mining/cpu-override': this.cpuMiningOverridden,
+      elevated: false,
+    })
   }
 }
