@@ -4,10 +4,17 @@ import { routeLink } from '../../utils'
 import type { ZendeskArticle, ZendeskArticleList, ZendeskArticleResource } from '../zendesk/models'
 import { AntiVirusSoftware } from '../zendesk/models'
 import { getZendeskAVData } from '../zendesk/utils'
+import type { WhitelistWindowsDefenderErrorType } from './models'
 
 export class OnboardingAntivirusStore {
   @observable
   public selectedAntiVirusGuide?: AntiVirusSoftware
+
+  @observable
+  public whitelistWindowsDefenderPending: boolean = false
+
+  @observable
+  public whitelistWindowsDefenderErrorType?: WhitelistWindowsDefenderErrorType
 
   @observable
   public helpCenterArticle?: string
@@ -80,20 +87,32 @@ export class OnboardingAntivirusStore {
     this.store.analytics.trackButtonClicked('onboarding_antivirus_select_modal', label, 'enabled')
   }
 
-  /**
-   * TODO: Have script actually whitelist Windows Defender. Also add tracking
-   */
-  public whitelistWindowsDefender = () => {
-    console.log('Whitelist Salad in Windows Defender')
-    const detectedAV = this.store.zendesk.detectedAV
-    if (detectedAV === AntiVirusSoftware.WindowsDefender) {
-      this.navigateToAVGuide(detectedAV)
+  @action.bound
+  public whitelistWindowsDefender = flow(function* (this: OnboardingAntivirusStore) {
+    this.whitelistWindowsDefenderErrorType = undefined
+    this.whitelistWindowsDefenderPending = true
+    try {
+      yield this.store.native.whitelistWindowsDefender()
+    } catch (error) {
+      this.setWhitelistWindowsErrorType(error)
+    } finally {
+      this.whitelistWindowsDefenderPending = false
     }
+    // TODO: I believe this can be removed?
+    // const detectedAV = this.store.zendesk.detectedAV
+    // if (detectedAV === AntiVirusSoftware.WindowsDefender) {
+    //   this.navigateToAVGuide(detectedAV)
+    // }
     this.store.analytics.trackButtonClicked(
       'onboarding_antivirus_whitelist_windows_defender',
       'Whitelist Salad in Windows Defender',
       'enabled',
     )
+  })
+
+  @action
+  public setWhitelistWindowsErrorType = (errorType: WhitelistWindowsDefenderErrorType) => {
+    this.whitelistWindowsDefenderErrorType = errorType
   }
 
   /**

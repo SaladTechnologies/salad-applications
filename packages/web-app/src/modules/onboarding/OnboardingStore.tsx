@@ -2,19 +2,13 @@ import { isEqual, sortBy } from 'lodash'
 import { action, flow, observable } from 'mobx'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
-import type { OnboardingPageItemType, WhitelistWindowsDefenderErrorType } from './models'
+import type { OnboardingPageItemType } from './models'
 import { OnboardingPageName, OnboardingPagesType, ONBOARDING_PAGES, ONBOARDING_PAGE_NAMES } from './models'
 
 const ONBOARDING_STORAGE_KEY = 'ONBOARDING_PAGES_COMPLETED'
 
 export class OnboardingStore {
   private completedOnboardingPages: OnboardingPageName[] | [] = []
-
-  @observable
-  public whitelistWindowsDefenderPending: boolean = false
-
-  @observable
-  public whitelistWindowsDefenderErrorType?: WhitelistWindowsDefenderErrorType
 
   public disableSleepModePending: boolean = false
 
@@ -96,24 +90,6 @@ export class OnboardingStore {
 
   private findNextPageByOrder = (sortedOnboardingPages: OnboardingPagesType, nextPage: number) => {
     return sortedOnboardingPages.find((page) => page.ORDER === nextPage)
-  }
-
-  @action.bound
-  public whitelistWindowsDefender = flow(function* (this: OnboardingStore) {
-    this.whitelistWindowsDefenderErrorType = undefined
-    this.whitelistWindowsDefenderPending = true
-    try {
-      yield this.store.native.whitelistWindowsDefender()
-    } catch (error) {
-      this.setWhitelistWindowsErrorType(error)
-    } finally {
-      this.whitelistWindowsDefenderPending = false
-    }
-  })
-
-  @action
-  public setWhitelistWindowsErrorType = (errorType: WhitelistWindowsDefenderErrorType) => {
-    this.whitelistWindowsDefenderErrorType = errorType
   }
 
   /**
