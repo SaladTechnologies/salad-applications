@@ -3,47 +3,12 @@ import { action, flow, observable } from 'mobx'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
 import type { OnboardingPageItemType } from './models'
-import { OnboardingPageName, OnboardingPagesType, ONBOARDING_PAGE_NAMES } from './models'
+import { OnboardingPageName, OnboardingPagesType, ONBOARDING_PAGES, ONBOARDING_PAGE_NAMES } from './models'
 
 const ONBOARDING_STORAGE_KEY = 'ONBOARDING_PAGES_COMPLETED'
 
 export class OnboardingStore {
   private completedOnboardingPages: OnboardingPageName[] | [] = []
-
-  /**
-   * An array of onboarding pages a chef needs to complete
-   * after creating an account. Each page has a name, route,
-   * a completion order number, and whether or not it is only
-   * available in the native app. There are certain pages that
-   * are also only available on the latest desktop version.
-   */
-  public onboardingPages = this.store.native.canDisableSleepMode
-    ? [
-        { NAME: ONBOARDING_PAGE_NAMES.WELCOME, PATH: '/onboarding/welcome', ORDER: 1, NATIVE: false },
-        { NAME: ONBOARDING_PAGE_NAMES.REFERRAL, PATH: '/onboarding/referral', ORDER: 2, NATIVE: false },
-        {
-          NAME: ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION,
-          PATH: '/onboarding/auto-start',
-          ORDER: 3,
-          NATIVE: true,
-        },
-        {
-          NAME: ONBOARDING_PAGE_NAMES.SLEEP_MODE_CONFIGURATION,
-          PATH: '/onboarding/sleep-mode',
-          ORDER: 4,
-          NATIVE: true,
-        },
-      ]
-    : [
-        { NAME: ONBOARDING_PAGE_NAMES.WELCOME, PATH: '/onboarding/welcome', ORDER: 1, NATIVE: false },
-        { NAME: ONBOARDING_PAGE_NAMES.REFERRAL, PATH: '/onboarding/referral', ORDER: 2, NATIVE: false },
-        {
-          NAME: ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION,
-          PATH: '/onboarding/auto-start',
-          ORDER: 3,
-          NATIVE: true,
-        },
-      ]
 
   @observable
   public disableSleepModePending: boolean = false
@@ -195,7 +160,7 @@ export class OnboardingStore {
     let nextOnboardingPage = undefined
 
     if (typeof currentOnboardingPageOrder === 'number') {
-      const onboardingPagesCopy = [...this.onboardingPages]
+      const onboardingPagesCopy = [...ONBOARDING_PAGES]
       const isNative = this.store.native.isNative
 
       const filteredOnboardingPagesCopy = isNative
@@ -232,13 +197,13 @@ export class OnboardingStore {
   }
 
   private getOnboardingPage = (name: OnboardingPageName): OnboardingPageItemType | undefined => {
-    return this.onboardingPages.find((page) => page.NAME === name)
+    return ONBOARDING_PAGES.find((page) => page.NAME === name)
   }
 
   private hasOnboardingPagesToComplete = (onboardingPagesCompletedInStorage: string | null): boolean => {
     const parsedStorageArray = onboardingPagesCompletedInStorage ? JSON.parse(onboardingPagesCompletedInStorage) : false
     if (parsedStorageArray) {
-      const onboardingPagesCopy = [...this.onboardingPages]
+      const onboardingPagesCopy = [...ONBOARDING_PAGES]
       const isNative = this.store.native.isNative
 
       const availableOnboardingPageNamesArray = isNative
