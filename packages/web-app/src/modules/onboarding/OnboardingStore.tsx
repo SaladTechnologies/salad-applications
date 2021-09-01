@@ -105,7 +105,7 @@ export class OnboardingStore {
     try {
       yield this.store.native.whitelistWindowsDefender()
     } catch (error) {
-      this.setWhitelistWindowsErrorType(error)
+      this.setWhitelistWindowsErrorType(error as WhitelistWindowsDefenderErrorType)
     } finally {
       this.whitelistWindowsDefenderPending = false
     }

@@ -1,4 +1,4 @@
-import { AxiosInstance } from 'axios'
+import Axios, { AxiosInstance } from 'axios'
 import { action, flow, observable } from 'mobx'
 import { ErrorPageType } from '../../UIStore'
 import { AnalyticsStore } from '../analytics'
@@ -56,10 +56,14 @@ export class Zendesk {
         let response = await this.axios.post(`/api/v2/zendesk-tokens/chat`)
         jwtToken = response.data.token
       } catch (e) {
-        if (e.response == null || e.response.status !== 404) {
-          this.chatAuthRetryTimeout = setTimeout(() => {
-            window.zE!('webWidget', 'chat:reauthenticate')
-          }, 30000)
+        if (Axios.isAxiosError(e)) {
+          if (e.response == null || e.response.status !== 404) {
+            this.chatAuthRetryTimeout = setTimeout(() => {
+              window.zE!('webWidget', 'chat:reauthenticate')
+            }, 30000)
+          }
+        } else {
+          throw e
         }
       }
     }
@@ -79,10 +83,14 @@ export class Zendesk {
         let response = await this.axios.post(`/api/v2/zendesk-tokens/help-center`)
         jwtToken = response.data.token
       } catch (e) {
-        if (e.response == null || e.response.status !== 404) {
-          this.helpCenterAuthRetryTimeout = setTimeout(() => {
-            window.zE!('webWidget', 'helpCenter:reauthenticate')
-          }, 30000)
+        if (Axios.isAxiosError(e)) {
+          if (e.response == null || e.response.status !== 404) {
+            this.helpCenterAuthRetryTimeout = setTimeout(() => {
+              window.zE!('webWidget', 'helpCenter:reauthenticate')
+            }, 30000)
+          }
+        } else {
+          throw e
         }
       }
     }

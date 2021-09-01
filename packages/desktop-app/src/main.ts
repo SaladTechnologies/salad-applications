@@ -153,9 +153,6 @@ const createOfflineWindow = () => {
     icon: icons.WINDOW_ICON_PATH,
     resizable: false,
     title: 'Salad',
-    webPreferences: {
-      enableRemoteModule: false,
-    },
     width: 300,
   })
 
@@ -220,7 +217,6 @@ const createMainWindow = () => {
     title: 'Salad',
     webPreferences: {
       contextIsolation: false,
-      enableRemoteModule: false,
       nodeIntegration: false,
       preload: path.resolve(__dirname, './preload.js'),
     },
