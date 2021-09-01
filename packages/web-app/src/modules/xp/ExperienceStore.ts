@@ -1,6 +1,5 @@
 import { AxiosInstance } from 'axios'
 import { action, computed, flow, observable } from 'mobx'
-import { RootStore } from '../../Store'
 import { defaultLevels } from './models/defaultLevels'
 import { Level } from './models/Level'
 
@@ -28,7 +27,7 @@ export class ExperienceStore {
     return delta / totalRange
   }
 
-  constructor(private readonly store: RootStore, readonly axios: AxiosInstance) {
+  constructor(readonly axios: AxiosInstance) {
     this.loadInitialLevels()
   }
 
@@ -49,8 +48,6 @@ export class ExperienceStore {
       let newXp = res.data.lifetimeXp
 
       this.updateXp(newXp)
-    } catch (err) {
-      this.store.analytics.captureException(err)
-    }
+    } catch {}
   })
 }

@@ -1,4 +1,4 @@
-import { AxiosError, AxiosInstance } from 'axios'
+import Axios, { AxiosInstance } from 'axios'
 import { action, flow, observable, runInAction } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
 import SuperTokens from 'supertokens-website'
@@ -153,12 +153,15 @@ export class AuthStore {
       this.isSubmitSuccess = true
       this.currentStep = FormSteps.Code
     } catch (e) {
-      let err: AxiosError = e
       this.isSubmitSuccess = false
-      if (err.response && err.response.status === 400) {
-        this.errorMessage = 'Invalid email address'
-      } else if (err.message) {
-        this.errorMessage = err.message
+      if (Axios.isAxiosError(e)) {
+        if (e.response && e.response.status === 400) {
+          this.errorMessage = 'Invalid email address'
+        } else if (e.message) {
+          this.errorMessage = e.message
+        } else {
+          throw e
+        }
       } else {
         throw e
       }
@@ -186,12 +189,15 @@ export class AuthStore {
       this.closeLoginProcess(true)
     } catch (e) {
       this.isSubmitSuccess = false
-      let err: AxiosError = e
-      if (err.response && err.response.status === 400) {
-        if (err.response.data?.type === 'invalid_session') {
-          this.errorMessage = 'The code has expired, resend the code to continue.'
+      if (Axios.isAxiosError(e)) {
+        if (e.response && e.response.status === 400) {
+          if (e.response.data?.type === 'invalid_session') {
+            this.errorMessage = 'The code has expired, resend the code to continue.'
+          } else {
+            this.errorMessage = 'Incorrect code'
+          }
         } else {
-          this.errorMessage = 'Incorrect code'
+          throw e
         }
       } else {
         throw e

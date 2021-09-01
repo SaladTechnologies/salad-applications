@@ -83,7 +83,7 @@ export class RootStore {
     this.routing = new RouterStore()
     this.auth = new AuthStore(axios, this.routing)
     this.notifications = new NotificationStore(this)
-    this.xp = new ExperienceStore(this, axios)
+    this.xp = new ExperienceStore(axios)
     this.native = new NativeStore(this)
     this.saladFork = new SaladFork(axios)
 
