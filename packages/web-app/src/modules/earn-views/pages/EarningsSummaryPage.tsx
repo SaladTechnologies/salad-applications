@@ -15,7 +15,6 @@ const styles = (theme: SaladTheme) => ({
     bottom: 0,
     left: 0,
     right: 0,
-    zIndex: 2000,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -57,7 +56,7 @@ const styles = (theme: SaladTheme) => ({
 })
 
 export interface EarningsSummaryPageProps extends WithStyles<typeof styles> {
-  bonusRate?: string
+  bonusRate?: number
   currentBalance: number
   daysShowing: 1 | 7 | 30
   earningHistory: EarningWindow[]

@@ -23,7 +23,7 @@ export class BalanceStore {
   }
 
   @computed
-  public get getDaysShowingEarnings(): number {
+  public get getDaysShowingEarnings(): 1 | 7 | 30 {
     return this.daysShowingEarnings
   }
 
