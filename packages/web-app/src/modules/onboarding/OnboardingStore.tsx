@@ -15,11 +15,11 @@ export class OnboardingStore {
    * to complete after creating an account. There are instances
    * where a chef will complete onboarding but certain pages may
    * not be available at the time because they are not on the
-   * desktop app or the latest version. In those cases, those pages
-   * will be skipped in the onboarding process but when they are
-   * viewable, chefs will be taken to them on login. Each item has a name, route,
-   * a completion order number, and whether or not it is only
-   * available in the native app.
+   * desktop app or the latest version. In those cases, those
+   * pages will be skipped in the onboarding process but when
+   * they are viewable, chefs will be taken to them on login.
+   * Each item has a name, route, a completion order number,
+   * and whether or not it is only available in the native app.
    */
   private onboardingPages =
     this.store.native.canDisableSleepMode && this.store.native.isNative
