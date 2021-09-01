@@ -63,7 +63,7 @@ Default.args = {}
 
 export const WithBonusRate: Story<EarningsSummaryPageProps> = Template.bind({})
 WithBonusRate.args = {
-  bonusRate: '2x',
+  bonusRate: 2,
 }
 
 export const WithoutEarningHistory: Story<EarningsSummaryPageProps> = Template.bind({})

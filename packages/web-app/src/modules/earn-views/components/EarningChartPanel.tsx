@@ -17,7 +17,7 @@ const styles = (theme: SaladTheme) => ({
 })
 
 export interface EarningChartPanelProps extends WithStyles<typeof styles> {
-  bonusRate?: string
+  bonusRate?: number
   daysShowing: 1 | 7 | 30
   title: string
   viewLast24Hours: () => void
@@ -40,7 +40,7 @@ const _EarningChartPanel = ({
         <Text variant="baseXXL">{title}</Text>
         {bonusRate && (
           <span className={classes.bonusRateText}>
-            <Text>{bonusRate} Bonus Active</Text>
+            <Text>{bonusRate}x Bonus Active</Text>
           </span>
         )}
       </div>
