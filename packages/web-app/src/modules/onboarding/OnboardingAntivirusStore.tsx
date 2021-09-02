@@ -93,7 +93,7 @@ export class OnboardingAntivirusStore {
     this.whitelistWindowsDefenderPending = true
     try {
       yield this.store.native.whitelistWindowsDefender()
-    } catch (error) {
+    } catch (error: any) {
       this.setWhitelistWindowsErrorType(error)
     } finally {
       this.whitelistWindowsDefenderPending = false
