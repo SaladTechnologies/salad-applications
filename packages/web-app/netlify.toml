@@ -8,10 +8,10 @@
   status = 200
   force = false
 
-[[plugins]]
+[[context.production.plugins]]
   package = "@sentry/netlify-build-plugin"
 
-  [plugins.inputs]
+  [context.production.plugins.inputs]
     sentryOrg = "salad-technologies"
     sentryProject = "web-app"
     deployPreviews = false
