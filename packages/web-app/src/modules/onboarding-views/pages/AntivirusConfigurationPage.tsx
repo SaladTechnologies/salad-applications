@@ -185,48 +185,35 @@ const _AntivirusConfigurationPage = ({
                     .
                   </Text>
                 </>
-              ) : (
-                <>
-                  <div className={classes.mb48}>
-                    <div className={classes.mb24}>
-                      <Button
-                        label={onViewAVGuideLabel}
-                        onClick={onViewAVGuide}
-                        variant="primary-basic"
-                        trailingIcon={<ChevronRight />}
-                      />
-                    </div>
-                    {detectedAV !== undefined && (
-                      <Text variant="baseS">
-                        Use a different antivirus provider?{' '}
-                        <span
-                          className={classes.underline}
-                          onClick={() => onViewAVGuideSelectionModal('Select it here')}
-                        >
-                          Select it here
-                        </span>
-                        .
-                      </Text>
-                    )}
-                  </div>
+              ) : detectedAV !== undefined ? (
+                <div className={classes.mb48}>
                   <div className={classes.mb24}>
-                    <div className={classes.mb12}>
-                      <Text variant="baseL">Optional: </Text>
-                    </div>
                     <Button
-                      label="Whitelist Salad in Windows Defender"
-                      onClick={onWhitelistWindowsDefender}
-                      variant="outlined"
-                      isLoading={whitelistWindowsDefenderPending}
-                      errorMessage={whitelistWindowsDefenderErrorMessage}
+                      label={onViewAVGuideLabel}
+                      onClick={onViewAVGuide}
+                      variant="primary-basic"
+                      trailingIcon={<ChevronRight />}
                     />
-                    <div className={classes.mt12}>
-                      <Text variant="baseS">
-                        You’ll need to click ‘Yes’ in the popup that appears in order to finish whitelisting.
-                      </Text>
-                    </div>
                   </div>
-                </>
+                </div>
+              ) : (
+                <div className={classes.mb48}>
+                  <div className={classes.mb24}>
+                    <Button
+                      label={onViewAVGuideLabel}
+                      onClick={onViewAVGuide}
+                      variant="primary-basic"
+                      trailingIcon={<ChevronRight />}
+                    />
+                  </div>
+                  <Text variant="baseS">
+                    Use a different antivirus provider?{' '}
+                    <span className={classes.underline} onClick={() => onViewAVGuideSelectionModal('Select it here')}>
+                      Select it here
+                    </span>
+                    .
+                  </Text>
+                </div>
               )}
             </FieldContainer>
           </div>
