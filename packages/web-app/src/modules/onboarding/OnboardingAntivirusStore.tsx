@@ -4,7 +4,7 @@ import { routeLink } from '../../utils'
 import type { ZendeskArticle, ZendeskArticleList, ZendeskArticleResource } from '../zendesk/models'
 import { AntiVirusSoftware } from '../zendesk/models'
 import { getZendeskAVData } from '../zendesk/utils'
-import type { WhitelistWindowsDefenderErrorType } from './models'
+import { ONBOARDING_PAGE_NAMES, WhitelistWindowsDefenderErrorType } from './models'
 
 export class OnboardingAntivirusStore {
   @observable
@@ -97,6 +97,7 @@ export class OnboardingAntivirusStore {
       this.setWhitelistWindowsErrorType(error)
     } finally {
       this.whitelistWindowsDefenderPending = false
+      this.store.onboarding.viewNextPage(ONBOARDING_PAGE_NAMES.ANTIVIRUS_CONFIGURATION)
     }
     // TODO: I believe this can be removed?
     // const detectedAV = this.store.zendesk.detectedAV
