@@ -2,6 +2,7 @@ import { action, computed, observable, toJS } from 'mobx'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
 import { NotificationMessageCategory } from '../notifications/models'
+import { WhitelistWindowsDefenderErrorType } from '../onboarding/models'
 import { Profile } from '../profile/models'
 import { MachineInfo } from './models'
 
@@ -19,6 +20,7 @@ const disableAutoLaunch = 'disable-auto-launch'
 const openLogFolder = 'open-log-folder'
 const login = 'login'
 const logout = 'logout'
+const whitelistWindowsDefender = 'whitelist-windows-defender'
 
 const AUTO_LAUNCH = 'AUTO_LAUNCH'
 const MINIMIZE_TO_TRAY = 'MINIMIZE_TO_TRAY'
@@ -93,6 +95,10 @@ export class NativeStore {
     return this.machineInfo.graphics.controllers.map((x) => x.model)
   }
 
+  get canWhitelistWindows(): boolean {
+    return window.salad && window.salad.platform === 'win32' && this.apiVersion >= 9
+  }
+
   get canDisableSleepMode(): boolean {
     return window.salad && window.salad.platform === 'win32' && this.apiVersion >= 9
   }
@@ -143,6 +149,34 @@ export class NativeStore {
       return
     }
     window.salad.dispatch(type, payload && toJS(payload))
+  }
+
+  whitelistWindowsDefender = (filePath?: string): Promise<void> => {
+    if (this.canWhitelistWindows) {
+      if (!this.callbacks.has(whitelistWindowsDefender)) {
+        return new Promise((resolve, reject) => {
+          this.callbacks.set(whitelistWindowsDefender, (result: { error?: boolean; errorCode?: number }) => {
+            this.callbacks.delete(whitelistWindowsDefender)
+            if (!result.error) {
+              resolve()
+            } else {
+              if (result.errorCode === 1223) {
+                reject(WhitelistWindowsDefenderErrorType.USER_SELECTED_NO)
+              } else {
+                reject(WhitelistWindowsDefenderErrorType.GENERAL_SCRIPT_ERROR)
+              }
+            }
+          })
+          this.send(whitelistWindowsDefender, filePath)
+        })
+      } else {
+        return Promise.reject('The process is already running.')
+      }
+    } else {
+      return Promise.reject(
+        'To whitelist Windows Defender, you must be running Windows and the latest version of Salad.',
+      )
+    }
   }
 
   disableSleepMode = (): Promise<void> => {
@@ -309,8 +343,8 @@ export class NativeStore {
   }
 
   @action
-  openFolderLog = () => {
-    this.send(openLogFolder)
+  openFolderLog = (path?: string) => {
+    this.send(openLogFolder, path)
   }
 
   @action

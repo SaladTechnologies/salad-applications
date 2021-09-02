@@ -10,7 +10,7 @@ const SaladDefaultAvatar: Avatar = {
   name: 'Default',
   description: 'Salad Default Avatar',
   imageUrl: SaladDefaultAvatarSrc,
-  id: '0',
+  id: '00000000-0000-0000-0000-000000000000',
 }
 
 export class ProfileStore {
@@ -80,7 +80,9 @@ export class ProfileStore {
     try {
       let selectedAvatar = yield this.axios.get('/api/v2/avatars/selected')
       this.currentSelectedAvatar = this.selectedAvatar = selectedAvatar.data?.id
-    } catch (err) {}
+    } catch (err) {
+      this.currentSelectedAvatar = this.selectedAvatar = SaladDefaultAvatar.id
+    }
   })
 
   @action.bound
@@ -109,14 +111,17 @@ export class ProfileStore {
     if (this.submittingAvatar !== undefined || !this.avatars || this.selectedAvatar === id) {
       return
     }
-    if (id === '0') {
-      this.currentSelectedAvatar = this.selectedAvatar = SaladDefaultAvatar.id
-      return
-    }
     this.avatarError = undefined
-    this.selectedAvatar = this.submittingAvatar = this.avatars.find((avatar) => avatar.id === id)?.id
+    let avatarId: string | undefined
+    if (id === '00000000-0000-0000-0000-000000000000') {
+      this.selectedAvatar = this.submittingAvatar = SaladDefaultAvatar.id
+      avatarId = '00000000-0000-0000-0000-000000000000'
+    } else {
+      this.selectedAvatar = this.submittingAvatar = this.avatars.find((avatar) => avatar.id === id)?.id
+      avatarId = id
+    }
     try {
-      let patch = yield this.axios.patch('/api/v2/avatars/selected', { avatarId: id })
+      let patch = yield this.axios.patch('/api/v2/avatars/selected', { avatarId })
       this.currentSelectedAvatar = this.selectedAvatar = patch.data?.id
     } catch (err) {
       this.avatarError = {

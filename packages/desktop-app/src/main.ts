@@ -31,6 +31,7 @@ import { PluginManager } from './salad-bowl/PluginManager'
 import { SaladBridgeNotificationService } from './salad-bowl/SaladBridgeNotificationService'
 import { SaladBridge } from './SaladBridge'
 import { DefaultTheme as theme } from './SaladTheme'
+import { powershellWhitelistCommand } from './whitelistWindowsScript'
 import isOnline = require('is-online')
 
 // The path to the `/static` folder. This is provided by electron-webpack.
@@ -152,9 +153,6 @@ const createOfflineWindow = () => {
     icon: icons.WINDOW_ICON_PATH,
     resizable: false,
     title: 'Salad',
-    webPreferences: {
-      enableRemoteModule: false,
-    },
     width: 300,
   })
 
@@ -219,7 +217,6 @@ const createMainWindow = () => {
     title: 'Salad',
     webPreferences: {
       contextIsolation: false,
-      enableRemoteModule: false,
       nodeIntegration: false,
       preload: path.resolve(__dirname, './preload.js'),
     },
@@ -385,6 +382,44 @@ const createMainWindow = () => {
     })
   })
 
+  bridge.on('whitelist-windows-defender', (filePath?: string) => {
+    if (!filePath) {
+      if (!process.env.APPDATA) {
+        console.error(
+          `Failed to Whitelist Windows Defender because the user's APPDATA environment variable has not been defined`,
+        )
+        bridge.send('whitelist-windows-defender', { error: true })
+        return
+      }
+      filePath = path.join(process.env.APPDATA, 'Salad/plugin-bin')
+    }
+    exec(
+      powershellWhitelistCommand,
+      {
+        env: {
+          WHITELIST_DIR: filePath,
+        },
+        timeout: 60000,
+        windowsHide: true,
+      },
+      (error, _stdout, stderr) => {
+        if (error) {
+          console.error(
+            `Failed to Whitelist Windows Defender (${error.message}${
+              error.code == null ? '' : `, exit code ${error.code}`
+            })${stderr ? `\n${stderr}` : ''}`,
+          )
+          bridge.send('whitelist-windows-defender', {
+            error: true,
+            errorCode: error.code,
+          })
+        } else {
+          bridge.send('whitelist-windows-defender', {})
+        }
+      },
+    )
+  })
+
   bridge.on('minimize-window', () => {
     mainWindow.minimize()
     console.log('Minimizing window')
@@ -429,8 +464,8 @@ const createMainWindow = () => {
     bridge.send(setDesktopVersion, app.getVersion())
   })
 
-  bridge.on('open-log-folder', () => {
-    const path = Logger.getLogFolder()
+  bridge.on('open-log-folder', (filePath?: string) => {
+    const path = filePath ? filePath : Logger.getLogFolder()
     shell.showItemInFolder(path)
   })
 

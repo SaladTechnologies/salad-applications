@@ -21,6 +21,7 @@ import { StopReason } from './modules/salad-bowl/models'
 import { SaladBowlStoreInterface } from './modules/salad-bowl/SaladBowlStoreInterface'
 import { SaladForkAndBowlStore } from './modules/salad-bowl/SaladForkAndBowlStore'
 import { SeasonsStore } from './modules/seasons'
+import { StartButtonUIStore } from './modules/start-button/StartButtonUIStore'
 import { StorefrontStore } from './modules/storefront/StorefrontStore'
 import { VaultStore } from './modules/vault'
 import { VersionStore } from './modules/versions'
@@ -76,12 +77,13 @@ export class RootStore {
   public readonly seasons: SeasonsStore
   public readonly onboarding: OnboardingStore
   public readonly saladFork: SaladFork
+  public readonly startButtonUI: StartButtonUIStore
 
   constructor(axios: AxiosInstance, private readonly featureManager: FeatureManager) {
     this.routing = new RouterStore()
     this.auth = new AuthStore(axios, this.routing)
     this.notifications = new NotificationStore(this)
-    this.xp = new ExperienceStore(this, axios)
+    this.xp = new ExperienceStore(axios)
     this.native = new NativeStore(this)
     this.saladFork = new SaladFork(axios)
 
@@ -109,6 +111,7 @@ export class RootStore {
     this.bonuses = new BonusStore(this, axios)
     this.seasons = new SeasonsStore(axios)
     this.onboarding = new OnboardingStore(this)
+    this.startButtonUI = new StartButtonUIStore(this)
 
     // Start refreshing data
     this.refresh.start()
@@ -182,6 +185,11 @@ export class RootStore {
     this.analytics.trackLogout()
     this.native.logout()
     this.zendesk.logout()
+
+    const saladBowlEnabled = this.featureManager.isEnabled('app_salad_bowl')
+    if (saladBowlEnabled) {
+      this.saladFork.logout()
+    }
 
     this.featureManager.handleLogout()
     this.finishInitialLoading()

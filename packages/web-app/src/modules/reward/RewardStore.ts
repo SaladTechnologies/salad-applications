@@ -1,6 +1,7 @@
-import { AxiosInstance, AxiosResponse } from 'axios'
+import Axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { action, computed, flow, observable } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
+import { SaladError } from '../../axiosFactory'
 import { RootStore } from '../../Store'
 import { NotificationMessage, NotificationMessageCategory } from '../notifications/models'
 import { ProfileStore } from '../profile'
@@ -242,8 +243,8 @@ export class RewardStore {
       })
     } catch (error) {
       response?.complete('fail')
-      if (!(error instanceof AbortError)) {
-        const response: AxiosResponse | undefined = error.response
+      if (!(error instanceof AbortError) && (Axios.isAxiosError(error) || error instanceof SaladError)) {
+        const response = error.response
         let notification: NotificationMessage | undefined
 
         switch (response?.status) {
