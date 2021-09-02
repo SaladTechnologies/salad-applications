@@ -3,12 +3,57 @@ import { action, flow, observable } from 'mobx'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
 import type { OnboardingPageItemType, WhitelistWindowsDefenderErrorType } from './models'
-import { OnboardingPageName, OnboardingPagesType, ONBOARDING_PAGES, ONBOARDING_PAGE_NAMES } from './models'
+import { OnboardingPageName, OnboardingPagesType, ONBOARDING_PAGE_NAMES } from './models'
 
 const ONBOARDING_STORAGE_KEY = 'ONBOARDING_PAGES_COMPLETED'
 
 export class OnboardingStore {
   private completedOnboardingPages: OnboardingPageName[] | [] = []
+
+  /**
+   * This is the master array of onboarding pages a chef needs
+   * to complete after creating an account. There are instances
+   * where a chef will complete onboarding but certain pages may
+   * not be available at the time because they are not on the
+   * desktop app or the latest version. In those cases, those
+   * pages will be skipped in the onboarding process but when
+   * they are viewable, chefs will be taken to them on login.
+   * Each item has a name, route, a completion order number,
+   * and whether or not it is only available in the native app.
+   */
+  private onboardingPages =
+    this.store.native.canDisableSleepMode && this.store.native.isNative
+      ? [
+          { NAME: ONBOARDING_PAGE_NAMES.WELCOME, PATH: '/onboarding/welcome', ORDER: 1, NATIVE: false },
+          { NAME: ONBOARDING_PAGE_NAMES.REFERRAL, PATH: '/onboarding/referral', ORDER: 2, NATIVE: false },
+          {
+            NAME: ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION,
+            PATH: '/onboarding/auto-start',
+            ORDER: 3,
+            NATIVE: true,
+          },
+          {
+            NAME: ONBOARDING_PAGE_NAMES.SLEEP_MODE_CONFIGURATION,
+            PATH: '/onboarding/sleep-mode',
+            ORDER: 4,
+            NATIVE: true,
+          },
+        ]
+      : this.store.native.isNative
+      ? [
+          { NAME: ONBOARDING_PAGE_NAMES.WELCOME, PATH: '/onboarding/welcome', ORDER: 1, NATIVE: false },
+          { NAME: ONBOARDING_PAGE_NAMES.REFERRAL, PATH: '/onboarding/referral', ORDER: 2, NATIVE: false },
+          {
+            NAME: ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION,
+            PATH: '/onboarding/auto-start',
+            ORDER: 3,
+            NATIVE: true,
+          },
+        ]
+      : [
+          { NAME: ONBOARDING_PAGE_NAMES.WELCOME, PATH: '/onboarding/welcome', ORDER: 1, NATIVE: false },
+          { NAME: ONBOARDING_PAGE_NAMES.REFERRAL, PATH: '/onboarding/referral', ORDER: 2, NATIVE: false },
+        ]
 
   @observable
   public whitelistWindowsDefenderPending: boolean = false
@@ -19,7 +64,13 @@ export class OnboardingStore {
   public disableSleepModePending: boolean = false
 
   @observable
-  public disableSleepModeError: boolean = false
+  public disableSleepModeErrorMessage?: string = undefined
+
+  @observable
+  public enableAutoStartPending: boolean = false
+
+  @observable
+  public enableAutoStartErrorMessage?: string = undefined
 
   constructor(private readonly store: RootStore) {}
 
@@ -28,6 +79,11 @@ export class OnboardingStore {
     const onboardingPagesCompleted = Storage.getItem(ONBOARDING_STORAGE_KEY)
     const currentReferral = this.store.referral.currentReferral?.code
 
+    /**
+     * Checks to see if users have gone through onboarding process.
+     * If they have not but already have a referral code, we skip the
+     * first two steps.
+     */
     if (onboardingPagesCompleted == null) {
       currentReferral
         ? this.updateCompletedOnboardingPages([ONBOARDING_PAGE_NAMES.WELCOME, ONBOARDING_PAGE_NAMES.REFERRAL])
@@ -38,6 +94,23 @@ export class OnboardingStore {
         this.markOnboardingPageAsCompleted(ONBOARDING_PAGE_NAMES.WELCOME)
         this.markOnboardingPageAsCompleted(ONBOARDING_PAGE_NAMES.REFERRAL)
       }
+    }
+
+    /**
+     * We renamed our AFK Configuration page to Auto Start so we are checking to
+     * see if users have seen the AFK Config page and if they have, we are swapping
+     * it out in our onboardingPagesCompleted array with our updated Auto Start page name
+     * so users do not see this page again.
+     * */
+    if (onboardingPagesCompleted?.includes(ONBOARDING_PAGE_NAMES.AFK_CONFIGURATION)) {
+      this.updateCompletedOnboardingPages(
+        JSON.parse(
+          onboardingPagesCompleted.replace(
+            ONBOARDING_PAGE_NAMES.AFK_CONFIGURATION,
+            ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION,
+          ),
+        ),
+      )
     }
 
     if (this.hasOnboardingPagesToComplete(onboardingPagesCompleted)) {
@@ -83,16 +156,43 @@ export class OnboardingStore {
 
   @action.bound
   public disableSleepMode = flow(function* (this: OnboardingStore) {
-    this.disableSleepModeError = false
+    this.disableSleepModeErrorMessage = undefined
     this.disableSleepModePending = true
     try {
       yield this.store.native.disableSleepMode()
     } catch {
-      this.disableSleepModeError = true
+      this.disableSleepModeErrorMessage =
+        'Something went wrong and we were unable to adjust your sleep mode settings. You can adjust these settings yourself in Windows Settings, or contact support for assistance.'
     } finally {
       this.disableSleepModePending = false
+      this.viewNextPage(ONBOARDING_PAGE_NAMES.SLEEP_MODE_CONFIGURATION)
     }
   })
+
+  @action
+  public skipSleepMode = () => {
+    this.viewNextPage(ONBOARDING_PAGE_NAMES.SLEEP_MODE_CONFIGURATION)
+  }
+
+  @action.bound
+  public enableAutoStart = flow(function* (this: OnboardingStore) {
+    this.enableAutoStartErrorMessage = undefined
+    this.enableAutoStartPending = true
+    try {
+      yield this.store.autoStart.setAutoStart(true)
+    } catch {
+      this.enableAutoStartErrorMessage =
+        'Something went wrong and we were unable to adjust your auto start settings. You can adjust these settings yourself in the Desktop App Settings, or contact support for assistance.'
+    } finally {
+      this.enableAutoStartPending = false
+      this.viewNextPage(ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION)
+    }
+  })
+
+  @action
+  public skipAutoStart = () => {
+    this.viewNextPage(ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION)
+  }
 
   private findNextPageByOrder = (sortedOnboardingPages: OnboardingPagesType, nextPage: number) => {
     return sortedOnboardingPages.find((page) => page.ORDER === nextPage)
@@ -128,14 +228,9 @@ export class OnboardingStore {
     let nextOnboardingPage = undefined
 
     if (typeof currentOnboardingPageOrder === 'number') {
-      const onboardingPagesCopy = [...ONBOARDING_PAGES]
-      const isNative = this.store.native.isNative
+      const onboardingPagesCopy = [...this.onboardingPages]
 
-      const filteredOnboardingPagesCopy = isNative
-        ? onboardingPagesCopy
-        : onboardingPagesCopy.filter((page) => page.NATIVE === false)
-
-      const sortedOnboardingPages = filteredOnboardingPagesCopy.sort((a, b) => (a.ORDER > b.ORDER ? 1 : -1))
+      const sortedOnboardingPages = onboardingPagesCopy.sort((a, b) => (a.ORDER > b.ORDER ? 1 : -1))
       const completedPagesCopy = [...this.completedOnboardingPages]
       let nextOnboardingPageOrder = currentOnboardingPageOrder + 1
 
@@ -165,21 +260,14 @@ export class OnboardingStore {
   }
 
   private getOnboardingPage = (name: OnboardingPageName): OnboardingPageItemType | undefined => {
-    return ONBOARDING_PAGES.find((page) => page.NAME === name)
+    return this.onboardingPages.find((page) => page.NAME === name)
   }
 
   private hasOnboardingPagesToComplete = (onboardingPagesCompletedInStorage: string | null): boolean => {
     const parsedStorageArray = onboardingPagesCompletedInStorage ? JSON.parse(onboardingPagesCompletedInStorage) : false
     if (parsedStorageArray) {
-      const onboardingPagesCopy = [...ONBOARDING_PAGES]
-      const isNative = this.store.native.isNative
-
-      const availableOnboardingPageNamesArray = isNative
-        ? onboardingPagesCopy
-        : onboardingPagesCopy.filter((page) => page.NATIVE === false).map((page) => page.NAME)
-
-      const availableOnboardingPagesArray = availableOnboardingPageNamesArray
-      return !isEqual(sortBy(parsedStorageArray), sortBy(availableOnboardingPagesArray))
+      const onboardingPagesCopy = this.onboardingPages.map((page) => page.NAME)
+      return !isEqual(sortBy(parsedStorageArray), sortBy(onboardingPagesCopy))
     } else {
       return true
     }
