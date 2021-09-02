@@ -67,10 +67,10 @@ export class OnboardingStore {
   public disableSleepModeErrorMessage?: string = undefined
 
   @observable
-  public disableAutoStartPending: boolean = false
+  public enableAutoStartPending: boolean = false
 
   @observable
-  public disableAutoStartErrorMessage?: string = undefined
+  public enableAutoStartErrorMessage?: string = undefined
 
   constructor(private readonly store: RootStore) {}
 
@@ -176,15 +176,15 @@ export class OnboardingStore {
 
   @action.bound
   public enableAutoStart = flow(function* (this: OnboardingStore) {
-    this.disableAutoStartErrorMessage = undefined
-    this.disableAutoStartPending = true
+    this.enableAutoStartErrorMessage = undefined
+    this.enableAutoStartPending = true
     try {
       yield this.store.autoStart.setAutoStart(true)
     } catch {
-      this.disableAutoStartErrorMessage =
+      this.enableAutoStartErrorMessage =
         'Something went wrong and we were unable to adjust your auto start settings. You can adjust these settings yourself in the Desktop App Settings, or contact support for assistance.'
     } finally {
-      this.disableAutoStartPending = false
+      this.enableAutoStartPending = false
       this.viewNextPage(ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION)
     }
   })
