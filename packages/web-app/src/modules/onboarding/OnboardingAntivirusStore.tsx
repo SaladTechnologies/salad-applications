@@ -14,7 +14,7 @@ export class OnboardingAntivirusStore {
   public whitelistWindowsDefenderPending: boolean = false
 
   @observable
-  public whitelistWindowsDefenderErrorType?: WhitelistWindowsDefenderErrorType
+  public whitelistWindowsDefenderErrorMessage?: WhitelistWindowsDefenderErrorType
 
   @observable
   public helpCenterArticle?: string
@@ -89,7 +89,7 @@ export class OnboardingAntivirusStore {
 
   @action.bound
   public whitelistWindowsDefender = flow(function* (this: OnboardingAntivirusStore) {
-    this.whitelistWindowsDefenderErrorType = undefined
+    this.whitelistWindowsDefenderErrorMessage = undefined
     this.whitelistWindowsDefenderPending = true
     try {
       yield this.store.native.whitelistWindowsDefender()
@@ -112,7 +112,7 @@ export class OnboardingAntivirusStore {
 
   @action
   public setWhitelistWindowsErrorType = (errorType: WhitelistWindowsDefenderErrorType) => {
-    this.whitelistWindowsDefenderErrorType = errorType
+    this.whitelistWindowsDefenderErrorMessage = errorType
   }
 
   /**

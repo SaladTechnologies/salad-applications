@@ -103,7 +103,7 @@ export interface AntivirusConfigurationPageProps extends WithStyles<typeof style
   onViewDiscord: (to: string, label: string) => void
   onViewGithub: (to: string, label: string) => void
   onWhitelistWindowsDefender: () => void
-  whitelistWindowsDefenderErrorType?: string
+  whitelistWindowsDefenderErrorMessage?: string
   whitelistWindowsDefenderPending: boolean
 }
 
@@ -116,7 +116,7 @@ const _AntivirusConfigurationPage = ({
   onViewDiscord,
   onViewGithub,
   onWhitelistWindowsDefender,
-  whitelistWindowsDefenderErrorType,
+  whitelistWindowsDefenderErrorMessage,
   whitelistWindowsDefenderPending,
 }: AntivirusConfigurationPageProps) => {
   const ref = useRef(null)
@@ -165,7 +165,7 @@ const _AntivirusConfigurationPage = ({
                       onClick={onWhitelistWindowsDefender}
                       variant="primary-basic"
                       trailingIcon={<ChevronRight />}
-                      errorMessage={whitelistWindowsDefenderErrorType}
+                      errorMessage={whitelistWindowsDefenderErrorMessage}
                       isLoading={whitelistWindowsDefenderPending}
                     />
                     <div className={classes.mt12}>
@@ -218,7 +218,7 @@ const _AntivirusConfigurationPage = ({
                       onClick={onWhitelistWindowsDefender}
                       variant="outlined"
                       isLoading={whitelistWindowsDefenderPending}
-                      errorMessage={whitelistWindowsDefenderErrorType}
+                      errorMessage={whitelistWindowsDefenderErrorMessage}
                     />
                     <div className={classes.mt12}>
                       <Text variant="baseS">
