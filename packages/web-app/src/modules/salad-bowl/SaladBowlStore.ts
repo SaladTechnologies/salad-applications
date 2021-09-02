@@ -6,6 +6,7 @@ import { RootStore } from '../../Store'
 import { ErrorPageType } from '../../UIStore'
 import { MiningStatus } from '../machine/models'
 import { NotificationMessageCategory } from '../notifications/models'
+import { IPersistentStore } from '../versions/IPersistentStore'
 import { getPluginDefinitions } from './definitions'
 import { Accounts, BEAM_WALLET_ADDRESS, ETH_WALLET_ADDRESS, getNiceHashMiningAddress } from './definitions/accounts'
 import { PluginDefinition, StartActionType, StartReason, StopReason } from './models'
@@ -21,7 +22,7 @@ const CPU_MINING_ENABLED = 'CPU_MINING_ENABLED'
 const GPU_MINING_OVERRIDDEN = 'GPU_MINING_OVERRIDDEN'
 const CPU_MINING_OVERRIDDEN = 'CPU_MINING_OVERRIDDEN'
 
-export class SaladBowlStore implements SaladBowlStoreInterface {
+export class SaladBowlStore implements SaladBowlStoreInterface, IPersistentStore {
   private currentPluginDefinition?: PluginDefinition
   private currentPluginDefinitionIndex: number = 0
   private currentPluginRetries: number = 0
@@ -56,7 +57,7 @@ export class SaladBowlStore implements SaladBowlStoreInterface {
   public gpuMiningOverridden: boolean = false
 
   @computed
-  get pluginDefinitions(): PluginDefinition[] {
+  private get pluginDefinitions(): PluginDefinition[] {
     const machine = this.store.machine.currentMachine
     const machineInfo = this.store.native.machineInfo
     if (machine === undefined || machineInfo === undefined) {
@@ -120,11 +121,6 @@ export class SaladBowlStore implements SaladBowlStoreInterface {
       this.store.native.machineInfo !== undefined &&
       this.pluginDefinitions.length > 0
     )
-  }
-
-  @computed
-  get pluginCount(): number {
-    return this.pluginDefinitions.length
   }
 
   @computed
@@ -269,7 +265,7 @@ export class SaladBowlStore implements SaladBowlStoreInterface {
   }
 
   @action
-  onReceiveStatus = (message: StatusMessage) => {
+  private onReceiveStatus = (message: StatusMessage) => {
     if (`${this.plugin.name}-${this.plugin.version}` !== message.name) {
       return
     }
@@ -300,7 +296,7 @@ export class SaladBowlStore implements SaladBowlStoreInterface {
   }
 
   @action
-  onReceiveError = (message: ErrorMessage) => {
+  private onReceiveError = (message: ErrorMessage) => {
     // Show the error modal
     switch (message.errorCategory) {
       case ErrorCategory.AntiVirus:
@@ -494,7 +490,7 @@ export class SaladBowlStore implements SaladBowlStoreInterface {
   })
 
   @action.bound
-  startNext = flow(function* (this: SaladBowlStore) {
+  private startNext = flow(function* (this: SaladBowlStore) {
     if (this.pluginDefinitions == null) {
       return
     }
@@ -554,10 +550,12 @@ export class SaladBowlStore implements SaladBowlStoreInterface {
     this.plugin.status = PluginStatus.Stopped
     this.store.native.send('stop-salad')
 
-    this.store.analytics.trackStop(reason, this.runningTime || 0, this.choppingTime || 0)
+    if (this.isRunning) {
+      this.store.analytics.trackStop(reason, this.runningTime || 0, this.choppingTime || 0)
+      console.log('Stopping after running for: ' + this.runningTime + 'and chopping for: ' + this.choppingTime)
+    }
 
     this.startTimestamp = undefined
-    console.log('Stopping after running for: ' + this.runningTime + 'and chopping for: ' + this.choppingTime)
     this.runningTime = undefined
     this.choppingTime = undefined
   }

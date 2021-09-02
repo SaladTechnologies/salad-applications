@@ -19,10 +19,11 @@ import {
 } from './modules/error-views'
 import { DontLoseProgressPageContainer, OverrideCompatibilityDetectionContainer } from './modules/machine-views'
 import {
-  AFKConfigurationPageContainer,
   AntivirusConfigurationContainer,
+  AutoStartConfigurationPageContainer,
   OnboardingAntivirusGuideListContainer,
   OnboardingSpecificAntivirusGuideContainer,
+  SleepModeConfigurationPageContainer,
 } from './modules/onboarding-views'
 import { RewardDetailsContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
@@ -53,10 +54,11 @@ class _Routes extends Component<RouteComponentProps> {
         <Switch location={currentLocation}>
           <Route exact path="/onboarding/referral" component={ReferralOnboardingContainer} />
           <Route exact path="/onboarding/welcome" component={ReferralWelcomeContainer} />
-          <Route exact path="/onboarding/afk" component={AFKConfigurationPageContainer} />
           <Route exact path="/onboarding/antivirus-configuration" component={AntivirusConfigurationContainer} />
           <Route exact path="/onboarding/antivirus-guide" component={OnboardingAntivirusGuideListContainer} />
           <Route exact path="/onboarding/antivirus-guide/:id" component={OnboardingSpecificAntivirusGuideContainer} />
+          <Route exact path="/onboarding/auto-start" component={AutoStartConfigurationPageContainer} />
+          <Route exact path="/onboarding/sleep-mode" component={SleepModeConfigurationPageContainer} />
           <Route exact path="/errors/cuda" component={CudaErrorContainer} />
           <Route exact path="/errors/fallback" component={FallbackErrorContainer} />
           <Route exact path="/errors/network" component={NetworkErrorContainer} />

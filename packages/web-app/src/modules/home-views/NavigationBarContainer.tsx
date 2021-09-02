@@ -1,9 +1,6 @@
 import { Avatar, AvatarDefault, BonusCard, NavigationBar } from '@saladtechnologies/garden-components'
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
-import { ErrorPageType } from '../../UIStore'
-import { MiningStatus } from '../machine/models'
-import { StartActionType } from '../salad-bowl/models'
 
 const mapStoreToProps = (store: RootStore): any => {
   const isAuthenticated = store.auth.isAuthenticated
@@ -13,23 +10,14 @@ const mapStoreToProps = (store: RootStore): any => {
     store.auth.login()
   }
 
-  const status = store.saladBowl.status
   const isRunning = store.saladBowl.isRunning
-  const isPrepping = status !== MiningStatus.Running && store.saladBowl.runningTime !== undefined
-  const nativeLabel = !store.saladBowl.isRunning
-    ? 'Start'
-    : isPrepping
-    ? status === MiningStatus.Installing
-      ? MiningStatus.Installing
-      : MiningStatus.Initializing
-    : status
-
-  const label = isNative ? nativeLabel : 'Download'
 
   const goToAccount = () => store.routing.push('/settings/summary')
   const bonus = store.bonuses.firstExpiringUnclaimedBonus
 
   const selectedAvatar = store.profile.profileAvatar
+
+  const startButton = store.startButtonUI.properties
 
   return {
     avatar: isAuthenticated ? (
@@ -63,19 +51,12 @@ const mapStoreToProps = (store: RootStore): any => {
     onLogin: handleLogin,
     rightSideButtonLabel: isAuthenticated ? undefined : 'Login',
     rightSideButtonClick: isAuthenticated ? undefined : handleLogin,
-    startButtonLabel: isAuthenticated ? label : 'Login',
-    startButtonClick: isNative
-      ? () => store.saladBowl.toggleRunning(StartActionType.StartButton)
-      : isAuthenticated
-      ? () => window.open('https://getsalad.io/', '_blank')
-      : handleLogin,
+    startButtonLabel: startButton.label,
+    startButtonClick: startButton.onClick,
     startButtonHoverLabel: isAuthenticated && isRunning ? 'Stop' : undefined,
-    startButtonErrorClick:
-      isAuthenticated && isNative && store.saladBowl.isNotCompatible
-        ? () => store.ui.showErrorPage(ErrorPageType.NotCompatible)
-        : undefined,
-    startButtonProgress: isPrepping ? store.saladBowl.preppingProgress : isRunning ? 1 : undefined,
-    startButtonRunningTime: store.saladBowl.runningTimeDisplay,
+    startButtonErrorClick: startButton.onClickWithError,
+    startButtonProgress: startButton.progress,
+    startButtonRunningTime: startButton.runningTime,
     username: isAuthenticated ? store.profile.currentProfile?.username : undefined,
   }
 }
