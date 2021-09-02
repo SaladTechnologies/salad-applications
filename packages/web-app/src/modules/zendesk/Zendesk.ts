@@ -1,5 +1,6 @@
 import Axios, { AxiosInstance } from 'axios'
 import { action, flow, observable } from 'mobx'
+import { SaladError } from '../../axiosFactory'
 import { ErrorPageType } from '../../UIStore'
 import { AnalyticsStore } from '../analytics'
 import { AuthStore } from '../auth'
@@ -56,7 +57,7 @@ export class Zendesk {
         let response = await this.axios.post(`/api/v2/zendesk-tokens/chat`)
         jwtToken = response.data.token
       } catch (e) {
-        if (Axios.isAxiosError(e)) {
+        if (Axios.isAxiosError(e) || e instanceof SaladError) {
           if (e.response == null || e.response.status !== 404) {
             this.chatAuthRetryTimeout = setTimeout(() => {
               window.zE!('webWidget', 'chat:reauthenticate')
@@ -83,7 +84,7 @@ export class Zendesk {
         let response = await this.axios.post(`/api/v2/zendesk-tokens/help-center`)
         jwtToken = response.data.token
       } catch (e) {
-        if (Axios.isAxiosError(e)) {
+        if (Axios.isAxiosError(e) || e instanceof SaladError) {
           if (e.response == null || e.response.status !== 404) {
             this.helpCenterAuthRetryTimeout = setTimeout(() => {
               window.zE!('webWidget', 'helpCenter:reauthenticate')
