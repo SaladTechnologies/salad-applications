@@ -1,6 +1,7 @@
 import { action, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { routeLink } from '../../utils'
+import { NotificationMessageCategory } from '../notifications/models'
 import type { ZendeskArticle, ZendeskArticleList, ZendeskArticleResource } from '../zendesk/models'
 import { AntiVirusSoftware } from '../zendesk/models'
 import { getZendeskAVData } from '../zendesk/utils'
@@ -93,6 +94,13 @@ export class OnboardingAntivirusStore {
     this.whitelistWindowsDefenderPending = true
     try {
       yield this.store.native.whitelistWindowsDefender()
+      this.store.notifications.sendNotification({
+        category: NotificationMessageCategory.Success,
+        title: 'You’ve successfully whitelisted Salad!',
+        message:
+          'Press the Start button to begin earning. The initial setup will then happen behind the scenes. This can take up to 30 minutes to complete.',
+        autoClose: 5000,
+      })
       this.store.onboarding.viewNextPage(ONBOARDING_PAGE_NAMES.ANTIVIRUS_CONFIGURATION)
     } catch (_error: any) {
       const error: WhitelistWindowsDefenderErrorType = _error
@@ -100,11 +108,6 @@ export class OnboardingAntivirusStore {
     } finally {
       this.whitelistWindowsDefenderPending = false
     }
-    // TODO: I believe this can be removed?
-    // const detectedAV = this.store.zendesk.detectedAV
-    // if (detectedAV === AntiVirusSoftware.WindowsDefender) {
-    //   this.navigateToAVGuide(detectedAV)
-    // }
     this.store.analytics.trackButtonClicked(
       'onboarding_antivirus_whitelist_windows_defender',
       'Whitelist Salad in Windows Defender',
