@@ -1,5 +1,6 @@
 export * from './DontLoseProgressContainer'
 export * from './MachineInfoContainer'
+export * from './MachineSettingsPageContainer'
 export * from './MinerListContainer'
 export * from './MinerTypeContainer'
 export * from './OverrideCompatibilityDetectionContainer'

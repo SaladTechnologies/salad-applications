@@ -374,9 +374,11 @@ export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
     }.bind(this),
   )
 
-  setGpuOnly = (value: boolean) => {
-    this.gpuMiningEnabled = value
-    this.cpuMiningEnabled = !value
+  public setGpuOnly = (value: boolean) => {
+    runInAction(() => {
+      this.gpuMiningEnabled = value
+      this.cpuMiningEnabled = !value
+    })
 
     this.store.saladFork.setPreferences({
       'mining/gpu': this.gpuMiningEnabled,
@@ -387,8 +389,11 @@ export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
     })
   }
 
-  setCpuOverride = (value: boolean) => {
-    this.cpuMiningOverridden = value
+  public setGpuAndCpu = () => {
+    runInAction(() => {
+      this.cpuMiningEnabled = true
+      this.gpuMiningEnabled = true
+    })
 
     this.store.saladFork.setPreferences({
       'mining/gpu': this.gpuMiningEnabled,
@@ -399,8 +404,24 @@ export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
     })
   }
 
-  setGpuOverride = (value: boolean) => {
-    this.gpuMiningOverridden = value
+  public setCpuOverride = (value: boolean) => {
+    runInAction(() => {
+      this.cpuMiningOverridden = value
+    })
+
+    this.store.saladFork.setPreferences({
+      'mining/gpu': this.gpuMiningEnabled,
+      'mining/cpu': this.cpuMiningEnabled,
+      'mining/gpu-override': this.gpuMiningOverridden,
+      'mining/cpu-override': this.cpuMiningOverridden,
+      elevated: false,
+    })
+  }
+
+  public setGpuOverride = (value: boolean) => {
+    runInAction(() => {
+      this.gpuMiningOverridden = value
+    })
 
     this.store.saladFork.setPreferences({
       'mining/gpu': this.gpuMiningEnabled,

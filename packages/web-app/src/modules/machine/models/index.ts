@@ -1,4 +1,6 @@
 export * from './GpuInformation'
 export * from './Machine'
 export * from './MachineInfo'
+export * from './MinerWorkload'
 export * from './MiningStatus'
+export * from './ProcessorInformation'

@@ -11,7 +11,7 @@ import { EarningChartPanel } from '../components/EarningChartPanel'
 const styles = (theme: SaladTheme) => ({
   container: {
     position: 'fixed',
-    top: 0,
+    top: (props: EarningsSummaryPageProps) => (props.isNative ? '4.1rem' : 0),
     bottom: 0,
     left: 0,
     right: 0,
@@ -60,6 +60,7 @@ export interface EarningsSummaryPageProps extends WithStyles<typeof styles> {
   currentBalance: number
   daysShowing: 1 | 7 | 30
   earningHistory: EarningWindow[]
+  isNative?: boolean
   lifetimeBalance: number
   lifetimeXP: number
   viewLast24HR: () => void
