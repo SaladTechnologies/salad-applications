@@ -157,7 +157,6 @@ const _AntivirusConfigurationPage = ({
                   in your antivirus first. Follow our easy guide below to learn how.
                 </Text>
               </div>
-              {/* Detected Windows Defender */}
               {detectedAV === AntiVirusSoftware.WindowsDefender ? (
                 <>
                   <div className={classes.mb48}>
@@ -186,8 +185,7 @@ const _AntivirusConfigurationPage = ({
                     .
                   </Text>
                 </>
-              ) : // Detected no antivirus
-              detectedAV === undefined ? (
+              ) : detectedAV === undefined ? (
                 <div className={classes.mb48}>
                   <div className={classes.mb24}>
                     <Button
@@ -199,7 +197,6 @@ const _AntivirusConfigurationPage = ({
                   </div>
                 </div>
               ) : (
-                // An antivirus other than Windows Defender was detected
                 <div className={classes.mb48}>
                   <div className={classes.mb24}>
                     <Button
