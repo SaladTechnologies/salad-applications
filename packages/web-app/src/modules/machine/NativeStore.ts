@@ -95,7 +95,7 @@ export class NativeStore {
     return this.machineInfo.graphics.controllers.map((x) => x.model)
   }
 
-  get canWhitelistWindowsAndDisableSleepMode(): boolean {
+  get canWhitelistWindowsDefenderAndDisableSleepMode(): boolean {
     return window.salad && window.salad.platform === 'win32' && this.apiVersion >= 9
   }
 
@@ -148,7 +148,7 @@ export class NativeStore {
   }
 
   whitelistWindowsDefender = (filePath?: string): Promise<void> => {
-    if (this.canWhitelistWindowsAndDisableSleepMode) {
+    if (this.canWhitelistWindowsDefenderAndDisableSleepMode) {
       if (!this.callbacks.has(whitelistWindowsDefender)) {
         return new Promise((resolve, reject) => {
           this.callbacks.set(whitelistWindowsDefender, (result: { error?: boolean; errorCode?: number }) => {
@@ -176,7 +176,7 @@ export class NativeStore {
   }
 
   disableSleepMode = (): Promise<void> => {
-    if (this.canWhitelistWindowsAndDisableSleepMode) {
+    if (this.canWhitelistWindowsDefenderAndDisableSleepMode) {
       if (!this.callbacks.has(disableSleepMode)) {
         return new Promise((resolve, reject) => {
           this.callbacks.set(disableSleepMode, (result: { success: boolean }) => {
