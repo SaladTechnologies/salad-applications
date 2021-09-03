@@ -91,7 +91,7 @@ export const formatBalance = (balance?: number): string => {
  */
 export const routeLink = (store: RootStore, path: string) => {
   if (path.startsWith('http') && typeof window !== undefined) {
-    window.open(path, '_blank', 'rel=noopener noreferrer')
+    window.open(path)
   } else {
     store.routing.push(path)
   }

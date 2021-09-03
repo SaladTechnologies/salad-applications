@@ -2,7 +2,7 @@ import { isEqual, sortBy } from 'lodash'
 import { action, flow, observable } from 'mobx'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
-import type { OnboardingPageItemType, WhitelistWindowsDefenderErrorType } from './models'
+import type { OnboardingPageItemType } from './models'
 import { OnboardingPageName, OnboardingPagesType, ONBOARDING_PAGE_NAMES } from './models'
 
 const ONBOARDING_STORAGE_KEY = 'ONBOARDING_PAGES_COMPLETED'
@@ -22,7 +22,7 @@ export class OnboardingStore {
    * and whether or not it is only available in the native app.
    */
   private onboardingPages =
-    this.store.native.canDisableSleepMode && this.store.native.isNative
+    this.store.native.canWhitelistWindowsDefenderAndDisableSleepMode && this.store.native.isNative
       ? [
           { NAME: ONBOARDING_PAGE_NAMES.WELCOME, PATH: '/onboarding/welcome', ORDER: 1, NATIVE: false },
           { NAME: ONBOARDING_PAGE_NAMES.REFERRAL, PATH: '/onboarding/referral', ORDER: 2, NATIVE: false },
@@ -36,6 +36,12 @@ export class OnboardingStore {
             NAME: ONBOARDING_PAGE_NAMES.SLEEP_MODE_CONFIGURATION,
             PATH: '/onboarding/sleep-mode',
             ORDER: 4,
+            NATIVE: true,
+          },
+          {
+            NAME: ONBOARDING_PAGE_NAMES.ANTIVIRUS_CONFIGURATION,
+            PATH: '/onboarding/antivirus-configuration',
+            ORDER: 5,
             NATIVE: true,
           },
         ]
@@ -54,12 +60,6 @@ export class OnboardingStore {
           { NAME: ONBOARDING_PAGE_NAMES.WELCOME, PATH: '/onboarding/welcome', ORDER: 1, NATIVE: false },
           { NAME: ONBOARDING_PAGE_NAMES.REFERRAL, PATH: '/onboarding/referral', ORDER: 2, NATIVE: false },
         ]
-
-  @observable
-  public whitelistWindowsDefenderPending: boolean = false
-
-  @observable
-  public whitelistWindowsDefenderErrorType?: WhitelistWindowsDefenderErrorType
 
   public disableSleepModePending: boolean = false
 
@@ -198,24 +198,6 @@ export class OnboardingStore {
     return sortedOnboardingPages.find((page) => page.ORDER === nextPage)
   }
 
-  @action.bound
-  public whitelistWindowsDefender = flow(function* (this: OnboardingStore) {
-    this.whitelistWindowsDefenderErrorType = undefined
-    this.whitelistWindowsDefenderPending = true
-    try {
-      yield this.store.native.whitelistWindowsDefender()
-    } catch (error) {
-      this.setWhitelistWindowsErrorType(error as WhitelistWindowsDefenderErrorType)
-    } finally {
-      this.whitelistWindowsDefenderPending = false
-    }
-  })
-
-  @action
-  public setWhitelistWindowsErrorType = (errorType: WhitelistWindowsDefenderErrorType) => {
-    this.whitelistWindowsDefenderErrorType = errorType
-  }
-
   /**
    * Routes to the next uncompleted onboarding page. If there are no more pages
    * to complete, we return the user to the home page.
@@ -253,7 +235,16 @@ export class OnboardingStore {
 
     if (nextOnboardingPage) {
       this.store.routing.push(nextOnboardingPage.PATH)
-      this.store.analytics.trackAccountOnboardingPageViewed(nextOnboardingPage.NAME, nextOnboardingPage.ORDER)
+      if (nextOnboardingPage.NAME === ONBOARDING_PAGE_NAMES.ANTIVIRUS_CONFIGURATION) {
+        const antivirusConfigurationPageType = this.store.onboardingAntivirus.pageType
+        this.store.analytics.trackOnboardingPageViewed(
+          nextOnboardingPage.NAME,
+          nextOnboardingPage.ORDER,
+          antivirusConfigurationPageType,
+        )
+      } else {
+        this.store.analytics.trackOnboardingPageViewed(nextOnboardingPage.NAME, nextOnboardingPage.ORDER)
+      }
     } else {
       this.store.routing.push('/')
     }
