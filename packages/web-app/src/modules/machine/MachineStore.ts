@@ -63,6 +63,8 @@ export class MachineStore {
         })
         this.currentMachine = res.data
 
+        this.store.analytics.trackMachineInformation(machineInfo)
+
         if (!this.store.saladBowl.canRun) {
           //Show an error notification
           this.store.notifications.sendNotification({

@@ -5,7 +5,7 @@ import { autorun } from 'mobx'
 import { hotjar } from 'react-hotjar'
 import { config } from '../../config'
 import { RootStore } from '../../Store'
-import { MiningStatus } from '../machine/models'
+import { MachineInfo, MiningStatus } from '../machine/models'
 import { NotificationMessage } from '../notifications/models'
 import { Profile } from '../profile/models'
 import { Reward } from '../reward/models'
@@ -99,6 +99,29 @@ export class AnalyticsStore {
     mixpanel.register({
       $app_version_string: version,
     })
+  }
+
+  public trackMachineInformation = (info: MachineInfo) => {
+    if (this.started) return
+
+    const machineData = {
+      'Machine OS Distro': info.os?.distro,
+      'Machine OS Release': info.os?.release,
+      'Machine OS Arch': info.os?.arch,
+      'Machine Virtual': info.system?.virtual,
+      // @ts-ignore TODO: Update ts definitions from hypervizor to hypervisor
+      'Machine HyperV': info.os?.hypervisor,
+      'Machine CPU': `${info.cpu?.manufacturer} ${info.cpu?.brand}`,
+      'Machine GPU': info.graphics?.controllers.map((x) => x.model),
+      'Machine RAM': `${
+        info.memLayout && info.memLayout.reduce((amount, memory) => amount + memory.size, 0) / (1024 * 1024 * 1024)
+      } GB`,
+    }
+
+    // Adds machine information to every subsequent message
+    mixpanel.register(machineData)
+
+    this.track('Machine Registered')
   }
 
   public trackLogout = () => {
