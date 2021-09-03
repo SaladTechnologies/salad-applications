@@ -1,32 +1,28 @@
 import { action } from '@storybook/addon-actions'
 import { Meta, Story } from '@storybook/react'
 import { useState } from 'react'
-import { MachineInfo, MachineSettingsPage, MachineSettingsPageProps } from './MachineSettingsPage'
+import type { MinerWorkload, ProcessorInformation } from '../../machine/models'
+import type { MachineSettingsPageProps } from './MachineSettingsPage'
+import { MachineSettingsPage } from './MachineSettingsPage'
 
-const gpuInfo: MachineInfo = {
-  processor: {
+const gpus: ProcessorInformation[] = [
+  {
     name: 'NVIDIA GeForce RTX 2080',
     temperature: '62° C',
     percentageUtilized: 100,
   },
-  miner: {
-    name: 'PhoenixMiner',
-    version: '5.6d',
-    algorithm: 'Ethash',
-  },
+]
+
+const cpu: ProcessorInformation = {
+  name: 'AMD Ryzen 7 5500XT',
+  temperature: '62° C',
+  percentageUtilized: 0,
 }
 
-const cpuInfo: MachineInfo = {
-  processor: {
-    name: 'AMD Ryzen 7 5500XT',
-    temperature: '62° C',
-    percentageUtilized: 0,
-  },
-  miner: {
-    name: undefined,
-    version: undefined,
-    algorithm: undefined,
-  },
+const miner: MinerWorkload = {
+  name: 'Phoenix1',
+  version: '56',
+  algorithm: 'Ethash',
 }
 
 export default {
@@ -37,8 +33,9 @@ export default {
     onShowLogFolder: action('Show Log Folder'),
   },
   argTypes: {
-    cpuInfo: { defaultValue: cpuInfo, description: "The chef's CPU information." },
-    gpuInfo: { defaultValue: gpuInfo, description: "The chef's GPU information." },
+    miner: { defaultValue: miner, description: "The chef's current miner running. " },
+    cpu: { defaultValue: cpu, description: "The chef's CPU information." },
+    gpus: { defaultValue: gpus, description: "The chef's GPU information." },
     gpuMiningEnabled: {
       defaultValue: true,
       description: 'The state of whether or not the chef has set gpu mining as enabled',

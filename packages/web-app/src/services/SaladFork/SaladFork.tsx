@@ -14,6 +14,11 @@ import { SaladBowlLogoutResponse, SaladBowlLogoutResponseError } from './models/
 export interface SaladForkInterface {
   login: () => Promise<SaladBowlLoginResponse>
   logout: () => Promise<SaladBowlLogoutResponse>
+  minerStats$: () => Observable<MinerStatResponse>
+  setPreferences: (preferences: Record<string, boolean>) => Promise<void>
+  start: () => Promise<void>
+  stop: () => Promise<void>
+  workloadStatuses$: () => Observable<WorkloadStatus>
 }
 
 export class SaladFork implements SaladForkInterface {
@@ -86,14 +91,14 @@ export class SaladFork implements SaladForkInterface {
       })
   }
 
-  public start = () => {
+  public start = async (): Promise<void> => {
     const startRequest = new SaladBowlMessages.StartRequest()
-    this.client.start(startRequest)
+    await this.client.start(startRequest)
   }
 
-  public stop = () => {
+  public stop = async (): Promise<void> => {
     const stopRequest = new SaladBowlMessages.StopRequest()
-    this.client.stop(stopRequest)
+    await this.client.stop(stopRequest)
   }
 
   public minerStats$ = (): Observable<MinerStatResponse> => {

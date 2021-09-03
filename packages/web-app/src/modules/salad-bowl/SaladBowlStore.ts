@@ -584,4 +584,7 @@ export class SaladBowlStore implements SaladBowlStoreInterface, IPersistentStore
     //Saves the new value locally so it will automatically be loaded next time
     Storage.setItem(CPU_MINING_OVERRIDDEN, value)
   }
+
+  @action
+  setGpuAndCpu = () => {}
 }

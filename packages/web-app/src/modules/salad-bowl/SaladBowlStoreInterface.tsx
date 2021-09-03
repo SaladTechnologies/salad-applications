@@ -12,6 +12,7 @@ export interface SaladBowlStoreInterface {
   isOverriding: boolean
   isRunning: boolean
   setGpuOnly: (value: boolean) => void
+  setGpuAndCpu: () => void
   setCpuOverride: (value: boolean) => void
   setGpuOverride: (value: boolean) => void
   plugin: PluginInfo

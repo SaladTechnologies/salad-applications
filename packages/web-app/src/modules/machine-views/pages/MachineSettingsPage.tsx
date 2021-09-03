@@ -5,16 +5,16 @@ import Scrollbars from 'react-custom-scrollbars'
 import withStyles, { WithStyles } from 'react-jss'
 import { Head } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
+import { MinerWorkload } from '../../machine/models'
 import { MachineSettingsBox } from './components/MachineSettingsBox'
 
 const styles = (theme: SaladTheme) => ({
   container: {
     position: 'fixed',
-    top: 0,
+    top: (props: MachineSettingsPageProps) => (props.isNative ? '4.1rem' : 0),
     bottom: 0,
     left: 0,
     right: 0,
-    zIndex: 2000,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -31,9 +31,12 @@ const styles = (theme: SaladTheme) => ({
     maxWidth: 1280,
     margin: '0 auto',
     marginTop: 96,
-    paddingBottom: 50,
+    paddingBottom: 100,
     display: 'flex',
-    flexDirection: 'column',
+    width: '100%',
+  },
+  content: {
+    padding: '0 15px',
     width: '100%',
   },
   column: {
@@ -85,21 +88,15 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
-export interface MachineInfo {
-  processor: {
-    name: string
-    temperature: string
-    percentageUtilized: number
-  }
-  miner: {
-    name?: string
-    version?: string
-    algorithm?: string
-  }
+interface ProcessorInformation {
+  name: string
+  temperature?: string
+  percentageUtilized?: number
 }
 
 export interface MachineSettingsPageProps extends WithStyles<typeof styles> {
-  onDisableWindowsDefender: () => void
+  isNative?: boolean
+  onWhitelistWindowsDefender: () => void
   onDisableSleepMode: () => void
   closeToTrayEnabled: boolean
   onToggleCloseToTray: (value: boolean) => void
@@ -112,15 +109,15 @@ export interface MachineSettingsPageProps extends WithStyles<typeof styles> {
   onSetCPUMiningOnly: () => void
   onSetGPUMiningOnly: () => void
   onSetGPUAndCPUMining: () => void
-  cpuInfo?: MachineInfo
-  gpuInfo?: MachineInfo
-  machineName: string
+  miner: MinerWorkload
+  cpu?: ProcessorInformation
+  gpus: ProcessorInformation[] | []
   onShowLogFolder: () => void
 }
 
 const _MachineSettingsPage = ({
   classes,
-  onDisableWindowsDefender,
+  onWhitelistWindowsDefender,
   onDisableSleepMode,
   closeToTrayEnabled,
   onToggleCloseToTray,
@@ -128,8 +125,9 @@ const _MachineSettingsPage = ({
   onToggleAutoStart,
   autoLaunchEnabled,
   onToggleAutoLaunch,
-  cpuInfo,
-  gpuInfo,
+  miner,
+  cpu,
+  gpus,
   onShowLogFolder,
   cpuMiningEnabled,
   gpuMiningEnabled,
@@ -143,183 +141,175 @@ const _MachineSettingsPage = ({
         <Scrollbars>
           <div className={classes.contentContainer}>
             <Head title="Machine Settings" />
-            <Text variant="headline">
-              <span className={classes.whiteFontColor}>Machine Settings</span>
-            </Text>
-            <div className={classes.tableContainer}>
-              <div className={classes.tableHeader}>
-                <Text variant="baseXXL">Machine Name</Text>
-                <Button variant="outlined" size="small" label="Show Log Folder" onClick={onShowLogFolder} />
-              </div>
-              {gpuInfo && (
-                <div className={classes.table}>
-                  <hr className={classnames(classes.hr, classes.mb24 ?? '-')} />
-                  <div className={classes.tableRow}>
-                    <div className={classes.tableItem}>
-                      <Text variant="baseL">GPU</Text>
-                      <Text variant="baseXXL">{gpuInfo.processor.name ?? '-'}</Text>
-                    </div>
-                    <div className={classes.tableItem}>
-                      <Text variant="baseL">Temperature</Text>
-                      <Text variant="baseXXL">{gpuInfo.processor.temperature ?? '-'}</Text>
-                    </div>
-                    <div className={classes.tableItem}>
-                      <Text variant="baseL">% Utilized</Text>
-                      <Text variant="baseXXL">{gpuInfo.processor.percentageUtilized ?? '-'}</Text>
-                    </div>
-                  </div>
-                  <div className={classes.tableRow}>
-                    <div className={classes.tableItem}>
-                      <Text variant="baseL">Miner Name</Text>
-                      <Text variant="baseXXL">{gpuInfo.miner.name ?? '-'}</Text>
-                    </div>
-                    <div className={classes.tableItem}>
-                      <Text variant="baseL">Miner Version</Text>
-                      <Text variant="baseXXL">{gpuInfo.miner.version ?? '-'}</Text>
-                    </div>
-                    <div className={classes.tableItem}>
-                      <Text variant="baseL">Algorithm</Text>
-                      <Text variant="baseXXL">{gpuInfo.miner.algorithm ?? '-'}</Text>
-                    </div>
-                  </div>
-                  <hr className={classes.hr} />
+            <div className={classes.content}>
+              <Text variant="headline">
+                <span className={classes.whiteFontColor}>Machine Settings</span>
+              </Text>
+              <div className={classes.tableContainer}>
+                <div className={classes.tableHeader}>
+                  <Text variant="baseXXL">Machine Name</Text>
+                  <Button variant="outlined" size="small" label="Show Log Folder" onClick={onShowLogFolder} />
                 </div>
-              )}
-              {cpuInfo && (
+                {gpus.length > 0 && (
+                  <div className={classes.table}>
+                    <hr className={classnames(classes.hr, classes.mb24)} />
+                    {gpus.map((gpu) => (
+                      <div className={classes.tableRow}>
+                        <div className={classes.tableItem}>
+                          <Text variant="baseL">GPU</Text>
+                          <Text variant="baseXXL">{gpu.name ?? '-'}</Text>
+                        </div>
+                        <div className={classes.tableItem}>
+                          <Text variant="baseL">Temperature</Text>
+                          <Text variant="baseXXL">{gpu.temperature ?? '-'}</Text>
+                        </div>
+                        <div className={classes.tableItem}>
+                          <Text variant="baseL">% Utilized</Text>
+                          <Text variant="baseXXL">{gpu.percentageUtilized ?? '-'}</Text>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {cpu !== undefined && (
+                  <div className={classes.table}>
+                    <hr className={classnames(classes.hr, classes.mb24)} />
+                    <div className={classes.tableRow}>
+                      <div className={classes.tableItem}>
+                        <Text variant="baseL">CPU</Text>
+                        <Text variant="baseXXL">{cpu.name ?? '-'}</Text>
+                      </div>
+                      <div className={classes.tableItem}>
+                        <Text variant="baseL">Temperature</Text>
+                        <Text variant="baseXXL">{cpu.temperature ?? '-'}</Text>
+                      </div>
+                      <div className={classes.tableItem}>
+                        <Text variant="baseL">% Utilized</Text>
+                        <Text variant="baseXXL">{cpu.percentageUtilized ?? '-'}</Text>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 <div className={classes.table}>
+                  <hr className={classnames(classes.hr, classes.mb24)} />
                   <div className={classes.mb24} />
                   <div className={classes.tableRow}>
                     <div className={classes.tableItem}>
-                      <Text variant="baseL">CPU</Text>
-                      <Text variant="baseXXL">{cpuInfo.processor.name ?? '-'}</Text>
-                    </div>
-                    <div className={classes.tableItem}>
-                      <Text variant="baseL">Temperature</Text>
-                      <Text variant="baseXXL">{cpuInfo.processor.temperature ?? '-'}</Text>
-                    </div>
-                    <div className={classes.tableItem}>
-                      <Text variant="baseL">% Utilized</Text>
-                      <Text variant="baseXXL">{cpuInfo.processor.percentageUtilized ?? '-'}</Text>
-                    </div>
-                  </div>
-                  <div className={classes.tableRow}>
-                    <div className={classes.tableItem}>
                       <Text variant="baseL">Miner Name</Text>
-                      <Text variant="baseXXL">{cpuInfo.miner.name ?? '-'}</Text>
+                      <Text variant="baseXXL">{miner.name ?? '-'}</Text>
                     </div>
                     <div className={classes.tableItem}>
                       <Text variant="baseL">Miner Version</Text>
-                      <Text variant="baseXXL">{cpuInfo.miner.version ?? '-'}</Text>
+                      <Text variant="baseXXL">{miner.version ?? '-'}</Text>
                     </div>
                     <div className={classes.tableItem}>
                       <Text variant="baseL">Algorithm</Text>
-                      <Text variant="baseXXL">{cpuInfo.miner.algorithm ?? '-'}</Text>
+                      <Text variant="baseXXL">{miner.algorithm ?? '-'}</Text>
                     </div>
                   </div>
-                  <hr className={classes.hr} />
-                </div>
-              )}
-            </div>
-            <div className={classes.settings}>
-              <div className={classes.column}>
-                <div className={classes.mt64}>
-                  <MachineSettingsBox
-                    title="Mining Type"
-                    buttons={
-                      <MiningTypeButtons
-                        cpuMiningEnabled={cpuMiningEnabled}
-                        gpuMiningEnabled={gpuMiningEnabled}
-                        onSetCPUMiningOnly={onSetCPUMiningOnly}
-                        onSetGPUMiningOnly={onSetGPUMiningOnly}
-                        onSetGPUAndCPUMining={onSetGPUAndCPUMining}
-                      />
-                    }
-                  >
-                    <Text variant="baseL">Mining Disclaimers:</Text>
-                    <Text variant="baseL">
-                      <ul>
-                        <li>Background processes will significantly affect earning rates. Use while AFK.</li>
-                        <li>Earning rates may vary widely from machine to machine</li>
-                        <li>Proper cooling and maintenance is vital for performance and safety</li>
-                        <li>Does GPU Mining Harm My Computer?</li>
-                      </ul>
-                    </Text>
-                    <Text variant="baseS">Having Antivirus Issues? Open Antivirus Guides</Text>
-                  </MachineSettingsBox>
-                </div>
-                <div className={classes.mt64}>
-                  <MachineSettingsBox
-                    title="Close to Tray"
-                    buttons={<ToggleButtons isEnabled={closeToTrayEnabled} onToggle={onToggleCloseToTray} />}
-                  >
-                    <Text variant="baseL">
-                      Salad always tries to fully utilize your PC to get you the highest earnings possible and is
-                      designed to be run when you are away from your machine (AFK).
-                    </Text>
-                    <div className={classes.mt24}>
-                      <Text variant="baseS">Automatically chop when you are away from your PC</Text>
-                    </div>
-                  </MachineSettingsBox>
                 </div>
               </div>
-              <div className={classes.column}>
-                <div className={classes.mt64}>
-                  <MachineSettingsBox
-                    title="Auto Start"
-                    buttons={<ToggleButtons isEnabled={autoStartEnabled} onToggle={onToggleAutoStart} />}
-                  >
-                    <Text variant="baseL">
-                      Salad always tries to fully utilize your PC to get you the highest earnings possible and is
-                      designed to be run when you are away from your machine (AFK).
-                    </Text>
-                    <div className={classes.mt24}>
-                      <Text variant="baseS">Automatically chop when you are away from your PC</Text>
-                    </div>
-                  </MachineSettingsBox>
+              <div className={classes.settings}>
+                <div className={classes.column}>
+                  <div className={classes.mt64}>
+                    <MachineSettingsBox
+                      title="Mining Type"
+                      buttons={
+                        <MiningTypeButtons
+                          cpuMiningEnabled={cpuMiningEnabled}
+                          gpuMiningEnabled={gpuMiningEnabled}
+                          onSetCPUMiningOnly={onSetCPUMiningOnly}
+                          onSetGPUMiningOnly={onSetGPUMiningOnly}
+                          onSetGPUAndCPUMining={onSetGPUAndCPUMining}
+                        />
+                      }
+                    >
+                      <Text variant="baseL">Mining Disclaimers:</Text>
+                      <Text variant="baseL">
+                        <ul>
+                          <li>Background processes will significantly affect earning rates. Use while AFK.</li>
+                          <li>Earning rates may vary widely from machine to machine</li>
+                          <li>Proper cooling and maintenance is vital for performance and safety</li>
+                          <li>Does GPU Mining Harm My Computer?</li>
+                        </ul>
+                      </Text>
+                      <Text variant="baseS">Having Antivirus Issues? Open Antivirus Guides</Text>
+                    </MachineSettingsBox>
+                  </div>
+                  <div className={classes.mt64}>
+                    <MachineSettingsBox
+                      title="Close to Tray"
+                      buttons={<ToggleButtons isEnabled={closeToTrayEnabled} onToggle={onToggleCloseToTray} />}
+                    >
+                      <Text variant="baseL">
+                        Salad always tries to fully utilize your PC to get you the highest earnings possible and is
+                        designed to be run when you are away from your machine (AFK).
+                      </Text>
+                      <div className={classes.mt24}>
+                        <Text variant="baseS">Automatically chop when you are away from your PC</Text>
+                      </div>
+                    </MachineSettingsBox>
+                  </div>
                 </div>
-                <div className={classes.mt64}>
-                  <MachineSettingsBox
-                    title="Windows Defender"
-                    buttons={<SingleButton label="Disable" onClick={onDisableWindowsDefender} />}
-                  >
-                    <Text variant="baseL">
-                      Salad always tries to fully utilize your PC to get you the highest earnings possible and is
-                      designed to be run when you are away from your machine (AFK).
-                    </Text>
-                    <div className={classes.mt24}>
-                      <Text variant="baseS">Automatically chop when you are away from your PC</Text>
-                    </div>
-                  </MachineSettingsBox>
+                <div className={classes.column}>
+                  <div className={classes.mt64}>
+                    <MachineSettingsBox
+                      title="Auto Start"
+                      buttons={<ToggleButtons isEnabled={autoStartEnabled} onToggle={onToggleAutoStart} />}
+                    >
+                      <Text variant="baseL">
+                        Salad always tries to fully utilize your PC to get you the highest earnings possible and is
+                        designed to be run when you are away from your machine (AFK).
+                      </Text>
+                      <div className={classes.mt24}>
+                        <Text variant="baseS">Automatically chop when you are away from your PC</Text>
+                      </div>
+                    </MachineSettingsBox>
+                  </div>
+                  <div className={classes.mt64}>
+                    <MachineSettingsBox
+                      title="Windows Defender"
+                      buttons={<SingleButton label="Whitelist" onClick={onWhitelistWindowsDefender} />}
+                    >
+                      <Text variant="baseL">
+                        Salad always tries to fully utilize your PC to get you the highest earnings possible and is
+                        designed to be run when you are away from your machine (AFK).
+                      </Text>
+                      <div className={classes.mt24}>
+                        <Text variant="baseS">Automatically chop when you are away from your PC</Text>
+                      </div>
+                    </MachineSettingsBox>
+                  </div>
                 </div>
-              </div>
-              <div className={classes.column}>
-                <div className={classes.mt64}>
-                  <MachineSettingsBox
-                    title="Auto Launch"
-                    buttons={<ToggleButtons isEnabled={autoLaunchEnabled} onToggle={onToggleAutoLaunch} />}
-                  >
-                    <Text variant="baseL">
-                      Salad always tries to fully utilize your PC to get you the highest earnings possible and is
-                      designed to be run when you are away from your machine (AFK).
-                    </Text>
-                    <div className={classes.mt24}>
-                      <Text variant="baseS">Automatically chop when you are away from your PC</Text>
-                    </div>
-                  </MachineSettingsBox>
-                </div>
-                <div className={classes.mt64}>
-                  <MachineSettingsBox
-                    title="Sleep Mode"
-                    buttons={<SingleButton label="Disable" onClick={onDisableSleepMode} />}
-                  >
-                    <Text variant="baseL">
-                      Salad always tries to fully utilize your PC to get you the highest earnings possible and is
-                      designed to be run when you are away from your machine (AFK).
-                    </Text>
-                    <div className={classes.mt24}>
-                      <Text variant="baseS">Automatically chop when you are away from your PC</Text>
-                    </div>
-                  </MachineSettingsBox>
+                <div className={classes.column}>
+                  <div className={classes.mt64}>
+                    <MachineSettingsBox
+                      title="Auto Launch"
+                      buttons={<ToggleButtons isEnabled={autoLaunchEnabled} onToggle={onToggleAutoLaunch} />}
+                    >
+                      <Text variant="baseL">
+                        Salad always tries to fully utilize your PC to get you the highest earnings possible and is
+                        designed to be run when you are away from your machine (AFK).
+                      </Text>
+                      <div className={classes.mt24}>
+                        <Text variant="baseS">Automatically chop when you are away from your PC</Text>
+                      </div>
+                    </MachineSettingsBox>
+                  </div>
+                  <div className={classes.mt64}>
+                    <MachineSettingsBox
+                      title="Sleep Mode"
+                      buttons={<SingleButton label="Disable" onClick={onDisableSleepMode} />}
+                    >
+                      <Text variant="baseL">
+                        Salad always tries to fully utilize your PC to get you the highest earnings possible and is
+                        designed to be run when you are away from your machine (AFK).
+                      </Text>
+                      <div className={classes.mt24}>
+                        <Text variant="baseS">Automatically chop when you are away from your PC</Text>
+                      </div>
+                    </MachineSettingsBox>
+                  </div>
                 </div>
               </div>
             </div>

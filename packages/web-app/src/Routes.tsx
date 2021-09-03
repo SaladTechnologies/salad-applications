@@ -1,6 +1,7 @@
 import { Location } from 'history'
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router'
 import { LoadingPage } from './components'
+import { DesktopRoute } from './DesktopRoute'
 import { useFeatureManager } from './FeatureManager'
 import { ReferralOnboardingContainer } from './modules/account-views/referral-views'
 import { ReferralWelcomeContainer } from './modules/account-views/referral-views/ReferralWelcomeContainer'
@@ -17,7 +18,11 @@ import {
   SpecificAntiVirusErrorContainer,
   UnknownErrorContainer,
 } from './modules/error-views'
-import { DontLoseProgressPageContainer, OverrideCompatibilityDetectionContainer } from './modules/machine-views'
+import {
+  DontLoseProgressPageContainer,
+  MachineSettingsPageContainer,
+  OverrideCompatibilityDetectionContainer,
+} from './modules/machine-views'
 import {
   AntivirusConfigurationContainer,
   AutoStartConfigurationPageContainer,
@@ -53,7 +58,11 @@ const _Routes = ({ location }: RouteComponentProps) => {
       <Switch location={currentLocation}>
         <Route exact path="/onboarding/referral" component={ReferralOnboardingContainer} />
         <Route exact path="/onboarding/welcome" component={ReferralWelcomeContainer} />
-        <Route exact path="/onboarding/afk" component={AFKConfigurationPagePageContainer} />
+        <Route exact path="/onboarding/antivirus-configuration" component={AntivirusConfigurationContainer} />
+        <Route exact path="/onboarding/antivirus-guide" component={OnboardingAntivirusGuideListContainer} />
+        <Route exact path="/onboarding/antivirus-guide/:id" component={OnboardingSpecificAntivirusGuideContainer} />
+        <Route exact path="/onboarding/auto-start" component={AutoStartConfigurationPageContainer} />
+        <Route exact path="/onboarding/sleep-mode" component={SleepModeConfigurationPageContainer} />
         <Route exact path="/errors/cuda" component={CudaErrorContainer} />
         <Route exact path="/errors/fallback" component={FallbackErrorContainer} />
         <Route exact path="/errors/network" component={NetworkErrorContainer} />
@@ -76,8 +85,9 @@ const _Routes = ({ location }: RouteComponentProps) => {
         <Redirect exact from="/account/reward-vault" to="/settings/reward-vault" />
         {saladBowlEnabled && <Redirect exact from="/earn/summary" to="/earn/mining" />}
         {saladBowlEnabled && <Redirect exact from="/earn/mine" to="/earn/mining" />}
-        {saladBowlEnabled && <Redirect exact from="/earn/mine/miner-details" to="/earn/mining" />}
+        {saladBowlEnabled && <Redirect exact from="/earn/mine/miner-details" to="/earn/machine-settings" />}
         {saladBowlEnabled && <Redirect exact from="/earn/referrals" to="/settings/referrals" />}
+        {saladBowlEnabled && <Redirect exact from="/settings/desktop-settings" to="/earn/machine-settings" />}
 
         {/* SaladPay: This is stand in until we figure out iFrames, popups... */}
         <Route exact path="/salad-pay/order-summary" component={SaladPayOrderSummaryContainer} />
@@ -94,6 +104,7 @@ const _Routes = ({ location }: RouteComponentProps) => {
         ) : (
           <Route path="/earn" component={EarnMenuContainer} />
         )}
+        {saladBowlEnabled && <DesktopRoute path="/earn/machine-settings" component={MachineSettingsPageContainer} />}
         <Route path="/login" exact component={LoginPageContainer} />
         <Route path="/" render={() => <StorefrontHomePage />} />
         <Redirect to="/" />

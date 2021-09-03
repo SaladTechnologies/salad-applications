@@ -5,6 +5,7 @@ import { EarningsSummaryPage, EarningsSummaryPageProps } from './pages/EarningsS
 const mapStoreToProps = (store: RootStore): Omit<EarningsSummaryPageProps, 'classes'> => ({
   currentBalance: store.balance.currentBalance,
   daysShowing: store.balance.getDaysShowingEarnings,
+  isNative: store.native.isNative,
   lifetimeBalance: store.balance.lifetimeBalance,
   lifetimeXP: store.xp.currentXp,
   viewLast24HR: store.balance.viewLast24Hours,
