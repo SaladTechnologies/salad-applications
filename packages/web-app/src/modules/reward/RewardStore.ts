@@ -295,7 +295,7 @@ export class RewardStore {
                 category: NotificationMessageCategory.Error,
                 title: 'Daily redemption limit has been reached.',
                 message:
-                  "Sorry, Chef! It looks like you've reached your daily daily redemption limit. Click here to learn more about daily limits, and come back tomorrow.",
+                  "Sorry, Chef! It looks like you've reached your daily redemption limit. Click here to learn more about daily limits, and come back tomorrow.",
                 autoClose: false,
                 onClick: () => window.open('https://support.salad.com/hc/en-us/articles/4405644006932', '_blank'),
                 type: 'error',
