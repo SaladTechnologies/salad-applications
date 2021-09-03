@@ -22,7 +22,7 @@ export class OnboardingStore {
    * and whether or not it is only available in the native app.
    */
   private onboardingPages =
-    this.store.native.canDisableSleepMode && this.store.native.isNative
+    this.store.native.canWhitelistWindowsAndDisableSleepMode && this.store.native.isNative
       ? [
           { NAME: ONBOARDING_PAGE_NAMES.WELCOME, PATH: '/onboarding/welcome', ORDER: 1, NATIVE: false },
           { NAME: ONBOARDING_PAGE_NAMES.REFERRAL, PATH: '/onboarding/referral', ORDER: 2, NATIVE: false },
