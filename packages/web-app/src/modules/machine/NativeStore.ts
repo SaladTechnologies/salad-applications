@@ -154,7 +154,9 @@ export class NativeStore {
           this.callbacks.set(whitelistWindowsDefender, (result: { error?: boolean; errorCode?: number }) => {
             this.callbacks.delete(whitelistWindowsDefender)
             if (!result.error) {
-              resolve()
+              setTimeout(() => {
+                resolve()
+              }, 2000)
             } else {
               if (result.errorCode === 1223) {
                 reject(WhitelistWindowsDefenderErrorTypeMessage.USER_SELECTED_NO)

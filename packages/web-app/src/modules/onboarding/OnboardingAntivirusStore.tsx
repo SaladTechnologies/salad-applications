@@ -94,16 +94,14 @@ export class OnboardingAntivirusStore {
     this.whitelistWindowsDefenderPending = true
     try {
       yield this.store.native.whitelistWindowsDefender()
-      setTimeout(() => {
-        this.store.notifications.sendNotification({
-          category: NotificationMessageCategory.Success,
-          title: 'You’ve successfully whitelisted Salad!',
-          message:
-            'Press the Start button to begin earning. The initial setup will then happen behind the scenes. This can take up to 30 minutes to complete.',
-          autoClose: 5000,
-        })
-        this.store.onboarding.viewNextPage(ONBOARDING_PAGE_NAMES.ANTIVIRUS_CONFIGURATION)
-      }, 2000)
+      this.store.notifications.sendNotification({
+        category: NotificationMessageCategory.Success,
+        title: 'You’ve successfully whitelisted Salad!',
+        message:
+          'Press the Start button to begin earning. The initial setup will then happen behind the scenes. This can take up to 30 minutes to complete.',
+        autoClose: 5000,
+      })
+      this.store.onboarding.viewNextPage(ONBOARDING_PAGE_NAMES.ANTIVIRUS_CONFIGURATION)
     } catch (_error: any) {
       const error: WhitelistWindowsDefenderErrorTypeMessage = _error
       this.setWhitelistWindowsErrorType(error)
