@@ -2,7 +2,7 @@ import { action } from '@storybook/addon-actions'
 import type { Meta, Story } from '@storybook/react'
 import type { ReactElement } from 'react'
 import { useEffect } from 'react'
-import { WhitelistWindowsDefenderErrorType } from '../../onboarding/models'
+import { WhitelistWindowsDefenderErrorTypeMessage } from '../../onboarding/models'
 import { AntiVirusSoftware } from '../../zendesk/models'
 import type { AntivirusConfigurationPageProps } from './AntivirusConfigurationPage'
 import { AntivirusConfigurationPage } from './AntivirusConfigurationPage'
@@ -44,14 +44,14 @@ export const DetectedWindowsDefenderUserSelectedNoErrorMessage: Story<AntivirusC
   {},
 )
 DetectedWindowsDefenderUserSelectedNoErrorMessage.args = {
-  whitelistWindowsDefenderErrorMessage: WhitelistWindowsDefenderErrorType.USER_SELECTED_NO,
+  whitelistWindowsDefenderErrorMessage: WhitelistWindowsDefenderErrorTypeMessage.USER_SELECTED_NO,
   detectedAV: AntiVirusSoftware.WindowsDefender,
   onViewAVGuideLabel: `Open ${AntiVirusSoftware.WindowsDefender} Guide`,
 }
 
 export const DetectedWindowsDefenderGeneralErrorMessage: Story<AntivirusConfigurationPageProps> = Template.bind({})
 DetectedWindowsDefenderGeneralErrorMessage.args = {
-  whitelistWindowsDefenderErrorMessage: WhitelistWindowsDefenderErrorType.GENERAL_SCRIPT_ERROR,
+  whitelistWindowsDefenderErrorMessage: WhitelistWindowsDefenderErrorTypeMessage.GENERAL_SCRIPT_ERROR,
   detectedAV: AntiVirusSoftware.WindowsDefender,
   onViewAVGuideLabel: `Open ${AntiVirusSoftware.WindowsDefender} Guide`,
 }

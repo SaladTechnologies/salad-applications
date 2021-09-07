@@ -2,7 +2,7 @@ import { action, computed, observable, toJS } from 'mobx'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
 import { NotificationMessageCategory } from '../notifications/models'
-import { WhitelistWindowsDefenderErrorType } from '../onboarding/models'
+import { WhitelistWindowsDefenderErrorTypeMessage } from '../onboarding/models'
 import { Profile } from '../profile/models'
 import { MachineInfo } from './models'
 
@@ -157,9 +157,9 @@ export class NativeStore {
               resolve()
             } else {
               if (result.errorCode === 1223) {
-                reject(WhitelistWindowsDefenderErrorType.USER_SELECTED_NO)
+                reject(WhitelistWindowsDefenderErrorTypeMessage.USER_SELECTED_NO)
               } else {
-                reject(WhitelistWindowsDefenderErrorType.GENERAL_SCRIPT_ERROR)
+                reject(WhitelistWindowsDefenderErrorTypeMessage.GENERAL_SCRIPT_ERROR)
               }
             }
           })
