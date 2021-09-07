@@ -39,6 +39,9 @@ export class SeasonsStore {
         ? `Starts in ${Math.floor(timeDifferenceObject.hours || 0)} ${dayPluralForm}`
         : ''
       return timeRemaining
+    } else if (now > this.currentSeason?.endAbsolute) {
+      const completedOn = `Completed on ${this.currentSeason.endAbsolute.toLocaleString(DateTime.DATE_MED)}`
+      return completedOn
     } else {
       const endDate = this.currentSeason.endAbsolute
 
