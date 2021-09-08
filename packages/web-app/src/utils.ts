@@ -97,6 +97,17 @@ export const routeLink = (store: RootStore, path: string) => {
   }
 }
 
+/**
+ * a delay that can be used in our mobx store
+ * @param ms amount of ms to wait
+ */
+export const delay = (ms: number): Promise<void> =>
+  new Promise((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, ms)
+  })
+
 export const getSanitizedHTML = (html: string) => {
   const sanitizedHTML = sanitizeHtml(html, {
     allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
