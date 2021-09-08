@@ -161,7 +161,9 @@ export class NativeStore {
               if (result.errorCode === 1223) {
                 reject(WhitelistWindowsDefenderErrorTypeMessage.USER_SELECTED_NO)
               } else {
-                reject(WhitelistWindowsDefenderErrorTypeMessage.GENERAL_SCRIPT_ERROR)
+                setTimeout(() => {
+                  reject(WhitelistWindowsDefenderErrorTypeMessage.GENERAL_SCRIPT_ERROR)
+                }, 2000)
               }
             }
           })
