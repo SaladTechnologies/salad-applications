@@ -174,7 +174,7 @@ export class NativeStore {
       }
     } else {
       return Promise.reject(
-        'To whitelist Windows Defender, you must be running Windows and the latest version of Salad.',
+        'To whitelist Salad in Windows Defender, you must be running Windows and the latest version of Salad.',
       )
     }
   }
