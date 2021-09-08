@@ -1,6 +1,6 @@
 import { action, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
-import { routeLink } from '../../utils'
+import { delay, routeLink } from '../../utils'
 import { NotificationMessageCategory } from '../notifications/models'
 import type { ZendeskArticle, ZendeskArticleList, ZendeskArticleResource } from '../zendesk/models'
 import { AntiVirusSoftware } from '../zendesk/models'
@@ -94,6 +94,7 @@ export class OnboardingAntivirusStore {
     this.whitelistWindowsDefenderPending = true
     try {
       yield this.store.native.whitelistWindowsDefender()
+      yield delay(2000)
       this.store.notifications.sendNotification({
         category: NotificationMessageCategory.Success,
         title: 'You’ve successfully whitelisted Salad!',

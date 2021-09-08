@@ -154,16 +154,12 @@ export class NativeStore {
           this.callbacks.set(whitelistWindowsDefender, (result: { error?: boolean; errorCode?: number }) => {
             this.callbacks.delete(whitelistWindowsDefender)
             if (!result.error) {
-              setTimeout(() => {
-                resolve()
-              }, 2000)
+              resolve()
             } else {
               if (result.errorCode === 1223) {
                 reject(WhitelistWindowsDefenderErrorTypeMessage.USER_SELECTED_NO)
               } else {
-                setTimeout(() => {
-                  reject(WhitelistWindowsDefenderErrorTypeMessage.GENERAL_SCRIPT_ERROR)
-                }, 2000)
+                reject(WhitelistWindowsDefenderErrorTypeMessage.GENERAL_SCRIPT_ERROR)
               }
             }
           })
