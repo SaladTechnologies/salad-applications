@@ -21,45 +21,38 @@ export class OnboardingStore {
    * Each item has a name, route, a completion order number,
    * and whether or not it is only available in the native app.
    */
-  private onboardingPages =
-    this.store.native.canWhitelistWindowsDefenderAndDisableSleepMode && this.store.native.isNative
-      ? [
-          { NAME: ONBOARDING_PAGE_NAMES.WELCOME, PATH: '/onboarding/welcome', ORDER: 1, NATIVE: false },
-          { NAME: ONBOARDING_PAGE_NAMES.REFERRAL, PATH: '/onboarding/referral', ORDER: 2, NATIVE: false },
-          {
-            NAME: ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION,
-            PATH: '/onboarding/auto-start',
-            ORDER: 3,
-            NATIVE: true,
-          },
-          {
-            NAME: ONBOARDING_PAGE_NAMES.SLEEP_MODE_CONFIGURATION,
-            PATH: '/onboarding/sleep-mode',
-            ORDER: 4,
-            NATIVE: true,
-          },
-          {
-            NAME: ONBOARDING_PAGE_NAMES.ANTIVIRUS_CONFIGURATION,
-            PATH: '/onboarding/antivirus-configuration',
-            ORDER: 5,
-            NATIVE: true,
-          },
-        ]
-      : this.store.native.isNative
-      ? [
-          { NAME: ONBOARDING_PAGE_NAMES.WELCOME, PATH: '/onboarding/welcome', ORDER: 1, NATIVE: false },
-          { NAME: ONBOARDING_PAGE_NAMES.REFERRAL, PATH: '/onboarding/referral', ORDER: 2, NATIVE: false },
-          {
-            NAME: ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION,
-            PATH: '/onboarding/auto-start',
-            ORDER: 3,
-            NATIVE: true,
-          },
-        ]
-      : [
-          { NAME: ONBOARDING_PAGE_NAMES.WELCOME, PATH: '/onboarding/welcome', ORDER: 1, NATIVE: false },
-          { NAME: ONBOARDING_PAGE_NAMES.REFERRAL, PATH: '/onboarding/referral', ORDER: 2, NATIVE: false },
-        ]
+  @computed
+  private get onboardingPages(): OnboardingPageItemType[] {
+    const pages = [
+      { NAME: ONBOARDING_PAGE_NAMES.WELCOME, PATH: '/onboarding/welcome', ORDER: 1, NATIVE: false },
+      { NAME: ONBOARDING_PAGE_NAMES.REFERRAL, PATH: '/onboarding/referral', ORDER: 2, NATIVE: false },
+    ]
+    if (this.store.native.isNative) {
+      pages.push({
+        NAME: ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION,
+        PATH: '/onboarding/auto-start',
+        ORDER: 3,
+        NATIVE: true,
+      })
+    }
+    if (this.store.native.canWhitelistWindowsDefenderAndDisableSleepMode) {
+      pages.push(
+        {
+          NAME: ONBOARDING_PAGE_NAMES.SLEEP_MODE_CONFIGURATION,
+          PATH: '/onboarding/sleep-mode',
+          ORDER: 4,
+          NATIVE: true,
+        },
+        {
+          NAME: ONBOARDING_PAGE_NAMES.ANTIVIRUS_CONFIGURATION,
+          PATH: '/onboarding/antivirus-configuration',
+          ORDER: 5,
+          NATIVE: true,
+        },
+      )
+    }
+    return pages
+  }
 
   public disableSleepModePending: boolean = false
 
