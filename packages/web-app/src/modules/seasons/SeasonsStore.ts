@@ -31,14 +31,18 @@ export class SeasonsStore {
     } else if (now < this.currentSeason?.startAbsolute) {
       const endDate = this.currentSeason.startAbsolute
 
-      const timeDifference = endDate.diff(now, ['years', 'months', 'days', 'hours'])
+      const timeDifference = endDate.diff(now, ['years', 'months', 'days', 'hours', 'minutes'])
       const timeDifferenceObject = timeDifference.toObject()
       const hourPluralForm = timeDifferenceObject.hours && timeDifferenceObject.hours < 2 ? 'hour' : 'hours'
       const dayPluralForm = timeDifferenceObject.days && timeDifferenceObject.days < 2 ? 'day' : 'days'
+      const minutePluralForm = timeDifferenceObject.minutes && timeDifferenceObject.minutes < 2 ? 'minute' : 'minutes'
+
       const timeRemaining = timeDifference.days
         ? `Starts in ${Math.floor(timeDifferenceObject.days || 0)} ${dayPluralForm}`
         : timeDifferenceObject.hours
         ? `Starts in ${Math.floor(timeDifferenceObject.hours || 0)} ${hourPluralForm}`
+        : timeDifferenceObject.minutes
+        ? `Starts in ${Math.floor(timeDifferenceObject.minutes || 0)} ${minutePluralForm}`
         : ''
       return timeRemaining
     } else if (now > this.currentSeason?.endAbsolute) {
