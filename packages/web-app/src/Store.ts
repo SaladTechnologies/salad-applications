@@ -175,6 +175,9 @@ export class RootStore {
       ])
 
       this.finishInitialLoading()
+      if (this.onboarding.shouldShowAutoStartPageAgain) {
+        this.onboarding.showAutoStartPageAgain()
+      }
       this.onboarding.showOnboardingIfNeeded()
     }.bind(this),
   )
