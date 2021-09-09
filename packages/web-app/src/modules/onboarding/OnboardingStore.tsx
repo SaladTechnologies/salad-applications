@@ -60,6 +60,13 @@ export class OnboardingStore {
   public disableSleepModeErrorMessage?: string = undefined
 
   @computed
+  public get haveSeenAutoStartPage(): boolean {
+    const haveSeenAutoStartPage =
+      this.onboardingPagesCompleted !== null &&
+      this.onboardingPagesCompleted.includes(ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION)
+    return haveSeenAutoStartPage
+  }
+  @computed
   private get onboardingPagesCompleted(): string | null {
     return Storage.getItem(ONBOARDING_STORAGE_KEY)
   }
