@@ -22,7 +22,7 @@ export class OnboardingStore {
    * and whether or not it is only available in the native app.
    */
   @computed
-  private get onboardingPages(): OnboardingPageItemType[] {
+  private get availableOnboardingPages(): OnboardingPageItemType[] {
     const pages = [
       { NAME: ONBOARDING_PAGE_NAMES.WELCOME, PATH: '/onboarding/welcome', ORDER: 1, NATIVE: false },
       { NAME: ONBOARDING_PAGE_NAMES.REFERRAL, PATH: '/onboarding/referral', ORDER: 2, NATIVE: false },
@@ -208,7 +208,7 @@ export class OnboardingStore {
     let nextOnboardingPage = undefined
 
     if (typeof currentOnboardingPageOrder === 'number') {
-      const onboardingPagesCopy = [...this.onboardingPages]
+      const onboardingPagesCopy = [...this.availableOnboardingPages]
 
       const sortedOnboardingPages = onboardingPagesCopy.sort((a, b) => (a.ORDER > b.ORDER ? 1 : -1))
       const completedPagesCopy = [...this.completedOnboardingPages]
@@ -249,13 +249,13 @@ export class OnboardingStore {
   }
 
   private getOnboardingPage = (name: OnboardingPageName): OnboardingPageItemType | undefined => {
-    return this.onboardingPages.find((page) => page.NAME === name)
+    return this.availableOnboardingPages.find((page) => page.NAME === name)
   }
 
   private hasOnboardingPagesToComplete = (onboardingPagesCompletedInStorage: string | null): boolean => {
     const parsedStorageArray = onboardingPagesCompletedInStorage ? JSON.parse(onboardingPagesCompletedInStorage) : false
     if (parsedStorageArray) {
-      const onboardingPagesCopy = this.onboardingPages.map((page) => page.NAME)
+      const onboardingPagesCopy = this.availableOnboardingPages.map((page) => page.NAME)
       return !isEqual(sortBy(parsedStorageArray), sortBy(onboardingPagesCopy))
     } else {
       return true
