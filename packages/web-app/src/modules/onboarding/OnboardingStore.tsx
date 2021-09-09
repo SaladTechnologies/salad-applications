@@ -6,7 +6,6 @@ import type { OnboardingPageItemType } from './models'
 import { OnboardingPageName, OnboardingPagesType, ONBOARDING_PAGE_NAMES } from './models'
 
 const ONBOARDING_STORAGE_KEY = 'ONBOARDING_PAGES_COMPLETED'
-export const DO_NOT_SHOW_AUTO_START_AGAIN = 'DO_NOT_SHOW_AUTO_START_AGAIN'
 
 export class OnboardingStore {
   private completedOnboardingPages: OnboardingPageName[] | [] = []
@@ -61,38 +60,6 @@ export class OnboardingStore {
   public disableSleepModeErrorMessage?: string = undefined
 
   @computed
-  public get haveSeenAutoStartPage(): boolean {
-    const haveSeenAutoStartPage =
-      this.onboardingPagesCompleted !== null &&
-      this.onboardingPagesCompleted.includes(ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION)
-    return haveSeenAutoStartPage
-  }
-
-  @observable
-  public isDoNotShowAutoStartAgainChecked: boolean = false
-
-  @computed
-  public get shouldShowAutoStartPageAgain(): boolean {
-    const shouldShowAutoStartPageAgain =
-      this.store.native.isNative &&
-      !this.store.autoStart.autoStart &&
-      this.onboardingPagesCompleted !== null &&
-      this.hasCompletedOnboarding &&
-      !this.userHasSelectedDoNotShowAutoStartAgain &&
-      this.onboardingPagesCompleted.includes(ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION)
-    return shouldShowAutoStartPageAgain
-  }
-
-  @computed
-  public get userHasSelectedDoNotShowAutoStartAgain(): boolean {
-    if (Storage.getItem(DO_NOT_SHOW_AUTO_START_AGAIN)) {
-      return true
-    } else {
-      return false
-    }
-  }
-
-  @computed
   public get hasCompletedOnboarding(): boolean {
     // if this is true, then we can push users to show autostartpageagain. but will maybe(?) have to have this above the showonboarding pages.
     const completedOnboarding =
@@ -102,15 +69,9 @@ export class OnboardingStore {
   }
 
   @computed
-  private get onboardingPagesCompleted(): string | null {
+  public get onboardingPagesCompleted(): string | null {
     return Storage.getItem(ONBOARDING_STORAGE_KEY)
   }
-
-  @observable
-  public enableAutoStartPending: boolean = false
-
-  @observable
-  public enableAutoStartErrorMessage?: string = undefined
 
   constructor(private readonly store: RootStore) {}
 
@@ -211,36 +172,6 @@ export class OnboardingStore {
   @action
   public skipSleepMode = () => {
     this.viewNextPage(ONBOARDING_PAGE_NAMES.SLEEP_MODE_CONFIGURATION)
-  }
-
-  @action.bound
-  public enableAutoStart = flow(function* (this: OnboardingStore) {
-    this.enableAutoStartErrorMessage = undefined
-    this.enableAutoStartPending = true
-    try {
-      yield this.store.autoStart.setAutoStart(true)
-    } catch {
-      this.enableAutoStartErrorMessage =
-        'Something went wrong and we were unable to adjust your auto start settings. You can adjust these settings yourself in the Desktop App Settings, or contact support for assistance.'
-    } finally {
-      this.enableAutoStartPending = false
-      this.viewNextPage(ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION)
-    }
-  })
-
-  @action
-  public skipAutoStart = () => {
-    this.viewNextPage(ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION)
-  }
-
-  @action
-  public onToggleDoNotShowAutoStartAgain = (checked: boolean) => {
-    this.isDoNotShowAutoStartAgainChecked = checked
-  }
-
-  @action
-  public showAutoStartPageAgain = () => {
-    this.store.routing.push('/onboarding/auto-start')
   }
 
   private findNextPageByOrder = (sortedOnboardingPages: OnboardingPagesType, nextPage: number) => {

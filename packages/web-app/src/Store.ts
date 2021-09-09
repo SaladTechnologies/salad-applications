@@ -11,7 +11,7 @@ import { EngagementStore } from './modules/engagement'
 import { HomeStore } from './modules/home/HomeStore'
 import { AutoStartStore, MachineSettingsUIStore, MachineStore, NativeStore } from './modules/machine'
 import { NotificationStore } from './modules/notifications'
-import { OnboardingAntivirusStore, OnboardingStore } from './modules/onboarding'
+import { OnboardingAntivirusStore, OnboardingAutoStartStore, OnboardingStore } from './modules/onboarding'
 import { ProfileStore } from './modules/profile'
 import { Profile } from './modules/profile/models'
 import { ReferralStore } from './modules/referral'
@@ -76,6 +76,7 @@ export class RootStore {
   public readonly bonuses: BonusStore
   public readonly seasons: SeasonsStore
   public readonly onboarding: OnboardingStore
+  public readonly onboardingAutoStart: OnboardingAutoStartStore
   public readonly onboardingAntivirus: OnboardingAntivirusStore
   public readonly saladFork: SaladFork
   public readonly startButtonUI: StartButtonUIStore
@@ -113,6 +114,7 @@ export class RootStore {
     this.bonuses = new BonusStore(this, axios)
     this.seasons = new SeasonsStore(axios)
     this.onboarding = new OnboardingStore(this)
+    this.onboardingAutoStart = new OnboardingAutoStartStore(this)
     this.onboardingAntivirus = new OnboardingAntivirusStore(this)
     this.startButtonUI = new StartButtonUIStore(this)
     this.machineSettingsUI = new MachineSettingsUIStore(this)
@@ -175,8 +177,8 @@ export class RootStore {
       ])
 
       this.finishInitialLoading()
-      if (this.onboarding.shouldShowAutoStartPageAgain) {
-        this.onboarding.showAutoStartPageAgain()
+      if (this.onboardingAutoStart.shouldShowAutoStartPageAgain) {
+        this.onboardingAutoStart.showAutoStartPageAgain()
       }
       this.onboarding.showOnboardingIfNeeded()
     }.bind(this),
