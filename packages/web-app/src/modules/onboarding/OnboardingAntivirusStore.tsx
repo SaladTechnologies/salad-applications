@@ -1,11 +1,11 @@
 import { action, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
-import { routeLink } from '../../utils'
+import { delay, routeLink } from '../../utils'
 import { NotificationMessageCategory } from '../notifications/models'
 import type { ZendeskArticle, ZendeskArticleList, ZendeskArticleResource } from '../zendesk/models'
 import { AntiVirusSoftware } from '../zendesk/models'
 import { getZendeskAVData } from '../zendesk/utils'
-import { ONBOARDING_PAGE_NAMES, WhitelistWindowsDefenderErrorType } from './models'
+import { ONBOARDING_PAGE_NAMES, WhitelistWindowsDefenderErrorTypeMessage } from './models'
 
 export class OnboardingAntivirusStore {
   @observable
@@ -15,7 +15,7 @@ export class OnboardingAntivirusStore {
   public whitelistWindowsDefenderPending: boolean = false
 
   @observable
-  public whitelistWindowsDefenderErrorMessage?: WhitelistWindowsDefenderErrorType
+  public whitelistWindowsDefenderErrorMessage?: WhitelistWindowsDefenderErrorTypeMessage
 
   @observable
   public helpCenterArticle?: string
@@ -94,6 +94,7 @@ export class OnboardingAntivirusStore {
     this.whitelistWindowsDefenderPending = true
     try {
       yield this.store.native.whitelistWindowsDefender()
+      yield delay(2000)
       this.store.notifications.sendNotification({
         category: NotificationMessageCategory.Success,
         title: 'You’ve successfully whitelisted Salad!',
@@ -103,7 +104,7 @@ export class OnboardingAntivirusStore {
       })
       this.store.onboarding.viewNextPage(ONBOARDING_PAGE_NAMES.ANTIVIRUS_CONFIGURATION)
     } catch (_error: any) {
-      const error: WhitelistWindowsDefenderErrorType = _error
+      const error: WhitelistWindowsDefenderErrorTypeMessage = _error
       this.setWhitelistWindowsErrorType(error)
     } finally {
       this.whitelistWindowsDefenderPending = false
@@ -116,7 +117,7 @@ export class OnboardingAntivirusStore {
   })
 
   @action
-  public setWhitelistWindowsErrorType = (errorType: WhitelistWindowsDefenderErrorType) => {
+  public setWhitelistWindowsErrorType = (errorType: WhitelistWindowsDefenderErrorTypeMessage) => {
     this.whitelistWindowsDefenderErrorMessage = errorType
   }
 
