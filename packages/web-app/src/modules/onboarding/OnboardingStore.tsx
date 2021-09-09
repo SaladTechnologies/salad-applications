@@ -1,5 +1,5 @@
 import { isEqual, sortBy } from 'lodash'
-import { action, flow, observable } from 'mobx'
+import { action, computed, flow, observable } from 'mobx'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
 import type { OnboardingPageItemType } from './models'
@@ -66,6 +66,11 @@ export class OnboardingStore {
   @observable
   public disableSleepModeErrorMessage?: string = undefined
 
+  @computed
+  private get onboardingPagesCompleted(): string | null {
+    return Storage.getItem(ONBOARDING_STORAGE_KEY)
+  }
+
   @observable
   public enableAutoStartPending: boolean = false
 
@@ -84,12 +89,12 @@ export class OnboardingStore {
      * If they have not but already have a referral code, we skip the
      * first two steps.
      */
-    if (onboardingPagesCompleted == null) {
+    if (this.onboardingPagesCompleted == null) {
       currentReferral
         ? this.updateCompletedOnboardingPages([ONBOARDING_PAGE_NAMES.WELCOME, ONBOARDING_PAGE_NAMES.REFERRAL])
         : this.updateCompletedOnboardingPages([])
     } else {
-      this.updateCompletedOnboardingPages(JSON.parse(onboardingPagesCompleted))
+      this.updateCompletedOnboardingPages(JSON.parse(this.onboardingPagesCompleted))
       if (currentReferral) {
         this.markOnboardingPageAsCompleted(ONBOARDING_PAGE_NAMES.WELCOME)
         this.markOnboardingPageAsCompleted(ONBOARDING_PAGE_NAMES.REFERRAL)
@@ -102,10 +107,10 @@ export class OnboardingStore {
      * it out in our onboardingPagesCompleted array with our updated Auto Start page name
      * so users do not see this page again.
      * */
-    if (onboardingPagesCompleted?.includes(ONBOARDING_PAGE_NAMES.AFK_CONFIGURATION)) {
+    if (this.onboardingPagesCompleted?.includes(ONBOARDING_PAGE_NAMES.AFK_CONFIGURATION)) {
       this.updateCompletedOnboardingPages(
         JSON.parse(
-          onboardingPagesCompleted.replace(
+          this.onboardingPagesCompleted.replace(
             ONBOARDING_PAGE_NAMES.AFK_CONFIGURATION,
             ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION,
           ),
@@ -113,7 +118,7 @@ export class OnboardingStore {
       )
     }
 
-    if (this.hasOnboardingPagesToComplete(onboardingPagesCompleted)) {
+    if (this.hasOnboardingPagesToComplete(this.onboardingPagesCompleted)) {
       this.routeToNextUncompletedPage()
     }
   }
