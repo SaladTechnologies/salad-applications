@@ -31,19 +31,15 @@ export class SeasonsStore {
     } else if (now < this.currentSeason?.startAbsolute) {
       const endDate = this.currentSeason.startAbsolute
 
-      const timeDifference = endDate.diff(now, ['years', 'months', 'days', 'hours', 'minutes'])
+      const timeDifference = endDate.diff(now, ['years', 'months', 'days', 'hours'])
       const timeDifferenceObject = timeDifference.toObject()
       const hourPluralForm = timeDifferenceObject.hours && timeDifferenceObject.hours < 2 ? 'hour' : 'hours'
       const dayPluralForm = timeDifferenceObject.days && timeDifferenceObject.days < 2 ? 'day' : 'days'
-      const minutePluralForm = timeDifferenceObject.minutes && timeDifferenceObject.minutes < 2 ? 'minute' : 'minutes'
-
       const timeRemaining = timeDifference.days
         ? `Starts in ${Math.floor(timeDifferenceObject.days || 0)} ${dayPluralForm}`
-        : timeDifferenceObject.hours
+        : timeDifference.hours > 1
         ? `Starts in ${Math.floor(timeDifferenceObject.hours || 0)} ${hourPluralForm}`
-        : timeDifferenceObject.minutes
-        ? `Starts in ${Math.floor(timeDifferenceObject.minutes || 0)} ${minutePluralForm}`
-        : ''
+        : `Starts in under 1 hour`
       return timeRemaining
     } else if (now > this.currentSeason?.endAbsolute) {
       const completedOn = `Completed on ${this.currentSeason.endAbsolute.toLocaleString(DateTime.DATE_MED)}`
