@@ -8,11 +8,20 @@ export class SeasonsStore {
   @observable
   private currentSeason: CurrentSeason | undefined
 
+  @observable
+  private testNow: any = DateTime.now()
+
+  @observable
+  private testStart: any = DateTime.now().minus({ days: 4, hours: 2 })
+
+  @observable
+  private testEnd: any = DateTime.now().minus({ days: 0, hours: 4 })
+
   @computed
   get duration(): string {
     if (this.currentSeason?.startAbsolute && this.currentSeason.startAbsolute) {
-      const startDateTime = this.currentSeason?.startAbsolute
-      const endDateTime = this.currentSeason.endAbsolute
+      const startDateTime = this.testStart
+      const endDateTime = this.testEnd
 
       if (!startDateTime || !endDateTime) return ''
 
@@ -26,24 +35,33 @@ export class SeasonsStore {
   get timeLeft(): string {
     const now = DateTime.now()
 
+    console.log(this.testNow, 'now')
+    console.log(this.testStart, 'teststart')
+    console.log(this.testEnd, 'testEnd')
+
+    // console.log(this.testEnd, '4')
+
     if (!this.currentSeason || !this.currentSeason.startAbsolute || !this.currentSeason.endAbsolute) {
       return ''
-    } else if (now < this.currentSeason?.startAbsolute) {
-      const endDate = this.currentSeason.startAbsolute
+    } else if (now < this.testStart) {
+      const endDate = this.testStart
 
       const timeDifference = endDate.diff(now, ['years', 'months', 'days', 'hours'])
       const timeDifferenceObject = timeDifference.toObject()
-
-      const dayPluralForm = timeDifferenceObject.hours && timeDifferenceObject.hours <= 1 ? 'hour' : 'hours'
-      const timeRemaining = dayPluralForm
-        ? `Starts in ${Math.floor(timeDifferenceObject.hours || 0)} ${dayPluralForm}`
+      debugger
+      const hourPluralForm = timeDifferenceObject.hours && timeDifferenceObject.hours <= 1 ? 'hour' : 'hours'
+      const dayPluralForm = timeDifferenceObject.days && timeDifferenceObject.days <= 1 ? 'day' : 'days'
+      const timeRemaining = timeDifference.days
+        ? `Starts in ${Math.floor(timeDifferenceObject.days || 0)} ${dayPluralForm}`
+        : timeDifferenceObject.hours
+        ? `Starts in ${Math.floor(timeDifferenceObject.hours || 0)} ${hourPluralForm}`
         : ''
       return timeRemaining
-    } else if (now > this.currentSeason?.endAbsolute) {
-      const completedOn = `Completed on ${this.currentSeason.endAbsolute.toLocaleString(DateTime.DATE_MED)}`
+    } else if (now > this.testEnd) {
+      const completedOn = `Completed on ${this.testEnd.toLocaleString(DateTime.DATE_MED)}`
       return completedOn
     } else {
-      const endDate = this.currentSeason.endAbsolute
+      const endDate = this.testEnd
 
       const timeDifference = endDate.diff(now, ['days', 'hours'])
       const timeDifferenceObject = timeDifference.toObject()
