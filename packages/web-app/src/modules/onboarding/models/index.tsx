@@ -1,2 +1,2 @@
 export * from './OnboardingPages'
-export * from './WhitelistWindowsDefenderErrorType'
+export * from './WhitelistWindowsDefenderErrorTypeMessage'
