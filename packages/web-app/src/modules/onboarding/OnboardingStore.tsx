@@ -130,6 +130,18 @@ export class OnboardingStore {
   }
 
   /**
+   * In the case of wanting to reshow a page on startup like the
+   * the Auto-Start page if certain conditions have not been met,
+   * this function will do that.
+   */
+  @action
+  public reshowOnboardingPagesIfNeeded = () => {
+    if (this.store.onboardingAutoStart.shouldShowAutoStartPageAgain) {
+      this.store.onboardingAutoStart.showAutoStartPageAgain()
+    }
+  }
+
+  /**
    * Updates onboarding store state and local storage with
    * an array of completed onboarding pages provided.
    * @param completedOnboardingPages An array of completed onboarding page names.

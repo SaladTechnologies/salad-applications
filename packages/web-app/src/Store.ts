@@ -177,10 +177,8 @@ export class RootStore {
       ])
 
       this.finishInitialLoading()
-      if (this.onboardingAutoStart.shouldShowAutoStartPageAgain) {
-        this.onboardingAutoStart.showAutoStartPageAgain()
-      }
       this.onboarding.showOnboardingIfNeeded()
+      this.onboarding.reshowOnboardingPagesIfNeeded()
     }.bind(this),
   )
 
