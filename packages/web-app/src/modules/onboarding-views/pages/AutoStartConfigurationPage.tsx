@@ -80,7 +80,7 @@ export interface AutoStartConfigurationPageProps extends WithStyles<typeof style
   enableAutoStartErrorMessage?: string
   onEnableAutoStart: () => void
   onSkipAutoStart: () => void
-  haveSeenAutoStartPage: boolean
+  hasSeenAutoStartPage: boolean
   isDoNotShowAutoStartAgainChecked: boolean
   onToggleDoNotShowAutoStartAgain: (checked: boolean) => void
 }
@@ -92,7 +92,7 @@ const _AutoStartConfigurationPage = ({
   onToggleDoNotShowAutoStartAgain,
   enableAutoStartPending,
   isDoNotShowAutoStartAgainChecked,
-  haveSeenAutoStartPage,
+  hasSeenAutoStartPage,
   enableAutoStartErrorMessage,
 }: AutoStartConfigurationPageProps) => {
   return (
@@ -133,7 +133,7 @@ const _AutoStartConfigurationPage = ({
                 />
               </span>
             </div>
-            {haveSeenAutoStartPage && (
+            {hasSeenAutoStartPage && (
               <div>
                 <Checkbox onChange={onToggleDoNotShowAutoStartAgain} checked={isDoNotShowAutoStartAgainChecked}>
                   <Text variant="baseS"> Do Not Show Again</Text>

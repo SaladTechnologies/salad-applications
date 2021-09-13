@@ -16,11 +16,11 @@ export class OnboardingAutoStartStore {
   public isDoNotShowAutoStartAgainChecked: boolean = false
 
   @computed
-  public get haveSeenAutoStartPage(): boolean {
-    const haveSeenAutoStartPage =
+  public get hasSeenAutoStartPage(): boolean {
+    const hasSeenAutoStartPage =
       this.store.onboarding.onboardingPagesCompleted !== null &&
       this.store.onboarding.onboardingPagesCompleted.includes(ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION)
-    return haveSeenAutoStartPage
+    return hasSeenAutoStartPage
   }
 
   @computed

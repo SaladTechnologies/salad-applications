@@ -28,7 +28,7 @@ const mapStoreToProps = (store: RootStore): any => {
     enableAutoStartPending: store.onboardingAutoStart.enableAutoStartPending,
     isDoNotShowAutoStartAgainChecked: store.onboardingAutoStart.isDoNotShowAutoStartAgainChecked,
     onToggleDoNotShowAutoStartAgain: store.onboardingAutoStart.onToggleDoNotShowAutoStartAgain,
-    haveSeenAutoStartPage: store.onboardingAutoStart.haveSeenAutoStartPage,
+    hasSeenAutoStartPage: store.onboardingAutoStart.hasSeenAutoStartPage,
     isNative: store.native.isNative,
   }
 }
