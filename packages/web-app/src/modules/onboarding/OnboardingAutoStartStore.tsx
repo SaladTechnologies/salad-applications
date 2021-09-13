@@ -37,11 +37,7 @@ export class OnboardingAutoStartStore {
 
   @computed
   public get userHasSelectedDoNotShowAutoStartAgain(): boolean {
-    if (Storage.getItem(DO_NOT_SHOW_AUTO_START_AGAIN)) {
-      return true
-    } else {
-      return false
-    }
+    return typeof Storage.getItem(DO_NOT_SHOW_AUTO_START_AGAIN) === 'string'
   }
 
   constructor(private readonly store: RootStore) {}
