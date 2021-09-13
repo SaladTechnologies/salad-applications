@@ -9,7 +9,7 @@ const mapStoreToProps = (store: RootStore): any => {
   const handleEnableAutoStart = () => {
     store.analytics.trackButtonClicked('enable_auto_start_button', 'Enable Auto-Start Button', 'enabled')
     store.onboardingAutoStart.enableAutoStart()
-    if (store.onboardingAutoStart.isDoNotShowAutoStartAgainChecked) {
+    if (store.onboardingAutoStart.isDoNotShowAutoStartAgainEnabled) {
       Storage.setItem(DO_NOT_SHOW_AUTO_START_AGAIN, true)
       store.routing.push('/')
     } else {
@@ -19,7 +19,7 @@ const mapStoreToProps = (store: RootStore): any => {
 
   const handleOnSkipAutoStart = () => {
     store.analytics.trackButtonClicked('skip_auto_start_button', 'Skip Auto-Start Button', 'enabled')
-    if (store.onboardingAutoStart.isDoNotShowAutoStartAgainChecked) {
+    if (store.onboardingAutoStart.isDoNotShowAutoStartAgainEnabled) {
       Storage.setItem(DO_NOT_SHOW_AUTO_START_AGAIN, true)
       store.routing.push('/')
     } else {
@@ -32,7 +32,7 @@ const mapStoreToProps = (store: RootStore): any => {
     onSkipAutoStart: handleOnSkipAutoStart,
     enableAutoStartErrorMessage: store.onboardingAutoStart.enableAutoStartErrorMessage,
     enableAutoStartPending: store.onboardingAutoStart.enableAutoStartPending,
-    isDoNotShowAutoStartAgainChecked: store.onboardingAutoStart.isDoNotShowAutoStartAgainChecked,
+    isDoNotShowAutoStartAgainEnabled: store.onboardingAutoStart.isDoNotShowAutoStartAgainEnabled,
     onToggleDoNotShowAutoStartAgain: store.onboardingAutoStart.onToggleDoNotShowAutoStartAgain,
     hasSeenAutoStartPage: store.onboardingAutoStart.hasSeenAutoStartPage,
     isNative: store.native.isNative,

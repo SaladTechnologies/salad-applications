@@ -13,7 +13,7 @@ export class OnboardingAutoStartStore {
   public enableAutoStartPending: boolean = false
 
   @observable
-  public isDoNotShowAutoStartAgainChecked: boolean = false
+  public isDoNotShowAutoStartAgainEnabled: boolean = false
 
   @computed
   public get hasSeenAutoStartPage(): boolean {
@@ -58,7 +58,7 @@ export class OnboardingAutoStartStore {
 
   @action
   public onToggleDoNotShowAutoStartAgain = (checked: boolean) => {
-    this.isDoNotShowAutoStartAgainChecked = checked
+    this.isDoNotShowAutoStartAgainEnabled = checked
   }
 
   @action
