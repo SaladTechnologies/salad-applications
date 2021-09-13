@@ -63,7 +63,9 @@ export class OnboardingStore {
   public get hasCompletedAvailableOnboardingPages(): boolean {
     const availableOnboardingPagesNameArray = this.availableOnboardingPages.map((item) => item.NAME)
     const completedOnboarding = availableOnboardingPagesNameArray.some(
-      (e) => this.onboardingPagesCompleted !== null && JSON.parse(this.onboardingPagesCompleted).includes(e),
+      (onboardingPagesName) =>
+        this.onboardingPagesCompleted !== null &&
+        JSON.parse(this.onboardingPagesCompleted).includes(onboardingPagesName),
     )
     return completedOnboarding
   }
