@@ -61,11 +61,10 @@ export class OnboardingStore {
 
   @computed
   public get hasCompletedAvailableOnboardingPages(): boolean {
-  public get hasCompletedOnboarding(): boolean {
-    // if this is true, then we can push users to show autostartpageagain. but will maybe(?) have to have this above the showonboarding pages.
-    const completedOnboarding =
-      this.onboardingPagesCompleted !== null &&
-      this.availableOnboardingPages.length <= JSON.parse(this.onboardingPagesCompleted).length
+    const availableOnboardingPagesNameArray = this.availableOnboardingPages.map((item) => item.NAME)
+    const completedOnboarding = availableOnboardingPagesNameArray.some(
+      (e) => this.onboardingPagesCompleted !== null && JSON.parse(this.onboardingPagesCompleted).includes(e),
+    )
     return completedOnboarding
   }
 
