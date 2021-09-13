@@ -60,6 +60,7 @@ export class OnboardingStore {
   public disableSleepModeErrorMessage?: string = undefined
 
   @computed
+  public get hasCompletedAvailableOnboardingPages(): boolean {
   public get hasCompletedOnboarding(): boolean {
     // if this is true, then we can push users to show autostartpageagain. but will maybe(?) have to have this above the showonboarding pages.
     const completedOnboarding =

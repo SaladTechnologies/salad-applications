@@ -29,7 +29,7 @@ export class OnboardingAutoStartStore {
       this.store.native.isNative &&
       !this.store.autoStart.autoStart &&
       this.store.onboarding.onboardingPagesCompleted !== null &&
-      this.store.onboarding.hasCompletedOnboarding &&
+      this.store.onboarding.hasCompletedAvailableOnboardingPages &&
       !this.userHasSelectedDoNotShowAutoStartAgain &&
       this.store.onboarding.onboardingPagesCompleted.includes(ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION)
     return shouldShowAutoStartPageAgain
