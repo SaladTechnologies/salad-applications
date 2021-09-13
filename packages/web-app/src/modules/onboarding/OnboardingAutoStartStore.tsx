@@ -53,14 +53,8 @@ export class OnboardingAutoStartStore {
         'Something went wrong and we were unable to adjust your auto start settings. You can adjust these settings yourself in the Desktop App Settings, or contact support for assistance.'
     } finally {
       this.enableAutoStartPending = false
-      this.store.onboarding.viewNextPage(ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION)
     }
   })
-
-  @action
-  public skipAutoStart = () => {
-    this.store.onboarding.viewNextPage(ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION)
-  }
 
   @action
   public onToggleDoNotShowAutoStartAgain = (checked: boolean) => {
