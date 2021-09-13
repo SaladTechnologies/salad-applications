@@ -1,4 +1,4 @@
-import { Button, FieldContainer, Text } from '@saladtechnologies/garden-components'
+import { Button, Checkbox, FieldContainer, Text } from '@saladtechnologies/garden-components'
 import classnames from 'classnames'
 import withStyles, { WithStyles } from 'react-jss'
 import MediaQuery from 'react-responsive'
@@ -80,13 +80,19 @@ export interface AutoStartConfigurationPageProps extends WithStyles<typeof style
   enableAutoStartErrorMessage?: string
   onEnableAutoStart: () => void
   onSkipAutoStart: () => void
+  hasSeenAutoStartPage: boolean
+  isDoNotShowAutoStartAgainEnabled: boolean
+  onToggleDoNotShowAutoStartAgain: (checked: boolean) => void
 }
 
 const _AutoStartConfigurationPage = ({
   classes,
   onSkipAutoStart,
   onEnableAutoStart,
+  onToggleDoNotShowAutoStartAgain,
   enableAutoStartPending,
+  isDoNotShowAutoStartAgainEnabled,
+  hasSeenAutoStartPage,
   enableAutoStartErrorMessage,
 }: AutoStartConfigurationPageProps) => {
   return (
@@ -112,7 +118,7 @@ const _AutoStartConfigurationPage = ({
             <div className={classes.mb48}>
               <Text variant="baseS">Automatically chop when you are away from your PC</Text>
             </div>
-            <div className={classes.buttonsContainer}>
+            <div className={classnames(classes.buttonsContainer, classes.mb24)}>
               <span className={classes.leaveButton}>
                 <Button size="medium" label="Leave Auto-Start Disabled" onClick={onSkipAutoStart} variant="outlined" />
               </span>
@@ -127,6 +133,13 @@ const _AutoStartConfigurationPage = ({
                 />
               </span>
             </div>
+            {hasSeenAutoStartPage && (
+              <div>
+                <Checkbox onChange={onToggleDoNotShowAutoStartAgain} checked={isDoNotShowAutoStartAgainEnabled}>
+                  <Text variant="baseS"> Do Not Show Again</Text>
+                </Checkbox>
+              </div>
+            )}
           </div>
           <MediaQuery minWidth={767}>
             <img className={classes.image} src={Carrot} alt="Salad Reward Items" />
