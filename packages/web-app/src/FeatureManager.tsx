@@ -13,10 +13,10 @@ export class UnleashFeatureManager implements FeatureManager {
   private readonly client: UnleashClient | undefined
 
   public constructor() {
-    if (process.env.REACT_APP_UNLEASH_URL) {
+    if (process.env.REACT_APP_UNLEASH_URL && process.env.REACT_APP_UNLEASH_API_KEY) {
       this.client = new UnleashClient({
         url: process.env.REACT_APP_UNLEASH_URL,
-        clientKey: 'zrujLzhnwVZkIOlS74oZZ0DK7ZXs3Ifo',
+        clientKey: process.env.REACT_APP_UNLEASH_API_KEY,
         appName: 'web-app',
       })
 
