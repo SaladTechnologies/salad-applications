@@ -345,7 +345,7 @@ class _VaultList extends Component<Props, State> {
                           {isPending && (
                             <InfoButton
                               text={
-                                "Your Order Has Been Received And Is Being Processed. This Usually Takes A Few Seconds, But It May Take Up To 40+ Hours. When We Receive Your Code, It Will Appear Here, And In An Email That We'll Send To You."
+                                "Your Order Has Been Received And Is Being Processed. This Usually Takes A Few Seconds, But It May Take Up To 24 Hours. When We Receive Your Code, It Will Appear Here, And In An Email That We'll Send To You."
                               }
                             />
                           )}
