@@ -1,8 +1,8 @@
 import semver from 'semver'
-import { Accounts } from '../accounts'
+import type { Accounts } from '../accounts'
 import { STANDARD_ERRORS } from '../errors'
 import { downloads } from '../gminer'
-import { PluginDefinition } from '../plugin-definitions'
+import type { PluginDefinition } from '../plugin-definitions'
 import { hasGpu } from '../requirements'
 
 export const createGMinerCuckooCyclePluginDefinitions = (accounts: Accounts): PluginDefinition[] =>

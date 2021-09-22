@@ -1,5 +1,5 @@
-import { Accounts } from '../accounts'
-import { PluginDefinition } from '../plugin-definitions'
+import type { Accounts } from '../accounts'
+import type { PluginDefinition } from '../plugin-definitions'
 import { createCCminerLyra2REv3PluginDefinitions } from './ccminer-lyra2rev3'
 import { createGMinerBeamHashPluginDefinitions } from './gminer-beamhash'
 import { createGMinerCuckooCyclePluginDefinitions } from './gminer-cuckoocycle'

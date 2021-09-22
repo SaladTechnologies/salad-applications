@@ -1,7 +1,7 @@
-import { Accounts } from '../accounts'
+import type { Accounts } from '../accounts'
 import { downloads } from '../ccminer'
 import { STANDARD_ERRORS } from '../errors'
-import { PluginDefinition } from '../plugin-definitions'
+import type { PluginDefinition } from '../plugin-definitions'
 import { hasGpu, negateGpuRequirement } from '../requirements'
 
 export const createCCminerLyra2REv3PluginDefinitions = (accounts: Accounts): PluginDefinition[] =>

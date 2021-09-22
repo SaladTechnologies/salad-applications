@@ -1,5 +1,5 @@
-import { Accounts } from '../accounts'
-import { PluginDefinition } from '../plugin-definitions'
+import type { Accounts } from '../accounts'
+import type { PluginDefinition } from '../plugin-definitions'
 import { createGMinerBeamHashPluginDefinitions } from './gminer-beamhash'
 import { createGMinerCuckooCyclePluginDefinitions } from './gminer-cuckoocycle'
 import { createGMinerZHashPluginDefinitions } from './gminer-zhash'

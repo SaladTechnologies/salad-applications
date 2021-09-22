@@ -1,6 +1,7 @@
 import { AxiosInstance, AxiosResponse } from 'axios'
 import { autorun, computed, flow, observable } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
+import { FeatureManager } from '../../FeatureManager'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
 import { NotificationMessageCategory } from '../notifications/models'
@@ -10,6 +11,7 @@ import {
   BEAM_WALLET_ADDRESS,
   ETH_WALLET_ADDRESS,
   getNiceHashMiningAddress,
+  PROHASHING_USERNAME,
 } from '../salad-bowl/definitions/accounts'
 import { GpuInformation, MachineInfo } from './models'
 import { Machine } from './models/Machine'
@@ -29,7 +31,11 @@ export class MachineStore {
     }
   }
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
+  constructor(
+    private readonly store: RootStore,
+    private readonly axios: AxiosInstance,
+    private readonly featureManager: FeatureManager,
+  ) {
     autorun(async () => {
       if (!store.auth.isAuthenticated) {
         return
@@ -113,6 +119,10 @@ export class MachineStore {
         address: getNiceHashMiningAddress(machine.id),
         rigId: machine.minerId,
       },
+      prohashing: {
+        username: PROHASHING_USERNAME,
+        workerName: machine.id,
+      },
     }
     const pluginDefinitions = getPluginDefinitions(accounts, machineInfo.platform ?? window.salad.platform)
     const gpus = machineInfo.graphics.controllers.map((gpu) => {
@@ -127,7 +137,11 @@ export class MachineStore {
       // TODO: Feed user preferences into the requirements check.
       const gpuPluginDefinitions = pluginDefinitions.filter((pluginDefinition) =>
         pluginDefinition.requirements.every((requirement) =>
-          requirement(gpuMachineInfo, { cpu: false, gpu: true, cpuOverridden: false, gpuOverridden: false }),
+          requirement(
+            gpuMachineInfo,
+            { cpu: false, gpu: true, cpuOverridden: false, gpuOverridden: false },
+            this.featureManager,
+          ),
         ),
       )
 
@@ -169,13 +183,21 @@ export class MachineStore {
         address: getNiceHashMiningAddress(machine.id),
         rigId: machine.minerId,
       },
+      prohashing: {
+        username: PROHASHING_USERNAME,
+        workerName: machine.id,
+      },
     }
     const pluginDefinitions = getPluginDefinitions(accounts, machineInfo.platform ?? window.salad.platform)
 
     //Get all the CPU only plugin definitions
     const cpuPlugins = pluginDefinitions.filter((pluginDefinition) =>
       pluginDefinition.requirements.every((requirement) =>
-        requirement(machineInfo, { cpu: true, gpu: false, cpuOverridden: false, gpuOverridden: false }),
+        requirement(
+          machineInfo,
+          { cpu: true, gpu: false, cpuOverridden: false, gpuOverridden: false },
+          this.featureManager,
+        ),
       ),
     )
 
