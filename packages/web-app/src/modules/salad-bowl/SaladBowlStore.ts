@@ -1,6 +1,7 @@
 import { Duration } from 'luxon'
 import { action, autorun, computed, flow, observable, runInAction } from 'mobx'
 import { EOL } from 'os'
+import { FeatureManager } from '../../FeatureManager'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
 import { ErrorPageType } from '../../UIStore'
@@ -8,7 +9,13 @@ import { MiningStatus } from '../machine/models'
 import { NotificationMessageCategory } from '../notifications/models'
 import { IPersistentStore } from '../versions/IPersistentStore'
 import { getPluginDefinitions } from './definitions'
-import { Accounts, BEAM_WALLET_ADDRESS, ETH_WALLET_ADDRESS, getNiceHashMiningAddress } from './definitions/accounts'
+import {
+  Accounts,
+  BEAM_WALLET_ADDRESS,
+  ETH_WALLET_ADDRESS,
+  getNiceHashMiningAddress,
+  PROHASHING_USERNAME,
+} from './definitions/accounts'
 import { PluginDefinition, StartActionType, StartReason, StopReason } from './models'
 import { ErrorCategory } from './models/ErrorCategory'
 import { ErrorMessage } from './models/ErrorMessage'
@@ -77,16 +84,24 @@ export class SaladBowlStore implements SaladBowlStoreInterface, IPersistentStore
         address: getNiceHashMiningAddress(machine.id),
         rigId: machine.minerId,
       },
+      prohashing: {
+        username: PROHASHING_USERNAME,
+        workerName: machine.id,
+      },
     }
     const pluginDefinitions = getPluginDefinitions(accounts, machineInfo.platform ?? window.salad.platform).filter(
       (pluginDefinition) =>
         pluginDefinition.requirements.every((requirement) =>
-          requirement(machineInfo, {
-            cpu: this.cpuMiningEnabled,
-            gpu: this.gpuMiningEnabled,
-            cpuOverridden: this.cpuMiningOverridden,
-            gpuOverridden: this.gpuMiningOverridden,
-          }),
+          requirement(
+            machineInfo,
+            {
+              cpu: this.cpuMiningEnabled,
+              gpu: this.gpuMiningEnabled,
+              cpuOverridden: this.cpuMiningOverridden,
+              gpuOverridden: this.gpuMiningOverridden,
+            },
+            this.featureManager,
+          ),
         ),
     )
     console.log(
@@ -188,7 +203,7 @@ export class SaladBowlStore implements SaladBowlStoreInterface, IPersistentStore
     }
   }
 
-  constructor(private readonly store: RootStore) {
+  constructor(private readonly store: RootStore, private readonly featureManager: FeatureManager) {
     this.store.native.on('mining-status', this.onReceiveStatus)
     this.store.native.on('mining-error', this.onReceiveError)
 

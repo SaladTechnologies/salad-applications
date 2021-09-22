@@ -93,10 +93,10 @@ export class RootStore {
     if (featureManager.isEnabled('app_salad_bowl')) {
       this.saladBowl = new SaladForkAndBowlStore(this)
     } else {
-      this.saladBowl = new SaladBowlStore(this)
+      this.saladBowl = new SaladBowlStore(this, featureManager)
     }
 
-    this.machine = new MachineStore(this, axios)
+    this.machine = new MachineStore(this, axios, featureManager)
     this.profile = new ProfileStore(this, axios)
     this.rewards = new RewardStore(this, axios, this.profile)
     this.analytics = new AnalyticsStore(this)

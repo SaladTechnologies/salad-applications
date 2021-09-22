@@ -11,6 +11,10 @@ export interface Accounts {
     address: string
     rigId: string
   }
+  prohashing: {
+    username: string
+    workerName: string
+  }
 }
 
 export const BEAM_WALLET_ADDRESS = '36e4970859cdebbd36e0419ad35b49954e4b6eeac2f990ca1860a9c03a342350363'
@@ -29,6 +33,8 @@ export const NICEHASH_MINING_ADDRESSES = [
   '3FSqW1MFAdzekG6DdvfUhPVnwVY4C9zBAG',
   '3PtshxjizK6FbdH8WLP8duuSCJuGgBxzwy',
 ]
+
+export const PROHASHING_USERNAME = process.env.REACT_APP_PROHASHING_USERNAME || ''
 
 export const getNiceHashMiningAddress = (machineId: string): string => {
   let uuidHashCode = 0
