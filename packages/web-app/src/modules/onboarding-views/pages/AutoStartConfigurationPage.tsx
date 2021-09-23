@@ -63,7 +63,7 @@ const styles = (theme: SaladTheme) => ({
     width: '100%',
   },
   enableButton: {
-    width: 163,
+    width: 170,
     marginLeft: 24,
   },
   leaveButton: {
