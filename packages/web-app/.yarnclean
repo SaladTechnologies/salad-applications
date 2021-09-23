@@ -47,3 +47,4 @@ wercker.yml
 # keep garden assets
 !@saladtechnologies/garden-components/lib/components/Avatar/assets
 !@saladtechnologies/garden-components/lib/components/LoadingScreen/assets
+!@saladtechnologies/garden-components/lib/components/HardwareCard/assets
