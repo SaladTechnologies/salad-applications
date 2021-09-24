@@ -81,7 +81,7 @@
     "@saladtechnologies/garden-components": "file:../../libs/saladtechnologies-garden-components-1.0.44.tgz",
     "@saladtechnologies/garden-fonts": "file:../../libs/saladtechnologies-garden-fonts-1.0.0.tgz",
     "@saladtechnologies/garden-icons": "file:../../libs/saladtechnologies-garden-icons-1.0.2.tgz",
-    "@saladtechnologies/salad-grpc-salad-bowl": "file:../../libs/saladtechnologies-salad-grpc-salad-bowl-0.0.1-alpha2.tgz",
+    "@saladtechnologies/salad-grpc-salad-bowl": "file:../../libs/saladtechnologies-grpc-salad-bowl-0.0.1-alpha3.tgz",
     "@sentry/react": "6.12.0",
     "@sentry/types": "6.12.0",
     "@storybook/addon-actions": "6.3.8",
