@@ -2139,9 +2139,9 @@
   version "1.0.2"
   resolved "file:../../libs/saladtechnologies-garden-icons-1.0.2.tgz#2e5a00a8b17b8f8ed968df28bb1ad731cfd4c743"
 
-"@saladtechnologies/salad-grpc-salad-bowl@file:../../libs/saladtechnologies-salad-grpc-salad-bowl-0.0.1-alpha2.tgz":
-  version "0.0.1-alpha2"
-  resolved "file:../../libs/saladtechnologies-salad-grpc-salad-bowl-0.0.1-alpha2.tgz#0c8cf0cde5818a911fdfa763b06e06f896566e98"
+"@saladtechnologies/salad-grpc-salad-bowl@file:../../libs/saladtechnologies-grpc-salad-bowl-0.0.1-alpha3.tgz":
+  version "0.0.1-alpha3"
+  resolved "file:../../libs/saladtechnologies-grpc-salad-bowl-0.0.1-alpha3.tgz#c8814ae5ee28cc68a2bd077f8fbe356d9e043e37"
   dependencies:
     google-protobuf "3.17.3"
     grpc-web "1.2.1"
