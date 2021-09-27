@@ -1,5 +1,6 @@
-import { Text } from '@saladtechnologies/garden-components'
+import { ButtonLink, HardwareCard, HardwareCardProps, Layout, Text } from '@saladtechnologies/garden-components'
 import classnames from 'classnames'
+import Scrollbars from 'react-custom-scrollbars'
 import { useIntl } from 'react-intl'
 import withStyles, { WithStyles } from 'react-jss'
 import { Head } from '../../../components'
@@ -7,17 +8,48 @@ import type { SaladTheme } from '../../../SaladTheme'
 import type { EarningWindow } from '../../balance/models'
 import { EarningChart } from '../components/EarningChart'
 import { EarningChartPanel } from '../components/EarningChartPanel'
+import { getIntervalEarnings } from '../utils'
 
 const styles = (theme: SaladTheme) => ({
+  balance: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
   container: {
     position: 'fixed',
-    top: (props: EarningsSummaryPageProps) => (props.isNative ? '4.1rem' : 0),
+    top: 0,
     bottom: 0,
     left: 0,
     right: 0,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  detectedHardware: {
+    display: 'flex',
+    flexDirection: 'column',
+    marginTop: 64,
+  },
+  detectedHardwareTitle: {
+    marginBottom: 11,
+  },
+  hardwareCards: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(1, minmax(0, 1fr))',
+    gridGap: 24,
+    marginTop: 24,
+    '@media (min-width: 600px)': {
+      gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+    },
+    '@media (min-width: 900px)': {
+      gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+    },
+  },
+  lightGreenColor: {
+    color: theme.lightGreen,
+  },
+  mb24: {
+    marginBottom: 24,
   },
   page: {
     flex: 1,
@@ -27,28 +59,26 @@ const styles = (theme: SaladTheme) => ({
     position: 'relative',
     zIndex: 1,
   },
-  contentContainer: {
-    maxWidth: 1280,
-    margin: '0 auto',
-    marginTop: 96,
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
+  panelContainer: {
+    marginTop: 40,
   },
-  content: {
+  summaryContainer: {
     color: theme.darkBlue,
-    padding: '0 15px',
-    width: '100%',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(1, minmax(0, 1fr))',
+    gridGap: 24,
+    '@media (min-width: 600px)': {
+      gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+    },
+    '@media (min-width: 900px)': {
+      gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+    },
   },
-  balance: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  mb24: {
-    marginBottom: 24,
-  },
-  lightGreenColor: {
-    color: theme.lightGreen,
+  summaryItem: {
+    marginBottom: 0,
+    '@media (min-width: 900px)': {
+      marginBottom: 24,
+    },
   },
   thousandths: {
     fontSize: 32,
@@ -56,7 +86,6 @@ const styles = (theme: SaladTheme) => ({
 })
 
 export interface EarningsSummaryPageProps extends WithStyles<typeof styles> {
-  bonusRate?: number
   currentBalance: number
   daysShowing: 1 | 7 | 30
   earningHistory: EarningWindow[]
@@ -66,11 +95,11 @@ export interface EarningsSummaryPageProps extends WithStyles<typeof styles> {
   viewLast24HR: () => void
   viewLast7Days: () => void
   viewLast30Days: () => void
+  hardwareDetected: HardwareCardProps[] | []
 }
 
 const _EarningsSummaryPage = ({
   classes,
-  bonusRate,
   currentBalance,
   daysShowing,
   lifetimeBalance,
@@ -79,6 +108,8 @@ const _EarningsSummaryPage = ({
   viewLast24HR,
   viewLast7Days,
   viewLast30Days,
+  hardwareDetected,
+  isNative,
 }: EarningsSummaryPageProps) => {
   const intl = useIntl()
 
@@ -92,43 +123,47 @@ const _EarningsSummaryPage = ({
   const lifetimeBalanceHundreths = lifetimeBalanceLabel.substring(0, lifetimeBalanceLabel.length - 2)
   const lifetimeBalanceThousandths = lifetimeBalanceLabel.substring(lifetimeBalanceLabel.length - 2)
 
+  const intervalEarnings = getIntervalEarnings(earningHistory)
+
   return (
     <div className={classes.container}>
       <div className={classes.page}>
-        <div className={classes.contentContainer}>
-          <Head title="Earnings Summary" />
-          <div className={classes.content}>
-            <div className={classnames(classes.balance, classes.mb24, classes.lightGreenColor)}>
-              <Text variant="base4XL">
-                <span aria-hidden="true">
-                  <b>{currentBalanceHundreths}</b>
-                </span>
-                <span className={classes.thousandths} aria-hidden="true">
-                  {currentBalanceThousandths}
-                </span>
-              </Text>
-              <Text variant="baseL">Current Balance</Text>
+        <Scrollbars>
+          <Layout title="Earnings Summary">
+            <Head title="Earnings Summary" />
+            <div className={classes.summaryContainer}>
+              <div className={classnames(classes.balance, classes.summaryItem)}>
+                <Text variant="baseL">Current Balance</Text>
+                <Text variant="base4XL">
+                  <span aria-hidden="true" className={classes.lightGreenColor}>
+                    <b>{currentBalanceHundreths}</b>
+                  </span>
+                  <span className={classnames(classes.thousandths, classes.lightGreenColor)} aria-hidden="true">
+                    {currentBalanceThousandths}
+                  </span>
+                </Text>
+              </div>
+              <div className={classnames(classes.balance, classes.summaryItem)}>
+                <Text variant="baseL">Lifetime Balance</Text>
+                <Text variant="base4XL">
+                  <span aria-hidden="true">
+                    <b>{lifetimeBalanceHundreths}</b>
+                  </span>
+                  <span className={classes.thousandths} aria-hidden="true">
+                    {lifetimeBalanceThousandths}
+                  </span>
+                </Text>
+              </div>
+              <div className={classnames(classes.balance, classes.summaryItem)}>
+                <Text variant="baseL">Lifetime XP</Text>
+                <Text variant="base4XL">{lifetimeXP}</Text>
+              </div>
             </div>
-            <div className={classnames(classes.balance, classes.mb24)}>
-              <Text variant="base4XL">
-                <span aria-hidden="true">
-                  <b>{lifetimeBalanceHundreths}</b>
-                </span>
-                <span className={classes.thousandths} aria-hidden="true">
-                  {lifetimeBalanceThousandths}
-                </span>
-              </Text>
-              <Text variant="baseL">Lifetime Balance</Text>
-            </div>
-            <div className={classnames(classes.balance, classes.mb24)}>
-              <Text variant="base3XL">{lifetimeXP}</Text>
-              <Text variant="baseL">Lifetime XP</Text>
-            </div>
-            <div className={classes.mb24}>
+            <div className={classes.panelContainer}>
               <EarningChartPanel
-                bonusRate={bonusRate}
+                intervalEarnings={intervalEarnings}
                 daysShowing={daysShowing}
-                title="Earning Summary"
+                title="Earnings History"
                 viewLast24Hours={viewLast24HR}
                 viewLast7Days={viewLast7Days}
                 viewLast30Days={viewLast30Days}
@@ -141,8 +176,29 @@ const _EarningsSummaryPage = ({
               viewLast7Days={viewLast7Days}
               viewLast30Days={viewLast30Days}
             />
-          </div>
-        </div>
+            {isNative && (
+              <div className={classes.detectedHardware}>
+                <div className={classnames(classes.detectedHardwareTitle, classes.lightGreenColor)}>
+                  <Text variant="base3XL">Detected Hardware</Text>
+                </div>
+                <ButtonLink variant="outlined" label="Machine Settings" to="/earn/machine-settings" />
+                <div className={classes.hardwareCards}>
+                  {hardwareDetected.map((hardware, index) => (
+                    <HardwareCard
+                      key={index}
+                      name={hardware.name}
+                      setupHardwareButtonLabel={hardware.setupHardwareButtonLabel}
+                      setupHardwareButtonClick={hardware.setupHardwareButtonClick}
+                      stats={hardware.stats}
+                      type={hardware.type}
+                      workloads={hardware.workloads}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+          </Layout>
+        </Scrollbars>
       </div>
     </div>
   )

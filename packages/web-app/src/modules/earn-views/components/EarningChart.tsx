@@ -48,6 +48,9 @@ const styles = (theme: SaladTheme) => ({
     color: theme.lightGreen,
     fontSize: 10,
   },
+  saladBowlTooltipContainer: {
+    color: theme.darkBlue,
+  },
   rangeSum: {
     fontSize: theme.medium,
   },
@@ -79,9 +82,10 @@ interface TooltipProps extends WithStyles<typeof styles> {
   label?: string
   nowWindow?: EarningWindow
   daysShowing: 1 | 7 | 30
+  saladBowlEnabled?: boolean
 }
 
-const _CustomTooltip = ({ active, payload, classes, nowWindow, daysShowing }: TooltipProps) => {
+const _CustomTooltip = ({ active, payload, classes, nowWindow, daysShowing, saladBowlEnabled }: TooltipProps) => {
   if (!active || !payload) {
     return null
   }
@@ -93,7 +97,11 @@ const _CustomTooltip = ({ active, payload, classes, nowWindow, daysShowing }: To
   const isNow = window === nowWindow
 
   return (
-    <div className={classes.tooltipContainer}>
+    <div
+      className={classnames(classes.tooltipContainer, {
+        [classes.saladBowlTooltipContainer]: saladBowlEnabled,
+      })}
+    >
       <div>{isNow ? 'Current' : timestamp}</div>
       <div>{formatBalance(earnings)}</div>
     </div>
@@ -108,6 +116,7 @@ interface RangeTooltipProps extends WithStyles<typeof styles> {
   rangeSum?: string
   leftToRight?: boolean
   daysShowing: 1 | 30 | 7
+  saladBowlEnabled?: boolean
 }
 
 const _CustomRangeTooltip = ({
@@ -117,6 +126,7 @@ const _CustomRangeTooltip = ({
   rangeEndTime,
   rangeSum,
   daysShowing,
+  saladBowlEnabled,
 }: RangeTooltipProps) => {
   if (!rangeStartTime || !rangeEndTime || !rangeSum) {
     return null
@@ -125,7 +135,11 @@ const _CustomRangeTooltip = ({
   const rangeDisplayTimes = getRangeTooltipTimestamp(daysShowing, rangeStartTime, rangeEndTime)
 
   return (
-    <div className={classnames(classes.tooltipContainer, classes.earningsRangeContainer)}>
+    <div
+      className={classnames(classes.tooltipContainer, classes.earningsRangeContainer, {
+        [classes.saladBowlTooltipContainer]: saladBowlEnabled,
+      })}
+    >
       <div className={classes.rangeSum}>{rangeSum}</div>
       {leftToRight ? (
         <div>
@@ -290,10 +304,8 @@ class _EarningChart extends Component<Props, State> {
       }
     }
 
-    if (this.state.showEarningsRange) {
-      if (this.state.hoverIndex !== nextState.hoverIndex) {
-        return true
-      }
+    if (this.state.hoverIndex !== nextState.hoverIndex) {
+      return true
     }
 
     return false
@@ -455,7 +467,10 @@ class _EarningChart extends Component<Props, State> {
                     onMouseUp={this.handleMouseUp}
                     barGap={10}
                   >
-                    <CartesianGrid vertical={false} stroke="#1F4F22" />
+                    <CartesianGrid
+                      vertical={false}
+                      stroke={value.isEnabled(saladBowlFeature) ? '#DBF1C1' : '#1F4F22'}
+                    />
                     {showEarningsRange && !isZero ? (
                       <Tooltip
                         content={
@@ -465,6 +480,7 @@ class _EarningChart extends Component<Props, State> {
                             rangeSum={earningsRangeSum}
                             leftToRight={selectedLeftToRight}
                             daysShowing={daysShowing}
+                            saladBowlEnabled={value.isEnabled(saladBowlFeature)}
                           />
                         }
                         cursor={false}
@@ -478,6 +494,7 @@ class _EarningChart extends Component<Props, State> {
                           <CustomTooltip
                             nowWindow={earningHistory[earningHistory.length - 1]}
                             daysShowing={daysShowing}
+                            saladBowlEnabled={value.isEnabled(saladBowlFeature)}
                           />
                         }
                         isAnimationActive={false}
@@ -490,7 +507,7 @@ class _EarningChart extends Component<Props, State> {
                       domain={['auto', 'auto']}
                       interval={7}
                       scale="time"
-                      stroke="#B2D530"
+                      stroke={value.isEnabled(saladBowlFeature) ? '#0A2133' : '#B2D530'}
                       //@ts-ignore
                       tick={<CustomizedXAxisTick daysShowing={daysShowing} />}
                       type="number"
@@ -498,7 +515,7 @@ class _EarningChart extends Component<Props, State> {
                     <YAxis
                       axisLine={false}
                       minTickGap={2}
-                      stroke="#B2D530"
+                      stroke={value.isEnabled(saladBowlFeature) ? '#0A2133' : '#B2D530'}
                       //@ts-ignore
                       tick={<CustomizedYAxisTick />}
                       tickLine={false}
@@ -506,7 +523,7 @@ class _EarningChart extends Component<Props, State> {
                     <Bar dataKey="earnings" fill="#B2D530">
                       {earningHistory &&
                         earningHistory.map((window, index) => {
-                          let color = '#B2D530'
+                          let color = value.isEnabled(saladBowlFeature) ? '#0A2133' : '#B2D530'
                           let border = ''
                           let dash = ''
 
@@ -514,9 +531,13 @@ class _EarningChart extends Component<Props, State> {
                             color = '#DBF1C1'
                           }
 
+                          if (value.isEnabled(saladBowlFeature) && selectedRangeIndexes.length > 0) {
+                            color = '#DBF1C1'
+                          }
+
                           if (selectedRangeIndexes.length > 0 && !selectedRangeIndexes.includes(index)) {
                             color = '#0A2133'
-                            border = '#B2D530'
+                            border = value.isEnabled(saladBowlFeature) ? '#0A2133' : '#B2D530'
                           }
 
                           if (index === earningHistory.length - 1) {
@@ -524,6 +545,7 @@ class _EarningChart extends Component<Props, State> {
                             color = '#0A2133'
                             dash = '3 3'
                           }
+
                           return (
                             <Cell
                               key={window.timestamp.toString()}
