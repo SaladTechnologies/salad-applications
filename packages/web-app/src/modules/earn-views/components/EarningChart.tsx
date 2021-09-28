@@ -1,3 +1,4 @@
+import { DefaultTheme as GardenTheme } from '@saladtechnologies/garden-components'
 import classnames from 'classnames'
 import { uniq } from 'lodash'
 import moment from 'moment'
@@ -43,13 +44,24 @@ const styles = (theme: SaladTheme) => ({
     fontFamily: theme.fontGroteskLight25,
     fontSize: theme.xSmall,
   },
+  saladBowlTickFont: {
+    // @ts-ignore The garden theme is not typed correctly, will need update in garden
+    ...GardenTheme.typography.variants.baseXS,
+  },
+  saladBowlToolTipContainer: {
+    // @ts-ignore The garden theme is not typed correctly, will need update in garden
+    ...GardenTheme.typography.variants.baseXS,
+    marginTop: -5,
+  },
+  saladBowlRangeContainer: {
+    // @ts-ignore The garden theme is not typed correctly, will need update in garden
+    ...GardenTheme.typography.variants.baseS,
+    marginTop: -20,
+  },
   tooltipContainer: {
     fontFamily: theme.fontGroteskBook25,
-    color: theme.lightGreen,
+    // color: theme.lightGreen,
     fontSize: 10,
-  },
-  saladBowlTooltipContainer: {
-    color: theme.darkBlue,
   },
   rangeSum: {
     fontSize: theme.medium,
@@ -98,8 +110,9 @@ const _CustomTooltip = ({ active, payload, classes, nowWindow, daysShowing, sala
 
   return (
     <div
-      className={classnames(classes.tooltipContainer, {
-        [classes.saladBowlTooltipContainer]: saladBowlEnabled,
+      className={classnames({
+        [classes.tooltipContainer]: !saladBowlEnabled,
+        [classes.saladBowlToolTipContainer]: saladBowlEnabled,
       })}
     >
       <div>{isNow ? 'Current' : timestamp}</div>
@@ -136,8 +149,9 @@ const _CustomRangeTooltip = ({
 
   return (
     <div
-      className={classnames(classes.tooltipContainer, classes.earningsRangeContainer, {
-        [classes.saladBowlTooltipContainer]: saladBowlEnabled,
+      className={classnames(classes.earningsRangeContainer, {
+        [classes.saladBowlRangeContainer]: saladBowlEnabled,
+        [classes.tooltipContainer]: !saladBowlEnabled,
       })}
     >
       <div className={classes.rangeSum}>{rangeSum}</div>
@@ -204,10 +218,11 @@ interface CustomTick extends WithStyles<typeof styles> {
   textAnchor: 'start' | 'middle' | 'end'
   x: string
   y: string
+  saladBowlEnabled?: boolean
 }
 
 const _CustomizedXAxisTick = (props: CustomTick) => {
-  const { classes, daysShowing, fill, payload, textAnchor, x, y } = props
+  const { classes, daysShowing, fill, payload, textAnchor, x, y, saladBowlEnabled } = props
   if (!payload) {
     return null
   }
@@ -220,12 +235,22 @@ const _CustomizedXAxisTick = (props: CustomTick) => {
       : moment(payload.value).add(15, 'minute').format('hh:mm')
   return (
     <>
-      <g transform={`translate(${x},${y})`} className={classnames(classes.tickFont, classes.tickMobile)}>
+      <g
+        transform={`translate(${x},${y})`}
+        className={classnames(classes.tickFont, classes.tickMobile, {
+          [classes.saladBowlTickFont]: saladBowlEnabled,
+        })}
+      >
         <text x={0} y={0} dy={4} fill={fill} textAnchor="end" transform="rotate(-25)">
           {timestamp}
         </text>
       </g>
-      <g transform={`translate(${x},${y})`} className={classnames(classes.tickFont, classes.tickDesktop)}>
+      <g
+        transform={`translate(${x},${y})`}
+        className={classnames(classes.tickFont, classes.tickDesktop, {
+          [classes.saladBowlTickFont]: saladBowlEnabled,
+        })}
+      >
         <text x={0} y={0} dy={12} fill={fill} textAnchor={textAnchor}>
           {timestamp}
         </text>
@@ -237,13 +262,18 @@ const _CustomizedXAxisTick = (props: CustomTick) => {
 const CustomizedXAxisTick = withStyles(styles)(_CustomizedXAxisTick)
 
 const _CustomizedYAxisTick = (props: CustomTick) => {
-  const { classes, fill, payload, textAnchor, x, y } = props
+  const { classes, fill, payload, textAnchor, x, y, saladBowlEnabled } = props
   if (!payload || payload.value === 0) {
     return null
   }
 
   return (
-    <g transform={`translate(${x},${y})`} className={classes.tickFont}>
+    <g
+      transform={`translate(${x},${y})`}
+      className={classnames(classes.tickFont, {
+        [classes.saladBowlTickFont]: saladBowlEnabled,
+      })}
+    >
       <text x={-5} y={0} dy={0} fill={fill} textAnchor={textAnchor}>
         ${payload.value}
       </text>
@@ -508,8 +538,13 @@ class _EarningChart extends Component<Props, State> {
                       interval={7}
                       scale="time"
                       stroke={value.isEnabled(saladBowlFeature) ? '#0A2133' : '#B2D530'}
-                      //@ts-ignore
-                      tick={<CustomizedXAxisTick daysShowing={daysShowing} />}
+                      tick={
+                        //@ts-ignore
+                        <CustomizedXAxisTick
+                          daysShowing={daysShowing}
+                          saladBowlEnabled={value.isEnabled(saladBowlFeature)}
+                        />
+                      }
                       type="number"
                     />
                     <YAxis
@@ -517,7 +552,7 @@ class _EarningChart extends Component<Props, State> {
                       minTickGap={2}
                       stroke={value.isEnabled(saladBowlFeature) ? '#0A2133' : '#B2D530'}
                       //@ts-ignore
-                      tick={<CustomizedYAxisTick />}
+                      tick={<CustomizedYAxisTick saladBowlEnabled={value.isEnabled(saladBowlFeature)} />}
                       tickLine={false}
                     />
                     <Bar dataKey="earnings" fill="#B2D530">
