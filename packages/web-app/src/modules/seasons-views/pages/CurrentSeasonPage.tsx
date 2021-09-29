@@ -96,6 +96,7 @@ const _CurrentSeasonPage = ({
           earnedAt: level.earnedAt || undefined,
           xpCurrent: level.id === nextLevel ? currentLevelXP : undefined,
           xpCumulativeRequiredTotal: (cumulativeSum += level.xpRequired),
+          xpRequiredForLevel: level.xpRequired,
         }))
       : []
   }, [levels, nextLevel, currentLevelXP])
@@ -136,9 +137,10 @@ const _CurrentSeasonPage = ({
                       earnedAt={levelCard.earnedAt}
                       level={levelCard.level}
                       src={levelCard.src}
-                      xpCurrent={levelCard.xpCurrent}
-                      xpCumulativeCurrentTotal={totalXP}
-                      xpCumulativeRequiredTotal={levelCard.xpCumulativeRequiredTotal}
+                      currentLevelXpEarned={levelCard.xpCurrent}
+                      currentLevelXpTotalRequired={levelCard.xpRequiredForLevel}
+                      cumulativeCurrentXp={totalXP}
+                      cumulativeTotalRequiredXp={levelCard.xpCumulativeRequiredTotal}
                     />
                   </div>
                 ))}
