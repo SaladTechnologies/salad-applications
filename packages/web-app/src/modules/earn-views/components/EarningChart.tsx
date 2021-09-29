@@ -60,7 +60,7 @@ const styles = (theme: SaladTheme) => ({
   },
   tooltipContainer: {
     fontFamily: theme.fontGroteskBook25,
-    // color: theme.lightGreen,
+    color: theme.lightGreen,
     fontSize: 10,
   },
   rangeSum: {
