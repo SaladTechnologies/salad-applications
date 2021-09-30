@@ -129,7 +129,7 @@ export interface AntivirusGuideProps extends WithStyles<typeof styles> {
   loadArticle?: () => void
   onCloseClicked?: () => void
   onNoAVClick?: () => void
-  onViewArticle?: (id: string) => void
+  onViewArticleWithId?: (id: string) => void
   onViewAVList?: () => void
 }
 
@@ -184,7 +184,7 @@ class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
       loading,
       onCloseClicked,
       onNoAVClick,
-      onViewArticle,
+      onViewArticleWithId,
       onViewAVList,
       classes,
     } = this.props
@@ -244,10 +244,14 @@ class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
                   </div>
                   {article ? (
                     <div className={classes.content} dangerouslySetInnerHTML={{ __html: article }} />
-                  ) : articleList && onViewArticle ? (
+                  ) : articleList && onViewArticleWithId ? (
                     <ul className={classes.list}>
                       {articleList.map((article) => (
-                        <li key={article.id} className={classes.listItem} onClick={() => onViewArticle(article.id)}>
+                        <li
+                          key={article.id}
+                          className={classes.listItem}
+                          onClick={() => onViewArticleWithId(article.id)}
+                        >
                           {article.name}
                         </li>
                       ))}

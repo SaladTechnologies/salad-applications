@@ -137,7 +137,7 @@ interface Props extends WithStyles<typeof styles> {
   loading?: boolean
   loadArticle?: () => void
   onCloseClicked?: () => void
-  onViewArticle?: (id: number) => void
+  onViewArticleWithId?: (id: number) => void
   onViewAVList?: () => void
 }
 
@@ -193,7 +193,7 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
       fallthrough,
       loading,
       onCloseClicked,
-      onViewArticle,
+      onViewArticleWithId,
       onViewAVList,
       classes,
     } = this.props
@@ -289,10 +289,14 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
                       </div>
                       {article ? (
                         <div className={classes.content} dangerouslySetInnerHTML={{ __html: article }} />
-                      ) : articleList && onViewArticle ? (
+                      ) : articleList && onViewArticleWithId ? (
                         <ul className={classes.list}>
                           {articleList.map((article) => (
-                            <li key={article.id} className={classes.listItem} onClick={() => onViewArticle(article.id)}>
+                            <li
+                              key={article.id}
+                              className={classes.listItem}
+                              onClick={() => onViewArticleWithId(article.id)}
+                            >
                               {article.name}
                             </li>
                           ))}
