@@ -87,6 +87,7 @@ const _CurrentSeasonPage = ({
   const intl = useIntl()
 
   const levelCards = useMemo(() => {
+    let cumulativeSum = 0
     return levels
       ? levels.map((level) => ({
           level: level.id,
@@ -94,7 +95,8 @@ const _CurrentSeasonPage = ({
           alt: `level ${level.id}`,
           earnedAt: level.earnedAt || undefined,
           xpCurrent: level.id === nextLevel ? currentLevelXP : undefined,
-          xpRequired: level.xpRequired,
+          xpCumulativeRequiredTotal: (cumulativeSum += level.xpRequired),
+          xpRequiredForLevel: level.xpRequired,
         }))
       : []
   }, [levels, nextLevel, currentLevelXP])
@@ -135,8 +137,10 @@ const _CurrentSeasonPage = ({
                       earnedAt={levelCard.earnedAt}
                       level={levelCard.level}
                       src={levelCard.src}
-                      xpCurrent={levelCard.xpCurrent}
-                      xpRequired={levelCard.xpRequired}
+                      currentLevelXpEarned={levelCard.xpCurrent}
+                      currentLevelXpTotalRequired={levelCard.xpRequiredForLevel}
+                      cumulativeCurrentXp={totalXP}
+                      cumulativeTotalRequiredXp={levelCard.xpCumulativeRequiredTotal}
                     />
                   </div>
                 ))}
