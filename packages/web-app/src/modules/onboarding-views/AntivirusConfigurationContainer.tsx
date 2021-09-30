@@ -13,6 +13,7 @@ const mapStoreToProps = (store: RootStore): Omit<AntivirusConfigurationPageProps
   onViewGithub: (to: string, label: string) => store.onboardingAntivirus.onTrackButtonClick(to, label),
   whitelistWindowsDefenderErrorMessage: store.onboardingAntivirus.whitelistWindowsDefenderErrorMessage,
   whitelistWindowsDefenderPending: store.onboardingAntivirus.whitelistWindowsDefenderPending,
+  onViewAVArticleWithName: (AV: string) => store.onboardingAntivirus.onViewAVArticleWithName(AV),
 })
 
 export const AntivirusConfigurationContainer = connect(mapStoreToProps, AntivirusConfigurationPage)
