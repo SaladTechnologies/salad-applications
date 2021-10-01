@@ -32,7 +32,7 @@ import Zillya from '../assets/Zillya.png'
 
 export const antivirusInfo = [
   {
-    label: 'WindowsDefender',
+    label: 'Windows Defender',
     name: AntiVirusSoftware.WindowsDefender,
     src: WindowsDefender,
   },
@@ -42,7 +42,7 @@ export const antivirusInfo = [
     src: Avast,
   },
   {
-    label: 'McAfeeSecurity',
+    label: 'McAfee',
     name: AntiVirusSoftware.McAfeeSecurity,
     src: McAfeeSecurity,
   },
@@ -78,7 +78,7 @@ export const antivirusInfo = [
     src: AVG,
   },
   {
-    label: 'EsetNod32',
+    label: 'ESET-NOD32',
     name: AntiVirusSoftware.ESETNOD32,
     src: EsetNod32,
   },
@@ -103,12 +103,12 @@ export const antivirusInfo = [
     src: TrendMicro,
   },
   {
-    label: 'BullGuard',
+    label: 'Bullguard',
     name: AntiVirusSoftware.BullGuard,
     src: BullGuard,
   },
   {
-    label: 'FSecure',
+    label: 'F-Secure',
     name: AntiVirusSoftware.FSecure,
     src: FSecure,
   },
@@ -148,12 +148,12 @@ export const antivirusInfo = [
     src: PCMatic,
   },
   {
-    label: 'Qihoo360',
+    label: 'Qihoo-360',
     name: AntiVirusSoftware.Qihoo360,
     src: Qihoo360,
   },
   {
-    label: 'AdvSystemCare',
+    label: 'Adv. SystemCare',
     name: AntiVirusSoftware.AdvancedSystemCareUltimate,
     src: AdvSystemCare,
   },
@@ -163,17 +163,17 @@ export const antivirusInfo = [
     src: Adaware,
   },
   {
-    label: 'EScan',
+    label: 'e-Scan',
     name: AntiVirusSoftware.EScan,
     src: EScan,
   },
   {
-    label: 'FProt',
+    label: 'F-Prot',
     name: AntiVirusSoftware.FProt,
     src: FProt,
   },
   {
-    label: 'SecureAgeAPEX',
+    label: 'SecureAge APEX',
     name: AntiVirusSoftware.SecureAgeAPEX,
     src: SecureAgeAPEX,
   },
