@@ -63,7 +63,7 @@ const styles = (theme: SaladTheme) => ({
     width: '100%',
   },
   enableButton: {
-    width: 175,
+    width: 180,
     marginLeft: 24,
   },
   skipButton: {
