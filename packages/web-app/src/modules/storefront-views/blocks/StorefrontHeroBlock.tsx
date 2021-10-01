@@ -17,7 +17,7 @@ export const StorefrontHeroBlock = ({ block }: Props) => {
           ? hero.subheading
           : hero.reward?.price
           ? `$${hero.reward?.price.toFixed(2)}`
-          : 'FREE'
+          : undefined
         const buttonLink = hero.button_link || rewardRoute(hero.reward?.uuid)
         const image = hero.image?.url
           ? new URL(hero.image?.url, config.strapiUploadUrl).href

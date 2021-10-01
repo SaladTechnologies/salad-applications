@@ -115,7 +115,7 @@ interface Props extends WithStyles<typeof styles> {
   lowQuantity: boolean
   outOfStock: boolean
   quantity?: number
-  subheading: string
+  subheading?: string
 }
 
 class _StorefrontHeroItem extends Component<Props> {
@@ -159,21 +159,23 @@ class _StorefrontHeroItem extends Component<Props> {
           {image ? (
             <div className={classes.infoContent}>
               {heading && <div className={classes.nameText}>{heading}</div>}
-              <div className={classes.priceContainer}>
-                <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
-                  {subheading}
+              {subheading !== undefined && (
+                <div className={classes.priceContainer}>
+                  <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
+                    {subheading}
+                  </div>
+                  {outOfStock && (
+                    <div className={classnames(classes.priceText, classes.stockLabel, classes.outOfStockLabel)}>
+                      Out of Stock
+                    </div>
+                  )}
+                  {lowQuantity && !outOfStock && (
+                    <div className={classnames(classes.priceText, classes.stockLabel, classes.lowQuanityLabel)}>
+                      {`${quantity} Remaining`}
+                    </div>
+                  )}
                 </div>
-                {outOfStock && (
-                  <div className={classnames(classes.priceText, classes.stockLabel, classes.outOfStockLabel)}>
-                    Out of Stock
-                  </div>
-                )}
-                {lowQuantity && !outOfStock && (
-                  <div className={classnames(classes.priceText, classes.stockLabel, classes.lowQuanityLabel)}>
-                    {`${quantity} Remaining`}
-                  </div>
-                )}
-              </div>
+              )}
               <div className={classes.body}>{body}</div>
               <div className={classes.buttonContainer}>
                 <SmartLink to={buttonLink} trackingInfo={{ label: buttonLabel }}>
