@@ -1,7 +1,7 @@
-import { Button, FieldContainer, GlassBox, SvgIcon, Text } from '@saladtechnologies/garden-components'
+import { Button, FieldContainer, GlassBox, Modal, SvgIcon, Text } from '@saladtechnologies/garden-components'
 import { ChevronRight } from '@saladtechnologies/garden-icons'
 import classnames from 'classnames'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Head, SmartLink } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
@@ -9,6 +9,7 @@ import { AntiVirusSoftware } from '../../zendesk/models'
 import DiscordIcon from '../assets/DiscordIcon'
 import GithubIcon from '../assets/GithubIcon'
 import VirusTotal from '../assets/virusTotal.png'
+import { antivirusInfo } from '../models/AntivirusInfo'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -65,6 +66,9 @@ const styles = (theme: SaladTheme) => ({
   mb12: {
     marginBottom: 12,
   },
+  mb36: {
+    marginBotton: 36,
+  },
   image: {
     display: 'flex',
     flex: 1,
@@ -92,12 +96,26 @@ const styles = (theme: SaladTheme) => ({
     cursor: 'pointer',
     textDecoration: 'underline',
   },
+  antivirusButtons: {
+    flexBasis: '48%',
+  },
+  antivirusButtonContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  modalContainer: {
+    textAlign: 'center',
+  },
 })
 
 export interface AntivirusConfigurationPageProps extends WithStyles<typeof styles> {
   detectedAV?: AntiVirusSoftware
   isNative?: boolean
   onViewAVGuide: () => void
+  onViewAVArticleWithName: (AV: string) => void
+  onNoAVClick: () => void
   onViewAVGuideLabel: string
   onViewAVGuideSelectionModal: (label: string) => void
   onViewDiscord: (to: string, label: string) => void
@@ -112,7 +130,8 @@ const _AntivirusConfigurationPage = ({
   detectedAV,
   onViewAVGuide,
   onViewAVGuideLabel,
-  onViewAVGuideSelectionModal,
+  onViewAVArticleWithName,
+  onNoAVClick,
   onViewDiscord,
   onViewGithub,
   onWhitelistWindowsDefender,
@@ -125,6 +144,8 @@ const _AntivirusConfigurationPage = ({
       window.Trustpilot.loadFromElement(ref.current, true)
     }
   }, [])
+
+  const [viewModal, setViewModal] = useState<boolean>(false)
 
   return (
     <div className={classes.container}>
@@ -179,7 +200,7 @@ const _AntivirusConfigurationPage = ({
                   </div>
                   <Text variant="baseS">
                     Use a different antivirus provider?{' '}
-                    <span className={classes.underline} onClick={() => onViewAVGuideSelectionModal('Select it here')}>
+                    <span className={classes.underline} onClick={() => setViewModal(true)}>
                       Select it here
                     </span>
                     .
@@ -208,7 +229,7 @@ const _AntivirusConfigurationPage = ({
                   </div>
                   <Text variant="baseS">
                     Use a different antivirus provider?{' '}
-                    <span className={classes.underline} onClick={() => onViewAVGuideSelectionModal('Select it here')}>
+                    <span className={classes.underline} onClick={() => setViewModal(true)}>
                       Select it here
                     </span>
                     .
@@ -298,6 +319,46 @@ const _AntivirusConfigurationPage = ({
           </div>
         </div>
       </div>
+      {viewModal && (
+        <Modal onClose={() => setViewModal(false)} title={'Select your Antivirus provider'}>
+          <div className={classes.modalContainer}>
+            <div>
+              <div className={classes.mb24}>
+                <Text variant="baseS">
+                  If your antivirus is not listed,{' '}
+                  <SmartLink
+                    trackingInfo={{ label: 'Onboarding - Antivirus not listed - We can help blog' }}
+                    to="https://support.salad.com/hc/en-us/articles/4404212712340"
+                  >
+                    we can help.
+                  </SmartLink>
+                </Text>
+              </div>
+              <div className={classes.mb48}>
+                <Button variant="outlined" label="I don't use Antivirus" onClick={onNoAVClick} />
+              </div>
+            </div>
+            <div className={classnames(classes.antivirusButtonContainer, classes.mb36)}>
+              {antivirusInfo.map((AV, index) => (
+                <span key={index} className={classnames(classes.antivirusButtonContainer, classes.mb12)}>
+                  <Button
+                    width={246}
+                    label={AV.label}
+                    variant="outlined"
+                    leadingImage={AV.src}
+                    leadingImageAlt={AV.label}
+                    trailingIcon={<ChevronRight />}
+                    contentAlignment="space-between"
+                    onClick={() => {
+                      onViewAVArticleWithName(AV.name)
+                    }}
+                  />
+                </span>
+              ))}
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   )
 }
