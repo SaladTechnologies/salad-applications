@@ -38,7 +38,7 @@ storiesOf('Modules/Error Pages/Pages', module)
         errorType={ErrorPageType.AntiVirus}
         articleList={articleList}
         onCloseClicked={action('On Close Clicked')}
-        onViewAVArticle={linkTo('Modules/Error Pages/Pages', 'Specific Anti-Virus Error - Initial')}
+        onViewArticle={linkTo('Modules/Error Pages/Pages', 'Specific Anti-Virus Error - Initial')}
         onViewAVList={linkTo('Modules/Error Pages/Pages', 'Generic Anti-Virus Error - Initial')}
       />
     )
@@ -50,7 +50,7 @@ storiesOf('Modules/Error Pages/Pages', module)
         articleList={articleList}
         onCloseClicked={action('On Close Clicked')}
         fallthrough={true}
-        onViewAVArticle={linkTo('Modules/Error Pages/Pages', 'Specific Anti-Virus Error - Initial')}
+        onViewArticle={linkTo('Modules/Error Pages/Pages', 'Specific Anti-Virus Error - Initial')}
         onViewAVList={linkTo('Modules/Error Pages/Pages', 'Generic Anti-Virus Error - Initial')}
       />
     )
