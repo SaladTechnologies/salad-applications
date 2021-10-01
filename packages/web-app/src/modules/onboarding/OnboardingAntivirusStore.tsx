@@ -83,7 +83,6 @@ export class OnboardingAntivirusStore {
    * @param label The label of the button that opens the AV Selection Modal.
    */
   public onViewAVGuideSelectionModal = (label: string) => {
-    this.store.routing.push('/onboarding/antivirus-guide')
     this.store.analytics.trackButtonClicked('onboarding_antivirus_select_modal', label, 'enabled')
   }
 

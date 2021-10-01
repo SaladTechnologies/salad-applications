@@ -135,6 +135,7 @@ const _AntivirusConfigurationPage = ({
   onViewAVGuideLabel,
   navigateToAVGuide,
   onNoAVClick,
+  onViewAVGuideSelectionModal,
   onViewDiscord,
   onViewGithub,
   onWhitelistWindowsDefender,
@@ -149,6 +150,11 @@ const _AntivirusConfigurationPage = ({
   }, [])
 
   const [viewModal, setViewModal] = useState<boolean>(false)
+
+  const handleOnViewAVGuideSelectionModalClick = (label: string) => {
+    onViewAVGuideSelectionModal(label)
+    setViewModal(true)
+  }
 
   return (
     <div className={classes.container}>
@@ -203,7 +209,10 @@ const _AntivirusConfigurationPage = ({
                   </div>
                   <Text variant="baseS">
                     Use a different antivirus provider?{' '}
-                    <span className={classes.underline} onClick={() => setViewModal(true)}>
+                    <span
+                      className={classes.underline}
+                      onClick={() => handleOnViewAVGuideSelectionModalClick('Select it here')}
+                    >
                       Select it here
                     </span>
                     .
@@ -232,7 +241,10 @@ const _AntivirusConfigurationPage = ({
                   </div>
                   <Text variant="baseS">
                     Use a different antivirus provider?{' '}
-                    <span className={classes.underline} onClick={() => setViewModal(true)}>
+                    <span
+                      className={classes.underline}
+                      onClick={() => handleOnViewAVGuideSelectionModalClick('Select it here')}
+                    >
                       Select it here
                     </span>
                     .
