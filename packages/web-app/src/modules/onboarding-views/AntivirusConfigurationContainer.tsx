@@ -1,5 +1,6 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
+import { ONBOARDING_PAGE_NAMES } from '../onboarding/models'
 import { AntivirusConfigurationPage, AntivirusConfigurationPageProps } from './pages/AntivirusConfigurationPage'
 
 const mapStoreToProps = (store: RootStore): Omit<AntivirusConfigurationPageProps, 'classes'> => ({
@@ -14,6 +15,7 @@ const mapStoreToProps = (store: RootStore): Omit<AntivirusConfigurationPageProps
   whitelistWindowsDefenderErrorMessage: store.onboardingAntivirus.whitelistWindowsDefenderErrorMessage,
   whitelistWindowsDefenderPending: store.onboardingAntivirus.whitelistWindowsDefenderPending,
   onViewAVArticleWithName: (AV: string) => store.onboardingAntivirus.onViewAVArticleWithName(AV),
+  onNoAVClick: () => store.onboarding.viewNextPage(ONBOARDING_PAGE_NAMES.ANTIVIRUS_CONFIGURATION),
 })
 
 export const AntivirusConfigurationContainer = connect(mapStoreToProps, AntivirusConfigurationPage)
