@@ -69,6 +69,9 @@ const styles = (theme: SaladTheme) => ({
   mb36: {
     marginBotton: 36,
   },
+  mb54: {
+    marginBottom: 54,
+  },
   image: {
     display: 'flex',
     flex: 1,
@@ -338,7 +341,7 @@ const _AntivirusConfigurationPage = ({
                 <Button variant="outlined" label="I don't use Antivirus" onClick={onNoAVClick} />
               </div>
             </div>
-            <div className={classnames(classes.antivirusButtonContainer, classes.mb36)}>
+            <div className={classnames(classes.antivirusButtonContainer, classes.mb54)}>
               {antivirusInfo.map((AV, index) => (
                 <span key={index} className={classnames(classes.antivirusButtonContainer, classes.mb12)}>
                   <Button
