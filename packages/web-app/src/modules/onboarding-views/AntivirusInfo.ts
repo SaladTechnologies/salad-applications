@@ -1,4 +1,3 @@
-import { AntiVirusSoftware } from '../../zendesk/models'
 import Adaware from '../assets/Adaware.png'
 import AdvSystemCare from '../assets/AdvSystemCare.png'
 import Avast from '../assets/Avast.png'
@@ -29,6 +28,7 @@ import VIPRE from '../assets/VIPRE.png'
 import Webroot from '../assets/Webroot.png'
 import WindowsDefender from '../assets/WindowsDefender.png'
 import Zillya from '../assets/Zillya.png'
+import { AntiVirusSoftware } from '../zendesk/models'
 
 export const antivirusInfo = [
   {

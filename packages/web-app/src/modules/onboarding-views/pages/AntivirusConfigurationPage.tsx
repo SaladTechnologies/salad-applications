@@ -6,10 +6,10 @@ import withStyles, { WithStyles } from 'react-jss'
 import { Head, SmartLink } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
 import { AntiVirusSoftware } from '../../zendesk/models'
+import { antivirusInfo } from '../AntivirusInfo'
 import DiscordIcon from '../assets/DiscordIcon'
 import GithubIcon from '../assets/GithubIcon'
 import VirusTotal from '../assets/virusTotal.png'
-import { antivirusInfo } from '../models/AntivirusInfo'
 
 const styles = (theme: SaladTheme) => ({
   container: {
