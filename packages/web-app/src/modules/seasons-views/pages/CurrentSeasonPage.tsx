@@ -4,7 +4,7 @@ import Scrollbars from 'react-custom-scrollbars'
 import { useIntl } from 'react-intl'
 import withStyles, { WithStyles } from 'react-jss'
 import Carousel from 'react-multi-carousel'
-import { Head } from '../../../components'
+import { Head, SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { withLogin } from '../../auth-views'
 import { Level } from '../../seasons/models'
@@ -122,7 +122,16 @@ const _CurrentSeasonPage = ({
             <Text variant="baseXL">Season XP</Text>
           </div>
           <div>
-            <Text variant="baseL">For every minute that you run Salad, you earn 1 XP</Text>
+            <Text variant="baseL">For every minute that you run Salad, you earn 1 XP.</Text>
+          </div>
+          <div>
+            <Text variant="baseS">
+              See{' '}
+              <SmartLink to={'https://support.salad.com/hc/en-us/articles/4402408729108-How-do-Seasons-work-'}>
+                our Salad Season FAQ
+              </SmartLink>{' '}
+              for more information.
+            </Text>
           </div>
           <div className={classes.xp}>
             <Text variant="base4XL">{intl.formatNumber(totalXP)}</Text>
