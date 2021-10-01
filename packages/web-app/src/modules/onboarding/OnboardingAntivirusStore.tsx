@@ -43,8 +43,7 @@ export class OnboardingAntivirusStore {
     if (detectedAV !== undefined) {
       const buttonLabel = `Open ${detectedAV} Guide`
       onClick = () => {
-        this.navigateToAVGuide(detectedAV)
-        this.store.analytics.trackButtonClicked('onboarding_antivirus_open_specific_av_guide', label, 'enabled')
+        this.navigateToAVGuide(detectedAV, label)
       }
       label = buttonLabel
     } else {
@@ -134,9 +133,11 @@ export class OnboardingAntivirusStore {
   /**
    * Navigates to the requested zendesk antivirus guide by name.
    * @param antivirusSoftwareName The name of the antivirus software.
+   * @param label The button label that will be passed to mixPanel.
    */
-  private navigateToAVGuide = (antivirusSoftwareName: AntiVirusSoftware) => {
+  public navigateToAVGuide = (antivirusSoftwareName: AntiVirusSoftware, label: string) => {
     const articleId = getZendeskAVData(antivirusSoftwareName).id
+    this.store.analytics.trackButtonClicked('onboarding_antivirus_open_specific_av_guide', label, 'enabled')
     this.store.routing.push(`/onboarding/antivirus-guide/${articleId}`)
   }
 

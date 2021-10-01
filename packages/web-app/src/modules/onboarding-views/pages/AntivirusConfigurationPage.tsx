@@ -117,7 +117,7 @@ export interface AntivirusConfigurationPageProps extends WithStyles<typeof style
   detectedAV?: AntiVirusSoftware
   isNative?: boolean
   onViewAVGuide: () => void
-  onViewAVArticleWithName: (AV: string) => void
+  navigateToAVGuide: (antivirusSoftwareName: AntiVirusSoftware, label: string) => void
   onNoAVClick: () => void
   onViewAVGuideLabel: string
   onViewAVGuideSelectionModal: (label: string) => void
@@ -133,7 +133,7 @@ const _AntivirusConfigurationPage = ({
   detectedAV,
   onViewAVGuide,
   onViewAVGuideLabel,
-  onViewAVArticleWithName,
+  navigateToAVGuide,
   onNoAVClick,
   onViewDiscord,
   onViewGithub,
@@ -353,7 +353,7 @@ const _AntivirusConfigurationPage = ({
                     trailingIcon={<ChevronRight />}
                     contentAlignment="space-between"
                     onClick={() => {
-                      onViewAVArticleWithName(AV.name)
+                      navigateToAVGuide(AV.name, AV.label)
                     }}
                   />
                 </span>
