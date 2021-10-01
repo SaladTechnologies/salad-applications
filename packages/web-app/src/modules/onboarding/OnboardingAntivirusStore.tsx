@@ -154,23 +154,6 @@ export class OnboardingAntivirusStore {
     }
   }
 
-  /**
-   * Navigates to the requested zendesk antivirus guide by taking
-   * the AV name. @param AV The AV name of the specific zendesk
-   * antivirus guide.
-   */
-  public onViewAVArticleWithName = (AV: string) => {
-    const articleId = getZendeskAVData(AV).id
-    if (articleId) {
-      const antiVirusSoftware = getZendeskAVData(articleId).name
-      if (antiVirusSoftware) {
-        const path = `/onboarding/antivirus-guide/${articleId}`
-        this.store.analytics.trackOnboardingAntivirusGuideViewed(path, antiVirusSoftware)
-        this.store.routing.push(path)
-      }
-    }
-  }
-
   @action.bound
   loadArticle = flow(
     function* (this: OnboardingAntivirusStore, articleID: number) {
