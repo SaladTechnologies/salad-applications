@@ -11,7 +11,7 @@ const mapStoreToProps = (store: RootStore): Omit<AntivirusGuideProps, 'classes'>
     onCloseClicked: () => store.routing.push('/onboarding/antivirus-configuration'),
     onNoAVClick: () => store.onboarding.viewNextPage(ONBOARDING_PAGE_NAMES.ANTIVIRUS_CONFIGURATION),
     onViewAVList: () => store.routing.push('/errors/anti-virus'),
-    onViewArticleWithId: (id: string) => store.onboardingAntivirus.onViewAVArticleWithId(id),
+    onViewArticle: (id: string) => store.onboardingAntivirus.onViewArticle(id),
   }
 }
 

@@ -145,7 +145,7 @@ export class OnboardingAntivirusStore {
    * Navigates to the requested zendesk antivirus guide by ID.
    * @param id The id of the specific zendesk antivirus guide.
    */
-  public onViewAVArticleWithId = (id: string) => {
+  public onViewArticle = (id: string) => {
     const antiVirusSoftware = getZendeskAVData(parseInt(id)).name
     if (antiVirusSoftware) {
       const path = `/onboarding/antivirus-guide/${id}`

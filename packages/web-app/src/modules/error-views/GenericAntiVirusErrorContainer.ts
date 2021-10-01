@@ -3,7 +3,7 @@ import { RootStore } from '../../Store'
 import { AntiVirusFirewallErrorPage } from './components/AntiVirusFirewallErrorPage'
 
 const mapStoreToProps = (store: RootStore): any => {
-  const onViewArticleWithId = (id: number) => {
+  const onViewArticle = (id: number) => {
     store.ui.showModal(`/errors/anti-virus/${id}`)
     store.ui.trackAntiVirusGuideLinkClick(id)
   }
@@ -15,7 +15,7 @@ const mapStoreToProps = (store: RootStore): any => {
     loadArticle: () => store.zendesk.loadAntiVirusArticleList(),
     onCloseClicked: () => store.ui.hideModal(true),
     onViewAVList: () => store.routing.push('/errors/anti-virus'),
-    onViewArticleWithId: (id: number) => onViewArticleWithId(id),
+    onViewArticle: (id: number) => onViewArticle(id),
   }
 }
 
