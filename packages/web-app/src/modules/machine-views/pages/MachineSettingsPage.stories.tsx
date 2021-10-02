@@ -1,85 +1,120 @@
+import { WorkloadCardProps } from '@saladtechnologies/garden-components'
 import { action } from '@storybook/addon-actions'
 import { Meta, Story } from '@storybook/react'
 import { useState } from 'react'
-import type { MinerWorkload, ProcessorInformation } from '../../machine/models'
+import {
+  AntivirusSetting,
+  AutoLaunchSetting,
+  AutoStartSetting,
+  CloseToTraySetting,
+  LogsSetting,
+  SleepModeSetting,
+} from '../settings'
 import type { MachineSettingsPageProps } from './MachineSettingsPage'
 import { MachineSettingsPage } from './MachineSettingsPage'
 
-const gpus: ProcessorInformation[] = [
-  {
-    name: 'NVIDIA GeForce RTX 2080',
-    temperature: '62° C',
-    percentageUtilized: 100,
-  },
-]
-
-const cpu: ProcessorInformation = {
-  name: 'AMD Ryzen 7 5500XT',
-  temperature: '62° C',
-  percentageUtilized: 0,
-}
-
-const miner: MinerWorkload = {
-  name: 'Phoenix1',
-  version: '56',
-  algorithm: 'Ethash',
+interface DesktopSettings {
+  panel: React.ReactNode
+  isAdvanced: boolean
 }
 
 export default {
   title: 'Modules/Machine/Machine Settings Page',
   component: MachineSettingsPage,
   description: 'The Machine Settings Page',
-  args: {
-    onShowLogFolder: action('Show Log Folder'),
-  },
   argTypes: {
-    miner: { defaultValue: miner, description: "The chef's current miner running. " },
-    cpu: { defaultValue: cpu, description: "The chef's CPU information." },
-    gpus: { defaultValue: gpus, description: "The chef's GPU information." },
-    gpuMiningEnabled: {
-      defaultValue: true,
-      description: 'The state of whether or not the chef has set gpu mining as enabled',
+    workloads: {
+      description: 'The Workloads available for the chef to enable or disable',
     },
   },
 } as Meta
 
 const Template: Story<MachineSettingsPageProps> = (args) => {
-  const [gpuEnabled, toggleGpuEnabled] = useState(true)
-  const [cpuEnabled, toggleCpuEnabled] = useState(false)
-  const [autoStartEnabled, toggleAutoStart] = useState(false)
-  const [autoLaunchEnabled, toggleAutoLaunch] = useState(false)
-  const [closeToTrayEnabled, toggleCloseToTray] = useState(false)
+  const [gpuEnabled, toggleGpuEnabled] = useState<boolean>(true)
+  const [gpuOverrideEnabled, toggleGpuOverride] = useState<boolean>(false)
+  const [cpuEnabled, toggleCpuEnabled] = useState<boolean>(false)
+  const [cpuOverrideEnabled, toggleCpuOverride] = useState<boolean>(false)
 
-  const onEnableGpuOnly = () => {
-    toggleGpuEnabled(true)
-    toggleCpuEnabled(false)
-  }
+  const workloads: WorkloadCardProps[] = [
+    {
+      glow: gpuEnabled ? true : false,
+      onToggleWorkload: gpuEnabled ? () => toggleGpuEnabled(false) : () => toggleGpuEnabled(true),
+      onToggleWorkloadLabel: `${gpuEnabled ? 'Disable' : 'Enable'} GPU Mining`,
+      onToggleOverrideLabel: 'Override GPU Compatibility Detection',
+      onToggleOverride: gpuOverrideEnabled ? () => toggleGpuOverride(false) : () => toggleGpuOverride(true),
+      overrideChecked: gpuOverrideEnabled,
+      onToggleOverrideTooltip:
+        'If Salad Is Unable To Detect A Compatible GPU, You Can Choose To Override GPU Detection. This Takes Longer To Start And Can Be Less Profitable',
+      title: 'GPU Mining',
+      type: 'gpu',
+    },
+    {
+      glow: cpuEnabled ? true : false,
+      onToggleWorkload: cpuEnabled ? () => toggleCpuEnabled(false) : () => toggleCpuEnabled(true),
+      onToggleWorkloadLabel: `${cpuEnabled ? 'Disable' : 'Enable'} CPU Mining`,
+      onToggleOverrideLabel: 'Override CPU Compatibility Detection',
+      onToggleOverride: cpuOverrideEnabled ? () => toggleCpuOverride(false) : () => toggleCpuOverride(true),
+      onToggleOverrideTooltip:
+        'If Salad Is Unable To Detect A Compatible CPU, You Can Choose To Override CPU Detection. This Takes Longer To Start And Can Be Less Profitable',
+      overrideChecked: cpuOverrideEnabled,
+      title: 'CPU Mining',
+      type: 'cpu',
+    },
+  ]
 
-  const onEnableCpuOnly = () => {
-    toggleCpuEnabled(true)
-    toggleGpuEnabled(false)
-  }
+  const [notify, toggleNotify] = useState<boolean>(false)
+  const [closeToTray, toggleCloseToTray] = useState<boolean>(false)
 
-  const onEnableCpuAndGpu = () => {
-    toggleCpuEnabled(true)
-    toggleGpuEnabled(true)
-  }
+  const [autoLaunchEnabled, toggleAutoLaunch] = useState<boolean>(false)
 
-  args.gpuMiningEnabled = gpuEnabled
-  args.onSetGPUMiningOnly = onEnableGpuOnly
-  args.cpuMiningEnabled = cpuEnabled
-  args.onSetCPUMiningOnly = onEnableCpuOnly
-  args.onSetGPUAndCPUMining = onEnableCpuAndGpu
+  const desktopSettings: DesktopSettings[] = [
+    {
+      panel: (
+        <AntivirusSetting
+          detectedAV="Windows Defender"
+          onViewAVGuide={action('On View AV Guide')}
+          onViewAVList={action('On View AV List')}
+          onWhitelistWindowsDefender={action('On Whitelist Windows Defender')}
+        />
+      ),
+      isAdvanced: false,
+    },
+    {
+      panel: <SleepModeSetting onDisableSleepMode={action('On Disable Sleep Mode')} />,
+      isAdvanced: false,
+    },
+    {
+      panel: <AutoStartSetting autoStartTime={10} onEnableAutoStart={action('On Enable Auto Start')} />,
+      isAdvanced: false,
+    },
+    {
+      panel: (
+        <CloseToTraySetting
+          closeToTray={closeToTray}
+          notify={notify}
+          onToggleCloseToTray={() => toggleCloseToTray(!closeToTray)}
+          onToggleNotification={() => toggleNotify(!notify)}
+        />
+      ),
+      isAdvanced: true,
+    },
+    {
+      panel: (
+        <AutoLaunchSetting
+          autoLaunchEnabled={autoLaunchEnabled}
+          onToggleAutoLaunch={() => toggleAutoLaunch(!autoLaunchEnabled)}
+        />
+      ),
+      isAdvanced: true,
+    },
+    {
+      panel: <LogsSetting onShowLogFolder={action('On Show Log Folder')} />,
+      isAdvanced: true,
+    },
+  ]
 
-  args.autoStartEnabled = autoStartEnabled
-  args.onToggleAutoStart = (value: boolean) => toggleAutoStart(value)
-
-  args.autoLaunchEnabled = autoLaunchEnabled
-  args.onToggleAutoLaunch = (value: boolean) => toggleAutoLaunch(value)
-
-  args.closeToTrayEnabled = closeToTrayEnabled
-  args.onToggleCloseToTray = (value: boolean) => toggleCloseToTray(value)
-
+  args.workloads = workloads
+  args.desktopSettings = desktopSettings
   return (
     <div>
       <MachineSettingsPage {...args} />
