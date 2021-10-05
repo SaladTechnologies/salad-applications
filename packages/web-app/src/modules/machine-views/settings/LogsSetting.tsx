@@ -29,12 +29,11 @@ const _LeftColumn = ({ classes }: LeftColumnProps) => {
     <>
       <div className={classes.textContainer}>
         <Text variant="baseL">
-          If you’re having issues with Salad, our Support team may request that you upload your log files.
+          If you’re having issues with Salad, our Support team may request that you upload your application log files.
+          Click "Show Log Folder" to navigate to where they are stored.
         </Text>
       </div>
-      <Text variant="baseS">
-        After pressing ‘Show Log Folder’, attach both files to your open support ticket, and press ‘Send’.
-      </Text>
+      <Text variant="baseS">Please attach only the requested log files to your open technical support ticket.</Text>
     </>
   )
 }

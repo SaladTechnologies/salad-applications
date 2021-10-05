@@ -34,8 +34,8 @@ export const CloseToTraySetting = ({
 const LeftColumn = () => {
   return (
     <Text variant="baseL">
-      Salad will hide in the tray and continue to run in the background when you select the Close (X) button. Use the
-      tray icon to quit Salad.
+      This option changes the Close (X) button behavior. If enabled, Salad will hide in the Windows System Tray and
+      continue running in the background. Use the tray icon to quit Salad.
     </Text>
   )
 }

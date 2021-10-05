@@ -29,9 +29,11 @@ const _LeftColumn = ({ classes }: LeftColumnProps) => {
   return (
     <>
       <div className={classes.textContainer}>
-        <Text variant="baseL">Automatically launch Salad when you log in to your computer.</Text>
+        <Text variant="baseL">Automatically launch Salad at startup.</Text>
       </div>
-      <Text variant="baseS">We recommend enabling Auto Launch.</Text>
+      <Text variant="baseS">
+        We recommend enabling this feature in conjunction with Auto Start for to maximize earnings.
+      </Text>
     </>
   )
 }

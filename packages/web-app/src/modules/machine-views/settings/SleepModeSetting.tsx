@@ -29,11 +29,10 @@ const _LeftColumn = ({ classes }: LeftColumnProps) => {
     <>
       <div className={classes.textContainer}>
         <Text variant="baseL">
-          When your PC goes to sleep, Salad stops chopping and you’ll miss out on earnings. You can adjust this setting
-          later in Windows settings.
+          By default, Salad stops Chopping when your PC goes to sleep. You can adjust this behavior in Windows Settings.
         </Text>
       </div>
-      <Text variant="baseS">We recommend disabling Sleep Mode.</Text>
+      <Text variant="baseS">We recommend disabling sleep mode so you don't miss out on earnings.</Text>
     </>
   )
 }

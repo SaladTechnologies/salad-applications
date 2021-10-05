@@ -44,11 +44,11 @@ const _LeftColumn = ({ classes }: LeftColumnProps) => {
     <>
       <div className={classes.textContainer}>
         <Text variant="baseL">
-          Salad is designed to run best when you’re away from your machine (AFK). Auto Start will run Salad
-          automatically when you’re AFK for a period of time.
+          Salad performs best when you're away from the keyboard. The Auto Start setting gives Salad permission to
+          detect inactivity and start earning Salad Balance automatically.
         </Text>
       </div>
-      <Text variant="baseS">We recommend enabling Auto Start.</Text>
+      <Text variant="baseS">We recommend enabling Auto Start to maximize your earning opportunities.</Text>
     </>
   )
 }

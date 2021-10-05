@@ -1,5 +1,6 @@
 import { Button, Text } from '@saladtechnologies/garden-components'
 import withStyles, { WithStyles } from 'react-jss'
+import { SmartLink } from '../../../components'
 import { SettingsPanel } from '../components/SettingsPanel'
 
 export interface AntivirusSettingProps {
@@ -40,8 +41,12 @@ export const AntivirusSetting = ({
 const LeftColumn = () => {
   return (
     <Text variant="baseL">
-      If your Antivirus program is flagging Salad by mistake, whitelist Salad in Windows Defender or follow our
-      step-by-step guide to whitelisting with your specific Antivirus.{' '}
+      If your antivirus software is{' '}
+      <SmartLink to="https://salad.com/blog/why-do-antivirus-programs-block-miners/">
+        preventing Salad from running
+      </SmartLink>
+      , use this toggle to whitelist Salad in Windows Defender, or follow the step-by-step guide for your specific
+      antivirus program.
     </Text>
   )
 }
