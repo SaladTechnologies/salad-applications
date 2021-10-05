@@ -6,10 +6,10 @@ import withStyles, { WithStyles } from 'react-jss'
 import { Head, SmartLink } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
 import { AntiVirusSoftware } from '../../zendesk/models'
-import { antivirusInfo } from '../../zendesk/utils'
 import DiscordIcon from '../assets/DiscordIcon'
 import GithubIcon from '../assets/GithubIcon'
 import VirusTotal from '../assets/virusTotal.png'
+import { AntivirusModal } from '../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -63,15 +63,6 @@ const styles = (theme: SaladTheme) => ({
   mt12: {
     marginTop: 12,
   },
-  mb12: {
-    marginBottom: 12,
-  },
-  mb36: {
-    marginBotton: 36,
-  },
-  mb54: {
-    marginBottom: 54,
-  },
   image: {
     display: 'flex',
     flex: 1,
@@ -98,18 +89,6 @@ const styles = (theme: SaladTheme) => ({
   underline: {
     cursor: 'pointer',
     textDecoration: 'underline',
-  },
-  antivirusButtons: {
-    flexBasis: '48%',
-  },
-  antivirusButtonContainer: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  modalContainer: {
-    textAlign: 'center',
   },
 })
 
@@ -336,42 +315,7 @@ const _AntivirusConfigurationPage = ({
       </div>
       {viewModal && (
         <Modal onClose={() => setViewModal(false)} title={'Select your Antivirus provider'}>
-          <div className={classes.modalContainer}>
-            <div>
-              <div className={classes.mb24}>
-                <Text variant="baseS">
-                  If your antivirus is not listed,{' '}
-                  <SmartLink
-                    trackingInfo={{ label: 'Onboarding - Antivirus not listed - We can help blog' }}
-                    to="https://support.salad.com/hc/en-us/articles/4404212712340"
-                  >
-                    we can help.
-                  </SmartLink>
-                </Text>
-              </div>
-              <div className={classes.mb48}>
-                <Button variant="outlined" label="I don't use Antivirus" onClick={onNoAVClick} />
-              </div>
-            </div>
-            <div className={classnames(classes.antivirusButtonContainer, classes.mb54)}>
-              {antivirusInfo.map((AV, index) => (
-                <span key={index} className={classnames(classes.antivirusButtonContainer, classes.mb12)}>
-                  <Button
-                    width={246}
-                    label={AV.label}
-                    variant="outlined"
-                    leadingImage={AV.src}
-                    leadingImageAlt={AV.label}
-                    trailingIcon={<ChevronRight />}
-                    contentAlignment="space-between"
-                    onClick={() => {
-                      navigateToAVGuide(AV.name, AV.label)
-                    }}
-                  />
-                </span>
-              ))}
-            </div>
-          </div>
+          <AntivirusModal navigateToAVGuide={navigateToAVGuide} onNoAVClick={onNoAVClick} />
         </Modal>
       )}
     </div>
