@@ -389,6 +389,34 @@ export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
     })
   }
 
+  public setGpu = (value: boolean) => {
+    runInAction(() => {
+      this.gpuMiningEnabled = value
+    })
+
+    this.store.saladFork.setPreferences({
+      'mining/gpu': this.gpuMiningEnabled,
+      'mining/cpu': this.cpuMiningEnabled,
+      'mining/gpu-override': this.gpuMiningOverridden,
+      'mining/cpu-override': this.cpuMiningOverridden,
+      elevated: false,
+    })
+  }
+
+  public setCpu = (value: boolean) => {
+    runInAction(() => {
+      this.cpuMiningEnabled = value
+    })
+
+    this.store.saladFork.setPreferences({
+      'mining/gpu': this.gpuMiningEnabled,
+      'mining/cpu': this.cpuMiningEnabled,
+      'mining/gpu-override': this.gpuMiningOverridden,
+      'mining/cpu-override': this.cpuMiningOverridden,
+      elevated: false,
+    })
+  }
+
   public setGpuAndCpu = () => {
     runInAction(() => {
       this.cpuMiningEnabled = true
