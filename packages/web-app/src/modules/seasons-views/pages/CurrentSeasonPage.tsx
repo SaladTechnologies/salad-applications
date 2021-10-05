@@ -85,6 +85,7 @@ const _CurrentSeasonPage = ({
   totalXP,
 }: CurrentSeasonPageProps) => {
   const intl = useIntl()
+  const seasonFAQ = 'Season FAQ'
 
   const levelCards = useMemo(() => {
     let cumulativeSum = 0
@@ -127,7 +128,10 @@ const _CurrentSeasonPage = ({
           <div>
             <Text variant="baseS">
               See{' '}
-              <SmartLink to={'https://support.salad.com/hc/en-us/articles/4402408729108-How-do-Seasons-work-'}>
+              <SmartLink
+                to={'https://support.salad.com/hc/en-us/articles/4402408729108-How-do-Seasons-work-'}
+                trackingInfo={{ label: seasonFAQ }}
+              >
                 our Salad Season FAQ
               </SmartLink>{' '}
               for more information.
