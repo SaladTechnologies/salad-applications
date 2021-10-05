@@ -2,7 +2,7 @@ import { action, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { delay, routeLink } from '../../utils'
 import { NotificationMessageCategory } from '../notifications/models'
-import type { ZendeskArticle, ZendeskArticleList, ZendeskArticleResource } from '../zendesk/models'
+import type { ZendeskArticleResource } from '../zendesk/models'
 import { AntiVirusSoftware } from '../zendesk/models'
 import { getZendeskAVData } from '../zendesk/utils'
 import { ONBOARDING_PAGE_NAMES, WhitelistWindowsDefenderErrorTypeMessage } from './models'
@@ -22,9 +22,6 @@ export class OnboardingAntivirusStore {
 
   @observable
   public loadingArticle: boolean = false
-
-  @observable
-  public antiVirusArticleList?: ZendeskArticle[]
 
   constructor(private readonly store: RootStore) {}
 
@@ -169,30 +166,6 @@ export class OnboardingAntivirusStore {
         const data: ZendeskArticleResource = yield res.json()
         this.helpCenterArticle = data.article.body
         this.selectedAntiVirusGuide = antivirusSoftwareName
-      } catch (err) {
-        throw err
-      }
-      this.loadingArticle = false
-    }.bind(this),
-  )
-
-  @action.bound
-  loadAntiVirusArticleList = flow(
-    function* (this: OnboardingAntivirusStore) {
-      if (this.antiVirusArticleList !== undefined) {
-        return
-      }
-
-      this.loadingArticle = true
-      try {
-        let res: Response = yield fetch(
-          'https://salad.zendesk.com/api/v2/help_center/en-us/sections/360008458292/articles',
-          {
-            credentials: 'omit',
-          },
-        )
-        const data: ZendeskArticleList = yield res.json()
-        this.antiVirusArticleList = data.articles
       } catch (err) {
         throw err
       }
