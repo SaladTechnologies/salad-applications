@@ -33,12 +33,12 @@ const styles = () => ({
   },
 })
 
-export interface AntivirusModalProps extends WithStyles<typeof styles> {
+export interface AntivirusModalContentProps extends WithStyles<typeof styles> {
   navigateToAVGuide: (antivirusSoftwareName: AntiVirusSoftware, label: string) => void
   onNoAVClick: () => void
 }
 
-const _AntivirusModal = ({ classes, navigateToAVGuide, onNoAVClick }: AntivirusModalProps) => {
+const _AntivirusModalContent = ({ classes, navigateToAVGuide, onNoAVClick }: AntivirusModalContentProps) => {
   return (
     <div className={classes.modalContainer}>
       <div>
@@ -79,4 +79,4 @@ const _AntivirusModal = ({ classes, navigateToAVGuide, onNoAVClick }: AntivirusM
   )
 }
 
-export const AntivirusModal = withStyles(styles)(_AntivirusModal)
+export const AntivirusModalContent = withStyles(styles)(_AntivirusModalContent)

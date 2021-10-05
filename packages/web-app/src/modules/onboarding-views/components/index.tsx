@@ -1,1 +1,1 @@
-export * from './AntivirusModal'
+export * from './AntivirusModalContent'

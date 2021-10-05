@@ -9,7 +9,7 @@ import { AntiVirusSoftware } from '../../zendesk/models'
 import DiscordIcon from '../assets/DiscordIcon'
 import GithubIcon from '../assets/GithubIcon'
 import VirusTotal from '../assets/virusTotal.png'
-import { AntivirusModal } from '../components'
+import { AntivirusModalContent } from '../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -315,7 +315,7 @@ const _AntivirusConfigurationPage = ({
       </div>
       {viewModal && (
         <Modal onClose={() => setViewModal(false)} title={'Select your Antivirus provider'}>
-          <AntivirusModal navigateToAVGuide={navigateToAVGuide} onNoAVClick={onNoAVClick} />
+          <AntivirusModalContent navigateToAVGuide={navigateToAVGuide} onNoAVClick={onNoAVClick} />
         </Modal>
       )}
     </div>
