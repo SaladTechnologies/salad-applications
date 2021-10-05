@@ -62,7 +62,7 @@ export class MachineSettingsUIStore {
       type: 'cpu',
     }
 
-    return [gpuWorkload, cpuWorkload]
+    return [cpuWorkload, gpuWorkload]
   }
 
   @computed
