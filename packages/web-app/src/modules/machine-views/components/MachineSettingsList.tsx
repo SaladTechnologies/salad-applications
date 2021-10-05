@@ -19,6 +19,7 @@ const _MachineSettingsList = ({ classes, panels }: MachineSettingsListProps) => 
   const [showAdvancedSettings, toggleShowAdvancedSettings] = useState<boolean>(false)
 
   const splitArrays = groupBy(panels, 'isAdvanced')
+  const hasAdvancedSettings = splitArrays?.true?.length > 0
   return (
     <>
       {splitArrays.false.map((panel, index) => (
@@ -26,7 +27,7 @@ const _MachineSettingsList = ({ classes, panels }: MachineSettingsListProps) => 
           {panel.panel}
         </div>
       ))}
-      {showAdvancedSettings && (
+      {hasAdvancedSettings && showAdvancedSettings && (
         <>
           {splitArrays.true.map((panel, index) => (
             <div key={index} className={classes.container}>
@@ -35,11 +36,13 @@ const _MachineSettingsList = ({ classes, panels }: MachineSettingsListProps) => 
           ))}
         </>
       )}
-      <Button
-        variant="outlined"
-        label={`${showAdvancedSettings ? 'Hide' : 'Show'} Advanced Settings`}
-        onClick={() => toggleShowAdvancedSettings(!showAdvancedSettings)}
-      />
+      {hasAdvancedSettings && (
+        <Button
+          variant="outlined"
+          label={`${showAdvancedSettings ? 'Hide' : 'Show'} Advanced Settings`}
+          onClick={() => toggleShowAdvancedSettings(!showAdvancedSettings)}
+        />
+      )}
     </>
   )
 }

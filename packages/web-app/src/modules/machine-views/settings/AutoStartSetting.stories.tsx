@@ -1,23 +1,27 @@
-import { action } from '@storybook/addon-actions'
 import { Meta, Story } from '@storybook/react'
+import { useState } from 'react'
 import type { AutoStartSettingProps } from './AutoStartSetting'
 import { AutoStartSetting } from './AutoStartSetting'
 
 export default {
   title: 'Modules/Machine/Settings/AutoStart',
   component: AutoStartSetting,
-  description: 'The Sleep Mode Setting Panel',
-  args: {
-    onEnableAutoStart: action('On Disable Sleep Mode'),
-  },
+  description: 'The Auto Start Setting Panel',
   argTypes: {
-    onEnableAutoStart: {
+    onToggleAutoStart: {
       description: 'A callback that enables auto start at the time selected with the slider',
     },
   },
 } as Meta
 
 const Template: Story<AutoStartSettingProps> = (args) => {
+  const [autoStartEnabled, toggleAutoStart] = useState<boolean>(false)
+  const [autoStartTime, setAutoStartTime] = useState<number>(10)
+
+  args.autoStartEnabled = autoStartEnabled
+  args.onToggleAutoStart = () => toggleAutoStart(!autoStartEnabled)
+  args.autoStartTime = autoStartTime
+  args.onSetMinutesIdle = (minutes: number) => setAutoStartTime(minutes)
   return (
     <div
       style={{

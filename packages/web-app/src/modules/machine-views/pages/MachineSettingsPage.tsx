@@ -10,6 +10,7 @@ import { DesktopSettingPanels } from '../settings/models/DesktopSettingsPanel'
 const styles = (theme: SaladTheme) => ({
   container: {
     position: 'fixed',
+    top: (props: MachineSettingsPageProps) => (props.isNative ? '4.1rem' : 0),
     bottom: 0,
     left: 0,
     right: 0,
@@ -34,7 +35,6 @@ const styles = (theme: SaladTheme) => ({
     width: '100%',
   },
   content: {
-    padding: '0 15px',
     width: '100%',
   },
   lightGreenColor: {
@@ -58,6 +58,7 @@ const styles = (theme: SaladTheme) => ({
 })
 
 export interface MachineSettingsPageProps extends WithStyles<typeof styles> {
+  isNative?: boolean
   desktopSettings: DesktopSettingPanels
   workloads: WorkloadCardProps[]
 }
@@ -87,12 +88,14 @@ const _MachineSettingsPage = ({ classes, desktopSettings, workloads }: MachineSe
                   />
                 ))}
               </div>
-              <div>
-                <div className={classnames(classes.title, classes.lightGreenColor)}>
-                  <Text variant="base3XL">Desktop</Text>
+              {desktopSettings.length > 0 && (
+                <div>
+                  <div className={classnames(classes.title, classes.lightGreenColor)}>
+                    <Text variant="base3XL">Desktop</Text>
+                  </div>
+                  <MachineSettingsList panels={desktopSettings} />
                 </div>
-                <MachineSettingsList panels={desktopSettings || []} />
-              </div>
+              )}
             </div>
           </Layout>
         </Scrollbars>

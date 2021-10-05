@@ -5,6 +5,8 @@ import { SettingsPanel } from '../components/SettingsPanel'
 export interface AntivirusSettingProps {
   detectedAV?: string
   onWhitelistWindowsDefender?: () => void
+  whitelistWindowsDefenderErrorMessage?: string
+  whitelistWindowsDefenderPending?: boolean
   onViewAVGuide: () => void
   onViewAVList: () => void
 }
@@ -12,6 +14,8 @@ export interface AntivirusSettingProps {
 export const AntivirusSetting = ({
   detectedAV,
   onWhitelistWindowsDefender,
+  whitelistWindowsDefenderErrorMessage,
+  whitelistWindowsDefenderPending,
   onViewAVGuide,
   onViewAVList,
 }: AntivirusSettingProps) => {
@@ -25,6 +29,8 @@ export const AntivirusSetting = ({
           onViewAVGuide={onViewAVGuide}
           onViewAVList={onViewAVList}
           onWhitelistWindowsDefender={onWhitelistWindowsDefender}
+          whitelistWindowsDefenderErrorMessage={whitelistWindowsDefenderErrorMessage}
+          whitelistWindowsDefenderPending={whitelistWindowsDefenderPending}
         />
       }
     />
@@ -45,12 +51,15 @@ const rightColumnStyles = () => ({
     marginBottom: 24,
   },
   underline: {
+    cursor: 'pointer',
     textDecoration: 'underline',
   },
 })
 
 interface RightColumnProps extends WithStyles<typeof rightColumnStyles> {
   onWhitelistWindowsDefender?: () => void
+  whitelistWindowsDefenderErrorMessage?: string
+  whitelistWindowsDefenderPending?: boolean
   onViewAVGuide: () => void
   onViewAVList: () => void
   detectedAV?: string
@@ -62,12 +71,21 @@ const _RightColumn = ({
   onViewAVGuide,
   onViewAVList,
   onWhitelistWindowsDefender,
+  whitelistWindowsDefenderErrorMessage,
+  whitelistWindowsDefenderPending,
 }: RightColumnProps) => {
   return (
     <>
-      <div className={classes.buttonContainer}>
-        <Button label="Whitelist Salad in Windows Defender" onClick={onWhitelistWindowsDefender} />
-      </div>
+      {onWhitelistWindowsDefender && (
+        <div className={classes.buttonContainer}>
+          <Button
+            label="Whitelist Salad in Windows Defender"
+            onClick={onWhitelistWindowsDefender}
+            errorMessage={whitelistWindowsDefenderErrorMessage}
+            isLoading={whitelistWindowsDefenderPending}
+          />
+        </div>
+      )}
       {detectedAV !== undefined && (
         <div className={classes.buttonContainer}>
           <Button variant="outlined" label={`Open ${detectedAV} Guide`} onClick={onViewAVGuide} />

@@ -10,13 +10,9 @@ import {
   LogsSetting,
   SleepModeSetting,
 } from '../settings'
+import type { DesktopSettingPanels } from '../settings/models/DesktopSettingsPanel'
 import type { MachineSettingsPageProps } from './MachineSettingsPage'
 import { MachineSettingsPage } from './MachineSettingsPage'
-
-interface DesktopSettings {
-  panel: React.ReactNode
-  isAdvanced: boolean
-}
 
 export default {
   title: 'Modules/Machine/Machine Settings Page',
@@ -66,8 +62,10 @@ const Template: Story<MachineSettingsPageProps> = (args) => {
   const [closeToTray, toggleCloseToTray] = useState<boolean>(false)
 
   const [autoLaunchEnabled, toggleAutoLaunch] = useState<boolean>(false)
+  const [autoStartEnabled, toggleAutoStart] = useState<boolean>(false)
+  const [autoStartTime, setAutoStartTime] = useState<number>(10)
 
-  const desktopSettings: DesktopSettings[] = [
+  const desktopSettings: DesktopSettingPanels = [
     {
       panel: (
         <AntivirusSetting
@@ -84,7 +82,14 @@ const Template: Story<MachineSettingsPageProps> = (args) => {
       isAdvanced: false,
     },
     {
-      panel: <AutoStartSetting autoStartTime={10} onEnableAutoStart={action('On Enable Auto Start')} />,
+      panel: (
+        <AutoStartSetting
+          autoStartEnabled={autoStartEnabled}
+          autoStartTime={autoStartTime}
+          onToggleAutoStart={() => toggleAutoStart(!autoStartEnabled)}
+          onSetMinutesIdle={(minutes: number) => setAutoStartTime(minutes)}
+        />
+      ),
       isAdvanced: false,
     },
     {

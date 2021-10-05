@@ -2,13 +2,10 @@ import { connect } from '../../connect'
 import { RootStore } from '../../Store'
 import { MachineSettingsPage, MachineSettingsPageProps } from './pages/MachineSettingsPage'
 
-const mapStoreToProps = (store: RootStore): Omit<MachineSettingsPageProps, 'classes'> => {
-  // component isn't connected yet, with new ui. The console log prevents a build failure.
-  console.log(store)
-  return {
-    desktopSettings: [],
-    workloads: [],
-  }
-}
+const mapStoreToProps = (store: RootStore): Omit<MachineSettingsPageProps, 'classes'> => ({
+  isNative: store.native.isNative,
+  desktopSettings: store.machineSettingsUI.desktopSettings,
+  workloads: store.machineSettingsUI.workloads,
+})
 
 export const MachineSettingsPageContainer = connect(mapStoreToProps, MachineSettingsPage)

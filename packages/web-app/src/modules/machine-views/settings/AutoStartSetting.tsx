@@ -1,24 +1,30 @@
 import { Button, Slider, Text } from '@saladtechnologies/garden-components'
-import { useState } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SettingsPanel } from '../components/SettingsPanel'
 
 export interface AutoStartSettingProps {
+  autoStartEnabled: boolean
   autoStartTime: number
-  onEnableAutoStart: (minutes: number) => void
+  onToggleAutoStart: () => void
+  onSetMinutesIdle: (minutes: number) => void
 }
 
-export const AutoStartSetting = ({ autoStartTime, onEnableAutoStart }: AutoStartSettingProps) => {
-  const [minutesSelected, setMinutesSelected] = useState<number>(autoStartTime || 0)
+export const AutoStartSetting = ({
+  autoStartEnabled,
+  autoStartTime,
+  onToggleAutoStart,
+  onSetMinutesIdle,
+}: AutoStartSettingProps) => {
   return (
     <SettingsPanel
       title="Auto Start"
       leftColumn={<LeftColumn />}
       rightColumn={
         <RightColumn
-          onChange={(minutes: number) => setMinutesSelected(minutes)}
-          autoStartTime={minutesSelected}
-          onEnableAutoStart={() => onEnableAutoStart(minutesSelected)}
+          onChange={(minutes: number) => onSetMinutesIdle(minutes)}
+          autoStartEnabled={autoStartEnabled}
+          autoStartTime={autoStartTime ? autoStartTime / 60 : 10}
+          onToggleAutoStart={onToggleAutoStart}
         />
       }
     />
@@ -56,19 +62,28 @@ const rightColumnStyles = () => ({
 })
 
 interface RightColumnProps extends WithStyles<typeof rightColumnStyles> {
+  autoStartEnabled: boolean
   autoStartTime: number
-  onEnableAutoStart: () => void
+  onToggleAutoStart: () => void
   onChange: (minutes: number) => void
 }
 
-const _RightColumn = ({ classes, autoStartTime, onEnableAutoStart, onChange }: RightColumnProps) => {
+const _RightColumn = ({ classes, autoStartEnabled, autoStartTime, onToggleAutoStart, onChange }: RightColumnProps) => {
   return (
     <>
       <div className={classes.container}>
-        <Button label="Enable Auto Start" onClick={onEnableAutoStart} />
+        <Button label={`${autoStartEnabled ? 'Disable' : 'Enable'} Auto Start`} onClick={onToggleAutoStart} />
       </div>
       <div className={classes.container}>
-        <Slider minimum={0} maximum={60} value={autoStartTime} stepSize={10} onChange={onChange} />
+        <Slider
+          minimum={10}
+          maximum={60}
+          value={autoStartTime}
+          stepSize={10}
+          onChange={(value: number) => {
+            onChange(value * 60)
+          }}
+        />
       </div>
       <Text variant="baseS">Start after {autoStartTime} Minutes</Text>
     </>
