@@ -4,14 +4,26 @@ import { SettingsPanel } from '../components/SettingsPanel'
 
 export interface SleepModeSettingProps {
   onDisableSleepMode: () => void
+  disableSleepModeErrorMessage?: string
+  disableSleepModePending?: boolean
 }
 
-export const SleepModeSetting = ({ onDisableSleepMode }: SleepModeSettingProps) => {
+export const SleepModeSetting = ({
+  disableSleepModeErrorMessage,
+  disableSleepModePending,
+  onDisableSleepMode,
+}: SleepModeSettingProps) => {
   return (
     <SettingsPanel
       title="Sleep Mode"
       leftColumn={<LeftColumn />}
-      rightColumn={<RightColumn onDisableSleepMode={onDisableSleepMode} />}
+      rightColumn={
+        <RightColumn
+          onDisableSleepMode={onDisableSleepMode}
+          disableSleepModeErrorMessage={disableSleepModeErrorMessage}
+          disableSleepModePending={disableSleepModePending}
+        />
+      }
     />
   )
 }
@@ -41,8 +53,21 @@ const LeftColumn = withStyles(leftColumnStyles)(_LeftColumn)
 
 interface RightColumnProps {
   onDisableSleepMode: () => void
+  disableSleepModeErrorMessage?: string
+  disableSleepModePending?: boolean
 }
 
-const RightColumn = ({ onDisableSleepMode }: RightColumnProps) => {
-  return <Button label="Disable Sleep Mode" onClick={onDisableSleepMode} />
+const RightColumn = ({
+  onDisableSleepMode,
+  disableSleepModePending,
+  disableSleepModeErrorMessage,
+}: RightColumnProps) => {
+  return (
+    <Button
+      label="Disable Sleep Mode"
+      onClick={onDisableSleepMode}
+      errorMessage={disableSleepModeErrorMessage}
+      isLoading={disableSleepModePending}
+    />
+  )
 }

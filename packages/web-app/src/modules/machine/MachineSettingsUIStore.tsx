@@ -22,6 +22,12 @@ export class MachineSettingsUIStore {
   @observable
   public whitelistWindowsDefenderErrorMessage?: WhitelistWindowsDefenderErrorTypeMessage
 
+  @observable
+  public disableSleepModePending: boolean = false
+
+  @observable
+  public disableSleepModeErrorMessage?: string = undefined
+
   @computed
   get workloads(): WorkloadCardProps[] {
     const gpuEnabled = this.store.saladBowl.gpuMiningEnabled
@@ -133,6 +139,20 @@ export class MachineSettingsUIStore {
       this.setWhitelistWindowsErrorType(error)
     } finally {
       this.whitelistWindowsDefenderPending = false
+    }
+  })
+
+  @action.bound
+  public disableSleepMode = flow(function* (this: MachineSettingsUIStore) {
+    this.disableSleepModeErrorMessage = undefined
+    this.disableSleepModePending = true
+    try {
+      yield this.store.native.disableSleepMode()
+    } catch {
+      this.disableSleepModeErrorMessage =
+        'Something went wrong and we were unable to adjust your sleep mode settings. You can adjust these settings yourself in Windows Settings, or contact support for assistance.'
+    } finally {
+      this.disableSleepModePending = false
     }
   })
 }
