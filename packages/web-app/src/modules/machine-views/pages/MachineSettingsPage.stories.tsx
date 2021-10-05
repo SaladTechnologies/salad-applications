@@ -63,7 +63,7 @@ const Template: Story<MachineSettingsPageProps> = (args) => {
 
   const [autoLaunchEnabled, toggleAutoLaunch] = useState<boolean>(false)
   const [autoStartEnabled, toggleAutoStart] = useState<boolean>(false)
-  const [autoStartTime, setAutoStartTime] = useState<number>(10)
+  const [autoStartTime, setAutoStartTime] = useState<number>(600)
 
   const desktopSettings: DesktopSettingPanels = [
     {

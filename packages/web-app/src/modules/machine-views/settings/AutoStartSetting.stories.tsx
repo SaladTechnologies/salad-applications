@@ -16,7 +16,7 @@ export default {
 
 const Template: Story<AutoStartSettingProps> = (args) => {
   const [autoStartEnabled, toggleAutoStart] = useState<boolean>(false)
-  const [autoStartTime, setAutoStartTime] = useState<number>(10)
+  const [autoStartTime, setAutoStartTime] = useState<number>(600)
 
   args.autoStartEnabled = autoStartEnabled
   args.onToggleAutoStart = () => toggleAutoStart(!autoStartEnabled)
