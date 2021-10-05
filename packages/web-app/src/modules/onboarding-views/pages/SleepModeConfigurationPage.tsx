@@ -109,9 +109,7 @@ const _SleepModeConfigurationPage = ({
               <Text variant="baseS">You can always adjust sleep mode later in Windows settings.</Text>
             </div>
             <div className={classes.buttonsContainer}>
-              <span>
-                <Button size="medium" label="Skip For Now" onClick={onSkipSleepMode} variant="outlined" />
-              </span>
+              <Button size="medium" label="Skip For Now" onClick={onSkipSleepMode} variant="outlined" />
               <span className={classes.enableButton}>
                 <Button
                   errorMessage={sleepModeErrorMessage}
