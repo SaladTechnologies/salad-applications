@@ -602,4 +602,12 @@ export class SaladBowlStore implements SaladBowlStoreInterface, IPersistentStore
 
   @action
   setGpuAndCpu = () => {}
+
+  public setGpu = (value: boolean) => {
+    console.log(value)
+  }
+
+  public setCpu = (value: boolean) => {
+    console.log(value)
+  }
 }

@@ -34,9 +34,7 @@ export class MachineSettingsUIStore {
     const gpuMiningOverridden = this.store.saladBowl.gpuMiningOverridden
     const gpuWorkload: WorkloadCardProps = {
       glow: gpuEnabled,
-      onToggleWorkload: gpuEnabled
-        ? () => this.store.saladBowl.setGpuOnly(false)
-        : () => this.store.saladBowl.setGpuOnly(true),
+      onToggleWorkload: gpuEnabled ? () => this.store.saladBowl.setGpu(false) : () => this.store.saladBowl.setGpu(true),
       onToggleWorkloadLabel: `${gpuEnabled ? 'Disable' : 'Enable'} GPU Mining`,
       overrideChecked: gpuMiningOverridden,
       onToggleOverride: gpuMiningOverridden
@@ -53,9 +51,7 @@ export class MachineSettingsUIStore {
     const cpuMiningOverridden = this.store.saladBowl.cpuMiningOverridden
     const cpuWorkload: WorkloadCardProps = {
       glow: cpuEnabled,
-      onToggleWorkload: cpuEnabled
-        ? () => this.store.saladBowl.setGpuOnly(true)
-        : () => this.store.saladBowl.setGpuOnly(false),
+      onToggleWorkload: cpuEnabled ? () => this.store.saladBowl.setCpu(false) : () => this.store.saladBowl.setCpu(true),
       onToggleWorkloadLabel: `${cpuEnabled ? 'Disable' : 'Enable'} CPU Mining`,
       overrideChecked: cpuMiningOverridden,
       onToggleOverride: cpuMiningOverridden
