@@ -1,5 +1,36 @@
 import type { Systeminformation as si } from 'systeminformation'
+import Adaware from '../onboarding-views/assets/Adaware.png'
+import AdvSystemCare from '../onboarding-views/assets/AdvSystemCare.png'
+import Avast from '../onboarding-views/assets/Avast.png'
+import AVG from '../onboarding-views/assets/AVG.png'
+import Avira from '../onboarding-views/assets/Avira.png'
+import BitDefender from '../onboarding-views/assets/BitDefender.png'
+import BullGuard from '../onboarding-views/assets/BullGuard.png'
+import Comodo from '../onboarding-views/assets/Comodo.png'
+import EScan from '../onboarding-views/assets/EScan.png'
+import EsetNod32 from '../onboarding-views/assets/EsetNod32.png'
+import FProt from '../onboarding-views/assets/FProt.png'
+import FSecure from '../onboarding-views/assets/FSecure.png'
+import GData from '../onboarding-views/assets/GData.png'
+import K7 from '../onboarding-views/assets/K7.png'
+import Kaspersky from '../onboarding-views/assets/Kaspersky.png'
+import Malwarebytes from '../onboarding-views/assets/Malwarebytes.png'
+import McAfeeSecurity from '../onboarding-views/assets/McAfeeSecurity.png'
+import Norton from '../onboarding-views/assets/Norton.png'
+import Panda from '../onboarding-views/assets/Panda.png'
+import PCMatic from '../onboarding-views/assets/PCMatic.png'
+import Qihoo360 from '../onboarding-views/assets/Qihoo360.png'
+import SecureAgeAPEX from '../onboarding-views/assets/SecureAgeAPEX.png'
+import Sophos from '../onboarding-views/assets/Sophos.png'
+import TotalAV from '../onboarding-views/assets/TotalAV.png'
+import TrendMicro from '../onboarding-views/assets/TrendMicro.png'
+import Twister from '../onboarding-views/assets/Twister.png'
+import VIPRE from '../onboarding-views/assets/VIPRE.png'
+import Webroot from '../onboarding-views/assets/Webroot.png'
+import WindowsDefender from '../onboarding-views/assets/WindowsDefender.png'
+import Zillya from '../onboarding-views/assets/Zillya.png'
 import { AntiVirusSoftware } from './models'
+
 type SystemProcessesData = si.ProcessesData
 
 interface ZendeskAVData {
@@ -249,3 +280,157 @@ export const getAntiVirusSoftware = (processes: SystemProcessesData) => {
   }
   return detectedAntiVirus
 }
+
+export const antivirusInfo = [
+  {
+    label: 'Windows Defender',
+    name: AntiVirusSoftware.WindowsDefender,
+    src: WindowsDefender,
+  },
+  {
+    label: 'Avast',
+    name: AntiVirusSoftware.Avast,
+    src: Avast,
+  },
+  {
+    label: 'McAfee',
+    name: AntiVirusSoftware.McAfeeSecurity,
+    src: McAfeeSecurity,
+  },
+  {
+    label: 'Norton',
+    name: AntiVirusSoftware.Norton,
+    src: Norton,
+  },
+
+  {
+    label: 'Malwarebytes',
+    name: AntiVirusSoftware.Malwarebytes,
+    src: Malwarebytes,
+  },
+  {
+    label: 'Kaspersky',
+    name: AntiVirusSoftware.Kaspersky,
+    src: Kaspersky,
+  },
+  {
+    label: 'Avira',
+    name: AntiVirusSoftware.Avira,
+    src: Avira,
+  },
+  {
+    label: 'BitDefender',
+    name: AntiVirusSoftware.BitDefender,
+    src: BitDefender,
+  },
+  {
+    label: 'AVG',
+    name: AntiVirusSoftware.AVG,
+    src: AVG,
+  },
+  {
+    label: 'ESET-NOD32',
+    name: AntiVirusSoftware.ESETNOD32,
+    src: EsetNod32,
+  },
+  {
+    label: 'Webroot',
+    name: AntiVirusSoftware.Webroot,
+    src: Webroot,
+  },
+  {
+    label: 'TotalAV',
+    name: AntiVirusSoftware.TotalAV,
+    src: TotalAV,
+  },
+  {
+    label: 'VIPRE',
+    name: AntiVirusSoftware.VIPRE,
+    src: VIPRE,
+  },
+  {
+    label: 'TrendMicro',
+    name: AntiVirusSoftware.TrendMicro,
+    src: TrendMicro,
+  },
+  {
+    label: 'Bullguard',
+    name: AntiVirusSoftware.BullGuard,
+    src: BullGuard,
+  },
+  {
+    label: 'F-Secure',
+    name: AntiVirusSoftware.FSecure,
+    src: FSecure,
+  },
+  {
+    label: 'Panda',
+    name: AntiVirusSoftware.Panda,
+    src: Panda,
+  },
+  {
+    label: 'K7',
+    name: AntiVirusSoftware.K7,
+    src: K7,
+  },
+  {
+    label: 'Zillya',
+    name: AntiVirusSoftware.Zillya,
+    src: Zillya,
+  },
+  {
+    label: 'Sophos',
+    name: AntiVirusSoftware.Sophos,
+    src: Sophos,
+  },
+  {
+    label: 'Twister',
+    name: AntiVirusSoftware.Twister,
+    src: Twister,
+  },
+  {
+    label: 'GData',
+    name: AntiVirusSoftware.GData,
+    src: GData,
+  },
+  {
+    label: 'PCMatic',
+    name: AntiVirusSoftware.PCMatic,
+    src: PCMatic,
+  },
+  {
+    label: 'Qihoo-360',
+    name: AntiVirusSoftware.Qihoo360,
+    src: Qihoo360,
+  },
+  {
+    label: 'Adv. SystemCare',
+    name: AntiVirusSoftware.AdvancedSystemCareUltimate,
+    src: AdvSystemCare,
+  },
+  {
+    label: 'Adaware',
+    name: AntiVirusSoftware.Adaware,
+    src: Adaware,
+  },
+  {
+    label: 'e-Scan',
+    name: AntiVirusSoftware.EScan,
+    src: EScan,
+  },
+  {
+    label: 'F-Prot',
+    name: AntiVirusSoftware.FProt,
+    src: FProt,
+  },
+  {
+    label: 'SecureAge APEX',
+    name: AntiVirusSoftware.SecureAgeAPEX,
+    src: SecureAgeAPEX,
+  },
+  {
+    label: 'Comodo',
+    name: AntiVirusSoftware.Comodo,
+    src: Comodo,
+  },
+]

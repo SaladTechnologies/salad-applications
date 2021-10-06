@@ -1,7 +1,7 @@
-import { Button, FieldContainer, GlassBox, SvgIcon, Text } from '@saladtechnologies/garden-components'
+import { Button, FieldContainer, GlassBox, Modal, SvgIcon, Text } from '@saladtechnologies/garden-components'
 import { ChevronRight } from '@saladtechnologies/garden-icons'
 import classnames from 'classnames'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Head, SmartLink } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
@@ -9,6 +9,7 @@ import { AntiVirusSoftware } from '../../zendesk/models'
 import DiscordIcon from '../assets/DiscordIcon'
 import GithubIcon from '../assets/GithubIcon'
 import VirusTotal from '../assets/virusTotal.png'
+import { AntivirusModalContent } from '../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -62,9 +63,6 @@ const styles = (theme: SaladTheme) => ({
   mt12: {
     marginTop: 12,
   },
-  mb12: {
-    marginBottom: 12,
-  },
   image: {
     display: 'flex',
     flex: 1,
@@ -98,6 +96,8 @@ export interface AntivirusConfigurationPageProps extends WithStyles<typeof style
   detectedAV?: AntiVirusSoftware
   isNative?: boolean
   onViewAVGuide: () => void
+  navigateToAVGuide: (antivirusSoftwareName: AntiVirusSoftware, label: string) => void
+  onNoAVClick: () => void
   onViewAVGuideLabel: string
   onViewAVGuideSelectionModal: (label: string) => void
   onViewDiscord: (to: string, label: string) => void
@@ -112,6 +112,8 @@ const _AntivirusConfigurationPage = ({
   detectedAV,
   onViewAVGuide,
   onViewAVGuideLabel,
+  navigateToAVGuide,
+  onNoAVClick,
   onViewAVGuideSelectionModal,
   onViewDiscord,
   onViewGithub,
@@ -125,6 +127,13 @@ const _AntivirusConfigurationPage = ({
       window.Trustpilot.loadFromElement(ref.current, true)
     }
   }, [])
+
+  const [viewModal, setViewModal] = useState<boolean>(false)
+
+  const handleOnViewAVGuideSelectionModalClick = (label: string) => {
+    onViewAVGuideSelectionModal(label)
+    setViewModal(true)
+  }
 
   return (
     <div className={classes.container}>
@@ -179,7 +188,10 @@ const _AntivirusConfigurationPage = ({
                   </div>
                   <Text variant="baseS">
                     Use a different antivirus provider?{' '}
-                    <span className={classes.underline} onClick={() => onViewAVGuideSelectionModal('Select it here')}>
+                    <span
+                      className={classes.underline}
+                      onClick={() => handleOnViewAVGuideSelectionModalClick('Select it here')}
+                    >
                       Select it here
                     </span>
                     .
@@ -208,7 +220,10 @@ const _AntivirusConfigurationPage = ({
                   </div>
                   <Text variant="baseS">
                     Use a different antivirus provider?{' '}
-                    <span className={classes.underline} onClick={() => onViewAVGuideSelectionModal('Select it here')}>
+                    <span
+                      className={classes.underline}
+                      onClick={() => handleOnViewAVGuideSelectionModalClick('Select it here')}
+                    >
                       Select it here
                     </span>
                     .
@@ -298,6 +313,11 @@ const _AntivirusConfigurationPage = ({
           </div>
         </div>
       </div>
+      {viewModal && (
+        <Modal onClose={() => setViewModal(false)} title={'Select your Antivirus provider'}>
+          <AntivirusModalContent navigateToAVGuide={navigateToAVGuide} onNoAVClick={onNoAVClick} />
+        </Modal>
+      )}
     </div>
   )
 }

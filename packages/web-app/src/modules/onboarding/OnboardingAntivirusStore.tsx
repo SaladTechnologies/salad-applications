@@ -2,7 +2,7 @@ import { action, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { delay, routeLink } from '../../utils'
 import { NotificationMessageCategory } from '../notifications/models'
-import type { ZendeskArticle, ZendeskArticleList, ZendeskArticleResource } from '../zendesk/models'
+import type { ZendeskArticleResource } from '../zendesk/models'
 import { AntiVirusSoftware } from '../zendesk/models'
 import { getZendeskAVData } from '../zendesk/utils'
 import { ONBOARDING_PAGE_NAMES, WhitelistWindowsDefenderErrorTypeMessage } from './models'
@@ -23,9 +23,6 @@ export class OnboardingAntivirusStore {
   @observable
   public loadingArticle: boolean = false
 
-  @observable
-  public antiVirusArticleList?: ZendeskArticle[]
-
   constructor(private readonly store: RootStore) {}
 
   /**
@@ -43,8 +40,7 @@ export class OnboardingAntivirusStore {
     if (detectedAV !== undefined) {
       const buttonLabel = `Open ${detectedAV} Guide`
       onClick = () => {
-        this.navigateToAVGuide(detectedAV)
-        this.store.analytics.trackButtonClicked('onboarding_antivirus_open_specific_av_guide', label, 'enabled')
+        this.navigateToAVGuide(detectedAV, label)
       }
       label = buttonLabel
     } else {
@@ -84,7 +80,6 @@ export class OnboardingAntivirusStore {
    * @param label The label of the button that opens the AV Selection Modal.
    */
   public onViewAVGuideSelectionModal = (label: string) => {
-    this.store.routing.push('/onboarding/antivirus-guide')
     this.store.analytics.trackButtonClicked('onboarding_antivirus_select_modal', label, 'enabled')
   }
 
@@ -134,9 +129,11 @@ export class OnboardingAntivirusStore {
   /**
    * Navigates to the requested zendesk antivirus guide by name.
    * @param antivirusSoftwareName The name of the antivirus software.
+   * @param label The button label that will be passed to mixPanel.
    */
-  private navigateToAVGuide = (antivirusSoftwareName: AntiVirusSoftware) => {
+  public navigateToAVGuide = (antivirusSoftwareName: AntiVirusSoftware, label: string) => {
     const articleId = getZendeskAVData(antivirusSoftwareName).id
+    this.store.analytics.trackButtonClicked('onboarding_antivirus_open_specific_av_guide', label, 'enabled')
     this.store.routing.push(`/onboarding/antivirus-guide/${articleId}`)
   }
 
@@ -169,30 +166,6 @@ export class OnboardingAntivirusStore {
         const data: ZendeskArticleResource = yield res.json()
         this.helpCenterArticle = data.article.body
         this.selectedAntiVirusGuide = antivirusSoftwareName
-      } catch (err) {
-        throw err
-      }
-      this.loadingArticle = false
-    }.bind(this),
-  )
-
-  @action.bound
-  loadAntiVirusArticleList = flow(
-    function* (this: OnboardingAntivirusStore) {
-      if (this.antiVirusArticleList !== undefined) {
-        return
-      }
-
-      this.loadingArticle = true
-      try {
-        let res: Response = yield fetch(
-          'https://salad.zendesk.com/api/v2/help_center/en-us/sections/360008458292/articles',
-          {
-            credentials: 'omit',
-          },
-        )
-        const data: ZendeskArticleList = yield res.json()
-        this.antiVirusArticleList = data.articles
       } catch (err) {
         throw err
       }

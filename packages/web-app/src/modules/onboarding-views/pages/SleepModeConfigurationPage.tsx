@@ -63,11 +63,7 @@ const styles = (theme: SaladTheme) => ({
     width: '100%',
   },
   enableButton: {
-    width: 175,
     marginLeft: 24,
-  },
-  skipButton: {
-    width: 145,
   },
   buttonsContainer: {
     display: 'flex',
@@ -113,9 +109,7 @@ const _SleepModeConfigurationPage = ({
               <Text variant="baseS">You can always adjust sleep mode later in Windows settings.</Text>
             </div>
             <div className={classes.buttonsContainer}>
-              <span className={classes.skipButton}>
-                <Button size="medium" label="Skip For Now" onClick={onSkipSleepMode} variant="outlined" />
-              </span>
+              <Button size="medium" label="Skip For Now" onClick={onSkipSleepMode} variant="outlined" />
               <span className={classes.enableButton}>
                 <Button
                   errorMessage={sleepModeErrorMessage}

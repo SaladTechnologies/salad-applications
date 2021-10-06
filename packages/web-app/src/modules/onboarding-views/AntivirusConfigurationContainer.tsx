@@ -1,5 +1,7 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
+import { ONBOARDING_PAGE_NAMES } from '../onboarding/models'
+import { AntiVirusSoftware } from '../zendesk/models'
 import { AntivirusConfigurationPage, AntivirusConfigurationPageProps } from './pages/AntivirusConfigurationPage'
 
 const mapStoreToProps = (store: RootStore): Omit<AntivirusConfigurationPageProps, 'classes'> => ({
@@ -13,6 +15,9 @@ const mapStoreToProps = (store: RootStore): Omit<AntivirusConfigurationPageProps
   onViewGithub: (to: string, label: string) => store.onboardingAntivirus.onTrackButtonClick(to, label),
   whitelistWindowsDefenderErrorMessage: store.onboardingAntivirus.whitelistWindowsDefenderErrorMessage,
   whitelistWindowsDefenderPending: store.onboardingAntivirus.whitelistWindowsDefenderPending,
+  navigateToAVGuide: (antivirusSoftwareName: AntiVirusSoftware, label: string) =>
+    store.onboardingAntivirus.navigateToAVGuide(antivirusSoftwareName, label),
+  onNoAVClick: () => store.onboarding.viewNextPage(ONBOARDING_PAGE_NAMES.ANTIVIRUS_CONFIGURATION),
 })
 
 export const AntivirusConfigurationContainer = connect(mapStoreToProps, AntivirusConfigurationPage)

@@ -2,7 +2,6 @@ import { connect } from '../../connect'
 import { RootStore } from '../../Store'
 import { AntiVirusFirewallErrorPage } from './components/AntiVirusFirewallErrorPage'
 
-
 const mapStoreToProps = (store: RootStore): any => {
   const onViewArticle = (id: number) => {
     store.ui.showModal(`/errors/anti-virus/${id}`)

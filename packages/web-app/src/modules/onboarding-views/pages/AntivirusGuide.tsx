@@ -6,7 +6,6 @@ import Skeleton from 'react-loading-skeleton'
 import { Button, InfoButton, ModalPage } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { AntiVirusFirewallScrollbar } from '../../error-views/components/AntiVirusFirewallScrollbar'
-import { ZendeskArticle } from '../../zendesk/models'
 
 const styles = (theme: SaladTheme) => ({
   bottomMessage: {
@@ -124,12 +123,9 @@ const styles = (theme: SaladTheme) => ({
 export interface AntivirusGuideProps extends WithStyles<typeof styles> {
   antivirusName?: string
   article?: string
-  articleList?: ZendeskArticle[]
   loading?: boolean
   loadArticle?: () => void
   onCloseClicked?: () => void
-  onNoAVClick?: () => void
-  onViewArticle?: (id: string) => void
   onViewAVList?: () => void
 }
 
@@ -177,17 +173,7 @@ class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
   }
 
   render() {
-    const {
-      antivirusName,
-      article,
-      articleList,
-      loading,
-      onCloseClicked,
-      onNoAVClick,
-      onViewArticle,
-      onViewAVList,
-      classes,
-    } = this.props
+    const { antivirusName, article, loading, onCloseClicked, onViewAVList, classes } = this.props
 
     const { webWidgetShowing } = this.state
 
@@ -216,43 +202,21 @@ class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
                     </div>
                     <div className={classes.subtitle}>
                       <>
-                        {antivirusName ? (
-                          <>
-                            <p>
-                              Your anti-virus software is blocking Salad, but there's an easy fix: whitelist Salad with{' '}
-                              {antivirusName}.
-                            </p>
-                            <p className={classes.selectFromList}>
-                              Use a different anti-virus provider?{' '}
-                              <span className={classes.link} onClick={onViewAVList}>
-                                Select it from this list
-                              </span>
-                              .
-                            </p>
-                          </>
-                        ) : (
-                          <>
-                            <p>
-                              It looks likes your anti-virus is blocking you from chopping. Select one of the guides
-                              below to fix this issue for your specific anti-virus program.
-                            </p>
-                            <Button onClick={onNoAVClick}>I don't use an antivirus</Button>
-                          </>
-                        )}
+                        <p>
+                          Your anti-virus software is blocking Salad, but there's an easy fix: whitelist Salad with{' '}
+                          {antivirusName}.
+                        </p>
+                        <p className={classes.selectFromList}>
+                          Use a different anti-virus provider?{' '}
+                          <span className={classes.link} onClick={onViewAVList}>
+                            Select it from this list
+                          </span>
+                          .
+                        </p>
                       </>
                     </div>
                   </div>
-                  {article ? (
-                    <div className={classes.content} dangerouslySetInnerHTML={{ __html: article }} />
-                  ) : articleList && onViewArticle ? (
-                    <ul className={classes.list}>
-                      {articleList.map((article) => (
-                        <li key={article.id} className={classes.listItem} onClick={() => onViewArticle(article.id)}>
-                          {article.name}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
+                  {article ? <div className={classes.content} dangerouslySetInnerHTML={{ __html: article }} /> : null}
                   <Button onClick={onCloseClicked}>Close</Button>
                 </>
               )}
