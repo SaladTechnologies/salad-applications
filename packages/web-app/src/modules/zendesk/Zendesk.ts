@@ -1,11 +1,13 @@
-import Axios, { AxiosInstance } from 'axios'
+import type { AxiosInstance } from 'axios'
+import Axios from 'axios'
 import { action, flow, observable } from 'mobx'
 import { SaladError } from '../../axiosFactory'
+import type { FeatureManager } from '../../FeatureManager'
 import { ErrorPageType } from '../../UIStore'
-import { AnalyticsStore } from '../analytics'
-import { AuthStore } from '../auth'
-import { NativeStore } from '../machine'
-import { AntiVirusSoftware, ZendeskArticle, ZendeskArticleList, ZendeskArticleResource } from './models'
+import type { AnalyticsStore } from '../analytics'
+import type { AuthStore } from '../auth'
+import type { NativeStore } from '../machine'
+import type { AntiVirusSoftware, ZendeskArticle, ZendeskArticleList, ZendeskArticleResource } from './models'
 import { getAntiVirusSoftware, getZendeskAVData } from './utils'
 
 export class Zendesk {
@@ -36,13 +38,18 @@ export class Zendesk {
   @observable
   public errorType: ErrorPageType = ErrorPageType.Unknown
 
+  private readonly useZendesk: boolean
+
   constructor(
     private readonly axios: AxiosInstance,
+    featureManager: FeatureManager,
     private readonly auth: AuthStore,
     private readonly native: NativeStore,
     private readonly analytics: AnalyticsStore,
   ) {
-    this.inject()
+    this.useZendesk = !featureManager.isEnabled('app_helpscout')
+    this.injectHelpScout()
+    this.injectZendesk()
   }
 
   private async getChatToken(): Promise<string | undefined> {
@@ -99,7 +106,38 @@ export class Zendesk {
     return jwtToken
   }
 
-  private inject() {
+  private injectHelpScout() {
+    if (this.useZendesk) {
+      return
+    }
+
+    if (typeof window !== 'undefined') {
+      if (Zendesk.injected) {
+        return
+      }
+
+      // Append Help Scout script to body.
+      /* eslint-disable */
+      /* prettier-ignore */
+      /* @ts-ignore */
+      !function(e,t,n){function a(){var e=t.getElementsByTagName("script")[0],n=t.createElement("script");n.type="text/javascript",n.async=!0,n.src="https://beacon-v2.helpscout.net",e.parentNode.insertBefore(n,e)}if(e.Beacon=n=function(t,n,a){e.Beacon.readyQueue.push({method:t,options:n,data:a})},n.readyQueue=[],"complete"===t.readyState)return a();e.attachEvent?e.attachEvent("onload",a):e.addEventListener("load",a,!1)}(window,document,window.Beacon||function(){});
+      /* prettier-ignore */
+      /* @ts-ignore */
+      window.Beacon('init', '29fdaae4-715f-48dc-b93e-5552ef031abc');
+      /* prettier-ignore */
+      /* @ts-ignore */
+      ;(function(){var u='https://unpkg.com/@helpscout/beacon-devtools/dist/beacon-devtools.umd.js';var s=document.createElement('script');s.type='text/javascript';s.charset='utf-8';s.src=u;document.body.appendChild(s)})();
+      /* eslint-enable */
+
+      Zendesk.injected = true
+    }
+  }
+
+  private injectZendesk() {
+    if (!this.useZendesk) {
+      return
+    }
+
     if (typeof window !== 'undefined') {
       if (Zendesk.injected) {
         return
@@ -201,6 +239,10 @@ export class Zendesk {
   }
 
   login(username: string, email: string) {
+    if (!this.useZendesk) {
+      return
+    }
+
     if (!window.zE) {
       if (this.initializeRetryTimeout !== undefined) {
         clearTimeout(this.initializeRetryTimeout)
@@ -262,6 +304,10 @@ export class Zendesk {
   }
 
   logout() {
+    if (!this.useZendesk) {
+      return
+    }
+
     if (!window.zE) {
       if (this.initializeRetryTimeout !== undefined) {
         clearTimeout(this.initializeRetryTimeout)
@@ -306,6 +352,10 @@ export class Zendesk {
   }
 
   openSupportTicket() {
+    if (!this.useZendesk) {
+      return
+    }
+
     this.analytics.trackButtonClicked('opened_support_ticket_widget', 'Opened Support Ticket Widget', 'enabled')
     if (window && window.zE) {
       try {
@@ -348,8 +398,7 @@ export class Zendesk {
     return this.detectedAntiVirus
   }
 
-  @action
-  setErrorType = (errorType: ErrorPageType) => {
+  private setErrorType = (errorType: ErrorPageType) => {
     this.errorType = errorType
   }
 
