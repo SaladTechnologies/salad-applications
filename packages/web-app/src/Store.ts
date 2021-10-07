@@ -109,7 +109,7 @@ export class RootStore {
     this.vault = new VaultStore(axios, this.balance, this.rewards)
     this.version = new VersionStore(this, axios)
     this.engagement = new EngagementStore(this, axios)
-    this.zendesk = new Zendesk(axios, this.auth, this.native, this.analytics)
+    this.zendesk = new Zendesk(axios, featureManager, this.auth, this.native, this.analytics)
     this.storefront = new StorefrontStore(axios)
     this.bonuses = new BonusStore(this, axios)
     this.seasons = new SeasonsStore(axios)
