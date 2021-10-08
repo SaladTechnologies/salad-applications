@@ -174,7 +174,11 @@ export class RootStore {
         this.refresh.refreshData(),
         this.zendesk.login(profile.username, profile.email),
         saladBowlEnabled ? this.saladFork.login() : Promise.resolve(),
-      ])
+      ]).then(([_a, _b, _c, _d, _e, _f, saladBowl]) => {
+        if (saladBowl.status === 'fulfilled') {
+          this.saladBowl.getSaladBowlState(saladBowl.value || undefined)
+        }
+      })
 
       this.finishInitialLoading()
       this.onboarding.showOnboardingIfNeeded()

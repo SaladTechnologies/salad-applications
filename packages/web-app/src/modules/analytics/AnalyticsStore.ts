@@ -103,6 +103,7 @@ export class AnalyticsStore {
 
   public trackMachineInformation = (info: MachineInfo) => {
     if (this.started) return
+    if (!this.mixpanelInitialized) return
 
     const machineData = {
       'Machine OS Distro': info.os?.distro,

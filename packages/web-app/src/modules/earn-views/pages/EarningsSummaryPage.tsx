@@ -17,7 +17,7 @@ const styles = (theme: SaladTheme) => ({
   },
   container: {
     position: 'fixed',
-    top: 0,
+    top: (props: EarningsSummaryPageProps) => (props.isNative ? '4.1rem' : 0),
     bottom: 0,
     left: 0,
     right: 0,
@@ -125,6 +125,8 @@ const _EarningsSummaryPage = ({
 
   const intervalEarnings = getIntervalEarnings(earningHistory)
 
+  const hasHardware = hardwareDetected.length > 0
+
   return (
     <div className={classes.container}>
       <div className={classes.page}>
@@ -176,7 +178,7 @@ const _EarningsSummaryPage = ({
               viewLast7Days={viewLast7Days}
               viewLast30Days={viewLast30Days}
             />
-            {isNative && (
+            {isNative && hasHardware && (
               <div className={classes.detectedHardware}>
                 <div className={classnames(classes.detectedHardwareTitle, classes.lightGreenColor)}>
                   <Text variant="base3XL">Detected Hardware</Text>

@@ -7,7 +7,7 @@ import {
 } from '@saladtechnologies/salad-grpc-salad-bowl/salad/grpc/salad_bowl/v1/salad_bowl_pb'
 import type { AxiosInstance } from 'axios'
 import { Observable, Observer, Subscription } from 'rxjs'
-import type { SaladBowlLoginResponse } from './models/SaladBowlLoginResponse'
+import type { GuiStateData, SaladBowlLoginResponse } from './models/SaladBowlLoginResponse'
 import { SaladBowlLoginResponseError } from './models/SaladBowlLoginResponse'
 import { SaladBowlLogoutResponse, SaladBowlLogoutResponseError } from './models/SaladBowlLogoutResponse'
 
@@ -25,7 +25,7 @@ export class SaladFork implements SaladForkInterface {
   readonly client: SaladBowlServices.SaladBowlServicePromiseClient
 
   constructor(private readonly axios: AxiosInstance) {
-    const server: string = 'http://localhost:5000' // make env variable
+    const server: string = 'http://127.0.0.1:5000'
     this.client = new SaladBowlServices.SaladBowlServicePromiseClient(server)
   }
 
@@ -63,13 +63,25 @@ export class SaladFork implements SaladForkInterface {
             throw new Error(SaladBowlLoginResponseError.failedToGetUserPreferences)
           }
 
+          let guiStateData: GuiStateData = {}
+
           if (guiStateResult.status === 'fulfilled') {
-            // TODO: Get guiState
+            const guiState = guiStateResult.value.getState()
+
+            guiStateData.isChopping = guiState?.hasChoptime()
+
+            const startTime = guiState?.getStart()
+            if (startTime) {
+              guiStateData.startTime = startTime.getSeconds()
+            }
           } else {
             throw new Error(SaladBowlLoginResponseError.failedToGetGuiState)
           }
 
-          return userPreferences
+          return {
+            preferences: userPreferences,
+            runningState: guiStateData,
+          }
         } else {
           throw new Error(SaladBowlLoginResponseError.unableToLoginToSaladBowl)
         }
@@ -138,5 +150,10 @@ export class SaladFork implements SaladForkInterface {
 
     request.setPreferences(userPreferences)
     await this.client.setUserPreferences(request)
+  }
+
+  public getPreferences = async (): Promise<void> => {
+    const request = new SaladBowlMessages.GetUserPreferenceRequest()
+    await this.client.getUserPreferences(request)
   }
 }
