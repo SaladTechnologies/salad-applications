@@ -48,8 +48,7 @@ export class Zendesk {
     private readonly analytics: AnalyticsStore,
   ) {
     this.useZendesk = !featureManager.isEnabled('app_helpscout')
-    this.injectHelpScout()
-    this.injectZendesk()
+    this.inject()
   }
 
   private async getChatToken(): Promise<string | undefined> {
@@ -106,248 +105,237 @@ export class Zendesk {
     return jwtToken
   }
 
-  private injectHelpScout() {
-    if (this.useZendesk) {
-      return
-    }
-
+  private inject() {
     if (typeof window !== 'undefined') {
       if (Zendesk.injected) {
         return
       }
 
-      // Append Help Scout script to body.
-      /* eslint-disable */
-      /* prettier-ignore */
-      /* @ts-ignore */
-      !function(e,t,n){function a(){var e=t.getElementsByTagName("script")[0],n=t.createElement("script");n.type="text/javascript",n.async=!0,n.src="https://beacon-v2.helpscout.net",e.parentNode.insertBefore(n,e)}if(e.Beacon=n=function(t,n,a){e.Beacon.readyQueue.push({method:t,options:n,data:a})},n.readyQueue=[],"complete"===t.readyState)return a();e.attachEvent?e.attachEvent("onload",a):e.addEventListener("load",a,!1)}(window,document,window.Beacon||function(){});
-      /* prettier-ignore */
-      /* @ts-ignore */
-      window.Beacon('init', '29fdaae4-715f-48dc-b93e-5552ef031abc');
-      /* prettier-ignore */
-      /* @ts-ignore */
-      ;(function(){var u='https://unpkg.com/@helpscout/beacon-devtools/dist/beacon-devtools.umd.js';var s=document.createElement('script');s.type='text/javascript';s.charset='utf-8';s.src=u;document.body.appendChild(s)})();
-      /* eslint-enable */
-
-      Zendesk.injected = true
-    }
-  }
-
-  private injectZendesk() {
-    if (!this.useZendesk) {
-      return
-    }
-
-    if (typeof window !== 'undefined') {
-      if (Zendesk.injected) {
-        return
-      }
-
-      // Add `zESettings` before injecting the Zendesk script.
-      window.zESettings = {
-        webWidget: {
-          authenticate: {
-            chat: {
+      if (this.useZendesk) {
+        // Add `zESettings` before injecting the Zendesk script.
+        window.zESettings = {
+          webWidget: {
+            authenticate: {
+              chat: {
+                jwtFn: async (callback) => {
+                  const jwtToken = await this.getChatToken()
+                  if (jwtToken) {
+                    callback(jwtToken)
+                  }
+                },
+              },
               jwtFn: async (callback) => {
-                const jwtToken = await this.getChatToken()
+                const jwtToken = await this.getHelpCenterToken()
                 if (jwtToken) {
                   callback(jwtToken)
                 }
               },
             },
-            jwtFn: async (callback) => {
-              const jwtToken = await this.getHelpCenterToken()
-              if (jwtToken) {
-                callback(jwtToken)
-              }
-            },
-          },
-          chat: {
-            title: {
-              '*': 'Live Chat',
-            },
-            menuOptions: {
-              emailTranscript: false,
-            },
-            notifications: {
-              mobile: {
-                disable: true,
+            chat: {
+              title: {
+                '*': 'Live Chat',
+              },
+              menuOptions: {
+                emailTranscript: false,
+              },
+              notifications: {
+                mobile: {
+                  disable: true,
+                },
+              },
+              profileCard: {
+                avatar: true,
+                rating: false,
+                title: true,
               },
             },
-            profileCard: {
-              avatar: true,
-              rating: false,
-              title: true,
+            contactForm: {
+              title: {
+                '*': 'Support Ticket',
+              },
+              attachments: true,
+            },
+            contactOptions: {
+              enabled: true,
+              contactButton: {
+                '*': 'Contact Us',
+              },
+              chatLabelOnline: {
+                '*': 'Live Chat',
+              },
+              chatLabelOffline: {
+                '*': 'Live Chat (Offline)',
+              },
+              contactFormLabel: {
+                '*': 'Support Ticket',
+              },
+            },
+            helpCenter: {
+              title: {
+                '*': 'Support',
+              },
+              originalArticleButton: false,
+            },
+            navigation: {
+              popoutButton: {
+                enabled: false,
+              },
+            },
+            offset: {
+              mobile: {
+                horizontal: '-530px',
+                vertical: '-100px',
+              },
+            },
+            color: {
+              theme: '#DBF1C1',
             },
           },
-          contactForm: {
-            title: {
-              '*': 'Support Ticket',
-            },
-            attachments: true,
-          },
-          contactOptions: {
-            enabled: true,
-            contactButton: {
-              '*': 'Contact Us',
-            },
-            chatLabelOnline: {
-              '*': 'Live Chat',
-            },
-            chatLabelOffline: {
-              '*': 'Live Chat (Offline)',
-            },
-            contactFormLabel: {
-              '*': 'Support Ticket',
-            },
-          },
-          helpCenter: {
-            title: {
-              '*': 'Support',
-            },
-            originalArticleButton: false,
-          },
-          navigation: {
-            popoutButton: {
-              enabled: false,
-            },
-          },
-          offset: {
-            mobile: {
-              horizontal: '-530px',
-              vertical: '-100px',
-            },
-          },
-          color: {
-            theme: '#DBF1C1',
-          },
-        },
-      }
+        }
 
-      // Append Zendesk script to body.
-      const zendeskSnippetScript = document.createElement('script')
-      zendeskSnippetScript.async = true
-      zendeskSnippetScript.onerror = () => {
-        Zendesk.injectionError = true
+        // Append Zendesk script to body.
+        const zendeskSnippetScript = document.createElement('script')
+        zendeskSnippetScript.async = true
+        zendeskSnippetScript.onerror = () => {
+          Zendesk.injectionError = true
+        }
+        zendeskSnippetScript.id = 'ze-snippet'
+        zendeskSnippetScript.src = 'https://static.zdassets.com/ekr/snippet.js?key=36be7184-2a3f-4bec-9bb2-758e7c9036d0'
+        document.body.appendChild(zendeskSnippetScript)
+      } else {
+        // Append Help Scout script to body.
+        /* eslint-disable */
+        /* prettier-ignore */
+        /* @ts-ignore */
+        !function(e,t,n){function a(){var e=t.getElementsByTagName("script")[0],n=t.createElement("script");n.type="text/javascript",n.async=!0,n.src="https://beacon-v2.helpscout.net",e.parentNode.insertBefore(n,e)}if(e.Beacon=n=function(t,n,a){e.Beacon.readyQueue.push({method:t,options:n,data:a})},n.readyQueue=[],"complete"===t.readyState)return a();e.attachEvent?e.attachEvent("onload",a):e.addEventListener("load",a,!1)}(window,document,window.Beacon||function(){});
+        /* prettier-ignore */
+        /* @ts-ignore */
+        window.Beacon('init', '29fdaae4-715f-48dc-b93e-5552ef031abc');
+        /* prettier-ignore */
+        /* @ts-ignore */
+        ;(function(){var u='https://unpkg.com/@helpscout/beacon-devtools/dist/beacon-devtools.umd.js';var s=document.createElement('script');s.type='text/javascript';s.charset='utf-8';s.src=u;document.body.appendChild(s)})();
+        /* eslint-enable */
       }
-      zendeskSnippetScript.id = 'ze-snippet'
-      zendeskSnippetScript.src = 'https://static.zdassets.com/ekr/snippet.js?key=36be7184-2a3f-4bec-9bb2-758e7c9036d0'
-      document.body.appendChild(zendeskSnippetScript)
 
       Zendesk.injected = true
     }
   }
 
   login(username: string, email: string) {
-    if (!this.useZendesk) {
-      return
-    }
+    if (this.useZendesk) {
+      if (!window.zE) {
+        if (this.initializeRetryTimeout !== undefined) {
+          clearTimeout(this.initializeRetryTimeout)
+          this.initializeRetryTimeout = undefined
+        }
 
-    if (!window.zE) {
-      if (this.initializeRetryTimeout !== undefined) {
+        if (!Zendesk.injectionError) {
+          this.initializeRetryTimeout = setTimeout(() => {
+            this.initializeRetryTimeout = undefined
+            this.login(username, email)
+          }, 1000)
+        }
+
+        return
+      }
+
+      let initialized = true
+
+      // Initialize contact form.
+      try {
+        window.zE('webWidget', 'prefill', {
+          name: {
+            value: username,
+            readOnly: true,
+          },
+          email: {
+            value: email.toLocaleLowerCase(),
+            readOnly: true,
+          },
+        })
+      } catch (e) {
+        console.error('Failed to prefill Zendesk contact form')
+        console.error(e)
+        initialized = false
+      }
+
+      // Initialize chat.
+      try {
+        window.zE('webWidget', 'chat:reauthenticate')
+      } catch (e) {
+        console.error('Failed to authenticate Zendesk chat')
+        console.error(e)
+        initialized = false
+      }
+
+      // Initialize help center.
+      try {
+        window.zE('webWidget', 'helpCenter:reauthenticate')
+      } catch (e) {
+        console.error('Unable to authenticate Zendesk help center')
+        console.error(e)
+        initialized = false
+      }
+
+      if (initialized && this.initializeRetryTimeout !== undefined) {
         clearTimeout(this.initializeRetryTimeout)
         this.initializeRetryTimeout = undefined
       }
-
-      if (!Zendesk.injectionError) {
-        this.initializeRetryTimeout = setTimeout(() => {
-          this.initializeRetryTimeout = undefined
-          this.login(username, email)
-        }, 1000)
+    } else {
+      if (window.Beacon) {
+        window.Beacon('identify', { name: username, email })
       }
-
-      return
-    }
-
-    let initialized = true
-
-    // Initialize contact form.
-    try {
-      window.zE('webWidget', 'prefill', {
-        name: {
-          value: username,
-          readOnly: true,
-        },
-        email: {
-          value: email.toLocaleLowerCase(),
-          readOnly: true,
-        },
-      })
-    } catch (e) {
-      console.error('Failed to prefill Zendesk contact form')
-      console.error(e)
-      initialized = false
-    }
-
-    // Initialize chat.
-    try {
-      window.zE('webWidget', 'chat:reauthenticate')
-    } catch (e) {
-      console.error('Failed to authenticate Zendesk chat')
-      console.error(e)
-      initialized = false
-    }
-
-    // Initialize help center.
-    try {
-      window.zE('webWidget', 'helpCenter:reauthenticate')
-    } catch (e) {
-      console.error('Unable to authenticate Zendesk help center')
-      console.error(e)
-      initialized = false
-    }
-
-    if (initialized && this.initializeRetryTimeout !== undefined) {
-      clearTimeout(this.initializeRetryTimeout)
-      this.initializeRetryTimeout = undefined
     }
   }
 
   logout() {
-    if (!this.useZendesk) {
-      return
-    }
-
-    if (!window.zE) {
-      if (this.initializeRetryTimeout !== undefined) {
-        clearTimeout(this.initializeRetryTimeout)
-        this.initializeRetryTimeout = undefined
-      }
-
-      if (!Zendesk.injectionError) {
-        this.initializeRetryTimeout = setTimeout(() => {
+    if (this.useZendesk) {
+      if (!window.zE) {
+        if (this.initializeRetryTimeout !== undefined) {
+          clearTimeout(this.initializeRetryTimeout)
           this.initializeRetryTimeout = undefined
-          this.logout()
-        }, 1000)
+        }
+
+        if (!Zendesk.injectionError) {
+          this.initializeRetryTimeout = setTimeout(() => {
+            this.initializeRetryTimeout = undefined
+            this.logout()
+          }, 1000)
+        }
+
+        return
       }
 
-      return
-    }
-
-    if (this.chatAuthRetryTimeout) {
-      clearTimeout(this.chatAuthRetryTimeout)
-      this.chatAuthRetryTimeout = undefined
-    }
-
-    if (this.helpCenterAuthRetryTimeout) {
-      clearTimeout(this.helpCenterAuthRetryTimeout)
-      this.helpCenterAuthRetryTimeout = undefined
-    }
-
-    try {
-      if (typeof window.zE.logout === 'function') {
-        window.zE.logout()
-      } else {
-        window.zE('webWidget', 'logout')
+      if (this.chatAuthRetryTimeout) {
+        clearTimeout(this.chatAuthRetryTimeout)
+        this.chatAuthRetryTimeout = undefined
       }
 
-      if (this.initializeRetryTimeout !== undefined) {
-        clearTimeout(this.initializeRetryTimeout)
-        this.initializeRetryTimeout = undefined
+      if (this.helpCenterAuthRetryTimeout) {
+        clearTimeout(this.helpCenterAuthRetryTimeout)
+        this.helpCenterAuthRetryTimeout = undefined
       }
-    } catch (e) {
-      console.error('Unable to logout of Zendesk')
-      console.error(e)
+
+      try {
+        if (typeof window.zE.logout === 'function') {
+          window.zE.logout()
+        } else {
+          window.zE('webWidget', 'logout')
+        }
+
+        if (this.initializeRetryTimeout !== undefined) {
+          clearTimeout(this.initializeRetryTimeout)
+          this.initializeRetryTimeout = undefined
+        }
+      } catch (e) {
+        console.error('Unable to logout of Zendesk')
+        console.error(e)
+      }
+    } else {
+      if (window.Beacon) {
+        window.Beacon('reset')
+        window.Beacon('logout', { endActiveChat: true })
+      }
     }
   }
 
