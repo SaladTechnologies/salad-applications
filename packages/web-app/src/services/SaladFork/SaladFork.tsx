@@ -25,7 +25,7 @@ export class SaladFork implements SaladForkInterface {
   readonly client: SaladBowlServices.SaladBowlServicePromiseClient
 
   constructor(private readonly axios: AxiosInstance) {
-    const server: string = 'http://localhost:5000' // TODO: make env variable
+    const server: string = 'http://127.0.0.1:5000'
     this.client = new SaladBowlServices.SaladBowlServicePromiseClient(server)
   }
 
