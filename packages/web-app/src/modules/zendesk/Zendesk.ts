@@ -38,6 +38,9 @@ export class Zendesk {
   @observable
   public errorType: ErrorPageType = ErrorPageType.Unknown
 
+  @observable
+  public antiVirusGuideVideoId?: number
+
   private readonly useZendesk: boolean
 
   constructor(
@@ -410,7 +413,9 @@ export class Zendesk {
       if (avSoftwareName === this.selectedAntiVirusGuide && this.helpCenterArticle !== undefined) {
         return
       }
-
+      if (avSoftwareName !== undefined) {
+        this.antiVirusGuideVideoId = getZendeskAVData(avSoftwareName).videoId
+      }
       this.loadingArticle = true
       try {
         let res: Response = yield fetch(`https://salad.zendesk.com/api/v2/help_center/en-us/articles/${articleID}`, {

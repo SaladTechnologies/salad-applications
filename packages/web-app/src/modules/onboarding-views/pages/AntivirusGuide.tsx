@@ -127,6 +127,7 @@ export interface AntivirusGuideProps extends WithStyles<typeof styles> {
   loadArticle?: () => void
   onCloseClicked?: () => void
   onViewAVList?: () => void
+  antiVirusGuideVideoId?: number
 }
 
 interface State {
@@ -173,7 +174,7 @@ class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
   }
 
   render() {
-    const { antivirusName, article, loading, onCloseClicked, onViewAVList, classes } = this.props
+    const { antivirusName, article, loading, onCloseClicked, onViewAVList, antiVirusGuideVideoId, classes } = this.props
 
     const { webWidgetShowing } = this.state
 
@@ -216,7 +217,23 @@ class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
                       </>
                     </div>
                   </div>
-                  {article ? <div className={classes.content} dangerouslySetInnerHTML={{ __html: article }} /> : null}
+                  {article ? (
+                    <>
+                      {antiVirusGuideVideoId && (
+                        <>
+                          <iframe
+                            title={antivirusName}
+                            src={`//player.vimeo.com/video/${antiVirusGuideVideoId}`}
+                            width="640"
+                            height="360"
+                            frameBorder="0"
+                            allowFullScreen
+                          ></iframe>
+                        </>
+                      )}
+                      <div className={classes.content} dangerouslySetInnerHTML={{ __html: article }} />{' '}
+                    </>
+                  ) : null}
                   <Button onClick={onCloseClicked}>Close</Button>
                 </>
               )}

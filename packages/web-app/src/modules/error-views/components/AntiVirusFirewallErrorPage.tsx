@@ -139,6 +139,7 @@ interface Props extends WithStyles<typeof styles> {
   onCloseClicked?: () => void
   onViewArticle?: (id: number) => void
   onViewAVList?: () => void
+  antiVirusGuideVideoId?: number
 }
 
 interface State {
@@ -195,6 +196,7 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
       onCloseClicked,
       onViewArticle,
       onViewAVList,
+      antiVirusGuideVideoId,
       classes,
     } = this.props
 
@@ -288,7 +290,21 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
                         </div>
                       </div>
                       {article ? (
-                        <div className={classes.content} dangerouslySetInnerHTML={{ __html: article }} />
+                        <>
+                          {antiVirusGuideVideoId && (
+                            <>
+                              <iframe
+                                title={antivirusName}
+                                src={`//player.vimeo.com/video/${antiVirusGuideVideoId}`}
+                                width="640"
+                                height="360"
+                                frameBorder="0"
+                                allowFullScreen
+                              ></iframe>
+                            </>
+                          )}
+                          <div className={classes.content} dangerouslySetInnerHTML={{ __html: article }} />{' '}
+                        </>
                       ) : articleList && onViewArticle ? (
                         <ul className={classes.list}>
                           {articleList.map((article) => (
