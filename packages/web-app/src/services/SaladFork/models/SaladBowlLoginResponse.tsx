@@ -5,4 +5,15 @@ export enum SaladBowlLoginResponseError {
   failedToGetGuiState = 'Failed to get gui state',
 }
 
-export type SaladBowlLoginResponse = Record<string, boolean>
+export interface GuiStateData {
+  startTime?: number
+  runningTime?: number
+  isChopping?: boolean
+}
+
+export interface SaladBowlState {
+  preferences: Record<string, boolean>
+  runningState: GuiStateData
+}
+
+export type SaladBowlLoginResponse = SaladBowlState

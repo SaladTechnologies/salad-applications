@@ -610,4 +610,6 @@ export class SaladBowlStore implements SaladBowlStoreInterface, IPersistentStore
   public setCpu = (value: boolean) => {
     console.log(value)
   }
+
+  public getSaladBowlState = () => {}
 }

@@ -1,3 +1,4 @@
+import type { SaladBowlState } from '../../services/SaladFork/models/SaladBowlLoginResponse'
 import { MiningStatus } from '../machine/models'
 import type { StartActionType, StopReason } from './models'
 import { PluginInfo } from './models'
@@ -6,6 +7,7 @@ export interface SaladBowlStoreInterface {
   canRun: boolean
   cpuMiningEnabled: boolean
   cpuMiningOverridden: boolean
+  getSaladBowlState: (saladBowlState?: SaladBowlState) => void
   gpuMiningEnabled: boolean
   gpuMiningOverridden: boolean
   isNotCompatible: boolean

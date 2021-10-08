@@ -2,6 +2,8 @@ import { Duration } from 'luxon'
 import { action, computed, flow, observable, runInAction } from 'mobx'
 import { Subject } from 'rxjs'
 import { filter, map, takeUntil } from 'rxjs/operators'
+import { SaladBowlState } from '../../services/SaladFork/models/SaladBowlLoginResponse'
+import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
 import { ErrorPageType } from '../../UIStore'
 import { MiningStatus } from '../machine/models'
@@ -10,6 +12,10 @@ import { PluginInfo, StartActionType, StartReason, StopReason } from './models'
 import { PluginStatus } from './models/PluginStatus'
 import { SaladBowlStoreInterface } from './SaladBowlStoreInterface'
 import { getPreppingPercentage } from './utils'
+
+const CPU_MINING_ENABLED = 'CPU_MINING_ENABLED'
+const GPU_MINING_OVERRIDDEN = 'GPU_MINING_OVERRIDDEN'
+const CPU_MINING_OVERRIDDEN = 'CPU_MINING_OVERRIDDEN'
 
 export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
   private runningTimer?: NodeJS.Timeout
@@ -28,7 +34,7 @@ export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
   public cpuMiningEnabled = false
 
   @observable
-  public gpuMiningEnabled = true
+  public gpuMiningEnabled = false
 
   @observable
   public cpuMiningOverridden = false
@@ -46,7 +52,7 @@ export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
 
   @computed
   get canRun() {
-    // Should also have a check if we are connected to Salad Bowl 2.0
+    // Should also have a check if we are connected to Salad Bowl 2.0, have available workloads, have a workload enabled
     return (
       this.store.auth.isAuthenticated !== undefined && this.store.auth.isAuthenticated && this.store.native.isNative
     )
@@ -136,22 +142,30 @@ export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
 
   private streamWorkloadData = () => {
     this.store.saladFork
-      .workloadStatuses$()
+      .workloadStatuses$('miner.*.>')
       .pipe(map((js) => js.getEvent()))
       .pipe(
         map((event) => {
           if (event !== undefined) {
             const topic = event.getTopic()
+            console.log('topic: ', topic)
+            console.log('message: ', event.getMessage())
 
-            let workloadData: { ethSpeed?: number; dagCompleted?: number; minerName: string } = {
-              ethSpeed: undefined,
+            let workloadData: { speed?: number; time?: string; dagCompleted?: number; minerName: string } = {
+              speed: undefined,
+              time: undefined,
               dagCompleted: undefined,
               minerName: topic.split('.')[1],
             }
 
-            if (topic.includes('eth.speed')) {
+            if (topic.includes('speed')) {
               const message = event.getMessage()
-              workloadData.ethSpeed = parseInt(message.trim())
+              workloadData.speed = parseInt(message.trim())
+            }
+
+            if (topic.includes('time')) {
+              const message = event.getMessage()
+              workloadData.time = message.trim()
             }
 
             if (topic.includes('dag.complete')) {
@@ -174,7 +188,11 @@ export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
             this.updatePluginName(workloadData.minerName)
           }
 
-          if ((workloadData.ethSpeed && workloadData.ethSpeed > 0) || workloadData.dagCompleted !== undefined) {
+          if (
+            (workloadData.speed && workloadData.speed > 0) ||
+            (workloadData.time && workloadData.time !== '0:00') ||
+            workloadData.dagCompleted !== undefined
+          ) {
             this.updatePluginStatus(PluginStatus.Running)
           } else if (this.plugin.status !== undefined) {
             this.updatePluginStatus(PluginStatus.Initializing)
@@ -212,83 +230,91 @@ export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
       return
     }
 
-    this.store.ui.updateViewedAVErrorPage(false)
-    if (this.timeoutTimer != null) {
-      clearTimeout(this.timeoutTimer)
-      this.timeoutTimer = undefined
-    }
+    this.store.saladFork
+      .start()
+      .then(() => {
+        // Start Salad Bowl 2.0
+        runInAction(() => {
+          this.plugin.status = PluginStatus.Installing
+        })
 
-    if (this.runningTimer) {
-      clearInterval(this.runningTimer)
-      this.runningTimer = undefined
-      this.runningTime = undefined
-      this.choppingTime = undefined
-    }
-
-    // Start Salad Bowl 2.0
-    this.plugin.status = PluginStatus.Installing
-    this.store.saladFork.start()
-
-    // start streaming salad bowl data data
-    this.streamWorkloadData()
-    this.streamMinerData()
-
-    // TODO: this.plugin.algorithm = this.currentPluginDefinition.algorithm
-
-    // TODO: This anaytics metric is probably not going to work anymore?
-    // const gpusNames = this.store.machine.gpus.filter((x) => x && x.model).map((x) => x.model)
-    // const cpu = this.store.native.machineInfo?.cpu
-    // const cpuName = `${cpu?.manufacturer} ${cpu?.brand}`
-
-    // this.store.analytics.trackStart(
-    //   reason,
-    //   this.gpuMiningEnabled,
-    //   this.cpuMiningEnabled,
-    //   gpusNames,
-    //   cpuName,
-    //   this.gpuMiningOverridden,
-    //   this.cpuMiningOverridden,
-    // )
-
-    //Show a notification reminding chefs to use auto start
-    if (reason === StartReason.Manual && this.store.autoStart.canAutoStart && !this.store.autoStart.autoStart) {
-      this.store.notifications.sendNotification({
-        category: NotificationMessageCategory.AutoStart,
-        title: 'Salad is best run AFK',
-        message: "Don't forget to enable auto start in Settings",
-        id: 123456,
-        onClick: () => this.store.routing.push('/settings/desktop-settings'),
-      })
-    }
-
-    this.startTimestamp = startTimestamp || new Date(Date.now())
-    this.runningTime = 0
-    this.choppingTime = choppingTime || 0
-
-    this.runningTimer = setInterval(() => {
-      runInAction(() => {
-        if (!this.startTimestamp) {
-          this.runningTime = 0
-        } else {
-          //Calculates the new total time since we started
-          const totalTime = Date.now() - this.startTimestamp.getTime()
-
-          //Checks to see if the miner is confirmed to be running and adds to the chopping time if it is
-          if (this.status === MiningStatus.Running) {
-            //Calculates the delta since the last timer
-            const deltaTime = totalTime - (this.runningTime || 0)
-
-            if (this.choppingTime) {
-              this.choppingTime += deltaTime
-            } else {
-              this.choppingTime = deltaTime
-            }
-          }
-
-          this.runningTime = totalTime
+        this.store.ui.updateViewedAVErrorPage(false)
+        if (this.timeoutTimer != null) {
+          clearTimeout(this.timeoutTimer)
+          this.timeoutTimer = undefined
         }
+
+        if (this.runningTimer) {
+          clearInterval(this.runningTimer)
+          this.runningTimer = undefined
+          this.runningTime = undefined
+          this.choppingTime = undefined
+        }
+
+        // start streaming salad bowl data data
+        this.streamWorkloadData()
+        this.streamMinerData()
+
+        // TODO: this.plugin.algorithm = this.currentPluginDefinition.algorithm
+
+        // TODO: This anaytics metric is probably not going to work anymore?
+        // const gpusNames = this.store.machine.gpus.filter((x) => x && x.model).map((x) => x.model)
+        // const cpu = this.store.native.machineInfo?.cpu
+        // const cpuName = `${cpu?.manufacturer} ${cpu?.brand}`
+
+        // this.store.analytics.trackStart(
+        //   reason,
+        //   this.gpuMiningEnabled,
+        //   this.cpuMiningEnabled,
+        //   gpusNames,
+        //   cpuName,
+        //   this.gpuMiningOverridden,
+        //   this.cpuMiningOverridden,
+        // )
+
+        //Show a notification reminding chefs to use auto start
+        if (reason === StartReason.Manual && this.store.autoStart.canAutoStart && !this.store.autoStart.autoStart) {
+          this.store.notifications.sendNotification({
+            category: NotificationMessageCategory.AutoStart,
+            title: 'Salad is best run AFK',
+            message: "Don't forget to enable auto start in Settings",
+            id: 123456,
+            onClick: () => this.store.routing.push('/settings/desktop-settings'),
+          })
+        }
+
+        runInAction(() => {
+          this.startTimestamp = startTimestamp || new Date(Date.now())
+          this.runningTime = 0
+          this.choppingTime = choppingTime || 0
+        })
+
+        this.runningTimer = setInterval(() => {
+          runInAction(() => {
+            if (!this.startTimestamp) {
+              this.runningTime = 0
+            } else {
+              //Calculates the new total time since we started
+              const totalTime = Date.now() - this.startTimestamp.getTime()
+
+              //Checks to see if the miner is confirmed to be running and adds to the chopping time if it is
+              if (this.status === MiningStatus.Running) {
+                //Calculates the delta since the last timer
+                const deltaTime = totalTime - (this.runningTime || 0)
+
+                if (this.choppingTime) {
+                  this.choppingTime += deltaTime
+                } else {
+                  this.choppingTime = deltaTime
+                }
+              }
+
+              this.runningTime = totalTime
+            }
+          })
+        }, 1000)
       })
-    }, 1000)
+      .catch((err) => console.log('error: ', err)) // TODO: Handle Error - Example Error Message - "Workload MUST Exist in SaladBowl"
   }
 
   stop = (reason: StopReason) => {
@@ -306,7 +332,7 @@ export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
     this.plugin.version = undefined
     this.plugin.algorithm = undefined
     this.plugin.status = PluginStatus.Stopped
-    this.store.saladFork.stop()
+    this.store.saladFork.stop() // this is promise that needs to be handled correctly
     this.destroySaladBowlSubscriptions()
 
     // should we remove this because it is a mixpanel tracking event
@@ -458,5 +484,52 @@ export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
       'mining/cpu-override': this.cpuMiningOverridden,
       elevated: false,
     })
+  }
+
+  // Persist Salad Bowl Store State on refresh
+  public getSaladBowlState(saladBowlState?: SaladBowlState): void {
+    // Check to see if we have any workload preferences
+    const preferences = saladBowlState?.preferences
+    if (preferences === undefined || (preferences && Object.keys(preferences).length === 0)) {
+      // should show onboarding page here if this is detected.
+      const cpuMiningEnabled = Storage.getItem(CPU_MINING_ENABLED) === 'true'
+      const cpuMiningOverrideEnabled = Storage.getItem(CPU_MINING_OVERRIDDEN) === 'true'
+      const gpuMiningOverrideEnabled = Storage.getItem(GPU_MINING_OVERRIDDEN) === 'true'
+
+      this.store.saladFork.setPreferences({
+        'mining/gpu': !cpuMiningEnabled,
+        'mining/cpu': cpuMiningEnabled,
+        'mining/gpu-override': gpuMiningOverrideEnabled,
+        'mining/cpu-override': cpuMiningOverrideEnabled,
+      })
+    } else {
+      if (preferences['mining/gpu']) {
+        this.setGpu(true)
+      }
+
+      if (preferences['mining/cpu']) {
+        this.setCpu(true)
+      }
+
+      if (preferences['mining/gpu-override']) {
+        this.setGpuOverride(true)
+      }
+
+      if (preferences['mining/cpu-override']) {
+        this.setCpuOverride(true)
+      }
+    }
+
+    // TODO: Check to see if we are currently chopping
+    // if (!this.isRunning) {
+    //   return
+    // }
+
+    // Change this to a run in action
+    // return {
+    //   isRunning: this.isRunning,
+    //   startTimestamp: this.startTimestamp,
+    //   choppingTime: this.choppingTime,
+    // }
   }
 }
