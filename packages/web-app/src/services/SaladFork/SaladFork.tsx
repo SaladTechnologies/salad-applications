@@ -104,12 +104,12 @@ export class SaladFork implements SaladForkInterface {
   }
 
   public start = async (): Promise<void> => {
-    const startRequest = new SaladBowlMessages.StartRequest()
+    const startRequest = new SaladBowlMessages.StartRequest().setWorkload('')
     await this.client.start(startRequest)
   }
 
   public stop = async (): Promise<void> => {
-    const stopRequest = new SaladBowlMessages.StopRequest()
+    const stopRequest = new SaladBowlMessages.StopRequest().setWorkload('')
     await this.client.stop(stopRequest)
   }
 
