@@ -1,4 +1,4 @@
-import type { AxiosInstance } from 'axios'
+import type { AxiosInstance, AxiosResponse } from 'axios'
 import Axios from 'axios'
 import { action, flow, observable } from 'mobx'
 import { SaladError } from '../../axiosFactory'
@@ -63,7 +63,7 @@ export class Zendesk {
     let jwtToken: string | undefined
     if (this.auth.isAuthenticated) {
       try {
-        let response = await this.axios.post(`/api/v2/zendesk-tokens/chat`)
+        let response = await this.axios.post<never, AxiosResponse<{ token: string }>>(`/api/v2/zendesk-tokens/chat`)
         jwtToken = response.data.token
       } catch (e) {
         if (Axios.isAxiosError(e) || e instanceof SaladError) {
@@ -90,7 +90,9 @@ export class Zendesk {
     let jwtToken: string | undefined
     if (this.auth.isAuthenticated) {
       try {
-        let response = await this.axios.post(`/api/v2/zendesk-tokens/help-center`)
+        let response = await this.axios.post<never, AxiosResponse<{ token: string }>>(
+          `/api/v2/zendesk-tokens/help-center`,
+        )
         jwtToken = response.data.token
       } catch (e) {
         if (Axios.isAxiosError(e) || e instanceof SaladError) {

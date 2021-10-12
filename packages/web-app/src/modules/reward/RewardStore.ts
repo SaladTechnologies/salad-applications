@@ -3,6 +3,7 @@ import { action, computed, flow, observable } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
 import { SaladError } from '../../axiosFactory'
 import { RootStore } from '../../Store'
+import { isProblemDetail } from '../../utils'
 import { NotificationMessage, NotificationMessageCategory } from '../notifications/models'
 import { ProfileStore } from '../profile'
 import { AbortError, SaladPaymentResponse } from '../salad-pay'
@@ -271,34 +272,37 @@ export class RewardStore {
             break
           case 400:
             this.clearRedemptionInfo()
-            if (response.data?.type === 'redemptions:invalid:price') {
-              this.loadReward(reward.id)
-              notification = {
-                category: NotificationMessageCategory.Error,
-                title: 'Uh-oh! The reward price has changed.',
-                message: 'Our vendors updated the price of this item. Please try again or return to the Storefront.',
-                autoClose: false,
-                onClick: () => this.store.routing.push(`/rewards/${reward.id}`),
-                type: 'error',
-              }
-            } else if (response.data?.type === 'redemptions:requires:minecraftUsername') {
-              notification = {
-                category: NotificationMessageCategory.FurtherActionRequired,
-                title: 'You need a Minecraft Username to redeem this reward.',
-                message: 'Go to your account page to add your Minecraft Username.',
-                autoClose: false,
-                onClick: () => this.store.routing.push('/settings/summary'),
-                type: 'error',
-              }
-            } else if (response.data?.type === 'redemptions:dailySpendLimitExceeded') {
-              notification = {
-                category: NotificationMessageCategory.Error,
-                title: 'Daily redemption limit has been reached.',
-                message:
-                  "Sorry, Chef! It looks like you've reached your daily redemption limit. Click here to learn more about daily limits, and come back tomorrow.",
-                autoClose: false,
-                onClick: () => window.open('https://support.salad.com/hc/en-us/articles/4405644006932', '_blank'),
-                type: 'error',
+            const data = response.data as unknown
+            if (isProblemDetail(data)) {
+              if (data.type === 'redemptions:invalid:price') {
+                this.loadReward(reward.id)
+                notification = {
+                  category: NotificationMessageCategory.Error,
+                  title: 'Uh-oh! The reward price has changed.',
+                  message: 'Our vendors updated the price of this item. Please try again or return to the Storefront.',
+                  autoClose: false,
+                  onClick: () => this.store.routing.push(`/rewards/${reward.id}`),
+                  type: 'error',
+                }
+              } else if (data.type === 'redemptions:requires:minecraftUsername') {
+                notification = {
+                  category: NotificationMessageCategory.FurtherActionRequired,
+                  title: 'You need a Minecraft Username to redeem this reward.',
+                  message: 'Go to your account page to add your Minecraft Username.',
+                  autoClose: false,
+                  onClick: () => this.store.routing.push('/settings/summary'),
+                  type: 'error',
+                }
+              } else if (data.type === 'redemptions:dailySpendLimitExceeded') {
+                notification = {
+                  category: NotificationMessageCategory.Error,
+                  title: 'Daily redemption limit has been reached.',
+                  message:
+                    "Sorry, Chef! It looks like you've reached your daily redemption limit. Click here to learn more about daily limits, and come back tomorrow.",
+                  autoClose: false,
+                  onClick: () => window.open('https://support.salad.com/hc/en-us/articles/4405644006932', '_blank'),
+                  type: 'error',
+                }
               }
             }
             break
