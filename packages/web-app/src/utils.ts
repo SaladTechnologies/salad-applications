@@ -129,3 +129,14 @@ export const getSanitizedHTML = (html: string) => {
   })
   return sanitizedHTML
 }
+
+export const isProblemDetail = (data: unknown): data is { type: string; [key: string]: unknown } => {
+  if (typeof data === 'object' && data != null) {
+    const obj = data as Record<string, unknown>
+    if (typeof obj.type === 'string') {
+      return true
+    }
+  }
+
+  return false
+}

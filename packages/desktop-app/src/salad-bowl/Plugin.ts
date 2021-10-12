@@ -4,6 +4,7 @@ import { ChildProcess, execSync, spawn } from 'child_process'
 import DecompressZip from 'decompress-zip'
 import * as fs from 'fs'
 import * as path from 'path'
+import type { Stream } from 'stream'
 import tar from 'tar'
 import { INotificationService } from './INotificationService'
 import { ErrorAction } from './models/ErrorAction'
@@ -182,7 +183,7 @@ export class Plugin {
     }
 
     console.log(`Starting download for ${this.name}`)
-    let res = await axios.get(this.pluginDefinition.downloadUrl, { responseType: 'stream' })
+    let res = await axios.get<Stream>(this.pluginDefinition.downloadUrl, { responseType: 'stream' })
 
     await new Promise<void>((fulfill) => {
       let stream = res.data.pipe(fs.createWriteStream(downloadFilename))

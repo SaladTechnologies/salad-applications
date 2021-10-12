@@ -1,8 +1,11 @@
-import Axios, { AxiosInstance } from 'axios'
+import type { AxiosInstance, AxiosResponse } from 'axios'
+import Axios from 'axios'
 import { action, computed, flow, observable } from 'mobx'
-import { RootStore } from '../../Store'
-import { NotificationMessage, NotificationMessageCategory } from '../notifications/models'
-import { completed, percentComplete, Referral } from './models'
+import type { RootStore } from '../../Store'
+import type { NotificationMessage } from '../notifications/models'
+import { NotificationMessageCategory } from '../notifications/models'
+import type { Referral } from './models'
+import { completed, percentComplete } from './models'
 import { maximumReferrerBonus } from './models/ReferralDefinition'
 
 export class ReferralStore {
@@ -161,7 +164,7 @@ export class ReferralStore {
       const request = {
         code: code,
       }
-      let res = yield this.axios.post<Referral>('/api/v1/profile/referral', request)
+      let res = yield this.axios.post<{ code: string }, AxiosResponse<Referral>>('/api/v1/profile/referral', request)
       this.currentReferral = res.data
       this.isSubmittingReferralCode = false
       this.isReferralCodeSubmitSuccess = true
