@@ -36,10 +36,11 @@ type SystemProcessesData = si.ProcessesData
 interface ZendeskAVData {
   id?: number
   name?: AntiVirusSoftware
+  videoId?: number
 }
 
 export const getZendeskAVData = (identifier: AntiVirusSoftware | string | number): ZendeskAVData => {
-  let zendeskAVData: ZendeskAVData = { id: undefined, name: undefined }
+  let zendeskAVData: ZendeskAVData = { id: undefined, name: undefined, videoId: undefined }
 
   switch (identifier) {
     case AntiVirusSoftware.Adaware:
@@ -56,6 +57,7 @@ export const getZendeskAVData = (identifier: AntiVirusSoftware | string | number
     case 360033487211:
       zendeskAVData.id = 360033487211
       zendeskAVData.name = AntiVirusSoftware.Avast
+      zendeskAVData.videoId = 574387141
       break
     case AntiVirusSoftware.AVG:
     case 360041706612:
@@ -126,6 +128,7 @@ export const getZendeskAVData = (identifier: AntiVirusSoftware | string | number
     case 360033488271:
       zendeskAVData.id = 360033488271
       zendeskAVData.name = AntiVirusSoftware.McAfeeSecurity
+      zendeskAVData.videoId = 575421455
       break
     case AntiVirusSoftware.Norton:
     case 360032211151:
@@ -186,6 +189,7 @@ export const getZendeskAVData = (identifier: AntiVirusSoftware | string | number
     case 360033124692:
       zendeskAVData.id = 360033124692
       zendeskAVData.name = AntiVirusSoftware.WindowsDefender
+      zendeskAVData.videoId = 574423693
       break
     case AntiVirusSoftware.Zillya:
     case 360042225091:

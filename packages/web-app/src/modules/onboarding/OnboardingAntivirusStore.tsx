@@ -154,6 +154,7 @@ export class OnboardingAntivirusStore {
   loadArticle = flow(
     function* (this: OnboardingAntivirusStore, articleID: number) {
       const antivirusSoftwareName = getZendeskAVData(articleID).name
+      this.store.zendesk.antiVirusGuideVideoId = getZendeskAVData(articleID).videoId
       if (antivirusSoftwareName === this.selectedAntiVirusGuide && this.helpCenterArticle !== undefined) {
         return
       }
