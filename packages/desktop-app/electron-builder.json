@@ -32,7 +32,8 @@
     "deleteAppDataOnUninstall": true,
     "license": "LICENSE.md",
     "oneClick": true,
-    "perMachine": true
+    "perMachine": true,
+    "warningsAsErrors": false
   },
   "linux": {
     "target": ["rpm", "deb"],
