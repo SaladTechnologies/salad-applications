@@ -6,19 +6,24 @@ import { PluginInfo } from './models'
 export interface SaladBowlStoreInterface {
   canRun: boolean
   cpuMiningEnabled: boolean
+  cpuMiningUpdatePending: boolean
   cpuMiningOverridden: boolean
+  cpuMiningOverriddenUpdatePending: boolean
   getSaladBowlState: (saladBowlState?: SaladBowlState) => void
   gpuMiningEnabled: boolean
+  gpuMiningUpdatePending: boolean
   gpuMiningOverridden: boolean
+  gpuMiningOverriddenUpdatePending: boolean
   isNotCompatible: boolean
   isOverriding: boolean
   isRunning: boolean
+  saladBowlConnected?: boolean
   setGpuOnly: (value: boolean) => void
   setGpu: (value: boolean) => void
   setCpu: (value: boolean) => void
-  setGpuAndCpu: () => void
   setCpuOverride: (value: boolean) => void
   setGpuOverride: (value: boolean) => void
+  setSaladBowlConnected: (value: boolean) => void
   plugin: PluginInfo
   preppingProgress: number
   runningTime?: number
