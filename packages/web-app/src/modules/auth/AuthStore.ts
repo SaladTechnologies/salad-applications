@@ -3,6 +3,7 @@ import { action, flow, observable, runInAction } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
 import SuperTokens from 'supertokens-website'
 import { config } from '../../config'
+import { isProblemDetail } from '../../utils'
 
 export enum FormSteps {
   Email,
@@ -190,9 +191,14 @@ export class AuthStore {
     } catch (e) {
       this.isSubmitSuccess = false
       if (Axios.isAxiosError(e)) {
-        if (e.response && e.response.status === 400) {
-          if (e.response.data?.type === 'invalid_session') {
-            this.errorMessage = 'The code has expired, resend the code to continue.'
+        if (e.response != null && e.response.status === 400) {
+          const data = e.response.data as unknown
+          if (isProblemDetail(data)) {
+            if (data.type === 'invalid_session') {
+              this.errorMessage = 'The code has expired, resend the code to continue.'
+            } else {
+              this.errorMessage = 'Incorrect code'
+            }
           } else {
             this.errorMessage = 'Incorrect code'
           }
