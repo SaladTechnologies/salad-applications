@@ -15,6 +15,7 @@ const mapStoreToProps = (store: RootStore, ownProps: any): Omit<AntivirusGuidePr
     onCloseClicked: () => store.onboarding.viewNextPage(ONBOARDING_PAGE_NAMES.ANTIVIRUS_CONFIGURATION),
     onViewAVList: () => store.routing.push('/onboarding/antivirus-guide'),
     antiVirusGuideVideoId: store.zendesk.antiVirusGuideVideoId,
+    isNative: store.native.isNative,
   }
 }
 

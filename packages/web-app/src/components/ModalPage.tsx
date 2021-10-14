@@ -6,7 +6,7 @@ import { SaladTheme } from '../SaladTheme'
 const styles = (theme: SaladTheme) => ({
   container: {
     position: 'fixed',
-    top: 0,
+    top: (props: Props) => (props.showWindowBarContainer && props.isNative ? '2rem' : 0),
     bottom: 0,
     left: 0,
     right: 0,
@@ -20,6 +20,8 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   onCloseClicked?: () => void
+  showWindowBarContainer?: boolean
+  isNative?: boolean
 }
 
 const bgId = 'modal-bg' + Math.random()

@@ -1,11 +1,12 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Button, Text } from '@saladtechnologies/garden-components'
 import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import Skeleton from 'react-loading-skeleton'
-import { Button, InfoButton, ModalPage } from '../../../components'
+import { ModalPage } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
-import { AntiVirusFirewallScrollbar } from '../../error-views/components/AntiVirusFirewallScrollbar'
+import { OnboardingAntiVirusScrollbar } from '../components'
 
 const styles = (theme: SaladTheme) => ({
   bottomMessage: {
@@ -20,9 +21,9 @@ const styles = (theme: SaladTheme) => ({
   closeButton: {
     display: 'inline-block',
     borderRadius: '50px',
-    border: `solid 2px ${theme.green}`,
+    border: `solid 2px ${theme.darkBlue}`,
     padding: '0.1rem 0.3rem',
-    color: theme.green,
+    color: theme.darkBlue,
     lineHeight: '100%',
     position: 'absolute',
     right: '2rem',
@@ -34,7 +35,6 @@ const styles = (theme: SaladTheme) => ({
     zIndex: 1,
   },
   container: {
-    alignItems: 'center',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -57,14 +57,11 @@ const styles = (theme: SaladTheme) => ({
     '& img': {
       maxWidth: '100%',
     },
-    fontSize: theme.small,
   },
   heading: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
     marginBottom: 25,
-    textAlign: 'center',
   },
   link: {
     cursor: 'pointer',
@@ -82,14 +79,12 @@ const styles = (theme: SaladTheme) => ({
     textDecoration: 'underline',
   },
   page: {
-    color: theme.lightGreen,
+    color: theme.darkBlue,
+    background: 'linear-gradient(to right, #56A431 , #AACF40)',
     display: 'flex',
     fontFamily: theme.fontGroteskLight25,
     justifyContent: 'center',
     lineHeight: '150%',
-  },
-  selectFromList: {
-    fontSize: theme.small,
   },
   subtitle: {
     fontSize: theme.medium,
@@ -100,8 +95,7 @@ const styles = (theme: SaladTheme) => ({
   },
   supportReminder: {
     animation: '$fadeIn 1s ease-in',
-    color: theme.lightGreen,
-    fontFamily: theme.fontGroteskLight25,
+    color: theme.darkBlue,
     fontSize: theme.small,
     lineHeight: '150%',
     position: 'absolute',
@@ -110,17 +104,21 @@ const styles = (theme: SaladTheme) => ({
     width: 175,
   },
   title: {
-    alignItems: 'center',
     display: 'flex',
     lineHeight: '250%',
+    color: theme.white,
+    paddingBottom: 24,
   },
-  tooltip: {
-    height: 30,
-    width: 30,
+  video: {
+    textAlign: 'center',
+  },
+  closeButtonContainer: {
+    textAlign: 'center',
   },
 })
 
 export interface AntivirusGuideProps extends WithStyles<typeof styles> {
+  isNative: boolean
   antivirusName?: string
   article?: string
   loading?: boolean
@@ -174,16 +172,25 @@ class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
   }
 
   render() {
-    const { antivirusName, article, loading, onCloseClicked, onViewAVList, antiVirusGuideVideoId, classes } = this.props
+    const {
+      antivirusName,
+      article,
+      loading,
+      onCloseClicked,
+      onViewAVList,
+      antiVirusGuideVideoId,
+      isNative,
+      classes,
+    } = this.props
 
     const { webWidgetShowing } = this.state
 
     return (
-      <ModalPage>
+      <ModalPage showWindowBarContainer={true} isNative={isNative}>
         <div className={classes.closeButton} onClick={onCloseClicked}>
           <FontAwesomeIcon icon={faTimes} size="lg" />
         </div>
-        <AntiVirusFirewallScrollbar>
+        <OnboardingAntiVirusScrollbar>
           <div className={classes.page}>
             <div className={classes.container}>
               {loading ? (
@@ -192,35 +199,22 @@ class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
                 <>
                   <div className={classes.heading}>
                     <div className={classes.title}>
-                      <h1>{antivirusName ? `${antivirusName} is Blocking Salad` : 'Anti-Virus is Blocking Salad'}</h1>
-
-                      <InfoButton
-                        className={classes.tooltip}
-                        text={
-                          "Don't worry! Most anti-virus programs block cryptominers. This is to protect you from having other people install miners on your computer without you knowing - a process called 'cryptojacking'. As long as you are allowed to use this machine, you're fine! Check out the Salad blog to learn more."
-                        }
-                      />
+                      <Text variant="headline">{antivirusName}</Text>
                     </div>
                     <div className={classes.subtitle}>
-                      <>
-                        <p>
-                          Your anti-virus software is blocking Salad, but there's an easy fix: whitelist Salad with{' '}
-                          {antivirusName}.
-                        </p>
-                        <p className={classes.selectFromList}>
-                          Use a different anti-virus provider?{' '}
-                          <span className={classes.link} onClick={onViewAVList}>
-                            Select it from this list
-                          </span>
-                          .
-                        </p>
-                      </>
+                      <Text variant="baseS">
+                        Use a different anti-virus provider?{' '}
+                        <span className={classes.link} onClick={onViewAVList}>
+                          Select it from this list
+                        </span>
+                        .
+                      </Text>
                     </div>
                   </div>
                   {article ? (
                     <>
                       {antiVirusGuideVideoId && (
-                        <>
+                        <div className={classes.video}>
                           <iframe
                             title={antivirusName}
                             src={`//player.vimeo.com/video/${antiVirusGuideVideoId}`}
@@ -229,20 +223,26 @@ class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
                             frameBorder="0"
                             allowFullScreen
                           ></iframe>
-                        </>
+                        </div>
                       )}
-                      <div className={classes.content} dangerouslySetInnerHTML={{ __html: article }} />{' '}
+                      <Text variant="baseL">
+                        <div className={classes.content} dangerouslySetInnerHTML={{ __html: article }} />{' '}
+                      </Text>
                     </>
                   ) : null}
-                  <Button onClick={onCloseClicked}>Close</Button>
+                  <span className={classes.closeButtonContainer}>
+                    <Button size="medium" label="Close" onClick={onCloseClicked} />
+                  </span>
                 </>
               )}
             </div>
           </div>
-        </AntiVirusFirewallScrollbar>
+        </OnboardingAntiVirusScrollbar>
         {webWidgetShowing && (
           <div className={classes.supportReminder}>
-            This information can also be found by clicking the support button and searching for 'anti-virus'.
+            <Text variant="baseS">
+              This information can also be found by clicking the support button and searching for 'anti-virus'.
+            </Text>
           </div>
         )}
       </ModalPage>
