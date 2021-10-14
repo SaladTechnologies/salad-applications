@@ -106,7 +106,7 @@ const styles = (theme: SaladTheme) => ({
   title: {
     display: 'flex',
     lineHeight: '250%',
-    color: theme.white,
+    color: theme.lightGreen,
     paddingBottom: 24,
   },
   video: {
