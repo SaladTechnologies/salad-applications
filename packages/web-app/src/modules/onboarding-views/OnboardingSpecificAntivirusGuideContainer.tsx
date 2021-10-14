@@ -5,6 +5,13 @@ import { ONBOARDING_PAGE_NAMES } from '../onboarding/models'
 import { AntivirusGuide, AntivirusGuideProps } from './pages/AntivirusGuide'
 
 const mapStoreToProps = (store: RootStore, ownProps: any): Omit<AntivirusGuideProps, 'classes'> => {
+  const handleOnCloseClicked = () => {
+    store.onboarding.viewNextPage(ONBOARDING_PAGE_NAMES.ANTIVIRUS_CONFIGURATION)
+    store.onboardingAntivirus.setStartButtonToolTip(
+      'You’ve successfully whitelisted Salad! Press the Start button to begin earning. The initial setup will then happen behind the scenes. This can take up to 30 minutes to complete.',
+    )
+  }
+
   return {
     antivirusName: store.onboardingAntivirus.selectedAntiVirusGuide,
     article: store.onboardingAntivirus.helpCenterArticle
@@ -12,7 +19,7 @@ const mapStoreToProps = (store: RootStore, ownProps: any): Omit<AntivirusGuidePr
       : undefined,
     loading: store.onboardingAntivirus.loadingArticle,
     loadArticle: () => store.onboardingAntivirus.loadArticle(parseInt(ownProps.match.params.id)),
-    onCloseClicked: () => store.onboarding.viewNextPage(ONBOARDING_PAGE_NAMES.ANTIVIRUS_CONFIGURATION),
+    onCloseClicked: handleOnCloseClicked,
     onViewAVList: () => store.routing.push('/onboarding/antivirus-guide'),
     antiVirusGuideVideoId: store.zendesk.antiVirusGuideVideoId,
     isNative: store.native.isNative,
