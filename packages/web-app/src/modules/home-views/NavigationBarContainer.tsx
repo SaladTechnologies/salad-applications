@@ -19,8 +19,6 @@ const mapStoreToProps = (store: RootStore): any => {
 
   const startButton = store.startButtonUI.properties
 
-  const startButtonToolTip = store.onboarding.startButtonToolTip
-
   return {
     avatar: isAuthenticated ? (
       selectedAvatar ? (
@@ -59,7 +57,7 @@ const mapStoreToProps = (store: RootStore): any => {
     startButtonErrorClick: startButton.onClickWithError,
     startButtonProgress: startButton.progress,
     startButtonRunningTime: startButton.runningTime,
-    startButtonToolTip: isAuthenticated && isNative ? startButtonToolTip : undefined,
+    startButtonToolTip: startButton.startButtonToolTip,
     username: isAuthenticated ? store.profile.currentProfile?.username : undefined,
   }
 }

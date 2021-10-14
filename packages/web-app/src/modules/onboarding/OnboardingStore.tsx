@@ -57,9 +57,6 @@ export class OnboardingStore {
   public disableSleepModePending: boolean = false
 
   @observable
-  public startButtonToolTip?: string
-
-  @observable
   public disableSleepModeErrorMessage?: string = undefined
 
   @computed

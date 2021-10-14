@@ -89,7 +89,7 @@ export class OnboardingAntivirusStore {
     try {
       yield this.store.native.whitelistWindowsDefender()
       yield delay(2000)
-      this.store.onboardingAntivirus.setStartButtonToolTip(
+      this.store.startButtonUI.setStartButtonToolTip(
         'You’ve successfully whitelisted Salad! Press the Start button to begin earning. The initial setup will then happen behind the scenes. This can take up to 30 minutes to complete.',
       )
       this.store.onboarding.viewNextPage(ONBOARDING_PAGE_NAMES.ANTIVIRUS_CONFIGURATION)
@@ -143,11 +143,6 @@ export class OnboardingAntivirusStore {
       this.store.analytics.trackOnboardingAntivirusGuideViewed(path, antiVirusSoftware)
       this.store.routing.push(path)
     }
-  }
-
-  @action.bound
-  setStartButtonToolTip = (toolTip: string) => {
-    this.store.onboarding.startButtonToolTip = toolTip
   }
 
   @action.bound
