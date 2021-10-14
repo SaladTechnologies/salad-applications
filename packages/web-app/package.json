@@ -78,7 +78,7 @@
     "@fortawesome/free-regular-svg-icons": "5.15.4",
     "@fortawesome/free-solid-svg-icons": "5.15.4",
     "@fortawesome/react-fontawesome": "0.1.15",
-    "@saladtechnologies/garden-components": "file:../../libs/saladtechnologies-garden-components-1.0.56.tgz",
+    "@saladtechnologies/garden-components": "file:../../libs/saladtechnologies-garden-components-1.0.57.tgz",
     "@saladtechnologies/garden-fonts": "file:../../libs/saladtechnologies-garden-fonts-1.0.0.tgz",
     "@saladtechnologies/garden-icons": "file:../../libs/saladtechnologies-garden-icons-1.0.2.tgz",
     "@saladtechnologies/salad-grpc-salad-bowl": "file:../../libs/saladtechnologies-grpc-salad-bowl-0.0.1-alpha3.tgz",
