@@ -20,7 +20,7 @@ const mapStoreToProps = (store: RootStore, ownProps: any): Omit<AntivirusGuidePr
     loading: store.onboardingAntivirus.loadingArticle,
     loadArticle: () => store.onboardingAntivirus.loadArticle(parseInt(ownProps.match.params.id)),
     onCloseClicked: handleOnCloseClicked,
-    onViewAVList: () => store.routing.push('/onboarding/antivirus-guide'),
+    onViewAVList: () => store.routing.push('/errors/anti-virus'),
     antiVirusGuideVideoId: store.zendesk.antiVirusGuideVideoId,
     isNative: store.native.isNative,
   }

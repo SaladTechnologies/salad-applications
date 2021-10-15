@@ -36,20 +36,11 @@ export class OnboardingAntivirusStore {
     let onClick: () => void
     let label: string
 
-    if (detectedAV !== undefined) {
-      const buttonLabel = `Open ${detectedAV} Guide`
-      onClick = () => {
-        this.navigateToAVGuide(detectedAV, label)
-      }
-      label = buttonLabel
-    } else {
-      const buttonLabel = 'Select My Antivirus Program'
-      onClick = () => {
-        this.store.routing.push('/onboarding/antivirus-guide')
-        this.store.analytics.trackButtonClicked('onboarding_antivirus_select_guide', label, 'enabled')
-      }
-      label = buttonLabel
+    const buttonLabel = `Open ${detectedAV} Guide`
+    onClick = () => {
+      detectedAV && this.navigateToAVGuide(detectedAV, label)
     }
+    label = buttonLabel
 
     return {
       onClick,
