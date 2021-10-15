@@ -1,7 +1,6 @@
 import { action, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { delay, routeLink } from '../../utils'
-import { NotificationMessageCategory } from '../notifications/models'
 import type { ZendeskArticleResource } from '../zendesk/models'
 import { AntiVirusSoftware } from '../zendesk/models'
 import { getZendeskAVData } from '../zendesk/utils'
@@ -31,26 +30,19 @@ export class OnboardingAntivirusStore {
    * action that navigates to the correct antivirus guide while also
    * capturing a mixpanel event.
    * @returns a `label` for the button and an `onClick` event.
+   * There will be no instance of this event being called when the
+   * detectedAV is undefined
    */
-  get viewAVGuide(): { onClick: () => void; label: string } {
+  get viewAVGuide(): { onClick?: () => void; label: string } {
     const detectedAV = this.store.zendesk.detectedAV
     let onClick: () => void
     let label: string
 
-    if (detectedAV !== undefined) {
-      const buttonLabel = `Open ${detectedAV} Guide`
-      onClick = () => {
-        this.navigateToAVGuide(detectedAV, label)
-      }
-      label = buttonLabel
-    } else {
-      const buttonLabel = 'Select My Antivirus Program'
-      onClick = () => {
-        this.store.routing.push('/onboarding/antivirus-guide')
-        this.store.analytics.trackButtonClicked('onboarding_antivirus_select_guide', label, 'enabled')
-      }
-      label = buttonLabel
+    const buttonLabel = `Open ${detectedAV} Guide`
+    onClick = () => {
+      detectedAV && this.navigateToAVGuide(detectedAV, label)
     }
+    label = buttonLabel
 
     return {
       onClick,
@@ -90,13 +82,9 @@ export class OnboardingAntivirusStore {
     try {
       yield this.store.native.whitelistWindowsDefender()
       yield delay(2000)
-      this.store.notifications.sendNotification({
-        category: NotificationMessageCategory.Success,
-        title: 'You’ve successfully whitelisted Salad!',
-        message:
-          'Press the Start button to begin earning. The initial setup will then happen behind the scenes. This can take up to 30 minutes to complete.',
-        autoClose: 5000,
-      })
+      this.store.startButtonUI.setStartButtonToolTip(
+        'You’ve successfully whitelisted Salad! Press the Start button to begin earning. The initial setup will then happen behind the scenes. This can take up to 30 minutes to complete.',
+      )
       this.store.onboarding.viewNextPage(ONBOARDING_PAGE_NAMES.ANTIVIRUS_CONFIGURATION)
     } catch (_error: any) {
       const error: WhitelistWindowsDefenderErrorTypeMessage = _error

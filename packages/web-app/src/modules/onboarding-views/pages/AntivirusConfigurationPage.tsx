@@ -95,7 +95,7 @@ const styles = (theme: SaladTheme) => ({
 export interface AntivirusConfigurationPageProps extends WithStyles<typeof styles> {
   detectedAV?: AntiVirusSoftware
   isNative?: boolean
-  onViewAVGuide: () => void
+  onViewAVGuide?: () => void
   navigateToAVGuide: (antivirusSoftwareName: AntiVirusSoftware, label: string) => void
   onNoAVClick: () => void
   onViewAVGuideLabel: string
@@ -128,11 +128,11 @@ const _AntivirusConfigurationPage = ({
     }
   }, [])
 
-  const [viewModal, setViewModal] = useState<boolean>(false)
+  const [viewAVSelectionModal, setViewAVSelectionModal] = useState<boolean>(false)
 
   const handleOnViewAVGuideSelectionModalClick = (label: string) => {
     onViewAVGuideSelectionModal(label)
-    setViewModal(true)
+    setViewAVSelectionModal(true)
   }
 
   return (
@@ -201,8 +201,8 @@ const _AntivirusConfigurationPage = ({
                 <div className={classes.mb48}>
                   <div className={classes.mb24}>
                     <Button
-                      label={onViewAVGuideLabel}
-                      onClick={onViewAVGuide}
+                      label={'Select My Antivirus Program'}
+                      onClick={() => handleOnViewAVGuideSelectionModalClick('Select My Antivirus Program')}
                       variant="primary-basic"
                       trailingIcon={<ChevronRight />}
                     />
@@ -313,8 +313,8 @@ const _AntivirusConfigurationPage = ({
           </div>
         </div>
       </div>
-      {viewModal && (
-        <Modal onClose={() => setViewModal(false)} title={'Select your Antivirus provider'}>
+      {viewAVSelectionModal && (
+        <Modal onClose={() => setViewAVSelectionModal(false)} title={'Select your Antivirus provider'}>
           <AntivirusModalContent navigateToAVGuide={navigateToAVGuide} onNoAVClick={onNoAVClick} />
         </Modal>
       )}

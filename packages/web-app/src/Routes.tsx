@@ -26,7 +26,6 @@ import {
 import {
   AntivirusConfigurationContainer,
   AutoStartConfigurationPageContainer,
-  OnboardingAntivirusGuideListContainer,
   OnboardingSpecificAntivirusGuideContainer,
   SleepModeConfigurationPageContainer,
 } from './modules/onboarding-views'
@@ -59,7 +58,6 @@ const _Routes = ({ location }: RouteComponentProps) => {
         <Route exact path="/onboarding/referral" component={ReferralOnboardingContainer} />
         <Route exact path="/onboarding/welcome" component={ReferralWelcomeContainer} />
         <Route exact path="/onboarding/antivirus-configuration" component={AntivirusConfigurationContainer} />
-        <Route exact path="/onboarding/antivirus-guide" component={OnboardingAntivirusGuideListContainer} />
         <Route exact path="/onboarding/antivirus-guide/:id" component={OnboardingSpecificAntivirusGuideContainer} />
         <Route exact path="/onboarding/auto-start" component={AutoStartConfigurationPageContainer} />
         <Route exact path="/onboarding/sleep-mode" component={SleepModeConfigurationPageContainer} />

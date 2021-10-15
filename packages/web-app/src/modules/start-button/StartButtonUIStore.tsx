@@ -1,4 +1,4 @@
-import { computed } from 'mobx'
+import { action, computed, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { ErrorPageType } from '../../UIStore'
 import { MiningStatus } from '../machine/models'
@@ -16,10 +16,19 @@ interface StartButtonProperties {
         unit: 'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'second'
       }
     | undefined
+  startButtonToolTip?: string
 }
 
 export class StartButtonUIStore {
   constructor(private readonly store: RootStore) {}
+
+  @observable
+  public startButtonToolTip?: string
+
+  @action
+  setStartButtonToolTip = (toolTip: string | undefined) => {
+    this.store.startButtonUI.startButtonToolTip = toolTip
+  }
 
   @computed
   get properties(): StartButtonProperties {
@@ -40,6 +49,7 @@ export class StartButtonUIStore {
         : MiningStatus.Initializing
       : status
 
+    const startButtonToolTip = this.store.startButtonUI.startButtonToolTip
     const label = isNative ? nativeLabel : 'Download'
     const saladBowlConnected = this.store.saladBowl.saladBowlConnected
 
@@ -63,6 +73,7 @@ export class StartButtonUIStore {
           : undefined,
       progress: isPrepping ? this.store.saladBowl.preppingProgress : isRunning ? 1 : undefined,
       runningTime: this.store.saladBowl.runningTimeDisplay,
+      startButtonToolTip: isAuthenticated && isNative ? startButtonToolTip : undefined,
     }
   }
 }
