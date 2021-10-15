@@ -202,7 +202,7 @@ const _AntivirusConfigurationPage = ({
                   <div className={classes.mb24}>
                     <Button
                       label={'Select My Antivirus Program'}
-                      onClick={() => setViewAVSelectionModal(true)}
+                      onClick={() => handleOnViewAVGuideSelectionModalClick('Select My Antivirus Program')}
                       variant="primary-basic"
                       trailingIcon={<ChevronRight />}
                     />
