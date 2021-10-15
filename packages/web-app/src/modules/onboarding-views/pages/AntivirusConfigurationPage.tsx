@@ -95,7 +95,7 @@ const styles = (theme: SaladTheme) => ({
 export interface AntivirusConfigurationPageProps extends WithStyles<typeof styles> {
   detectedAV?: AntiVirusSoftware
   isNative?: boolean
-  onViewAVGuide: () => void
+  onViewAVGuide?: () => void
   navigateToAVGuide: (antivirusSoftwareName: AntiVirusSoftware, label: string) => void
   onNoAVClick: () => void
   onViewAVGuideLabel: string

@@ -30,8 +30,10 @@ export class OnboardingAntivirusStore {
    * action that navigates to the correct antivirus guide while also
    * capturing a mixpanel event.
    * @returns a `label` for the button and an `onClick` event.
+   * There will be no instance of this event being called when the
+   * detectedAV is undefined
    */
-  get viewAVGuide(): { onClick: () => void; label: string } {
+  get viewAVGuide(): { onClick?: () => void; label: string } {
     const detectedAV = this.store.zendesk.detectedAV
     let onClick: () => void
     let label: string
