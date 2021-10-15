@@ -29,6 +29,7 @@ import { ExperienceStore } from './modules/xp'
 import { Zendesk } from './modules/zendesk'
 import { SaladFork } from './services/SaladFork/SaladFork'
 import { UIStore } from './UIStore'
+import { delay } from './utils'
 
 configure({
   // computedRequiresReaction: process.env.NODE_ENV === 'development',
@@ -90,7 +91,7 @@ export class RootStore {
     this.native = new NativeStore(this)
     this.saladFork = new SaladFork(axios)
 
-    if (featureManager.isEnabled('app_salad_bowl')) {
+    if (featureManager.isEnabledCached('app_salad_bowl')) {
       this.saladBowl = new SaladForkAndBowlStore(this)
     } else {
       this.saladBowl = new SaladBowlStore(this, featureManager)
@@ -165,7 +166,7 @@ export class RootStore {
 
       this.featureManager.handleLogin(profile.id)
 
-      const saladBowlEnabled = this.featureManager.isEnabled('app_salad_bowl')
+      const saladBowlEnabled = this.featureManager.isEnabledCached('app_salad_bowl')
       yield Promise.allSettled([
         this.analytics.start(profile),
         this.native.login(profile),
@@ -173,18 +174,24 @@ export class RootStore {
         this.referral.loadReferralCode(),
         this.refresh.refreshData(),
         this.zendesk.login(profile.username, profile.email),
-        saladBowlEnabled ? this.saladFork.login() : Promise.resolve(),
-      ]).then(([_a, _b, _c, _d, _e, _f, saladBowl]) => {
-        if (saladBowl.status === 'fulfilled') {
-          this.saladBowl.getSaladBowlState(saladBowl.value || undefined)
-        }
-      })
+        Promise.race([saladBowlEnabled ? this.saladBowlLogin() : Promise.resolve(), delay(10000)]),
+      ])
 
       this.finishInitialLoading()
       this.onboarding.showOnboardingIfNeeded()
       this.onboarding.reshowOnboardingPagesIfNeeded()
     }.bind(this),
   )
+
+  private saladBowlLogin = async (): Promise<void> => {
+    try {
+      const response = await this.saladFork.login()
+      this.saladBowl.setSaladBowlConnected(true)
+      this.saladBowl.getSaladBowlState(response || undefined)
+    } catch {
+      this.saladBowl.setSaladBowlConnected(false)
+    }
+  }
 
   @action
   onLogout = (): void => {
@@ -197,7 +204,7 @@ export class RootStore {
     this.native.logout()
     this.zendesk.logout()
 
-    const saladBowlEnabled = this.featureManager.isEnabled('app_salad_bowl')
+    const saladBowlEnabled = this.featureManager.isEnabledCached('app_salad_bowl')
     if (saladBowlEnabled) {
       this.saladFork.logout()
     }

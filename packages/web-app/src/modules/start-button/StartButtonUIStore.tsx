@@ -41,14 +41,21 @@ export class StartButtonUIStore {
       : status
 
     const label = isNative ? nativeLabel : 'Download'
+    const saladBowlConnected = this.store.saladBowl.saladBowlConnected
+
+    // Start Button required onClick to be provided.
+    const voidFunction = () => {}
 
     return {
-      label: isAuthenticated ? label : 'Login',
-      onClick: isNative
-        ? () => this.store.saladBowl.toggleRunning(StartActionType.StartButton)
-        : isAuthenticated
-        ? () => window.open('https://getsalad.io/', '_blank')
-        : handleLogin,
+      label: isAuthenticated ? (saladBowlConnected ? label : 'loading') : 'Login',
+      onClick:
+        isNative && saladBowlConnected
+          ? () => this.store.saladBowl.toggleRunning(StartActionType.StartButton)
+          : isNative && !saladBowlConnected
+          ? voidFunction
+          : isAuthenticated
+          ? () => window.open('https://getsalad.io/', '_blank')
+          : handleLogin,
       hoverLabel: isAuthenticated && isRunning ? 'Stop' : undefined,
       onClickWithError:
         isAuthenticated && isNative && this.store.saladBowl.isNotCompatible

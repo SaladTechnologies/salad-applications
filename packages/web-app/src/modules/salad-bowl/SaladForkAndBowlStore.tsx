@@ -34,16 +34,31 @@ export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
   public cpuMiningEnabled = false
 
   @observable
+  public cpuMiningUpdatePending = false
+
+  @observable
   public gpuMiningEnabled = false
+
+  @observable
+  public gpuMiningUpdatePending = false
 
   @observable
   public cpuMiningOverridden = false
 
   @observable
+  public cpuMiningOverriddenUpdatePending = false
+
+  @observable
   public gpuMiningOverridden = false
 
   @observable
+  public gpuMiningOverriddenUpdatePending = false
+
+  @observable
   public plugin = new PluginInfo()
+
+  @observable
+  public saladBowlConnected?: boolean = false
 
   @action
   private destroySaladBowlSubscriptions(): void {
@@ -400,124 +415,161 @@ export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
     }.bind(this),
   )
 
-  public setGpuOnly = (value: boolean) => {
-    runInAction(() => {
-      this.gpuMiningEnabled = value
-      this.cpuMiningEnabled = !value
-    })
-
-    this.store.saladFork.setPreferences({
-      'mining/gpu': this.gpuMiningEnabled,
-      'mining/cpu': this.cpuMiningEnabled,
-      'mining/gpu-override': this.gpuMiningOverridden,
-      'mining/cpu-override': this.cpuMiningOverridden,
-      elevated: false,
-    })
+  @action
+  public setSaladBowlConnected = (value: boolean) => {
+    this.saladBowlConnected = value
   }
 
-  public setGpu = (value: boolean) => {
-    runInAction(() => {
-      this.gpuMiningEnabled = value
-    })
+  @action.bound
+  public setGpu = flow(function* (this: SaladForkAndBowlStore, value: boolean) {
+    let hasError = false
+    this.gpuMiningUpdatePending = true
+    try {
+      yield this.setWorkloadPreferences(
+        value,
+        this.cpuMiningEnabled,
+        this.gpuMiningOverridden,
+        this.cpuMiningOverridden,
+      )
+    } catch (_error: any) {
+      hasError = true
+      this.store.notifications.sendNotification({
+        category: NotificationMessageCategory.Error,
+        title: 'Unable to update your preference.',
+        message: 'We were unable to update your preference, please try again.',
+        type: 'error',
+      })
+    } finally {
+      if (!hasError) {
+        this.gpuMiningEnabled = value
+      }
+      this.gpuMiningUpdatePending = false
+    }
+  })
 
-    this.store.saladFork.setPreferences({
-      'mining/gpu': this.gpuMiningEnabled,
-      'mining/cpu': this.cpuMiningEnabled,
-      'mining/gpu-override': this.gpuMiningOverridden,
-      'mining/cpu-override': this.cpuMiningOverridden,
-      elevated: false,
-    })
-  }
+  @action.bound
+  public setCpu = flow(function* (this: SaladForkAndBowlStore, value: boolean) {
+    let hasError = false
+    this.cpuMiningUpdatePending = true
+    try {
+      yield this.setWorkloadPreferences(
+        this.gpuMiningEnabled,
+        value,
+        this.gpuMiningOverridden,
+        this.cpuMiningOverridden,
+      )
+    } catch (_error: any) {
+      hasError = true
+      this.store.notifications.sendNotification({
+        category: NotificationMessageCategory.Error,
+        title: 'Unable to update your preference.',
+        message: 'We were unable to update your preference, please try again.',
+        type: 'error',
+      })
+    } finally {
+      if (!hasError) {
+        this.cpuMiningEnabled = value
+      }
+      this.cpuMiningUpdatePending = false
+    }
+  })
 
-  public setCpu = (value: boolean) => {
-    runInAction(() => {
-      this.cpuMiningEnabled = value
-    })
+  @action.bound
+  public setCpuOverride = flow(function* (this: SaladForkAndBowlStore, value: boolean) {
+    let hasError = false
+    this.cpuMiningOverriddenUpdatePending = true
+    try {
+      yield this.setWorkloadPreferences(this.gpuMiningEnabled, this.cpuMiningEnabled, this.gpuMiningOverridden, value)
+    } catch (_error: any) {
+      hasError = true
+      this.store.notifications.sendNotification({
+        category: NotificationMessageCategory.Error,
+        title: 'Unable to update your preference.',
+        message: 'We were unable to update your preference, please try again.',
+        type: 'error',
+      })
+    } finally {
+      if (!hasError) {
+        this.cpuMiningOverridden = value
+      }
+      this.cpuMiningOverriddenUpdatePending = false
+    }
+  })
 
-    this.store.saladFork.setPreferences({
-      'mining/gpu': this.gpuMiningEnabled,
-      'mining/cpu': this.cpuMiningEnabled,
-      'mining/gpu-override': this.gpuMiningOverridden,
-      'mining/cpu-override': this.cpuMiningOverridden,
-      elevated: false,
-    })
-  }
-
-  public setGpuAndCpu = () => {
-    runInAction(() => {
-      this.cpuMiningEnabled = true
-      this.gpuMiningEnabled = true
-    })
-
-    this.store.saladFork.setPreferences({
-      'mining/gpu': this.gpuMiningEnabled,
-      'mining/cpu': this.cpuMiningEnabled,
-      'mining/gpu-override': this.gpuMiningOverridden,
-      'mining/cpu-override': this.cpuMiningOverridden,
-      elevated: false,
-    })
-  }
-
-  public setCpuOverride = (value: boolean) => {
-    runInAction(() => {
-      this.cpuMiningOverridden = value
-    })
-
-    this.store.saladFork.setPreferences({
-      'mining/gpu': this.gpuMiningEnabled,
-      'mining/cpu': this.cpuMiningEnabled,
-      'mining/gpu-override': this.gpuMiningOverridden,
-      'mining/cpu-override': this.cpuMiningOverridden,
-      elevated: false,
-    })
-  }
-
-  public setGpuOverride = (value: boolean) => {
-    runInAction(() => {
-      this.gpuMiningOverridden = value
-    })
-
-    this.store.saladFork.setPreferences({
-      'mining/gpu': this.gpuMiningEnabled,
-      'mining/cpu': this.cpuMiningEnabled,
-      'mining/gpu-override': this.gpuMiningOverridden,
-      'mining/cpu-override': this.cpuMiningOverridden,
-      elevated: false,
-    })
-  }
+  @action.bound
+  public setGpuOverride = flow(function* (this: SaladForkAndBowlStore, value: boolean) {
+    let hasError = false
+    this.gpuMiningOverriddenUpdatePending = true
+    try {
+      yield this.setWorkloadPreferences(this.gpuMiningEnabled, this.cpuMiningEnabled, value, this.cpuMiningOverridden)
+    } catch (_error: any) {
+      hasError = true
+      this.store.notifications.sendNotification({
+        category: NotificationMessageCategory.Error,
+        title: 'Unable to update your preference.',
+        message: 'We were unable to update your preference, please try again.',
+        type: 'error',
+      })
+    } finally {
+      if (!hasError) {
+        this.gpuMiningOverridden = value
+      }
+      this.gpuMiningOverriddenUpdatePending = false
+    }
+  })
 
   // Persist Salad Bowl Store State on refresh
-  public getSaladBowlState(saladBowlState?: SaladBowlState): void {
+  public getSaladBowlState = flow(function* (this: SaladForkAndBowlStore, saladBowlState?: SaladBowlState) {
     // Check to see if we have any workload preferences
     const preferences = saladBowlState?.preferences
+
+    let gpuMining = false
+    let cpuMining = false
+    let gpuMiningOverridden = false
+    let cpuMiningOverridden = false
+
     if (preferences === undefined || (preferences && Object.keys(preferences).length === 0)) {
       // should show onboarding page here if this is detected.
       const cpuMiningEnabled = Storage.getItem(CPU_MINING_ENABLED) === 'true'
       const cpuMiningOverrideEnabled = Storage.getItem(CPU_MINING_OVERRIDDEN) === 'true'
       const gpuMiningOverrideEnabled = Storage.getItem(GPU_MINING_OVERRIDDEN) === 'true'
-
-      this.store.saladFork.setPreferences({
-        'mining/gpu': !cpuMiningEnabled,
-        'mining/cpu': cpuMiningEnabled,
-        'mining/gpu-override': gpuMiningOverrideEnabled,
-        'mining/cpu-override': cpuMiningOverrideEnabled,
-      })
+      gpuMining = !cpuMiningEnabled
+      cpuMining = cpuMiningEnabled
+      gpuMiningOverridden = gpuMiningOverrideEnabled
+      cpuMiningOverridden = cpuMiningOverrideEnabled
     } else {
-      if (preferences['mining/gpu']) {
-        this.setGpu(true)
-      }
+      gpuMining = preferences['mining/gpu']
+      cpuMining = preferences['mining/cpu']
+      gpuMiningOverridden = preferences['mining/gpu-override']
+      cpuMiningOverridden = preferences['mining/cpu-override']
+    }
 
-      if (preferences['mining/cpu']) {
-        this.setCpu(true)
+    let hasError = false
+    this.gpuMiningUpdatePending = true
+    this.cpuMiningUpdatePending = true
+    this.gpuMiningOverriddenUpdatePending = true
+    this.cpuMiningOverriddenUpdatePending = true
+    try {
+      yield this.setWorkloadPreferences(gpuMining, cpuMining, gpuMiningOverridden, cpuMiningOverridden)
+    } catch (_error: any) {
+      hasError = true
+      this.store.notifications.sendNotification({
+        category: NotificationMessageCategory.Error,
+        title: 'Unable to update your preference.',
+        message: 'We were unable to update your preference while logging in.',
+        type: 'error',
+      })
+    } finally {
+      if (!hasError) {
+        this.gpuMiningEnabled = gpuMining
+        this.cpuMiningEnabled = cpuMining
+        this.gpuMiningOverridden = gpuMiningOverridden
+        this.cpuMiningOverridden = cpuMiningOverridden
       }
-
-      if (preferences['mining/gpu-override']) {
-        this.setGpuOverride(true)
-      }
-
-      if (preferences['mining/cpu-override']) {
-        this.setCpuOverride(true)
-      }
+      this.gpuMiningUpdatePending = false
+      this.cpuMiningUpdatePending = false
+      this.gpuMiningOverriddenUpdatePending = false
+      this.cpuMiningOverriddenUpdatePending = false
     }
 
     // TODO: Check to see if we are currently chopping
@@ -531,5 +583,24 @@ export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
     //   startTimestamp: this.startTimestamp,
     //   choppingTime: this.choppingTime,
     // }
+  })
+
+  private setWorkloadPreferences = (
+    gpuMining: boolean,
+    cpuMining: boolean,
+    gpuMiningOverridden: boolean,
+    cpuMiningOverridden: boolean,
+  ): Promise<void> => {
+    return this.store.saladFork.setPreferences({
+      'mining/gpu': gpuMining,
+      'mining/cpu': cpuMining,
+      'mining/gpu-override': gpuMiningOverridden,
+      'mining/cpu-override': cpuMiningOverridden,
+      elevated: false,
+    })
+  }
+
+  public setGpuOnly = (value: boolean) => {
+    console.log(value)
   }
 }

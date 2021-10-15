@@ -30,16 +30,21 @@ export class MachineSettingsUIStore {
 
   @computed
   get workloads(): WorkloadCardProps[] {
+    const saladBowlNotConnected = !this.store.saladBowl.saladBowlConnected
     const gpuEnabled = this.store.saladBowl.gpuMiningEnabled
     const gpuMiningOverridden = this.store.saladBowl.gpuMiningOverridden
     const gpuWorkload: WorkloadCardProps = {
       glow: gpuEnabled,
       onToggleWorkload: gpuEnabled ? () => this.store.saladBowl.setGpu(false) : () => this.store.saladBowl.setGpu(true),
       onToggleWorkloadLabel: `${gpuEnabled ? 'Disable' : 'Enable'} GPU Mining`,
+      onToggleWorkloadDisabled: saladBowlNotConnected,
+      onToggleWorkloadLoading: this.store.saladBowl.gpuMiningUpdatePending,
       overrideChecked: gpuMiningOverridden,
       onToggleOverride: gpuMiningOverridden
         ? () => this.store.saladBowl.setGpuOverride(false)
         : () => this.store.saladBowl.setGpuOverride(true),
+      onToggleOverrideDisabled: saladBowlNotConnected,
+      onToggleOverrideLoading: this.store.saladBowl.gpuMiningOverriddenUpdatePending,
       onToggleOverrideLabel: 'Override GPU Compatibility Detection',
       onToggleOverrideTooltip:
         'If Salad Is Unable To Detect A Compatible GPU, You Can Choose To Override GPU Detection. This Takes Longer To Start And Can Be Less Profitable',
@@ -53,10 +58,14 @@ export class MachineSettingsUIStore {
       glow: cpuEnabled,
       onToggleWorkload: cpuEnabled ? () => this.store.saladBowl.setCpu(false) : () => this.store.saladBowl.setCpu(true),
       onToggleWorkloadLabel: `${cpuEnabled ? 'Disable' : 'Enable'} CPU Mining`,
+      onToggleWorkloadDisabled: saladBowlNotConnected,
+      onToggleWorkloadLoading: this.store.saladBowl.cpuMiningUpdatePending,
       overrideChecked: cpuMiningOverridden,
       onToggleOverride: cpuMiningOverridden
         ? () => this.store.saladBowl.setCpuOverride(false)
         : () => this.store.saladBowl.setCpuOverride(true),
+      onToggleOverrideDisabled: saladBowlNotConnected,
+      onToggleOverrideLoading: this.store.saladBowl.cpuMiningOverriddenUpdatePending,
       onToggleOverrideLabel: 'Override CPU Compatibility Detection',
       onToggleOverrideTooltip:
         'If Salad Is Unable To Detect A Compatible CPU, You Can Choose To Override CPU Detection. This Takes Longer To Start And Can Be Less Profitable',

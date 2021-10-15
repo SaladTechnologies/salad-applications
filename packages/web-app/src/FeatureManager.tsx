@@ -6,13 +6,16 @@ export interface FeatureManager {
   handleLogin: (userId: string) => void
   handleLogout: () => void
   isEnabled: (feature: string) => boolean
+  isEnabledCached: (feature: string) => boolean
   start: () => Promise<void>
 }
 
 export class UnleashFeatureManager implements FeatureManager {
   private readonly client: UnleashClient | undefined
+  private readonly cache: Record<string, boolean>
 
   public constructor() {
+    this.cache = {}
     if (process.env.REACT_APP_UNLEASH_URL && process.env.REACT_APP_UNLEASH_API_KEY) {
       this.client = new UnleashClient({
         url: process.env.REACT_APP_UNLEASH_URL,
@@ -61,9 +64,22 @@ export class UnleashFeatureManager implements FeatureManager {
 
   public isEnabled = (feature: string): boolean => {
     if (this.client) {
-      return this.client.isEnabled(feature)
+      const value = this.client.isEnabled(feature)
+      if (this.cache[feature] === undefined) {
+        this.cache[feature] = value
+      }
+      return value
     } else {
       return false
+    }
+  }
+
+  public isEnabledCached = (feature: string): boolean => {
+    const value = this.cache[feature]
+    if (value === undefined) {
+      return this.isEnabled(feature)
+    } else {
+      return value
     }
   }
 }
@@ -76,6 +92,8 @@ class DefaultFeatureManager implements FeatureManager {
   public handleLogout = (): void => {}
 
   public isEnabled = (): boolean => false
+
+  public isEnabledCached = (): boolean => false
 
   public start = (): Promise<void> => Promise.resolve()
 }
