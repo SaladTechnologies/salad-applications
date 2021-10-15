@@ -1,12 +1,13 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Button, Text } from '@saladtechnologies/garden-components'
+import { Button, Modal, Text } from '@saladtechnologies/garden-components'
 import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import Skeleton from 'react-loading-skeleton'
 import { ModalPage } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
-import { OnboardingAntiVirusScrollbar } from '../components'
+import { AntiVirusSoftware } from '../../zendesk/models'
+import { AntivirusModalContent, OnboardingAntiVirusScrollbar } from '../components'
 
 const styles = (theme: SaladTheme) => ({
   bottomMessage: {
@@ -124,12 +125,14 @@ export interface AntivirusGuideProps extends WithStyles<typeof styles> {
   loading?: boolean
   loadArticle?: () => void
   onCloseClicked?: () => void
-  onViewAVList?: () => void
   antiVirusGuideVideoId?: number
+  navigateToAVGuide: (antivirusSoftwareName: AntiVirusSoftware, label: string) => void
+  onNoAVClick: () => void
 }
 
 interface State {
   webWidgetShowing: boolean
+  showAVSelectionModal: boolean
 }
 
 class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
@@ -139,7 +142,20 @@ class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
     super(props)
     this.state = {
       webWidgetShowing: false,
+      showAVSelectionModal: false,
     }
+  }
+
+  handleCloseAVSelectionModal = () => {
+    this.setState({
+      showAVSelectionModal: false,
+    })
+  }
+
+  handleOpenAVSelectionModal = () => {
+    this.setState({
+      showAVSelectionModal: true,
+    })
   }
 
   componentDidMount() {
@@ -177,13 +193,14 @@ class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
       article,
       loading,
       onCloseClicked,
-      onViewAVList,
       antiVirusGuideVideoId,
       isNative,
+      navigateToAVGuide,
+      onNoAVClick,
       classes,
     } = this.props
 
-    const { webWidgetShowing } = this.state
+    const { webWidgetShowing, showAVSelectionModal } = this.state
 
     return (
       <ModalPage showWindowBarContainer={true} isNative={isNative}>
@@ -204,7 +221,7 @@ class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
                     <div className={classes.subtitle}>
                       <Text variant="baseS">
                         Use a different anti-virus provider?{' '}
-                        <span className={classes.link} onClick={onViewAVList}>
+                        <span className={classes.link} onClick={this.handleOpenAVSelectionModal}>
                           Select it from this list
                         </span>
                         .
@@ -244,6 +261,11 @@ class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
               This information can also be found by clicking the support button and searching for 'anti-virus'.
             </Text>
           </div>
+        )}
+        {showAVSelectionModal && (
+          <Modal onClose={() => this.handleCloseAVSelectionModal()} title="Select your Antivirus provider">
+            <AntivirusModalContent navigateToAVGuide={navigateToAVGuide} onNoAVClick={onNoAVClick} />
+          </Modal>
         )}
       </ModalPage>
     )

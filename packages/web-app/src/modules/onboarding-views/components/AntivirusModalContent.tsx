@@ -68,9 +68,7 @@ const _AntivirusModalContent = ({ classes, navigateToAVGuide, onNoAVClick }: Ant
               leadingImageAlt={AV.label}
               trailingIcon={<ChevronRight />}
               contentAlignment="space-between"
-              onClick={() => {
-                navigateToAVGuide(AV.name, AV.label)
-              }}
+              onClick={() => navigateToAVGuide(AV.name, AV.label)}
             />
           </span>
         ))}

@@ -120,6 +120,7 @@ export class OnboardingAntivirusStore {
    * @param label The button label that will be passed to mixPanel.
    */
   public navigateToAVGuide = (antivirusSoftwareName: AntiVirusSoftware, label: string) => {
+    // TODO: figure out why this isn't pushing
     const articleId = getZendeskAVData(antivirusSoftwareName).id
     this.store.analytics.trackButtonClicked('onboarding_antivirus_open_specific_av_guide', label, 'enabled')
     this.store.routing.push(`/onboarding/antivirus-guide/${articleId}`)
