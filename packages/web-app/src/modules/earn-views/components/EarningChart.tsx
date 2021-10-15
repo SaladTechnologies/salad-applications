@@ -475,7 +475,7 @@ class _EarningChart extends Component<Props, State> {
         {(value) => (
           <div
             className={classnames(classes.container, {
-              [classes.removeContainerPadding]: value.isEnabled(saladBowlFeature),
+              [classes.removeContainerPadding]: value.isEnabledCached(saladBowlFeature),
             })}
           >
             <div

@@ -63,6 +63,21 @@ export class SaladBowlStore implements SaladBowlStoreInterface, IPersistentStore
   @observable
   public gpuMiningOverridden: boolean = false
 
+  @observable
+  public saladBowlConnected?: boolean = true
+
+  @observable
+  public cpuMiningUpdatePending = false
+
+  @observable
+  public gpuMiningUpdatePending = false
+
+  @observable
+  public cpuMiningOverriddenUpdatePending = false
+
+  @observable
+  public gpuMiningOverriddenUpdatePending = false
+
   @computed
   private get pluginDefinitions(): PluginDefinition[] {
     const machine = this.store.machine.currentMachine
@@ -601,7 +616,9 @@ export class SaladBowlStore implements SaladBowlStoreInterface, IPersistentStore
   }
 
   @action
-  setGpuAndCpu = () => {}
+  setSaladBowlConnected = (value: boolean) => {
+    console.log(value)
+  }
 
   public setGpu = (value: boolean) => {
     console.log(value)

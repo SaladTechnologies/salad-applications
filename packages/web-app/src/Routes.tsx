@@ -39,7 +39,7 @@ import { getStore } from './Store'
 const _Routes = ({ location }: RouteComponentProps) => {
   const store = getStore()
   const feature = useFeatureManager()
-  const saladBowlEnabled = feature.isEnabled('app_salad_bowl')
+  const saladBowlEnabled = feature.isEnabledCached('app_salad_bowl')
 
   if (store.native.apiVersion < 6) {
     return (
