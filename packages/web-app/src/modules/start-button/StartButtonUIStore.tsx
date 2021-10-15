@@ -25,8 +25,8 @@ export class StartButtonUIStore {
   @observable
   public startButtonToolTip?: string
 
-  @action.bound
-  setStartButtonToolTip = (toolTip: string) => {
+  @action
+  setStartButtonToolTip = (toolTip: string | undefined) => {
     this.store.startButtonUI.startButtonToolTip = toolTip
   }
 
