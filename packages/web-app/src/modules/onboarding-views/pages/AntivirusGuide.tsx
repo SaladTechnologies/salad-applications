@@ -128,6 +128,7 @@ export interface AntivirusGuideProps extends WithStyles<typeof styles> {
   antiVirusGuideVideoId?: number
   navigateToAVGuide: (antivirusSoftwareName: AntiVirusSoftware, label: string) => void
   onNoAVClick: () => void
+  articleId?: number
 }
 
 interface State {
@@ -185,6 +186,15 @@ class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
 
   componentWillUnmount() {
     clearTimeout(this.webWidgetTimerID)
+  }
+
+  componentDidUpdate(prevProps: AntivirusGuideProps) {
+    if (prevProps.articleId !== this.props.articleId) {
+      if (this.props.loadArticle) {
+        this.handleCloseAVSelectionModal()
+        this.props.loadArticle()
+      }
+    }
   }
 
   render() {
