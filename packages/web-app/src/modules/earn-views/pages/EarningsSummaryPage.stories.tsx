@@ -1,4 +1,8 @@
-import { HardwareDetailSingleColumn, HardwareDetailTwoColumns } from '@saladtechnologies/garden-components'
+import {
+  HardwareCardProps,
+  HardwareDetailSingleColumn,
+  HardwareDetailTwoColumns,
+} from '@saladtechnologies/garden-components'
 import { action } from '@storybook/addon-actions'
 import { number, select, text } from '@storybook/addon-knobs'
 import { Meta, Story } from '@storybook/react'
@@ -101,9 +105,10 @@ export default {
     hardwareDetected: {
       defaultValue: [
         {
+          configured: true,
           name: 'AMD Ryzen 9 5900X',
-          setupHardwareButtonLabel: 'Start Earning',
-          setupHardwareButtonClick: action('On Setup Hardware Button Click'),
+          configureWorkloadLabel: 'Enable CPU Mining',
+          configureWorkloadClick: action('On Configure Workload Click'),
           type: 'cpu',
           stats: [
             { label: 'Temperature', stat: '62° C' },
@@ -119,9 +124,10 @@ export default {
           ],
         },
         {
+          configured: true,
           name: 'NVIDIA RTX 3080',
-          setupHardwareButtonLabel: 'Start Earning',
-          setupHardwareButtonClick: action('On Setup Hardware Button Click'),
+          configureWorkloadLabel: 'Start Earning',
+          configureWorkloadClick: action('On Configure Workload Click'),
           type: 'gpu',
           stats: [
             { label: 'Temperature', stat: '62° C' },
@@ -181,6 +187,141 @@ const Template: Story<EarningsSummaryPageProps> = (args) => {
   )
 }
 
+const ConfigureCPUWorkloadTemplate: Story<EarningsSummaryPageProps> = (args) => {
+  const [daysShowing, selectDaysShowing] = useState<1 | 7 | 30>(1)
+  const [configured, setConfigured] = useState<boolean>(false)
+  const [configureWorkloadPending, toggleConfigureWorkloadPending] = useState<boolean>(false)
+
+  const onClick = () => {
+    toggleConfigureWorkloadPending(true)
+    setTimeout(() => {
+      setConfigured(true)
+      toggleConfigureWorkloadPending(false)
+    }, 1000)
+  }
+
+  const hardwareDetected: HardwareCardProps[] = [
+    {
+      configured: configured,
+      name: 'AMD Ryzen 9 5900X',
+      configureWorkloadLabel: 'Enable CPU Workloads',
+      configureWorkloadClick: onClick,
+      configureWorkloadPending: configureWorkloadPending,
+      type: 'cpu',
+      stats: [
+        { label: 'Temperature', stat: undefined },
+        { label: 'Utilization', stat: undefined },
+      ],
+      workloads: [],
+    },
+    {
+      configured: true,
+      name: 'NVIDIA RTX 3080 Founders Edition',
+      configureWorkloadLabel: 'Start Earning',
+      configureWorkloadClick: action('On Configure Workload Click'),
+      type: 'gpu',
+      stats: [
+        { label: 'Temperature', stat: undefined },
+        { label: 'Utilization', stat: undefined },
+      ],
+      workloads: [],
+    },
+    {
+      configured: true,
+      name: 'ZOTAC NVIDIA RTX 2080',
+      configureWorkloadLabel: 'Start Earning',
+      configureWorkloadClick: action('On Configure Workload Click'),
+      type: 'gpu',
+      stats: [
+        { label: 'Temperature', stat: undefined },
+        { label: 'Utilization', stat: undefined },
+      ],
+      workloads: [],
+    },
+  ]
+
+  args.hardwareDetected = hardwareDetected
+  args.viewLast24HR = () => selectDaysShowing(1)
+  args.viewLast7Days = () => selectDaysShowing(7)
+  args.viewLast30Days = () => selectDaysShowing(30)
+  args.daysShowing = daysShowing
+  args.earningHistory = args.earningHistory?.length === 0 ? args.earningHistory : getEarningWindow(daysShowing)
+
+  return (
+    <div>
+      <EarningsSummaryPage {...args} />
+    </div>
+  )
+}
+
+const ConfigureGPUWorkloadTemplate: Story<EarningsSummaryPageProps> = (args) => {
+  const [daysShowing, selectDaysShowing] = useState<1 | 7 | 30>(1)
+  const [configured, setConfigured] = useState<boolean>(false)
+  const [configureWorkloadPending, toggleConfigureWorkloadPending] = useState<boolean>(false)
+
+  const onClick = () => {
+    toggleConfigureWorkloadPending(true)
+    setTimeout(() => {
+      setConfigured(true)
+      toggleConfigureWorkloadPending(false)
+    }, 1000)
+  }
+
+  const hardwareDetected: HardwareCardProps[] = [
+    {
+      configured: configured,
+      name: 'NVIDIA RTX 3080 Founders Edition',
+      configureWorkloadLabel: 'Enable GPU Workloads',
+      configureWorkloadClick: onClick,
+      configureWorkloadPending: configureWorkloadPending,
+      type: 'gpu',
+      stats: [
+        { label: 'Temperature', stat: undefined },
+        { label: 'Utilization', stat: undefined },
+      ],
+      workloads: [],
+    },
+    {
+      configured: configured,
+      name: 'ZOTAC NVIDIA RTX 2080',
+      configureWorkloadLabel: 'Enable GPU Workloads',
+      configureWorkloadClick: onClick,
+      configureWorkloadPending: configureWorkloadPending,
+      type: 'gpu',
+      stats: [
+        { label: 'Temperature', stat: undefined },
+        { label: 'Utilization', stat: undefined },
+      ],
+      workloads: [],
+    },
+    {
+      configured: true,
+      name: 'AMD Ryzen 9 5900X',
+      configureWorkloadLabel: 'Enable CPU Workloads',
+      configureWorkloadClick: action('On Configure Workload Click'),
+      type: 'cpu',
+      stats: [
+        { label: 'Temperature', stat: undefined },
+        { label: 'Utilization', stat: undefined },
+      ],
+      workloads: [],
+    },
+  ]
+
+  args.hardwareDetected = hardwareDetected
+  args.viewLast24HR = () => selectDaysShowing(1)
+  args.viewLast7Days = () => selectDaysShowing(7)
+  args.viewLast30Days = () => selectDaysShowing(30)
+  args.daysShowing = daysShowing
+  args.earningHistory = args.earningHistory?.length === 0 ? args.earningHistory : getEarningWindow(daysShowing)
+
+  return (
+    <div>
+      <EarningsSummaryPage {...args} />
+    </div>
+  )
+}
+
 export const Default: Story<EarningsSummaryPageProps> = Template.bind({})
 Default.args = {}
 
@@ -189,9 +330,10 @@ WithoutEarningHistory.args = {
   earningHistory: [],
   hardwareDetected: [
     {
+      configured: true,
       name: 'AMD Ryzen 9 5900X',
-      setupHardwareButtonLabel: 'Start Earning',
-      setupHardwareButtonClick: action('On Setup Hardware Button Click'),
+      configureWorkloadLabel: 'Enable CPU Mining',
+      configureWorkloadClick: action('On Configure Workload Click'),
       type: 'cpu',
       stats: [
         { label: 'Temperature', stat: undefined },
@@ -207,9 +349,10 @@ WithoutEarningHistory.args = {
       ],
     },
     {
+      configured: true,
       name: 'NVIDIA RTX 3080',
-      setupHardwareButtonLabel: 'Start Earning',
-      setupHardwareButtonClick: action('On Setup Hardware Button Click'),
+      configureWorkloadLabel: 'Enable Workloads',
+      configureWorkloadClick: action('On Configure Workload Click'),
       type: 'gpu',
       stats: [
         { label: 'Temperature', stat: undefined },
@@ -237,9 +380,10 @@ export const WithHardwareNotConfigured: Story<EarningsSummaryPageProps> = Templa
 WithHardwareNotConfigured.args = {
   hardwareDetected: [
     {
+      configured: false,
       name: 'AMD Ryzen 9 5900X',
-      setupHardwareButtonLabel: 'Start Earning',
-      setupHardwareButtonClick: action('On Setup Hardware Button Click'),
+      configureWorkloadLabel: 'Enable CPU Mining',
+      configureWorkloadClick: action('On Configure Workload Click'),
       type: 'cpu',
       stats: [
         { label: 'Temperature', stat: '62° C' },
@@ -248,9 +392,10 @@ WithHardwareNotConfigured.args = {
       workloads: [],
     },
     {
+      configured: true,
       name: 'NVIDIA RTX 3080',
-      setupHardwareButtonLabel: 'Start Earning',
-      setupHardwareButtonClick: action('On Setup Hardware Button Click'),
+      configureWorkloadLabel: 'Enable GPU Mining',
+      configureWorkloadClick: action('On Configure Workload Click'),
       type: 'gpu',
       stats: [
         { label: 'Temperature', stat: '62° C' },
@@ -278,9 +423,10 @@ export const WithManyHardwares: Story<EarningsSummaryPageProps> = Template.bind(
 WithManyHardwares.args = {
   hardwareDetected: [
     {
+      configured: false,
       name: 'AMD Ryzen 9 5900X',
-      setupHardwareButtonLabel: 'Start Earning',
-      setupHardwareButtonClick: action('On Setup Hardware Button Click'),
+      configureWorkloadLabel: 'Enable CPU Workloads',
+      configureWorkloadClick: action('On Configure Workload Click'),
       type: 'cpu',
       stats: [
         { label: 'Temperature', stat: '62° C' },
@@ -289,9 +435,10 @@ WithManyHardwares.args = {
       workloads: [],
     },
     {
+      configured: true,
       name: 'AMD Radeon RX 580',
-      setupHardwareButtonLabel: 'Start Earning',
-      setupHardwareButtonClick: action('On Setup Hardware Button Click'),
+      configureWorkloadLabel: 'Start Earning',
+      configureWorkloadClick: action('On Configure Workload Click'),
       type: 'gpu',
       stats: [
         { label: 'Temperature', stat: '62° C' },
@@ -313,9 +460,10 @@ WithManyHardwares.args = {
       ],
     },
     {
+      configured: true,
       name: 'ZOTAC NVIDIA RTX 2080 OC GAMING 10G VERY LONG NAME',
-      setupHardwareButtonLabel: 'Start Earning',
-      setupHardwareButtonClick: action('On Setup Hardware Button Click'),
+      configureWorkloadLabel: 'Start Earning',
+      configureWorkloadClick: action('On Configure Workload Click'),
       type: 'gpu',
       stats: [
         { label: 'Temperature', stat: '62° C' },
@@ -337,9 +485,10 @@ WithManyHardwares.args = {
       ],
     },
     {
+      configured: true,
       name: 'NVIDIA RTX 3080 Founders Edition',
-      setupHardwareButtonLabel: 'Start Earning',
-      setupHardwareButtonClick: action('On Setup Hardware Button Click'),
+      configureWorkloadLabel: 'Start Earning',
+      configureWorkloadClick: action('On Configure Workload Click'),
       type: 'gpu',
       stats: [
         { label: 'Temperature', stat: '62° C' },
@@ -361,9 +510,10 @@ WithManyHardwares.args = {
       ],
     },
     {
+      configured: true,
       name: 'NVIDIA RTX 3080 Founders Edition',
-      setupHardwareButtonLabel: 'Start Earning',
-      setupHardwareButtonClick: action('On Setup Hardware Button Click'),
+      configureWorkloadLabel: 'Start Earning',
+      configureWorkloadClick: action('On Configure Workload Click'),
       type: 'gpu',
       stats: [
         { label: 'Temperature', stat: '62° C' },
@@ -386,6 +536,12 @@ WithManyHardwares.args = {
     },
   ],
 }
+
+export const CPUWorkloadNeedsToBeConfigured: Story<EarningsSummaryPageProps> = ConfigureCPUWorkloadTemplate.bind({})
+CPUWorkloadNeedsToBeConfigured.args = {}
+
+export const GPUWorkloadNeedsToBeConfigured: Story<EarningsSummaryPageProps> = ConfigureGPUWorkloadTemplate.bind({})
+GPUWorkloadNeedsToBeConfigured.args = {}
 
 export const NotNative: Story<EarningsSummaryPageProps> = Template.bind({})
 NotNative.args = {

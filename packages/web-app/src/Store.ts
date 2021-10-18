@@ -9,7 +9,13 @@ import { BonusStore } from './modules/bonus'
 import { RefreshService } from './modules/data-refresh'
 import { EngagementStore } from './modules/engagement'
 import { HomeStore } from './modules/home/HomeStore'
-import { AutoStartStore, MachineSettingsUIStore, MachineStore, NativeStore } from './modules/machine'
+import {
+  AutoStartStore,
+  DetectedHardwareUIStore,
+  MachineSettingsUIStore,
+  MachineStore,
+  NativeStore,
+} from './modules/machine'
 import { NotificationStore } from './modules/notifications'
 import { OnboardingAntivirusStore, OnboardingAutoStartStore, OnboardingStore } from './modules/onboarding'
 import { ProfileStore } from './modules/profile'
@@ -82,6 +88,7 @@ export class RootStore {
   public readonly saladFork: SaladFork
   public readonly startButtonUI: StartButtonUIStore
   public readonly machineSettingsUI: MachineSettingsUIStore
+  public readonly detectedHardwareUIStore: DetectedHardwareUIStore
 
   constructor(axios: AxiosInstance, private readonly featureManager: FeatureManager) {
     this.routing = new RouterStore()
@@ -119,6 +126,7 @@ export class RootStore {
     this.onboardingAntivirus = new OnboardingAntivirusStore(this)
     this.startButtonUI = new StartButtonUIStore(this)
     this.machineSettingsUI = new MachineSettingsUIStore(this)
+    this.detectedHardwareUIStore = new DetectedHardwareUIStore(this)
 
     // Start refreshing data
     this.refresh.start()
