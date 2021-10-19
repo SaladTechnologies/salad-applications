@@ -9,7 +9,7 @@ const mapStoreToProps = (store: RootStore, ownProps: any): Omit<AntivirusGuidePr
   const handleOnCloseClicked = () => {
     store.onboarding.viewNextPage(ONBOARDING_PAGE_NAMES.ANTIVIRUS_CONFIGURATION)
     store.startButtonUI.setStartButtonToolTip(
-      'You’ve successfully whitelisted Salad! Press the Start button to begin earning. The initial setup will then happen behind the scenes. This can take up to 30 minutes to complete.',
+      'You should be all set! Press the Start button. Once the button text changes to ‘Chopping’, you’ll know the configuration was successful.',
     )
   }
 
