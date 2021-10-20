@@ -8,11 +8,12 @@ const mapStoreToProps = (store: RootStore): Omit<EarningsSummaryPageProps, 'clas
   isNative: store.native.isNative,
   lifetimeBalance: store.balance.lifetimeBalance,
   lifetimeXP: store.xp.currentXp,
+  onViewMachineSettingsPage: () => store.routing.push('/earn/machine-settings'),
   viewLast24HR: store.balance.viewLast24Hours,
   viewLast7Days: store.balance.viewLast7Days,
   viewLast30Days: store.balance.viewLast30Days,
   earningHistory: store.balance.earningsHistory,
-  hardwareDetected: [],
+  hardwareDetected: store.detectedHardwareUIStore.hardwareCards,
 })
 
 export const EarningsSummaryPageContainer = connect(mapStoreToProps, EarningsSummaryPage)

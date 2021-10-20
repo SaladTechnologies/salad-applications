@@ -1,4 +1,4 @@
-import { ButtonLink, HardwareCard, HardwareCardProps, Layout, Text } from '@saladtechnologies/garden-components'
+import { Button, HardwareCard, HardwareCardProps, Layout, Text } from '@saladtechnologies/garden-components'
 import classnames from 'classnames'
 import Scrollbars from 'react-custom-scrollbars'
 import { useIntl } from 'react-intl'
@@ -92,6 +92,7 @@ export interface EarningsSummaryPageProps extends WithStyles<typeof styles> {
   isNative?: boolean
   lifetimeBalance: number
   lifetimeXP: number
+  onViewMachineSettingsPage: () => void
   viewLast24HR: () => void
   viewLast7Days: () => void
   viewLast30Days: () => void
@@ -104,6 +105,7 @@ const _EarningsSummaryPage = ({
   daysShowing,
   lifetimeBalance,
   lifetimeXP,
+  onViewMachineSettingsPage,
   earningHistory,
   viewLast24HR,
   viewLast7Days,
@@ -183,14 +185,17 @@ const _EarningsSummaryPage = ({
                 <div className={classnames(classes.detectedHardwareTitle, classes.lightGreenColor)}>
                   <Text variant="base3XL">Detected Hardware</Text>
                 </div>
-                <ButtonLink variant="outlined" label="Machine Settings" to="/earn/machine-settings" />
+                <Button variant="outlined" label="Machine Settings" onClick={onViewMachineSettingsPage} />
                 <div className={classes.hardwareCards}>
                   {hardwareDetected.map((hardware, index) => (
                     <HardwareCard
                       key={index}
                       name={hardware.name}
-                      setupHardwareButtonLabel={hardware.setupHardwareButtonLabel}
-                      setupHardwareButtonClick={hardware.setupHardwareButtonClick}
+                      configured={hardware.configured}
+                      configureWorkloadLabel={hardware.configureWorkloadLabel}
+                      configureWorkloadClick={hardware.configureWorkloadClick}
+                      configureWorkloadDisabled={hardware.configureWorkloadDisabled}
+                      configureWorkloadPending={hardware.configureWorkloadPending}
                       stats={hardware.stats}
                       type={hardware.type}
                       workloads={hardware.workloads}
