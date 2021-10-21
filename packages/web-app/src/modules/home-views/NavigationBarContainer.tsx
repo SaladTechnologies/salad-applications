@@ -57,7 +57,8 @@ const mapStoreToProps = (store: RootStore): any => {
     startButtonErrorClick: startButton.onClickWithError,
     startButtonProgress: startButton.progress,
     startButtonRunningTime: startButton.runningTime,
-    startButtonToolTip: startButton.startButtonToolTip,
+    startButtonToolTip: startButton.toolTip,
+    startButtonToolTipError: startButton.toolTipError,
     username: isAuthenticated ? store.profile.currentProfile?.username : undefined,
   }
 }

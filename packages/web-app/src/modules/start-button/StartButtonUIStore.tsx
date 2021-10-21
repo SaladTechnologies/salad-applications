@@ -16,18 +16,36 @@ interface StartButtonProperties {
         unit: 'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'second'
       }
     | undefined
-  startButtonToolTip?: string
+  supportNeeded?: boolean
+  toolTip?: string
+  toolTipError?: boolean
+}
+
+interface StartButtonToolTipProps {
+  message?: string
+  error?: boolean
 }
 
 export class StartButtonUIStore {
   constructor(private readonly store: RootStore) {}
 
   @observable
-  public startButtonToolTip?: string
+  public startButtonToolTip: StartButtonToolTipProps = {}
+
+  @observable
+  private supportNeeded?: boolean = false
 
   @action
-  setStartButtonToolTip = (toolTip: string | undefined) => {
-    this.store.startButtonUI.startButtonToolTip = toolTip
+  setStartButtonToolTip = (toolTip?: string, error?: boolean) => {
+    this.startButtonToolTip = {
+      message: toolTip,
+      error: error,
+    }
+  }
+
+  @action
+  setSupportNeeded = (value: boolean) => {
+    this.supportNeeded = value
   }
 
   @computed
@@ -49,20 +67,24 @@ export class StartButtonUIStore {
         : MiningStatus.Initializing
       : status
 
-    const startButtonToolTip = this.store.startButtonUI.startButtonToolTip
     const label = isNative ? nativeLabel : 'Download'
     const saladBowlConnected = this.store.saladBowl.saladBowlConnected
 
-    // Start Button required onClick to be provided.
-    const voidFunction = () => {}
+    const notConnected = () => {
+      if (this.supportNeeded) {
+        this.store.zendesk.openSupportTicket()
+      }
+    }
+
+    const saladBowlPendingLabel = this.supportNeeded ? 'Support' : 'Loading'
 
     return {
-      label: isAuthenticated ? (saladBowlConnected ? label : 'loading') : 'Login',
+      label: isAuthenticated ? (saladBowlConnected ? label : saladBowlPendingLabel) : 'Login',
       onClick:
         isNative && saladBowlConnected
           ? () => this.store.saladBowl.toggleRunning(StartActionType.StartButton)
           : isNative && !saladBowlConnected
-          ? voidFunction
+          ? notConnected
           : isAuthenticated
           ? () => window.open('https://getsalad.io/', '_blank')
           : handleLogin,
@@ -73,7 +95,9 @@ export class StartButtonUIStore {
           : undefined,
       progress: isPrepping ? this.store.saladBowl.preppingProgress : isRunning ? 1 : undefined,
       runningTime: this.store.saladBowl.runningTimeDisplay,
-      startButtonToolTip: isAuthenticated && isNative ? startButtonToolTip : undefined,
+      supportNeeded: this.supportNeeded,
+      toolTip: this.startButtonToolTip?.message,
+      toolTipError: this.startButtonToolTip?.error,
     }
   }
 }

@@ -8,7 +8,7 @@ import {
 import type { AxiosInstance } from 'axios'
 import { Observable, Observer, Subscription } from 'rxjs'
 import type { GuiStateData, SaladBowlLoginResponse } from './models/SaladBowlLoginResponse'
-import { SaladBowlLoginResponseError } from './models/SaladBowlLoginResponse'
+import { RetryConnectingToSaladBowl, SaladBowlLoginResponseError } from './models/SaladBowlLoginResponse'
 import { SaladBowlLogoutResponse, SaladBowlLogoutResponseError } from './models/SaladBowlLogoutResponse'
 
 export interface SaladForkInterface {
@@ -21,8 +21,13 @@ export interface SaladForkInterface {
   workloadStatuses$: () => Observable<WorkloadStatus>
 }
 
+const availablePorts = [5000, 5001, 5002, 5003, 5004, 5005, 5006, 5007, 5008, 5009, 5010]
+
 export class SaladFork implements SaladForkInterface {
-  readonly client: SaladBowlServices.SaladBowlServicePromiseClient
+  private client: SaladBowlServices.SaladBowlServicePromiseClient
+
+  private jwt?: string
+  private availablePortIndex: number = 0
 
   constructor(private readonly axios: AxiosInstance) {
     const server: string = 'http://127.0.0.1:5000'
@@ -34,62 +39,80 @@ export class SaladFork implements SaladForkInterface {
       const response = await this.axios.post('/api/v2/saladbowl/auth/login')
 
       if (response.data) {
-        const jwt: string = response.data
+        this.jwt = response.data
 
-        const request = new SaladBowlMessages.LoginRequest()
-        request.setJwt(jwt)
-        const loginResponse = await this.client.login(request)
+        try {
+          const request = new SaladBowlMessages.LoginRequest()
+          request.setJwt(this.jwt)
 
-        if (loginResponse.getSuccess()) {
-          const userPreferenceRequest = new SaladBowlMessages.GetUserPreferenceRequest()
-          const guiStateRequest = new SaladBowlMessages.GetGUIStateRequest()
+          const loginResponse = await this.client.login(request)
 
-          const [userPreferencesResult, guiStateResult] = await Promise.allSettled([
-            this.client.getUserPreferences(userPreferenceRequest),
-            this.client.getGUIState(guiStateRequest),
-          ])
+          if (loginResponse.getSuccess()) {
+            const userPreferenceRequest = new SaladBowlMessages.GetUserPreferenceRequest()
+            const guiStateRequest = new SaladBowlMessages.GetGUIStateRequest()
 
-          let userPreferences: Record<string, boolean> = {}
+            const [userPreferencesResult, guiStateResult] = await Promise.allSettled([
+              this.client.getUserPreferences(userPreferenceRequest),
+              this.client.getGUIState(guiStateRequest),
+            ])
 
-          if (userPreferencesResult.status === 'fulfilled') {
-            const preferences = userPreferencesResult.value.getPreferences()
-            if (preferences) {
-              const preferencesMap = preferences.getPreferencesMap()
-              if (preferencesMap) {
-                userPreferences = Object.fromEntries(preferencesMap.entries())
+            let userPreferences: Record<string, boolean> = {}
+
+            if (userPreferencesResult.status === 'fulfilled') {
+              const preferences = userPreferencesResult.value.getPreferences()
+              if (preferences) {
+                const preferencesMap = preferences.getPreferencesMap()
+                if (preferencesMap) {
+                  userPreferences = Object.fromEntries(preferencesMap.entries())
+                }
               }
+            } else {
+              throw new Error(SaladBowlLoginResponseError.failedToGetUserPreferences)
+            }
+
+            let guiStateData: GuiStateData = {}
+
+            if (guiStateResult.status === 'fulfilled') {
+              const guiState = guiStateResult.value.getState()
+
+              guiStateData.isChopping = guiState?.hasChoptime()
+
+              const startTime = guiState?.getStart()
+              if (startTime) {
+                guiStateData.startTime = startTime.getSeconds()
+              }
+            } else {
+              throw new Error(SaladBowlLoginResponseError.failedToGetGuiState)
+            }
+
+            return {
+              preferences: userPreferences,
+              runningState: guiStateData,
             }
           } else {
-            throw new Error(SaladBowlLoginResponseError.failedToGetUserPreferences)
+            throw new Error(SaladBowlLoginResponseError.unableToLoginToSaladBowl)
           }
-
-          let guiStateData: GuiStateData = {}
-
-          if (guiStateResult.status === 'fulfilled') {
-            const guiState = guiStateResult.value.getState()
-
-            guiStateData.isChopping = guiState?.hasChoptime()
-
-            const startTime = guiState?.getStart()
-            if (startTime) {
-              guiStateData.startTime = startTime.getSeconds()
+        } catch (error: any) {
+          if (error?.message === 'Http response at 400 or 500 level' || error.code === 2) {
+            if (this.availablePortIndex === 10) {
+              throw new Error(SaladBowlLoginResponseError.unableToConnectToSaladBowl)
+            } else {
+              this.availablePortIndex += 1
+              this.client = new SaladBowlServices.SaladBowlServicePromiseClient(
+                `http://127.0.0.1:${availablePorts[this.availablePortIndex]}`,
+              )
+              console.log(`Attempting to connect to Salad Bowl on port ${availablePorts[this.availablePortIndex]}`)
+              return RetryConnectingToSaladBowl.Message
             }
           } else {
-            throw new Error(SaladBowlLoginResponseError.failedToGetGuiState)
+            throw new Error(SaladBowlLoginResponseError.unableToLoginToSaladBowl)
           }
-
-          return {
-            preferences: userPreferences,
-            runningState: guiStateData,
-          }
-        } else {
-          throw new Error(SaladBowlLoginResponseError.unableToLoginToSaladBowl)
         }
       } else {
         throw new Error(SaladBowlLoginResponseError.unableToRetrieveJWT)
       }
-    } catch (error) {
-      throw new Error(SaladBowlLoginResponseError.unableToRetrieveJWT)
+    } catch (error: any) {
+      throw new Error(error)
     }
   }
 

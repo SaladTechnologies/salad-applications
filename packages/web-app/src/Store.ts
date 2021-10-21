@@ -33,6 +33,7 @@ import { VaultStore } from './modules/vault'
 import { VersionStore } from './modules/versions'
 import { ExperienceStore } from './modules/xp'
 import { Zendesk } from './modules/zendesk'
+import { RetryConnectingToSaladBowl } from './services/SaladFork/models/SaladBowlLoginResponse'
 import { SaladFork } from './services/SaladFork/SaladFork'
 import { UIStore } from './UIStore'
 import { delay } from './utils'
@@ -194,10 +195,20 @@ export class RootStore {
   private saladBowlLogin = async (): Promise<void> => {
     try {
       const response = await this.saladFork.login()
-      this.saladBowl.setSaladBowlConnected(true)
-      this.saladBowl.getSaladBowlState(response || undefined)
-    } catch {
+
+      if (response === RetryConnectingToSaladBowl.Message) {
+        await this.saladBowlLogin()
+      } else {
+        this.saladBowl.setSaladBowlConnected(true)
+        this.saladBowl.getSaladBowlState(response || undefined)
+      }
+    } catch (error: any) {
       this.saladBowl.setSaladBowlConnected(false)
+      this.startButtonUI.setStartButtonToolTip(
+        'We are currently unable to connect to Salad Bowl. Please make sure you are running on the latest version and contact support.',
+        true,
+      )
+      this.startButtonUI.setSupportNeeded(true)
     }
   }
 
