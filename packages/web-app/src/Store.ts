@@ -197,7 +197,7 @@ export class RootStore {
       const response = await this.saladFork.login()
 
       if (response === RetryConnectingToSaladBowl.Message) {
-        this.saladBowlLogin()
+        await this.saladBowlLogin()
       } else {
         this.saladBowl.setSaladBowlConnected(true)
         this.saladBowl.getSaladBowlState(response || undefined)
@@ -209,7 +209,6 @@ export class RootStore {
         true,
       )
       this.startButtonUI.setSupportNeeded(true)
-      throw new Error(error)
     }
   }
 
