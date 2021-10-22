@@ -10,6 +10,7 @@ import { MobileDevice, NotMobile } from './components'
 import { config } from './config'
 import { MobileRoutes } from './MobileRoutes'
 import { NavigationBarContainer, WindowBarContainer } from './modules/home-views'
+import { ModalContainer } from './modules/modal-views'
 import { Routes } from './Routes'
 import { SaladTheme } from './SaladTheme'
 import { getStore } from './Store'
@@ -146,6 +147,7 @@ const DesktopLayout = ({ history, classes }: Props) => (
       </div>
       <ToastContainer />
     </div>
+    <ModalContainer />
   </div>
 )
 
@@ -170,6 +172,7 @@ const AppLayout = ({ history, classes }: Props) => (
       </div>
       <ToastContainer />
     </div>
+    <ModalContainer />
   </div>
 )
 

@@ -8,6 +8,7 @@ import { BalanceStore } from './modules/balance'
 import { BonusStore } from './modules/bonus'
 import { RefreshService } from './modules/data-refresh'
 import { EngagementStore } from './modules/engagement'
+import { SaladBowlConnectionFailureContainer } from './modules/error-views'
 import { HomeStore } from './modules/home/HomeStore'
 import {
   AutoStartStore,
@@ -16,6 +17,7 @@ import {
   MachineStore,
   NativeStore,
 } from './modules/machine'
+import { ModalUIStore } from './modules/modal'
 import { NotificationStore } from './modules/notifications'
 import { OnboardingAntivirusStore, OnboardingAutoStartStore, OnboardingStore } from './modules/onboarding'
 import { ProfileStore } from './modules/profile'
@@ -90,6 +92,7 @@ export class RootStore {
   public readonly startButtonUI: StartButtonUIStore
   public readonly machineSettingsUI: MachineSettingsUIStore
   public readonly detectedHardwareUIStore: DetectedHardwareUIStore
+  public readonly modalUIStore: ModalUIStore
 
   constructor(axios: AxiosInstance, private readonly featureManager: FeatureManager) {
     this.routing = new RouterStore()
@@ -128,6 +131,7 @@ export class RootStore {
     this.startButtonUI = new StartButtonUIStore(this)
     this.machineSettingsUI = new MachineSettingsUIStore(this)
     this.detectedHardwareUIStore = new DetectedHardwareUIStore(this)
+    this.modalUIStore = new ModalUIStore()
 
     // Start refreshing data
     this.refresh.start()
@@ -192,7 +196,7 @@ export class RootStore {
     }.bind(this),
   )
 
-  private saladBowlLogin = async (): Promise<void> => {
+  public saladBowlLogin = async (): Promise<void> => {
     try {
       const response = await this.saladFork.login()
 
@@ -204,11 +208,11 @@ export class RootStore {
       }
     } catch (error: any) {
       this.saladBowl.setSaladBowlConnected(false)
-      this.startButtonUI.setStartButtonToolTip(
-        'We are currently unable to connect to Salad Bowl. Please make sure you are running on the latest version and contact support.',
-        true,
-      )
       this.startButtonUI.setSupportNeeded(true)
+      this.modalUIStore.showModal({
+        title: 'Salad Connection Error',
+        content: () => <SaladBowlConnectionFailureContainer />,
+      })
     }
   }
 

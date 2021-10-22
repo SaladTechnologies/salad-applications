@@ -1,6 +1,7 @@
 import { action, computed, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { ErrorPageType } from '../../UIStore'
+import { SaladBowlConnectionFailureContainer } from '../error-views'
 import { MiningStatus } from '../machine/models'
 import { StartActionType } from '../salad-bowl/models'
 
@@ -72,11 +73,14 @@ export class StartButtonUIStore {
 
     const notConnected = () => {
       if (this.supportNeeded) {
-        this.store.zendesk.openSupportTicket()
+        this.store.modalUIStore.showModal({
+          title: 'Salad Connection Error',
+          content: () => <SaladBowlConnectionFailureContainer />,
+        })
       }
     }
 
-    const saladBowlPendingLabel = this.supportNeeded ? 'Support' : 'Loading'
+    const saladBowlPendingLabel = this.supportNeeded ? 'Fix Error' : 'Loading'
 
     return {
       label: isAuthenticated ? (saladBowlConnected ? label : saladBowlPendingLabel) : 'Login',
