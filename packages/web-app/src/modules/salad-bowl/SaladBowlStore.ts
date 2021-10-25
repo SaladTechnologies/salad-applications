@@ -1,3 +1,4 @@
+import { SBWorkloadState } from '@saladtechnologies/salad-grpc-salad-bowl/salad/grpc/salad_bowl/v1/salad_bowl_pb'
 import { Duration } from 'luxon'
 import { action, autorun, computed, flow, observable, runInAction } from 'mobx'
 import { EOL } from 'os'
@@ -77,6 +78,9 @@ export class SaladBowlStore implements SaladBowlStoreInterface, IPersistentStore
 
   @observable
   public gpuMiningOverriddenUpdatePending = false
+
+  @observable
+  public workloadState?: SBWorkloadState.AsObject[]
 
   @computed
   private get pluginDefinitions(): PluginDefinition[] {
@@ -629,4 +633,12 @@ export class SaladBowlStore implements SaladBowlStoreInterface, IPersistentStore
   }
 
   public getSaladBowlState = () => {}
+
+  public login = () => {
+    return Promise.resolve()
+  }
+
+  public logout = () => {
+    return Promise.resolve()
+  }
 }

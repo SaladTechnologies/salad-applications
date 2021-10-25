@@ -1,3 +1,4 @@
+export * from './ActiveWorkloads'
 export * from './GpuInformation'
 export * from './Machine'
 export * from './MachineInfo'

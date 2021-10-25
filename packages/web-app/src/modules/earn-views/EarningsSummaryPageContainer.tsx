@@ -3,6 +3,7 @@ import { RootStore } from '../../Store'
 import { EarningsSummaryPage, EarningsSummaryPageProps } from './pages/EarningsSummaryPage'
 
 const mapStoreToProps = (store: RootStore): Omit<EarningsSummaryPageProps, 'classes'> => ({
+  activeWorkloads: store.activeWorkloadsUIStore.activeWorkloads,
   currentBalance: store.balance.currentBalance,
   daysShowing: store.balance.getDaysShowingEarnings,
   isNative: store.native.isNative,
