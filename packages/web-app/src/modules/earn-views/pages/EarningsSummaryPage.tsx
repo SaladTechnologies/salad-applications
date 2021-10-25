@@ -240,7 +240,7 @@ const _EarningsSummaryPage = ({
             {isNative && (
               <div className={classes.detectedHardware}>
                 <div className={classnames(classes.sectionTitle, classes.lightGreenColor)}>
-                  <Text variant="base3XL">Active Workloads</Text>
+                  <Text variant="base3XL">Current Workloads</Text>
                 </div>
                 <div className={classes.activeWorkloadsContainer}>
                   <div className={classnames(classes.row, classes.titleRow)}>

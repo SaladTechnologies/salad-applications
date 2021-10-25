@@ -61,7 +61,7 @@ export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
   public plugin = new PluginInfo()
 
   @observable
-  public saladBowlConnected?: boolean = false
+  public saladBowlConnected?: boolean
 
   @observable
   public workloadState?: SBWorkloadState.AsObject[]
@@ -84,9 +84,13 @@ export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
 
   @computed
   get canRun() {
-    // Should also have a check if we are connected to Salad Bowl 2.0, have available workloads, have a workload enabled
     return (
-      this.store.auth.isAuthenticated !== undefined && this.store.auth.isAuthenticated && this.store.native.isNative
+      this.store.auth.isAuthenticated !== undefined &&
+      this.store.auth.isAuthenticated &&
+      this.store.native.isNative &&
+      this.saladBowlConnected !== undefined &&
+      this.saladBowlConnected &&
+      this.store.activeWorkloadsUIStore.hasCompatibleWorkloads
     )
   }
 
@@ -283,9 +287,6 @@ export class SaladForkAndBowlStore implements SaladBowlStoreInterface {
 
         // start streaming workload data
         this.streamWorkloadData()
-
-        // start streaming workload state - TODO: This should be moved to the main store after a succesful login
-        this.streamWorkloadState()
 
         // TODO: This anaytics metric is probably not going to work anymore?
         // const gpusNames = this.store.machine.gpus.filter((x) => x && x.model).map((x) => x.model)
