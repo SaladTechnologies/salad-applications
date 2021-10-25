@@ -16,6 +16,7 @@ import {
   MachineStore,
   NativeStore,
 } from './modules/machine'
+import { ActiveWorkloadsUIStore } from './modules/machine/ActiveWorkloadsUIStore'
 import { NotificationStore } from './modules/notifications'
 import { OnboardingAntivirusStore, OnboardingAutoStartStore, OnboardingStore } from './modules/onboarding'
 import { ProfileStore } from './modules/profile'
@@ -33,7 +34,6 @@ import { VaultStore } from './modules/vault'
 import { VersionStore } from './modules/versions'
 import { ExperienceStore } from './modules/xp'
 import { Zendesk } from './modules/zendesk'
-import { RetryConnectingToSaladBowl } from './services/SaladFork/models/SaladBowlLoginResponse'
 import { SaladFork } from './services/SaladFork/SaladFork'
 import { UIStore } from './UIStore'
 import { delay } from './utils'
@@ -90,6 +90,7 @@ export class RootStore {
   public readonly startButtonUI: StartButtonUIStore
   public readonly machineSettingsUI: MachineSettingsUIStore
   public readonly detectedHardwareUIStore: DetectedHardwareUIStore
+  public readonly activeWorkloadsUIStore: ActiveWorkloadsUIStore
 
   constructor(axios: AxiosInstance, private readonly featureManager: FeatureManager) {
     this.routing = new RouterStore()
@@ -128,6 +129,7 @@ export class RootStore {
     this.startButtonUI = new StartButtonUIStore(this)
     this.machineSettingsUI = new MachineSettingsUIStore(this)
     this.detectedHardwareUIStore = new DetectedHardwareUIStore(this)
+    this.activeWorkloadsUIStore = new ActiveWorkloadsUIStore(this)
 
     // Start refreshing data
     this.refresh.start()
@@ -175,7 +177,6 @@ export class RootStore {
 
       this.featureManager.handleLogin(profile.id)
 
-      const saladBowlEnabled = this.featureManager.isEnabledCached('app_salad_bowl')
       yield Promise.allSettled([
         this.analytics.start(profile),
         this.native.login(profile),
@@ -183,7 +184,7 @@ export class RootStore {
         this.referral.loadReferralCode(),
         this.refresh.refreshData(),
         this.zendesk.login(profile.username, profile.email),
-        Promise.race([saladBowlEnabled ? this.saladBowlLogin() : Promise.resolve(), delay(10000)]),
+        Promise.race([this.saladBowl.login(), delay(10000)]),
       ])
 
       this.finishInitialLoading()
@@ -191,26 +192,6 @@ export class RootStore {
       this.onboarding.reshowOnboardingPagesIfNeeded()
     }.bind(this),
   )
-
-  private saladBowlLogin = async (): Promise<void> => {
-    try {
-      const response = await this.saladFork.login()
-
-      if (response === RetryConnectingToSaladBowl.Message) {
-        await this.saladBowlLogin()
-      } else {
-        this.saladBowl.setSaladBowlConnected(true)
-        this.saladBowl.getSaladBowlState(response || undefined)
-      }
-    } catch (error: any) {
-      this.saladBowl.setSaladBowlConnected(false)
-      this.startButtonUI.setStartButtonToolTip(
-        'We are currently unable to connect to Salad Bowl. Please make sure you are running on the latest version and contact support.',
-        true,
-      )
-      this.startButtonUI.setSupportNeeded(true)
-    }
-  }
 
   @action
   onLogout = (): void => {
@@ -225,7 +206,7 @@ export class RootStore {
 
     const saladBowlEnabled = this.featureManager.isEnabledCached('app_salad_bowl')
     if (saladBowlEnabled) {
-      this.saladFork.logout()
+      this.saladBowl.logout()
     }
 
     this.featureManager.handleLogout()

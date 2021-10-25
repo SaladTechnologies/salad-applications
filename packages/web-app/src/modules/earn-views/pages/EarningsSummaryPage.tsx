@@ -6,6 +6,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import { Head } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
 import type { EarningWindow } from '../../balance/models'
+import { ActiveWorkloads } from '../../machine/models'
 import { EarningChart } from '../components/EarningChart'
 import { EarningChartPanel } from '../components/EarningChartPanel'
 import { getIntervalEarnings } from '../utils'
@@ -30,7 +31,7 @@ const styles = (theme: SaladTheme) => ({
     flexDirection: 'column',
     marginTop: 64,
   },
-  detectedHardwareTitle: {
+  sectionTitle: {
     marginBottom: 11,
   },
   hardwareCards: {
@@ -83,9 +84,40 @@ const styles = (theme: SaladTheme) => ({
   thousandths: {
     fontSize: 32,
   },
+  activeWorkloadsContainer: {
+    overflow: 'hidden',
+    paddingBottom: 100,
+  },
+  row: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  firstColumn: {
+    flex: '2 1',
+    padding: 5,
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  column: {
+    flex: '1 1',
+    padding: 5,
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  titleRow: {
+    color: theme.darkBlue,
+    textTransform: 'uppercase',
+    whiteSpace: 'nowrap',
+  },
+  contentRow: {
+    color: theme.darkBlue,
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+  },
 })
 
 export interface EarningsSummaryPageProps extends WithStyles<typeof styles> {
+  activeWorkloads: ActiveWorkloads
   currentBalance: number
   daysShowing: 1 | 7 | 30
   earningHistory: EarningWindow[]
@@ -100,6 +132,7 @@ export interface EarningsSummaryPageProps extends WithStyles<typeof styles> {
 }
 
 const _EarningsSummaryPage = ({
+  activeWorkloads,
   classes,
   currentBalance,
   daysShowing,
@@ -182,7 +215,7 @@ const _EarningsSummaryPage = ({
             />
             {isNative && hasHardware && (
               <div className={classes.detectedHardware}>
-                <div className={classnames(classes.detectedHardwareTitle, classes.lightGreenColor)}>
+                <div className={classnames(classes.sectionTitle, classes.lightGreenColor)}>
                   <Text variant="base3XL">Detected Hardware</Text>
                 </div>
                 <Button variant="outlined" label="Machine Settings" onClick={onViewMachineSettingsPage} />
@@ -201,6 +234,56 @@ const _EarningsSummaryPage = ({
                       workloads={hardware.workloads}
                     />
                   ))}
+                </div>
+              </div>
+            )}
+            {isNative && (
+              <div className={classes.detectedHardware}>
+                <div className={classnames(classes.sectionTitle, classes.lightGreenColor)}>
+                  <Text variant="base3XL">Active Workloads</Text>
+                </div>
+                <div className={classes.activeWorkloadsContainer}>
+                  <div className={classnames(classes.row, classes.titleRow)}>
+                    <div className={classes.firstColumn}>
+                      <Text variant="baseL">Name</Text>
+                    </div>
+                    <div className={classes.column}>
+                      <Text variant="baseL">Version</Text>
+                    </div>
+                    <div className={classes.column}>
+                      <Text variant="baseL">Algorithm</Text>
+                    </div>
+                  </div>
+
+                  {activeWorkloads.length > 0 ? (
+                    <>
+                      {activeWorkloads.map((metadata, index) => (
+                        <div key={index} className={classnames(classes.row, classes.contentRow)}>
+                          <div className={classes.firstColumn}>
+                            <Text variant="baseXXL">{metadata.name ? metadata.name : '-'}</Text>
+                          </div>
+                          <div className={classes.column}>
+                            <Text variant="baseXXL">{metadata.version ? metadata.version : '-'}</Text>
+                          </div>
+                          <div className={classes.column}>
+                            <Text variant="baseXXL">{metadata.algorithm ? metadata.algorithm : '-'}</Text>
+                          </div>
+                        </div>
+                      ))}
+                    </>
+                  ) : (
+                    <div className={classnames(classes.row, classes.contentRow)}>
+                      <div className={classes.firstColumn}>
+                        <Text variant="baseXXL">-</Text>
+                      </div>
+                      <div className={classes.column}>
+                        <Text variant="baseXXL">-</Text>
+                      </div>
+                      <div className={classes.column}>
+                        <Text variant="baseXXL">-</Text>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
