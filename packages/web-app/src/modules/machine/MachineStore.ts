@@ -45,6 +45,10 @@ export class MachineStore {
         return
       }
 
+      if (store.saladBowl.saladBowlConnected === undefined) {
+        return
+      }
+
       await this.registerMachine()
     })
   }
