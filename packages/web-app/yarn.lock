@@ -2135,9 +2135,9 @@
   version "1.0.0"
   resolved "file:../../libs/saladtechnologies-garden-fonts-1.0.0.tgz#efbb3ce488fba99d8a9144aa291d19f25d51a4d8"
 
-"@saladtechnologies/garden-icons@file:../../libs/saladtechnologies-garden-icons-1.0.2.tgz":
-  version "1.0.2"
-  resolved "file:../../libs/saladtechnologies-garden-icons-1.0.2.tgz#2e5a00a8b17b8f8ed968df28bb1ad731cfd4c743"
+"@saladtechnologies/garden-icons@file:../../libs/saladtechnologies-garden-icons-1.0.5.tgz":
+  version "1.0.5"
+  resolved "file:../../libs/saladtechnologies-garden-icons-1.0.5.tgz#5a9c92b6dd836101250bd4ea31f5333fbfb7eda5"
 
 "@saladtechnologies/salad-grpc-salad-bowl@file:../../libs/saladtechnologies-grpc-salad-bowl-0.0.1-alpha5.tgz":
   version "0.0.1-alpha5"
