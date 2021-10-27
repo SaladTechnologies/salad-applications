@@ -82,7 +82,10 @@ export class StartButtonUIStore {
       label: isAuthenticated ? (saladBowlConnected ? label : saladBowlPendingLabel) : 'Login',
       onClick:
         isNative && saladBowlConnected
-          ? () => this.store.saladBowl.toggleRunning(StartActionType.StartButton)
+          ? () => {
+              this.store.saladBowl.toggleRunning(StartActionType.StartButton)
+              this.startButtonToolTip && setTimeout(() => this.setStartButtonToolTip(undefined), 1000)
+            }
           : isNative && !saladBowlConnected
           ? notConnected
           : isAuthenticated
