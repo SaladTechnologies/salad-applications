@@ -1,20 +1,14 @@
 import type { Ref } from 'react'
 
-declare function Beacon(method: 'init', beaconId: string): void
-declare function Beacon(method: 'destroy'): void
-declare function Beacon(method: 'open'): void
-declare function Beacon(method: 'close'): void
-declare function Beacon(method: 'toggle'): void
-declare function Beacon(method: 'search', query: string): void
-declare function Beacon(method: 'suggest'): void
-declare function Beacon(method: 'article', articleId: string, options?: { type: 'modal' | 'sidebar' }): void
-declare function Beacon(method: 'navigate', route: string): void
-declare function Beacon(method: 'identify', userObject: { name: string; email: string; signature?: string }): void
-declare function Beacon(method: 'prefill', formObject: {}): void
-declare function Beacon(method: 'reset'): void
-declare function Beacon(method: 'logout', options?: { endActiveChat: true }): void
-declare function Beacon(method: 'config', formObject: {}): void
-declare function Beacon(method: 'info'): void
+export interface IntercomSettings {
+  app_id: string
+  email?: string
+  user_id?: string
+  name?: string
+}
+
+declare function Intercom(method: 'boot', settings: IntercomSettings): void
+declare function Intercom(method: 'shutdown'): void
 
 export interface ZendeskWidget {
   (type: 'webWidget:on' | 'webWidget' | 'webWidget:get', command: string, payload?: any): void
@@ -167,7 +161,7 @@ export interface ZendeskSettings {
 
 declare global {
   interface Window {
-    Beacon?: typeof Beacon
+    Intercom?: typeof Intercom
     zESettings?: ZendeskSettings
     zE?: ZendeskWidget
     // https://support.trustpilot.com/hc/en-us/articles/115011421468--Add-a-TrustBox-to-a-single-page-application
