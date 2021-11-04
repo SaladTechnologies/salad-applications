@@ -2,7 +2,7 @@ import type { Accounts } from '../accounts'
 import { STANDARD_ERRORS } from '../errors'
 import { downloads } from '../gminer'
 import type { PluginDefinition } from '../plugin-definitions'
-import { hasGpu, isEnabled } from '../requirements'
+import { hasGpu } from '../requirements'
 
 export const createGMinerZHashPluginDefinitions = (accounts: Accounts): PluginDefinition[] =>
   downloads.reduce((definitions, download) => {
@@ -24,7 +24,7 @@ export const createGMinerZHashPluginDefinitions = (accounts: Accounts): PluginDe
         initialRetries: 1,
         watchdogTimeout: 900000,
         errors: [...STANDARD_ERRORS],
-        requirements: [isEnabled('app_prohashing'), hasGpu('*', 2048)],
+        requirements: [hasGpu('*', 2048)],
       })
 
       definitions.push({

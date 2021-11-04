@@ -2,26 +2,16 @@ import type { Accounts } from '../accounts'
 import { STANDARD_ERRORS } from '../errors'
 import { downloads } from '../phoenix-miner'
 import type { PluginDefinition } from '../plugin-definitions'
-import type { RequirementFn } from '../requirements'
-import { hasGpu, isEnabled } from '../requirements'
+import { hasGpu } from '../requirements'
 
 export const createPhoenixMinerEthashPluginDefinitions = (accounts: Accounts): PluginDefinition[] => {
   const pools = [
-    [
-      `-pool stratum+tcp://prohashing.com:3339 -pool2 stratum+tcp://eu.prohashing.com:3339 -wal ${accounts.prohashing.username} -pass o=${accounts.prohashing.workerName},n=${accounts.prohashing.workerName}`,
-      [isEnabled('app_prohashing')],
-    ],
-    [
-      `-pool ssl://us1.ethermine.org:5555 -pool2 ssl://eu1.ethermine.org:5555 -ewal ${accounts.ethermine.address}.${accounts.ethermine.workerId}`,
-      [],
-    ],
-    [
-      `-pool stratum+tcp://daggerhashimoto.usa.nicehash.com:3353 -pool2 stratum+tcp://daggerhashimoto.eu.nicehash.com:3353 -ewal ${accounts.nicehash.address}.${accounts.nicehash.rigId} -esm 3 -allpools 1 -allcoins 0`,
-      [],
-    ],
-  ] as [string, RequirementFn[]][]
+    `-pool stratum+tcp://prohashing.com:3339 -pool2 stratum+tcp://eu.prohashing.com:3339 -wal ${accounts.prohashing.username} -pass o=${accounts.prohashing.workerName},n=${accounts.prohashing.workerName}`,
+    `-pool ssl://us1.ethermine.org:5555 -pool2 ssl://eu1.ethermine.org:5555 -ewal ${accounts.ethermine.address}.${accounts.ethermine.workerId}`,
+    `-pool stratum+tcp://daggerhashimoto.usa.nicehash.com:3353 -pool2 stratum+tcp://daggerhashimoto.eu.nicehash.com:3353 -ewal ${accounts.nicehash.address}.${accounts.nicehash.rigId} -esm 3 -allpools 1 -allcoins 0`,
+  ]
   return pools.reduce(
-    (definitions, [pool, requirements]) =>
+    (definitions, pool) =>
       downloads.reduce((definitions, download) => {
         if (download.windowsUrl !== undefined) {
           definitions.push({
@@ -36,7 +26,7 @@ export const createPhoenixMinerEthashPluginDefinitions = (accounts: Accounts): P
             initialRetries: 3,
             watchdogTimeout: 900000,
             errors: [...STANDARD_ERRORS],
-            requirements: [...requirements, hasGpu('*', 5120)],
+            requirements: [hasGpu('*', 5120)],
           })
         }
 
