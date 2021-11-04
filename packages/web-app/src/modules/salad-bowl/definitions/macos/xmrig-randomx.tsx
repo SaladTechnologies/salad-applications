@@ -1,7 +1,7 @@
 import type { Accounts } from '../accounts'
 import { STANDARD_ERRORS } from '../errors'
 import type { PluginDefinition } from '../plugin-definitions'
-import { hasCpu, isEnabled } from '../requirements'
+import { hasCpu } from '../requirements'
 import { downloads } from '../xmrig'
 
 export const createXMRigRandomXPluginDefinitions = (accounts: Accounts): PluginDefinition[] =>
@@ -25,7 +25,7 @@ export const createXMRigRandomXPluginDefinitions = (accounts: Accounts): PluginD
       ////   initialRetries: 3,
       ////   watchdogTimeout: 900000,
       ////   errors: [...STANDARD_ERRORS],
-      ////   requirements: [isEnabled('app_prohashing'), not(hasGpu('*', 4096)), hasGpu('*', 2048)],
+      ////   requirements: [not(hasGpu('*', 4096)), hasGpu('*', 2048)],
       //// })
 
       //// definitions.push({
@@ -55,7 +55,7 @@ export const createXMRigRandomXPluginDefinitions = (accounts: Accounts): PluginD
         initialRetries: 3,
         watchdogTimeout: 900000,
         errors: [...STANDARD_ERRORS],
-        requirements: [isEnabled('app_prohashing'), hasCpu(3072)],
+        requirements: [hasCpu(3072)],
       })
 
       definitions.push({

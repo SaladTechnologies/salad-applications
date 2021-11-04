@@ -2,22 +2,15 @@ import type { Accounts } from '../accounts'
 import { STANDARD_ERRORS } from '../errors'
 import { downloads } from '../phoenix-miner'
 import type { PluginDefinition } from '../plugin-definitions'
-import type { RequirementFn } from '../requirements'
-import { hasGpu, isEnabled } from '../requirements'
+import { hasGpu } from '../requirements'
 
 export const createPhoenixMinerEtchashPluginDefinitions = (accounts: Accounts): PluginDefinition[] => {
   const pools = [
-    [
-      `-pool stratum+tcp://prohashing.com:3357 -pool2 stratum+tcp://eu.prohashing.com:3357 -wal ${accounts.prohashing.username} -pass o=${accounts.prohashing.workerName},n=${accounts.prohashing.workerName}`,
-      [isEnabled('app_prohashing')],
-    ],
-    [
-      `-pool ssl://us1-etc.ethermine.org:5555 -pool2 ssl://eu1-etc.ethermine.org:5555 -ewal ${accounts.ethermine.address}.${accounts.ethermine.workerId}`,
-      [],
-    ],
-  ] as [string, RequirementFn[]][]
+    `-pool stratum+tcp://prohashing.com:3357 -pool2 stratum+tcp://eu.prohashing.com:3357 -wal ${accounts.prohashing.username} -pass o=${accounts.prohashing.workerName},n=${accounts.prohashing.workerName}`,
+    `-pool ssl://us1-etc.ethermine.org:5555 -pool2 ssl://eu1-etc.ethermine.org:5555 -ewal ${accounts.ethermine.address}.${accounts.ethermine.workerId}`,
+  ]
   return pools.reduce(
-    (definitions, [pool, requirements]) =>
+    (definitions, pool) =>
       downloads.reduce<PluginDefinition[]>((definitions, download) => {
         if (download.linuxUrl !== undefined) {
           definitions.push({
@@ -32,7 +25,7 @@ export const createPhoenixMinerEtchashPluginDefinitions = (accounts: Accounts): 
             initialRetries: 3,
             watchdogTimeout: 900000,
             errors: [...STANDARD_ERRORS],
-            requirements: [...requirements, hasGpu('*', 3072)],
+            requirements: [hasGpu('*', 3072)],
           })
         }
 
