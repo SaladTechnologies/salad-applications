@@ -21,6 +21,7 @@ export class ExperienceStore {
   }
 
   @computed get currentPercentComplete(): number {
+    if (this.currentXp > 131400) return 1;
     const level = this.currentLevel
     let totalRange = level.maxXp - level.minXp
     let delta = this.currentXp - level.minXp
