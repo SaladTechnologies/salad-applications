@@ -32,12 +32,12 @@
 [context.branch-deploy.environment]
   REACT_APP_API_URL='https://app-api-testing.salad.io'
   REACT_APP_MIXPANEL_TOKEN='4b245bace4eed86ffdfa35efc3addf1d'
-  REACT_APP_SEARCH_ENGINE=salad-rewards-test
-  REACT_APP_SEARCH_KEY=search-qced4ibef8m4s7xacm9hoqyk
+  REACT_APP_SEARCH_ENGINE='salad-rewards-test'
+  REACT_APP_SEARCH_KEY='search-qced4ibef8m4s7xacm9hoqyk'
 
 # Environment variables defined when building a pull request.
 [context.deploy-preview.environment]
   REACT_APP_API_URL='https://app-api-testing.salad.io'
   REACT_APP_MIXPANEL_TOKEN='4b245bace4eed86ffdfa35efc3addf1d'
-  REACT_APP_SEARCH_ENGINE=salad-rewards-test
-  REACT_APP_SEARCH_KEY=search-qced4ibef8m4s7xacm9hoqyk
+  REACT_APP_SEARCH_ENGINE='salad-rewards-test'
+  REACT_APP_SEARCH_KEY='search-qced4ibef8m4s7xacm9hoqyk'
