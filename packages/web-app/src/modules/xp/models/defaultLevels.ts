@@ -43,6 +43,7 @@ const veggies = [
  * Should be modified in conjunction with `linearFactor`
  */
 const curveFactor = 3.529964328
+export const totalXpRequiredForAllVegies = 131400
 
 /**
  * Linear factor. Ensures that the polynomial curve is not too flat initially.

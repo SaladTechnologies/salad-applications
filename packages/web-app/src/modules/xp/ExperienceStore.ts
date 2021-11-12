@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios'
 import { action, computed, flow, observable } from 'mobx'
-import { defaultLevels } from './models/defaultLevels'
+import { defaultLevels, totalXpRequiredForAllVegies } from './models/defaultLevels'
 import { Level } from './models/Level'
 
 export class ExperienceStore {
@@ -21,6 +21,10 @@ export class ExperienceStore {
   }
 
   @computed get currentPercentComplete(): number {
+    if (this.currentXp > totalXpRequiredForAllVegies) {
+      return 1
+    }
+
     const level = this.currentLevel
     let totalRange = level.maxXp - level.minXp
     let delta = this.currentXp - level.minXp
