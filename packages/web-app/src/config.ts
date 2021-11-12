@@ -42,6 +42,7 @@ export class Config {
   public readonly sentryDSN?: string = optionalString('REACT_APP_SENTRY_DSN')
   public readonly searchUrl: string = requiredString('REACT_APP_SEARCH_URL')
   public readonly strapiUploadUrl: string = requiredString('REACT_APP_STRAPI_UPLOAD_URL')
+  public readonly appRoutingBasename?: string = optionalString('REACT_APP_ROUTING_BASENAME')
 
   public get apiBaseUrl(): string {
     const override = Storage.getItem('OVERRIDE_APP_API_URL')
