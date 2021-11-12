@@ -21,7 +21,7 @@ export class ExperienceStore {
   }
 
   @computed get currentPercentComplete(): number {
-    if (this.currentXp > totalXpRequiredForAllVegies) {
+    if (this.currentXp >= totalXpRequiredForAllVegies) {
       return 1
     }
 
@@ -50,8 +50,8 @@ export class ExperienceStore {
       let res = yield this.axios.get('/api/v1/profile/xp')
 
       let newXp = res.data.lifetimeXp
-
-      this.updateXp(newXp)
+      console.log(newXp)
+      this.updateXp(100000000000)
     } catch {}
   })
 }
