@@ -2,6 +2,7 @@
 import './index.css'
 import '@saladtechnologies/garden-fonts'
 import 'react-hint/css/index.css'
+import 'react-loading-skeleton/dist/skeleton.css'
 import 'react-toastify/dist/ReactToastify.css'
 
 // Import polyfills. Order is important!
@@ -97,7 +98,7 @@ setTimeout(() => {
         <RawIntlProvider value={intl}>
           <EmotionThemeProvider theme={EmotionTheme}>
             <JSSThemeProvider theme={JSSTheme}>
-              <SkeletonTheme color={'#172E40'} highlightColor="#304759">
+              <SkeletonTheme baseColor="#172E40" highlightColor="#304759">
                 <ErrorBoundary>
                   {/* Default page title for any page that doesn't specify one */}
                   <Head title="Salad Technologies" />

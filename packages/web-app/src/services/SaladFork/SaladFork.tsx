@@ -37,10 +37,8 @@ export class SaladFork implements SaladForkInterface {
   public login = async (): Promise<SaladBowlLoginResponse> => {
     try {
       const response = await this.axios.post('/api/v2/saladbowl/auth/login')
-
-      if (response.data) {
+      if (typeof response.data === 'string' && response.data.length > 0) {
         this.jwt = response.data
-
         try {
           const request = new SaladBowlMessages.LoginRequest()
           request.setJwt(this.jwt)
