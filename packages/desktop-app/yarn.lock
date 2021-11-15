@@ -1966,7 +1966,7 @@ __metadata:
     npm-run-all: 4.1.5
     rimraf: 3.0.2
     source-map-support: 0.5.20
-    systeminformation: 5.9.12
+    systeminformation: 5.9.13
     tar: 6.1.11
     ts-loader: 8.3.0
     ts-unused-exports: 7.0.3
@@ -2782,17 +2782,17 @@ __metadata:
   linkType: hard
 
 "browserslist@npm:^4.17.5, browserslist@npm:^4.17.6":
-  version: 4.17.6
-  resolution: "browserslist@npm:4.17.6"
+  version: 4.18.0
+  resolution: "browserslist@npm:4.18.0"
   dependencies:
-    caniuse-lite: ^1.0.30001274
-    electron-to-chromium: ^1.3.886
+    caniuse-lite: ^1.0.30001280
+    electron-to-chromium: ^1.3.896
     escalade: ^3.1.1
     node-releases: ^2.0.1
     picocolors: ^1.0.0
   bin:
     browserslist: cli.js
-  checksum: 7191280a30621dcb9b285f7f22c462aacbd366a94fcacdac109b8fa1a2fdab826b6545ccb308ad40f5d80f4fc488ae1212af8b16342286b97a1418476a98f77c
+  checksum: 8bf8867d05d8709ba936bbe6d7c5055fb07e4c3227866e64b795044e7c44be1ff0c65cb9e95e8f53d3119ed92bd783ebbb4a54a9d69b5cbb9f8b17ec2864067a
   languageName: node
   linkType: hard
 
@@ -3096,13 +3096,13 @@ __metadata:
   linkType: hard
 
 "camelcase@npm:^6.2.0":
-  version: 6.2.0
-  resolution: "camelcase@npm:6.2.0"
-  checksum: 8335cfd0ecc472eae685896a42afd8c9dacd193a91f569120b931c87deb053a1ba82102031b9b48a4dbc1d18066caeacf2e4ace8c3c7f0d02936d348dc0b5a87
+  version: 6.2.1
+  resolution: "camelcase@npm:6.2.1"
+  checksum: d876272ef76391ebf8442fb7ea1d77e80ae179ce1339e021a8731b4895fd190dc19e148e045469cff5825d4c089089f3fff34d804d3f49115d55af97dd6ac0af
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.30001274":
+"caniuse-lite@npm:^1.0.30001280":
   version: 1.0.30001280
   resolution: "caniuse-lite@npm:1.0.30001280"
   checksum: 5794b22f4254927f095e83c65e89ddfc63065c7ed16e6544555a3252ee3d16e48f8a7846713dc64869c52e1abe9a2a93161804b40c2097d1abc9aaa0155a0b65
@@ -4383,7 +4383,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-to-chromium@npm:^1.3.886":
+"electron-to-chromium@npm:^1.3.896":
   version: 1.3.896
   resolution: "electron-to-chromium@npm:1.3.896"
   checksum: 6a6120bc6d2c53c57409831e0acd4c9d2c3c18e30851b3c9278bce9a4ad24ce7781fbc0fe735926aea358875ab5b10f32208df865a1c42ca565108f55b6e4aae
@@ -9635,9 +9635,9 @@ __metadata:
   linkType: hard
 
 "spdx-license-ids@npm:^3.0.0":
-  version: 3.0.10
-  resolution: "spdx-license-ids@npm:3.0.10"
-  checksum: 94fde6f558941f82c737433000e20678eccad448fe5e87cbb98ba1d811a120ddf7fbc4a7a3ebfcd2f49c8c4541ba6537af07750ca5cb54900a064d53f68b888d
+  version: 3.0.11
+  resolution: "spdx-license-ids@npm:3.0.11"
+  checksum: 1da1acb090257773e60b022094050e810ae9fec874dc1461f65dc0400cd42dd830ab2df6e64fb49c2db3dce386dd0362110780e1b154db7c0bb413488836aaeb
   languageName: node
   linkType: hard
 
@@ -9994,12 +9994,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"systeminformation@npm:5.9.12":
-  version: 5.9.12
-  resolution: "systeminformation@npm:5.9.12"
+"systeminformation@npm:5.9.13":
+  version: 5.9.13
+  resolution: "systeminformation@npm:5.9.13"
   bin:
     systeminformation: lib/cli.js
-  checksum: 6311c6a3c5b94c2411608388a4c0e0722e17e7d9b2ed267a037371a880ee0c24ccca134e9f77c4bd6830dd8e41fd1197766900ffa26b1a9015409fd9b1d48d57
+  checksum: 53960bf156582df46645267592d2565b0438da8f25376b56ef3dab0c002866b0f2365c623a766ea3a5e1be026d73e4c830d01d9862860f9c5aab5a1e36051b34
   conditions: (os=darwin | os=linux | os=win32 | os=freebsd | os=openbsd | os=netbsd | os=sunos)
   languageName: node
   linkType: hard
