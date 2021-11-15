@@ -2928,12 +2928,12 @@ __metadata:
     "@storybook/react": 6.3.12
     "@types/google-protobuf": 3.15.5
     "@types/jest": 26.0.24
-    "@types/lodash": 4.14.176
+    "@types/lodash": 4.14.177
     "@types/luxon": 2.0.7
     "@types/mixpanel-browser": 2.35.7
     "@types/node": 16.11.7
     "@types/promise.allsettled": 1.0.3
-    "@types/react": 17.0.34
+    "@types/react": 17.0.35
     "@types/react-copy-to-clipboard": 5.0.2
     "@types/react-custom-scrollbars": 4.0.9
     "@types/react-dom": 17.0.11
@@ -2998,7 +2998,7 @@ __metadata:
     rxjs: 7.4.0
     sanitize-html: 2.5.3
     semver: 7.3.5
-    supertokens-website: 10.0.3
+    supertokens-website: 10.0.4
     systeminformation: 5.9.13
     ts-unused-exports: 7.0.3
     typescript: 4.4.4
@@ -4423,10 +4423,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:4.14.176":
-  version: 4.14.176
-  resolution: "@types/lodash@npm:4.14.176"
-  checksum: 9e949704dfffab60365b5cdca0477926af6eabe82c64b7be8f74b3a117bb373d58371be962c2b159dd0cf8fad49a7dcacc748564aea4ce6b6883c197a6f0bfa8
+"@types/lodash@npm:4.14.177":
+  version: 4.14.177
+  resolution: "@types/lodash@npm:4.14.177"
+  checksum: 00f9eb300ed5219cfbabb3448d4a71744895edad60dcfda9f028c0808a50eb6ad1ca9f673b56a85f85668a4ea54b9870643625468a747039c435643e52253a75
   languageName: node
   linkType: hard
 
@@ -4691,14 +4691,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:16 || 17, @types/react@npm:17.0.34":
-  version: 17.0.34
-  resolution: "@types/react@npm:17.0.34"
+"@types/react@npm:*, @types/react@npm:16 || 17, @types/react@npm:17.0.35":
+  version: 17.0.35
+  resolution: "@types/react@npm:17.0.35"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: 16729ad7d50922ccbf8eb93874d7781dc2f1c64edc78134b5edc7154839d41e9fe320eb1c11ad2d1c9bf28b99cb1febda344509c1fda025955a5c2b43c688c8f
+  checksum: 33e2bf8068ccc5330f089f5d4bee54649c2d5b512edee4a9e44c113271a69ea8c71ddbd3103b205eb971fd4c358e9f69d707df08bec90b3c33492db374614eb7
   languageName: node
   linkType: hard
 
@@ -4804,8 +4804,8 @@ __metadata:
   linkType: hard
 
 "@types/webpack@npm:^4.41.13, @types/webpack@npm:^4.41.26, @types/webpack@npm:^4.41.8":
-  version: 4.41.31
-  resolution: "@types/webpack@npm:4.41.31"
+  version: 4.41.32
+  resolution: "@types/webpack@npm:4.41.32"
   dependencies:
     "@types/node": "*"
     "@types/tapable": ^1
@@ -4813,7 +4813,7 @@ __metadata:
     "@types/webpack-sources": "*"
     anymatch: ^3.0.0
     source-map: ^0.6.0
-  checksum: 8aa4b4ad68bb7a6ee5bd027005014e6242434162ed4c14cd251713ad6041e42bf7629fc56a5edc5a2124b49cc0dce273d6ee3386fae9a9cfe02e1f7e82087ea2
+  checksum: e594a1357cbbc2f7c6ca47785c5a11adb5591a774a69afaeab07cd6f6bff6c6aea2030bd37b32bdd19d0ec2336a346db754e8d8d236ba8effeab542716fb32b7
   languageName: node
   linkType: hard
 
@@ -6525,8 +6525,8 @@ __metadata:
   linkType: hard
 
 "browserslist@npm:^4.0.0, browserslist@npm:^4.12.0, browserslist@npm:^4.16.8, browserslist@npm:^4.17.5, browserslist@npm:^4.17.6, browserslist@npm:^4.6.2, browserslist@npm:^4.6.4":
-  version: 4.18.0
-  resolution: "browserslist@npm:4.18.0"
+  version: 4.18.1
+  resolution: "browserslist@npm:4.18.1"
   dependencies:
     caniuse-lite: ^1.0.30001280
     electron-to-chromium: ^1.3.896
@@ -6535,7 +6535,7 @@ __metadata:
     picocolors: ^1.0.0
   bin:
     browserslist: cli.js
-  checksum: 8bf8867d05d8709ba936bbe6d7c5055fb07e4c3227866e64b795044e7c44be1ff0c65cb9e95e8f53d3119ed92bd783ebbb4a54a9d69b5cbb9f8b17ec2864067a
+  checksum: ae58322deef15960fc2e601d71bc081b571cfab6705999a3d24db5325b9cfadf5f676615f4460207a93e600549c33d60d37b4502007fe9e737b3cc19e20575d5
   languageName: node
   linkType: hard
 
@@ -8729,9 +8729,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.3.564, electron-to-chromium@npm:^1.3.896":
-  version: 1.3.896
-  resolution: "electron-to-chromium@npm:1.3.896"
-  checksum: 6a6120bc6d2c53c57409831e0acd4c9d2c3c18e30851b3c9278bce9a4ad24ce7781fbc0fe735926aea358875ab5b10f32208df865a1c42ca565108f55b6e4aae
+  version: 1.3.897
+  resolution: "electron-to-chromium@npm:1.3.897"
+  checksum: bc9af830dd45824116c25c7b66aa7b6849c5303da5f2ac794b2af01c62607edf9bbe6b6f629c85755c145714b11d00517236a5392ac43e0630c8956b4805588e
   languageName: node
   linkType: hard
 
@@ -19475,20 +19475,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"supertokens-js-override@git+https://github.com/supertokens/supertokens-js-override.git#v0.0.3":
-  version: 0.0.1
-  resolution: "supertokens-js-override@https://github.com/supertokens/supertokens-js-override.git#commit=adec8381629900e749f27fae9c9f72f584fe7716"
-  checksum: 3eab338e425dc27fc91d7f05c37c2377cd64bcc63177d278028be8cce1fa5594d07c1f8fc3592f7c371ab8ad4022ca248fcf2da859cabee0010272a10770fda5
+"supertokens-js-override@npm:^0.0.4":
+  version: 0.0.4
+  resolution: "supertokens-js-override@npm:0.0.4"
+  checksum: 1486212cf2a364f798781065c598cc4a6519fdf232c5cf9f159c70637722669aa078f70a443f5a406bbc2bb5283c40cd44dea3f1bc0ac75d2ced1fdba37e1b0d
   languageName: node
   linkType: hard
 
-"supertokens-website@npm:10.0.3":
-  version: 10.0.3
-  resolution: "supertokens-website@npm:10.0.3"
+"supertokens-website@npm:10.0.4":
+  version: 10.0.4
+  resolution: "supertokens-website@npm:10.0.4"
   dependencies:
     browser-tabs-lock: ^1.2.14
-    supertokens-js-override: "git+https://github.com/supertokens/supertokens-js-override.git#v0.0.3"
-  checksum: baf068845a761246bd2af719179d9e7141e425ae506ae5d7b5ce0fec2040ee68c7c20910f81ca33de8d41e64f2d2a55f963ff370c2a1a4defaeb83be03a3814c
+    supertokens-js-override: ^0.0.4
+  checksum: a36732707018719fd4d282c38f09ca38bfb8c78e713d9bf71a75d48474acbeeafcf870a46cc3790c5a676f0f64e4f5d1d2e8954f2d53d4c0aebff5bb68096729
   languageName: node
   linkType: hard
 
