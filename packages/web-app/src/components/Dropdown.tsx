@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import Select, { OptionTypeBase } from 'react-select'
+import Select, { OptionsOrGroups } from 'react-select'
 import { SaladTheme } from '../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
@@ -12,7 +12,7 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  options?: OptionTypeBase[]
+  options?: OptionsOrGroups<any, any>
   onChange?: (value?: any) => void
 }
 
