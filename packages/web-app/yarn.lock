@@ -19478,7 +19478,7 @@ __metadata:
 "supertokens-js-override@git+https://github.com/supertokens/supertokens-js-override.git#v0.0.3":
   version: 0.0.1
   resolution: "supertokens-js-override@https://github.com/supertokens/supertokens-js-override.git#commit=adec8381629900e749f27fae9c9f72f584fe7716"
-  checksum: 97c6ffb5688141ef2852e329aca791c57dd6ce869251271d94c67c409045928d28bd867a0779c24497ee25f66fd7cd96824c489faf97788f2391523f735e8c51
+  checksum: 3eab338e425dc27fc91d7f05c37c2377cd64bcc63177d278028be8cce1fa5594d07c1f8fc3592f7c371ab8ad4022ca248fcf2da859cabee0010272a10770fda5
   languageName: node
   linkType: hard
 
