@@ -33,7 +33,6 @@ import { RewardDetailsContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
 import { SettingsContainer } from './modules/settings-views'
 import { StorefrontHomePage } from './modules/storefront-views/pages/StorefrontHomePage'
-import { PrivateRoute } from './PrivateRoute'
 import { getStore } from './Store'
 
 const _Routes = ({ location }: RouteComponentProps) => {
@@ -89,13 +88,6 @@ const _Routes = ({ location }: RouteComponentProps) => {
 
         {/* SaladPay: This is stand in until we figure out iFrames, popups... */}
         <Route exact path="/salad-pay/order-summary" component={SaladPayOrderSummaryContainer} />
-        <PrivateRoute
-          path="/account"
-          component={SettingsContainer}
-          isSignedIn={store.auth.isAuthenticated}
-          isAuthPending={store.auth.isAuthenticated}
-          // TODO: Do we still need this?? isAuthPending={this.store.auth.isAuthenticationPending}
-        />
         <Route path="/settings" component={SettingsContainer} />
         {saladBowlEnabled ? (
           <Route path="/earn/mining" component={EarningsSummaryPageContainer} />
@@ -105,7 +97,6 @@ const _Routes = ({ location }: RouteComponentProps) => {
         {saladBowlEnabled && <DesktopRoute path="/earn/machine-settings" component={MachineSettingsPageContainer} />}
         <Route path="/login" exact component={LoginPageContainer} />
         <Route path="/" render={() => <StorefrontHomePage />} />
-        <Redirect to="/" />
       </Switch>
     </>
   )
