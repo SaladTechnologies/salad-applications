@@ -10,7 +10,6 @@ const WEB_APP_URL = "http://localhost:3000";
 const GATSBY_URL = "http://localhost:8000";
 const HOST = "localhost";
 const PORT = 8080
-const API_SERVICE_URL = "https://jsonplaceholder.typicode.com";
 
 // Logging
 app.use(morgan('dev'));
