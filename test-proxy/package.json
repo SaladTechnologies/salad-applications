@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "express": "^4.17.1",
+    "http-proxy-middleware": "^2.0.1",
+    "morgan": "^1.10.0",
+    "yarn": "^1.22.17"
+  },
+  "name": "test-proxy",
+  "version": "1.0.0",
+  "description": "A proxy tool to route requests to both the salad.com application and the salad.io gatsby tool",
+  "main": "proxy.js",
+  "author": "Shonee Freed-Doerr",
+  "license": "MIT",
+  "private": false,
+  "packageManager": "yarn@3.1.0"
+}
