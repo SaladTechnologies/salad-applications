@@ -7,7 +7,7 @@ import {
 } from '@saladtechnologies/salad-grpc-salad-bowl/salad/grpc/salad_bowl/v1/salad_bowl_pb'
 import type { AxiosInstance } from 'axios'
 import { Observable, Observer, Subscription } from 'rxjs'
-import type { GuiStateData, SaladBowlLoginResponse } from './models/SaladBowlLoginResponse'
+import type { SaladBowlLoginResponse } from './models/SaladBowlLoginResponse'
 import { RetryConnectingToSaladBowl, SaladBowlLoginResponseError } from './models/SaladBowlLoginResponse'
 import { SaladBowlLogoutResponse, SaladBowlLogoutResponseError } from './models/SaladBowlLogoutResponse'
 
@@ -46,48 +46,25 @@ export class SaladFork implements SaladForkInterface {
           const loginResponse = await this.client.login(request)
 
           if (loginResponse.getSuccess()) {
-            const userPreferenceRequest = new SaladBowlMessages.GetUserPreferenceRequest()
-            const guiStateRequest = new SaladBowlMessages.GetGUIStateRequest()
-
-            const [userPreferencesResult, guiStateResult] = await Promise.allSettled([
-              this.client.getUserPreferences(userPreferenceRequest),
-              this.client.getGUIState(guiStateRequest),
-            ])
-
             let userPreferences: Record<string, boolean> = {}
 
-            if (userPreferencesResult.status === 'fulfilled') {
-              const preferences = userPreferencesResult.value.getPreferences()
+            const userPreferenceRequest = new SaladBowlMessages.GetUserPreferenceRequest()
+            try {
+              const userPreferencesResult = await this.client.getUserPreferences(userPreferenceRequest)
+              const preferences = userPreferencesResult.getPreferences()
               if (preferences) {
                 const preferencesMap = preferences.getPreferencesMap()
                 if (preferencesMap) {
                   userPreferences = Object.fromEntries(preferencesMap.entries())
                 }
               }
-            } else {
+            } catch {
               throw new Error(SaladBowlLoginResponseError.failedToGetUserPreferences)
             }
 
-            let guiStateData: GuiStateData = {}
-
-            // TODO: Remove GUI State
-            console.log(guiStateResult)
-            // if (guiStateResult.status === 'fulfilled') {
-            //   const guiState = guiStateResult.value.getState()
-
-            //   guiStateData.isChopping = guiState?.hasChoptime()
-
-            //   const startTime = guiState?.getStart()
-            //   if (startTime) {
-            //     guiStateData.startTime = startTime.getSeconds()
-            //   }
-            // } else {
-            //   throw new Error(SaladBowlLoginResponseError.failedToGetGuiState)
-            // }
-
             return {
               preferences: userPreferences,
-              runningState: guiStateData,
+              runningState: {},
             }
           } else {
             throw new Error(SaladBowlLoginResponseError.unableToLoginToSaladBowl)
