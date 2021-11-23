@@ -10,8 +10,6 @@ import type { NativeStore } from '../machine'
 import type { AntiVirusSoftware, ZendeskArticle, ZendeskArticleList, ZendeskArticleResource } from './models'
 import { getAntiVirusSoftware, getZendeskAVData } from './utils'
 
-const INTERCOM_APP_ID = 'tkraexri'
-
 export class Zendesk {
   private static injected: boolean = false
 
@@ -52,7 +50,7 @@ export class Zendesk {
     private readonly native: NativeStore,
     private readonly analytics: AnalyticsStore,
   ) {
-    this.useZendesk = !featureManager.isEnabled('app_intercom')
+    this.useZendesk = !featureManager.isEnabled('app_helpscout')
     this.inject()
   }
 
@@ -210,16 +208,18 @@ export class Zendesk {
         zendeskSnippetScript.src = 'https://static.zdassets.com/ekr/snippet.js?key=36be7184-2a3f-4bec-9bb2-758e7c9036d0'
         document.body.appendChild(zendeskSnippetScript)
       } else {
-        // Append Intercom script to body.
+        // Append Help Scout script to body.
         /* eslint-disable */
         /* prettier-ignore */
         /* @ts-ignore */
-        ;(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/'+INTERCOM_APP_ID;var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(document.readyState==='complete'){l();}else if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
-        if (window.Intercom) {
-          window.Intercom('boot', {
-            app_id: INTERCOM_APP_ID,
-          })
-        }
+        !function(e,t,n){function a(){var e=t.getElementsByTagName("script")[0],n=t.createElement("script");n.type="text/javascript",n.async=!0,n.src="https://beacon-v2.helpscout.net",e.parentNode.insertBefore(n,e)}if(e.Beacon=n=function(t,n,a){e.Beacon.readyQueue.push({method:t,options:n,data:a})},n.readyQueue=[],"complete"===t.readyState)return a();e.attachEvent?e.attachEvent("onload",a):e.addEventListener("load",a,!1)}(window,document,window.Beacon||function(){});
+        /* prettier-ignore */
+        /* @ts-ignore */
+        window.Beacon('init', '29fdaae4-715f-48dc-b93e-5552ef031abc');
+        /* prettier-ignore */
+        /* @ts-ignore */
+        ;(function(){var u='https://unpkg.com/@helpscout/beacon-devtools/dist/beacon-devtools.umd.js';var s=document.createElement('script');s.type='text/javascript';s.charset='utf-8';s.src=u;document.body.appendChild(s)})();
+        /* eslint-enable */
       }
 
       Zendesk.injected = true
@@ -287,12 +287,8 @@ export class Zendesk {
         this.initializeRetryTimeout = undefined
       }
     } else {
-      if (window.Intercom) {
-        window.Intercom('boot', {
-          app_id: INTERCOM_APP_ID,
-          email,
-          name: username,
-        })
+      if (window.Beacon) {
+        window.Beacon('identify', { name: username, email })
       }
     }
   }
@@ -341,11 +337,9 @@ export class Zendesk {
         console.error(e)
       }
     } else {
-      if (window.Intercom) {
-        window.Intercom('shutdown')
-        window.Intercom('boot', {
-          app_id: INTERCOM_APP_ID,
-        })
+      if (window.Beacon) {
+        window.Beacon('reset')
+        window.Beacon('logout', { endActiveChat: true })
       }
     }
   }
