@@ -168,6 +168,28 @@ export class OnboardingStore {
     }
   }
 
+  /**
+   * Removes all account related onboarding pages from local storage.
+   */
+  @action
+  public resetAccountOnboardingPagesCompleted = () => {
+    if (this.onboardingPagesCompleted) {
+      const completedOnboardingPages = JSON.parse(this.onboardingPagesCompleted)
+
+      const welcomeIndex = completedOnboardingPages.indexOf(ONBOARDING_PAGE_NAMES.WELCOME)
+      if (welcomeIndex > -1) {
+        completedOnboardingPages.splice(welcomeIndex, 1)
+      }
+
+      const referralIndex = completedOnboardingPages.indexOf(ONBOARDING_PAGE_NAMES.REFERRAL)
+      if (referralIndex > -1) {
+        completedOnboardingPages.splice(referralIndex, 1)
+      }
+
+      this.updateCompletedOnboardingPages(completedOnboardingPages)
+    }
+  }
+
   @action.bound
   public disableSleepMode = flow(function* (this: OnboardingStore) {
     this.disableSleepModeErrorMessage = undefined

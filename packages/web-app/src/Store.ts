@@ -199,6 +199,7 @@ export class RootStore {
 
     this.referral.currentReferral = undefined
     this.referral.referralCode = ''
+    this.onboarding.resetAccountOnboardingPagesCompleted()
 
     this.analytics.trackLogout()
     this.native.logout()
