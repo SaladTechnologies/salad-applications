@@ -11,7 +11,7 @@ Thanks for being here and for being awesome! 👍
 
 ## Discussing
 
-The easiest way to contribute to Salad is by participating in discussions on our [community forums](https://forums.salad.com) or the [SaladChefs Discord server](https://discord.gg/salad). The community often chimes in with helpful advice when you have a question, and you may also find yourself providing answers and helping others.
+The easiest way to contribute to Salad is by participating in discussions on our [community forums](https://www.reddit.com/r/SaladChefs) or the [SaladChefs Discord server](https://discord.gg/salad). The community often chimes in with helpful advice when you have a question, and you may also find yourself providing answers and helping others.
 
 You can also create a [support ticket](https://support.salad.com/hc/en-us/requests/new) if you have a specific question that should be answered by a team member.
 
@@ -21,7 +21,7 @@ _Please don't use GitHub issues to ask a question._ We will politely close a Git
 
 We're sorry if this happened to you!
 
-Consider jumping into the [Community Support category on our community forums](https://forums.salad.com/c/community-support) or the [#community-support channel in the SaladChefs Discord server](https://discord.gg/salad). The community may have already found a solution.
+Consider jumping into the [Community Support category on our community forums](https://www.reddit.com/r/SaladChefs) or the [#community-support channel in the SaladChefs Discord server](https://discord.gg/salad). The community may have already found a solution.
 
 You can also create a [support ticket](https://support.salad.com/hc/en-us/requests/new) to report any problems or concerns.
 
@@ -29,7 +29,7 @@ You can also create a [support ticket](https://support.salad.com/hc/en-us/reques
 
 We love a good idea. Do you have one?
 
-Consider jumping into the [Feature Requests category on our community forums](https://forums.salad.com/c/feature-requests). You may submit your ideas or upvote existing suggestions there. The community may have some interesting insights.
+Consider jumping into the [Feature Requests category on our community forums](https://www.reddit.com/r/SaladChefs). You may submit your ideas or upvote existing suggestions there. The community may have some interesting insights.
 
 ## Changing Code
 

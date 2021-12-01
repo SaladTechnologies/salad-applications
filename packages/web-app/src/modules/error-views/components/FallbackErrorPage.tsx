@@ -66,7 +66,7 @@ class _FallbackErrorPage extends Component<Props> {
             Support Ticket
           </span>{' '}
           or getting help from our{' '}
-          <SmartLink to="https://forums.salad.com/c/community-support" trackingInfo={{ label: forumLabel }}>
+          <SmartLink to="https://www.reddit.com/r/SaladChefs" trackingInfo={{ label: forumLabel }}>
             {forumLabel}
           </SmartLink>
           . In the meantime, try switching to {alternativeMinerType} mining so that you keep earning while we work to
