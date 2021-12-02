@@ -244,7 +244,7 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
                                   <p>
                                     Your anti-virus software is still blocking Salad, and none of our miners will work
                                     until you whitelist Salad with {antivirusName}. Reach out to the{' '}
-                                    <SmartLink to="https://forums.salad.com">support forum</SmartLink> for help!
+                                    <SmartLink to="https://www.reddit.com/r/SaladChefs">support forum</SmartLink> for help!
                                   </p>
                                   <p className={classes.selectFromList}>
                                     {' '}
@@ -259,7 +259,7 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
                                 <p>
                                   Your anti-virus has blocked all of our miners. so you'll need to whitelist Salad with
                                   your anti-virus in order to get chopping. Reach out to the{' '}
-                                  <SmartLink to="https://forums.salad.com">support forum</SmartLink> for help!
+                                  <SmartLink to="https://www.reddit.com/r/SaladChefs">support forum</SmartLink> for help!
                                 </p>
                               )}
                             </>
@@ -359,7 +359,7 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
                             <p>
                               Your Firewall is still blocking Salad, and none of our miners will work until this issue
                               is resolved. Can't add an exception? Reach out to the{' '}
-                              <SmartLink to="https://forums.salad.com">Support Forum</SmartLink> for help!
+                              <SmartLink to="https://www.reddit.com/r/SaladChefs">Support Forum</SmartLink> for help!
                             </p>
                           ) : (
                             <p>

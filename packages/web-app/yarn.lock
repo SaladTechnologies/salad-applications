@@ -2934,7 +2934,7 @@ __metadata:
     "@fortawesome/free-regular-svg-icons": 5.15.4
     "@fortawesome/free-solid-svg-icons": 5.15.4
     "@fortawesome/react-fontawesome": 0.1.16
-    "@saladtechnologies/garden-components": "file:../../libs/saladtechnologies-garden-components-1.0.59.tgz"
+    "@saladtechnologies/garden-components": "file:../../libs/saladtechnologies-garden-components-1.0.60.tgz"
     "@saladtechnologies/garden-fonts": "file:../../libs/saladtechnologies-garden-fonts-1.0.0.tgz"
     "@saladtechnologies/garden-icons": "file:../../libs/saladtechnologies-garden-icons-1.0.5.tgz"
     "@saladtechnologies/salad-grpc-salad-bowl": "file:../../libs/saladtechnologies-grpc-salad-bowl-0.0.2-alpha1.tgz"
@@ -3034,9 +3034,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@saladtechnologies/garden-components@file:../../libs/saladtechnologies-garden-components-1.0.59.tgz::locator=%40saladtech%2Fweb-app%40workspace%3A.":
-  version: 1.0.59
-  resolution: "@saladtechnologies/garden-components@file:../../libs/saladtechnologies-garden-components-1.0.59.tgz::locator=%40saladtech%2Fweb-app%40workspace%3A."
+"@saladtechnologies/garden-components@file:../../libs/saladtechnologies-garden-components-1.0.60.tgz::locator=%40saladtech%2Fweb-app%40workspace%3A.":
+  version: 1.0.60
+  resolution: "@saladtechnologies/garden-components@file:../../libs/saladtechnologies-garden-components-1.0.60.tgz::locator=%40saladtech%2Fweb-app%40workspace%3A."
   peerDependencies:
     "@emotion/react": 11.x
     "@emotion/styled": 11.x
@@ -3049,7 +3049,7 @@ __metadata:
     react-hook-form: 7.x
     react-intl: 5.x
     react-range: 1.x
-  checksum: 7b5bed9f91d6d3bc517a2ee30bc67c5ead528ce5cb1176b3e7ec9992f52ac1a1b7b27f9d5b5f81e011902759d7f9cb4ee2318b33e1e2016609f8cb47437c8a6d
+  checksum: 4679dbe10ba4142ed6208c41bf63cf6f7878bb3c718d6baef1c701f3b5912a5622c5533dae1992d1dd7d35ca829a92e56cc408909e5a9f07e6a559c4225f974c
   languageName: node
   linkType: hard
 
