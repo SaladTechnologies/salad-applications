@@ -10,6 +10,8 @@ import type { NativeStore } from '../machine'
 import type { AntiVirusSoftware, ZendeskArticle, ZendeskArticleList, ZendeskArticleResource } from './models'
 import { getAntiVirusSoftware, getZendeskAVData } from './utils'
 
+const defaultBeaconId = '29fdaae4-715f-48dc-b93e-5552ef031abc'
+
 export class Zendesk {
   private static injected: boolean = false
 
@@ -108,6 +110,18 @@ export class Zendesk {
     }
 
     return jwtToken
+  }
+
+  private async getSignature(beaconId: string): Promise<string | undefined> {
+    let signature: string | null | undefined
+    if (this.auth.isAuthenticated) {
+      let response = await this.axios.post<never, AxiosResponse<{ signature: string | null | undefined }>>(
+        `/api/v2/help-scout-signatures?beaconId=${beaconId}`,
+      )
+      signature = response.data.signature
+    }
+
+    return signature || undefined
   }
 
   private inject() {
@@ -215,7 +229,7 @@ export class Zendesk {
         !function(e,t,n){function a(){var e=t.getElementsByTagName("script")[0],n=t.createElement("script");n.type="text/javascript",n.async=!0,n.src="https://beacon-v2.helpscout.net",e.parentNode.insertBefore(n,e)}if(e.Beacon=n=function(t,n,a){e.Beacon.readyQueue.push({method:t,options:n,data:a})},n.readyQueue=[],"complete"===t.readyState)return a();e.attachEvent?e.attachEvent("onload",a):e.addEventListener("load",a,!1)}(window,document,window.Beacon||function(){});
         /* prettier-ignore */
         /* @ts-ignore */
-        window.Beacon('init', '29fdaae4-715f-48dc-b93e-5552ef031abc');
+        window.Beacon('init', defaultBeaconId);
         /* prettier-ignore */
         /* @ts-ignore */
         ;(function(){var u='https://unpkg.com/@helpscout/beacon-devtools/dist/beacon-devtools.umd.js';var s=document.createElement('script');s.type='text/javascript';s.charset='utf-8';s.src=u;document.body.appendChild(s)})();
@@ -226,7 +240,7 @@ export class Zendesk {
     }
   }
 
-  login(username: string, email: string) {
+  async login(username: string, email: string) {
     if (this.useZendesk) {
       if (!window.zE) {
         if (this.initializeRetryTimeout !== undefined) {
@@ -288,7 +302,7 @@ export class Zendesk {
       }
     } else {
       if (window.Beacon) {
-        window.Beacon('identify', { name: username, email })
+        window.Beacon('identify', { name: username, email, signature: await this.getSignature(defaultBeaconId) })
       }
     }
   }
