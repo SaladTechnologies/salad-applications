@@ -21,6 +21,8 @@ export class UnleashFeatureManager implements FeatureManager {
         url: process.env.REACT_APP_UNLEASH_URL,
         clientKey: process.env.REACT_APP_UNLEASH_API_KEY,
         appName: 'web-app',
+        refreshInterval: 60,
+        metricsInterval: 60,
       })
 
       // TODO: refactor to add this at top app-level initialization
