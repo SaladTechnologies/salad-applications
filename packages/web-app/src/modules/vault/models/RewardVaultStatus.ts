@@ -3,4 +3,5 @@ export enum RewardVaultStatus {
   CREATED = 'created',
   FAILED = 'failed',
   COMPLETE = 'complete',
+  REFUNDED = 'refunded'
 }
