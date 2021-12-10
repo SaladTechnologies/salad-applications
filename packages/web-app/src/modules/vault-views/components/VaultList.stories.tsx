@@ -92,6 +92,13 @@ const redemptions = [
     code: 'HULU_CODE',
     status: RewardVaultStatus.COMPLETE,
   },
+  {
+    id: '123513925',
+    name: 'StarCraft: Brood War',
+    price: 19.99,
+    timestamp: today,
+    status: RewardVaultStatus.REFUNDED,
+  },
 ]
 
 storiesOf('Modules/New Vault/Components', module)
