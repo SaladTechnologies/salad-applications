@@ -34,8 +34,8 @@
   REACT_APP_MIXPANEL_TOKEN='4b245bace4eed86ffdfa35efc3addf1d'
   REACT_APP_SEARCH_ENGINE='salad-rewards-test'
   REACT_APP_SEARCH_KEY='search-qced4ibef8m4s7xacm9hoqyk'
-  REACT_APP_UNLEASH_URL=https://features-testing.salad.com/proxy
-  REACT_APP_UNLEASH_API_KEY=zrujLzhnwVZkIOlS74oZZ0DK7ZXs3Ifo
+  REACT_APP_UNLEASH_URL='https://features-testing.salad.com/proxy'
+  REACT_APP_UNLEASH_API_KEY='zrujLzhnwVZkIOlS74oZZ0DK7ZXs3Ifo'
 
 # Environment variables defined when building a pull request.
 [context.deploy-preview.environment]
@@ -43,5 +43,5 @@
   REACT_APP_MIXPANEL_TOKEN='4b245bace4eed86ffdfa35efc3addf1d'
   REACT_APP_SEARCH_ENGINE='salad-rewards-test'
   REACT_APP_SEARCH_KEY='search-qced4ibef8m4s7xacm9hoqyk'
-  REACT_APP_UNLEASH_URL=https://features-testing.salad.com/proxy
-  REACT_APP_UNLEASH_API_KEY=zrujLzhnwVZkIOlS74oZZ0DK7ZXs3Ifo
+  REACT_APP_UNLEASH_URL='https://features-testing.salad.com/proxy'
+  REACT_APP_UNLEASH_API_KEY='zrujLzhnwVZkIOlS74oZZ0DK7ZXs3Ifo'
