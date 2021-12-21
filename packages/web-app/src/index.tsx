@@ -58,7 +58,7 @@ if (!window.salad) {
 console.log(`Running web app build:${config.appBuild}`)
 
 const client = createClient()
-const featureManager = new UnleashFeatureManager()
+const featureManager = new UnleashFeatureManager(config)
 
 setTimeout(() => {
   const rootStore = createStore(client, featureManager)
