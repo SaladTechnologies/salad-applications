@@ -36,13 +36,13 @@ const requiredString = (name: string, defaultValue?: string): string => {
 
 export class Config {
   public readonly appBuild: string = requiredString('REACT_APP_BUILD')
+  public readonly appRoutingBasename?: string = optionalString('PUBLIC_URL')
   public readonly dataRefreshRate: number = numberOrDefault('REACT_APP_DATA_REFRESH_RATE', convertMinutes(5))
   public readonly mixpanelToken?: string = optionalString('REACT_APP_MIXPANEL_TOKEN')
   public readonly rewardRefreshRate: number = numberOrDefault('REACT_APP_REWARD_REFRESH_RATE', convertMinutes(5))
   public readonly sentryDSN?: string = optionalString('REACT_APP_SENTRY_DSN')
   public readonly searchUrl: string = requiredString('REACT_APP_SEARCH_URL')
   public readonly strapiUploadUrl: string = requiredString('REACT_APP_STRAPI_UPLOAD_URL')
-  public readonly appRoutingBasename?: string = optionalString('PUBLIC_URL')
 
   public get apiBaseUrl(): string {
     const override = Storage.getItem('OVERRIDE_APP_API_URL')
@@ -68,6 +68,24 @@ export class Config {
       return override
     } else {
       return requiredString('REACT_APP_SEARCH_ENGINE')
+    }
+  }
+
+  public get unleashApiKey(): string {
+    const override = Storage.getItem('OVERRIDE_UNLEASH_API_KEY')
+    if (override != null) {
+      return override
+    } else {
+      return requiredString('REACT_APP_UNLEASH_API_KEY')
+    }
+  }
+
+  public get unleashUrl(): string {
+    const override = Storage.getItem('OVERRIDE_UNLEASH_URL')
+    if (override != null) {
+      return override
+    } else {
+      return requiredString('REACT_APP_UNLEASH_URL')
     }
   }
 }

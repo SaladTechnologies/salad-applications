@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react'
 import { UnleashClient } from 'unleash-proxy-client'
+import type { Config } from './config'
 
 export interface FeatureManager {
   getVariant: (feature: string) => string
@@ -14,20 +15,18 @@ export class UnleashFeatureManager implements FeatureManager {
   private readonly client: UnleashClient | undefined
   private readonly cache: Record<string, boolean>
 
-  public constructor() {
+  public constructor(config: Config) {
     this.cache = {}
-    if (process.env.REACT_APP_UNLEASH_URL && process.env.REACT_APP_UNLEASH_API_KEY) {
-      this.client = new UnleashClient({
-        url: process.env.REACT_APP_UNLEASH_URL,
-        clientKey: process.env.REACT_APP_UNLEASH_API_KEY,
-        appName: 'web-app',
-        refreshInterval: 60,
-        metricsInterval: 60,
-      })
+    this.client = new UnleashClient({
+      url: config.unleashUrl,
+      clientKey: config.unleashApiKey,
+      appName: 'web-app',
+      refreshInterval: 60,
+      metricsInterval: 60,
+    })
 
-      // TODO: refactor to add this at top app-level initialization
-      this.start()
-    }
+    // TODO: refactor to add this at top app-level initialization
+    this.start()
   }
 
   public start = (): Promise<void> => {
