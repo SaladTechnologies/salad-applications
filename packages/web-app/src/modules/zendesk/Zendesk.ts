@@ -230,9 +230,6 @@ export class Zendesk {
         /* prettier-ignore */
         /* @ts-ignore */
         window.Beacon('init', defaultBeaconId);
-        /* prettier-ignore */
-        /* @ts-ignore */
-        ;(function(){var u='https://unpkg.com/@helpscout/beacon-devtools/dist/beacon-devtools.umd.js';var s=document.createElement('script');s.type='text/javascript';s.charset='utf-8';s.src=u;document.body.appendChild(s)})();
         /* eslint-enable */
       }
 
