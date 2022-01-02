@@ -378,7 +378,7 @@ const createMainWindow = () => {
     }
 
     machineInfo.then((info) => {
-      bridge.send('set-machine-info', info)
+      bridge.send('set-machine-info', JSON.parse(JSON.stringify(info)))
     })
   })
 
