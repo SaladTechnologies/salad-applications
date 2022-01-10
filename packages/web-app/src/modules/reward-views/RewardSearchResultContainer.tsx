@@ -14,7 +14,7 @@ const mapStoreToProps = (store: RootStore): any => {
     }
   }
   return {
-    onBack: () => store.routing.push(''),
+    onBack: () => store.routing.push('/store'),
     onClickReward,
   }
 }

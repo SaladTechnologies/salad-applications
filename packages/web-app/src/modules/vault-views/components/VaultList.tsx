@@ -24,6 +24,7 @@ const styles = (theme: SaladTheme) => ({
   container: {
     height: '100%',
     display: 'flex',
+    width: '100%',
     flexDirection: 'column',
     padding: 20,
   },

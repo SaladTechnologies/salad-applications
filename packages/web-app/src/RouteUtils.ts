@@ -10,7 +10,7 @@ export const rewardCategoryRoute = (category: string): string => {
 
   let safeCategory = encodeURIComponent(category)
 
-  return `/search?size=n_20_n&filters%5B0%5D%5Bfield%5D=tags&filters%5B0%5D%5Bvalues%5D%5B0%5D=${safeCategory}&filters%5B0%5D%5Btype%5D=all`
+  return `/store/search?size=n_20_n&filters%5B0%5D%5Bfield%5D=tags&filters%5B0%5D%5Bvalues%5D%5B0%5D=${safeCategory}&filters%5B0%5D%5Btype%5D=all`
 }
 
 /**
@@ -18,5 +18,5 @@ export const rewardCategoryRoute = (category: string): string => {
  * @param category The category to view
  */
 export const rewardRoute = (rewardId?: string): string => {
-  return `/rewards/${rewardId}`
+  return `/store/rewards/${rewardId}`
 }

@@ -11,7 +11,7 @@ const mapStoreToProps = (store: RootStore): any => {
     store.onboardingAutoStart.enableAutoStart()
     if (store.onboardingAutoStart.isDoNotShowAutoStartAgainEnabled) {
       Storage.setItem(DO_NOT_SHOW_AUTO_START_AGAIN, true)
-      store.routing.push('/')
+      store.routing.push('/store')
     } else {
       store.onboarding.viewNextPage(ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION)
     }
@@ -21,7 +21,7 @@ const mapStoreToProps = (store: RootStore): any => {
     store.analytics.trackButtonClicked('skip_auto_start_button', 'Skip Auto-Start Button', 'enabled')
     if (store.onboardingAutoStart.isDoNotShowAutoStartAgainEnabled) {
       Storage.setItem(DO_NOT_SHOW_AUTO_START_AGAIN, true)
-      store.routing.push('/')
+      store.routing.push('/store')
     } else {
       store.onboarding.viewNextPage(ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION)
     }

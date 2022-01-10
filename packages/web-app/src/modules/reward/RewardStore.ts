@@ -256,7 +256,7 @@ export class RewardStore {
               title: 'Sorry, Chef! This reward is unavailable.',
               message: "Looks like we're fresh out of that. Head to the Storefront to browse more great rewards.",
               autoClose: false,
-              onClick: () => this.store.routing.push('/'),
+              onClick: () => this.store.routing.push('/store'),
               type: 'error',
             }
             break

@@ -52,7 +52,7 @@ const mapStoreToProps = (store: RootStore): any => {
   }
 
   const handleClose = () => {
-    store.analytics.trackSmartLink('/', 'Back')
+    store.analytics.trackSmartLink('/store', 'Back')
     store.ui.hideModal()
   }
 
