@@ -262,7 +262,7 @@ export class OnboardingStore {
         this.store.analytics.trackOnboardingPageViewed(nextOnboardingPage.NAME, nextOnboardingPage.ORDER)
       }
     } else {
-      this.store.routing.push('/')
+      this.store.routing.push('/store')
     }
   }
 

@@ -83,7 +83,7 @@ export class MachineStore {
             message: 'Salad was unable to detect a compatible graphics card. Click here for more details.',
             autoClose: false,
             type: 'error',
-            onClick: () => this.store.routing.push('/earn/mine/miner-details'),
+            onClick: () => this.store.routing.push('/earn/machine-settings'),
           })
         }
       } catch (err) {

@@ -3,21 +3,10 @@ import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-
 import { LoadingPage } from './components'
 import { DesktopRoute } from './DesktopRoute'
 import { useFeatureManager } from './FeatureManager'
-import { ReferralOnboardingContainer } from './modules/account-views/referral-views'
-import { ReferralWelcomeContainer } from './modules/account-views/referral-views/ReferralWelcomeContainer'
+import { ReferralOnboardingContainer, ReferralWelcomeContainer } from './modules/account-views/referral-views'
 import { LoginPageContainer } from './modules/auth-views'
 import { ReplaceBonusModalContainer } from './modules/bonus-views'
 import { EarningsSummaryPageContainer, EarnMenuContainer } from './modules/earn-views'
-import {
-  CudaErrorContainer,
-  FallbackErrorContainer,
-  FirewallErrorContainer,
-  GenericAntiVirusErrorContainer,
-  NetworkErrorContainer,
-  NotCompatibleErrorContainer,
-  SpecificAntiVirusErrorContainer,
-  UnknownErrorContainer,
-} from './modules/error-views'
 import {
   DontLoseProgressPageContainer,
   MachineSettingsPageContainer,
@@ -33,6 +22,8 @@ import { RewardDetailsContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
 import { SettingsContainer } from './modules/settings-views'
 import { StorefrontHomePage } from './modules/storefront-views/pages/StorefrontHomePage'
+import { VaultListContainer } from './modules/vault-views'
+import { NotFoundPage } from './NotFoundPage'
 import { getStore } from './Store'
 
 const _Routes = ({ location }: RouteComponentProps) => {
@@ -52,53 +43,67 @@ const _Routes = ({ location }: RouteComponentProps) => {
     (location.state as { currentLocation: Location | undefined } | undefined)?.currentLocation || location
 
   return (
-    <>
-      <Switch location={currentLocation}>
-        <Route exact path="/onboarding/referral" component={ReferralOnboardingContainer} />
-        <Route exact path="/onboarding/welcome" component={ReferralWelcomeContainer} />
-        <Route exact path="/onboarding/antivirus-configuration" component={AntivirusConfigurationContainer} />
-        <Route exact path="/onboarding/antivirus-guide/:id" component={OnboardingSpecificAntivirusGuideContainer} />
-        <Route exact path="/onboarding/auto-start" component={AutoStartConfigurationPageContainer} />
-        <Route exact path="/onboarding/sleep-mode" component={SleepModeConfigurationPageContainer} />
-        <Route exact path="/errors/cuda" component={CudaErrorContainer} />
-        <Route exact path="/errors/fallback" component={FallbackErrorContainer} />
-        <Route exact path="/errors/network" component={NetworkErrorContainer} />
-        <Route exact path="/errors/not-compatible" component={NotCompatibleErrorContainer} />
-        <Route exact path="/errors/unknown" component={UnknownErrorContainer} />
-        <Route exact path="/errors/anti-virus/:id" component={SpecificAntiVirusErrorContainer} />
-        <Route exact path="/errors/anti-virus" component={GenericAntiVirusErrorContainer} />
-        <Route exact path="/errors/firewall" component={FirewallErrorContainer} />
-        <Route exact path="/bonuses/replace-bonus" component={ReplaceBonusModalContainer} />
-        <Route exact path="/warnings/dont-lose-progress" component={DontLoseProgressPageContainer} />
-        <Route
-          exact
-          path="/warnings/override-compatibility-detection"
-          component={OverrideCompatibilityDetectionContainer}
-        />
-        <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
-        <Redirect exact from="/whats-new" to="/" />
-        <Redirect exact from="/account/summary" to="/settings/summary" />
-        <Redirect exact from="/account/referrals" to="/settings/referrals" />
-        <Redirect exact from="/account/reward-vault" to="/settings/reward-vault" />
-        {saladBowlEnabled && <Redirect exact from="/earn/summary" to="/earn/mining" />}
-        {saladBowlEnabled && <Redirect exact from="/earn/mine" to="/earn/mining" />}
-        {saladBowlEnabled && <Redirect exact from="/earn/mine/miner-details" to="/earn/machine-settings" />}
-        {saladBowlEnabled && <Redirect exact from="/earn/referrals" to="/settings/referrals" />}
-        {saladBowlEnabled && <Redirect exact from="/settings/desktop-settings" to="/earn/machine-settings" />}
+    <Switch location={currentLocation}>
+      {/* Login Pages */}
+      <Route path="/login" exact component={LoginPageContainer} />
 
-        {/* SaladPay: This is stand in until we figure out iFrames, popups... */}
-        <Route exact path="/salad-pay/order-summary" component={SaladPayOrderSummaryContainer} />
-        <Route path="/settings" component={SettingsContainer} />
-        {saladBowlEnabled ? (
-          <Route path="/earn/mining" component={EarningsSummaryPageContainer} />
-        ) : (
-          <Route path="/earn" component={EarnMenuContainer} />
-        )}
-        {saladBowlEnabled && <DesktopRoute path="/earn/machine-settings" component={MachineSettingsPageContainer} />}
-        <Route path="/login" exact component={LoginPageContainer} />
-        <Route path="/" render={() => <StorefrontHomePage />} />
-      </Switch>
-    </>
+      {/* Onboarding */}
+      <Route exact path="/onboarding/referral" component={ReferralOnboardingContainer} />
+      <Route exact path="/onboarding/welcome" component={ReferralWelcomeContainer} />
+      <Route exact path="/onboarding/antivirus-configuration" component={AntivirusConfigurationContainer} />
+      <Route exact path="/onboarding/antivirus-guide/:id" component={OnboardingSpecificAntivirusGuideContainer} />
+      <Route exact path="/onboarding/auto-start" component={AutoStartConfigurationPageContainer} />
+      <Route exact path="/onboarding/sleep-mode" component={SleepModeConfigurationPageContainer} />
+      <Redirect exact from="/welcome" to="/onboarding/welcome" />
+
+      {/* Store Pages */}
+      <Route path={['/store', '/store/search']} exact render={() => <StorefrontHomePage />} />
+      <Route path="/store/rewards/:id" exact component={RewardDetailsContainer} />
+      <Route path="/store/vault" exact component={VaultListContainer} />
+
+      {/* Modals */}
+      {/* SaladPay: This is stand in until we figure out iFrames, popups... */}
+      <Route exact path="/salad-pay/order-summary" component={SaladPayOrderSummaryContainer} />
+      <Route exact path="/bonuses/replace-bonus" component={ReplaceBonusModalContainer} />
+      <Route exact path="/warnings/dont-lose-progress" component={DontLoseProgressPageContainer} />
+      <Route
+        exact
+        path="/warnings/override-compatibility-detection"
+        component={OverrideCompatibilityDetectionContainer}
+      />
+
+      {/* Account */}
+      <Redirect exact from="/account" to="/account/summary" />
+      <Route path="/account" component={SettingsContainer} />
+
+      {/* <Route exact path="/errors/cuda" component={CudaErrorContainer} />
+      <Route exact path="/errors/fallback" component={FallbackErrorContainer} />
+      <Route exact path="/errors/network" component={NetworkErrorContainer} />
+      <Route exact path="/errors/not-compatible" component={NotCompatibleErrorContainer} />
+      <Route exact path="/errors/unknown" component={UnknownErrorContainer} />
+      <Route exact path="/errors/anti-virus/:id" component={SpecificAntiVirusErrorContainer} />
+      <Route exact path="/errors/anti-virus" component={GenericAntiVirusErrorContainer} />
+      <Route exact path="/errors/firewall" component={FirewallErrorContainer} />
+       */}
+
+      {/* {saladBowlEnabled && <Redirect exact from="/earn/summary" to="/earn/mining" />}
+      {saladBowlEnabled && <Redirect exact from="/earn/mine" to="/earn/mining" />}
+      {saladBowlEnabled && <Redirect exact from="/earn/mine/miner-details" to="/earn/machine-settings" />}
+      {saladBowlEnabled && <Redirect exact from="/earn/referrals" to="/settings/referrals" />}
+      {saladBowlEnabled && <Redirect exact from="/settings/desktop-settings" to="/earn/machine-settings" />} */}
+
+      <Redirect exact from="/earn" to="/earn/summary" />
+      {saladBowlEnabled ? (
+        <Route path="/earn/mining" component={EarningsSummaryPageContainer} />
+      ) : (
+        <Route path="/earn" component={EarnMenuContainer} />
+      )}
+      {saladBowlEnabled && <DesktopRoute path="/earn/machine-settings" component={MachineSettingsPageContainer} />}
+
+      <Redirect exact from="/" to="/store" />
+
+      <Route component={NotFoundPage} />
+    </Switch>
   )
 }
 

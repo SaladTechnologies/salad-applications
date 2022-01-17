@@ -5,44 +5,28 @@ import { RootStore } from '../../Store'
 import { AccountContainer } from '../account-views/account-views'
 import { ReferralSettingsContainer } from '../account-views/referral-views'
 import { BonusPageContainer } from '../bonus-views'
-import { EngagementStore } from '../engagement'
 import { CurrentSeasonPageContainer } from '../seasons-views'
-import { VaultListContainer } from '../vault-views'
 import { DesktopSettingsContainer } from './desktop-settings-views'
 
 const mapStoreToProps = (store: RootStore): any => {
   const menuItems: MenuItem[] = [
-    { url: '/settings/summary', text: 'Account', component: AccountContainer },
-    { url: '/settings/referrals', text: 'Referrals', component: ReferralSettingsContainer },
-    { url: '/settings/reward-vault', text: 'Reward Vault', component: VaultListContainer, divider: true },
-    { url: '/settings/seasons', text: 'Seasons', component: CurrentSeasonPageContainer },
-    { url: '/settings/bonuses', text: 'Bonuses', component: BonusPageContainer },
-    {
-      url: EngagementStore.CHANGELOG_URL,
-      text: "What's New",
-      externalLink: true,
-      divider: true,
-    },
+    { url: '/account/summary', text: 'Account', component: AccountContainer },
+    { url: '/account/referrals', text: 'Referrals', component: ReferralSettingsContainer },
+    { url: '/account/seasons', text: 'Seasons', component: CurrentSeasonPageContainer, divider: true },
+    { url: '/account/bonuses', text: 'Bonuses', component: BonusPageContainer },
   ]
 
   const nativeMenuItems: MenuItem[] = [
-    { url: '/settings/summary', text: 'Account', component: AccountContainer },
-    { url: '/settings/referrals', text: 'Referrals', component: ReferralSettingsContainer },
-    { url: '/settings/reward-vault', text: 'Reward Vault', component: VaultListContainer, divider: true },
-    { url: '/settings/seasons', text: 'Seasons', component: CurrentSeasonPageContainer },
-    { url: '/settings/bonuses', text: 'Bonuses', component: BonusPageContainer },
+    { url: '/account/summary', text: 'Account', component: AccountContainer },
+    { url: '/account/referrals', text: 'Referrals', component: ReferralSettingsContainer },
+    { url: '/account/seasons', text: 'Seasons', component: CurrentSeasonPageContainer },
+    { url: '/account/bonuses', text: 'Bonuses', component: BonusPageContainer },
     {
-      url: '/settings/desktop-settings',
+      url: '/account/desktop-settings',
       text: 'Desktop App Settings',
       component: DesktopSettingsContainer,
       divider: true,
       desktopOnly: true,
-    },
-    {
-      url: EngagementStore.CHANGELOG_URL,
-      text: "What's New",
-      externalLink: true,
-      divider: true,
     },
   ]
 
@@ -52,7 +36,7 @@ const mapStoreToProps = (store: RootStore): any => {
   }
 
   const handleClose = () => {
-    store.analytics.trackSmartLink('/', 'Back')
+    store.analytics.trackSmartLink('/store', 'Back')
     store.ui.hideModal()
   }
 

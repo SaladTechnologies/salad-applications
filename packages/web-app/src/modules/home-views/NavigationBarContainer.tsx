@@ -12,7 +12,7 @@ const mapStoreToProps = (store: RootStore): any => {
 
   const isRunning = store.saladBowl.isRunning
 
-  const goToAccount = () => store.routing.push('/settings/summary')
+  const goToAccount = () => store.routing.push('/account/summary')
   const bonus = store.bonuses.firstExpiringUnclaimedBonus
 
   const selectedAvatar = store.profile.profileAvatar
@@ -45,7 +45,7 @@ const mapStoreToProps = (store: RootStore): any => {
     isNative: isNative,
     onClickAvatar: goToAccount,
     onClickUsername: goToAccount,
-    onClickViewAllBonuses: () => store.routing.push('/settings/bonuses'),
+    onClickViewAllBonuses: () => store.routing.push('/account/bonuses'),
     onInternalRoute: (path: string) => store.routing.push(path),
     onLogOut: store.auth.logout,
     onLogin: handleLogin,

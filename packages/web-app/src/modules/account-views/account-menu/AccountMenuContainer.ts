@@ -14,7 +14,7 @@ const mapStoreToProps = (store: RootStore): any => {
     // canLogin: !store.auth.isAuthenticationPending,
     canLogin: true,
     currentBalance: store.balance.currentBalance,
-    onClick: () => store.routing.push('/settings/summary'),
+    onClick: () => store.routing.push('/account/summary'),
     onLogin: handleLogin,
     username: store.profile.currentProfile?.username,
   }

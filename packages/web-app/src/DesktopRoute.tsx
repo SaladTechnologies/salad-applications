@@ -23,7 +23,7 @@ export class DesktopRoute extends Component<Props> {
           ) : (
             <Redirect
               to={{
-                pathname: '/',
+                pathname: '/store',
               }}
             />
           )

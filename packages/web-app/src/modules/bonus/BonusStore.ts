@@ -118,7 +118,7 @@ export class BonusStore {
         category: NotificationMessageCategory.BonusClaimedSuccess,
         title: `Claimed ${bonus?.name}!`,
         message: 'Congrats on your new bonus!',
-        onClick: () => this.store.routing.push('/settings/bonuses'),
+        onClick: () => this.store.routing.push('/account/bonuses'),
         autoClose: false,
       }
 
@@ -126,7 +126,7 @@ export class BonusStore {
         case BonusType.Avatar:
           notification.message =
             'Congrats on your new bonus! Your item is on its way. Check your profile for more details.'
-          notification.onClick = () => this.store.routing.push('/settings/summary')
+          notification.onClick = () => this.store.routing.push('/account/summary')
           break
         case BonusType.Balance:
           break
@@ -138,7 +138,7 @@ export class BonusStore {
           // NOTE: These should be kept in sync with the notification for successful reward redemptions
           notification.message =
             'Congrats on your pick! Your item is on its way. Check your reward vault for more details.'
-          notification.onClick = () => this.store.routing.push('/account/reward-vault')
+          notification.onClick = () => this.store.routing.push('/store/vault')
           break
         case BonusType.Xp:
           break

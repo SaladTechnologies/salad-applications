@@ -125,7 +125,7 @@ const searchConfig = {
       },
     },
   },
-  pathname: '/search',
+  pathname: '/store/search',
 }
 
 const DesktopLayout = ({ history, classes }: Props) => (

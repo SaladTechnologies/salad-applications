@@ -60,7 +60,7 @@ export class RewardStore {
         title: 'You need a Minecraft Username to redeem this reward.',
         message: 'Go to your account page to add your Minecraft Username.',
         autoClose: false,
-        onClick: () => this.store.routing.push('/settings/summary'),
+        onClick: () => this.store.routing.push('/account/summary'),
         type: 'error',
       })
     }
@@ -239,7 +239,7 @@ export class RewardStore {
         category: NotificationMessageCategory.Redemption,
         title: `Thank you for ordering ${reward.name}!`,
         message: 'Congrats on your pick! Your item is on its way. Check your reward vault for more details.',
-        onClick: () => this.store.routing.push('/account/reward-vault'),
+        onClick: () => this.store.routing.push('/store/vault'),
         autoClose: false,
       })
     } catch (error) {
@@ -256,7 +256,7 @@ export class RewardStore {
               title: 'Sorry, Chef! This reward is unavailable.',
               message: "Looks like we're fresh out of that. Head to the Storefront to browse more great rewards.",
               autoClose: false,
-              onClick: () => this.store.routing.push('/'),
+              onClick: () => this.store.routing.push('/store'),
               type: 'error',
             }
             break
@@ -266,7 +266,7 @@ export class RewardStore {
               category: NotificationMessageCategory.Redemption,
               title: `Thank you for ordering ${reward.name}!`,
               message: 'Congrats on your pick! Your item is on its way. Check your reward vault for more details.',
-              onClick: () => this.store.routing.push('/account/reward-vault'),
+              onClick: () => this.store.routing.push('/store/vault'),
               autoClose: false,
             }
             break
@@ -290,7 +290,7 @@ export class RewardStore {
                   title: 'You need a Minecraft Username to redeem this reward.',
                   message: 'Go to your account page to add your Minecraft Username.',
                   autoClose: false,
-                  onClick: () => this.store.routing.push('/settings/summary'),
+                  onClick: () => this.store.routing.push('/account/summary'),
                   type: 'error',
                 }
               } else if (data.type === 'redemptions:dailySpendLimitExceeded') {

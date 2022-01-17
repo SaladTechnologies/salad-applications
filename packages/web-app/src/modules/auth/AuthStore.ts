@@ -100,7 +100,7 @@ export class AuthStore {
       this.loginReject = reject
 
       // Save current route so we can go back to it later once it is resolved
-      this.startingRoute = this.router.location.pathname === '/login' ? '/' : this.router.location.pathname
+      this.startingRoute = this.router.location.pathname === '/login' ? '/store' : this.router.location.pathname
 
       this.router.replace('/login')
     })
@@ -116,7 +116,7 @@ export class AuthStore {
     })
 
     if (this.router.location.pathname.includes('onboarding')) {
-      this.router.replace('/')
+      this.router.replace('/store')
     }
   }
 
@@ -235,7 +235,7 @@ export class AuthStore {
     if (this.startingRoute) {
       this.router.replace(this.startingRoute)
     } else {
-      this.router.replace('/')
+      this.router.replace('/store')
     }
 
     if (success) {

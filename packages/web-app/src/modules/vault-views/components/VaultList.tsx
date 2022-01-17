@@ -24,8 +24,10 @@ const styles = (theme: SaladTheme) => ({
   container: {
     height: '100%',
     display: 'flex',
+    width: '100%',
     flexDirection: 'column',
     padding: 20,
+    color: theme.lightGreen,
   },
   getHelpLink: {
     fontFamily: theme.fontGroteskLight25,
