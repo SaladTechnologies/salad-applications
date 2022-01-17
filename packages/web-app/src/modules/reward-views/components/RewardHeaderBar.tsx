@@ -168,7 +168,7 @@ class _RewardHeaderBar extends Component<Props> {
               )}
               {requiresMinecraftUsername && authenticated && (
                 <div className={classnames(classes.priceText, classes.stockLabel, classes.insufficientBalanceLabel)}>
-                  <SmartLink to="/settings/summary">Add Minecraft Username</SmartLink>
+                  <SmartLink to="/account/summary">Add Minecraft Username</SmartLink>
                 </div>
               )}
             </div>
