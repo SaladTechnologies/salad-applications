@@ -36,7 +36,6 @@ const requiredString = (name: string, defaultValue?: string): string => {
 
 export class Config {
   public readonly appBuild: string = requiredString('REACT_APP_BUILD')
-  public readonly appRoutingBasename?: string = optionalString('PUBLIC_URL')
   public readonly dataRefreshRate: number = numberOrDefault('REACT_APP_DATA_REFRESH_RATE', convertMinutes(5))
   public readonly mixpanelToken?: string = optionalString('REACT_APP_MIXPANEL_TOKEN')
   public readonly rewardRefreshRate: number = numberOrDefault('REACT_APP_REWARD_REFRESH_RATE', convertMinutes(5))
