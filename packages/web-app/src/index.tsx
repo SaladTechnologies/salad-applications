@@ -62,9 +62,8 @@ const featureManager = new UnleashFeatureManager(config)
 
 setTimeout(() => {
   const rootStore = createStore(client, featureManager)
-  const basename = config.appRoutingBasename
   const routerHistory = createBrowserHistory({
-    basename: basename ? basename : '/',
+    basename: '/',
   })
 
   let currentLocation: any = null
