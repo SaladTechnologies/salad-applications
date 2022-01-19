@@ -1,6 +1,3 @@
-import { Button } from '@saladtechnologies/garden-components'
-import { groupBy } from 'lodash'
-import { useState } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { DesktopSettingPanels } from '../settings/models/DesktopSettingsPanel'
 
@@ -16,33 +13,13 @@ interface MachineSettingsListProps extends WithStyles<typeof styles> {
 }
 
 const _MachineSettingsList = ({ classes, panels }: MachineSettingsListProps) => {
-  const [showAdvancedSettings, toggleShowAdvancedSettings] = useState<boolean>(false)
-
-  const splitArrays = groupBy(panels, 'isAdvanced')
-  const hasAdvancedSettings = splitArrays?.true?.length > 0
   return (
     <>
-      {splitArrays.false.map((panel, index) => (
+      {panels.map((panel, index) => (
         <div key={index} className={classes.container}>
           {panel.panel}
         </div>
       ))}
-      {hasAdvancedSettings && showAdvancedSettings && (
-        <>
-          {splitArrays.true.map((panel, index) => (
-            <div key={index} className={classes.container}>
-              {panel.panel}
-            </div>
-          ))}
-        </>
-      )}
-      {hasAdvancedSettings && (
-        <Button
-          variant="outlined"
-          label={`${showAdvancedSettings ? 'Hide' : 'Show'} Advanced Settings`}
-          onClick={() => toggleShowAdvancedSettings(!showAdvancedSettings)}
-        />
-      )}
     </>
   )
 }

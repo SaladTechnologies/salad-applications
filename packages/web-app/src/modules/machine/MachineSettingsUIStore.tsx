@@ -2,14 +2,7 @@ import { WorkloadCardProps } from '@saladtechnologies/garden-components'
 import { action, computed, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { delay } from '../../utils'
-import {
-  AntivirusSettingContainer,
-  AutoLaunchSettingContainer,
-  AutoStartSettingContainer,
-  CloseToTraySettingContainer,
-  LogsSettingContainer,
-  SleepModeSettingContainer,
-} from '../machine-views'
+import { AntivirusSettingContainer, AutoStartSettingContainer, SleepModeSettingContainer } from '../machine-views'
 import type { DesktopSettingPanels } from '../machine-views/settings/models/DesktopSettingsPanel'
 import { NotificationMessageCategory } from '../notifications/models'
 import { WhitelistWindowsDefenderErrorTypeMessage } from '../onboarding/models'
@@ -81,27 +74,12 @@ export class MachineSettingsUIStore {
     return [
       {
         panel: <AntivirusSettingContainer />,
-        isAdvanced: false,
       },
       {
         panel: <SleepModeSettingContainer />,
-        isAdvanced: false,
       },
       {
         panel: <AutoStartSettingContainer />,
-        isAdvanced: false,
-      },
-      {
-        panel: <CloseToTraySettingContainer />,
-        isAdvanced: true,
-      },
-      {
-        panel: <AutoLaunchSettingContainer />,
-        isAdvanced: true,
-      },
-      {
-        panel: <LogsSettingContainer />,
-        isAdvanced: true,
       },
     ]
   }
