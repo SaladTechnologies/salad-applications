@@ -75,7 +75,7 @@ const _MachineSettingsPage = ({ classes, desktopSettings, workloads }: MachineSe
             <Head title="Machine Settings" />
             <div className={classes.content}>
               <div className={classnames(classes.mb24, classes.lightGreenColor)}>
-                <Text variant="base3XL">Hardware Configurations </Text>
+                <Text variant="base3XL">Hardware Configurations</Text>
               </div>
               <div className={classes.workloadsContainer}>
                 {workloads.map((workload, index) => (
