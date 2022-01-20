@@ -28,11 +28,11 @@ export const SleepModeSetting = ({
   )
 }
 
-const leftColumnStyles = () => ({
+const leftColumnStyles = {
   textContainer: {
     marginBottom: 24,
   },
-})
+}
 
 interface LeftColumnProps extends WithStyles<typeof leftColumnStyles> {}
 

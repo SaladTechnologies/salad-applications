@@ -10,7 +10,6 @@ const styles = (theme: SaladTheme) => ({
   },
   title: {
     color: theme.lightGreen,
-    marginBottom: 24,
   },
   container: {
     borderBottom: `solid 1px ${theme.lightGreen}`,
