@@ -152,6 +152,7 @@ const _EarningsSummaryPage = ({
   const currentBalanceLabel = `${intl.formatNumber(currentBalance, { style: 'decimal', minimumFractionDigits: 4 })}`
   const currentBalanceHundreths = currentBalanceLabel.substring(0, currentBalanceLabel.length - 2)
   const currentBalanceThousandths = currentBalanceLabel.substring(currentBalanceLabel.length - 2)
+  const currentLifeTimeXPFormatted = intl.formatNumber(lifetimeXP)
 
   // lifetime balance
   const lifetimeBalanceLabel = `${intl.formatNumber(lifetimeBalance, { style: 'decimal', minimumFractionDigits: 4 })}`
@@ -173,7 +174,7 @@ const _EarningsSummaryPage = ({
                 <Text variant="baseL">Current Balance</Text>
                 <Text variant="base4XL">
                   <span aria-hidden="true" className={classes.lightGreenColor}>
-                    <b>{currentBalanceHundreths}</b>
+                    ${currentBalanceHundreths}
                   </span>
                   <span className={classnames(classes.thousandths, classes.lightGreenColor)} aria-hidden="true">
                     {currentBalanceThousandths}
@@ -183,9 +184,7 @@ const _EarningsSummaryPage = ({
               <div className={classnames(classes.balance, classes.summaryItem)}>
                 <Text variant="baseL">Lifetime Balance</Text>
                 <Text variant="base4XL">
-                  <span aria-hidden="true">
-                    <b>{lifetimeBalanceHundreths}</b>
-                  </span>
+                  <span aria-hidden="true">${lifetimeBalanceHundreths}</span>
                   <span className={classes.thousandths} aria-hidden="true">
                     {lifetimeBalanceThousandths}
                   </span>
@@ -193,7 +192,7 @@ const _EarningsSummaryPage = ({
               </div>
               <div className={classnames(classes.balance, classes.summaryItem)}>
                 <Text variant="baseL">Lifetime XP</Text>
-                <Text variant="base4XL">{lifetimeXP}</Text>
+                <Text variant="base4XL">{currentLifeTimeXPFormatted}</Text>
               </div>
             </div>
             <div className={classes.panelContainer}>

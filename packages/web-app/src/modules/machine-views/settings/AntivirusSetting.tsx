@@ -51,7 +51,7 @@ const LeftColumn = () => {
   )
 }
 
-const rightColumnStyles = () => ({
+const rightColumnStyles = {
   buttonContainer: {
     marginBottom: 24,
   },
@@ -59,7 +59,7 @@ const rightColumnStyles = () => ({
     cursor: 'pointer',
     textDecoration: 'underline',
   },
-})
+}
 
 interface RightColumnProps extends WithStyles<typeof rightColumnStyles> {
   onWhitelistWindowsDefender?: () => void

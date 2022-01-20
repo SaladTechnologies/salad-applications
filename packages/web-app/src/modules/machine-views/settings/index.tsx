@@ -1,6 +1,3 @@
 export { AntivirusSetting } from './AntivirusSetting'
-export { AutoLaunchSetting } from './AutoLaunchSetting'
 export { AutoStartSetting } from './AutoStartSetting'
-export { CloseToTraySetting } from './CloseToTraySetting'
-export { LogsSetting } from './LogsSetting'
 export { SleepModeSetting } from './SleepModeSetting'

@@ -86,11 +86,11 @@ const _Routes = ({ location }: RouteComponentProps) => {
       <Route exact path="/errors/firewall" component={FirewallErrorContainer} />
        */}
 
-      {/* {saladBowlEnabled && <Redirect exact from="/earn/summary" to="/earn/mining" />}
+      {saladBowlEnabled && <Redirect exact from="/earn/summary" to="/earn/mining" />}
       {saladBowlEnabled && <Redirect exact from="/earn/mine" to="/earn/mining" />}
       {saladBowlEnabled && <Redirect exact from="/earn/mine/miner-details" to="/earn/machine-settings" />}
       {saladBowlEnabled && <Redirect exact from="/earn/referrals" to="/settings/referrals" />}
-      {saladBowlEnabled && <Redirect exact from="/settings/desktop-settings" to="/earn/machine-settings" />} */}
+      {saladBowlEnabled && <Redirect exact from="/settings/desktop-settings" to="/earn/machine-settings" />}
 
       <Redirect exact from="/earn" to="/earn/summary" />
       {saladBowlEnabled ? (

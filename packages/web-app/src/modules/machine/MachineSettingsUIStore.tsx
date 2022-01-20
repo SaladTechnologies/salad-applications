@@ -2,14 +2,7 @@ import { WorkloadCardProps } from '@saladtechnologies/garden-components'
 import { action, computed, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { delay } from '../../utils'
-import {
-  AntivirusSettingContainer,
-  AutoLaunchSettingContainer,
-  AutoStartSettingContainer,
-  CloseToTraySettingContainer,
-  LogsSettingContainer,
-  SleepModeSettingContainer,
-} from '../machine-views'
+import { AntivirusSettingContainer, AutoStartSettingContainer, SleepModeSettingContainer } from '../machine-views'
 import type { DesktopSettingPanels } from '../machine-views/settings/models/DesktopSettingsPanel'
 import { NotificationMessageCategory } from '../notifications/models'
 import { WhitelistWindowsDefenderErrorTypeMessage } from '../onboarding/models'
@@ -32,44 +25,24 @@ export class MachineSettingsUIStore {
   get workloads(): WorkloadCardProps[] {
     const saladBowlNotConnected = !this.store.saladBowl.saladBowlConnected
     const gpuEnabled = this.store.saladBowl.gpuMiningEnabled
-    const gpuMiningOverridden = this.store.saladBowl.gpuMiningOverridden
     const gpuWorkload: WorkloadCardProps = {
       glow: gpuEnabled,
       onToggleWorkload: gpuEnabled ? () => this.store.saladBowl.setGpu(false) : () => this.store.saladBowl.setGpu(true),
-      onToggleWorkloadLabel: `${gpuEnabled ? 'Disable' : 'Enable'} GPU Mining`,
+      onToggleWorkloadLabel: `${gpuEnabled ? 'Disable' : 'Enable'} GPU`,
       onToggleWorkloadDisabled: saladBowlNotConnected,
       onToggleWorkloadLoading: this.store.saladBowl.gpuMiningUpdatePending,
-      overrideChecked: gpuMiningOverridden,
-      onToggleOverride: gpuMiningOverridden
-        ? () => this.store.saladBowl.setGpuOverride(false)
-        : () => this.store.saladBowl.setGpuOverride(true),
-      onToggleOverrideDisabled: saladBowlNotConnected,
-      onToggleOverrideLoading: this.store.saladBowl.gpuMiningOverriddenUpdatePending,
-      onToggleOverrideLabel: 'Override GPU Compatibility Detection',
-      onToggleOverrideTooltip:
-        'If Salad Is Unable To Detect A Compatible GPU, You Can Choose To Override GPU Detection. This Takes Longer To Start And Can Be Less Profitable',
-      title: 'GPU Mining',
+      title: 'GPU',
       type: 'gpu',
     }
 
     const cpuEnabled = this.store.saladBowl.cpuMiningEnabled
-    const cpuMiningOverridden = this.store.saladBowl.cpuMiningOverridden
     const cpuWorkload: WorkloadCardProps = {
       glow: cpuEnabled,
       onToggleWorkload: cpuEnabled ? () => this.store.saladBowl.setCpu(false) : () => this.store.saladBowl.setCpu(true),
-      onToggleWorkloadLabel: `${cpuEnabled ? 'Disable' : 'Enable'} CPU Mining`,
+      onToggleWorkloadLabel: `${cpuEnabled ? 'Disable' : 'Enable'} CPU`,
       onToggleWorkloadDisabled: saladBowlNotConnected,
       onToggleWorkloadLoading: this.store.saladBowl.cpuMiningUpdatePending,
-      overrideChecked: cpuMiningOverridden,
-      onToggleOverride: cpuMiningOverridden
-        ? () => this.store.saladBowl.setCpuOverride(false)
-        : () => this.store.saladBowl.setCpuOverride(true),
-      onToggleOverrideDisabled: saladBowlNotConnected,
-      onToggleOverrideLoading: this.store.saladBowl.cpuMiningOverriddenUpdatePending,
-      onToggleOverrideLabel: 'Override CPU Compatibility Detection',
-      onToggleOverrideTooltip:
-        'If Salad Is Unable To Detect A Compatible CPU, You Can Choose To Override CPU Detection. This Takes Longer To Start And Can Be Less Profitable',
-      title: 'CPU Mining',
+      title: 'CPU',
       type: 'cpu',
     }
 
@@ -81,27 +54,12 @@ export class MachineSettingsUIStore {
     return [
       {
         panel: <AntivirusSettingContainer />,
-        isAdvanced: false,
       },
       {
         panel: <SleepModeSettingContainer />,
-        isAdvanced: false,
       },
       {
         panel: <AutoStartSettingContainer />,
-        isAdvanced: false,
-      },
-      {
-        panel: <CloseToTraySettingContainer />,
-        isAdvanced: true,
-      },
-      {
-        panel: <AutoLaunchSettingContainer />,
-        isAdvanced: true,
-      },
-      {
-        panel: <LogsSettingContainer />,
-        isAdvanced: true,
       },
     ]
   }

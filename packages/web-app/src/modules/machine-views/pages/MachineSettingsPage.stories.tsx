@@ -2,14 +2,7 @@ import { WorkloadCardProps } from '@saladtechnologies/garden-components'
 import { action } from '@storybook/addon-actions'
 import { Meta, Story } from '@storybook/react'
 import { useState } from 'react'
-import {
-  AntivirusSetting,
-  AutoLaunchSetting,
-  AutoStartSetting,
-  CloseToTraySetting,
-  LogsSetting,
-  SleepModeSetting,
-} from '../settings'
+import { AntivirusSetting, AutoStartSetting, SleepModeSetting } from '../settings'
 import type { DesktopSettingPanels } from '../settings/models/DesktopSettingsPanel'
 import type { MachineSettingsPageProps } from './MachineSettingsPage'
 import { MachineSettingsPage } from './MachineSettingsPage'
@@ -58,10 +51,6 @@ const Template: Story<MachineSettingsPageProps> = (args) => {
     },
   ]
 
-  const [notify, toggleNotify] = useState<boolean>(false)
-  const [closeToTray, toggleCloseToTray] = useState<boolean>(false)
-
-  const [autoLaunchEnabled, toggleAutoLaunch] = useState<boolean>(false)
   const [autoStartEnabled, toggleAutoStart] = useState<boolean>(false)
   const [autoStartTime, setAutoStartTime] = useState<number>(600)
 
@@ -75,11 +64,9 @@ const Template: Story<MachineSettingsPageProps> = (args) => {
           onWhitelistWindowsDefender={action('On Whitelist Windows Defender')}
         />
       ),
-      isAdvanced: false,
     },
     {
       panel: <SleepModeSetting onDisableSleepMode={action('On Disable Sleep Mode')} />,
-      isAdvanced: false,
     },
     {
       panel: (
@@ -90,31 +77,6 @@ const Template: Story<MachineSettingsPageProps> = (args) => {
           onSetMinutesIdle={(minutes: number) => setAutoStartTime(minutes)}
         />
       ),
-      isAdvanced: false,
-    },
-    {
-      panel: (
-        <CloseToTraySetting
-          closeToTray={closeToTray}
-          notify={notify}
-          onToggleCloseToTray={() => toggleCloseToTray(!closeToTray)}
-          onToggleNotification={() => toggleNotify(!notify)}
-        />
-      ),
-      isAdvanced: true,
-    },
-    {
-      panel: (
-        <AutoLaunchSetting
-          autoLaunchEnabled={autoLaunchEnabled}
-          onToggleAutoLaunch={() => toggleAutoLaunch(!autoLaunchEnabled)}
-        />
-      ),
-      isAdvanced: true,
-    },
-    {
-      panel: <LogsSetting onShowLogFolder={action('On Show Log Folder')} />,
-      isAdvanced: true,
     },
   ]
 

@@ -46,13 +46,16 @@ const styles = (theme: SaladTheme) => ({
     marginBottom: 24,
   },
   workloadsContainer: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(1, minmax(0, 1fr))',
-    gridGap: 24,
-    '@media (min-width: 600px)': {
-      gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-    },
-    marginBottom: 64,
+    display: 'flex',
+    flexDirection: 'row',
+    marginBottom: 56,
+  },
+  workloadContainer: {
+    width: 294,
+    marginRight: 24,
+  },
+  mb24: {
+    marginBottom: 24,
   },
   machineSettingPanels: {},
 })
@@ -71,24 +74,23 @@ const _MachineSettingsPage = ({ classes, desktopSettings, workloads }: MachineSe
           <Layout title="Machine Settings">
             <Head title="Machine Settings" />
             <div className={classes.content}>
+              <div className={classnames(classes.mb24, classes.lightGreenColor)}>
+                <Text variant="base3XL">Hardware Configurations</Text>
+              </div>
               <div className={classes.workloadsContainer}>
                 {workloads.map((workload, index) => (
-                  <WorkloadCard
-                    key={index}
-                    glow={workload.glow}
-                    onToggleWorkload={workload.onToggleWorkload}
-                    onToggleWorkloadLabel={workload.onToggleWorkloadLabel}
-                    onToggleWorkloadDisabled={workload.onToggleWorkloadDisabled}
-                    onToggleWorkloadLoading={workload.onToggleWorkloadLoading}
-                    onToggleOverride={workload.onToggleOverride}
-                    onToggleOverrideLabel={workload.onToggleOverrideLabel}
-                    onToggleOverrideDisabled={workload.onToggleOverrideDisabled}
-                    onToggleOverrideLoading={workload.onToggleOverrideLoading}
-                    onToggleOverrideTooltip={workload.onToggleOverrideTooltip}
-                    overrideChecked={workload.overrideChecked}
-                    title={workload.title}
-                    type={workload.type}
-                  />
+                  <div className={classes.workloadContainer} key={index}>
+                    <WorkloadCard
+                      key={index}
+                      glow={workload.glow}
+                      onToggleWorkload={workload.onToggleWorkload}
+                      onToggleWorkloadLabel={workload.onToggleWorkloadLabel}
+                      onToggleWorkloadDisabled={workload.onToggleWorkloadDisabled}
+                      onToggleWorkloadLoading={workload.onToggleWorkloadLoading}
+                      title={workload.title}
+                      type={workload.type}
+                    />
+                  </div>
                 ))}
               </div>
               {desktopSettings.length > 0 && (

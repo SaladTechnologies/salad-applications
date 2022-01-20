@@ -31,11 +31,11 @@ export const AutoStartSetting = ({
   )
 }
 
-const leftColumnStyles = () => ({
+const leftColumnStyles = {
   textContainer: {
     marginBottom: 24,
   },
-})
+}
 
 interface LeftColumnProps extends WithStyles<typeof leftColumnStyles> {}
 
@@ -55,11 +55,11 @@ const _LeftColumn = ({ classes }: LeftColumnProps) => {
 
 const LeftColumn = withStyles(leftColumnStyles)(_LeftColumn)
 
-const rightColumnStyles = () => ({
+const rightColumnStyles = {
   container: {
     marginBottom: 24,
   },
-})
+}
 
 interface RightColumnProps extends WithStyles<typeof rightColumnStyles> {
   autoStartEnabled: boolean
