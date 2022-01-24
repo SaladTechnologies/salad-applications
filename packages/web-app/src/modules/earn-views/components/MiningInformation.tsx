@@ -110,28 +110,22 @@ class _MiningInformation extends Component<Props> {
                 <SectionHeader>More Information</SectionHeader>
                 <br />
                 <P>
-                  <SmartLink
-                    openInSameWindow={true}
-                    to="http://support.salad.com/hc/en-us/sections/360008458292-Anti-Virus"
-                  >
+                  <SmartLink to="https://support.salad.com/hc/en-us/sections/360008458292-Anti-Virus">
                     Having Anti-Virus Issues?
                   </SmartLink>
                 </P>
                 <P>
-                  <SmartLink openInSameWindow={true} to="http://salad.com/blog/gamers-guide-blockchain-crypto">
+                  <SmartLink to="https://salad.com/blog/gamers-guide-blockchain-crypto">
                     Gamers Guide to Blockchain
                   </SmartLink>
                 </P>
                 <P>
-                  <SmartLink openInSameWindow={true} to="http://salad.com/blog/making-money-with-salad-whats-the-catch">
+                  <SmartLink to="https://salad.com/blog/making-money-with-salad-whats-the-catch">
                     What's the Catch?
                   </SmartLink>
                 </P>
                 <P>
-                  <SmartLink
-                    openInSameWindow={true}
-                    to="http://salad.com/blog/does-mining-for-cryptocurrency-damage-my-gpu"
-                  >
+                  <SmartLink to="https://salad.com/blog/does-mining-for-cryptocurrency-damage-my-gpu">
                     Does mining hurt my machine?
                   </SmartLink>
                 </P>
