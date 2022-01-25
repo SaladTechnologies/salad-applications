@@ -23,7 +23,6 @@ interface Props extends WithStyles<typeof styles> {
   children?: ReactNode
   className?: string
   trackingInfo?: LinkTrackingInfo
-  openInSameWindow?: boolean
 }
 
 const handleClickTracking = (to?: string, trackingInfo?: any) => {
@@ -33,16 +32,17 @@ const handleClickTracking = (to?: string, trackingInfo?: any) => {
   }
 }
 
-const _SmartLink = ({ to, children, classes, className, trackingInfo, openInSameWindow }: Props) => {
+const _SmartLink = ({ to, children, classes, className, trackingInfo }: Props) => {
   const isTextChild = typeof children === 'string'
   const finalClassName = classnames(classes.link, className, { [classes.hideUnderline]: !isTextChild })
-
+  const store: RootStore = getStore()
+  const isNative = store.native.isNative
   if (to === undefined || to.startsWith('http')) {
     return (
       <a
         className={finalClassName}
         href={to}
-        target={openInSameWindow ? undefined : '_blank'}
+        target={isNative ? '_blank' : undefined}
         rel="noopener noreferrer"
         onClick={trackingInfo ? () => handleClickTracking(to, trackingInfo) : undefined}
       >
