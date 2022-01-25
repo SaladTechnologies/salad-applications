@@ -38,11 +38,13 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  isNative: boolean
+}
 
 class _MiningInformation extends Component<Props> {
   render() {
-    const { classes } = this.props
+    const { classes, isNative } = this.props
 
     return (
       <div className={classes.container}>
@@ -78,7 +80,7 @@ class _MiningInformation extends Component<Props> {
             <P>
               Don't forget to enable{' '}
               <b>
-                <SmartLink to="/settings/desktop-settings">Auto Start</SmartLink>
+                {isNative ? <SmartLink to="/account/desktop-settings">Auto Start</SmartLink> : <span>Auto Start</span>}
               </b>
               , this will allow Salad to automatically start when you step away from your machine.
             </P>
