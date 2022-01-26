@@ -1,6 +1,3 @@
-!include salad-bowl\StrRep.nsh
-!include salad-bowl\replace_in_file.nsh
-
 !macro customInit
   !include /NONFATAL salad-bowl\install_init.nsh
 !macroend

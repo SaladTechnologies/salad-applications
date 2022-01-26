@@ -22,10 +22,6 @@ RMDir /r "$LocalAppData\Salad\workload-definitions\systeminformation"
 
 SetOutPath "$INSTDIR\SaladBowl"
 File /r "${__FILEDIR__}\dist\service\SaladBowl\*.*"
-!insertmacro StrRep $7 $INSTDIR "\" "\\"  ; need to escape the slashes or dotnet will be unhappy
-!insertmacro _ReplaceInFile "$INSTDIR\SaladBowl\appsettings.json" "SBEXE" "$7\\SaladBowlRunner\\Salad.Bowl.Service.exe"
-!insertmacro _ReplaceInFile "$INSTDIR\SaladBowl\appsettings.json" "SBDir" "$7\\SaladBowlRunner"
-
 
 SetOutPath "$INSTDIR\SaladBowlRunner"
 File /r "${__FILEDIR__}\dist\service\SaladBowlRunner\*.*"
@@ -73,7 +69,7 @@ install_cancel:
   Abort
 
 install_continue:
-  SimpleSC::StartService "SaladBowl" "" 30
+  SimpleSC::StartService "SaladBowl" "--sb $INSTDIR\SaladBowlRunner\Salad.Bowl.Service.exe" 30
   Pop $0
   ${If} $0 <> 0
     SetRebootFlag true
