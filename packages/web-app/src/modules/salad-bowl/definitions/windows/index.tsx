@@ -1,6 +1,5 @@
 import type { Accounts } from '../accounts'
 import type { PluginDefinition } from '../plugin-definitions'
-import { createCCminerLyra2REv3PluginDefinitions } from './ccminer-lyra2rev3'
 import { createGMinerBeamHashPluginDefinitions } from './gminer-beamhash'
 import { createGMinerCuckooCyclePluginDefinitions } from './gminer-cuckoocycle'
 import { createGMinerZHashPluginDefinitions } from './gminer-zhash'
@@ -18,5 +17,4 @@ export const createWindowsPluginDefinitions = (accounts: Accounts): PluginDefini
   ...createGMinerCuckooCyclePluginDefinitions(accounts),
   ...createGMinerZHashPluginDefinitions(accounts),
   ...createXMRigRandomXPluginDefinitions(accounts),
-  ...createCCminerLyra2REv3PluginDefinitions(accounts),
 ]
