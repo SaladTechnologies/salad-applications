@@ -66,33 +66,24 @@ export class MachineStore {
         machineWithoutServices.system.uuid = Storage.getOrSetDefault(SYSTEM_ID, uuidv4())
       }
 
-      try {
-        console.log('Registering machine with salad')
-        let res: AxiosResponse<Machine> = yield this.axios.post(`/api/v2/machines`, {
-          systemInfo: machineWithoutServices,
-        })
-        this.currentMachine = res.data
+      console.log('Registering machine with salad')
+      let res: AxiosResponse<Machine> = yield this.axios.post(`/api/v2/machines`, {
+        systemInfo: machineWithoutServices,
+      })
+      this.currentMachine = res.data
 
-        this.store.analytics.trackMachineInformation(machineInfo)
+      this.store.analytics.trackMachineInformation(machineInfo)
 
-        if (!this.store.saladBowl.canRun) {
-          //Show an error notification
-          this.store.notifications.sendNotification({
-            category: NotificationMessageCategory.MachineIncompatible,
-            title: `Machine is Incompatible`,
-            message: 'Salad was unable to detect a compatible graphics card. Click here for more details.',
-            autoClose: false,
-            type: 'error',
-            onClick: () => this.store.routing.push('/earn/mine/miner-details'),
-          })
-        }
-      } catch (err) {
-        this.store.analytics.captureException(new Error(`register-machine error: ${err}`), {
-          contexts: {
-            machineInfo: machineWithoutServices as Record<string, unknown>,
-          },
+      if (!this.store.saladBowl.canRun) {
+        //Show an error notification
+        this.store.notifications.sendNotification({
+          category: NotificationMessageCategory.MachineIncompatible,
+          title: `Machine is Incompatible`,
+          message: 'Salad was unable to detect a compatible graphics card. Click here for more details.',
+          autoClose: false,
+          type: 'error',
+          onClick: () => this.store.routing.push('/earn/mine/miner-details'),
         })
-        throw err
       }
     }.bind(this),
   )

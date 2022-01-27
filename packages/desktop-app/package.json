@@ -35,7 +35,6 @@
     "start": "cross-env NODE_ENV=development electron-webpack dev"
   },
   "dependencies": {
-    "@sentry/electron": "2.5.4",
     "auto-launch": "5.0.5",
     "axios": "0.25.0",
     "decompress-zip": "0.3.3",

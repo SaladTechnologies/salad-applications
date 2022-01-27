@@ -1,7 +1,7 @@
-import * as Sentry from '@sentry/react'
-import { FC, PureComponent } from 'react'
+import { FunctionComponent } from 'react'
+import type { FallbackProps } from 'react-error-boundary'
+import { ErrorBoundary } from 'react-error-boundary'
 import withStyles, { WithStyles } from 'react-jss'
-import { Button } from './components/Button'
 import { SmartLink } from './components/SmartLink'
 import { SaladTheme } from './SaladTheme'
 
@@ -46,88 +46,32 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
-interface ErrorProps extends WithStyles<typeof styles> {
-  error: Error | null
-  eventId: string | null
-}
+interface ErrorPageProps extends FallbackProps, WithStyles<typeof styles> {}
 
-interface ErrorState {
-  canShowReportDialog: boolean
-  reportDialogShown: boolean
-}
-
-class ErrorPage extends PureComponent<ErrorProps, ErrorState> {
-  constructor(props: ErrorProps) {
-    super(props)
-    this.state = {
-      canShowReportDialog: props.eventId != null,
-      reportDialogShown: false,
-    }
-  }
-
-  handleShowReportDialog = () => {
-    if (this.props.eventId == null || !this.state.canShowReportDialog || this.state.reportDialogShown) {
-      return
-    }
-
-    Sentry.showReportDialog({
-      eventId: this.props.eventId,
-      labelClose: 'Close',
-      labelComments: 'What Happened?',
-      labelEmail: 'Salad Email',
-      labelName: 'Name',
-      labelSubmit: 'Submit Crash Report',
-      onLoad: () => {
-        this.setState(() => ({
-          canShowReportDialog: false,
-        }))
-      },
-      subtitle: 'Our engineers are already on the case, but they could use your help. Submit a report below.',
-      subtitle2: '',
-      successMessage: "Thanks for the assist chef, we're working on a solution now.",
-      title: "There's Some Gunk In the Kitchen",
-    })
-    this.setState(() => ({
-      reportDialogShown: true,
-    }))
-  }
-
-  render() {
-    return (
-      <div className={this.props.classes.page}>
-        <div className={this.props.classes.modal}>
-          <div className={this.props.classes.title}>There's Trouble in the Kitchen!</div>
-          <div className={this.props.classes.description}>
-            <p>
-              Salad has encountered an unknown error and cannot continue. Please restart the app to try again. If you
-              encounter further issues, please send us a crash report by clicking below and{' '}
-              <SmartLink to="https://support.salad.com">submit a support ticket</SmartLink>.
-            </p>
-            <p>
-              If you'd like live help from both fellow chefs and Salad support representatives, feel free to drop by our{' '}
-              <SmartLink to="https://discord.gg/salad">Discord</SmartLink> and post your error in the support channel.
-            </p>
-            {!this.state.canShowReportDialog && this.state.reportDialogShown ? (
-              <p>We appreciate the help, thanks for keeping Salad fresh!</p>
-            ) : null}
-          </div>
-          {this.state.canShowReportDialog ? (
-            <div className={this.props.classes.actionBar}>
-              <Button className={this.props.classes.crashReportAction} onClick={this.handleShowReportDialog}>
-                Send Crash Report
-              </Button>
-            </div>
-          ) : null}
-        </div>
+const ErrorPage: FunctionComponent<ErrorPageProps> = ({ classes }) => (
+  <div className={classes.page}>
+    <div className={classes.modal}>
+      <div className={classes.title}>There's Trouble in the Kitchen!</div>
+      <div className={classes.description}>
+        <p>
+          Salad has encountered an unknown error and cannot continue. Please restart the app to try again. If you
+          encounter further issues, please <SmartLink to="https://support.salad.com">submit a support ticket</SmartLink>
+          .
+        </p>
+        <p>
+          If you'd like to try to get live help from a fellow Chef, feel free to drop by our{' '}
+          <SmartLink to="https://discord.gg/salad">Discord</SmartLink> and post your error in one of the community
+          support channels.
+        </p>
       </div>
-    )
-  }
-}
+    </div>
+  </div>
+)
 
 const StyledErrorPage = withStyles(styles)(ErrorPage)
 
-export const ErrorBoundary: FC = ({ children }) => (
-  <Sentry.ErrorBoundary fallback={({ error, eventId }) => <StyledErrorPage error={error} eventId={eventId} />}>
-    {children}
-  </Sentry.ErrorBoundary>
+const ErrorBoundaryPage: FunctionComponent = ({ children }) => (
+  <ErrorBoundary FallbackComponent={StyledErrorPage}>{children}</ErrorBoundary>
 )
+
+export { ErrorBoundaryPage as ErrorBoundary }
