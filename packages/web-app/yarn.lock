@@ -2735,8 +2735,6 @@ __metadata:
     "@saladtechnologies/garden-fonts": "file:../../libs/saladtechnologies-garden-fonts-1.0.0.tgz"
     "@saladtechnologies/garden-icons": "file:../../libs/saladtechnologies-garden-icons-1.0.5.tgz"
     "@saladtechnologies/salad-grpc-salad-bowl": "file:../../libs/saladtechnologies-grpc-salad-bowl-0.0.2-alpha1.tgz"
-    "@sentry/react": 6.17.2
-    "@sentry/types": 6.17.2
     "@storybook/addon-actions": 6.4.14
     "@storybook/addon-backgrounds": 6.4.14
     "@storybook/addon-console": 1.2.3
@@ -2794,6 +2792,7 @@ __metadata:
     react-copy-to-clipboard: 5.0.4
     react-custom-scrollbars: 4.2.1
     react-dom: 17.0.2
+    react-error-boundary: 3.1.4
     react-final-form: 6.5.7
     react-helmet: 6.1.0
     react-hint: 3.2.1
@@ -2874,86 +2873,6 @@ __metadata:
     google-protobuf: 3.19.1
     grpc-web: 1.3.0
   checksum: 83a8f70bc3b3c77c0ece450a68a3930676be5563071555ce466f65a91eaeccfe857db445722f7c9aa9bec4af4df0adf020c32580edbef370e336406fced787cf
-  languageName: node
-  linkType: hard
-
-"@sentry/browser@npm:6.17.2":
-  version: 6.17.2
-  resolution: "@sentry/browser@npm:6.17.2"
-  dependencies:
-    "@sentry/core": 6.17.2
-    "@sentry/types": 6.17.2
-    "@sentry/utils": 6.17.2
-    tslib: ^1.9.3
-  checksum: 81235d9648a8486ba76fbc2c069f4d25889b936c45367b8c3ddf36e4a4a609ac8d65d65219afd1dc1d16177fa2167ed625d88bdeb0276f8230128d195ce4bfbd
-  languageName: node
-  linkType: hard
-
-"@sentry/core@npm:6.17.2":
-  version: 6.17.2
-  resolution: "@sentry/core@npm:6.17.2"
-  dependencies:
-    "@sentry/hub": 6.17.2
-    "@sentry/minimal": 6.17.2
-    "@sentry/types": 6.17.2
-    "@sentry/utils": 6.17.2
-    tslib: ^1.9.3
-  checksum: 3d0265bacf95df766db90ce582758130cf802ea4a9cc86872519aec8e240a37d69aa0f0e72be3526a6b8d4c59bd6eb0c23518d07e4b7b3477014526e45c5e29a
-  languageName: node
-  linkType: hard
-
-"@sentry/hub@npm:6.17.2":
-  version: 6.17.2
-  resolution: "@sentry/hub@npm:6.17.2"
-  dependencies:
-    "@sentry/types": 6.17.2
-    "@sentry/utils": 6.17.2
-    tslib: ^1.9.3
-  checksum: 1f8e029f6e32fd3b6779103cf425bd813a1caeec91fc27f3a3675ea253a16e50a95d719fce9511d061682c81108a969f25e39eb6d59f469f4d4fd89a57d72eea
-  languageName: node
-  linkType: hard
-
-"@sentry/minimal@npm:6.17.2":
-  version: 6.17.2
-  resolution: "@sentry/minimal@npm:6.17.2"
-  dependencies:
-    "@sentry/hub": 6.17.2
-    "@sentry/types": 6.17.2
-    tslib: ^1.9.3
-  checksum: 4c1d63deee6387c25b3f6fd8d377777f6010f4725230566b24ef103a26daa07a359604e5d1418e8e7f47f31680506a128dab803ecec2eab3e263fad99902e92e
-  languageName: node
-  linkType: hard
-
-"@sentry/react@npm:6.17.2":
-  version: 6.17.2
-  resolution: "@sentry/react@npm:6.17.2"
-  dependencies:
-    "@sentry/browser": 6.17.2
-    "@sentry/minimal": 6.17.2
-    "@sentry/types": 6.17.2
-    "@sentry/utils": 6.17.2
-    hoist-non-react-statics: ^3.3.2
-    tslib: ^1.9.3
-  peerDependencies:
-    react: 15.x || 16.x || 17.x
-  checksum: 55b055ce9a7c7285ea6200e9e7b9e108ad69fcd5643a274f2129dd50074a913b5ce78ecfafbe6ac2e37e79209ad21e34e6d238197b7d52280fc66016dc03100d
-  languageName: node
-  linkType: hard
-
-"@sentry/types@npm:6.17.2":
-  version: 6.17.2
-  resolution: "@sentry/types@npm:6.17.2"
-  checksum: 0872f84ef93547a15a9c6567a1e7ce4f79ab4649829879637aba476437c4bb025bd4b0107799620818f8c2188521d3af221b3b35663ce968e5a44dc3a3a18ccb
-  languageName: node
-  linkType: hard
-
-"@sentry/utils@npm:6.17.2":
-  version: 6.17.2
-  resolution: "@sentry/utils@npm:6.17.2"
-  dependencies:
-    "@sentry/types": 6.17.2
-    tslib: ^1.9.3
-  checksum: 15d2885a7da1bb30b78b2de54a031130aab59cb511ad5766d80daffeb2a08c5769b015e2a2687d4435b27e4474f79cc9fd19c1ad6bc0aabb572bea2a388ae0fb
   languageName: node
   linkType: hard
 
@@ -16819,6 +16738,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-error-boundary@npm:3.1.4":
+  version: 3.1.4
+  resolution: "react-error-boundary@npm:3.1.4"
+  dependencies:
+    "@babel/runtime": ^7.12.5
+  peerDependencies:
+    react: ">=16.13.1"
+  checksum: f36270a5d775a25c8920f854c0d91649ceea417b15b5bc51e270a959b0476647bb79abb4da3be7dd9a4597b029214e8fe43ea914a7f16fa7543c91f784977f1b
+  languageName: node
+  linkType: hard
+
 "react-error-overlay@npm:6.0.9":
   version: 6.0.9
   resolution: "react-error-overlay@npm:6.0.9"
@@ -19923,7 +19853,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^1.8.1, tslib@npm:^1.9.3":
+"tslib@npm:^1.8.1":
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
   checksum: dbe628ef87f66691d5d2959b3e41b9ca0045c3ee3c7c7b906cc1e328b39f199bb1ad9e671c39025bd56122ac57dfbf7385a94843b1cc07c60a4db74795829acd

@@ -8,27 +8,17 @@
   status = 200
   force = false
 
-[[context.production.plugins]]
-  package = "@sentry/netlify-build-plugin"
-
-  [context.production.plugins.inputs]
-    sentryOrg = "salad-technologies"
-    sentryProject = "web-app"
-    deployPreviews = false
-
 # Environment variables defined when building the `main` branch.
 [context.production.environment]
   PUBLIC_URL='/app'
   REACT_APP_API_URL='https://app-api.salad.io'
   REACT_APP_MIXPANEL_TOKEN='68db9194f229525012624f3cf368921f'
-  REACT_APP_SENTRY_DSN='https://15f1024783af4b60a295b04ace0bbd2a@sentry.io/1424792'
 
 # Environment variables defined when building the `main-prime` branch.
 [context.main-prime.environment]
   PUBLIC_URL='/app'
   REACT_APP_API_URL='https://app-api.salad.io'
   REACT_APP_MIXPANEL_TOKEN='68db9194f229525012624f3cf368921f'
-  REACT_APP_SENTRY_DSN='https://15f1024783af4b60a295b04ace0bbd2a@sentry.io/1424792'
 
 # Environment variables defined when building any other branch.
 [context.branch-deploy.environment]

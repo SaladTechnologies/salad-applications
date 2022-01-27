@@ -1,5 +1,3 @@
-import * as Sentry from '@sentry/react'
-import { CaptureContext } from '@sentry/types'
 import mixpanel from 'mixpanel-browser'
 import { autorun } from 'mobx'
 import { hotjar } from 'react-hotjar'
@@ -55,14 +53,6 @@ export class AnalyticsStore {
     }
 
     this.started = true
-
-    Sentry.configureScope((scope) => {
-      scope.setUser({
-        id: profile.id,
-        email: profile.email,
-        username: profile.username,
-      })
-    })
 
     if (this.mixpanelInitialized) {
       mixpanel.register({
@@ -129,8 +119,6 @@ export class AnalyticsStore {
     if (!this.started) return
 
     this.started = false
-
-    Sentry.configureScope((scope) => scope.setUser(null))
 
     if (this.mixpanelInitialized) {
       this.track('Logout')
@@ -453,13 +441,5 @@ export class AnalyticsStore {
     if (!this.mixpanelInitialized) return
 
     mixpanel.track(event, properties)
-  }
-
-  public captureException = (err: Error, scope?: CaptureContext) => {
-    console.error(err)
-    Sentry.withScope((s) => {
-      s.setFingerprint([err.name, err.message])
-      Sentry.captureException(err, scope)
-    })
   }
 }
