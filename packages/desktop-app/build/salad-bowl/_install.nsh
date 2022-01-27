@@ -33,7 +33,7 @@ File /r "${__FILEDIR__}\dist\workloads\*.*"
 SetOutPath $INSTDIR
 
 install_service_retry:
-  SimpleSC::InstallService "SaladBowl" "Salad Bowl" "16" "2" "$INSTDIR\SaladBowl\Salad.Bootstrapper.exe --sb $\"$INSTDIR\SaladBowlRunner\Salad.Bowl.Service.exe$\" "" "" ""
+  SimpleSC::InstallService "SaladBowl" "Salad Bowl" "16" "2" '$INSTDIR\SaladBowl\Salad.Bootstrapper.exe --sb "$INSTDIR\SaladBowlRunner\Salad.Bowl.Service.exe"' "" "" ""
   Pop $0
   ${If} $0 <> 0
     MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "Failed to install the Salad Bowl service." /SD IDCANCEL IDRETRY install_service_retry IDCANCEL install_cancel
@@ -69,7 +69,7 @@ install_cancel:
   Abort
 
 install_continue:
-  SimpleSC::StartService "SaladBowl" "--sb $INSTDIR\SaladBowlRunner\Salad.Bowl.Service.exe" 30
+  SimpleSC::StartService "SaladBowl" '--sb "$INSTDIR\SaladBowlRunner\Salad.Bowl.Service.exe"' 30
   Pop $0
   ${If} $0 <> 0
     SetRebootFlag true
