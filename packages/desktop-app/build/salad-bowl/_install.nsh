@@ -69,7 +69,7 @@ install_cancel:
   Abort
 
 install_continue:
-  SimpleSC::StartService "SaladBowl" '--sb "$INSTDIR\SaladBowlRunner\Salad.Bowl.Service.exe"' 30
+  SimpleSC::StartService "SaladBowl" "" 30
   Pop $0
   ${If} $0 <> 0
     SetRebootFlag true
