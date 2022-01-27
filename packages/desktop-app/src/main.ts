@@ -1,4 +1,3 @@
-import * as Sentry from '@sentry/electron'
 import { exec } from 'child_process'
 import {
   app,
@@ -42,12 +41,6 @@ app.disableHardwareAcceleration()
 
 // Register to send Windows 10 notifications.
 app.setAppUserModelId('salad-technologies-desktop-app')
-
-// Capture unhandled errors.
-Sentry.init({
-  dsn: 'https://0a70874cde284d838a378e1cc3bbd963@sentry.io/1804227',
-  release: app.getVersion(),
-})
 
 // Redirect `console` to the application log file.
 Logger.connect()
@@ -477,21 +470,9 @@ const createMainWindow = () => {
     saladAutoLauncher.disable()
   })
 
-  bridge.on('login', (profile: Profile) => {
-    Sentry.configureScope((scope) => {
-      scope.setUser({
-        id: profile.id,
-        email: profile.email,
-        username: profile.username,
-      })
-    })
-  })
+  bridge.on('login', (_profile: Profile) => {})
 
-  bridge.on('logout', () => {
-    Sentry.configureScope((scope) => {
-      scope.setUser({})
-    })
-  })
+  bridge.on('logout', () => {})
 
   //Gets the current idle time
   bridge.on(getIdleTime, () => {

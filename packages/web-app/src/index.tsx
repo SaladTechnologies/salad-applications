@@ -14,7 +14,6 @@ import 'url-polyfill'
 // Import dependencies.
 import { ThemeProvider as EmotionThemeProvider } from '@emotion/react'
 import { DefaultTheme as EmotionTheme, LoadingScreen } from '@saladtechnologies/garden-components'
-import * as Sentry from '@sentry/react'
 import { createBrowserHistory } from 'history'
 import { Observer } from 'mobx-react'
 import { syncHistoryWithStore } from 'mobx-react-router'
@@ -35,13 +34,6 @@ import { createStore } from './Store'
 import { Tooltips } from './Tooltips'
 
 allSettled.shim()
-
-Sentry.init({
-  dsn: config.sentryDSN,
-  ignoreErrors: ['ResizeObserver loop limit exceeded'],
-  normalizeDepth: 5,
-  release: config.appBuild,
-})
 
 //Adds a dummy window.salad for use in the web-app, this will be skipped in desktop-app
 if (!window.salad) {
