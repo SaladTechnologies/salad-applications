@@ -100,6 +100,19 @@ const _Routes = ({ location }: RouteComponentProps) => {
       )}
       {saladBowlEnabled && <DesktopRoute path="/earn/machine-settings" component={MachineSettingsPageContainer} />}
 
+      <Route
+        exact
+        path="/search"
+        component={({ location }: RouteComponentProps) => (
+          <Redirect
+            to={{
+              ...location,
+              pathname: `/store${location.pathname}`,
+            }}
+          />
+        )}
+      />
+      <Redirect exact from="/rewards/:id" to="/store/rewards/:id" />
       <Redirect exact from="/" to="/store" />
 
       <Route component={NotFoundPage} />
