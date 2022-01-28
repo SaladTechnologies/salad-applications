@@ -2,6 +2,10 @@ const baseUrl = 'https://github.com/SaladTechnologies/plugin-downloads/releases/
 
 export const downloads = [
   {
+    version: '2.75',
+    windowsUrl: baseUrl + '/gminer-2-75/gminer-2-75-windows.zip',
+  },
+  {
     version: '2.54',
     linuxUrl: baseUrl + '/gminer-2.54/gminer-2-54-linux.tar.gz',
     windowsUrl: baseUrl + '/gminer-2.54/gminer-2-54-windows.zip',
