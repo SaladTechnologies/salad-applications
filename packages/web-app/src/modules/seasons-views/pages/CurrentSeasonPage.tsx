@@ -107,8 +107,8 @@ const _CurrentSeasonPage = ({
   return (
     <div className={classes.page}>
       <Scrollbars>
-        <Layout title="Current Season">
-          <Head title="Current Season" />
+        <Layout title="Last Season Snapshot">
+          <Head title="Last Season Snapshot" />
           {duration.length && timeLeft.length ? (
             <div className={classes.subtitle}>
               <div className={classes.subtitleLabel}>
@@ -154,6 +154,7 @@ const _CurrentSeasonPage = ({
                       currentLevelXpTotalRequired={levelCard.xpRequiredForLevel}
                       cumulativeCurrentXp={totalXP}
                       cumulativeTotalRequiredXp={levelCard.xpCumulativeRequiredTotal}
+                      hideTimeEstimate
                     />
                   </div>
                 ))}
