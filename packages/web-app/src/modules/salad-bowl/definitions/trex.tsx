@@ -2,6 +2,11 @@ const baseUrl = 'https://github.com/SaladTechnologies/plugin-downloads/releases/
 
 export const downloads = [
   {
+    version: '0.25.2',
+    linuxUrl: baseUrl + '/trex-0.25.2/t-rex-0-25-2-linux-cuda.tar.gz',
+    windowsUrl: baseUrl + '/trex-0.25.2/t-rex-0-25-2-windows-cuda.zip',
+  },
+  {
     version: '0.17.2',
     linuxUrl: baseUrl + '/trex-0.17.2/t-rex-0-17-2-linux-cuda.tar.gz',
     windowsUrl: baseUrl + '/trex-0.17.2/t-rex-0-17-2-windows-cuda.zip',
