@@ -2,6 +2,10 @@ const baseUrl = 'https://github.com/SaladTechnologies/plugin-downloads/releases/
 
 export const downloads = [
   {
+    version: '6.16.4',
+    windowsUrl: baseUrl + '/xmrig-6-16-4/xmrig-6-16-4-windows.zip',
+  },
+  {
     version: '6.16.3',
     windowsUrl: baseUrl + '/xmrig-6-16-3/xmrig-6-16-3-windows.zip',
   },
