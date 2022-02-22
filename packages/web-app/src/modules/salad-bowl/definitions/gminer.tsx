@@ -2,6 +2,10 @@ const baseUrl = 'https://github.com/SaladTechnologies/plugin-downloads/releases/
 
 export const downloads = [
   {
+    version: '2.79',
+    windowsUrl: baseUrl + '/gminer-2-79/gminer-2-79-windows.zip',
+  },
+  {
     version: '2.78',
     windowsUrl: baseUrl + '/gminer-2-78/gminer-2-78-windows.zip',
   },
