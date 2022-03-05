@@ -53,7 +53,7 @@ class _NotFoundPage extends Component<Props> {
       <div className={classes.container}>
         <div className={classes.card}>
           <div className={classes.heading}>Uh-oh, Chef.</div>
-          <div className={classes.subheading}>That page doesn't appear to exist.</div>
+          <div className={classes.subheading}>That recipe doesn't appear to exist.</div>
         </div>
       </div>
     )
