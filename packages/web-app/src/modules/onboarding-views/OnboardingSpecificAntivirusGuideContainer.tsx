@@ -23,6 +23,7 @@ const mapStoreToProps = (store: RootStore, ownProps: any): Omit<AntivirusGuidePr
     onCloseClicked: handleOnCloseClicked,
     antiVirusGuideVideoId: store.zendesk.antiVirusGuideVideoId,
     articleId: ownProps.match.params.id,
+    helpScoutUrl: store.zendesk.helpScoutUrl,
     isNative: store.native.isNative,
     navigateToAVGuide: (antivirusSoftwareName: AntiVirusSoftware, label: string) =>
       store.onboardingAntivirus.navigateToAVGuide(antivirusSoftwareName, label),
