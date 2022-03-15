@@ -213,7 +213,6 @@ class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
         <OnboardingAntiVirusScrollbar>
           <div className={classes.page}>
             <div className={classes.container}>
-              {console.log(helpScoutUrl)}
               <div className={classes.heading}>
                 <div className={classes.title}>
                   <Text variant="headline">{antivirusName}</Text>
