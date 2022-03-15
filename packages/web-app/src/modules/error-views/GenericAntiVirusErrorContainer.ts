@@ -16,6 +16,7 @@ const mapStoreToProps = (store: RootStore): any => {
     onCloseClicked: () => store.ui.hideModal(true),
     onViewAVList: () => store.routing.push('/errors/anti-virus'),
     onViewArticle: (id: number) => onViewArticle(id),
+    helpScoutAntiVirusList: store.zendesk.helpScoutAntiVirusList,
   }
 }
 

@@ -14,6 +14,7 @@ const mapStoreToProps = (store: RootStore, ownProps: any): any => ({
   onCloseClicked: () => store.ui.hideModal(),
   onViewAVList: () => store.routing.push('/errors/anti-virus'),
   antiVirusGuideVideoId: store.zendesk.antiVirusGuideVideoId,
+  helpScoutUrl: store.zendesk.helpScoutUrl,
 })
 
 export const SpecificAntiVirusErrorContainer = withRouter(connect(mapStoreToProps, AntiVirusFirewallErrorPage))

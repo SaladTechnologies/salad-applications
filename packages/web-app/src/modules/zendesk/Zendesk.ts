@@ -1,13 +1,13 @@
 import type { AxiosInstance, AxiosResponse } from 'axios'
 import Axios from 'axios'
-import { action, flow, observable } from 'mobx'
+import { action, observable } from 'mobx'
 import { SaladError } from '../../axiosFactory'
 import type { FeatureManager } from '../../FeatureManager'
 import { ErrorPageType } from '../../UIStore'
 import type { AnalyticsStore } from '../analytics'
 import type { AuthStore } from '../auth'
 import type { NativeStore } from '../machine'
-import type { AntiVirusSoftware, ZendeskArticle, ZendeskArticleList, ZendeskArticleResource } from './models'
+import type { AntiVirusSoftware, ZendeskArticle } from './models'
 import { getAntiVirusSoftware, getZendeskAVData } from './utils'
 
 const defaultBeaconId = '29fdaae4-715f-48dc-b93e-5552ef031abc'
@@ -42,6 +42,12 @@ export class Zendesk {
 
   @observable
   public antiVirusGuideVideoId?: number
+
+  @observable helpScoutUrl?: string
+
+  @observable helpScoutFirewallArticle?: string
+
+  @observable helpScoutAntiVirusList?: string
 
   private readonly useZendesk: boolean
 
@@ -407,71 +413,22 @@ export class Zendesk {
   }
 
   @action.bound
-  loadArticle = flow(
-    function* (this: Zendesk, articleID: number) {
-      this.setErrorType(ErrorPageType.AntiVirus)
-      const avSoftwareName = getZendeskAVData(articleID).name
-      if (avSoftwareName === this.selectedAntiVirusGuide && this.helpCenterArticle !== undefined) {
-        return
-      }
-      if (avSoftwareName !== undefined) {
-        this.antiVirusGuideVideoId = getZendeskAVData(avSoftwareName).videoId
-      }
-      this.loadingArticle = true
-      try {
-        let res: Response = yield fetch(`https://salad.zendesk.com/api/v2/help_center/en-us/articles/${articleID}`, {
-          credentials: 'omit',
-        })
-        const data: ZendeskArticleResource = yield res.json()
-        this.helpCenterArticle = data.article.body
-        this.selectedAntiVirusGuide = avSoftwareName
-      } catch (err) {
-        throw err
-      }
-      this.loadingArticle = false
-    }.bind(this),
-  )
+  loadArticle = function (this: Zendesk, articleID: number) {
+    this.setErrorType(ErrorPageType.AntiVirus)
+    const avSoftwareName = getZendeskAVData(articleID).name
+    this.selectedAntiVirusGuide = avSoftwareName
+    this.helpScoutUrl = getZendeskAVData(articleID).helpScoutUrl
+  }.bind(this)
 
   @action.bound
-  loadAntiVirusArticleList = flow(
-    function* (this: Zendesk) {
-      this.setErrorType(ErrorPageType.AntiVirus)
-      if (this.antiVirusArticleList !== undefined) {
-        return
-      }
-
-      this.loadingArticle = true
-      try {
-        let res: Response = yield fetch(
-          'https://salad.zendesk.com/api/v2/help_center/en-us/sections/360008458292/articles',
-          {
-            credentials: 'omit',
-          },
-        )
-        const data: ZendeskArticleList = yield res.json()
-        this.antiVirusArticleList = data.articles
-      } catch (err) {
-        throw err
-      }
-      this.loadingArticle = false
-    }.bind(this),
-  )
+  loadAntiVirusArticleList = function (this: Zendesk) {
+    this.setErrorType(ErrorPageType.AntiVirus)
+    this.helpScoutAntiVirusList = `https://support.salad.com/category/30-anti-virus`
+  }.bind(this)
 
   @action.bound
-  loadFirewallArticle = flow(
-    function* (this: Zendesk) {
-      this.setErrorType(ErrorPageType.Firewall)
-      this.loadingArticle = true
-      try {
-        let res: Response = yield fetch('https://salad.zendesk.com/api/v2/help_center/en-us/articles/360058674291', {
-          credentials: 'omit',
-        })
-        const data: ZendeskArticleResource = yield res.json()
-        this.helpCenterArticle = data.article.body
-      } catch (err) {
-        throw err
-      }
-      this.loadingArticle = false
-    }.bind(this),
-  )
+  loadFirewallArticle = function (this: Zendesk) {
+    this.setErrorType(ErrorPageType.Firewall)
+    this.helpScoutFirewallArticle = `https://support.salad.com/article/219-whitelisting-salad-in-your-firewall`
+  }.bind(this)
 }

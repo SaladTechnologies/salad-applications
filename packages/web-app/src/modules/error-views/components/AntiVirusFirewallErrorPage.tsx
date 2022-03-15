@@ -140,6 +140,9 @@ interface Props extends WithStyles<typeof styles> {
   onViewArticle?: (id: number) => void
   onViewAVList?: () => void
   antiVirusGuideVideoId?: number
+  helpScoutFirewallArticle?: string
+  helpScoutAntiVirusList?: string
+  helpScoutUrl?: string
 }
 
 interface State {
@@ -189,14 +192,13 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
     const {
       antivirusName,
       errorType,
-      article,
-      articleList,
       fallthrough,
       loading,
       onCloseClicked,
-      onViewArticle,
       onViewAVList,
-      antiVirusGuideVideoId,
+      helpScoutFirewallArticle,
+      helpScoutAntiVirusList,
+      helpScoutUrl,
       classes,
     } = this.props
 
@@ -244,7 +246,8 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
                                   <p>
                                     Your anti-virus software is still blocking Salad, and none of our miners will work
                                     until you whitelist Salad with {antivirusName}. Reach out to the{' '}
-                                    <SmartLink to="https://www.reddit.com/r/SaladChefs">support forum</SmartLink> for help!
+                                    <SmartLink to="https://www.reddit.com/r/SaladChefs">support forum</SmartLink> for
+                                    help!
                                   </p>
                                   <p className={classes.selectFromList}>
                                     {' '}
@@ -259,7 +262,8 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
                                 <p>
                                   Your anti-virus has blocked all of our miners. so you'll need to whitelist Salad with
                                   your anti-virus in order to get chopping. Reach out to the{' '}
-                                  <SmartLink to="https://www.reddit.com/r/SaladChefs">support forum</SmartLink> for help!
+                                  <SmartLink to="https://www.reddit.com/r/SaladChefs">support forum</SmartLink> for
+                                  help!
                                 </p>
                               )}
                             </>
@@ -289,31 +293,11 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
                           )}
                         </div>
                       </div>
-                      {article ? (
-                        <>
-                          {antiVirusGuideVideoId && (
-                            <>
-                              <iframe
-                                title={antivirusName}
-                                src={`//player.vimeo.com/video/${antiVirusGuideVideoId}`}
-                                width="640"
-                                height="360"
-                                frameBorder="0"
-                                allowFullScreen
-                              ></iframe>
-                            </>
-                          )}
-                          <div className={classes.content} dangerouslySetInnerHTML={{ __html: article }} />{' '}
-                        </>
-                      ) : articleList && onViewArticle ? (
-                        <ul className={classes.list}>
-                          {articleList.map((article) => (
-                            <li key={article.id} className={classes.listItem} onClick={() => onViewArticle(article.id)}>
-                              {article.name}
-                            </li>
-                          ))}
-                        </ul>
-                      ) : null}
+                      {antivirusName ? (
+                        <iframe height={700} width={700} src={helpScoutUrl} title={antivirusName} />
+                      ) : (
+                        <iframe height={700} width={700} src={helpScoutAntiVirusList} title="AV Guide List" />
+                      )}
                       <Button onClick={onCloseClicked}>Close</Button>
                     </>
                   )}
@@ -336,45 +320,39 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
             <AntiVirusFirewallScrollbar>
               <div className={classes.page}>
                 <div className={classes.container}>
-                  {loading ? (
-                    <Skeleton height={'100%'} />
-                  ) : (
-                    <>
-                      <div className={classes.heading}>
-                        <div className={classes.title}>
-                          {fallthrough ? (
-                            <h1>Add Exception for Salad to your Firewall</h1>
-                          ) : (
-                            <h1>Firewall is blocking Salad</h1>
-                          )}
-                          <InfoButton
-                            className={classes.tooltip}
-                            text={
-                              "Don't worry! Most Firewalls block cryptominers. This is to protect you from having other people install miners on your computer without you knowing - a process called 'cryptojacking'. As long as you are allowed to use this machine, you're fine! Check out the Salad blog to learn more."
-                            }
-                          />
-                        </div>
-                        <div className={classes.subtitle}>
-                          {fallthrough ? (
-                            <p>
-                              Your Firewall is still blocking Salad, and none of our miners will work until this issue
-                              is resolved. Can't add an exception? Reach out to the{' '}
-                              <SmartLink to="https://www.reddit.com/r/SaladChefs">Support Forum</SmartLink> for help!
-                            </p>
-                          ) : (
-                            <p>
-                              Your Firewall is blocking you from chopping. We'll keep testing other miners, but your
-                              earning rates could be lower until this issue is resolved.
-                            </p>
-                          )}
-                        </div>
+                  <>
+                    <div className={classes.heading}>
+                      <div className={classes.title}>
+                        {fallthrough ? (
+                          <h1>Add Exception for Salad to your Firewall</h1>
+                        ) : (
+                          <h1>Firewall is blocking Salad</h1>
+                        )}
+                        <InfoButton
+                          className={classes.tooltip}
+                          text={
+                            "Don't worry! Most Firewalls block cryptominers. This is to protect you from having other people install miners on your computer without you knowing - a process called 'cryptojacking'. As long as you are allowed to use this machine, you're fine! Check out the Salad blog to learn more."
+                          }
+                        />
                       </div>
-                      {article ? (
-                        <div className={classes.content} dangerouslySetInnerHTML={{ __html: article }} />
-                      ) : null}
-                      <Button onClick={onCloseClicked}>Close</Button>
-                    </>
-                  )}
+                      <div className={classes.subtitle}>
+                        {fallthrough ? (
+                          <p>
+                            Your Firewall is still blocking Salad, and none of our miners will work until this issue is
+                            resolved. Can't add an exception? Reach out to the{' '}
+                            <SmartLink to="https://www.reddit.com/r/SaladChefs">Support Forum</SmartLink> for help!
+                          </p>
+                        ) : (
+                          <p>
+                            Your Firewall is blocking you from chopping. We'll keep testing other miners, but your
+                            earning rates could be lower until this issue is resolved.
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <iframe height={700} width={700} src={helpScoutFirewallArticle} title="firewall article" />
+                    <Button onClick={onCloseClicked}>Close</Button>
+                  </>
                 </div>
               </div>
             </AntiVirusFirewallScrollbar>
