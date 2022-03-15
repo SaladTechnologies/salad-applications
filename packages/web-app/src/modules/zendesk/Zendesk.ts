@@ -43,6 +43,8 @@ export class Zendesk {
   @observable
   public antiVirusGuideVideoId?: number
 
+  @observable helpScoutUrl?: string
+
   private readonly useZendesk: boolean
 
   constructor(
