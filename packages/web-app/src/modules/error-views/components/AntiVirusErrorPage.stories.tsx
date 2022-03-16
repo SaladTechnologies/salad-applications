@@ -3,6 +3,7 @@ import { linkTo } from '@storybook/addon-links'
 import { storiesOf } from '@storybook/react'
 import { ErrorPageType } from '../../../UIStore'
 import { getSanitizedHTML } from '../../../utils'
+import { antivirusInfo } from '../../zendesk/utils'
 import { AntiVirusFirewallErrorPage } from './AntiVirusFirewallErrorPage'
 
 storiesOf('Modules/Error Pages/Pages', module)
@@ -36,7 +37,7 @@ storiesOf('Modules/Error Pages/Pages', module)
     return (
       <AntiVirusFirewallErrorPage
         errorType={ErrorPageType.AntiVirus}
-        articleList={articleList}
+        articleList={antivirusInfo}
         onCloseClicked={action('On Close Clicked')}
         onViewArticle={linkTo('Modules/Error Pages/Pages', 'Specific Anti-Virus Error - Initial')}
         onViewAVList={linkTo('Modules/Error Pages/Pages', 'Generic Anti-Virus Error - Initial')}
@@ -47,7 +48,7 @@ storiesOf('Modules/Error Pages/Pages', module)
     return (
       <AntiVirusFirewallErrorPage
         errorType={ErrorPageType.AntiVirus}
-        articleList={articleList}
+        articleList={antivirusInfo}
         onCloseClicked={action('On Close Clicked')}
         fallthrough={true}
         onViewArticle={linkTo('Modules/Error Pages/Pages', 'Specific Anti-Virus Error - Initial')}
@@ -82,86 +83,3 @@ const specificAntiVirusArticle = getSanitizedHTML(kasperskyBody)
 const firewallBody =
   '<ol><li> Open Windows Security.<img src="https://support.salad.com/hc/article_attachments/360089893631/mceclip0.png" alt="mceclip0.png"></li><li>Navigate to Firewall &amp; network protection.<img src="https://support.salad.com/hc/article_attachments/360090201211/FIREWALL_GUIDE_IMAGE_2.png" alt="FIREWALL_GUIDE_IMAGE_2.png"></li><li>Scroll down to Allow an app through firewall.<img src="https://support.salad.com/hc/article_attachments/360090201191/FIREWALLGUIDE_IMAGE_3.png" alt="FIREWALLGUIDE_IMAGE_3.png"></li><li>Scroll down until you find the affected miner.<img src="https://support.salad.com/hc/article_attachments/360090201271/FIREWALL_GUIDE_IMAGE_4.png" alt="FIREWALL_GUIDE_IMAGE_4.png"></li><li>Click Change settings at the top right, and click all the tick boxes on the right side, as well as left side, of the affected miner. Do the same for any further firewall blocked affected miners, if you see the same item listed multiple times, make sure to allow all of them through. Then click OK.</li></ol><p> </p><p>If you are using another Firewall service, please consult their website or support for details on how to allow applications or services through your Firewall.</p>'
 const firewallArticle = getSanitizedHTML(firewallBody)
-
-const articleList = [
-  {
-    id: 1,
-    name: 'How to Whitelist Salad in Windows Defender',
-  },
-  {
-    id: 2,
-    name: 'How to whitelist Salad in McAfee',
-  },
-  {
-    id: 3,
-    name: 'How to Whitelist Salad in Avast Antivirus',
-  },
-  {
-    id: 4,
-    name: 'How to Whitelist Salad in Norton Antivirus',
-  },
-  {
-    id: 5,
-    name: 'How to Whitelist Salad in Malwarebytes',
-  },
-  {
-    id: 6,
-    name: 'How to Whitelist Salad in AVG',
-  },
-  {
-    id: 7,
-    name: 'How to Whitelist Salad in Kaspersky',
-  },
-  {
-    id: 8,
-    name: 'How to Whitelist Salad in Zillya',
-  },
-  {
-    id: 9,
-    name: 'How to Whitelist Salad in Webroot',
-  },
-  {
-    id: 10,
-    name: 'How to Whitelist Salad in VIPRE',
-  },
-  {
-    id: 11,
-    name: 'How to Whitelist Salad in Twister',
-  },
-  {
-    id: 12,
-    name: 'How to Whitelist Salad in TrendMicro',
-  },
-  {
-    id: 13,
-    name: 'How to Whitelist Salad in TotalAV',
-  },
-  {
-    id: 14,
-    name: 'How to Whitelist Salad in Sophos',
-  },
-  {
-    id: 15,
-    name: 'How to Whitelist Salad in SecureAge APEX',
-  },
-  {
-    id: 16,
-    name: 'How to Whitelist Salad in Qihoo-360',
-  },
-  {
-    id: 17,
-    name: 'How to Whitelist Salad in PCMatic',
-  },
-  {
-    id: 18,
-    name: 'How to Whitelist Salad in K7',
-  },
-  {
-    id: 19,
-    name: 'How to Whitelist Salad in GData',
-  },
-  {
-    id: 20,
-    name: 'How to Whitelist Salad in F-Secure',
-  },
-]

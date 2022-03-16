@@ -1,12 +1,12 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import type { ReactChild } from 'react'
 import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import Skeleton from 'react-loading-skeleton'
 import { Button, InfoButton, ModalPage, SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { ErrorPageType } from '../../../UIStore'
+import { antivirusInfo } from '../../zendesk/utils'
 import { AntiVirusFirewallScrollbar } from './AntiVirusFirewallScrollbar'
 
 const styles = (theme: SaladTheme) => ({
@@ -122,26 +122,17 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
-interface HelpCenterArticle {
-  name: string
-  id: number
-}
-
 interface Props extends WithStyles<typeof styles> {
   antivirusName?: string
   errorType: string
-  article?: string
-  articleList?: HelpCenterArticle[]
-  bottomMessage?: ReactChild
+  articleList?: typeof antivirusInfo
   fallthrough?: boolean
   loading?: boolean
   loadArticle?: () => void
   onCloseClicked?: () => void
-  onViewArticle?: (id: number) => void
+  onViewArticle?: (name: string) => void
   onViewAVList?: () => void
-  antiVirusGuideVideoId?: number
   helpScoutFirewallArticle?: string
-  helpScoutAntiVirusList?: string
   helpScoutUrl?: string
 }
 
@@ -197,7 +188,8 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
       onCloseClicked,
       onViewAVList,
       helpScoutFirewallArticle,
-      helpScoutAntiVirusList,
+      onViewArticle,
+      articleList,
       helpScoutUrl,
       classes,
     } = this.props
@@ -296,7 +288,17 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
                       {antivirusName ? (
                         <iframe height={700} width={700} src={helpScoutUrl} title={antivirusName} />
                       ) : (
-                        <iframe height={700} width={700} src={helpScoutAntiVirusList} title="AV Guide List" />
+                        <ul className={classes.list}>
+                          {articleList?.map((article) => (
+                            <li
+                              key={article.label}
+                              className={classes.listItem}
+                              onClick={() => onViewArticle && onViewArticle(article.name)}
+                            >
+                              How to Whitelist Salad in {article.name}
+                            </li>
+                          ))}
+                        </ul>
                       )}
                       <Button onClick={onCloseClicked}>Close</Button>
                     </>

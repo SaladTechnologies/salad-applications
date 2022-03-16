@@ -7,8 +7,8 @@ import { ErrorPageType } from '../../UIStore'
 import type { AnalyticsStore } from '../analytics'
 import type { AuthStore } from '../auth'
 import type { NativeStore } from '../machine'
-import type { AntiVirusSoftware, ZendeskArticle } from './models'
-import { getAntiVirusSoftware, getZendeskAVData } from './utils'
+import type { AntiVirusSoftware } from './models'
+import { antivirusInfo, getAntiVirusSoftware, getZendeskAVData } from './utils'
 
 const defaultBeaconId = '29fdaae4-715f-48dc-b93e-5552ef031abc'
 
@@ -35,7 +35,7 @@ export class Zendesk {
   public loadingArticle: boolean = false
 
   @observable
-  public antiVirusArticleList?: ZendeskArticle[]
+  public antiVirusArticleList?: typeof antivirusInfo
 
   @observable
   public errorType: ErrorPageType = ErrorPageType.Unknown
@@ -46,8 +46,6 @@ export class Zendesk {
   @observable helpScoutUrl?: string
 
   @observable helpScoutFirewallArticle?: string
-
-  @observable helpScoutAntiVirusList?: string
 
   private readonly useZendesk: boolean
 
@@ -423,12 +421,14 @@ export class Zendesk {
   @action.bound
   loadAntiVirusArticleList = function (this: Zendesk) {
     this.setErrorType(ErrorPageType.AntiVirus)
-    this.helpScoutAntiVirusList = `https://support.salad.com/category/30-anti-virus`
+    this.antiVirusArticleList = antivirusInfo
+    this.analytics.trackErrorPageViewed('Generic Anti-Virus Error')
   }.bind(this)
 
   @action.bound
   loadFirewallArticle = function (this: Zendesk) {
     this.setErrorType(ErrorPageType.Firewall)
+    this.analytics.trackErrorPageViewed('Firewall Error')
     this.helpScoutFirewallArticle = `https://support.salad.com/article/219-whitelisting-salad-in-your-firewall`
   }.bind(this)
 }
