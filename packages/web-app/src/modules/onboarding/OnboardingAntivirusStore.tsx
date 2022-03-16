@@ -1,7 +1,6 @@
 import { action, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { delay, routeLink } from '../../utils'
-import type { ZendeskArticleResource } from '../zendesk/models'
 import { AntiVirusSoftware } from '../zendesk/models'
 import { getZendeskAVData } from '../zendesk/utils'
 import { ONBOARDING_PAGE_NAMES, WhitelistWindowsDefenderErrorTypeMessage } from './models'
@@ -18,9 +17,6 @@ export class OnboardingAntivirusStore {
 
   @observable
   public helpCenterArticle?: string
-
-  @observable
-  public loadingArticle: boolean = false
 
   constructor(private readonly store: RootStore) {}
 
@@ -139,26 +135,8 @@ export class OnboardingAntivirusStore {
   }
 
   @action.bound
-  loadArticle = flow(
-    function* (this: OnboardingAntivirusStore, articleID: number) {
-      const antivirusSoftwareName = getZendeskAVData(articleID).name
-      this.store.zendesk.antiVirusGuideVideoId = getZendeskAVData(articleID).videoId
-      if (antivirusSoftwareName === this.selectedAntiVirusGuide && this.helpCenterArticle !== undefined) {
-        return
-      }
-
-      this.loadingArticle = true
-      try {
-        let res: Response = yield fetch(`https://salad.zendesk.com/api/v2/help_center/en-us/articles/${articleID}`, {
-          credentials: 'omit',
-        })
-        const data: ZendeskArticleResource = yield res.json()
-        this.helpCenterArticle = data.article.body
-        this.selectedAntiVirusGuide = antivirusSoftwareName
-      } catch (err) {
-        throw err
-      }
-      this.loadingArticle = false
-    }.bind(this),
-  )
+  loadArticle = function (this: OnboardingAntivirusStore, articleID: number) {
+    this.store.zendesk.helpScoutUrl = getZendeskAVData(articleID).helpScoutUrl
+    this.selectedAntiVirusGuide = getZendeskAVData(articleID).name
+  }.bind(this)
 }

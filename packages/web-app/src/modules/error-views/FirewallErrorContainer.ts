@@ -11,6 +11,7 @@ const mapStoreToProps = (store: RootStore): any => {
     loading: store.zendesk.loadingArticle,
     loadArticle: () => store.zendesk.loadFirewallArticle(),
     onCloseClicked: () => store.ui.hideModal(true),
+    helpScoutFirewallArticle: store.zendesk.helpScoutFirewallArticle,
   }
 }
 

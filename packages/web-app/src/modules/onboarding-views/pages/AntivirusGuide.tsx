@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Modal, Text } from '@saladtechnologies/garden-components'
 import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import Skeleton from 'react-loading-skeleton'
 import { ModalPage } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { AntiVirusSoftware } from '../../zendesk/models'
@@ -88,6 +87,8 @@ const styles = (theme: SaladTheme) => ({
     lineHeight: '150%',
   },
   subtitle: {
+    marginTop: 16,
+    marginBottom: 8,
     fontSize: theme.medium,
   },
   '@keyframes fadeIn': {
@@ -121,14 +122,12 @@ const styles = (theme: SaladTheme) => ({
 export interface AntivirusGuideProps extends WithStyles<typeof styles> {
   isNative: boolean
   antivirusName?: string
-  article?: string
-  loading?: boolean
   loadArticle?: () => void
   onCloseClicked?: () => void
-  antiVirusGuideVideoId?: number
   navigateToAVGuide: (antivirusSoftwareName: AntiVirusSoftware, label: string) => void
   onNoAVClick: () => void
   articleId?: number
+  helpScoutUrl?: string
 }
 
 interface State {
@@ -198,17 +197,8 @@ class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
   }
 
   render() {
-    const {
-      antivirusName,
-      article,
-      loading,
-      onCloseClicked,
-      antiVirusGuideVideoId,
-      isNative,
-      navigateToAVGuide,
-      onNoAVClick,
-      classes,
-    } = this.props
+    const { antivirusName, onCloseClicked, isNative, navigateToAVGuide, onNoAVClick, classes, helpScoutUrl } =
+      this.props
 
     const { webWidgetShowing, showAVSelectionModal } = this.state
 
@@ -220,48 +210,25 @@ class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
         <OnboardingAntiVirusScrollbar>
           <div className={classes.page}>
             <div className={classes.container}>
-              {loading ? (
-                <Skeleton height={'100%'} />
-              ) : (
-                <>
-                  <div className={classes.heading}>
-                    <div className={classes.title}>
-                      <Text variant="headline">{antivirusName}</Text>
-                    </div>
-                    <div className={classes.subtitle}>
-                      <Text variant="baseS">
-                        Use a different anti-virus provider?{' '}
-                        <span className={classes.link} onClick={this.handleOpenAVSelectionModal}>
-                          Select it from this list
-                        </span>
-                        .
-                      </Text>
-                    </div>
-                  </div>
-                  {article ? (
-                    <>
-                      {antiVirusGuideVideoId && (
-                        <div className={classes.video}>
-                          <iframe
-                            title={antivirusName}
-                            src={`//player.vimeo.com/video/${antiVirusGuideVideoId}`}
-                            width="640"
-                            height="360"
-                            frameBorder="0"
-                            allowFullScreen
-                          ></iframe>
-                        </div>
-                      )}
-                      <Text variant="baseL">
-                        <div className={classes.content} dangerouslySetInnerHTML={{ __html: article }} />{' '}
-                      </Text>
-                    </>
-                  ) : null}
-                  <span className={classes.closeButtonContainer}>
-                    <Button size="medium" label="Close" onClick={onCloseClicked} />
+              <div className={classes.heading}>
+                <div className={classes.title}>
+                  <Text variant="headline">{antivirusName}</Text>
+                </div>
+              </div>
+
+              <iframe width={700} height={700} title={antivirusName} src={helpScoutUrl} />
+              <div className={classes.subtitle}>
+                <Text variant="baseS">
+                  Use a different anti-virus provider?{' '}
+                  <span className={classes.link} onClick={this.handleOpenAVSelectionModal}>
+                    Select it from this list
                   </span>
-                </>
-              )}
+                  .
+                </Text>
+              </div>
+              <span className={classes.closeButtonContainer}>
+                <Button size="medium" label="Close" onClick={onCloseClicked} />
+              </span>
             </div>
           </div>
         </OnboardingAntiVirusScrollbar>

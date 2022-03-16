@@ -1,11 +1,15 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
+import { getZendeskAVData } from '../zendesk/utils'
 import { AntiVirusFirewallErrorPage } from './components/AntiVirusFirewallErrorPage'
 
 const mapStoreToProps = (store: RootStore): any => {
-  const onViewArticle = (id: number) => {
-    store.ui.showModal(`/errors/anti-virus/${id}`)
-    store.ui.trackAntiVirusGuideLinkClick(id)
+  const onViewArticle = (name: string) => {
+    const id = getZendeskAVData(name).id
+    if (id) {
+      store.ui.showModal(`/errors/anti-virus/${id}`)
+      store.ui.trackAntiVirusGuideLinkClick(id)
+    }
   }
   return {
     errorType: store.zendesk.errorType,
@@ -15,7 +19,7 @@ const mapStoreToProps = (store: RootStore): any => {
     loadArticle: () => store.zendesk.loadAntiVirusArticleList(),
     onCloseClicked: () => store.ui.hideModal(true),
     onViewAVList: () => store.routing.push('/errors/anti-virus'),
-    onViewArticle: (id: number) => onViewArticle(id),
+    onViewArticle: (name: string) => onViewArticle(name),
   }
 }
 
