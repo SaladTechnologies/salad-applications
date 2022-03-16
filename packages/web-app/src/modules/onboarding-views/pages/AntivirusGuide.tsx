@@ -122,11 +122,8 @@ const styles = (theme: SaladTheme) => ({
 export interface AntivirusGuideProps extends WithStyles<typeof styles> {
   isNative: boolean
   antivirusName?: string
-  article?: string
-  loading?: boolean
   loadArticle?: () => void
   onCloseClicked?: () => void
-  antiVirusGuideVideoId?: number
   navigateToAVGuide: (antivirusSoftwareName: AntiVirusSoftware, label: string) => void
   onNoAVClick: () => void
   articleId?: number

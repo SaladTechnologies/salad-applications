@@ -18,9 +18,6 @@ export class OnboardingAntivirusStore {
   @observable
   public helpCenterArticle?: string
 
-  @observable
-  public loadingArticle: boolean = false
-
   constructor(private readonly store: RootStore) {}
 
   /**
@@ -139,7 +136,6 @@ export class OnboardingAntivirusStore {
 
   @action.bound
   loadArticle = function (this: OnboardingAntivirusStore, articleID: number) {
-    this.store.zendesk.antiVirusGuideVideoId = getZendeskAVData(articleID).videoId
     this.store.zendesk.helpScoutUrl = getZendeskAVData(articleID).helpScoutUrl
     this.selectedAntiVirusGuide = getZendeskAVData(articleID).name
   }.bind(this)

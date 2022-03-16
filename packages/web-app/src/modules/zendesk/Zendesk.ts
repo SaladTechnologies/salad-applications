@@ -40,9 +40,6 @@ export class Zendesk {
   @observable
   public errorType: ErrorPageType = ErrorPageType.Unknown
 
-  @observable
-  public antiVirusGuideVideoId?: number
-
   @observable helpScoutUrl?: string
 
   @observable helpScoutFirewallArticle?: string
