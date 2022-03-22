@@ -15,9 +15,11 @@ const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ id: stri
   }
 
   const extensions = store.profile.currentProfile?.extensions
+  const hasPayPalAccount = store.profile.payPalId != null
   const reward = store.rewards.getReward(props.match.params.id)
   const requiresMinecraftUsername =
     reward?.tags?.includes('requires-minecraft-username') && !extensions?.minecraftUsername
+  const requiresPayPalAccount = reward?.tags?.includes('requires-paypal-account') && !hasPayPalAccount
   return {
     loadReward: store.rewards.loadAndTrackReward,
     authenticated: store.auth.isAuthenticated,
@@ -30,6 +32,7 @@ const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ id: stri
     onAddToCart: store.rewards.addToChoppingCart,
     onRemoveFromCart: store.rewards.removeFromChoppingCart,
     requiresMinecraftUsername: requiresMinecraftUsername,
+    requiresPayPalAccount,
     trackDisabledBuyNowClick,
   }
 }
