@@ -1,10 +1,10 @@
 import SaladDefaultAvatarSrc from '@saladtechnologies/garden-components/lib/components/Avatar/assets/SaladAvatar.png'
-import { AxiosInstance } from 'axios'
+import { AxiosInstance, AxiosResponse } from 'axios'
 import { action, computed, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { FormValues } from '../account-views/account-views/components/'
 import { NotificationMessageCategory } from '../notifications/models'
-import { Avatar, Profile } from './models'
+import { Avatar, payPalResponse, Profile } from './models'
 
 const SaladDefaultAvatar: Avatar = {
   name: 'Default',
@@ -51,6 +51,12 @@ export class ProfileStore {
   get profileAvatar(): Avatar | undefined {
     return this.avatars?.find((avatar) => avatar.id === this.currentSelectedAvatar)
   }
+
+  @observable
+  public payPalId?: string
+
+  @observable
+  public isPayPalIdDisconnectLoading: boolean = false
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
@@ -200,4 +206,29 @@ export class ProfileStore {
   resetMinecraftUsernameSuccess = () => {
     this.isMinecraftUserNameSubmitSuccess = false
   }
+
+  @action.bound
+  loadPayPalId = flow(function* (this: ProfileStore) {
+    try {
+      debugger
+      let res: AxiosResponse<payPalResponse> = yield this.axios.get('/api/v2/paypal-account') as payPalResponse
+      this.payPalId = res?.data?.email
+    } catch (err) {
+      console.log(err)
+    }
+  })
+
+  @action.bound
+  disconnectPayPalId = flow(function* (this: ProfileStore) {
+    this.isPayPalIdDisconnectLoading = true
+    try {
+      let res: AxiosResponse<payPalResponse> = yield this.axios.delete('/api/v2/paypal-account')
+      this.payPalId = res?.data?.email
+      this.isPayPalIdDisconnectLoading = false
+      this.loadPayPalId()
+    } catch (err) {
+      console.log(err)
+      this.isPayPalIdDisconnectLoading = false
+    }
+  })
 }
