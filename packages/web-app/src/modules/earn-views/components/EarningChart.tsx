@@ -5,6 +5,7 @@ import moment from 'moment'
 import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import type { CategoricalChartState } from 'recharts/types/chart/generateCategoricalChart'
 import { P } from '../../../components'
 import { Segments } from '../../../components/elements/Segments'
 import { FeatureManagerConsumer } from '../../../FeatureManager'
@@ -177,34 +178,6 @@ interface EarningRange {
   timestamp: Object
 }
 
-interface ChartMouseEvent {
-  activeLabel: string
-  activeCoordinate: {
-    x: number
-    y: number
-  }
-  activePayload: [
-    {
-      color: string
-      datakey: string
-      fill: string
-      formatter: string
-      name: string
-      payload: {
-        earnings: number
-        unit: number
-        timestamp: Object
-      }
-      type?: string
-      value: number
-    },
-  ]
-  activeTooltipIndex: number
-  chartX: number
-  chartY: number
-  isTooltipActive: boolean
-}
-
 interface CustomTick extends WithStyles<typeof styles> {
   daysShowing: 1 | 7 | 30
   fill: string
@@ -371,12 +344,12 @@ class _EarningChart extends Component<Props, State> {
     }
   }
 
-  handleMouseEvent = (a: ChartMouseEvent) => {
-    if (a) {
+  handleMouseEvent = (nextState: CategoricalChartState) => {
+    if (nextState) {
       const { selectingRangeInProgress, selectedRangeIndexes } = this.state
 
       if (selectingRangeInProgress) {
-        const uniqueIndexes = uniq(selectedRangeIndexes.concat(a.activeTooltipIndex))
+        const uniqueIndexes = uniq(selectedRangeIndexes.concat(nextState.activeTooltipIndex ?? 0))
         for (var i = 1; i < uniqueIndexes.length; i++) {
           if (uniqueIndexes[i] - uniqueIndexes[i - 1] !== 1) {
             let missingSequenceNum: number = uniqueIndexes[i - 1] + 1
@@ -389,16 +362,16 @@ class _EarningChart extends Component<Props, State> {
         this.setState({ selectedRangeIndexes: uniqueIndexes.sort() })
       }
 
-      if (!a.isTooltipActive) {
+      if (!nextState.isTooltipActive) {
         this.setState({ hoverIndex: undefined, selectedRangeIndexes: [], showEarningsRange: false })
       } else {
-        this.setState({ hoverIndex: a.activeTooltipIndex })
+        this.setState({ hoverIndex: nextState.activeTooltipIndex })
       }
     }
   }
 
-  handleMouseDown = (a: ChartMouseEvent) => {
-    if (a) {
+  handleMouseDown = (nextState: CategoricalChartState) => {
+    if (nextState) {
       if (this.state.selectedRangeIndexes.length > 0) {
         this.setState({
           selectedRangeIndexes: [],
@@ -409,23 +382,29 @@ class _EarningChart extends Component<Props, State> {
       }
       this.setState({
         earningsRangeStart: {
-          chartX: a.chartX,
-          chartY: a.chartY,
-          index: a.activeTooltipIndex,
-          timestamp: a.activePayload[0].payload.timestamp,
+          chartX: nextState.chartX ?? 0,
+          chartY: nextState.chartY ?? 0,
+          index: nextState.activeTooltipIndex ?? 0,
+          timestamp:
+            nextState.activePayload !== undefined && nextState.activePayload[0] !== undefined
+              ? nextState.activePayload[0].payload.timestamp
+              : undefined,
         },
         selectingRangeInProgress: true,
       })
     }
   }
 
-  handleMouseUp = (a: ChartMouseEvent) => {
-    if (a) {
+  handleMouseUp = (nextState: CategoricalChartState) => {
+    if (nextState) {
       const earningsRangeEnd = {
-        chartX: a.chartX,
-        chartY: a.chartY,
-        index: a.activeTooltipIndex,
-        timestamp: a.activePayload[0].payload.timestamp,
+        chartX: nextState.chartX ?? 0,
+        chartY: nextState.chartY ?? 0,
+        index: nextState.activeTooltipIndex ?? 0,
+        timestamp:
+          nextState.activePayload !== undefined && nextState.activePayload[0] !== undefined
+            ? nextState.activePayload[0].payload.timestamp
+            : undefined,
       }
       this.setState({ earningsRangeEnd, selectingRangeInProgress: false })
       this.setEarningsRangeSum(this.state.earningsRangeStart?.index, earningsRangeEnd.index)
