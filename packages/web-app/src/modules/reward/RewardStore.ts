@@ -51,7 +51,9 @@ export class RewardStore {
 
   private checkIfFurtherActionIsRequired(reward: Reward) {
     const hasMinecraftUsername = this.profile.currentProfile?.extensions?.minecraftUsername != null
+    const hasPayPalAccount = this.profile.payPalId != null
     const requiresMinecraft = reward?.tags?.includes('requires-minecraft-username') && !hasMinecraftUsername
+    const requiresPayPal = reward?.tags?.includes('requires-paypal-account') && !hasPayPalAccount
 
     if (requiresMinecraft) {
       this.requiresFurtherAction = true
@@ -61,6 +63,18 @@ export class RewardStore {
         message: 'Go to your account page to add your Minecraft Username.',
         autoClose: false,
         onClick: () => this.store.routing.push('/account/summary'),
+        type: 'error',
+      })
+    }
+
+    if (requiresPayPal) {
+      this.requiresFurtherAction = true
+      this.store.notifications.sendNotification({
+        category: NotificationMessageCategory.FurtherActionRequired,
+        title: 'A Paypal account is needed for this reward.',
+        message: 'Go to your account page to link your PayPal account, then try redeeming this reward again.',
+        autoClose: false,
+        onClick: () => this.store.routing.push('/settings/summary'),
         type: 'error',
       })
     }
@@ -291,6 +305,15 @@ export class RewardStore {
                   message: 'Go to your account page to add your Minecraft Username.',
                   autoClose: false,
                   onClick: () => this.store.routing.push('/account/summary'),
+                  type: 'error',
+                }
+              } else if (data.type === 'redemptions:requires:payPalAccount') {
+                notification = {
+                  category: NotificationMessageCategory.FurtherActionRequired,
+                  title: 'A Paypal account is needed for this reward.',
+                  message: 'Go to your account page to link your PayPal account, then try redeeming this reward again.',
+                  autoClose: false,
+                  onClick: () => this.store.routing.push('/settings/summary'),
                   type: 'error',
                 }
               } else if (data.type === 'redemptions:dailySpendLimitExceeded') {
