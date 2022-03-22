@@ -10,8 +10,8 @@ import { createXMRigRandomXPluginDefinitions } from './xmrig-randomx'
 
 export const createWindowsPluginDefinitions = (accounts: Accounts): PluginDefinition[] => [
   ...createPhoenixMinerEthashPluginDefinitions(accounts),
-  ...createXMRigKawPowPluginDefinitions(accounts),
   ...createPhoenixMinerEtchashPluginDefinitions(accounts),
+  ...createXMRigKawPowPluginDefinitions(accounts),
   // TODO: ...createTRexKawPowPluginDefinitions(accounts),
   ...createGMinerBeamHashPluginDefinitions(accounts),
   ...createGMinerCuckooCyclePluginDefinitions(accounts),
