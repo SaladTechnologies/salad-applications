@@ -1,39 +1,3 @@
 [build]
   command = "./.netlify/build.sh"
   publish = "build/"
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  force = false
-
-# Environment variables defined when building the `main` branch.
-[context.production.environment]
-  PUBLIC_URL='/app'
-  REACT_APP_API_URL='https://app-api.salad.io'
-  REACT_APP_MIXPANEL_TOKEN='68db9194f229525012624f3cf368921f'
-
-# Environment variables defined when building the `main-prime` branch.
-[context.main-prime.environment]
-  PUBLIC_URL='/app'
-  REACT_APP_API_URL='https://app-api.salad.io'
-  REACT_APP_MIXPANEL_TOKEN='68db9194f229525012624f3cf368921f'
-
-# Environment variables defined when building any other branch.
-[context.branch-deploy.environment]
-  REACT_APP_API_URL='https://app-api-testing.salad.io'
-  REACT_APP_MIXPANEL_TOKEN='4b245bace4eed86ffdfa35efc3addf1d'
-  REACT_APP_SEARCH_ENGINE='salad-rewards-test'
-  REACT_APP_SEARCH_KEY='search-qced4ibef8m4s7xacm9hoqyk'
-  REACT_APP_UNLEASH_URL='https://features-testing.salad.com/proxy'
-  REACT_APP_UNLEASH_API_KEY='zrujLzhnwVZkIOlS74oZZ0DK7ZXs3Ifo'
-
-# Environment variables defined when building a pull request.
-[context.deploy-preview.environment]
-  REACT_APP_API_URL='https://app-api-testing.salad.io'
-  REACT_APP_MIXPANEL_TOKEN='4b245bace4eed86ffdfa35efc3addf1d'
-  REACT_APP_SEARCH_ENGINE='salad-rewards-test'
-  REACT_APP_SEARCH_KEY='search-qced4ibef8m4s7xacm9hoqyk'
-  REACT_APP_UNLEASH_URL='https://features-testing.salad.com/proxy'
-  REACT_APP_UNLEASH_API_KEY='zrujLzhnwVZkIOlS74oZZ0DK7ZXs3Ifo'
