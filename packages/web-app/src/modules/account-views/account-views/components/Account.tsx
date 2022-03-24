@@ -1,18 +1,11 @@
-import {
-  AvatarSelectionForm,
-  Layout,
-  SvgIconButton,
-  Text,
-  TextField,
-} from '@saladtechnologies/garden-components'
+import { AvatarSelectionForm, Button, Layout, Text, TextField } from '@saladtechnologies/garden-components'
 import { Component } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
 import withStyles, { WithStyles } from 'react-jss'
 import { Head } from '../../../../components'
-import { SaladTheme } from '../../../../SaladTheme'
+import { DefaultTheme, SaladTheme } from '../../../../SaladTheme'
 import { withLogin } from '../../../auth-views'
 import { Avatar, Profile } from '../../../profile/models'
-import { Disconnect } from './assets/Disconnect'
 import { PayPalLoginButton } from './PayPalLoginButton'
 
 const styles = (theme: SaladTheme) => ({
@@ -44,17 +37,15 @@ const styles = (theme: SaladTheme) => ({
     maxWidth: '400px',
     paddingBottom: '12px',
   },
-  disconnectButton: {
-    backgroundColor: theme.darkBlue,
-    padding: '12px',
-    display: 'inline-flex',
-    position: 'relative',
+  disconnectButtonContainer: {
+    marginTop: '12px',
   },
   paypalIdContainer: {
     display: 'flex',
     justifyContent: 'space-between',
     overflowWrap: 'anywhere',
     alignItems: 'center',
+    marginTop: '18px',
   },
 })
 
@@ -145,11 +136,11 @@ class _Account extends Component<Props, State> {
 
     const handleCheckPayPalId = () => {
       clearInterval(intervalId)
-      this.setState({payPalLoadRetries: 0})
+      this.setState({ payPalLoadRetries: 0 })
       intervalId = setInterval(() => {
         this.props.loadPayPalId()
         this.setState((previousCount) => ({
-          payPalLoadRetries: previousCount.payPalLoadRetries + 1
+          payPalLoadRetries: previousCount.payPalLoadRetries + 1,
         }))
       }, 5000)
     }
@@ -220,12 +211,14 @@ class _Account extends Component<Props, State> {
             <div className={classes.fieldContainer}>
               {payPalId ? (
                 <Text variant="baseXL">
-                  <div className={classes.paypalIdContainer}>
-                    {payPalId}
-                    <SvgIconButton
+                  <div className={classes.paypalIdContainer}>{payPalId}</div>
+                  <div className={classes.disconnectButtonContainer}>
+                    <Button
                       onClick={disconnectPayPalId}
                       isLoading={isPayPalIdDisconnectLoading}
-                      icon={<Disconnect />}
+                      label={'Unlink PayPal Account'}
+                      outlineColor={DefaultTheme.darkBlue}
+                      variant={'outlined'}
                     />
                   </div>
                 </Text>
