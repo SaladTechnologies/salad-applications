@@ -210,7 +210,6 @@ export class ProfileStore {
   @action.bound
   loadPayPalId = flow(function* (this: ProfileStore) {
     try {
-      debugger
       let res: AxiosResponse<payPalResponse> = yield this.axios.get('/api/v2/paypal-account') as payPalResponse
       this.payPalId = res?.data?.email
     } catch (err) {
