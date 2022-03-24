@@ -183,6 +183,7 @@ export class RootStore {
         this.referral.loadCurrentReferral(),
         this.referral.loadReferralCode(),
         this.refresh.refreshData(),
+        this.profile.loadPayPalId(),
         this.zendesk.login(profile.username, profile.email),
         Promise.race([this.saladBowl.login(), delay(10000)]),
       ])
