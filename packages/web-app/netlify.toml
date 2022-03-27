@@ -1,6 +1,9 @@
 [build]
   command = "./.netlify/build.sh"
-  publish = "build/"
+  publish = "./build/"
+
+[build.environment]
+  NODE_ENV="production"
 
 [[redirects]]
   from = "/*"
@@ -10,16 +13,19 @@
 
 # Environment variables defined when building the `main` branch.
 [context.production.environment]
+  NODE_ENV="production"
   REACT_APP_API_URL='https://app-api.salad.io'
   REACT_APP_MIXPANEL_TOKEN='68db9194f229525012624f3cf368921f'
 
 # Environment variables defined when building the `main-prime` branch.
 [context.main-prime.environment]
+  NODE_ENV="production"
   REACT_APP_API_URL='https://app-api.salad.io'
   REACT_APP_MIXPANEL_TOKEN='68db9194f229525012624f3cf368921f'
 
 # Environment variables defined when building any other branch.
 [context.branch-deploy.environment]
+  NODE_ENV="production"
   REACT_APP_API_URL='https://app-api-testing.salad.io'
   REACT_APP_MIXPANEL_TOKEN='4b245bace4eed86ffdfa35efc3addf1d'
   REACT_APP_SEARCH_ENGINE='salad-rewards-test'
@@ -29,6 +35,7 @@
 
 # Environment variables defined when building a pull request.
 [context.deploy-preview.environment]
+  NODE_ENV="production"
   REACT_APP_API_URL='https://app-api-testing.salad.io'
   REACT_APP_MIXPANEL_TOKEN='4b245bace4eed86ffdfa35efc3addf1d'
   REACT_APP_SEARCH_ENGINE='salad-rewards-test'

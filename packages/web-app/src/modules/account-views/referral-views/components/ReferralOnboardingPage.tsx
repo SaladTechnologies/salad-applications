@@ -75,7 +75,9 @@ class _ReferralOnboardingPage extends Component<Props> {
   handleSubmitCode = (data: FormValues) => {
     const { onSubmitCode } = this.props
 
-    onSubmitCode?.(data.input)
+    if (data.input) {
+      onSubmitCode?.(data.input)
+    }
   }
 
   handleDefaultCode = () => {
