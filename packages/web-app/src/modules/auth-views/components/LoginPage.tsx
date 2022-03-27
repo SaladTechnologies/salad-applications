@@ -114,11 +114,15 @@ const _LoginPage = ({
   const ref = useRef<TextFieldRefHandlers>(null)
 
   const handleSubmitEmail = (data: FormValues) => {
-    onSubmitEmail?.(data.input)
+    if (data.input) {
+      onSubmitEmail?.(data.input)
+    }
   }
 
   const handleSubmitCode = (data: FormValues) => {
-    onSubmitCode?.(data.input)
+    if (data.input) {
+      onSubmitCode?.(data.input)
+    }
   }
 
   const handleResendCode = () => {

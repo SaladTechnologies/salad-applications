@@ -55,8 +55,9 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 export type FormValues = {
-  input: string
+  input?: string
 }
+
 class _Account extends Component<Props> {
   render() {
     const {
