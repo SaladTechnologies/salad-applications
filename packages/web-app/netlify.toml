@@ -1,3 +1,6 @@
 [build]
   command = "./.netlify/build.sh"
-  publish = "build/"
+  publish = "./build/"
+
+[build.environment]
+  NODE_ENV="production"
