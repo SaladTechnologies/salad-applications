@@ -181,7 +181,7 @@ class _RewardHeaderBar extends Component<Props> {
               )}
               {requiresPayPalAccount && authenticated && (
                 <div className={classnames(classes.priceText, classes.stockLabel, classes.insufficientBalanceLabel)}>
-                  <SmartLink to="/settings/summary">Add PayPal account</SmartLink>
+                  <SmartLink to="/account/summary">Add PayPal account</SmartLink>
                 </div>
               )}
             </div>

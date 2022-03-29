@@ -74,7 +74,7 @@ export class RewardStore {
         title: 'A Paypal account is needed for this reward.',
         message: 'Go to your account page to link your PayPal account, then try redeeming this reward again.',
         autoClose: false,
-        onClick: () => this.store.routing.push('/settings/summary'),
+        onClick: () => this.store.routing.push('/account/summary'),
         type: 'error',
       })
     }
@@ -313,7 +313,7 @@ export class RewardStore {
                   title: 'A Paypal account is needed for this reward.',
                   message: 'Go to your account page to link your PayPal account, then try redeeming this reward again.',
                   autoClose: false,
-                  onClick: () => this.store.routing.push('/settings/summary'),
+                  onClick: () => this.store.routing.push('/account/summary'),
                   type: 'error',
                 }
               } else if (data.type === 'redemptions:dailySpendLimitExceeded') {
