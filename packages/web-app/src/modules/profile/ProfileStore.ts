@@ -210,7 +210,7 @@ export class ProfileStore {
   @action.bound
   loadPayPalId = flow(function* (this: ProfileStore) {
     try {
-      let res: AxiosResponse<payPalResponse> = yield this.axios.get('/api/v2/paypal-account') as payPalResponse
+      let res: AxiosResponse<payPalResponse> = yield this.axios.get('/api/v2/paypal/users') as payPalResponse
       this.payPalId = res?.data?.email
     } catch (err) {
       console.log(err)
@@ -221,7 +221,7 @@ export class ProfileStore {
   disconnectPayPalId = flow(function* (this: ProfileStore) {
     this.isPayPalIdDisconnectLoading = true
     try {
-      let res: AxiosResponse<payPalResponse> = yield this.axios.delete('/api/v2/paypal-account')
+      let res: AxiosResponse<payPalResponse> = yield this.axios.delete('/api/v2/paypal/users')
       this.payPalId = res?.data?.email
       this.isPayPalIdDisconnectLoading = false
       this.loadPayPalId()
