@@ -39,6 +39,7 @@ export class Config {
   public readonly appRoutingBasename?: string = optionalString('PUBLIC_URL')
   public readonly dataRefreshRate: number = numberOrDefault('REACT_APP_DATA_REFRESH_RATE', convertMinutes(5))
   public readonly mixpanelToken?: string = optionalString('REACT_APP_MIXPANEL_TOKEN')
+  public readonly paypalUrl: string = requiredString('REACT_APP_PAYPAL_URL')
   public readonly rewardRefreshRate: number = numberOrDefault('REACT_APP_REWARD_REFRESH_RATE', convertMinutes(5))
   public readonly searchUrl: string = requiredString('REACT_APP_SEARCH_URL')
   public readonly strapiUploadUrl: string = requiredString('REACT_APP_STRAPI_UPLOAD_URL')

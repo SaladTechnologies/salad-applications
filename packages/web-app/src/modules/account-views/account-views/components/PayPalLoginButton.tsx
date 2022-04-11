@@ -1,6 +1,7 @@
 import { ButtonLink } from '@saladtechnologies/garden-components'
 import { FunctionComponent } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
+import { config } from '../../../../config'
 
 const styles = {
   container: {
@@ -18,7 +19,7 @@ const _PayPalLoginButton: FunctionComponent<PayPalLoginButtonProps> = ({ onClick
       label="Log in with PayPal"
       fill="#0070BA"
       target="_blank"
-      to="https://www.sandbox.paypal.com/connect/?flowEntry=static&client_id=AYjYnvjB968mKTIhMqUtLlNa8CJuF9rg_Q4m0Oym5gFvBkZEMPPoooXcG94OjSCjih7kI1_KM25EgfDs&response_type=code&scope=openid%20email%20https%3A%2F%2Furi.paypal.com%2Fservices%2Fpaypalattributes&redirect_uri=https%253A%252F%252Fapp-api-testing.salad.io%252Fapi%252Fv2%252Fpaypal-account-callback"
+      to={config.paypalUrl}
       size="large"
       leadingIcon={
         <svg
