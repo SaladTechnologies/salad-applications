@@ -5,7 +5,7 @@ export const downloads = [
     version: '6.1b',
     windowsUrl: baseUrl + '/phoenixminer-6-1b/phoenixminer-6-1b-windows.zip',
   },
-    {
+  {
     version: '6.0c',
     windowsUrl: baseUrl + '/phoenixminer-6-0c/phoenixminer-6-0c-windows.zip',
   },
