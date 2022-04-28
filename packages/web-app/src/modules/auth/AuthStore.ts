@@ -101,8 +101,13 @@ export class AuthStore {
 
       // Save current route so we can go back to it later once it is resolved
       this.startingRoute = this.router.location.pathname === '/login' ? '/store' : this.router.location.pathname
+      const path = window.location.pathname
 
-      this.router.replace('/login')
+      if (path === '/') {
+        this.router.replace(`/login`)
+      } else {
+        this.router.replace(`/login/?redirect_uri=${path}`)
+      }
     })
 
     await this.loginPromise
