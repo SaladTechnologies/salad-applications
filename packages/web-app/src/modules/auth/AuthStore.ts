@@ -104,9 +104,9 @@ export class AuthStore {
       const path = window.location.pathname
 
       if (path === '/') {
-        this.router.replace(`/login`)
+        window.location.replace(`https://salad.com/login`)
       } else {
-        this.router.replace(`/login/?redirect_uri=${path}`)
+        window.location.replace(`https://salad.com/login/?redirect_uri=${path}`)
       }
     })
 
