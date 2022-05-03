@@ -41,11 +41,6 @@ export class AuthStore {
 
   private loginPromise?: Promise<void>
 
-  /**
-   * Path to where we started the login process.
-   */
-  private startingRoute?: string
-
   private loginResolve?: () => void
   private loginReject?: () => void
 
@@ -99,10 +94,13 @@ export class AuthStore {
       this.loginResolve = resolve
       this.loginReject = reject
 
-      // Save current route so we can go back to it later once it is resolved
-      this.startingRoute = this.router.location.pathname === '/login' ? '/store' : this.router.location.pathname
+      const path = window.location.pathname
 
-      this.router.replace('/login')
+      if (path === '/') {
+        window.location.replace(`/login`)
+      } else {
+        window.location.replace(`/login/?redirect_uri=${path}`)
+      }
     })
 
     await this.loginPromise
@@ -231,12 +229,7 @@ export class AuthStore {
   private closeLoginProcess = (success: boolean) => {
     this.isAuthenticated = success
 
-    // Route back to the location we started the login flow from
-    if (this.startingRoute) {
-      this.router.replace(this.startingRoute)
-    } else {
-      this.router.replace('/store')
-    }
+    this.router.replace('/store')
 
     if (success) {
       this.loginResolve?.()
@@ -250,7 +243,6 @@ export class AuthStore {
   @action
   public resetLoginProcess = () => {
     this.loginPromise = undefined
-    this.startingRoute = undefined
     this.currentStep = FormSteps.Email
     this.isSubmitting = false
     this.errorMessage = undefined
