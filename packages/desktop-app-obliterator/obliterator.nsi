@@ -17,12 +17,12 @@
 
   VIAddVersionKey "ProductName" "Salad Obliterator"
   VIAddVersionKey "CompanyName" "Salad Technologies, Inc."
-  VIAddVersionKey "LegalCopyright" "Copyright © 2020 Salad Technologies, Inc."
+  VIAddVersionKey "LegalCopyright" "Copyright © 2020-2022 Salad Technologies, Inc."
   VIAddVersionKey "FileDescription" "Uninstalls broken Salad installations"
-  VIAddVersionKey "FileVersion" "1.0.0.0"
-  VIAddVersionKey "ProductVersion" "1.0.0"
-  VIFileVersion 1.0.0.0
-  VIProductVersion 1.0.0.0
+  VIAddVersionKey "FileVersion" "1.1.0.0"
+  VIAddVersionKey "ProductVersion" "1.1.0"
+  VIFileVersion 1.1.0.0
+  VIProductVersion 1.1.0.0
 
 ;--------------------------------
 ;Interface Settings
@@ -126,6 +126,9 @@ Section Obliterate
   RMDir /r /REBOOTOK "$LOCALAPPDATA\Programs\Salad"
   RMDir /r /REBOOTOK "$PROGRAMFILES32\Salad"
   RMDir /r /REBOOTOK "$PROGRAMFILES64\Salad"
+  SetShellVarContext all
+  RMDir /r /REBOOTOK "$APPDATA\Salad"
+  SetShellVarContext current
 
   Delete "$DESKTOP\Salad.lnk"
   Delete "$SMPROGRAMS\Salad.lnk"
