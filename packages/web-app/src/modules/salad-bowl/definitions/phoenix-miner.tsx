@@ -2,16 +2,16 @@ const baseUrl = 'https://github.com/SaladTechnologies/plugin-downloads/releases/
 
 export const downloads = [
   {
+    version: '6.2c',
+    windowsUrl: baseUrl + '/phoenixminer-6-2c/phoenixminer-6-2c-windows.zip',
+  },
+  {
     version: '6.1b',
     windowsUrl: baseUrl + '/phoenixminer-6-1b/phoenixminer-6-1b-windows.zip',
   },
   {
     version: '6.0c',
     windowsUrl: baseUrl + '/phoenixminer-6-0c/phoenixminer-6-0c-windows.zip',
-  },
-  {
-    version: '5.9d',
-    windowsUrl: baseUrl + '/phoenixminer-5-9d/phoenixminer-5-9d-windows.zip',
   },
   {
     version: '5.7b',
