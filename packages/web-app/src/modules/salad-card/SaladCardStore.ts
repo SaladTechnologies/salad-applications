@@ -49,6 +49,8 @@ export class SaladCardStore {
       const saladCardData = response.data
       if (saladCardData.length > 0) {
         this.hasSaladCard = true
+      } else if (saladCardData.length === 0) {
+        this.hasSaladCard = false
       }
     } catch (e) {
       this.hasSaladCard = false
