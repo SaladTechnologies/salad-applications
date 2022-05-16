@@ -42,6 +42,7 @@ interface Props extends WithStyles<typeof styles> {
   requiresMinecraftUsername: boolean
   trackDisabledBuyNowClick: () => void
   requiresPayPalAccount: boolean
+  requiresSaladCard: boolean
 }
 
 class _RewardDetailsPage extends Component<Props> {
@@ -57,6 +58,7 @@ class _RewardDetailsPage extends Component<Props> {
       onBack,
       requiresMinecraftUsername,
       requiresPayPalAccount,
+      requiresSaladCard,
       trackDisabledBuyNowClick,
       classes,
       ...rest
@@ -70,6 +72,7 @@ class _RewardDetailsPage extends Component<Props> {
           onRedeem={onRedeem}
           requiresMinecraftUsername={requiresMinecraftUsername}
           requiresPayPalAccount={requiresPayPalAccount}
+          requiresSaladCard={true}
           trackDisabledBuyNowClick={trackDisabledBuyNowClick}
           {...rest}
         />
