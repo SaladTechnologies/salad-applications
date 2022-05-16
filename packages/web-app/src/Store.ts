@@ -27,6 +27,7 @@ import { SaladBowlStore } from './modules/salad-bowl'
 import { StopReason } from './modules/salad-bowl/models'
 import { SaladBowlStoreInterface } from './modules/salad-bowl/SaladBowlStoreInterface'
 import { SaladForkAndBowlStore } from './modules/salad-bowl/SaladForkAndBowlStore'
+import { SaladCardStore } from './modules/salad-card/SaladCardStore'
 import { SeasonsStore } from './modules/seasons'
 import { StartButtonUIStore } from './modules/start-button/StartButtonUIStore'
 import { StorefrontStore } from './modules/storefront/StorefrontStore'
@@ -91,6 +92,7 @@ export class RootStore {
   public readonly machineSettingsUI: MachineSettingsUIStore
   public readonly detectedHardwareUIStore: DetectedHardwareUIStore
   public readonly activeWorkloadsUIStore: ActiveWorkloadsUIStore
+  public readonly saladCard: SaladCardStore
 
   constructor(axios: AxiosInstance, private readonly featureManager: FeatureManager) {
     this.routing = new RouterStore()
@@ -130,6 +132,7 @@ export class RootStore {
     this.machineSettingsUI = new MachineSettingsUIStore(this)
     this.detectedHardwareUIStore = new DetectedHardwareUIStore(this)
     this.activeWorkloadsUIStore = new ActiveWorkloadsUIStore(this)
+    this.saladCard = new SaladCardStore(this, axios)
 
     // Start refreshing data
     this.refresh.start()
