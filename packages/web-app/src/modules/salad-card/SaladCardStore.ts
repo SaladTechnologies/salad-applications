@@ -25,7 +25,7 @@ export class SaladCardStore {
   }
 
   @action.bound
-  public CreateSaladCard = flow(function* (this: SaladCardStore) {
+  public createSaladCard = flow(function* (this: SaladCardStore) {
     this.isSubmitSuccess = false
     try {
       this.isSubmitting = true
