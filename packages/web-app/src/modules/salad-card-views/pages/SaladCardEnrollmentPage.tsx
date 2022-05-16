@@ -26,7 +26,7 @@ const styles = (theme: SaladTheme) => ({
 
 interface SaladCardEnrollmentPageProps extends WithStyles<typeof styles> {
   handleCreateSaladCard: () => void
-  isAcceptedTerms: boolean
+  hasAcceptedTerms: boolean
   onToggleAccept: (accepted: boolean) => void
   isSubmitting: boolean
   hasSaladCard: boolean
@@ -37,7 +37,7 @@ interface SaladCardEnrollmentPageProps extends WithStyles<typeof styles> {
 const _SaladCardEnrollmentPage = ({
   classes,
   handleCreateSaladCard,
-  isAcceptedTerms,
+  hasAcceptedTerms,
   onToggleAccept,
   isSubmitting,
   hasSaladCard,
@@ -76,7 +76,7 @@ const _SaladCardEnrollmentPage = ({
               </Text>
             </div>
             <div className={classes.mb48}>
-              <Checkbox onChange={onToggleAccept} checked={isAcceptedTerms}>
+              <Checkbox onChange={onToggleAccept} checked={hasAcceptedTerms}>
                 <Text variant="baseM">
                   I agree to the SaladCard{' '}
                   <a
@@ -110,7 +110,7 @@ const _SaladCardEnrollmentPage = ({
             <div className={classes.mb48}>
               <Button
                 onClick={handleCreateSaladCard}
-                disabled={!isAcceptedTerms}
+                disabled={!hasAcceptedTerms}
                 isLoading={isSubmitting}
                 label="Get SaladCard"
               />

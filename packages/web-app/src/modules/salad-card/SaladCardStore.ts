@@ -4,7 +4,7 @@ import { RootStore } from '../../Store'
 
 export class SaladCardStore {
   @observable
-  public isAcceptedTerms: boolean = false
+  public hasAcceptedTerms: boolean = false
 
   @observable
   public isSubmitting: boolean = false
@@ -16,7 +16,7 @@ export class SaladCardStore {
 
   @action
   public toggleAcceptTerms = (accepted: boolean) => {
-    this.isAcceptedTerms = accepted
+    this.hasAcceptedTerms = accepted
   }
 
   @action

@@ -4,7 +4,7 @@ import { SaladCardEnrollmentPage } from './pages/SaladCardEnrollmentPage'
 
 const mapStoreToProps = (store: RootStore): any => ({
   handleCreateSaladCard: store.saladCard.createSaladCard,
-  isAcceptedTerms: store.saladCard.isAcceptedTerms,
+  hasAcceptedTerms: store.saladCard.hasAcceptedTerms,
   onToggleAccept: store.saladCard.toggleAcceptTerms,
   isSubmitting: store.saladCard.isSubmitting,
   hasSaladCard: store.saladCard.hasSaladCard,
