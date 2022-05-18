@@ -6,6 +6,7 @@ import { RootStore } from '../../Store'
 import { isProblemDetail } from '../../utils'
 import { NotificationMessage, NotificationMessageCategory } from '../notifications/models'
 import { ProfileStore } from '../profile'
+import { SaladCardStore } from '../salad-card/SaladCardStore'
 import { AbortError, SaladPaymentResponse } from '../salad-pay'
 import { SaladPay } from '../salad-pay/SaladPay'
 import { Reward } from './models/Reward'
@@ -52,8 +53,10 @@ export class RewardStore {
   private checkIfFurtherActionIsRequired(reward: Reward) {
     const hasMinecraftUsername = this.profile.currentProfile?.extensions?.minecraftUsername != null
     const hasPayPalAccount = this.profile.payPalId != null
+    const hasSaladCard = this.saladCard.hasSaladCard === true
     const requiresMinecraft = reward?.tags?.includes('requires-minecraft-username') && !hasMinecraftUsername
     const requiresPayPal = reward?.tags?.includes('requires-paypal-account') && !hasPayPalAccount
+    const requiresSaladCard = reward?.tags?.includes('requires-saladcard-account') && !hasSaladCard
 
     if (requiresMinecraft) {
       this.requiresFurtherAction = true
@@ -78,12 +81,25 @@ export class RewardStore {
         type: 'error',
       })
     }
+
+    if (requiresSaladCard) {
+      this.requiresFurtherAction = true
+      this.store.notifications.sendNotification({
+        category: NotificationMessageCategory.FurtherActionRequired,
+        title: 'You must activate a SaladCard for this reward.',
+        message: 'Click to enroll for a SaladCard.',
+        autoClose: false,
+        onClick: () => this.store.routing.push('/earn/saladcard'),
+        type: 'error',
+      })
+    }
   }
 
   constructor(
     private readonly store: RootStore,
     private readonly axios: AxiosInstance,
     private readonly profile: ProfileStore,
+    private readonly saladCard: SaladCardStore,
   ) {}
 
   loadReward = flow(

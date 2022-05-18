@@ -9,7 +9,7 @@ const mapStoreToProps = (store: RootStore): any => ({
   isSubmitting: store.saladCard.isSubmitting,
   hasSaladCard: store.saladCard.hasSaladCard,
   handleRouteToStore: store.saladCard.routeToStore,
-  handleCheckForSaladCard: store.saladCard.checkForSaladCard,
+  handleLoadSaladCard: store.saladCard.loadSaladCard,
 })
 
 export const SaladCardEnrollmentPageContainer = connect(mapStoreToProps, SaladCardEnrollmentPage)

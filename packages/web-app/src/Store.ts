@@ -110,7 +110,8 @@ export class RootStore {
 
     this.machine = new MachineStore(this, axios, featureManager)
     this.profile = new ProfileStore(this, axios)
-    this.rewards = new RewardStore(this, axios, this.profile)
+    this.saladCard = new SaladCardStore(this, axios)
+    this.rewards = new RewardStore(this, axios, this.profile, this.saladCard)
     this.analytics = new AnalyticsStore(this)
     this.balance = new BalanceStore(axios)
     this.ui = new UIStore(this)
@@ -132,7 +133,6 @@ export class RootStore {
     this.machineSettingsUI = new MachineSettingsUIStore(this)
     this.detectedHardwareUIStore = new DetectedHardwareUIStore(this)
     this.activeWorkloadsUIStore = new ActiveWorkloadsUIStore(this)
-    this.saladCard = new SaladCardStore(this, axios)
 
     // Start refreshing data
     this.refresh.start()
@@ -187,6 +187,7 @@ export class RootStore {
         this.referral.loadReferralCode(),
         this.refresh.refreshData(),
         this.profile.loadPayPalId(),
+        this.saladCard.loadSaladCard(),
         this.zendesk.login(profile.username, profile.email),
         Promise.race([this.saladBowl.login(), delay(10000)]),
       ])

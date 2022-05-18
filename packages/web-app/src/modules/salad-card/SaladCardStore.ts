@@ -43,7 +43,7 @@ export class SaladCardStore {
   })
 
   @action.bound
-  public checkForSaladCard = flow(function* (this: SaladCardStore) {
+  public loadSaladCard = flow(function* (this: SaladCardStore) {
     try {
       const response = yield this.axios.get('/api/v2/salad-card/cards')
       const saladCardData = response.data

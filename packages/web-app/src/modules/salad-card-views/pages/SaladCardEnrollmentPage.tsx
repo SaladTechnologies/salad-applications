@@ -31,7 +31,7 @@ interface SaladCardEnrollmentPageProps extends WithStyles<typeof styles> {
   isSubmitting: boolean
   hasSaladCard: boolean
   handleRouteToStore: () => void
-  handleCheckForSaladCard: () => void
+  handleLoadSaladCard: () => void
 }
 
 const _SaladCardEnrollmentPage = ({
@@ -42,12 +42,12 @@ const _SaladCardEnrollmentPage = ({
   isSubmitting,
   hasSaladCard,
   handleRouteToStore,
-  handleCheckForSaladCard,
+  handleLoadSaladCard,
 }: SaladCardEnrollmentPageProps) => {
   useEffect(() => {
-    handleCheckForSaladCard()
+    handleLoadSaladCard()
     hasSaladCard && handleRouteToStore()
-  }, [handleCheckForSaladCard, handleRouteToStore, hasSaladCard])
+  }, [handleLoadSaladCard, handleRouteToStore, hasSaladCard])
   return (
     <div className={classes.page}>
       <Scrollbars>

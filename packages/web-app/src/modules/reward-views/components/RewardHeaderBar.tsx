@@ -96,6 +96,7 @@ interface Props extends WithStyles<typeof styles> {
   onRemoveFromCart?: (reward: Reward) => void
   requiresMinecraftUsername: boolean
   requiresPayPalAccount: boolean
+  requiresSaladCard: boolean
   trackDisabledBuyNowClick: () => void
 }
 
@@ -122,6 +123,7 @@ class _RewardHeaderBar extends Component<Props> {
       currentBalance,
       requiresMinecraftUsername,
       requiresPayPalAccount,
+      requiresSaladCard,
       trackDisabledBuyNowClick,
       classes,
     } = this.props
@@ -182,6 +184,11 @@ class _RewardHeaderBar extends Component<Props> {
               {requiresPayPalAccount && authenticated && (
                 <div className={classnames(classes.priceText, classes.stockLabel, classes.insufficientBalanceLabel)}>
                   <SmartLink to="/account/summary">Add PayPal account</SmartLink>
+                </div>
+              )}
+              {requiresSaladCard && authenticated && (
+                <div className={classnames(classes.priceText, classes.stockLabel, classes.insufficientBalanceLabel)}>
+                  <SmartLink to="/earn/saladcard">Enroll in SaladCard</SmartLink>
                 </div>
               )}
             </div>
