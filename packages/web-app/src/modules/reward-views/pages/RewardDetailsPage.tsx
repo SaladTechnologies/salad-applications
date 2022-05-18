@@ -72,7 +72,7 @@ class _RewardDetailsPage extends Component<Props> {
           onRedeem={onRedeem}
           requiresMinecraftUsername={requiresMinecraftUsername}
           requiresPayPalAccount={requiresPayPalAccount}
-          requiresSaladCard={true}
+          requiresSaladCard={requiresSaladCard}
           trackDisabledBuyNowClick={trackDisabledBuyNowClick}
           {...rest}
         />
