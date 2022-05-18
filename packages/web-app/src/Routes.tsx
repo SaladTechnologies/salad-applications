@@ -94,7 +94,7 @@ const _Routes = ({ location }: RouteComponentProps) => {
       {saladBowlEnabled && <Redirect exact from="/settings/desktop-settings" to="/earn/machine-settings" />}
 
       <Redirect exact from="/earn" to="/earn/summary" />
-      <Route path="/earn/saladcard" component={SaladCardEnrollmentPageContainer} />
+      {saladBowlEnabled && <Route path="/earn/saladcard" component={SaladCardEnrollmentPageContainer} />}
       {saladBowlEnabled ? (
         <Route path="/earn/mining" component={EarningsSummaryPageContainer} />
       ) : (
