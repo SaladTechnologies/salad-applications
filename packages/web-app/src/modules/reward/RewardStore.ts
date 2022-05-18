@@ -87,7 +87,7 @@ export class RewardStore {
       this.store.notifications.sendNotification({
         category: NotificationMessageCategory.FurtherActionRequired,
         title: 'You must activate a SaladCard for this reward.',
-        message: 'Click to go to the enroll a SaladCard page.',
+        message: 'Click to enroll for a SaladCard.',
         autoClose: false,
         onClick: () => this.store.routing.push('/earn/saladcard'),
         type: 'error',
