@@ -28,7 +28,7 @@ interface SaladCardEnrollmentPageProps extends WithStyles<typeof styles> {
   handleCreateSaladCard: () => void
   hasAcceptedTerms: boolean
   onToggleAccept: (accepted: boolean) => void
-  isSubmitting: boolean
+  isCreateSaladCardLoading: boolean
   hasSaladCard: boolean
   handleRouteToStore: () => void
   handleLoadSaladCard: () => void
@@ -39,7 +39,7 @@ const _SaladCardEnrollmentPage = ({
   handleCreateSaladCard,
   hasAcceptedTerms,
   onToggleAccept,
-  isSubmitting,
+  isCreateSaladCardLoading,
   hasSaladCard,
   handleRouteToStore,
   handleLoadSaladCard,
@@ -111,7 +111,7 @@ const _SaladCardEnrollmentPage = ({
               <Button
                 onClick={handleCreateSaladCard}
                 disabled={!hasAcceptedTerms}
-                isLoading={isSubmitting}
+                isLoading={isCreateSaladCardLoading}
                 label="Get SaladCard"
               />
             </div>

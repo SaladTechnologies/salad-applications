@@ -89,7 +89,7 @@ export class RewardStore {
         title: 'You must activate a SaladCard for this reward.',
         message: 'Click to enroll for a SaladCard.',
         autoClose: false,
-        onClick: () => this.store.routing.push('/earn/saladcard'),
+        onClick: () => this.store.routing.push('/earn/saladcard-enroll'),
         type: 'error',
       })
     }
