@@ -1,0 +1,44 @@
+variables:
+  - name: workingDirectory
+    value: packages/webapp/
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - alpha
+  paths:
+    include:
+      - packages/webapp
+    exclude:
+      - packages/webapp/.vscode
+      - packages/webapp/.yarn
+      - packages/webapp/scripts
+      - packages/webapp/.gitignore
+      - packages/webapp/.yarnrc
+      - packages/webapp/.yarnrc.yml
+      - packages/webapp/README.md
+
+pr:
+  branches:
+    include:
+      - alpha
+  paths:
+    include:
+      - packages/webapp
+    exclude:
+      - packages/webapp/.vscode
+      - packages/webapp/.yarn
+      - packages/webapp/scripts
+      - packages/webapp/.gitignore
+      - packages/webapp/.yarnrc
+      - packages/webapp/.yarnrc.yml
+      - packages/webapp/README.md
+
+pool:
+  vmImage: ubuntu-latest
+
+jobs:
+  - job: DummyJob
+    steps:
+      - bash: echo "Hello world"
