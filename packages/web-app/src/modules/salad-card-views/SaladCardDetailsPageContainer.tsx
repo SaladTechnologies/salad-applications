@@ -1,8 +1,8 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
-import { SaladCardDetailsPage } from './pages/SaladCardDetailsPage'
+import { SaladCardDetailsPage, SaladCardDetailsPageProps } from './pages/SaladCardDetailsPage'
 
-const mapStoreToProps = (store: RootStore): any => ({
+const mapStoreToProps = (store: RootStore): Omit<SaladCardDetailsPageProps, 'classes'> => ({
   hasSaladCard: store.saladCard.hasSaladCard,
   handleLockSaladCard: store.saladCard.lockSaladCard,
   lockSaladCardErrorMessage: store.saladCard.lockSaladCardErrorMessage,

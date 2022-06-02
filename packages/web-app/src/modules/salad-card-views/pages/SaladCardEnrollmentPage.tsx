@@ -24,7 +24,7 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
-interface SaladCardEnrollmentPageProps extends WithStyles<typeof styles> {
+export interface SaladCardEnrollmentPageProps extends WithStyles<typeof styles> {
   handleCreateSaladCard: () => void
   hasAcceptedTerms: boolean
   onToggleAccept: (accepted: boolean) => void

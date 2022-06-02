@@ -36,7 +36,7 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
-interface SaladCardDetailsPageProps extends WithStyles<typeof styles> {
+export interface SaladCardDetailsPageProps extends WithStyles<typeof styles> {
   hasSaladCard: boolean
   handleLockSaladCard: () => void
   lockSaladCardErrorMessage?: string
