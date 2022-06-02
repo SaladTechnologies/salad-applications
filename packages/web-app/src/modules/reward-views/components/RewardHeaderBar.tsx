@@ -188,7 +188,7 @@ class _RewardHeaderBar extends Component<Props> {
               )}
               {requiresSaladCard && authenticated && (
                 <div className={classnames(classes.priceText, classes.stockLabel, classes.insufficientBalanceLabel)}>
-                  <SmartLink to="/earn/saladcard">Enroll in SaladCard</SmartLink>
+                  <SmartLink to="/earn/saladcard-enroll">Enroll in SaladCard</SmartLink>
                 </div>
               )}
             </div>

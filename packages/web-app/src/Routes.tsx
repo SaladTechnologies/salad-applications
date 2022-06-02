@@ -19,6 +19,7 @@ import {
   SleepModeConfigurationPageContainer,
 } from './modules/onboarding-views'
 import { RewardDetailsContainer } from './modules/reward-views'
+import { SaladCardDetailsPageContainer } from './modules/salad-card-views/SaladCardDetailsPageContainer'
 import { SaladCardEnrollmentPageContainer } from './modules/salad-card-views/SaladCardEnrollmentPageContainer'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
 import { SettingsContainer } from './modules/settings-views'
@@ -94,7 +95,8 @@ const _Routes = ({ location }: RouteComponentProps) => {
       {saladBowlEnabled && <Redirect exact from="/settings/desktop-settings" to="/earn/machine-settings" />}
 
       <Redirect exact from="/earn" to="/earn/summary" />
-      {saladBowlEnabled && <Route path="/earn/saladcard" component={SaladCardEnrollmentPageContainer} />}
+      {saladBowlEnabled && <Route path="/earn/saladcard-enroll" component={SaladCardEnrollmentPageContainer} />}
+      {saladBowlEnabled && <Route path="/earn/saladcard-details" component={SaladCardDetailsPageContainer} />}
       {saladBowlEnabled ? (
         <Route path="/earn/mining" component={EarningsSummaryPageContainer} />
       ) : (

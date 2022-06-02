@@ -13,7 +13,8 @@ const styles = (theme: SaladTheme) => ({
     flex: 1,
   },
   parentContainer: {
-    width: 688,
+    maxWidth: 688,
+    width: '100%',
   },
   mb48: {
     marginBottom: 48,
@@ -24,11 +25,11 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
-interface SaladCardEnrollmentPageProps extends WithStyles<typeof styles> {
+export interface SaladCardEnrollmentPageProps extends WithStyles<typeof styles> {
   handleCreateSaladCard: () => void
   hasAcceptedTerms: boolean
   onToggleAccept: (accepted: boolean) => void
-  isSubmitting: boolean
+  isCreateSaladCardLoading: boolean
   hasSaladCard: boolean
   handleRouteToStore: () => void
   handleLoadSaladCard: () => void
@@ -39,7 +40,7 @@ const _SaladCardEnrollmentPage = ({
   handleCreateSaladCard,
   hasAcceptedTerms,
   onToggleAccept,
-  isSubmitting,
+  isCreateSaladCardLoading,
   hasSaladCard,
   handleRouteToStore,
   handleLoadSaladCard,
@@ -111,7 +112,7 @@ const _SaladCardEnrollmentPage = ({
               <Button
                 onClick={handleCreateSaladCard}
                 disabled={!hasAcceptedTerms}
-                isLoading={isSubmitting}
+                isLoading={isCreateSaladCardLoading}
                 label="Get SaladCard"
               />
             </div>
