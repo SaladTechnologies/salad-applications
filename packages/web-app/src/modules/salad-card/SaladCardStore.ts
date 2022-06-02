@@ -87,7 +87,6 @@ export class SaladCardStore {
   public lockSaladCard = flow(function* (this: SaladCardStore) {
     try {
       this.isLockSaladCardLoading = true
-      debugger
       const request = true
       yield this.axios.put(`/api/v2/salad-card/cards/${this.saladCard?.cardId}/locked`, request, {
         headers: {
@@ -117,7 +116,6 @@ export class SaladCardStore {
       this.isReplaceSaladCardLoading = true
       const response = yield this.axios.post(`/api/v2/salad-card/cards/${this.saladCard?.cardId}/replace`)
       this.saladCard = response.data
-      debugger
     } catch (e) {
       if (Axios.isAxiosError(e)) {
         if (e.response && e.response.status === 403) {
