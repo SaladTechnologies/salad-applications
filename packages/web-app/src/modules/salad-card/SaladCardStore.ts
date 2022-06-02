@@ -87,8 +87,7 @@ export class SaladCardStore {
   public lockSaladCard = flow(function* (this: SaladCardStore) {
     try {
       this.isLockSaladCardLoading = true
-      const request = true
-      yield this.axios.put(`/api/v2/salad-card/cards/${this.saladCard?.cardId}/locked`, request, {
+      yield this.axios.put(`/api/v2/salad-card/cards/${this.saladCard?.cardId}/locked`, true, {
         headers: {
           'Content-Type': 'application/json',
         },
