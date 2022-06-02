@@ -17,7 +17,8 @@ const styles = (theme: SaladTheme) => ({
     flex: 1,
   },
   parentContainer: {
-    width: 688,
+    maxWidth: 688,
+    width: '100%',
     display: 'flex',
     flexDirection: 'row',
   },

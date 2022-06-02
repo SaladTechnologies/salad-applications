@@ -13,7 +13,8 @@ const styles = (theme: SaladTheme) => ({
     flex: 1,
   },
   parentContainer: {
-    width: 688,
+    maxWidth: 688,
+    width: '100%',
   },
   mb48: {
     marginBottom: 48,
