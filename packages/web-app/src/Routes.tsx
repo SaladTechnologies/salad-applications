@@ -32,6 +32,7 @@ const _Routes = ({ location }: RouteComponentProps) => {
   const store = getStore()
   const feature = useFeatureManager()
   const saladBowlEnabled = feature.isEnabledCached('app_salad_bowl')
+  const saladCardEnabled = feature.isEnabledCached('app_saladcard')
 
   if (store.native.apiVersion < 6) {
     return (
@@ -95,8 +96,8 @@ const _Routes = ({ location }: RouteComponentProps) => {
       {saladBowlEnabled && <Redirect exact from="/settings/desktop-settings" to="/earn/machine-settings" />}
 
       <Redirect exact from="/earn" to="/earn/summary" />
-      {saladBowlEnabled && <Route path="/earn/saladcard-enroll" component={SaladCardEnrollmentPageContainer} />}
-      {saladBowlEnabled && <Route path="/earn/saladcard-details" component={SaladCardDetailsPageContainer} />}
+      {saladCardEnabled && <Route path="/earn/saladcard-enroll" component={SaladCardEnrollmentPageContainer} />}
+      {saladCardEnabled && <Route path="/earn/saladcard-details" component={SaladCardDetailsPageContainer} />}
       {saladBowlEnabled ? (
         <Route path="/earn/mining" component={EarningsSummaryPageContainer} />
       ) : (
