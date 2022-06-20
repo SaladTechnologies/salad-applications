@@ -14,6 +14,7 @@ const mapStoreToProps = (store: RootStore): Omit<SaladCardDetailsPageProps, 'cla
   handleLoadSaladBalance: store.saladCard.loadSaladCardBalance,
   handleLoadSaladCard: store.saladCard.loadSaladCard,
   handleRouteToStore: store.saladCard.routeToStore,
+  lastFourSaladCardDigits: store.saladCard.lastFourSaladCardDigits,
 })
 
 export const SaladCardDetailsPageContainer = connect(mapStoreToProps, SaladCardDetailsPage)

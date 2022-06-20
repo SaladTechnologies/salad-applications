@@ -2,13 +2,12 @@ import { Button, Layout, Text } from '@saladtechnologies/garden-components'
 import { Lock, RefreshCcw } from '@saladtechnologies/garden-icons'
 import { useEffect } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
-import { Img } from 'react-image'
 import withStyles, { WithStyles } from 'react-jss'
 import { Head } from '../../../components'
 import { currencyFormatter } from '../../../formatters'
 import { SaladTheme } from '../../../SaladTheme'
 import { withLogin } from '../../auth-views'
-import saladCardPlaceHolderImage from '../assets/SaladCardPlaceHolderImage.png'
+import { SaladCardProtectedView } from '../components/SaladCardProtectedView'
 
 const styles = (theme: SaladTheme) => ({
   page: {
@@ -49,6 +48,7 @@ export interface SaladCardDetailsPageProps extends WithStyles<typeof styles> {
   handleLoadSaladBalance: () => void
   handleLoadSaladCard: () => void
   handleRouteToStore: () => void
+  lastFourSaladCardDigits?: string
 }
 
 const _SaladCardDetailsPage = ({
@@ -64,6 +64,7 @@ const _SaladCardDetailsPage = ({
   replaceSaladCardErrorMessage,
   isReplaceSaladCardLoading,
   handleLoadSaladBalance,
+  lastFourSaladCardDigits,
 }: SaladCardDetailsPageProps) => {
   useEffect(() => {
     handleLoadSaladCard()
@@ -77,7 +78,7 @@ const _SaladCardDetailsPage = ({
           <Head title="SaladCard" />
           <div className={classes.parentContainer}>
             <div>
-              <Img src={saladCardPlaceHolderImage} alt="Salad Card Image" />
+              <SaladCardProtectedView lastFourSaladCardDigits={lastFourSaladCardDigits} />
             </div>
             <div className={classes.ml24}>
               <div>
