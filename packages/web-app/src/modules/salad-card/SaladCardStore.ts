@@ -66,7 +66,7 @@ export class SaladCardStore {
       if (saladCardData.length > 0) {
         this.hasSaladCard = true
         this.saladCard = saladCardData[0]
-        this.lastFourSaladCardDigits = saladCardData[0].panMasked.slice(-4)
+        this.assignLastFourSaladCardDigits()
       } else {
         this.hasSaladCard = false
       }
@@ -116,8 +116,9 @@ export class SaladCardStore {
   public replaceSaladCard = flow(function* (this: SaladCardStore) {
     try {
       this.isReplaceSaladCardLoading = true
-      yield this.axios.post(`/api/v2/salad-card/cards/${this.saladCard?.cardId}/replace`)
-      this.loadSaladCard()
+      const response = yield this.axios.post(`/api/v2/salad-card/cards/${this.saladCard?.cardId}/replace`)
+      this.saladCard = response.data
+      this.assignLastFourSaladCardDigits()
     } catch (e) {
       if (Axios.isAxiosError(e)) {
         if (e.response && e.response.status === 403) {
@@ -132,6 +133,10 @@ export class SaladCardStore {
       this.isReplaceSaladCardLoading = false
     }
   })
+
+  public assignLastFourSaladCardDigits = () => {
+    this.lastFourSaladCardDigits = this.saladCard?.panMasked.slice(-4)
+  }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 }
