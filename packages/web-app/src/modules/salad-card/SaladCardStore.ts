@@ -116,8 +116,7 @@ export class SaladCardStore {
   public replaceSaladCard = flow(function* (this: SaladCardStore) {
     try {
       this.isReplaceSaladCardLoading = true
-      const response = yield this.axios.post(`/api/v2/salad-card/cards/${this.saladCard?.cardId}/replace`)
-      this.saladCard = response.data
+      yield this.axios.post(`/api/v2/salad-card/cards/${this.saladCard?.cardId}/replace`)
       this.loadSaladCard()
     } catch (e) {
       if (Axios.isAxiosError(e)) {
