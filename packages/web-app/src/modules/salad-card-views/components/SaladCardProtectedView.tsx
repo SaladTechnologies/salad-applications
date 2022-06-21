@@ -2,11 +2,11 @@ import { Text } from '@saladtechnologies/garden-components'
 import { FunctionComponent } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
-import image from '../assets/background.png'
+import saladCardBackgroundImage from '../assets/background.png'
 
 const styles = (theme: SaladTheme) => ({
   parentContainer: {
-    backgroundImage: `url(${image})`,
+    backgroundImage: `url(${saladCardBackgroundImage})`,
     width: 400,
     height: 250,
     display: 'block',
@@ -38,7 +38,7 @@ const _SaladCardProtectedView: FunctionComponent<SaladCardProtectedViewProps> = 
   return (
     <div className={classes.parentContainer}>
       <div className={classes.saladCardNumberContainer}>
-        <Text variant="baseXXL">xxxx xxxx xxxx {lastFourSaladCardDigits}</Text>
+        <Text variant="baseXXL">xxxx xxxx xxxx {lastFourSaladCardDigits ? lastFourSaladCardDigits : 'xxxx'}</Text>
       </div>
       <div className={classes.expCvvContainer}>
         <div className={classes.expContainer}>
