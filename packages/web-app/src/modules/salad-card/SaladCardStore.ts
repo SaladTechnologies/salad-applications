@@ -29,6 +29,8 @@ export class SaladCardStore {
 
   @observable lastFourSaladCardDigits?: string
 
+  @observable saladCardInfoUrl?: string
+
   @action
   public toggleAcceptTerms = (accepted: boolean) => {
     this.hasAcceptedTerms = accepted
@@ -82,7 +84,7 @@ export class SaladCardStore {
 
       this.saladCardBalance = response.data.currentBalance
     } catch (e) {
-      this.hasSaladCard = false
+      // this.hasSaladCard = false
     }
   })
 
@@ -137,6 +139,16 @@ export class SaladCardStore {
   public assignLastFourSaladCardDigits = () => {
     this.lastFourSaladCardDigits = this.saladCard?.panMasked.slice(-4)
   }
+
+  @action.bound
+  public loadSaladCardInfoUrl = flow(function* (this: SaladCardStore) {
+    try {
+      const response = yield this.axios.get(`/api/v2/salad-card/cards/${this.saladCard?.cardId}/embed`)
+      this.saladCardInfoUrl = response.data.url
+    } catch (e) {
+      throw e
+    }
+  })
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 }

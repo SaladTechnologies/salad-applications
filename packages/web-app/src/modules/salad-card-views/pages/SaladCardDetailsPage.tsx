@@ -1,6 +1,6 @@
-import { Button, Layout, Text } from '@saladtechnologies/garden-components'
-import { Lock, RefreshCcw } from '@saladtechnologies/garden-icons'
-import { useEffect } from 'react'
+import { Button, Layout, Modal, Text } from '@saladtechnologies/garden-components'
+import { Lock, RefreshCcw, Search } from '@saladtechnologies/garden-icons'
+import { useEffect, useState } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
 import withStyles, { WithStyles } from 'react-jss'
 import { Head } from '../../../components'
@@ -34,6 +34,9 @@ const styles = (theme: SaladTheme) => ({
     color: theme.darkBlue,
     cursor: 'pointer',
   },
+  fullSaladCardContainer: {
+    text: 'center',
+  },
 })
 
 export interface SaladCardDetailsPageProps extends WithStyles<typeof styles> {
@@ -49,6 +52,8 @@ export interface SaladCardDetailsPageProps extends WithStyles<typeof styles> {
   handleLoadSaladCard: () => void
   handleRouteToStore: () => void
   lastFourSaladCardDigits?: string
+  saladCardInfoUrl?: string
+  handleLoadSaladCardInfoUrl: () => void
 }
 
 const _SaladCardDetailsPage = ({
@@ -65,12 +70,25 @@ const _SaladCardDetailsPage = ({
   isReplaceSaladCardLoading,
   handleLoadSaladBalance,
   lastFourSaladCardDigits,
+  handleLoadSaladCardInfoUrl,
+  saladCardInfoUrl,
 }: SaladCardDetailsPageProps) => {
   useEffect(() => {
     handleLoadSaladCard()
     handleLoadSaladBalance()
     !hasSaladCard && handleRouteToStore()
-  }, [handleLoadSaladCard, handleLoadSaladBalance, handleRouteToStore, hasSaladCard])
+  }, [handleLoadSaladCard, handleLoadSaladBalance, handleRouteToStore, hasSaladCard, handleLoadSaladCardInfoUrl])
+
+  const [viewFullSaladCard, setViewFullSaladCard] = useState<boolean>(false)
+
+  const FiveMinutesInMs = 300000
+
+  const handleOnViewSaladCardModalClick = () => {
+    setViewFullSaladCard(true)
+    handleLoadSaladCardInfoUrl()
+    setInterval(() => setViewFullSaladCard(false), FiveMinutesInMs)
+  }
+
   return (
     <div className={classes.page}>
       <Scrollbars>
@@ -105,10 +123,29 @@ const _SaladCardDetailsPage = ({
                   errorMessage={replaceSaladCardErrorMessage}
                 />
               </div>
+              <div className={classes.mb12}>
+                <Button
+                  leadingIcon={<Search />}
+                  label="View Full SaladCard"
+                  onClick={() => handleOnViewSaladCardModalClick()}
+                />
+              </div>
             </div>
           </div>
         </Layout>
       </Scrollbars>
+      {viewFullSaladCard && (
+        <Modal onClose={() => setViewFullSaladCard(false)} title={'SaladCard'}>
+          <div className={classes.fullSaladCardContainer}>
+            <div className={classes.mb12}>
+              <iframe title="SaladCardFullView" src={saladCardInfoUrl} />
+            </div>
+            <div>
+              <Text variant="baseS">Note: For your safety, this modal will close after 5 minutes</Text>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   )
 }

@@ -1,0 +1,114 @@
+html, body {
+	background-color: #0a2133;
+	margin: 0;
+	padding: 0;
+	font-family: 'Mallory', sans-serif;
+}
+
+#card {
+	background-image: url(./saladCardBackground.png);
+	background-color: #54a745;
+	color: #0a2133;
+	font-size: 14px;
+	height: 250px;
+	left: 50%;
+	position: absolute;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 400px;
+}
+
+#pan {
+	bottom: 110px;
+	font-size: 24px;
+	left: 33px;
+	position: absolute;
+}
+
+.pan-separator:before {
+	content: " ";
+}
+
+#expiry:before {
+	content: "Exp Date: ";
+	font-size: 14px;
+}
+
+#expiry {
+	bottom: 50px;
+	font-size: 0;
+	left: 33px;
+	position: absolute;
+}
+
+#month {
+	font-size: 14px;
+}
+
+#separator {
+	font-size: 14px;
+}
+
+#year {
+	font-size: 14px;
+}
+
+#cvv:before {
+	content: "Security Code: ";
+}
+
+#cvv {
+	bottom: 20px;
+	left: 33px;
+	position: absolute;
+}
+
+@font-face {
+	font-family: 'Mallory';
+	src: url('./fonts/Mallory-BoldItalic.woff2') format('woff2'), url('./fonts/Mallory-BoldItalic.woff') format('woff');
+	font-weight: 700;
+	font-style: italic;
+	font-display: swap;
+  }
+  @font-face {
+	font-family: 'Mallory';
+	src: url('./fonts/Mallory-Book.woff2') format('woff2'), url('./fonts/Mallory-Book.woff') format('woff');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+  }
+  @font-face {
+	font-family: 'Mallory';
+	src: url('./fonts/Mallory-Medium.woff2') format('woff2'), url('./fonts/Mallory-Medium.woff') format('woff');
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+  }
+  @font-face {
+	font-family: 'Mallory';
+	src: url('./fonts/Mallory-Bold.woff2') format('woff2'), url('./fonts/Mallory-Bold.woff') format('woff');
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+  }
+  @font-face {
+	font-family: 'Mallory';
+	src: url('./fonts/Mallory-BookItalic.woff2') format('woff2'), url('./fonts/Mallory-BookItalic.woff') format('woff');
+	font-weight: 400;
+	font-style: italic;
+	font-display: swap;
+  }
+  @font-face {
+	font-family: 'Mallory';
+	src: url('./fonts/Mallory-MediumItalic.woff2') format('woff2'), url('./fonts/Mallory-MediumItalic.woff') format('woff');
+	font-weight: 500;
+	font-style: italic;
+	font-display: swap;
+  }
+  @font-face {
+	font-family: 'Mallory';
+	src: url('./fonts/Mallory-Ultra.woff2') format('woff2'), url('./fonts/Mallory-Ultra.woff') format('woff');
+	font-weight: 900;
+	font-style: normal;
+	font-display: swap;
+  }
