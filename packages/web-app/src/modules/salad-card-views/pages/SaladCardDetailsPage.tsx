@@ -81,12 +81,15 @@ const _SaladCardDetailsPage = ({
 
   const [viewFullSaladCard, setViewFullSaladCard] = useState<boolean>(false)
 
-  const FiveMinutesInMs = 300000
+  const handleCloseSaladCardModalAfterFiveMinutes = () => {
+    setInterval(() => setViewFullSaladCard(false), 300000)
+
+  }
 
   const handleOnViewSaladCardModalClick = () => {
     setViewFullSaladCard(true)
     handleLoadSaladCardInfoUrl()
-    setInterval(() => setViewFullSaladCard(false), FiveMinutesInMs)
+    handleCloseSaladCardModalAfterFiveMinutes()
   }
 
   return (
