@@ -29,7 +29,9 @@ export class SaladCardStore {
 
   @observable lastFourSaladCardDigits?: string
 
-  @observable saladCardInfoUrl?: string
+  @observable saladCardEmbededUrl?: string
+
+  @observable isSaladCardEmbededUrlLoading: boolean = false
 
   @action
   public toggleAcceptTerms = (accepted: boolean) => {
@@ -141,11 +143,14 @@ export class SaladCardStore {
   }
 
   @action.bound
-  public loadSaladCardInfoUrl = flow(function* (this: SaladCardStore) {
+  public loadSaladCardEmbededUrl = flow(function* (this: SaladCardStore) {
     try {
+      this.isSaladCardEmbededUrlLoading = true
       const response = yield this.axios.get(`/api/v2/salad-card/cards/${this.saladCard?.cardId}/embed`)
-      this.saladCardInfoUrl = response.data.url
+      this.saladCardEmbededUrl = response.data.url
+      this.isSaladCardEmbededUrlLoading = false
     } catch (e) {
+      this.isSaladCardEmbededUrlLoading = false
       throw e
     }
   })

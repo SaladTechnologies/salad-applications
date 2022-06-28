@@ -1,4 +1,4 @@
-import { Button, Layout, Modal, Text } from '@saladtechnologies/garden-components'
+import { Button, Layout, LoadingSpinner, Modal, Text } from '@saladtechnologies/garden-components'
 import { Lock, RefreshCcw, Search } from '@saladtechnologies/garden-icons'
 import { useEffect, useState } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
@@ -37,6 +37,9 @@ const styles = (theme: SaladTheme) => ({
   fullSaladCardContainer: {
     text: 'center',
   },
+  saladCardFullViewContainer: {
+    height: 160,
+  },
 })
 
 export interface SaladCardDetailsPageProps extends WithStyles<typeof styles> {
@@ -52,8 +55,9 @@ export interface SaladCardDetailsPageProps extends WithStyles<typeof styles> {
   handleLoadSaladCard: () => void
   handleRouteToStore: () => void
   lastFourSaladCardDigits?: string
-  saladCardInfoUrl?: string
-  handleLoadSaladCardInfoUrl: () => void
+  saladCardEmbededUrl?: string
+  isSaladCardEmbededUrlLoading: boolean
+  handleLoadSaladCardEmbededUrl: () => void
 }
 
 const _SaladCardDetailsPage = ({
@@ -70,25 +74,25 @@ const _SaladCardDetailsPage = ({
   isReplaceSaladCardLoading,
   handleLoadSaladBalance,
   lastFourSaladCardDigits,
-  handleLoadSaladCardInfoUrl,
-  saladCardInfoUrl,
+  handleLoadSaladCardEmbededUrl,
+  saladCardEmbededUrl,
+  isSaladCardEmbededUrlLoading,
 }: SaladCardDetailsPageProps) => {
   useEffect(() => {
     handleLoadSaladCard()
     handleLoadSaladBalance()
     !hasSaladCard && handleRouteToStore()
-  }, [handleLoadSaladCard, handleLoadSaladBalance, handleRouteToStore, hasSaladCard, handleLoadSaladCardInfoUrl])
+  }, [handleLoadSaladCard, handleLoadSaladBalance, handleRouteToStore, hasSaladCard, handleLoadSaladCardEmbededUrl])
 
   const [viewFullSaladCard, setViewFullSaladCard] = useState<boolean>(false)
 
   const handleCloseSaladCardModalAfterFiveMinutes = () => {
     setInterval(() => setViewFullSaladCard(false), 300000)
-
   }
 
   const handleOnViewSaladCardModalClick = () => {
     setViewFullSaladCard(true)
-    handleLoadSaladCardInfoUrl()
+    handleLoadSaladCardEmbededUrl()
     handleCloseSaladCardModalAfterFiveMinutes()
   }
 
@@ -141,7 +145,13 @@ const _SaladCardDetailsPage = ({
         <Modal onClose={() => setViewFullSaladCard(false)} title={'SaladCard'}>
           <div className={classes.fullSaladCardContainer}>
             <div className={classes.mb12}>
-              <iframe title="SaladCardFullView" src={saladCardInfoUrl} />
+              <div className={classes.saladCardFullViewContainer}>
+                {isSaladCardEmbededUrlLoading ? (
+                  <LoadingSpinner variant="dark" size={50} />
+                ) : (
+                  <iframe title="SaladCardFullView" src={saladCardEmbededUrl} />
+                )}
+              </div>
             </div>
             <div>
               <Text variant="baseS">Note: For your safety, this modal will close after 5 minutes</Text>
