@@ -40,6 +40,9 @@ const styles = (theme: SaladTheme) => ({
   saladCardFullViewContainer: {
     height: 160,
   },
+  errorMessageContainer: {
+    color: theme.red,
+  },
 })
 
 export interface SaladCardDetailsPageProps extends WithStyles<typeof styles> {
@@ -57,6 +60,7 @@ export interface SaladCardDetailsPageProps extends WithStyles<typeof styles> {
   lastFourSaladCardDigits?: string
   saladCardEmbededUrl?: string
   isSaladCardEmbededUrlLoading: boolean
+  saladCardEmbededUrlErrorMessage?: string
   handleLoadSaladCardEmbededUrl: () => void
 }
 
@@ -77,6 +81,7 @@ const _SaladCardDetailsPage = ({
   handleLoadSaladCardEmbededUrl,
   saladCardEmbededUrl,
   isSaladCardEmbededUrlLoading,
+  saladCardEmbededUrlErrorMessage,
 }: SaladCardDetailsPageProps) => {
   useEffect(() => {
     handleLoadSaladCard()
@@ -150,6 +155,11 @@ const _SaladCardDetailsPage = ({
                   <LoadingSpinner variant="dark" size={50} />
                 ) : (
                   <iframe title="SaladCardFullView" src={saladCardEmbededUrl} />
+                )}
+                {saladCardEmbededUrlErrorMessage && (
+                  <div className={classes.errorMessageContainer}>
+                    <Text variant="baseM">{saladCardEmbededUrlErrorMessage}</Text>
+                  </div>
                 )}
               </div>
             </div>

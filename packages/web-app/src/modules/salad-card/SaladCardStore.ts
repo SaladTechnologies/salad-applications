@@ -33,6 +33,8 @@ export class SaladCardStore {
 
   @observable isSaladCardEmbededUrlLoading: boolean = false
 
+  @observable saladCardEmbededUrlErrorMessage?: string
+
   @action
   public toggleAcceptTerms = (accepted: boolean) => {
     this.hasAcceptedTerms = accepted
@@ -146,12 +148,13 @@ export class SaladCardStore {
   public loadSaladCardEmbededUrl = flow(function* (this: SaladCardStore) {
     try {
       this.isSaladCardEmbededUrlLoading = true
+      this.saladCardEmbededUrlErrorMessage = undefined
       const response = yield this.axios.get(`/api/v2/salad-card/cards/${this.saladCard?.cardId}/embed`)
       this.saladCardEmbededUrl = response.data.url
       this.isSaladCardEmbededUrlLoading = false
     } catch (e) {
       this.isSaladCardEmbededUrlLoading = false
-      throw e
+      this.saladCardEmbededUrlErrorMessage = 'An error occured. Please try again'
     }
   })
 

@@ -17,6 +17,7 @@ const mapStoreToProps = (store: RootStore): Omit<SaladCardDetailsPageProps, 'cla
   lastFourSaladCardDigits: store.saladCard.lastFourSaladCardDigits,
   saladCardEmbededUrl: store.saladCard.saladCardEmbededUrl,
   isSaladCardEmbededUrlLoading: store.saladCard.isSaladCardEmbededUrlLoading,
+  saladCardEmbededUrlErrorMessage: store.saladCard.saladCardEmbededUrlErrorMessage,
   handleLoadSaladCardEmbededUrl: store.saladCard.loadSaladCardEmbededUrl,
 })
 
