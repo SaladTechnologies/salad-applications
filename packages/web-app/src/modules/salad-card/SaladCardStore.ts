@@ -88,7 +88,7 @@ export class SaladCardStore {
 
       this.saladCardBalance = response.data.currentBalance
     } catch (e) {
-      // this.hasSaladCard = false
+      this.hasSaladCard = false
     }
   })
 
