@@ -110,6 +110,10 @@ const _SaladCardDetailsPage = ({
     clearInterval(intervalId)
   }
 
+  useEffect(() => {
+    return () => clearInterval(intervalId)
+  })
+
   return (
     <div className={classes.page}>
       <Scrollbars>
