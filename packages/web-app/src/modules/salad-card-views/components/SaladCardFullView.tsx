@@ -1,4 +1,5 @@
 import { LoadingSpinner, Text } from '@saladtechnologies/garden-components'
+import classnames from 'classnames'
 import { FunctionComponent } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
@@ -10,11 +11,12 @@ const styles = (theme: SaladTheme) => ({
   mb12: {
     marginBottom: 12,
   },
-  parentContainer: {
-    text: 'center',
-  },
   saladCardFullViewContainer: {
-    height: 160,
+    height: 250,
+  },
+  centerAlign: {
+    display: 'flex',
+    justifyContent: 'center',
   },
 })
 
@@ -31,13 +33,13 @@ const _SaladCardFullView: FunctionComponent<SaladCardFullViewProps> = ({
   saladCardEmbededUrlErrorMessage,
 }) => {
   return (
-    <div className={classes.parentContainer}>
+    <div>
       <div className={classes.mb12}>
-        <div className={classes.saladCardFullViewContainer}>
+        <div className={classnames(classes.saladCardFullViewContainer, classes.centerAlign)}>
           {isSaladCardEmbededUrlLoading ? (
             <LoadingSpinner variant="dark" size={50} />
           ) : (
-            <iframe title="SaladCardFullView" src={saladCardEmbededUrl} />
+            <iframe height={250} width={400} title="SaladCardFullView" src={saladCardEmbededUrl} />
           )}
           {saladCardEmbededUrlErrorMessage && (
             <div className={classes.errorMessageContainer}>
@@ -46,7 +48,7 @@ const _SaladCardFullView: FunctionComponent<SaladCardFullViewProps> = ({
           )}
         </div>
       </div>
-      <div>
+      <div className={classes.centerAlign}>
         <Text variant="baseS">Note: For your safety, this modal will close after 5 minutes</Text>
       </div>
     </div>
