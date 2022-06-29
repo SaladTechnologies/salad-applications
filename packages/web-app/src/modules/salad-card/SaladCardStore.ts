@@ -29,6 +29,12 @@ export class SaladCardStore {
 
   @observable lastFourSaladCardDigits?: string
 
+  @observable saladCardEmbededUrl?: string
+
+  @observable isSaladCardEmbededUrlLoading: boolean = false
+
+  @observable saladCardEmbededUrlErrorMessage?: string
+
   @action
   public toggleAcceptTerms = (accepted: boolean) => {
     this.hasAcceptedTerms = accepted
@@ -137,6 +143,20 @@ export class SaladCardStore {
   public assignLastFourSaladCardDigits = () => {
     this.lastFourSaladCardDigits = this.saladCard?.panMasked.slice(-4)
   }
+
+  @action.bound
+  public loadSaladCardEmbededUrl = flow(function* (this: SaladCardStore) {
+    try {
+      this.isSaladCardEmbededUrlLoading = true
+      this.saladCardEmbededUrlErrorMessage = undefined
+      const response = yield this.axios.get(`/api/v2/salad-card/cards/${this.saladCard?.cardId}/embed`)
+      this.saladCardEmbededUrl = response.data.url
+      this.isSaladCardEmbededUrlLoading = false
+    } catch (e) {
+      this.isSaladCardEmbededUrlLoading = false
+      this.saladCardEmbededUrlErrorMessage = 'An error occured. Please try again'
+    }
+  })
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 }

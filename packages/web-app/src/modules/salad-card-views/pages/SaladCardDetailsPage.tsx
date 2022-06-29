@@ -1,12 +1,14 @@
-import { Button, Layout, Text } from '@saladtechnologies/garden-components'
-import { Lock, RefreshCcw } from '@saladtechnologies/garden-icons'
-import { useEffect } from 'react'
+import { Button, Layout, Modal, Text } from '@saladtechnologies/garden-components'
+import { Lock, RefreshCcw, Search } from '@saladtechnologies/garden-icons'
+import { useEffect, useState } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
 import withStyles, { WithStyles } from 'react-jss'
+import { clearInterval, setInterval } from 'timers'
 import { Head } from '../../../components'
 import { currencyFormatter } from '../../../formatters'
 import { SaladTheme } from '../../../SaladTheme'
 import { withLogin } from '../../auth-views'
+import { SaladCardFullView } from '../components/SaladCardFullView'
 import { SaladCardProtectedView } from '../components/SaladCardProtectedView'
 
 const styles = (theme: SaladTheme) => ({
@@ -34,6 +36,15 @@ const styles = (theme: SaladTheme) => ({
     color: theme.darkBlue,
     cursor: 'pointer',
   },
+  fullSaladCardContainer: {
+    text: 'center',
+  },
+  saladCardFullViewContainer: {
+    height: 160,
+  },
+  errorMessageContainer: {
+    color: theme.red,
+  },
 })
 
 export interface SaladCardDetailsPageProps extends WithStyles<typeof styles> {
@@ -49,6 +60,10 @@ export interface SaladCardDetailsPageProps extends WithStyles<typeof styles> {
   handleLoadSaladCard: () => void
   handleRouteToStore: () => void
   lastFourSaladCardDigits?: string
+  saladCardEmbededUrl?: string
+  isSaladCardEmbededUrlLoading: boolean
+  saladCardEmbededUrlErrorMessage?: string
+  handleLoadSaladCardEmbededUrl: () => void
 }
 
 const _SaladCardDetailsPage = ({
@@ -65,12 +80,40 @@ const _SaladCardDetailsPage = ({
   isReplaceSaladCardLoading,
   handleLoadSaladBalance,
   lastFourSaladCardDigits,
+  handleLoadSaladCardEmbededUrl,
+  saladCardEmbededUrl,
+  isSaladCardEmbededUrlLoading,
+  saladCardEmbededUrlErrorMessage,
 }: SaladCardDetailsPageProps) => {
   useEffect(() => {
     handleLoadSaladCard()
     handleLoadSaladBalance()
     !hasSaladCard && handleRouteToStore()
-  }, [handleLoadSaladCard, handleLoadSaladBalance, handleRouteToStore, hasSaladCard])
+  }, [handleLoadSaladCard, handleLoadSaladBalance, handleRouteToStore, hasSaladCard, handleLoadSaladCardEmbededUrl])
+
+  const [viewFullSaladCardModal, setViewFullSaladCardModal] = useState<boolean>(false)
+  let intervalId: NodeJS.Timer
+
+  const handleCloseSaladCardModalAfterFiveMinutes = () => {
+    clearInterval(intervalId)
+    intervalId = setInterval(() => setViewFullSaladCardModal(false), 300000)
+  }
+
+  const handleOpenFullViewSaladCardModal = () => {
+    setViewFullSaladCardModal(true)
+    handleLoadSaladCardEmbededUrl()
+    handleCloseSaladCardModalAfterFiveMinutes()
+  }
+
+  const handleCloseFullViewSaladCardModal = () => {
+    setViewFullSaladCardModal(false)
+    clearInterval(intervalId)
+  }
+
+  useEffect(() => {
+    return () => clearInterval(intervalId)
+  })
+
   return (
     <div className={classes.page}>
       <Scrollbars>
@@ -105,10 +148,26 @@ const _SaladCardDetailsPage = ({
                   errorMessage={replaceSaladCardErrorMessage}
                 />
               </div>
+              <div className={classes.mb12}>
+                <Button
+                  leadingIcon={<Search />}
+                  label="View Full SaladCard"
+                  onClick={() => handleOpenFullViewSaladCardModal()}
+                />
+              </div>
             </div>
           </div>
         </Layout>
       </Scrollbars>
+      {viewFullSaladCardModal && (
+        <Modal onClose={() => handleCloseFullViewSaladCardModal()} title={'SaladCard'}>
+          <SaladCardFullView
+            isSaladCardEmbededUrlLoading={isSaladCardEmbededUrlLoading}
+            saladCardEmbededUrl={saladCardEmbededUrl}
+            saladCardEmbededUrlErrorMessage={saladCardEmbededUrlErrorMessage}
+          />
+        </Modal>
+      )}
     </div>
   )
 }
