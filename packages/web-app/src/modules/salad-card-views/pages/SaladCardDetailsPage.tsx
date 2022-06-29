@@ -1,12 +1,14 @@
-import { Button, Layout, LoadingSpinner, Modal, Text } from '@saladtechnologies/garden-components'
+import { Button, Layout, Modal, Text } from '@saladtechnologies/garden-components'
 import { Lock, RefreshCcw, Search } from '@saladtechnologies/garden-icons'
 import { useEffect, useState } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
 import withStyles, { WithStyles } from 'react-jss'
+import { clearInterval, setInterval } from 'timers'
 import { Head } from '../../../components'
 import { currencyFormatter } from '../../../formatters'
 import { SaladTheme } from '../../../SaladTheme'
 import { withLogin } from '../../auth-views'
+import { SaladCardFullView } from '../components/SaladCardFullView'
 import { SaladCardProtectedView } from '../components/SaladCardProtectedView'
 
 const styles = (theme: SaladTheme) => ({
@@ -89,16 +91,23 @@ const _SaladCardDetailsPage = ({
     !hasSaladCard && handleRouteToStore()
   }, [handleLoadSaladCard, handleLoadSaladBalance, handleRouteToStore, hasSaladCard, handleLoadSaladCardEmbededUrl])
 
-  const [viewFullSaladCard, setViewFullSaladCard] = useState<boolean>(false)
+  const [viewFullSaladCardModal, setViewFullSaladCardModal] = useState<boolean>(false)
+  let intervalId: NodeJS.Timer
 
   const handleCloseSaladCardModalAfterFiveMinutes = () => {
-    setInterval(() => setViewFullSaladCard(false), 300000)
+    clearInterval(intervalId)
+    intervalId = setInterval(() => setViewFullSaladCardModal(false), 300000)
   }
 
-  const handleOnViewSaladCardModalClick = () => {
-    setViewFullSaladCard(true)
+  const handleOpenFullViewSaladCardModal = () => {
+    setViewFullSaladCardModal(true)
     handleLoadSaladCardEmbededUrl()
     handleCloseSaladCardModalAfterFiveMinutes()
+  }
+
+  const handleCloseFullViewSaladCardModal = () => {
+    setViewFullSaladCardModal(false)
+    clearInterval(intervalId)
   }
 
   return (
@@ -139,34 +148,20 @@ const _SaladCardDetailsPage = ({
                 <Button
                   leadingIcon={<Search />}
                   label="View Full SaladCard"
-                  onClick={() => handleOnViewSaladCardModalClick()}
+                  onClick={() => handleOpenFullViewSaladCardModal()}
                 />
               </div>
             </div>
           </div>
         </Layout>
       </Scrollbars>
-      {viewFullSaladCard && (
-        <Modal onClose={() => setViewFullSaladCard(false)} title={'SaladCard'}>
-          <div className={classes.fullSaladCardContainer}>
-            <div className={classes.mb12}>
-              <div className={classes.saladCardFullViewContainer}>
-                {isSaladCardEmbededUrlLoading ? (
-                  <LoadingSpinner variant="dark" size={50} />
-                ) : (
-                  <iframe title="SaladCardFullView" src={saladCardEmbededUrl} />
-                )}
-                {saladCardEmbededUrlErrorMessage && (
-                  <div className={classes.errorMessageContainer}>
-                    <Text variant="baseM">{saladCardEmbededUrlErrorMessage}</Text>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div>
-              <Text variant="baseS">Note: For your safety, this modal will close after 5 minutes</Text>
-            </div>
-          </div>
+      {viewFullSaladCardModal && (
+        <Modal onClose={() => handleCloseFullViewSaladCardModal()} title={'SaladCard'}>
+          <SaladCardFullView
+            isSaladCardEmbededUrlLoading={isSaladCardEmbededUrlLoading}
+            saladCardEmbededUrl={saladCardEmbededUrl}
+            saladCardEmbededUrlErrorMessage={saladCardEmbededUrlErrorMessage}
+          />
         </Modal>
       )}
     </div>
