@@ -14,7 +14,7 @@ import {
   DetectedHardwareUIStore,
   MachineSettingsUIStore,
   MachineStore,
-  NativeStore,
+  NativeStore
 } from './modules/machine'
 import { ActiveWorkloadsUIStore } from './modules/machine/ActiveWorkloadsUIStore'
 import { NotificationStore } from './modules/notifications'
@@ -133,6 +133,9 @@ export class RootStore {
     this.machineSettingsUI = new MachineSettingsUIStore(this)
     this.detectedHardwareUIStore = new DetectedHardwareUIStore(this)
     this.activeWorkloadsUIStore = new ActiveWorkloadsUIStore(this)
+
+    // Pass AnalyticsStore to FeatureManager
+    featureManager.setAnalyticsStore(this.analytics)
 
     // Start refreshing data
     this.refresh.start()

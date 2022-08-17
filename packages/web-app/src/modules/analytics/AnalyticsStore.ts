@@ -437,7 +437,7 @@ export class AnalyticsStore {
     })
   }
 
-  private track = (event: string, properties?: { [key: string]: any }) => {
+  public track = (event: string, properties?: { [key: string]: any }) => {
     if (!this.mixpanelInitialized) return
 
     mixpanel.track(event, properties)
