@@ -36,7 +36,7 @@ export class UnleashFeatureManager implements FeatureManager {
     this.client.on("impression", (event: any) => {
       if (event.enabled) {
         if (this.analyticsStore !== undefined) {
-          this.analyticsStore.track(
+          this.analyticsStore.trackUnleashEvent(
             "$experiment_started",
             {
               "Experiment name": event.featureName,
@@ -45,13 +45,18 @@ export class UnleashFeatureManager implements FeatureManager {
           )
           if (events.length > 0) {
             events.forEach(event => {
-              this.analyticsStore.track(
-                "$experiment_started",
-                {
-                  "Experiment name": event.featureName,
-                  "Variant name": event.variant,
-                },
-              )
+              // This second conditional is necessary, implying asynchronous execution.
+              // There is probably a race condition which may cause impression events to be lost, but I don't know where.
+              // I don't know this code or this language well enough to propose a fix.
+              if (this.analyticsStore !== undefined) {
+                this.analyticsStore.trackUnleashEvent(
+                  "$experiment_started",
+                  {
+                    "Experiment name": event.featureName,
+                    "Variant name": event.variant,
+                  },
+                )
+              }
             });
             events = []
           }
