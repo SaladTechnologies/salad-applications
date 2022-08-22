@@ -1,8 +1,8 @@
 import { action, autorun, observable } from 'mobx'
 import { MiningStatus } from './modules/machine/models'
 import { NotificationMessageCategory } from './modules/notifications/models'
-import { ErrorMessage } from './modules/salad-bowl/models/ErrorMessage'
 import { getAVData } from './modules/onboarding/utils'
+import { ErrorMessage } from './modules/salad-bowl/models/ErrorMessage'
 import { RootStore } from './Store'
 
 export enum ErrorPageType {
@@ -64,7 +64,7 @@ export class UIStore {
         if (!hasViewedAVErrorPage && errorMessage) {
           this.store.analytics.trackMiningError(errorMessage.errorCategory, errorMessage.errorCode)
 
-          const antiVirusSoftware = this.store.zendesk.detectedAV
+          const antiVirusSoftware = this.store.onboardingAntivirus.detectedAV
           if (antiVirusSoftware) {
             const articleId = getAVData(antiVirusSoftware).id
             this.showModal(`/errors/anti-virus/${articleId}`)
@@ -122,7 +122,7 @@ export class UIStore {
 
   @action
   navigateToAVPage = () => {
-    const antiVirusSoftware = this.store.zendesk.detectedAV
+    const antiVirusSoftware = this.store.onboardingAntivirus.detectedAV
     if (antiVirusSoftware) {
       const articleId = getAVData(antiVirusSoftware).id
       this.showModal(`/errors/anti-virus/${articleId}`)

@@ -71,7 +71,7 @@ export class MachineSettingsUIStore {
    * on what antivirus software has been detected.
    */
   public onViewAVArticle = () => {
-    const antiVirusSoftware = this.store.zendesk.detectedAV
+    const antiVirusSoftware = this.store.onboardingAntivirus.detectedAV
     if (antiVirusSoftware) {
       const articleId = getAVData(antiVirusSoftware).id
       this.store.ui.showModal(`/errors/anti-virus/${articleId}`)

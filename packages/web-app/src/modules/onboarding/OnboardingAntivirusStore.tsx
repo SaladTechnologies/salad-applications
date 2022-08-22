@@ -1,10 +1,13 @@
 import { action, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { delay, routeLink } from '../../utils'
-import { getAVData } from './utils'
+import { NativeStore } from '../machine'
 import { AntiVirusSoftware, ONBOARDING_PAGE_NAMES, WhitelistWindowsDefenderErrorTypeMessage } from './models'
+import { getAntiVirusSoftware, getAVData } from './utils'
 
 export class OnboardingAntivirusStore {
+  private detectedAntiVirus?: AntiVirusSoftware
+
   @observable
   public selectedAntiVirusGuide?: AntiVirusSoftware
 
@@ -20,7 +23,7 @@ export class OnboardingAntivirusStore {
   @observable
   public loadingArticle: boolean = false
 
-  constructor(private readonly store: RootStore) {}
+  constructor(private readonly store: RootStore, private readonly native: NativeStore) {}
 
   /**
    * Based on what antivirus software we detect on their machine,
@@ -32,7 +35,7 @@ export class OnboardingAntivirusStore {
    * detectedAV is undefined
    */
   get viewAVGuide(): { onClick?: () => void; label: string } {
-    const detectedAV = this.store.zendesk.detectedAV
+    const detectedAV = this.store.onboardingAntivirus.detectedAV
     let onClick: () => void
     let label: string
 
@@ -54,7 +57,7 @@ export class OnboardingAntivirusStore {
    * @returns a page type.
    */
   get pageType(): string {
-    const detectedAV = this.store.zendesk.detectedAV
+    const detectedAV = this.store.onboardingAntivirus.detectedAV
 
     if (detectedAV === undefined) {
       return 'No AV Detected'
@@ -71,6 +74,16 @@ export class OnboardingAntivirusStore {
    */
   public onViewAVGuideSelectionModal = (label: string) => {
     this.store.analytics.trackButtonClicked('onboarding_antivirus_select_modal', label, 'enabled')
+  }
+
+  public get detectedAV() {
+    // do need
+    if (this.detectedAntiVirus === undefined) {
+      this.detectedAntiVirus =
+        this.native.machineInfo?.processes && getAntiVirusSoftware(this.native.machineInfo?.processes)
+    }
+
+    return this.detectedAntiVirus
   }
 
   @action.bound

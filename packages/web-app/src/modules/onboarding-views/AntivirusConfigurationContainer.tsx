@@ -4,7 +4,7 @@ import { AntiVirusSoftware, ONBOARDING_PAGE_NAMES } from '../onboarding/models'
 import { AntivirusConfigurationPage, AntivirusConfigurationPageProps } from './pages/AntivirusConfigurationPage'
 
 const mapStoreToProps = (store: RootStore): Omit<AntivirusConfigurationPageProps, 'classes'> => ({
-  detectedAV: store.zendesk.detectedAV,
+  detectedAV: store.onboardingAntivirus.detectedAV,
   isNative: store.native.isNative,
   onWhitelistWindowsDefender: store.onboardingAntivirus.whitelistWindowsDefender,
   onViewAVGuide: store.onboardingAntivirus.viewAVGuide.onClick,

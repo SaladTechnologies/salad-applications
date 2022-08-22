@@ -3,7 +3,7 @@ import { RootStore } from '../../Store'
 import { AntivirusSetting } from './settings/AntivirusSetting'
 
 const mapStoreToProps = (store: RootStore): any => ({
-  detectedAV: store.zendesk.detectedAV,
+  detectedAV: store.onboardingAntivirus.detectedAV,
   onViewAVGuide: store.machineSettingsUI.onViewAVArticle,
   onViewAVList: () => store.ui.showModal('/errors/anti-virus'),
   onWhitelistWindowsDefender: store.native.canWhitelistWindowsDefenderAndDisableSleepMode

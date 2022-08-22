@@ -6,9 +6,8 @@ import type { FeatureManager } from '../../FeatureManager'
 import { ErrorPageType } from '../../UIStore'
 import type { AnalyticsStore } from '../analytics'
 import type { AuthStore } from '../auth'
-import type { NativeStore } from '../machine'
 import { AntiVirusSoftware } from '../onboarding/models'
-import { getAntiVirusSoftware, getAVData } from '../onboarding/utils'
+import { getAVData } from '../onboarding/utils'
 import type { ZendeskArticle, ZendeskArticleList, ZendeskArticleResource } from './models'
 
 const defaultBeaconId = '29fdaae4-715f-48dc-b93e-5552ef031abc'
@@ -23,8 +22,6 @@ export class Zendesk {
   private helpCenterAuthRetryTimeout?: NodeJS.Timeout
 
   private initializeRetryTimeout?: NodeJS.Timeout
-
-  private detectedAntiVirus?: AntiVirusSoftware
 
   @observable
   public selectedAntiVirusGuide?: AntiVirusSoftware
@@ -52,7 +49,6 @@ export class Zendesk {
     private readonly axios: AxiosInstance,
     featureManager: FeatureManager,
     private readonly auth: AuthStore,
-    private readonly native: NativeStore,
     private readonly analytics: AnalyticsStore,
   ) {
     this.useZendesk = !featureManager.isEnabled('app_helpscout')
@@ -401,16 +397,6 @@ export class Zendesk {
         console.log(e)
       }
     }
-  }
-
-  public get detectedAV() {
-    // do need
-    if (this.detectedAntiVirus === undefined) {
-      this.detectedAntiVirus =
-        this.native.machineInfo?.processes && getAntiVirusSoftware(this.native.machineInfo?.processes)
-    }
-
-    return this.detectedAntiVirus
   }
 
   private setErrorType = (errorType: ErrorPageType) => {
