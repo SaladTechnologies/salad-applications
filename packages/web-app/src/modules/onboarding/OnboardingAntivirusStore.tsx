@@ -20,9 +20,6 @@ export class OnboardingAntivirusStore {
   @observable
   public helpCenterArticle?: string
 
-  @observable
-  public loadingArticle: boolean = false
-
   constructor(private readonly store: RootStore, private readonly native: NativeStore) {}
 
   /**
@@ -151,8 +148,8 @@ export class OnboardingAntivirusStore {
 
   @action.bound
   loadArticle = function (this: OnboardingAntivirusStore, articleID: number) {
-    this.store.zendesk.antiVirusGuideVideoId = getAVData(articleID).videoId
-    this.store.zendesk.helpScoutUrl = getAVData(articleID).helpScoutUrl
+    this.store.helpScout.antiVirusGuideVideoId = getAVData(articleID).videoId
+    this.store.helpScout.helpScoutUrl = getAVData(articleID).helpScoutUrl
     this.selectedAntiVirusGuide = getAVData(articleID).name
   }.bind(this)
 }

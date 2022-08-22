@@ -122,11 +122,8 @@ const styles = (theme: SaladTheme) => ({
 export interface AntivirusGuideProps extends WithStyles<typeof styles> {
   isNative: boolean
   antivirusName?: string
-  article?: string
-  loading?: boolean
   loadArticle?: () => void
   onCloseClicked?: () => void
-  antiVirusGuideVideoId?: number
   navigateToAVGuide: (antivirusSoftwareName: AntiVirusSoftware, label: string) => void
   onNoAVClick: () => void
   articleId?: number
@@ -134,17 +131,13 @@ export interface AntivirusGuideProps extends WithStyles<typeof styles> {
 }
 
 interface State {
-  webWidgetShowing: boolean
   showAVSelectionModal: boolean
 }
 
 class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
-  webWidgetTimerID?: number
-
   constructor(props: AntivirusGuideProps) {
     super(props)
     this.state = {
-      webWidgetShowing: false,
       showAVSelectionModal: false,
     }
   }
@@ -167,27 +160,6 @@ class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
     if (loadArticle) {
       loadArticle()
     }
-
-    const webWidgetDisplay: any = window && window.zE && window.zE('webWidget:get', 'display')
-    if (webWidgetDisplay === 'launcher') {
-      this.setState({
-        webWidgetShowing: true,
-      })
-    } else {
-      this.webWidgetTimerID = window.setTimeout(() => {
-        const webWidgetDisplay: any = window && window.zE && window.zE('webWidget:get', 'display')
-        if (webWidgetDisplay === 'launcher') {
-          this.setState({
-            webWidgetShowing: true,
-          })
-          clearTimeout(this.webWidgetTimerID)
-        }
-      }, 3000)
-    }
-  }
-
-  componentWillUnmount() {
-    clearTimeout(this.webWidgetTimerID)
   }
 
   componentDidUpdate(prevProps: AntivirusGuideProps) {
@@ -203,7 +175,7 @@ class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
     const { antivirusName, onCloseClicked, isNative, navigateToAVGuide, onNoAVClick, classes, helpScoutUrl } =
       this.props
 
-    const { webWidgetShowing, showAVSelectionModal } = this.state
+    const { showAVSelectionModal } = this.state
 
     return (
       <ModalPage showWindowBarContainer={true} isNative={isNative}>
@@ -235,13 +207,6 @@ class _AntivirusGuide extends Component<AntivirusGuideProps, State> {
             </div>
           </div>
         </OnboardingAntiVirusScrollbar>
-        {webWidgetShowing && (
-          <div className={classes.supportReminder}>
-            <Text variant="baseS">
-              This information can also be found by clicking the support button and searching for 'anti-virus'.
-            </Text>
-          </div>
-        )}
         {showAVSelectionModal && (
           <Modal onClose={() => this.handleCloseAVSelectionModal()} title="Select your Antivirus provider">
             <AntivirusModalContent navigateToAVGuide={navigateToAVGuide} onNoAVClick={onNoAVClick} />

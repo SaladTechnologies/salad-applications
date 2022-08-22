@@ -8,6 +8,7 @@ import { BalanceStore } from './modules/balance'
 import { BonusStore } from './modules/bonus'
 import { RefreshService } from './modules/data-refresh'
 import { EngagementStore } from './modules/engagement'
+import { HelpScoutStore } from './modules/helpscout/HelpScoutStore'
 import { HomeStore } from './modules/home/HomeStore'
 import {
   AutoStartStore,
@@ -81,6 +82,7 @@ export class RootStore {
   public readonly version: VersionStore
   public readonly engagement: EngagementStore
   public readonly zendesk: Zendesk
+  public readonly helpScout: HelpScoutStore
   public readonly storefront: StorefrontStore
   public readonly bonuses: BonusStore
   public readonly seasons: SeasonsStore
@@ -123,6 +125,7 @@ export class RootStore {
     this.version = new VersionStore(this, axios)
     this.engagement = new EngagementStore(this, axios)
     this.zendesk = new Zendesk(axios, featureManager, this.auth, this.analytics)
+    this.helpScout = new HelpScoutStore(this.analytics)
     this.storefront = new StorefrontStore(axios)
     this.bonuses = new BonusStore(this, axios)
     this.seasons = new SeasonsStore(axios)
