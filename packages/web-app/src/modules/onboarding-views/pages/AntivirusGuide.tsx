@@ -5,7 +5,7 @@ import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { ModalPage } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
-import { AntiVirusSoftware } from '../../zendesk/models'
+import { AntiVirusSoftware } from '../../onboarding/models'
 import { AntivirusModalContent, OnboardingAntiVirusScrollbar } from '../components'
 
 const styles = (theme: SaladTheme) => ({

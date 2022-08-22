@@ -7,8 +7,9 @@ import { ErrorPageType } from '../../UIStore'
 import type { AnalyticsStore } from '../analytics'
 import type { AuthStore } from '../auth'
 import type { NativeStore } from '../machine'
-import type { AntiVirusSoftware, ZendeskArticle, ZendeskArticleList, ZendeskArticleResource } from './models'
-import { getAntiVirusSoftware, getZendeskAVData } from './utils'
+import { AntiVirusSoftware } from '../onboarding/models'
+import { getAntiVirusSoftware, getAVData } from '../onboarding/utils'
+import type { ZendeskArticle, ZendeskArticleList, ZendeskArticleResource } from './models'
 
 const defaultBeaconId = '29fdaae4-715f-48dc-b93e-5552ef031abc'
 
@@ -59,6 +60,7 @@ export class Zendesk {
   }
 
   private async getChatToken(): Promise<string | undefined> {
+    // don't need
     if (this.chatAuthRetryTimeout) {
       clearTimeout(this.chatAuthRetryTimeout)
       this.chatAuthRetryTimeout = undefined
@@ -86,6 +88,7 @@ export class Zendesk {
   }
 
   private async getHelpCenterToken(): Promise<string | undefined> {
+    // don't need
     if (this.helpCenterAuthRetryTimeout) {
       clearTimeout(this.helpCenterAuthRetryTimeout)
       this.helpCenterAuthRetryTimeout = undefined
@@ -115,6 +118,7 @@ export class Zendesk {
   }
 
   private async getSignature(beaconId: string): Promise<string | undefined> {
+    // don't need
     let signature: string | null | undefined
     if (this.auth.isAuthenticated) {
       let response = await this.axios.post<never, AxiosResponse<{ signature: string | null | undefined }>>(
@@ -127,6 +131,7 @@ export class Zendesk {
   }
 
   private inject() {
+    // don't need
     if (typeof window !== 'undefined') {
       if (Zendesk.injected) {
         return
@@ -240,6 +245,7 @@ export class Zendesk {
   }
 
   async login(username: string, email: string) {
+    // don't need
     if (this.useZendesk) {
       if (!window.zE) {
         if (this.initializeRetryTimeout !== undefined) {
@@ -307,6 +313,7 @@ export class Zendesk {
   }
 
   logout() {
+    // don't need
     if (this.useZendesk) {
       if (!window.zE) {
         if (this.initializeRetryTimeout !== undefined) {
@@ -358,6 +365,7 @@ export class Zendesk {
   }
 
   openSupportTicket() {
+    // don't need
     if (!this.useZendesk) {
       return
     }
@@ -396,6 +404,7 @@ export class Zendesk {
   }
 
   public get detectedAV() {
+    // do need
     if (this.detectedAntiVirus === undefined) {
       this.detectedAntiVirus =
         this.native.machineInfo?.processes && getAntiVirusSoftware(this.native.machineInfo?.processes)
@@ -408,16 +417,16 @@ export class Zendesk {
     this.errorType = errorType
   }
 
-  @action.bound
+  @action.bound // don't need
   loadArticle = flow(
     function* (this: Zendesk, articleID: number) {
       this.setErrorType(ErrorPageType.AntiVirus)
-      const avSoftwareName = getZendeskAVData(articleID).name
+      const avSoftwareName = getAVData(articleID).name
       if (avSoftwareName === this.selectedAntiVirusGuide && this.helpCenterArticle !== undefined) {
         return
       }
       if (avSoftwareName !== undefined) {
-        this.antiVirusGuideVideoId = getZendeskAVData(avSoftwareName).videoId
+        this.antiVirusGuideVideoId = getAVData(avSoftwareName).videoId
       }
       this.loadingArticle = true
       try {
@@ -434,7 +443,7 @@ export class Zendesk {
     }.bind(this),
   )
 
-  @action.bound
+  @action.bound // don't need
   loadAntiVirusArticleList = flow(
     function* (this: Zendesk) {
       this.setErrorType(ErrorPageType.AntiVirus)
@@ -459,7 +468,7 @@ export class Zendesk {
     }.bind(this),
   )
 
-  @action.bound
+  @action.bound // don't need
   loadFirewallArticle = flow(
     function* (this: Zendesk) {
       this.setErrorType(ErrorPageType.Firewall)

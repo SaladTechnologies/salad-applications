@@ -3,8 +3,8 @@ import { ChevronRight } from '@saladtechnologies/garden-icons'
 import classnames from 'classnames'
 import withStyles, { WithStyles } from 'react-jss'
 import { SmartLink } from '../../../components'
-import { AntiVirusSoftware } from '../../zendesk/models'
-import { antivirusInfo } from '../../zendesk/utils'
+import { AntiVirusSoftware } from '../../onboarding/models'
+import { antivirusInfo } from '../../onboarding/utils'
 
 const styles = () => ({
   antivirusButtons: {

@@ -6,7 +6,7 @@ import { AntivirusSettingContainer, AutoStartSettingContainer, SleepModeSettingC
 import type { DesktopSettingPanels } from '../machine-views/settings/models/DesktopSettingsPanel'
 import { NotificationMessageCategory } from '../notifications/models'
 import { WhitelistWindowsDefenderErrorTypeMessage } from '../onboarding/models'
-import { getZendeskAVData } from '../zendesk/utils'
+import { getAVData } from '../onboarding/utils'
 
 export class MachineSettingsUIStore {
   @observable
@@ -73,7 +73,7 @@ export class MachineSettingsUIStore {
   public onViewAVArticle = () => {
     const antiVirusSoftware = this.store.zendesk.detectedAV
     if (antiVirusSoftware) {
-      const articleId = getZendeskAVData(antiVirusSoftware).id
+      const articleId = getAVData(antiVirusSoftware).id
       this.store.ui.showModal(`/errors/anti-virus/${articleId}`)
     }
   }

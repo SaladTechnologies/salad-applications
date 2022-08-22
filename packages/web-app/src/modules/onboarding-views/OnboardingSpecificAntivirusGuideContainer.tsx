@@ -1,8 +1,7 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
 import { getSanitizedHTML } from '../../utils'
-import { ONBOARDING_PAGE_NAMES } from '../onboarding/models'
-import { AntiVirusSoftware } from '../zendesk/models'
+import { AntiVirusSoftware, ONBOARDING_PAGE_NAMES } from '../onboarding/models'
 import { AntivirusGuide, AntivirusGuideProps } from './pages/AntivirusGuide'
 
 const mapStoreToProps = (store: RootStore, ownProps: any): Omit<AntivirusGuideProps, 'classes'> => {
