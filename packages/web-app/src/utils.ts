@@ -1,5 +1,4 @@
 import moment from 'moment'
-import sanitizeHtml from 'sanitize-html'
 import { RootStore } from './Store'
 
 /** Convert hours to ms */
@@ -107,28 +106,6 @@ export const delay = (ms: number): Promise<void> =>
       resolve()
     }, ms)
   })
-
-export const getSanitizedHTML = (html: string) => {
-  const sanitizedHTML = sanitizeHtml(html, {
-    allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
-    allowedAttributes: {
-      img: ['src', 'alt'],
-      a: ['href', 'target', 'rel'],
-    },
-    transformTags: {
-      a: function (tagName, attribs) {
-        attribs.rel = 'noopener noreferrer'
-        attribs.target = '_blank'
-
-        return {
-          tagName,
-          attribs,
-        }
-      },
-    },
-  })
-  return sanitizedHTML
-}
 
 export const isProblemDetail = (data: unknown): data is { type: string; [key: string]: unknown } => {
   if (typeof data === 'object' && data != null) {
