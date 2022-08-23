@@ -122,7 +122,7 @@ export class RootStore {
     this.vault = new VaultStore(axios, this.balance, this.rewards)
     this.version = new VersionStore(this, axios)
     this.engagement = new EngagementStore(this, axios)
-    this.helpScout = new HelpScoutStore(this.analytics)
+    this.helpScout = new HelpScoutStore(axios, this.analytics, this.auth)
     this.storefront = new StorefrontStore(axios)
     this.bonuses = new BonusStore(this, axios)
     this.seasons = new SeasonsStore(axios)
@@ -188,6 +188,7 @@ export class RootStore {
         this.refresh.refreshData(),
         this.profile.loadPayPalId(),
         this.saladCard.loadSaladCard(),
+        this.helpScout.login(profile.username, profile.email),
         Promise.race([this.saladBowl.login(), delay(10000)]),
       ])
 
@@ -207,6 +208,7 @@ export class RootStore {
 
     this.analytics.trackLogout()
     this.native.logout()
+    this.helpScout.logout()
 
     const saladBowlEnabled = this.featureManager.isEnabledCached('app_salad_bowl')
     if (saladBowlEnabled) {
