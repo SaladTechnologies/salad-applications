@@ -67,7 +67,7 @@ export class MachineSettingsUIStore {
   constructor(private readonly store: RootStore) {}
 
   /**
-   * Navigates to the requested zendesk antivirus guide based
+   * Navigates to the requested antivirus guide based
    * on what antivirus software has been detected.
    */
   public onViewAVArticle = () => {

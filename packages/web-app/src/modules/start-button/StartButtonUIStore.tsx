@@ -72,7 +72,7 @@ export class StartButtonUIStore {
 
     const notConnected = () => {
       if (this.supportNeeded) {
-        this.store.zendesk.openSupportTicket()
+        window.open('https://support.salad.com/', '_blank')
       }
     }
 

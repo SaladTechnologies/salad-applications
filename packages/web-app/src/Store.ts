@@ -35,7 +35,6 @@ import { StorefrontStore } from './modules/storefront/StorefrontStore'
 import { VaultStore } from './modules/vault'
 import { VersionStore } from './modules/versions'
 import { ExperienceStore } from './modules/xp'
-import { Zendesk } from './modules/zendesk'
 import { SaladFork } from './services/SaladFork/SaladFork'
 import { UIStore } from './UIStore'
 import { delay } from './utils'
@@ -81,7 +80,6 @@ export class RootStore {
   public readonly vault: VaultStore
   public readonly version: VersionStore
   public readonly engagement: EngagementStore
-  public readonly zendesk: Zendesk
   public readonly helpScout: HelpScoutStore
   public readonly storefront: StorefrontStore
   public readonly bonuses: BonusStore
@@ -124,7 +122,6 @@ export class RootStore {
     this.vault = new VaultStore(axios, this.balance, this.rewards)
     this.version = new VersionStore(this, axios)
     this.engagement = new EngagementStore(this, axios)
-    this.zendesk = new Zendesk(axios, featureManager, this.auth, this.analytics)
     this.helpScout = new HelpScoutStore(this.analytics)
     this.storefront = new StorefrontStore(axios)
     this.bonuses = new BonusStore(this, axios)
@@ -191,7 +188,6 @@ export class RootStore {
         this.refresh.refreshData(),
         this.profile.loadPayPalId(),
         this.saladCard.loadSaladCard(),
-        this.zendesk.login(profile.username, profile.email),
         Promise.race([this.saladBowl.login(), delay(10000)]),
       ])
 
@@ -211,7 +207,6 @@ export class RootStore {
 
     this.analytics.trackLogout()
     this.native.logout()
-    this.zendesk.logout()
 
     const saladBowlEnabled = this.featureManager.isEnabledCached('app_salad_bowl')
     if (saladBowlEnabled) {

@@ -31,25 +31,15 @@ interface Props extends WithStyles<typeof styles> {
   alternativeMinerType: 'GPU' | 'CPU'
   currentMinerType: 'GPU' | 'CPU'
   onCloseClicked: () => void
-  onOpenSupportTicket: () => void
   onSwitchMiningType: () => void
   onViewAVGuide: () => void
   gpuMiningEnabled: boolean
 }
 
-const forumLabel = 'Support Forum'
-
 class _FallbackErrorPage extends Component<Props> {
   render() {
-    const {
-      alternativeMinerType,
-      currentMinerType,
-      onCloseClicked,
-      onOpenSupportTicket,
-      onSwitchMiningType,
-      onViewAVGuide,
-      classes,
-    } = this.props
+    const { alternativeMinerType, currentMinerType, onCloseClicked, onSwitchMiningType, onViewAVGuide, classes } =
+      this.props
     return (
       <ErrorPage title={`Salad is Unable to Run on your ${currentMinerType}`} onCloseClicked={onCloseClicked}>
         <div className={classes.padding}>
@@ -61,16 +51,9 @@ class _FallbackErrorPage extends Component<Props> {
           .
         </div>
         <div className={classes.padding}>
-          Already tried that? Try opening a{' '}
-          <span className={classes.link} onClick={onOpenSupportTicket}>
-            Support Ticket
-          </span>{' '}
-          or getting help from our{' '}
-          <SmartLink to="https://www.reddit.com/r/SaladChefs" trackingInfo={{ label: forumLabel }}>
-            {forumLabel}
-          </SmartLink>
-          . In the meantime, try switching to {alternativeMinerType} mining so that you keep earning while we work to
-          resolve your issue.
+          Already tried that? Try getting help from <SmartLink to="https://support.salad.com/">support</SmartLink>. In
+          the meantime, try switching to {alternativeMinerType} mining so that you keep earning while we work to resolve
+          your issue.
         </div>
         <Button className={classes.button} onClick={onSwitchMiningType}>
           <span className={classes.buttonText}>Switch to {alternativeMinerType} Mining</span>

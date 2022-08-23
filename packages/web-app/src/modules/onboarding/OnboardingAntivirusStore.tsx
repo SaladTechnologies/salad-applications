@@ -66,7 +66,7 @@ export class OnboardingAntivirusStore {
   }
 
   /**
-   * Navigates to list of available zendesk antivirus guides.
+   * Navigates to list of available antivirus guides.
    * @param label The label of the button that opens the AV Selection Modal.
    */
   public onViewAVGuideSelectionModal = (label: string) => {
@@ -123,7 +123,7 @@ export class OnboardingAntivirusStore {
   }
 
   /**
-   * Navigates to the requested zendesk antivirus guide by name.
+   * Navigates to the requested antivirus guide by name.
    * @param antivirusSoftwareName The name of the antivirus software.
    * @param label The button label that will be passed to mixPanel.
    */
@@ -134,8 +134,8 @@ export class OnboardingAntivirusStore {
   }
 
   /**
-   * Navigates to the requested zendesk antivirus guide by ID.
-   * @param id The id of the specific zendesk antivirus guide.
+   * Navigates to the requested antivirus guide by ID.
+   * @param id The id of the specific antivirus guide.
    */
   public onViewAVArticle = (id: string) => {
     const antiVirusSoftware = getAVData(parseInt(id)).name

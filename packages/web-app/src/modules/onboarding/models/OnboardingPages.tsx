@@ -1,3 +1,5 @@
+import { Ref } from 'react'
+
 export enum ONBOARDING_PAGE_NAMES {
   WELCOME = 'Onboarding Welcome',
   REFERRAL = 'Onboarding Enter Referral Code',
@@ -17,3 +19,12 @@ export type OnboardingPageItemType = {
 }
 
 export type OnboardingPagesType = OnboardingPageItemType[]
+
+declare global {
+  interface Window {
+    // https://support.trustpilot.com/hc/en-us/articles/115011421468--Add-a-TrustBox-to-a-single-page-application
+    Trustpilot?: {
+      loadFromElement: (ref: Ref<any>, flag: boolean) => void
+    }
+  }
+}
