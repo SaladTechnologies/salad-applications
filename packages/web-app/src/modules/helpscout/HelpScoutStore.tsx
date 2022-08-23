@@ -29,7 +29,6 @@ export class HelpScoutStore {
 
   @action.bound
   loadArticle = function (this: HelpScoutStore, articleID: number) {
-    console.log(articleID, 'aritcle id')
     this.setErrorType(ErrorPageType.AntiVirus)
     const avSoftwareName = getAVData(articleID).name
     if (avSoftwareName !== undefined) {

@@ -74,7 +74,6 @@ export class OnboardingAntivirusStore {
   }
 
   public get detectedAV() {
-    // do need
     if (this.detectedAntiVirus === undefined) {
       this.detectedAntiVirus =
         this.native.machineInfo?.processes && getAntiVirusSoftware(this.native.machineInfo?.processes)
