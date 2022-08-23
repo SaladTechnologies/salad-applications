@@ -1,13 +1,11 @@
 import { Location } from 'history'
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router'
 import { LoadingPage } from './components'
-import { DesktopRoute } from './DesktopRoute'
-import { useFeatureManager } from './FeatureManager'
 import { ReferralOnboardingContainer } from './modules/account-views/referral-views'
 import { ReferralWelcomeContainer } from './modules/account-views/referral-views/ReferralWelcomeContainer'
 import { LoginPageContainer } from './modules/auth-views'
 import { ReplaceBonusModalContainer } from './modules/bonus-views'
-import { EarningsSummaryPageContainer, EarnMenuContainer } from './modules/earn-views'
+import { EarnMenuContainer } from './modules/earn-views'
 import {
   CudaErrorContainer,
   FallbackErrorContainer,
@@ -18,11 +16,7 @@ import {
   SpecificAntiVirusErrorContainer,
   UnknownErrorContainer,
 } from './modules/error-views'
-import {
-  DontLoseProgressPageContainer,
-  MachineSettingsPageContainer,
-  OverrideCompatibilityDetectionContainer,
-} from './modules/machine-views'
+import { DontLoseProgressPageContainer, OverrideCompatibilityDetectionContainer } from './modules/machine-views'
 import {
   AntivirusConfigurationContainer,
   AutoStartConfigurationPageContainer,
@@ -37,8 +31,6 @@ import { getStore } from './Store'
 
 const _Routes = ({ location }: RouteComponentProps) => {
   const store = getStore()
-  const feature = useFeatureManager()
-  const saladBowlEnabled = feature.isEnabledCached('app_salad_bowl')
 
   if (store.native.apiVersion < 6) {
     return (
@@ -80,21 +72,21 @@ const _Routes = ({ location }: RouteComponentProps) => {
         <Redirect exact from="/account/summary" to="/settings/summary" />
         <Redirect exact from="/account/referrals" to="/settings/referrals" />
         <Redirect exact from="/account/reward-vault" to="/settings/reward-vault" />
-        {saladBowlEnabled && <Redirect exact from="/earn/summary" to="/earn/mining" />}
-        {saladBowlEnabled && <Redirect exact from="/earn/mine" to="/earn/mining" />}
-        {saladBowlEnabled && <Redirect exact from="/earn/mine/miner-details" to="/earn/machine-settings" />}
-        {saladBowlEnabled && <Redirect exact from="/earn/referrals" to="/settings/referrals" />}
-        {saladBowlEnabled && <Redirect exact from="/settings/desktop-settings" to="/earn/machine-settings" />}
+
+        {/* Routes that were enabled with the SaladBowlFlag */}
+        {/* <Redirect exact from="/earn/summary" to="/earn/mining" />
+       <Redirect exact from="/earn/mine" to="/earn/mining" />
+       <Redirect exact from="/earn/mine/miner-details" to="/earn/machine-settings" />
+       <Redirect exact from="/earn/referrals" to="/settings/referrals" />
+       <Redirect exact from="/settings/desktop-settings" to="/earn/machine-settings" />
+       <DesktopRoute path="/earn/machine-settings" component={MachineSettingsPageContainer} />
+       <Route path="/earn/mining" component={EarningsSummaryPageContainer} /> */}
 
         {/* SaladPay: This is stand in until we figure out iFrames, popups... */}
         <Route exact path="/salad-pay/order-summary" component={SaladPayOrderSummaryContainer} />
+
         <Route path="/settings" component={SettingsContainer} />
-        {saladBowlEnabled ? (
-          <Route path="/earn/mining" component={EarningsSummaryPageContainer} />
-        ) : (
-          <Route path="/earn" component={EarnMenuContainer} />
-        )}
-        {saladBowlEnabled && <DesktopRoute path="/earn/machine-settings" component={MachineSettingsPageContainer} />}
+        <Route path="/earn" component={EarnMenuContainer} />
         <Route path="/login" exact component={LoginPageContainer} />
         <Route path="/" render={() => <StorefrontHomePage />} />
       </Switch>
