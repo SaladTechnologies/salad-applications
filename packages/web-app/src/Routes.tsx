@@ -1,17 +1,11 @@
 import { Location } from 'history'
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router'
 import { LoadingPage } from './components'
-import { DesktopRoute } from './DesktopRoute'
-import { useFeatureManager } from './FeatureManager'
 import { ReferralOnboardingContainer, ReferralWelcomeContainer } from './modules/account-views/referral-views'
 import { LoginPageContainer } from './modules/auth-views'
 import { ReplaceBonusModalContainer } from './modules/bonus-views'
-import { EarningsSummaryPageContainer, EarnMenuContainer } from './modules/earn-views'
-import {
-  DontLoseProgressPageContainer,
-  MachineSettingsPageContainer,
-  OverrideCompatibilityDetectionContainer,
-} from './modules/machine-views'
+import { EarnMenuContainer } from './modules/earn-views'
+import { DontLoseProgressPageContainer, OverrideCompatibilityDetectionContainer } from './modules/machine-views'
 import {
   AntivirusConfigurationContainer,
   AutoStartConfigurationPageContainer,
@@ -19,8 +13,6 @@ import {
   SleepModeConfigurationPageContainer,
 } from './modules/onboarding-views'
 import { RewardDetailsContainer } from './modules/reward-views'
-import { SaladCardDetailsPageContainer } from './modules/salad-card-views/SaladCardDetailsPageContainer'
-import { SaladCardEnrollmentPageContainer } from './modules/salad-card-views/SaladCardEnrollmentPageContainer'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
 import { SettingsContainer } from './modules/settings-views'
 import { StorefrontHomePage } from './modules/storefront-views/pages/StorefrontHomePage'
@@ -30,9 +22,6 @@ import { getStore } from './Store'
 
 const _Routes = ({ location }: RouteComponentProps) => {
   const store = getStore()
-  const feature = useFeatureManager()
-  const saladBowlEnabled = feature.isEnabledCached('app_salad_bowl')
-  const saladCardEnabled = feature.isEnabledCached('app_saladcard')
 
   if (store.native.apiVersion < 6) {
     return (
@@ -89,21 +78,21 @@ const _Routes = ({ location }: RouteComponentProps) => {
       <Route exact path="/errors/firewall" component={FirewallErrorContainer} />
        */}
 
-      {saladBowlEnabled && <Redirect exact from="/earn/summary" to="/earn/mining" />}
-      {saladBowlEnabled && <Redirect exact from="/earn/mine" to="/earn/mining" />}
-      {saladBowlEnabled && <Redirect exact from="/earn/mine/miner-details" to="/earn/machine-settings" />}
-      {saladBowlEnabled && <Redirect exact from="/earn/referrals" to="/settings/referrals" />}
-      {saladBowlEnabled && <Redirect exact from="/settings/desktop-settings" to="/earn/machine-settings" />}
+      {/* Routes that were enabled with the SaladBowlFlag */}
+      {/* <Redirect exact from="/earn/summary" to="/earn/mining" />
+      <Redirect exact from="/earn/mine" to="/earn/mining" />
+      <Redirect exact from="/earn/mine/miner-details" to="/earn/machine-settings" />
+      <Redirect exact from="/earn/referrals" to="/settings/referrals" />
+      <Redirect exact from="/settings/desktop-settings" to="/earn/machine-settings" />
+      <Route path="/earn/mining" component={EarningsSummaryPageContainer} />
+      <DesktopRoute path="/earn/machine-settings" component={MachineSettingsPageContainer} /> */}
+
+      {/* Routes that were enabled with the SaladCard flag */}
+      {/* <Route path="/earn/saladcard-enroll" component={SaladCardEnrollmentPageContainer} />
+      <Route path="/earn/saladcard-details" component={SaladCardDetailsPageContainer} /> */}
 
       <Redirect exact from="/earn" to="/earn/summary" />
-      {saladCardEnabled && <Route path="/earn/saladcard-enroll" component={SaladCardEnrollmentPageContainer} />}
-      {saladCardEnabled && <Route path="/earn/saladcard-details" component={SaladCardDetailsPageContainer} />}
-      {saladBowlEnabled ? (
-        <Route path="/earn/mining" component={EarningsSummaryPageContainer} />
-      ) : (
-        <Route path="/earn" component={EarnMenuContainer} />
-      )}
-      {saladBowlEnabled && <DesktopRoute path="/earn/machine-settings" component={MachineSettingsPageContainer} />}
+      <Route path="/earn" component={EarnMenuContainer} />
 
       <Route
         exact
