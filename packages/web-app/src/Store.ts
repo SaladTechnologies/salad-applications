@@ -26,7 +26,6 @@ import { RewardStore } from './modules/reward'
 import { SaladBowlStore } from './modules/salad-bowl'
 import { StopReason } from './modules/salad-bowl/models'
 import { SaladBowlStoreInterface } from './modules/salad-bowl/SaladBowlStoreInterface'
-import { SaladForkAndBowlStore } from './modules/salad-bowl/SaladForkAndBowlStore'
 import { SeasonsStore } from './modules/seasons'
 import { StartButtonUIStore } from './modules/start-button/StartButtonUIStore'
 import { StorefrontStore } from './modules/storefront/StorefrontStore'
@@ -99,13 +98,7 @@ export class RootStore {
     this.xp = new ExperienceStore(axios)
     this.native = new NativeStore(this)
     this.saladFork = new SaladFork(axios)
-
-    if (featureManager.isEnabledCached('app_salad_bowl')) {
-      this.saladBowl = new SaladForkAndBowlStore(this)
-    } else {
-      this.saladBowl = new SaladBowlStore(this, featureManager)
-    }
-
+    this.saladBowl = new SaladBowlStore(this, featureManager)
     this.machine = new MachineStore(this, axios, featureManager)
     this.profile = new ProfileStore(this, axios)
     this.rewards = new RewardStore(this, axios, this.profile)
@@ -205,11 +198,6 @@ export class RootStore {
     this.analytics.trackLogout()
     this.native.logout()
     this.zendesk.logout()
-
-    const saladBowlEnabled = this.featureManager.isEnabledCached('app_salad_bowl')
-    if (saladBowlEnabled) {
-      this.saladBowl.logout()
-    }
 
     this.featureManager.handleLogout()
     this.finishInitialLoading()
