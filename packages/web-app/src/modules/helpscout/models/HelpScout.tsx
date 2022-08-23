@@ -1,5 +1,3 @@
-import { Ref } from 'react'
-
 declare function Beacon(method: 'init', beaconId: string): void
 declare function Beacon(method: 'destroy'): void
 declare function Beacon(method: 'open'): void
@@ -19,9 +17,7 @@ declare function Beacon(method: 'info'): void
 declare global {
   interface Window {
     Beacon?: typeof Beacon
-    // https://support.trustpilot.com/hc/en-us/articles/115011421468--Add-a-TrustBox-to-a-single-page-application
-    Trustpilot?: {
-      loadFromElement: (ref: Ref<any>, flag: boolean) => void
-    }
   }
 }
+
+export {}
