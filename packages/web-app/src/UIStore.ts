@@ -1,8 +1,8 @@
 import { action, autorun, observable } from 'mobx'
 import { MiningStatus } from './modules/machine/models'
 import { NotificationMessageCategory } from './modules/notifications/models'
+import { getAVData } from './modules/onboarding/utils'
 import { ErrorMessage } from './modules/salad-bowl/models/ErrorMessage'
-import { getZendeskAVData } from './modules/zendesk/utils'
 import { RootStore } from './Store'
 
 export enum ErrorPageType {
@@ -64,9 +64,9 @@ export class UIStore {
         if (!hasViewedAVErrorPage && errorMessage) {
           this.store.analytics.trackMiningError(errorMessage.errorCategory, errorMessage.errorCode)
 
-          const antiVirusSoftware = this.store.zendesk.detectedAV
+          const antiVirusSoftware = this.store.onboardingAntivirus.detectedAV
           if (antiVirusSoftware) {
-            const articleId = getZendeskAVData(antiVirusSoftware).id
+            const articleId = getAVData(antiVirusSoftware).id
             this.showModal(`/errors/anti-virus/${articleId}`)
             this.updateViewedAVErrorPage(true)
             this.store.analytics.trackErrorPageViewed(`${antiVirusSoftware} Anti-Virus Error`)
@@ -122,9 +122,9 @@ export class UIStore {
 
   @action
   navigateToAVPage = () => {
-    const antiVirusSoftware = this.store.zendesk.detectedAV
+    const antiVirusSoftware = this.store.onboardingAntivirus.detectedAV
     if (antiVirusSoftware) {
-      const articleId = getZendeskAVData(antiVirusSoftware).id
+      const articleId = getAVData(antiVirusSoftware).id
       this.showModal(`/errors/anti-virus/${articleId}`)
       this.store.analytics.trackErrorPageViewed(`${antiVirusSoftware} Anti-Virus Error`)
     } else {
@@ -135,7 +135,7 @@ export class UIStore {
 
   @action
   trackAntiVirusGuideLinkClick = (id: number) => {
-    const antiVirusSoftware = getZendeskAVData(id).name
+    const antiVirusSoftware = getAVData(id).name
     this.store.analytics.trackErrorPageViewed(`${antiVirusSoftware} Anti-Virus Error`)
   }
 }

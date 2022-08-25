@@ -1,8 +1,6 @@
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
-import { getSanitizedHTML } from '../../utils'
-import { ONBOARDING_PAGE_NAMES } from '../onboarding/models'
-import { AntiVirusSoftware } from '../zendesk/models'
+import { AntiVirusSoftware, ONBOARDING_PAGE_NAMES } from '../onboarding/models'
 import { AntivirusGuide, AntivirusGuideProps } from './pages/AntivirusGuide'
 
 const mapStoreToProps = (store: RootStore, ownProps: any): Omit<AntivirusGuideProps, 'classes'> => {
@@ -15,15 +13,10 @@ const mapStoreToProps = (store: RootStore, ownProps: any): Omit<AntivirusGuidePr
 
   return {
     antivirusName: store.onboardingAntivirus.selectedAntiVirusGuide,
-    article: store.onboardingAntivirus.helpCenterArticle
-      ? getSanitizedHTML(store.onboardingAntivirus.helpCenterArticle)
-      : undefined,
-    loading: store.onboardingAntivirus.loadingArticle,
     loadArticle: () => store.onboardingAntivirus.loadArticle(parseInt(ownProps.match.params.id)),
     onCloseClicked: handleOnCloseClicked,
-    antiVirusGuideVideoId: store.zendesk.antiVirusGuideVideoId,
     articleId: ownProps.match.params.id,
-    helpScoutUrl: store.zendesk.helpScoutUrl,
+    helpScoutUrl: store.helpScout.helpScoutUrl,
     isNative: store.native.isNative,
     navigateToAVGuide: (antivirusSoftwareName: AntiVirusSoftware, label: string) =>
       store.onboardingAntivirus.navigateToAVGuide(antivirusSoftwareName, label),

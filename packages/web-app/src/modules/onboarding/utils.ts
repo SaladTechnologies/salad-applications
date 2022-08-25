@@ -33,203 +33,203 @@ import { AntiVirusSoftware } from './models'
 
 type SystemProcessesData = si.ProcessesData
 
-interface ZendeskAVData {
+interface AVData {
   id?: number
   name?: AntiVirusSoftware
   videoId?: number
   helpScoutUrl?: string
 }
 
-export const getZendeskAVData = (identifier: AntiVirusSoftware | string | number): ZendeskAVData => {
-  let zendeskAVData: ZendeskAVData = { id: undefined, name: undefined, videoId: undefined }
+export const getAVData = (identifier: AntiVirusSoftware | string | number): AVData => {
+  let AVData: AVData = { id: undefined, name: undefined, videoId: undefined }
 
   switch (identifier) {
     case AntiVirusSoftware.Adaware:
     case 360041688612:
-      zendeskAVData.id = 360041688612
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/148-how-to-whitelist-salad-in-adaware`
-      zendeskAVData.name = AntiVirusSoftware.Adaware
+      AVData.id = 360041688612
+      AVData.helpScoutUrl = `https://support.salad.com/article/148-how-to-whitelist-salad-in-adaware`
+      AVData.name = AntiVirusSoftware.Adaware
       break
     case AntiVirusSoftware.AdvancedSystemCareUltimate:
     case 360042137651:
-      zendeskAVData.id = 360042137651
-      zendeskAVData.name = AntiVirusSoftware.AdvancedSystemCareUltimate
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/149-how-to-whitelist-salad-in-advanced-systemcare-ultimate`
+      AVData.id = 360042137651
+      AVData.name = AntiVirusSoftware.AdvancedSystemCareUltimate
+      AVData.helpScoutUrl = `https://support.salad.com/article/149-how-to-whitelist-salad-in-advanced-systemcare-ultimate`
       break
     case AntiVirusSoftware.Avast:
     case 360033487211:
-      zendeskAVData.id = 360033487211
-      zendeskAVData.name = AntiVirusSoftware.Avast
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/144-how-to-whitelist-salad-in-avast-antivirus`
-      zendeskAVData.videoId = 574387141
+      AVData.id = 360033487211
+      AVData.name = AntiVirusSoftware.Avast
+      AVData.helpScoutUrl = `https://support.salad.com/article/144-how-to-whitelist-salad-in-avast-antivirus`
+      AVData.videoId = 574387141
       break
     case AntiVirusSoftware.AVG:
     case 360041706612:
-      zendeskAVData.id = 360041706612
-      zendeskAVData.name = AntiVirusSoftware.AVG
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/150-how-to-whitelist-salad-in-avg`
+      AVData.id = 360041706612
+      AVData.name = AntiVirusSoftware.AVG
+      AVData.helpScoutUrl = `https://support.salad.com/article/150-how-to-whitelist-salad-in-avg`
       break
     case AntiVirusSoftware.Avira:
     case 360042139651:
-      zendeskAVData.id = 360042139651
-      zendeskAVData.name = AntiVirusSoftware.Avira
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/151-how-to-whitelist-salad-in-avira`
+      AVData.id = 360042139651
+      AVData.name = AntiVirusSoftware.Avira
+      AVData.helpScoutUrl = `https://support.salad.com/article/151-how-to-whitelist-salad-in-avira`
       break
     case AntiVirusSoftware.BitDefender:
     case 360033488151:
-      zendeskAVData.id = 360033488151
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/145-how-to-whitelist-salad-in-bitdefender-antivirus-plus`
-      zendeskAVData.name = AntiVirusSoftware.BitDefender
+      AVData.id = 360033488151
+      AVData.helpScoutUrl = `https://support.salad.com/article/145-how-to-whitelist-salad-in-bitdefender-antivirus-plus`
+      AVData.name = AntiVirusSoftware.BitDefender
       break
     case AntiVirusSoftware.BullGuard:
     case 360041708232:
-      zendeskAVData.id = 360041708232
-      zendeskAVData.name = AntiVirusSoftware.BullGuard
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/152-how-to-whitelist-salad-in-bullguard`
+      AVData.id = 360041708232
+      AVData.name = AntiVirusSoftware.BullGuard
+      AVData.helpScoutUrl = `https://support.salad.com/article/152-how-to-whitelist-salad-in-bullguard`
       break
     case AntiVirusSoftware.Comodo:
     case 360041713452:
-      zendeskAVData.id = 360041713452
-      zendeskAVData.name = AntiVirusSoftware.Comodo
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/153-how-to-whitelist-salad-in-comodo`
+      AVData.id = 360041713452
+      AVData.name = AntiVirusSoftware.Comodo
+      AVData.helpScoutUrl = `https://support.salad.com/article/153-how-to-whitelist-salad-in-comodo`
       break
     case AntiVirusSoftware.EScan:
     case 360041720452:
-      zendeskAVData.id = 360041720452
-      zendeskAVData.name = AntiVirusSoftware.EScan
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/154-how-to-whitelist-salad-in-e-scan`
+      AVData.id = 360041720452
+      AVData.name = AntiVirusSoftware.EScan
+      AVData.helpScoutUrl = `https://support.salad.com/article/154-how-to-whitelist-salad-in-e-scan`
       break
     case AntiVirusSoftware.ESETNOD32:
     case 360041721632:
-      zendeskAVData.id = 360041721632
-      zendeskAVData.name = AntiVirusSoftware.ESETNOD32
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/155-how-to-whitelist-salad-in-eset-nod32`
+      AVData.id = 360041721632
+      AVData.name = AntiVirusSoftware.ESETNOD32
+      AVData.helpScoutUrl = `https://support.salad.com/article/155-how-to-whitelist-salad-in-eset-nod32`
       break
     case AntiVirusSoftware.FProt:
     case 360042153731:
-      zendeskAVData.id = 360042153731
-      zendeskAVData.name = AntiVirusSoftware.FProt
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/156-how-to-whitelist-salad-in-f-prot`
+      AVData.id = 360042153731
+      AVData.name = AntiVirusSoftware.FProt
+      AVData.helpScoutUrl = `https://support.salad.com/article/156-how-to-whitelist-salad-in-f-prot`
       break
     case AntiVirusSoftware.FSecure:
     case 360042154431:
-      zendeskAVData.id = 360042154431
-      zendeskAVData.name = AntiVirusSoftware.FSecure
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/157-how-to-whitelist-salad-in-f-secure`
+      AVData.id = 360042154431
+      AVData.name = AntiVirusSoftware.FSecure
+      AVData.helpScoutUrl = `https://support.salad.com/article/157-how-to-whitelist-salad-in-f-secure`
       break
     case AntiVirusSoftware.GData:
     case 360042154771:
-      zendeskAVData.id = 360042154771
-      zendeskAVData.name = AntiVirusSoftware.GData
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/158-how-to-whitelist-salad-in-gdata`
+      AVData.id = 360042154771
+      AVData.name = AntiVirusSoftware.GData
+      AVData.helpScoutUrl = `https://support.salad.com/article/158-how-to-whitelist-salad-in-gdata`
       break
     case AntiVirusSoftware.K7:
     case 360041736392:
-      zendeskAVData.id = 360041736392
-      zendeskAVData.name = AntiVirusSoftware.K7
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/159-how-to-whitelist-salad-in-k7`
+      AVData.id = 360041736392
+      AVData.name = AntiVirusSoftware.K7
+      AVData.helpScoutUrl = `https://support.salad.com/article/159-how-to-whitelist-salad-in-k7`
       break
     case AntiVirusSoftware.Kaspersky:
     case 360042167171:
-      zendeskAVData.id = 360042167171
-      zendeskAVData.name = AntiVirusSoftware.Kaspersky
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/160-how-to-whitelist-salad-in-kaspersky`
+      AVData.id = 360042167171
+      AVData.name = AntiVirusSoftware.Kaspersky
+      AVData.helpScoutUrl = `https://support.salad.com/article/160-how-to-whitelist-salad-in-kaspersky`
       break
     case AntiVirusSoftware.Malwarebytes:
     case 360031870772:
-      zendeskAVData.id = 360031870772
-      zendeskAVData.name = AntiVirusSoftware.Malwarebytes
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/141-how-to-whitelist-salad-in-malwarebytes`
+      AVData.id = 360031870772
+      AVData.name = AntiVirusSoftware.Malwarebytes
+      AVData.helpScoutUrl = `https://support.salad.com/article/141-how-to-whitelist-salad-in-malwarebytes`
       break
     case AntiVirusSoftware.McAfeeSecurity:
     case 360033488271:
-      zendeskAVData.id = 360033488271
-      zendeskAVData.name = AntiVirusSoftware.McAfeeSecurity
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/146-how-to-whitelist-salad-in-mcafee`
-      zendeskAVData.videoId = 575421455
+      AVData.id = 360033488271
+      AVData.name = AntiVirusSoftware.McAfeeSecurity
+      AVData.helpScoutUrl = `https://support.salad.com/article/146-how-to-whitelist-salad-in-mcafee`
+      AVData.videoId = 575421455
       break
     case AntiVirusSoftware.Norton:
     case 360032211151:
-      zendeskAVData.id = 360032211151
-      zendeskAVData.name = AntiVirusSoftware.Norton
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/142-how-to-whitelist-salad-in-norton-antivirus`
+      AVData.id = 360032211151
+      AVData.name = AntiVirusSoftware.Norton
+      AVData.helpScoutUrl = `https://support.salad.com/article/142-how-to-whitelist-salad-in-norton-antivirus`
       break
     case AntiVirusSoftware.Panda:
     case 360033488451:
-      zendeskAVData.id = 360033488451
-      zendeskAVData.name = AntiVirusSoftware.Panda
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/147-how-to-whitelist-salad-in-panda`
+      AVData.id = 360033488451
+      AVData.name = AntiVirusSoftware.Panda
+      AVData.helpScoutUrl = `https://support.salad.com/article/147-how-to-whitelist-salad-in-panda`
       break
     case AntiVirusSoftware.PCMatic:
     case 360042169891:
-      zendeskAVData.id = 360042169891
-      zendeskAVData.name = AntiVirusSoftware.PCMatic
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/161-how-to-whitelist-salad-in-pcmatic`
+      AVData.id = 360042169891
+      AVData.name = AntiVirusSoftware.PCMatic
+      AVData.helpScoutUrl = `https://support.salad.com/article/161-how-to-whitelist-salad-in-pcmatic`
       break
     case AntiVirusSoftware.Qihoo360:
     case 360042222471:
-      zendeskAVData.id = 360042222471
-      zendeskAVData.name = AntiVirusSoftware.Qihoo360
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/162-how-to-whitelist-salad-in-qihoo-360`
+      AVData.id = 360042222471
+      AVData.name = AntiVirusSoftware.Qihoo360
+      AVData.helpScoutUrl = `https://support.salad.com/article/162-how-to-whitelist-salad-in-qihoo-360`
       break
     case AntiVirusSoftware.SecureAgeAPEX:
     case 360041801812:
-      zendeskAVData.id = 360041801812
-      zendeskAVData.name = AntiVirusSoftware.SecureAgeAPEX
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/163-how-to-whitelist-salad-in-secureage-apex`
+      AVData.id = 360041801812
+      AVData.name = AntiVirusSoftware.SecureAgeAPEX
+      AVData.helpScoutUrl = `https://support.salad.com/article/163-how-to-whitelist-salad-in-secureage-apex`
       break
     case AntiVirusSoftware.Sophos:
     case 360041802092:
-      zendeskAVData.id = 360041802092
-      zendeskAVData.name = AntiVirusSoftware.Sophos
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/164-how-to-whitelist-salad-in-sophos`
+      AVData.id = 360041802092
+      AVData.name = AntiVirusSoftware.Sophos
+      AVData.helpScoutUrl = `https://support.salad.com/article/164-how-to-whitelist-salad-in-sophos`
       break
     case AntiVirusSoftware.TotalAV:
     case 360041802372:
-      zendeskAVData.id = 360041802372
-      zendeskAVData.name = AntiVirusSoftware.TotalAV
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/165-how-to-whitelist-salad-in-totalav`
+      AVData.id = 360041802372
+      AVData.name = AntiVirusSoftware.TotalAV
+      AVData.helpScoutUrl = `https://support.salad.com/article/165-how-to-whitelist-salad-in-totalav`
       break
     case AntiVirusSoftware.TrendMicro:
     case 360042223291:
-      zendeskAVData.id = 360042223291
-      zendeskAVData.name = AntiVirusSoftware.TrendMicro
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/166-how-to-whitelist-salad-in-trendmicro`
+      AVData.id = 360042223291
+      AVData.name = AntiVirusSoftware.TrendMicro
+      AVData.helpScoutUrl = `https://support.salad.com/article/166-how-to-whitelist-salad-in-trendmicro`
       break
     case AntiVirusSoftware.Twister:
     case 360042223891:
-      zendeskAVData.id = 360042223891
-      zendeskAVData.name = AntiVirusSoftware.Twister
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/167-how-to-whitelist-salad-in-twister`
+      AVData.id = 360042223891
+      AVData.name = AntiVirusSoftware.Twister
+      AVData.helpScoutUrl = `https://support.salad.com/article/167-how-to-whitelist-salad-in-twister`
       break
     case AntiVirusSoftware.VIPRE:
     case 360041803732:
-      zendeskAVData.id = 360041803732
-      zendeskAVData.name = AntiVirusSoftware.VIPRE
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/168-how-to-whitelist-salad-in-vipre`
+      AVData.id = 360041803732
+      AVData.name = AntiVirusSoftware.VIPRE
+      AVData.helpScoutUrl = `https://support.salad.com/article/168-how-to-whitelist-salad-in-vipre`
       break
     case AntiVirusSoftware.Webroot:
     case 360041804212:
-      zendeskAVData.id = 360041804212
-      zendeskAVData.name = AntiVirusSoftware.Webroot
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/169-how-to-whitelist-salad-in-webroot`
+      AVData.id = 360041804212
+      AVData.name = AntiVirusSoftware.Webroot
+      AVData.helpScoutUrl = `https://support.salad.com/article/169-how-to-whitelist-salad-in-webroot`
       break
     case AntiVirusSoftware.WindowsDefender:
     case 360033124692:
-      zendeskAVData.id = 360033124692
-      zendeskAVData.name = AntiVirusSoftware.WindowsDefender
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/143-how-to-whitelist-salad-in-windows-defender`
-      zendeskAVData.videoId = 574423693
+      AVData.id = 360033124692
+      AVData.name = AntiVirusSoftware.WindowsDefender
+      AVData.helpScoutUrl = `https://support.salad.com/article/143-how-to-whitelist-salad-in-windows-defender`
+      AVData.videoId = 574423693
       break
     case AntiVirusSoftware.Zillya:
     case 360042225091:
-      zendeskAVData.id = 360042225091
-      zendeskAVData.name = AntiVirusSoftware.Zillya
-      zendeskAVData.helpScoutUrl = `https://support.salad.com/article/170-how-to-whitelist-salad-in-zillya`
+      AVData.id = 360042225091
+      AVData.name = AntiVirusSoftware.Zillya
+      AVData.helpScoutUrl = `https://support.salad.com/article/170-how-to-whitelist-salad-in-zillya`
       break
   }
 
-  return zendeskAVData
+  return AVData
 }
 
 export const getAntiVirusSoftware = (processes: SystemProcessesData) => {

@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
+import { SmartLink } from '../../../components'
 import { Button } from '../../../components/Button'
 import { ErrorPage } from '../../../components/ErrorPage'
 import { SaladTheme } from '../../../SaladTheme'
@@ -38,14 +39,13 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   prepTime: number
-  onSubmitSupportTicket: () => void
   onCloseClicked: () => void
   onStopPrepping: () => void
 }
 
 export class _DontLoseProgressPage extends Component<Props> {
   render() {
-    const { onSubmitSupportTicket, onCloseClicked, onStopPrepping, prepTime, classes } = this.props
+    const { onCloseClicked, onStopPrepping, prepTime, classes } = this.props
 
     return (
       <ErrorPage title={"Don't Lose your Progress!"}>
@@ -58,11 +58,8 @@ export class _DontLoseProgressPage extends Component<Props> {
         </div>
         <div className={classes.padding}>
           Stopping and starting over will reset the whole process, so we recommend you let Prepping finish! If it's
-          taking more than 30 minutes,{' '}
-          <span className={classes.link} onClick={onSubmitSupportTicket}>
-            submit a support ticket
-          </span>
-          .
+          taking more than 30 minutes, <SmartLink to="https://support.salad.com/">reach out to support</SmartLink> for
+          help! .
         </div>
         <div className={classes.buttons}>
           <Button className={classes.button} onClick={onStopPrepping}>

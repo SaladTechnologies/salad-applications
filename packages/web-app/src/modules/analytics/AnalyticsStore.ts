@@ -5,10 +5,10 @@ import { config } from '../../config'
 import { RootStore } from '../../Store'
 import { MachineInfo, MiningStatus } from '../machine/models'
 import { NotificationMessage } from '../notifications/models'
+import { AntiVirusSoftware } from '../onboarding/models'
 import { Profile } from '../profile/models'
 import { Reward } from '../reward/models'
 import { getRewardAvailability } from '../reward/utils'
-import { AntiVirusSoftware } from '../zendesk/models'
 
 export class AnalyticsStore {
   private started = false

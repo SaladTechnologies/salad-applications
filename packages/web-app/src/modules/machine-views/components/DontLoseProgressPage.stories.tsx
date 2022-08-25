@@ -11,7 +11,6 @@ storiesOf('Modules/Machine/Pages', module)
     return (
       <DontLoseProgressPage
         onCloseClicked={action('close modal')}
-        onSubmitSupportTicket={action('open zendesk web widget')}
         onStopPrepping={action('stop prepping')}
         prepTime={number('Prep Time', 600000)}
       />

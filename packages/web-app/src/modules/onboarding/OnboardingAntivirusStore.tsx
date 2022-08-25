@@ -1,11 +1,13 @@
 import { action, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { delay, routeLink } from '../../utils'
-import { AntiVirusSoftware } from '../zendesk/models'
-import { getZendeskAVData } from '../zendesk/utils'
-import { ONBOARDING_PAGE_NAMES, WhitelistWindowsDefenderErrorTypeMessage } from './models'
+import { NativeStore } from '../machine'
+import { AntiVirusSoftware, ONBOARDING_PAGE_NAMES, WhitelistWindowsDefenderErrorTypeMessage } from './models'
+import { getAntiVirusSoftware, getAVData } from './utils'
 
 export class OnboardingAntivirusStore {
+  private detectedAntiVirus?: AntiVirusSoftware
+
   @observable
   public selectedAntiVirusGuide?: AntiVirusSoftware
 
@@ -18,10 +20,7 @@ export class OnboardingAntivirusStore {
   @observable
   public helpCenterArticle?: string
 
-  @observable
-  public loadingArticle: boolean = false
-
-  constructor(private readonly store: RootStore) {}
+  constructor(private readonly store: RootStore, private readonly native: NativeStore) {}
 
   /**
    * Based on what antivirus software we detect on their machine,
@@ -33,7 +32,7 @@ export class OnboardingAntivirusStore {
    * detectedAV is undefined
    */
   get viewAVGuide(): { onClick?: () => void; label: string } {
-    const detectedAV = this.store.zendesk.detectedAV
+    const detectedAV = this.store.onboardingAntivirus.detectedAV
     let onClick: () => void
     let label: string
 
@@ -55,7 +54,7 @@ export class OnboardingAntivirusStore {
    * @returns a page type.
    */
   get pageType(): string {
-    const detectedAV = this.store.zendesk.detectedAV
+    const detectedAV = this.store.onboardingAntivirus.detectedAV
 
     if (detectedAV === undefined) {
       return 'No AV Detected'
@@ -67,11 +66,20 @@ export class OnboardingAntivirusStore {
   }
 
   /**
-   * Navigates to list of available zendesk antivirus guides.
+   * Navigates to list of available antivirus guides.
    * @param label The label of the button that opens the AV Selection Modal.
    */
   public onViewAVGuideSelectionModal = (label: string) => {
     this.store.analytics.trackButtonClicked('onboarding_antivirus_select_modal', label, 'enabled')
+  }
+
+  public get detectedAV() {
+    if (this.detectedAntiVirus === undefined) {
+      this.detectedAntiVirus =
+        this.native.machineInfo?.processes && getAntiVirusSoftware(this.native.machineInfo?.processes)
+    }
+
+    return this.detectedAntiVirus
   }
 
   @action.bound
@@ -114,22 +122,22 @@ export class OnboardingAntivirusStore {
   }
 
   /**
-   * Navigates to the requested zendesk antivirus guide by name.
+   * Navigates to the requested antivirus guide by name.
    * @param antivirusSoftwareName The name of the antivirus software.
    * @param label The button label that will be passed to mixPanel.
    */
   public navigateToAVGuide = (antivirusSoftwareName: AntiVirusSoftware, label: string) => {
-    const articleId = getZendeskAVData(antivirusSoftwareName).id
+    const articleId = getAVData(antivirusSoftwareName).id
     this.store.analytics.trackButtonClicked('onboarding_antivirus_open_specific_av_guide', label, 'enabled')
     this.store.routing.push(`/onboarding/antivirus-guide/${articleId}`)
   }
 
   /**
-   * Navigates to the requested zendesk antivirus guide by ID.
-   * @param id The id of the specific zendesk antivirus guide.
+   * Navigates to the requested antivirus guide by ID.
+   * @param id The id of the specific antivirus guide.
    */
   public onViewAVArticle = (id: string) => {
-    const antiVirusSoftware = getZendeskAVData(parseInt(id)).name
+    const antiVirusSoftware = getAVData(parseInt(id)).name
     if (antiVirusSoftware) {
       const path = `/onboarding/antivirus-guide/${id}`
       this.store.analytics.trackOnboardingAntivirusGuideViewed(path, antiVirusSoftware)
@@ -139,8 +147,8 @@ export class OnboardingAntivirusStore {
 
   @action.bound
   loadArticle = function (this: OnboardingAntivirusStore, articleID: number) {
-    this.store.zendesk.antiVirusGuideVideoId = getZendeskAVData(articleID).videoId
-    this.store.zendesk.helpScoutUrl = getZendeskAVData(articleID).helpScoutUrl
-    this.selectedAntiVirusGuide = getZendeskAVData(articleID).name
+    this.store.helpScout.antiVirusGuideVideoId = getAVData(articleID).videoId
+    this.store.helpScout.helpScoutUrl = getAVData(articleID).helpScoutUrl
+    this.selectedAntiVirusGuide = getAVData(articleID).name
   }.bind(this)
 }

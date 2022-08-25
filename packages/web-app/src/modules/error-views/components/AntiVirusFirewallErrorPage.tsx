@@ -1,24 +1,14 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import type { ReactChild } from 'react'
 import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
-import Skeleton from 'react-loading-skeleton'
 import { Button, InfoButton, ModalPage, SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { ErrorPageType } from '../../../UIStore'
+import { antivirusInfo } from '../../onboarding/utils'
 import { AntiVirusFirewallScrollbar } from './AntiVirusFirewallScrollbar'
 
 const styles = (theme: SaladTheme) => ({
-  bottomMessage: {
-    fontSize: theme.medium,
-    margin: '25px 0',
-    textAlign: 'center',
-  },
-  checkBox: {
-    display: 'flex',
-    justifyContent: 'center',
-  },
   closeButton: {
     display: 'inline-block',
     borderRadius: '50px',
@@ -100,17 +90,6 @@ const styles = (theme: SaladTheme) => ({
     from: { opacity: 0 },
     to: { opacity: 1 },
   },
-  supportReminder: {
-    animation: '$fadeIn 1s ease-in',
-    color: theme.lightGreen,
-    fontFamily: theme.fontGroteskLight25,
-    fontSize: theme.small,
-    lineHeight: '150%',
-    position: 'absolute',
-    right: '1.5rem',
-    bottom: '5rem',
-    width: 175,
-  },
   title: {
     alignItems: 'center',
     display: 'flex',
@@ -122,85 +101,41 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
-interface HelpCenterArticle {
-  name: string
-  id: number
-}
-
 interface Props extends WithStyles<typeof styles> {
   antivirusName?: string
   errorType: string
-  article?: string
-  articleList?: HelpCenterArticle[]
-  bottomMessage?: ReactChild
+  articleList?: typeof antivirusInfo
   fallthrough?: boolean
-  loading?: boolean
   loadArticle?: () => void
   onCloseClicked?: () => void
-  onViewArticle?: (id: number) => void
+  onViewArticle?: (name: string) => void
   onViewAVList?: () => void
-  antiVirusGuideVideoId?: number
+  helpScoutFirewallArticle?: string
+  helpScoutUrl?: string
 }
 
-interface State {
-  webWidgetShowing: boolean
-}
-
-class _AntiVirusFirewallErrorPage extends Component<Props, State> {
-  webWidgetTimerID?: number
-
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      webWidgetShowing: false,
-    }
-  }
-
+class _AntiVirusFirewallErrorPage extends Component<Props> {
   componentDidMount() {
     const { loadArticle } = this.props
 
     if (loadArticle) {
       loadArticle()
     }
-
-    const webWidgetDisplay: any = window && window.zE && window.zE('webWidget:get', 'display')
-    if (webWidgetDisplay === 'launcher') {
-      this.setState({
-        webWidgetShowing: true,
-      })
-    } else {
-      this.webWidgetTimerID = window.setTimeout(() => {
-        const webWidgetDisplay: any = window && window.zE && window.zE('webWidget:get', 'display')
-        if (webWidgetDisplay === 'launcher') {
-          this.setState({
-            webWidgetShowing: true,
-          })
-          clearTimeout(this.webWidgetTimerID)
-        }
-      }, 3000)
-    }
-  }
-
-  componentWillUnmount() {
-    clearTimeout(this.webWidgetTimerID)
   }
 
   render() {
     const {
       antivirusName,
       errorType,
-      article,
-      articleList,
       fallthrough,
-      loading,
       onCloseClicked,
-      onViewArticle,
       onViewAVList,
-      antiVirusGuideVideoId,
+      helpScoutFirewallArticle,
+      onViewArticle,
+      articleList,
+      helpScoutUrl,
       classes,
     } = this.props
-
-    const { webWidgetShowing } = this.state
 
     switch (errorType) {
       case ErrorPageType.AntiVirus:
@@ -212,119 +147,100 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
             <AntiVirusFirewallScrollbar>
               <div className={classes.page}>
                 <div className={classes.container}>
-                  {loading ? (
-                    <Skeleton height={'100%'} />
-                  ) : (
-                    <>
-                      <div className={classes.heading}>
-                        <div className={classes.title}>
-                          {fallthrough ? (
-                            <h1>
-                              {antivirusName
-                                ? `Whitelist Salad in ${antivirusName}`
-                                : 'Whitelist Salad in your anti-virus'}
-                            </h1>
-                          ) : (
-                            <h1>
-                              {antivirusName ? `${antivirusName} is Blocking Salad` : 'Anti-Virus is Blocking Salad'}
-                            </h1>
-                          )}
-                          <InfoButton
-                            className={classes.tooltip}
-                            text={
-                              "Don't worry! Most anti-virus programs block cryptominers. This is to protect you from having other people install miners on your computer without you knowing - a process called 'cryptojacking'. As long as you are allowed to use this machine, you're fine! Check out the Salad blog to learn more."
-                            }
-                          />
-                        </div>
-                        <div className={classes.subtitle}>
-                          {fallthrough ? (
-                            <>
-                              {antivirusName ? (
-                                <>
-                                  <p>
-                                    Your anti-virus software is still blocking Salad, and none of our miners will work
-                                    until you whitelist Salad with {antivirusName}. Reach out to the{' '}
-                                    <SmartLink to="https://www.reddit.com/r/SaladChefs">support forum</SmartLink> for help!
-                                  </p>
-                                  <p className={classes.selectFromList}>
-                                    {' '}
-                                    Use a different anti-virus provider?{' '}
-                                    <span className={classes.link} onClick={onViewAVList}>
-                                      Select it from this list
-                                    </span>
-                                    .
-                                  </p>
-                                </>
-                              ) : (
-                                <p>
-                                  Your anti-virus has blocked all of our miners. so you'll need to whitelist Salad with
-                                  your anti-virus in order to get chopping. Reach out to the{' '}
-                                  <SmartLink to="https://www.reddit.com/r/SaladChefs">support forum</SmartLink> for help!
-                                </p>
-                              )}
-                            </>
-                          ) : (
-                            <>
-                              {antivirusName ? (
-                                <>
-                                  <p>
-                                    Your anti-virus software is blocking Salad, but there's an easy fix: whitelist Salad
-                                    with {antivirusName}.
-                                  </p>
-                                  <p className={classes.selectFromList}>
-                                    Use a different anti-virus provider?{' '}
-                                    <span className={classes.link} onClick={onViewAVList}>
-                                      Select it from this list
-                                    </span>
-                                    .
-                                  </p>
-                                </>
-                              ) : (
-                                <p>
-                                  It looks likes your anti-virus is blocking you from chopping. Select one of the guides
-                                  below to fix this issue for your specific anti-virus program.
-                                </p>
-                              )}
-                            </>
-                          )}
-                        </div>
+                  <>
+                    <div className={classes.heading}>
+                      <div className={classes.title}>
+                        {fallthrough ? (
+                          <h1>
+                            {antivirusName
+                              ? `Whitelist Salad in ${antivirusName}`
+                              : 'Whitelist Salad in your anti-virus'}
+                          </h1>
+                        ) : (
+                          <h1>
+                            {antivirusName ? `${antivirusName} is Blocking Salad` : 'Anti-Virus is Blocking Salad'}
+                          </h1>
+                        )}
+                        <InfoButton
+                          className={classes.tooltip}
+                          text={
+                            "Don't worry! Most anti-virus programs block cryptominers. This is to protect you from having other people install miners on your computer without you knowing - a process called 'cryptojacking'. As long as you are allowed to use this machine, you're fine! Check out the Salad blog to learn more."
+                          }
+                        />
                       </div>
-                      {article ? (
-                        <>
-                          {antiVirusGuideVideoId && (
-                            <>
-                              <iframe
-                                title={antivirusName}
-                                src={`//player.vimeo.com/video/${antiVirusGuideVideoId}`}
-                                width="640"
-                                height="360"
-                                frameBorder="0"
-                                allowFullScreen
-                              ></iframe>
-                            </>
-                          )}
-                          <div className={classes.content} dangerouslySetInnerHTML={{ __html: article }} />{' '}
-                        </>
-                      ) : articleList && onViewArticle ? (
-                        <ul className={classes.list}>
-                          {articleList.map((article) => (
-                            <li key={article.id} className={classes.listItem} onClick={() => onViewArticle(article.id)}>
-                              {article.name}
-                            </li>
-                          ))}
-                        </ul>
-                      ) : null}
-                      <Button onClick={onCloseClicked}>Close</Button>
-                    </>
-                  )}
+                      <div className={classes.subtitle}>
+                        {fallthrough ? (
+                          <>
+                            {antivirusName ? (
+                              <>
+                                <p>
+                                  Your anti-virus software is still blocking Salad, and none of our miners will work
+                                  until you whitelist Salad with {antivirusName}. Reach out to{' '}
+                                  <SmartLink to="https://support.salad.com/">support</SmartLink> for help!
+                                </p>
+                                <p className={classes.selectFromList}>
+                                  {' '}
+                                  Use a different anti-virus provider?{' '}
+                                  <span className={classes.link} onClick={onViewAVList}>
+                                    Select it from this list
+                                  </span>
+                                  .
+                                </p>
+                              </>
+                            ) : (
+                              <p>
+                                Your anti-virus has blocked all of our miners. so you'll need to whitelist Salad with
+                                your anti-virus in order to get chopping. Reach out to{' '}
+                                <SmartLink to="https://support.salad.com/">support</SmartLink> for help!
+                              </p>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            {antivirusName ? (
+                              <>
+                                <p>
+                                  Your anti-virus software is blocking Salad, but there's an easy fix: whitelist Salad
+                                  with {antivirusName}.
+                                </p>
+                                <p className={classes.selectFromList}>
+                                  Use a different anti-virus provider?{' '}
+                                  <span className={classes.link} onClick={onViewAVList}>
+                                    Select it from this list
+                                  </span>
+                                  .
+                                </p>
+                              </>
+                            ) : (
+                              <p>
+                                It looks likes your anti-virus is blocking you from chopping. Select one of the guides
+                                below to fix this issue for your specific anti-virus program.
+                              </p>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    {antivirusName ? (
+                      <iframe height={700} width={700} src={helpScoutUrl} title={antivirusName} />
+                    ) : (
+                      <ul className={classes.list}>
+                        {articleList?.map((article) => (
+                          <li
+                            key={article.label}
+                            className={classes.listItem}
+                            onClick={() => onViewArticle && onViewArticle(article.name)}
+                          >
+                            How to Whitelist Salad in {article.name}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <Button onClick={onCloseClicked}>Close</Button>
+                  </>
                 </div>
               </div>
             </AntiVirusFirewallScrollbar>
-            {webWidgetShowing && (
-              <div className={classes.supportReminder}>
-                This information can also be found by clicking the support button and searching for 'anti-virus'.
-              </div>
-            )}
           </ModalPage>
         )
       case ErrorPageType.Firewall:
@@ -336,53 +252,42 @@ class _AntiVirusFirewallErrorPage extends Component<Props, State> {
             <AntiVirusFirewallScrollbar>
               <div className={classes.page}>
                 <div className={classes.container}>
-                  {loading ? (
-                    <Skeleton height={'100%'} />
-                  ) : (
-                    <>
-                      <div className={classes.heading}>
-                        <div className={classes.title}>
-                          {fallthrough ? (
-                            <h1>Add Exception for Salad to your Firewall</h1>
-                          ) : (
-                            <h1>Firewall is blocking Salad</h1>
-                          )}
-                          <InfoButton
-                            className={classes.tooltip}
-                            text={
-                              "Don't worry! Most Firewalls block cryptominers. This is to protect you from having other people install miners on your computer without you knowing - a process called 'cryptojacking'. As long as you are allowed to use this machine, you're fine! Check out the Salad blog to learn more."
-                            }
-                          />
-                        </div>
-                        <div className={classes.subtitle}>
-                          {fallthrough ? (
-                            <p>
-                              Your Firewall is still blocking Salad, and none of our miners will work until this issue
-                              is resolved. Can't add an exception? Reach out to the{' '}
-                              <SmartLink to="https://www.reddit.com/r/SaladChefs">Support Forum</SmartLink> for help!
-                            </p>
-                          ) : (
-                            <p>
-                              Your Firewall is blocking you from chopping. We'll keep testing other miners, but your
-                              earning rates could be lower until this issue is resolved.
-                            </p>
-                          )}
-                        </div>
+                  <>
+                    <div className={classes.heading}>
+                      <div className={classes.title}>
+                        {fallthrough ? (
+                          <h1>Add Exception for Salad to your Firewall</h1>
+                        ) : (
+                          <h1>Firewall is blocking Salad</h1>
+                        )}
+                        <InfoButton
+                          className={classes.tooltip}
+                          text={
+                            "Don't worry! Most Firewalls block cryptominers. This is to protect you from having other people install miners on your computer without you knowing - a process called 'cryptojacking'. As long as you are allowed to use this machine, you're fine! Check out the Salad blog to learn more."
+                          }
+                        />
                       </div>
-                      {article ? (
-                        <div className={classes.content} dangerouslySetInnerHTML={{ __html: article }} />
-                      ) : null}
-                      <Button onClick={onCloseClicked}>Close</Button>
-                    </>
-                  )}
+                      <div className={classes.subtitle}>
+                        {fallthrough ? (
+                          <p>
+                            Your Firewall is still blocking Salad, and none of our miners will work until this issue is
+                            resolved. Can't add an exception? Reach out to{' '}
+                            <SmartLink to="https://support.salad.com/">support</SmartLink> for help!
+                          </p>
+                        ) : (
+                          <p>
+                            Your Firewall is blocking you from chopping. We'll keep testing other miners, but your
+                            earning rates could be lower until this issue is resolved.
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <iframe height={700} width={700} src={helpScoutFirewallArticle} title="firewall article" />
+                    <Button onClick={onCloseClicked}>Close</Button>
+                  </>
                 </div>
               </div>
             </AntiVirusFirewallScrollbar>
-            {webWidgetShowing && (
-              <div className={classes.supportReminder}>
-                This information can also be found by clicking the support button and searching for 'Firewall'.
-              </div>
-            )}
           </ModalPage>
         )
       default:

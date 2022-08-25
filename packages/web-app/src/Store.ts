@@ -8,6 +8,7 @@ import { BalanceStore } from './modules/balance'
 import { BonusStore } from './modules/bonus'
 import { RefreshService } from './modules/data-refresh'
 import { EngagementStore } from './modules/engagement'
+import { HelpScoutStore } from './modules/helpscout/HelpScoutStore'
 import { HomeStore } from './modules/home/HomeStore'
 import {
   AutoStartStore,
@@ -33,7 +34,6 @@ import { StorefrontStore } from './modules/storefront/StorefrontStore'
 import { VaultStore } from './modules/vault'
 import { VersionStore } from './modules/versions'
 import { ExperienceStore } from './modules/xp'
-import { Zendesk } from './modules/zendesk'
 import { SaladFork } from './services/SaladFork/SaladFork'
 import { UIStore } from './UIStore'
 import { delay } from './utils'
@@ -79,7 +79,7 @@ export class RootStore {
   public readonly vault: VaultStore
   public readonly version: VersionStore
   public readonly engagement: EngagementStore
-  public readonly zendesk: Zendesk
+  public readonly helpScout: HelpScoutStore
   public readonly storefront: StorefrontStore
   public readonly bonuses: BonusStore
   public readonly seasons: SeasonsStore
@@ -116,13 +116,13 @@ export class RootStore {
     this.vault = new VaultStore(axios, this.balance, this.rewards)
     this.version = new VersionStore(this, axios)
     this.engagement = new EngagementStore(this, axios)
-    this.zendesk = new Zendesk(axios, featureManager, this.auth, this.native, this.analytics)
+    this.helpScout = new HelpScoutStore(axios, this.analytics, this.auth)
     this.storefront = new StorefrontStore(axios)
     this.bonuses = new BonusStore(this, axios)
     this.seasons = new SeasonsStore(axios)
     this.onboarding = new OnboardingStore(this)
     this.onboardingAutoStart = new OnboardingAutoStartStore(this)
-    this.onboardingAntivirus = new OnboardingAntivirusStore(this)
+    this.onboardingAntivirus = new OnboardingAntivirusStore(this, this.native)
     this.startButtonUI = new StartButtonUIStore(this)
     this.machineSettingsUI = new MachineSettingsUIStore(this)
     this.detectedHardwareUIStore = new DetectedHardwareUIStore(this)
@@ -185,7 +185,7 @@ export class RootStore {
         this.refresh.refreshData(),
         this.profile.loadPayPalId(),
         this.saladCard.loadSaladCard(),
-        this.zendesk.login(profile.username, profile.email),
+        this.helpScout.login(profile.username, profile.email),
         Promise.race([this.saladBowl.login(), delay(10000)]),
       ])
 
@@ -205,7 +205,7 @@ export class RootStore {
 
     this.analytics.trackLogout()
     this.native.logout()
-    this.zendesk.logout()
+    this.helpScout.logout()
 
     this.featureManager.handleLogout()
     this.finishInitialLoading()
