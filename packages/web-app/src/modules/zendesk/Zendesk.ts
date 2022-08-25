@@ -2,7 +2,6 @@ import type { AxiosInstance, AxiosResponse } from 'axios'
 import Axios from 'axios'
 import { action, observable } from 'mobx'
 import { SaladError } from '../../axiosFactory'
-import type { FeatureManager } from '../../FeatureManager'
 import { ErrorPageType } from '../../UIStore'
 import type { AnalyticsStore } from '../analytics'
 import type { AuthStore } from '../auth'
@@ -48,12 +47,11 @@ export class Zendesk {
 
   constructor(
     private readonly axios: AxiosInstance,
-    featureManager: FeatureManager,
     private readonly auth: AuthStore,
     private readonly native: NativeStore,
     private readonly analytics: AnalyticsStore,
   ) {
-    this.useZendesk = !featureManager.isEnabled('app_helpscout')
+    this.useZendesk = false
     this.inject()
   }
 
