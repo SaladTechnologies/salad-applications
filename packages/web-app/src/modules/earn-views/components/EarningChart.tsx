@@ -449,7 +449,6 @@ class _EarningChart extends Component<Props, State> {
 
     return (
       <div className={classnames(classes.container)}>
-        hi!!
         <div
           className={classnames(classes.placeholderText, {
             [classes.placeholderTextHidden]: !isZero,
