@@ -30,6 +30,7 @@ interface Props extends WithStyles<typeof styles> {
   visible?: boolean
   onCloseClicked?: () => void
   width?: number
+  children?: ReactNode
 }
 
 class _Modal extends Component<Props> {

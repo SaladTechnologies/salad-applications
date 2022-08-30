@@ -1,4 +1,4 @@
-import { Component, ReactElement } from 'react'
+import { Component, ReactElement, ReactNode } from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import withStyles, { WithStyles } from 'react-jss'
 import { SmartLink } from '../../../components'
@@ -22,6 +22,7 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   reward?: Reward
+  children?: ReactNode
 }
 
 class _RewardDescriptionPanel extends Component<Props> {

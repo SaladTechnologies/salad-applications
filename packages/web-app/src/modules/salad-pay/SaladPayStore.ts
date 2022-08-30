@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action, computed, observable } from 'mobx'
 import { getStore } from '../../Store'
 import { SaladAppPaymentRequest } from './handlers'

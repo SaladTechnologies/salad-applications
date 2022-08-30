@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { Component, ReactNode } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
 import withStyles, { WithStyles } from 'react-jss'
 
@@ -14,7 +14,9 @@ const styles = {
   },
 }
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  children?: ReactNode
+}
 
 class _Scrollbar extends Component<Props> {
   render() {

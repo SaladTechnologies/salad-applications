@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { Component, ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Divider } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
@@ -20,6 +20,7 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   hideDivider?: boolean
+  children?: ReactNode
 }
 
 class _RewardDetailsContentPanel extends Component<Props> {

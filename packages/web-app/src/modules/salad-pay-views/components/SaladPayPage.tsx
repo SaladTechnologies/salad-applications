@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { Component, ReactNode } from 'react'
 import { Img } from 'react-image'
 import withStyles, { WithStyles } from 'react-jss'
 import { ModalPage } from '../../../components'
@@ -32,6 +32,7 @@ const styles = {
 
 interface Props extends WithStyles<typeof styles> {
   onClose?: () => void
+  children?: ReactNode
 }
 
 class _SaladPayPage extends Component<Props> {

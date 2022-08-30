@@ -1,4 +1,4 @@
-import { ReactNode, StatelessComponent } from 'react'
+import { ReactNode, FunctionComponent } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
 
@@ -35,7 +35,7 @@ interface Props extends WithStyles<typeof styles> {
   children?: ReactNode
 }
 
-const _Tooltip: StatelessComponent<Props> = ({ text, title, classes, children }) => (
+const _Tooltip: FunctionComponent<Props> = ({ text, title, classes, children }) => (
   <div className={classes.container}>
     {title && <div className={classes.title}>{title}</div>}
     <div className={classes.text}>
