@@ -1,10 +1,14 @@
-import { Component } from 'react'
+import { Component, ReactNode } from 'react'
 import ReactDOM from 'react-dom'
 
-export class Portal extends Component {
+export interface PortalProps {
+  children?: ReactNode
+}
+
+export class Portal extends Component<PortalProps> {
   private readonly portalElement: HTMLDivElement
 
-  constructor(props: {}) {
+  constructor(props: PortalProps) {
     super(props)
     this.portalElement = document.createElement('div')
   }

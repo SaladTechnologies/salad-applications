@@ -1,5 +1,6 @@
 import { AxiosInstance } from 'axios'
 import { DateTime } from 'luxon'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action, computed, flow, observable } from 'mobx'
 import { CurrentSeason, Level } from './models'
 

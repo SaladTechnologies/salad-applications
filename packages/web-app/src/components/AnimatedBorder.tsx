@@ -1,5 +1,5 @@
 import classnames from 'classnames'
-import { Component } from 'react'
+import { Component, ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
 
@@ -51,6 +51,7 @@ interface Props extends WithStyles<typeof styles> {
   animating?: boolean
   className?: string
   onClick?: ((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void) | undefined
+  children?: ReactNode
 }
 
 class _AnimatedBorder extends Component<Props> {

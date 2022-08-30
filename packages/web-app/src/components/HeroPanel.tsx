@@ -1,5 +1,5 @@
 import classnames from 'classnames'
-import { Component } from 'react'
+import { Component, ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
 
@@ -41,6 +41,7 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   color: 'red' | 'purple' | 'green' | 'cyan'
   className?: string
+  children?: ReactNode
 }
 
 class _HeroPanel extends Component<Props> {

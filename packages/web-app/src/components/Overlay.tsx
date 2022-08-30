@@ -1,4 +1,4 @@
-import { Component, MouseEvent } from 'react'
+import { Component, MouseEvent, ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
 
@@ -21,6 +21,7 @@ const styles = (theme: SaladTheme) => ({
 
 export interface OverlayProps extends WithStyles<typeof styles> {
   onCloseRequested?: () => void
+  children?: ReactNode
 }
 
 export const Overlay = withStyles(styles)(

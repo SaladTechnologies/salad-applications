@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react'
+import { FunctionComponent, ReactNode } from 'react'
 import type { FallbackProps } from 'react-error-boundary'
 import { ErrorBoundary } from 'react-error-boundary'
 import withStyles, { WithStyles } from 'react-jss'
@@ -70,7 +70,7 @@ const ErrorPage: FunctionComponent<ErrorPageProps> = ({ classes }) => (
 
 const StyledErrorPage = withStyles(styles)(ErrorPage)
 
-const ErrorBoundaryPage: FunctionComponent = ({ children }) => (
+const ErrorBoundaryPage: FunctionComponent<{ children?: ReactNode }> = ({ children }) => (
   <ErrorBoundary FallbackComponent={StyledErrorPage}>{children}</ErrorBoundary>
 )
 

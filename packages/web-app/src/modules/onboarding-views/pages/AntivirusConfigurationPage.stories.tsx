@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import type { Meta, Story } from '@storybook/react'
-import type { ReactElement } from 'react'
+import type { ReactNode } from 'react'
 import { useEffect } from 'react'
 import { WhitelistWindowsDefenderErrorTypeMessage } from '../../onboarding/models'
 import { AntiVirusSoftware } from '../../zendesk/models'
@@ -77,7 +77,7 @@ const loadTrustPilotScript = () => {
 }
 
 interface AssetLoaderProps {
-  children: ReactElement
+  children?: ReactNode
 }
 
 const AssetLoader = ({ children }: AssetLoaderProps) => {

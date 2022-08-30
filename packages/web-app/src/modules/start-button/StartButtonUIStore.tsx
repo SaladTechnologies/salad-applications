@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action, computed, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { ErrorPageType } from '../../UIStore'

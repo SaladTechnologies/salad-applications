@@ -1,5 +1,5 @@
 import classnames from 'classnames'
-import { Component } from 'react'
+import { Component, ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../../../SaladTheme'
 
@@ -12,7 +12,9 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  children?: ReactNode
+}
 
 class _ErrorText extends Component<Props> {
   render() {

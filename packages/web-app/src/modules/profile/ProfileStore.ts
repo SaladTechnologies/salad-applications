@@ -1,5 +1,6 @@
 import SaladDefaultAvatarSrc from '@saladtechnologies/garden-components/lib/components/Avatar/assets/SaladAvatar.png'
 import { AxiosInstance, AxiosResponse } from 'axios'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action, computed, flow, observable } from 'mobx'
 import { RootStore } from '../../Store'
 import { FormValues } from '../account-views/account-views/components/'

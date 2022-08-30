@@ -1,5 +1,6 @@
 import type { AxiosInstance, AxiosResponse } from 'axios'
 import Axios from 'axios'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action, computed, flow, observable } from 'mobx'
 import type { RootStore } from '../../Store'
 import type { NotificationMessage } from '../notifications/models'
