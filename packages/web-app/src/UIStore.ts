@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action, autorun, observable } from 'mobx'
 import { MiningStatus } from './modules/machine/models'
 import { NotificationMessageCategory } from './modules/notifications/models'

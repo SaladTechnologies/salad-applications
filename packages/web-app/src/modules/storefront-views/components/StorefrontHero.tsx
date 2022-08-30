@@ -1,5 +1,5 @@
 import classnames from 'classnames'
-import { Component } from 'react'
+import { Component, ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import Carousel from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
@@ -27,6 +27,7 @@ const responsive = {
 
 interface Props extends WithStyles<typeof styles> {
   title: string
+  children?: ReactNode
 }
 
 class _StorefrontHero extends Component<Props> {

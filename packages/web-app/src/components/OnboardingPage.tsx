@@ -81,6 +81,7 @@ interface Props extends WithStyles<typeof styles> {
   fullHeightImg?: boolean
   onBack?: () => void
   onNext?: () => void
+  children?: ReactNode
 }
 
 class _OnboardingPage extends Component<Props> {

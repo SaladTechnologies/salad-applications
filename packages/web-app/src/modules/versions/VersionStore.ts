@@ -1,5 +1,6 @@
 import { AxiosInstance } from 'axios'
-import compareVersions from 'compare-versions'
+import { compare } from 'compare-versions'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action, flow, observable, reaction, runInAction } from 'mobx'
 import { config } from '../../config'
 import { getItem, removeItem, setItem } from '../../Storage'
@@ -67,7 +68,7 @@ export class VersionStore {
         }),
         ({ currentDesktopVersion, latestDesktopVersion }, reaction) => {
           if (currentDesktopVersion !== undefined && latestDesktopVersion !== undefined) {
-            const onLatest = compareVersions.compare(currentDesktopVersion, latestDesktopVersion, '>=')
+            const onLatest = compare(currentDesktopVersion, latestDesktopVersion, '>=')
             runInAction(() => {
               this.onLatestDesktop = onLatest
             })

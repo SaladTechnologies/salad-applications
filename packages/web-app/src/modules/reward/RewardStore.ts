@@ -1,4 +1,5 @@
 import Axios, { AxiosInstance, AxiosResponse } from 'axios'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action, computed, flow, observable } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
 import { SaladError } from '../../axiosFactory'

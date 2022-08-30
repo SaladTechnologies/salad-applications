@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { Component, CSSProperties } from 'react'
+import { Component, CSSProperties, ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
 
@@ -22,6 +22,7 @@ interface Props extends WithStyles<typeof styles> {
   direction?: 'up' | 'down'
   className?: string
   style?: CSSProperties
+  children?: ReactNode
 }
 
 class _Fade extends Component<Props> {

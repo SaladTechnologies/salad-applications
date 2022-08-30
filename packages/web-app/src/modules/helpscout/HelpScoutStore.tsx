@@ -1,4 +1,5 @@
 import { AxiosInstance, AxiosResponse } from 'axios'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action, observable } from 'mobx'
 import { ErrorPageType } from '../../UIStore'
 import { AnalyticsStore } from '../analytics'

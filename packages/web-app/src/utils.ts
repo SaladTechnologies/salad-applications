@@ -89,7 +89,7 @@ export const formatBalance = (balance?: number): string => {
  * @param path The url path
  */
 export const routeLink = (store: RootStore, path: string) => {
-  if (path.startsWith('http') && typeof window !== undefined) {
+  if (path.startsWith('http') && typeof window !== 'undefined') {
     window.open(path)
   } else {
     store.routing.push(path)

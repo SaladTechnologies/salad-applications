@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { Component, ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { getTrackBackground, Range } from 'react-range'
 import { SaladTheme } from '../../../SaladTheme'
@@ -39,6 +39,7 @@ interface Props extends WithStyles<typeof styles> {
   maximum: number
   value: number
   onValueChange?: (value: number) => void
+  children?: ReactNode
 }
 
 class _Slider extends Component<Props> {

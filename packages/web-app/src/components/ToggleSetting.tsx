@@ -1,5 +1,5 @@
 import classnames from 'classnames'
-import { Component } from 'react'
+import { Component, ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { P, ToggleSwitch, Username } from '.'
 
@@ -29,6 +29,7 @@ interface Props extends WithStyles<typeof styles> {
   description?: string | JSX.Element
   toggleLeft?: string
   toggleRight?: string
+  children?: ReactNode
 }
 
 class _ToggleSetting extends Component<Props> {

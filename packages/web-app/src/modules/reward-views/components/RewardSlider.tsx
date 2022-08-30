@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { Component, ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import Carousel from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
@@ -68,6 +68,7 @@ export const rewardItemResponsive = {
 interface Props extends WithStyles<typeof styles> {
   title?: string
   viewAllRoute?: string
+  children?: ReactNode
 }
 
 interface State {

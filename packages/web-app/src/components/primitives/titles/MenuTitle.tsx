@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { Component } from 'react'
+import { Component, ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { NavLink } from 'react-router-dom'
 import { LinkTrackingInfo } from '../../../modules/analytics/models'
@@ -44,6 +44,7 @@ interface Props extends WithStyles<typeof styles> {
   enabled?: boolean
   externalLink?: boolean
   trackingInfo?: LinkTrackingInfo
+  children?: ReactNode
 }
 
 const handleClickTracking = (to?: string, trackingInfo?: any) => {
