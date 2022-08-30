@@ -1,4 +1,5 @@
 import { AxiosInstance } from 'axios'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action, flow, observable } from 'mobx'
 import { BannerInfo } from './models/BannerInfo'
 

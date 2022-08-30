@@ -1,4 +1,5 @@
 import { AxiosInstance } from 'axios'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action, autorun, configure, flow, observable } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
 import { FeatureManager } from './FeatureManager'

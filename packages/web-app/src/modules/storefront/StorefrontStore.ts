@@ -1,5 +1,6 @@
 import { AxiosInstance } from 'axios'
 import { pick } from 'lodash'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action, computed, flow, observable } from 'mobx'
 import { Reward } from '../reward/models'
 import {

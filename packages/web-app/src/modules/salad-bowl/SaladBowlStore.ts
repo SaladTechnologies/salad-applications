@@ -1,7 +1,7 @@
 import { SBWorkloadState } from '@saladtechnologies/salad-grpc-salad-bowl/salad/grpc/salad_bowl/v1/salad_bowl_pb'
 import { Duration } from 'luxon'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action, autorun, computed, flow, observable, runInAction } from 'mobx'
-import { EOL } from 'os'
 import { FeatureManager } from '../../FeatureManager'
 import * as Storage from '../../Storage'
 import { RootStore } from '../../Store'
@@ -29,6 +29,7 @@ import { getPreppingPercentage } from './utils'
 const CPU_MINING_ENABLED = 'CPU_MINING_ENABLED'
 const GPU_MINING_OVERRIDDEN = 'GPU_MINING_OVERRIDDEN'
 const CPU_MINING_OVERRIDDEN = 'CPU_MINING_OVERRIDDEN'
+const EOL = '\r\n'
 
 export class SaladBowlStore implements SaladBowlStoreInterface, IPersistentStore {
   private currentPluginDefinition?: PluginDefinition

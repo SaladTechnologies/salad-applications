@@ -1,4 +1,3 @@
-import { withRouter } from 'react-router'
 import { connect } from '../../connect'
 import { RootStore } from '../../Store'
 import { AntiVirusFirewallErrorPage } from './components/AntiVirusFirewallErrorPage'
@@ -14,4 +13,4 @@ const mapStoreToProps = (store: RootStore, ownProps: any): any => ({
   helpScoutUrl: store.zendesk.helpScoutUrl,
 })
 
-export const SpecificAntiVirusErrorContainer = withRouter(connect(mapStoreToProps, AntiVirusFirewallErrorPage))
+export const SpecificAntiVirusErrorContainer = connect(mapStoreToProps, AntiVirusFirewallErrorPage)

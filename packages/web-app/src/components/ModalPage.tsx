@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { Component } from 'react'
+import { Component, ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
 
@@ -22,6 +22,7 @@ interface Props extends WithStyles<typeof styles> {
   onCloseClicked?: () => void
   showWindowBarContainer?: boolean
   isNative?: boolean
+  children?: ReactNode
 }
 
 const bgId = 'modal-bg' + Math.random()

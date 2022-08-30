@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { Component } from 'react'
+import { Component, ReactNode } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
 import logo from './assets/animated-logo-lg.gif'
@@ -36,6 +36,7 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   text?: string
   onDidMount?: Promise<void>
+  children?: ReactNode
 }
 
 class _LoadingPage extends Component<Props> {

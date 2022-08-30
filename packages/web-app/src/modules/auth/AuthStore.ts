@@ -1,4 +1,5 @@
 import Axios, { AxiosInstance } from 'axios'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action, flow, observable, runInAction } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
 import SuperTokens from 'supertokens-website'

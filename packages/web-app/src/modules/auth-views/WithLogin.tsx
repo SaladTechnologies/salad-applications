@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { observer } from 'mobx-react'
 import { Component, ComponentType } from 'react'
 import { getStore } from '../../Store'

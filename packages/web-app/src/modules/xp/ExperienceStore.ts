@@ -1,4 +1,5 @@
 import { AxiosInstance } from 'axios'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action, computed, flow, observable } from 'mobx'
 import { defaultLevels, totalXpRequiredForAllVegies } from './models/defaultLevels'
 import { Level } from './models/Level'
