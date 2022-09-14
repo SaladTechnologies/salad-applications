@@ -38,7 +38,7 @@ export const createXMRigKawPowPluginDefinitions = (accounts: Accounts): PluginDe
       initialRetries: 3,
       watchdogTimeout: 900000,
       errors: [...STANDARD_ERRORS],
-      requirements: [hasGpu('*', 3072)],
+      requirements: [hasGpu('*', 5120)],
     })
 
     return definitions
