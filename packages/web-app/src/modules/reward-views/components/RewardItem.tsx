@@ -6,6 +6,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import Skeleton from 'react-loading-skeleton'
 import { SaladTheme } from '../../../SaladTheme'
 import { SearchResult } from '../../reward/models'
+import { getPercentOff } from '../../reward/utils'
 import { RewardMissingImage } from './RewardMissingImage'
 
 const styles = (theme: SaladTheme) => ({
@@ -89,6 +90,22 @@ const styles = (theme: SaladTheme) => ({
     color: theme.darkBlue,
     backgroundColor: theme.green,
   },
+  discountLabel: {
+    fontFamily: theme.fontGroteskBook19,
+    color: theme.darkBlue,
+    backgroundColor: theme.cyan,
+    fontSize: 12,
+    letterSpacing: 1,
+    paddingLeft: 5,
+    paddingRight: 10,
+    marginRight: 8,
+    marginTop: 3,
+  },
+  originalPrice: {
+    textDecoration: 'line-through',
+    opacity: 0.5,
+    color: theme.green,
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -120,15 +137,26 @@ class _RewardItem extends Component<Props> {
         <div className={classes.textContainer}>
           <div className={classes.nameText}>{reward ? reward.name : <Skeleton />}</div>
           <div className={classes.subTextContainer}>
-            <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
-              {reward ? reward?.price ? `$${reward?.price.toFixed(2)}` : 'FREE' : <Skeleton width={100} />}
-            </div>
+            {reward && reward?.originalPrice && !outOfStock && (
+              <div className={classnames(classes.discountLabel)}>
+                {getPercentOff(reward.originalPrice, reward.price)}{' '}
+              </div>
+            )}
+            {reward && reward.originalPrice && !outOfStock ? (
+              <span className={classes.priceText}>
+                <span className={classes.originalPrice}>{reward.originalPrice}</span> {reward.price}
+              </span>
+            ) : (
+              <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
+                {reward ? reward?.price ? `$${reward?.price.toFixed(2)}` : 'FREE' : <Skeleton width={100} />}
+              </div>
+            )}
             {outOfStock && (
               <div className={classnames(classes.priceText, classes.stockLabel, classes.outOfStockLabel)}>
                 Out of Stock
               </div>
             )}
-            {lowQuanity && (
+            {lowQuanity && !reward?.originalPrice && (
               <div className={classnames(classes.priceText, classes.stockLabel, classes.lowQuanityLabel)}>
                 {`${reward?.quantity} Remaining`}
               </div>

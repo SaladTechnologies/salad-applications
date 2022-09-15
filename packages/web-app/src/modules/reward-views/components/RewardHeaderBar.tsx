@@ -4,6 +4,7 @@ import withStyles, { WithStyles } from 'react-jss'
 import { Button, SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { Reward } from '../../reward/models'
+import { getPercentOff } from '../../reward/utils'
 import { IconArrowLeft } from './assets'
 
 const styles = (theme: SaladTheme) => ({
@@ -83,6 +84,22 @@ const styles = (theme: SaladTheme) => ({
     color: theme.darkBlue,
     backgroundColor: theme.green,
   },
+  discountLabel: {
+    fontFamily: theme.fontGroteskBook19,
+    color: theme.darkBlue,
+    backgroundColor: theme.cyan,
+    fontSize: 12,
+    letterSpacing: 1,
+    paddingLeft: 5,
+    paddingRight: 10,
+    marginRight: 8,
+    marginTop: 3,
+  },
+  originalPrice: {
+    textDecoration: 'line-through',
+    opacity: 0.5,
+    color: theme.green,
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -152,21 +169,31 @@ class _RewardHeaderBar extends Component<Props> {
         {!promoGame && (
           <>
             <div className={classes.priceContainer}>
-              <div
-                className={classnames(classes.priceText, {
-                  [classes.outOfStockPrice]: hasBalance,
-                  [classes.outOfStockPrice]: outOfStock,
-                })}
-              >
-                ${reward ? reward.price.toFixed(2) : '-'}
-              </div>
-
+              {reward && reward.originalPrice && !outOfStock ? (
+                <span className={classes.priceText}>
+                  <span className={classes.originalPrice}>{reward.originalPrice}</span> {reward.price}
+                </span>
+              ) : (
+                <div
+                  className={classnames(classes.priceText, {
+                    [classes.outOfStockPrice]: hasBalance,
+                    [classes.outOfStockPrice]: outOfStock,
+                  })}
+                >
+                  ${reward ? reward.price.toFixed(2) : '-'}
+                </div>
+              )}
+              {reward && reward.originalPrice && !outOfStock && (
+                <div className={classnames(classes.discountLabel)}>
+                  {getPercentOff(reward.originalPrice, reward.price)}{' '}
+                </div>
+              )}
               {outOfStock && (
                 <div className={classnames(classes.priceText, classes.stockLabel, classes.outOfStockLabel)}>
                   Out of Stock
                 </div>
               )}
-              {lowQuanity && (
+              {lowQuanity && !reward?.originalPrice && (
                 <div className={classnames(classes.priceText, classes.stockLabel, classes.lowQuanityLabel)}>
                   {`${reward?.quantity} Remaining`}
                 </div>
