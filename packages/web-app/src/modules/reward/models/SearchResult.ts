@@ -15,6 +15,7 @@ export class SearchResult {
     public readonly heroImage?: string,
     public readonly description?: string,
     public readonly quantity?: number,
+    public readonly originalPrice?: number,
   ) {}
 
   public static parseSearchResult = (result: any): SearchResult => {
@@ -22,6 +23,7 @@ export class SearchResult {
     const name = result['name'].raw
     const price = parseFloat(result['price'].raw)
     const image = result['cover_image']?.raw
+    let originalPrice: number | undefined = parseFloat(result['original_price']?.raw)
     let quantity: number | undefined = parseInt(result['quantity']?.raw)
     const inStock = result['in_stock']?.raw === 'true'
     const url = rewardRoute(id)
@@ -33,7 +35,10 @@ export class SearchResult {
       quantity = undefined
     }
 
-    return new SearchResult(id, name, price, url, image, undefined, undefined, quantity)
+    if (isNaN(originalPrice)) {
+      originalPrice = undefined
+    }
+    return new SearchResult(id, name, price, url, image, undefined, undefined, quantity, originalPrice)
   }
 
   public static fromReward = (reward: Reward): SearchResult => {
@@ -46,6 +51,7 @@ export class SearchResult {
       reward.heroImage,
       reward.headline,
       reward.quantity,
+      reward.originalPrice,
     )
   }
 }

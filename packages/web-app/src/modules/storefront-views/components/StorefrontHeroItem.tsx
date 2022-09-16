@@ -8,6 +8,8 @@ import Skeleton from 'react-loading-skeleton'
 import { Button, SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { RewardMissingImage } from '../../reward-views/components/RewardMissingImage'
+import { getPercentOff } from '../../reward/utils'
+import { StorefrontRewardItemProps } from '../../storefront/models'
 
 const styles = (theme: SaladTheme) => ({
   content: {
@@ -103,6 +105,22 @@ const styles = (theme: SaladTheme) => ({
   buttonContainer: {
     marginLeft: -8,
   },
+  discountLabel: {
+    fontFamily: theme.fontGroteskBook19,
+    color: theme.darkBlue,
+    backgroundColor: theme.cyan,
+    fontSize: 12,
+    letterSpacing: 1,
+    paddingLeft: 5,
+    paddingRight: 10,
+    marginRight: 8,
+    marginTop: 3,
+  },
+  originalPrice: {
+    textDecoration: 'line-through',
+    opacity: 0.5,
+    color: theme.green,
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -116,6 +134,7 @@ interface Props extends WithStyles<typeof styles> {
   outOfStock: boolean
   quantity?: number
   subheading?: string
+  reward?: StorefrontRewardItemProps
 }
 
 class _StorefrontHeroItem extends Component<Props> {
@@ -130,6 +149,7 @@ class _StorefrontHeroItem extends Component<Props> {
       lowQuantity,
       outOfStock,
       subheading,
+      reward,
       quantity,
       classes,
     } = this.props
@@ -161,15 +181,26 @@ class _StorefrontHeroItem extends Component<Props> {
               {heading && <div className={classes.nameText}>{heading}</div>}
               {subheading !== undefined && (
                 <div className={classes.priceContainer}>
-                  <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
-                    {subheading}
-                  </div>
+                  {reward && reward.originalPrice && !outOfStock && (
+                    <div className={classnames(classes.discountLabel)}>
+                      {getPercentOff(reward.originalPrice, reward.price)}{' '}
+                    </div>
+                  )}
+                  {reward && reward.originalPrice && !outOfStock ? (
+                    <span className={classes.priceText}>
+                      <span className={classes.originalPrice}>{reward.originalPrice}</span> {reward.price}
+                    </span>
+                  ) : (
+                    <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
+                      {subheading}
+                    </div>
+                  )}
                   {outOfStock && (
                     <div className={classnames(classes.priceText, classes.stockLabel, classes.outOfStockLabel)}>
                       Out of Stock
                     </div>
                   )}
-                  {lowQuantity && !outOfStock && (
+                  {lowQuantity && !outOfStock && !reward?.originalPrice && (
                     <div className={classnames(classes.priceText, classes.stockLabel, classes.lowQuanityLabel)}>
                       {`${quantity} Remaining`}
                     </div>
