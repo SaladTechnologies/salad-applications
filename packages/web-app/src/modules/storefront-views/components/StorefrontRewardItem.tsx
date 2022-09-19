@@ -150,9 +150,9 @@ class _StorefrontRewardItem extends Component<Props> {
               </div>
             )}
             {originalPrice && !outOfStock ? (
-              <span className={classes.priceText}>
+              <div className={classes.priceText}>
                 <span className={classes.originalPrice}>{originalPrice}</span> {price}
-              </span>
+              </div>
             ) : price ? (
               <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}> {price} </div>
             ) : (
