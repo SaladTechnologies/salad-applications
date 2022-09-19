@@ -148,7 +148,7 @@ class _RewardItem extends Component<Props> {
               </div>
             ) : (
               <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
-                {reward ? reward?.price ? `$${reward?.price.toFixed(2)}` : 'FREE' : <Skeleton width={100} />}
+                {reward ? reward.price ? `$${reward?.price.toFixed(2)}` : 'FREE' : <Skeleton width={100} />}
               </div>
             )}
             {outOfStock && (
