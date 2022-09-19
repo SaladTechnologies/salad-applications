@@ -22,7 +22,9 @@ export class SearchResult {
     const id = result['id'].raw
     const name = result['name'].raw
     const price = parseFloat(result['price'].raw)
-    let originalPrice: number | undefined = parseFloat(result['original_price']?.raw)
+    let originalPrice: number | undefined = result['original_price']?.raw
+      ? parseFloat(result['original_price']?.raw)
+      : undefined
     const image = result['cover_image']?.raw
     let quantity: number | undefined = parseInt(result['quantity']?.raw)
     const inStock = result['in_stock']?.raw === 'true'
@@ -35,9 +37,6 @@ export class SearchResult {
       quantity = undefined
     }
 
-    if (isNaN(originalPrice)) {
-      originalPrice = undefined
-    }
     return new SearchResult(id, name, price, url, image, undefined, undefined, quantity, originalPrice)
   }
 
