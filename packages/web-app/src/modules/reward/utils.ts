@@ -19,6 +19,7 @@ export const rewardFromResource = (r: RewardResource): Reward => ({
   headline: r.headline,
   description: r.description,
   price: r.price,
+  originalPrice: r.originalPrice,
   coverImage: toFullImageUrl(r.coverImage),
   heroImage: toFullImageUrl(r.heroImage),
   image: toFullImageUrl(r.image),
@@ -100,4 +101,8 @@ export const getRewardAvailability = (reward?: Partial<Reward>): 'Out of Stock' 
     : reward?.quantity !== undefined && reward?.quantity > 0
     ? 'Low Quantity'
     : 'In Stock'
+}
+
+export const getPercentOff = (originalPrice: number, newPrice: number) => {
+  return `${((newPrice / originalPrice - 1) * 100).toFixed()}%`
 }

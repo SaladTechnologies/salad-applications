@@ -7,6 +7,8 @@ import Skeleton from 'react-loading-skeleton'
 import { SmartLink } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { RewardMissingImage } from '../../reward-views/components/RewardMissingImage'
+import { getPercentOff } from '../../reward/utils'
+import { StorefrontRewardItemProps } from '../../storefront/models'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -89,6 +91,22 @@ const styles = (theme: SaladTheme) => ({
     color: theme.darkBlue,
     backgroundColor: theme.green,
   },
+  discountLabel: {
+    fontFamily: theme.fontGroteskBook19,
+    color: theme.darkBlue,
+    backgroundColor: theme.cyan,
+    fontSize: 12,
+    letterSpacing: 1,
+    paddingLeft: 5,
+    paddingRight: 10,
+    marginRight: 8,
+    marginTop: 3,
+  },
+  originalPrice: {
+    textDecoration: 'line-through',
+    opacity: 0.5,
+    color: theme.green,
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -98,12 +116,15 @@ interface Props extends WithStyles<typeof styles> {
   outOfStock: boolean
   link: string
   price?: string
+  originalPrice?: string
   quantity?: number
+  rewardData?: StorefrontRewardItemProps
 }
 
 class _StorefrontRewardItem extends Component<Props> {
   render() {
-    const { image, lowQuantity, outOfStock, name, price, link, quantity, classes } = this.props
+    const { image, lowQuantity, outOfStock, name, price, originalPrice, link, quantity, rewardData, classes } =
+      this.props
     return (
       <SmartLink className={classnames(classes.container)} to={link}>
         <AspectRatio ratio={'323/433'}>
@@ -123,15 +144,26 @@ class _StorefrontRewardItem extends Component<Props> {
         <div className={classes.textContainer}>
           <div className={classes.nameText}>{name ? name : <Skeleton />}</div>
           <div className={classes.subTextContainer}>
-            <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
-              {price ? price : <Skeleton width={100} />}
-            </div>
+            {rewardData && rewardData.originalPrice && !outOfStock && (
+              <div className={classnames(classes.discountLabel)}>
+                {getPercentOff(rewardData.originalPrice, rewardData.price)}{' '}
+              </div>
+            )}
+            {originalPrice && !outOfStock ? (
+              <div className={classes.priceText}>
+                <span className={classes.originalPrice}>{originalPrice}</span> {price}
+              </div>
+            ) : price ? (
+              <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}> {price} </div>
+            ) : (
+              <Skeleton width={100} />
+            )}
             {outOfStock && (
               <div className={classnames(classes.priceText, classes.stockLabel, classes.outOfStockLabel)}>
                 Out of Stock
               </div>
             )}
-            {lowQuantity && !outOfStock && (
+            {lowQuantity && !outOfStock && !originalPrice && (
               <div className={classnames(classes.priceText, classes.stockLabel, classes.lowQuanityLabel)}>
                 {`${quantity} Remaining`}
               </div>

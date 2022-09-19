@@ -24,6 +24,7 @@ export const StorefrontHeroBlock = ({ block }: Props) => {
           : undefined || hero.reward?.heroImage
         const outOfStock = hero.reward?.quantity === 0
         const lowQuanity = hero.reward?.quantity !== undefined && hero.reward.quantity > 0
+        const reward = hero.reward
         return (
           <StorefrontHeroItem
             key={hero.id}
@@ -37,6 +38,7 @@ export const StorefrontHeroBlock = ({ block }: Props) => {
             outOfStock={outOfStock}
             subheading={subHeading}
             quantity={hero.reward?.quantity}
+            reward={reward}
           />
         )
       })}
