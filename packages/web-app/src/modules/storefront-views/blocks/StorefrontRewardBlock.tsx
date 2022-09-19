@@ -21,7 +21,9 @@ export const StorefrontRewardBlock = ({ block }: Props) => {
           const outOfStock = reward?.quantity === 0
           const lowQuanity = reward?.quantity !== undefined && reward?.quantity > 0
           const price = reward?.price ? `$${reward?.price.toFixed(2)}` : 'FREE'
+          const originalPrice = reward?.originalPrice ? `$${reward?.originalPrice}` : undefined
           const link = rewardRoute(reward.uuid)
+          const rewardData = reward
           return (
             <StorefrontRewardItem
               key={reward.id}
@@ -30,6 +32,8 @@ export const StorefrontRewardBlock = ({ block }: Props) => {
               outOfStock={outOfStock}
               name={reward?.name}
               price={price}
+              originalPrice={originalPrice}
+              rewardData={rewardData}
               link={link}
               quantity={reward?.quantity}
             />

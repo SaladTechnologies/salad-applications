@@ -3,6 +3,7 @@ export interface StorefrontRewardItemProps {
   name: string
   uuid: string
   price: number
+  originalPrice?: number
   inStock: boolean
   quantity: number
   created_at: string

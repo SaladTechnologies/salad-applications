@@ -29,6 +29,9 @@ export interface RewardResource {
   /** Purchase price */
   price: number
 
+  /** MSRP of the reward */
+  originalPrice?: number
+
   /** Main image show on the storefront. Similar to a game box */
   coverImage?: string
 
