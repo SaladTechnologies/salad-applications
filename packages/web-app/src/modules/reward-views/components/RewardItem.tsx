@@ -137,7 +137,7 @@ class _RewardItem extends Component<Props> {
         <div className={classes.textContainer}>
           <div className={classes.nameText}>{reward ? reward.name : <Skeleton />}</div>
           <div className={classes.subTextContainer}>
-            {reward && reward?.originalPrice && !outOfStock && (
+            {reward && reward.originalPrice && !outOfStock && (
               <div className={classnames(classes.discountLabel)}>
                 {getPercentOff(reward.originalPrice, reward.price)}{' '}
               </div>

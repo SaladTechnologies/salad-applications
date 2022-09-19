@@ -144,7 +144,7 @@ class _StorefrontRewardItem extends Component<Props> {
         <div className={classes.textContainer}>
           <div className={classes.nameText}>{name ? name : <Skeleton />}</div>
           <div className={classes.subTextContainer}>
-            {rewardData && rewardData?.originalPrice && !outOfStock && (
+            {rewardData && rewardData.originalPrice && !outOfStock && (
               <div className={classnames(classes.discountLabel)}>
                 {getPercentOff(rewardData.originalPrice, rewardData.price)}{' '}
               </div>
