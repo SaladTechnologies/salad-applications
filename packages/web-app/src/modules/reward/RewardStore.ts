@@ -343,6 +343,14 @@ export class RewardStore {
                   onClick: () => window.open('https://support.salad.com/hc/en-us/articles/4405644006932', '_blank'),
                   type: 'error',
                 }
+              } else if (data.type === 'redemptions:notEnoughXp') {
+                notification = {
+                  category: NotificationMessageCategory.Error,
+                  title: 'Redemption Error',
+                  message: "This Salad account is too new to redeem. Please keep chopping with Salad and try again later.",
+                  autoClose: false,
+                  type: 'error',
+                }
               }
             }
             break
