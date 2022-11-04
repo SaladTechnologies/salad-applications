@@ -39,7 +39,7 @@ interface Props extends WithStyles<typeof styles> {
   onPantryClicked: (key: string) => void
 }
 
-const getImage = (key: string) => require(`../assets/${key}/complete.png`).default
+const getImage = (key: string) => require(`../assets/${key}/complete.png`)
 
 class _Pantry extends Component<Props> {
   getColumnPositions = (percent: number): number[] =>
