@@ -4,7 +4,7 @@ import classnames from 'classnames'
 import { Component } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import withStyles, { WithStyles } from 'react-jss'
-import { Divider, Head, InfoButton, P, SmartLink } from '../../../components'
+import { Divider, Head, InfoButton, P, SmartLink, MustUpdateNotificationBanner } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { withLogin } from '../../auth-views'
 import { RewardVaultItem, RewardVaultStatus } from '../../vault/models'
@@ -257,115 +257,118 @@ class _VaultList extends Component<Props, State> {
     const { classes } = this.props
     const { dropdown, redemptions } = this.state
     return (
-      <div className={classes.container}>
-        <Head title="Reward Vault" />
-        <div className={classes.listContainer}>
-          <div className={classes.innerListContainer}>
-            {redemptions && redemptions.length > 0 && (
-              <>
-                <div className={classnames(classes.gridContainer, classes.gridContainerSticky)}>
-                  <div className={classes.grid}>
-                    <VaultListHeaderItem
-                      active={dropdown['name'].active}
-                      header="Reward"
-                      onClick={this.sortRedemptionsByName}
-                      reverse={dropdown['name'].reverse}
-                    />
-                    <VaultListHeaderItem
-                      active={dropdown['status'].active}
-                      header="Status"
-                      onClick={this.sortRedemptionsByStatus}
-                      reverse={dropdown['status'].reverse}
-                    />
-                    <VaultListHeaderItem
-                      active={dropdown['price'].active}
-                      header="Price"
-                      onClick={this.sortRedemptionsByPrice}
-                      reverse={dropdown['price'].reverse}
-                    />
-                    <VaultListHeaderItem
-                      active={dropdown['redeemDate'].active}
-                      header="Date"
-                      onClick={this.sortRedemptionsByRedeemedDate}
-                      reverse={dropdown['redeemDate'].reverse}
-                    />
-                  </div>
-                  <Divider className={classes.tableHeaderDivider} />
-                </div>
-
-                {redemptions.map((reward) => {
-                  const { id, name, price, timestamp, code, status } = reward
-                  const incompleteItem = status === RewardVaultStatus.FAILED
-                  const isPending = status === RewardVaultStatus.CREATED
-                  const isCancelled = status === RewardVaultStatus.FAILED
-
-                  return (
-                    <div key={id} className={classes.gridContainer}>
-                      <div className={classnames(classes.grid)}>
-                        <div className={incompleteItem ? classes.incompleteItem : ''}>
-                          <div className={classes.gridColumnContent}>
-                            <div className={classes.labelNameContainer}>
-                              <label className={classes.label}>{name}</label>
-                            </div>
-                            {code && !code.startsWith('https') && (
-                              <P>
-                                {code}
-                                <CopyToClipboard text={code}>
-                                  <FontAwesomeIcon className={classes.iconButton} icon={faClipboard} size={'lg'} />
-                                </CopyToClipboard>
-                              </P>
-                            )}
-                            {code && code.startsWith('https') && (
-                              <P>
-                                <SmartLink to={code}>Redeem Reward</SmartLink>
-                              </P>
-                            )}
-                            {isCancelled && (
-                              <P>Order Canceled. Don't worry though, we've refunded your Salad balance!</P>
-                            )}
-                          </div>
-                        </div>
-                        <div className={classes.statusContainer}>
-                          <div>
-                            <label
-                              className={classnames(classes.status, {
-                                [classes.statusPending]: isPending,
-                                [classes.statusCancelled]: isCancelled,
-                              })}
-                            >
-                              {convertStatus(status).toUpperCase()}
-                            </label>
-                            {isCancelled && (
-                              <SmartLink
-                                className={classes.getHelpLink}
-                                to="https://support.salad.com/hc/en-us/articles/360028479532-I-redeemed-an-item-and-haven-t-gotten-it-yet-What-s-going-on-"
-                              >
-                                Get help
-                              </SmartLink>
-                            )}
-                          </div>
-                          {isPending && (
-                            <InfoButton
-                              text={
-                                "Your Order Has Been Received And Is Being Processed. This Usually Takes A Few Seconds, But It May Take Up To 40+ Hours. When We Receive Your Code, It Will Appear Here, And In An Email That We'll Send To You."
-                              }
-                            />
-                          )}
-                        </div>
-                        <div className={classnames({ [classes.incompleteItem]: incompleteItem })}>
-                          <label className={classes.label}>${price?.toFixed(2)}</label>
-                        </div>
-                        <div className={classnames({ [classes.incompleteItem]: incompleteItem })}>
-                          <label className={classes.label}>{timestamp?.toLocaleDateString()}</label>
-                        </div>
-                      </div>
-                      <Divider />
+      <div>
+        <MustUpdateNotificationBanner />
+        <div className={classes.container}>
+          <Head title="Reward Vault" />
+          <div className={classes.listContainer}>
+            <div className={classes.innerListContainer}>
+              {redemptions && redemptions.length > 0 && (
+                <>
+                  <div className={classnames(classes.gridContainer, classes.gridContainerSticky)}>
+                    <div className={classes.grid}>
+                      <VaultListHeaderItem
+                        active={dropdown['name'].active}
+                        header="Reward"
+                        onClick={this.sortRedemptionsByName}
+                        reverse={dropdown['name'].reverse}
+                      />
+                      <VaultListHeaderItem
+                        active={dropdown['status'].active}
+                        header="Status"
+                        onClick={this.sortRedemptionsByStatus}
+                        reverse={dropdown['status'].reverse}
+                      />
+                      <VaultListHeaderItem
+                        active={dropdown['price'].active}
+                        header="Price"
+                        onClick={this.sortRedemptionsByPrice}
+                        reverse={dropdown['price'].reverse}
+                      />
+                      <VaultListHeaderItem
+                        active={dropdown['redeemDate'].active}
+                        header="Date"
+                        onClick={this.sortRedemptionsByRedeemedDate}
+                        reverse={dropdown['redeemDate'].reverse}
+                      />
                     </div>
-                  )
-                })}
-              </>
-            )}
-            {(!redemptions || redemptions.length === 0) && <P>Nothing here yet, go redeem something!</P>}
+                    <Divider className={classes.tableHeaderDivider} />
+                  </div>
+
+                  {redemptions.map((reward) => {
+                    const { id, name, price, timestamp, code, status } = reward
+                    const incompleteItem = status === RewardVaultStatus.FAILED
+                    const isPending = status === RewardVaultStatus.CREATED
+                    const isCancelled = status === RewardVaultStatus.FAILED
+
+                    return (
+                      <div key={id} className={classes.gridContainer}>
+                        <div className={classnames(classes.grid)}>
+                          <div className={incompleteItem ? classes.incompleteItem : ''}>
+                            <div className={classes.gridColumnContent}>
+                              <div className={classes.labelNameContainer}>
+                                <label className={classes.label}>{name}</label>
+                              </div>
+                              {code && !code.startsWith('https') && (
+                                <P>
+                                  {code}
+                                  <CopyToClipboard text={code}>
+                                    <FontAwesomeIcon className={classes.iconButton} icon={faClipboard} size={'lg'} />
+                                  </CopyToClipboard>
+                                </P>
+                              )}
+                              {code && code.startsWith('https') && (
+                                <P>
+                                  <SmartLink to={code}>Redeem Reward</SmartLink>
+                                </P>
+                              )}
+                              {isCancelled && (
+                                <P>Order Canceled. Don't worry though, we've refunded your Salad balance!</P>
+                              )}
+                            </div>
+                          </div>
+                          <div className={classes.statusContainer}>
+                            <div>
+                              <label
+                                className={classnames(classes.status, {
+                                  [classes.statusPending]: isPending,
+                                  [classes.statusCancelled]: isCancelled,
+                                })}
+                              >
+                                {convertStatus(status).toUpperCase()}
+                              </label>
+                              {isCancelled && (
+                                <SmartLink
+                                  className={classes.getHelpLink}
+                                  to="https://support.salad.com/hc/en-us/articles/360028479532-I-redeemed-an-item-and-haven-t-gotten-it-yet-What-s-going-on-"
+                                >
+                                  Get help
+                                </SmartLink>
+                              )}
+                            </div>
+                            {isPending && (
+                              <InfoButton
+                                text={
+                                  "Your Order Has Been Received And Is Being Processed. This Usually Takes A Few Seconds, But It May Take Up To 40+ Hours. When We Receive Your Code, It Will Appear Here, And In An Email That We'll Send To You."
+                                }
+                              />
+                            )}
+                          </div>
+                          <div className={classnames({ [classes.incompleteItem]: incompleteItem })}>
+                            <label className={classes.label}>${price?.toFixed(2)}</label>
+                          </div>
+                          <div className={classnames({ [classes.incompleteItem]: incompleteItem })}>
+                            <label className={classes.label}>{timestamp?.toLocaleDateString()}</label>
+                          </div>
+                        </div>
+                        <Divider />
+                      </div>
+                    )
+                  })}
+                </>
+              )}
+              {(!redemptions || redemptions.length === 0) && <P>Nothing here yet, go redeem something!</P>}
+            </div>
           </div>
         </div>
       </div>
