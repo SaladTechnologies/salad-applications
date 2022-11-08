@@ -2,7 +2,7 @@ import classnames from 'classnames'
 import { Component, ComponentType } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Route } from 'react-router'
-import { Button, Divider, Head, LinkListUnstyled, MenuTitle } from '.'
+import { Button, Divider, Head, LinkListUnstyled, MenuTitle, MustUpdateNotificationBanner } from '.'
 import { DesktopRoute } from '../DesktopRoute'
 import { IconArrowLeft } from '../modules/reward-views/components/assets'
 import { styles } from './SettingsPage.styles'
@@ -126,6 +126,7 @@ class _Settings extends Component<Props> {
           )}
         </div>
         <div className={classnames(classes.settings)}>
+          <MustUpdateNotificationBanner />
           {/* Adds each path */}
           {menuItems?.map((x) =>
             x.desktopOnly ? (
