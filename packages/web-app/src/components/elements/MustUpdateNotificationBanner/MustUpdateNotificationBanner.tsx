@@ -5,7 +5,7 @@ import { SaladTheme } from '../../../SaladTheme'
 const styles = (theme: SaladTheme) => ({
   container: {
     fontSize: theme.mediumLarge,
-    padding: 24,
+    padding: '24px 24px 0px',
     backgroundColor: theme.red,
     color: '#FFFFFF',
     fontFamily: 'Mallory',
