@@ -181,14 +181,14 @@ class _StorefrontHeroItem extends Component<Props> {
               {heading && <div className={classes.nameText}>{heading}</div>}
               {subheading !== undefined && (
                 <div className={classes.priceContainer}>
-                  {reward && reward.originalPrice && !outOfStock && (
+                  {reward && reward.originalPrice && !outOfStock && !lowQuantity && (
                     <div className={classnames(classes.discountLabel)}>
                       {getPercentOff(reward.originalPrice, reward.price)}{' '}
                     </div>
                   )}
-                  {reward && reward.originalPrice && !outOfStock ? (
+                  {reward && reward.originalPrice && !outOfStock && !lowQuantity ? (
                     <div className={classes.priceText}>
-                      <span className={classes.originalPrice}>${reward.originalPrice}</span> ${reward.price}
+                      <span className={classes.originalPrice}>${reward.originalPrice.toFixed(2)}</span> ${reward.price}
                     </div>
                   ) : (
                     <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
@@ -200,7 +200,7 @@ class _StorefrontHeroItem extends Component<Props> {
                       Out of Stock
                     </div>
                   )}
-                  {lowQuantity && !outOfStock && !reward?.originalPrice && (
+                  {lowQuantity && !outOfStock && (
                     <div className={classnames(classes.priceText, classes.stockLabel, classes.lowQuanityLabel)}>
                       {`${quantity} Remaining`}
                     </div>
