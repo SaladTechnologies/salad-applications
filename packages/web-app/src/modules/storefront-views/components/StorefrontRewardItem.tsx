@@ -144,12 +144,12 @@ class _StorefrontRewardItem extends Component<Props> {
         <div className={classes.textContainer}>
           <div className={classes.nameText}>{name ? name : <Skeleton />}</div>
           <div className={classes.subTextContainer}>
-            {rewardData && rewardData.originalPrice && !outOfStock && (
+            {rewardData && rewardData.originalPrice && !outOfStock && !lowQuantity && (
               <div className={classnames(classes.discountLabel)}>
                 {getPercentOff(rewardData.originalPrice, rewardData.price)}{' '}
               </div>
             )}
-            {originalPrice && !outOfStock ? (
+            {originalPrice && !outOfStock && !lowQuantity ? (
               <div className={classes.priceText}>
                 <span className={classes.originalPrice}>{originalPrice}</span> {price}
               </div>
@@ -163,7 +163,7 @@ class _StorefrontRewardItem extends Component<Props> {
                 Out of Stock
               </div>
             )}
-            {lowQuantity && !outOfStock && !originalPrice && (
+            {lowQuantity && !outOfStock && (
               <div className={classnames(classes.priceText, classes.stockLabel, classes.lowQuanityLabel)}>
                 {`${quantity} Remaining`}
               </div>
