@@ -10,7 +10,7 @@ import type { NativeStore } from '../machine'
 import type { AntiVirusSoftware } from './models'
 import { antivirusInfo, getAntiVirusSoftware, getZendeskAVData } from './utils'
 
-const defaultBeaconId = '29fdaae4-715f-48dc-b93e-5552ef031abc'
+const defaultBeaconId = 'c2cd3598-83e1-4575-8183-fa9047095fb3'
 
 export class Zendesk {
   private static injected: boolean = false
