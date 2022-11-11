@@ -38,12 +38,12 @@ class _MustUpdateNotificationBanner extends Component<WithStyles<typeof styles>>
               .
             </p>
             <p>
-              The legacy version of the Salad app you are using will stop working on <b>December 1st</b>. Make sure to
-              update to the latest version of the Salad widget to continue earning. The Salad widget{' '}
+              The legacy version of the Salad app you are using will stop working soon. Make sure to update to the
+              latest version of the Salad desktop app to continue earning. Salad 1.0{' '}
               <a target="_blank" rel="noreferrer" className={classes.link} href="https://salad.com/blog/salad-1-0/">
                 performs better
               </a>{' '}
-              then our legacy app and supports new features like the{' '}
+              than our legacy app and supports new features like the{' '}
               <a
                 target="_blank"
                 rel="noreferrer"
