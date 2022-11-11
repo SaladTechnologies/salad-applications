@@ -7,7 +7,7 @@ import { AuthStore } from '../auth'
 import { AntiVirusSoftware } from '../onboarding/models'
 import { antivirusInfo, getAVData } from '../onboarding/utils'
 
-const defaultHelpScoutBeaconId = '29fdaae4-715f-48dc-b93e-5552ef031abc'
+const defaultHelpScoutBeaconId = 'c2cd3598-83e1-4575-8183-fa9047095fb3'
 
 export class HelpScoutStore {
   @observable
