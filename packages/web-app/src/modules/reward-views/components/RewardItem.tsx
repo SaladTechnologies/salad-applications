@@ -100,6 +100,7 @@ const styles = (theme: SaladTheme) => ({
     paddingRight: 10,
     marginRight: 8,
     marginTop: 3,
+    alignSelf: 'flex-start',
   },
   originalPrice: {
     textDecoration: 'line-through',
@@ -118,6 +119,8 @@ class _RewardItem extends Component<Props> {
     const { reward, onClick, classes } = this.props
     let outOfStock = reward?.quantity === 0
     let lowQuanity = reward?.quantity !== undefined && reward?.quantity > 0
+    const shouldShowDiscount = reward && reward.originalPrice && !outOfStock && !lowQuanity
+
     return (
       <div key={reward?.id} className={classnames(classes.container)} onClick={onClick}>
         <AspectRatio ratio={'323/433'}>
@@ -137,14 +140,14 @@ class _RewardItem extends Component<Props> {
         <div className={classes.textContainer}>
           <div className={classes.nameText}>{reward ? reward.name : <Skeleton />}</div>
           <div className={classes.subTextContainer}>
-            {reward && reward.originalPrice && !outOfStock && (
+            {shouldShowDiscount && (
               <div className={classnames(classes.discountLabel)}>
                 {getPercentOff(reward.originalPrice, reward.price)}{' '}
               </div>
             )}
-            {reward && reward.originalPrice && !outOfStock ? (
+            {shouldShowDiscount ? (
               <div className={classes.priceText}>
-                <span className={classes.originalPrice}>{reward.originalPrice}</span> ${reward.price}
+                <span className={classes.originalPrice}>${reward.originalPrice}</span> ${reward.price}
               </div>
             ) : (
               <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
@@ -156,7 +159,7 @@ class _RewardItem extends Component<Props> {
                 Out of Stock
               </div>
             )}
-            {lowQuanity && !reward?.originalPrice && (
+            {lowQuanity && (
               <div className={classnames(classes.priceText, classes.stockLabel, classes.lowQuanityLabel)}>
                 {`${reward?.quantity} Remaining`}
               </div>
