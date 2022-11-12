@@ -92,7 +92,8 @@ const styles = (theme: SaladTheme) => ({
     letterSpacing: 1,
     paddingLeft: 5,
     paddingRight: 10,
-    marginRight: 8,
+    marginRight: 10,
+    marginBottom: 3,
     marginTop: 3,
   },
   originalPrice: {
@@ -169,7 +170,7 @@ class _RewardHeaderBar extends Component<Props> {
             <div className={classes.priceContainer}>
               {reward && reward.originalPrice && !outOfStock ? (
                 <div className={classes.priceText}>
-                  <span className={classes.originalPrice}>${reward.originalPrice}</span> ${reward.price}
+                  <span className={classes.originalPrice}>${reward.originalPrice.toFixed(2)}</span> ${reward.price}
                 </div>
               ) : (
                 <div
@@ -191,7 +192,7 @@ class _RewardHeaderBar extends Component<Props> {
                   Out of Stock
                 </div>
               )}
-              {lowQuanity && !reward?.originalPrice && (
+              {lowQuanity && (
                 <div className={classnames(classes.priceText, classes.stockLabel, classes.lowQuanityLabel)}>
                   {`${reward?.quantity} Remaining`}
                 </div>
