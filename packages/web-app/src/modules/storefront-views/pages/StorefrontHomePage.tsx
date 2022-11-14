@@ -1,6 +1,7 @@
 import { Component } from 'react'
 import withStyles, { WithStyles } from 'react-jss'
 import { Redirect, Route, Switch } from 'react-router'
+import { MustUpdateNotificationBanner } from '../../../components'
 import { SaladTheme } from '../../../SaladTheme'
 import { RewardSearchBarContainer, RewardSearchResultContainer } from '../../reward-views'
 import { StorefrontPageContainer } from '../StorefrontPageContainer'
@@ -45,6 +46,7 @@ class _StorefrontHomePage extends Component<WithStyles<typeof styles>> {
       <div className={classes.container}>
         <div className={classes.appContainer}>
           <RewardSearchBarContainer />
+          <MustUpdateNotificationBanner />
           <div className={classes.main}>
             <Switch>
               <Route exact path="/" component={StorefrontPageContainer} />
