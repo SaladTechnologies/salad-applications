@@ -170,7 +170,8 @@ class _RewardHeaderBar extends Component<Props> {
             <div className={classes.priceContainer}>
               {reward && reward.originalPrice && !outOfStock ? (
                 <div className={classes.priceText}>
-                  <span className={classes.originalPrice}>${reward.originalPrice.toFixed(2)}</span> ${reward.price}
+                  <span className={classes.originalPrice}>${reward.originalPrice.toFixed(2)}</span> $
+                  {reward.price.toFixed(2)}
                 </div>
               ) : (
                 <div
