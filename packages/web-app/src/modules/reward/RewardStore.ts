@@ -347,7 +347,7 @@ export class RewardStore {
                 notification = {
                   category: NotificationMessageCategory.Error,
                   title: 'Redemption Error',
-                  message: "This Salad account is too new to redeem. Please keep chopping with Salad and try again later.",
+                  message: "This Salad account is too new to redeem. You need 1440 xp to redeem rewards. Keep chopping and try again later.",
                   autoClose: false,
                   type: 'error',
                 }
