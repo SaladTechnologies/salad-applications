@@ -32,6 +32,7 @@ import { SaladCardStore } from './modules/salad-card/SaladCardStore'
 import { SeasonsStore } from './modules/seasons'
 import { StartButtonUIStore } from './modules/start-button/StartButtonUIStore'
 import { StorefrontStore } from './modules/storefront/StorefrontStore'
+import { TermsAndConditionsStore } from './modules/terms-and-conditions'
 import { VaultStore } from './modules/vault'
 import { VersionStore } from './modules/versions'
 import { ExperienceStore } from './modules/xp'
@@ -62,6 +63,7 @@ export class RootStore {
   public appLoading: boolean = true
   public appStartTime: Date = new Date()
   public readonly auth: AuthStore
+  public readonly termsAndConditions: TermsAndConditionsStore
   public readonly autoStart: AutoStartStore
   public readonly analytics: AnalyticsStore
   public readonly routing: RouterStore
@@ -97,6 +99,7 @@ export class RootStore {
   constructor(axios: AxiosInstance, private readonly featureManager: FeatureManager) {
     this.routing = new RouterStore()
     this.auth = new AuthStore(axios, this.routing)
+    this.termsAndConditions = new TermsAndConditionsStore(axios, this)
     this.notifications = new NotificationStore(this)
     this.xp = new ExperienceStore(axios)
     this.native = new NativeStore(this)

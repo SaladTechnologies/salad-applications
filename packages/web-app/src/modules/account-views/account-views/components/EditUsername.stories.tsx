@@ -8,6 +8,7 @@ storiesOf('Modules/Account/AccountViews/components/EditUsername', module).add('d
     lastSeenApplicationVersion: '2020-12-10',
     username: 'LUKE',
     viewedReferralOnboarding: false,
+    pendingTermsVersion: '',
   }
   return (
     <div style={{ backgroundColor: '#0A2133' }}>
