@@ -101,6 +101,7 @@ const styles = (theme: SaladTheme) => ({
     paddingRight: 10,
     marginRight: 8,
     marginTop: 3,
+    alignSelf: 'flex-start',
   },
   originalPrice: {
     textDecoration: 'line-through',
