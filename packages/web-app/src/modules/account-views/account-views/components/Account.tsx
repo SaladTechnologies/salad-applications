@@ -74,7 +74,6 @@ interface Props extends WithStyles<typeof styles> {
   disconnectPayPalId: () => void
   isPayPalIdDisconnectLoading: boolean
   checkPayPalId: () => void
-  shouldShowUpdateAccountTermsAndConditions: boolean
   isSubmitting: boolean
   acceptedTermsAndConditions: boolean
   onToggleAcceptTermsAndConditions: (accepted: boolean) => void
@@ -129,13 +128,13 @@ class _Account extends Component<Props, State> {
       payPalId,
       disconnectPayPalId,
       isPayPalIdDisconnectLoading,
-      shouldShowUpdateAccountTermsAndConditions,
       isSubmitting,
       acceptedTermsAndConditions,
       onSubmitTermsAndConditions,
       onToggleAcceptTermsAndConditions,
     } = this.props
 
+    const shouldShowUpdateAccountTermsAndConditions = !!profile?.pendingTermsVersion
     const handleSubmitButtonReset = () => {
       isUserNameSubmitSuccess && onResetUsernameSuccess()
       isMinecraftUserNameSubmitSuccess && onResetMinecraftUsernameSuccess()

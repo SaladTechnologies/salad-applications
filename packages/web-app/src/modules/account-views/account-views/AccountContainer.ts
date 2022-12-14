@@ -22,7 +22,6 @@ const mapStoreToProps = (store: RootStore): any => ({
   loadPayPalId: store.profile.loadPayPalId,
   disconnectPayPalId: store.profile.disconnectPayPalId,
   isPayPalIdDisconnectLoading: store.profile.isPayPalIdDisconnectLoading,
-  shouldShowUpdateAccountTermsAndConditions: !!store.profile.currentProfile?.pendingTermsVersion,
   isSubmitting: store.termsAndConditions.isSubmitting,
   acceptedTermsAndConditions: store.termsAndConditions.acceptedTermsAndConditions,
   onSubmitTermsAndConditions: store.termsAndConditions.submitTermsAndConditions,
