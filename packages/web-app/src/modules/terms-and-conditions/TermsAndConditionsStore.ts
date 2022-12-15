@@ -27,11 +27,6 @@ export class TermsAndConditionsStore {
         }})
 
       this.isSubmitting = false
-
-      if (!response.data) {
-        throw new Error("Accept Terms and Conditions failed")
-      }
-
       this.store.profile.setProfileData(response.data)
       this.acceptedTermsAndConditions = false
     } catch (error) {
