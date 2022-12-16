@@ -22,6 +22,10 @@ const mapStoreToProps = (store: RootStore): any => ({
   loadPayPalId: store.profile.loadPayPalId,
   disconnectPayPalId: store.profile.disconnectPayPalId,
   isPayPalIdDisconnectLoading: store.profile.isPayPalIdDisconnectLoading,
+  isSubmitting: store.termsAndConditions.isSubmitting,
+  acceptedTermsAndConditions: store.termsAndConditions.acceptedTermsAndConditions,
+  onSubmitTermsAndConditions: store.termsAndConditions.submitTermsAndConditions,
+  onToggleAcceptTermsAndConditions: store.termsAndConditions.toggleAcceptTermsAndConditions,
 })
 
 export const AccountContainer = connect(mapStoreToProps, Account)

@@ -76,7 +76,7 @@
     "@fortawesome/free-regular-svg-icons": "6.1.2",
     "@fortawesome/free-solid-svg-icons": "6.1.2",
     "@fortawesome/react-fontawesome": "0.2.0",
-    "@saladtechnologies/garden-components": "1.0.80",
+    "@saladtechnologies/garden-components": "1.0.86",
     "@saladtechnologies/garden-fonts": "1.0.2",
     "@saladtechnologies/garden-icons": "1.0.9",
     "@saladtechnologies/salad-grpc-salad-bowl": "file:../../libs/saladtechnologies-grpc-salad-bowl-0.0.2-alpha1.tgz",

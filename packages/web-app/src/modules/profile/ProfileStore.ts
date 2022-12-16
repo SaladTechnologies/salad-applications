@@ -61,6 +61,11 @@ export class ProfileStore {
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
+  @action
+  setProfileData = (profileData: Profile) => {
+    this.currentProfile = profileData
+  }
+
   @action.bound
   loadProfile = flow(function* (this: ProfileStore) {
     try {

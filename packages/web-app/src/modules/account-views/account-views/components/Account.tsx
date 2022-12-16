@@ -6,6 +6,7 @@ import { Head } from '../../../../components'
 import { DefaultTheme, SaladTheme } from '../../../../SaladTheme'
 import { withLogin } from '../../../auth-views'
 import { Avatar, Profile } from '../../../profile/models'
+import { AccountTermsAndConditionsUpdate } from './AccountTermsAndConditionsUpdate'
 import { PayPalLoginButton } from './PayPalLoginButton'
 
 const styles = (theme: SaladTheme) => ({
@@ -73,6 +74,10 @@ interface Props extends WithStyles<typeof styles> {
   disconnectPayPalId: () => void
   isPayPalIdDisconnectLoading: boolean
   checkPayPalId: () => void
+  isSubmitting: boolean
+  acceptedTermsAndConditions: boolean
+  onToggleAcceptTermsAndConditions: (accepted: boolean) => void
+  onSubmitTermsAndConditions: () => void
 }
 
 let intervalId: NodeJS.Timer
@@ -123,8 +128,13 @@ class _Account extends Component<Props, State> {
       payPalId,
       disconnectPayPalId,
       isPayPalIdDisconnectLoading,
+      isSubmitting,
+      acceptedTermsAndConditions,
+      onSubmitTermsAndConditions,
+      onToggleAcceptTermsAndConditions,
     } = this.props
 
+    const shouldShowUpdateAccountTermsAndConditions = !!profile?.pendingTermsVersion
     const handleSubmitButtonReset = () => {
       isUserNameSubmitSuccess && onResetUsernameSuccess()
       isMinecraftUserNameSubmitSuccess && onResetMinecraftUsernameSuccess()
@@ -150,6 +160,14 @@ class _Account extends Component<Props, State> {
         <Scrollbars>
           <Layout title="Profile">
             <Head title="Profile" />
+            {shouldShowUpdateAccountTermsAndConditions && (
+              <AccountTermsAndConditionsUpdate
+                isSubmitting={isSubmitting}
+                acceptedTermsAndConditions={acceptedTermsAndConditions}
+                onSubmitTermsAndConditions={onSubmitTermsAndConditions}
+                onToggleAcceptTermsAndConditions={onToggleAcceptTermsAndConditions}
+              />
+            )}
             <div className={classes.fieldContainer}>
               <TextField
                 isSubmitting={isUserNameSubmitting}

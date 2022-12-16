@@ -6,6 +6,7 @@ export interface Profile {
     minecraftUsername?: string
   }
   lastSeenApplicationVersion: string | undefined
+  pendingTermsVersion: string | undefined
 }
 
 export interface Avatar {

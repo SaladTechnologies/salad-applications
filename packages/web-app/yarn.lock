@@ -2921,7 +2921,7 @@ __metadata:
     "@fortawesome/free-regular-svg-icons": 6.1.2
     "@fortawesome/free-solid-svg-icons": 6.1.2
     "@fortawesome/react-fontawesome": 0.2.0
-    "@saladtechnologies/garden-components": 1.0.80
+    "@saladtechnologies/garden-components": 1.0.86
     "@saladtechnologies/garden-fonts": 1.0.2
     "@saladtechnologies/garden-icons": 1.0.9
     "@saladtechnologies/salad-grpc-salad-bowl": "file:../../libs/saladtechnologies-grpc-salad-bowl-0.0.2-alpha1.tgz"
@@ -3019,24 +3019,24 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@saladtechnologies/garden-components@npm:1.0.80":
-  version: 1.0.80
-  resolution: "@saladtechnologies/garden-components@npm:1.0.80"
+"@saladtechnologies/garden-components@npm:1.0.86":
+  version: 1.0.86
+  resolution: "@saladtechnologies/garden-components@npm:1.0.86"
   peerDependencies:
     "@emotion/react": 11.x
     "@emotion/styled": 11.x
     "@saladtechnologies/garden-fonts": 1.x
     "@saladtechnologies/garden-icons": 1.x
-    luxon: 2.x
+    luxon: 3.x
     prop-types: 15.x
-    react: 17.x || 18.x
+    react: 18.x
     react-custom-scrollbars: 4.x
-    react-dom: 17.x || 18.x
+    react-dom: 18.x
     react-hook-form: 7.x
-    react-intl: 5.x
+    react-intl: 6.x
     react-range: 1.x
-    react-responsive: 8.x
-  checksum: 04b232dc3b2d8172c3385292bafc923073390bffc19eaa7b33b9b0d5a7e7f9b4bcc781c7f95045f889498ba352c1dd7c40d9f073ab6bcda6dee5297cb6ba7739
+    react-responsive: 9.x
+  checksum: b41b5bb2fd04f0a8adebb5feefa80240df0aaac5a10955e4916f0b20649afbdfa846beda18c262bf67296afa7ec606967416f545d948a080677e72e6e1451461
   languageName: node
   linkType: hard
 
