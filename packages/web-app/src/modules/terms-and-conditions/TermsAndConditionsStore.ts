@@ -1,6 +1,6 @@
 import { AxiosInstance, AxiosResponse } from 'axios'
 import { action, flow, observable } from 'mobx'
-import { RootStore } from '../../Store'
+import { ProfileStore } from '../profile'
 import { Profile } from '../profile/models'
 
 export class TermsAndConditionsStore {
@@ -14,20 +14,20 @@ export class TermsAndConditionsStore {
 
   constructor(
     private readonly axios: AxiosInstance,
-    private readonly store: RootStore,
+    private readonly profile: ProfileStore,
     ) {}
 
   @action.bound
   public submitTermsAndConditions = flow(function* (this: TermsAndConditionsStore) {
     try {
       this.isSubmitting = true
-      const response: AxiosResponse<Profile> = yield this.axios.post(`/api/v1/profile/terms`,  this.store.profile.currentProfile?.pendingTermsVersion,  {
+      const response: AxiosResponse<Profile> = yield this.axios.post(`/api/v1/profile/terms`,  this.profile.currentProfile?.pendingTermsVersion,  {
         headers: {
           'Content-Type': 'application/json',
         }})
 
       this.isSubmitting = false
-      this.store.profile.setProfileData(response.data)
+      this.profile.setProfileData(response.data)
       this.acceptedTermsAndConditions = false
     } catch (error) {
       this.isSubmitting = false
