@@ -186,7 +186,11 @@ export class RootStore {
         this.refresh.refreshData(),
         this.profile.loadPayPalId(),
         this.saladCard.loadSaladCard(),
-        this.helpScout.login(profile.username, profile.email),
+        this.helpScout.login({
+          name: profile.username,
+          email: profile.email,
+          lifetimeXP: this.xp.currentXp
+        }),
         Promise.race([this.saladBowl.login(), delay(10000)]),
       ])
 

@@ -6,6 +6,7 @@ import { AnalyticsStore } from '../analytics'
 import { AuthStore } from '../auth'
 import { AntiVirusSoftware } from '../onboarding/models'
 import { antivirusInfo, getAVData } from '../onboarding/utils'
+import { HelpScoutIdentifyUser } from './models/interfaces'
 
 const defaultHelpScoutBeaconId = '29fdaae4-715f-48dc-b93e-5552ef031abc'
 
@@ -50,9 +51,12 @@ export class HelpScoutStore {
     return signature || undefined
   }
 
-  async login(username: string, email: string) {
+  async login(user: HelpScoutIdentifyUser) {
     if (window.Beacon) {
-      window.Beacon('identify', { name: username, email, signature: await this.getSignature(defaultHelpScoutBeaconId) })
+      window.Beacon('identify', {
+        ...user,
+        signature: await this.getSignature(defaultHelpScoutBeaconId),
+      })
     }
   }
 

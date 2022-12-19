@@ -1,3 +1,5 @@
+import { HelpScoutIdentifyUser } from './interfaces'
+
 declare function Beacon(method: 'init', beaconId: string): void
 declare function Beacon(method: 'destroy'): void
 declare function Beacon(method: 'open'): void
@@ -7,7 +9,7 @@ declare function Beacon(method: 'search', query: string): void
 declare function Beacon(method: 'suggest'): void
 declare function Beacon(method: 'article', articleId: string, options?: { type: 'modal' | 'sidebar' }): void
 declare function Beacon(method: 'navigate', route: string): void
-declare function Beacon(method: 'identify', userObject: { name: string; email: string; signature?: string }): void
+declare function Beacon(method: 'identify', userObject: HelpScoutIdentifyUser): void
 declare function Beacon(method: 'prefill', formObject: {}): void
 declare function Beacon(method: 'reset'): void
 declare function Beacon(method: 'logout', options?: { endActiveChat: true }): void
