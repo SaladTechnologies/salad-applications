@@ -5,21 +5,18 @@ import { RootStore } from '../../Store'
 import { AccountContainer } from '../account-views/account-views'
 import { ReferralSettingsContainer } from '../account-views/referral-views'
 import { BonusPageContainer } from '../bonus-views'
-import { CurrentSeasonPageContainer } from '../seasons-views'
 import { DesktopSettingsContainer } from './desktop-settings-views'
 
 const mapStoreToProps = (store: RootStore): any => {
   const menuItems: MenuItem[] = [
     { url: '/account/summary', text: 'Account', component: AccountContainer },
     { url: '/account/referrals', text: 'Referrals', component: ReferralSettingsContainer },
-    { url: '/account/seasons', text: 'Seasons', component: CurrentSeasonPageContainer, divider: true },
     { url: '/account/bonuses', text: 'Bonuses', component: BonusPageContainer },
   ]
 
   const nativeMenuItems: MenuItem[] = [
     { url: '/account/summary', text: 'Account', component: AccountContainer },
     { url: '/account/referrals', text: 'Referrals', component: ReferralSettingsContainer },
-    { url: '/account/seasons', text: 'Seasons', component: CurrentSeasonPageContainer },
     { url: '/account/bonuses', text: 'Bonuses', component: BonusPageContainer },
     {
       url: '/account/desktop-settings',
