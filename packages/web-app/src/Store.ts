@@ -99,7 +99,6 @@ export class RootStore {
   constructor(axios: AxiosInstance, private readonly featureManager: FeatureManager) {
     this.routing = new RouterStore()
     this.auth = new AuthStore(axios, this.routing)
-    this.termsAndConditions = new TermsAndConditionsStore(axios, this)
     this.notifications = new NotificationStore(this)
     this.xp = new ExperienceStore(axios)
     this.native = new NativeStore(this)
@@ -108,6 +107,7 @@ export class RootStore {
 
     this.machine = new MachineStore(this, axios, featureManager)
     this.profile = new ProfileStore(this, axios)
+    this.termsAndConditions = new TermsAndConditionsStore(axios, this.profile)
     this.saladCard = new SaladCardStore(this, axios)
     this.rewards = new RewardStore(this, axios, this.profile, this.saladCard)
     this.analytics = new AnalyticsStore(this)
@@ -196,6 +196,10 @@ export class RootStore {
         }),
         Promise.race([this.saladBowl.login(), delay(10000)]),
       ])
+
+      if(profile.pendingTermsVersion) {
+        yield this.termsAndConditions.submitTermsAndConditions()
+      }
 
       this.finishInitialLoading()
       this.onboarding.showOnboardingIfNeeded()

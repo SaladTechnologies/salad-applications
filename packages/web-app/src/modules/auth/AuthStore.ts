@@ -172,7 +172,7 @@ export class AuthStore {
     }
   })
 
-  /** Called when a user enters their email address */
+  /** Called when a user submits his confirmation code */
   @action.bound
   public submitCode = flow(function* (this: AuthStore, code: string) {
     this.isSubmitSuccess = false
