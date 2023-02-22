@@ -46,7 +46,10 @@ const styles = (theme: SaladTheme) => ({
 
 export const _UpgradePage: FunctionComponent<WithStyles<typeof styles>> = ({ classes }) => {
   const handleDownloadSaladClick = () => {
-    window.location.href = 'https://salad.com/download'
+    const newTab = window.open('https://salad.com/download', '_blank')
+    if (newTab) {
+      newTab.focus()
+    }
   }
 
   return (
@@ -56,6 +59,7 @@ export const _UpgradePage: FunctionComponent<WithStyles<typeof styles>> = ({ cla
           It's time to upgrade
         </Text>
         <iframe
+          allowFullScreen
           className={classes.player}
           src="https://player.vimeo.com/video/771258052"
           title="video"
@@ -87,13 +91,22 @@ export const _UpgradePage: FunctionComponent<WithStyles<typeof styles>> = ({ cla
           </Text>
           <Text variant="baseM">
             Salad 1.0{' '}
-            <a className="link" href="https://salad.com/blog/salad-1-0/">
+            <a className="link" href="https://salad.com/blog/salad-1-0/" target="_blank" rel="noreferrer">
               performs better
             </a>{' '}
             than our legacy app and supports new features like the{' '}
-            <a href="https://salad.com/blog/container-workloads/">Salad Container Environment</a> and{' '}
-            <a href="https://salad.com/blog/high-bandwidth-jobs/">Bandwidth Sharing</a>. Salad is always getting better,{' '}
-            <a href="https://salad.com/download">update now</a>!
+            <a href="https://salad.com/blog/container-workloads/" target="_blank" rel="noreferrer">
+              Salad Container Environment
+            </a>{' '}
+            and{' '}
+            <a href="https://salad.com/blog/high-bandwidth-jobs/" target="_blank" rel="noreferrer">
+              Bandwidth Sharing
+            </a>
+            . Salad is always getting better,{' '}
+            <a href="https://salad.com/download" target="_blank" rel="noreferrer">
+              update now
+            </a>
+            !
           </Text>
         </div>
       </div>
