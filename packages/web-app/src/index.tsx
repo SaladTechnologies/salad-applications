@@ -23,7 +23,6 @@ import { createIntl, createIntlCache, RawIntlProvider } from 'react-intl'
 import { ThemeProvider as JSSThemeProvider } from 'react-jss'
 import { SkeletonTheme } from 'react-loading-skeleton'
 import { Router } from 'react-router-dom'
-import { App } from './App'
 import { createClient } from './axiosFactory'
 import { Head } from './components'
 import { config } from './config'
@@ -31,7 +30,7 @@ import { ErrorBoundary } from './ErrorBoundary'
 import { FeatureManagerProvider, UnleashFeatureManager } from './FeatureManager'
 import { DefaultTheme as JSSTheme } from './SaladTheme'
 import { createStore } from './Store'
-import { Tooltips } from './Tooltips'
+import { UpgradePage } from './components/UpgradePage'
 
 allSettled.shim()
 
@@ -111,18 +110,7 @@ setTimeout(() => {
                   {/* Default page title for any page that doesn't specify one */}
                   <Head title="Salad Technologies" />
                   <div>
-                    <Observer>
-                      {() => {
-                        return rootStore.appLoading ? (
-                          <LoadingScreen />
-                        ) : (
-                          <div>
-                            <Tooltips />
-                            <App history={history} />
-                          </div>
-                        )
-                      }}
-                    </Observer>
+                    <Observer>{() => (rootStore.native.isNative ? <UpgradePage /> : <LoadingScreen />)}</Observer>
                   </div>
                 </ErrorBoundary>
               </SkeletonTheme>
