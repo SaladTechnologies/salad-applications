@@ -54,6 +54,20 @@ const featureManager = new UnleashFeatureManager(config, undefined)
 
 setTimeout(() => {
   const rootStore = createStore(client, featureManager)
+
+  // redirect to the modern web-app as a part of upgrade
+  if (!rootStore.native.isNative) {
+    if (window.location.href.includes('rewards/19834a60-9ff7-4802-9018-7f4f1ee29ca4')) {
+      window.location.href = 'https://salad.com/store/rewards/19834a60-9ff7-4802-9018-7f4f1ee29ca4'
+      return
+    }
+    if (window.location.href.includes('settings/summary')) {
+      window.location.href = 'https://salad.com/account/summary'
+      return
+    }
+    window.location.href = 'https://salad.com/store'
+  }
+
   const routerHistory = createBrowserHistory({
     basename: '/',
   })
