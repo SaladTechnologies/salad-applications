@@ -3,6 +3,7 @@ import { Button, SvgIcon, Text } from '@saladtechnologies/garden-components'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
 import { ChevronRight, Download } from '@saladtechnologies/garden-icons'
+import { WindowBarContainer } from '../modules/home-views'
 
 const styles = (theme: SaladTheme) => ({
   upgradePageWrapper: {
@@ -18,6 +19,12 @@ const styles = (theme: SaladTheme) => ({
     textAlign: 'center',
     paddingLeft: '5%',
     paddingRight: '5%',
+  },
+  windowBarContainerWrapper: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
   },
   upgradePageContainer: {
     display: 'flex',
@@ -54,6 +61,9 @@ export const _UpgradePage: FunctionComponent<WithStyles<typeof styles>> = ({ cla
 
   return (
     <div className={classes.upgradePageWrapper}>
+      <div className={classes.windowBarContainerWrapper}>
+        <WindowBarContainer />
+      </div>
       <div className={classes.upgradePageContainer}>
         <Text as="h1" variant="headline">
           It's time to upgrade
