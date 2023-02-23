@@ -7,7 +7,7 @@ import { ErrorPageType } from '../../UIStore'
 import type { AnalyticsStore } from '../analytics'
 import type { AuthStore } from '../auth'
 import type { NativeStore } from '../machine'
-import type { AntiVirusSoftware } from './models'
+import type { AntiVirusSoftware, ZendeskIdentifyUser } from './models'
 import { antivirusInfo, getAntiVirusSoftware, getZendeskAVData } from './utils'
 
 const defaultBeaconId = '29fdaae4-715f-48dc-b93e-5552ef031abc'
@@ -237,7 +237,7 @@ export class Zendesk {
     }
   }
 
-  async login(username: string, email: string) {
+  async login(user: Exclude<ZendeskIdentifyUser, 'signature'>) {
     if (this.useZendesk) {
       if (!window.zE) {
         if (this.initializeRetryTimeout !== undefined) {
@@ -248,7 +248,7 @@ export class Zendesk {
         if (!Zendesk.injectionError) {
           this.initializeRetryTimeout = setTimeout(() => {
             this.initializeRetryTimeout = undefined
-            this.login(username, email)
+            this.login(user)
           }, 1000)
         }
 
@@ -261,11 +261,11 @@ export class Zendesk {
       try {
         window.zE('webWidget', 'prefill', {
           name: {
-            value: username,
+            value: user.name,
             readOnly: true,
           },
           email: {
-            value: email.toLocaleLowerCase(),
+            value: user.email.toLocaleLowerCase(),
             readOnly: true,
           },
         })
@@ -299,7 +299,7 @@ export class Zendesk {
       }
     } else {
       if (window.Beacon) {
-        window.Beacon('identify', { name: username, email, signature: await this.getSignature(defaultBeaconId) })
+        window.Beacon('identify', { ...user, signature: await this.getSignature(defaultBeaconId) })
       }
     }
   }

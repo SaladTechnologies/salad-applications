@@ -94,7 +94,6 @@ export class RewardStore {
       try {
         let res: AxiosResponse<RewardResource> = yield this.axios.get(`/api/v1/rewards/${rewardId}`)
         let reward: Reward = rewardFromResource(res.data)
-        console.log(reward)
         this.rewards.set(reward.id, reward)
       } catch (err) {
         throw err
