@@ -154,9 +154,9 @@ export class VersionStore {
 
   downloadLatestDesktop = () => {
     if (this.store.native.isNative) {
-      window.open('https://getsalad.io', '_blank')
+      window.open('https://salad.com/download', '_blank')
     } else {
-      window.open('https://getsalad.io', '_self')
+      window.open('https://salad.com/download', '_self')
     }
   }
 
