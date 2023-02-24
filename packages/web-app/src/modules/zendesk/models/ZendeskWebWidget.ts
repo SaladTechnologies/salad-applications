@@ -9,13 +9,19 @@ declare function Beacon(method: 'search', query: string): void
 declare function Beacon(method: 'suggest'): void
 declare function Beacon(method: 'article', articleId: string, options?: { type: 'modal' | 'sidebar' }): void
 declare function Beacon(method: 'navigate', route: string): void
-declare function Beacon(method: 'identify', userObject: { name: string; email: string; signature?: string }): void
+declare function Beacon(method: 'identify', userObject: ZendeskIdentifyUser): void
 declare function Beacon(method: 'prefill', formObject: {}): void
 declare function Beacon(method: 'reset'): void
 declare function Beacon(method: 'logout', options?: { endActiveChat: true }): void
 declare function Beacon(method: 'config', formObject: {}): void
 declare function Beacon(method: 'info'): void
 
+export interface ZendeskIdentifyUser {
+  name: string
+  lifetimeXP: number
+  email: string
+  signature?: string
+}
 export interface ZendeskWidget {
   (type: 'webWidget:on' | 'webWidget' | 'webWidget:get', command: string, payload?: any): void
   (type: 'webWidget', command: 'updateSettings', payload: ZendeskSettings): void
