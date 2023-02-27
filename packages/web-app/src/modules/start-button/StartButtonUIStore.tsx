@@ -90,7 +90,7 @@ export class StartButtonUIStore {
           : isNative && !saladBowlConnected
           ? notConnected
           : isAuthenticated
-          ? () => window.open('https://getsalad.io/', '_blank')
+          ? () => window.open('https://salad.com/download', '_blank')
           : handleLogin,
       hoverLabel: isAuthenticated && isRunning ? 'Stop' : undefined,
       onClickWithError:
