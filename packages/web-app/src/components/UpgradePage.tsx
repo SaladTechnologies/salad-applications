@@ -18,10 +18,9 @@ const send = (type: string) => {
       window.salad.platform === 'linux' ||
       window.salad.platform === 'win32')
 
-  if (!isNative) {
-    return
+  if (isNative) {
+    window.salad.dispatch(type, null)
   }
-  window.salad.dispatch(type, null)
 }
 
 const styles = (theme: SaladTheme) => ({
@@ -72,10 +71,7 @@ const styles = (theme: SaladTheme) => ({
 
 export const _UpgradePage: FunctionComponent<WithStyles<typeof styles>> = ({ classes }) => {
   const handleDownloadSaladClick = () => {
-    const newTab = window.open('https://salad.com/download', '_blank')
-    if (newTab) {
-      newTab.focus()
-    }
+    window.open('https://salad.com/download', '_blank')
   }
 
   return (
