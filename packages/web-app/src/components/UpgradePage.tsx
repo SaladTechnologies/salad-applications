@@ -60,8 +60,7 @@ export const _UpgradePage: FunctionComponent<WithStyles<typeof styles>> = ({ cla
     window.open('https://salad.com/download', '_blank')
   }
 
-  /** Sends a message to the native code */
-  const send = (type: string) => {
+  const sendToNative = (type: string) => {
     const isNative =
       window.salad &&
       (window.salad.platform === 'electron' ||
@@ -77,7 +76,11 @@ export const _UpgradePage: FunctionComponent<WithStyles<typeof styles>> = ({ cla
   return (
     <div className={classes.upgradePageWrapper}>
       <div className={classes.windowBarContainerWrapper}>
-        <WindowBar onClose={() => send(close)} onMaximize={() => send(maximize)} onMinimize={() => send(minimize)} />
+        <WindowBar
+          onClose={() => sendToNative(close)}
+          onMaximize={() => sendToNative(maximize)}
+          onMinimize={() => sendToNative(minimize)}
+        />
       </div>
       <div className={classes.upgradePageContainer}>
         <Text as="h1" variant="headline">
