@@ -3,7 +3,26 @@ import { Button, SvgIcon, Text } from '@saladtechnologies/garden-components'
 import withStyles, { WithStyles } from 'react-jss'
 import { SaladTheme } from '../SaladTheme'
 import { ChevronRight, Download } from '@saladtechnologies/garden-icons'
-import { WindowBarContainer } from '../modules/home-views'
+import { WindowBar } from '../modules/home-views/components/WindowBar'
+
+const minimize = 'minimize-window'
+const maximize = 'maximize-window'
+const close = 'close-window'
+
+/** Sends a message to the native code */
+const send = (type: string) => {
+  const isNative =
+    window.salad &&
+    (window.salad.platform === 'electron' ||
+      window.salad.platform === 'darwin' ||
+      window.salad.platform === 'linux' ||
+      window.salad.platform === 'win32')
+
+  if (!isNative) {
+    return
+  }
+  window.salad.dispatch(type, null)
+}
 
 const styles = (theme: SaladTheme) => ({
   upgradePageWrapper: {
@@ -62,7 +81,7 @@ export const _UpgradePage: FunctionComponent<WithStyles<typeof styles>> = ({ cla
   return (
     <div className={classes.upgradePageWrapper}>
       <div className={classes.windowBarContainerWrapper}>
-        <WindowBarContainer />
+        <WindowBar onClose={() => send(close)} onMaximize={() => send(maximize)} onMinimize={() => send(minimize)} />
       </div>
       <div className={classes.upgradePageContainer}>
         <Text as="h1" variant="headline">
