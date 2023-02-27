@@ -9,20 +9,6 @@ const minimize = 'minimize-window'
 const maximize = 'maximize-window'
 const close = 'close-window'
 
-/** Sends a message to the native code */
-const send = (type: string) => {
-  const isNative =
-    window.salad &&
-    (window.salad.platform === 'electron' ||
-      window.salad.platform === 'darwin' ||
-      window.salad.platform === 'linux' ||
-      window.salad.platform === 'win32')
-
-  if (isNative) {
-    window.salad.dispatch(type, null)
-  }
-}
-
 const styles = (theme: SaladTheme) => ({
   upgradePageWrapper: {
     flex: 1,
@@ -72,6 +58,20 @@ const styles = (theme: SaladTheme) => ({
 export const _UpgradePage: FunctionComponent<WithStyles<typeof styles>> = ({ classes }) => {
   const handleDownloadSaladClick = () => {
     window.open('https://salad.com/download', '_blank')
+  }
+
+  /** Sends a message to the native code */
+  const send = (type: string) => {
+    const isNative =
+      window.salad &&
+      (window.salad.platform === 'electron' ||
+        window.salad.platform === 'darwin' ||
+        window.salad.platform === 'linux' ||
+        window.salad.platform === 'win32')
+
+    if (isNative) {
+      window.salad.dispatch(type, null)
+    }
   }
 
   return (
