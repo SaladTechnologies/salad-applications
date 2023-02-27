@@ -77,6 +77,11 @@ setTimeout(() => {
     return
   }
 
+  if (window.location.href.includes('earn/referrals')) {
+    window.location.href = 'https://salad.com/account/referrals'
+    return
+  }
+
   if (baseUrl !== window.location.href) {
     window.location.href = window.location.href.replace(baseUrl, 'https://salad.com/')
     return
