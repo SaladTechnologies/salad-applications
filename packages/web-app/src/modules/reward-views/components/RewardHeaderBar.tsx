@@ -63,6 +63,14 @@ const styles = (theme: SaladTheme) => ({
     color: theme.darkBlue,
     fontWeight: 'bold',
   },
+  targetThisRewardButton: {
+    padding: '10px 30px',
+  },
+  targetThisRewardText: {
+    fontSize: 14,
+    color: theme.lightGreen,
+    fontWeight: 'bold',
+  },
   outOfStockPrice: {
     textDecoration: 'line-through',
     color: theme.red,
@@ -223,6 +231,9 @@ class _RewardHeaderBar extends Component<Props> {
                 </div>
               )}
             </div>
+            <Button className={classes.targetThisRewardButton} onClick={() => {}}>
+              <div className={classes.targetThisRewardText}>TARGET THIS REWARD</div>
+            </Button>
             <Button
               className={classes.buyButton}
               onClick={this.handleRedeem}
