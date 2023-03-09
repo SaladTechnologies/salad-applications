@@ -11,29 +11,14 @@ import 'whatwg-fetch'
 import 'abortcontroller-polyfill'
 import 'url-polyfill'
 
-// Import dependencies.
+import { DefaultTheme as JSSTheme } from './SaladTheme'
+import { DefaultTheme as EmotionTheme } from '@saladtechnologies/garden-components'
 import { ThemeProvider as EmotionThemeProvider } from '@emotion/react'
-import { DefaultTheme as EmotionTheme, LoadingScreen } from '@saladtechnologies/garden-components'
-import { createBrowserHistory } from 'history'
-import { Observer } from 'mobx-react'
-import { syncHistoryWithStore } from 'mobx-react-router'
-import allSettled from 'promise.allsettled'
-import ReactDOM from 'react-dom'
-import { createIntl, createIntlCache, RawIntlProvider } from 'react-intl'
 import { ThemeProvider as JSSThemeProvider } from 'react-jss'
 import { SkeletonTheme } from 'react-loading-skeleton'
-import { Router } from 'react-router-dom'
-import { App } from './App'
-import { createClient } from './axiosFactory'
-import { Head } from './components'
-import { config } from './config'
-import { ErrorBoundary } from './ErrorBoundary'
-import { FeatureManagerProvider, UnleashFeatureManager } from './FeatureManager'
-import { DefaultTheme as JSSTheme } from './SaladTheme'
-import { createStore } from './Store'
-import { Tooltips } from './Tooltips'
 
-allSettled.shim()
+import ReactDOM from 'react-dom'
+import { UpgradePage } from './components/UpgradePage'
 
 //Adds a dummy window.salad for use in the web-app, this will be skipped in desktop-app
 if (!window.salad) {
@@ -47,77 +32,60 @@ if (!window.salad) {
   }
 }
 
-console.log(`Running web app build:${config.appBuild}`)
-
-const client = createClient()
-const featureManager = new UnleashFeatureManager(config)
-
 setTimeout(() => {
-  const rootStore = createStore(client, featureManager)
-  const basename = config.appRoutingBasename
-  const routerHistory = createBrowserHistory({
-    basename: basename ? basename : '/',
-  })
+  const isNative =
+    window.salad &&
+    (window.salad.platform === 'electron' ||
+      window.salad.platform === 'darwin' ||
+      window.salad.platform === 'linux' ||
+      window.salad.platform === 'win32')
 
-  let currentLocation: any = null
+  if (isNative) {
+    ReactDOM.render(
+      <EmotionThemeProvider theme={EmotionTheme}>
+        <JSSThemeProvider theme={JSSTheme}>
+          <SkeletonTheme baseColor="#172E40" highlightColor="#304759">
+            <UpgradePage />
+          </SkeletonTheme>
+        </JSSThemeProvider>
+      </EmotionThemeProvider>,
 
-  // Ensures that the same url will not get "pushed" multiple times
-  routerHistory.block((location, action) => {
-    const nextLocation = location.pathname + location.search
+      document.getElementById('root'),
+    )
+    return
+  }
 
-    if (action === 'PUSH') {
-      if (currentLocation === nextLocation) {
-        return false
-      }
-    }
+  // in case running in browser: redirect to the modern web-app as a part of upgrade
+  const baseUrl = window.location.href.includes('https://app.salad.io/')
+    ? 'https://app.salad.io/'
+    : 'http://localhost:3000/'
 
-    currentLocation = nextLocation
+  const isStoreRedirect = window.location.href.includes('rewards') || window.location.href.includes('search')
+  if (isStoreRedirect) {
+    window.location.href = window.location.href.replace(baseUrl, 'https://salad.com/store/')
+    return
+  }
 
-    return undefined
-  })
+  const isSettingsRedirect = window.location.href.includes('settings')
+  if (isSettingsRedirect) {
+    window.location.href = window.location.href.replace(baseUrl + 'settings', 'https://salad.com/account')
+    return
+  }
 
-  const history = syncHistoryWithStore(routerHistory, rootStore.routing)
+  if (window.location.href.includes('earn/mine/miner-details')) {
+    window.location.href = 'https://salad.com/earn/machine-settings'
+    return
+  }
 
-  const cache = createIntlCache()
-  const intl = createIntl(
-    {
-      locale: 'en-US',
-      messages: {},
-    },
-    cache,
-  )
+  if (window.location.href.includes('earn/referrals')) {
+    window.location.href = 'https://salad.com/account/referrals'
+    return
+  }
 
-  ReactDOM.render(
-    <FeatureManagerProvider value={featureManager}>
-      <Router history={history}>
-        <RawIntlProvider value={intl}>
-          <EmotionThemeProvider theme={EmotionTheme}>
-            <JSSThemeProvider theme={JSSTheme}>
-              <SkeletonTheme baseColor="#172E40" highlightColor="#304759">
-                <ErrorBoundary>
-                  {/* Default page title for any page that doesn't specify one */}
-                  <Head title="Salad Technologies" />
-                  <div>
-                    <Observer>
-                      {() => {
-                        return rootStore.appLoading ? (
-                          <LoadingScreen />
-                        ) : (
-                          <div>
-                            <Tooltips />
-                            <App history={history} />
-                          </div>
-                        )
-                      }}
-                    </Observer>
-                  </div>
-                </ErrorBoundary>
-              </SkeletonTheme>
-            </JSSThemeProvider>
-          </EmotionThemeProvider>
-        </RawIntlProvider>
-      </Router>
-    </FeatureManagerProvider>,
-    document.getElementById('root'),
-  )
+  if (baseUrl !== window.location.href) {
+    window.location.href = window.location.href.replace(baseUrl, 'https://salad.com/')
+    return
+  }
+
+  window.location.href = 'https://salad.com/store'
 }, 0)
