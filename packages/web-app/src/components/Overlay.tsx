@@ -1,6 +1,8 @@
-import { Component, MouseEvent, ReactNode } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../SaladTheme'
+import type { MouseEvent, ReactNode } from 'react'
+import { Component } from 'react'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { SaladTheme } from '../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   overlay: {
@@ -26,11 +28,11 @@ export interface OverlayProps extends WithStyles<typeof styles> {
 
 export const Overlay = withStyles(styles)(
   class Overlay extends Component<OverlayProps> {
-    componentDidMount() {
+    public override componentDidMount() {
       document.addEventListener('keydown', this.onKeyDown)
     }
 
-    componentWillUnmount() {
+    public override componentWillUnmount() {
       document.removeEventListener('keydown', this.onKeyDown)
     }
 
@@ -50,7 +52,7 @@ export const Overlay = withStyles(styles)(
       }
     }
 
-    render() {
+    public override render(): ReactNode {
       return (
         <div className={this.props.classes.overlay} onClick={this.onClick}>
           {this.props.children}

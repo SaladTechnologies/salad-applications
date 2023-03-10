@@ -1,7 +1,9 @@
-import { Component, ReactNode } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { ReactNode } from 'react'
+import { Component } from 'react'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { getTrackBackground, Range } from 'react-range'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   touchArea: {
@@ -50,7 +52,7 @@ class _Slider extends Component<Props> {
       onValueChange(event[0])
     }
   }
-  render() {
+  public override render(): ReactNode {
     const { stepSize, minimum, maximum, value, classes } = this.props
     return (
       <Range

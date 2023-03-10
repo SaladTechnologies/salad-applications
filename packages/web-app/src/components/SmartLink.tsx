@@ -1,9 +1,11 @@
 import classnames from 'classnames'
-import { ReactNode } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { ReactNode } from 'react'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Link } from 'react-router-dom'
-import { LinkTrackingInfo } from '../modules/analytics/models'
-import { getStore, RootStore } from '../Store'
+import type { LinkTrackingInfo } from '../modules/analytics/models'
+import type { RootStore } from '../Store'
+import { getStore } from '../Store'
 
 const styles = {
   link: {
@@ -35,14 +37,11 @@ const handleClickTracking = (to?: string, trackingInfo?: any) => {
 const _SmartLink = ({ to, children, classes, className, trackingInfo }: Props) => {
   const isTextChild = typeof children === 'string'
   const finalClassName = classnames(classes.link, className, { [classes.hideUnderline]: !isTextChild })
-  const store: RootStore = getStore()
-  const isNative = store.native.isNative
   if (to === undefined || to.startsWith('http')) {
     return (
       <a
         className={finalClassName}
         href={to}
-        target={isNative ? '_blank' : undefined}
         rel="noopener noreferrer"
         onClick={trackingInfo ? () => handleClickTracking(to, trackingInfo) : undefined}
       >

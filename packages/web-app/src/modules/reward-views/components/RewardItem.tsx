@@ -1,11 +1,13 @@
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import AspectRatio from 'react-aspect-ratio'
 import { Img } from 'react-image'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import Skeleton from 'react-loading-skeleton'
-import { SaladTheme } from '../../../SaladTheme'
-import { SearchResult } from '../../reward/models'
+import type { SaladTheme } from '../../../SaladTheme'
+import type { SearchResult } from '../../reward/models'
 import { getPercentOff } from '../../reward/utils'
 import { RewardMissingImage } from './RewardMissingImage'
 
@@ -115,7 +117,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _RewardItem extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { reward, onClick, classes } = this.props
     let outOfStock = reward?.quantity === 0
     let lowQuanity = reward?.quantity !== undefined && reward?.quantity > 0

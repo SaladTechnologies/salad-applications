@@ -1,7 +1,9 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
-import { Reward } from '../../reward/models'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { SaladTheme } from '../../../SaladTheme'
+import type { Reward } from '../../reward/models'
 import { CartIcon } from '../assets/cart-icon'
 import { CartIconOutline } from '../assets/cart-icon-outline'
 
@@ -45,7 +47,7 @@ class _AddToCartButton extends Component<Props> {
       onAddToCart?.(reward)
     }
   }
-  render() {
+  public override render(): ReactNode {
     const { isInCart, classes } = this.props
 
     return (

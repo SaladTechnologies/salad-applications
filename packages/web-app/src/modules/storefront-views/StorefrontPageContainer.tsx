@@ -1,5 +1,5 @@
 import { connect } from '../../connect'
-import { RootStore } from '../../Store'
+import type { RootStore } from '../../Store'
 import { StorefrontPage } from './pages/StorefrontPage'
 
 const mapStoreToProps = (store: RootStore): any => ({

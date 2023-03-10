@@ -1,7 +1,7 @@
-import { createContext, useContext } from 'react'
+import { createContext } from 'react'
 import { UnleashClient } from 'unleash-proxy-client'
 import type { Config } from './config'
-import { AnalyticsStore } from './modules/analytics'
+import type { AnalyticsStore } from './modules/analytics'
 
 export interface FeatureManager {
   getVariant: (feature: string) => string
@@ -33,35 +33,28 @@ export class UnleashFeatureManager implements FeatureManager {
     this.start()
 
     let events: any[] = []
-    this.client.on("impression", (event: any) => {
+    this.client.on('impression', (event: any) => {
       if (event.enabled) {
         if (this.analyticsStore !== undefined) {
-          this.analyticsStore.trackUnleashEvent(
-            "$experiment_started",
-            {
-              "Experiment name": event.featureName,
-              "Variant name": event.variant,
-            },
-          )
+          this.analyticsStore.trackUnleashEvent('$experiment_started', {
+            'Experiment name': event.featureName,
+            'Variant name': event.variant,
+          })
           if (events.length > 0) {
-            events.forEach(event => {
+            events.forEach((event) => {
               // This second conditional is necessary, implying asynchronous execution.
               // There is probably a race condition which may cause impression events to be lost, but I don't know where.
               // I don't know this code or this language well enough to propose a fix.
               if (this.analyticsStore !== undefined) {
-                this.analyticsStore.trackUnleashEvent(
-                  "$experiment_started",
-                  {
-                    "Experiment name": event.featureName,
-                    "Variant name": event.variant,
-                  },
-                )
+                this.analyticsStore.trackUnleashEvent('$experiment_started', {
+                  'Experiment name': event.featureName,
+                  'Variant name': event.variant,
+                })
               }
-            });
+            })
             events = []
           }
-        }
-        else {
+        } else {
           events.push(event)
         }
       }
@@ -147,8 +140,8 @@ class DefaultFeatureManager implements FeatureManager {
 const FeatureManagerContext = createContext<FeatureManager>(new DefaultFeatureManager())
 FeatureManagerContext.displayName = 'FeatureManager'
 
-export const FeatureManagerConsumer = FeatureManagerContext.Consumer
-
 export const FeatureManagerProvider = FeatureManagerContext.Provider
 
-export const useFeatureManager = () => useContext(FeatureManagerContext)
+// TODO: Use the context or remove it altogether!
+//export const FeatureManagerConsumer = FeatureManagerContext.Consumer
+//export const useFeatureManager = () => useContext(FeatureManagerContext)

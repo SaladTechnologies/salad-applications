@@ -1,7 +1,7 @@
 import { number, select } from '@storybook/addon-knobs'
-import { Meta } from '@storybook/react'
+import type { Meta } from '@storybook/react'
 import { defaultLevels } from '../../xp/models/defaultLevels'
-import { Level } from '../../xp/models/Level'
+import type { Level } from '../../xp/models/Level'
 import { SlicedVeggie } from './SlicedVeggie'
 
 export default {
@@ -24,7 +24,7 @@ export const Basic = () => {
     options[l.key] = l
   }
 
-  let selectedLevel = (select('Veggie', options, levels[0] as any) as any) as Level
+  let selectedLevel = select('Veggie', options, levels[0] as any) as any as Level
 
   return (
     <div style={{ paddingTop: 200 }}>

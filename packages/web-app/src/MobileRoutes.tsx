@@ -1,7 +1,9 @@
-import { Location } from 'history'
+import type { Location } from 'history'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router'
-import { MobilePageNotFound } from './components/MobilePageNotFound'
+import type { RouteComponentProps } from 'react-router'
+import { Redirect, Route, Switch, withRouter } from 'react-router'
+import { MobilePageNotFound } from './components'
 import { MobileAccountSummaryContainer } from './modules/account-views-mobile'
 import { LoginPageContainer } from './modules/auth-views'
 import { MobileEarningSummaryContainer } from './modules/earn-views-mobile'
@@ -11,7 +13,7 @@ import { getStore } from './Store'
 class _Routes extends Component<RouteComponentProps> {
   store = getStore()
 
-  render() {
+  public override render(): ReactNode {
     const { location } = this.props
 
     const currentLocation =

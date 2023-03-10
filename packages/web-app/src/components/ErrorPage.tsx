@@ -1,7 +1,9 @@
-import { Component, ReactNode } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { ReactNode } from 'react'
+import { Component } from 'react'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Modal, ModalPage } from '.'
-import { SaladTheme } from '../SaladTheme'
+import type { SaladTheme } from '../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   contentContainer: {
@@ -44,7 +46,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _ErrorPage extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { title, modalWidth, onCloseClicked, children, classes } = this.props
 
     return (

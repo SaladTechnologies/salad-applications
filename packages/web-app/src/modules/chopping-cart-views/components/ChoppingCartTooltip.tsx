@@ -1,10 +1,12 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import { Img } from 'react-image'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { P, SmartLink } from '../../../components'
 import { rewardRoute } from '../../../RouteUtils'
-import { SaladTheme } from '../../../SaladTheme'
-import { Reward } from '../../reward/models'
+import type { SaladTheme } from '../../../SaladTheme'
+import type { Reward } from '../../reward/models'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -72,7 +74,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _ChoppingCartTooltip extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { rewards, classes } = this.props
 
     const hasRewards = rewards !== undefined && rewards.length !== 0

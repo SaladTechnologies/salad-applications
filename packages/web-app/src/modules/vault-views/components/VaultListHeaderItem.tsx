@@ -1,6 +1,7 @@
 import classnames from 'classnames'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { SaladTheme } from '../../../SaladTheme'
 import { IconArrowDown } from '../../reward-views/components/assets'
 
 const styles = (theme: SaladTheme) => ({

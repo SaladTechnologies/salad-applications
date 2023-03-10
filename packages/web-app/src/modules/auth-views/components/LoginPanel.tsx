@@ -1,7 +1,9 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { P, Username } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -72,7 +74,7 @@ class _LoginPanel extends Component<Props> {
     }
   }
 
-  render() {
+  public override render(): ReactNode {
     const { authenticated } = this.props
     if (authenticated) {
       return null

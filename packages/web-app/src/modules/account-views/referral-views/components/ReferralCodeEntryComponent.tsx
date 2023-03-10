@@ -1,6 +1,8 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import { Field, Form } from 'react-final-form'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Button, ErrorText, TextField } from '../../../../components'
 
 const styles = {
@@ -69,7 +71,7 @@ class _ReferralCodeEntryComponent extends Component<Props, State> {
     }
   }
 
-  render() {
+  public override render(): ReactNode {
     const { classes } = this.props
     const { submitting, errorMessage } = this.state
 

@@ -1,10 +1,12 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { P } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -61,7 +63,7 @@ class _NotificationToast extends Component<Props> {
     onClick?.()
   }
 
-  render() {
+  public override render(): ReactNode {
     const { title, message, isError, classes } = this.props
     return (
       <div className={classnames(classes.container, classes.clickable, { [classes.error]: isError })}>

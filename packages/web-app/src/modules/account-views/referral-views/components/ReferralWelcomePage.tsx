@@ -1,16 +1,18 @@
 import { Button, FieldContainer, Text } from '@saladtechnologies/garden-components'
 import { ChevronRight } from '@saladtechnologies/garden-icons'
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import MediaQuery from 'react-responsive'
-import { SaladTheme } from '../../../../SaladTheme'
+import type { SaladTheme } from '../../../../SaladTheme'
 import LoginPageRewards from '../../../auth-views/assets/login-screen-rewards.png'
 
 const styles = (theme: SaladTheme) => ({
   container: {
     position: 'fixed',
-    top: (props: Props) => (props.isNative ? '4.1rem' : 0),
+    top: 0,
     bottom: 0,
     left: 0,
     right: 0,
@@ -60,13 +62,12 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  isNative: boolean
   username?: string
   onNextPage?: () => void
 }
 
 class _ReferralWelcomePage extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { classes, onNextPage, username } = this.props
 
     return (

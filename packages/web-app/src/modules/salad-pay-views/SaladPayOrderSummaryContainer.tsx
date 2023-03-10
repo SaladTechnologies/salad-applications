@@ -1,4 +1,4 @@
-import { SaladPayStore } from '../salad-pay/SaladPayStore'
+import type { SaladPayStore } from '../salad-pay/SaladPayStore'
 import { SaladPayOrderSummaryPage } from './components'
 import { connectSaladPay } from './connectSaladPay'
 

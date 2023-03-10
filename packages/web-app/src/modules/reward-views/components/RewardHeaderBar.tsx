@@ -1,9 +1,11 @@
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Button, SmartLink } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
-import { Reward } from '../../reward/models'
+import type { SaladTheme } from '../../../SaladTheme'
+import type { Reward } from '../../reward/models'
 import { getPercentOff } from '../../reward/utils'
 import { IconArrowLeft } from './assets'
 
@@ -134,7 +136,7 @@ class _RewardHeaderBar extends Component<Props> {
     }
   }
 
-  render() {
+  public override render(): ReactNode {
     const {
       reward,
       authenticated,

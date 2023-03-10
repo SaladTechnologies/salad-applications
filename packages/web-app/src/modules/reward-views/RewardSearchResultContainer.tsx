@@ -1,6 +1,6 @@
 import { withSearch } from '@elastic/react-search-ui'
 import { connect } from '../../connect'
-import { RootStore } from '../../Store'
+import type { RootStore } from '../../Store'
 import { routeLink } from '../../utils'
 import { SearchResultsPage } from './pages'
 

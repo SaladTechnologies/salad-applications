@@ -1,5 +1,5 @@
 import { storiesOf } from '@storybook/react'
-import { BannerInfo } from '../../home/models/BannerInfo'
+import type { BannerInfo } from '../../home/models/BannerInfo'
 import { NotificationBanner } from './NotificationBanner'
 
 storiesOf('Modules/Home', module).add('Notification Banner', () => {

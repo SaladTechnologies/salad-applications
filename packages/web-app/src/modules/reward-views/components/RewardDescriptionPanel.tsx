@@ -1,9 +1,11 @@
-import { Component, ReactElement, ReactNode } from 'react'
+import type { ReactElement, ReactNode } from 'react'
+import { Component } from 'react'
 import ReactHtmlParser from 'react-html-parser'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { SmartLink } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
-import { Reward } from '../../reward/models'
+import type { SaladTheme } from '../../../SaladTheme'
+import type { Reward } from '../../reward/models'
 import { RewardDetailsContentPanel } from './RewardDetailsContentPanel'
 
 const styles = (theme: SaladTheme) => ({
@@ -39,7 +41,7 @@ class _RewardDescriptionPanel extends Component<Props> {
       return undefined
     }
   }
-  render() {
+  public override render(): ReactNode {
     const { reward, classes } = this.props
 
     if (!reward || !reward.description) return null

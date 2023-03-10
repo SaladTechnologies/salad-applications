@@ -1,15 +1,13 @@
-import {
-  HardwareCardProps,
-  HardwareDetailSingleColumn,
-  HardwareDetailTwoColumns,
-} from '@saladtechnologies/garden-components'
+import type { HardwareCardProps } from '@saladtechnologies/garden-components'
+import { HardwareDetailSingleColumn, HardwareDetailTwoColumns } from '@saladtechnologies/garden-components'
 import { action } from '@storybook/addon-actions'
 import { number, select, text } from '@storybook/addon-knobs'
-import { Meta, Story } from '@storybook/react'
+import type { Meta, Story } from '@storybook/react'
 import moment from 'moment'
 import { useState } from 'react'
-import { EarningWindow } from '../../balance/models'
-import { EarningsSummaryPage, EarningsSummaryPageProps } from './EarningsSummaryPage'
+import type { EarningWindow } from '../../balance/models'
+import type { EarningsSummaryPageProps } from './EarningsSummaryPage'
+import { EarningsSummaryPage } from './EarningsSummaryPage'
 
 const GPUDetails = () => {
   return (

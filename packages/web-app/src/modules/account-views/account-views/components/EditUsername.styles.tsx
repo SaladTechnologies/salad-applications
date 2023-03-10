@@ -1,4 +1,4 @@
-import { SaladTheme } from '../../../../SaladTheme'
+import type { SaladTheme } from '../../../../SaladTheme'
 
 export const styles = (theme: SaladTheme) => ({
   container: {

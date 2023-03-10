@@ -1,6 +1,7 @@
 import { Button, ButtonGroup, Text } from '@saladtechnologies/garden-components'
 import { useIntl } from 'react-intl'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({

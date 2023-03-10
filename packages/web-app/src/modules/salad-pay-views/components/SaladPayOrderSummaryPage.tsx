@@ -1,11 +1,13 @@
 import classNames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { SaladPayPage } from '.'
 import { SmartLink } from '../../../components'
 import { currencyFormatter } from '../../../formatters'
-import { SaladTheme } from '../../../SaladTheme'
-import { SaladPaymentRequestOptions } from '../../salad-pay/models'
+import type { SaladTheme } from '../../../SaladTheme'
+import type { SaladPaymentRequestOptions } from '../../salad-pay/models'
 import { SaladPayCheckoutButton } from './SaladPayCheckoutButton'
 
 const styles = (theme: SaladTheme) => ({
@@ -97,7 +99,7 @@ class _SaladPayOrderSummaryPage extends Component<Props> {
     }
   }
 
-  render() {
+  public override render(): ReactNode {
     const { request, availableBalance, processing, onClose, classes } = this.props
 
     if (!request) {

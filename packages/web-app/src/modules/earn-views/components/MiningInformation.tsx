@@ -1,11 +1,12 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import { Img } from 'react-image'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Divider, Head, P, Scrollbar, SectionHeader, SmartLink } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 import miningOverview from '../assets/mining-overview.svg'
 import mining from '../assets/mining.svg'
-import { DesktopDownloadContainer } from '../DesktopDownloadContainer'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -38,20 +39,16 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
-interface Props extends WithStyles<typeof styles> {
-  isNative: boolean
-}
+interface Props extends WithStyles<typeof styles> {}
 
 class _MiningInformation extends Component<Props> {
-  render() {
-    const { classes, isNative } = this.props
-
+  public override render(): ReactNode {
+    const { classes } = this.props
     return (
       <div className={classes.container}>
         <Head title="Mining" />
         <Scrollbar>
           <div className={classes.content}>
-            <DesktopDownloadContainer />
             <div className={classes.splitContainer}>
               <div className={classes.column} style={{ paddingRight: 20 }}>
                 <SectionHeader>What is Mining?</SectionHeader>
@@ -78,11 +75,8 @@ class _MiningInformation extends Component<Props> {
             <Img className={classes.overviewImage} src={miningOverview} />
 
             <P>
-              Don't forget to enable{' '}
-              <b>
-                {isNative ? <SmartLink to="/account/desktop-settings">Auto Start</SmartLink> : <span>Auto Start</span>}
-              </b>
-              , this will allow Salad to automatically start when you step away from your machine.
+              Don't forget to enable
+              <b>Auto Start</b>, this will allow Salad to automatically start when you step away from your machine.
             </P>
             <Divider />
             <SectionHeader>What Does the Status Mean?</SectionHeader>

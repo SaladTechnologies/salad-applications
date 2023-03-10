@@ -17,19 +17,19 @@
 
   VIAddVersionKey "ProductName" "Salad Obliterator"
   VIAddVersionKey "CompanyName" "Salad Technologies, Inc."
-  VIAddVersionKey "LegalCopyright" "Copyright © 2020-2022 Salad Technologies, Inc."
+  VIAddVersionKey "LegalCopyright" "Copyright © 2020-2023 Salad Technologies, Inc."
   VIAddVersionKey "FileDescription" "Uninstalls broken Salad installations"
-  VIAddVersionKey "FileVersion" "1.1.0.0"
-  VIAddVersionKey "ProductVersion" "1.1.0"
-  VIFileVersion 1.1.0.0
-  VIProductVersion 1.1.0.0
+  VIAddVersionKey "FileVersion" "1.2.0.0"
+  VIAddVersionKey "ProductVersion" "1.2.0"
+  VIFileVersion 1.2.0.0
+  VIProductVersion 1.2.0.0
 
 ;--------------------------------
 ;Interface Settings
 
   !define MUI_ABORTWARNING
   !define MUI_HEADERIMAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Header\orange-uninstall-r.bmp"
-  !define MUI_ICON "${__FILEDIR__}\..\desktop-app\assets\favicon.ico"
+  !define MUI_ICON "${__FILEDIR__}\assets\icon.ico"
   !define MUI_WELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\orange-uninstall.bmp"
 
 ;--------------------------------
@@ -42,7 +42,7 @@
   !define MUI_PAGE_HEADER_SUBTEXT "Please review the license terms before using the Salad Obliterator"
   !define MUI_LICENSEPAGE_TEXT_BOTTOM "If you accept the terms of the agreement, click I Agree to continue. You must accept the agreement to use the Salad Obliterator."
 
-  !insertmacro MUI_PAGE_LICENSE "D:\Documents\Projects\salad-applications\packages\desktop-app\LICENSE.md"
+  !insertmacro MUI_PAGE_LICENSE "${__FILEDIR__}\assets\LICENSE.md"
 
   !insertmacro MUI_PAGE_INSTFILES
 
@@ -128,6 +128,7 @@ Section Obliterate
   RMDir /r /REBOOTOK "$PROGRAMFILES64\Salad"
   SetShellVarContext all
   RMDir /r /REBOOTOK "$APPDATA\Salad"
+  RMDir /r /REBOOTOK "$LOCALAPPDATA\Salad
   SetShellVarContext current
 
   Delete "$DESKTOP\Salad.lnk"

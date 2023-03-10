@@ -1,9 +1,11 @@
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { InfoItem } from '.'
-import { SaladTheme } from '../../../SaladTheme'
-import { RewardSystemDetails } from '../../reward/models'
+import type { SaladTheme } from '../../../SaladTheme'
+import type { RewardSystemDetails } from '../../reward/models'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -28,7 +30,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _RewardSystemDetailsList extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { title, systemDetails, classes } = this.props
 
     //Skip if there are no details

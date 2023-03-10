@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import { P } from '../../../components'
 import { RewardDetailsContentPanel } from './RewardDetailsContentPanel'
@@ -5,7 +6,7 @@ import { RewardDetailsContentPanel } from './RewardDetailsContentPanel'
 interface Props {}
 
 export class RewardDisclaimers extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     return (
       <RewardDetailsContentPanel hideDivider>
         <P>

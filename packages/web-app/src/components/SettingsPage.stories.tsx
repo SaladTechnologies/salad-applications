@@ -1,6 +1,7 @@
 import { action } from '@storybook/addon-actions'
-import { Meta } from '@storybook/react'
-import { MenuItem, SettingsPage } from './SettingsPage'
+import type { Meta } from '@storybook/react'
+import type { MenuItem } from './SettingsPage'
+import { SettingsPage } from './SettingsPage'
 
 export default {
   title: 'Components/Settings Page',

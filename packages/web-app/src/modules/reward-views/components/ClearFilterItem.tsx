@@ -1,9 +1,11 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { FilterOption } from './RewardPriceFilter'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { FilterOption } from './RewardPriceFilter'
 
 const styles = {
   row: {
@@ -34,7 +36,7 @@ class _ClearFilterItem extends Component<Props> {
     options?.filter((x) => x.selected).forEach((x) => onRemove?.(x.value))
   }
 
-  render() {
+  public override render(): ReactNode {
     const { options, classes } = this.props
 
     if (!options) return null

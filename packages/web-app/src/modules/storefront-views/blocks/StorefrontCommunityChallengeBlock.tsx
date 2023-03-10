@@ -1,4 +1,4 @@
-import { StorefrontCommunityChallengeProps } from '../../storefront/models'
+import type { StorefrontCommunityChallengeProps } from '../../storefront/models'
 import { StorefrontCommunityChallengePanel } from '../components'
 
 interface Props {

@@ -1,10 +1,12 @@
 import classNames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { SectionHeader, StatElement } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 import { formatBalance } from '../../../utils'
-import { EarningWindow } from '../../balance/models'
+import type { EarningWindow } from '../../balance/models'
 import { EarningChartContainer } from '../EarningChartContainer'
 
 const styles = (theme: SaladTheme) => ({
@@ -61,7 +63,7 @@ class _EarningHistory extends Component<Props, State> {
     }
   }
 
-  render() {
+  public override render(): ReactNode {
     const { last24Hr, last7Day, last30Day, classes } = this.props
     return (
       <div className={classes.container}>

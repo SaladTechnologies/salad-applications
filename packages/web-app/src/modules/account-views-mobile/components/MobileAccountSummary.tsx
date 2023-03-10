@@ -1,5 +1,7 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Button, Divider, P, StatElement } from '../../../components'
 
 const styles = {
@@ -19,7 +21,7 @@ class _MobileAccountSummary extends Component<Props> {
     onLogout?.()
   }
 
-  render() {
+  public override render(): ReactNode {
     const { username, classes } = this.props
 
     return (

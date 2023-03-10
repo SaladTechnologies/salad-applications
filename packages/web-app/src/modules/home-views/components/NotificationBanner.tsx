@@ -1,7 +1,9 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
-import { BannerInfo } from '../../home/models/BannerInfo'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { SaladTheme } from '../../../SaladTheme'
+import type { BannerInfo } from '../../home/models/BannerInfo'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -22,7 +24,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _NotificationBanner extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { bannerInfo, classes } = this.props
     let now = new Date()
 

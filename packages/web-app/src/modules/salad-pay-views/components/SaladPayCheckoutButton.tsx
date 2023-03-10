@@ -1,8 +1,10 @@
 import classNames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import { Img } from 'react-image'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { SaladTheme } from '../../../SaladTheme'
 import animatedLogo from '../assets/animated-logo-lg.gif'
 
 const styles = (theme: SaladTheme) => ({
@@ -53,7 +55,7 @@ class _SaladPayCheckoutButton extends Component<Props> {
     }
   }
 
-  render() {
+  public override render(): ReactNode {
     const { classes, enabled, loading } = this.props
 
     return (

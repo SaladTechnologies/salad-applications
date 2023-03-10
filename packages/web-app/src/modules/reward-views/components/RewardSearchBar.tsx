@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import { SearchBar } from '../../../components'
 
@@ -13,7 +14,7 @@ class _RewardSearchBar extends Component<Props> {
 
     setSearchTerm?.(text, { shouldClearFilters: false })
   }
-  render() {
+  public override render(): ReactNode {
     const { error, searchTerm } = this.props
     return <SearchBar error={error && 'Search Unavailable'} text={searchTerm} onTextEntered={this.handleText} />
   }

@@ -1,9 +1,10 @@
 import classnames from 'classnames'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Remark } from 'react-remark'
 import { HeroTitle, ProgressBar, SmartLink } from '../../../components'
 import { HeroPanel } from '../../../components/HeroPanel'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   container: {

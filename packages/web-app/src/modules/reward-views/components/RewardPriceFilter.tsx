@@ -1,7 +1,9 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { SectionHeader } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 import { ClearFilterItem } from './ClearFilterItem'
 import { RewardFilterRow } from './RewardFilterRow'
 
@@ -68,7 +70,7 @@ class _RewardPriceFilter extends Component<Props> {
     onChange?.(option.value)
   }
 
-  render() {
+  public override render(): ReactNode {
     const { label, options, classes, onRemove } = this.props
 
     if (!options) return null

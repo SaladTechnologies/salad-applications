@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
 import { rewardRoute } from '../../../RouteUtils'
-import { StorefrontRewardBlockProps } from '../../storefront/models'
+import type { StorefrontRewardBlockProps } from '../../storefront/models'
 import { StorefrontRewardItem } from '../components/StorefrontRewardItem'
 import { StorefrontRewardSlider } from '../components/StorefrontRewardSlider'
 

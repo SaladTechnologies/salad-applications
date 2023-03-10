@@ -1,6 +1,7 @@
 import classnames from 'classnames'
-import { CSSProperties } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { CSSProperties } from 'react'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 
 const styles = {
   container: {

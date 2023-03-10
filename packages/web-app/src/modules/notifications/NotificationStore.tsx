@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify'
-import { RootStore } from '../../Store'
+import type { RootStore } from '../../Store'
 import { NotificationToast } from './components/NotificationToast'
-import { NotificationMessage } from './models'
+import type { NotificationMessage } from './models'
 
 export class NotificationStore {
   constructor(private readonly store: RootStore) {}
@@ -11,10 +11,6 @@ export class NotificationStore {
    * @param message The notification message
    */
   sendNotification = (message: NotificationMessage) => {
-    if (message.showDesktop) {
-      this.store.native.send('show-notification', message)
-    }
-
     const handleClick = () => {
       if (message.onClick) {
         this.store.analytics.trackToastNotificationClicked(message)
@@ -64,7 +60,6 @@ export class NotificationStore {
   }
 
   removeNotification = (id: number) => {
-    this.store.native.send('show-notification', { remove: id, close: id })
     toast.dismiss(id)
   }
 }

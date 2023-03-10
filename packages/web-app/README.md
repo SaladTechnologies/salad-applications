@@ -1,6 +1,6 @@
 # Salad Web Application
 
-The Salad Web Application is the primary UI that allows users to interact with Salad. The Salad Web Application is a [Typescript](https://www.typescriptlang.org/) build with [React](https://reactjs.org/) and [MobX](https://mobx.js.org/)
+The Salad Web Application is the primary UI that allows users to interact with Salad. The Salad Web Application is a [Typescript](https://www.typescriptlang.org/) built with [React](https://reactjs.org/) and [MobX](https://mobx.js.org/).
 
 ## Getting Started
 

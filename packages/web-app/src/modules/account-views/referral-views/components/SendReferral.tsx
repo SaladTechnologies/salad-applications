@@ -1,6 +1,8 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import { Field, Form } from 'react-final-form'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Button, P, TextField } from '../../../../components'
 import { isEmailFormat } from '../../../../utils'
 
@@ -49,7 +51,7 @@ class _SendReferral extends Component<Props> {
     return errors
   }
 
-  render() {
+  public override render(): ReactNode {
     const { sending, classes } = this.props
 
     return (

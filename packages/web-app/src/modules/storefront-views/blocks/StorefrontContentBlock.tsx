@@ -1,5 +1,5 @@
 import { config } from '../../../config'
-import { StorefrontContentBlockProps } from '../../storefront/models'
+import type { StorefrontContentBlockProps } from '../../storefront/models'
 import { StorefrontContentPanel } from '../components/StorefrontContentPanel'
 
 interface Props {

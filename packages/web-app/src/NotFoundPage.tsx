@@ -1,8 +1,10 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from './SaladTheme'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { SaladTheme } from './SaladTheme'
 
-export const styles = (theme: SaladTheme) => ({
+const styles = (theme: SaladTheme) => ({
   container: {
     width: '100%',
     display: 'flex',
@@ -47,7 +49,7 @@ interface Props extends WithStyles<typeof styles> {}
  * 404 Page
  */
 class _NotFoundPage extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { classes } = this.props
     return (
       <div className={classes.container}>

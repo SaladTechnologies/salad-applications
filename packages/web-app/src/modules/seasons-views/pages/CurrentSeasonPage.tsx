@@ -2,12 +2,13 @@ import { Layout, LevelCard, Text } from '@saladtechnologies/garden-components'
 import { useMemo } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
 import { useIntl } from 'react-intl'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import Carousel from 'react-multi-carousel'
 import { Head, SmartLink } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 import { withLogin } from '../../auth-views'
-import { Level } from '../../seasons/models'
+import type { Level } from '../../seasons/models'
 
 const styles = (theme: SaladTheme) => ({
   levels: {

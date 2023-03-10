@@ -1,8 +1,10 @@
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import { Field, Form } from 'react-final-form'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Button, ComputerName, P, TextField, Username } from '../../../../components'
 import { styles } from './EditUsername.styles'
 
@@ -49,7 +51,7 @@ class _MinecraftUsername extends Component<Props, State> {
     return errors
   }
 
-  render() {
+  public override render(): ReactNode {
     const { isUpdating, classes, username } = this.props
 
     return (

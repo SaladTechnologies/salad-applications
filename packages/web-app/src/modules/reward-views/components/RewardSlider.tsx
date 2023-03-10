@@ -1,9 +1,11 @@
-import { Component, ReactNode } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { ReactNode } from 'react'
+import { Component } from 'react'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import Carousel from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
 import { SmartLink } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 import { IconArrowRight } from './assets'
 import { RewardSliderButton } from './RewardSliderButton'
 
@@ -110,7 +112,7 @@ class _RewardSlider extends Component<Props, State> {
     })
   }
 
-  render() {
+  public override render(): ReactNode {
     const { title, viewAllRoute, classes, children } = this.props
     const { isHoveringRewards } = this.state
     return (

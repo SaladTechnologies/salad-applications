@@ -13,7 +13,7 @@ Thanks for being here and for being awesome! 👍
 
 The easiest way to contribute to Salad is by participating in discussions on our [community forums](https://www.reddit.com/r/SaladChefs) or the [SaladChefs Discord server](https://discord.gg/salad). The community often chimes in with helpful advice when you have a question, and you may also find yourself providing answers and helping others.
 
-You can also create a [support ticket](https://support.salad.com/hc/en-us/requests/new) if you have a specific question that should be answered by a team member.
+You can also create a [support ticket](https://support.salad.com/article/216-how-to-create-a-support-ticket) if you have a specific question that should be answered by a team member.
 
 _Please don't use GitHub issues to ask a question._ We will politely close a GitHub issue that asks a question and kindly refer you to one of the aforementioned avenues.
 
@@ -23,7 +23,7 @@ We're sorry if this happened to you!
 
 Consider jumping into the [Community Support category on our community forums](https://www.reddit.com/r/SaladChefs) or the [#community-support channel in the SaladChefs Discord server](https://discord.gg/salad). The community may have already found a solution.
 
-You can also create a [support ticket](https://support.salad.com/hc/en-us/requests/new) to report any problems or concerns.
+You can also create a [support ticket](https://support.salad.com/article/216-how-to-create-a-support-ticket) to report any problems or concerns.
 
 ## Requesting Features
 
@@ -48,7 +48,7 @@ First, you're going to need a few development tools:
 - [Git](https://www.git-scm.com/)
 - [nvm](https://github.com/nvm-sh/nvm) (if you're on Linux or macOS) or [NVM for Windows](https://github.com/coreybutler/nvm-windows) (if you're on Windows)
 - [Visual Studio Code](https://code.visualstudio.com/)
-- [Yarn version 1](https://classic.yarnpkg.com/en/docs/install) (version 2 doesn't work with Salad just yet)
+- [Yarn (version 3)](https://yarnpkg.com/)
 
 We try to stay on the latest, stable versions of these tools, and we recommend that you choose to do the same. We will be unable to provide technical support for these tools, and old versions may not work with our project configuration.
 
@@ -59,6 +59,16 @@ Next, launch Visual Studio Code and install the following essential extensions:
 - [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
 Refer to the [Visual Studio Code documentation](https://code.visualstudio.com/docs/editor/extension-gallery) for help finding and installing these extensions.
+
+### Setting Up the Project
+
+First, you're going to need to clone the repository.
+
+In your favorite terminal, change the current working directory to a location suitable for storing the repository. Then run the following:
+
+```sh
+git clone https://github.com/SaladTechnologies/salad-applications.git
+```
 
 Next, use nvm (if you're on Linux or macOS) or NVM for Windows (if you're on Windows) to install the required version of Node.js.
 
@@ -83,16 +93,6 @@ In a PowerShell terminal on Windows:
 $NodeVersion = Get-Content .nvmrc
 & nvm install $NodeVersion
 & nvm use $NodeVersion
-```
-
-### Setting Up the Project
-
-First, you're going to need to clone the repository.
-
-In your favorite terminal, change the current working directory to a location suitable for storing the repository. Then run the following:
-
-```sh
-git clone https://github.com/SaladTechnologies/salad-applications.git
 ```
 
 Next, restore the project dependencies and tooling.

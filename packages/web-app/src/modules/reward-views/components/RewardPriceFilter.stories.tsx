@@ -1,6 +1,7 @@
 import { action } from '@storybook/addon-actions'
-import { Meta } from '@storybook/react'
-import { RangeFilterOption, RewardPriceFilter } from './RewardPriceFilter'
+import type { Meta } from '@storybook/react'
+import type { RangeFilterOption } from './RewardPriceFilter'
+import { RewardPriceFilter } from './RewardPriceFilter'
 
 export default {
   title: 'Modules/Rewards/Reward Price Filter',

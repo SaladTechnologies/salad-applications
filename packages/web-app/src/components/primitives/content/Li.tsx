@@ -1,7 +1,9 @@
 import classnames from 'classnames'
-import { Component, ReactNode } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
+import type { ReactNode } from 'react'
+import { Component } from 'react'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   appBody: {
@@ -22,7 +24,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _Li extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { className, bold, children, classes } = this.props
 
     return <li className={classnames(classes.appBody, className, { [classes.bold]: bold })}>{children}</li>

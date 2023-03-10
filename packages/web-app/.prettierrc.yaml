@@ -1,0 +1,11 @@
+endOfLine: auto
+printWidth: 120
+semi: false
+singleQuote: true
+trailingComma: all
+overrides:
+  - files:
+      - "*.yml"
+      - "*.yaml"
+    options:
+      singleQuote: false

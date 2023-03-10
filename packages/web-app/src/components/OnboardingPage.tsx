@@ -1,8 +1,10 @@
 import classnames from 'classnames'
-import { Component, ReactNode } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { ReactNode } from 'react'
+import { Component } from 'react'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Button } from '.'
-import { SaladTheme } from '../SaladTheme'
+import type { SaladTheme } from '../SaladTheme'
 import logo from './assets/SaladLockup-BlueBg.svg'
 
 const styles = (theme: SaladTheme) => ({
@@ -85,7 +87,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _OnboardingPage extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const {
       title,
       nextText,

@@ -1,7 +1,9 @@
 import classnames from 'classnames'
-import { Component, ReactNode } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../SaladTheme'
+import type { ReactNode } from 'react'
+import { Component } from 'react'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { SaladTheme } from '../SaladTheme'
 import { AnimatedBorder } from './AnimatedBorder'
 
 const styles = (theme: SaladTheme) => ({
@@ -61,7 +63,7 @@ class _Button extends Component<Props> {
     }
   }
 
-  render() {
+  public override render(): ReactNode {
     const { loading, className, type, classes, disabled, children } = this.props
     let enabled = !loading && !disabled
 

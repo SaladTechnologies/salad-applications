@@ -1,7 +1,7 @@
-import { RouteComponentProps } from 'react-router-dom'
+import type { RouteComponentProps } from 'react-router-dom'
 import { connect } from '../../connect'
-import { RootStore } from '../../Store'
-import { Reward } from '../reward/models'
+import type { RootStore } from '../../Store'
+import type { Reward } from '../reward/models'
 import { RewardDetailsPage } from './pages'
 
 const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ id: string }>): any => {

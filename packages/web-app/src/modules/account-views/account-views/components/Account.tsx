@@ -1,11 +1,14 @@
 import { AvatarSelectionForm, Button, Layout, Text, TextField } from '@saladtechnologies/garden-components'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Head } from '../../../../components'
-import { DefaultTheme, SaladTheme } from '../../../../SaladTheme'
+import type { SaladTheme } from '../../../../SaladTheme'
+import { DefaultTheme } from '../../../../SaladTheme'
 import { withLogin } from '../../../auth-views'
-import { Avatar, Profile } from '../../../profile/models'
+import type { Avatar, Profile } from '../../../profile/models'
 import { AccountTermsAndConditionsUpdate } from './AccountTermsAndConditionsUpdate'
 import { PayPalLoginButton } from './PayPalLoginButton'
 
@@ -99,15 +102,15 @@ class _Account extends Component<Props, State> {
     }
   }
 
-  componentDidMount() {
+  public override componentDidMount() {
     this.props.loadPayPalId()
   }
 
-  componentWillUnmount() {
+  public override componentWillUnmount() {
     clearInterval(intervalId)
   }
 
-  render() {
+  public override render(): ReactNode {
     const {
       profile,
       onUpdateUsername,

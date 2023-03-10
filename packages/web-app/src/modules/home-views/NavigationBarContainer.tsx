@@ -1,16 +1,13 @@
 import { Avatar, AvatarDefault, BonusCard, NavigationBar } from '@saladtechnologies/garden-components'
 import { connect } from '../../connect'
-import { RootStore } from '../../Store'
+import type { RootStore } from '../../Store'
 
 const mapStoreToProps = (store: RootStore): any => {
   const isAuthenticated = store.auth.isAuthenticated
-  const isNative = store.native.isNative
   const handleLogin = () => {
     store.analytics.trackButtonClicked('login_button', 'Log In Button', 'enabled')
     store.auth.login()
   }
-
-  const isRunning = store.saladBowl.isRunning
 
   const goToAccount = () => store.routing.push('/account/summary')
   const bonus = store.bonuses.firstExpiringUnclaimedBonus
@@ -42,7 +39,7 @@ const mapStoreToProps = (store: RootStore): any => {
         isLoading={store.bonuses.pendingBonuses?.has(bonus.id)}
       />
     ) : undefined,
-    isNative: isNative,
+    isNative: false,
     onClickAvatar: goToAccount,
     onClickUsername: goToAccount,
     onClickViewAllBonuses: () => store.routing.push('/account/bonuses'),
@@ -53,7 +50,7 @@ const mapStoreToProps = (store: RootStore): any => {
     rightSideButtonClick: isAuthenticated ? undefined : handleLogin,
     startButtonLabel: startButton.label,
     startButtonClick: startButton.onClick,
-    startButtonHoverLabel: isAuthenticated && isRunning ? 'Stop' : undefined,
+    startButtonHoverLabel: undefined,
     startButtonErrorClick: startButton.onClickWithError,
     startButtonProgress: startButton.progress,
     startButtonRunningTime: startButton.runningTime,

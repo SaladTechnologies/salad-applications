@@ -1,6 +1,8 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../../SaladTheme'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { SaladTheme } from '../../../../SaladTheme'
 import { formatBalance } from '../../../../utils'
 import { ChoppingCartButtonContainer } from '../../../chopping-cart-views'
 
@@ -72,7 +74,7 @@ class _AccountMenu extends Component<Props> {
     }
   }
 
-  render() {
+  public override render(): ReactNode {
     const { authenticated, canLogin, classes, currentBalance, username } = this.props
     if (authenticated) {
       return (

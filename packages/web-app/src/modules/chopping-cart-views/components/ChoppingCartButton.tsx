@@ -1,10 +1,12 @@
 import * as React from 'react'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import ReactHintFactory from 'react-hint'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { ChoppingCartTooltip } from '.'
-import { SaladTheme } from '../../../SaladTheme'
-import { Reward } from '../../reward/models'
+import type { SaladTheme } from '../../../SaladTheme'
+import type { Reward } from '../../reward/models'
 import { CartIcon } from '../assets/cart-icon'
 
 const ReactHint = ReactHintFactory(React)
@@ -38,7 +40,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _ChoppingCartButton extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { onClickChoppingCartIcon, rewards, classes } = this.props
 
     return (

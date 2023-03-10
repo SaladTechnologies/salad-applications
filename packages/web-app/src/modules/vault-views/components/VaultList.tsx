@@ -1,13 +1,16 @@
 import { faClipboard } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Divider, Head, InfoButton, P, SmartLink } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 import { withLogin } from '../../auth-views'
-import { RewardVaultItem, RewardVaultStatus } from '../../vault/models'
+import type { RewardVaultItem } from '../../vault/models'
+import { RewardVaultStatus } from '../../vault/models'
 import { VaultListHeaderItem } from './VaultListHeaderItem'
 
 const convertStatus = (status: RewardVaultStatus) => {
@@ -235,17 +238,17 @@ class _VaultList extends Component<Props, State> {
     this.updateActiveDropdown('status')
   }
 
-  componentDidMount = () => {
+  public override componentDidMount = () => {
     const { startRefresh } = this.props
     startRefresh?.()
   }
 
-  componentWillUnmount = () => {
+  public override componentWillUnmount = () => {
     const { stopRefresh } = this.props
     stopRefresh?.()
   }
 
-  componentDidUpdate(prevProps: Props) {
+  public override componentDidUpdate(prevProps: Props) {
     if (this.props.redemptions !== prevProps.redemptions) {
       this.setState({
         redemptions: sort(this.state.dropdown, this.props.redemptions),
@@ -253,7 +256,7 @@ class _VaultList extends Component<Props, State> {
     }
   }
 
-  render() {
+  public override render(): ReactNode {
     const { classes } = this.props
     const { dropdown, redemptions } = this.state
     return (

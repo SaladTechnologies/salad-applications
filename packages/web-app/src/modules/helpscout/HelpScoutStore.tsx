@@ -1,42 +1,12 @@
-import { AxiosInstance, AxiosResponse } from 'axios'
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { action, observable } from 'mobx'
-import { ErrorPageType } from '../../UIStore'
-import { AnalyticsStore } from '../analytics'
-import { AuthStore } from '../auth'
-import { AntiVirusSoftware } from '../onboarding/models'
-import { antivirusInfo, getAVData } from '../onboarding/utils'
-import { HelpScoutIdentifyUser } from './models/interfaces'
+import type { AxiosInstance, AxiosResponse } from 'axios'
+import type { AuthStore } from '../auth'
+import type { HelpScoutIdentifyUser } from './models/interfaces'
 
 const defaultHelpScoutBeaconId = '29fdaae4-715f-48dc-b93e-5552ef031abc'
 
 export class HelpScoutStore {
-  @observable
-  public errorType: ErrorPageType = ErrorPageType.Unknown
-
-  @observable
-  public antiVirusArticleList?: typeof antivirusInfo
-
-  @observable
-  public antiVirusGuideVideoId?: number
-
-  @observable
-  public selectedAntiVirusGuide?: AntiVirusSoftware
-
-  @observable helpScoutUrl?: string
-
-  @observable helpScoutFirewallArticle?: string
-
-  constructor(
-    private readonly axios: AxiosInstance,
-    private readonly analytics: AnalyticsStore,
-    private readonly auth: AuthStore,
-  ) {
+  constructor(private readonly axios: AxiosInstance, private readonly auth: AuthStore) {
     this.inject()
-  }
-
-  private setErrorType = (errorType: ErrorPageType) => {
-    this.errorType = errorType
   }
 
   private async getSignature(beaconId: string): Promise<string | undefined> {
@@ -80,29 +50,4 @@ export class HelpScoutStore {
       /* eslint-enable */
     }
   }
-
-  @action.bound
-  loadArticle = function (this: HelpScoutStore, articleID: number) {
-    this.setErrorType(ErrorPageType.AntiVirus)
-    const avSoftwareName = getAVData(articleID).name
-    if (avSoftwareName !== undefined) {
-      this.antiVirusGuideVideoId = getAVData(avSoftwareName).videoId
-    }
-    this.selectedAntiVirusGuide = avSoftwareName
-    this.helpScoutUrl = getAVData(articleID).helpScoutUrl
-  }.bind(this)
-
-  @action.bound
-  loadAntiVirusArticleList = function (this: HelpScoutStore) {
-    this.setErrorType(ErrorPageType.AntiVirus)
-    this.antiVirusArticleList = antivirusInfo
-    this.analytics.trackErrorPageViewed('Generic Anti-Virus Error')
-  }.bind(this)
-
-  @action.bound
-  loadFirewallArticle = function (this: HelpScoutStore) {
-    this.setErrorType(ErrorPageType.Firewall)
-    this.analytics.trackErrorPageViewed('Firewall Error')
-    this.helpScoutFirewallArticle = `https://support.salad.com/article/219-whitelisting-salad-in-your-firewall`
-  }.bind(this)
 }

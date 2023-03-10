@@ -1,6 +1,8 @@
 import classnames from 'classnames'
-import { Component, ReactNode } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { ReactNode } from 'react'
+import { Component } from 'react'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { P, ToggleSwitch, Username } from '.'
 
 export const styles = {
@@ -33,7 +35,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _ToggleSetting extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { title, description, disabled, toggled, onToggle, classes, children, toggleLeft, toggleRight } = this.props
 
     return (

@@ -1,7 +1,9 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Route, Switch } from 'react-router'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 import { RewardSearchBarContainer, RewardSearchResultContainer } from '../../reward-views'
 import { StorefrontPageContainer } from '../StorefrontPageContainer'
 
@@ -39,7 +41,7 @@ const styles = (theme: SaladTheme) => ({
 })
 
 class _StorefrontHomePage extends Component<WithStyles<typeof styles>> {
-  render() {
+  public override render(): ReactNode {
     const { classes } = this.props
     return (
       <div className={classes.container}>
