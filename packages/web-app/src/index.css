@@ -7,11 +7,6 @@ body {
   margin: 0;
 }
 
-.hide-toast {
-  background-color: transparent !important;
-  box-shadow: none !important;
-}
-
 @font-face {
   font-family: 'sharpGroteskBook19';
   src: url('./assets/fonts/SharpGroteskBook19.woff');

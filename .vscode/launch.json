@@ -2,25 +2,29 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug Web App",
-      "type": "chrome",
+      "name": "Launch & Debug (Chrome)",
       "request": "launch",
       "runtimeArgs": ["--disable-web-security"],
-      "url": "http://localhost:3000",
       "sourceMapPathOverrides": {
         "webpack:///src/*": "${webRoot}/*"
-      }
+      },
+      "type": "chrome",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceRoot}/src"
     },
     {
-      "type": "node",
+      "name": "Launch & Debug (Firefox)",
+      "pathMappings": [
+        {
+          "url": "http://localhost:3000",
+          "path": "${workspaceFolder}"
+        }
+      ],
+      "reAttach": true,
       "request": "launch",
-      "name": "Debug Desktop App",
-      "runtimeExecutable": "yarn",
-      "runtimeArgs": ["start"],
-      "autoAttachChildProcesses": true,
-      "internalConsoleOptions": "openOnFirstSessionStart",
-      "console": "integratedTerminal",
-      "cwd": "${workspaceRoot}/packages/desktop-app"
+      "timeout": 30,
+      "type": "firefox",
+      "url": "http://localhost:3000/"
     }
   ]
 }

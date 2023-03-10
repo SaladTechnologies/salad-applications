@@ -1,13 +1,25 @@
-import type { FunctionComponent } from 'react'
 import { Button, SvgIcon, Text } from '@saladtechnologies/garden-components'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../SaladTheme'
 import { ChevronRight, Download } from '@saladtechnologies/garden-icons'
-import { WindowBar } from '../modules/home-views/components/WindowBar'
+import { FunctionComponent, useCallback } from 'react'
+import withStyles, { WithStyles } from 'react-jss'
+import type { SaladTheme } from '../SaladTheme'
+import { WindowBar } from './WindowBar'
 
-const minimize = 'minimize-window'
-const maximize = 'maximize-window'
 const close = 'close-window'
+const maximize = 'maximize-window'
+const minimize = 'minimize-window'
+
+const sendToNative = (type: string) => {
+  const isNative =
+    window.salad &&
+    (window.salad.platform === 'electron' ||
+      window.salad.platform === 'darwin' ||
+      window.salad.platform === 'linux' ||
+      window.salad.platform === 'win32')
+  if (isNative) {
+    window.salad.dispatch(type, null)
+  }
+}
 
 const styles = (theme: SaladTheme) => ({
   upgradePageWrapper: {
@@ -56,31 +68,26 @@ const styles = (theme: SaladTheme) => ({
 })
 
 export const _UpgradePage: FunctionComponent<WithStyles<typeof styles>> = ({ classes }) => {
-  const handleDownloadSaladClick = () => {
+  const handleDownloadSaladClick = useCallback(() => {
     window.open('https://salad.com/download', '_blank')
-  }
+  }, [])
 
-  const sendToNative = (type: string) => {
-    const isNative =
-      window.salad &&
-      (window.salad.platform === 'electron' ||
-        window.salad.platform === 'darwin' ||
-        window.salad.platform === 'linux' ||
-        window.salad.platform === 'win32')
+  const handleClose = useCallback(() => {
+    sendToNative(close)
+  }, [])
 
-    if (isNative) {
-      window.salad.dispatch(type, null)
-    }
-  }
+  const handleMaximize = useCallback(() => {
+    sendToNative(maximize)
+  }, [])
+
+  const handleMinimize = useCallback(() => {
+    sendToNative(minimize)
+  }, [])
 
   return (
     <div className={classes.upgradePageWrapper}>
       <div className={classes.windowBarContainerWrapper}>
-        <WindowBar
-          onClose={() => sendToNative(close)}
-          onMaximize={() => sendToNative(maximize)}
-          onMinimize={() => sendToNative(minimize)}
-        />
+        <WindowBar onClose={handleClose} onMaximize={handleMaximize} onMinimize={handleMinimize} />
       </div>
       <div className={classes.upgradePageContainer}>
         <Text as="h1" variant="headline">

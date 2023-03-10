@@ -1,24 +1,16 @@
 // Import CSS. Order is important!
 import './index.css'
 import '@saladtechnologies/garden-fonts'
-import 'react-hint/css/index.css'
-import 'react-loading-skeleton/dist/skeleton.css'
-import 'react-toastify/dist/ReactToastify.css'
 
 // Import polyfills. Order is important!
 import 'react-app-polyfill/stable'
-import 'whatwg-fetch'
-import 'abortcontroller-polyfill'
-import 'url-polyfill'
 
-import { DefaultTheme as JSSTheme } from './SaladTheme'
-import { DefaultTheme as EmotionTheme } from '@saladtechnologies/garden-components'
 import { ThemeProvider as EmotionThemeProvider } from '@emotion/react'
-import { ThemeProvider as JSSThemeProvider } from 'react-jss'
-import { SkeletonTheme } from 'react-loading-skeleton'
-
+import { DefaultTheme as EmotionTheme } from '@saladtechnologies/garden-components'
 import ReactDOM from 'react-dom'
+import { ThemeProvider as JSSThemeProvider } from 'react-jss'
 import { UpgradePage } from './components/UpgradePage'
+import { DefaultTheme as JSSTheme } from './SaladTheme'
 
 //Adds a dummy window.salad for use in the web-app, this will be skipped in desktop-app
 if (!window.salad) {
@@ -39,14 +31,11 @@ setTimeout(() => {
       window.salad.platform === 'darwin' ||
       window.salad.platform === 'linux' ||
       window.salad.platform === 'win32')
-
   if (isNative) {
     ReactDOM.render(
       <EmotionThemeProvider theme={EmotionTheme}>
         <JSSThemeProvider theme={JSSTheme}>
-          <SkeletonTheme baseColor="#172E40" highlightColor="#304759">
-            <UpgradePage />
-          </SkeletonTheme>
+          <UpgradePage />
         </JSSThemeProvider>
       </EmotionThemeProvider>,
 
