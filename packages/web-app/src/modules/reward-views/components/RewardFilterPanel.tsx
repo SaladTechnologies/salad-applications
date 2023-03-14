@@ -1,10 +1,12 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Checkbox, SectionHeader } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 import { ClearFilterItem } from './ClearFilterItem'
 import { RewardFilterRow } from './RewardFilterRow'
-import { FilterOption } from './RewardPriceFilter'
+import type { FilterOption } from './RewardPriceFilter'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -67,7 +69,7 @@ class _RewardFilterPanel extends Component<Props> {
     onMoreClick?.()
   }
 
-  render() {
+  public override render(): ReactNode {
     const { label, options, multiSelect, showMore, classes, onRemove } = this.props
 
     if (!options) return null

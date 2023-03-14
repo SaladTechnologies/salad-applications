@@ -1,6 +1,7 @@
 import classnames from 'classnames'
 import { Img } from 'react-image'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import Skeleton from 'react-loading-skeleton'
 import { Remark } from 'react-remark'
 import { HeroTitle, SmartLink } from '../../../components'
@@ -54,7 +55,7 @@ interface Props extends WithStyles<typeof styles> {
   title: string
 }
 
-export const _StorefrontContentPanel = ({ body, color, image, imagePosition, title, classes }: Props) => {
+const _StorefrontContentPanel = ({ body, color, image, imagePosition, title, classes }: Props) => {
   return (
     <HeroPanel
       color={color}

@@ -1,9 +1,11 @@
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../SaladTheme'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { SaladTheme } from '../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -97,7 +99,7 @@ class _Checkbox extends Component<Props> {
     onClick?.(!checked)
   }
 
-  render() {
+  public override render(): ReactNode {
     const { textClassName, disabled, hideCheckbox, className, text, textElement, errorText, checked, dark, classes } =
       this.props
 

@@ -1,7 +1,9 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import { Img } from 'react-image'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { SaladTheme } from '../../../SaladTheme'
 import logo from './assets/default-image.png'
 
 const styles = (theme: SaladTheme) => ({
@@ -34,7 +36,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _RewardMissingImage extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { text, classes } = this.props
     return (
       <div className={classes.container}>

@@ -1,7 +1,7 @@
 import { action } from '@storybook/addon-actions'
 import { storiesOf } from '@storybook/react'
 import { SaladPayOrderSummaryPage } from '.'
-import { SaladPaymentRequestOptions } from '../../salad-pay/models'
+import type { SaladPaymentRequestOptions } from '../../salad-pay/models'
 import { SaladPayCheckoutButton } from './SaladPayCheckoutButton'
 import { SaladPayPage } from './SaladPayPage'
 

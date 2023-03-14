@@ -1,9 +1,11 @@
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import { Img } from 'react-image'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
-import { Level } from '../../xp/models/Level'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { SaladTheme } from '../../../SaladTheme'
+import type { Level } from '../../xp/models/Level'
 
 const styles = (theme: SaladTheme) => ({
   content: {
@@ -47,7 +49,7 @@ class _Pantry extends Component<Props> {
       return Math.round(50 * (1 - percent) * Math.sin(i))
     })
 
-  render() {
+  public override render(): ReactNode {
     const { currentXp, levels, onPantryClicked, classes } = this.props
 
     return (

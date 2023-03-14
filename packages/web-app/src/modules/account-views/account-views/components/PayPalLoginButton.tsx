@@ -1,6 +1,7 @@
 import { ButtonLink } from '@saladtechnologies/garden-components'
-import { FunctionComponent } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { FunctionComponent } from 'react'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { config } from '../../../../config'
 
 const styles = {

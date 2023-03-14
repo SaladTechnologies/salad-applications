@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { number } from '@storybook/addon-knobs'
-import { Meta } from '@storybook/react'
+import type { Meta } from '@storybook/react'
 import { defaultLevels } from '../../xp/models/defaultLevels'
 import { Pantry } from './Pantry'
 

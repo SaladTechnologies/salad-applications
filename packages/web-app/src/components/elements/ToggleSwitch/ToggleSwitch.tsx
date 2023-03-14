@@ -1,7 +1,9 @@
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   btn: {
@@ -53,7 +55,7 @@ class _ToggleSwitch extends Component<Props> {
     toggleClick?.()
   }
 
-  render() {
+  public override render(): ReactNode {
     const { toggleOn, classes, toggleLeft, toggleRight, disabled } = this.props
     return (
       <>

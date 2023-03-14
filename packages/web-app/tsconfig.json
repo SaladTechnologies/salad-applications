@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
     "allowJs": true,
+    "allowUnreachableCode": false,
     "allowSyntheticDefaultImports": true,
+    "allowUnusedLabels": false,
     "assumeChangesOnlyAffectDirectDependencies": true,
     "downlevelIteration": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
+    "importsNotUsedAsValues": "error",
     "isolatedModules": true,
     "jsx": "react-jsx",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -14,7 +17,9 @@
     "moduleResolution": "node",
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
     "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "resolveJsonModule": true,
@@ -22,5 +27,6 @@
     "strict": true,
     "target": "es5"
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["**/*.stories.ts", "**/*.stories.tsx"]
 }

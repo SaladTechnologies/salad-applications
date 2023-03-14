@@ -1,9 +1,11 @@
 import classnames from 'classnames'
-import { Component, ReactNode } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { ReactNode } from 'react'
+import { Component } from 'react'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import Carousel from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 import { StorefrontHeroButtonGroup } from './StorefrontHeroButtonGroup'
 
 const styles = (theme: SaladTheme) => ({
@@ -31,7 +33,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _StorefrontHero extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { title, classes, children } = this.props
     return (
       <div className={classnames(classes.container)}>

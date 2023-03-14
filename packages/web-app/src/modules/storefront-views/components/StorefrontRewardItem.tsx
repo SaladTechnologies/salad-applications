@@ -1,14 +1,16 @@
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import AspectRatio from 'react-aspect-ratio'
 import { Img } from 'react-image'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import Skeleton from 'react-loading-skeleton'
 import { SmartLink } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 import { RewardMissingImage } from '../../reward-views/components/RewardMissingImage'
 import { getPercentOff } from '../../reward/utils'
-import { StorefrontRewardItemProps } from '../../storefront/models'
+import type { StorefrontRewardItemProps } from '../../storefront/models'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -123,7 +125,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _StorefrontRewardItem extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { image, lowQuantity, outOfStock, name, price, originalPrice, link, quantity, rewardData, classes } =
       this.props
     return (

@@ -1,6 +1,7 @@
 import { action } from '@storybook/addon-actions'
-import { Meta } from '@storybook/react'
-import { RewardFilterPanel, ValueFilterOption } from './RewardFilterPanel'
+import type { Meta } from '@storybook/react'
+import type { ValueFilterOption } from './RewardFilterPanel'
+import { RewardFilterPanel } from './RewardFilterPanel'
 
 export default {
   title: 'Modules/Rewards/Reward Filter Panel',

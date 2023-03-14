@@ -1,10 +1,12 @@
 import { Paging, Result } from '@elastic/react-search-ui'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { P, Scrollbar } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
-import { SearchResult } from '../../reward/models'
+import type { SaladTheme } from '../../../SaladTheme'
+import type { SearchResult } from '../../reward/models'
 import { RewardDisclaimers } from '../components'
 import { IconArrowLeft } from '../components/assets'
 import LeftArrow from '../components/assets/pagination/left-arrow.svg'
@@ -158,7 +160,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _BrowseRewardsPage extends Component<Props> {
-  componentDidMount() {
+  public override componentDidMount() {
     const paginationListItems = document.querySelectorAll('.rc-pagination > li')
     if (paginationListItems) {
       paginationListItems.forEach((listItem) => listItem.removeAttribute('title'))
@@ -169,7 +171,7 @@ class _BrowseRewardsPage extends Component<Props> {
     this.props.onBack?.()
   }
 
-  render() {
+  public override render(): ReactNode {
     const { results, error, title, onClickReward, classes } = this.props
     const hasRewards = results && results.length > 0
 

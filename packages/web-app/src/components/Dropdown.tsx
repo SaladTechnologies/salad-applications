@@ -1,7 +1,10 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import Select, { OptionsOrGroups } from 'react-select'
-import { SaladTheme } from '../SaladTheme'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { OptionsOrGroups } from 'react-select'
+import Select from 'react-select'
+import type { SaladTheme } from '../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -27,7 +30,7 @@ const customStyles = {
 }
 
 class _Dropdown extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { options, onChange, classes } = this.props
 
     return (

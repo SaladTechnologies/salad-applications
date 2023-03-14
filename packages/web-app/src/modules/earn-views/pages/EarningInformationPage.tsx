@@ -1,8 +1,10 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import { Img } from 'react-image'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Divider, P, Scrollbar, SectionHeader, SmartLink } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 import earningOverview from '../assets/earning-overview.svg'
 import mining from '../assets/mining.svg'
 import referral from '../assets/referral.svg'
@@ -44,7 +46,7 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {}
 
 class _EarningInformationPage extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { classes } = this.props
 
     return (

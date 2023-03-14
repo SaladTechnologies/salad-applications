@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react'
+import type { Meta } from '@storybook/react'
 import { MiningInformation } from '.'
 
 export default {
@@ -9,4 +9,4 @@ export default {
   ],
 } as Meta
 
-export const IncompatibleGPUAndOS = () => <MiningInformation isNative={false} />
+export const IncompatibleGPUAndOS = () => <MiningInformation />

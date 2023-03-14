@@ -1,6 +1,8 @@
 import { Facet, Sorting } from '@elastic/react-search-ui'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Dropdown } from '../../../components/Dropdown'
 import { RewardFilterPanel } from './RewardFilterPanel'
 import { RewardPriceFilter } from './RewardPriceFilter'
@@ -10,7 +12,7 @@ const styles = {}
 interface Props extends WithStyles<typeof styles> {}
 
 class _RewardFilterList extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     return (
       <div>
         <Sorting

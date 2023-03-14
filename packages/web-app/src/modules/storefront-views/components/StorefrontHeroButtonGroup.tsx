@@ -1,6 +1,8 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { ButtonGroupProps } from 'react-multi-carousel/lib/types'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { ButtonGroupProps } from 'react-multi-carousel/lib/types'
 import { IconTriangleLeft, IconTriangleRight } from '../../reward-views/components/assets'
 
 const styles = {
@@ -26,7 +28,7 @@ const styles = {
 interface Props extends ButtonGroupProps, WithStyles<typeof styles> {}
 
 class _StorefrontHeroButtonGroup extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { next, previous, classes } = this.props
 
     return (

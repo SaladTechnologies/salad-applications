@@ -1,10 +1,12 @@
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import { Img } from 'react-image'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import Carousel from 'react-multi-carousel'
 import { Divider } from '../../../components'
-import { Reward } from '../../reward/models'
+import type { Reward } from '../../reward/models'
 import { RewardImageDot } from './RewardImageDot'
 
 const styles = {
@@ -80,7 +82,7 @@ const renderImageComponent = (props: Props) => {
 }
 
 class _RewardImageCarousel extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { reward, classes } = this.props
 
     const image = renderImageComponent(this.props)

@@ -1,7 +1,8 @@
-import { FC } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { FC } from 'react'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Button, Checkbox, GlassBox, Text } from '@saladtechnologies/garden-components'
-import { SaladTheme } from '../../../../SaladTheme'
+import type { SaladTheme } from '../../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   link: {

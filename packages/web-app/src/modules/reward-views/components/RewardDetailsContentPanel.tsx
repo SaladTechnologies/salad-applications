@@ -1,7 +1,9 @@
-import { Component, ReactNode } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { ReactNode } from 'react'
+import { Component } from 'react'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Divider } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -24,7 +26,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _RewardDetailsContentPanel extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { hideDivider, children, classes } = this.props
     return (
       <div className={classes.container}>

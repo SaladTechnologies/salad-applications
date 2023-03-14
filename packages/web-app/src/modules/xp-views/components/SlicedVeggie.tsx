@@ -1,7 +1,9 @@
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { Level } from '../../xp/models/Level'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { Level } from '../../xp/models/Level'
 
 const styles = {
   container: {
@@ -34,7 +36,7 @@ class _SlicedVeggie extends Component<Props> {
       return Math.round(50 * (1 - percent) * Math.sin(i))
     })
 
-  render() {
+  public override render(): ReactNode {
     const { percent, level, classes } = this.props
 
     if (!level || percent === undefined) return null

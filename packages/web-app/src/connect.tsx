@@ -1,7 +1,8 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { observer } from 'mobx-react'
-import { Component, ComponentType } from 'react'
-import { getStore, RootStore } from './Store'
+import type { ComponentType, ReactNode } from 'react'
+import { Component } from 'react'
+import type { RootStore } from './Store'
+import { getStore } from './Store'
 
 export const connect = <T extends {}>(
   mapStoreToProps: (store: RootStore, ownProps?: any) => T,
@@ -10,7 +11,7 @@ export const connect = <T extends {}>(
   @observer
   class ConnectedComponent extends Component<Partial<T>> {
     public static displayName = `connect(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`
-    render() {
+    public override render(): ReactNode {
       const store = getStore()
       const nextProps = mapStoreToProps(store, this.props)
       return <WrappedComponent {...nextProps} />

@@ -1,9 +1,10 @@
-import { FunctionComponent, ReactNode } from 'react'
+import type { FunctionComponent, ReactNode } from 'react'
 import type { FallbackProps } from 'react-error-boundary'
 import { ErrorBoundary } from 'react-error-boundary'
-import withStyles, { WithStyles } from 'react-jss'
-import { SmartLink } from './components/SmartLink'
-import { SaladTheme } from './SaladTheme'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import { SmartLink } from './components'
+import type { SaladTheme } from './SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   actionBar: {

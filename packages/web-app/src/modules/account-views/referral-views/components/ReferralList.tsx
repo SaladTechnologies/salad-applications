@@ -1,8 +1,10 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { P, SectionHeader } from '../../../../components'
-import { Referral } from '../../../referral/models'
+import type { Referral } from '../../../referral/models'
 import { ReferralItem } from './ReferralItem'
 
 const styles = {
@@ -21,7 +23,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _ReferralList extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { referrals, classes } = this.props
 
     let hasReferrals = referrals && referrals.length !== 0

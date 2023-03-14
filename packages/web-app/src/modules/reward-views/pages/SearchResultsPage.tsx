@@ -1,6 +1,8 @@
-import { Result } from '@elastic/react-search-ui'
+import type { Result } from '@elastic/react-search-ui'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { BrowseRewardsPage } from '.'
 import { SearchResult } from '../../reward/models'
 
@@ -24,7 +26,7 @@ class _SearchResultsPage extends Component<Props> {
     onBack?.()
   }
 
-  render() {
+  public override render(): ReactNode {
     const { results, onClickReward, ...rest } = this.props
 
     const searchResults = results?.map(SearchResult.parseSearchResult)

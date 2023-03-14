@@ -1,13 +1,15 @@
 import { BonusCard, Layout, Text } from '@saladtechnologies/garden-components'
 import { Observer } from 'mobx-react'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
 import type { IntlShape } from 'react-intl'
 import { injectIntl } from 'react-intl'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Head } from '../../../components'
 import { withLogin } from '../../auth-views'
-import { Bonus } from '../../bonus/models'
+import type { Bonus } from '../../bonus/models'
 
 const styles = () => ({
   cardContainer: {
@@ -27,7 +29,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _BonusPage extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { unclaimedBonuses, pendingBonuses, claimBonus, intl, classes } = this.props
     const hasBonuses = unclaimedBonuses && unclaimedBonuses.length !== 0
 

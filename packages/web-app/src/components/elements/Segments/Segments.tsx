@@ -1,7 +1,9 @@
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   btn: {
@@ -50,7 +52,7 @@ class _Segments extends Component<Props, State> {
     this.state = {}
   }
 
-  componentDidMount() {
+  public override componentDidMount() {
     const options = this.props.options
     options.forEach((option, index) => {
       this.setState({
@@ -68,7 +70,7 @@ class _Segments extends Component<Props, State> {
     action()
   }
 
-  render() {
+  public override render(): ReactNode {
     const { classes, options } = this.props
     return (
       <>

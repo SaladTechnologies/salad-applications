@@ -1,10 +1,9 @@
 import { isEqual, sortBy } from 'lodash'
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { action, computed, flow, observable } from 'mobx'
+import { action, computed } from 'mobx'
 import * as Storage from '../../Storage'
-import { RootStore } from '../../Store'
-import type { OnboardingPageItemType } from './models'
-import { OnboardingPageName, OnboardingPagesType, ONBOARDING_PAGE_NAMES } from './models'
+import type { RootStore } from '../../Store'
+import type { OnboardingPageItemType, OnboardingPageName, OnboardingPagesType } from './models'
+import { ONBOARDING_PAGE_NAMES } from './models'
 
 const ONBOARDING_STORAGE_KEY = 'ONBOARDING_PAGES_COMPLETED'
 
@@ -28,37 +27,8 @@ export class OnboardingStore {
       { NAME: ONBOARDING_PAGE_NAMES.WELCOME, PATH: '/onboarding/welcome', ORDER: 1, NATIVE: false },
       { NAME: ONBOARDING_PAGE_NAMES.REFERRAL, PATH: '/onboarding/referral', ORDER: 2, NATIVE: false },
     ]
-    if (this.store.native.isNative) {
-      pages.push({
-        NAME: ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION,
-        PATH: '/onboarding/auto-start',
-        ORDER: 3,
-        NATIVE: true,
-      })
-    }
-    if (this.store.native.canWhitelistWindowsDefenderAndDisableSleepMode) {
-      pages.push(
-        {
-          NAME: ONBOARDING_PAGE_NAMES.SLEEP_MODE_CONFIGURATION,
-          PATH: '/onboarding/sleep-mode',
-          ORDER: 4,
-          NATIVE: true,
-        },
-        {
-          NAME: ONBOARDING_PAGE_NAMES.ANTIVIRUS_CONFIGURATION,
-          PATH: '/onboarding/antivirus-configuration',
-          ORDER: 5,
-          NATIVE: true,
-        },
-      )
-    }
     return pages
   }
-
-  public disableSleepModePending: boolean = false
-
-  @observable
-  public disableSleepModeErrorMessage?: string = undefined
 
   @computed
   public get hasCompletedAvailableOnboardingPages(): boolean {
@@ -99,23 +69,6 @@ export class OnboardingStore {
       }
     }
 
-    /**
-     * We renamed our AFK Configuration page to Auto Start so we are checking to
-     * see if users have seen the AFK Config page and if they have, we are swapping
-     * it out in our onboardingPagesCompleted array with our updated Auto Start page name
-     * so users do not see this page again.
-     * */
-    if (this.onboardingPagesCompleted?.includes(ONBOARDING_PAGE_NAMES.AFK_CONFIGURATION)) {
-      this.updateCompletedOnboardingPages(
-        JSON.parse(
-          this.onboardingPagesCompleted.replace(
-            ONBOARDING_PAGE_NAMES.AFK_CONFIGURATION,
-            ONBOARDING_PAGE_NAMES.AUTO_START_CONFIGURATION,
-          ),
-        ),
-      )
-    }
-
     if (this.hasOnboardingPagesToComplete(this.onboardingPagesCompleted)) {
       this.routeToNextUncompletedPage()
     }
@@ -138,11 +91,7 @@ export class OnboardingStore {
    * this function will do that.
    */
   @action
-  public reshowOnboardingPagesIfNeeded = () => {
-    if (this.store.onboardingAutoStart.shouldShowAutoStartPageAgain) {
-      this.store.onboardingAutoStart.showAutoStartPageAgain()
-    }
-  }
+  public reshowOnboardingPagesIfNeeded = () => {}
 
   /**
    * Updates onboarding store state and local storage with
@@ -191,26 +140,6 @@ export class OnboardingStore {
     }
   }
 
-  @action.bound
-  public disableSleepMode = flow(function* (this: OnboardingStore) {
-    this.disableSleepModeErrorMessage = undefined
-    this.disableSleepModePending = true
-    try {
-      yield this.store.native.disableSleepMode()
-    } catch {
-      this.disableSleepModeErrorMessage =
-        'Something went wrong and we were unable to adjust your sleep mode settings. You can adjust these settings yourself in Windows Settings, or contact support for assistance.'
-    } finally {
-      this.disableSleepModePending = false
-      this.viewNextPage(ONBOARDING_PAGE_NAMES.SLEEP_MODE_CONFIGURATION)
-    }
-  })
-
-  @action
-  public skipSleepMode = () => {
-    this.viewNextPage(ONBOARDING_PAGE_NAMES.SLEEP_MODE_CONFIGURATION)
-  }
-
   private findNextPageByOrder = (sortedOnboardingPages: OnboardingPagesType, nextPage: number) => {
     return sortedOnboardingPages.find((page) => page.ORDER === nextPage)
   }
@@ -233,7 +162,7 @@ export class OnboardingStore {
       const completedPagesCopy = [...this.completedOnboardingPages]
       let nextOnboardingPageOrder = currentOnboardingPageOrder + 1
 
-      while (nextOnboardingPageOrder <= sortedOnboardingPages[sortedOnboardingPages.length - 1].ORDER) {
+      while (nextOnboardingPageOrder <= sortedOnboardingPages[sortedOnboardingPages.length - 1]!.ORDER) {
         const nextPageByOrder = this.findNextPageByOrder(sortedOnboardingPages, nextOnboardingPageOrder)
 
         if (nextPageByOrder) {
@@ -252,16 +181,7 @@ export class OnboardingStore {
 
     if (nextOnboardingPage) {
       this.store.routing.push(nextOnboardingPage.PATH)
-      if (nextOnboardingPage.NAME === ONBOARDING_PAGE_NAMES.ANTIVIRUS_CONFIGURATION) {
-        const antivirusConfigurationPageType = this.store.onboardingAntivirus.pageType
-        this.store.analytics.trackOnboardingPageViewed(
-          nextOnboardingPage.NAME,
-          nextOnboardingPage.ORDER,
-          antivirusConfigurationPageType,
-        )
-      } else {
-        this.store.analytics.trackOnboardingPageViewed(nextOnboardingPage.NAME, nextOnboardingPage.ORDER)
-      }
+      this.store.analytics.trackOnboardingPageViewed(nextOnboardingPage.NAME, nextOnboardingPage.ORDER)
     } else {
       this.store.routing.push('/store')
     }

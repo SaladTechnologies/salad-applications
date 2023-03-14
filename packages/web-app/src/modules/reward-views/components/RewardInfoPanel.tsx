@@ -1,10 +1,13 @@
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import { Img } from 'react-image'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Divider } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
-import { Reward, RewardPlatform } from '../../reward/models'
+import type { SaladTheme } from '../../../SaladTheme'
+import type { Reward } from '../../reward/models'
+import { RewardPlatform } from '../../reward/models'
 import android from './assets/logos/android.png'
 import apple from './assets/logos/apple.png'
 import epicGames from './assets/logos/epicGames.png'
@@ -84,7 +87,7 @@ const getPlatformIcon = (platform?: RewardPlatform): string | undefined => {
 }
 
 class _RewardInfoPanel extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { reward, classes } = this.props
 
     if (!reward) {

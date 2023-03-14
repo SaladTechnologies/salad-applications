@@ -1,4 +1,5 @@
-import { Component, ReactNode } from 'react'
+import type { ReactNode } from 'react'
+import { Component } from 'react'
 import ReactDOM from 'react-dom'
 
 export interface PortalProps {
@@ -13,15 +14,15 @@ export class Portal extends Component<PortalProps> {
     this.portalElement = document.createElement('div')
   }
 
-  componentDidMount() {
+  public override componentDidMount() {
     document.body.appendChild(this.portalElement)
   }
 
-  componentWillUnmount() {
+  public override componentWillUnmount() {
     document.body.removeChild(this.portalElement)
   }
 
-  render() {
+  public override render(): ReactNode {
     const { children } = this.props
     return ReactDOM.createPortal(children, this.portalElement)
   }

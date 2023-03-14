@@ -10,9 +10,9 @@
   <a href="https://salad.com"><img src="./docs/banner.png" width="100%" /></a>
 </center>
 
-Salad allows gamers to mine crypto in their downtime. We turn your GPU power into credits you can spend on items like subscriptions, games, gift cards, and more from our curated storefront.
+Salad allows gamers to earn rewards from their PCs. We turn your GPU power into credits you can spend on items like subscriptions, games, gift cards, and more from our curated storefront.
 
-Our applications [mine cryptocurrency](https://salad.com/blog/gamers-guide-blockchain-crypto) and the mining software is downloaded from our ["plugin" repository](https://github.com/SaladTechnologies/plugin-downloads/).
+Our applications run high-performance computing jobs using [GPU-accelerated containers](https://salad.com/blog/container-workloads/), [stream bandwidth](https://salad.com/blog/high-bandwidth-jobs), and [mine cryptocurrency](https://salad.com/blog/gamers-guide-blockchain-crypto). They put your idle PC resources to work.
 
 **Table of contents**
 
@@ -35,7 +35,3 @@ Download and install the [latest release](https://github.com/SaladTechnologies/s
 ## Contributing
 
 Check out our [contributing guide](./CONTRIBUTING.md) for more details.
-
-## Bug Bounty
-
-Salad is committed to building and protecting the world's most trusted way to monetize idle compute time. If you believe you have discovered a security vulnerability, we will gladly compensate you with some 💰💰💰 for responsibly disclosing the issue to us. Check out our [security policy](https://github.com/SaladTechnologies/salad-applications/security/policy) for more details.

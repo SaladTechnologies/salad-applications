@@ -1,4 +1,4 @@
-import { HelpScoutIdentifyUser } from './interfaces'
+import type { HelpScoutIdentifyUser } from './interfaces'
 
 declare function Beacon(method: 'init', beaconId: string): void
 declare function Beacon(method: 'destroy'): void

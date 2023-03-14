@@ -1,5 +1,5 @@
 import { connect } from '../../connect'
-import { RootStore } from '../../Store'
+import type { RootStore } from '../../Store'
 import { VaultList } from './components/VaultList'
 
 const mapStoreToProps = (store: RootStore): any => ({

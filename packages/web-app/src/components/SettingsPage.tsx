@@ -1,9 +1,10 @@
 import classnames from 'classnames'
-import { Component, ComponentType } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { ComponentType, ReactNode } from 'react'
+import { Component } from 'react'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Route } from 'react-router'
-import { Button, Divider, Head, LinkListUnstyled, MenuTitle } from '.'
-import { DesktopRoute } from '../DesktopRoute'
+import { Button, Divider, LinkListUnstyled, MenuTitle } from '.'
 import { IconArrowLeft } from '../modules/reward-views/components/assets'
 import { styles } from './SettingsPage.styles'
 
@@ -16,7 +17,6 @@ export interface MenuItem {
   /** Is the item clickable */
   enabled?: boolean
   inset?: boolean
-  desktopOnly?: boolean
   externalLink?: boolean
 }
 
@@ -26,72 +26,37 @@ export interface MenuButton {
 }
 
 interface Props extends WithStyles<typeof styles> {
-  pageTitle?: string
-  onClose?: () => void
-  onSendBug?: () => void
-  menuItems?: MenuItem[]
-  menuButtons?: MenuButton[]
-  appVersion?: string
   appBuild?: string
-  latestDesktop?: boolean
-  onDownloadLatestDesktop?: () => void
+  menuButtons?: MenuButton[]
+  menuItems?: MenuItem[]
+  onClose?: () => void
 }
 
 class _Settings extends Component<Props> {
-  state = {
-    buttonToggle: false,
-  }
-
-  componentDidMount() {
+  public override componentDidMount() {
     document.addEventListener('keyup', this.handleCloseKeyPress)
   }
 
-  componentWillUnmount() {
+  public override componentWillUnmount() {
     document.removeEventListener('keyup', this.handleCloseKeyPress)
   }
 
-  handleBugClicked = () => {
-    const { onSendBug } = this.props
-
-    if (onSendBug) onSendBug()
-  }
-
-  handleCloseClicked = () => {
+  private handleCloseClicked = () => {
     const { onClose } = this.props
-
     onClose?.()
   }
 
-  handleCloseKeyPress = (e: any) => {
+  private handleCloseKeyPress = (e: any) => {
     if (e.key === 'Escape') {
       const { onClose } = this.props
       onClose?.()
     }
   }
 
-  handleDownloadLatest = () => {
-    const { onDownloadLatestDesktop } = this.props
-
-    if (onDownloadLatestDesktop) onDownloadLatestDesktop()
-  }
-
-  render() {
-    const {
-      appVersion,
-      appBuild,
-      classes,
-      menuItems,
-      menuButtons,
-      latestDesktop,
-      onSendBug,
-      onDownloadLatestDesktop,
-      onClose,
-      pageTitle,
-    } = this.props
-
+  public override render(): ReactNode {
+    const { appBuild, classes, menuButtons, menuItems, onClose } = this.props
     return (
       <div className={classes.container}>
-        <Head title={pageTitle} />
         <div className={classnames(classes.menu, classes.menuItems)}>
           {onClose && (
             <>
@@ -107,33 +72,16 @@ class _Settings extends Component<Props> {
           {menuItems && <LinkListUnstyled list={menuItems} trackingType="sidebar" />}
 
           <div className={classes.buttonContainer}>
-            {onSendBug && <Button onClick={this.handleBugClicked}>Submit Bug</Button>}
             {menuButtons && menuButtons.map((x) => <Button onClick={x.onClick}>{x.text}</Button>)}
           </div>
           <div className={classes.versionContainer}>
-            {appVersion !== undefined && (
-              <MenuTitle className={classnames({ [classes.outOfDateLabel]: !latestDesktop })}>
-                Version: {appVersion ? appVersion : '-'}
-              </MenuTitle>
-            )}
             {appBuild !== undefined && <MenuTitle>Build: {appBuild ? appBuild.slice(0, 7) : '-'}</MenuTitle>}
           </div>
-          {!latestDesktop && onDownloadLatestDesktop && (
-            <div className={classes.updateSalad}>
-              <Divider />
-              <Button onClick={this.handleDownloadLatest}>Get Latest Version</Button>
-            </div>
-          )}
         </div>
         <div className={classnames(classes.settings)}>
-          {/* Adds each path */}
-          {menuItems?.map((x) =>
-            x.desktopOnly ? (
-              <DesktopRoute key={x.url} exact path={x.url} component={x.component} />
-            ) : (
-              <Route key={x.url} exact path={x.url} component={x.component} />
-            ),
-          )}
+          {menuItems?.map((x) => (
+            <Route key={x.url} exact path={x.url} component={x.component} />
+          ))}
         </div>
       </div>
     )

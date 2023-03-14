@@ -1,4 +1,4 @@
-import { StorefrontBlockComponent } from '../storefront/models'
+import type { StorefrontBlockComponent } from '../storefront/models'
 
 /**
  * Returns mock Strapi Block data based on block type
@@ -292,8 +292,7 @@ export const strapiJSON = {
       __component: 'storefront.content-block',
       id: 1,
       title: 'Offerwalls',
-      body:
-        'Earn Salad Balance by completing tasks such as downloading and playing mobile games. Whether you just want to top off your balance, boost your regular earnings, or can’t mine with Salad, offerwalls allow you to make more money.\n\n[Take Me There](/earn/offerwall)',
+      body: 'Earn Salad Balance by completing tasks such as downloading and playing mobile games. Whether you just want to top off your balance, boost your regular earnings, or can’t mine with Salad, offerwalls allow you to make more money.\n\n[Take Me There](/earn/offerwall)',
       color: 'cyan',
       image: null,
     },

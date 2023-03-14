@@ -1,9 +1,11 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { SectionHeader, StatElement } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 import { formatBalance } from '../../../utils'
-import { BonusEarningRate } from '../../bonus/models'
+import type { BonusEarningRate } from '../../bonus/models'
 
 const styles = (theme: SaladTheme) => ({
   container: {},
@@ -29,7 +31,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _EarningSummary extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { currentBalance, lifetimeBalance, totalXp, bonusEarningRate, classes } = this.props
 
     return (

@@ -2,15 +2,17 @@ import { DefaultTheme as GardenTheme } from '@saladtechnologies/garden-component
 import classnames from 'classnames'
 import { uniq } from 'lodash'
 import moment from 'moment'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import type { CategoricalChartState } from 'recharts/types/chart/generateCategoricalChart'
 import { P } from '../../../components'
 import { Segments } from '../../../components/elements/Segments'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 import { formatBalance } from '../../../utils'
-import { EarningWindow } from '../../balance/models'
+import type { EarningWindow } from '../../balance/models'
 import { getRangeTooltipTimestamp, getTooltipTimestamp } from '../utils'
 
 const styles = (theme: SaladTheme) => ({
@@ -283,11 +285,11 @@ class _EarningChart extends Component<Props, State> {
     }
   }
 
-  componentDidMount() {
+  public override componentDidMount() {
     this.props.viewLast24Hours()
   }
 
-  shouldComponentUpdate(nextProps: Props, nextState: State) {
+  public override shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
     if (this.props.earningHistory !== nextProps.earningHistory) {
       return true
     }
@@ -350,9 +352,9 @@ class _EarningChart extends Component<Props, State> {
       if (selectingRangeInProgress) {
         const uniqueIndexes = uniq(selectedRangeIndexes.concat(nextState.activeTooltipIndex ?? 0))
         for (var i = 1; i < uniqueIndexes.length; i++) {
-          if (uniqueIndexes[i] - uniqueIndexes[i - 1] !== 1) {
-            let missingSequenceNum: number = uniqueIndexes[i - 1] + 1
-            while (missingSequenceNum < uniqueIndexes[i]) {
+          if (uniqueIndexes[i]! - uniqueIndexes[i - 1]! !== 1) {
+            let missingSequenceNum: number = uniqueIndexes[i - 1]! + 1
+            while (missingSequenceNum < uniqueIndexes[i]!) {
               uniqueIndexes.push(missingSequenceNum)
               missingSequenceNum++
             }
@@ -413,7 +415,7 @@ class _EarningChart extends Component<Props, State> {
 
   getTimeValue = (earningWindow: EarningWindow) => moment(earningWindow.timestamp).valueOf()
 
-  render() {
+  public override render(): ReactNode {
     const { daysShowing, classes, earningHistory, viewLast24Hours, viewLast7Days, viewLast30Days } = this.props
     const {
       hoverIndex,

@@ -1,10 +1,12 @@
 import { faClipboard } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { P, Username } from '../../../../components'
-import { SaladTheme } from '../../../../SaladTheme'
+import type { SaladTheme } from '../../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -35,7 +37,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _ReferralCode extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { code, classes } = this.props
 
     return (

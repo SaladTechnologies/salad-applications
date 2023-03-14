@@ -18,7 +18,7 @@ import { createBrowserHistory } from 'history'
 import { Observer } from 'mobx-react'
 import { syncHistoryWithStore } from 'mobx-react-router'
 import allSettled from 'promise.allsettled'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { createIntl, createIntlCache, RawIntlProvider } from 'react-intl'
 import { ThemeProvider as JSSThemeProvider } from 'react-jss'
 import { SkeletonTheme } from 'react-loading-skeleton'
@@ -35,19 +35,7 @@ import { Tooltips } from './Tooltips'
 
 allSettled.shim()
 
-//Adds a dummy window.salad for use in the web-app, this will be skipped in desktop-app
-if (!window.salad) {
-  window.salad = {
-    platform: 'web',
-    apiVersion: 100000000,
-    // @ts-ignore
-    dispatch: (type: string, payload: any) => {},
-    // @ts-ignore
-    onNative: (args: { type: string; payload: any }) => {},
-  }
-}
-
-console.log(`Running web app build:${config.appBuild}`)
+console.log(`Running web app build: ${config.appBuild}`)
 
 const client = createClient()
 const featureManager = new UnleashFeatureManager(config, undefined)
@@ -86,7 +74,8 @@ setTimeout(() => {
     cache,
   )
 
-  ReactDOM.render(
+  const container = createRoot(document.getElementById('root') as HTMLDivElement)
+  container.render(
     <FeatureManagerProvider value={featureManager}>
       <Router history={history}>
         <RawIntlProvider value={intl}>
@@ -117,6 +106,5 @@ setTimeout(() => {
         </RawIntlProvider>
       </Router>
     </FeatureManagerProvider>,
-    document.getElementById('root'),
   )
 }, 0)

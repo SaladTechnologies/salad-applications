@@ -1,13 +1,15 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Divider, Scrollbar, SectionHeader } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 import { withLogin } from '../../auth-views'
-import { EarningWindow } from '../../balance/models'
-import { BonusEarningRate } from '../../bonus/models'
+import type { EarningWindow } from '../../balance/models'
+import type { BonusEarningRate } from '../../bonus/models'
 import { PantryContainer, SlicedVeggieContainer } from '../../xp-views'
 import { EarningHistory, EarningSummary } from '../components'
-import { EarningInformationContainer } from '../EarningInformationContainer'
+import { EarningInformationPage } from './EarningInformationPage'
 
 const styles = (theme: SaladTheme) => ({
   content: {
@@ -49,7 +51,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _EarningSummaryPage extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { classes, ...rest } = this.props
 
     return (
@@ -70,4 +72,4 @@ class _EarningSummaryPage extends Component<Props> {
   }
 }
 
-export const EarningSummaryPage = withLogin(withStyles(styles)(_EarningSummaryPage), EarningInformationContainer)
+export const EarningSummaryPage = withLogin(withStyles(styles)(_EarningSummaryPage), EarningInformationPage)

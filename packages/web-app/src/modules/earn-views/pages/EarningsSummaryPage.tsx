@@ -1,12 +1,12 @@
-import { Button, HardwareCard, HardwareCardProps, Layout, Text } from '@saladtechnologies/garden-components'
+import { Layout, Text } from '@saladtechnologies/garden-components'
 import classnames from 'classnames'
 import Scrollbars from 'react-custom-scrollbars'
 import { useIntl } from 'react-intl'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Head } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
 import type { EarningWindow } from '../../balance/models'
-import { ActiveWorkloads } from '../../machine/models'
 import { EarningChart } from '../components/EarningChart'
 import { EarningChartPanel } from '../components/EarningChartPanel'
 import { getIntervalEarnings } from '../utils'
@@ -18,7 +18,7 @@ const styles = (theme: SaladTheme) => ({
   },
   container: {
     position: 'fixed',
-    top: (props: EarningsSummaryPageProps) => (props.isNative ? '4.1rem' : 0),
+    top: 0,
     bottom: 0,
     left: 0,
     right: 0,
@@ -117,34 +117,26 @@ const styles = (theme: SaladTheme) => ({
 })
 
 export interface EarningsSummaryPageProps extends WithStyles<typeof styles> {
-  activeWorkloads: ActiveWorkloads
   currentBalance: number
   daysShowing: 1 | 7 | 30
   earningHistory: EarningWindow[]
-  isNative?: boolean
   lifetimeBalance: number
   lifetimeXP: number
-  onViewMachineSettingsPage: () => void
   viewLast24HR: () => void
   viewLast7Days: () => void
   viewLast30Days: () => void
-  hardwareDetected: HardwareCardProps[] | []
 }
 
 const _EarningsSummaryPage = ({
-  activeWorkloads,
   classes,
   currentBalance,
   daysShowing,
   lifetimeBalance,
   lifetimeXP,
-  onViewMachineSettingsPage,
   earningHistory,
   viewLast24HR,
   viewLast7Days,
   viewLast30Days,
-  hardwareDetected,
-  isNative,
 }: EarningsSummaryPageProps) => {
   const intl = useIntl()
 
@@ -160,8 +152,6 @@ const _EarningsSummaryPage = ({
   const lifetimeBalanceThousandths = lifetimeBalanceLabel.substring(lifetimeBalanceLabel.length - 2)
 
   const intervalEarnings = getIntervalEarnings(earningHistory)
-
-  const hasHardware = hardwareDetected.length > 0
 
   return (
     <div className={classes.container}>
@@ -212,80 +202,6 @@ const _EarningsSummaryPage = ({
               viewLast7Days={viewLast7Days}
               viewLast30Days={viewLast30Days}
             />
-            {isNative && hasHardware && (
-              <div className={classes.detectedHardware}>
-                <div className={classnames(classes.sectionTitle, classes.lightGreenColor)}>
-                  <Text variant="base3XL">Detected Hardware</Text>
-                </div>
-                <Button variant="outlined" label="Machine Settings" onClick={onViewMachineSettingsPage} />
-                <div className={classes.hardwareCards}>
-                  {hardwareDetected.map((hardware, index) => (
-                    <HardwareCard
-                      key={index}
-                      name={hardware.name}
-                      configured={hardware.configured}
-                      configureWorkloadLabel={hardware.configureWorkloadLabel}
-                      configureWorkloadClick={hardware.configureWorkloadClick}
-                      configureWorkloadDisabled={hardware.configureWorkloadDisabled}
-                      configureWorkloadPending={hardware.configureWorkloadPending}
-                      stats={hardware.stats}
-                      type={hardware.type}
-                      workloads={hardware.workloads}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-            {isNative && (
-              <div className={classes.detectedHardware}>
-                <div className={classnames(classes.sectionTitle, classes.lightGreenColor)}>
-                  <Text variant="base3XL">Current Workloads</Text>
-                </div>
-                <div className={classes.activeWorkloadsContainer}>
-                  <div className={classnames(classes.row, classes.titleRow)}>
-                    <div className={classes.firstColumn}>
-                      <Text variant="baseL">Name</Text>
-                    </div>
-                    <div className={classes.column}>
-                      <Text variant="baseL">Version</Text>
-                    </div>
-                    <div className={classes.column}>
-                      <Text variant="baseL">Algorithm</Text>
-                    </div>
-                  </div>
-
-                  {activeWorkloads.length > 0 ? (
-                    <>
-                      {activeWorkloads.map((metadata, index) => (
-                        <div key={index} className={classnames(classes.row, classes.contentRow)}>
-                          <div className={classes.firstColumn}>
-                            <Text variant="baseXXL">{metadata.name ? metadata.name : '-'}</Text>
-                          </div>
-                          <div className={classes.column}>
-                            <Text variant="baseXXL">{metadata.version ? metadata.version : '-'}</Text>
-                          </div>
-                          <div className={classes.column}>
-                            <Text variant="baseXXL">{metadata.algorithm ? metadata.algorithm : '-'}</Text>
-                          </div>
-                        </div>
-                      ))}
-                    </>
-                  ) : (
-                    <div className={classnames(classes.row, classes.contentRow)}>
-                      <div className={classes.firstColumn}>
-                        <Text variant="baseXXL">-</Text>
-                      </div>
-                      <div className={classes.column}>
-                        <Text variant="baseXXL">-</Text>
-                      </div>
-                      <div className={classes.column}>
-                        <Text variant="baseXXL">-</Text>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
           </Layout>
         </Scrollbars>
       </div>

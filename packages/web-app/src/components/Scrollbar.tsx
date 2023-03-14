@@ -1,6 +1,8 @@
-import { Component, ReactNode } from 'react'
+import type { ReactNode } from 'react'
+import { Component } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 
 const styles = {
   scrollThumb: {
@@ -19,7 +21,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _Scrollbar extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { classes, children } = this.props
     const renderThumb = (props: any) => <div {...props} className={classes.scrollThumb} />
 

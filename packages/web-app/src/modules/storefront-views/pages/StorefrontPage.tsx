@@ -1,15 +1,21 @@
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Head, Scrollbar } from '../../../components'
 import { NotificationBannerContainer } from '../../home-views/NotificationBannerContainer'
-import {
-  StorefrontBlockComponent,
+import type {
   StorefrontCommunityChallengeProps,
   StorefrontContentBlockProps,
   StorefrontHeroBlockProps,
   StorefrontPageProps,
-  StorefrontRewardBlockProps
+  StorefrontRewardBlockProps,
 } from '../../storefront/models'
-import { StorefrontCommunityChallengeBlock, StorefrontContentBlock, StorefrontHeroBlock, StorefrontRewardBlock } from '../blocks'
+import { StorefrontBlockComponent } from '../../storefront/models'
+import {
+  StorefrontCommunityChallengeBlock,
+  StorefrontContentBlock,
+  StorefrontHeroBlock,
+  StorefrontRewardBlock,
+} from '../blocks'
 import { StorefrontSkeleton } from '../components'
 
 const styles = {
@@ -31,9 +37,8 @@ const _StorefrontPage = ({ data, classes }: Props) => {
       <div className={classes.content}>
         <NotificationBannerContainer />
         {data?.blocks.length > 0 ? (
-          data?.blocks?.map((block, index) =>
-          {
-            switch(block.__component){
+          data?.blocks?.map((block, index) => {
+            switch (block.__component) {
               case StorefrontBlockComponent.Hero:
                 return <StorefrontHeroBlock key={index} block={block as StorefrontHeroBlockProps} />
               case StorefrontBlockComponent.Reward:
@@ -41,7 +46,9 @@ const _StorefrontPage = ({ data, classes }: Props) => {
               case StorefrontBlockComponent.Content:
                 return <StorefrontContentBlock key={index} block={block as StorefrontContentBlockProps} />
               case StorefrontBlockComponent.CommunityChallenge:
-                return <StorefrontCommunityChallengeBlock key={index} block={block as StorefrontCommunityChallengeProps} />
+                return (
+                  <StorefrontCommunityChallengeBlock key={index} block={block as StorefrontCommunityChallengeProps} />
+                )
             }
             return null
           })

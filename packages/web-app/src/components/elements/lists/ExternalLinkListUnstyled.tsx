@@ -1,8 +1,10 @@
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { SmartLink } from '../..'
-import { LinkTrackingInfo } from '../../../modules/analytics/models'
+import type { LinkTrackingInfo } from '../../../modules/analytics/models'
 import { getStore } from '../../../Store'
 
 const styles = {
@@ -25,7 +27,7 @@ interface Props extends WithStyles<typeof styles> {
 class _ExternalLinkListUnstyled extends Component<Props> {
   store = getStore()
 
-  render() {
+  public override render(): ReactNode {
     const { list, classes } = this.props
 
     return (

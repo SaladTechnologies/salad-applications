@@ -1,8 +1,10 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Head, Scrollbar } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
-import { Reward } from '../../reward/models'
+import type { SaladTheme } from '../../../SaladTheme'
+import type { Reward } from '../../reward/models'
 import {
   RewardDescriptionPanel,
   RewardDisclaimers,
@@ -46,12 +48,12 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _RewardDetailsPage extends Component<Props> {
-  componentDidMount = () => {
+  public override componentDidMount = () => {
     const { rewardId, loadReward } = this.props
     loadReward?.(rewardId)
   }
 
-  render() {
+  public override render(): ReactNode {
     const {
       reward,
       onRedeem,

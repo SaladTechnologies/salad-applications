@@ -1,8 +1,10 @@
 import classnames from 'classnames'
-import { ChangeEvent, Component, FocusEvent } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { ChangeEvent, FocusEvent, ReactNode } from 'react'
+import { Component } from 'react'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { ErrorText } from '.'
-import { SaladTheme } from '../SaladTheme'
+import type { SaladTheme } from '../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -49,7 +51,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _TextField extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { className, errorText, classes, ...input } = this.props
     return (
       <div className={classes.container}>

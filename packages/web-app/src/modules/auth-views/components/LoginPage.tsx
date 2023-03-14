@@ -1,3 +1,4 @@
+import type { TextFieldRefHandlers } from '@saladtechnologies/garden-components'
 import {
   Checkbox,
   FieldContainer,
@@ -5,23 +6,23 @@ import {
   SvgSecondaryLogoLockup,
   Text,
   TextField,
-  TextFieldRefHandlers,
 } from '@saladtechnologies/garden-components'
-import { FormValues } from '@saladtechnologies/garden-components/lib/components/TextField/TextField'
+import type { FormValues } from '@saladtechnologies/garden-components/lib/components/TextField/TextField'
 import { Key, Mail } from '@saladtechnologies/garden-icons'
 import classnames from 'classnames'
 import { useEffect, useRef } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import MediaQuery from 'react-responsive'
 import { Head } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 import { FormSteps } from '../../auth/AuthStore'
 import LoginPageRewards from '../assets/login-screen-rewards.png'
 
 const styles = (theme: SaladTheme) => ({
   container: {
     position: 'fixed',
-    top: (props: Props) => (props.isNative ? '4.1rem' : 0),
+    top: 0,
     bottom: 0,
     left: 0,
     right: 0,
@@ -85,7 +86,6 @@ interface Props extends WithStyles<typeof styles> {
   currentEmail?: string
   isSubmitting: boolean
   isSubmitSuccess: boolean
-  isNative: boolean
   acceptedTerms?: boolean
   errorMessage?: string
   onSubmitEmail?: (email: string) => void

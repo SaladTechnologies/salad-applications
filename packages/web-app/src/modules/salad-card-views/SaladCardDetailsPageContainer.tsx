@@ -1,6 +1,7 @@
 import { connect } from '../../connect'
-import { RootStore } from '../../Store'
-import { SaladCardDetailsPage, SaladCardDetailsPageProps } from './pages/SaladCardDetailsPage'
+import type { RootStore } from '../../Store'
+import type { SaladCardDetailsPageProps } from './pages/SaladCardDetailsPage'
+import { SaladCardDetailsPage } from './pages/SaladCardDetailsPage'
 
 const mapStoreToProps = (store: RootStore): Omit<SaladCardDetailsPageProps, 'classes'> => ({
   hasSaladCard: store.saladCard.hasSaladCard,

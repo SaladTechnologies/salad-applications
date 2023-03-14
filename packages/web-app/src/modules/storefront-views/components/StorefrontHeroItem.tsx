@@ -1,15 +1,17 @@
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import AspectRatio from 'react-aspect-ratio'
 import 'react-aspect-ratio/aspect-ratio.css'
 import { Img } from 'react-image'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import Skeleton from 'react-loading-skeleton'
 import { Button, SmartLink } from '../../../components'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 import { RewardMissingImage } from '../../reward-views/components/RewardMissingImage'
 import { getPercentOff } from '../../reward/utils'
-import { StorefrontRewardItemProps } from '../../storefront/models'
+import type { StorefrontRewardItemProps } from '../../storefront/models'
 
 const styles = (theme: SaladTheme) => ({
   content: {
@@ -138,7 +140,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _StorefrontHeroItem extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const {
       altText,
       body,

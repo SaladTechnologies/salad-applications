@@ -1,5 +1,7 @@
-import { Component, ReactNode } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { ReactNode } from 'react'
+import { Component } from 'react'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Route, Switch } from 'react-router'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
@@ -27,7 +29,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _AnimatedSwitch extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { classes, children } = this.props
 
     return (

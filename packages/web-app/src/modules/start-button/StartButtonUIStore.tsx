@@ -1,9 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { action, computed, observable } from 'mobx'
-import { RootStore } from '../../Store'
-import { ErrorPageType } from '../../UIStore'
-import { MiningStatus } from '../machine/models'
-import { StartActionType } from '../salad-bowl/models'
+import { computed } from 'mobx'
+import type { RootStore } from '../../Store'
 
 interface StartButtonProperties {
   label: string
@@ -22,86 +18,29 @@ interface StartButtonProperties {
   toolTipError?: boolean
 }
 
-interface StartButtonToolTipProps {
-  message?: string
-  error?: boolean
-}
-
 export class StartButtonUIStore {
   constructor(private readonly store: RootStore) {}
 
-  @observable
-  public startButtonToolTip: StartButtonToolTipProps = {}
-
-  @observable
-  private supportNeeded?: boolean = false
-
-  @action
-  setStartButtonToolTip = (toolTip?: string, error?: boolean) => {
-    this.startButtonToolTip = {
-      message: toolTip,
-      error: error,
-    }
-  }
-
-  @action
-  setSupportNeeded = (value: boolean) => {
-    this.supportNeeded = value
-  }
-
   @computed
   get properties(): StartButtonProperties {
+    const isAuthenticated = this.store.auth.isAuthenticated
     const handleLogin = () => {
       this.store.analytics.trackButtonClicked('login_button', 'Log In Button', 'enabled')
       this.store.auth.login()
     }
-    const isAuthenticated = this.store.auth.isAuthenticated
-    const status = this.store.saladBowl.status
-    const isRunning = this.store.saladBowl.isRunning
-    const isNative = this.store.native.isNative
-    const isPrepping = status !== MiningStatus.Running && this.store.saladBowl.runningTime !== undefined
-    const nativeLabel = !this.store.saladBowl.isRunning
-      ? 'Start'
-      : isPrepping
-      ? status === MiningStatus.Installing
-        ? MiningStatus.Installing
-        : MiningStatus.Initializing
-      : status
-
-    const label = isNative ? nativeLabel : 'Download'
-    const saladBowlConnected = this.store.saladBowl.saladBowlConnected
-
-    const notConnected = () => {
-      if (this.supportNeeded) {
-        window.open('https://support.salad.com/', '_blank')
-      }
+    const handleDownload = () => {
+      window.open('https://salad.com/download', '_blank')
     }
-
-    const saladBowlPendingLabel = this.supportNeeded ? 'Support' : 'Loading'
-
     return {
-      label: isAuthenticated ? (saladBowlConnected ? label : saladBowlPendingLabel) : 'Login',
-      onClick:
-        isNative && saladBowlConnected
-          ? () => {
-              this.store.saladBowl.toggleRunning(StartActionType.StartButton)
-              this.startButtonToolTip && setTimeout(() => this.setStartButtonToolTip(undefined), 1000)
-            }
-          : isNative && !saladBowlConnected
-          ? notConnected
-          : isAuthenticated
-          ? () => window.open('https://salad.com/download', '_blank')
-          : handleLogin,
-      hoverLabel: isAuthenticated && isRunning ? 'Stop' : undefined,
-      onClickWithError:
-        isAuthenticated && isNative && this.store.saladBowl.isNotCompatible
-          ? () => this.store.ui.showErrorPage(ErrorPageType.NotCompatible)
-          : undefined,
-      progress: isPrepping ? this.store.saladBowl.preppingProgress : isRunning ? 1 : undefined,
-      runningTime: this.store.saladBowl.runningTimeDisplay,
-      supportNeeded: this.supportNeeded,
-      toolTip: this.startButtonToolTip?.message,
-      toolTipError: this.startButtonToolTip?.error,
+      label: isAuthenticated ? 'Download' : 'Login',
+      onClick: isAuthenticated ? handleDownload : handleLogin,
+      hoverLabel: isAuthenticated ? 'Download the Salad desktop app' : 'Login to your Salad account',
+      onClickWithError: undefined,
+      progress: undefined,
+      runningTime: undefined,
+      supportNeeded: false,
+      toolTip: undefined,
+      toolTipError: undefined,
     }
   }
 }

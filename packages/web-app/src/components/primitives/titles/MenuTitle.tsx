@@ -1,9 +1,11 @@
 import classNames from 'classnames'
-import { Component, ReactNode } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { ReactNode } from 'react'
+import { Component } from 'react'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { NavLink } from 'react-router-dom'
-import { LinkTrackingInfo } from '../../../modules/analytics/models'
-import { SaladTheme } from '../../../SaladTheme'
+import type { LinkTrackingInfo } from '../../../modules/analytics/models'
+import type { SaladTheme } from '../../../SaladTheme'
 import { getStore } from '../../../Store'
 import { SmartLink } from '../../SmartLink'
 
@@ -47,6 +49,10 @@ interface Props extends WithStyles<typeof styles> {
   children?: ReactNode
 }
 
+interface State {
+  toggle: boolean
+}
+
 const handleClickTracking = (to?: string, trackingInfo?: any) => {
   if (to) {
     const store = getStore()
@@ -54,8 +60,8 @@ const handleClickTracking = (to?: string, trackingInfo?: any) => {
   }
 }
 
-class _MenuTitle extends Component<Props> {
-  state = {
+class _MenuTitle extends Component<Props, State> {
+  public override state = {
     toggle: false,
   }
 
@@ -65,7 +71,7 @@ class _MenuTitle extends Component<Props> {
     })
   }
 
-  render() {
+  public override render(): ReactNode {
     const { path, children, className, classes, enabled, externalLink, trackingInfo } = this.props
 
     const elements = path ? (

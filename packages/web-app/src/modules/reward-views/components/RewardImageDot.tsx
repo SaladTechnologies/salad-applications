@@ -1,7 +1,9 @@
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -37,7 +39,7 @@ class _RewardImageDot extends Component<Props> {
     }
   }
 
-  render() {
+  public override render(): ReactNode {
     const { active, classes } = this.props
 
     return (

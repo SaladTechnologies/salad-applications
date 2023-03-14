@@ -1,5 +1,7 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { StatElement } from '../../../../components'
 
 const styles = {
@@ -20,7 +22,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _ReferralStats extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { totalEarned, potentialEarned, classes } = this.props
 
     return (

@@ -1,7 +1,8 @@
 import { Text } from '@saladtechnologies/garden-components'
-import { FunctionComponent } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
+import type { FunctionComponent } from 'react'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { SaladTheme } from '../../../SaladTheme'
 import saladCardBackgroundImage from '../assets/background.png'
 
 const styles = (theme: SaladTheme) => ({

@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { Meta } from '@storybook/react'
+import type { Meta } from '@storybook/react'
 import { Dropdown } from './Dropdown'
 
 export default {

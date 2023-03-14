@@ -1,6 +1,6 @@
-import { Meta } from '@storybook/react'
+import type { Meta } from '@storybook/react'
 import moment from 'moment'
-import { EarningWindow } from '../../balance/models'
+import type { EarningWindow } from '../../balance/models'
 import { EarningSummaryPage } from './EarningSummaryPage'
 
 export default {

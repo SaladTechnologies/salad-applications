@@ -1,9 +1,11 @@
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Button } from '../../../components/Button'
 import { ErrorPage } from '../../../components/ErrorPage'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   buttons: {
@@ -36,7 +38,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _ReplaceBonusModal extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { currentEarningBonus, onCloseClicked, onReplaceCurrentBonus, classes } = this.props
     return (
       <ErrorPage title="Replace Current Earning Rate?" onCloseClicked={onCloseClicked}>

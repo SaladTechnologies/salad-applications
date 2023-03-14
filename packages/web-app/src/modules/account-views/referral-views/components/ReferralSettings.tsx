@@ -1,10 +1,12 @@
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Divider, Head, SectionHeader } from '../../../../components'
-import { SaladTheme } from '../../../../SaladTheme'
+import type { SaladTheme } from '../../../../SaladTheme'
 import { withLogin } from '../../../auth-views'
-import { Referral } from '../../../referral/models'
+import type { Referral } from '../../../referral/models'
 import { CurrentReferralPanelContainer } from '../CurrentReferralPanelContainer'
 import { ReferralCodeContainer } from '../ReferralCodeContainer'
 import { ReferralListContainer } from '../ReferralListContainer'
@@ -38,7 +40,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _ReferralSettings extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { classes } = this.props
 
     return (

@@ -1,16 +1,18 @@
 import { Button, FieldContainer, Text, TextField } from '@saladtechnologies/garden-components'
-import { FormValues } from '@saladtechnologies/garden-components/lib/components/TextField/TextField'
+import type { FormValues } from '@saladtechnologies/garden-components/lib/components/TextField/TextField'
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import MediaQuery from 'react-responsive'
-import { SaladTheme } from '../../../../SaladTheme'
+import type { SaladTheme } from '../../../../SaladTheme'
 import ReferralsImageStatic from '../../../auth-views/assets/referrals-image-static.png'
 
 const styles = (theme: SaladTheme) => ({
   container: {
     position: 'fixed',
-    top: (props: Props) => (props.isNative ? '4.1rem' : 0),
+    top: 0,
     bottom: 0,
     left: 0,
     right: 0,
@@ -65,7 +67,6 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   isSubmittingReferralCode: boolean
   isReferralCodeSubmitSuccess: boolean
-  isNative: boolean
   serverSideErrorMessage?: string
   onSubmitCode?: (code: string) => Promise<void>
   onEnterDefault?: () => void
@@ -85,7 +86,7 @@ class _ReferralOnboardingPage extends Component<Props> {
     onEnterDefault?.()
   }
 
-  render() {
+  public override render(): ReactNode {
     const { classes, isSubmittingReferralCode, serverSideErrorMessage, isReferralCodeSubmitSuccess } = this.props
 
     return (

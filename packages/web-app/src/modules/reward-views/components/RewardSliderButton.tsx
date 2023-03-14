@@ -1,7 +1,9 @@
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../../../SaladTheme'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { SaladTheme } from '../../../SaladTheme'
 import { IconArrowLeft, IconArrowRight } from './assets'
 
 const styles = (theme: SaladTheme) => ({
@@ -72,7 +74,7 @@ class _RewardSliderButton extends Component<Props, State> {
     }
   }
 
-  render() {
+  public override render(): ReactNode {
     const { direction, classes } = this.props
     const { isHovering } = this.state
 

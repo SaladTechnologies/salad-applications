@@ -1,6 +1,6 @@
 import { config } from '../../../config'
 import { rewardRoute } from '../../../RouteUtils'
-import { StorefrontHeroBlockProps } from '../../storefront/models'
+import type { StorefrontHeroBlockProps } from '../../storefront/models'
 import { StorefrontHero } from '../components/StorefrontHero'
 import { StorefrontHeroItem } from '../components/StorefrontHeroItem'
 

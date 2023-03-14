@@ -1,9 +1,11 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames'
-import { Component, ReactNode } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../SaladTheme'
+import type { ReactNode } from 'react'
+import { Component } from 'react'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { SaladTheme } from '../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -40,7 +42,7 @@ class _Modal extends Component<Props> {
       onCloseClicked()
     }
   }
-  render() {
+  public override render(): ReactNode {
     const { onCloseClicked, classes, children, width } = this.props
     return (
       <div className={classNames(classes.container)} style={width ? { width: width } : undefined}>

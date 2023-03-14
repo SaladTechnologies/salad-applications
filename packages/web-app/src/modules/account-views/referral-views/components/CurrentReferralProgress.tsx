@@ -1,9 +1,12 @@
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { P, ProgressBar, SectionHeader } from '../../../../components'
-import { SaladTheme } from '../../../../SaladTheme'
-import { percentComplete, Referral } from '../../../referral/models'
+import type { SaladTheme } from '../../../../SaladTheme'
+import type { Referral } from '../../../referral/models'
+import { percentComplete } from '../../../referral/models'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -34,7 +37,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _CurrentReferralProgress extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { referral, classes } = this.props
     if (!referral || !referral.referralDefinition) return null
     return (

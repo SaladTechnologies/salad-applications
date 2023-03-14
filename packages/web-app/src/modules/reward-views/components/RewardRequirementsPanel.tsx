@@ -1,9 +1,11 @@
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
-import { SaladTheme } from '../../../SaladTheme'
-import { Reward } from '../../reward/models'
+import type { SaladTheme } from '../../../SaladTheme'
+import type { Reward } from '../../reward/models'
 import { RewardDetailsContentPanel } from './RewardDetailsContentPanel'
 import { RewardSystemDetailsList } from './RewardSystemDetailsList'
 
@@ -55,7 +57,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _RewardRequirementsPanel extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { reward, classes } = this.props
 
     //Skip if there are no requirements

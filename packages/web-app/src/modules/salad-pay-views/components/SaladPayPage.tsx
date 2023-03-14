@@ -1,6 +1,8 @@
-import { Component, ReactNode } from 'react'
+import type { ReactNode } from 'react'
+import { Component } from 'react'
 import { Img } from 'react-image'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { ModalPage } from '../../../components'
 import saladPayLogo from '../assets/saladpay.png'
 
@@ -36,7 +38,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _SaladPayPage extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { onClose, classes, children } = this.props
 
     return (

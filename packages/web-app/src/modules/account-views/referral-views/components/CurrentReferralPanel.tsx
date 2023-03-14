@@ -1,9 +1,11 @@
 import classnames from 'classnames'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { ReferralCodeEntryContainer } from '../..'
 import { P, SectionHeader } from '../../../../components'
-import { Referral } from '../../../referral/models'
+import type { Referral } from '../../../referral/models'
 import { CurrentReferralProgress } from './CurrentReferralProgress'
 
 const styles = {
@@ -18,7 +20,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _CurrentReferralPanel extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { referral, classes } = this.props
     return (
       <>

@@ -1,5 +1,7 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { Divider, SectionHeader, StatElement } from '../../../components'
 import { formatBalance } from '../../../utils'
 import { EarningChartContainer } from '../../earn-views'
@@ -18,7 +20,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _MobileEarningSummary extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { currentBalance, lifetimeBalance, totalXp, classes } = this.props
 
     return (

@@ -1,11 +1,13 @@
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 import { Img } from 'react-image'
-import withStyles, { WithStyles } from 'react-jss'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
 import { SmartLink } from '../../../components'
 import { HeroPanel } from '../../../components/HeroPanel'
-import { SaladTheme } from '../../../SaladTheme'
+import type { SaladTheme } from '../../../SaladTheme'
 import earningOverview from '../../earn-views/assets/earning-overview.svg'
-import { Reward } from '../../reward/models'
+import type { Reward } from '../../reward/models'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -43,7 +45,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _RewardHowToPanel extends Component<Props> {
-  render() {
+  public override render(): ReactNode {
     const { reward, authenticated, classes } = this.props
 
     if (!reward) return null

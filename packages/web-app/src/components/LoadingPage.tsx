@@ -1,7 +1,9 @@
 import classNames from 'classnames'
-import { Component, ReactNode } from 'react'
-import withStyles, { WithStyles } from 'react-jss'
-import { SaladTheme } from '../SaladTheme'
+import type { ReactNode } from 'react'
+import { Component } from 'react'
+import type { WithStyles } from 'react-jss'
+import withStyles from 'react-jss'
+import type { SaladTheme } from '../SaladTheme'
 import logo from './assets/animated-logo-lg.gif'
 
 const styles = (theme: SaladTheme) => ({
@@ -40,7 +42,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 class _LoadingPage extends Component<Props> {
-  async componentDidMount() {
+  public override async componentDidMount() {
     const { onDidMount } = this.props
 
     if (onDidMount) {
@@ -48,7 +50,7 @@ class _LoadingPage extends Component<Props> {
     }
   }
 
-  render() {
+  public override render(): ReactNode {
     const { text, classes, children } = this.props
     return (
       <div className={classes.container}>
