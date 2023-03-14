@@ -1,4 +1,5 @@
 import { AxiosInstance, AxiosResponse } from 'axios'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action, flow, observable } from 'mobx'
 import { ProfileStore } from '../profile'
 import { Profile } from '../profile/models'
@@ -12,19 +13,21 @@ export class TermsAndConditionsStore {
   @observable
   public acceptedTermsAndConditions: boolean = false
 
-  constructor(
-    private readonly axios: AxiosInstance,
-    private readonly profile: ProfileStore,
-    ) {}
+  constructor(private readonly axios: AxiosInstance, private readonly profile: ProfileStore) {}
 
   @action.bound
   public submitTermsAndConditions = flow(function* (this: TermsAndConditionsStore) {
     try {
       this.isSubmitting = true
-      const response: AxiosResponse<Profile> = yield this.axios.post(`/api/v1/profile/terms`,  this.profile.currentProfile?.pendingTermsVersion,  {
-        headers: {
-          'Content-Type': 'application/json',
-        }})
+      const response: AxiosResponse<Profile> = yield this.axios.post(
+        `/api/v1/profile/terms`,
+        this.profile.currentProfile?.pendingTermsVersion,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
 
       this.isSubmitting = false
       this.profile.setProfileData(response.data)
