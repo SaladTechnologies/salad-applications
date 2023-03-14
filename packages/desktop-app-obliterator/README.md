@@ -1,6 +1,6 @@
 # Salad Obliterator
 
-This tool may be used to force uninstall Salad.
+This tool may be used to forcefully uninstall Salad.
 
 ## Building
 

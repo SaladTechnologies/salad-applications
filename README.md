@@ -19,7 +19,6 @@ Our applications run high-performance computing jobs using [GPU-accelerated cont
 - 🚀 [Getting Started](#getting-started)
 - 👥 [Community](#community)
 - 👏 [Contributing](#contributing)
-- 🐛 [Bug Bounty](#bug-bounty)
 
 ## Getting Started
 
