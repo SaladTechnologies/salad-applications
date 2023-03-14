@@ -149,10 +149,6 @@ export default {
       ],
       description: 'The list of workloads configured for the hardward listed.',
     },
-    isNative: {
-      defaultValue: true,
-      description: 'A flag that determines whether the user is on the web or desktop app.',
-    },
   },
 } as Meta
 
@@ -542,6 +538,3 @@ export const GPUWorkloadNeedsToBeConfigured: Story<EarningsSummaryPageProps> = C
 GPUWorkloadNeedsToBeConfigured.args = {}
 
 export const NotNative: Story<EarningsSummaryPageProps> = Template.bind({})
-NotNative.args = {
-  isNative: false,
-}

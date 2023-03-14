@@ -9,4 +9,4 @@ export default {
   ],
 } as Meta
 
-export const IncompatibleGPUAndOS = () => <MiningInformation isNative={false} />
+export const IncompatibleGPUAndOS = () => <MiningInformation />
