@@ -37,7 +37,7 @@ Interested in changing the world?
 
 First, identify the scale of your proposed changes. If it is a small change, such as to fix grammar or spelling, feel free to start working on a fix. However, if it is a feature or substantial code contribution, please discuss it with the team first to ensure it fits in the product roadmap.
 
-You can propose code changes by submitting GitHub pull requests. The code changes are expected to fit existing code styles and conventions. Using Visual Studio Code with the recommended extensions should minimize any manual work associated with code styles (see [Setting Up a Development Environment](#setting-up-a-development-dnvironment)).
+You can propose code changes by submitting GitHub pull requests. The code changes are expected to fit existing code styles and conventions. Using Visual Studio Code with the recommended extensions should minimize any manual work associated with code styles (see [Setting Up a Development Environment](#setting-up-a-development-environment)).
 
 Additionally, please consider taking a moment to read Miguel de Icaza's blog post titled [Open Source Contribution Etiquette](https://tirania.org/blog/archive/2010/Dec-31.html) and Ilya Grigorik's blog post titled [Don't "Push" Your Pull Requests](https://www.igvita.com/2011/12/19/dont-push-your-pull-requests/).
 

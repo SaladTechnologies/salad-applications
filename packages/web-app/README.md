@@ -6,19 +6,19 @@ The Salad Web Application is the primary UI that allows users to interact with S
 
 To run the Web Application in development mode run
 
-```
+```sh
 yarn start
 ```
 
-Salad UI will now be available at http://localhost:3000/ and automatically refresh when any changes are detected. Debugging is available if you run via the included VSCode launch task `Debug Web App`.
+Salad UI will now be available at <http://localhost:3000/> and automatically refresh when any changes are detected. Debugging is available if you run via the included VSCode launch task `Debug Web App`.
 
 While doing UI component development it is recommended to use [Storybook](https://storybook.js.org/).
 
-```
+```sh
 yarn storybook
 ```
 
-Storybook will now be available at http://localhost:9001/ and automatically refresh when any changes are detected.
+Storybook will now be available at <http://localhost:9001/> and automatically refresh when any changes are detected.
 
 ## Architecture
 

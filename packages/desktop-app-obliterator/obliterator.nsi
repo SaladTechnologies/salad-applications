@@ -36,7 +36,7 @@
 ;Pages
 
   !define MUI_WELCOMEPAGE_TITLE "Welcome to the Salad Obliterator"
-  !define MUI_WELCOMEPAGE_TEXT "YOU SHOULD ONLY USE THIS TOOL IF INSTRUCTED BY SALAD SUPPORT. This wizard will guide you through a forced uninstall of Salad.$\r$\n$\r$\nYOU MUST CLOSE SALAD BEFORE BEGINNING. It is recommend that you check the Task Manager to ensure Salad is closed before continuing.$\r$\n$\r$\nClick Next to continue."
+  !define MUI_WELCOMEPAGE_TEXT "YOU SHOULD ONLY USE THIS TOOL IF INSTRUCTED BY SALAD SUPPORT. This wizard will guide you through a forced uninstall of Salad.$\r$\n$\r$\nYOU MUST CLOSE SALAD BEFORE BEGINNING. It is recommended that you check Task Manager to ensure Salad is closed before continuing.$\r$\n$\r$\nClick Next to continue."
   !insertmacro MUI_PAGE_WELCOME
 
   !define MUI_PAGE_HEADER_SUBTEXT "Please review the license terms before using the Salad Obliterator"
