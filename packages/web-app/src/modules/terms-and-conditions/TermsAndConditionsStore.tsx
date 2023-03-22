@@ -10,7 +10,7 @@ export class TermsAndConditionsStore {
 
   /** A value indicating whether the user accepted the terms and conditions. */
   @observable
-  public acceptedTermsAndConditions: boolean = false
+  public areTermsAndConditionsAccepted: boolean = false
 
   constructor(private readonly axios: AxiosInstance, private readonly profile: ProfileStore) {}
 
@@ -30,7 +30,7 @@ export class TermsAndConditionsStore {
 
       this.isSubmitting = false
       this.profile.setProfileData(response.data)
-      this.acceptedTermsAndConditions = false
+      this.areTermsAndConditionsAccepted = false
     } catch (error) {
       this.isSubmitting = false
       console.error('Submit Terms and Conditions error: ', error)
@@ -40,6 +40,6 @@ export class TermsAndConditionsStore {
   /** Toggles if the user accepted terms */
   @action
   public toggleAcceptTermsAndConditions = (accepted: boolean) => {
-    this.acceptedTermsAndConditions = accepted
+    this.areTermsAndConditionsAccepted = accepted
   }
 }

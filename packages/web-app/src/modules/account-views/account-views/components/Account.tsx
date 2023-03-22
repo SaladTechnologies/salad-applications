@@ -78,7 +78,7 @@ interface Props extends WithStyles<typeof styles> {
   isPayPalIdDisconnectLoading: boolean
   checkPayPalId: () => void
   isSubmitting: boolean
-  acceptedTermsAndConditions: boolean
+  areTermsAndConditionsAccepted: boolean
   onToggleAcceptTermsAndConditions: (accepted: boolean) => void
   onSubmitTermsAndConditions: () => void
 }
@@ -132,7 +132,7 @@ class _Account extends Component<Props, State> {
       disconnectPayPalId,
       isPayPalIdDisconnectLoading,
       isSubmitting,
-      acceptedTermsAndConditions,
+      areTermsAndConditionsAccepted,
       onSubmitTermsAndConditions,
       onToggleAcceptTermsAndConditions,
     } = this.props
@@ -166,7 +166,7 @@ class _Account extends Component<Props, State> {
             {shouldShowUpdateAccountTermsAndConditions && (
               <AccountTermsAndConditionsUpdate
                 isSubmitting={isSubmitting}
-                acceptedTermsAndConditions={acceptedTermsAndConditions}
+                areTermsAndConditionsAccepted={areTermsAndConditionsAccepted}
                 onSubmitTermsAndConditions={onSubmitTermsAndConditions}
                 onToggleAcceptTermsAndConditions={onToggleAcceptTermsAndConditions}
               />

@@ -20,7 +20,7 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   isSubmitting: boolean
-  acceptedTermsAndConditions: boolean
+  areTermsAndConditionsAccepted: boolean
   onToggleAcceptTermsAndConditions: (accepted: boolean) => void
   onSubmitTermsAndConditions: () => void
 }
@@ -28,7 +28,7 @@ interface Props extends WithStyles<typeof styles> {
 const _AccountTermsAndConditionsUpdate: FC<Props> = ({
   classes,
   isSubmitting,
-  acceptedTermsAndConditions,
+  areTermsAndConditionsAccepted,
   onSubmitTermsAndConditions,
   onToggleAcceptTermsAndConditions,
 }) => (
@@ -48,7 +48,7 @@ const _AccountTermsAndConditionsUpdate: FC<Props> = ({
       </Text>
 
       <div className={classes.my48}>
-        <Checkbox onChange={onToggleAcceptTermsAndConditions} checked={acceptedTermsAndConditions}>
+        <Checkbox onChange={onToggleAcceptTermsAndConditions} checked={areTermsAndConditionsAccepted}>
           <Text variant="baseM">I agree to the Terms of Service and Privacy Policy</Text>
         </Checkbox>
       </div>
@@ -56,7 +56,7 @@ const _AccountTermsAndConditionsUpdate: FC<Props> = ({
         variant="primary-basic"
         label="Continue"
         onClick={onSubmitTermsAndConditions}
-        disabled={!acceptedTermsAndConditions}
+        disabled={!areTermsAndConditionsAccepted}
         isLoading={isSubmitting}
       />
     </GlassBox>

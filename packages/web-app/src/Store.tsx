@@ -154,7 +154,9 @@ export class RootStore {
         }),
       ])
 
-      if (profile.pendingTermsVersion) {
+      const areTermsAndConditionsAccepted = this.termsAndConditions.areTermsAndConditionsAccepted
+
+      if(profile.pendingTermsVersion && areTermsAndConditionsAccepted) {
         yield this.termsAndConditions.submitTermsAndConditions()
       }
 
