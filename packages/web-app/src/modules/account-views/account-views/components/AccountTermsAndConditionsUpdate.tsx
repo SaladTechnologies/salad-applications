@@ -1,7 +1,7 @@
+import { Button, Checkbox, GlassBox, Text } from '@saladtechnologies/garden-components'
 import type { FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { Button, Checkbox, GlassBox, Text } from '@saladtechnologies/garden-components'
 import type { SaladTheme } from '../../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
@@ -20,7 +20,7 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   isSubmitting: boolean
-  areTermsAndConditionsAccepted: boolean
+  isTermsAndConditionsAccepted: boolean
   onToggleAcceptTermsAndConditions: (accepted: boolean) => void
   onSubmitTermsAndConditions: () => void
 }
@@ -28,7 +28,7 @@ interface Props extends WithStyles<typeof styles> {
 const _AccountTermsAndConditionsUpdate: FC<Props> = ({
   classes,
   isSubmitting,
-  areTermsAndConditionsAccepted,
+  isTermsAndConditionsAccepted,
   onSubmitTermsAndConditions,
   onToggleAcceptTermsAndConditions,
 }) => (
@@ -48,7 +48,7 @@ const _AccountTermsAndConditionsUpdate: FC<Props> = ({
       </Text>
 
       <div className={classes.my48}>
-        <Checkbox onChange={onToggleAcceptTermsAndConditions} checked={areTermsAndConditionsAccepted}>
+        <Checkbox onChange={onToggleAcceptTermsAndConditions} checked={isTermsAndConditionsAccepted}>
           <Text variant="baseM">I agree to the Terms of Service and Privacy Policy</Text>
         </Checkbox>
       </div>
@@ -56,7 +56,7 @@ const _AccountTermsAndConditionsUpdate: FC<Props> = ({
         variant="primary-basic"
         label="Continue"
         onClick={onSubmitTermsAndConditions}
-        disabled={!areTermsAndConditionsAccepted}
+        disabled={!isTermsAndConditionsAccepted}
         isLoading={isSubmitting}
       />
     </GlassBox>

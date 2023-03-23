@@ -23,7 +23,7 @@ const mapStoreToProps = (store: RootStore): any => ({
   disconnectPayPalId: store.profile.disconnectPayPalId,
   isPayPalIdDisconnectLoading: store.profile.isPayPalIdDisconnectLoading,
   isSubmitting: store.termsAndConditions.isSubmitting,
-  areTermsAndConditionsAccepted: store.termsAndConditions.areTermsAndConditionsAccepted,
+  isTermsAndConditionsAccepted: store.termsAndConditions.isTermsAndConditionsAccepted,
   onSubmitTermsAndConditions: store.termsAndConditions.submitTermsAndConditions,
   onToggleAcceptTermsAndConditions: store.termsAndConditions.toggleAcceptTermsAndConditions,
 })
