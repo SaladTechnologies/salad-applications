@@ -138,18 +138,23 @@ export class RewardStore {
     return this.rewards.get(id)
   }
 
-  isInChoppingCart = (id?: string): boolean => {
-    return this.selectedRewardId === id
+  @computed
+  public get selectedReward(): Reward | undefined {
+    if (this.selectedRewardId) {
+      return this.rewards.get(this.selectedRewardId)
+    }
+    return undefined
   }
 
   @action.bound
   loadSelectedReward = flow(function* (this: RewardStore) {
     var res = yield this.axios.get('/api/v1/profile/selected-reward')
+    yield this.loadReward(res.data.rewardId)
     this.selectedRewardId = res.data.rewardId
   })
 
   @action.bound
-  addToChoppingCart = flow(function* (this: RewardStore, reward: Reward) {
+  setSelectedReward = flow(function* (this: RewardStore, reward: Reward) {
     //Ensures that the user is logged in
     try {
       yield this.store.auth.login()
@@ -176,7 +181,7 @@ export class RewardStore {
   })
 
   @action.bound
-  removeFromChoppingCart = flow(function* (this: RewardStore, _reward: Reward) {
+  removeSelectedReward = flow(function* (this: RewardStore) {
     const request = {
       rewardId: undefined,
     }
@@ -241,7 +246,7 @@ export class RewardStore {
 
       //Automatically add the reward to the chopping cart if they don't have one selected
       if (!this.choppingCart || this.choppingCart.length === 0) {
-        this.addToChoppingCart(reward)
+        this.setSelectedReward(reward)
       }
 
       //Shows the SaladPay UI
