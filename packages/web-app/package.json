@@ -79,7 +79,7 @@
     "@fortawesome/free-regular-svg-icons": "6.3.0",
     "@fortawesome/free-solid-svg-icons": "6.3.0",
     "@fortawesome/react-fontawesome": "0.2.0",
-    "@saladtechnologies/garden-components": "1.0.89",
+    "@saladtechnologies/garden-components": "1.1.1",
     "@saladtechnologies/garden-fonts": "1.0.3",
     "@saladtechnologies/garden-icons": "1.0.11",
     "@storybook/addon-a11y": "6.5.16",
