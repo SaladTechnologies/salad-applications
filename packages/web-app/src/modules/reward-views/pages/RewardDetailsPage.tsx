@@ -78,7 +78,7 @@ class _RewardDetailsPage extends Component<Props> {
           requiresMinecraftUsername={requiresMinecraftUsername}
           requiresPayPalAccount={requiresPayPalAccount}
           requiresSaladCard={requiresSaladCard}
-          isTargerReward={isTargetReward}
+          isTargetReward={isTargetReward}
           onTargetThisRewardClick={onTargetThisRewardClick}
           onRemoveTargetRewardClick={onRemoveTargetRewardClick}
           trackDisabledBuyNowClick={trackDisabledBuyNowClick}

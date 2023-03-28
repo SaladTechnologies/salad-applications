@@ -119,7 +119,7 @@ interface Props extends WithStyles<typeof styles> {
   authenticated?: boolean
   onBack?: () => void
   onRedeem?: (reward?: Reward) => void
-  isTargerReward?: boolean
+  isTargetReward?: boolean
   requiresMinecraftUsername: boolean
   requiresPayPalAccount: boolean
   requiresSaladCard: boolean
@@ -161,7 +161,7 @@ class _RewardHeaderBar extends Component<Props> {
       requiresSaladCard,
       trackDisabledBuyNowClick,
       onRemoveTargetRewardClick,
-      isTargerReward,
+      isTargetReward,
       classes,
     } = this.props
 
@@ -182,7 +182,7 @@ class _RewardHeaderBar extends Component<Props> {
         return
       }
 
-      return isTargerReward ? (
+      return isTargetReward ? (
         <Button className={classes.targetThisRewardButton} onClick={onRemoveTargetRewardClick}>
           <div className={classes.targetThisRewardText}>REMOVE AS TARGET REWARD</div>
         </Button>
