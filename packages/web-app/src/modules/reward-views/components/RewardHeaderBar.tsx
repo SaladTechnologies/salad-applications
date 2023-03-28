@@ -177,6 +177,22 @@ class _RewardHeaderBar extends Component<Props> {
 
     const disabled = outOfStock || promoGame || (authenticated && !hasBalance)
 
+    const getTargetRewardControl = () => {
+      if (!reward) {
+        return
+      }
+
+      return isTargerReward ? (
+        <Button className={classes.targetThisRewardButton} onClick={onRemoveTargetRewardClick}>
+          <div className={classes.targetThisRewardText}>REMOVE AS TARGET REWARD</div>
+        </Button>
+      ) : (
+        <Button className={classes.targetThisRewardButton} onClick={this.handleTargetThisRewardClick}>
+          <div className={classes.targetThisRewardText}>TARGET THIS REWARD</div>
+        </Button>
+      )
+    }
+
     return (
       <div className={classnames(classes.container)}>
         <div className={classes.nameContainer} onClick={this.handleBack}>
@@ -240,15 +256,7 @@ class _RewardHeaderBar extends Component<Props> {
                 </div>
               )}
             </div>
-            {isTargerReward ? (
-              <Button className={classes.targetThisRewardButton} onClick={onRemoveTargetRewardClick}>
-                <div className={classes.targetThisRewardText}>REMOVE AS TARGET REWARD</div>
-              </Button>
-            ) : (
-              <Button className={classes.targetThisRewardButton} onClick={this.handleTargetThisRewardClick}>
-                <div className={classes.targetThisRewardText}>TARGET THIS REWARD</div>
-              </Button>
-            )}
+            {getTargetRewardControl()}
             <Button
               className={classes.buyButton}
               onClick={this.handleRedeem}

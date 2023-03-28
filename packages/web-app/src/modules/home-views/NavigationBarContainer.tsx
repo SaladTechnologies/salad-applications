@@ -17,17 +17,15 @@ const mapStoreToProps = (store: RootStore): any => {
 
   const startButton = store.startButtonUI.properties
 
-  const selectedReward = store.rewards.selectedReward
-
-  const targetReward: TargetRewardInfo | undefined = selectedReward
+  const targetReward: TargetRewardInfo | null = store.rewards.selectedTargetReward
     ? {
-        id: selectedReward.id,
-        label: selectedReward.name,
-        imageSrc: selectedReward.coverImage ?? '',
-        price: selectedReward.price,
-        canBeRedeemed: store.balance.currentBalance >= selectedReward?.price,
+        id: store.rewards.selectedTargetReward.id,
+        label: store.rewards.selectedTargetReward.name,
+        imageSrc: store.rewards.selectedTargetReward.coverImage ?? '',
+        price: store.rewards.selectedTargetReward.price,
+        canBeRedeemed: store.balance.currentBalance >= store.rewards.selectedTargetReward?.price,
       }
-    : undefined
+    : null
 
   return {
     avatar: isAuthenticated ? (
@@ -65,13 +63,13 @@ const mapStoreToProps = (store: RootStore): any => {
     startButtonClick: startButton.onClick,
     startButtonHoverLabel: undefined,
     startButtonErrorClick: startButton.onClickWithError,
-    onRemoveTargetRewardClick: store.rewards.removeSelectedReward,
+    onRemoveTargetRewardClick: store.rewards.removeSelectedTargetReward,
     startButtonProgress: startButton.progress,
     startButtonRunningTime: startButton.runningTime,
     startButtonToolTip: startButton.toolTip,
     startButtonToolTipError: startButton.toolTipError,
     username: isAuthenticated ? store.profile.currentProfile?.username : undefined,
-    targetReward: targetReward,
+    targetReward,
   }
 }
 
