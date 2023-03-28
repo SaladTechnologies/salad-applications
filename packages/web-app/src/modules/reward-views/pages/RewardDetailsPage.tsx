@@ -31,20 +31,20 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  loadReward?: (id?: string) => void
   rewardId?: string
   reward?: Reward
   currentBalance?: number
   authenticated?: boolean
+  requiresMinecraftUsername: boolean
+  requiresSaladCard: boolean
+  requiresPayPalAccount: boolean
+  isTargetReward: boolean
+  loadReward?: (id?: string) => void
   onRedeem?: (reward?: Reward) => void
   onBack?: () => void
-  isInCart?: boolean
-  onAddToCart?: (reward: Reward) => void
-  onRemoveFromCart?: (reward: Reward) => void
-  requiresMinecraftUsername: boolean
+  onRemoveTargetRewardClick: () => void
   trackDisabledBuyNowClick: () => void
-  requiresPayPalAccount: boolean
-  requiresSaladCard: boolean
+  onTargetThisRewardClick: (reward: Reward) => void
 }
 
 class _RewardDetailsPage extends Component<Props> {
@@ -61,7 +61,10 @@ class _RewardDetailsPage extends Component<Props> {
       requiresMinecraftUsername,
       requiresPayPalAccount,
       requiresSaladCard,
+      isTargetReward,
       trackDisabledBuyNowClick,
+      onTargetThisRewardClick,
+      onRemoveTargetRewardClick,
       classes,
       ...rest
     } = this.props
@@ -75,6 +78,9 @@ class _RewardDetailsPage extends Component<Props> {
           requiresMinecraftUsername={requiresMinecraftUsername}
           requiresPayPalAccount={requiresPayPalAccount}
           requiresSaladCard={requiresSaladCard}
+          isTargetReward={isTargetReward}
+          onTargetThisRewardClick={onTargetThisRewardClick}
+          onRemoveTargetRewardClick={onRemoveTargetRewardClick}
           trackDisabledBuyNowClick={trackDisabledBuyNowClick}
           {...rest}
         />

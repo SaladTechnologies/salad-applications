@@ -22,6 +22,7 @@ const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ id: stri
     reward?.tags?.includes('requires-minecraft-username') && !extensions?.minecraftUsername
   const requiresPayPalAccount = reward?.tags?.includes('requires-paypal-account') && !hasPayPalAccount
   const requiresSaladCard = reward?.tags?.includes('requires-saladcard-account') && !hasSaladCard
+  const isRewardSelectedAsTarget = store.rewards.selectedTargetReward?.id === reward?.id
 
   return {
     loadReward: store.rewards.loadAndTrackReward,
@@ -31,9 +32,9 @@ const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ id: stri
     reward: reward,
     onBack: store.routing.goBack,
     onRedeem,
-    isInCart: store.rewards.isInChoppingCart(props.match.params.id),
-    onAddToCart: store.rewards.addToChoppingCart,
-    onRemoveFromCart: store.rewards.removeFromChoppingCart,
+    onTargetThisRewardClick: store.rewards.setSelectedTargetReward,
+    onRemoveTargetRewardClick: store.rewards.removeSelectedTargetReward,
+    isTargetReward: isRewardSelectedAsTarget,
     requiresMinecraftUsername: requiresMinecraftUsername,
     requiresPayPalAccount,
     requiresSaladCard,

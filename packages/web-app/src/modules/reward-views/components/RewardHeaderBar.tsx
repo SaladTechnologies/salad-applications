@@ -63,6 +63,14 @@ const styles = (theme: SaladTheme) => ({
     color: theme.darkBlue,
     fontWeight: 'bold',
   },
+  targetThisRewardButton: {
+    padding: '10px 30px',
+  },
+  targetThisRewardText: {
+    fontSize: 14,
+    color: theme.lightGreen,
+    fontWeight: 'bold',
+  },
   outOfStockPrice: {
     textDecoration: 'line-through',
     color: theme.red,
@@ -111,13 +119,13 @@ interface Props extends WithStyles<typeof styles> {
   authenticated?: boolean
   onBack?: () => void
   onRedeem?: (reward?: Reward) => void
-  isInCart?: boolean
-  onAddToCart?: (reward: Reward) => void
-  onRemoveFromCart?: (reward: Reward) => void
+  isTargetReward?: boolean
   requiresMinecraftUsername: boolean
   requiresPayPalAccount: boolean
   requiresSaladCard: boolean
   trackDisabledBuyNowClick: () => void
+  onRemoveTargetRewardClick: () => void
+  onTargetThisRewardClick: (reward: Reward) => void
 }
 
 class _RewardHeaderBar extends Component<Props> {
@@ -136,6 +144,13 @@ class _RewardHeaderBar extends Component<Props> {
     }
   }
 
+  handleTargetThisRewardClick = () => {
+    const { reward, onTargetThisRewardClick } = this.props
+    if (reward) {
+      onTargetThisRewardClick(reward)
+    }
+  }
+
   public override render(): ReactNode {
     const {
       reward,
@@ -145,6 +160,8 @@ class _RewardHeaderBar extends Component<Props> {
       requiresPayPalAccount,
       requiresSaladCard,
       trackDisabledBuyNowClick,
+      onRemoveTargetRewardClick,
+      isTargetReward,
       classes,
     } = this.props
 
@@ -159,6 +176,22 @@ class _RewardHeaderBar extends Component<Props> {
     const hasBalance = reward ? reward?.price <= balance : false
 
     const disabled = outOfStock || promoGame || (authenticated && !hasBalance)
+
+    const getTargetRewardControl = () => {
+      if (!reward) {
+        return
+      }
+
+      return isTargetReward ? (
+        <Button className={classes.targetThisRewardButton} onClick={onRemoveTargetRewardClick}>
+          <div className={classes.targetThisRewardText}>REMOVE AS TARGET REWARD</div>
+        </Button>
+      ) : (
+        <Button className={classes.targetThisRewardButton} onClick={this.handleTargetThisRewardClick}>
+          <div className={classes.targetThisRewardText}>TARGET THIS REWARD</div>
+        </Button>
+      )
+    }
 
     return (
       <div className={classnames(classes.container)}>
@@ -223,6 +256,7 @@ class _RewardHeaderBar extends Component<Props> {
                 </div>
               )}
             </div>
+            {getTargetRewardControl()}
             <Button
               className={classes.buyButton}
               onClick={this.handleRedeem}

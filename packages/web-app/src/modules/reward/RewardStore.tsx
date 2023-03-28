@@ -25,7 +25,7 @@ export class RewardStore {
   private rewards: Map<string, Reward> = new Map<string, Reward>()
 
   @observable
-  private selectedRewardId?: string
+  private selectedTargetRewardId?: string
 
   @observable
   private requiresFurtherAction: boolean = false
@@ -44,9 +44,9 @@ export class RewardStore {
   private lastRewardId?: string = undefined
 
   @computed get choppingCart(): Reward[] | undefined {
-    let selectedReward = this.getReward(this.selectedRewardId)
-    if (selectedReward === undefined) return undefined
-    return [selectedReward]
+    const selectedTargetReward = this.getReward(this.selectedTargetRewardId)
+    if (selectedTargetReward === undefined) return undefined
+    return [selectedTargetReward]
   }
 
   get currentRedemptionId(): string | undefined {
@@ -138,18 +138,23 @@ export class RewardStore {
     return this.rewards.get(id)
   }
 
-  isInChoppingCart = (id?: string): boolean => {
-    return this.selectedRewardId === id
+  @computed
+  public get selectedTargetReward(): Reward | undefined {
+    if (this.selectedTargetRewardId) {
+      return this.rewards.get(this.selectedTargetRewardId)
+    }
+    return undefined
   }
 
   @action.bound
-  loadSelectedReward = flow(function* (this: RewardStore) {
+  loadSelectedTargetReward = flow(function* (this: RewardStore) {
     var res = yield this.axios.get('/api/v1/profile/selected-reward')
-    this.selectedRewardId = res.data.rewardId
+    yield this.loadReward(res.data.rewardId)
+    this.selectedTargetRewardId = res.data.rewardId
   })
 
   @action.bound
-  addToChoppingCart = flow(function* (this: RewardStore, reward: Reward) {
+  setSelectedTargetReward = flow(function* (this: RewardStore, reward: Reward) {
     //Ensures that the user is logged in
     try {
       yield this.store.auth.login()
@@ -165,7 +170,7 @@ export class RewardStore {
 
     try {
       var res = yield this.axios.patch('/api/v1/profile/selected-reward', request)
-      this.selectedRewardId = res.data.rewardId
+      this.selectedTargetRewardId = res.data.rewardId
 
       if (reward) this.store.analytics.trackSelectedReward(reward)
     } catch (error) {
@@ -176,7 +181,7 @@ export class RewardStore {
   })
 
   @action.bound
-  removeFromChoppingCart = flow(function* (this: RewardStore, _reward: Reward) {
+  removeSelectedTargetReward = flow(function* (this: RewardStore) {
     const request = {
       rewardId: undefined,
     }
@@ -185,7 +190,7 @@ export class RewardStore {
 
     try {
       var res = yield this.axios.patch('/api/v1/profile/selected-reward', request)
-      this.selectedRewardId = res.data.rewardId
+      this.selectedTargetRewardId = res.data.rewardId
     } catch (error) {
       console.error(error)
     } finally {
@@ -241,7 +246,7 @@ export class RewardStore {
 
       //Automatically add the reward to the chopping cart if they don't have one selected
       if (!this.choppingCart || this.choppingCart.length === 0) {
-        this.addToChoppingCart(reward)
+        this.setSelectedTargetReward(reward)
       }
 
       //Shows the SaladPay UI

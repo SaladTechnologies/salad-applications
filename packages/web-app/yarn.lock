@@ -2947,8 +2947,8 @@ __metadata:
     "@fortawesome/free-regular-svg-icons": 6.3.0
     "@fortawesome/free-solid-svg-icons": 6.3.0
     "@fortawesome/react-fontawesome": 0.2.0
-    "@saladtechnologies/garden-components": 1.0.89
-    "@saladtechnologies/garden-fonts": 1.0.2
+    "@saladtechnologies/garden-components": 1.1.1
+    "@saladtechnologies/garden-fonts": 1.0.3
     "@saladtechnologies/garden-icons": 1.0.11
     "@storybook/addon-a11y": 6.5.16
     "@storybook/addon-actions": 6.5.16
@@ -3055,9 +3055,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@saladtechnologies/garden-components@npm:1.0.89":
-  version: 1.0.89
-  resolution: "@saladtechnologies/garden-components@npm:1.0.89"
+"@saladtechnologies/garden-components@npm:1.1.1":
+  version: 1.1.1
+  resolution: "@saladtechnologies/garden-components@npm:1.1.1"
   peerDependencies:
     "@emotion/react": 11.x
     "@emotion/styled": 11.x
@@ -3072,14 +3072,14 @@ __metadata:
     react-intl: 6.x
     react-range: 1.x
     react-responsive: 9.x
-  checksum: 52a41ab15817ab89840b01bfe3b6a50aaebf1ce42d9cd9c5d7508a358451ad1c3fb883c3f4ac1c6b2b968156b6c76ab0f5d895574bb9c30966192d9fe58b22a8
+  checksum: 461e2d87d73772449f856f2131ca142303effd0ca4c7afbd6299ec86e84bf5bbc88a7d70e2839517fb1408e9505d694c633e2bc275aea016c2a2a2cbc2d9815a
   languageName: node
   linkType: hard
 
-"@saladtechnologies/garden-fonts@npm:1.0.2":
-  version: 1.0.2
-  resolution: "@saladtechnologies/garden-fonts@npm:1.0.2"
-  checksum: d651ed322fa142b80fb060f247baa8d8a0eefd445965c03889c65ca41ac914b874ff1e78123589d1af6bc843a02f00be0a77e1b651b81f304e3272e3990f7cfb
+"@saladtechnologies/garden-fonts@npm:1.0.3":
+  version: 1.0.3
+  resolution: "@saladtechnologies/garden-fonts@npm:1.0.3"
+  checksum: ce6e554408b7508acda5c53aea6adfc766a359a2299cf8a4d62694360e7fd1cfd19e8799d7b36b86f4270b1c24154242820febdfc22daccb0e10ad8d3ee5e304
   languageName: node
   linkType: hard
 

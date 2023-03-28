@@ -1,4 +1,5 @@
 import { Avatar, AvatarDefault, BonusCard, NavigationBar } from '@saladtechnologies/garden-components'
+import type { TargetRewardInfo } from '@saladtechnologies/garden-components/lib/components/NavigationBar/components/DesktopNavigationBar/TargetRewardStatus'
 import { connect } from '../../connect'
 import type { RootStore } from '../../Store'
 
@@ -15,6 +16,16 @@ const mapStoreToProps = (store: RootStore): any => {
   const selectedAvatar = store.profile.profileAvatar
 
   const startButton = store.startButtonUI.properties
+
+  const targetReward: TargetRewardInfo | null = store.rewards.selectedTargetReward
+    ? {
+        id: store.rewards.selectedTargetReward.id,
+        label: store.rewards.selectedTargetReward.name,
+        imageSrc: store.rewards.selectedTargetReward.coverImage ?? '',
+        price: store.rewards.selectedTargetReward.price,
+        canBeRedeemed: store.balance.currentBalance >= store.rewards.selectedTargetReward?.price,
+      }
+    : null
 
   return {
     avatar: isAuthenticated ? (
@@ -52,11 +63,13 @@ const mapStoreToProps = (store: RootStore): any => {
     startButtonClick: startButton.onClick,
     startButtonHoverLabel: undefined,
     startButtonErrorClick: startButton.onClickWithError,
+    onRemoveTargetRewardClick: store.rewards.removeSelectedTargetReward,
     startButtonProgress: startButton.progress,
     startButtonRunningTime: startButton.runningTime,
     startButtonToolTip: startButton.toolTip,
     startButtonToolTipError: startButton.toolTipError,
     username: isAuthenticated ? store.profile.currentProfile?.username : undefined,
+    targetReward,
   }
 }
 
