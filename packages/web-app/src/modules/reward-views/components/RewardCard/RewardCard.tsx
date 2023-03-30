@@ -46,7 +46,6 @@ const styles = (theme: SaladTheme) => ({
     width: '100%',
     boxSizing: 'border-box',
     filter: 'drop-shadow(8px 14px 21px rgba(0, 0, 0, 0.45))',
-    border: '4px solid transparent',
   },
   name: {
     color: theme.lightGreen,
