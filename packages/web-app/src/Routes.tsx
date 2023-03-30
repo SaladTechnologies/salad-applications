@@ -30,6 +30,9 @@ const _Routes = ({ location }: RouteComponentProps) => {
       <Route path={['/store', '/store/search']} exact render={() => <StorefrontHomePage />} />
       <Route path="/store/rewards/:id" exact component={RewardDetailsContainer} />
       <Route path="/store/vault" exact component={VaultListContainer} />
+      {/* Target Reward Page */}
+      {/* * NOTE: Should be uncommented when backend is ready */}
+      {/* <Route path="/store/select-target-reward" exact component={SelectTargetRewardContainer} /> */}
 
       {/* Modals */}
       {/* SaladPay: This is stand in until we figure out iFrames, popups... */}

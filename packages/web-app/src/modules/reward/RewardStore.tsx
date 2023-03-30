@@ -105,7 +105,7 @@ export class RewardStore {
     private readonly saladCard: SaladCardStore,
   ) {}
 
-  loadReward = flow(
+  fetchReward = flow(
     function* (this: RewardStore, rewardId?: string) {
       console.log('Loading reward ' + rewardId)
 
@@ -119,10 +119,10 @@ export class RewardStore {
     }.bind(this),
   )
 
-  loadAndTrackReward = flow(
+  fetchAndTrackReward = flow(
     function* (this: RewardStore, rewardId?: string) {
       try {
-        yield this.loadReward(rewardId)
+        yield this.fetchReward(rewardId)
         const reward = this.getReward(rewardId)
 
         if (reward) {
@@ -147,9 +147,9 @@ export class RewardStore {
   }
 
   @action.bound
-  loadSelectedTargetReward = flow(function* (this: RewardStore) {
+  fetchSelectedTargetReward = flow(function* (this: RewardStore) {
     var res = yield this.axios.get('/api/v1/profile/selected-reward')
-    yield this.loadReward(res.data.rewardId)
+    yield this.fetchReward(res.data.rewardId)
     this.selectedTargetRewardId = res.data.rewardId
   })
 
@@ -307,7 +307,7 @@ export class RewardStore {
             const data = response.data as unknown
             if (isProblemDetail(data)) {
               if (data.type === 'redemptions:invalid:price') {
-                this.loadReward(reward.id)
+                this.fetchReward(reward.id)
                 notification = {
                   category: NotificationMessageCategory.Error,
                   title: 'Uh-oh! The reward price has changed.',
