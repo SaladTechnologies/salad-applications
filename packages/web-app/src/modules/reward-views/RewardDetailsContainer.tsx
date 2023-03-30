@@ -25,7 +25,7 @@ const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ id: stri
   const isRewardSelectedAsTarget = store.rewards.selectedTargetReward?.id === reward?.id
 
   return {
-    loadReward: store.rewards.loadAndTrackReward,
+    loadReward: store.rewards.fetchAndTrackReward,
     authenticated: store.auth.isAuthenticated,
     rewardId: props.match.params.id,
     currentBalance: store.balance.currentBalance,

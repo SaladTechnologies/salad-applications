@@ -40,7 +40,7 @@ export class RefreshService {
     // Load authenticated data
     try {
       this.store.balance.refreshBalanceAndHistory()
-      this.store.rewards.loadSelectedTargetReward()
+      this.store.rewards.fetchSelectedTargetReward()
       this.store.referral.loadReferrals()
       this.store.vault.loadVault()
       this.store.xp.refreshXp()

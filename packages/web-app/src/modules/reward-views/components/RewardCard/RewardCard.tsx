@@ -99,14 +99,6 @@ const _RewardCard: FunctionComponent<Props> = ({ classes, reward, isSelected, on
     return onSelectReward(reward.id)
   }
 
-  const getButton = () => {
-    if (isSelected) {
-      return <Button variant="primary" label="Confirm" />
-    }
-
-    return <Button variant="secondary" outlineColor={DefaultTheme.mediumGreen} label="Target" />
-  }
-
   return (
     <div onClick={handleRewardClick} className={classNames(classes.container, isSelected && classes.selected)}>
       <div className={classes.imageWrapper}>
@@ -118,7 +110,13 @@ const _RewardCard: FunctionComponent<Props> = ({ classes, reward, isSelected, on
           loader={<Skeleton height={'100%'} />}
           unloader={<RewardMissingImage text={reward.name} />}
         />
-        <div className={classes.buttonWrapper}>{getButton()}</div>
+        <div className={classes.buttonWrapper}>
+          {isSelected ? (
+            <Button variant="primary" label="Confirm" />
+          ) : (
+            <Button variant="secondary" outlineColor={DefaultTheme.mediumGreen} label="Target" />
+          )}
+        </div>
       </div>
       <div className={classes.name}>{reward.name}</div>
       <div className={classes.price}>{reward.price.toFixed(2)}</div>
