@@ -12,6 +12,14 @@ import { RewardMissingImage } from '../RewardMissingImage'
 
 const styles = (theme: SaladTheme) => ({
   selected: {},
+  imageOverlay: {
+    display: 'none',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
   container: {
     display: 'flex',
     flexDirection: 'column',
@@ -23,25 +31,26 @@ const styles = (theme: SaladTheme) => ({
     ':is(&:hover, &$selected) $name': {
       color: theme.mediumGreen,
     },
-    ':is(&:hover) $imageWrapper': {
+    ':is(&:hover) $imageOverlay': {
+      display: 'block',
       background: 'linear-gradient(0deg, rgba(83, 166, 38, 0.2), rgba(83, 166, 38, 0.2))',
     },
-    ':is(&$selected) $imageWrapper': {
+    ':is(&$selected) $imageOverlay': {
+      display: 'block',
       background: 'linear-gradient(180deg, rgba(177, 209, 53, 0.4) 0%, rgba(83, 166, 38, 0.4) 100%)',
     },
-    ':is(&$selected) $image': {
+    ':is(&$selected) $imageWrapper': {
       border: `4px solid ${theme.mediumGreen}`,
     },
   },
   imageWrapper: {
-    display: 'flex',
     position: 'relative',
     height: 241,
     width: '100%',
     marginBottom: 32,
+    border: '4px solid transparent',
   },
   image: {
-    zIndex: -1,
     height: '100%',
     width: '100%',
     boxSizing: 'border-box',
@@ -109,6 +118,7 @@ const _RewardCard: FunctionComponent<Props> = ({ classes, reward, isSelected, on
           loader={<Skeleton height={'100%'} />}
           unloader={<RewardMissingImage text={reward.name} />}
         />
+        <div className={classes.imageOverlay} />
         <div className={classes.buttonWrapper}>
           {isSelected ? (
             <Button variant="primary" label="Confirm" />
