@@ -37,7 +37,7 @@ const _SelectTargetRewardPage: FunctionComponent<Props> = ({ classes, targetRewa
     onSelectTargetReward(targetReward)
   }
 
-  const mockedTargetRewards =
+  const mockedRewards =
     [
       {
         id: 'd214ac17-daaf-4e14-87ac-036f93f32474',
@@ -66,11 +66,11 @@ const _SelectTargetRewardPage: FunctionComponent<Props> = ({ classes, targetRewa
     <Scrollbar>
       <div className={classes.targetRewards}>
         {/* * NOTE: Should be replaced with "targetRewards" from props when backend is ready */}
-        {mockedTargetRewards.map((targetReward) => (
+        {mockedRewards.map((reward) => (
           <RewardCard
-            key={targetReward.id}
-            reward={targetReward}
-            isSelected={selectedRewardId === targetReward.id}
+            key={reward.id}
+            reward={reward}
+            isSelected={selectedRewardId === reward.id}
             onSelectTargetRewardClick={handleSelectTargetRewardClick}
             onConfirmTargetRewardSelectionClick={handleConfirmTargetRewardSelectionClick}
           />
