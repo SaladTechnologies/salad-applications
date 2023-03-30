@@ -46,6 +46,7 @@ const styles = (theme: SaladTheme) => ({
     width: '100%',
     boxSizing: 'border-box',
     filter: 'drop-shadow(8px 14px 21px rgba(0, 0, 0, 0.45))',
+    border: '4px solid transparent',
   },
   name: {
     color: theme.lightGreen,
@@ -85,23 +86,17 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   reward: Reward
   isSelected: boolean
-  onSelectTargetRewardClick: (rewardId: string) => void
-  onConfirmTargetRewardSelectionClick: (reward: Reward) => void
+  onSelectReward: (rewardId: string) => void
+  onConfirmReward: (reward: Reward) => void
 }
 
-const _RewardCard: FunctionComponent<Props> = ({
-  classes,
-  reward,
-  isSelected,
-  onSelectTargetRewardClick,
-  onConfirmTargetRewardSelectionClick,
-}) => {
+const _RewardCard: FunctionComponent<Props> = ({ classes, reward, isSelected, onSelectReward, onConfirmReward }) => {
   const handleRewardClick = () => {
     if (isSelected) {
-      return onConfirmTargetRewardSelectionClick(reward)
+      return onConfirmReward(reward)
     }
 
-    return onSelectTargetRewardClick(reward.id)
+    return onSelectReward(reward.id)
   }
 
   const getButton = () => {

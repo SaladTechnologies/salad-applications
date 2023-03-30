@@ -21,20 +21,20 @@ const styles = {
 }
 
 interface Props extends WithStyles<typeof styles> {
-  targetRewards: Reward[]
-  onSelectTargetReward: (reward: Reward) => void
+  rewards: Reward[]
+  onConfirmTargetReward: (reward: Reward) => void
 }
 
-const _SelectTargetRewardPage: FunctionComponent<Props> = ({ classes, targetRewards, onSelectTargetReward }) => {
+const _SelectTargetRewardPage: FunctionComponent<Props> = ({ classes, rewards, onConfirmTargetReward }) => {
   const [selectedRewardId, setSelectedRewardId] = useState<string | null>(null)
 
-  const handleSelectTargetRewardClick = (rewardId: string) => {
+  const selectTargetReward = (rewardId: string) => {
     setSelectedRewardId(rewardId)
   }
 
-  const handleConfirmTargetRewardSelectionClick = (targetReward: Reward) => {
+  const confirmTargetReward = (reward: Reward) => {
     // * TODO: Add redirect to the "You've selected ..." new page
-    onSelectTargetReward(targetReward)
+    onConfirmTargetReward(reward)
   }
 
   const mockedRewards =
@@ -60,7 +60,7 @@ const _SelectTargetRewardPage: FunctionComponent<Props> = ({ classes, targetRewa
         tags: [],
         coverImage: NorthAmerica5URL,
       },
-    ] ?? targetRewards
+    ] ?? rewards
 
   return (
     <Scrollbar>
@@ -71,8 +71,8 @@ const _SelectTargetRewardPage: FunctionComponent<Props> = ({ classes, targetRewa
             key={reward.id}
             reward={reward}
             isSelected={selectedRewardId === reward.id}
-            onSelectTargetRewardClick={handleSelectTargetRewardClick}
-            onConfirmTargetRewardSelectionClick={handleConfirmTargetRewardSelectionClick}
+            onSelectReward={selectTargetReward}
+            onConfirmReward={confirmTargetReward}
           />
         ))}
       </div>
