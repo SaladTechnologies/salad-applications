@@ -5,7 +5,10 @@ import { connectSaladPay } from './connectSaladPay'
 const mapStoreToProps = (store: SaladPayStore): any => ({
   request: store.currentRequestOptions,
   availableBalance: store.currentBalance,
-  onClose: store.abort,
+  onClose: () => {
+    store.abort()
+    store.goBack()
+  },
   onConfirm: store.confirmPayment,
   processing: store.processing,
 })

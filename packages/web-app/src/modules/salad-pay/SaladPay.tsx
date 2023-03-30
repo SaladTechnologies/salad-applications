@@ -12,6 +12,13 @@ export class SaladPay {
   paymentRequest = (options: SaladPaymentRequestOptions): SaladPaymentRequest => {
     console.log('Creating a new payment request')
 
+    // Check if there is already one and abort previous ones
+    if (this.currentRequest) {
+      console.log('Aborting previous request')
+      this.currentRequest.abort()
+      this.currentRequest = undefined
+    }
+
     this.currentRequest = this.createRequest(options)
 
     this.currentRequest.on('abort', () => {
