@@ -48,7 +48,9 @@ const styles = (theme: SaladTheme) => ({
   backgroundImage: {
     backgroundImage: `url(${SaladBackgroundURL})`,
     backgroundSize: 'cover',
+    backgroundPosition: 'center',
     width: '75%',
+    height: '100vh',
   },
   buttonContainer: {
     marginBottom: '5px',
