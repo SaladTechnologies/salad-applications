@@ -24,7 +24,7 @@ const styles = (theme: SaladTheme) => ({
     gap: '32px',
     margin: '70px 45px 0px 330px',
   },
-  targetRewards: {
+  rewards: {
     display: 'flex',
     gap: '32px',
     alignItems: 'stretch',
@@ -64,7 +64,7 @@ interface Props extends WithStyles<typeof styles> {
 
 const _SelectTargetRewardPage: FunctionComponent<Props> = ({ classes, rewards, onConfirmTargetReward }) => {
   const [selectedRewardId, setSelectedRewardId] = useState<string | null>(null)
-  const [visibleRewards, setVisibleRewards] = useState(6)
+  const [visibleRewardsAmount, setVisibleRewardsAmount] = useState(6)
 
   const selectTargetReward = (rewardId: string) => {
     setSelectedRewardId(rewardId)
@@ -140,8 +140,8 @@ const _SelectTargetRewardPage: FunctionComponent<Props> = ({ classes, rewards, o
             </p>
           </div>
           {/* * NOTE: Should be replaced with "targetRewards" from props when backend is ready */}
-          <div className={classes.targetRewards}>
-            {mockedRewards.slice(0, visibleRewards).map((reward) => (
+          <div className={classes.rewards}>
+            {mockedRewards.slice(0, visibleRewardsAmount).map((reward) => (
               <RewardCard
                 key={reward.id}
                 reward={reward}
@@ -150,12 +150,12 @@ const _SelectTargetRewardPage: FunctionComponent<Props> = ({ classes, rewards, o
                 onConfirmReward={confirmTargetReward}
               />
             ))}
-            {visibleRewards < mockedRewards.length && (
+            {visibleRewardsAmount < mockedRewards.length && (
               <div className={classes.buttonContainer}>
                 <Button
                   variant="outlined"
                   outlineColor={DefaultTheme.lightGreen}
-                  onClick={() => setVisibleRewards(visibleRewards + 3)}
+                  onClick={() => setVisibleRewardsAmount(visibleRewardsAmount + 3)}
                   label="View More Items"
                 />
               </div>
