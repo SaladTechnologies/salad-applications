@@ -59,7 +59,6 @@ export class SaladPayStore {
 
     this.processing = false
     if (this.currentRequest) {
-      this.hide()
       let req = this.currentRequest
 
       this.currentRequest = undefined
@@ -69,7 +68,7 @@ export class SaladPayStore {
     }
   }
 
-  hide = () => {
+  goBack = () => {
     this.routing.goBack()
   }
 
@@ -86,7 +85,7 @@ export class SaladPayStore {
       },
       complete: () => {
         console.log('SaladPay "complete" called')
-        this.hide()
+        this.goBack()
         this.currentRequest?.emit('complete')
         this.processing = false
       },
