@@ -9,6 +9,7 @@ const mapStoreToProps = (store: SaladPayStore): any => ({
     store.abort()
     store.goBack()
   },
+  onAbort: store.abort,
   onConfirm: store.confirmPayment,
   processing: store.processing,
 })

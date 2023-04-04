@@ -31,6 +31,9 @@ export class RewardStore {
   private requiresFurtherAction: boolean = false
 
   @observable
+  public isRedeeming: boolean = false
+
+  @observable
   public isLoading: boolean = false
 
   @observable
@@ -208,12 +211,18 @@ export class RewardStore {
       this.lastRewardId = reward.id
     }
 
+    if (this.isRedeeming) {
+      console.log('Already redeeming reward, skipping')
+      return
+    }
     //Ensures that the user is logged in
     try {
       yield this.store.auth.login()
     } catch {
       return
     }
+
+    this.isRedeeming = true
 
     let response: SaladPaymentResponse | undefined
 
@@ -363,6 +372,8 @@ export class RewardStore {
     } finally {
       yield this.store.balance.refreshBalance()
       yield this.store.balance.refreshBalanceHistory()
+      this.isRedeeming = false
+      console.error('Cleared isRedeeming flag')
     }
   })
 
