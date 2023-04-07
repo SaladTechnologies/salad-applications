@@ -2,9 +2,9 @@ import type { ReactNode } from 'react'
 import { Component } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { Head, Scrollbar } from '../../../components'
-import type { SaladTheme } from '../../../SaladTheme'
-import type { Reward } from '../../reward/models'
+import { Head, Scrollbar } from '../../../../components'
+import type { SaladTheme } from '../../../../SaladTheme'
+import type { Reward } from '../../../reward/models'
 import {
   RewardDescriptionPanel,
   RewardDisclaimers,
@@ -13,7 +13,7 @@ import {
   RewardImageCarousel,
   RewardInfoPanel,
   RewardRequirementsPanel,
-} from '../components'
+} from '../../components'
 
 const styles = (theme: SaladTheme) => ({
   container: {

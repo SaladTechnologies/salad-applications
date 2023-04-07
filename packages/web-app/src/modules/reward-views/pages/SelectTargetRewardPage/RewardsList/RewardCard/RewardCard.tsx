@@ -5,12 +5,12 @@ import { Img } from 'react-image'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import Skeleton from 'react-loading-skeleton'
-import type { SaladTheme } from '../../../../SaladTheme'
-import { DefaultTheme } from '../../../../SaladTheme'
-import type { Reward } from '../../../reward/models'
-import { RewardMissingImage } from '../RewardMissingImage'
+import type { SaladTheme } from '../../../../../../SaladTheme'
+import { DefaultTheme } from '../../../../../../SaladTheme'
+import type { Reward } from '../../../../../reward/models'
+import { RewardMissingImage } from '../../../../components/RewardMissingImage'
 
-const styles = (theme: SaladTheme) => ({
+export const styles = (theme: SaladTheme) => ({
   selected: {},
   imageOverlay: {
     display: 'none',
@@ -128,7 +128,7 @@ const _RewardCard: FunctionComponent<Props> = ({ classes, reward, isSelected, on
         </div>
       </div>
       <div className={classes.name}>{reward.name}</div>
-      <div className={classes.price}>{reward.price.toFixed(2)}</div>
+      <div className={classes.price}>${reward.price.toFixed(2)}</div>
     </div>
   )
 }

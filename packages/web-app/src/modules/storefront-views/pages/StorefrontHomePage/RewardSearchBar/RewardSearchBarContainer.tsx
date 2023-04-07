@@ -1,6 +1,6 @@
 import { withSearch } from '@elastic/react-search-ui'
-import { connect } from '../../connect'
-import { RewardSearchBar } from './components'
+import { connect } from '../../../../../connect'
+import { RewardSearchBar } from '../../../../reward-views/components'
 
 const mapStoreToProps = (): any => ({})
 

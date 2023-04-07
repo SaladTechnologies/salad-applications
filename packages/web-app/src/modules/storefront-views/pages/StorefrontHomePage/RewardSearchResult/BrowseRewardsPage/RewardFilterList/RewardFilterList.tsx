@@ -3,7 +3,8 @@ import type { ReactNode } from 'react'
 import { Component } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { Dropdown } from '../../../components/Dropdown'
+import { Dropdown } from '../../../../../../../components/Dropdown'
+import { connect } from '../../../../../../../connect'
 import { RewardFilterPanel } from './RewardFilterPanel'
 import { RewardPriceFilter } from './RewardPriceFilter'
 
@@ -64,3 +65,7 @@ class _RewardFilterList extends Component<Props> {
 }
 
 export const RewardFilterList = withStyles(styles)(_RewardFilterList)
+
+const mapStoreToProps = () => ({})
+
+export const RewardFilterListContainer = connect(mapStoreToProps, RewardFilterList)

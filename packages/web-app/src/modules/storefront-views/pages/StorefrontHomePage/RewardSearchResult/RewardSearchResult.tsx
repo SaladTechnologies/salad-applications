@@ -3,8 +3,8 @@ import type { ReactNode } from 'react'
 import { Component } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { BrowseRewardsPage } from '.'
-import { SearchResult } from '../../reward/models'
+import { SearchResult } from '../../../../reward/models'
+import { BrowseRewardsPage } from './BrowseRewardsPage'
 
 const styles = {}
 
@@ -17,7 +17,7 @@ interface Props extends WithStyles<typeof styles> {
   onClickReward: (to: string, action?: Function) => void
 }
 
-class _SearchResultsPage extends Component<Props> {
+class _RewardSearchResult extends Component<Props> {
   handleBack = () => {
     const { clearFilters, onBack } = this.props
 
@@ -36,4 +36,4 @@ class _SearchResultsPage extends Component<Props> {
   }
 }
 
-export const SearchResultsPage = withStyles(styles)(_SearchResultsPage)
+export const RewardSearchResult = withStyles(styles)(_RewardSearchResult)

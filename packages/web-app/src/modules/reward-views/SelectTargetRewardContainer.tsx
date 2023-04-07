@@ -3,9 +3,11 @@ import type { RootStore } from '../../Store'
 import { SelectTargetRewardPage } from './pages'
 
 const mapStoreToProps = (store: RootStore): any => ({
-  // * NOTE: Should be replaced with real data when backend is ready
-  targetRewards: [],
+  recommendedRewards: store.rewards.recommendedRewards,
+  targetReward: store.rewards.selectedTargetReward,
   onConfirmTargetReward: store.rewards.setSelectedTargetReward,
+  onSelectDifferentReward: store.rewards.removeSelectedTargetReward,
+  getRecommendedRewards: store.rewards.getRecommendedRewards,
 })
 
 export const SelectTargetRewardContainer = connect(mapStoreToProps, SelectTargetRewardPage)
