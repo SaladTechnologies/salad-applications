@@ -205,7 +205,7 @@ export class RewardStore {
   getRecommendedRewards = flow(function* (this: RewardStore) {
     try {
       var res = yield this.axios.get('api/v1/rewards/recommendations')
-      this.recommendedRewards = res.data
+      this.recommendedRewards = res.data.map(rewardFromResource)
     } catch (error) {
       console.error(error)
     }
