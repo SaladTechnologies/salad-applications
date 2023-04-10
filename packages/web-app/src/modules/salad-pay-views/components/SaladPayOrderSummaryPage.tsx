@@ -80,6 +80,7 @@ interface Props extends WithStyles<typeof styles> {
   processing?: boolean
   onConfirm?: () => void
   onClose?: () => void
+  onAbort?: () => void
 }
 
 const moneyFormat = (amount?: number): string => currencyFormatter.format(amount ?? 0)
@@ -97,6 +98,24 @@ class _SaladPayOrderSummaryPage extends Component<Props> {
     if (onConfirm && this.hasBalance()) {
       onConfirm()
     }
+  }
+
+  handleAbort = () => {
+    const { onAbort } = this.props
+
+    if (onAbort) {
+      onAbort()
+    }
+  }
+
+  public override componentDidMount() {
+    window.addEventListener('popstate', this.handleAbort)
+  }
+
+  public override componentWillUnmount() {
+    setTimeout(() => {
+      window.removeEventListener('popstate', this.handleAbort)
+    })
   }
 
   public override render(): ReactNode {

@@ -215,7 +215,6 @@ export class RewardStore {
       console.log('Already redeeming reward, skipping')
       return
     }
-
     //Ensures that the user is logged in
     try {
       yield this.store.auth.login()
