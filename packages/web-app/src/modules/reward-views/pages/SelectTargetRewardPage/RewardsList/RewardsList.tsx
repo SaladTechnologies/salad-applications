@@ -34,11 +34,6 @@ const _RewardsList: FunctionComponent<Props> = ({ classes, rewards, onConfirmTar
     setSelectedRewardId(rewardId)
   }
 
-  const confirmTargetReward = (reward: Reward) => {
-    // * TODO: Add redirect to the "You've selected ..." new page
-    onConfirmTargetReward(reward)
-  }
-
   return (
     <div className={classes.rewards}>
       {rewards.slice(0, visibleRewardsAmount).map((reward) => (
@@ -47,7 +42,7 @@ const _RewardsList: FunctionComponent<Props> = ({ classes, rewards, onConfirmTar
           reward={reward}
           isSelected={selectedRewardId === reward.id}
           onSelectReward={selectTargetReward}
-          onConfirmReward={confirmTargetReward}
+          onConfirmReward={onConfirmTargetReward}
         />
       ))}
       {visibleRewardsAmount < rewards.length && (
