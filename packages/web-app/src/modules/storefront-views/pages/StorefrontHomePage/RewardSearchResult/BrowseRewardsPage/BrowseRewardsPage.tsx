@@ -13,7 +13,7 @@ import { rewardItemResponsive } from '../../../../../reward-views/components/Rew
 import type { SearchResult } from '../../../../../reward/models'
 import RightArrow from './/assets/right-arrow.svg'
 import LeftArrow from './assets/left-arrow.svg'
-import { RewardFilterListContainer } from './RewardFilterList'
+import { RewardFilterList } from './RewardFilterList'
 
 const styles = (theme: SaladTheme) => {
   let style = {
@@ -229,7 +229,7 @@ class _BrowseRewardsPage extends Component<Props> {
           <div style={{ flex: '0 0 250px' }}>
             <Scrollbars>
               <div className={classes.filterContainer}>
-                <RewardFilterListContainer />
+                <RewardFilterList />
               </div>
             </Scrollbars>
           </div>
