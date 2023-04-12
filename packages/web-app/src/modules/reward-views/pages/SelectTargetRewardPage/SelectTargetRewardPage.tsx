@@ -1,14 +1,16 @@
+import { Button } from '@saladtechnologies/garden-components'
+import classNames from 'classnames'
 import type { FunctionComponent } from 'react'
 import { useEffect } from 'react'
 import { Img } from 'react-image'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import Skeleton from 'react-loading-skeleton'
-import classNames from 'classnames'
-import { Button, Scrollbar } from '../../../../components'
+import { Scrollbar } from '../../../../components'
+import type { SaladTheme } from '../../../../SaladTheme'
+import { DefaultTheme } from '../../../../SaladTheme'
 import type { Reward } from '../../../reward/models'
 import { RewardMissingImage } from '../../components/RewardMissingImage'
-import type { SaladTheme } from '../../../../SaladTheme'
 import SaladBackgroundURL from '../assets/saladBackground.png'
 import { RewardsList } from './RewardsList'
 
@@ -34,6 +36,14 @@ export const styles = (theme: SaladTheme) => ({
     fontFamily: theme.fontGroteskLight09,
     color: theme.green,
     fontSize: '96px',
+    fontWeight: 300,
+    textShadow: '0px 0px 24px rgba(178, 213, 48, 0.7)',
+  },
+  subHeader: {
+    margin: 0,
+    fontFamily: theme.fontGroteskLight09,
+    color: theme.green,
+    fontSize: '56px',
     fontWeight: 300,
     textShadow: '0px 0px 24px rgba(178, 213, 48, 0.7)',
   },
@@ -94,6 +104,16 @@ export const styles = (theme: SaladTheme) => ({
     lineHeight: '18px',
     marginTop: 16,
   },
+  buttonContainer: {
+    marginBottom: '5px',
+  },
+  wantSomethingDifferent: {
+    marginTop: '8px',
+    display: 'flex',
+    flexDirection: 'row',
+    gap: '10px',
+    alignItems: 'center',
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -101,20 +121,22 @@ interface Props extends WithStyles<typeof styles> {
   targetReward: Reward
   onConfirmTargetReward: (reward: Reward) => void
   onSelectDifferentReward: () => void
-  getRecommendedRewards: () => void
+  fetchRecommendedRewards: () => void
+  navigateToStorePage: () => void
 }
 
 const _SelectTargetRewardPage: FunctionComponent<Props> = ({
   classes,
   recommendedRewards,
   targetReward,
+  navigateToStorePage,
   onConfirmTargetReward,
   onSelectDifferentReward,
-  getRecommendedRewards,
+  fetchRecommendedRewards,
 }) => {
   useEffect(() => {
-    getRecommendedRewards()
-  }, [getRecommendedRewards])
+    fetchRecommendedRewards()
+  }, [fetchRecommendedRewards])
 
   return (
     <Scrollbar>
@@ -140,9 +162,12 @@ const _SelectTargetRewardPage: FunctionComponent<Props> = ({
                     <div className={classes.targetRewardName}>{targetReward.name}</div>
                     <div className={classes.targetRewardPrice}>${targetReward.price.toFixed(2)}</div>
                   </div>
-                  <Button onClick={onSelectDifferentReward}>
-                    <div>Select a Different Reward</div>
-                  </Button>
+                  <Button
+                    variant="outlined"
+                    outlineColor={DefaultTheme.lightGreen}
+                    onClick={onSelectDifferentReward}
+                    label="Select a Different Reward"
+                  />
                 </div>
               </div>
             </>
@@ -154,8 +179,18 @@ const _SelectTargetRewardPage: FunctionComponent<Props> = ({
                   You can target any of these rewards, or any other reward in the Salad store, and track your progress
                   towards redeeming it. Once you have enough balance you can get that sweet loot or get something else
                 </p>
+                <RewardsList rewards={recommendedRewards} onConfirmTargetReward={onConfirmTargetReward} />
+                <h2 className={classes.subHeader}>Want something different? </h2>
+                <div className={classes.wantSomethingDifferent}>
+                  <Button
+                    variant="outlined"
+                    outlineColor={DefaultTheme.lightGreen}
+                    onClick={navigateToStorePage}
+                    label="Check out the Store"
+                  />
+                  <p className={classes.description}>and click into an item, and then press “Target this Reward.”</p>
+                </div>
               </div>
-              <RewardsList rewards={recommendedRewards} onConfirmTargetReward={onConfirmTargetReward} />
             </>
           )}
         </div>

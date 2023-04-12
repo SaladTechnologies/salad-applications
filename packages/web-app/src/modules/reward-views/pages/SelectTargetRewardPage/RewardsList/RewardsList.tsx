@@ -1,9 +1,7 @@
-import { Button } from '@saladtechnologies/garden-components'
 import type { FunctionComponent } from 'react'
 import { useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { DefaultTheme } from '../../../../../SaladTheme'
 import type { Reward } from '../../../../reward/models'
 import { RewardCard } from './RewardCard'
 
@@ -14,10 +12,7 @@ export const styles = {
     alignItems: 'stretch',
     maxWidth: 655,
     flexWrap: 'wrap',
-    paddingBottom: '100px',
-  },
-  buttonContainer: {
-    marginBottom: '5px',
+    paddingBottom: '40px',
   },
 }
 
@@ -26,9 +21,10 @@ interface Props extends WithStyles<typeof styles> {
   onConfirmTargetReward: (reward: Reward) => void
 }
 
+const visibleRewardsAmount = 6
+
 const _RewardsList: FunctionComponent<Props> = ({ classes, rewards, onConfirmTargetReward }) => {
   const [selectedRewardId, setSelectedRewardId] = useState<string | null>(null)
-  const [visibleRewardsAmount, setVisibleRewardsAmount] = useState(6)
 
   const selectTargetReward = (rewardId: string) => {
     setSelectedRewardId(rewardId)
@@ -45,16 +41,6 @@ const _RewardsList: FunctionComponent<Props> = ({ classes, rewards, onConfirmTar
           onConfirmReward={onConfirmTargetReward}
         />
       ))}
-      {visibleRewardsAmount < rewards.length && (
-        <div className={classes.buttonContainer}>
-          <Button
-            variant="outlined"
-            outlineColor={DefaultTheme.lightGreen}
-            onClick={() => setVisibleRewardsAmount(visibleRewardsAmount + 3)}
-            label="View More Items"
-          />
-        </div>
-      )}
     </div>
   )
 }

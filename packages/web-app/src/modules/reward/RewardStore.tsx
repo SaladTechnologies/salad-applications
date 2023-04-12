@@ -202,7 +202,7 @@ export class RewardStore {
   })
 
   @action.bound
-  getRecommendedRewards = flow(function* (this: RewardStore) {
+  fetchRecommendedRewards = flow(function* (this: RewardStore) {
     try {
       var res = yield this.axios.get('api/v1/rewards/recommendations')
       this.recommendedRewards = res.data.map(rewardFromResource)
