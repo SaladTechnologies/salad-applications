@@ -3,7 +3,7 @@ import type { RootStore } from '../../Store'
 import { SelectTargetRewardPage } from './pages'
 
 const mapStoreToProps = (store: RootStore): any => {
-  const navigateToStorePage = () => store.routing.push(`/store/`)
+  const navigateToStorePage = () => store.routing.push(`/store`)
   return {
     recommendedRewards: store.rewards.recommendedRewards,
     targetReward: store.rewards.selectedTargetReward,
