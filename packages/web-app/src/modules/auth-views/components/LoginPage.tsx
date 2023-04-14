@@ -16,6 +16,7 @@ import withStyles from 'react-jss'
 import MediaQuery from 'react-responsive'
 import { Head } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
+import { saveUTMTagsToCookies } from '../../../utmTags'
 import { FormSteps } from '../../auth/AuthStore'
 import LoginPageRewards from '../assets/login-screen-rewards.png'
 
@@ -138,6 +139,14 @@ const _LoginPage = ({
   const handleResetSubmitSuccess = () => {
     isSubmitSuccess && onResetSubmitSuccess?.()
   }
+
+  useEffect(() => {
+    if (!document.location.search) {
+      return
+    }
+
+    saveUTMTagsToCookies(document.location.search, document.cookie)
+  }, [])
 
   useEffect(() => {
     return () => {

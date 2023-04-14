@@ -1,8 +1,7 @@
 import { Button, FieldContainer, Text, TextField } from '@saladtechnologies/garden-components'
 import type { FormValues } from '@saladtechnologies/garden-components/lib/components/TextField/TextField'
 import classnames from 'classnames'
-import type { ReactNode } from 'react'
-import { Component } from 'react'
+import type { FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import MediaQuery from 'react-responsive'
@@ -70,72 +69,73 @@ interface Props extends WithStyles<typeof styles> {
   serverSideErrorMessage?: string
   onSubmitCode?: (code: string) => Promise<void>
   onEnterDefault?: () => void
+  referralCode?: string
 }
 
-class _ReferralOnboardingPage extends Component<Props> {
-  handleSubmitCode = (data: FormValues) => {
-    const { onSubmitCode } = this.props
-
+const _ReferralOnboardingPage: FC<Props> = ({
+  classes,
+  onSubmitCode,
+  onEnterDefault,
+  isSubmittingReferralCode,
+  serverSideErrorMessage,
+  isReferralCodeSubmitSuccess,
+  referralCode,
+}) => {
+  const handleSubmitCode = (data: FormValues) => {
     if (data.input) {
       onSubmitCode?.(data.input)
     }
   }
 
-  handleDefaultCode = () => {
-    const { onEnterDefault } = this.props
+  const handleDefaultCode = () => {
     onEnterDefault?.()
   }
-
-  public override render(): ReactNode {
-    const { classes, isSubmittingReferralCode, serverSideErrorMessage, isReferralCodeSubmitSuccess } = this.props
-
-    return (
-      <div className={classes.container}>
-        <div className={classes.page}>
-          <div className={classes.contentContainer}>
-            <>
-              <div className={classes.content}>
-                <div className={classnames(classes.header, classes.mb48)}>
-                  <Text variant="headline">Enter your Referral Code</Text>
-                </div>
-                <FieldContainer>
-                  <div className={classes.mb26}>
-                    <Text variant="baseL">
-                      If you received a promo code, enter it below. This boosts your earning rate and lets us give
-                      credit to your referrer, too.
-                    </Text>
-                  </div>
-                  <div className={classes.mb48}>
-                    <TextField
-                      label="Promo Code"
-                      validationRegex={/^.{1,10}/}
-                      validationRegexErrorMessage={'Invalid Code. Codes are less than 10 characters with no spaces.'}
-                      onSubmit={this.handleSubmitCode}
-                      isSubmitting={isSubmittingReferralCode}
-                      isSubmitSuccess={isReferralCodeSubmitSuccess}
-                      serverSideErrorMessage={serverSideErrorMessage}
-                    />
-                  </div>
-                  <div className={classes.mb48}>
-                    <Text variant="baseL">
-                      Didn’t receive a promo code? No problem! We’ll enter one automatically so you can still get a
-                      bonus.
-                    </Text>
-                  </div>
-                </FieldContainer>
-                <div>
-                  <Button onClick={this.handleDefaultCode} variant="outlined" label="Give me a bonus!" />
-                </div>
+  return (
+    <div className={classes.container}>
+      <div className={classes.page}>
+        <div className={classes.contentContainer}>
+          <>
+            <div className={classes.content}>
+              <div className={classnames(classes.header, classes.mb48)}>
+                <Text variant="headline">Enter your Referral Code</Text>
               </div>
-              <MediaQuery minWidth={767}>
-                <img className={classes.rightSideImage} src={ReferralsImageStatic} alt="Salad Reward Items" />
-              </MediaQuery>
-            </>
-          </div>
+              <FieldContainer>
+                <div className={classes.mb26}>
+                  <Text variant="baseL">
+                    If you received a promo code, enter it below. This boosts your earning rate and lets us give credit
+                    to your referrer, too.
+                  </Text>
+                </div>
+                <div className={classes.mb48}>
+                  <TextField
+                    label="Promo Code"
+                    validationRegex={/^.{1,10}/}
+                    validationRegexErrorMessage={'Invalid Code. Codes are less than 10 characters with no spaces.'}
+                    onSubmit={handleSubmitCode}
+                    defaultValue={referralCode}
+                    isSubmitting={isSubmittingReferralCode}
+                    isSubmitSuccess={isReferralCodeSubmitSuccess}
+                    serverSideErrorMessage={serverSideErrorMessage}
+                  />
+                </div>
+                <div className={classes.mb48}>
+                  <Text variant="baseL">
+                    Didn’t receive a promo code? No problem! We’ll enter one automatically so you can still get a bonus.
+                  </Text>
+                </div>
+              </FieldContainer>
+              <div>
+                <Button onClick={handleDefaultCode} variant="outlined" label="Give me a bonus!" />
+              </div>
+            </div>
+            <MediaQuery minWidth={767}>
+              <img className={classes.rightSideImage} src={ReferralsImageStatic} alt="Salad Reward Items" />
+            </MediaQuery>
+          </>
         </div>
       </div>
-    )
-  }
+    </div>
+  )
 }
 
 export const ReferralOnboardingPage = withStyles(styles)(_ReferralOnboardingPage)

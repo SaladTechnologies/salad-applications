@@ -1,8 +1,7 @@
 import { Button, FieldContainer, Text } from '@saladtechnologies/garden-components'
 import { ChevronRight } from '@saladtechnologies/garden-icons'
 import classnames from 'classnames'
-import type { ReactNode } from 'react'
-import { Component } from 'react'
+import type { FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import MediaQuery from 'react-responsive'
@@ -66,45 +65,39 @@ interface Props extends WithStyles<typeof styles> {
   onNextPage?: () => void
 }
 
-class _ReferralWelcomePage extends Component<Props> {
-  public override render(): ReactNode {
-    const { classes, onNextPage, username } = this.props
-
-    return (
-      <div className={classes.container}>
-        <div className={classes.page}>
-          <div className={classes.contentContainer}>
-            <>
-              <div className={classes.content}>
-                <div className={classnames(classes.header, classes.mb48)}>
-                  <Text variant="headline">Welcome to the Kitchen, {username}!</Text>
-                </div>
-                <FieldContainer>
-                  <div className={classes.mb48}>
-                    <Text variant="baseL">
-                      You’ve joined a community of over 500,000 Chefs who use Salad to earn games, gift cards, and other
-                      rewards.
-                    </Text>
-                  </div>
-                  <div className={classes.mb48}>
-                    <Text variant="baseL">
-                      Now, let’s get your machine set up with a quick process to maximize your earning rates.
-                    </Text>
-                  </div>
-                </FieldContainer>
-                <div>
-                  <Button onClick={onNextPage} trailingIcon={<ChevronRight />} label="let's go"></Button>
-                </div>
+const _ReferralWelcomePage: FC<Props> = ({ classes, onNextPage, username }) => (
+  <div className={classes.container}>
+    <div className={classes.page}>
+      <div className={classes.contentContainer}>
+        <>
+          <div className={classes.content}>
+            <div className={classnames(classes.header, classes.mb48)}>
+              <Text variant="headline">Welcome to the Kitchen, {username}!</Text>
+            </div>
+            <FieldContainer>
+              <div className={classes.mb48}>
+                <Text variant="baseL">
+                  You’ve joined a community of over 500,000 Chefs who use Salad to earn games, gift cards, and other
+                  rewards.
+                </Text>
               </div>
-              <MediaQuery minWidth={767}>
-                <img className={classes.rightSideImage} src={LoginPageRewards} alt="Salad Reward Items" />
-              </MediaQuery>
-            </>
+              <div className={classes.mb48}>
+                <Text variant="baseL">
+                  Now, let’s get your machine set up with a quick process to maximize your earning rates.
+                </Text>
+              </div>
+            </FieldContainer>
+            <div>
+              <Button onClick={onNextPage} trailingIcon={<ChevronRight />} label="let's go"></Button>
+            </div>
           </div>
-        </div>
+          <MediaQuery minWidth={767}>
+            <img className={classes.rightSideImage} src={LoginPageRewards} alt="Salad Reward Items" />
+          </MediaQuery>
+        </>
       </div>
-    )
-  }
-}
+    </div>
+  </div>
+)
 
 export const ReferralWelcomePage = withStyles(styles)(_ReferralWelcomePage)

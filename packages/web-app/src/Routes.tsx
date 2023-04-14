@@ -1,7 +1,11 @@
 import type { Location } from 'history'
 import type { RouteComponentProps } from 'react-router'
 import { Redirect, Route, Switch, withRouter } from 'react-router'
-import { ReferralOnboardingContainer, ReferralWelcomeContainer } from './modules/account-views/referral-views'
+import {
+  ReferralOnboardingContainer,
+  ReferralWelcomeContainer,
+  WelcomeRedirect,
+} from './modules/account-views/referral-views'
 import { LoginPageContainer } from './modules/auth-views'
 import { ReplaceBonusModalContainer } from './modules/bonus-views'
 import { EarnMenuContainer } from './modules/earn-views'
@@ -24,7 +28,7 @@ const _Routes = ({ location }: RouteComponentProps) => {
       {/* Onboarding */}
       <Route exact path="/onboarding/referral" component={ReferralOnboardingContainer} />
       <Route exact path="/onboarding/welcome" component={ReferralWelcomeContainer} />
-      <Redirect exact from="/welcome" to="/onboarding/welcome" />
+      <Route exact path="/welcome" component={WelcomeRedirect} />
 
       {/* Store Pages */}
       <Route path={['/store', '/store/search']} exact render={() => <StorefrontHomePage />} />
