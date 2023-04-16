@@ -128,7 +128,7 @@ Section Obliterate
   RMDir /r /REBOOTOK "$PROGRAMFILES64\Salad"
   SetShellVarContext all
   RMDir /r /REBOOTOK "$APPDATA\Salad"
-  RMDir /r /REBOOTOK "$LOCALAPPDATA\Salad
+  RMDir /r /REBOOTOK "$LOCALAPPDATA\Salad"
   SetShellVarContext current
 
   Delete "$DESKTOP\Salad.lnk"
