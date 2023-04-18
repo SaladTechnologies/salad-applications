@@ -151,9 +151,14 @@ export class RewardStore {
 
   @action.bound
   fetchSelectedTargetReward = flow(function* (this: RewardStore) {
-    var res = yield this.axios.get('/api/v1/profile/selected-reward')
-    yield this.fetchReward(res.data.rewardId)
-    this.selectedTargetRewardId = res.data.rewardId
+    const result = yield this.axios.get('/api/v1/profile/selected-reward')
+
+    if (!result.data.rewardId) {
+      return
+    }
+
+    yield this.fetchReward(result.data.rewardId)
+    this.selectedTargetRewardId = result.data.rewardId
   })
 
   @action.bound

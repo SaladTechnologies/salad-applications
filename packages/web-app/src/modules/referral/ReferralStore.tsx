@@ -154,7 +154,6 @@ export class ReferralStore {
     //Ensures that the user is logged in
     try {
       yield this.store.auth.login()
-      deleteCookieByName(UTMTag.Campaign)
     } catch {
       return
     }
@@ -230,6 +229,8 @@ export class ReferralStore {
 
       this.store.notifications.sendNotification(notification)
       throw new Error(this.errorMessage)
+    } finally {
+      deleteCookieByName(UTMTag.Campaign)
     }
   })
 
