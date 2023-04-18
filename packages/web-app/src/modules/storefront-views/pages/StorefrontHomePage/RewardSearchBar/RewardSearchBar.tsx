@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { Component } from 'react'
-import { SearchBar } from '../../../components'
+import { SearchBar } from '../../../../../components'
 
 interface Props {
   searchTerm?: string

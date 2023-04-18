@@ -5,7 +5,7 @@ import type { ReactNode } from 'react'
 import { Component } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import type { FilterOption } from './RewardPriceFilter'
+import type { FilterOption } from '../RewardPriceFilter'
 
 const styles = {
   row: {

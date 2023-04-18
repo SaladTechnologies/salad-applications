@@ -5,7 +5,7 @@ import { ReferralOnboardingContainer, ReferralWelcomeContainer } from './modules
 import { LoginPageContainer } from './modules/auth-views'
 import { ReplaceBonusModalContainer } from './modules/bonus-views'
 import { EarnMenuContainer } from './modules/earn-views'
-import { RewardDetailsContainer } from './modules/reward-views'
+import { RewardDetailsContainer, SelectTargetRewardContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
 import { SettingsContainer } from './modules/settings-views'
 import { StorefrontHomePage } from './modules/storefront-views/pages/StorefrontHomePage'
@@ -30,9 +30,8 @@ const _Routes = ({ location }: RouteComponentProps) => {
       <Route path={['/store', '/store/search']} exact render={() => <StorefrontHomePage />} />
       <Route path="/store/rewards/:id" exact component={RewardDetailsContainer} />
       <Route path="/store/vault" exact component={VaultListContainer} />
-      {/* Target Reward Page */}
-      {/* * NOTE: Should be uncommented when backend is ready */}
-      {/* <Route path="/store/select-target-reward" exact component={SelectTargetRewardContainer} /> */}
+      {/* Recommended Target Rewards Page */}
+      <Route path="/store/select-target-reward" exact component={SelectTargetRewardContainer} />
 
       {/* Modals */}
       {/* SaladPay: This is stand in until we figure out iFrames, popups... */}

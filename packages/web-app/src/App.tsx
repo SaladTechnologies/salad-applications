@@ -71,7 +71,6 @@ const styles = (theme: SaladTheme) => ({
     flex: 1,
     maxWidth: 1600,
     position: 'relative',
-    paddingBottom: 100,
     marginTop: 60,
   },
 })

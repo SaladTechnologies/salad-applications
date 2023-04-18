@@ -3,9 +3,10 @@ import { Component } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Route, Switch } from 'react-router'
-import type { SaladTheme } from '../../../SaladTheme'
-import { RewardSearchBarContainer, RewardSearchResultContainer } from '../../reward-views'
-import { StorefrontPageContainer } from '../StorefrontPageContainer'
+import type { SaladTheme } from '../../../../SaladTheme'
+import { StorefrontPageContainer } from '../../StorefrontPageContainer'
+import { RewardSearchBarContainer } from './RewardSearchBar/RewardSearchBarContainer'
+import { RewardSearchResultContainer } from './RewardSearchResult/RewardSearchResultContainer'
 
 const styles = (theme: SaladTheme) => ({
   container: {
