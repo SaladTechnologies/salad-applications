@@ -113,6 +113,7 @@ const _ReferralOnboardingPage: FC<Props> = ({
                     validationRegexErrorMessage={'Invalid Code. Codes are less than 10 characters with no spaces.'}
                     onSubmit={handleSubmitCode}
                     defaultValue={referralCode}
+                    useDefaultValueAsPreset={false}
                     isSubmitting={isSubmittingReferralCode}
                     isSubmitSuccess={isReferralCodeSubmitSuccess}
                     serverSideErrorMessage={serverSideErrorMessage}

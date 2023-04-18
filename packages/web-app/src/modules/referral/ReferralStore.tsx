@@ -2,6 +2,7 @@ import type { AxiosInstance, AxiosResponse } from 'axios'
 import Axios from 'axios'
 import { action, computed, flow, observable } from 'mobx'
 import type { RootStore } from '../../Store'
+import { deleteCookieByName, UTMTag } from '../../utmTags'
 import type { NotificationMessage } from '../notifications/models'
 import { NotificationMessageCategory } from '../notifications/models'
 import type { Referral } from './models'
@@ -153,6 +154,7 @@ export class ReferralStore {
     //Ensures that the user is logged in
     try {
       yield this.store.auth.login()
+      deleteCookieByName(UTMTag.Campaign)
     } catch {
       return
     }
