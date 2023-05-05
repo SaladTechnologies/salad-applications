@@ -1,0 +1,1 @@
+export { NovuProviderWrapper } from './NovuProviderWrapper'

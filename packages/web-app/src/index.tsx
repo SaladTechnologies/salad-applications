@@ -1,15 +1,15 @@
 // Import CSS. Order is important!
-import './index.css'
 import '@saladtechnologies/garden-fonts'
 import 'react-hint/css/index.css'
 import 'react-loading-skeleton/dist/skeleton.css'
 import 'react-toastify/dist/ReactToastify.css'
+import './index.css'
 
 // Import polyfills. Order is important!
-import 'react-app-polyfill/stable'
-import 'whatwg-fetch'
 import 'abortcontroller-polyfill'
+import 'react-app-polyfill/stable'
 import 'url-polyfill'
+import 'whatwg-fetch'
 
 // Import dependencies.
 import { ThemeProvider as EmotionThemeProvider } from '@emotion/react'
@@ -26,6 +26,7 @@ import { Router } from 'react-router-dom'
 import { App } from './App'
 import { createClient } from './axiosFactory'
 import { Head } from './components'
+import { NovuProviderWrapper } from './components/NovuProviderWrapper'
 import { config } from './config'
 import { ErrorBoundary } from './ErrorBoundary'
 import { FeatureManagerProvider, UnleashFeatureManager } from './FeatureManager'
@@ -91,10 +92,12 @@ setTimeout(() => {
                         return rootStore.appLoading ? (
                           <LoadingScreen />
                         ) : (
-                          <div>
+                          <>
                             <Tooltips />
-                            <App history={history} />
-                          </div>
+                            <NovuProviderWrapper>
+                              <App history={history} />
+                            </NovuProviderWrapper>
+                          </>
                         )
                       }}
                     </Observer>
