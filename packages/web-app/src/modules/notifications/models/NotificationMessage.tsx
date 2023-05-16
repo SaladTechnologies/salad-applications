@@ -88,8 +88,6 @@ export interface NovuNotificationAction {
 }
 
 export interface NovuNotification {
-  /** The resource identifier. */
-  id: string;
   /** The Novu resource identifier. */
   novuId: string;
   /** The title. */
@@ -97,7 +95,7 @@ export interface NovuNotification {
   /** The body. */
   body: string;
   /** The date and time of the notification. */
-  createTime: Date | undefined;
+  createDate: Date | undefined;
   /** The list of actions. */
   actions: NovuNotificationAction[];
   /** A value indicating whether the notification has been acknowledged. */

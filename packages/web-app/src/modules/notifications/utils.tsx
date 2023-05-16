@@ -13,7 +13,10 @@ interface NotificationCta {
 
 type NotificationCtaContent = NotificationCta['acknowledgeLabel'] | NotificationCta['linkCTA']
 
-const getNormalizedNotificationAction = (ctaKey: string, ctaContent: NotificationCtaContent): NovuNotificationAction['action'] => {
+const getNormalizedNotificationAction = (
+  ctaKey: string,
+  ctaContent: NotificationCtaContent,
+): NovuNotificationAction['action'] => {
   switch (ctaKey) {
     case 'linkCTA': {
       return {
@@ -50,18 +53,17 @@ export const getNormalizedNovuNotification = (novuNotification: IMessage): NovuN
       return { action: getNormalizedNotificationAction(key, cta[key]) }
     })
 
-    const notificationId =
+    const trackId =
       v1.type === 'info' ? NotificationMessageCategory.NovuInfo : NotificationMessageCategory.NovuWarning
 
     return {
-      trackId: notificationId,
-      id: notificationId,
+      trackId,
       novuId: novuNotification._id,
       title: v1.title,
       body: v1.body,
       read: novuNotification.read,
       seen: novuNotification.seen,
-      createTime: new Date(novuNotification.createdAt),
+      createDate: new Date(novuNotification.createdAt),
       acknowledged: novuNotification.read,
       actions,
       osNotification,
@@ -71,16 +73,16 @@ export const getNormalizedNovuNotification = (novuNotification: IMessage): NovuN
   }
 }
 
-interface NotificationActionData {
+interface NotificationAction {
   label: string
   onClick: () => void
 }
 
 const getReceivedAtDisplay = (
-  createTime: Date,
+  createDate: Date,
 ): { value: number; unit: 'year' | 'month' | 'day' | 'hour' | 'minute' | 'second' } => {
-  const createTimeLuxon = DateTime.fromJSDate(createTime)
-  const duration = DateTime.now().diff(createTimeLuxon)
+  const createDateLuxon = DateTime.fromJSDate(createDate)
+  const duration = DateTime.now().diff(createDateLuxon)
   const interval = duration.shiftTo('years', 'months', 'days', 'hours', 'minutes', 'seconds').toObject()
   if (interval.years !== undefined && interval.years >= 1) {
     return { value: interval.years, unit: 'year' }
@@ -101,40 +103,42 @@ const getReceivedAtDisplay = (
   return { value: interval.seconds ? Math.ceil(interval.seconds) : 0, unit: 'second' }
 }
 
+const getNotificationBannerAction = (
+  notification: NovuNotification,
+  onReadNovuNotification: (notificationId: string) => void,
+  onDismiss: (notificationId: string) => void,
+  action?: NovuNotificationAction,
+): NotificationAction => {
+  switch (action?.action?.$case) {
+    case 'acknowledge': {
+      return {
+        label: action.action.acknowledge.title,
+        onClick: () => onReadNovuNotification(notification.novuId),
+      }
+    }
+    case 'dismiss': {
+      return {
+        label: action.action.dismiss.title,
+        onClick: () => onDismiss(notification.trackId),
+      }
+    }
+    default:
+      return {
+        label: '',
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        onClick: () => {},
+      }
+  }
+}
+
 export const getConfiguredNovuBannerNotifications = (
   novuNotifications: IMessage[] | undefined,
-  onAcknowledge: (notificationID: string) => void,
-  onDismiss: (notificationID: string) => void,
+  onAcknowledge: (notificationId: string) => void,
+  onDismiss: (notificationId: string) => void,
   onReadNovuNotification: (id?: string) => void,
 ): NotificationBannerProps[] => {
   if (!novuNotifications) {
     return []
-  }
-
-  const getNotificationAction = (
-    notification: NovuNotification,
-    action?: NovuNotificationAction,
-  ): NotificationActionData => {
-    switch (action?.action?.$case) {
-      case 'acknowledge': {
-        return {
-          label: action.action.acknowledge.title,
-          onClick: () => onReadNovuNotification(notification.novuId),
-        }
-      }
-      case 'dismiss': {
-        return {
-          label: action.action.dismiss.title,
-          onClick: () => onDismiss(notification.id),
-        }
-      }
-      default:
-        return {
-          label: '',
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          onClick: () => {},
-        }
-    }
   }
 
   const configuredNovuBannerNotifications: (NotificationBannerProps | null)[] = novuNotifications.map(
@@ -145,17 +149,27 @@ export const getConfiguredNovuBannerNotifications = (
         return null
       }
 
-      const { createTime, id: notificationId, title, body, trackId, actions } = normalizedNotification
+      const { createDate, title, body, trackId, actions } = normalizedNotification
       const firstNotificationAction = actions[0]
       const secondNotificationAction = actions[1]
       const variant = trackId === NotificationMessageCategory.NovuInfo ? 'news' : 'error'
 
       return {
-        action1: getNotificationAction(normalizedNotification, firstNotificationAction),
-        action2: getNotificationAction(normalizedNotification, secondNotificationAction),
+        action1: getNotificationBannerAction(
+          normalizedNotification,
+          onReadNovuNotification,
+          onDismiss,
+          firstNotificationAction,
+        ),
+        action2: getNotificationBannerAction(
+          normalizedNotification,
+          onReadNovuNotification,
+          onDismiss,
+          secondNotificationAction,
+        ),
         message: body,
-        onClose: () => onAcknowledge(notificationId),
-        receivedAt: createTime ? getReceivedAtDisplay(createTime) : { value: 1, unit: 'minute' },
+        onClose: () => onAcknowledge(trackId),
+        receivedAt: createDate ? getReceivedAtDisplay(createDate) : { value: 1, unit: 'minute' },
         title,
         variant,
       }

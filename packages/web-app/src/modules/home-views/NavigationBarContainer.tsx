@@ -2,7 +2,7 @@ import { Avatar, AvatarDefault, BonusCard } from '@saladtechnologies/garden-comp
 import type { TargetRewardInfo } from '@saladtechnologies/garden-components/lib/components/NavigationBar/components/DesktopNavigationBar/TargetRewardStatus'
 import { connect } from '../../connect'
 import type { RootStore } from '../../Store'
-import { NavigationBar } from './components/NavigationBar'
+import { NavigationBarWithNotifications } from './components/NavigationBarWithNotifications'
 
 const mapStoreToProps = (store: RootStore): any => {
   const isAuthenticated = store.auth.isAuthenticated
@@ -88,4 +88,4 @@ const mapStoreToProps = (store: RootStore): any => {
   }
 }
 
-export const NavigationBarContainer = connect(mapStoreToProps, NavigationBar)
+export const NavigationBarContainer = connect(mapStoreToProps, NavigationBarWithNotifications)
