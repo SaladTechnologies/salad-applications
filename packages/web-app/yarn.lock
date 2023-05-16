@@ -3015,7 +3015,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@novu/shared@npm:^0.14.0":
+"@novu/shared@npm:0.14.0, @novu/shared@npm:^0.14.0":
   version: 0.14.0
   resolution: "@novu/shared@npm:0.14.0"
   dependencies:
@@ -3353,9 +3353,10 @@ __metadata:
     "@fortawesome/free-solid-svg-icons": 6.3.0
     "@fortawesome/react-fontawesome": 0.2.0
     "@novu/notification-center": 0.14.0
-    "@saladtechnologies/garden-components": 1.1.5
+    "@novu/shared": 0.14.0
+    "@saladtechnologies/garden-components": 1.1.8
     "@saladtechnologies/garden-fonts": 1.0.3
-    "@saladtechnologies/garden-icons": 1.0.11
+    "@saladtechnologies/garden-icons": 1.0.12
     "@storybook/addon-a11y": 6.5.16
     "@storybook/addon-actions": 6.5.16
     "@storybook/addon-essentials": 6.5.16
@@ -3461,9 +3462,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@saladtechnologies/garden-components@npm:1.1.5":
-  version: 1.1.5
-  resolution: "@saladtechnologies/garden-components@npm:1.1.5"
+"@saladtechnologies/garden-components@npm:1.1.8":
+  version: 1.1.8
+  resolution: "@saladtechnologies/garden-components@npm:1.1.8"
   peerDependencies:
     "@emotion/react": 11.x
     "@emotion/styled": 11.x
@@ -3478,7 +3479,7 @@ __metadata:
     react-intl: 6.x
     react-range: 1.x
     react-responsive: 9.x
-  checksum: a44be0c688520b814e04ec1e5f93436fbc5c5ac1db286d097f0410f3d9a2eb0d6e22b9145d8437de5c1db85b62db2bbacf433882b2edb5c734453fb873825890
+  checksum: 952d7aeb49e50de4a6d9a0916d3707a54ad613cbf0d631f0857188e8401eaf2b5488a14ca92d5bd0038d06a4568daae624722d8068bfb59ee39987969b1f6432
   languageName: node
   linkType: hard
 
@@ -3489,13 +3490,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@saladtechnologies/garden-icons@npm:1.0.11":
-  version: 1.0.11
-  resolution: "@saladtechnologies/garden-icons@npm:1.0.11"
+"@saladtechnologies/garden-icons@npm:1.0.12":
+  version: 1.0.12
+  resolution: "@saladtechnologies/garden-icons@npm:1.0.12"
   peerDependencies:
     react: 18.x
     react-dom: 18.x
-  checksum: 5ea12a2e484a67c492269e77450ea7d8a8fbe4788cb20482a493b5877c96fb2021bb2ae075ed8ccc87e80c1ef717f35dbf8436aa0684e84304e0ba56d751a981
+  checksum: a05b7f49da45af9b2b06c5a38f4ea1710721f7e076db76baca17a0289dacf1806f146522fd6c8dfc91ce67f519e0324fa1ba68ec53874f9eb2c0b836245a4805
   languageName: node
   linkType: hard
 

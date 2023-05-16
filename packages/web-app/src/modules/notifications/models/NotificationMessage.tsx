@@ -12,6 +12,8 @@ export enum NotificationMessageCategory {
   ReferralCodeInvalid = 'Referral Code Invalid',
   ReferralCodeDoesNotExist = 'Referral Code Does Not Exist',
   ReferralCodeError = 'Referral Code Error',
+  NovuInfo = 'Novu Info',
+  NovuWarning = 'Novu Warning',
 }
 
 export interface NotificationMessage {
@@ -51,4 +53,61 @@ export interface NotificationMessage {
    * `Default: close the notification`
    */
   onClick?: () => void
+}
+
+/** A resource that represents an action that acknowledges a notification. */
+export interface AcknowledgeNotificationAction {
+  /** The title. */
+  title: string;
+}
+/** A resource that represents an action that dismisses a notification. */
+export interface DismissNotificationAction {
+  /** The title. */
+  title: string;
+}
+/** A resource that represents an action that opens a link in the default browser. */
+export interface OpenLinkNotificationAction {
+  /** The title. */
+  title: string;
+  /** The link. */
+  link: string;
+}
+
+/** A resource that represents an in-app notification action. */
+export interface NovuNotificationAction {
+  action?: {
+      $case: "acknowledge";
+      acknowledge: AcknowledgeNotificationAction;
+  } | {
+    $case: "dismiss";
+    dismiss: DismissNotificationAction;
+  } | {
+      $case: "openLink";
+      openLink: OpenLinkNotificationAction;
+  }
+}
+
+export interface NovuNotification {
+  /** The resource identifier. */
+  id: string;
+  /** The Novu resource identifier. */
+  novuId: string;
+  /** The title. */
+  title: string;
+  /** The body. */
+  body: string;
+  /** The date and time of the notification. */
+  createTime: Date | undefined;
+  /** The list of actions. */
+  actions: NovuNotificationAction[];
+  /** A value indicating whether the notification has been acknowledged. */
+  acknowledged: boolean;
+  /** identifier used to track actions from this notification. */
+  trackId: string;
+  /** A value indicating whether the notification is os type. */
+  osNotification: boolean
+  /** A value indicating whether the notification has been seen. */
+  seen: boolean
+  /** A value indicating whether the notification has been read. */
+  read: boolean
 }

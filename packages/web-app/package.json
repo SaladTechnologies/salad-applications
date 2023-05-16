@@ -80,9 +80,12 @@
     "@fortawesome/free-solid-svg-icons": "6.3.0",
     "@fortawesome/react-fontawesome": "0.2.0",
     "@novu/notification-center": "0.14.0",
-    "@saladtechnologies/garden-components": "1.1.5",
+    "@novu/shared": "0.14.0",
+    //TODO: Should be reverted to prevent deploment to production
+    "@saladtechnologies/garden-components": "1.1.8",
     "@saladtechnologies/garden-fonts": "1.0.3",
-    "@saladtechnologies/garden-icons": "1.0.11",
+    //TODO: Should be reverted to prevent deploment to production
+    "@saladtechnologies/garden-icons": "1.0.12",
     "@storybook/addon-a11y": "6.5.16",
     "@storybook/addon-actions": "6.5.16",
     "@storybook/addon-essentials": "6.5.16",
