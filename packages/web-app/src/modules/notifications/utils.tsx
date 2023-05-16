@@ -1,9 +1,9 @@
 import type { IMessage } from '@novu/shared'
 import type { NotificationBannerProps } from '@saladtechnologies/garden-components'
 import { DateTime } from 'luxon'
-import { NotificationMessageCategory, type NovuNotification, type NovuNotificationAction } from './models'
+import { NotificationMessageCategory, type Notification, type NotificationAction } from './models'
 
-interface NotificationCta {
+interface NovuTemplateCta {
   acknowledgeLabel: string
   linkCTA: {
     linkLabel: string
@@ -11,19 +11,19 @@ interface NotificationCta {
   }
 }
 
-type NotificationCtaContent = NotificationCta['acknowledgeLabel'] | NotificationCta['linkCTA']
+type NovuTemplateCtaContent = NovuTemplateCta['acknowledgeLabel'] | NovuTemplateCta['linkCTA']
 
 const getNormalizedNotificationAction = (
   ctaKey: string,
-  ctaContent: NotificationCtaContent,
-): NovuNotificationAction['action'] => {
+  ctaContent: NovuTemplateCtaContent,
+): NotificationAction['action'] => {
   switch (ctaKey) {
     case 'linkCTA': {
       return {
         $case: 'openLink',
         openLink: {
-          link: (ctaContent as NotificationCta['linkCTA']).url,
-          title: (ctaContent as NotificationCta['linkCTA']).linkLabel,
+          link: (ctaContent as NovuTemplateCta['linkCTA']).url,
+          title: (ctaContent as NovuTemplateCta['linkCTA']).linkLabel,
         },
       }
     }
@@ -32,7 +32,7 @@ const getNormalizedNotificationAction = (
       return {
         $case: 'acknowledge',
         acknowledge: {
-          title: ctaContent as NotificationCta['acknowledgeLabel'],
+          title: ctaContent as NovuTemplateCta['acknowledgeLabel'],
         },
       }
     }
@@ -43,18 +43,17 @@ export interface IMessageWithId extends IMessage {
   id: string
 }
 
-export const getNormalizedNovuNotification = (novuNotification: IMessage): NovuNotification | null => {
+export const getNormalizedNovuNotification = (novuNotification: IMessage): Notification | null => {
   try {
     const { v1, osNotification } = JSON.parse(novuNotification.content as string)
 
     const { cta } = v1
 
-    const actions: NovuNotificationAction[] = Object.keys(cta).map((key: string) => {
+    const actions: NotificationAction[] = Object.keys(cta).map((key: string) => {
       return { action: getNormalizedNotificationAction(key, cta[key]) }
     })
 
-    const trackId =
-      v1.type === 'info' ? NotificationMessageCategory.NovuInfo : NotificationMessageCategory.NovuWarning
+    const trackId = v1.type === 'info' ? NotificationMessageCategory.NovuInfo : NotificationMessageCategory.NovuWarning
 
     return {
       trackId,
@@ -73,7 +72,7 @@ export const getNormalizedNovuNotification = (novuNotification: IMessage): NovuN
   }
 }
 
-interface NotificationAction {
+interface NotificationActionPayload {
   label: string
   onClick: () => void
 }
@@ -104,11 +103,11 @@ const getReceivedAtDisplay = (
 }
 
 const getNotificationBannerAction = (
-  notification: NovuNotification,
+  notification: Notification,
   onReadNovuNotification: (notificationId: string) => void,
   onDismiss: (notificationId: string) => void,
-  action?: NovuNotificationAction,
-): NotificationAction => {
+  action?: NotificationAction,
+): NotificationActionPayload => {
   switch (action?.action?.$case) {
     case 'acknowledge': {
       return {

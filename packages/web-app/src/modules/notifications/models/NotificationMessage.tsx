@@ -58,50 +58,53 @@ export interface NotificationMessage {
 /** A resource that represents an action that acknowledges a notification. */
 export interface AcknowledgeNotificationAction {
   /** The title. */
-  title: string;
+  title: string
 }
 /** A resource that represents an action that dismisses a notification. */
 export interface DismissNotificationAction {
   /** The title. */
-  title: string;
+  title: string
 }
 /** A resource that represents an action that opens a link in the default browser. */
 export interface OpenLinkNotificationAction {
   /** The title. */
-  title: string;
+  title: string
   /** The link. */
-  link: string;
+  link: string
 }
 
 /** A resource that represents an in-app notification action. */
-export interface NovuNotificationAction {
-  action?: {
-      $case: "acknowledge";
-      acknowledge: AcknowledgeNotificationAction;
-  } | {
-    $case: "dismiss";
-    dismiss: DismissNotificationAction;
-  } | {
-      $case: "openLink";
-      openLink: OpenLinkNotificationAction;
-  }
+export interface NotificationAction {
+  action?:
+    | {
+        $case: 'acknowledge'
+        acknowledge: AcknowledgeNotificationAction
+      }
+    | {
+        $case: 'dismiss'
+        dismiss: DismissNotificationAction
+      }
+    | {
+        $case: 'openLink'
+        openLink: OpenLinkNotificationAction
+      }
 }
 
-export interface NovuNotification {
+export interface Notification {
   /** The Novu resource identifier. */
-  novuId: string;
+  novuId: string
   /** The title. */
-  title: string;
+  title: string
   /** The body. */
-  body: string;
+  body: string
   /** The date and time of the notification. */
-  createDate: Date | undefined;
+  createDate: Date | undefined
   /** The list of actions. */
-  actions: NovuNotificationAction[];
+  actions: NotificationAction[]
   /** A value indicating whether the notification has been acknowledged. */
-  acknowledged: boolean;
+  acknowledged: boolean
   /** identifier used to track actions from this notification. */
-  trackId: string;
+  trackId: string
   /** A value indicating whether the notification is os type. */
   osNotification: boolean
   /** A value indicating whether the notification has been seen. */
