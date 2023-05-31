@@ -1,7 +1,12 @@
 #!/usr/bin/env pwsh
 #Requires -Version 7
 [CmdletBinding()]
-param()
+param(
+    [Parameter(Mandatory = $True)]
+    [string]$SiteName,
+    [Parameter(Mandatory = $True)]
+    [string]$Context
+)
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
