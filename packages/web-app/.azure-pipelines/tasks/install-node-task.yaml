@@ -30,7 +30,7 @@ steps:
           $yarnRegistryLine = $yarnConfig | Select-String -Pattern 'npmRegistryServer:' -SimpleMatch -CaseSensitive
           if ($null -ne $yarnRegistryLine) {
             $yarnConfig[0..$($yarnRegistryLine[0].LineNumber - 1)], `
-              "    npmAuthIdent: `"ApiKey:$($Env:SYSTEM_ACCESSTOKEN)`"", `
+              '    npmAlwaysAuth: true', "    npmAuthIdent: `"ApiKey:$($Env:SYSTEM_ACCESSTOKEN)`"", `
               $yarnConfig[$($yarnRegistryLine[0].LineNumber)..$($yarnConfig.Count - 1)] | `
               Set-Content -Path .yarnrc.yml -Encoding utf8
           }
