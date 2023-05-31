@@ -33,14 +33,14 @@ try {
         Write-Error -Message 'npm is not installed'
     }
 
-    Show-LogInfo -Content "npm ${npmVersion} is installed"
+    # Show-LogInfo -Content "npm ${npmVersion} is installed"
 
-    $yarnVersion = Get-YarnVersion
-    if ($null -eq $yarnVersion) {
-        Write-Error -Message 'Yarn is not installed'
-    }
+    # $yarnVersion = Get-YarnVersion
+    # if ($null -eq $yarnVersion) {
+    #     Write-Error -Message 'Yarn is not installed'
+    # }
 
-    Show-LogInfo -Content "Yarn ${yarnVersion} is installed"
+    # Show-LogInfo -Content "Yarn ${yarnVersion} is installed"
 
     # Install dependencies
     Show-LogSection -Content 'Installing dependencies...'
