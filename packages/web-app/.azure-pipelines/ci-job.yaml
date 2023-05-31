@@ -1,0 +1,46 @@
+parameters:
+  - name: projectDirectory
+    type: string
+    default: ""
+  - name: artifactName
+    type: string
+    default: "salad-app"
+
+jobs:
+  - job: BuildTest
+    displayName: Build/CI Test
+    variables:
+      - name: NUGET_PACKAGES
+        value: $(Pipeline.Workspace)/.nuget/packages
+    steps:
+      - template: ./tasks/install-yarn-step.yaml
+        parameters:
+          projectDirectory: ${{ parameters.projectDirectory }}
+      - template: ./tasks/pwsh-step.yaml
+        parameters:
+          projectDirectory: ${{ parameters.projectDirectory }}
+          scriptFile: initialize.ps1
+      - template: ./tasks/pwsh-step.yaml
+        parameters:
+          projectDirectory: ${{ parameters.projectDirectory }}
+          scriptFile: build.ps1
+      # - template: ./tasks/pwsh-step.yaml
+      #   parameters:
+      #     projectDirectory: ${{ parameters.projectDirectory }}
+      #     scriptFile: test.ps1
+      # - template: ./tasks/publish-artifact-step.yaml
+      #   parameters:
+      #     artifactPath: ${{ parameters.projectDirectory }}/test/TestResults/securityScan.sarif
+      #     artifactName: CodeAnalysisLogs
+      # - task: PublishTestResults@2
+      #   displayName: Publish Test Results
+      #   inputs:
+      #     testResultsFormat: VSTest
+      #     testResultsFiles: "**/*.trx"
+      #     searchFolder: ${{ parameters.projectDirectory }}/test
+      #     mergeTestResults: true
+      # - task: PublishCodeCoverageResults@1
+      #   displayName: Publish Code Coverage Results
+      #   inputs:
+      #     codeCoverageTool: Cobertura
+      #     summaryFileLocation: ${{ parameters.projectDirectory }}/test/TestResults/*.xml
