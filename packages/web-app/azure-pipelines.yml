@@ -1,0 +1,45 @@
+variables:
+  - name: workingDirectory
+    value: packages/web-app/
+
+trigger:
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - packages/web-app
+    exclude:
+      - packages/web-app/.vscode
+      - packages/web-app/scripts
+      - packages/web-app/.gitignore
+      - packages/web-app/README.md
+
+pr:
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - packages/web-app
+    exclude:
+      - packages/web-app/.vscode
+      - packages/web-app/scripts
+      - packages/web-app/.gitignore
+      - packages/web-app/README.md
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+  - ${{ if or(ne(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.Reason'], 'PullRequest')) }}:
+      - template: .azure-pipelines/stages/deploy-preview-stage.yaml
+        parameters:
+          workingDirectory: $(Build.Repository.LocalPath)/$(workingDirectory)
+  - ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(variables['Build.Reason'], 'PullRequest')) }}:
+      - template: .azure-pipelines/stages/deploy-test-stage.yaml
+        parameters:
+          workingDirectory: $(Build.Repository.LocalPath)/$(workingDirectory)
+      - template: .azure-pipelines/stages/deploy-prod-stage.yaml
+        parameters:
+          workingDirectory: $(Build.Repository.LocalPath)/$(workingDirectory)
