@@ -1,0 +1,24 @@
+parameters:
+  - name: projectDirectory
+    type: string
+    default: ""
+  - name: scriptFile
+    type: string
+    default: ""
+  - name: arguments
+    type: string
+    default: ""
+  - name: env
+    type: object
+    default: {}
+
+steps:
+  - task: PowerShell@2
+    displayName: pwsh ${{ parameters.scriptFile }}
+    inputs:
+      filePath: ${{ parameters.projectDirectory }}/.azure-pipelines/${{ parameters.scriptFile }}
+      pwsh: true
+      workingDirectory: ${{ parameters.projectDirectory }}
+      arguments: ${{ parameters.arguments }}
+    env:
+      ${{ insert }}: ${{ parameters.env }}
