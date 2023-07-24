@@ -1,0 +1,25 @@
+parameters:
+  - name: workingDirectory
+    type: string
+    default: ""
+
+stages:
+  - stage: DeployProd
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(variables['Build.Reason'], 'PullRequest'))
+    displayName: Deploy to Production Site
+    jobs:
+      - deployment: DeployProd
+        displayName: Deploy to Production Site
+        variables:
+          - group: Netlify
+        environment: Netlify Web App
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: ../steps/deploy-steps.yaml
+                  parameters:
+                    workingDirectory: ${{ parameters.workingDirectory }}
+                    siteId: d5fb99c8-d018-48be-a2c8-1a1900831793
+                    siteName: production
+                    context: production

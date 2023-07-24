@@ -4,16 +4,16 @@ import { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { P, Scrollbar } from '../../../components'
-import type { SaladTheme } from '../../../SaladTheme'
-import type { SearchResult } from '../../reward/models'
-import { RewardDisclaimers } from '../components'
-import { IconArrowLeft } from '../components/assets'
-import LeftArrow from '../components/assets/pagination/left-arrow.svg'
-import RightArrow from '../components/assets/pagination/right-arrow.svg'
-import { RewardItem } from '../components/RewardItem'
-import { rewardItemResponsive } from '../components/RewardSlider'
-import { RewardFilterContainer } from '../RewardFilterContainer'
+import { P, Scrollbar } from '../../../../../../components'
+import type { SaladTheme } from '../../../../../../SaladTheme'
+import { RewardDisclaimers } from '../../../../../reward-views/components'
+import { IconArrowLeft } from '../../../../../reward-views/components/assets'
+import { RewardItem } from '../../../../../reward-views/components/RewardItem'
+import { rewardItemResponsive } from '../../../../../reward-views/components/RewardSlider'
+import type { SearchResult } from '../../../../../reward/models'
+import RightArrow from './/assets/right-arrow.svg'
+import LeftArrow from './assets/left-arrow.svg'
+import { RewardFilterList } from './RewardFilterList'
 
 const styles = (theme: SaladTheme) => {
   let style = {
@@ -229,7 +229,7 @@ class _BrowseRewardsPage extends Component<Props> {
           <div style={{ flex: '0 0 250px' }}>
             <Scrollbars>
               <div className={classes.filterContainer}>
-                <RewardFilterContainer />
+                <RewardFilterList />
               </div>
             </Scrollbars>
           </div>

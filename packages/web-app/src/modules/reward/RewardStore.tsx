@@ -31,6 +31,9 @@ export class RewardStore {
   private requiresFurtherAction: boolean = false
 
   @observable
+  public recommendedRewards: Array<Reward> = []
+
+  @observable
   public isRedeeming: boolean = false
 
   @observable
@@ -171,7 +174,7 @@ export class RewardStore {
     try {
       var res = yield this.axios.patch('/api/v1/profile/selected-reward', request)
       this.selectedTargetRewardId = res.data.rewardId
-
+      this.rewards.set(reward.id, reward)
       if (reward) this.store.analytics.trackSelectedReward(reward)
     } catch (error) {
       console.error(error)
@@ -195,6 +198,16 @@ export class RewardStore {
       console.error(error)
     } finally {
       this.isSelecting = false
+    }
+  })
+
+  @action.bound
+  fetchRecommendedRewards = flow(function* (this: RewardStore) {
+    try {
+      var res = yield this.axios.get('api/v1/rewards/recommendations')
+      this.recommendedRewards = res.data.map(rewardFromResource)
+    } catch (error) {
+      console.error(error)
     }
   })
 

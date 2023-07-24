@@ -1,5 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import type { Meta } from '@storybook/react'
+import React from 'react'
 import type { RangeFilterOption } from './RewardPriceFilter'
 import { RewardPriceFilter } from './RewardPriceFilter'
 

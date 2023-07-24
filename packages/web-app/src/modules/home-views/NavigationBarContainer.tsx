@@ -10,7 +10,6 @@ const mapStoreToProps = (store: RootStore): any => {
     store.auth.login()
   }
 
-  const goToAccount = () => store.routing.push('/account/summary')
   const bonus = store.bonuses.firstExpiringUnclaimedBonus
 
   const selectedAvatar = store.profile.profileAvatar
@@ -26,6 +25,10 @@ const mapStoreToProps = (store: RootStore): any => {
         canBeRedeemed: store.balance.currentBalance >= store.rewards.selectedTargetReward?.price,
       }
     : null
+
+  const goToAccount = () => store.routing.push('/account/summary')
+  const goToSelectTargetRewardPage = () => store.routing.push('/store/select-target-reward')
+  const goToTargetRewardPage = () => store.routing.push(`/store/rewards/${targetReward?.id}`)
 
   return {
     avatar: isAuthenticated ? (
@@ -63,6 +66,8 @@ const mapStoreToProps = (store: RootStore): any => {
     startButtonHoverLabel: undefined,
     startButtonErrorClick: startButton.onClickWithError,
     onRemoveTargetRewardClick: store.rewards.removeSelectedTargetReward,
+    onSelectTargetRewardClick: goToSelectTargetRewardPage,
+    onOpenTargetRewardClick: goToTargetRewardPage,
     startButtonProgress: startButton.progress,
     startButtonRunningTime: startButton.runningTime,
     startButtonToolTip: startButton.toolTip,

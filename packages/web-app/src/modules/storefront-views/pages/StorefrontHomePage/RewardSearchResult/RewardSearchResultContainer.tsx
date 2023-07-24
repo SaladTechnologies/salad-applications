@@ -1,8 +1,8 @@
 import { withSearch } from '@elastic/react-search-ui'
-import { connect } from '../../connect'
-import type { RootStore } from '../../Store'
-import { routeLink } from '../../utils'
-import { SearchResultsPage } from './pages'
+import { connect } from '../../../../../connect'
+import type { RootStore } from '../../../../../Store'
+import { routeLink } from '../../../../../utils'
+import { RewardSearchResult } from './RewardSearchResult'
 
 const mapStoreToProps = (store: RootStore): any => {
   const onClickReward = (to: string, action?: any) => {
@@ -25,5 +25,5 @@ export const RewardSearchResultContainer = connect(
     error,
     results,
     clearFilters,
-  }))(SearchResultsPage),
+  }))(RewardSearchResult),
 )

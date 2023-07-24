@@ -1,0 +1,40 @@
+parameters:
+  - name: projectDirectory
+    type: string
+    default: ""
+  - name: authenticateNpm
+    type: boolean
+    default: true
+  - name: authenticateYarn
+    type: boolean
+    default: true
+
+steps:
+  - pwsh: |
+      $version = (Get-Content -Path .nvmrc -Raw -Encoding utf8).Trim()
+      Write-Host -Object "##vso[task.setvariable variable=Argument.NodeVersion;isreadonly=true;]${version}"
+    displayName: Get Node.js version
+    workingDirectory: ${{ parameters.projectDirectory }}
+  - task: NodeTool@0
+    displayName: Install Node.js
+    inputs:
+      versionSpec: "$(Argument.NodeVersion)"
+  - ${{ if eq(parameters.authenticateNpm, true) }}:
+      - task: npmAuthenticate@0
+        displayName: Login to Azure Artifacts (npm)
+        inputs:
+          workingFile: ${{ parameters.projectDirectory }}/.npmrc
+  - ${{ if eq(parameters.authenticateYarn, true) }}:
+      - pwsh: |
+          $yarnConfig = Get-Content -Path .yarnrc.yml -Encoding utf8
+          $yarnRegistryLine = $yarnConfig | Select-String -Pattern 'npmRegistryServer:' -SimpleMatch -CaseSensitive
+          if ($null -ne $yarnRegistryLine) {
+            $yarnConfig[0..$($yarnRegistryLine[0].LineNumber - 1)], `
+              '    npmAlwaysAuth: true', "    npmAuthIdent: `"ApiKey:$($Env:SYSTEM_ACCESSTOKEN)`"", `
+              $yarnConfig[$($yarnRegistryLine[0].LineNumber)..$($yarnConfig.Count - 1)] | `
+              Set-Content -Path .yarnrc.yml -Encoding utf8
+          }
+        displayName: Login to Azure Artifacts (Yarn)
+        workingDirectory: ${{ parameters.projectDirectory }}
+        env:
+          SYSTEM_ACCESSTOKEN: $(System.AccessToken)

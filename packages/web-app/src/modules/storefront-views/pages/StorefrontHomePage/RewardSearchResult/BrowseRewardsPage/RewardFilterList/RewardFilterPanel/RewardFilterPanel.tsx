@@ -2,11 +2,11 @@ import type { ReactNode } from 'react'
 import { Component } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { Checkbox, SectionHeader } from '../../../components'
-import type { SaladTheme } from '../../../SaladTheme'
-import { ClearFilterItem } from './ClearFilterItem'
-import { RewardFilterRow } from './RewardFilterRow'
-import type { FilterOption } from './RewardPriceFilter'
+import { Checkbox, SectionHeader } from '../../../../../../../../components'
+import type { SaladTheme } from '../../../../../../../../SaladTheme'
+import type { FilterOption } from '../RewardPriceFilter'
+import { ClearFilterItem } from '../RewardPriceFilter/ClearFilterItem'
+import { RewardFilterRow } from '../RewardPriceFilter/RewardFilterRow'
 
 const styles = (theme: SaladTheme) => ({
   container: {
