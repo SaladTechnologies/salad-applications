@@ -28,10 +28,7 @@ const mapStoreToProps = (store: RootStore): any => {
     : null
   const isNotificationsDrawerOpened = store.notifications.isNotificationsDrawerOpened
   const notifications = {
-    news: [],
-    warnings: [],
     isNotificationsDrawerOpened,
-    hasUnseenNotifications: false,
     onOpenNotificationsDrawer: store.notifications.openNotificationsDrawer,
     onCloseNotificationsDrawer: store.notifications.closeNotificationsDrawer,
   }
