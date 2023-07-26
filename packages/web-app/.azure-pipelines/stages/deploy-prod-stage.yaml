@@ -12,6 +12,7 @@ stages:
         displayName: Deploy to Production Site
         variables:
           - group: Netlify
+          - group: DevOps Access Tokens
         environment: Netlify Web App
         strategy:
           runOnce:

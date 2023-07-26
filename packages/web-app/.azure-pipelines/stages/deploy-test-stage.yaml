@@ -12,6 +12,7 @@ stages:
         displayName: Deploy to Test Site
         variables:
           - group: Netlify
+          - group: DevOps Access Tokens
         environment: Netlify Test
         strategy:
           runOnce:

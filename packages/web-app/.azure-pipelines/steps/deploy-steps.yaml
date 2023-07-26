@@ -22,6 +22,8 @@ steps:
     parameters:
       projectDirectory: ${{ parameters.workingDirectory }}
       scriptFile: initialize.ps1
+      env:
+        NPM_BASE64_TOKEN: $(AZURE_DEVOPS_PAT_BASE64)
   - template: ../tasks/pwsh-task.yaml
     parameters:
       projectDirectory: ${{ parameters.workingDirectory }}
