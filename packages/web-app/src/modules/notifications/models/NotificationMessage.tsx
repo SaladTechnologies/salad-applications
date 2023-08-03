@@ -107,6 +107,8 @@ export interface Notification {
   trackId: string
   /** A value indicating whether the notification is os type. */
   osNotification: boolean
+  /** A value indicating whether the notification is overlay type. */
+  overlay: boolean
   /** A value indicating whether the notification has been seen. */
   seen: boolean
   /** A value indicating whether the notification has been read. */

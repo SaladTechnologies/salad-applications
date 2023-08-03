@@ -2975,26 +2975,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@novu/client@npm:^0.14.0":
-  version: 0.14.0
-  resolution: "@novu/client@npm:0.14.0"
+"@novu/client@npm:^0.16.2":
+  version: 0.16.4
+  resolution: "@novu/client@npm:0.16.4"
   dependencies:
-    "@novu/shared": ^0.14.0
-  checksum: 68e96b757c59e1cbb734c4e266dd2f9484c4ab2db791969cc891409d4655286dfa121c6d703ae27dac813fd2c7405c1303de5bfcaa21b458bf6b144ee821e36a
+    "@novu/shared": ^0.16.4
+  checksum: e30c597fef39a248e7895edc2581cf36eb37f669f1f3de4283a3429107b8d88daef92926dc41897938087829e82276c2b92e2cdcbc78df3537b5ee17567c8885
   languageName: node
   linkType: hard
 
-"@novu/notification-center@npm:0.14.0":
-  version: 0.14.0
-  resolution: "@novu/notification-center@npm:0.14.0"
+"@novu/notification-center@npm:0.16.2":
+  version: 0.16.2
+  resolution: "@novu/notification-center@npm:0.16.2"
   dependencies:
     "@emotion/css": ^11.10.5
     "@emotion/react": ^11.7.1
     "@emotion/styled": ^11.6.0
     "@mantine/core": ^5.7.1
     "@mantine/hooks": ^5.7.1
-    "@novu/client": ^0.14.0
-    "@novu/shared": ^0.14.0
+    "@novu/client": ^0.16.2
+    "@novu/shared": ^0.16.2
     "@rollup/plugin-babel": ^6.0.3
     "@tanstack/react-query": ^4.20.4
     acorn-jsx: ^5.3.2
@@ -3011,18 +3011,29 @@ __metadata:
   peerDependencies:
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
-  checksum: da7cadeb6bfa85fab7987e17a07435b8fc492e14a9853afe2846d357b9fa07505714c8e6a52b209477afd3d5326801d2fd27eaca4ff47d01f8b8dcc9126836e8
+  checksum: 7f6100685750166369933195465473c8b51766f4e742a80df0451ee2a3e09603f5f57d4366992ec319b0ba40975d02a9a810ef7a3f83efad756fda1fda61db20
   languageName: node
   linkType: hard
 
-"@novu/shared@npm:0.14.0, @novu/shared@npm:^0.14.0":
-  version: 0.14.0
-  resolution: "@novu/shared@npm:0.14.0"
+"@novu/shared@npm:0.17.1":
+  version: 0.17.1
+  resolution: "@novu/shared@npm:0.17.1"
   dependencies:
     axios: 1.2.0
     class-transformer: 0.5.1
     class-validator: 0.14.0
-  checksum: 99a3d464332dec5eeb6ddf2cbfd3dfa36b8284d38e2d2720e3ae11e540b289b0ea1871d1e75792a7574647a3ea41b8ee5e214503463ef8ddcc8e754703a29bfc
+  checksum: a468ec6dfee156abb8802ae2a347f1d819ef4d45bd263ba6f8d4e3f23d4a86abc8fbd390add884854dd3d000a3d7dad0047addc3037582188b930ca6b761012c
+  languageName: node
+  linkType: hard
+
+"@novu/shared@npm:^0.16.2, @novu/shared@npm:^0.16.4":
+  version: 0.16.4
+  resolution: "@novu/shared@npm:0.16.4"
+  dependencies:
+    axios: 1.2.0
+    class-transformer: 0.5.1
+    class-validator: 0.14.0
+  checksum: 16f2a082c781c1ef63e7eafab8e1fdf49ef6f0d35d48304fe398f34be2be49b50964388c1be76c433360b33e4f1a64eb639e8a4c596c3a3b61b75d4760565e27
   languageName: node
   linkType: hard
 
@@ -3352,8 +3363,8 @@ __metadata:
     "@fortawesome/free-regular-svg-icons": 6.3.0
     "@fortawesome/free-solid-svg-icons": 6.3.0
     "@fortawesome/react-fontawesome": 0.2.0
-    "@novu/notification-center": 0.14.0
-    "@novu/shared": 0.14.0
+    "@novu/notification-center": 0.16.2
+    "@novu/shared": 0.17.1
     "@saladtechnologies/garden-components": 1.1.8
     "@saladtechnologies/garden-fonts": 1.0.3
     "@saladtechnologies/garden-icons": 1.0.12

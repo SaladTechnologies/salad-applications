@@ -1,5 +1,5 @@
 import type { IMessage } from '@novu/shared'
-import type { NotificationBannerProps } from '@saladtechnologies/garden-components'
+import type { NotificationBannerProps as GardenNotificationBannerProps } from '@saladtechnologies/garden-components'
 import { DateTime } from 'luxon'
 import { NotificationMessageCategory, type Notification, type NotificationAction } from './models'
 
@@ -12,6 +12,9 @@ interface NovuTemplateCta {
 }
 
 type NovuTemplateCtaContent = NovuTemplateCta['acknowledgeLabel'] | NovuTemplateCta['linkCTA']
+type NotificationBannerProps = GardenNotificationBannerProps & {
+  overlay: boolean
+}
 
 const getNormalizedNotificationAction = (
   ctaKey: string,
@@ -45,7 +48,7 @@ export interface IMessageWithId extends IMessage {
 
 export const getNormalizedNovuNotification = (novuNotification: IMessage): Notification | null => {
   try {
-    const { v1, osNotification } = JSON.parse(novuNotification.content as string)
+    const { v1, osNotification, overlay } = JSON.parse(novuNotification.content as string)
 
     const { cta } = v1
 
@@ -65,6 +68,7 @@ export const getNormalizedNovuNotification = (novuNotification: IMessage): Notif
       createDate: new Date(novuNotification.createdAt),
       acknowledged: novuNotification.read,
       actions,
+      overlay,
       osNotification,
     }
   } catch (e) {
@@ -105,7 +109,6 @@ const getReceivedAtDisplay = (
 const getNotificationBannerAction = (
   notification: Notification,
   onReadNovuNotification: (notificationId: string) => void,
-  onDismiss: (notificationId: string) => void,
   action?: NotificationAction,
 ): NotificationActionPayload => {
   switch (action?.action?.$case) {
@@ -118,7 +121,18 @@ const getNotificationBannerAction = (
     case 'dismiss': {
       return {
         label: action.action.dismiss.title,
-        onClick: () => onDismiss(notification.trackId),
+        onClick: () => onReadNovuNotification(notification.novuId),
+      }
+    }
+    case 'openLink': {
+      const openLink = action.action.openLink
+
+      return {
+        label: openLink.title,
+        onClick: () => {
+          window.open(openLink.link, '_blank')
+          onReadNovuNotification(notification.novuId)
+        },
       }
     }
     default:
@@ -132,9 +146,7 @@ const getNotificationBannerAction = (
 
 export const getConfiguredNovuBannerNotifications = (
   novuNotifications: IMessage[] | undefined,
-  onAcknowledge: (notificationId: string) => void,
-  onDismiss: (notificationId: string) => void,
-  onReadNovuNotification: (id?: string) => void,
+  onReadNovuNotification: (notificationId: string) => void,
 ): NotificationBannerProps[] => {
   if (!novuNotifications) {
     return []
@@ -148,29 +160,20 @@ export const getConfiguredNovuBannerNotifications = (
         return null
       }
 
-      const { createDate, title, body, trackId, actions } = normalizedNotification
+      const { createDate, title, body, overlay, trackId, actions, novuId } = normalizedNotification
       const firstNotificationAction = actions[0]
       const secondNotificationAction = actions[1]
       const variant = trackId === NotificationMessageCategory.NovuInfo ? 'news' : 'error'
 
       return {
-        action1: getNotificationBannerAction(
-          normalizedNotification,
-          onReadNovuNotification,
-          onDismiss,
-          firstNotificationAction,
-        ),
-        action2: getNotificationBannerAction(
-          normalizedNotification,
-          onReadNovuNotification,
-          onDismiss,
-          secondNotificationAction,
-        ),
+        action1: getNotificationBannerAction(normalizedNotification, onReadNovuNotification, firstNotificationAction),
+        action2: getNotificationBannerAction(normalizedNotification, onReadNovuNotification, secondNotificationAction),
         message: body,
-        onClose: () => onAcknowledge(trackId),
+        onClose: () => onReadNovuNotification(novuId),
         receivedAt: createDate ? getReceivedAtDisplay(createDate) : { value: 1, unit: 'minute' },
         title,
         variant,
+        overlay,
       }
     },
   )
