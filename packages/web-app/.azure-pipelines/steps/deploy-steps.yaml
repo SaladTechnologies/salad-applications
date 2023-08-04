@@ -1,0 +1,40 @@
+parameters:
+  - name: workingDirectory
+    type: string
+    default: ""
+  - name: siteId
+    type: string
+    default: ""
+  - name: siteName
+    type: string
+    default: ""
+  - name: context
+    type: string
+    default: ""
+
+steps:
+  - download: none
+  - checkout: self
+  - template: ../tasks/install-node-task.yaml
+    parameters:
+      projectDirectory: ${{ parameters.workingDirectory }}
+  - template: ../tasks/pwsh-task.yaml
+    parameters:
+      projectDirectory: ${{ parameters.workingDirectory }}
+      scriptFile: initialize.ps1
+  - template: ../tasks/pwsh-task.yaml
+    parameters:
+      projectDirectory: ${{ parameters.workingDirectory }}
+      scriptFile: build.ps1
+      arguments: -SiteName "${{ parameters.siteName }}" -Context "${{ parameters.context }}"
+      env:
+        NETLIFY_AUTH_TOKEN: $(NETLIFY_AUTH_TOKEN)
+        NETLIFY_SITE_ID: ${{ parameters.siteId }}
+  - template: ../tasks/pwsh-task.yaml
+    parameters:
+      projectDirectory: ${{ parameters.workingDirectory }}
+      scriptFile: deploy.ps1
+      arguments: -Context "${{ parameters.context }}"
+      env:
+        NETLIFY_AUTH_TOKEN: $(NETLIFY_AUTH_TOKEN)
+        NETLIFY_SITE_ID: ${{ parameters.siteId }}
