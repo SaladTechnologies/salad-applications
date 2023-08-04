@@ -11,8 +11,8 @@
     "typescriptreact"
   ],
   "eslint.nodePath": ".yarn/sdks",
-  "eslint.packageManager": "yarn",
   "files.associations": {
+    "**/.azure-pipelines/**/*.yaml": "azure-pipelines",
     ".env.development.local": "properties",
     ".env.development": "properties",
     ".env.production.local": "properties",
