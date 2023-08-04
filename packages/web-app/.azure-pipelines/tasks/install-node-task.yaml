@@ -37,4 +37,4 @@ steps:
         displayName: Login to Azure Artifacts (Yarn)
         workingDirectory: ${{ parameters.projectDirectory }}
         env:
-          SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+          SYSTEM_ACCESSTOKEN: $(AZURE_DEVOPS_PAT_BASE64)
