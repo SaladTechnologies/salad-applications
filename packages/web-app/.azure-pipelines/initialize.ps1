@@ -12,7 +12,6 @@ try {
 
     $buildDirectory = Join-Path -Path $projectRoot -ChildPath 'build'
     $srcDirectory = Join-Path -Path $projectRoot -ChildPath 'src'
-    $zipFile = Join-Path -Path $srcDirectory -ChildPath 'latest.zip'
 
     # Verify Node.js and npm
     Show-LogSection -Content 'Verifying Node.js, npm, and Yarn...'
@@ -78,9 +77,6 @@ try {
 
     New-Item -ItemType Directory -Path $buildDirectory | Out-Null
 
-    if (Test-Path -Path $zipFile) {
-        Remove-Item -Path $zipFile -Force
-    }
 }
 catch {
     if (($null -ne $_.ErrorDetails) -and ($null -ne $_.ErrorDetails.Message)) {
