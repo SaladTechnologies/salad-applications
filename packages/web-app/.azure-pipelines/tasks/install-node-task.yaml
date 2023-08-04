@@ -24,16 +24,3 @@ steps:
         displayName: Login to Azure Artifacts (npm)
         inputs:
           workingFile: ${{ parameters.projectDirectory }}/.npmrc
-  - ${{ if eq(parameters.authenticateYarn, true) }}:
-      - pwsh: |
-          $yarnConfig = Get-Content -Path .yarnrc.yml -Encoding utf8
-          $yarnRegistryLine = $yarnConfig | Select-String -Pattern 'npmRegistryServer:' -SimpleMatch -CaseSensitive
-          if ($null -ne $yarnRegistryLine) {
-            $yarnConfig[0..$($yarnRegistryLine[0].LineNumber - 1)], `
-              $yarnConfig[$($yarnRegistryLine[0].LineNumber)..$($yarnConfig.Count - 1)] | `
-              Set-Content -Path .yarnrc.yml -Encoding utf8
-          }
-        displayName: Login to Azure Artifacts (Yarn)
-        workingDirectory: ${{ parameters.projectDirectory }}
-        env:
-          SYSTEM_ACCESSTOKEN: $(System.AccessToken)
