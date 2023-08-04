@@ -1,0 +1,17 @@
+parameters:
+  - name: projectDirectory
+    type: string
+    default: ""
+  - name: cacheKey
+    type: string
+    default: ""
+
+steps:
+  - task: Cache@2
+    displayName: Cache Yarn packages
+    inputs:
+      key: '"${{ parameters.cacheKey }}" | "$(CacheVersion)" | "yarn" | "$(Agent.OS)" | ${{ parameters.projectDirectory }}/yarn.lock'
+      restoreKeys: |
+        "${{ parameters.cacheKey }}" | "$(CacheVersion)" | "yarn" | "$(Agent.OS)"
+        "${{ parameters.cacheKey }}" | "$(CacheVersion)" | "yarn"
+      path: ${{ parameters.projectDirectory }}/.yarn/cache

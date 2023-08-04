@@ -18,6 +18,9 @@ steps:
   - template: ../tasks/install-node-task.yaml
     parameters:
       projectDirectory: ${{ parameters.workingDirectory }}
+  - template: ../tasks/cache-yarn-task.yaml
+    parameters:
+      projectDirectory: ${{ parameters.workingDirectory }}
   - template: ../tasks/pwsh-task.yaml
     parameters:
       projectDirectory: ${{ parameters.workingDirectory }}
