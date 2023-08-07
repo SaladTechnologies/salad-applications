@@ -2,14 +2,16 @@ parameters:
   - name: workingDirectory
     type: string
     default: ""
+  - name: context
+    type: string
+    default: "deploy-preview"
 
 stages:
   - stage: DeployDev
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(variables['Build.Reason'], 'PullRequest'))
-    displayName: Deploy to Test Site
+    displayName: Deployment Test
     jobs:
-      - deployment: DeployDev
-        displayName: Deploy to Test Site
+      - deployment: DeployTest
+        displayName: Deployment Test
         variables:
           - group: Netlify
           - group: DevOps Access Tokens
@@ -23,4 +25,4 @@ stages:
                     workingDirectory: ${{ parameters.workingDirectory }}
                     siteId: b32d496d-3b42-4727-bd8c-5798a32b1ad4
                     siteName: test
-                    context: production
+                    context: "${{ parameters.context }}"
