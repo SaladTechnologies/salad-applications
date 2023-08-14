@@ -16,9 +16,9 @@ try {
     $buildDirectory = Join-Path -Path $projectRoot -ChildPath 'build'
 
     # Deploy to Netlify
-    Write-LogSection -Content 'Deploying to Netlify...'
+    Show-LogSection -Content 'Deploying to Netlify...'
     if ($Context -eq 'production') {
-        Write-LogCommand -Content "netlify deploy --dir ${buildDirectory} --prodIfUnlocked"
+        Show-LogCommand -Content "netlify deploy --dir ${buildDirectory} --prodIfUnlocked"
         & netlify deploy --dir $buildDirectory --prodIfUnlocked
         Assert-LastExitCodeSuccess -LastExecutableName 'netlify'
     }
@@ -34,20 +34,20 @@ try {
             $alias = 'no-alias'
             $message = 'no-message'
         }
-        Write-LogCommand -Content "netlify deploy --dir ${buildDirectory} --alias ${alias} --message ${message}"
+        Show-LogCommand -Content "netlify deploy --dir ${buildDirectory} --alias ${alias} --message ${message}"
         & netlify deploy --dir $buildDirectory --alias $alias --message $message
         Assert-LastExitCodeSuccess -LastExecutableName 'netlify'
     }
 }
 catch {
     if (($null -ne $_.ErrorDetails) -and ($null -ne $_.ErrorDetails.Message)) {
-        Write-LogError -Content $_.ErrorDetails.Message
+        Show-LogError -Content $_.ErrorDetails.Message
     }
     elseif (($null -ne $_.Exception) -and ($null -ne $_.Exception.Message)) {
-        Write-LogError -Content $_.Exception.Message
+        Show-LogError -Content $_.Exception.Message
     }
     else {
-        Write-LogError -Content $_
+        Show-LogError -Content $_
     }
 
     exit 1
