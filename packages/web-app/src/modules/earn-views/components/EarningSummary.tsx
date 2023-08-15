@@ -1,73 +1,85 @@
-import type { ReactNode } from 'react'
-import { Component } from 'react'
+import type { FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { SectionHeader, StatElement } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
 import { formatBalance } from '../../../utils'
-import type { BonusEarningRate } from '../../bonus/models'
+import { BalanceStat } from './BalanceStat'
 
 const styles = (theme: SaladTheme) => ({
-  container: {},
   row: {
     paddingTop: 20,
     display: 'flex',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    '@media (max-width: 1024px)': {
+      gap: '40px',
+      '&>div': {
+        flex: '1 0 calc(50% - 40px)',
+      },
+    },
   },
   title: {
-    fontFamily: theme.fontGroteskBook25,
-    textTransform: 'uppercase',
-    fontSize: 10,
+    fontFamily: theme.fontGroteskLight09,
+    fontSize: 56,
+    color: theme.green,
+    textShadow: '0px 0px 24px rgba(178, 213, 48, 0.70)',
+    fontWeight: 300,
+    lineHeight: 1,
+  },
+  subtitle: {
+    fontFamily: 'Mallory',
+    fontSize: 16,
     color: theme.lightGreen,
-    letterSpacing: '1px',
+    margin: '8px 0px 0px',
+    lineHeight: 1.5,
   },
 })
 
 interface Props extends WithStyles<typeof styles> {
   currentBalance?: number
   lifetimeBalance?: number
-  totalXp?: number
-  bonusEarningRate?: BonusEarningRate
+  totalChoppingHours?: number
+  redeemedRewardsCount: number
 }
 
-class _EarningSummary extends Component<Props> {
-  public override render(): ReactNode {
-    const { currentBalance, lifetimeBalance, totalXp, bonusEarningRate, classes } = this.props
+export const EarningSummaryRaw: FC<Props> = ({
+  classes,
+  currentBalance,
+  lifetimeBalance,
+  totalChoppingHours,
+  redeemedRewardsCount,
+}) => {
+  const getRedeemedRewardsCountText = (count: number) => {
+    if (count === 1) {
+      return `${count} reward`
+    }
 
-    return (
-      <div className={classes.container}>
-        <SectionHeader>Summary</SectionHeader>
-        <div className={classes.row}>
-          <StatElement
-            title={'Current Balance'}
-            values={[formatBalance(currentBalance)]}
-            infoText={'Current balance available to spend'}
-          />
-          <StatElement
-            title={'Lifetime Balance'}
-            values={[formatBalance(lifetimeBalance)]}
-            infoText={'Total balance earned'}
-          />
-          <StatElement
-            title={'Lifetime XP'}
-            values={[Math.round(totalXp || 0).toLocaleString() || '0']}
-            infoText={`XP stands for "Experience Points". You are awarded 1 XP per minute of confirmed mining time. The more XP you have, the more veggies you will unlock in the Pantry.`}
-          />
-          {bonusEarningRate && (
-            <StatElement
-              title={'Earning Bonus'}
-              values={[`${Math.round(bonusEarningRate?.multiplier || 0).toLocaleString()}x`]}
-              infoText={`You are currently earning ${
-                bonusEarningRate.multiplier
-              }x your normal earning rate. You have already earned ${formatBalance(
-                bonusEarningRate.earnedAmount,
-              )}/${formatBalance(bonusEarningRate.earnedAmountLimit)} of your bonus amount`}
-            />
-          )}
-        </div>
-      </div>
-    )
+    return `${count} rewards`
   }
+  const getTotalChoppingHoursText = (count?: number) => {
+    if (!count) {
+      return `0 hours`
+    }
+
+    if (count === 1) {
+      return `${count} hour`
+    }
+
+    return `${count} hours`
+  }
+
+  return (
+    <div>
+      <div className={classes.title}>Earning Summary</div>
+      <p className={classes.subtitle}>Take a birds eye view on how you’ve used Salad to earn rewards.</p>
+      <div className={classes.row}>
+        <BalanceStat title={'Current Balance'} value={formatBalance(currentBalance)} />
+        <BalanceStat title={'Lifetime Balance'} value={formatBalance(lifetimeBalance)} />
+        <BalanceStat title={'Total Chopping Hours'} value={getTotalChoppingHoursText(totalChoppingHours)} />
+        <BalanceStat title={'Number of Rewards Redeemed'} value={getRedeemedRewardsCountText(redeemedRewardsCount)} />
+      </div>
+    </div>
+  )
 }
 
-export const EarningSummary = withStyles(styles)(_EarningSummary)
+export const EarningSummary = withStyles(styles)(EarningSummaryRaw)

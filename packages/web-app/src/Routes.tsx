@@ -4,7 +4,7 @@ import { Redirect, Route, Switch, withRouter } from 'react-router'
 import { ReferralOnboardingContainer, ReferralWelcomeContainer } from './modules/account-views/referral-views'
 import { LoginPageContainer } from './modules/auth-views'
 import { ReplaceBonusModalContainer } from './modules/bonus-views'
-import { EarnMenuContainer } from './modules/earn-views'
+import { EarningSummaryContainer } from './modules/earn-views/EarningSummaryContainer'
 import { RewardDetailsContainer, SelectTargetRewardContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
 import { SettingsContainer } from './modules/settings-views'
@@ -43,7 +43,7 @@ const _Routes = ({ location }: RouteComponentProps) => {
       <Route path="/account" component={SettingsContainer} />
 
       <Redirect exact from="/earn" to="/earn/summary" />
-      <Route path="/earn" component={EarnMenuContainer} />
+      <Route path="/earn" component={EarningSummaryContainer} />
 
       <Route
         exact

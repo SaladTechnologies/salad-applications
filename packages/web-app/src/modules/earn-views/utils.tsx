@@ -75,3 +75,7 @@ export const getIntervalEarnings = (earningHistory: EarningWindow[]): number => 
     return 0
   }
 }
+
+export const getNumberWithCommas = (number: string): string => {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
