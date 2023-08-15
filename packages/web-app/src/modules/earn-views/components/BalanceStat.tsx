@@ -10,7 +10,7 @@ const styles = (theme: SaladTheme) => ({
     fontFamily: 'Mallory',
   },
   title: {
-    color: '#D5DADF',
+    color: theme.lightGreen,
     fontSize: 14,
     lineHeight: '24px',
     whiteSpace: 'nowrap',
