@@ -73,10 +73,10 @@ export const EarningSummaryRaw: FC<Props> = ({
       <div className={classes.title}>Earning Summary</div>
       <p className={classes.subtitle}>Take a birds eye view on how you’ve used Salad to earn rewards.</p>
       <div className={classes.row}>
-        <BalanceStat title={'Current Balance'} value={formatBalance(currentBalance)} />
-        <BalanceStat title={'Lifetime Balance'} value={formatBalance(lifetimeBalance)} />
-        <BalanceStat title={'Total Chopping Hours'} value={getTotalChoppingHoursText(totalChoppingHours)} />
-        <BalanceStat title={'Number of Rewards Redeemed'} value={getRedeemedRewardsCountText(redeemedRewardsCount)} />
+        <BalanceStat title="Current Balance" value={formatBalance(currentBalance)} />
+        <BalanceStat title="Lifetime Balance" value={formatBalance(lifetimeBalance)} />
+        <BalanceStat title="Total Chopping Hours" value={getTotalChoppingHoursText(totalChoppingHours)} />
+        <BalanceStat title="Number of Rewards Redeemed" value={getRedeemedRewardsCountText(redeemedRewardsCount)} />
       </div>
     </div>
   )
