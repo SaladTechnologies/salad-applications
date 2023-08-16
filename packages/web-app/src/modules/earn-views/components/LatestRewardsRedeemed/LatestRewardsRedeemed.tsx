@@ -47,7 +47,7 @@ const _LatestRewardsRedeemed: FunctionComponent<Props> = ({
       {isLatestCompletedRedeemedRewardsExist ? (
         <>
           <div className={classes.rewards}>
-            {latestCompletedRedeemedRewards?.map((latestCompletedRedeemedReward) => (
+            {latestCompletedRedeemedRewards.map((latestCompletedRedeemedReward) => (
               <LatestRewardsRedeemedCard {...latestCompletedRedeemedReward} />
             ))}
           </div>
