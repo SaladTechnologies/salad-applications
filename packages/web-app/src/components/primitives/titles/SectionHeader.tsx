@@ -6,10 +6,12 @@ import type { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   header: {
-    fontFamily: theme.fontGroteskBook25,
-    textTransform: 'uppercase',
-    fontSize: 10,
-    letterSpacing: '1px',
+    fontFamily: theme.fontGroteskLight09,
+    fontSize: 56,
+    color: theme.green,
+    textShadow: '0px 0px 24px rgba(178, 213, 48, 0.70)',
+    fontWeight: 300,
+    lineHeight: 1,
   },
 })
 
