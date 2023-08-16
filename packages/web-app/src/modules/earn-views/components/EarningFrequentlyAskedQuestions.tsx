@@ -40,7 +40,7 @@ interface Props extends WithStyles<typeof styles> {}
 
 const _EarningFrequentlyAskedQuestions: FunctionComponent<Props> = ({ classes }) => {
   const navigateToSaladSupportPage = () => {
-    window.open('https://support.salad.com/')
+    window.open('https://support.salad.com/', '_blank')
   }
 
   return (
