@@ -10,7 +10,7 @@ import type { BonusEarningRate } from '../../bonus/models'
 import type { RewardVaultItem } from '../../vault/models'
 import { RewardVaultStatus } from '../../vault/models'
 import { PantryContainer, SlicedVeggieContainer } from '../../xp-views'
-import { EarningHistory, EarningSummary, LatestRewardsRedeemed } from '../components'
+import { EarningFrequentlyAskedQuestions, EarningHistory, EarningSummary, LatestRewardsRedeemed } from '../components'
 import { EarningInformationPage } from './EarningInformationPage'
 
 const styles = () => ({
@@ -90,6 +90,7 @@ const EarningSummaryPageRaw: FC<Props> = ({
             latestCompletedRedeemedRewards={latestCompletedRedeemedRewards}
             navigateToRewardVaultPage={navigateToRewardVaultPage}
           />
+          <EarningFrequentlyAskedQuestions />
           <SectionHeader>Pantry</SectionHeader>
           <PantryContainer />
         </div>
