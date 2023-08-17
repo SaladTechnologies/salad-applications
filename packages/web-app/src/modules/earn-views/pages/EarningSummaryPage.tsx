@@ -2,16 +2,14 @@ import type { FC } from 'react'
 import { useEffect } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { Scrollbar, SectionHeader } from '../../../components'
+import { Scrollbar } from '../../../components'
 import { withLogin } from '../../auth-views'
 import type { EarningWindow } from '../../balance/models'
 import type { RedeemedReward } from '../../balance/models/RedeemedReward'
 import type { BonusEarningRate } from '../../bonus/models'
 import type { RewardVaultItem } from '../../vault/models'
 import { RewardVaultStatus } from '../../vault/models'
-import { PantryContainer, SlicedVeggieContainer } from '../../xp-views'
 import { EarningHistory, EarningSummary, LatestRewardsRedeemed } from '../components'
-import { EarningInformationPage } from './EarningInformationPage'
 
 const styles = () => ({
   content: {
@@ -70,32 +68,22 @@ const EarningSummaryPageRaw: FC<Props> = ({
   const redeemedRewardsCount = redeemedRewards?.length ?? 0
 
   return (
-    <>
-      <SlicedVeggieContainer />
-      <Scrollbar>
-        <div className={classes.content}>
-          <EarningSummary
-            currentBalance={currentBalance}
-            lifetimeBalance={lifetimeBalance}
-            redeemedRewardsCount={redeemedRewardsCount}
-            totalChoppingHours={totalChoppingHours}
-          />
-          <EarningHistory
-            last24Hr={last24Hr}
-            last7Day={last7Day}
-            last30Day={last30Day}
-            earningHistory={earningHistory}
-          />
-          <LatestRewardsRedeemed
-            latestCompletedRedeemedRewards={latestCompletedRedeemedRewards}
-            navigateToRewardVaultPage={navigateToRewardVaultPage}
-          />
-          <SectionHeader>Pantry</SectionHeader>
-          <PantryContainer />
-        </div>
-      </Scrollbar>
-    </>
+    <Scrollbar>
+      <div className={classes.content}>
+        <EarningSummary
+          currentBalance={currentBalance}
+          lifetimeBalance={lifetimeBalance}
+          redeemedRewardsCount={redeemedRewardsCount}
+          totalChoppingHours={totalChoppingHours}
+        />
+        <EarningHistory last24Hr={last24Hr} last7Day={last7Day} last30Day={last30Day} earningHistory={earningHistory} />
+        <LatestRewardsRedeemed
+          latestCompletedRedeemedRewards={latestCompletedRedeemedRewards}
+          navigateToRewardVaultPage={navigateToRewardVaultPage}
+        />
+      </div>
+    </Scrollbar>
   )
 }
 
-export const EarningSummaryPage = withLogin(withStyles(styles)(EarningSummaryPageRaw), EarningInformationPage)
+export const EarningSummaryPage = withLogin(withStyles(styles)(EarningSummaryPageRaw))
