@@ -8,7 +8,6 @@ import type { EarningWindow } from '../../balance/models'
 import type { RedeemedReward } from '../../balance/models/RedeemedReward'
 import type { BonusEarningRate } from '../../bonus/models'
 import type { RewardVaultItem } from '../../vault/models'
-import { RewardVaultStatus } from '../../vault/models'
 import { PantryContainer, SlicedVeggieContainer } from '../../xp-views'
 import { EarningHistory, EarningSummary, LatestRewardsRedeemed } from '../components'
 import { EarningInformationPage } from './EarningInformationPage'
@@ -27,6 +26,7 @@ interface Props extends WithStyles<typeof styles> {
   lifetimeBalance?: number
   totalChoppingHours?: number
   redeemedRewards?: RewardVaultItem[]
+  latestCompletedRedeemedRewards: Map<string, RedeemedReward>
   startRedemptionsRefresh: () => void
   stopRedemptionsRefresh: () => void
   last24Hr?: number
@@ -35,6 +35,7 @@ interface Props extends WithStyles<typeof styles> {
   earningHistory?: EarningWindow[]
   bonusEarningRate?: BonusEarningRate
   navigateToRewardVaultPage: () => void
+  isLatestCompletedRedeemedRewardsLoading: boolean
 }
 
 const EarningSummaryPageRaw: FC<Props> = ({
@@ -43,6 +44,7 @@ const EarningSummaryPageRaw: FC<Props> = ({
   lifetimeBalance,
   totalChoppingHours,
   redeemedRewards,
+  latestCompletedRedeemedRewards,
   last24Hr,
   last7Day,
   last30Day,
@@ -50,6 +52,7 @@ const EarningSummaryPageRaw: FC<Props> = ({
   startRedemptionsRefresh,
   stopRedemptionsRefresh,
   navigateToRewardVaultPage,
+  isLatestCompletedRedeemedRewardsLoading,
 }) => {
   useEffect(() => {
     startRedemptionsRefresh()
@@ -59,13 +62,7 @@ const EarningSummaryPageRaw: FC<Props> = ({
     }
   }, [startRedemptionsRefresh, stopRedemptionsRefresh])
 
-  const sortByDate = (a: RedeemedReward, b: RedeemedReward): number =>
-    new Date(a.timestamp) > new Date(b.timestamp) ? -1 : 1
-
-  const latestCompletedRedeemedRewards = redeemedRewards
-    ?.filter((redemption) => redemption.status === RewardVaultStatus.COMPLETE)
-    .slice(-4)
-    .sort(sortByDate)
+  const latestCompletedRedeemedRewardsArray: RedeemedReward[] = Array.from(latestCompletedRedeemedRewards.values())
 
   const redeemedRewardsCount = redeemedRewards?.length ?? 0
 
@@ -87,8 +84,9 @@ const EarningSummaryPageRaw: FC<Props> = ({
             earningHistory={earningHistory}
           />
           <LatestRewardsRedeemed
-            latestCompletedRedeemedRewards={latestCompletedRedeemedRewards}
+            latestCompletedRedeemedRewards={latestCompletedRedeemedRewardsArray}
             navigateToRewardVaultPage={navigateToRewardVaultPage}
+            isLatestCompletedRedeemedRewardsLoading={isLatestCompletedRedeemedRewardsLoading}
           />
           <SectionHeader>Pantry</SectionHeader>
           <PantryContainer />

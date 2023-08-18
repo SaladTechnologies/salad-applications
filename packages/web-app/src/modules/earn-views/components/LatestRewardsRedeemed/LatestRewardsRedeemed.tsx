@@ -1,4 +1,4 @@
-import { Button } from '@saladtechnologies/garden-components'
+import { Button, LoadingSpinner } from '@saladtechnologies/garden-components'
 import type { FunctionComponent } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
@@ -31,12 +31,14 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   latestCompletedRedeemedRewards?: RedeemedReward[]
   navigateToRewardVaultPage: () => void
+  isLatestCompletedRedeemedRewardsLoading: boolean
 }
 
 const _LatestRewardsRedeemed: FunctionComponent<Props> = ({
   classes,
   latestCompletedRedeemedRewards,
   navigateToRewardVaultPage,
+  isLatestCompletedRedeemedRewardsLoading,
 }) => {
   const isLatestCompletedRedeemedRewardsExist =
     latestCompletedRedeemedRewards && latestCompletedRedeemedRewards?.length > 0
@@ -44,24 +46,30 @@ const _LatestRewardsRedeemed: FunctionComponent<Props> = ({
   return (
     <div className={classes.container}>
       <SectionHeader>Latest Rewards Redeemed</SectionHeader>
-      {isLatestCompletedRedeemedRewardsExist ? (
-        <>
-          <div className={classes.rewards}>
-            {latestCompletedRedeemedRewards.map((latestCompletedRedeemedReward) => (
-              <LatestRewardsRedeemedCard {...latestCompletedRedeemedReward} />
-            ))}
-          </div>
-          <Button
-            outlineColor="#DBF1C1"
-            variant="outlined"
-            label="View Rewards Vault"
-            onClick={navigateToRewardVaultPage}
-          />
-        </>
+      {isLatestCompletedRedeemedRewardsLoading ? (
+        <LoadingSpinner variant="light" size={100} />
       ) : (
-        <p className={classes.noRewardsDescription}>
-          No rewards redeemed yet. Check out your reward progress on the top right of this screen.
-        </p>
+        <>
+          {isLatestCompletedRedeemedRewardsExist ? (
+            <>
+              <div className={classes.rewards}>
+                {latestCompletedRedeemedRewards.map((latestCompletedRedeemedReward) => (
+                  <LatestRewardsRedeemedCard {...latestCompletedRedeemedReward} />
+                ))}
+              </div>
+              <Button
+                outlineColor="#DBF1C1"
+                variant="outlined"
+                label="View Rewards Vault"
+                onClick={navigateToRewardVaultPage}
+              />
+            </>
+          ) : (
+            <p className={classes.noRewardsDescription}>
+              No rewards redeemed yet. Check out your reward progress on the top right of this screen.
+            </p>
+          )}
+        </>
       )}
     </div>
   )
