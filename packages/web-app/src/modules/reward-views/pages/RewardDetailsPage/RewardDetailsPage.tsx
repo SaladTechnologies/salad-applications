@@ -14,6 +14,7 @@ import {
   RewardInfoPanel,
   RewardRequirementsPanel,
 } from '../../components'
+import { ReviewAfterRedemptionContainer } from './ReviewAfterRedemption/ReviewAfterRedemptionContainer'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -39,6 +40,7 @@ interface Props extends WithStyles<typeof styles> {
   requiresSaladCard: boolean
   requiresPayPalAccount: boolean
   isTargetReward: boolean
+  isReviewing: boolean
   loadReward?: (id?: string) => void
   onRedeem?: (reward?: Reward) => void
   onBack?: () => void
@@ -70,6 +72,7 @@ class _RewardDetailsPage extends Component<Props> {
     } = this.props
     return (
       <div className={classes.container}>
+        {this.props.isReviewing && <ReviewAfterRedemptionContainer />}
         <Head title={reward?.name} />
         <RewardHeaderBar
           reward={reward}
