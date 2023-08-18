@@ -4,6 +4,7 @@ import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
 import { formatBalance } from '../../../utils'
 import { BalanceStat } from './BalanceStat'
+import { EarnSectionHeader } from './EarnSectionHeader'
 
 const styles = (theme: SaladTheme) => ({
   row: {
@@ -70,7 +71,7 @@ export const EarningSummaryRaw: FC<Props> = ({
 
   return (
     <div>
-      <div className={classes.title}>Earning Summary</div>
+      <EarnSectionHeader>Earning Summary</EarnSectionHeader>
       <p className={classes.subtitle}>Take a birds eye view on how you’ve used Salad to earn rewards.</p>
       <div className={classes.row}>
         <BalanceStat title="Current Balance" value={formatBalance(currentBalance)} />

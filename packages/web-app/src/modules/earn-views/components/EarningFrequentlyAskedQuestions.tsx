@@ -3,9 +3,9 @@ import type { FunctionComponent } from 'react'
 import { Img } from 'react-image'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { SectionHeader } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
 import faqIcon from '../assets/faq-icon.svg'
+import { EarnSectionHeader } from './EarnSectionHeader'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -45,7 +45,7 @@ const _EarningFrequentlyAskedQuestions: FunctionComponent<Props> = ({ classes })
 
   return (
     <div className={classes.container}>
-      <SectionHeader>Have questions? Check out our FAQS</SectionHeader>
+      <EarnSectionHeader>Have questions? Check out our FAQS</EarnSectionHeader>
       <div className={classes.questionsContainer}>
         <a
           className={classes.questionLink}

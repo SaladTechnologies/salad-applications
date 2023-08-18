@@ -1,5 +1,6 @@
 export * from './EarningFrequentlyAskedQuestions'
 export * from './EarningHistory'
 export * from './EarningSummary'
+export * from './EarnSectionHeader'
 export * from './LatestRewardsRedeemed'
 export * from './MiningInformation'
