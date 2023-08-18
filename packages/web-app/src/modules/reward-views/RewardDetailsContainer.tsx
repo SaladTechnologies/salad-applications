@@ -30,6 +30,7 @@ const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ id: stri
     rewardId: props.match.params.id,
     currentBalance: store.balance.currentBalance,
     reward: reward,
+    isReviewing: store.rewards.isReviewing,
     onBack: store.routing.goBack,
     onRedeem,
     onTargetThisRewardClick: store.rewards.setSelectedTargetReward,
