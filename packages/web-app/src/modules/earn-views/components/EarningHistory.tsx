@@ -1,98 +1,36 @@
-import classNames from 'classnames'
-import type { ReactNode } from 'react'
-import { Component } from 'react'
+import type { FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { SectionHeader, StatElement } from '../../../components'
+import { SectionHeader } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
-import { formatBalance } from '../../../utils'
-import type { EarningWindow } from '../../balance/models'
 import { EarningChartContainer } from '../EarningChartContainer'
 
 const styles = (theme: SaladTheme) => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
-  },
-  row: {
-    display: 'flex',
-  },
-  statsContainer: {
-    justifyContent: 'space-around',
-    flex: 1,
-    paddingTop: 20,
-  },
-  chartContainer: {
-    paddingTop: 75,
-    height: 200,
-    width: '100%',
+    maxWidth: 860,
     position: 'relative',
   },
-  tooltipContainer: {
-    fontFamily: theme.fontGroteskBook25,
+  subtitle: {
+    fontFamily: 'Mallory',
+    fontSize: 16,
     color: theme.lightGreen,
-    fontSize: 10,
-  },
-  placeholderText: {
-    textAlign: 'center',
+    margin: '8px 0px 0px',
+    lineHeight: 1.5,
+    marginTop: 32,
+    marginBottom: 10,
   },
 })
 
-interface Props extends WithStyles<typeof styles> {
-  last24Hr?: number
-  last7Day?: number
-  last30Day?: number
-  earningHistory?: EarningWindow[]
-}
+interface Props extends WithStyles<typeof styles> {}
 
-interface State {
-  hoverIndex?: number
-}
+const EarningHistoryRaw: FC<Props> = ({ classes }) => (
+  <div className={classes.container}>
+    <SectionHeader>Earning History</SectionHeader>
+    <p className={classes.subtitle}>See earnings from the last...</p>
+    <EarningChartContainer />
+  </div>
+)
 
-class _EarningHistory extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = {}
-  }
-
-  handleMouseEvent = (a: { isTooltipActive: boolean; activeTooltipIndex: number }) => {
-    if (!a.isTooltipActive) {
-      this.setState({ hoverIndex: undefined })
-    } else {
-      this.setState({ hoverIndex: a.activeTooltipIndex })
-    }
-  }
-
-  public override render(): ReactNode {
-    const { last24Hr, last7Day, last30Day, classes } = this.props
-    return (
-      <div className={classes.container}>
-        <div className={classes.row}>
-          <SectionHeader>Earning History</SectionHeader>
-        </div>
-        <div className={classNames(classes.row, classes.statsContainer)}>
-          <StatElement
-            title={'Last 24Hr'}
-            values={[formatBalance(last24Hr)]}
-            infoText={'Total amount earned in the past 24 hours'}
-          />
-          <StatElement
-            title={'Last 7 Days'}
-            values={[formatBalance(last7Day)]}
-            infoText={'Total amount earned in the past 7 days'}
-          />
-          <StatElement
-            title={'Last 30 Days'}
-            values={[formatBalance(last30Day)]}
-            infoText={'Total amount earned in the past 30 days'}
-          />
-        </div>
-        <div className={classes.row}>
-          <EarningChartContainer />
-        </div>
-      </div>
-    )
-  }
-}
-
-export const EarningHistory = withStyles(styles)(_EarningHistory)
+export const EarningHistory = withStyles(styles)(EarningHistoryRaw)

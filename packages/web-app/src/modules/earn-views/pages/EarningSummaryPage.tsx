@@ -4,9 +4,7 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Scrollbar, SectionHeader } from '../../../components'
 import { withLogin } from '../../auth-views'
-import type { EarningWindow } from '../../balance/models'
 import type { RedeemedReward } from '../../balance/models/RedeemedReward'
-import type { BonusEarningRate } from '../../bonus/models'
 import type { RewardVaultItem } from '../../vault/models'
 import { RewardVaultStatus } from '../../vault/models'
 import { PantryContainer, SlicedVeggieContainer } from '../../xp-views'
@@ -29,11 +27,6 @@ interface Props extends WithStyles<typeof styles> {
   redeemedRewards?: RewardVaultItem[]
   startRedemptionsRefresh: () => void
   stopRedemptionsRefresh: () => void
-  last24Hr?: number
-  last7Day?: number
-  last30Day?: number
-  earningHistory?: EarningWindow[]
-  bonusEarningRate?: BonusEarningRate
   navigateToRewardVaultPage: () => void
 }
 
@@ -43,10 +36,6 @@ const EarningSummaryPageRaw: FC<Props> = ({
   lifetimeBalance,
   totalChoppingHours,
   redeemedRewards,
-  last24Hr,
-  last7Day,
-  last30Day,
-  earningHistory,
   startRedemptionsRefresh,
   stopRedemptionsRefresh,
   navigateToRewardVaultPage,
@@ -80,12 +69,7 @@ const EarningSummaryPageRaw: FC<Props> = ({
             redeemedRewardsCount={redeemedRewardsCount}
             totalChoppingHours={totalChoppingHours}
           />
-          <EarningHistory
-            last24Hr={last24Hr}
-            last7Day={last7Day}
-            last30Day={last30Day}
-            earningHistory={earningHistory}
-          />
+          <EarningHistory />
           <LatestRewardsRedeemed
             latestCompletedRedeemedRewards={latestCompletedRedeemedRewards}
             navigateToRewardVaultPage={navigateToRewardVaultPage}

@@ -2,7 +2,7 @@ import type { AxiosInstance } from 'axios'
 import { action, computed, flow, observable } from 'mobx'
 import moment from 'moment'
 import type { EarningWindow } from './models'
-import { batchEarningsWindow } from './utils'
+import { batchEarningsWindow, getEarningWindowsGrouppedByDay } from './utils'
 
 export class BalanceStore {
   @observable
@@ -87,7 +87,15 @@ export class BalanceStore {
       }
     }
 
-    return windows.sort((a, b) => a.timestamp.diff(b.timestamp))
+    const sortedEarningWindowsByTimestamp = windows.sort((a, b) => a.timestamp.diff(b.timestamp))
+    
+    if (numberOfDays === 1) {
+      return sortedEarningWindowsByTimestamp
+    }
+
+    const grouppedByTheDayEarningWindows = getEarningWindowsGrouppedByDay(sortedEarningWindowsByTimestamp, numberOfDays)
+
+    return grouppedByTheDayEarningWindows
   }
 
   constructor(private readonly axios: AxiosInstance) {}

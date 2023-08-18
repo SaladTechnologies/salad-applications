@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
+import { SectionHeader } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
 import { formatBalance } from '../../../utils'
 import { BalanceStat } from './BalanceStat'
@@ -17,14 +18,6 @@ const styles = (theme: SaladTheme) => ({
         flex: '1 0 calc(50% - 40px)',
       },
     },
-  },
-  title: {
-    fontFamily: theme.fontGroteskLight09,
-    fontSize: 56,
-    color: theme.green,
-    textShadow: '0px 0px 24px rgba(178, 213, 48, 0.70)',
-    fontWeight: 300,
-    lineHeight: 1,
   },
   subtitle: {
     fontFamily: 'Mallory',
@@ -70,7 +63,7 @@ export const EarningSummaryRaw: FC<Props> = ({
 
   return (
     <div>
-      <div className={classes.title}>Earning Summary</div>
+      <SectionHeader>Earning Summary</SectionHeader>
       <p className={classes.subtitle}>Take a birds eye view on how you’ve used Salad to earn rewards.</p>
       <div className={classes.row}>
         <BalanceStat title="Current Balance" value={formatBalance(currentBalance)} />
