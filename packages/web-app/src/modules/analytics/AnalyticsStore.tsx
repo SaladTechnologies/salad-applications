@@ -370,9 +370,9 @@ export class AnalyticsStore {
 
   /** Track when user click on vault button on Earn page */
   public trackEarnPageVaultButtonClicked = () => {
-    const isVaultLinkClicked = true
+    const isVaultButtonClicked = true
     this.track('Earning Summary Action', {
-      VaultLink: isVaultLinkClicked,
+      VaultLink: isVaultButtonClicked,
     })
   }
 
