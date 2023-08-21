@@ -1,15 +1,25 @@
-import type { AxiosInstance } from 'axios'
+import type { AxiosInstance, AxiosResponse } from 'axios'
 import { action, flow, observable } from 'mobx'
 import { convertMinToMilli } from '../../utils'
 import type { BalanceStore } from '../balance'
+import type { RedeemedReward } from '../balance/models/RedeemedReward'
 import type { RewardStore } from '../reward'
+import type { RewardResource } from '../reward/models/RewardResource'
+import { toFullImageUrl } from '../reward/utils'
 import type { RewardVaultItem, RewardVaultResource } from './models'
+import { RewardVaultStatus } from './models'
 
 export class VaultStore {
   private refreshTimer?: NodeJS.Timeout
 
   @observable
   public redemptions: RewardVaultItem[] = []
+
+  @observable
+  public latestCompletedRedeemedRewards: Map<string, RedeemedReward> = new Map<string, RedeemedReward>()
+
+  @observable
+  public isLatestCompletedRedeemedRewardsLoading: boolean = false
 
   constructor(
     private readonly axios: AxiosInstance,
@@ -31,13 +41,55 @@ export class VaultStore {
     id: r.id,
     name: r.name,
     price: r.price,
+    rewardId: r.rewardId,
     timestamp: new Date(r.timestamp),
     code: r.code?.trim(),
     status: r.status,
   })
 
   @action.bound
+  loadLatestCompletedRedeemedRewards = flow(function* (this: VaultStore) {
+    const latestCompletedRedeemedRewards = this.redemptions
+      ?.filter((redemption: RewardVaultItem) => redemption.status === RewardVaultStatus.COMPLETE)
+      .slice(-4)
+      .reverse()
+
+    this.isLatestCompletedRedeemedRewardsLoading = true
+
+    try {
+      for (let completedRedeemedReward of latestCompletedRedeemedRewards) {
+        yield this.addRewardToCompletedRedeemedList(completedRedeemedReward)
+      }
+      this.isLatestCompletedRedeemedRewardsLoading = false
+    } catch {}
+  })
+
+  @action.bound
+  addRewardToCompletedRedeemedList = flow(function* (this: VaultStore, completedRedeemedReward: RewardVaultItem) {
+    try {
+      const res: AxiosResponse<RewardResource> = yield this.axios.get(
+        `/api/v1/rewards/${completedRedeemedReward.rewardId}`,
+      )
+      const reward: RedeemedReward = this.completedRedeemedRewardFromResource(
+        completedRedeemedReward,
+        res.data.coverImage,
+      )
+      this.latestCompletedRedeemedRewards.set(reward.id, reward)
+    } catch {}
+  })
+
+  completedRedeemedRewardFromResource = (r: RewardVaultItem, coverImage?: string): RedeemedReward => ({
+    id: r.id,
+    name: r.name,
+    coverImage: toFullImageUrl(coverImage),
+    timestamp: new Date(r.timestamp),
+  })
+
+  @action.bound
   startRefresh = flow(function* (this: VaultStore) {
+    //Reload completed redeemed rewards
+    yield this.loadLatestCompletedRedeemedRewards()
+
     //Reload the vault
     yield this.loadVault()
 
@@ -46,6 +98,7 @@ export class VaultStore {
 
     // Start a timer to keep the vault refreshed
     this.refreshTimer = setInterval(async () => {
+      await this.loadLatestCompletedRedeemedRewards()
       await this.loadVault()
       await this.balance.refreshBalance()
     }, convertMinToMilli(2))
@@ -65,6 +118,7 @@ export class VaultStore {
 
   @action
   addRewardToRedemptionsList = (reward: RewardVaultItem) => {
+    this.latestCompletedRedeemedRewards.clear()
     this.redemptions.push(reward)
   }
 
