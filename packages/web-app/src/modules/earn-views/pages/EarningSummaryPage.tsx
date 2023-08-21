@@ -9,7 +9,7 @@ import type { RedeemedReward } from '../../balance/models/RedeemedReward'
 import type { BonusEarningRate } from '../../bonus/models'
 import type { RewardVaultItem } from '../../vault/models'
 import { RewardVaultStatus } from '../../vault/models'
-import { EarningHistory, EarningSummary, LatestRewardsRedeemed } from '../components'
+import { EarningFrequentlyAskedQuestions, EarningHistory, EarningSummary, LatestRewardsRedeemed } from '../components'
 
 const styles = () => ({
   content: {
@@ -81,6 +81,7 @@ const EarningSummaryPageRaw: FC<Props> = ({
           latestCompletedRedeemedRewards={latestCompletedRedeemedRewards}
           navigateToRewardVaultPage={navigateToRewardVaultPage}
         />
+        <EarningFrequentlyAskedQuestions />
       </div>
     </Scrollbar>
   )
