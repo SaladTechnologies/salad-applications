@@ -354,6 +354,33 @@ export class AnalyticsStore {
     })
   }
 
+  /** Track when user click on FAQ link on Earn page */
+  public trackEarnPageFAQLinkClicked = (faqLink: string) => {
+    this.track('Earning Summary Action', {
+      FAQLink: faqLink,
+    })
+  }
+
+  /** Track when user click on time filter button on Earn page */
+  public trackEarnPageTimeFilterButtonClicked = (timeFilter: string) => {
+    this.track('Earning Summary Action', {
+      TimeFilter: timeFilter,
+    })
+  }
+
+  /** Track when user click on vault button on Earn page */
+  public trackEarnPageVaultButtonClicked = () => {
+    const isVaultLinkClicked = true
+    this.track('Earning Summary Action', {
+      VaultLink: isVaultLinkClicked,
+    })
+  }
+
+  /** Track when an Earn Page is viewed by the user */
+  public trackEarnPageViewed = () => {
+    this.track('Earning Summary Viewed')
+  }
+
   public trackUnleashEvent = (event: string, properties: { [key: string]: any }) => {
     this.track(event, properties)
   }

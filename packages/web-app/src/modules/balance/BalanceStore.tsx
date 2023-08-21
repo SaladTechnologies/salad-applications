@@ -1,8 +1,15 @@
 import type { AxiosInstance } from 'axios'
 import { action, computed, flow, observable } from 'mobx'
 import moment from 'moment'
+import type { RootStore } from '../../Store'
 import type { EarningWindow } from './models'
 import { batchEarningsWindow } from './utils'
+
+enum EarningChartTimeFilter {
+  Filter24Hour = '24 hour filter',
+  Filter7Day = '7 day filter',
+  Filter30Day = '30 day filter',
+}
 
 export class BalanceStore {
   @observable
@@ -29,16 +36,28 @@ export class BalanceStore {
 
   @action
   viewLast24Hours = () => {
+    if (this.daysShowingEarnings !== 1) {
+      this.store.analytics.trackEarnPageTimeFilterButtonClicked(EarningChartTimeFilter.Filter24Hour)
+    }
+
     this.daysShowingEarnings = 1
   }
 
   @action
   viewLast7Days = () => {
+    if (this.daysShowingEarnings !== 30) {
+      this.store.analytics.trackEarnPageTimeFilterButtonClicked(EarningChartTimeFilter.Filter7Day)
+    }
+
     this.daysShowingEarnings = 7
   }
 
   @action
   viewLast30Days = () => {
+    if (this.daysShowingEarnings !== 30) {
+      this.store.analytics.trackEarnPageTimeFilterButtonClicked(EarningChartTimeFilter.Filter30Day)
+    }
+
     this.daysShowingEarnings = 30
   }
 
@@ -90,7 +109,7 @@ export class BalanceStore {
     return windows.sort((a, b) => a.timestamp.diff(b.timestamp))
   }
 
-  constructor(private readonly axios: AxiosInstance) {}
+  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   @action.bound
   refreshBalanceAndHistory = flow(function* (this: BalanceStore) {

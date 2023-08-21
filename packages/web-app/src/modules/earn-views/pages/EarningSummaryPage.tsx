@@ -32,8 +32,10 @@ interface Props extends WithStyles<typeof styles> {
   last30Day?: number
   earningHistory?: EarningWindow[]
   bonusEarningRate?: BonusEarningRate
-  navigateToRewardVaultPage: () => void
   isLatestCompletedRedeemedRewardsLoading: boolean
+  trackAndNavigateToRewardVaultPage: () => void
+  trackEarnPageFAQLinkClicked: (faqLink: string) => void
+  trackEarnPageViewed: () => void
 }
 
 const EarningSummaryPageRaw: FC<Props> = ({
@@ -49,16 +51,19 @@ const EarningSummaryPageRaw: FC<Props> = ({
   earningHistory,
   startRedemptionsRefresh,
   stopRedemptionsRefresh,
-  navigateToRewardVaultPage,
   isLatestCompletedRedeemedRewardsLoading,
+  trackAndNavigateToRewardVaultPage,
+  trackEarnPageFAQLinkClicked,
+  trackEarnPageViewed,
 }) => {
   useEffect(() => {
     startRedemptionsRefresh()
+    trackEarnPageViewed()
 
     return () => {
       stopRedemptionsRefresh()
     }
-  }, [startRedemptionsRefresh, stopRedemptionsRefresh])
+  }, [startRedemptionsRefresh, stopRedemptionsRefresh, trackEarnPageViewed])
 
   const latestCompletedRedeemedRewardsArray: RedeemedReward[] = Array.from(latestCompletedRedeemedRewards.values())
 
@@ -76,10 +81,10 @@ const EarningSummaryPageRaw: FC<Props> = ({
         <EarningHistory last24Hr={last24Hr} last7Day={last7Day} last30Day={last30Day} earningHistory={earningHistory} />
         <LatestRewardsRedeemed
           latestCompletedRedeemedRewards={latestCompletedRedeemedRewardsArray}
-          navigateToRewardVaultPage={navigateToRewardVaultPage}
+          navigateToRewardVaultPage={trackAndNavigateToRewardVaultPage}
           isLatestCompletedRedeemedRewardsLoading={isLatestCompletedRedeemedRewardsLoading}
         />
-        <EarningFrequentlyAskedQuestions />
+        <EarningFrequentlyAskedQuestions trackFAQLinkClicked={trackEarnPageFAQLinkClicked} />
       </div>
     </Scrollbar>
   )

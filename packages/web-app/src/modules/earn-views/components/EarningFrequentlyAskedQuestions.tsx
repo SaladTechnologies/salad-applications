@@ -36,11 +36,13 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  trackFAQLinkClicked: (faqLink: string) => void
+}
 
-const _EarningFrequentlyAskedQuestions: FunctionComponent<Props> = ({ classes }) => {
+const _EarningFrequentlyAskedQuestions: FunctionComponent<Props> = ({ classes, trackFAQLinkClicked }) => {
   const navigateToSaladSupportPage = () => {
-    window.open('https://support.salad.com/', '_blank')
+    window.open('https://support.salad.com/', '_blank', 'noopener, noreferrer')
   }
 
   return (
@@ -50,6 +52,7 @@ const _EarningFrequentlyAskedQuestions: FunctionComponent<Props> = ({ classes })
         <a
           className={classes.questionLink}
           href="https://support.salad.com/article/59-faq-on-salad-swag"
+          onClick={() => trackFAQLinkClicked('https://support.salad.com/article/59-faq-on-salad-swag')}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -59,6 +62,11 @@ const _EarningFrequentlyAskedQuestions: FunctionComponent<Props> = ({ classes })
         <a
           className={classes.questionLink}
           href="https://support.salad.com/article/52-i-live-outside-the-us-can-i-still-redeem-rewards-with-salad"
+          onClick={() =>
+            trackFAQLinkClicked(
+              'https://support.salad.com/article/52-i-live-outside-the-us-can-i-still-redeem-rewards-with-salad',
+            )
+          }
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -68,6 +76,11 @@ const _EarningFrequentlyAskedQuestions: FunctionComponent<Props> = ({ classes })
         <a
           className={classes.questionLink}
           href="https://support.salad.com/category/40-rewards"
+          onClick={() =>
+            trackFAQLinkClicked(
+              'https://support.salad.com/article/52-i-live-outside-the-us-can-i-still-redeem-rewards-with-salad',
+            )
+          }
           target="_blank"
           rel="noopener noreferrer"
         >
