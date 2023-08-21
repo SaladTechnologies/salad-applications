@@ -3,11 +3,12 @@ import type { ReactNode } from 'react'
 import { Component } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { SectionHeader, StatElement } from '../../../components'
+import { StatElement } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
 import { formatBalance } from '../../../utils'
 import type { EarningWindow } from '../../balance/models'
 import { EarningChartContainer } from '../EarningChartContainer'
+import { EarnSectionHeader } from './EarnSectionHeader'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -68,7 +69,7 @@ class _EarningHistory extends Component<Props, State> {
     return (
       <div className={classes.container}>
         <div className={classes.row}>
-          <SectionHeader>Earning History</SectionHeader>
+          <EarnSectionHeader>Earning History</EarnSectionHeader>
         </div>
         <div className={classNames(classes.row, classes.statsContainer)}>
           <StatElement

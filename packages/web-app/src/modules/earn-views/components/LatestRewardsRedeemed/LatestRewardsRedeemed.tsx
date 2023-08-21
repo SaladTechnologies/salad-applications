@@ -2,9 +2,9 @@ import { Button, LoadingSpinner } from '@saladtechnologies/garden-components'
 import type { FunctionComponent } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { SectionHeader } from '../../../../components'
 import type { SaladTheme } from '../../../../SaladTheme'
 import type { RedeemedReward } from '../../../balance/models/RedeemedReward'
+import { EarnSectionHeader } from '../EarnSectionHeader'
 import { LatestRewardsRedeemedCard } from './components'
 
 const styles = (theme: SaladTheme) => ({
@@ -45,7 +45,7 @@ const _LatestRewardsRedeemed: FunctionComponent<Props> = ({
 
   return (
     <div className={classes.container}>
-      <SectionHeader>Latest Rewards Redeemed</SectionHeader>
+      <EarnSectionHeader>Latest Rewards Redeemed</EarnSectionHeader>
       {isLatestCompletedRedeemedRewardsLoading ? (
         <LoadingSpinner variant="light" size={100} />
       ) : (
