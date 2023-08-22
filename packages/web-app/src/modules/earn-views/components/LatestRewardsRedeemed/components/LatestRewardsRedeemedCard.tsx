@@ -4,6 +4,7 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import Skeleton from 'react-loading-skeleton'
 import type { SaladTheme } from '../../../../../SaladTheme'
+import type { RedeemedReward } from '../../../../balance/models/RedeemedReward'
 import defaultRewardImage from '../../../assets/default-reward-image.svg'
 
 const styles = (theme: SaladTheme) => ({
@@ -51,12 +52,7 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
-interface Props extends WithStyles<typeof styles> {
-  id: string
-  name: string
-  coverImage?: string
-  timestamp: Date
-}
+interface Props extends RedeemedReward, WithStyles<typeof styles> {}
 
 const _LatestRewardsRedeemedCard: FunctionComponent<Props> = ({ classes, id, name, coverImage, timestamp }) => (
   <div className={classes.container} key={id}>

@@ -49,6 +49,8 @@ export class VaultStore {
 
   @action.bound
   loadLatestCompletedRedeemedRewards = flow(function* (this: VaultStore) {
+    this.latestCompletedRedeemedRewards.clear()
+
     const latestCompletedRedeemedRewards = this.redemptions
       ?.filter((redemption: RewardVaultItem) => redemption.status === RewardVaultStatus.COMPLETE)
       .slice(-4)
@@ -61,7 +63,9 @@ export class VaultStore {
         yield this.addRewardToCompletedRedeemedList(completedRedeemedReward)
       }
       this.isLatestCompletedRedeemedRewardsLoading = false
-    } catch {}
+    } catch (error) {
+      console.error(error)
+    }
   })
 
   @action.bound
@@ -75,7 +79,9 @@ export class VaultStore {
         res.data.coverImage,
       )
       this.latestCompletedRedeemedRewards.set(reward.id, reward)
-    } catch {}
+    } catch (error) {
+      console.error(error)
+    }
   })
 
   completedRedeemedRewardFromResource = (r: RewardVaultItem, coverImage?: string): RedeemedReward => ({
@@ -118,7 +124,6 @@ export class VaultStore {
 
   @action
   addRewardToRedemptionsList = (reward: RewardVaultItem) => {
-    this.latestCompletedRedeemedRewards.clear()
     this.redemptions.push(reward)
   }
 

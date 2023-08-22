@@ -21,8 +21,8 @@ export const getEarningWindowsGroupedByDay = (
 ): EarningWindow[] => {
   const groupedByTheDayEarningWindows = groupBy(earningWindows, (item) => moment(item.timestamp).endOf('day').unix())
 
-  const accumulatedEarningsByTheDay = Object.values(groupedByTheDayEarningWindows).map((item) =>
-    item.reduce((acc, curr) => ({
+  const accumulatedEarningsByTheDay = Object.values(groupedByTheDayEarningWindows).map((day) =>
+    day.reduce((acc, curr) => ({
       ...acc,
       earnings: acc.earnings + curr.earnings,
     })),

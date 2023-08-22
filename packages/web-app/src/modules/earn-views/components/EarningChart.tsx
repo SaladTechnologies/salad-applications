@@ -189,6 +189,8 @@ interface CustomTick extends WithStyles<typeof styles> {
 
 const _CustomizedXAxisTick = (props: CustomTick) => {
   const { classes, daysShowing, fill, payload, textAnchor, x, y, saladBowlEnabled } = props
+  let timestamp
+
   if (!payload) {
     return null
   }
@@ -198,11 +200,14 @@ const _CustomizedXAxisTick = (props: CustomTick) => {
   const shouldShowAmPm = daysShowing === 1
   const shouldShowDateMonth = daysShowing === 7
 
-  const timestamp = shouldShowAmPm
-    ? moment(payload.value).add(15, 'minute').format('h')
-    : shouldShowDateMonth
-    ? moment(payload.value).add(15, 'minute').format('D/M')
-    : moment(payload.value).add(15, 'minute').format('D')
+  if (shouldShowAmPm) {
+    timestamp = moment(payload.value).add(15, 'minute').format('h')
+  } else if (shouldShowDateMonth) {
+    timestamp = moment(payload.value).add(15, 'minute').format('D/M')
+  } else {
+    timestamp = moment(payload.value).add(15, 'minute').format('D')
+  }
+
   return (
     <>
       <g
