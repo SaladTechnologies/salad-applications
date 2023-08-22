@@ -15,13 +15,13 @@ export const batchEarningsWindow = (earnings: Map<number, number>, batchSize: nu
   return earningHistory
 }
 
-export const getEarningWindowsGrouppedByDay = (
+export const getEarningWindowsGroupedByDay = (
   earningWindows: EarningWindow[],
   numberOfDays: 7 | 30,
 ): EarningWindow[] => {
-  const grouppedByTheDayEarningWindows = groupBy(earningWindows, (item) => moment(item.timestamp).endOf('day').unix())
+  const groupedByTheDayEarningWindows = groupBy(earningWindows, (item) => moment(item.timestamp).endOf('day').unix())
 
-  const accumulatedEarningsByTheDay = Object.values(grouppedByTheDayEarningWindows).map((item) =>
+  const accumulatedEarningsByTheDay = Object.values(groupedByTheDayEarningWindows).map((item) =>
     item.reduce((acc, curr) => ({
       ...acc,
       earnings: acc.earnings + curr.earnings,

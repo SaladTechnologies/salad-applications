@@ -3,7 +3,7 @@ import { action, computed, flow, observable } from 'mobx'
 import moment from 'moment'
 import type { RootStore } from '../../Store'
 import type { EarningWindow } from './models'
-import { batchEarningsWindow, getEarningWindowsGrouppedByDay } from './utils'
+import { batchEarningsWindow, getEarningWindowsGroupedByDay } from './utils'
 
 enum EarningChartTimeFilter {
   Filter24Hour = '24 hour filter',
@@ -107,14 +107,14 @@ export class BalanceStore {
     }
 
     const sortedEarningWindowsByTimestamp = windows.sort((a, b) => a.timestamp.diff(b.timestamp))
-    
+
     if (numberOfDays === 1) {
       return sortedEarningWindowsByTimestamp
     }
 
-    const grouppedByTheDayEarningWindows = getEarningWindowsGrouppedByDay(sortedEarningWindowsByTimestamp, numberOfDays)
+    const groupedByTheDayEarningWindows = getEarningWindowsGroupedByDay(sortedEarningWindowsByTimestamp, numberOfDays)
 
-    return grouppedByTheDayEarningWindows
+    return groupedByTheDayEarningWindows
   }
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}

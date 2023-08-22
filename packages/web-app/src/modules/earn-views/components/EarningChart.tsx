@@ -196,13 +196,13 @@ const _CustomizedXAxisTick = (props: CustomTick) => {
   const isMidnight = moment(payload.value).add(15, 'minute').hours() === 0
   const isNoon = moment(payload.value).add(15, 'minute').hours() === 12
   const shouldShowAmPm = daysShowing === 1
+  const shouldShowDateMonth = daysShowing === 7
 
-  const timestamp =
-    daysShowing === 1
-      ? moment(payload.value).add(15, 'minute').format('h')
-      : daysShowing === 7
-      ? moment(payload.value).add(15, 'minute').format('D/M')
-      : moment(payload.value).add(15, 'minute').format('D')
+  const timestamp = shouldShowAmPm
+    ? moment(payload.value).add(15, 'minute').format('h')
+    : shouldShowDateMonth
+    ? moment(payload.value).add(15, 'minute').format('D/M')
+    : moment(payload.value).add(15, 'minute').format('D')
   return (
     <>
       <g
