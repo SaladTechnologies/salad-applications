@@ -4,9 +4,7 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Scrollbar } from '../../../components'
 import { withLogin } from '../../auth-views'
-import type { EarningWindow } from '../../balance/models'
 import type { RedeemedReward } from '../../balance/models/RedeemedReward'
-import type { BonusEarningRate } from '../../bonus/models'
 import type { RewardVaultItem } from '../../vault/models'
 import { EarningFrequentlyAskedQuestions, EarningHistory, EarningSummary, LatestRewardsRedeemed } from '../components'
 
@@ -27,11 +25,7 @@ interface Props extends WithStyles<typeof styles> {
   latestCompletedRedeemedRewards: Map<string, RedeemedReward>
   startRedemptionsRefresh: () => void
   stopRedemptionsRefresh: () => void
-  last24Hr?: number
-  last7Day?: number
-  last30Day?: number
-  earningHistory?: EarningWindow[]
-  bonusEarningRate?: BonusEarningRate
+  navigateToRewardVaultPage: () => void
   isLatestCompletedRedeemedRewardsLoading: boolean
   trackAndNavigateToRewardVaultPage: () => void
   trackEarnPageFAQLinkClicked: (faqLink: string) => void
@@ -45,10 +39,6 @@ const EarningSummaryPageRaw: FC<Props> = ({
   totalChoppingHours,
   redeemedRewards,
   latestCompletedRedeemedRewards,
-  last24Hr,
-  last7Day,
-  last30Day,
-  earningHistory,
   startRedemptionsRefresh,
   stopRedemptionsRefresh,
   isLatestCompletedRedeemedRewardsLoading,
@@ -78,7 +68,7 @@ const EarningSummaryPageRaw: FC<Props> = ({
           redeemedRewardsCount={redeemedRewardsCount}
           totalChoppingHours={totalChoppingHours}
         />
-        <EarningHistory last24Hr={last24Hr} last7Day={last7Day} last30Day={last30Day} earningHistory={earningHistory} />
+        <EarningHistory />
         <LatestRewardsRedeemed
           latestCompletedRedeemedRewards={latestCompletedRedeemedRewardsArray}
           navigateToRewardVaultPage={trackAndNavigateToRewardVaultPage}

@@ -1,4 +1,6 @@
-import { chunk } from 'lodash'
+import { chunk, groupBy } from 'lodash'
+import moment from 'moment'
+import type { EarningWindow } from './models'
 
 export const batchEarningsWindow = (earnings: Map<number, number>, batchSize: number): Map<number, number> => {
   const earningHistory = new Map<number, number>()
@@ -11,4 +13,25 @@ export const batchEarningsWindow = (earnings: Map<number, number>, batchSize: nu
     earningHistory.set(chunkArray[i]![batchSize - 1]!.timestamp, earning || 0)
   }
   return earningHistory
+}
+
+export const getEarningWindowsGroupedByDay = (
+  earningWindows: EarningWindow[],
+  numberOfDays: 7 | 30,
+): EarningWindow[] => {
+  const groupedByTheDayEarningWindows = groupBy(earningWindows, (item) => moment(item.timestamp).endOf('day').unix())
+
+  const accumulatedEarningsByTheDay = Object.values(groupedByTheDayEarningWindows).map((item) =>
+    item.reduce((acc, curr) => ({
+      ...acc,
+      earnings: acc.earnings + curr.earnings,
+    })),
+  )
+
+  const chunkedDaysPeriodEarnings =
+    accumulatedEarningsByTheDay.length === numberOfDays
+      ? accumulatedEarningsByTheDay
+      : accumulatedEarningsByTheDay.slice(accumulatedEarningsByTheDay.length - numberOfDays)
+
+  return chunkedDaysPeriodEarnings
 }
