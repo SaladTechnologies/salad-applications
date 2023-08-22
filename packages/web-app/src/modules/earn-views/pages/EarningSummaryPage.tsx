@@ -2,14 +2,11 @@ import type { FC } from 'react'
 import { useEffect } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { Scrollbar, SectionHeader } from '../../../components'
+import { Scrollbar } from '../../../components'
 import { withLogin } from '../../auth-views'
 import type { RedeemedReward } from '../../balance/models/RedeemedReward'
 import type { RewardVaultItem } from '../../vault/models'
-import { RewardVaultStatus } from '../../vault/models'
-import { PantryContainer, SlicedVeggieContainer } from '../../xp-views'
-import { EarningHistory, EarningSummary, LatestRewardsRedeemed } from '../components'
-import { EarningInformationPage } from './EarningInformationPage'
+import { EarningFrequentlyAskedQuestions, EarningHistory, EarningSummary, LatestRewardsRedeemed } from '../components'
 
 const styles = () => ({
   content: {
@@ -25,9 +22,14 @@ interface Props extends WithStyles<typeof styles> {
   lifetimeBalance?: number
   totalChoppingHours?: number
   redeemedRewards?: RewardVaultItem[]
+  latestCompletedRedeemedRewards: Map<string, RedeemedReward>
   startRedemptionsRefresh: () => void
   stopRedemptionsRefresh: () => void
   navigateToRewardVaultPage: () => void
+  isLatestCompletedRedeemedRewardsLoading: boolean
+  trackAndNavigateToRewardVaultPage: () => void
+  trackEarnPageFAQLinkClicked: (faqLink: string) => void
+  trackEarnPageViewed: () => void
 }
 
 const EarningSummaryPageRaw: FC<Props> = ({
@@ -36,50 +38,46 @@ const EarningSummaryPageRaw: FC<Props> = ({
   lifetimeBalance,
   totalChoppingHours,
   redeemedRewards,
+  latestCompletedRedeemedRewards,
   startRedemptionsRefresh,
   stopRedemptionsRefresh,
-  navigateToRewardVaultPage,
+  isLatestCompletedRedeemedRewardsLoading,
+  trackAndNavigateToRewardVaultPage,
+  trackEarnPageFAQLinkClicked,
+  trackEarnPageViewed,
 }) => {
   useEffect(() => {
     startRedemptionsRefresh()
+    trackEarnPageViewed()
 
     return () => {
       stopRedemptionsRefresh()
     }
-  }, [startRedemptionsRefresh, stopRedemptionsRefresh])
+  }, [startRedemptionsRefresh, stopRedemptionsRefresh, trackEarnPageViewed])
 
-  const sortByDate = (a: RedeemedReward, b: RedeemedReward): number =>
-    new Date(a.timestamp) > new Date(b.timestamp) ? -1 : 1
-
-  const latestCompletedRedeemedRewards = redeemedRewards
-    ?.filter((redemption) => redemption.status === RewardVaultStatus.COMPLETE)
-    .slice(-4)
-    .sort(sortByDate)
+  const latestCompletedRedeemedRewardsArray: RedeemedReward[] = Array.from(latestCompletedRedeemedRewards.values())
 
   const redeemedRewardsCount = redeemedRewards?.length ?? 0
 
   return (
-    <>
-      <SlicedVeggieContainer />
-      <Scrollbar>
-        <div className={classes.content}>
-          <EarningSummary
-            currentBalance={currentBalance}
-            lifetimeBalance={lifetimeBalance}
-            redeemedRewardsCount={redeemedRewardsCount}
-            totalChoppingHours={totalChoppingHours}
-          />
-          <EarningHistory />
-          <LatestRewardsRedeemed
-            latestCompletedRedeemedRewards={latestCompletedRedeemedRewards}
-            navigateToRewardVaultPage={navigateToRewardVaultPage}
-          />
-          <SectionHeader>Pantry</SectionHeader>
-          <PantryContainer />
-        </div>
-      </Scrollbar>
-    </>
+    <Scrollbar>
+      <div className={classes.content}>
+        <EarningSummary
+          currentBalance={currentBalance}
+          lifetimeBalance={lifetimeBalance}
+          redeemedRewardsCount={redeemedRewardsCount}
+          totalChoppingHours={totalChoppingHours}
+        />
+        <EarningHistory />
+        <LatestRewardsRedeemed
+          latestCompletedRedeemedRewards={latestCompletedRedeemedRewardsArray}
+          navigateToRewardVaultPage={trackAndNavigateToRewardVaultPage}
+          isLatestCompletedRedeemedRewardsLoading={isLatestCompletedRedeemedRewardsLoading}
+        />
+        <EarningFrequentlyAskedQuestions trackFAQLinkClicked={trackEarnPageFAQLinkClicked} />
+      </div>
+    </Scrollbar>
   )
 }
 
-export const EarningSummaryPage = withLogin(withStyles(styles)(EarningSummaryPageRaw), EarningInformationPage)
+export const EarningSummaryPage = withLogin(withStyles(styles)(EarningSummaryPageRaw))

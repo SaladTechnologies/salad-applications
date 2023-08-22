@@ -1,9 +1,9 @@
 import type { FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { SectionHeader } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
 import { EarningChartContainer } from '../EarningChartContainer'
+import { EarnSectionHeader } from './EarnSectionHeader'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -27,7 +27,7 @@ interface Props extends WithStyles<typeof styles> {}
 
 const EarningHistoryRaw: FC<Props> = ({ classes }) => (
   <div className={classes.container}>
-    <SectionHeader>Earning History</SectionHeader>
+    <EarnSectionHeader>Earning History</EarnSectionHeader>
     <p className={classes.subtitle}>See earnings from the last...</p>
     <EarningChartContainer />
   </div>
