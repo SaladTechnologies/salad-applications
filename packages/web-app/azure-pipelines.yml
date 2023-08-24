@@ -1,6 +1,8 @@
 variables:
   - name: workingDirectory
     value: packages/web-app/
+  - name: system.debug
+    value: "true"
 
 trigger:
   branches:
