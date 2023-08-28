@@ -97,6 +97,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     color: theme.green,
     fontWeight: 400,
     textDecoration: 'underline',
+    cursor: 'pointer',
   },
   starsImage: {
     position: 'absolute',
@@ -124,9 +125,10 @@ interface Props extends WithStyles<typeof styles> {
   reward: Reward
   referralCode: string
   onCloseClick: () => void
+  onVaultLinkClick: () => void
 }
 
-const _ReviewAfterRedemption = ({ classes, reward, referralCode, onCloseClick }: Props) => {
+const _ReviewAfterRedemption = ({ classes, reward, referralCode, onCloseClick, onVaultLinkClick }: Props) => {
   const [isCopied, setIsCopied] = useState(false)
   const modalContainerRef = useRef(null)
   const [referralText, setReferralText] = useState(
@@ -162,9 +164,9 @@ const _ReviewAfterRedemption = ({ classes, reward, referralCode, onCloseClick }:
           </h1>
           <p className={classes.description}>
             Check your{' '}
-            <a href="https://salad.com/store/vault" className={classes.link}>
+            <span onClick={onVaultLinkClick} className={classes.link}>
               rewards vault
-            </a>{' '}
+            </span>{' '}
             or email for more details.
           </p>
           <div>
