@@ -195,12 +195,7 @@ const _ReviewAfterRedemption = ({ classes, reward, referralCode, onCloseClick, o
           <h3 className={classes.subtitle}>Review us on TrustPilot</h3>
           <p className={classes.description}>
             Having fun with Salad? Review us on{' '}
-            <a
-              href="https://www.trustpilot.com/review/salad.com"
-              target="_blank"
-              rel="noreferrer"
-              className={classes.link}
-            >
+            <a href="https://www.trustpilot.com/review/salad.com" className={classes.link}>
               Trustpilot
             </a>{' '}
             to help our Kitchen grow.
