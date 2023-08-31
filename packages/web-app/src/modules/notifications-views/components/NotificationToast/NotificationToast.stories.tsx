@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { storiesOf } from '@storybook/react'
-import { addStories } from '../../../../.storybook/addStories'
+import { addStories } from '../../../../../.storybook/addStories'
 import { NotificationToast } from './NotificationToast'
 
 const stories = [

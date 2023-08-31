@@ -12,6 +12,7 @@ import { MobileDevice, NotMobile } from './components'
 import { config } from './config'
 import { MobileRoutes } from './MobileRoutes'
 import { NavigationBarContainer } from './modules/home-views'
+import { NovuNotificationBanner } from './modules/notifications-views/components'
 import { Routes } from './Routes'
 import type { SaladTheme } from './SaladTheme'
 import { getStore } from './Store'
@@ -117,8 +118,11 @@ export const App = withStyles(styles)(
 
     public override render(): ReactNode {
       const { classes, history } = this.props
+      const isAuthenticated = this.store.auth.isAuthenticated
+
       return (
         <>
+          {isAuthenticated && <NovuNotificationBanner />}
           <MobileDevice>
             <div className={classes.mobileMainWindow}>
               <div className={classes.mobileNavigationContainer}>

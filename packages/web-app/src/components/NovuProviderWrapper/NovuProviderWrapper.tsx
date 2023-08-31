@@ -8,12 +8,10 @@ interface NovuProviderWrapperProps {
   children: ReactElement
 }
 
-const isNovuProviderEnabled = false
-
 export const NovuProviderWrapper = observer(({ children }: NovuProviderWrapperProps): ReactElement | null => {
   const store = getStore()
   const { currentProfile } = store.profile
-  if (currentProfile?.id && isNovuProviderEnabled) {
+  if (currentProfile?.id) {
     return (
       <NovuProvider
         applicationIdentifier={config.novuAppId}
