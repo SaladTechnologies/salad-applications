@@ -3476,6 +3476,7 @@ __metadata:
     buffer: 6.0.3
     classnames: 2.3.2
     compare-versions: 5.0.3
+    csstype: 3.1.2
     eslint: 8.36.0
     eslint-config-react-app: 7.0.1
     eslint-plugin-compat: 4.1.2
@@ -9513,6 +9514,13 @@ __metadata:
   version: 3.0.9
   resolution: "csstype@npm:3.0.9"
   checksum: 199f9af7e673f9f188525c3102a329d637ff46c52f6385a4427ff5cb17adcb736189150170a7af7c5701d18d7704bdad130273f4aa7e44c6c4f9967e6115dc93
+  languageName: node
+  linkType: hard
+
+"csstype@npm:3.1.2":
+  version: 3.1.2
+  resolution: "csstype@npm:3.1.2"
+  checksum: e1a52e6c25c1314d6beef5168da704ab29c5186b877c07d822bd0806717d9a265e8493a2e35ca7e68d0f5d472d43fac1cdce70fd79fd0853dff81f3028d857b5
   languageName: node
   linkType: hard
 
