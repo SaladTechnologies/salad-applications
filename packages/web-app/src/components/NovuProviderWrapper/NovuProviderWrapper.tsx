@@ -16,7 +16,7 @@ export const NovuProviderWrapper = observer(({ children }: NovuProviderWrapperPr
       <NovuProvider
         applicationIdentifier={config.novuAppId}
         subscriberId={currentProfile.id}
-        initialFetchingStrategy={{ fetchNotifications: true }}
+        initialFetchingStrategy={{ fetchNotifications: true, fetchUnseenCount: true }}
         subscriberHash={novuSignature}
       >
         {children}
