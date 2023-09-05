@@ -89,7 +89,9 @@ export class ProfileStore {
 
       let novuSignature = yield this.axios.post('/api/v2/novu-signatures')
       this.novuSignature = novuSignature.data.signature
-    } catch (err) {}
+    } catch (_error) {
+      console.error('Failed to Load Novu Signature')
+    }
   })
 
   @action.bound
