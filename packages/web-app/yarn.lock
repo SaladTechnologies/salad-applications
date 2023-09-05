@@ -1595,7 +1595,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.13.10":
+"@babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.21.0":
   version: 7.21.5
   resolution: "@babel/runtime@npm:7.21.5"
   dependencies:
@@ -3043,29 +3043,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@novu/client@npm:^0.18.0":
-  version: 0.18.0
-  resolution: "@novu/client@npm:0.18.0"
+"@novu/client@npm:^0.16.2":
+  version: 0.16.4
+  resolution: "@novu/client@npm:0.16.4"
   dependencies:
-    "@novu/shared": ^0.18.0
-  checksum: 1f368841533b7dafd7242fbaf7db320436d3e7fd4d6a942c861a7d179da122e497bbe277637f1a3bea956e05734853642c77d31f457f5ab4fa400008f85307e9
+    "@novu/shared": ^0.16.4
+  checksum: e30c597fef39a248e7895edc2581cf36eb37f669f1f3de4283a3429107b8d88daef92926dc41897938087829e82276c2b92e2cdcbc78df3537b5ee17567c8885
   languageName: node
   linkType: hard
 
-"@novu/notification-center@npm:0.18.0":
-  version: 0.18.0
-  resolution: "@novu/notification-center@npm:0.18.0"
+"@novu/notification-center@npm:0.16.2":
+  version: 0.16.2
+  resolution: "@novu/notification-center@npm:0.16.2"
   dependencies:
     "@emotion/css": ^11.10.5
     "@emotion/react": ^11.7.1
     "@emotion/styled": ^11.6.0
     "@mantine/core": ^5.7.1
     "@mantine/hooks": ^5.7.1
-    "@novu/client": ^0.18.0
-    "@novu/shared": ^0.18.0
+    "@novu/client": ^0.16.2
+    "@novu/shared": ^0.16.2
+    "@rollup/plugin-babel": ^6.0.3
     "@tanstack/react-query": ^4.20.4
     acorn-jsx: ^5.3.2
-    axios: ^1.4.0
+    axios: ^1.3.3
+    chroma-js: ^2.4.2
+    date-fns: ^2.29.1
     lodash.clonedeep: ^4.5.0
     lodash.debounce: ^4.0.8
     lodash.merge: ^4.6.2
@@ -3076,18 +3079,29 @@ __metadata:
   peerDependencies:
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
-  checksum: 1d648f0f9bfa52f343d41c3360a43ce774a7eb9f875c768893473fb0900fbe258ad8c0c32b7ba3956117becb8a2f2dfd56ba4e6b893dc13c3cc28df1fde0abec
+  checksum: 7f6100685750166369933195465473c8b51766f4e742a80df0451ee2a3e09603f5f57d4366992ec319b0ba40975d02a9a810ef7a3f83efad756fda1fda61db20
   languageName: node
   linkType: hard
 
-"@novu/shared@npm:0.18.0, @novu/shared@npm:^0.18.0":
-  version: 0.18.0
-  resolution: "@novu/shared@npm:0.18.0"
+"@novu/shared@npm:0.17.1":
+  version: 0.17.1
+  resolution: "@novu/shared@npm:0.17.1"
   dependencies:
-    axios: ^1.4.0
+    axios: 1.2.0
     class-transformer: 0.5.1
     class-validator: 0.14.0
-  checksum: 3b3b6c0de4fe83d25f4106d7acaf8cbacc3acbe75f5c62e54a757b0d42d0530b7a907290c0cf8081f88e0ba94e8b559d3dbbe746ef632a520424b933dd9a916b
+  checksum: a468ec6dfee156abb8802ae2a347f1d819ef4d45bd263ba6f8d4e3f23d4a86abc8fbd390add884854dd3d000a3d7dad0047addc3037582188b930ca6b761012c
+  languageName: node
+  linkType: hard
+
+"@novu/shared@npm:^0.16.2, @novu/shared@npm:^0.16.4":
+  version: 0.16.4
+  resolution: "@novu/shared@npm:0.16.4"
+  dependencies:
+    axios: 1.2.0
+    class-transformer: 0.5.1
+    class-validator: 0.14.0
+  checksum: 16f2a082c781c1ef63e7eafab8e1fdf49ef6f0d35d48304fe398f34be2be49b50964388c1be76c433360b33e4f1a64eb639e8a4c596c3a3b61b75d4760565e27
   languageName: node
   linkType: hard
 
@@ -3320,6 +3334,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@rollup/plugin-babel@npm:^6.0.3":
+  version: 6.0.3
+  resolution: "@rollup/plugin-babel@npm:6.0.3"
+  dependencies:
+    "@babel/helper-module-imports": ^7.18.6
+    "@rollup/pluginutils": ^5.0.1
+  peerDependencies:
+    "@babel/core": ^7.0.0
+    "@types/babel__core": ^7.1.9
+    rollup: ^1.20.0||^2.0.0||^3.0.0
+  peerDependenciesMeta:
+    "@types/babel__core":
+      optional: true
+    rollup:
+      optional: true
+  checksum: 412c1c3bb5dd029cbf0b37315ad54b51ef378b8d2fd91d1ec44d73cade723cec8718b5affa2ce8a8b06660710d11765056fac4068521f18737ce26142506a8b1
+  languageName: node
+  linkType: hard
+
 "@rollup/plugin-node-resolve@npm:^11.2.1":
   version: 11.2.1
   resolution: "@rollup/plugin-node-resolve@npm:11.2.1"
@@ -3361,6 +3394,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@rollup/pluginutils@npm:^5.0.1":
+  version: 5.0.2
+  resolution: "@rollup/pluginutils@npm:5.0.2"
+  dependencies:
+    "@types/estree": ^1.0.0
+    estree-walker: ^2.0.2
+    picomatch: ^2.3.1
+  peerDependencies:
+    rollup: ^1.20.0||^2.0.0||^3.0.0
+  peerDependenciesMeta:
+    rollup:
+      optional: true
+  checksum: edea15e543bebc7dcac3b0ac8bc7b8e8e6dbd46e2864dbe5dd28072de1fbd5b0e10d545a610c0edaa178e8a7ac432e2a2a52e547ece1308471412caba47db8ce
+  languageName: node
+  linkType: hard
+
 "@rushstack/eslint-patch@npm:^1.1.0":
   version: 1.2.0
   resolution: "@rushstack/eslint-patch@npm:1.2.0"
@@ -3385,8 +3434,8 @@ __metadata:
     "@fortawesome/free-regular-svg-icons": 6.3.0
     "@fortawesome/free-solid-svg-icons": 6.3.0
     "@fortawesome/react-fontawesome": 0.2.0
-    "@novu/notification-center": 0.18.0
-    "@novu/shared": 0.18.0
+    "@novu/notification-center": 0.16.2
+    "@novu/shared": 0.17.1
     "@saladtechnologies/garden-components": 1.1.8
     "@saladtechnologies/garden-fonts": 1.0.3
     "@saladtechnologies/garden-icons": 1.0.12
@@ -5268,6 +5317,13 @@ __metadata:
   version: 0.0.51
   resolution: "@types/estree@npm:0.0.51"
   checksum: e56a3bcf759fd9185e992e7fdb3c6a5f81e8ff120e871641607581fb3728d16c811702a7d40fa5f869b7f7b4437ab6a87eb8d98ffafeee51e85bbe955932a189
+  languageName: node
+  linkType: hard
+
+"@types/estree@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "@types/estree@npm:1.0.1"
+  checksum: e9aa175eacb797216fafce4d41e8202c7a75555bc55232dee0f9903d7171f8f19f0ae7d5191bb1a88cb90e65468be508c0df850a9fb81b4433b293a5a749899d
   languageName: node
   linkType: hard
 
@@ -7293,6 +7349,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axios@npm:1.2.0":
+  version: 1.2.0
+  resolution: "axios@npm:1.2.0"
+  dependencies:
+    follow-redirects: ^1.15.0
+    form-data: ^4.0.0
+    proxy-from-env: ^1.1.0
+  checksum: f08ce214e957dfde45b837f8d3c7861424608fb7df32faa638835e338782a9f4c0b05074e92e0e8dcca3a1e6250112fbbe1b15a6b21104da633d84745bbb79cc
+  languageName: node
+  linkType: hard
+
 "axios@npm:1.3.4":
   version: 1.3.4
   resolution: "axios@npm:1.3.4"
@@ -7304,14 +7371,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.4.0":
-  version: 1.5.0
-  resolution: "axios@npm:1.5.0"
+"axios@npm:^1.3.3":
+  version: 1.4.0
+  resolution: "axios@npm:1.4.0"
   dependencies:
     follow-redirects: ^1.15.0
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
-  checksum: e7405a5dbbea97760d0e6cd58fecba311b0401ddb4a8efbc4108f5537da9b3f278bde566deb777935a960beec4fa18e7b8353881f2f465e4f2c0e949fead35be
+  checksum: 7fb6a4313bae7f45e89d62c70a800913c303df653f19eafec88e56cea2e3821066b8409bc68be1930ecca80e861c52aa787659df0ffec6ad4d451c7816b9386b
   languageName: node
   linkType: hard
 
@@ -8386,6 +8453,13 @@ __metadata:
   version: 2.0.0
   resolution: "chownr@npm:2.0.0"
   checksum: c57cf9dd0791e2f18a5ee9c1a299ae6e801ff58fee96dc8bfd0dcb4738a6ce58dd252a3605b1c93c6418fe4f9d5093b28ffbf4d66648cb2a9c67eaef9679be2f
+  languageName: node
+  linkType: hard
+
+"chroma-js@npm:^2.4.2":
+  version: 2.4.2
+  resolution: "chroma-js@npm:2.4.2"
+  checksum: cf9884c02d406286e4370599bcd1afbf089384407df46b3a69edfedcba7bb99e8f959a5cfdbfec750b305c441c06ca40cd1f70ba3a6c2ce739ac09a92520ddae
   languageName: node
   linkType: hard
 
@@ -9588,6 +9662,15 @@ __metadata:
   version: 1.30.1
   resolution: "date-fns@npm:1.30.1"
   checksum: 86b1f3269cbb1f3ee5ac9959775ea6600436f4ee2b78430cd427b41a0c9fabf740b1a5d401c085f3003539a6f4755c7c56c19fbd70ce11f6f673f6bc8075b710
+  languageName: node
+  linkType: hard
+
+"date-fns@npm:^2.29.1":
+  version: 2.30.0
+  resolution: "date-fns@npm:2.30.0"
+  dependencies:
+    "@babel/runtime": ^7.21.0
+  checksum: f7be01523282e9bb06c0cd2693d34f245247a29098527d4420628966a2d9aad154bd0e90a6b1cf66d37adcb769cd108cf8a7bd49d76db0fb119af5cdd13644f4
   languageName: node
   linkType: hard
 
@@ -11019,6 +11102,13 @@ __metadata:
   version: 1.0.1
   resolution: "estree-walker@npm:1.0.1"
   checksum: 7e70da539691f6db03a08e7ce94f394ce2eef4180e136d251af299d41f92fb2d28ebcd9a6e393e3728d7970aeb5358705ddf7209d52fbcb2dd4693f95dcf925f
+  languageName: node
+  linkType: hard
+
+"estree-walker@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "estree-walker@npm:2.0.2"
+  checksum: 6151e6f9828abe2259e57f5fd3761335bb0d2ebd76dc1a01048ccee22fabcfef3c0859300f6d83ff0d1927849368775ec5a6d265dde2f6de5a1be1721cd94efc
   languageName: node
   linkType: hard
 

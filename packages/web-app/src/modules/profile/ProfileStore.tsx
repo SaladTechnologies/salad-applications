@@ -30,9 +30,6 @@ export class ProfileStore {
   public currentProfile?: Profile
 
   @observable
-  public novuSignature?: string
-
-  @observable
   public submittingAvatar?: string
 
   @observable
@@ -78,20 +75,6 @@ export class ProfileStore {
       this.store.routing.replace('/profile-error')
     }
     return this.currentProfile
-  })
-
-  @action.bound
-  loadNovuSignature = flow(function* (this: ProfileStore) {
-    try {
-      if (this.novuSignature) {
-        return
-      }
-
-      let novuSignature = yield this.axios.post('/api/v2/novu-signatures')
-      this.novuSignature = novuSignature.data.signature
-    } catch (_error) {
-      console.error('Failed to Load Novu Signature')
-    }
   })
 
   @action.bound
