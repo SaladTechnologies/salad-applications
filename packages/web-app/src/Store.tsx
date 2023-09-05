@@ -152,6 +152,7 @@ export class RootStore {
           email: profile.email,
           lifetimeXP: this.xp.currentXp,
         }),
+        this.profile.loadNovuSignature(),
       ])
 
       const isTermsAndConditionsAccepted = this.termsAndConditions.isTermsAndConditionsAccepted
