@@ -5,8 +5,8 @@ import type { ReactNode } from 'react'
 import { Component } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { P } from '../../../components'
-import type { SaladTheme } from '../../../SaladTheme'
+import { P } from '../../../../components'
+import type { SaladTheme } from '../../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   container: {
