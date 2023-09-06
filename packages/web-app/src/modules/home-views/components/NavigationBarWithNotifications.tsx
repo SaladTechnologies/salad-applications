@@ -1,34 +1,20 @@
-import { useNotifications } from '@novu/notification-center'
 import { NavigationBar, type NavigationBarProps } from '@saladtechnologies/garden-components'
 import type { FunctionComponent } from 'react'
-import { getConfiguredNovuBannerNotifications } from '../../notifications/utils'
+import { NavigationBarWithNovuNotifications } from './NavigationBarWithNovuNotifications'
 
 export const NavigationBarWithNotifications: FunctionComponent<NavigationBarProps> = (props) => {
-  const novu = useNotifications()
-  const novuNotifications = novu?.notifications || []
-
-  const unreadNovuNotifications = novuNotifications?.filter((notification) => !notification.read)
-  const bannerNotifications = getConfiguredNovuBannerNotifications(unreadNovuNotifications, (notificationId: string) =>
-    novu?.markNotificationAsRead(notificationId),
-  )
-  const newsNotifications = bannerNotifications.filter((notification) => notification?.variant === 'news')
-  const warningsNotifications = bannerNotifications.filter((notification) => notification?.variant === 'error')
-  const hasUnseenNotifications = novu?.unseenCount > 0
-  const handleOpenNotificationsDrawer = () => {
-    props.notifications.onOpenNotificationsDrawer()
-
-    if (hasUnseenNotifications) {
-      novu?.markAllNotificationsAsSeen()
-    }
-  }
-
   const notifications = {
     ...props.notifications,
-    news: newsNotifications,
-    warnings: warningsNotifications,
-    hasUnseenNotifications,
-    onOpenNotificationsDrawer: handleOpenNotificationsDrawer,
+    news: [],
+    warnings: [],
+    hasUnseenNotifications: false,
+    onOpenNotificationsDrawer: props.notifications.onOpenNotificationsDrawer,
+    onCloseNotificationsDrawer: props.notifications.onCloseNotificationsDrawer,
   }
 
-  return <NavigationBar {...props} notifications={notifications} />
+  return props.username !== undefined ? (
+    <NavigationBarWithNovuNotifications {...props} />
+  ) : (
+    <NavigationBar {...props} notifications={notifications} />
+  )
 }
