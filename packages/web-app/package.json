@@ -84,7 +84,7 @@
     "@fortawesome/react-fontawesome": "0.2.0",
     "@novu/notification-center": "0.18.0",
     "@novu/shared": "0.18.0",
-    "@saladtechnologies/garden-components": "1.1.8",
+    "@saladtechnologies/garden-components": "1.1.9",
     "@saladtechnologies/garden-fonts": "1.0.3",
     "@saladtechnologies/garden-icons": "1.0.12",
     "@storybook/addon-a11y": "6.5.16",
