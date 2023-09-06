@@ -8,17 +8,16 @@ interface NovuProviderWrapperProps {
   children: ReactElement
 }
 
-const isNovuProviderEnabled = false
-
 export const NovuProviderWrapper = observer(({ children }: NovuProviderWrapperProps): ReactElement | null => {
   const store = getStore()
-  const { currentProfile } = store.profile
-  if (currentProfile?.id && isNovuProviderEnabled) {
+  const { currentProfile, novuSignature } = store.profile
+  if (currentProfile?.id) {
     return (
       <NovuProvider
         applicationIdentifier={config.novuAppId}
         subscriberId={currentProfile.id}
-        initialFetchingStrategy={{ fetchNotifications: true }}
+        initialFetchingStrategy={{ fetchNotifications: true, fetchUnseenCount: true }}
+        subscriberHash={novuSignature}
       >
         {children}
       </NovuProvider>

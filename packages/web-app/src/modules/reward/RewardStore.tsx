@@ -37,6 +37,9 @@ export class RewardStore {
   public isRedeeming: boolean = false
 
   @observable
+  public isReviewing: boolean = false
+
+  @observable
   public isLoading: boolean = false
 
   @observable
@@ -278,14 +281,7 @@ export class RewardStore {
       response?.complete('success')
       this.clearRedemptionInfo()
 
-      //Show a notification
-      this.store.notifications.sendNotification({
-        category: NotificationMessageCategory.Redemption,
-        title: `Thank you for ordering ${reward.name}!`,
-        message: 'Congrats on your pick! Your item is on its way. Check your reward vault for more details.',
-        onClick: () => this.store.routing.push('/store/vault'),
-        autoClose: false,
-      })
+      this.isReviewing = true
     } catch (error) {
       response?.complete('fail')
       if (!(error instanceof AbortError) && (Axios.isAxiosError(error) || error instanceof SaladError)) {
@@ -394,5 +390,10 @@ export class RewardStore {
   clearRedemptionInfo() {
     this.lastRedemptionId = undefined
     this.lastRewardId = undefined
+  }
+
+  @action.bound
+  finishReview() {
+    this.isReviewing = false
   }
 }

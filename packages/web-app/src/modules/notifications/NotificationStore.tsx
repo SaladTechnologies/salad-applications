@@ -1,10 +1,24 @@
+import { action, observable } from 'mobx'
 import { toast } from 'react-toastify'
 import type { RootStore } from '../../Store'
-import { NotificationToast } from './components/NotificationToast'
+import { NotificationToast } from '../notifications-views/components'
 import type { NotificationMessage } from './models'
 
 export class NotificationStore {
+  @observable
+  public isNotificationsDrawerOpened: boolean = false
+
   constructor(private readonly store: RootStore) {}
+
+  @action.bound
+  openNotificationsDrawer = () => {
+    this.isNotificationsDrawerOpened = true
+  }
+
+  @action.bound
+  closeNotificationsDrawer = () => {
+    this.isNotificationsDrawerOpened = false
+  }
 
   /**
    * Shows a notification to the user
