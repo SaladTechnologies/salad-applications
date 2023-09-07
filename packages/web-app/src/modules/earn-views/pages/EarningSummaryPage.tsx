@@ -32,7 +32,7 @@ interface Props extends WithStyles<typeof styles> {
   trackEarnPageViewed: () => void
 }
 
-const EarningSummaryPageRaw: FC<Props> = ({
+const _EarningSummaryPage: FC<Props> = ({
   classes,
   currentBalance,
   lifetimeBalance,
@@ -80,4 +80,4 @@ const EarningSummaryPageRaw: FC<Props> = ({
   )
 }
 
-export const EarningSummaryPage = withLogin(withStyles(styles)(EarningSummaryPageRaw))
+export const EarningSummaryPage = withLogin(withStyles(styles)(_EarningSummaryPage))
