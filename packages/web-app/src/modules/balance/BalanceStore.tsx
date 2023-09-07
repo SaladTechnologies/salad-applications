@@ -45,7 +45,7 @@ export class BalanceStore {
 
   @action
   viewLast7Days = () => {
-    if (this.daysShowingEarnings !== 30) {
+    if (this.daysShowingEarnings !== 7) {
       this.store.analytics.trackEarnPageTimeFilterButtonClicked(EarningChartTimeFilter.Filter7Day)
     }
 
