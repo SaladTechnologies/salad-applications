@@ -76,11 +76,7 @@ const _EarningFrequentlyAskedQuestions: FunctionComponent<Props> = ({ classes, t
         <a
           className={classes.questionLink}
           href="https://support.salad.com/category/40-rewards"
-          onClick={() =>
-            trackFAQLinkClicked(
-              'https://support.salad.com/article/52-i-live-outside-the-us-can-i-still-redeem-rewards-with-salad',
-            )
-          }
+          onClick={() => trackFAQLinkClicked('https://support.salad.com/category/40-rewards')}
           target="_blank"
           rel="noopener noreferrer"
         >

@@ -41,7 +41,7 @@ const _LatestRewardsRedeemed: FunctionComponent<Props> = ({
   isLatestCompletedRedeemedRewardsLoading,
 }) => {
   const isLatestCompletedRedeemedRewardsExist =
-    latestCompletedRedeemedRewards && latestCompletedRedeemedRewards?.length > 0
+    latestCompletedRedeemedRewards && latestCompletedRedeemedRewards.length > 0
 
   return (
     <div className={classes.container}>
