@@ -37,14 +37,14 @@ export class VaultStore {
     } catch {}
   })
 
-  rewardVaultFromResource = (r: RewardVaultResource): RewardVaultItem => ({
-    id: r.id,
-    name: r.name,
-    price: r.price,
-    rewardId: r.rewardId,
-    timestamp: new Date(r.timestamp),
-    code: r.code?.trim(),
-    status: r.status,
+  rewardVaultFromResource = (rewardVaultResource: RewardVaultResource): RewardVaultItem => ({
+    id: rewardVaultResource.id,
+    name: rewardVaultResource.name,
+    price: rewardVaultResource.price,
+    rewardId: rewardVaultResource.rewardId,
+    timestamp: new Date(rewardVaultResource.timestamp),
+    code: rewardVaultResource.code?.trim(),
+    status: rewardVaultResource.status,
   })
 
   @action.bound
@@ -84,11 +84,11 @@ export class VaultStore {
     }
   })
 
-  completedRedeemedRewardFromResource = (r: RewardVaultItem, coverImage?: string): RedeemedReward => ({
-    id: r.id,
-    name: r.name,
+  completedRedeemedRewardFromResource = (rewardVaultItem: RewardVaultItem, coverImage?: string): RedeemedReward => ({
+    id: rewardVaultItem.id,
+    name: rewardVaultItem.name,
     coverImage: toFullImageUrl(coverImage),
-    timestamp: new Date(r.timestamp),
+    timestamp: new Date(rewardVaultItem.timestamp),
   })
 
   @action.bound
