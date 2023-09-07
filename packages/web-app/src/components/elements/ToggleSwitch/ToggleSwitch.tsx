@@ -7,7 +7,7 @@ import type { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   btn: {
-    border: '1px solid ' + theme.lightGreen,
+    border: `1px solid ${theme.lightGreen}`,
     color: theme.lightGreen,
     display: 'inline-block',
     padding: '6px 2px',

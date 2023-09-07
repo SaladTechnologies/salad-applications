@@ -6,9 +6,9 @@ import type { EarningWindow } from './models'
 import { batchEarningsWindow, getEarningWindowsGroupedByDay } from './utils'
 
 enum EarningChartTimeFilter {
-  Filter24Hour = '24 hour filter',
-  Filter7Day = '7 day filter',
-  Filter30Day = '30 day filter',
+  Last24Hour = '24 hour filter',
+  Last7Day = '7 day filter',
+  Last30Day = '30 day filter',
 }
 
 export class BalanceStore {
@@ -37,7 +37,7 @@ export class BalanceStore {
   @action
   viewLast24Hours = () => {
     if (this.daysShowingEarnings !== 1) {
-      this.store.analytics.trackEarnPageTimeFilterButtonClicked(EarningChartTimeFilter.Filter24Hour)
+      this.store.analytics.trackEarnPageTimeFilterButtonClicked(EarningChartTimeFilter.Last24Hour)
     }
 
     this.daysShowingEarnings = 1
@@ -46,7 +46,7 @@ export class BalanceStore {
   @action
   viewLast7Days = () => {
     if (this.daysShowingEarnings !== 7) {
-      this.store.analytics.trackEarnPageTimeFilterButtonClicked(EarningChartTimeFilter.Filter7Day)
+      this.store.analytics.trackEarnPageTimeFilterButtonClicked(EarningChartTimeFilter.Last7Day)
     }
 
     this.daysShowingEarnings = 7
@@ -55,7 +55,7 @@ export class BalanceStore {
   @action
   viewLast30Days = () => {
     if (this.daysShowingEarnings !== 30) {
-      this.store.analytics.trackEarnPageTimeFilterButtonClicked(EarningChartTimeFilter.Filter30Day)
+      this.store.analytics.trackEarnPageTimeFilterButtonClicked(EarningChartTimeFilter.Last30Day)
     }
 
     this.daysShowingEarnings = 30
