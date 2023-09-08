@@ -41,9 +41,11 @@ try {
             $Env:REACT_APP_BUILD = 'production'
         }
     }
-    Show-LogInfo -Content "REACT_APP_BUILD env variable set to ${BUILD_SOURCEVERSION}"
+
+    $shortHash = $Env:BUILD_SOURCEVERSION.Substring(0, 7)
+    Show-LogInfo -Content "REACT_APP_BUILD env variable set to ${$shortHash}"
     $Env:REACT_APP_BUILD = 'production'
-    $Env:REACT_APP_BUILD = $BUILD_SOURCEVERSION
+    $Env:REACT_APP_BUILD = $shortHash
 
     # Build projects.
     Show-LogSection -Content 'Building projects...'
