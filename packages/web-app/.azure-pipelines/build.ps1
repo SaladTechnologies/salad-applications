@@ -41,6 +41,8 @@ try {
             $Env:REACT_APP_BUILD = 'production'
         }
     }
+    Show-LogInfo -Content "REACT_APP_BUILD env variable set"
+    $Env:REACT_APP_BUILD = 'production'
 
     # Build projects.
     Show-LogSection -Content 'Building projects...'
