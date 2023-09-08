@@ -259,7 +259,7 @@ const _CustomizedYAxisTick = (props: CustomTick) => {
         [classes.saladBowlTickFont]: saladBowlEnabled,
       })}
     >
-      <text x={-5} y={0} dy={0} fill={fill} textAnchor={textAnchor}>
+      <text x={10} y={0} dy={0} fill={fill} textAnchor={textAnchor}>
         ${payload.value}
       </text>
     </g>
