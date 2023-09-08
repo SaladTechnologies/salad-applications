@@ -23,6 +23,7 @@ try {
     if ($Context -eq 'production') {
         Show-LogInfo -Content 'Setting public url and mixpanel token.'
         $Env:PUBLIC_URL = '/app'
+        $Env:REACT_APP_BUILD = $Env:BUILD_SOURCEVERSION.Substring(0, 7)
         if ($SiteName -eq 'test') {
             Show-LogInfo -Content "test env variables set"
             $Env:REACT_APP_MIXPANEL_TOKEN = '4b245bace4eed86ffdfa35efc3addf1d'
@@ -36,16 +37,9 @@ try {
             $Env:REACT_APP_UNLEASH_URL = 'https://features-testing.salad.com/proxy'
         }
         else {
-            Show-LogInfo -Content "prod env variables set"
             $Env:REACT_APP_MIXPANEL_TOKEN = '68db9194f229525012624f3cf368921f'
-            $Env:REACT_APP_BUILD = 'production'
         }
     }
-
-    $shortHash = $Env:BUILD_SOURCEVERSION.Substring(0, 7)
-    Show-LogInfo -Content "REACT_APP_BUILD env variable set to ${shortHash}"
-    $Env:REACT_APP_BUILD = 'production'
-    $Env:REACT_APP_BUILD = $shortHash
 
     # Build projects.
     Show-LogSection -Content 'Building projects...'
