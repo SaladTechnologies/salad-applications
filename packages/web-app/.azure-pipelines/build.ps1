@@ -18,8 +18,6 @@ try {
 
     # Setting up environment variables
     Show-LogSection -Content 'Setting up environment variables...'
-    Show-LogInfo -Content "Context: ${Context}"
-    Show-LogInfo -Content "SiteName: ${SiteName}"
     if ($Context -eq 'production') {
         Show-LogInfo -Content 'Setting public url and mixpanel token.'
         $Env:PUBLIC_URL = '/app'
