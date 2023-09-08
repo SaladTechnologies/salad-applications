@@ -13,16 +13,10 @@ import { Segments } from '../../../components/elements/Segments'
 import type { SaladTheme } from '../../../SaladTheme'
 import { formatBalance } from '../../../utils'
 import type { EarningWindow } from '../../balance/models'
-import { getRangeTooltipTimestamp, getTooltipTimestamp } from '../utils'
 
 const styles = (theme: SaladTheme) => ({
-  buttonContainer: {
-    marginLeft: 60,
-    marginTop: 10,
-  },
   container: {
     display: 'flex',
-    paddingTop: 75,
     height: 250,
     width: '100%',
     position: 'relative',
@@ -31,8 +25,28 @@ const styles = (theme: SaladTheme) => ({
   removeContainerPadding: {
     paddingTop: 0,
   },
+  segmentsContainer: {
+    '&>label:first-child': {
+      borderRadius: '2px 0px 0px 2px',
+    },
+    '&>label:last-child': {
+      borderRadius: '0px 2px 2px 0px',
+    },
+  },
   placeholderText: {
+    fontFamily: 'Mallory',
+    fontSize: 12,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
     textAlign: 'center',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    top: 40,
+    zIndex: 1,
+    color: '#fff',
   },
   placeholderTextHidden: {
     visibility: 'hidden',
@@ -43,8 +57,9 @@ const styles = (theme: SaladTheme) => ({
     textAlign: 'center',
   },
   tickFont: {
-    fontFamily: theme.fontGroteskLight25,
-    fontSize: theme.xSmall,
+    fontFamily: 'Mallory',
+    color: theme.lightGreen,
+    fontSize: 12,
   },
   saladBowlTickFont: {
     // @ts-ignore The garden theme is not typed correctly, will need update in garden
@@ -61,9 +76,12 @@ const styles = (theme: SaladTheme) => ({
     marginTop: -20,
   },
   tooltipContainer: {
-    fontFamily: theme.fontGroteskBook25,
+    fontFamily: 'Mallory',
     color: theme.lightGreen,
-    fontSize: 10,
+    fontSize: 14,
+    padding: '2px 9px',
+    borderRadius: '24px',
+    border: `1px solid ${theme.green}`,
   },
   rangeSum: {
     fontSize: theme.medium,
@@ -87,28 +105,25 @@ const styles = (theme: SaladTheme) => ({
 const CustomizedCursor = (props: any) => {
   const { height, width, x } = props
   const xPt = x + width / 2.0
-  return <line x1={xPt} y1={height + 30} x2={xPt} y2={-30} stroke="#DBF1C1" />
+
+  return <line strokeWidth={2} x1={xPt} y1={height + 30} x2={xPt} y2={-30} stroke="#B2D530" />
 }
 
 interface TooltipProps extends WithStyles<typeof styles> {
   active?: boolean
   payload?: any
   label?: string
-  nowWindow?: EarningWindow
-  daysShowing: 1 | 7 | 30
   saladBowlEnabled?: boolean
 }
 
-const _CustomTooltip = ({ active, payload, classes, nowWindow, daysShowing, saladBowlEnabled }: TooltipProps) => {
+const _CustomTooltip = ({ active, payload, classes, saladBowlEnabled }: TooltipProps) => {
   if (!active || !payload) {
     return null
   }
 
   const window: EarningWindow = payload[0].payload
 
-  const timestamp = getTooltipTimestamp(daysShowing, window.timestamp)
   const earnings = window.earnings
-  const isNow = window === nowWindow
 
   return (
     <div
@@ -117,7 +132,6 @@ const _CustomTooltip = ({ active, payload, classes, nowWindow, daysShowing, sala
         [classes.saladBowlToolTipContainer]: saladBowlEnabled,
       })}
     >
-      <div>{isNow ? 'Current' : timestamp}</div>
       <div>{formatBalance(earnings)}</div>
     </div>
   )
@@ -126,28 +140,14 @@ const _CustomTooltip = ({ active, payload, classes, nowWindow, daysShowing, sala
 const CustomTooltip = withStyles(styles)(_CustomTooltip)
 
 interface RangeTooltipProps extends WithStyles<typeof styles> {
-  rangeStartTime?: Object
-  rangeEndTime?: Object
   rangeSum?: string
-  leftToRight?: boolean
-  daysShowing: 1 | 30 | 7
   saladBowlEnabled?: boolean
 }
 
-const _CustomRangeTooltip = ({
-  classes,
-  leftToRight,
-  rangeStartTime,
-  rangeEndTime,
-  rangeSum,
-  daysShowing,
-  saladBowlEnabled,
-}: RangeTooltipProps) => {
-  if (!rangeStartTime || !rangeEndTime || !rangeSum) {
+const _CustomRangeTooltip = ({ classes, rangeSum, saladBowlEnabled }: RangeTooltipProps) => {
+  if (!rangeSum) {
     return null
   }
-
-  const rangeDisplayTimes = getRangeTooltipTimestamp(daysShowing, rangeStartTime, rangeEndTime)
 
   return (
     <div
@@ -157,15 +157,6 @@ const _CustomRangeTooltip = ({
       })}
     >
       <div className={classes.rangeSum}>{rangeSum}</div>
-      {leftToRight ? (
-        <div>
-          {rangeDisplayTimes.startTime} - {rangeDisplayTimes.endTime}
-        </div>
-      ) : (
-        <div>
-          {rangeDisplayTimes.endTime} - {rangeDisplayTimes.startTime}
-        </div>
-      )}
     </div>
   )
 }
@@ -188,6 +179,7 @@ interface CustomTick extends WithStyles<typeof styles> {
     offset: number
     tickCoord: number
     value: number
+    index: number
   }
   textAnchor: 'start' | 'middle' | 'end'
   x: string
@@ -197,16 +189,25 @@ interface CustomTick extends WithStyles<typeof styles> {
 
 const _CustomizedXAxisTick = (props: CustomTick) => {
   const { classes, daysShowing, fill, payload, textAnchor, x, y, saladBowlEnabled } = props
+  let timestamp
+
   if (!payload) {
     return null
   }
 
-  const timestamp =
-    daysShowing === 30
-      ? moment(payload.value).add(15, 'minute').format('M/D') +
-        ' ' +
-        moment(payload.value).add(15, 'minute').format('A')
-      : moment(payload.value).add(15, 'minute').format('hh:mm')
+  const isMidnight = moment(payload.value).add(15, 'minute').hours() === 0
+  const isNoon = moment(payload.value).add(15, 'minute').hours() === 12
+  const shouldShowAmPm = daysShowing === 1
+  const shouldShowDateMonth = daysShowing === 7
+
+  if (shouldShowAmPm) {
+    timestamp = moment(payload.value).add(15, 'minute').format('h')
+  } else if (shouldShowDateMonth) {
+    timestamp = moment(payload.value).add(15, 'minute').format('D/M')
+  } else {
+    timestamp = moment(payload.value).add(15, 'minute').format('D')
+  }
+
   return (
     <>
       <g
@@ -215,9 +216,14 @@ const _CustomizedXAxisTick = (props: CustomTick) => {
           [classes.saladBowlTickFont]: saladBowlEnabled,
         })}
       >
-        <text x={0} y={0} dy={4} fill={fill} textAnchor="end" transform="rotate(-25)">
+        <text x={0} y={0} dx={10} dy={2} fill={fill} textAnchor="start">
           {timestamp}
         </text>
+        {shouldShowAmPm && (
+          <text x={0} y={0} dx={30} dy={15} fill={fill} textAnchor="end">
+            {isMidnight ? 'AM' : isNoon ? 'PM' : ''}
+          </text>
+        )}
       </g>
       <g
         transform={`translate(${x},${y})`}
@@ -225,9 +231,14 @@ const _CustomizedXAxisTick = (props: CustomTick) => {
           [classes.saladBowlTickFont]: saladBowlEnabled,
         })}
       >
-        <text x={0} y={0} dy={12} fill={fill} textAnchor={textAnchor}>
+        <text x={15} y={0} fill={fill} textAnchor={textAnchor}>
           {timestamp}
         </text>
+        {shouldShowAmPm && (
+          <text x={20} y={0} dy={15} fill={fill} textAnchor={textAnchor}>
+            {isMidnight ? 'AM' : isNoon ? 'PM' : ''}
+          </text>
+        )}
       </g>
     </>
   )
@@ -417,37 +428,15 @@ class _EarningChart extends Component<Props, State> {
 
   public override render(): ReactNode {
     const { daysShowing, classes, earningHistory, viewLast24Hours, viewLast7Days, viewLast30Days } = this.props
-    const {
-      hoverIndex,
-      showEarningsRange,
-      earningsRangeStart,
-      earningsRangeEnd,
-      earningsRangeSum,
-      rangeCenterCoordinate,
-      selectedLeftToRight,
-      selectedRangeIndexes,
-    } = this.state
+    const { hoverIndex, showEarningsRange, earningsRangeSum, rangeCenterCoordinate, selectedRangeIndexes } = this.state
     const isZero: boolean =
       !earningHistory || earningHistory.length === 0 || !earningHistory.some((x) => x.earnings > 0)
 
     const segmentOptions = [
-      { name: '24HR', action: viewLast24Hours },
+      { name: '24 Hours', action: viewLast24Hours },
       { name: '7 Days', action: viewLast7Days },
       { name: '30 Days', action: viewLast30Days },
     ]
-
-    let timePeriod: string
-    switch (daysShowing) {
-      case 1:
-        timePeriod = '24 Hours'
-        break
-      case 7:
-        timePeriod = '7 Days'
-        break
-      case 30:
-        timePeriod = '30 Days'
-        break
-    }
 
     return (
       <div className={classnames(classes.container)}>
@@ -456,58 +445,52 @@ class _EarningChart extends Component<Props, State> {
             [classes.placeholderTextHidden]: !isZero,
           })}
         >
-          <P>No Earning History During the Last {timePeriod}. Get Chopping to See Those Earnings!</P>
+          <P>No data to display</P>
+        </div>
+        <div className={classes.segmentsContainer}>
+          <Segments options={segmentOptions} />
         </div>
         {earningHistory && (
           <>
             <ResponsiveContainer>
               <BarChart
                 data={earningHistory}
-                margin={{ top: 30, left: 10, right: 10, bottom: 0 }}
+                margin={{ top: 30, left: 10, right: 0, bottom: 10 }}
+                barCategoryGap={daysShowing === 7 ? '40%' : '15%'}
                 onMouseMove={this.handleMouseEvent}
                 onMouseLeave={this.handleMouseEvent}
                 onMouseDown={this.handleMouseDown}
                 onMouseUp={this.handleMouseUp}
                 barGap={10}
               >
-                <CartesianGrid vertical={false} stroke={'#1F4F22'} />
+                <CartesianGrid vertical={false} stroke="#3B4D5C" />
                 {showEarningsRange && !isZero ? (
                   <Tooltip
-                    content={
-                      <CustomRangeTooltip
-                        rangeStartTime={earningsRangeStart?.timestamp}
-                        rangeEndTime={earningsRangeEnd?.timestamp}
-                        rangeSum={earningsRangeSum}
-                        leftToRight={selectedLeftToRight}
-                        daysShowing={daysShowing}
-                        saladBowlEnabled={false}
-                      />
-                    }
+                    content={<CustomRangeTooltip rangeSum={earningsRangeSum} saladBowlEnabled={false} />}
                     cursor={false}
                     isAnimationActive={false}
                     position={{ y: 0, x: rangeCenterCoordinate || 0 }}
                   />
                 ) : (
                   <Tooltip
+                    wrapperStyle={{ border: 'none' }}
                     cursor={<CustomizedCursor />}
-                    content={
-                      <CustomTooltip
-                        nowWindow={earningHistory[earningHistory.length - 1]}
-                        daysShowing={daysShowing}
-                        saladBowlEnabled={false}
-                      />
-                    }
+                    content={<CustomTooltip saladBowlEnabled={false} />}
                     isAnimationActive={false}
                     //@ts-ignore
                     position={{ y: 0, x: 'auto' }}
+                    offset={5}
                   />
                 )}
                 <XAxis
                   dataKey={this.getTimeValue}
                   domain={['auto', 'auto']}
-                  interval={7}
+                  interval={daysShowing === 1 ? 3 : 0}
+                  padding={{ left: 5, right: daysShowing === 1 ? 5 : 30 }}
                   scale="time"
-                  stroke={'#B2D530'}
+                  stroke="#DBF1C1"
+                  tickSize={15}
+                  tickMargin={0}
                   tick={
                     //@ts-ignore
                     <CustomizedXAxisTick daysShowing={daysShowing} saladBowlEnabled={false} />
@@ -517,7 +500,8 @@ class _EarningChart extends Component<Props, State> {
                 <YAxis
                   axisLine={false}
                   minTickGap={2}
-                  stroke={'#B2D530'}
+                  stroke="#DBF1C1"
+                  tickMargin={10}
                   //@ts-ignore
                   tick={<CustomizedYAxisTick saladBowlEnabled={false} />}
                   tickLine={false}
@@ -525,9 +509,13 @@ class _EarningChart extends Component<Props, State> {
                 <Bar dataKey="earnings" fill="#B2D530">
                   {earningHistory &&
                     earningHistory.map((window, index) => {
-                      let color = '#B2D530'
+                      let color = '#DBF1C1'
                       let border = ''
                       let dash = ''
+
+                      if (hoverIndex) {
+                        color = 'rgb(219, 241, 193, 0.5)'
+                      }
 
                       if (index === hoverIndex) {
                         color = '#DBF1C1'
@@ -551,9 +539,6 @@ class _EarningChart extends Component<Props, State> {
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
-            <div className={classes.buttonContainer}>
-              <Segments options={segmentOptions} />
-            </div>
           </>
         )}
       </div>

@@ -118,11 +118,11 @@ export const App = withStyles(styles)(
 
     public override render(): ReactNode {
       const { classes, history } = this.props
-      const isAuthenticated = this.store.auth.isAuthenticated
+      const shouldShowNovuBanner = this.store.auth.isAuthenticated && this.store.profile.novuSignature
 
       return (
         <>
-          {isAuthenticated && <NovuNotificationBanner />}
+          {shouldShowNovuBanner && <NovuNotificationBanner />}
           <MobileDevice>
             <div className={classes.mobileMainWindow}>
               <div className={classes.mobileNavigationContainer}>

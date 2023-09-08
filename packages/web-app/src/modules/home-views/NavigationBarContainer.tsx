@@ -82,6 +82,7 @@ const mapStoreToProps = (store: RootStore): any => {
     username: isAuthenticated ? store.profile.currentProfile?.username : undefined,
     targetReward,
     notifications,
+    novuSignature: store.profile.novuSignature
   }
 }
 

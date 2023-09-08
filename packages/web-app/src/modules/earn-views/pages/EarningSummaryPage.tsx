@@ -1,75 +1,83 @@
-import type { ReactNode } from 'react'
-import { Component } from 'react'
+import type { FC } from 'react'
+import { useEffect } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { Divider, Scrollbar, SectionHeader } from '../../../components'
-import type { SaladTheme } from '../../../SaladTheme'
+import { Scrollbar } from '../../../components'
 import { withLogin } from '../../auth-views'
-import type { EarningWindow } from '../../balance/models'
-import type { BonusEarningRate } from '../../bonus/models'
-import { PantryContainer, SlicedVeggieContainer } from '../../xp-views'
-import { EarningHistory, EarningSummary } from '../components'
-import { EarningInformationPage } from './EarningInformationPage'
+import type { RedeemedReward } from '../../balance/models/RedeemedReward'
+import type { RewardVaultItem } from '../../vault/models'
+import { EarningFrequentlyAskedQuestions, EarningHistory, EarningSummary, LatestRewardsRedeemed } from '../components'
 
-const styles = (theme: SaladTheme) => ({
+const styles = () => ({
   content: {
     display: 'flex',
     flexDirection: 'column',
-    padding: 20,
-    marginRight: 225,
-    paddingTop: '32px',
-  },
-  splitContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  column: {
-    display: 'flex',
-    flexDirection: 'column',
-    flex: 1,
-    flexBasis: '50%',
-  },
-  startContainer: {
-    backgroundColor: theme.darkBlue,
-    padding: 30,
-    boxShadow: '8px 14px 22px rgba(0, 0, 0, 0.45)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignSelf: 'center',
+    gap: '80px',
+    margin: 60,
   },
 })
 
 interface Props extends WithStyles<typeof styles> {
   currentBalance?: number
   lifetimeBalance?: number
-  totalXp?: number
-  last24Hr?: number
-  last7Day?: number
-  last30Day?: number
-  earningHistory?: EarningWindow[]
-  bonusEarningRate?: BonusEarningRate
+  totalChoppingHours?: number
+  redeemedRewards?: RewardVaultItem[]
+  latestCompletedRedeemedRewards: Map<string, RedeemedReward>
+  startRedemptionsRefresh: () => void
+  stopRedemptionsRefresh: () => void
+  navigateToRewardVaultPage: () => void
+  isLatestCompletedRedeemedRewardsLoading: boolean
+  trackAndNavigateToRewardVaultPage: () => void
+  trackEarnPageFAQLinkClicked: (faqLink: string) => void
+  trackEarnPageViewed: () => void
 }
 
-class _EarningSummaryPage extends Component<Props> {
-  public override render(): ReactNode {
-    const { classes, ...rest } = this.props
+const _EarningSummaryPage: FC<Props> = ({
+  classes,
+  currentBalance,
+  lifetimeBalance,
+  totalChoppingHours,
+  redeemedRewards,
+  latestCompletedRedeemedRewards,
+  startRedemptionsRefresh,
+  stopRedemptionsRefresh,
+  isLatestCompletedRedeemedRewardsLoading,
+  trackAndNavigateToRewardVaultPage,
+  trackEarnPageFAQLinkClicked,
+  trackEarnPageViewed,
+}) => {
+  useEffect(() => {
+    startRedemptionsRefresh()
+    trackEarnPageViewed()
 
-    return (
-      <>
-        <SlicedVeggieContainer />
-        <Scrollbar>
-          <div className={classes.content}>
-            <EarningSummary {...rest} />
-            <Divider />
-            <EarningHistory {...rest} />
-            <Divider />
-            <SectionHeader>Pantry</SectionHeader>
-            <PantryContainer />
-          </div>
-        </Scrollbar>
-      </>
-    )
-  }
+    return () => {
+      stopRedemptionsRefresh()
+    }
+  }, [startRedemptionsRefresh, stopRedemptionsRefresh, trackEarnPageViewed])
+
+  const latestCompletedRedeemedRewardsArray: RedeemedReward[] = Array.from(latestCompletedRedeemedRewards.values())
+
+  const redeemedRewardsCount = redeemedRewards?.length ?? 0
+
+  return (
+    <Scrollbar>
+      <div className={classes.content}>
+        <EarningSummary
+          currentBalance={currentBalance}
+          lifetimeBalance={lifetimeBalance}
+          redeemedRewardsCount={redeemedRewardsCount}
+          totalChoppingHours={totalChoppingHours}
+        />
+        <EarningHistory />
+        <LatestRewardsRedeemed
+          latestCompletedRedeemedRewards={latestCompletedRedeemedRewardsArray}
+          navigateToRewardVaultPage={trackAndNavigateToRewardVaultPage}
+          isLatestCompletedRedeemedRewardsLoading={isLatestCompletedRedeemedRewardsLoading}
+        />
+        <EarningFrequentlyAskedQuestions trackFAQLinkClicked={trackEarnPageFAQLinkClicked} />
+      </div>
+    </Scrollbar>
+  )
 }
 
-export const EarningSummaryPage = withLogin(withStyles(styles)(_EarningSummaryPage), EarningInformationPage)
+export const EarningSummaryPage = withLogin(withStyles(styles)(_EarningSummaryPage))
