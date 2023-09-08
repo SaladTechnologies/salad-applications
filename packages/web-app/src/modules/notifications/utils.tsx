@@ -1,5 +1,6 @@
 import type { IMessage } from '@novu/shared'
 import type { NotificationBannerProps as GardenNotificationBannerProps } from '@saladtechnologies/garden-components'
+import { unescape } from 'lodash'
 import { DateTime } from 'luxon'
 import { NotificationMessageCategory, type Notification, type NotificationAction } from './models'
 
@@ -168,10 +169,10 @@ export const getConfiguredNovuBannerNotifications = (
       return {
         action1: getNotificationBannerAction(normalizedNotification, onReadNovuNotification, firstNotificationAction),
         action2: getNotificationBannerAction(normalizedNotification, onReadNovuNotification, secondNotificationAction),
-        message: body,
+        message: unescape(body),
         onClose: () => onReadNovuNotification(novuId),
         receivedAt: createDate ? getReceivedAtDisplay(createDate) : { value: 1, unit: 'minute' },
-        title,
+        title: unescape(title),
         variant,
         overlay,
       }
