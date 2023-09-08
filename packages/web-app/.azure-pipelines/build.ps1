@@ -43,7 +43,7 @@ try {
     }
 
     $shortHash = $Env:BUILD_SOURCEVERSION.Substring(0, 7)
-    Show-LogInfo -Content "REACT_APP_BUILD env variable set to ${$shortHash}"
+    Show-LogInfo -Content "REACT_APP_BUILD env variable set to ${shortHash}"
     $Env:REACT_APP_BUILD = 'production'
     $Env:REACT_APP_BUILD = $shortHash
 
