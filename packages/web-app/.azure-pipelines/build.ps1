@@ -41,9 +41,9 @@ try {
             $Env:REACT_APP_BUILD = 'production'
         }
     }
-    Show-LogInfo -Content "REACT_APP_BUILD env variable set to ${Env:COMMIT_REF}"
+    Show-LogInfo -Content "REACT_APP_BUILD env variable set to ${BUILD_SOURCEVERSION}"
     $Env:REACT_APP_BUILD = 'production'
-    $Env:REACT_APP_BUILD = $Env:COMMIT_REF
+    $Env:REACT_APP_BUILD = $BUILD_SOURCEVERSION
 
     # Build projects.
     Show-LogSection -Content 'Building projects...'
