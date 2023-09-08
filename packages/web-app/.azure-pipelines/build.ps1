@@ -38,8 +38,6 @@ try {
         }
     }
 
-    $Env:REACT_APP_BUILD = $Env:BUILD_SOURCEVERSION.Substring(0, 7)
-
     # Build projects.
     Show-LogSection -Content 'Building projects...'
     Show-LogCommand -Content "yarn run build "
