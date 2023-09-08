@@ -81,7 +81,7 @@ export class RootStore {
     this.saladCard = new SaladCardStore(this, axios)
     this.rewards = new RewardStore(this, axios, this.profile, this.saladCard)
     this.analytics = new AnalyticsStore()
-    this.balance = new BalanceStore(axios)
+    this.balance = new BalanceStore(this, axios)
     this.ui = new UIStore(this)
     this.referral = new ReferralStore(this, axios)
     this.home = new HomeStore(axios)
