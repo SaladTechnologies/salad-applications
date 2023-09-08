@@ -21,6 +21,7 @@ try {
     if ($Context -eq 'production') {
         Show-LogInfo -Content 'Setting public url and mixpanel token.'
         $Env:PUBLIC_URL = '/app'
+        $Env:REACT_APP_BUILD = $Env:BUILD_SOURCEVERSION.Substring(0, 7)
         if ($SiteName -eq 'test') {
             $Env:REACT_APP_MIXPANEL_TOKEN = '4b245bace4eed86ffdfa35efc3addf1d'
             $Env:REACT_APP_API_URL = 'https://app-api-testing.salad.com'
