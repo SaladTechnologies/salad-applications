@@ -18,10 +18,12 @@ try {
 
     # Setting up environment variables
     Show-LogSection -Content 'Setting up environment variables...'
+    Show-LogInfo -Content "SiteName: ${SiteName}"
     if ($Context -eq 'production') {
         Show-LogInfo -Content 'Setting public url and mixpanel token.'
         $Env:PUBLIC_URL = '/app'
         if ($SiteName -eq 'test') {
+            Show-LogInfo -Content "test env variables set"
             $Env:REACT_APP_MIXPANEL_TOKEN = '4b245bace4eed86ffdfa35efc3addf1d'
             $Env:REACT_APP_API_URL = 'https://app-api-testing.salad.com'
             $Env:REACT_APP_PAYPAL_URL = 'https://www.sandbox.paypal.com/connect/?flowEntry=static&client_id=AYjYnvjB968mKTIhMqUtLlNa8CJuF9rg_Q4m0Oym5gFvBkZEMPPoooXcG94OjSCjih7kI1_KM25EgfDs&response_type=code&scope=openid%20email%20https%3A%2F%2Furi.paypal.com%2Fservices%2Fpaypalattributes&redirect_uri=https%253A%252F%252Fapp-api-testing.salad.com%252Fapi%252Fv2%252Fpaypal-account-callback'
@@ -33,7 +35,7 @@ try {
             $Env:REACT_APP_UNLEASH_URL = 'https://features-testing.salad.com/proxy'
         }
         else {
-            Show-LogCommand -Content "prod env variables set"
+            Show-LogInfo -Content "prod env variables set"
             $Env:REACT_APP_MIXPANEL_TOKEN = '68db9194f229525012624f3cf368921f'
             $Env:REACT_APP_BUILD = 'production'
         }
