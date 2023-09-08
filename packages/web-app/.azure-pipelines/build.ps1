@@ -33,6 +33,7 @@ try {
             $Env:REACT_APP_UNLEASH_URL = 'https://features-testing.salad.com/proxy'
         }
         else {
+            Show-LogCommand -Content "prod env variables set"
             $Env:REACT_APP_MIXPANEL_TOKEN = '68db9194f229525012624f3cf368921f'
             $Env:REACT_APP_BUILD = 'production'
         }
