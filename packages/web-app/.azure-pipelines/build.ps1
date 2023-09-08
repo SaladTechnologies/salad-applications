@@ -34,6 +34,7 @@ try {
         }
         else {
             $Env:REACT_APP_MIXPANEL_TOKEN = '68db9194f229525012624f3cf368921f'
+            $Env:REACT_APP_BUILD = 'production'
         }
     }
 
