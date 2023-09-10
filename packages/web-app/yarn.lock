@@ -3405,7 +3405,7 @@ __metadata:
     "@types/lodash": 4.14.191
     "@types/luxon": 3.2.0
     "@types/mixpanel-browser": 2.38.1
-    "@types/node": 18.15.3
+    "@types/node": 18.17.6
     "@types/promise.allsettled": 1.0.3
     "@types/react": 18.2.20
     "@types/react-copy-to-clipboard": 5.0.4
@@ -5506,10 +5506,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:18.15.3":
+"@types/node@npm:*":
   version: 18.15.3
   resolution: "@types/node@npm:18.15.3"
   checksum: 31b1d92475a82c30de29aa6c0771b18a276552d191283b4423ba2d61b3f01159bf0d02576c0b7cc834b043997893800db6bb47f246083ed85aa45e79c80875d7
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:18.17.6":
+  version: 18.17.6
+  resolution: "@types/node@npm:18.17.6"
+  checksum: 70bc92adde47d569f25c5ed40b55040cdf189518d6149e0c3041c6e60b1098cad9c48a856f0b7868ebd74d4098a0ca508b0ec4373dd96216eb8a387ee898e14c
   languageName: node
   linkType: hard
 
