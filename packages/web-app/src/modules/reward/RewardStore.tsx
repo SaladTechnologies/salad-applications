@@ -113,12 +113,12 @@ export class RewardStore {
 
   fetchReward = flow(
     function* (this: RewardStore, rewardId?: string) {
-      console.log('Loading reward ' + rewardId)
-
       try {
-        let res: AxiosResponse<RewardResource> = yield this.axios.get(`/api/v1/rewards/${rewardId}`)
-        let reward: Reward = rewardFromResource(res.data)
-        this.rewards.set(reward.id, reward)
+        if (rewardId) {
+          let res: AxiosResponse<RewardResource> = yield this.axios.get(`/api/v1/rewards/${rewardId}`)
+          let reward: Reward = rewardFromResource(res.data)
+          this.rewards.set(reward.id, reward)
+        }
       } catch (err) {
         throw err
       }
