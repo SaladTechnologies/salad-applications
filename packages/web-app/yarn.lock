@@ -1918,13 +1918,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@elastic/search-ui-app-search-connector@npm:1.17.1":
-  version: 1.17.1
-  resolution: "@elastic/search-ui-app-search-connector@npm:1.17.1"
+"@elastic/search-ui-app-search-connector@npm:1.20.2":
+  version: 1.20.2
+  resolution: "@elastic/search-ui-app-search-connector@npm:1.20.2"
   dependencies:
     "@elastic/app-search-javascript": ^8.1.2
-    "@elastic/search-ui": 1.17.1
-  checksum: fb4f5a247a1c0d2b2ec882a909152200833ce2ffafaa071977eb496bc3ce2f72a5da2198aa9aee90b4cd52e86062f59bc1d40c8f8499c44e2155a4efb0091037
+    "@elastic/search-ui": 1.20.2
+  checksum: 0bc11382c40c83b82650c5b0018c32a7f0f3a017ecb59d147cc48741abe29a3b34f46d83250976924a97aaeda078f9146d127ee13a194ee0a6441834d714f2c2
   languageName: node
   linkType: hard
 
@@ -3400,7 +3400,7 @@ __metadata:
     "@babel/core": 7.21.3
     "@babel/runtime": 7.21.0
     "@elastic/react-search-ui": 1.17.1
-    "@elastic/search-ui-app-search-connector": 1.17.1
+    "@elastic/search-ui-app-search-connector": 1.20.2
     "@emotion/cache": 11.11.0
     "@emotion/react": 11.10.6
     "@emotion/serialize": 1.1.2
