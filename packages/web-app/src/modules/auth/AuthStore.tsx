@@ -128,6 +128,12 @@ export class AuthStore {
     }
   }
 
+  /** Called for changing isAuthenticated status */
+  @action
+  public setIsAuthenticated = (isAuthenticated: boolean) => {
+    this.isAuthenticated = isAuthenticated
+  }
+
   /** Toggles if the user accepted terms */
   @action
   public toggleAcceptTerms = (accepted: boolean) => {
