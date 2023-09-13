@@ -44,12 +44,15 @@ export const createClient = (): AxiosInstance => {
     },
     (error) => {
       const store = getStore()
-      if (error.response.status === 401 && error.config.baseURL === config.apiBaseUrl) {
-        store.auth.setIsAuthenticated(false)
-      }
-      let a = onError(error)
+      try {
+        if (error.response.status === 401 && error.config.baseURL === config.apiBaseUrl) {
+          store.auth.setIsAuthenticated(false)
+        }
+      } finally {
+        let a = onError(error)
 
-      throw a
+        throw a
+      }
     },
   )
   httpClient.defaults.timeout = 10000
