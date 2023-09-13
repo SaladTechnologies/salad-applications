@@ -73,9 +73,14 @@ export class AuthStore {
 
     SuperTokens.doesSessionExist()
       .then((result) => {
-        runInAction(() => {
-          this.isAuthenticated = result
-        })
+        if (result) {
+          runInAction(() => (this.isAuthenticated = result))
+        } else {
+          this.axios
+            .get('/api/v1/profile')
+            .then(() => runInAction(() => (this.isAuthenticated = true)))
+            .catch(() => runInAction(() => (this.isAuthenticated = false)))
+        }
       })
       .catch(() => {})
   }
@@ -112,6 +117,8 @@ export class AuthStore {
   @action
   public logout = async (): Promise<void> => {
     await SuperTokens.signOut()
+    await this.axios.post('/api/v2/user-accounts/logout')
+
     runInAction(() => {
       this.isAuthenticated = false
     })
@@ -149,7 +156,7 @@ export class AuthStore {
 
       this.isSubmitting = true
 
-      yield this.axios.post('/api/v2/authentication-sessions', request)
+      yield this.axios.post('/api/v2/user-accounts/login', request)
 
       this.currentEmail = email
       this.isSubmitSuccess = true
@@ -186,7 +193,7 @@ export class AuthStore {
       }
 
       // TODO: POST /auth/login/code
-      yield this.axios.post('/api/v2/authentication-sessions/verification', request)
+      yield this.axios.post('/api/v2/user-accounts/confirm-login', request)
       this.isSubmitSuccess = true
       this.closeLoginProcess(true)
     } catch (e) {
