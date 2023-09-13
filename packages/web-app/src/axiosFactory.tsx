@@ -43,8 +43,8 @@ export const createClient = (): AxiosInstance => {
       return response
     },
     (error) => {
-      const store = getStore()
       try {
+        const store = getStore()
         if (error.response.status === 401 && error.config.baseURL === config.apiBaseUrl) {
           store.auth.setIsAuthenticated(false)
         }
