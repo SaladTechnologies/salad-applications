@@ -2131,31 +2131,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@elastic/react-search-ui-views@npm:1.17.1":
-  version: 1.17.1
-  resolution: "@elastic/react-search-ui-views@npm:1.17.1"
+"@elastic/react-search-ui-views@npm:1.20.2":
+  version: 1.20.2
+  resolution: "@elastic/react-search-ui-views@npm:1.20.2"
   dependencies:
-    "@elastic/search-ui": 1.17.1
+    "@elastic/search-ui": 1.20.2
     downshift: ^3.2.10
     rc-pagination: ^1.20.1
     react-select: ^5.0.0
   peerDependencies:
     react: ">= 16.8.0 <= 18"
     react-dom: ">= 16.8.0 <= 18"
-  checksum: 32b770e7a06b934e31328ff9c73ae72b4d9d5cf0db1cea65e7feb56914ab7710645add2275e1e3295c5762d7bb7e9759d56da6354aa66482819accb6aa2b03b4
+  checksum: d8f451ce7a931e32e2806fab561d1d0dfbd7dadb6343ed84abaecde221041412b04d6267dd01fee047c8112ad33d37141489408f5253d803a00982d4e5c3dba0
   languageName: node
   linkType: hard
 
-"@elastic/react-search-ui@npm:1.17.1":
-  version: 1.17.1
-  resolution: "@elastic/react-search-ui@npm:1.17.1"
+"@elastic/react-search-ui@npm:1.20.2":
+  version: 1.20.2
+  resolution: "@elastic/react-search-ui@npm:1.20.2"
   dependencies:
-    "@elastic/react-search-ui-views": 1.17.1
-    "@elastic/search-ui": 1.17.1
+    "@elastic/react-search-ui-views": 1.20.2
+    "@elastic/search-ui": 1.20.2
   peerDependencies:
     react: ">= 16.8.0 <= 18"
     react-dom: ">= 16.8.0 <= 18"
-  checksum: 7849476d397f9d506a84400fd3899aa3b1beb5a34fc4dd488ad905f08cf9a56ee9d0d04d04fe4755a20506fbe221c63ad62ca0cd22232aa6261d0fefb6ffb303
+  checksum: dcf0f80174c6d397afca0bc039f4fecfa4d6d7aa1d1101fe7e8c2bcbe476cac922ce2eb59dedc7e52291a67f65bc0209bdb4babf89d36f536a7117946ebbef2d
   languageName: node
   linkType: hard
 
@@ -3682,7 +3682,7 @@ __metadata:
   dependencies:
     "@babel/core": 7.22.10
     "@babel/runtime": 7.22.10
-    "@elastic/react-search-ui": 1.17.1
+    "@elastic/react-search-ui": 1.20.2
     "@elastic/search-ui-app-search-connector": 1.20.2
     "@emotion/cache": 11.11.0
     "@emotion/react": 11.10.6
