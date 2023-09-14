@@ -51,10 +51,20 @@ export class AuthStore {
   private loginReject?: () => void
 
   constructor(private readonly axios: AxiosInstance, private readonly router: RouterStore) {
+    const isSuperTokensAuth = localStorage.getItem('isSuperTokensAuth') === 'true'
+
+    if (isSuperTokensAuth) {
+      console.log('AuthStore uses SuperTokens Auth')
+    } else {
+      console.log('AuthStore uses Identity Core Auth')
+    }
+
+    console.log('AuthStore initialization - started')
     // TODO: Get this url from config
     SuperTokens.init({
       apiDomain: config.apiBaseUrl,
       onHandleEvent: (context) => {
+        console.log('SuperToken onHandleEvent context: ', context)
         switch (context.action) {
           // case 'SESSION_CREATED':
           //   runInAction(() => {
@@ -63,6 +73,7 @@ export class AuthStore {
           //   break
           case 'SIGN_OUT':
           case 'UNAUTHORISED':
+            console.log('SuperToken onHandleEvent UNAUTHORISED or SIGN_OUT')
             runInAction(() => {
               this.isAuthenticated = false
             })
@@ -73,11 +84,34 @@ export class AuthStore {
 
     SuperTokens.doesSessionExist()
       .then((result) => {
-        runInAction(() => {
-          this.isAuthenticated = result
-        })
+        if (result) {
+          runInAction(() => {
+            console.log('SuperToken session - exists')
+            this.isAuthenticated = result
+          })
+        } else {
+          console.log('SuperToken session - doesn`t exist')
+          console.log('Get Profile fetch to check if there is Identity Core cookies')
+          this.axios
+            .get('/api/v1/profile')
+            .then((response) =>
+              runInAction(() => {
+                console.log('Get Profile successfully - fetched: ', response)
+                console.log('There are valid Identity Core cookies!!!')
+                this.isAuthenticated = true
+              }),
+            )
+            .catch((error) =>
+              runInAction(() => {
+                console.log('Get Profile fetch error: ', error)
+                this.isAuthenticated = false
+              }),
+            )
+        }
       })
-      .catch(() => {})
+      .catch((error) => {
+        console.log('SuperTokens.doesSessionExist Error: ', error)
+      })
   }
 
   @action
@@ -85,6 +119,7 @@ export class AuthStore {
     // Don't do anything if we are already logged in
     if (await SuperTokens.doesSessionExist()) {
       runInAction(() => {
+        console.log('Login: SuperTokens session - exists')
         this.isAuthenticated = true
       })
       return
@@ -112,6 +147,8 @@ export class AuthStore {
   @action
   public logout = async (): Promise<void> => {
     await SuperTokens.signOut()
+    await this.axios.post('/api/v2/user-accounts/logout')
+
     runInAction(() => {
       this.isAuthenticated = false
     })
@@ -119,6 +156,13 @@ export class AuthStore {
     if (this.router.location.pathname.includes('onboarding')) {
       this.router.replace('/store')
     }
+  }
+
+  /** Called for changing isAuthenticated status */
+  @action
+  public setIsAuthenticated = (isAuthenticated: boolean) => {
+    console.log('setIsAuthenticated invoked with value: ', isAuthenticated)
+    this.isAuthenticated = isAuthenticated
   }
 
   /** Toggles if the user accepted terms */
@@ -149,7 +193,14 @@ export class AuthStore {
 
       this.isSubmitting = true
 
-      yield this.axios.post('/api/v2/authentication-sessions', request)
+      const isSuperTokensAuth = localStorage.getItem('isSuperTokensAuth') === 'true'
+      if (isSuperTokensAuth) {
+        console.log('authentication-sessions - invoked')
+        yield this.axios.post('/api/v2/authentication-sessions', request)
+      } else {
+        console.log('user-accounts/login - invoked')
+        yield this.axios.post('/api/v2/user-accounts/login', request)
+      }
 
       this.currentEmail = email
       this.isSubmitSuccess = true
@@ -186,7 +237,15 @@ export class AuthStore {
       }
 
       // TODO: POST /auth/login/code
-      yield this.axios.post('/api/v2/authentication-sessions/verification', request)
+      const isSuperTokensAuth = localStorage.getItem('isSuperTokensAuth') === 'true'
+      if (isSuperTokensAuth) {
+        console.log('authentication-sessions/verification - invoked')
+        yield this.axios.post('/api/v2/authentication-sessions/verification', request)
+      } else {
+        console.log('user-accounts/confirm-login - invoked')
+        yield this.axios.post('/api/v2/user-accounts/confirm-login', request)
+      }
+
       this.isSubmitSuccess = true
       this.closeLoginProcess(true)
     } catch (e) {

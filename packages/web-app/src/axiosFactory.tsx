@@ -4,6 +4,7 @@ import axiosRetry, { exponentialDelay } from 'axios-retry'
 import isRetryAllowed from 'is-retry-allowed'
 import SuperTokens from 'supertokens-website'
 import { config } from './config'
+import { getStore } from './Store'
 
 /**
  * The list of safe HTTP request methods. HTTP requests using these methods may be retried.
@@ -39,12 +40,19 @@ export const createClient = (): AxiosInstance => {
     (response) => {
       // Any status code that lie within the range of 2xx cause this function to trigger
       // Do something with response data
+      console.log('Response Interceptor: ', response)
       return response
     },
     (error) => {
-      let a = onError(error)
-
-      throw a
+      try {
+        const store = getStore()
+        if (error.response.status === 401 && error.config.baseURL === config.apiBaseUrl) {
+          console.log('Response Interceptor Auth Error: ', error)
+          store.auth.setIsAuthenticated(false)
+        }
+      } finally {
+        throw onError(error)
+      }
     },
   )
   httpClient.defaults.timeout = 10000
