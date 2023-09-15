@@ -40,14 +40,12 @@ export const createClient = (): AxiosInstance => {
     (response) => {
       // Any status code that lie within the range of 2xx cause this function to trigger
       // Do something with response data
-      console.log('Response Interceptor: ', response)
       return response
     },
     (error) => {
       try {
         const store = getStore()
         if (error.response.status === 401 && error.config.baseURL === config.apiBaseUrl) {
-          console.log('Response Interceptor Auth Error: ', error)
           store.auth.setIsAuthenticated(false)
         }
       } finally {
