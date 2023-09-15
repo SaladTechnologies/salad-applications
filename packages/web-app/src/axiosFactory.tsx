@@ -40,7 +40,6 @@ export const createClient = (): AxiosInstance => {
     (response) => {
       // Any status code that lie within the range of 2xx cause this function to trigger
       // Do something with response data
-      console.log('Response Interceptor: ', response)
       return response
     },
     (error) => {
@@ -48,7 +47,6 @@ export const createClient = (): AxiosInstance => {
         if (error.response.status === 401 && error.config.baseURL === config.apiBaseUrl) {
           SuperTokens.doesSessionExist().then((result) => {
             if (!result) {
-              console.log('Response Interceptor: SuperToken session - doesn`t exist')
               const store = getStore()
               store.auth.setIsAuthenticated(false)
             }
