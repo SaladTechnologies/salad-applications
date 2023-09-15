@@ -49,7 +49,7 @@ export const createClient = (): AxiosInstance => {
           store.auth.setIsAuthenticated(false)
         }
       } finally {
-           throw onError(error)
+        throw onError(error)
       }
     },
   )
