@@ -45,10 +45,14 @@ export const createClient = (): AxiosInstance => {
     },
     (error) => {
       try {
-        const store = getStore()
         if (error.response.status === 401 && error.config.baseURL === config.apiBaseUrl) {
-          console.log('Response Interceptor Auth Error: ', error)
-          store.auth.setIsAuthenticated(false)
+          SuperTokens.doesSessionExist().then((result) => {
+            if (!result) {
+              console.log('Response Interceptor: SuperToken session - doesn`t exist')
+              const store = getStore()
+              store.auth.setIsAuthenticated(false)
+            }
+          })
         }
       } finally {
         throw onError(error)
