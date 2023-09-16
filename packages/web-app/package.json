@@ -102,7 +102,7 @@
     "@types/lodash": "4.14.197",
     "@types/luxon": "3.2.0",
     "@types/mixpanel-browser": "2.38.1",
-    "@types/node": "18.17.6",
+    "@types/node": "18.17.11",
     "@types/promise.allsettled": "1.0.3",
     "@types/react": "18.2.20",
     "@types/react-copy-to-clipboard": "5.0.4",
