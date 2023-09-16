@@ -3782,7 +3782,7 @@ __metadata:
     react-router: 5.3.4
     react-router-dom: 5.3.4
     react-scripts: 5.0.1
-    react-select: 5.7.0
+    react-select: 5.7.4
     react-tabs: 3.2.3
     react-toastify: 7.0.4
     react-transition-group: 4.4.5
@@ -19460,7 +19460,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-select@npm:5.7.0, react-select@npm:^5.0.0":
+"react-select@npm:5.7.4":
+  version: 5.7.4
+  resolution: "react-select@npm:5.7.4"
+  dependencies:
+    "@babel/runtime": ^7.12.0
+    "@emotion/cache": ^11.4.0
+    "@emotion/react": ^11.8.1
+    "@floating-ui/dom": ^1.0.1
+    "@types/react-transition-group": ^4.4.0
+    memoize-one: ^6.0.0
+    prop-types: ^15.6.0
+    react-transition-group: ^4.3.0
+    use-isomorphic-layout-effect: ^1.1.2
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: ca72941ad1d2c578ec04c09ed3deb7e373f987e589f403fadedc6fcc3e29935b5425ec4d2628f0fe58c21319bcaf153c0d0172432e09fc6423da869d848de757
+  languageName: node
+  linkType: hard
+
+"react-select@npm:^5.0.0":
   version: 5.7.0
   resolution: "react-select@npm:5.7.0"
   dependencies:
