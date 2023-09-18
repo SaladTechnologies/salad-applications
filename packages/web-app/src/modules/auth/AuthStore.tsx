@@ -122,7 +122,11 @@ export class AuthStore {
       console.error(error)
     }
 
-    await this.axios.post('/api/v2/authentication-sessions/logout')
+    try {
+      await this.axios.post('/api/v2/authentication-sessions/logout')
+    } catch (error) {
+      console.error(error)
+    }
 
     runInAction(() => {
       this.isAuthenticated = false
