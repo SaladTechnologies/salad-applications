@@ -162,7 +162,7 @@ export class AuthStore {
 
       this.isSubmitting = true
 
-      yield this.axios.post('/api/v2/user-accounts/login', request)
+      yield this.axios.post('/api/v2/authentication-sessions', request)
 
       this.currentEmail = email
       this.isSubmitSuccess = true
@@ -198,8 +198,7 @@ export class AuthStore {
         passcode: code.trim(),
       }
 
-      // TODO: POST /auth/login/code
-      yield this.axios.post('/api/v2/user-accounts/confirm-login', request)
+      yield this.axios.post('/api/v2/authentication-sessions/verification', request)
       this.isSubmitSuccess = true
       this.closeLoginProcess(true)
     } catch (e) {
