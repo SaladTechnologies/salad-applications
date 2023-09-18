@@ -116,8 +116,13 @@ export class AuthStore {
 
   @action
   public logout = async (): Promise<void> => {
-    await SuperTokens.signOut()
-    await this.axios.post('/api/v2/user-accounts/logout')
+    try {
+      await SuperTokens.signOut()
+    } catch (error) {
+      console.error(error)
+    }
+
+    await this.axios.post('/api/v2/authentication-sessions/logout')
 
     runInAction(() => {
       this.isAuthenticated = false
