@@ -4,6 +4,7 @@ import axiosRetry, { exponentialDelay } from 'axios-retry'
 import isRetryAllowed from 'is-retry-allowed'
 import SuperTokens from 'supertokens-website'
 import { config } from './config'
+import { getStore } from './Store'
 
 /**
  * The list of safe HTTP request methods. HTTP requests using these methods may be retried.
@@ -42,9 +43,18 @@ export const createClient = (): AxiosInstance => {
       return response
     },
     (error) => {
-      let a = onError(error)
-
-      throw a
+      try {
+        if (error.response.status === 401 && error.config.baseURL === config.apiBaseUrl) {
+          SuperTokens.doesSessionExist().then((result) => {
+            if (!result) {
+              const store = getStore()
+              store.auth.setIsAuthenticated(false)
+            }
+          })
+        }
+      } finally {
+        throw onError(error)
+      }
     },
   )
   httpClient.defaults.timeout = 10000

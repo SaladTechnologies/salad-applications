@@ -73,9 +73,14 @@ export class AuthStore {
 
     SuperTokens.doesSessionExist()
       .then((result) => {
-        runInAction(() => {
-          this.isAuthenticated = result
-        })
+        if (result) {
+          runInAction(() => (this.isAuthenticated = result))
+        } else {
+          this.axios
+            .get('/api/v1/profile')
+            .then(() => runInAction(() => (this.isAuthenticated = true)))
+            .catch(() => runInAction(() => (this.isAuthenticated = false)))
+        }
       })
       .catch(() => {})
   }
@@ -111,7 +116,18 @@ export class AuthStore {
 
   @action
   public logout = async (): Promise<void> => {
-    await SuperTokens.signOut()
+    try {
+      await SuperTokens.signOut()
+    } catch (error) {
+      console.error(error)
+    }
+
+    try {
+      await this.axios.post('/api/v2/authentication-sessions/logout')
+    } catch (error) {
+      console.error(error)
+    }
+
     runInAction(() => {
       this.isAuthenticated = false
     })
@@ -119,6 +135,12 @@ export class AuthStore {
     if (this.router.location.pathname.includes('onboarding')) {
       this.router.replace('/store')
     }
+  }
+
+  /** Called for changing isAuthenticated status */
+  @action
+  public setIsAuthenticated = (isAuthenticated: boolean) => {
+    this.isAuthenticated = isAuthenticated
   }
 
   /** Toggles if the user accepted terms */
@@ -185,7 +207,6 @@ export class AuthStore {
         passcode: code.trim(),
       }
 
-      // TODO: POST /auth/login/code
       yield this.axios.post('/api/v2/authentication-sessions/verification', request)
       this.isSubmitSuccess = true
       this.closeLoginProcess(true)
