@@ -3711,7 +3711,7 @@ __metadata:
     "@types/google-protobuf": 3.15.6
     "@types/history": 4.7.11
     "@types/lodash": 4.14.197
-    "@types/luxon": 3.2.0
+    "@types/luxon": 3.3.1
     "@types/mixpanel-browser": 2.38.1
     "@types/node": 18.17.6
     "@types/promise.allsettled": 1.0.3
@@ -5774,10 +5774,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/luxon@npm:3.2.0":
-  version: 3.2.0
-  resolution: "@types/luxon@npm:3.2.0"
-  checksum: 051bfbf841c6ce98728df6538342ce4aaddfcf0ec6e8b473e0195dcfc3ba6b1fe4b3ce17f2ba6d25344f41cb70032c1debe96da9e384e5f6e639665c1e6d368c
+"@types/luxon@npm:3.3.1":
+  version: 3.3.1
+  resolution: "@types/luxon@npm:3.3.1"
+  checksum: da8f6158edacae1430f3eca5f4ab4891200ffb34aa521ef6bae407a3c50b3854907098bc4535fb2a66a2779738f3c6c48fdfd86f01117a6f4844b18536cdb7c0
   languageName: node
   linkType: hard
 
