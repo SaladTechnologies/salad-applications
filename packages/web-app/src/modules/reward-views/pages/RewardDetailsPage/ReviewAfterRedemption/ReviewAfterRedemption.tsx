@@ -132,7 +132,7 @@ const _ReviewAfterRedemption = ({ classes, reward, referralCode, onCloseClick, o
   const [isCopied, setIsCopied] = useState(false)
   const modalContainerRef = useRef(null)
   const [referralText, setReferralText] = useState(
-    `I just got ${reward?.name} though Salad! Signup with referral code ${referralCode} and get 2X earnings! salad.com/download`,
+    `I just got ${reward?.name} through Salad! Signup with referral code ${referralCode} and get 2X earnings! salad.com/download`,
   )
 
   useDetectClickOutsideElement(modalContainerRef, onCloseClick)
