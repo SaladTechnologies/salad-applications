@@ -3485,7 +3485,7 @@ __metadata:
     semver: 7.3.8
     string_decoder: 1.3.0
     supertokens-website: 13.0.2
-    systeminformation: 5.17.12
+    systeminformation: 5.21.7
     ts-unused-exports: 9.0.4
     typescript: 4.9.5
     unleash-proxy-client: 2.4.3
@@ -21201,12 +21201,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"systeminformation@npm:5.17.12":
-  version: 5.17.12
-  resolution: "systeminformation@npm:5.17.12"
+"systeminformation@npm:5.21.7":
+  version: 5.21.7
+  resolution: "systeminformation@npm:5.21.7"
   bin:
     systeminformation: lib/cli.js
-  checksum: 0f005bb0a00eaa08ee2d04afc7fde688440e2fc85f09cf247b74dac0f5d08fdd24cad0c233733f1eb69721085efc5beb425afe814e5fa9f5d1aaa4cbe523e5cc
+  checksum: d0e6080c49b5ede3f59232c7fbdc0966a00ae03932f49ac33c27ae34c0c34e115390b47f56bfc74528326fddfe5cf43e7c9431c21e5d5dc95823afe92054ba2d
   conditions: (os=darwin | os=linux | os=win32 | os=freebsd | os=openbsd | os=netbsd | os=sunos | os=android)
   languageName: node
   linkType: hard
