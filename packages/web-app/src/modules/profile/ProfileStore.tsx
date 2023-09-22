@@ -73,9 +73,11 @@ export class ProfileStore {
     try {
       let profile = yield this.axios.get('/api/v1/profile')
       this.currentProfile = profile.data
-    } catch (err) {
+    } catch (err: any) {
       this.currentProfile = undefined
-      this.store.routing.replace('/profile-error')
+      if (err.response.status !== 401) {
+        this.store.routing.replace('/profile-error')
+      }
     }
     return this.currentProfile
   })
