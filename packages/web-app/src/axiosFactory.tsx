@@ -2,7 +2,6 @@ import type { AxiosError, AxiosInstance, AxiosResponse } from 'axios'
 import axios from 'axios'
 import axiosRetry, { exponentialDelay } from 'axios-retry'
 import isRetryAllowed from 'is-retry-allowed'
-import SuperTokens from 'supertokens-website'
 import { config } from './config'
 import { getStore } from './Store'
 
@@ -32,10 +31,10 @@ const shouldRetryDownload = (error: any): boolean => {
 
 export const createClient = (): AxiosInstance => {
   let httpClient = axios.create({
+    withCredentials: true,
     baseURL: config.apiBaseUrl,
   })
 
-  SuperTokens.addAxiosInterceptors(httpClient)
   httpClient.interceptors.response.use(
     (response) => {
       // Any status code that lie within the range of 2xx cause this function to trigger
@@ -45,12 +44,8 @@ export const createClient = (): AxiosInstance => {
     (error) => {
       try {
         if (error.response.status === 401 && error.config.baseURL === config.apiBaseUrl) {
-          SuperTokens.doesSessionExist().then((result) => {
-            if (!result) {
-              const store = getStore()
-              store.auth.setIsAuthenticated(false)
-            }
-          })
+          const store = getStore()
+          store.auth.setIsAuthenticated(false)
         }
       } finally {
         throw onError(error)

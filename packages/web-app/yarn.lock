@@ -7832,11 +7832,11 @@ __metadata:
   linkType: hard
 
 "browser-tabs-lock@npm:^1.2.14":
-  version: 1.2.15
-  resolution: "browser-tabs-lock@npm:1.2.15"
+  version: 1.3.0
+  resolution: "browser-tabs-lock@npm:1.3.0"
   dependencies:
     lodash: ">=4.17.21"
-  checksum: 79194361d5dbd0bf83f1e7e56fdbc209161d1c86f8211214512388df126d69b152512f073392e9415dec8d5e3b427045f9a9a3cb089ae7e7f6ed48dd6022ae74
+  checksum: 4fcfb6d5fc4bc5e4f53c298d555d8421ca4f815e32c2650b73008868eb70d7ee41aca8f92ad84d9beb77a8ffe0cb99f1efc8d9b3135cc434d48f7bd569f2bb72
   languageName: node
   linkType: hard
 

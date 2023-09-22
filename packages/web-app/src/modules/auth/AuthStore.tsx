@@ -52,6 +52,7 @@ export class AuthStore {
 
   constructor(private readonly axios: AxiosInstance, private readonly router: RouterStore) {
     // TODO: Get this url from config
+
     SuperTokens.init({
       apiDomain: config.apiBaseUrl,
       onHandleEvent: (context) => {
@@ -71,57 +72,48 @@ export class AuthStore {
       },
     })
 
-    SuperTokens.doesSessionExist()
-      .then((result) => {
-        if (result) {
-          runInAction(() => (this.isAuthenticated = result))
-        } else {
-          this.axios
-            .get('/api/v1/profile')
-            .then(() => runInAction(() => (this.isAuthenticated = true)))
-            .catch(() => runInAction(() => (this.isAuthenticated = false)))
-        }
+    SuperTokens.signOut()
+      .then(() => {
+        this.isAuthenticated = false
       })
-      .catch(() => {})
+      .catch(() => {
+        this.isAuthenticated = false
+      })
+
+    this.axios
+      .get('/api/v1/profile')
+      .then(() => runInAction(() => (this.isAuthenticated = true)))
+      .catch(() => runInAction(() => (this.isAuthenticated = false)))
   }
 
   @action
   public login = async (): Promise<void> => {
     // Don't do anything if we are already logged in
-    if (await SuperTokens.doesSessionExist()) {
-      runInAction(() => {
-        this.isAuthenticated = true
+    try {
+      await this.axios.get('/api/v1/profile').then(() => runInAction(() => (this.isAuthenticated = true)))
+    } catch {
+      if (this.loginPromise) {
+        return this.loginPromise
+      }
+
+      // Create a promise that we will return
+      this.loginPromise = new Promise(async (resolve, reject) => {
+        // Save the promise data to reject
+        this.loginResolve = resolve
+        this.loginReject = reject
+
+        // Save current route so we can go back to it later once it is resolved
+        this.startingRoute = this.router.location.pathname === '/login' ? '/store' : this.router.location.pathname
+
+        this.router.replace('/login')
       })
-      return
+
+      await this.loginPromise
     }
-
-    if (this.loginPromise) {
-      return this.loginPromise
-    }
-
-    // Create a promise that we will return
-    this.loginPromise = new Promise(async (resolve, reject) => {
-      // Save the promise data to reject
-      this.loginResolve = resolve
-      this.loginReject = reject
-
-      // Save current route so we can go back to it later once it is resolved
-      this.startingRoute = this.router.location.pathname === '/login' ? '/store' : this.router.location.pathname
-
-      this.router.replace('/login')
-    })
-
-    await this.loginPromise
   }
 
   @action
   public logout = async (): Promise<void> => {
-    try {
-      await SuperTokens.signOut()
-    } catch (error) {
-      console.error(error)
-    }
-
     try {
       await this.axios.post('/api/v2/authentication-sessions/logout')
     } catch (error) {
