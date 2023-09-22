@@ -2,6 +2,8 @@ import type { AxiosInstance } from 'axios'
 import Axios from 'axios'
 import { action, flow, observable, runInAction } from 'mobx'
 import type { RouterStore } from 'mobx-react-router'
+import SuperTokens from 'supertokens-website'
+import { config } from '../../config'
 import { isProblemDetail } from '../../utils'
 
 export enum FormSteps {
@@ -49,6 +51,35 @@ export class AuthStore {
   private loginReject?: () => void
 
   constructor(private readonly axios: AxiosInstance, private readonly router: RouterStore) {
+    // TODO: Get this url from config
+
+    SuperTokens.init({
+      apiDomain: config.apiBaseUrl,
+      onHandleEvent: (context) => {
+        switch (context.action) {
+          // case 'SESSION_CREATED':
+          //   runInAction(() => {
+          //     this.isAuthenticated = true
+          //   })
+          //   break
+          case 'SIGN_OUT':
+          case 'UNAUTHORISED':
+            runInAction(() => {
+              this.isAuthenticated = false
+            })
+            break
+        }
+      },
+    })
+
+    SuperTokens.signOut()
+      .then(() => {
+        this.isAuthenticated = false
+      })
+      .catch(() => {
+        this.isAuthenticated = false
+      })
+
     this.axios
       .get('/api/v1/profile')
       .then(() => runInAction(() => (this.isAuthenticated = true)))

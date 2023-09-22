@@ -3484,6 +3484,7 @@ __metadata:
     sanitize-html: 2.10.0
     semver: 7.3.8
     string_decoder: 1.3.0
+    supertokens-website: 13.0.2
     systeminformation: 5.17.12
     ts-unused-exports: 9.0.4
     typescript: 4.9.5
@@ -7827,6 +7828,15 @@ __metadata:
   version: 1.0.0
   resolution: "browser-process-hrtime@npm:1.0.0"
   checksum: e30f868cdb770b1201afb714ad1575dd86366b6e861900884665fb627109b3cc757c40067d3bfee1ff2a29c835257ea30725a8018a9afd02ac1c24b408b1e45f
+  languageName: node
+  linkType: hard
+
+"browser-tabs-lock@npm:^1.2.14":
+  version: 1.3.0
+  resolution: "browser-tabs-lock@npm:1.3.0"
+  dependencies:
+    lodash: ">=4.17.21"
+  checksum: 4fcfb6d5fc4bc5e4f53c298d555d8421ca4f815e32c2650b73008868eb70d7ee41aca8f92ad84d9beb77a8ffe0cb99f1efc8d9b3135cc434d48f7bd569f2bb72
   languageName: node
   linkType: hard
 
@@ -15028,7 +15038,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:4.17.21, lodash@npm:^4.17.15, lodash@npm:^4.17.19, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.7.0":
+"lodash@npm:4.17.21, lodash@npm:>=4.17.21, lodash@npm:^4.17.15, lodash@npm:^4.17.19, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.7.0":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
@@ -21047,6 +21057,23 @@ __metadata:
   version: 4.2.0
   resolution: "stylis@npm:4.2.0"
   checksum: 0eb6cc1b866dc17a6037d0a82ac7fa877eba6a757443e79e7c4f35bacedbf6421fadcab4363b39667b43355cbaaa570a3cde850f776498e5450f32ed2f9b7584
+  languageName: node
+  linkType: hard
+
+"supertokens-js-override@npm:^0.0.4":
+  version: 0.0.4
+  resolution: "supertokens-js-override@npm:0.0.4"
+  checksum: 1486212cf2a364f798781065c598cc4a6519fdf232c5cf9f159c70637722669aa078f70a443f5a406bbc2bb5283c40cd44dea3f1bc0ac75d2ced1fdba37e1b0d
+  languageName: node
+  linkType: hard
+
+"supertokens-website@npm:13.0.2":
+  version: 13.0.2
+  resolution: "supertokens-website@npm:13.0.2"
+  dependencies:
+    browser-tabs-lock: ^1.2.14
+    supertokens-js-override: ^0.0.4
+  checksum: 042e018477ec05a1171cb71f603490eafeb655b8ca2fb9afec88a4baf6b5f52bcab3f057d8b26578d097e0becedb7f91b70e8f3e9c2419adeb1ddef164ae5bb8
   languageName: node
   linkType: hard
 
