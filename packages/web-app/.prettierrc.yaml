@@ -5,7 +5,7 @@ singleQuote: true
 trailingComma: all
 overrides:
   - files:
-      - "*.yml"
       - "*.yaml"
+      - "*.yml"
     options:
       singleQuote: false
