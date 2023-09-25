@@ -1,24 +1,24 @@
-# Salad Web Application
+# Salad Web App
 
-The Salad Web Application is the primary UI that allows users to interact with Salad. The Salad Web Application is a [Typescript](https://www.typescriptlang.org/) built with [React](https://reactjs.org/) and [MobX](https://mobx.js.org/).
+The Salad web app is the primary web-based UI that allows users to interact with their Salad profile and the Salad storefront. The Salad web app is a [Typescript](https://www.typescriptlang.org/) application built with [React](https://reactjs.org/) and [MobX](https://mobx.js.org/).
 
 ## Getting Started
 
-To run the Web Application in development mode run
+To run the web app in development mode, run the following:
 
 ```sh
 yarn start
 ```
 
-Salad UI will now be available at <http://localhost:3000/> and automatically refresh when any changes are detected. Debugging is available if you run via the included VSCode launch task `Debug Web App`.
+The web app will be available at <http://localhost:3000/> and automatically refresh when changes are detected. Debugging from Visual Studio Code is available if you run via one of the `Launch & Debug` tasks.
 
-While doing UI component development it is recommended to use [Storybook](https://storybook.js.org/).
+To run Storybook for UI component development, run the following:
 
 ```sh
 yarn storybook
 ```
 
-Storybook will now be available at <http://localhost:9001/> and automatically refresh when any changes are detected.
+Storybook will be available at <http://localhost:9001/> and automatically refresh when any changes are detected.
 
 ## Architecture
 

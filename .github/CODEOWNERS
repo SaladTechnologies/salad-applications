@@ -1,0 +1,4 @@
+* @SaladTechnologies/admins
+
+# Administrators must approve changes to the code owners.
+CODEOWNERS @SaladTechnologies/admins

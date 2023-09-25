@@ -3,29 +3,7 @@
   "editor.minimap.maxColumn": 120,
   "editor.renderWhitespace": "all",
   "editor.rulers": [120],
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "html",
-    "typescript",
-    "typescriptreact"
-  ],
-  "eslint.nodePath": "packages/web-app/.yarn/sdks",
-  "eslint.packageManager": "yarn",
-  "files.associations": {
-    ".env.development.local": "properties",
-    ".env.development": "properties",
-    ".env.production.local": "properties",
-    ".env.production": "properties",
-    ".env.test.local": "properties",
-    ".env.test": "properties",
-    ".env": "properties"
-  },
   "git.branchProtection": ["master"],
-  "javascript.format.enable": false,
-  "javascript.validate.enable": false,
-  "npm.packageManager": "yarn",
-  "prettier.prettierPath": "packages/web-app/.yarn/sdks/prettier/index.js",
   "search.exclude": {
     "node_modules": true,
     "scripts": true,
@@ -34,18 +12,5 @@
     "**/npm-debug.log*": true,
     "**/yarn-debug.log*": true,
     "**/yarn-error.log*": true
-  },
-  "typescript.enablePromptUseWorkspaceTsdk": true,
-  "typescript.format.enable": false,
-  "typescript.tsdk": "packages/web-app/.yarn/sdks/typescript/lib",
-  "[typescript]": {
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": true
-    }
-  },
-  "[typescriptreact]": {
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": true
-    }
   }
 }
