@@ -93,7 +93,7 @@
     "@saladtechnologies/garden-icons": "1.0.12",
     "@storybook/addon-a11y": "6.5.16",
     "@storybook/addon-actions": "6.5.16",
-    "@storybook/addon-essentials": "6.5.16",
+    "@storybook/addon-essentials": "7.4.5",
     "@storybook/addon-links": "6.5.16",
     "@storybook/addon-viewport": "6.5.16",
     "@storybook/builder-webpack5": "6.5.16",
