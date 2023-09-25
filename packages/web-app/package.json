@@ -95,7 +95,7 @@
     "@storybook/addon-actions": "6.5.16",
     "@storybook/addon-essentials": "6.5.16",
     "@storybook/addon-links": "6.5.16",
-    "@storybook/addon-viewport": "6.5.16",
+    "@storybook/addon-viewport": "7.4.5",
     "@storybook/builder-webpack5": "6.5.16",
     "@storybook/manager-webpack5": "6.5.16",
     "@storybook/node-logger": "6.5.16",
