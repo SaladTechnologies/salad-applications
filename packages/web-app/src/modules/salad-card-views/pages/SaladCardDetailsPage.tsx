@@ -5,9 +5,9 @@ import Scrollbars from 'react-custom-scrollbars'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { clearInterval, setInterval } from 'timers'
+import type { SaladTheme } from '../../../SaladTheme'
 import { Head } from '../../../components'
 import { currencyFormatter } from '../../../formatters'
-import type { SaladTheme } from '../../../SaladTheme'
 import { withLogin } from '../../auth-views'
 import { SaladCardFullView } from '../components/SaladCardFullView'
 import { SaladCardProtectedView } from '../components/SaladCardProtectedView'
@@ -93,7 +93,7 @@ const _SaladCardDetailsPage = ({
   }, [handleLoadSaladCard, handleLoadSaladBalance, handleRouteToStore, hasSaladCard, handleLoadSaladCardEmbededUrl])
 
   const [viewFullSaladCardModal, setViewFullSaladCardModal] = useState<boolean>(false)
-  let intervalId: NodeJS.Timer
+  let intervalId: NodeJS.Timeout
 
   const handleCloseSaladCardModalAfterFiveMinutes = () => {
     clearInterval(intervalId)
