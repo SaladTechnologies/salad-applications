@@ -4,9 +4,9 @@ import { Component } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { Head } from '../../../../components'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { DefaultTheme } from '../../../../SaladTheme'
+import { Head } from '../../../../components'
 import { withLogin } from '../../../auth-views'
 import type { Avatar, Profile } from '../../../profile/models'
 import { AccountTermsAndConditionsUpdate } from './AccountTermsAndConditionsUpdate'
@@ -83,7 +83,7 @@ interface Props extends WithStyles<typeof styles> {
   onSubmitTermsAndConditions: () => void
 }
 
-let intervalId: NodeJS.Timer
+let intervalId: NodeJS.Timeout
 const maxPaypalLoadRetries = 60
 
 export type FormValues = {

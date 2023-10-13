@@ -1,0 +1,6 @@
+reject:
+  # We have to upgrade our fork and rebuild the package in the top-level `libs` folder.
+  - '@elastic/react-search-ui'
+  - '@elastic/search-ui-app-search-connector'
+  # We have to refactor the legacy JSS usage in _every_ component.
+  - react-jss
