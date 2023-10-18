@@ -1,4 +1,8 @@
-* @SaladTechnologies/admins
+## The Kitchen
 
-# Administrators must approve changes to the code owners.
-CODEOWNERS @SaladTechnologies/admins
+* @SaladTechnologies/kitchen-ux-frontend
+
+## Miscellaneous
+
+# Administrators must approve changes to code owners (and other GitHub-specific resources).
+/.github/ @SaladTechnologies/admins
