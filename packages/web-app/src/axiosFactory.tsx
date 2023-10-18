@@ -2,8 +2,8 @@ import type { AxiosError, AxiosInstance, AxiosResponse } from 'axios'
 import axios from 'axios'
 import axiosRetry, { exponentialDelay } from 'axios-retry'
 import isRetryAllowed from 'is-retry-allowed'
-import { config } from './config'
 import { getStore } from './Store'
+import { config } from './config'
 
 /**
  * The list of safe HTTP request methods. HTTP requests using these methods may be retried.
@@ -33,6 +33,9 @@ export const createClient = (): AxiosInstance => {
   let httpClient = axios.create({
     withCredentials: true,
     baseURL: config.apiBaseUrl,
+    headers: {
+      'X-XSRF-TOKEN': 1,
+    },
   })
 
   httpClient.interceptors.response.use(
