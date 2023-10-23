@@ -3388,7 +3388,7 @@ __metadata:
     "@types/react-custom-scrollbars": 4.0.10
     "@types/react-dom": 18.2.13
     "@types/react-helmet": 6.1.7
-    "@types/react-html-parser": 2.0.3
+    "@types/react-html-parser": 2.0.4
     "@types/react-router": 5.1.20
     "@types/react-router-dom": 5.3.3
     "@types/react-tabs": 2.3.4
@@ -5625,13 +5625,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-html-parser@npm:2.0.3":
-  version: 2.0.3
-  resolution: "@types/react-html-parser@npm:2.0.3"
+"@types/react-html-parser@npm:2.0.4":
+  version: 2.0.4
+  resolution: "@types/react-html-parser@npm:2.0.4"
   dependencies:
     "@types/htmlparser2": "*"
     "@types/react": "*"
-  checksum: 2795b2410f2ee5cedb5a3ecf4f6f0d94f593bf13dcb4b2dc181c39151bd2e712874aad67ec933de7fe20a940d220b839f51ab9126c765e544a73a553cc1a7578
+  checksum: 0be08103237c8eec9fead387977f5861633d7f923680514bed98f95c456388ba121f9f84a1ee9d47f04405c3db977a0323794a559614167ea98132e44070e398
   languageName: node
   linkType: hard
 
