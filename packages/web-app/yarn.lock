@@ -3416,7 +3416,7 @@ __metadata:
     mobx: 5.15.7
     mobx-react: 6.3.1
     mobx-react-lite: 2.2.2
-    mobx-react-router: 4.1.0
+    mobx-react-router: 5.0.2
     moment: 2.29.4
     npm-run-all: 4.1.5
     prettier: 2.8.8
@@ -15919,13 +15919,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mobx-react-router@npm:4.1.0":
-  version: 4.1.0
-  resolution: "mobx-react-router@npm:4.1.0"
+"mobx-react-router@npm:5.0.2":
+  version: 5.0.2
+  resolution: "mobx-react-router@npm:5.0.2"
   peerDependencies:
-    mobx: ^3.0.0 || ^4.0.0 || ^5.0.0
-    react-router: ^4.0.0 || ^5.0.0
-  checksum: 7fc4d227eca023ceb30fa57ba0db21440288fcdfecb08b8493a4496228585c2b56f6746ef8af65ae7c4cd05a831f9b9ec1fd78fa1c5cbddf84f220585c17deb3
+    mobx: ^6.0.0
+    react-router: ^5.0.0
+  checksum: ce6ea5f25ea6a1560e21a6383d3d692a9240f187291123bb93d551622782df963a7ed2172c517a8c21848b187133402926769b8e8bf0b37d4d13413ee7823b0f
   languageName: node
   linkType: hard
 
