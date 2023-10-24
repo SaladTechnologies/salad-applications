@@ -1,9 +1,10 @@
+import type { RootStore } from '../../Store'
 import { SettingsPage } from '../../components'
 import { config } from '../../config'
 import { connect } from '../../connect'
-import type { RootStore } from '../../Store'
 import { AccountContainer } from '../account-views/account-views'
 import { ReferralSettingsContainer } from '../account-views/referral-views'
+import { AchievementPageContainer } from '../achievements-views'
 import { BonusPageContainer } from '../bonus-views'
 
 const mapStoreToProps = (store: RootStore): any => {
@@ -24,6 +25,7 @@ const mapStoreToProps = (store: RootStore): any => {
       { url: '/account/summary', text: 'Account', component: AccountContainer },
       { url: '/account/referrals', text: 'Referrals', component: ReferralSettingsContainer },
       { url: '/account/bonuses', text: 'Bonuses', component: BonusPageContainer },
+      { url: '/account/achievements', text: 'Achievements', component: AchievementPageContainer },
     ],
     onClose: () => {
       store.analytics.trackSmartLink('/store', 'Back')

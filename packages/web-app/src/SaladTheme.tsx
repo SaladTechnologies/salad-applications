@@ -31,6 +31,7 @@ export interface SaladTheme {
   fontGroteskLight09: string
   fontGroteskLight25: string
   fontGroteskMedium25: string
+  fontMallory: string
 }
 
 export const DefaultTheme: SaladTheme = {
@@ -66,4 +67,5 @@ export const DefaultTheme: SaladTheme = {
   fontGroteskLight09: 'SharpGroteskLight09',
   fontGroteskLight25: 'SharpGroteskLight25',
   fontGroteskMedium25: 'sharpGroteskMedium25',
+  fontMallory: 'Mallory',
 }
