@@ -1,8 +1,8 @@
 import type { IMessage } from '@novu/shared'
 import type { NotificationBannerProps as GardenNotificationBannerProps } from '@saladtechnologies/garden-components'
+import type { NotificationVariant } from '@saladtechnologies/garden-components/lib/components/NotificationBanner/NotificationBanner'
 import { unescape } from 'lodash'
-import { DateTime } from 'luxon'
-import { NotificationMessageCategory, type Notification, type NotificationAction } from './models'
+import { type Notification, type NotificationAction } from './models'
 
 interface NovuTemplateCta {
   acknowledgeLabel: string
@@ -57,10 +57,14 @@ export const getNormalizedNovuNotification = (novuNotification: IMessage): Notif
       return { action: getNormalizedNotificationAction(key, cta[key]) }
     })
 
-    const trackId = v1.type === 'info' ? NotificationMessageCategory.NovuInfo : NotificationMessageCategory.NovuWarning
+    let variant: NotificationVariant = 'news'
+    if (v1.type === 'info') {
+      variant = 'news'
+    } else {
+      variant = v1.type
+    }
 
     return {
-      trackId,
       novuId: novuNotification._id,
       title: v1.title,
       body: v1.body,
@@ -68,9 +72,11 @@ export const getNormalizedNovuNotification = (novuNotification: IMessage): Notif
       seen: novuNotification.seen,
       createDate: new Date(novuNotification.createdAt),
       acknowledged: novuNotification.read,
+      badgeUrl: v1.badgeUrl,
       actions,
       overlay,
       osNotification,
+      variant,
     }
   } catch (e) {
     return null
@@ -80,31 +86,6 @@ export const getNormalizedNovuNotification = (novuNotification: IMessage): Notif
 interface NotificationActionPayload {
   label: string
   onClick: () => void
-}
-
-const getReceivedAtDisplay = (
-  createDate: Date,
-): { value: number; unit: 'year' | 'month' | 'day' | 'hour' | 'minute' | 'second' } => {
-  const createDateLuxon = DateTime.fromJSDate(createDate)
-  const duration = DateTime.now().diff(createDateLuxon)
-  const interval = duration.shiftTo('years', 'months', 'days', 'hours', 'minutes', 'seconds').toObject()
-  if (interval.years !== undefined && interval.years >= 1) {
-    return { value: interval.years, unit: 'year' }
-  }
-  if (interval.months !== undefined && interval.months >= 1) {
-    return { value: interval.months, unit: 'month' }
-  }
-  if (interval.days !== undefined && interval.days >= 1) {
-    return { value: interval.days, unit: 'day' }
-  }
-  if (interval.hours !== undefined && interval.hours >= 1) {
-    return { value: interval.hours, unit: 'hour' }
-  }
-  if (interval.minutes !== undefined && interval.minutes >= 1) {
-    return { value: Math.ceil(interval.minutes), unit: 'minute' }
-  }
-
-  return { value: interval.seconds ? Math.ceil(interval.seconds) : 0, unit: 'second' }
 }
 
 const getNotificationBannerAction = (
@@ -161,18 +142,18 @@ export const getConfiguredNovuBannerNotifications = (
         return null
       }
 
-      const { createDate, title, body, overlay, trackId, actions, novuId } = normalizedNotification
+      const { createDate, title, body, overlay, variant, actions, novuId, badgeUrl } = normalizedNotification
       const firstNotificationAction = actions[0]
       const secondNotificationAction = actions[1]
-      const variant = trackId === NotificationMessageCategory.NovuInfo ? 'news' : 'error'
 
       return {
         action1: getNotificationBannerAction(normalizedNotification, onReadNovuNotification, firstNotificationAction),
         action2: getNotificationBannerAction(normalizedNotification, onReadNovuNotification, secondNotificationAction),
         message: unescape(body),
         onClose: () => onReadNovuNotification(novuId),
-        receivedAt: createDate ? getReceivedAtDisplay(createDate) : { value: 1, unit: 'minute' },
+        createdDate: createDate ?? new Date(),
         title: unescape(title),
+        badgeUrl,
         variant,
         overlay,
       }

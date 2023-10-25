@@ -1,3 +1,5 @@
+import type { NotificationVariant } from '@saladtechnologies/garden-components/lib/components/NotificationBanner/NotificationBanner'
+
 export enum NotificationMessageCategory {
   AppUpdate = 'App Update',
   AutoStart = 'Auto Start',
@@ -12,8 +14,6 @@ export enum NotificationMessageCategory {
   ReferralCodeInvalid = 'Referral Code Invalid',
   ReferralCodeDoesNotExist = 'Referral Code Does Not Exist',
   ReferralCodeError = 'Referral Code Error',
-  NovuInfo = 'Novu Info',
-  NovuWarning = 'Novu Warning',
 }
 
 export interface NotificationMessage {
@@ -103,8 +103,6 @@ export interface Notification {
   actions: NotificationAction[]
   /** A value indicating whether the notification has been acknowledged. */
   acknowledged: boolean
-  /** identifier used to track actions from this notification. */
-  trackId: string
   /** A value indicating whether the notification is os type. */
   osNotification: boolean
   /** A value indicating whether the notification is overlay type. */
@@ -113,4 +111,8 @@ export interface Notification {
   seen: boolean
   /** A value indicating whether the notification has been read. */
   read: boolean
+  /** A value indicating the absolute link to the badge image. */
+  badgeUrl: string
+  /** A value indicating the notification variant */
+  variant: NotificationVariant
 }

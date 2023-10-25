@@ -22,7 +22,9 @@ export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBar
   const bannerNotifications = getConfiguredNovuBannerNotifications(unreadNovuNotifications, (notificationId: string) =>
     novu?.markNotificationAsRead(notificationId),
   )
+
   const newsNotifications = bannerNotifications.filter((notification) => notification?.variant === 'news')
+  const achievementNotifications = bannerNotifications.filter((notification) => notification?.variant === 'achievement')
   const warningsNotifications = bannerNotifications.filter((notification) => notification?.variant === 'error')
   const hasUnseenNotifications = novu?.unseenCount > 0
   const handleOpenNotificationsDrawer = () => {
@@ -43,6 +45,7 @@ export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBar
     ...props.notifications,
     news: newsNotifications,
     warnings: warningsNotifications,
+    achievements: achievementNotifications,
     hasUnseenNotifications,
     onOpenNotificationsDrawer: handleOpenNotificationsDrawer,
     onCloseNotificationsDrawer: handleCloseNotificationsDrawer,
