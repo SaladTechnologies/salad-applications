@@ -3364,7 +3364,7 @@ __metadata:
     "@fortawesome/react-fontawesome": 0.2.0
     "@novu/notification-center": 0.20.0
     "@novu/shared": 0.20.0
-    "@saladtechnologies/garden-components": 1.2.0
+    "@saladtechnologies/garden-components": 1.2.4
     "@saladtechnologies/garden-fonts": 1.0.3
     "@saladtechnologies/garden-icons": 1.0.12
     "@storybook/addon-a11y": 6.5.16
@@ -3464,9 +3464,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@saladtechnologies/garden-components@npm:1.2.0":
-  version: 1.2.0
-  resolution: "@saladtechnologies/garden-components@npm:1.2.0"
+"@saladtechnologies/garden-components@npm:1.2.4":
+  version: 1.2.4
+  resolution: "@saladtechnologies/garden-components@npm:1.2.4"
   peerDependencies:
     "@emotion/react": 11.x
     "@emotion/styled": 11.x
@@ -3481,7 +3481,7 @@ __metadata:
     react-intl: 6.x
     react-range: 1.x
     react-responsive: 9.x
-  checksum: 8424f93b39b033368aca8d4254e306677a28dcbb95864c64402a7b4dfe5d638a57e5536bff50735dda645e243d28e443de80bf3df2996c8353ca4a35f1763e7a
+  checksum: 9307e281f1b61cc90773d1a3ae2464a92123b8095605f477897a64aa75fb3f74bf7428ad02da1190179e1ed5fff0c15e88c6c7bfa540ec3e4354bf0caa5285f0
   languageName: node
   linkType: hard
 
