@@ -98,7 +98,7 @@ export interface Notification {
   /** The body. */
   body: string
   /** The date and time of the notification. */
-  createDate: Date | undefined
+  createdDate: Date | undefined
   /** The list of actions. */
   actions: NotificationAction[]
   /** A value indicating whether the notification has been acknowledged. */
