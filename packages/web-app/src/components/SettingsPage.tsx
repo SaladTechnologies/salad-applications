@@ -44,7 +44,7 @@ const _Settings = ({ appBuild, classes, menuButtons, onClose }: Props) => {
   }
 
   const handleCloseKeyPress = useCallback(
-    (e: any) => {
+    (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onClose?.()
       }
