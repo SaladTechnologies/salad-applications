@@ -2,6 +2,7 @@ import { useFetchNotifications, useNotifications } from '@novu/notification-cent
 import { NavigationBar, type NavigationBarProps } from '@saladtechnologies/garden-components'
 import type { FunctionComponent } from 'react'
 import { useEffect, useState } from 'react'
+import { FeatureFlags, useFeatureManager } from '../../../FeatureManager'
 import { getConfiguredNovuBannerNotifications } from '../../notifications/utils'
 
 export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBarProps> = (props) => {
@@ -11,6 +12,8 @@ export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBar
   const unreadNovuNotifications = fetchNotificationsPageData?.data
   const [isDrawerOpened, setIsDrawerOpened] = useState(false)
   const markFetchedNotificationsAsSeen = novu?.markFetchedNotificationsAsSeen
+  const featureManager = useFeatureManager()
+  const isAchievementsFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.Achievements)
 
   useEffect(() => {
     const hasUnseenNotification = unreadNovuNotifications?.some((novuNotification) => !novuNotification.seen)
@@ -23,8 +26,10 @@ export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBar
     novu?.markNotificationAsRead(notificationId),
   )
 
+  const achievementNotifications = isAchievementsFeatureFlagEnabled
+    ? bannerNotifications.filter((notification) => notification?.variant === 'achievement')
+    : []
   const newsNotifications = bannerNotifications.filter((notification) => notification?.variant === 'news')
-  const achievementNotifications = bannerNotifications.filter((notification) => notification?.variant === 'achievement')
   const warningsNotifications = bannerNotifications.filter((notification) => notification?.variant === 'error')
   const hasUnseenNotifications = novu?.unseenCount > 0
   const handleOpenNotificationsDrawer = () => {

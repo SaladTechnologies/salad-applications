@@ -1,7 +1,7 @@
 import { Avatar, AvatarDefault, BonusCard } from '@saladtechnologies/garden-components'
 import type { TargetRewardInfo } from '@saladtechnologies/garden-components/lib/components/NavigationBar/components/DesktopNavigationBar/TargetRewardStatus'
-import { connect } from '../../connect'
 import type { RootStore } from '../../Store'
+import { connect } from '../../connect'
 import { NavigationBarWithNotifications } from './components/NavigationBarWithNotifications'
 
 const mapStoreToProps = (store: RootStore): any => {
@@ -82,7 +82,7 @@ const mapStoreToProps = (store: RootStore): any => {
     username: isAuthenticated ? store.profile.currentProfile?.username : undefined,
     targetReward,
     notifications,
-    novuSignature: store.profile.novuSignature
+    novuSignature: store.profile.novuSignature,
   }
 }
 
