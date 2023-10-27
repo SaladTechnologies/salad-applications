@@ -1,7 +1,11 @@
-import { createContext } from 'react'
+import { createContext, useContext } from 'react'
 import { UnleashClient } from 'unleash-proxy-client'
 import type { Config } from './config'
 import type { AnalyticsStore } from './modules/analytics'
+
+export enum FeatureFlags {
+  Achievements = 'app_saladachievements',
+}
 
 export interface FeatureManager {
   getVariant: (feature: string) => string
@@ -142,6 +146,5 @@ FeatureManagerContext.displayName = 'FeatureManager'
 
 export const FeatureManagerProvider = FeatureManagerContext.Provider
 
-// TODO: Use the context or remove it altogether!
-//export const FeatureManagerConsumer = FeatureManagerContext.Consumer
-//export const useFeatureManager = () => useContext(FeatureManagerContext)
+export const FeatureManagerConsumer = FeatureManagerContext.Consumer
+export const useFeatureManager = () => useContext(FeatureManagerContext)
