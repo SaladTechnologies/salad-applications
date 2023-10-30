@@ -1,7 +1,6 @@
 import type { AxiosInstance } from 'axios'
 import { action, observable, runInAction } from 'mobx'
 import type { RouterStore } from 'mobx-react-router'
-import { config } from '../../config'
 
 export class AuthStore {
   /** A value indicating whether the user is authenticated. */
@@ -23,7 +22,14 @@ export class AuthStore {
     } catch {
       const routeWithoutTrailingSlash = this.router.location.pathname.slice(1)
 
-      window.location.replace(`${config.loginUrl}?redirect_webapp=${routeWithoutTrailingSlash}`)
+      const __DEV__ = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+
+      if (__DEV__) {
+        const testAPI = 'https://preview.salad.com/login'
+        window.location.assign(`${testAPI}?redirect_webapp=${routeWithoutTrailingSlash}`)
+      } else {
+        this.router.replace(`login?redirect_webapp=${routeWithoutTrailingSlash}`)
+      }
     }
   }
 
