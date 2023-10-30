@@ -7,7 +7,7 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import MediaQuery from 'react-responsive'
 import type { SaladTheme } from '../../../../SaladTheme'
-import ReferralsImageStatic from '../../../auth-views/assets/referrals-image-static.png'
+import ReferralsImageStatic from '../assets/referrals-image-static.png'
 
 const styles = (theme: SaladTheme) => ({
   container: {

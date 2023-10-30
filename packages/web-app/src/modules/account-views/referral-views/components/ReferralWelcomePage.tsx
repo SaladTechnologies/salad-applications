@@ -7,7 +7,7 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import MediaQuery from 'react-responsive'
 import type { SaladTheme } from '../../../../SaladTheme'
-import LoginPageRewards from '../../../auth-views/assets/login-screen-rewards.png'
+import LoginPageRewards from '../assets/login-screen-rewards.png'
 
 const styles = (theme: SaladTheme) => ({
   container: {

@@ -3,12 +3,11 @@ import type { ReactNode } from 'react'
 import { Component } from 'react'
 import type { RouteComponentProps } from 'react-router'
 import { Redirect, Route, Switch, withRouter } from 'react-router'
+import { getStore } from './Store'
 import { MobilePageNotFound } from './components'
 import { MobileAccountSummaryContainer } from './modules/account-views-mobile'
-import { LoginPageContainer } from './modules/auth-views'
 import { MobileEarningSummaryContainer } from './modules/earn-views-mobile'
 import { RewardDetailsContainer } from './modules/reward-views'
-import { getStore } from './Store'
 
 class _Routes extends Component<RouteComponentProps> {
   store = getStore()
@@ -27,7 +26,6 @@ class _Routes extends Component<RouteComponentProps> {
           <Redirect exact from="/account/summary" to="/account/summary" />
           <Route component={MobilePageNotFound} />
         </Switch>
-        <Route path="/login" exact component={LoginPageContainer} />
       </>
     )
   }

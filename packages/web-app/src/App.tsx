@@ -1,6 +1,5 @@
 import { SearchProvider } from '@elastic/react-search-ui'
 import AppSearchAPIConnector from '@elastic/search-ui-app-search-connector'
-import classnames from 'classnames'
 import type { History } from 'history'
 import type { ReactNode } from 'react'
 import { Component } from 'react'
@@ -8,14 +7,14 @@ import Scrollbars from 'react-custom-scrollbars'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { ToastContainer } from 'react-toastify'
-import { MobileDevice, NotMobile } from './components'
-import { config } from './config'
 import { MobileRoutes } from './MobileRoutes'
-import { NavigationBarContainer } from './modules/home-views'
-import { NovuNotificationBanner } from './modules/notifications-views/components'
 import { Routes } from './Routes'
 import type { SaladTheme } from './SaladTheme'
 import { getStore } from './Store'
+import { MobileDevice, NotMobile } from './components'
+import { config } from './config'
+import { NavigationBarContainer } from './modules/home-views'
+import { NovuNotificationBanner } from './modules/notifications-views/components'
 
 const styles = (theme: SaladTheme) => ({
   mainWindow: {
@@ -44,9 +43,6 @@ const styles = (theme: SaladTheme) => ({
     padding: 20,
     paddingBottom: 100,
     marginTop: 60,
-  },
-  mobileLoginPage: {
-    padding: 0,
   },
   navigationContainer: {
     position: 'relative',
@@ -129,11 +125,7 @@ export const App = withStyles(styles)(
                 <NavigationBarContainer />
               </div>
               <Scrollbars>
-                <div
-                  className={classnames(classes.mobileContent, {
-                    [classes.mobileLoginPage]: this.store.routing.location.pathname === '/login',
-                  })}
-                >
+                <div className={classes.mobileContent}>
                   <MobileRoutes />
                 </div>
               </Scrollbars>
