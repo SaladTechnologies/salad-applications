@@ -51,7 +51,6 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const _AchievementPage = ({ classes, achievements, getAchievements }: Props) => {
-  console.log('test ===> ', achievements)
   useEffect(() => {
     getAchievements()
   }, [getAchievements])
