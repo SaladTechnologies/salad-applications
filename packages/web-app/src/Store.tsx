@@ -2,6 +2,8 @@ import type { AxiosInstance } from 'axios'
 import { action, autorun, configure, flow, observable } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
 import type { FeatureManager } from './FeatureManager'
+import { UIStore } from './UIStore'
+import { AchievementsStore } from './modules/achievements'
 import { AnalyticsStore } from './modules/analytics'
 import { AuthStore } from './modules/auth'
 import { BalanceStore } from './modules/balance'
@@ -23,7 +25,6 @@ import { StorefrontStore } from './modules/storefront/StorefrontStore'
 import { TermsAndConditionsStore } from './modules/terms-and-conditions'
 import { VaultStore } from './modules/vault'
 import { ExperienceStore } from './modules/xp'
-import { UIStore } from './UIStore'
 
 configure({
   // computedRequiresReaction: process.env.NODE_ENV === 'development',
@@ -65,6 +66,7 @@ export class RootStore {
   public readonly helpScout: HelpScoutStore
   public readonly storefront: StorefrontStore
   public readonly bonuses: BonusStore
+  public readonly achievements: AchievementsStore
   public readonly seasons: SeasonsStore
   public readonly onboarding: OnboardingStore
   public readonly startButtonUI: StartButtonUIStore
@@ -76,6 +78,7 @@ export class RootStore {
     this.notifications = new NotificationStore(this)
     this.xp = new ExperienceStore(axios)
 
+    this.achievements = new AchievementsStore(axios)
     this.profile = new ProfileStore(this, axios)
     this.termsAndConditions = new TermsAndConditionsStore(axios, this.profile)
     this.saladCard = new SaladCardStore(this, axios)

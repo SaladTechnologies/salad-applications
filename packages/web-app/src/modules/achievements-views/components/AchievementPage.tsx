@@ -1,12 +1,14 @@
+import { LoadingSpinner } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
+import { useEffect } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
 import type { IntlShape } from 'react-intl'
 import { injectIntl } from 'react-intl'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
+import type { Achievement } from '../../achievements/models/Achievement'
 import { withLogin } from '../../auth-views'
-import defaultAchievementImage from '../assets/Achievement.png'
 import { AchievementCard } from './AchievementCard'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
@@ -33,35 +35,47 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     fontWeight: 300,
     textShadow: '0px 0px 24px rgba(178, 213, 48, 0.7)',
   },
+  loadingSpinnerWrap: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
   intl: IntlShape
+  getAchievements: () => void
+  achievements: Achievement[] | undefined
 }
 
-const _AchievementPage = ({ classes }: Props) => {
-  const achievements = new Array(28).fill({
-    title: 'When Chef’s Mix, You Earn Six',
-    imageUrl: defaultAchievementImage,
-    description: 'Earn your first $6',
-    dateAchieved: 'Achieved on Sept 8, 2023',
-    isAchieved: true,
-  })
+const _AchievementPage = ({ classes, achievements, getAchievements }: Props) => {
+  useEffect(() => {
+    getAchievements()
+  }, [getAchievements])
+
   return (
     <Scrollbars>
       <div className={classes.achievementPageWrapper}>
         <h2 className={classes.achievementPageHeader}>Achievements</h2>
-        <div className={classes.achievementPageGrid}>
-          {achievements.map((achievement) => (
-            <AchievementCard
-              title={achievement.title}
-              imageUrl={achievement.imageUrl}
-              description={achievement.description}
-              dateAchieved={achievement.dateAchieved}
-              isAchieved={achievement.isAchieved}
-            />
-          ))}
-        </div>
+        {!achievements ? (
+          <div className={classes.loadingSpinnerWrap}>
+            <LoadingSpinner variant="light" size={100} />
+          </div>
+        ) : (
+          <div className={classes.achievementPageGrid}>
+            {achievements.map((achievement) => (
+              <AchievementCard
+                title={achievement.name}
+                imageUrl={achievement.badgeImageUrl}
+                description={achievement.description}
+                dateAchieved={achievement.completedAt ?? undefined}
+                isAchieved={!!achievement.completedAt}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </Scrollbars>
   )
