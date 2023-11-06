@@ -5,7 +5,7 @@ import type { Achievement } from './models/Achievement'
 
 export class AchievementsStore {
   @observable
-  public achievements: Achievement[] = []
+  public achievements: Achievement[] | undefined = undefined
 
   constructor(private readonly axios: AxiosInstance) {}
 

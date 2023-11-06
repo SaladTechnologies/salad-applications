@@ -1,3 +1,4 @@
+import { LoadingSpinner } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
 import { useEffect } from 'react'
 import Scrollbars from 'react-custom-scrollbars'
@@ -34,15 +35,23 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     fontWeight: 300,
     textShadow: '0px 0px 24px rgba(178, 213, 48, 0.7)',
   },
+  loadingSpinnerWrap: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
   intl: IntlShape
   getAchievements: () => void
-  achievements: Achievement[]
+  achievements: Achievement[] | undefined
 }
 
 const _AchievementPage = ({ classes, achievements, getAchievements }: Props) => {
+  console.log('test ===> ', achievements)
   useEffect(() => {
     getAchievements()
   }, [getAchievements])
@@ -51,17 +60,23 @@ const _AchievementPage = ({ classes, achievements, getAchievements }: Props) => 
     <Scrollbars>
       <div className={classes.achievementPageWrapper}>
         <h2 className={classes.achievementPageHeader}>Achievements</h2>
-        <div className={classes.achievementPageGrid}>
-          {achievements.map((achievement) => (
-            <AchievementCard
-              title={achievement.name}
-              imageUrl={achievement.badgeImageUrl}
-              description={achievement.description}
-              dateAchieved={achievement.completedAt ?? undefined}
-              isAchieved={!!achievement.completedAt}
-            />
-          ))}
-        </div>
+        {!achievements ? (
+          <div className={classes.loadingSpinnerWrap}>
+            <LoadingSpinner variant="light" size={100} />
+          </div>
+        ) : (
+          <div className={classes.achievementPageGrid}>
+            {achievements.map((achievement) => (
+              <AchievementCard
+                title={achievement.name}
+                imageUrl={achievement.badgeImageUrl}
+                description={achievement.description}
+                dateAchieved={achievement.completedAt ?? undefined}
+                isAchieved={!!achievement.completedAt}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </Scrollbars>
   )
