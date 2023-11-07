@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 import type CSS from 'csstype'
+import { DateTime } from 'luxon'
 import { Img } from 'react-image'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
@@ -80,6 +81,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const _AchievementCard = ({ title, imageUrl, description, isAchieved, dateAchieved, classes }: Props) => {
+  const dateAchievedFormatted = dateAchieved ? DateTime.fromISO(dateAchieved).toFormat('MMM d, yyyy') : null
   return (
     <div
       className={classNames(classes.achievementCardWrapper, isAchieved && classes.achievementCardWrapperAchieved)}
@@ -96,7 +98,7 @@ const _AchievementCard = ({ title, imageUrl, description, isAchieved, dateAchiev
         alt={title}
         loader={<Skeleton height={'100%'} />}
       />
-      {dateAchieved && <p className={classes.achievementDate}>{dateAchieved}</p>}
+      {dateAchievedFormatted && <p className={classes.achievementDate}>{`Achieved on ${dateAchievedFormatted}`}</p>}
     </div>
   )
 }
