@@ -20,6 +20,8 @@ const mapStoreToProps = (store: RootStore): any => ({
   isMinecraftUserNameSubmitSuccess: store.profile.isMinecraftUserNameSubmitSuccess,
   payPalId: store.profile.payPalId,
   loadPayPalId: store.profile.loadPayPalId,
+  connectedGoogleAccountEmail: store.profile.connectedGoogleAccountEmail,
+  loadGoogleAccountConnection: store.profile.loadGoogleAccountConnection,
   disconnectPayPalId: store.profile.disconnectPayPalId,
   isPayPalIdDisconnectLoading: store.profile.isPayPalIdDisconnectLoading,
   isSubmitting: store.termsAndConditions.isSubmitting,

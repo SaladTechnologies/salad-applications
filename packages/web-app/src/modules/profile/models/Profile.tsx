@@ -38,3 +38,21 @@ export enum ReferredStatus {
 export interface ProfileExtensions {
   minecraftUsername: string
 }
+
+export interface ExternalAuthProvider {
+  email: string
+  loginProvider: string
+  providerDisplayName: string
+}
+
+export enum ExternalAuthProviderLoginAction {
+  None = 'None',
+  OneTimeCodeFlow = 'OneTimeCodeFlow',
+  WithMessageConfirmation = 'WithMessageConfirmation',
+  WithoutMessageConfirmation = 'WithoutMessageConfirmation',
+}
+
+export enum ExternalAuthProviderLoginStatus {
+  Success = 'Success',
+  Failed = 'Failed',
+}
