@@ -1,10 +1,18 @@
 import SaladDefaultAvatarSrc from '@saladtechnologies/garden-components/lib/components/Avatar/assets/SaladAvatar.png'
 import type { AxiosInstance, AxiosResponse } from 'axios'
 import { action, computed, flow, observable } from 'mobx'
+import type { RouterStore } from 'mobx-react-router'
 import type { RootStore } from '../../Store'
 import type { FormValues } from '../account-views/account-views/components/'
 import { NotificationMessageCategory } from '../notifications/models'
-import type { Avatar, payPalResponse, Profile } from './models'
+import {
+  ExternalAuthProviderLoginAction,
+  ExternalAuthProviderLoginStatus,
+  type Avatar,
+  type ExternalAuthProvider,
+  type Profile,
+  type payPalResponse,
+} from './models'
 
 const SaladDefaultAvatar: Avatar = {
   name: 'Default',
@@ -59,9 +67,16 @@ export class ProfileStore {
   public payPalId?: string
 
   @observable
+  public connectedGoogleAccountEmail?: string
+
+  @observable
   public isPayPalIdDisconnectLoading: boolean = false
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
+  constructor(
+    private readonly store: RootStore,
+    private readonly axios: AxiosInstance,
+    private readonly router: RouterStore,
+  ) {}
 
   @action
   setProfileData = (profileData: Profile) => {
@@ -236,6 +251,56 @@ export class ProfileStore {
       this.payPalId = res?.data?.email
     } catch (err) {
       console.log(err)
+    }
+  })
+  @action.bound
+  connectExternalAccountProvider = () => {
+    const urlSearchParams = new URLSearchParams(window.location.search)
+    const externalAuthProviderLoginStatus = urlSearchParams.get('external-login-status')
+    const externalAuthProviderLoginAction = urlSearchParams.get('external-login-action')
+
+    this.router.replace('/account/summary')
+
+    if (
+      externalAuthProviderLoginAction === ExternalAuthProviderLoginAction.OneTimeCodeFlow ||
+      externalAuthProviderLoginAction === ExternalAuthProviderLoginAction.WithMessageConfirmation
+    ) {
+      if (externalAuthProviderLoginStatus === ExternalAuthProviderLoginStatus.Success) {
+        return this.store.auth.successfulExternalProviderConnection()
+      }
+
+      if (externalAuthProviderLoginStatus === ExternalAuthProviderLoginStatus.Failed) {
+        return this.store.auth.failedExternalProviderConnection()
+      }
+    }
+  }
+
+  @action.bound
+  loadGoogleAccountConnection = flow(function* (this: ProfileStore) {
+    try {
+      this.connectExternalAccountProvider()
+
+      const authProviderConnections: AxiosResponse<ExternalAuthProvider[]> = yield this.axios.get(
+        '/api/v2/authentication/external',
+      )
+
+      if (authProviderConnections.data && authProviderConnections.data.length > 0) {
+        const connectedGoogleAccount = authProviderConnections.data.find(
+          (externalAuthProvider) => externalAuthProvider?.loginProvider === 'Google',
+        )
+
+        if (connectedGoogleAccount) {
+          this.connectedGoogleAccountEmail = connectedGoogleAccount.email
+        }
+      }
+    } catch (err) {
+      this.store.notifications.sendNotification({
+        category: NotificationMessageCategory.Error,
+        title: 'Unable to fetch Connected Google Account.',
+        message: 'Please try refresh the page.',
+        autoClose: false,
+        type: 'error',
+      })
     }
   })
 
