@@ -1,7 +1,7 @@
 import { AvatarSelectionForm, Button, Layout, Text, TextField } from '@saladtechnologies/garden-components'
 import type { ReactNode } from 'react'
 import { Component } from 'react'
-import Scrollbars from 'react-custom-scrollbars'
+import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'

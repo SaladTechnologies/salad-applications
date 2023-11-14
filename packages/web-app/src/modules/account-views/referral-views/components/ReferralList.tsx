@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { Component } from 'react'
-import Scrollbars from 'react-custom-scrollbars'
+import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { P, SectionHeader } from '../../../../components'

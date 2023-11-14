@@ -1,7 +1,7 @@
 import { Button, Layout, Modal, Text } from '@saladtechnologies/garden-components'
 import { Lock, RefreshCcw, Search } from '@saladtechnologies/garden-icons'
 import { useEffect, useState } from 'react'
-import Scrollbars from 'react-custom-scrollbars'
+import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { clearInterval, setInterval } from 'timers'

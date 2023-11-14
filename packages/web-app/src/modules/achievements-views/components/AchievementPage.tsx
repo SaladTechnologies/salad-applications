@@ -1,7 +1,7 @@
 import { LoadingSpinner } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
 import { useEffect } from 'react'
-import Scrollbars from 'react-custom-scrollbars'
+import Scrollbars from 'react-custom-scrollbars-2'
 import type { IntlShape } from 'react-intl'
 import { injectIntl } from 'react-intl'
 import type { WithStyles } from 'react-jss'
