@@ -21,6 +21,7 @@ const mapStoreToProps = (store: RootStore): any => ({
   payPalId: store.profile.payPalId,
   loadPayPalId: store.profile.loadPayPalId,
   connectedGoogleAccountEmail: store.profile.connectedGoogleAccountEmail,
+  isLoadConnectedGoogleAccountEmailError: store.profile.isLoadConnectedGoogleAccountEmailError,
   loadGoogleAccountConnection: store.profile.loadGoogleAccountConnection,
   disconnectPayPalId: store.profile.disconnectPayPalId,
   isPayPalIdDisconnectLoading: store.profile.isPayPalIdDisconnectLoading,

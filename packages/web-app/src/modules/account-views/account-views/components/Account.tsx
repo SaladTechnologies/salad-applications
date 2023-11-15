@@ -39,13 +39,13 @@ const styles = (theme: SaladTheme) => ({
   },
   connectAccountDescription: {
     maxWidth: '400px',
+    paddingTop: 15,
   },
   accountConnectionItem: {
     paddingTop: '56px',
   },
   connectAccountButtonContainer: {
     maxWidth: '400px',
-    paddingBottom: 15,
   },
   disconnectButtonContainer: {
     marginTop: '12px',
@@ -55,7 +55,6 @@ const styles = (theme: SaladTheme) => ({
     justifyContent: 'space-between',
     overflowWrap: 'anywhere',
     alignItems: 'center',
-    marginTop: '18px',
   },
   connectedGoogleAccountEmail: {
     maxWidth: '400px',
@@ -65,6 +64,10 @@ const styles = (theme: SaladTheme) => ({
   minecraftConnectText: {
     maxWidth: '400px',
     paddingTop: 20,
+  },
+  connectAccountError: {
+    paddingTop: 10,
+    color: theme.darkRed,
   },
 })
 
@@ -90,6 +93,7 @@ interface Props extends WithStyles<typeof styles> {
   payPalId?: string
   loadPayPalId: () => void
   connectedGoogleAccountEmail: string
+  isLoadConnectedGoogleAccountEmailError: boolean
   loadGoogleAccountConnection: () => void
   disconnectPayPalId: () => void
   isPayPalIdDisconnectLoading: boolean
@@ -149,6 +153,7 @@ class _Account extends Component<Props, State> {
       payPalId,
       disconnectPayPalId,
       connectedGoogleAccountEmail,
+      isLoadConnectedGoogleAccountEmailError,
       isPayPalIdDisconnectLoading,
       isSubmitting,
       isTermsAndConditionsAccepted,
@@ -238,15 +243,17 @@ class _Account extends Component<Props, State> {
                       </div>
                     </Text>
                   ) : (
-                    <PayPalLoginButton onClick={handleCheckPayPalId} />
+                    <>
+                      <PayPalLoginButton onClick={handleCheckPayPalId} />
+                      <div className={classes.connectAccountDescription}>
+                        <Text variant="baseS">
+                          Connect Salad to your PayPal account. A PayPal account is required to redeem all PayPal
+                          rewards. This enables transfering Salad Balance to your PayPal wallet.
+                        </Text>
+                      </div>
+                    </>
                   )}
                 </div>
-              </div>
-              <div className={classes.connectAccountDescription}>
-                <Text variant="baseS">
-                  Connect Salad to your PayPal account. A PayPal account is required to redeem all PayPal rewards. This
-                  enables transfering Salad Balance to your PayPal wallet.
-                </Text>
               </div>
               <div className={classes.accountConnectionItem}>
                 <div className={classes.subheadingContainer}>
@@ -254,22 +261,31 @@ class _Account extends Component<Props, State> {
                 </div>
                 <div className={classes.connectAccountButtonContainer}>
                   {connectedGoogleAccountEmail ? (
-                    <Text variant="baseS">
-                      <div>Google Email Address</div>
-                      <div className={classes.connectedGoogleAccountEmail}>{connectedGoogleAccountEmail}</div>
-                    </Text>
+                    <>
+                      <Text variant="baseS">Google Email Address</Text>
+                      <Text variant="baseL">
+                        <div className={classes.connectedGoogleAccountEmail}>{connectedGoogleAccountEmail}</div>
+                      </Text>
+                    </>
                   ) : (
-                    <GoogleSignInForm
-                      isTermsAndConditionsAccepted={isTermsAndConditionsAccepted}
-                      isTermsAndConditionsRequired={shouldShowUpdateAccountTermsAndConditions}
-                    />
+                    <>
+                      <GoogleSignInForm
+                        isTermsAndConditionsAccepted={isTermsAndConditionsAccepted}
+                        isTermsAndConditionsRequired={shouldShowUpdateAccountTermsAndConditions}
+                      />
+                      {isLoadConnectedGoogleAccountEmailError && (
+                        <div className={classes.connectAccountError}>
+                          <Text variant="baseS">Unable to fetch connected Google Account. Please refresh page.</Text>
+                        </div>
+                      )}
+                      <div className={classes.connectAccountDescription}>
+                        <Text variant="baseS">
+                          Connect Salad to your Google account. A Google account allows you to sign in easily to Salad
+                          using Google SSO.
+                        </Text>
+                      </div>
+                    </>
                   )}
-                </div>
-                <div className={classes.connectAccountDescription}>
-                  <Text variant="baseS">
-                    Connect Salad to your Google account. A Google account allows you to sign in easily to Salad using
-                    Google SSO.
-                  </Text>
                 </div>
               </div>
               <div className={classes.accountConnectionItem}>

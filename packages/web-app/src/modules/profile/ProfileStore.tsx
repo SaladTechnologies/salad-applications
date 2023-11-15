@@ -70,6 +70,9 @@ export class ProfileStore {
   public connectedGoogleAccountEmail?: string
 
   @observable
+  public isLoadConnectedGoogleAccountEmailError: boolean = false
+
+  @observable
   public isPayPalIdDisconnectLoading: boolean = false
 
   constructor(
@@ -278,6 +281,7 @@ export class ProfileStore {
   @action.bound
   loadGoogleAccountConnection = flow(function* (this: ProfileStore) {
     try {
+      this.isLoadConnectedGoogleAccountEmailError = false
       this.connectExternalAccountProvider()
 
       const authProviderConnections: AxiosResponse<ExternalAuthProvider[]> = yield this.axios.get(
@@ -294,11 +298,11 @@ export class ProfileStore {
         }
       }
     } catch (err) {
+      this.isLoadConnectedGoogleAccountEmailError = true
       this.store.notifications.sendNotification({
         category: NotificationMessageCategory.Error,
-        title: 'Unable to fetch Connected Google Account.',
+        title: 'Unable to fetch connected Google Account.',
         message: 'Please try to refresh the page.',
-        autoClose: false,
         type: 'error',
       })
     }
