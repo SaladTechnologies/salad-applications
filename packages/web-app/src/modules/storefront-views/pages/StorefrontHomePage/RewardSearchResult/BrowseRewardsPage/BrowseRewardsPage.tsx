@@ -1,19 +1,19 @@
 import { Paging, Result } from '@elastic/react-search-ui'
 import type { ReactNode } from 'react'
 import { Component } from 'react'
-import { Scrollbars } from 'react-custom-scrollbars'
+import { Scrollbars } from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { P, Scrollbar } from '../../../../../../components'
 import type { SaladTheme } from '../../../../../../SaladTheme'
+import { P, Scrollbar } from '../../../../../../components'
 import { RewardDisclaimers } from '../../../../../reward-views/components'
-import { IconArrowLeft } from '../../../../../reward-views/components/assets'
 import { RewardItem } from '../../../../../reward-views/components/RewardItem'
 import { rewardItemResponsive } from '../../../../../reward-views/components/RewardSlider'
+import { IconArrowLeft } from '../../../../../reward-views/components/assets'
 import type { SearchResult } from '../../../../../reward/models'
 import RightArrow from './/assets/right-arrow.svg'
-import LeftArrow from './assets/left-arrow.svg'
 import { RewardFilterList } from './RewardFilterList'
+import LeftArrow from './assets/left-arrow.svg'
 
 const styles = (theme: SaladTheme) => {
   let style = {

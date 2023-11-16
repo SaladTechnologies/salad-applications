@@ -1,10 +1,10 @@
 import { Button, Checkbox, Layout, Text } from '@saladtechnologies/garden-components'
 import { useEffect } from 'react'
-import Scrollbars from 'react-custom-scrollbars'
+import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { Head } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
+import { Head } from '../../../components'
 import { withLogin } from '../../auth-views'
 
 const styles = (theme: SaladTheme) => ({

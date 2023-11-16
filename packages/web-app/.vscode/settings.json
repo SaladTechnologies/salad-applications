@@ -3,13 +3,7 @@
   "editor.minimap.maxColumn": 120,
   "editor.renderWhitespace": "all",
   "editor.rulers": [120],
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "html",
-    "typescript",
-    "typescriptreact"
-  ],
+  "eslint.validate": ["javascript", "javascriptreact", "html", "typescript", "typescriptreact"],
   "eslint.nodePath": ".yarn/sdks",
   "files.associations": {
     "**/.azure-pipelines/**/*.yaml": "azure-pipelines",
