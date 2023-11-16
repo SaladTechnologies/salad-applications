@@ -74,12 +74,12 @@ export class RootStore {
 
   constructor(axios: AxiosInstance, private readonly featureManager: FeatureManager) {
     this.routing = new RouterStore()
-    this.auth = new AuthStore(this, axios, this.routing)
+    this.auth = new AuthStore(this, axios)
     this.notifications = new NotificationStore(this)
     this.xp = new ExperienceStore(axios)
 
     this.achievements = new AchievementsStore(axios)
-    this.profile = new ProfileStore(this, axios, this.routing)
+    this.profile = new ProfileStore(this, axios)
     this.termsAndConditions = new TermsAndConditionsStore(axios, this.profile)
     this.saladCard = new SaladCardStore(this, axios)
     this.rewards = new RewardStore(this, axios, this.profile, this.saladCard)
@@ -95,7 +95,7 @@ export class RootStore {
     this.storefront = new StorefrontStore(axios)
     this.bonuses = new BonusStore(this, axios)
     this.seasons = new SeasonsStore(axios)
-    this.onboarding = new OnboardingStore(this, this.routing)
+    this.onboarding = new OnboardingStore(this)
     this.startButtonUI = new StartButtonUIStore(this)
 
     // Pass AnalyticsStore to FeatureManager

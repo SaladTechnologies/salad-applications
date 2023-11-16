@@ -26,29 +26,29 @@ const styles = (theme: SaladTheme) => ({
     paddingBottom: 40,
   },
   fieldContainer: {
-    maxWidth: '400px',
+    maxWidth: 400,
   },
   titleContainer: {
-    paddingBottom: '35px',
+    paddingBottom: 35,
   },
   avatarContainer: {
     paddingTop: 66,
   },
   accountConnectionsContainer: {
-    paddingTop: '56px',
+    paddingTop: 56,
   },
   connectAccountDescription: {
-    maxWidth: '400px',
+    maxWidth: 400,
     paddingTop: 15,
   },
   accountConnectionItem: {
-    paddingTop: '56px',
+    paddingTop: 56,
   },
   connectAccountButtonContainer: {
-    maxWidth: '400px',
+    maxWidth: 400,
   },
   disconnectButtonContainer: {
-    marginTop: '12px',
+    marginTop: 12,
   },
   paypalIdContainer: {
     display: 'flex',
@@ -57,17 +57,17 @@ const styles = (theme: SaladTheme) => ({
     alignItems: 'center',
   },
   connectedGoogleAccountEmail: {
-    maxWidth: '400px',
+    maxWidth: 400,
     paddingTop: 5,
     wordWrap: 'break-word',
   },
   minecraftConnectText: {
-    maxWidth: '400px',
+    maxWidth: 400,
     paddingTop: 20,
   },
   connectAccountError: {
     paddingTop: 10,
-    color: theme.darkRed,
+    color: '#811417',
   },
 })
 
@@ -92,7 +92,7 @@ interface Props extends WithStyles<typeof styles> {
   isMinecraftUserNameSubmitSuccess: boolean
   payPalId?: string
   loadPayPalId: () => void
-  connectedGoogleAccountEmail: string
+  connectedGoogleAccountEmail?: string
   isLoadConnectedGoogleAccountEmailError: boolean
   loadGoogleAccountConnection: () => void
   disconnectPayPalId: () => void
@@ -275,7 +275,9 @@ class _Account extends Component<Props, State> {
                       />
                       {isLoadConnectedGoogleAccountEmailError && (
                         <div className={classes.connectAccountError}>
-                          <Text variant="baseS">Unable to fetch connected Google Account. Please refresh page.</Text>
+                          <Text variant="baseS">
+                            Unable to fetch connected Google Account. Please try to refresh the page.
+                          </Text>
                         </div>
                       )}
                       <div className={classes.connectAccountDescription}>

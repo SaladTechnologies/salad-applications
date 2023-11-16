@@ -1,7 +1,6 @@
 import SaladDefaultAvatarSrc from '@saladtechnologies/garden-components/lib/components/Avatar/assets/SaladAvatar.png'
 import type { AxiosInstance, AxiosResponse } from 'axios'
 import { action, computed, flow, observable } from 'mobx'
-import type { RouterStore } from 'mobx-react-router'
 import type { RootStore } from '../../Store'
 import type { FormValues } from '../account-views/account-views/components/'
 import { NotificationMessageCategory } from '../notifications/models'
@@ -75,11 +74,7 @@ export class ProfileStore {
   @observable
   public isPayPalIdDisconnectLoading: boolean = false
 
-  constructor(
-    private readonly store: RootStore,
-    private readonly axios: AxiosInstance,
-    private readonly router: RouterStore,
-  ) {}
+  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   @action
   setProfileData = (profileData: Profile) => {
@@ -262,18 +257,18 @@ export class ProfileStore {
     const externalAuthProviderLoginStatus = urlSearchParams.get('external-login-status')
     const externalAuthProviderLoginAction = urlSearchParams.get('external-login-action')
 
-    this.router.replace('/account/summary')
+    this.store.routing.replace('/account/summary')
 
     if (
       externalAuthProviderLoginAction === ExternalAuthProviderLoginAction.OneTimeCodeFlow ||
       externalAuthProviderLoginAction === ExternalAuthProviderLoginAction.WithMessageConfirmation
     ) {
       if (externalAuthProviderLoginStatus === ExternalAuthProviderLoginStatus.Success) {
-        return this.store.auth.successfulExternalProviderConnection()
+        this.store.auth.successfulExternalProviderConnection()
       }
 
       if (externalAuthProviderLoginStatus === ExternalAuthProviderLoginStatus.Failed) {
-        return this.store.auth.failedExternalProviderConnection()
+        this.store.auth.failedExternalProviderConnection()
       }
     }
   }
@@ -288,7 +283,7 @@ export class ProfileStore {
         '/api/v2/authentication/external',
       )
 
-      if (authProviderConnections.data && authProviderConnections.data.length > 0) {
+      if (authProviderConnections.data?.length > 0) {
         const connectedGoogleAccount = authProviderConnections.data.find(
           (externalAuthProvider) => externalAuthProvider?.loginProvider === 'Google',
         )

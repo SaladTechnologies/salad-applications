@@ -1,6 +1,5 @@
 import type { AxiosInstance } from 'axios'
 import { action, observable, runInAction } from 'mobx'
-import type { RouterStore } from 'mobx-react-router'
 import type { RootStore } from '../../Store'
 import { config } from '../../config'
 import { NotificationMessageCategory } from '../notifications/models'
@@ -10,11 +9,7 @@ export class AuthStore {
   @observable
   public isAuthenticated?: boolean = undefined
 
-  constructor(
-    private readonly store: RootStore,
-    private readonly axios: AxiosInstance,
-    private readonly router: RouterStore,
-  ) {
+  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     this.axios
       .get('/api/v1/profile')
       .then(() => runInAction(() => (this.isAuthenticated = true)))
@@ -27,7 +22,7 @@ export class AuthStore {
     try {
       await this.axios.get('/api/v1/profile').then(() => runInAction(() => (this.isAuthenticated = true)))
     } catch {
-      const routeWithoutTrailingSlash = this.router.location.pathname.slice(1)
+      const routeWithoutTrailingSlash = this.store.routing.location.pathname.slice(1)
 
       window.location.assign(`${config.loginUrl}?redirect_webapp=${routeWithoutTrailingSlash}`)
     }
@@ -45,8 +40,8 @@ export class AuthStore {
       this.isAuthenticated = false
     })
 
-    if (this.router.location.pathname.includes('onboarding')) {
-      this.router.replace('/store')
+    if (this.store.routing.location.pathname.includes('onboarding')) {
+      this.store.routing.replace('/store')
     }
   }
 

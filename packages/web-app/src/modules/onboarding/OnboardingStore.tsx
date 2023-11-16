@@ -1,6 +1,5 @@
 import { isEqual, sortBy } from 'lodash'
 import { action, computed } from 'mobx'
-import type { RouterStore } from 'mobx-react-router'
 import * as Storage from '../../Storage'
 import type { RootStore } from '../../Store'
 import type { OnboardingPageItemType, OnboardingPageName, OnboardingPagesType } from './models'
@@ -9,7 +8,7 @@ import { ONBOARDING_PAGE_NAMES } from './models'
 const ONBOARDING_STORAGE_KEY = 'ONBOARDING_PAGES_COMPLETED'
 
 export class OnboardingStore {
-  private completedOnboardingPages: OnboardingPageName[] | [] = []
+  private completedOnboardingPages: OnboardingPageName[] = []
   private redirectRoute: string = '/store'
 
   /**
@@ -48,11 +47,11 @@ export class OnboardingStore {
     return Storage.getItem(ONBOARDING_STORAGE_KEY)
   }
 
-  constructor(private readonly store: RootStore, private readonly router: RouterStore) {}
+  constructor(private readonly store: RootStore) {}
 
   @action
   public showOnboardingIfNeeded = () => {
-    this.redirectRoute = this.router.location.pathname + this.router.location.search
+    this.redirectRoute = this.store.routing.location.pathname + this.store.routing.location.search
 
     const currentReferral = this.store.referral.currentReferral?.code
 
