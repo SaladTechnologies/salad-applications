@@ -125,7 +125,9 @@ class _Account extends Component<Props, State> {
 
   public override componentDidMount() {
     this.props.loadPayPalId()
-    this.props.loadGoogleAccountConnection()
+
+    // Hide google SSO until salad google account devops setup
+    // this.props.loadGoogleAccountConnection()
   }
 
   public override componentWillUnmount() {
@@ -181,6 +183,9 @@ class _Account extends Component<Props, State> {
         }))
       }, 5000)
     }
+
+    // Hide google SSO until salad google account devops setup
+    const hideGoogleSSO = true
 
     return (
       <div className={classes.container}>
@@ -255,41 +260,43 @@ class _Account extends Component<Props, State> {
                   )}
                 </div>
               </div>
-              <div className={classes.accountConnectionItem}>
-                <div className={classes.subheadingContainer}>
-                  <Text variant="baseL">Google</Text>
-                </div>
-                <div className={classes.connectAccountButtonContainer}>
-                  {connectedGoogleAccountEmail ? (
-                    <>
-                      <Text variant="baseS">Google Email Address</Text>
-                      <Text variant="baseL">
-                        <div className={classes.connectedGoogleAccountEmail}>{connectedGoogleAccountEmail}</div>
-                      </Text>
-                    </>
-                  ) : (
-                    <>
-                      <GoogleSignInForm
-                        isTermsAndConditionsAccepted={isTermsAndConditionsAccepted}
-                        isTermsAndConditionsRequired={shouldShowUpdateAccountTermsAndConditions}
-                      />
-                      {isLoadConnectedGoogleAccountEmailError && (
-                        <div className={classes.connectAccountError}>
+              {!hideGoogleSSO && (
+                <div className={classes.accountConnectionItem}>
+                  <div className={classes.subheadingContainer}>
+                    <Text variant="baseL">Google</Text>
+                  </div>
+                  <div className={classes.connectAccountButtonContainer}>
+                    {connectedGoogleAccountEmail ? (
+                      <>
+                        <Text variant="baseS">Google Email Address</Text>
+                        <Text variant="baseL">
+                          <div className={classes.connectedGoogleAccountEmail}>{connectedGoogleAccountEmail}</div>
+                        </Text>
+                      </>
+                    ) : (
+                      <>
+                        <GoogleSignInForm
+                          isTermsAndConditionsAccepted={isTermsAndConditionsAccepted}
+                          isTermsAndConditionsRequired={shouldShowUpdateAccountTermsAndConditions}
+                        />
+                        {isLoadConnectedGoogleAccountEmailError && (
+                          <div className={classes.connectAccountError}>
+                            <Text variant="baseS">
+                              Unable to fetch connected Google Account. Please try to refresh the page.
+                            </Text>
+                          </div>
+                        )}
+                        <div className={classes.connectAccountDescription}>
                           <Text variant="baseS">
-                            Unable to fetch connected Google Account. Please try to refresh the page.
+                            Connect Salad to your Google account. A Google account allows you to sign in easily to Salad
+                            using Google SSO.
                           </Text>
                         </div>
-                      )}
-                      <div className={classes.connectAccountDescription}>
-                        <Text variant="baseS">
-                          Connect Salad to your Google account. A Google account allows you to sign in easily to Salad
-                          using Google SSO.
-                        </Text>
-                      </div>
-                    </>
-                  )}
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
               <div className={classes.accountConnectionItem}>
                 <div className={classes.subheadingContainer}>
                   <Text variant="baseL">Minecraft</Text>

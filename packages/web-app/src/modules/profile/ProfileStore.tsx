@@ -275,6 +275,12 @@ export class ProfileStore {
 
   @action.bound
   loadGoogleAccountConnection = flow(function* (this: ProfileStore) {
+    // Hide google SSO until salad google account devops setup
+    const hideGoogleSSO = true
+    if (hideGoogleSSO) {
+      return
+    }
+
     try {
       this.isLoadConnectedGoogleAccountEmailError = false
       this.connectExternalAccountProvider()
