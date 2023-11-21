@@ -8,7 +8,8 @@ import { ONBOARDING_PAGE_NAMES } from './models'
 const ONBOARDING_STORAGE_KEY = 'ONBOARDING_PAGES_COMPLETED'
 
 export class OnboardingStore {
-  private completedOnboardingPages: OnboardingPageName[] | [] = []
+  private completedOnboardingPages: OnboardingPageName[] = []
+  private redirectRoute: string = '/store'
 
   /**
    * This is the master array of onboarding pages a chef needs
@@ -50,6 +51,8 @@ export class OnboardingStore {
 
   @action
   public showOnboardingIfNeeded = () => {
+    this.redirectRoute = this.store.routing.location.pathname + this.store.routing.location.search
+
     const currentReferral = this.store.referral.currentReferral?.code
 
     /**
@@ -183,7 +186,7 @@ export class OnboardingStore {
       this.store.routing.push(nextOnboardingPage.PATH)
       this.store.analytics.trackOnboardingPageViewed(nextOnboardingPage.NAME, nextOnboardingPage.ORDER)
     } else {
-      this.store.routing.push('/store')
+      this.store.routing.push(this.redirectRoute)
     }
   }
 

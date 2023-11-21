@@ -74,7 +74,7 @@ export class RootStore {
 
   constructor(axios: AxiosInstance, private readonly featureManager: FeatureManager) {
     this.routing = new RouterStore()
-    this.auth = new AuthStore(axios, this.routing)
+    this.auth = new AuthStore(this, axios)
     this.notifications = new NotificationStore(this)
     this.xp = new ExperienceStore(axios)
 

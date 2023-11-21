@@ -4,7 +4,14 @@ import { action, computed, flow, observable } from 'mobx'
 import type { RootStore } from '../../Store'
 import type { FormValues } from '../account-views/account-views/components/'
 import { NotificationMessageCategory } from '../notifications/models'
-import type { Avatar, payPalResponse, Profile } from './models'
+import {
+  ExternalAuthProviderLoginAction,
+  ExternalAuthProviderLoginStatus,
+  type Avatar,
+  type ExternalAuthProvider,
+  type Profile,
+  type payPalResponse,
+} from './models'
 
 const SaladDefaultAvatar: Avatar = {
   name: 'Default',
@@ -57,6 +64,12 @@ export class ProfileStore {
 
   @observable
   public payPalId?: string
+
+  @observable
+  public connectedGoogleAccountEmail?: string
+
+  @observable
+  public isLoadConnectedGoogleAccountEmailError: boolean = false
 
   @observable
   public isPayPalIdDisconnectLoading: boolean = false
@@ -236,6 +249,63 @@ export class ProfileStore {
       this.payPalId = res?.data?.email
     } catch (err) {
       console.log(err)
+    }
+  })
+  @action.bound
+  connectExternalAccountProvider = () => {
+    const urlSearchParams = new URLSearchParams(window.location.search)
+    const externalAuthProviderLoginStatus = urlSearchParams.get('external-login-status')
+    const externalAuthProviderLoginAction = urlSearchParams.get('external-login-action')
+
+    this.store.routing.replace('/account/summary')
+
+    if (
+      externalAuthProviderLoginAction === ExternalAuthProviderLoginAction.OneTimeCodeFlow ||
+      externalAuthProviderLoginAction === ExternalAuthProviderLoginAction.WithMessageConfirmation
+    ) {
+      if (externalAuthProviderLoginStatus === ExternalAuthProviderLoginStatus.Success) {
+        this.store.auth.successfulExternalProviderConnection()
+      }
+
+      if (externalAuthProviderLoginStatus === ExternalAuthProviderLoginStatus.Failed) {
+        this.store.auth.failedExternalProviderConnection()
+      }
+    }
+  }
+
+  @action.bound
+  loadGoogleAccountConnection = flow(function* (this: ProfileStore) {
+    // Hide google SSO until salad google account devops setup
+    const hideGoogleSSO = true
+    if (hideGoogleSSO) {
+      return
+    }
+
+    try {
+      this.isLoadConnectedGoogleAccountEmailError = false
+      this.connectExternalAccountProvider()
+
+      const authProviderConnections: AxiosResponse<ExternalAuthProvider[]> = yield this.axios.get(
+        '/api/v2/authentication/external',
+      )
+
+      if (authProviderConnections.data?.length > 0) {
+        const connectedGoogleAccount = authProviderConnections.data.find(
+          (externalAuthProvider) => externalAuthProvider?.loginProvider === 'Google',
+        )
+
+        if (connectedGoogleAccount) {
+          this.connectedGoogleAccountEmail = connectedGoogleAccount.email
+        }
+      }
+    } catch (err) {
+      this.isLoadConnectedGoogleAccountEmailError = true
+      this.store.notifications.sendNotification({
+        category: NotificationMessageCategory.Error,
+        title: 'Unable to fetch connected Google Account.',
+        message: 'Please try to refresh the page.',
+        type: 'error',
+      })
     }
   })
 
