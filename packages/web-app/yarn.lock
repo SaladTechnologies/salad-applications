@@ -3344,6 +3344,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@remix-run/router@npm:1.13.1":
+  version: 1.13.1
+  resolution: "@remix-run/router@npm:1.13.1"
+  checksum: 2f8c213dd0f1ebc0c2c1357badf6e1a65a42c40d38558f5e5085fbe7b144439eb326955d97ae0b2505f95ec8defa77a2492d44f5b10f351a0a90a50758169a22
+  languageName: node
+  linkType: hard
+
 "@rollup/plugin-babel@npm:^5.2.0":
   version: 5.3.1
   resolution: "@rollup/plugin-babel@npm:5.3.1"
@@ -3509,7 +3516,7 @@ __metadata:
     react-range: "npm:1.8.14"
     react-remark: "npm:2.1.0"
     react-responsive: "npm:9.0.2"
-    react-router: "npm:5.3.4"
+    react-router: "npm:6.20.1"
     react-router-dom: "npm:5.3.4"
     react-scripts: "npm:5.0.1"
     react-select: "npm:5.7.7"
@@ -19098,6 +19105,17 @@ __metadata:
   peerDependencies:
     react: ">=15"
   checksum: e15c00dfef199249b4c6e6d98e5e76cc352ce66f3270f13df37cc069ddf7c05e43281e8c308fc407e4435d72924373baef1d2890e0f6b0b1eb423cf47315a053
+  languageName: node
+  linkType: hard
+
+"react-router@npm:6.20.1":
+  version: 6.20.1
+  resolution: "react-router@npm:6.20.1"
+  dependencies:
+    "@remix-run/router": "npm:1.13.1"
+  peerDependencies:
+    react: ">=16.8"
+  checksum: 5249f42048633fef42361e08b6fb879e6a575415ac3068a0805ae5464fec998a3149ca262cc1939ae8f4607ee24caa6ec0623c0fef702f1d323faba4a5f87d53
   languageName: node
   linkType: hard
 
