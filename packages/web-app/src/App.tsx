@@ -1,5 +1,6 @@
 import { SearchProvider } from '@elastic/react-search-ui'
 import AppSearchAPIConnector from '@elastic/search-ui-app-search-connector'
+import classNames from 'classnames'
 import type { History } from 'history'
 import type { ReactNode } from 'react'
 import { Component } from 'react'
@@ -44,12 +45,6 @@ const styles = (theme: SaladTheme) => ({
     paddingBottom: 100,
     marginTop: 60,
   },
-  navigationContainer: {
-    position: 'relative',
-    '& > div': {
-      borderBottom: `solid 1px ${theme.lightGreen}`,
-    },
-  },
   mobileNavigationContainer: {
     position: 'relative',
     '& > div > div': {
@@ -69,6 +64,9 @@ const styles = (theme: SaladTheme) => ({
     maxWidth: 1600,
     position: 'relative',
     marginTop: 60,
+  },
+  withBanner: {
+    marginTop: 115,
   },
 })
 
@@ -115,6 +113,7 @@ export const App = withStyles(styles)(
     public override render(): ReactNode {
       const { classes, history } = this.props
       const shouldShowNovuBanner = this.store.auth.isAuthenticated && this.store.profile.novuSignature
+      const wasWidgetLoggedInOnce = !!this.store.profile.widgetFirstLoginDate
 
       return (
         <>
@@ -133,11 +132,9 @@ export const App = withStyles(styles)(
           </MobileDevice>
           <NotMobile>
             <div className={classes.mainWindow}>
-              <div className={classes.navigationContainer}>
-                <NavigationBarContainer />
-              </div>
+              <NavigationBarContainer />
               <div className={classes.container}>
-                <div className={classes.content}>
+                <div className={classNames(classes.content, !wasWidgetLoggedInOnce && classes.withBanner)}>
                   <SearchProvider
                     config={{
                       ...searchConfig,

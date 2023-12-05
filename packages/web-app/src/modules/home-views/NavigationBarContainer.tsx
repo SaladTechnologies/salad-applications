@@ -2,7 +2,9 @@ import { Avatar, AvatarDefault, BonusCard } from '@saladtechnologies/garden-comp
 import type { TargetRewardInfo } from '@saladtechnologies/garden-components/lib/components/NavigationBar/components/DesktopNavigationBar/TargetRewardStatus'
 import type { RootStore } from '../../Store'
 import { connect } from '../../connect'
+import { InstallReminder } from './components/InstallReminder'
 import { NavigationBarWithNotifications } from './components/NavigationBarWithNotifications'
+import { detectBrowser } from './utils'
 
 const mapStoreToProps = (store: RootStore): any => {
   const isAuthenticated = store.auth.isAuthenticated
@@ -16,6 +18,9 @@ const mapStoreToProps = (store: RootStore): any => {
   const selectedAvatar = store.profile.profileAvatar
 
   const startButton = store.startButtonUI.properties
+
+  const wasWidgetLoggedInOnce = !!store.profile.widgetFirstLoginDate
+  const { isChromeAgent } = detectBrowser()
 
   const targetReward: TargetRewardInfo | null = store.rewards.selectedTargetReward
     ? {
@@ -60,6 +65,9 @@ const mapStoreToProps = (store: RootStore): any => {
         isLoading={store.bonuses.pendingBonuses?.has(bonus.id)}
       />
     ) : undefined,
+    headerBannerContent: !wasWidgetLoggedInOnce && (
+      <InstallReminder justifyContent={isChromeAgent ? 'flex-end' : 'center'} />
+    ),
     onClickAvatar: goToAccount,
     onClickUsername: goToAccount,
     onClickViewAllBonuses: () => store.routing.push('/account/bonuses'),
