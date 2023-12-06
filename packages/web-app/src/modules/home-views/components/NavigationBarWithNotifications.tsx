@@ -2,14 +2,17 @@ import { NavigationBar, type NavigationBarProps } from '@saladtechnologies/garde
 import type { AccountNavigationMenuItem } from '@saladtechnologies/garden-components/lib/components/NavigationBar/components/DesktopNavigationBar/AccountNavigationMenu'
 import type { FunctionComponent } from 'react'
 import { FeatureFlags, useFeatureManager } from '../../../FeatureManager'
+import { InstallReminder } from './InstallReminder'
 import { NavigationBarWithNovuNotifications } from './NavigationBarWithNovuNotifications'
 
 export interface NavigationBarWithNotificationsProps extends NavigationBarProps {
   novuSignature?: string
+  widgetFirstLoginDate: null | Date
 }
 
 export const NavigationBarWithNotifications: FunctionComponent<NavigationBarWithNotificationsProps> = ({
   novuSignature,
+  widgetFirstLoginDate,
   ...props
 }) => {
   const featureManager = useFeatureManager()
@@ -55,9 +58,24 @@ export const NavigationBarWithNotifications: FunctionComponent<NavigationBarWith
   }
   const shouldShowNavigationBarWithNovuNotifications = props.username !== undefined && novuSignature !== undefined
 
+  const isNewChefDownloadFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.NewChefDownload)
+  const headerBannerContent =
+    !widgetFirstLoginDate && isNewChefDownloadFeatureFlagEnabled ? (
+      <InstallReminder justifyContent={'flex-end'} />
+    ) : undefined
+
   return shouldShowNavigationBarWithNovuNotifications ? (
-    <NavigationBarWithNovuNotifications {...props} accountNavigationMenuitems={accountNavigationMenuitems} />
+    <NavigationBarWithNovuNotifications
+      {...props}
+      accountNavigationMenuitems={accountNavigationMenuitems}
+      headerBannerContent={headerBannerContent}
+    />
   ) : (
-    <NavigationBar {...props} notifications={notifications} accountNavigationMenuitems={accountNavigationMenuitems} />
+    <NavigationBar
+      {...props}
+      notifications={notifications}
+      accountNavigationMenuitems={accountNavigationMenuitems}
+      headerBannerContent={headerBannerContent}
+    />
   )
 }

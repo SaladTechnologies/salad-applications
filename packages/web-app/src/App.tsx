@@ -2,18 +2,18 @@ import { SearchProvider } from '@elastic/react-search-ui'
 import AppSearchAPIConnector from '@elastic/search-ui-app-search-connector'
 import classNames from 'classnames'
 import type { History } from 'history'
-import type { ReactNode } from 'react'
-import { Component } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { ToastContainer } from 'react-toastify'
+import { FeatureFlags, useFeatureManager } from './FeatureManager'
 import { MobileRoutes } from './MobileRoutes'
 import { Routes } from './Routes'
 import type { SaladTheme } from './SaladTheme'
-import { getStore } from './Store'
+import type { RootStore } from './Store'
 import { MobileDevice, NotMobile } from './components'
 import { config } from './config'
+import { connect } from './connect'
 import { NavigationBarContainer } from './modules/home-views'
 import { NovuNotificationBanner } from './modules/notifications-views/components'
 
@@ -70,10 +70,6 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
-interface Props extends WithStyles<typeof styles> {
-  history: History
-}
-
 const searchConfig = {
   apiConnector: new AppSearchAPIConnector({
     endpointBase: config.searchUrl,
@@ -106,50 +102,60 @@ const searchConfig = {
   pathname: '/store/search',
 }
 
-export const App = withStyles(styles)(
-  class App extends Component<Props> {
-    store = getStore()
+interface AppProps extends WithStyles<typeof styles> {
+  isAuthenticated: boolean
+  novuSignature: string
+  widgetFirstLoginDate: Date
+  history: History
+}
 
-    public override render(): ReactNode {
-      const { classes, history } = this.props
-      const shouldShowNovuBanner = this.store.auth.isAuthenticated && this.store.profile.novuSignature
-      const wasWidgetLoggedInOnce = !!this.store.profile.widgetFirstLoginDate
+export const _App = ({ classes, history, isAuthenticated, novuSignature, widgetFirstLoginDate }: AppProps) => {
+  const featureManager = useFeatureManager()
+  const shouldShowNovuBanner = isAuthenticated && novuSignature
+  const isNewChefDownloadFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.NewChefDownload)
+  const isInstallReminderShown = isNewChefDownloadFeatureFlagEnabled && !widgetFirstLoginDate
 
-      return (
-        <>
-          {shouldShowNovuBanner && <NovuNotificationBanner />}
-          <MobileDevice>
-            <div className={classes.mobileMainWindow}>
-              <div className={classes.mobileNavigationContainer}>
-                <NavigationBarContainer />
-              </div>
-              <Scrollbars>
-                <div className={classes.mobileContent}>
-                  <MobileRoutes />
-                </div>
-              </Scrollbars>
+  return (
+    <>
+      {shouldShowNovuBanner && <NovuNotificationBanner />}
+      <MobileDevice>
+        <div className={classes.mobileMainWindow}>
+          <div className={classes.mobileNavigationContainer}>
+            <NavigationBarContainer />
+          </div>
+          <Scrollbars>
+            <div className={classes.mobileContent}>
+              <MobileRoutes />
             </div>
-          </MobileDevice>
-          <NotMobile>
-            <div className={classes.mainWindow}>
-              <NavigationBarContainer />
-              <div className={classes.container}>
-                <div className={classNames(classes.content, !wasWidgetLoggedInOnce && classes.withBanner)}>
-                  <SearchProvider
-                    config={{
-                      ...searchConfig,
-                      history: history,
-                    }}
-                  >
-                    <Routes />
-                  </SearchProvider>
-                </div>
-                <ToastContainer />
-              </div>
+          </Scrollbars>
+        </div>
+      </MobileDevice>
+      <NotMobile>
+        <div className={classes.mainWindow}>
+          <NavigationBarContainer />
+          <div className={classes.container}>
+            <div className={classNames(classes.content, isInstallReminderShown && classes.withBanner)}>
+              <SearchProvider
+                config={{
+                  ...searchConfig,
+                  history: history,
+                }}
+              >
+                <Routes />
+              </SearchProvider>
             </div>
-          </NotMobile>
-        </>
-      )
-    }
-  },
-)
+            <ToastContainer />
+          </div>
+        </div>
+      </NotMobile>
+    </>
+  )
+}
+
+const mapStoreToProps = (store: RootStore): any => ({
+  isAuthenticated: store.auth.isAuthenticated,
+  novuSignature: store.profile.novuSignature,
+  widgetFirstLoginDate: store.profile.widgetFirstLoginDate,
+})
+
+export const App = connect(mapStoreToProps, withStyles(styles)(_App))
