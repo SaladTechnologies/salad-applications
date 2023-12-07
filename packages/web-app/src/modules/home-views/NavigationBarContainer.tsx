@@ -11,10 +11,17 @@ const mapStoreToProps = (store: RootStore): any => {
     store.auth.login()
   }
 
+  const handleCloseInstallReminderClick = () => {
+    store.profile.setIsInstallReminderClosed(true)
+  }
+
   const bonus = store.bonuses.firstExpiringUnclaimedBonus
 
   const selectedAvatar = store.profile.profileAvatar
+
   const widgetFirstLoginDate = store.profile.widgetFirstLoginDate
+  const isInstallReminderClosed = store.profile.isInstallReminderClosed
+  const withInstallReminder = !isInstallReminderClosed && !widgetFirstLoginDate
 
   const startButton = store.startButtonUI.properties
 
@@ -76,6 +83,7 @@ const mapStoreToProps = (store: RootStore): any => {
     onRemoveTargetRewardClick: store.rewards.removeSelectedTargetReward,
     onSelectTargetRewardClick: goToSelectTargetRewardPage,
     onOpenTargetRewardClick: goToTargetRewardPage,
+    onCloseInstallReminderClick: handleCloseInstallReminderClick,
     startButtonProgress: startButton.progress,
     startButtonRunningTime: startButton.runningTime,
     startButtonToolTip: startButton.toolTip,
@@ -83,7 +91,7 @@ const mapStoreToProps = (store: RootStore): any => {
     username: isAuthenticated ? store.profile.currentProfile?.username : undefined,
     targetReward,
     notifications,
-    widgetFirstLoginDate,
+    withInstallReminder,
     novuSignature: store.profile.novuSignature,
   }
 }

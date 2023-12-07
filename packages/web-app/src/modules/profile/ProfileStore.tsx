@@ -1,6 +1,7 @@
 import SaladDefaultAvatarSrc from '@saladtechnologies/garden-components/lib/components/Avatar/assets/SaladAvatar.png'
 import type { AxiosInstance, AxiosResponse } from 'axios'
 import { action, computed, flow, observable } from 'mobx'
+import * as Storage from '../../Storage'
 import type { RootStore } from '../../Store'
 import type { FormValues } from '../account-views/account-views/components/'
 import { NotificationMessageCategory } from '../notifications/models'
@@ -19,6 +20,8 @@ const SaladDefaultAvatar: Avatar = {
   imageUrl: SaladDefaultAvatarSrc,
   id: '00000000-0000-0000-0000-000000000000',
 }
+
+const IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY = 'IS_INSTALL_REMINDER_CLOSED'
 
 export class ProfileStore {
   @observable
@@ -77,13 +80,22 @@ export class ProfileStore {
   // TODO: the initial value has to be null (will be change after BE endpoint ready)
   // this data should be fetched from BE
   @observable
-  public widgetFirstLoginDate: Date | null = new Date()
+  public widgetFirstLoginDate: Date | null = null
+
+  @observable
+  public isInstallReminderClosed: boolean = Storage.getItem(IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY) === 'true'
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   @action
   setProfileData = (profileData: Profile) => {
     this.currentProfile = profileData
+  }
+
+  @action
+  setIsInstallReminderClosed = (isInstallReminderClosed: boolean) => {
+    this.isInstallReminderClosed = isInstallReminderClosed
+    Storage.setItem(IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY, JSON.stringify(isInstallReminderClosed))
   }
 
   @action.bound
