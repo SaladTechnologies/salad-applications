@@ -15,6 +15,7 @@ const styles: () => Record<string, CSS.Properties> = () => ({
     flexDirection: 'row',
     paddingLeft: '16px',
     paddingRight: '16px',
+    justifyContent: 'flex-end',
   },
   text: {
     fontWeight: 500,
@@ -23,13 +24,11 @@ const styles: () => Record<string, CSS.Properties> = () => ({
   },
 })
 
-interface InstallReminderProps extends WithStyles<typeof styles> {
-  justifyContent?: 'flex-start' | 'center' | 'flex-end'
-}
+interface InstallReminderProps extends WithStyles<typeof styles> {}
 
-export const _InstallReminder: FunctionComponent<InstallReminderProps> = ({ justifyContent = 'center', classes }) => {
+const _InstallReminder: FunctionComponent<InstallReminderProps> = ({ classes }) => {
   return (
-    <div className={classes.installReminderWrapper} style={{ justifyContent }}>
+    <div className={classes.installReminderWrapper}>
       <SvgIcon size="large">
         <ArrowUp />
       </SvgIcon>

@@ -63,7 +63,7 @@ const mapStoreToProps = (store: RootStore): any => {
         isLoading={store.bonuses.pendingBonuses?.has(bonus.id)}
       />
     ) : undefined,
-    headerBannerContent: !wasWidgetLoggedInOnce && <InstallReminder justifyContent={'flex-end'} />,
+    headerBannerContent: !wasWidgetLoggedInOnce && <InstallReminder />,
     onClickAvatar: goToAccount,
     onClickUsername: goToAccount,
     onClickViewAllBonuses: () => store.routing.push('/account/bonuses'),
