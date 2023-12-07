@@ -74,6 +74,11 @@ export class ProfileStore {
   @observable
   public isPayPalIdDisconnectLoading: boolean = false
 
+  // TODO: the initial value has to be null (will be change after BE endpoint ready)
+  // this data should be fetched from BE
+  @observable
+  public widgetFirstLoginDate: Date | null = new Date()
+
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   @action
