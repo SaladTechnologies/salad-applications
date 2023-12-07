@@ -60,9 +60,7 @@ export const NavigationBarWithNotifications: FunctionComponent<NavigationBarWith
 
   const isNewChefDownloadFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.NewChefDownload)
   const headerBannerContent =
-    !widgetFirstLoginDate && isNewChefDownloadFeatureFlagEnabled ? (
-      <InstallReminder justifyContent={'flex-end'} />
-    ) : undefined
+    !widgetFirstLoginDate && isNewChefDownloadFeatureFlagEnabled ? <InstallReminder /> : undefined
 
   return shouldShowNavigationBarWithNovuNotifications ? (
     <NavigationBarWithNovuNotifications
