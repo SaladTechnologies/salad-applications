@@ -1,12 +1,10 @@
 import { SearchProvider } from '@elastic/react-search-ui'
 import AppSearchAPIConnector from '@elastic/search-ui-app-search-connector'
-import classNames from 'classnames'
 import type { History } from 'history'
 import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { ToastContainer } from 'react-toastify'
-import { FeatureFlags, useFeatureManager } from './FeatureManager'
 import { MobileRoutes } from './MobileRoutes'
 import { Routes } from './Routes'
 import type { SaladTheme } from './SaladTheme'
@@ -65,9 +63,6 @@ const styles = (theme: SaladTheme) => ({
     position: 'relative',
     marginTop: 60,
   },
-  withBanner: {
-    marginTop: 115,
-  },
 })
 
 const searchConfig = {
@@ -105,15 +100,11 @@ const searchConfig = {
 interface AppProps extends WithStyles<typeof styles> {
   isAuthenticated: boolean
   novuSignature: string
-  widgetFirstLoginDate: Date
   history: History
 }
 
-export const _App = ({ classes, history, isAuthenticated, novuSignature, widgetFirstLoginDate }: AppProps) => {
-  const featureManager = useFeatureManager()
+export const _App = ({ classes, history, isAuthenticated, novuSignature }: AppProps) => {
   const shouldShowNovuBanner = isAuthenticated && novuSignature
-  const isNewChefDownloadFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.NewChefDownload)
-  const isInstallReminderShown = isNewChefDownloadFeatureFlagEnabled && !widgetFirstLoginDate
 
   return (
     <>
@@ -134,7 +125,7 @@ export const _App = ({ classes, history, isAuthenticated, novuSignature, widgetF
         <div className={classes.mainWindow}>
           <NavigationBarContainer />
           <div className={classes.container}>
-            <div className={classNames(classes.content, isInstallReminderShown && classes.withBanner)}>
+            <div className={classes.content}>
               <SearchProvider
                 config={{
                   ...searchConfig,
@@ -155,7 +146,6 @@ export const _App = ({ classes, history, isAuthenticated, novuSignature, widgetF
 const mapStoreToProps = (store: RootStore): any => ({
   isAuthenticated: store.auth.isAuthenticated,
   novuSignature: store.profile.novuSignature,
-  widgetFirstLoginDate: store.profile.widgetFirstLoginDate,
 })
 
 export const App = connect(mapStoreToProps, withStyles(styles)(_App))

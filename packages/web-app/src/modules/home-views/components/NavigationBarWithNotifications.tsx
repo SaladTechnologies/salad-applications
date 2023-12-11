@@ -7,12 +7,14 @@ import { NavigationBarWithNovuNotifications } from './NavigationBarWithNovuNotif
 
 export interface NavigationBarWithNotificationsProps extends NavigationBarProps {
   novuSignature?: string
-  widgetFirstLoginDate: null | Date
+  withInstallReminder: boolean
+  onCloseInstallReminderClick: () => void
 }
 
 export const NavigationBarWithNotifications: FunctionComponent<NavigationBarWithNotificationsProps> = ({
   novuSignature,
-  widgetFirstLoginDate,
+  withInstallReminder,
+  onCloseInstallReminderClick,
   ...props
 }) => {
   const featureManager = useFeatureManager()
@@ -60,7 +62,9 @@ export const NavigationBarWithNotifications: FunctionComponent<NavigationBarWith
 
   const isNewChefDownloadFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.NewChefDownload)
   const headerBannerContent =
-    !widgetFirstLoginDate && isNewChefDownloadFeatureFlagEnabled ? <InstallReminder /> : undefined
+    withInstallReminder && isNewChefDownloadFeatureFlagEnabled ? (
+      <InstallReminder onCloseClick={onCloseInstallReminderClick} />
+    ) : undefined
 
   return shouldShowNavigationBarWithNovuNotifications ? (
     <NavigationBarWithNovuNotifications
