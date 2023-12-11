@@ -21,7 +21,7 @@ const mapStoreToProps = (store: RootStore): any => {
 
   const widgetFirstLoginDate = store.profile.widgetFirstLoginDate
   const isInstallReminderClosed = store.profile.isInstallReminderClosed
-  const withInstallReminder = !isInstallReminderClosed && !widgetFirstLoginDate
+  const withInstallReminder = !isInstallReminderClosed && !widgetFirstLoginDate && isAuthenticated
 
   const startButton = store.startButtonUI.properties
 
