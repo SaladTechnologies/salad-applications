@@ -19,9 +19,9 @@ const mapStoreToProps = (store: RootStore): any => {
 
   const selectedAvatar = store.profile.profileAvatar
 
-  const widgetFirstLoginDate = store.profile.widgetFirstLoginDate
+  const saladBowlFirstLoginAt = store.profile.currentProfile?.saladBowlFirstLoginAt
   const isInstallReminderClosed = store.profile.isInstallReminderClosed
-  const withInstallReminder = !isInstallReminderClosed && !widgetFirstLoginDate && isAuthenticated
+  const withInstallReminder = !isInstallReminderClosed && !saladBowlFirstLoginAt && isAuthenticated
 
   const startButton = store.startButtonUI.properties
 
