@@ -7,6 +7,7 @@ export interface Profile {
   }
   lastSeenApplicationVersion: string | undefined
   saladBowlFirstLoginAt: string | undefined | null
+  createdAt: string | undefined
   pendingTermsVersion: string | undefined
 }
 
