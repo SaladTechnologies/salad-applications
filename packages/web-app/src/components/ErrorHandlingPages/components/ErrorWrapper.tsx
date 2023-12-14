@@ -5,12 +5,6 @@ import type { SaladTheme } from '../../../SaladTheme'
 import ErrorBoundaryImage from '../assets/ErrorBoundaryImage.png'
 
 const styles = (theme: SaladTheme) => ({
-  modal: {
-    display: 'flex',
-    flexDirection: 'row-reverse',
-    width: '110vmin',
-    height: '50vmin',
-  },
   page: {
     alignItems: 'center',
     background: 'linear-gradient(124deg, #0A2133 55.6%, #3CC 145.45%)',
@@ -21,6 +15,11 @@ const styles = (theme: SaladTheme) => ({
     position: 'fixed',
     right: 0,
     top: 0,
+  },
+  pageContent: {
+    display: 'flex',
+    width: '110vmin',
+    height: '50vmin',
   },
   errorBoundaryImage: {
     maxWidth: 560,
@@ -58,12 +57,12 @@ interface ErrorWrapperProps extends WithStyles<typeof styles> {
 
 const _ErrorWrapper: FunctionComponent<ErrorWrapperProps> = ({ title, description, classes }) => (
   <div className={classes.page}>
-    <div className={classes.modal}>
+    <div className={classes.pageContent}>
+      <img className={classes.errorBoundaryImage} src={ErrorBoundaryImage} alt="Salad Error Boundary" />
       <div className={classes.textWrapper}>
         <p className={classes.title}>{title}</p>
         <p className={classes.description}>{description}</p>
       </div>
-      <img className={classes.errorBoundaryImage} src={ErrorBoundaryImage} alt="Salad Error Boundary" />
     </div>
   </div>
 )

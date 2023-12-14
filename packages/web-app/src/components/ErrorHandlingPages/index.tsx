@@ -1,2 +1,2 @@
 export * from './ErrorBoundaryPage'
-export * from './NotFoundPage'
+export * from './NoPageFound'
