@@ -1,10 +1,12 @@
 import { SearchProvider } from '@elastic/react-search-ui'
 import AppSearchAPIConnector from '@elastic/search-ui-app-search-connector'
+import classNames from 'classnames'
 import type { History } from 'history'
 import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { ToastContainer } from 'react-toastify'
+import { FeatureFlags, useFeatureManager } from './FeatureManager'
 import { MobileRoutes } from './MobileRoutes'
 import { Routes } from './Routes'
 import type { SaladTheme } from './SaladTheme'
@@ -63,6 +65,9 @@ const styles = (theme: SaladTheme) => ({
     position: 'relative',
     marginTop: 60,
   },
+  withBanner: {
+    marginTop: 115,
+  },
 })
 
 const searchConfig = {
@@ -99,12 +104,15 @@ const searchConfig = {
 
 interface AppProps extends WithStyles<typeof styles> {
   isAuthenticated: boolean
+  withInstallReminder: boolean
   novuSignature: string
   history: History
 }
 
-export const _App = ({ classes, history, isAuthenticated, novuSignature }: AppProps) => {
+export const _App = ({ classes, history, isAuthenticated, novuSignature, withInstallReminder }: AppProps) => {
+  const featureManager = useFeatureManager()
   const shouldShowNovuBanner = isAuthenticated && novuSignature
+  const isNewChefDownloadFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.NewChefDownload)
 
   return (
     <>
@@ -125,7 +133,12 @@ export const _App = ({ classes, history, isAuthenticated, novuSignature }: AppPr
         <div className={classes.mainWindow}>
           <NavigationBarContainer />
           <div className={classes.container}>
-            <div className={classes.content}>
+            <div
+              className={classNames(
+                classes.content,
+                isNewChefDownloadFeatureFlagEnabled && withInstallReminder && classes.withBanner,
+              )}
+            >
               <SearchProvider
                 config={{
                   ...searchConfig,
@@ -146,6 +159,7 @@ export const _App = ({ classes, history, isAuthenticated, novuSignature }: AppPr
 const mapStoreToProps = (store: RootStore): any => ({
   isAuthenticated: store.auth.isAuthenticated,
   novuSignature: store.profile.novuSignature,
+  withInstallReminder: store.profile.withInstallReminder,
 })
 
 export const App = connect(mapStoreToProps, withStyles(styles)(_App))
