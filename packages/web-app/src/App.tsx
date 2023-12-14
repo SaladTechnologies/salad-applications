@@ -104,25 +104,15 @@ const searchConfig = {
 
 interface AppProps extends WithStyles<typeof styles> {
   isAuthenticated: boolean
+  withInstallReminder: boolean
   novuSignature: string
-  saladBowlFirstLoginAt: string
-  isInstallReminderClosed: boolean
   history: History
 }
 
-export const _App = ({
-  classes,
-  history,
-  isAuthenticated,
-  novuSignature,
-  saladBowlFirstLoginAt,
-  isInstallReminderClosed,
-}: AppProps) => {
+export const _App = ({ classes, history, isAuthenticated, novuSignature, withInstallReminder }: AppProps) => {
   const featureManager = useFeatureManager()
   const shouldShowNovuBanner = isAuthenticated && novuSignature
   const isNewChefDownloadFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.NewChefDownload)
-  const withInstallReminder =
-    isNewChefDownloadFeatureFlagEnabled && !isInstallReminderClosed && !saladBowlFirstLoginAt && isAuthenticated
 
   return (
     <>
@@ -143,7 +133,12 @@ export const _App = ({
         <div className={classes.mainWindow}>
           <NavigationBarContainer />
           <div className={classes.container}>
-            <div className={classNames(classes.content, withInstallReminder && classes.withBanner)}>
+            <div
+              className={classNames(
+                classes.content,
+                isNewChefDownloadFeatureFlagEnabled && withInstallReminder && classes.withBanner,
+              )}
+            >
               <SearchProvider
                 config={{
                   ...searchConfig,
@@ -164,8 +159,7 @@ export const _App = ({
 const mapStoreToProps = (store: RootStore): any => ({
   isAuthenticated: store.auth.isAuthenticated,
   novuSignature: store.profile.novuSignature,
-  saladBowlFirstLoginAt: store.profile.currentProfile?.saladBowlFirstLoginAt,
-  isInstallReminderClosed: store.profile.isInstallReminderClosed,
+  withInstallReminder: store.profile.withInstallReminder,
 })
 
 export const App = connect(mapStoreToProps, withStyles(styles)(_App))

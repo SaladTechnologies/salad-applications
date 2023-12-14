@@ -4,8 +4,6 @@ import type { RootStore } from '../../Store'
 import { connect } from '../../connect'
 import { NavigationBarWithNotifications } from './components/NavigationBarWithNotifications'
 
-const installReminderFeatureReleaseDate = new Date('2023-12-13T14:45:00.711Z')
-
 const mapStoreToProps = (store: RootStore): any => {
   const isAuthenticated = store.auth.isAuthenticated
   const handleLogin = () => {
@@ -20,22 +18,6 @@ const mapStoreToProps = (store: RootStore): any => {
   const bonus = store.bonuses.firstExpiringUnclaimedBonus
 
   const selectedAvatar = store.profile.profileAvatar
-
-  const profileCreatedDate = store.profile.currentProfile?.createdAt
-    ? new Date(store.profile.currentProfile?.createdAt)
-    : null
-
-  const isProfileCreatedAfterInstallReminderReleaseDate = profileCreatedDate
-    ? profileCreatedDate > installReminderFeatureReleaseDate
-    : false
-
-  const saladBowlFirstLoginAt = store.profile.currentProfile?.saladBowlFirstLoginAt
-  const isInstallReminderClosed = store.profile.isInstallReminderClosed
-  const withInstallReminder =
-    !isInstallReminderClosed &&
-    !saladBowlFirstLoginAt &&
-    isAuthenticated &&
-    isProfileCreatedAfterInstallReminderReleaseDate
 
   const startButton = store.startButtonUI.properties
 
@@ -105,7 +87,7 @@ const mapStoreToProps = (store: RootStore): any => {
     username: isAuthenticated ? store.profile.currentProfile?.username : undefined,
     targetReward,
     notifications,
-    withInstallReminder,
+    withInstallReminder: store.profile.withInstallReminder,
     novuSignature: store.profile.novuSignature,
   }
 }

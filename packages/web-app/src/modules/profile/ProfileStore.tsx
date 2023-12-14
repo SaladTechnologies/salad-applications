@@ -20,7 +20,7 @@ const SaladDefaultAvatar: Avatar = {
   imageUrl: SaladDefaultAvatarSrc,
   id: '00000000-0000-0000-0000-000000000000',
 }
-
+const installReminderFeatureReleaseDate = new Date('2023-12-13T14:45:00.711Z')
 const IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY = 'IS_INSTALL_REMINDER_CLOSED'
 
 export class ProfileStore {
@@ -81,6 +81,20 @@ export class ProfileStore {
   public isInstallReminderClosed: boolean = Storage.getItem(IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY) === 'true'
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
+
+  @computed
+  public get withInstallReminder(): boolean {
+    const isProfileCreatedAfterInstallReminderReleaseDate = this.currentProfile?.createdAt
+      ? new Date(this.currentProfile?.createdAt) > installReminderFeatureReleaseDate
+      : false
+
+    return (
+      isProfileCreatedAfterInstallReminderReleaseDate &&
+      !this.isInstallReminderClosed &&
+      !this.currentProfile?.saladBowlFirstLoginAt &&
+      !!this.store.auth.isAuthenticated
+    )
+  }
 
   @action
   setProfileData = (profileData: Profile) => {
