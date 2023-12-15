@@ -19,7 +19,7 @@ const styles = (theme: SaladTheme) => ({
     flexDirection: 'column',
     gap: '80px',
     padding: '120px 230px 150px',
-    color: theme.neutral,
+    color: theme.white,
     fontFamily: theme.fontMallory,
     justifyContent: 'center',
 
@@ -90,7 +90,7 @@ const styles = (theme: SaladTheme) => ({
     display: 'inline-block',
     textAlign: 'center',
     textDecoration: 'none',
-    color: theme.neutral,
+    color: theme.white,
     fontWeight: 700,
     borderRadius: 4,
     border: `2px solid ${theme.darkGreen}`,
