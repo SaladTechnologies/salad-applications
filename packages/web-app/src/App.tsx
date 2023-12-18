@@ -121,10 +121,10 @@ export const _App = ({
   withInstallReminder,
 }: AppProps) => {
   const featureManager = useFeatureManager()
+  const { showBoundary } = useErrorBoundary()
+
   const shouldShowNovuBanner = isAuthenticated && novuSignature
   const isNewChefDownloadFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.NewChefDownload)
-
-  const { showBoundary } = useErrorBoundary()
 
   useEffect(() => {
     if (isErrorCaught) {
