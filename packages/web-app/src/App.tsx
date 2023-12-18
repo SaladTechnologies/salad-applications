@@ -105,6 +105,7 @@ const searchConfig = {
 }
 
 interface AppProps extends WithStyles<typeof styles> {
+  errorCaughtMessage: string
   isAuthenticated: boolean
   isErrorCaught: boolean
   withInstallReminder: boolean
@@ -115,6 +116,7 @@ interface AppProps extends WithStyles<typeof styles> {
 export const _App = ({
   classes,
   history,
+  errorCaughtMessage,
   isAuthenticated,
   isErrorCaught,
   novuSignature,
@@ -128,9 +130,9 @@ export const _App = ({
 
   useEffect(() => {
     if (isErrorCaught) {
-      showBoundary('Error Caught')
+      showBoundary(errorCaughtMessage)
     }
-  }, [isErrorCaught, showBoundary])
+  }, [errorCaughtMessage, isErrorCaught, showBoundary])
 
   return (
     <>
@@ -175,8 +177,9 @@ export const _App = ({
 }
 
 const mapStoreToProps = (store: RootStore): any => ({
+  errorCaughtMessage: store.errorBoundary.errorCaughtMessage,
   isAuthenticated: store.auth.isAuthenticated,
-  isErrorCaught: store.profile.isErrorCaught,
+  isErrorCaught: store.errorBoundary.isErrorCaught,
   novuSignature: store.profile.novuSignature,
   withInstallReminder: store.profile.withInstallReminder,
 })
