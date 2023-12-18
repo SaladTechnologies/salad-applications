@@ -3,8 +3,8 @@ import type { FallbackProps } from 'react-error-boundary'
 import { ErrorBoundary } from 'react-error-boundary'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { SmartLink } from './components'
 import type { SaladTheme } from './SaladTheme'
+import { SmartLink } from './components'
 
 const styles = (theme: SaladTheme) => ({
   actionBar: {

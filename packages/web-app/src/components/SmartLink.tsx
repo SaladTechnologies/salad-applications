@@ -3,16 +3,15 @@ import type { ReactNode } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Link } from 'react-router-dom'
-import type { LinkTrackingInfo } from '../modules/analytics/models'
 import type { RootStore } from '../Store'
 import { getStore } from '../Store'
+import type { LinkTrackingInfo } from '../modules/analytics/models'
 
 const styles = {
   link: {
-    color: 'inherit',
-
+    color: (props: Props) => (props.color ? props.color : 'inherit'),
     '&:visited': {
-      color: 'inherit',
+      color: (props: Props) => (props.color ? props.color : 'inherit'),
     },
   },
   hideUnderline: {
@@ -24,6 +23,7 @@ interface Props extends WithStyles<typeof styles> {
   to?: string
   children?: ReactNode
   className?: string
+  color?: string
   trackingInfo?: LinkTrackingInfo
 }
 
