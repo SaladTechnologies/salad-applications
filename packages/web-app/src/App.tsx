@@ -2,7 +2,9 @@ import { SearchProvider } from '@elastic/react-search-ui'
 import AppSearchAPIConnector from '@elastic/search-ui-app-search-connector'
 import classNames from 'classnames'
 import type { History } from 'history'
+import { useEffect } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
+import { useErrorBoundary } from 'react-error-boundary'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { ToastContainer } from 'react-toastify'
@@ -104,15 +106,31 @@ const searchConfig = {
 
 interface AppProps extends WithStyles<typeof styles> {
   isAuthenticated: boolean
+  isErrorCaught: boolean
   withInstallReminder: boolean
   novuSignature: string
   history: History
 }
 
-export const _App = ({ classes, history, isAuthenticated, novuSignature, withInstallReminder }: AppProps) => {
+export const _App = ({
+  classes,
+  history,
+  isAuthenticated,
+  isErrorCaught,
+  novuSignature,
+  withInstallReminder,
+}: AppProps) => {
   const featureManager = useFeatureManager()
   const shouldShowNovuBanner = isAuthenticated && novuSignature
   const isNewChefDownloadFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.NewChefDownload)
+
+  const { showBoundary } = useErrorBoundary()
+
+  useEffect(() => {
+    if (isErrorCaught) {
+      showBoundary('Error Caught')
+    }
+  }, [isErrorCaught, showBoundary])
 
   return (
     <>
@@ -158,6 +176,7 @@ export const _App = ({ classes, history, isAuthenticated, novuSignature, withIns
 
 const mapStoreToProps = (store: RootStore): any => ({
   isAuthenticated: store.auth.isAuthenticated,
+  isErrorCaught: store.profile.isErrorCaught,
   novuSignature: store.profile.novuSignature,
   withInstallReminder: store.profile.withInstallReminder,
 })

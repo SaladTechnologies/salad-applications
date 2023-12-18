@@ -138,6 +138,7 @@ export class RootStore {
       var profile: Profile = yield this.profile.loadProfile()
       if (!profile) {
         this.auth.logout()
+        this.finishInitialLoading()
         return
       }
 

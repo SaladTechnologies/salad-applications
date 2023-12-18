@@ -60,6 +60,9 @@ export class ProfileStore {
   @observable
   public isMinecraftUserNameSubmitSuccess: boolean = false
 
+  @observable
+  public isErrorCaught: boolean = false
+
   @computed
   get profileAvatar(): Avatar | undefined {
     return this.avatars?.find((avatar) => avatar.id === this.currentSelectedAvatar)
@@ -112,9 +115,10 @@ export class ProfileStore {
     try {
       let profile = yield this.axios.get('/api/v1/profile')
       this.currentProfile = profile.data
+      this.isErrorCaught = false
     } catch (err) {
       this.currentProfile = undefined
-      this.store.routing.replace('/profile-error')
+      this.isErrorCaught = true
     }
     return this.currentProfile
   })
