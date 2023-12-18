@@ -3,15 +3,11 @@ import { Img } from 'react-image'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import Skeleton from 'react-loading-skeleton'
-import { Link } from 'react-router-dom'
-import type { SaladTheme } from '../../../SaladTheme'
-import { Scrollbar } from '../../../components'
-import BandwidthImage from '../assets/bandwidth.svg'
-import ContainerWorkloadsImage from '../assets/container-workloads.svg'
-import CPUImage from '../assets/cpu.svg'
-import GPUImage from '../assets/gpu.svg'
+import { DefaultTheme, type SaladTheme } from '../../../SaladTheme'
+import { Scrollbar, SmartLink } from '../../../components'
 import PixelChoppingSaladImage from '../assets/pixel-chopping-salad.svg'
 import SaladEarnOptionsImage from '../assets/salad-earn-options.svg'
+import { earnTypes } from './constants'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -98,38 +94,10 @@ const styles = (theme: SaladTheme) => ({
     backgroundColor: theme.darkGreen,
     padding: '8px 75px',
   },
-  link: {
-    color: theme.green,
-  },
   downloadImage: {
     margin: 'auto',
   },
 })
-
-const earnTypes = [
-  {
-    title: 'Container Workloads,',
-    description:
-      'our most profitable workloads, require more intensive GPU resources. At this time, only newer NVIDIA GPUs are eligible for these workloads.',
-    imageSrc: ContainerWorkloadsImage,
-  },
-  {
-    title: 'GPU Mining Workloads,',
-    description:
-      'unlike the other workloads, are always available to chefs. Payouts are consistent with the current crypto market.',
-    imageSrc: GPUImage,
-  },
-  {
-    title: 'CPU Container Workloads',
-    description: 'use your CPU to run containerized jobs on your PC.',
-    imageSrc: CPUImage,
-  },
-  {
-    title: 'Bandwidth Sharing.',
-    description: 'Chefs can safely share their bandwidth with Salad to run streaming services across the globe.',
-    imageSrc: BandwidthImage,
-  },
-]
 
 interface Props extends WithStyles<typeof styles> {}
 
@@ -144,18 +112,16 @@ const _EarnInfoPage: FC<Props> = ({ classes }) => {
               In exchange for lending us your GPU, CPU or Bandwidth resources Salad will give you balance to spend in
               the Salad store. This can be used to purchase things like Amazon Gift Cards, Steam keys, Discord Nitro,
               and more in the{' '}
-              <Link to="/store" className={classes.link}>
+              <SmartLink to="/store" color={DefaultTheme.green}>
                 Salad Storefront.
-              </Link>{' '}
+              </SmartLink>{' '}
               Salad Balance varies depending on the type of jobs performed on the Salad network, as well as the{' '}
-              <a
-                rel="noopener noreferrer"
-                target="_blank"
-                href="https://support.salad.com/article/78-is-my-machine-compatible-with-salad"
-                className={classes.link}
+              <SmartLink
+                to="https://support.salad.com/article/78-is-my-machine-compatible-with-salad"
+                color={DefaultTheme.green}
               >
                 quality
-              </a>{' '}
+              </SmartLink>{' '}
               of your PC.
             </p>
           </div>
@@ -184,14 +150,12 @@ const _EarnInfoPage: FC<Props> = ({ classes }) => {
             <p className={classes.downloadDescriptiom}>
               All you have to do is download the Salad widget and start chopping! For more information on how to get
               started, check out this{' '}
-              <a
-                rel="noopener noreferrer"
-                target="_blank"
-                href="https://support.salad.com/article/135-getting-started-with-salad-the-basics"
-                className={classes.link}
+              <SmartLink
+                to="https://support.salad.com/article/135-getting-started-with-salad-the-basics"
+                color={DefaultTheme.green}
               >
                 guide
-              </a>{' '}
+              </SmartLink>{' '}
               .
             </p>
             <a href="/download" className={classes.downloadButtonLink}>
