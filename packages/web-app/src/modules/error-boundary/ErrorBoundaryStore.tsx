@@ -3,7 +3,7 @@ import type { UseErrorBoundaryApi } from 'react-error-boundary'
 
 export class ErrorBoundaryStore {
   @observable
-  private showErrorBoundaryQueue: (() => void)[] = []
+  private pendingShowErrorBoundaryActions: (() => void)[] = []
 
   @observable
   public errorBoundary?: UseErrorBoundaryApi<Error> = undefined
@@ -12,10 +12,10 @@ export class ErrorBoundaryStore {
   public setErrorBoundary = (errorBoundary: UseErrorBoundaryApi<Error>) => {
     this.errorBoundary = errorBoundary
     // Trigger any queued showErrorBoundary actions
-    this.showErrorBoundaryQueue.forEach((queuedAction) => {
+    this.pendingShowErrorBoundaryActions.forEach((queuedAction) => {
       queuedAction()
     })
-    this.showErrorBoundaryQueue = []
+    this.pendingShowErrorBoundaryActions = []
   }
 
   @action
@@ -24,7 +24,7 @@ export class ErrorBoundaryStore {
       this.errorBoundary.showBoundary(errorCaughtMessage)
     } else {
       // Queue the showErrorBoundary action if errorBoundary is not defined
-      this.showErrorBoundaryQueue.push(() => this.showErrorBoundary(errorCaughtMessage))
+      this.pendingShowErrorBoundaryActions.push(() => this.showErrorBoundary(errorCaughtMessage))
     }
   }
 
