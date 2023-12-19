@@ -10,6 +10,7 @@ import { BalanceStore } from './modules/balance'
 import { BonusStore } from './modules/bonus'
 import { RefreshService } from './modules/data-refresh'
 import { EngagementStore } from './modules/engagement'
+import { ErrorBoundaryStore } from './modules/error-boundary'
 import { HelpScoutStore } from './modules/helpscout/HelpScoutStore'
 import { HomeStore } from './modules/home/HomeStore'
 import { NotificationStore } from './modules/notifications'
@@ -71,6 +72,7 @@ export class RootStore {
   public readonly onboarding: OnboardingStore
   public readonly startButtonUI: StartButtonUIStore
   public readonly saladCard: SaladCardStore
+  public readonly errorBoundary: ErrorBoundaryStore
 
   constructor(axios: AxiosInstance, private readonly featureManager: FeatureManager) {
     this.routing = new RouterStore()
@@ -97,6 +99,7 @@ export class RootStore {
     this.seasons = new SeasonsStore(axios)
     this.onboarding = new OnboardingStore(this)
     this.startButtonUI = new StartButtonUIStore(this)
+    this.errorBoundary = new ErrorBoundaryStore()
 
     // Pass AnalyticsStore to FeatureManager
     featureManager.setAnalyticsStore(this.analytics)

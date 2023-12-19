@@ -1,7 +1,7 @@
 import type { Location } from 'history'
 import type { RouteComponentProps } from 'react-router'
 import { Redirect, Route, Switch, withRouter } from 'react-router'
-import { NotFoundPage } from './NotFoundPage'
+import { NoPageFound } from './components'
 import { ReferralOnboardingContainer, ReferralWelcomeContainer } from './modules/account-views/referral-views'
 import { ReplaceBonusModalContainer } from './modules/bonus-views'
 import { EarnInfoPage, EarningSummaryContainer } from './modules/earn-views'
@@ -56,7 +56,7 @@ const _Routes = ({ location }: RouteComponentProps) => {
       <Redirect exact from="/rewards/:id" to="/store/rewards/:id" />
       <Redirect exact from="/" to="/store" />
 
-      <Route component={NotFoundPage} />
+      <Route component={NoPageFound} />
     </Switch>
   )
 }

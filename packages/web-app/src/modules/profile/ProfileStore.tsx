@@ -112,9 +112,10 @@ export class ProfileStore {
     try {
       let profile = yield this.axios.get('/api/v1/profile')
       this.currentProfile = profile.data
+      this.store.errorBoundary.resetErrorBoundary()
     } catch (err) {
       this.currentProfile = undefined
-      this.store.routing.replace('/profile-error')
+      this.store.errorBoundary.showErrorBoundary(new Error(`An error occurred: ${err}`))
     }
     return this.currentProfile
   })
