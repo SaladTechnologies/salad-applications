@@ -3455,7 +3455,7 @@ __metadata:
     react-copy-to-clipboard: "npm:5.1.0"
     react-custom-scrollbars-2: "npm:4.5.0"
     react-dom: "npm:18.2.0"
-    react-error-boundary: "npm:4.0.11"
+    react-error-boundary: "npm:4.0.12"
     react-final-form: "npm:6.5.9"
     react-helmet: "npm:6.1.0"
     react-hint: "npm:3.2.1"
@@ -18590,14 +18590,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-error-boundary@npm:4.0.11":
-  version: 4.0.11
-  resolution: "react-error-boundary@npm:4.0.11"
+"react-error-boundary@npm:4.0.12":
+  version: 4.0.12
+  resolution: "react-error-boundary@npm:4.0.12"
   dependencies:
     "@babel/runtime": "npm:^7.12.5"
   peerDependencies:
     react: ">=16.13.1"
-  checksum: 33dad3df7687971e65c7182d97f44bd618cb5d77d1c338e0a7c17c5cf7706a07b9055fffb771ff19bad750d40dd3cfd18d661a60b0518e73197e294dc185f18c
+  checksum: de599799efab78929447e11f4cfb3779e99ca87a8af1b3c56ab49ecb0bcc44fe924cfad4d2f3cc77c6cc8d992e3c47e356c70edebb825ae867aa621438035209
   languageName: node
   linkType: hard
 
