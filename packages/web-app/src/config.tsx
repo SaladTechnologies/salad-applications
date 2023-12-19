@@ -44,6 +44,7 @@ export class Config {
   public readonly strapiUploadUrl: string = requiredString('REACT_APP_STRAPI_UPLOAD_URL')
   public readonly novuAppId: string = requiredString('REACT_APP_NOVU_APP_ID')
   public readonly loginUrl: string = requiredString('REACT_APP_LOGIN_URL')
+  public readonly isTestEnvironment: boolean = requiredString('REACT_APP_API_URL').includes('testing')
 
   public get apiBaseUrl(): string {
     const override = Storage.getItem('OVERRIDE_APP_API_URL')
