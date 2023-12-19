@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import type { History } from 'history'
 import { useEffect } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
+import type { UseErrorBoundaryApi } from 'react-error-boundary'
 import { useErrorBoundary } from 'react-error-boundary'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
@@ -105,9 +106,8 @@ const searchConfig = {
 }
 
 interface AppProps extends WithStyles<typeof styles> {
-  errorCaughtMessage: string
   isAuthenticated: boolean
-  isErrorCaught: boolean
+  setErrorBoundary: (errorBoundary: UseErrorBoundaryApi<Error>) => void
   withInstallReminder: boolean
   novuSignature: string
   history: History
@@ -116,23 +116,20 @@ interface AppProps extends WithStyles<typeof styles> {
 export const _App = ({
   classes,
   history,
-  errorCaughtMessage,
   isAuthenticated,
-  isErrorCaught,
+  setErrorBoundary,
   novuSignature,
   withInstallReminder,
 }: AppProps) => {
   const featureManager = useFeatureManager()
-  const { showBoundary } = useErrorBoundary()
+  const errorBoundary = useErrorBoundary()
 
   const shouldShowNovuBanner = isAuthenticated && novuSignature
   const isNewChefDownloadFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.NewChefDownload)
 
   useEffect(() => {
-    if (isErrorCaught) {
-      showBoundary(errorCaughtMessage)
-    }
-  }, [errorCaughtMessage, isErrorCaught, showBoundary])
+    setErrorBoundary(errorBoundary)
+  }, [setErrorBoundary, errorBoundary])
 
   return (
     <>
@@ -177,10 +174,9 @@ export const _App = ({
 }
 
 const mapStoreToProps = (store: RootStore): any => ({
-  errorCaughtMessage: store.errorBoundary.errorCaughtMessage,
   isAuthenticated: store.auth.isAuthenticated,
-  isErrorCaught: store.errorBoundary.isErrorCaught,
   novuSignature: store.profile.novuSignature,
+  setErrorBoundary: store.errorBoundary.setErrorBoundary,
   withInstallReminder: store.profile.withInstallReminder,
 })
 
