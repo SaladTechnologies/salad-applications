@@ -24,7 +24,7 @@ export class AuthStore {
     } catch {
       const routeWithoutTrailingSlash = this.store.routing.location.pathname.slice(1)
 
-      window.location.assign(`${config.loginUrl}?redirect_webapp=${routeWithoutTrailingSlash}`)
+      window.location.assign(`${config.loginUrl}?redirect_uri=${routeWithoutTrailingSlash}`)
     }
   }
 
