@@ -162,7 +162,7 @@ export const _App = ({
                   history: history,
                 }}
               >
-                <Routes />
+                <Routes isAuthenticated={isAuthenticated} />
               </SearchProvider>
             </div>
             <ToastContainer />
