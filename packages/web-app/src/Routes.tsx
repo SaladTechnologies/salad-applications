@@ -11,7 +11,11 @@ import { SettingsContainer } from './modules/settings-views'
 import { StorefrontHomePage } from './modules/storefront-views/pages/StorefrontHomePage'
 import { VaultListContainer } from './modules/vault-views'
 
-const _Routes = ({ location }: RouteComponentProps) => {
+interface Props extends RouteComponentProps {
+  isAuthenticated: boolean
+}
+
+const _Routes = ({ location, isAuthenticated }: Props) => {
   const currentLocation =
     (location.state as { currentLocation: Location | undefined } | undefined)?.currentLocation || location
 
@@ -38,6 +42,7 @@ const _Routes = ({ location }: RouteComponentProps) => {
       <Redirect exact from="/account" to="/account/summary" />
       <Route path="/account" component={SettingsContainer} />
 
+      {isAuthenticated ? <Redirect exact from="/earn" to="/earn/summary" /> : null}
       <Route path="/earn/summary" component={EarningSummaryContainer} />
       <Route path="/earn" component={EarnInfoPage} />
 
