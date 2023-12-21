@@ -20,7 +20,7 @@ const SaladDefaultAvatar: Avatar = {
   imageUrl: SaladDefaultAvatarSrc,
   id: '00000000-0000-0000-0000-000000000000',
 }
-const installReminderFeatureReleaseDate = new Date('2023-12-13T14:45:00.711Z')
+const installReminderFeatureReleaseDate = new Date('2023-12-21T17:10:47.324Z')
 const IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY = 'IS_INSTALL_REMINDER_CLOSED'
 
 export class ProfileStore {
