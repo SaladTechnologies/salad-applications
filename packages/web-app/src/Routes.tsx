@@ -42,7 +42,7 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
       <Redirect exact from="/account" to="/account/summary" />
       <Route path="/account" component={SettingsContainer} />
 
-      {isAuthenticated ? <Redirect exact from="/earn" to="/earn/summary" /> : null}
+      {isAuthenticated && <Redirect exact from="/earn" to="/earn/summary" />}
       <Route path="/earn/summary" component={EarningSummaryContainer} />
       <Route path="/earn" component={EarnInfoPage} />
 
