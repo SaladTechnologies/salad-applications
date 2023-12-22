@@ -173,7 +173,8 @@ export const _App = ({
   )
 }
 
-const mapStoreToProps = (store: RootStore): any => ({
+const mapStoreToProps = (store: RootStore, props: AppProps): any => ({
+  ...props,
   isAuthenticated: store.auth.isAuthenticated,
   novuSignature: store.profile.novuSignature,
   setErrorBoundary: store.errorBoundary.setErrorBoundary,
