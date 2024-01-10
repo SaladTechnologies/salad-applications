@@ -1,12 +1,13 @@
 import { AvatarSelectionForm, Button, Layout, Text, TextField } from '@saladtechnologies/garden-components'
-import type { ReactNode } from 'react'
-import { Component } from 'react'
+import type { FC } from 'react'
+import { useEffect, useState } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { DefaultTheme } from '../../../../SaladTheme'
 import { Head } from '../../../../components'
+import { config } from '../../../../config'
 import { withLogin } from '../../../auth-views'
 import type { Avatar, Profile } from '../../../profile/models'
 import { AccountTermsAndConditionsUpdate } from './AccountTermsAndConditionsUpdate'
@@ -111,221 +112,209 @@ export type FormValues = {
   input?: string
 }
 
-interface State {
-  payPalLoadRetries: number
-}
+const _Account: FC<Props> = ({
+  loadPayPalId,
+  loadGoogleAccountConnection,
+  profile,
+  onUpdateUsername,
+  avatarError,
+  submittingAvatar,
+  onClearAvatarError,
+  onUpdateMinecraftUsername,
+  onSelectAvatar,
+  onResetUsernameSuccess,
+  onResetMinecraftUsernameSuccess,
+  classes,
+  avatars,
+  selectedAvatar,
+  isUserNameSubmitting,
+  isUserNameSubmitSuccess,
+  isMinecraftUserNameSubmitting,
+  isMinecraftUserNameSubmitSuccess,
+  payPalId,
+  disconnectPayPalId,
+  connectedGoogleAccountEmail,
+  isLoadConnectedGoogleAccountEmailError,
+  isPayPalIdDisconnectLoading,
+  isSubmitting,
+  isTermsAndConditionsAccepted,
+  onSubmitTermsAndConditions,
+  onToggleAcceptTermsAndConditions,
+}) => {
+  const [payPalLoadRetries, setPayPalLoadRetries] = useState(0)
 
-class _Account extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      payPalLoadRetries: 0,
+  // Hide google SSO until salad google account devops setup
+  const hideGoogleSSO = !config.isTestEnvironment
+
+  useEffect(() => {
+    loadPayPalId()
+
+    if (!hideGoogleSSO) {
+      loadGoogleAccountConnection()
     }
+
+    return () => {
+      clearInterval(intervalId)
+    }
+  }, [])
+
+  const shouldShowUpdateAccountTermsAndConditions = !!profile?.pendingTermsVersion
+  const handleSubmitButtonReset = () => {
+    isUserNameSubmitSuccess && onResetUsernameSuccess()
+    isMinecraftUserNameSubmitSuccess && onResetMinecraftUsernameSuccess()
   }
 
-  public override componentDidMount() {
-    this.props.loadPayPalId()
-
-    // Hide google SSO until salad google account devops setup
-    // this.props.loadGoogleAccountConnection()
-  }
-
-  public override componentWillUnmount() {
+  if (payPalLoadRetries === maxPaypalLoadRetries || payPalId) {
     clearInterval(intervalId)
   }
 
-  public override render(): ReactNode {
-    const {
-      profile,
-      onUpdateUsername,
-      avatarError,
-      submittingAvatar,
-      onClearAvatarError,
-      onUpdateMinecraftUsername,
-      onSelectAvatar,
-      onResetUsernameSuccess,
-      onResetMinecraftUsernameSuccess,
-      classes,
-      avatars,
-      selectedAvatar,
-      isUserNameSubmitting,
-      isUserNameSubmitSuccess,
-      isMinecraftUserNameSubmitting,
-      isMinecraftUserNameSubmitSuccess,
-      payPalId,
-      disconnectPayPalId,
-      connectedGoogleAccountEmail,
-      isLoadConnectedGoogleAccountEmailError,
-      isPayPalIdDisconnectLoading,
-      isSubmitting,
-      isTermsAndConditionsAccepted,
-      onSubmitTermsAndConditions,
-      onToggleAcceptTermsAndConditions,
-    } = this.props
+  const handleCheckPayPalId = () => {
+    clearInterval(intervalId)
+    setPayPalLoadRetries(0)
+    intervalId = setInterval(() => {
+      loadPayPalId()
+      setPayPalLoadRetries((previousCount) => previousCount + 1)
+    }, 5000)
+  }
 
-    const shouldShowUpdateAccountTermsAndConditions = !!profile?.pendingTermsVersion
-    const handleSubmitButtonReset = () => {
-      isUserNameSubmitSuccess && onResetUsernameSuccess()
-      isMinecraftUserNameSubmitSuccess && onResetMinecraftUsernameSuccess()
-    }
-
-    if (this.state.payPalLoadRetries === maxPaypalLoadRetries || payPalId) {
-      clearInterval(intervalId)
-    }
-
-    const handleCheckPayPalId = () => {
-      clearInterval(intervalId)
-      this.setState({ payPalLoadRetries: 0 })
-      intervalId = setInterval(() => {
-        this.props.loadPayPalId()
-        this.setState((previousCount) => ({
-          payPalLoadRetries: previousCount.payPalLoadRetries + 1,
-        }))
-      }, 5000)
-    }
-
-    // Hide google SSO until salad google account devops setup
-    const hideGoogleSSO = true
-
-    return (
-      <div className={classes.container}>
-        <Scrollbars>
-          <Layout title="Profile">
-            <Head title="Profile" />
-            {shouldShowUpdateAccountTermsAndConditions && (
-              <AccountTermsAndConditionsUpdate
-                isSubmitting={isSubmitting}
-                isTermsAndConditionsAccepted={isTermsAndConditionsAccepted}
-                onSubmitTermsAndConditions={onSubmitTermsAndConditions}
-                onToggleAcceptTermsAndConditions={onToggleAcceptTermsAndConditions}
-              />
-            )}
-            <div className={classes.fieldContainer}>
-              <TextField
-                isSubmitting={isUserNameSubmitting}
-                isSubmitSuccess={isUserNameSubmitSuccess}
-                validationRegexErrorMessage="Username must be between 2 - 32 characters and can not contain spaces!"
-                label="Username"
-                onSubmit={onUpdateUsername}
-                validationRegex={/^\w{2,32}$/}
-                onFocus={handleSubmitButtonReset}
-                defaultValue={profile?.username}
+  return (
+    <div className={classes.container}>
+      <Scrollbars>
+        <Layout title="Profile">
+          <Head title="Profile" />
+          {shouldShowUpdateAccountTermsAndConditions && (
+            <AccountTermsAndConditionsUpdate
+              isSubmitting={isSubmitting}
+              isTermsAndConditionsAccepted={isTermsAndConditionsAccepted}
+              onSubmitTermsAndConditions={onSubmitTermsAndConditions}
+              onToggleAcceptTermsAndConditions={onToggleAcceptTermsAndConditions}
+            />
+          )}
+          <div className={classes.fieldContainer}>
+            <TextField
+              isSubmitting={isUserNameSubmitting}
+              isSubmitSuccess={isUserNameSubmitSuccess}
+              validationRegexErrorMessage="Username must be between 2 - 32 characters and can not contain spaces!"
+              label="Username"
+              onSubmit={onUpdateUsername}
+              validationRegex={/^\w{2,32}$/}
+              onFocus={handleSubmitButtonReset}
+              defaultValue={profile?.username}
+            />
+          </div>
+          {avatars && (
+            <div className={classes.avatarContainer}>
+              <div className={classes.headingContainer}>
+                <Text variant="baseXL"> Avatar </Text>
+              </div>
+              <AvatarSelectionForm
+                avatars={avatars}
+                error={avatarError}
+                submittingAvatar={submittingAvatar}
+                onResetError={onClearAvatarError}
+                onSelectAvatar={onSelectAvatar}
+                selectedAvatar={selectedAvatar}
               />
             </div>
-            {avatars && (
-              <div className={classes.avatarContainer}>
-                <div className={classes.headingContainer}>
-                  <Text variant="baseXL"> Avatar </Text>
-                </div>
-                <AvatarSelectionForm
-                  avatars={avatars}
-                  error={avatarError}
-                  submittingAvatar={submittingAvatar}
-                  onResetError={onClearAvatarError}
-                  onSelectAvatar={onSelectAvatar}
-                  selectedAvatar={selectedAvatar}
-                />
+          )}
+          <div className={classes.accountConnectionsContainer}>
+            <Text variant="baseXL">Account Connections</Text>
+            <div className={classes.accountConnectionItem}>
+              <div className={classes.subheadingContainer}>
+                <Text variant="baseL">PayPal</Text>
               </div>
-            )}
-            <div className={classes.accountConnectionsContainer}>
-              <Text variant="baseXL">Account Connections</Text>
+              <div className={classes.connectAccountButtonContainer}>
+                {payPalId ? (
+                  <Text variant="baseXL">
+                    <div className={classes.paypalIdContainer}>{payPalId}</div>
+                    <div className={classes.disconnectButtonContainer}>
+                      <Button
+                        onClick={disconnectPayPalId}
+                        isLoading={isPayPalIdDisconnectLoading}
+                        label={'Unlink PayPal Account'}
+                        outlineColor={DefaultTheme.darkBlue}
+                        variant={'outlined'}
+                      />
+                    </div>
+                  </Text>
+                ) : (
+                  <>
+                    <PayPalLoginButton onClick={handleCheckPayPalId} />
+                    <div className={classes.connectAccountDescription}>
+                      <Text variant="baseS">
+                        Connect Salad to your PayPal account. A PayPal account is required to redeem all PayPal rewards.
+                        This enables transfering Salad Balance to your PayPal wallet.
+                      </Text>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+            {!hideGoogleSSO && (
               <div className={classes.accountConnectionItem}>
                 <div className={classes.subheadingContainer}>
-                  <Text variant="baseL">PayPal</Text>
+                  <Text variant="baseL">Google</Text>
                 </div>
                 <div className={classes.connectAccountButtonContainer}>
-                  {payPalId ? (
-                    <Text variant="baseXL">
-                      <div className={classes.paypalIdContainer}>{payPalId}</div>
-                      <div className={classes.disconnectButtonContainer}>
-                        <Button
-                          onClick={disconnectPayPalId}
-                          isLoading={isPayPalIdDisconnectLoading}
-                          label={'Unlink PayPal Account'}
-                          outlineColor={DefaultTheme.darkBlue}
-                          variant={'outlined'}
-                        />
-                      </div>
-                    </Text>
+                  {connectedGoogleAccountEmail ? (
+                    <>
+                      <Text variant="baseS">Google Email Address</Text>
+                      <Text variant="baseL">
+                        <div className={classes.connectedGoogleAccountEmail}>{connectedGoogleAccountEmail}</div>
+                      </Text>
+                    </>
                   ) : (
                     <>
-                      <PayPalLoginButton onClick={handleCheckPayPalId} />
+                      <GoogleSignInForm
+                        isTermsAndConditionsAccepted={isTermsAndConditionsAccepted}
+                        isTermsAndConditionsRequired={shouldShowUpdateAccountTermsAndConditions}
+                      />
+                      {isLoadConnectedGoogleAccountEmailError && (
+                        <div className={classes.connectAccountError}>
+                          <Text variant="baseS">
+                            Unable to fetch connected Google Account. Please try to refresh the page.
+                          </Text>
+                        </div>
+                      )}
                       <div className={classes.connectAccountDescription}>
                         <Text variant="baseS">
-                          Connect Salad to your PayPal account. A PayPal account is required to redeem all PayPal
-                          rewards. This enables transfering Salad Balance to your PayPal wallet.
+                          Connect Salad to your Google account. A Google account allows you to sign in easily to Salad
+                          using Google SSO.
                         </Text>
                       </div>
                     </>
                   )}
                 </div>
               </div>
-              {!hideGoogleSSO && (
-                <div className={classes.accountConnectionItem}>
-                  <div className={classes.subheadingContainer}>
-                    <Text variant="baseL">Google</Text>
-                  </div>
-                  <div className={classes.connectAccountButtonContainer}>
-                    {connectedGoogleAccountEmail ? (
-                      <>
-                        <Text variant="baseS">Google Email Address</Text>
-                        <Text variant="baseL">
-                          <div className={classes.connectedGoogleAccountEmail}>{connectedGoogleAccountEmail}</div>
-                        </Text>
-                      </>
-                    ) : (
-                      <>
-                        <GoogleSignInForm
-                          isTermsAndConditionsAccepted={isTermsAndConditionsAccepted}
-                          isTermsAndConditionsRequired={shouldShowUpdateAccountTermsAndConditions}
-                        />
-                        {isLoadConnectedGoogleAccountEmailError && (
-                          <div className={classes.connectAccountError}>
-                            <Text variant="baseS">
-                              Unable to fetch connected Google Account. Please try to refresh the page.
-                            </Text>
-                          </div>
-                        )}
-                        <div className={classes.connectAccountDescription}>
-                          <Text variant="baseS">
-                            Connect Salad to your Google account. A Google account allows you to sign in easily to Salad
-                            using Google SSO.
-                          </Text>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </div>
-              )}
-              <div className={classes.accountConnectionItem}>
-                <div className={classes.subheadingContainer}>
-                  <Text variant="baseL">Minecraft</Text>
-                </div>
-                <div className={classes.fieldContainer}>
-                  <TextField
-                    isSubmitting={isMinecraftUserNameSubmitting}
-                    isSubmitSuccess={isMinecraftUserNameSubmitSuccess}
-                    validationRegexErrorMessage="Not a valid Minecraft username!"
-                    label="Minecraft Username"
-                    onSubmit={onUpdateMinecraftUsername}
-                    validationRegex={/^\w{3,16}$/}
-                    onFocus={handleSubmitButtonReset}
-                    defaultValue={profile?.extensions?.minecraftUsername}
-                  />
-                </div>
-                <div className={classes.minecraftConnectText}>
-                  <Text variant="baseS">
-                    Connect Salad to your Minecraft account. A Minecraft username is required to redeem many Minecraft
-                    rewards.
-                  </Text>
-                </div>
+            )}
+            <div className={classes.accountConnectionItem}>
+              <div className={classes.subheadingContainer}>
+                <Text variant="baseL">Minecraft</Text>
+              </div>
+              <div className={classes.fieldContainer}>
+                <TextField
+                  isSubmitting={isMinecraftUserNameSubmitting}
+                  isSubmitSuccess={isMinecraftUserNameSubmitSuccess}
+                  validationRegexErrorMessage="Not a valid Minecraft username!"
+                  label="Minecraft Username"
+                  onSubmit={onUpdateMinecraftUsername}
+                  validationRegex={/^\w{3,16}$/}
+                  onFocus={handleSubmitButtonReset}
+                  defaultValue={profile?.extensions?.minecraftUsername}
+                />
+              </div>
+              <div className={classes.minecraftConnectText}>
+                <Text variant="baseS">
+                  Connect Salad to your Minecraft account. A Minecraft username is required to redeem many Minecraft
+                  rewards.
+                </Text>
               </div>
             </div>
-          </Layout>
-        </Scrollbars>
-      </div>
-    )
-  }
+          </div>
+        </Layout>
+      </Scrollbars>
+    </div>
+  )
 }
 
 export const Account = withLogin(withStyles(styles)(_Account))
