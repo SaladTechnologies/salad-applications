@@ -7,12 +7,14 @@ import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { DefaultTheme } from '../../../../SaladTheme'
 import { Head } from '../../../../components'
+import { Dropdown } from '../../../../components/Dropdown'
 import { config } from '../../../../config'
 import { withLogin } from '../../../auth-views'
 import type { Avatar, Profile } from '../../../profile/models'
 import { AccountTermsAndConditionsUpdate } from './AccountTermsAndConditionsUpdate'
 import { GoogleSignInForm } from './GoogleSignInForm'
 import { PayPalLoginButton } from './PayPalLoginButton'
+import { accountNotificationPreferenceDropdownOptions } from './assets/constants'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -35,7 +37,7 @@ const styles = (theme: SaladTheme) => ({
   avatarContainer: {
     paddingTop: 66,
   },
-  accountConnectionsContainer: {
+  accountSection: {
     paddingTop: 56,
   },
   connectAccountDescription: {
@@ -62,13 +64,25 @@ const styles = (theme: SaladTheme) => ({
     paddingTop: 5,
     wordWrap: 'break-word',
   },
-  minecraftConnectText: {
+  textContainer: {
     maxWidth: 400,
     paddingTop: 20,
   },
   connectAccountError: {
     paddingTop: 10,
     color: '#811417',
+  },
+  notificationPreferences: {
+    display: 'flex',
+    gap: '56px',
+    flexWrap: 'wrap',
+  },
+  notificationPreference: {
+    width: 'calc(50% - 56px)',
+    paddingTop: 56,
+  },
+  notificationPrefenceLabel: {
+    marginBottom: 3,
   },
 })
 
@@ -142,7 +156,6 @@ const _Account: FC<Props> = ({
   onToggleAcceptTermsAndConditions,
 }) => {
   const [payPalLoadRetries, setPayPalLoadRetries] = useState(0)
-
   // Hide google SSO until salad google account devops setup
   const hideGoogleSSO = !config.isTestEnvironment
 
@@ -217,7 +230,7 @@ const _Account: FC<Props> = ({
               />
             </div>
           )}
-          <div className={classes.accountConnectionsContainer}>
+          <div className={classes.accountSection}>
             <Text variant="baseXL">Account Connections</Text>
             <div className={classes.accountConnectionItem}>
               <div className={classes.subheadingContainer}>
@@ -303,11 +316,56 @@ const _Account: FC<Props> = ({
                   defaultValue={profile?.extensions?.minecraftUsername}
                 />
               </div>
-              <div className={classes.minecraftConnectText}>
+              <div className={classes.textContainer}>
                 <Text variant="baseS">
                   Connect Salad to your Minecraft account. A Minecraft username is required to redeem many Minecraft
                   rewards.
                 </Text>
+              </div>
+            </div>
+          </div>
+          <div className={classes.accountSection}>
+            <Text variant="baseXL">Notification Preferences</Text>
+            <div className={classes.notificationPreferences}>
+              <div className={classes.notificationPreference}>
+                <div className={classes.fieldContainer}>
+                  <div className={classes.notificationPrefenceLabel}>
+                    <Text variant="baseS">Account Activity Notifications</Text>
+                  </div>
+                  <Dropdown type="light" options={accountNotificationPreferenceDropdownOptions} />
+                </div>
+                <div className={classes.textContainer}>
+                  <Text variant="baseS">
+                    Notifications related to your usage and progress within Salad. e.g.: Achievements, Progress towards
+                    your Target Reward, etc.
+                  </Text>
+                </div>
+              </div>
+              <div className={classes.notificationPreference}>
+                <div className={classes.fieldContainer}>
+                  <div className={classes.notificationPrefenceLabel}>
+                    <Text variant="baseS">Promo Notifications Enabled</Text>
+                  </div>
+                  <Dropdown type="light" options={accountNotificationPreferenceDropdownOptions} />
+                </div>
+                <div className={classes.textContainer}>
+                  <Text variant="baseS">
+                    Notifications related to store sales, new rewards and other Salad partnerships.
+                  </Text>
+                </div>
+              </div>
+              <div className={classes.notificationPreference}>
+                <div className={classes.fieldContainer}>
+                  <div className={classes.notificationPrefenceLabel}>
+                    <Text variant="baseS">Community Notifications Enabled</Text>
+                  </div>
+                  <Dropdown type="light" options={accountNotificationPreferenceDropdownOptions} />
+                </div>
+                <div className={classes.textContainer}>
+                  <Text variant="baseS">
+                    Notifications related to community events, user survey opportunities, etc.
+                  </Text>
+                </div>
               </div>
             </div>
           </div>
