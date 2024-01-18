@@ -1,7 +1,6 @@
 import type { FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import type { OptionsOrGroups } from 'react-select'
 import Select from 'react-select'
 import type { SaladTheme } from '../SaladTheme'
 
@@ -12,16 +11,18 @@ const styles = (theme: SaladTheme) => ({
     color: theme.lightGreen,
   },
 })
-
+interface Option {
+  label: string
+  value: string
+}
 interface Props extends WithStyles<typeof styles> {
-  options?: OptionsOrGroups<any, any>
+  options?: Option[]
   value?: string
   onChange?: (value?: any) => void
 }
 
 const _Dropdown: FC<Props> = ({ classes, options, value, onChange }) => {
-  const selectedValue = value
-  const selectedOption = selectedValue && options?.find((option) => option.value === selectedValue)
+  const selectedValue = value && options?.find((option) => option.value === value)
 
   const customStyles = {
     option: (styles: any) => {
@@ -42,7 +43,7 @@ const _Dropdown: FC<Props> = ({ classes, options, value, onChange }) => {
   return (
     <Select
       className={classes.container}
-      value={selectedOption}
+      value={selectedValue}
       options={options}
       onChange={onChange}
       defaultValue={options && options[0]}
