@@ -17,7 +17,7 @@ const styles = (theme: SaladTheme) => ({
     userSelect: 'none',
     color: theme.lightGreen,
     fontSize: '.625rem',
-    fontFamily: 'sharpGroteskLight25',
+    fontFamily: theme.fontGroteskLight25,
     '&:hover': {
       opacity: 0.8,
     },

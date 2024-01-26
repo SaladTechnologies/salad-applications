@@ -3402,8 +3402,8 @@ __metadata:
     "@fortawesome/react-fontawesome": "npm:0.2.0"
     "@novu/notification-center": "npm:0.22.0"
     "@novu/shared": "npm:0.22.0"
-    "@saladtechnologies/garden-components": "npm:1.3.5"
-    "@saladtechnologies/garden-fonts": "npm:1.0.3"
+    "@saladtechnologies/garden-components": "npm:1.3.6"
+    "@saladtechnologies/garden-fonts": "npm:1.0.4"
     "@saladtechnologies/garden-icons": "npm:1.0.16"
     "@storybook/addon-a11y": "npm:6.5.16"
     "@storybook/addon-actions": "npm:6.5.16"
@@ -3501,9 +3501,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@saladtechnologies/garden-components@npm:1.3.5":
-  version: 1.3.5
-  resolution: "@saladtechnologies/garden-components@npm:1.3.5"
+"@saladtechnologies/garden-components@npm:1.3.6":
+  version: 1.3.6
+  resolution: "@saladtechnologies/garden-components@npm:1.3.6"
   peerDependencies:
     "@emotion/react": 11.x
     "@emotion/styled": 11.x
@@ -3518,14 +3518,14 @@ __metadata:
     react-intl: 6.x
     react-range: 1.x
     react-responsive: 9.x
-  checksum: 93ddb32530043fd6f060748843b3e4bd842ab21b1ba29a31db598acae4d503daac124b32add588671aeac7c600afe2e6d8cfbed55b1a910207859cef7b8a675b
+  checksum: d84bfda3935bb15b3e578923fb2c6567a0a953dd0cb210507b720349fd3e5e4eff9adec24e90a8b7f8e8ce903fcc25e10f197aa8eba0ce2a802659f9c14b4b90
   languageName: node
   linkType: hard
 
-"@saladtechnologies/garden-fonts@npm:1.0.3":
-  version: 1.0.3
-  resolution: "@saladtechnologies/garden-fonts@npm:1.0.3"
-  checksum: 67ae46cdd48823b8c3fb41e11f6a0128041612350f283803e1a51b1c157cb8041c3d7e5499d51e2a175df4792c502d4492ce5a014e6953ab7699b943e3a63a05
+"@saladtechnologies/garden-fonts@npm:1.0.4":
+  version: 1.0.4
+  resolution: "@saladtechnologies/garden-fonts@npm:1.0.4"
+  checksum: 038d9cae196d814af10c32c7f1aa378e812eb45dfcb74214a12c65150e3b4ffd74636f07aeaa979732856b957fcdadd14dc1d328f8271802912e84bf4e25dab8
   languageName: node
   linkType: hard
 

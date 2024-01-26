@@ -81,7 +81,7 @@ export const styles = (theme: SaladTheme) => ({
     backgroundColor: theme.darkBlue,
     color: theme.green,
     marginLeft: '1rem',
-    fontFamily: 'sharpGroteskLight25',
+    fontFamily: theme.fontGroteskLight25,
     fontSize: theme.small,
     cursor: 'pointer',
 

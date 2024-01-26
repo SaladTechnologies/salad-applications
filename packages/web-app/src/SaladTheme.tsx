@@ -63,11 +63,11 @@ export const DefaultTheme: SaladTheme = {
   xxLarge: '5rem',
 
   // Font Family
-  fontGroteskBook19: 'sharpGroteskBook19',
-  fontGroteskBook25: 'sharpGroteskBook25',
-  fontGroteskLight05: 'SharpGroteskLight05',
-  fontGroteskLight09: 'SharpGroteskLight09',
-  fontGroteskLight25: 'SharpGroteskLight25',
-  fontGroteskMedium25: 'sharpGroteskMedium25',
+  fontGroteskBook19: 'SharpGrotesk-Book19',
+  fontGroteskBook25: 'SharpGrotesk-Book25',
+  fontGroteskLight05: 'SharpGrotesk-Light05',
+  fontGroteskLight09: 'SharpGrotesk-Light09',
+  fontGroteskLight25: 'SharpGrotesk-Light25',
+  fontGroteskMedium25: 'SharpGrotesk-Medium25',
   fontMallory: 'Mallory',
 }

@@ -12,7 +12,7 @@ const styles = (theme: SaladTheme) => ({
     padding: '0 3rem',
   },
   title: {
-    fontFamily: 'SharpGroteskLight09',
+    fontFamily: theme.fontGroteskLight09,
     fontSize: theme.xLarge,
     textOverflow: 'ellipsis',
     overflow: 'hidden',
@@ -20,7 +20,7 @@ const styles = (theme: SaladTheme) => ({
     whiteSpace: 'nowrap',
   },
   description: {
-    fontFamily: 'sharpGroteskBook19',
+    fontFamily: theme.fontGroteskBook19,
     fontSize: theme.small,
   },
   bugButton: {
@@ -29,7 +29,7 @@ const styles = (theme: SaladTheme) => ({
     backgroundColor: theme.darkBlue,
     color: theme.green,
     marginLeft: '1rem',
-    fontFamily: 'sharpGroteskLight25',
+    fontFamily: theme.fontGroteskLight25,
     fontSize: theme.small,
     cursor: 'pointer',
     '&:hover': {

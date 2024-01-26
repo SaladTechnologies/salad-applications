@@ -16,7 +16,7 @@ const styles = (theme: SaladTheme) => ({
     padding: '.5rem',
     color: theme.lightGreen,
     fontSize: '.625rem',
-    fontFamily: 'sharpGroteskLight25',
+    fontFamily: theme.fontGroteskLight25,
     '&::placeholder': {
       opacity: 0.5,
       color: theme.lightGreen,
@@ -34,7 +34,7 @@ const styles = (theme: SaladTheme) => ({
   errorText: {
     margin: '.25rem',
     color: theme.red,
-    fontFamily: 'sharpGroteskBook25',
+    fontFamily: theme.fontGroteskBook25,
     fontSize: theme.small,
   },
 })

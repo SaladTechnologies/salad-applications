@@ -13,31 +13,31 @@ body {
 }
 
 @font-face {
-  font-family: 'sharpGroteskBook19';
-  src: url('./assets/fonts/SharpGroteskBook19.woff');
+  font-family: 'SharpGrotesk-Book19';
+  src: url('../src/assets/fonts/SharpGrotesk-Book19.woff2') format('woff2'), url('../src/assets/fonts/SharpGrotesk-Book19.woff') format('woff');
 }
 
 @font-face {
-  font-family: 'sharpGroteskBook25';
-  src: url('./assets/fonts/SharpGroteskBook25.woff');
+  font-family: 'SharpGrotesk-Book25';
+  src: url('../src/assets/fonts/SharpGrotesk-Book25.woff2') format('woff2'), url('../src/assets/fonts/SharpGrotesk-Book25.woff') format('woff');
 }
 
 @font-face {
-  font-family: 'SharpGroteskLight05';
-  src: url('./assets/fonts/SharpGroteskLight05.woff');
+  font-family: 'SharpGrotesk-Light05';
+  src: url('../src/assets/fonts/SharpGrotesk-Light05.woff2') format('woff2'), url('../src/assets/fonts/SharpGrotesk-Light05.woff') format('woff');
 }
 
 @font-face {
-  font-family: 'sharpGroteskLight09';
-  src: url('./assets/fonts/SharpGroteskLight09.woff');
+  font-family: 'SharpGrotesk-Light09';
+  src: url('../src/assets/fonts/SharpGrotesk-Light09.woff2') format('woff2'), url('../src/assets/fonts/SharpGrotesk-Light09.woff') format('woff');
 }
 
 @font-face {
-  font-family: 'sharpGroteskLight25';
-  src: url('./assets/fonts/SharpGroteskLight25.woff');
+  font-family: 'SharpGrotesk-Light25';
+  src: url('../src/assets/fonts/SharpGrotesk-Light25.woff2') format('woff2'), url('../src/assets/fonts/SharpGrotesk-Light25.woff') format('woff');
 }
 
 @font-face {
-  font-family: 'sharpGroteskMedium25';
-  src: url('./assets/fonts/SharpGroteskMedium25.woff');
+  font-family: 'SharpGrotesk-Medium25';
+  src: url('../src/assets/fonts/SharpGrotesk-Medium25.woff2') format('woff2'), url('../src/assets/fonts/SharpGrotesk-Medium25.woff') format('woff');
 }
