@@ -52,7 +52,7 @@ const styles = (theme: SaladTheme) => ({
     position: 'absolute',
   },
   text: {
-    fontFamily: 'sharpGroteskBook19',
+    fontFamily: theme.fontGroteskBook19,
     margin: 0,
     whiteSpace: 'nowrap',
     overflow: 'hidden',
@@ -70,7 +70,7 @@ const styles = (theme: SaladTheme) => ({
   errorText: {
     margin: '.25rem',
     color: theme.red,
-    fontFamily: 'sharpGroteskBook25',
+    fontFamily: theme.fontGroteskBook25,
     fontSize: theme.small,
   },
 })

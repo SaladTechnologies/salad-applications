@@ -1,4 +1,4 @@
-import type { ReactNode, FunctionComponent } from 'react'
+import type { FunctionComponent, ReactNode } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../SaladTheme'
@@ -16,14 +16,14 @@ const styles = (theme: SaladTheme) => ({
     maxWidth: 250,
   },
   title: {
-    fontFamily: 'sharpGroteskLight09',
+    fontFamily: theme.fontGroteskLight09,
     fontSize: theme.xLarge,
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
   text: {
-    fontFamily: 'sharpGroteskBook19',
+    fontFamily: theme.fontGroteskBook19,
     fontSize: theme.small,
     textTransform: 'capitalize',
     whiteSpace: 'pre-wrap',

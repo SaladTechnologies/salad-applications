@@ -57,12 +57,12 @@ const styles = (theme: SaladTheme) => ({
   },
   title: {
     paddingTop: '2rem',
-    fontFamily: 'SharpGroteskLight09',
+    fontFamily: theme.fontGroteskLight09,
     fontSize: theme.xxLarge,
     lineHeight: '54px',
   },
   subtitle: {
-    fontFamily: 'sharpGroteskLight25',
+    fontFamily: theme.fontGroteskLight25,
     fontSize: '18px',
     lineHeight: '32px',
     paddingTop: '3rem',

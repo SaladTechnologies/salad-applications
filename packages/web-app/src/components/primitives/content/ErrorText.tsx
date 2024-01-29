@@ -9,7 +9,7 @@ const styles = (theme: SaladTheme) => ({
   errorText: {
     margin: '.25rem',
     color: theme.red,
-    fontFamily: 'sharpGroteskBook25',
+    fontFamily: theme.fontGroteskBook25,
     fontSize: theme.small,
   },
 })

@@ -31,7 +31,7 @@ const styles = (theme: SaladTheme) => ({
     textAlign: 'center',
     color: theme.lightGreen,
     fontSize: theme.large,
-    fontFamily: 'SharpGroteskLight25',
+    fontFamily: theme.fontGroteskLight25,
   },
 })
 
