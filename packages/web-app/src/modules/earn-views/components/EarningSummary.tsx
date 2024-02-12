@@ -9,14 +9,11 @@ import { EarnSectionHeader } from './EarnSectionHeader'
 const styles = (theme: SaladTheme) => ({
   row: {
     paddingTop: 20,
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    gridAutoRows: 'minmax(100px, auto)',
     '@media (max-width: 1024px)': {
-      gap: '40px',
-      '&>div': {
-        flex: '1 0 calc(50% - 40px)',
-      },
+      gridTemplateColumns: 'repeat(2, 1fr)',
     },
   },
   subtitle: {
@@ -30,6 +27,9 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   currentBalance?: number
+  last24HrEarnings: number
+  last7DayEarnings: number
+  last30DayEarnings: number
   lifetimeBalance?: number
   totalChoppingHours?: number
   redeemedRewardsCount: number
@@ -38,6 +38,9 @@ interface Props extends WithStyles<typeof styles> {
 export const EarningSummaryRaw: FC<Props> = ({
   classes,
   currentBalance,
+  last24HrEarnings,
+  last7DayEarnings,
+  last30DayEarnings,
   lifetimeBalance,
   totalChoppingHours,
   redeemedRewardsCount,
@@ -70,6 +73,9 @@ export const EarningSummaryRaw: FC<Props> = ({
         <BalanceStat title="Lifetime Balance" value={formatBalance(lifetimeBalance)} />
         <BalanceStat title="Total Chopping Hours" value={getTotalChoppingHoursText(totalChoppingHours)} />
         <BalanceStat title="Number of Rewards Redeemed" value={getRedeemedRewardsCountText(redeemedRewardsCount)} />
+        <BalanceStat title="Earnings last 24 hours" value={formatBalance(last24HrEarnings)} />
+        <BalanceStat title="Earnings last 7 days" value={formatBalance(last7DayEarnings)} />
+        <BalanceStat title="Earnings last 30 days" value={formatBalance(last30DayEarnings)} />
       </div>
     </div>
   )
