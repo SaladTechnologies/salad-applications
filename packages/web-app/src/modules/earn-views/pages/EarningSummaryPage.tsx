@@ -23,6 +23,9 @@ interface Props extends WithStyles<typeof styles> {
   totalChoppingHours?: number
   redeemedRewards?: RewardVaultItem[]
   latestCompletedRedeemedRewards: Map<string, RedeemedReward>
+  last24HrEarnings: number
+  last7DayEarnings: number
+  last30DayEarnings: number
   startRedemptionsRefresh: () => void
   stopRedemptionsRefresh: () => void
   navigateToRewardVaultPage: () => void
@@ -39,6 +42,9 @@ const _EarningSummaryPage: FC<Props> = ({
   totalChoppingHours,
   redeemedRewards,
   latestCompletedRedeemedRewards,
+  last24HrEarnings,
+  last7DayEarnings,
+  last30DayEarnings,
   startRedemptionsRefresh,
   stopRedemptionsRefresh,
   isLatestCompletedRedeemedRewardsLoading,
@@ -64,6 +70,9 @@ const _EarningSummaryPage: FC<Props> = ({
       <div className={classes.content}>
         <EarningSummary
           currentBalance={currentBalance}
+          last24HrEarnings={last24HrEarnings}
+          last7DayEarnings={last7DayEarnings}
+          last30DayEarnings={last30DayEarnings}
           lifetimeBalance={lifetimeBalance}
           redeemedRewardsCount={redeemedRewardsCount}
           totalChoppingHours={totalChoppingHours}
