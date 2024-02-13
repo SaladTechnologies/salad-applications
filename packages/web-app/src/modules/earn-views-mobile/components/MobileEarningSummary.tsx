@@ -44,7 +44,7 @@ const _MobileEarningSummary = ({
     <div className={classes.item}>
       <StatElement
         title="Total XP"
-        values={[Math.round(totalXp || 0).toLocaleString() || '0']}
+        values={[Math.round(totalXp ?? 0).toLocaleString()]}
         infoText={`XP stands for "Experience Points". You are awarded 1 XP per minute of confirmed mining time. The more XP you have, the more veggies you will unlock in the Pantry.`}
       />
     </div>
