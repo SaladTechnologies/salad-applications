@@ -15,11 +15,11 @@ export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBar
   const fetchNotificationsData = useFetchNotifications({ query: { read: false, limit: 10 } })
   const fetchNotificationsPageData = fetchNotificationsData.data?.pages[0]
   const unreadNovuNotifications = fetchNotificationsPageData?.data
-  const filteredUnreadNovuNotifications = unreadNovuNotifications?.filter(
+  const unreadNovuNotificationsWithoutStarChef = unreadNovuNotifications?.filter(
     (unreadNovuNotification) => !unreadNovuNotification.payload.starChefStatus,
   )
-  const unseenNovuNotificationsIds = filteredUnreadNovuNotifications
-    ?.filter((filteredUnreadNovuNotification) => !filteredUnreadNovuNotification.seen)
+  const unseenNovuNotificationsIds = unreadNovuNotificationsWithoutStarChef
+    ?.filter((unreadNovuNotificationWithoutStarChef) => !unreadNovuNotificationWithoutStarChef.seen)
     .map((unseenNovuNotification) => unseenNovuNotification._id)
   const hasUnseenNovuNotifications = !!(unseenNovuNotificationsIds && unseenNovuNotificationsIds?.length > 0)
 
@@ -42,7 +42,7 @@ export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBar
   }, [isNotificationsDrawerOpened, handleMarkNotificationAs, hasUnseenNovuNotifications, unseenNovuNotificationsIds])
 
   const bannerNotifications = getConfiguredNovuBannerNotifications(
-    filteredUnreadNovuNotifications,
+    unreadNovuNotificationsWithoutStarChef,
     (notificationId: string) => handleMarkNotificationAs(notificationId, true, true),
   )
 
