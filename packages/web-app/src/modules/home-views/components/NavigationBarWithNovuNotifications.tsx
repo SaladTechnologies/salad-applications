@@ -16,7 +16,7 @@ export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBar
   const fetchNotificationsPageData = fetchNotificationsData.data?.pages[0]
   const unreadNovuNotifications = fetchNotificationsPageData?.data
   const unreadNovuNotificationsWithoutStarChef = unreadNovuNotifications?.filter(
-    (unreadNovuNotification) => !unreadNovuNotification.payload.starChefStatus,
+    (unreadNovuNotification) => !unreadNovuNotification.payload?.starChefStatus,
   )
   const unseenNovuNotificationsIds = unreadNovuNotificationsWithoutStarChef
     ?.filter((unreadNovuNotificationWithoutStarChef) => !unreadNovuNotificationWithoutStarChef.seen)
