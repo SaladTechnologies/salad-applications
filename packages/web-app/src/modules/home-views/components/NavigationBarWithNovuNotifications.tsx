@@ -21,6 +21,7 @@ export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBar
   const unseenNovuNotificationsIds = unreadNovuNotificationsWithoutStarChef
     ?.filter((unreadNovuNotificationWithoutStarChef) => !unreadNovuNotificationWithoutStarChef.seen)
     .map((unseenNovuNotification) => unseenNovuNotification._id)
+  const unseenNovuNotificationsAmount = unseenNovuNotificationsIds?.length ?? 0
 
   const { markNotificationsAs } = useMarkNotificationsAs()
   const handleMarkNotificationAs = useCallback(
@@ -64,7 +65,7 @@ export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBar
     news: newsNotifications,
     warnings: warningsNotifications,
     achievements: achievementNotifications,
-    hasUnseenNotifications: !!unseenNovuNotificationsIds,
+    hasUnseenNotifications: unseenNovuNotificationsAmount > 0,
     onOpenNotificationsDrawer: handleOpenNotificationsDrawer,
     onCloseNotificationsDrawer,
   }
