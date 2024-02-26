@@ -3,6 +3,7 @@ import type { AxiosInstance, AxiosResponse } from 'axios'
 import { action, computed, flow, observable } from 'mobx'
 import * as Storage from '../../Storage'
 import type { RootStore } from '../../Store'
+import { config } from '../../config'
 import type { FormValues } from '../account-views/account-views/components/'
 import { NotificationMessageCategory } from '../notifications/models'
 import {
@@ -302,6 +303,12 @@ export class ProfileStore {
 
   @action.bound
   loadGoogleAccountConnection = flow(function* (this: ProfileStore) {
+    // Hide google SSO until salad google account devops setup
+    const hideGoogleSSO = !config.isTestEnvironment
+    if (hideGoogleSSO) {
+      return
+    }
+
     try {
       this.isLoadConnectedGoogleAccountEmailError = false
       this.connectExternalAccountProvider()
