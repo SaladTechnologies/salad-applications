@@ -7,7 +7,6 @@ import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { DefaultTheme } from '../../../../SaladTheme'
 import { Head } from '../../../../components'
-import { config } from '../../../../config'
 import { withLogin } from '../../../auth-views'
 import type { Avatar, Profile } from '../../../profile/models'
 import { AccountTermsAndConditionsUpdate } from './AccountTermsAndConditionsUpdate'
@@ -143,15 +142,10 @@ const _Account: FC<Props> = ({
 }) => {
   const [payPalLoadRetries, setPayPalLoadRetries] = useState(0)
 
-  // Hide google SSO until salad google account devops setup
-  const hideGoogleSSO = !config.isTestEnvironment
-
   useEffect(() => {
     loadPayPalId()
 
-    if (!hideGoogleSSO) {
-      loadGoogleAccountConnection()
-    }
+    loadGoogleAccountConnection()
 
     return () => {
       clearInterval(intervalId)
@@ -250,43 +244,41 @@ const _Account: FC<Props> = ({
                 )}
               </div>
             </div>
-            {!hideGoogleSSO && (
-              <div className={classes.accountConnectionItem}>
-                <div className={classes.subheadingContainer}>
-                  <Text variant="baseL">Google</Text>
-                </div>
-                <div className={classes.connectAccountButtonContainer}>
-                  {connectedGoogleAccountEmail ? (
-                    <>
-                      <Text variant="baseS">Google Email Address</Text>
-                      <Text variant="baseL">
-                        <div className={classes.connectedGoogleAccountEmail}>{connectedGoogleAccountEmail}</div>
-                      </Text>
-                    </>
-                  ) : (
-                    <>
-                      <GoogleSignInForm
-                        isTermsAndConditionsAccepted={isTermsAndConditionsAccepted}
-                        isTermsAndConditionsRequired={shouldShowUpdateAccountTermsAndConditions}
-                      />
-                      {isLoadConnectedGoogleAccountEmailError && (
-                        <div className={classes.connectAccountError}>
-                          <Text variant="baseS">
-                            Unable to fetch connected Google Account. Please try to refresh the page.
-                          </Text>
-                        </div>
-                      )}
-                      <div className={classes.connectAccountDescription}>
+            <div className={classes.accountConnectionItem}>
+              <div className={classes.subheadingContainer}>
+                <Text variant="baseL">Google</Text>
+              </div>
+              <div className={classes.connectAccountButtonContainer}>
+                {connectedGoogleAccountEmail ? (
+                  <>
+                    <Text variant="baseS">Google Email Address</Text>
+                    <Text variant="baseL">
+                      <div className={classes.connectedGoogleAccountEmail}>{connectedGoogleAccountEmail}</div>
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    <GoogleSignInForm
+                      isTermsAndConditionsAccepted={isTermsAndConditionsAccepted}
+                      isTermsAndConditionsRequired={shouldShowUpdateAccountTermsAndConditions}
+                    />
+                    {isLoadConnectedGoogleAccountEmailError && (
+                      <div className={classes.connectAccountError}>
                         <Text variant="baseS">
-                          Connect Salad to your Google account. A Google account allows you to sign in easily to Salad
-                          using Google SSO.
+                          Unable to fetch connected Google Account. Please try to refresh the page.
                         </Text>
                       </div>
-                    </>
-                  )}
-                </div>
+                    )}
+                    <div className={classes.connectAccountDescription}>
+                      <Text variant="baseS">
+                        Connect Salad to your Google account. A Google account allows you to sign in easily to Salad
+                        using Google SSO.
+                      </Text>
+                    </div>
+                  </>
+                )}
               </div>
-            )}
+            </div>
             <div className={classes.accountConnectionItem}>
               <div className={classes.subheadingContainer}>
                 <Text variant="baseL">Minecraft</Text>
