@@ -7,7 +7,14 @@ export interface Referral {
   code: string
   earnedBalance: number
   referralDefinition?: ReferralDefinition
-  // dateEntered TODO:
+}
+
+export interface ReferralsReport {
+  latestReferrals: Referral[]
+  potentialEarnings: number
+  referralsCount: number
+  totalEarned: number
+  updatedAt: string
 }
 
 export const completed = (referral: Referral): boolean => {

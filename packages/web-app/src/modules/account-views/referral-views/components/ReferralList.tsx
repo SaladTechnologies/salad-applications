@@ -1,5 +1,4 @@
-import type { ReactNode } from 'react'
-import { Component } from 'react'
+import type { FC } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
@@ -13,32 +12,29 @@ const styles = {
     height: '100%',
   },
   content: {
-    // padding: 20,
     paddingBottom: 50,
   },
 }
 
 interface Props extends WithStyles<typeof styles> {
-  referrals?: Referral[]
+  latestReferrals?: Referral[]
 }
 
-class _ReferralList extends Component<Props> {
-  public override render(): ReactNode {
-    const { referrals, classes } = this.props
-
-    let hasReferrals = referrals && referrals.length !== 0
-    return (
-      <div className={classes.container}>
-        <SectionHeader>Who you referred</SectionHeader>
-        {!hasReferrals && <P>No one has entered your code yet. Send it to your friends now!</P>}
-        {hasReferrals && (
-          <Scrollbars>
-            <div className={classes.content}>{referrals && referrals.map((x) => <ReferralItem referral={x} />)}</div>
-          </Scrollbars>
-        )}
-      </div>
-    )
-  }
+const _ReferralList: FC<Props> = ({ classes, latestReferrals }) => {
+  let hasReferrals = latestReferrals && latestReferrals.length !== 0
+  return (
+    <div className={classes.container}>
+      <SectionHeader>Who you referred</SectionHeader>
+      {!hasReferrals && <P>No one has entered your code yet. Send it to your friends now!</P>}
+      {hasReferrals && (
+        <Scrollbars>
+          <div className={classes.content}>
+            {latestReferrals && latestReferrals.map((x) => <ReferralItem referral={x} />)}
+          </div>
+        </Scrollbars>
+      )}
+    </div>
+  )
 }
 
 export const ReferralList = withStyles(styles)(_ReferralList)
