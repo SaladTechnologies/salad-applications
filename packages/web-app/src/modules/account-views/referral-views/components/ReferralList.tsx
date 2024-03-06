@@ -29,7 +29,10 @@ const _ReferralList: FC<Props> = ({ classes, latestReferrals }) => {
       {hasReferrals && (
         <Scrollbars>
           <div className={classes.content}>
-            {latestReferrals && latestReferrals.map((x) => <ReferralItem referral={x} />)}
+            {latestReferrals &&
+              latestReferrals.map(
+                (latestReferral) => latestReferral.referralDefinition && <ReferralItem referral={latestReferral} />,
+              )}
           </div>
         </Scrollbars>
       )}

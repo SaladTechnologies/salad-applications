@@ -44,12 +44,12 @@
   "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "[typescript]": {
     "editor.codeActionsOnSave": {
-      "source.organizeImports": true
+      "source.organizeImports": "explicit"
     }
   },
   "[typescriptreact]": {
     "editor.codeActionsOnSave": {
-      "source.organizeImports": true
+      "source.organizeImports": "explicit"
     }
   },
   "[typescript][typescriptreact]": {
