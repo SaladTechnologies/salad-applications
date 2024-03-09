@@ -4,7 +4,7 @@ import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { P, ProgressBar, SectionHeader } from '../../../../components'
 import type { Referral } from '../../../referral/models'
-import { progressCompletePercentage } from '../../../referral/models'
+import { getProgressCompletePercentage } from '../../../referral/models'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -37,7 +37,10 @@ interface Props extends WithStyles<typeof styles> {
 const _CurrentReferralProgress = ({ classes, referral }: Props) => {
   const { code, earnedBalance, refereeId, referralDefinition } = referral || {}
 
-  const progressPercentage = progressCompletePercentage(earnedBalance, referralDefinition?.balanceThreshold ?? 1)
+  const progressCompletePercentage = getProgressCompletePercentage(
+    earnedBalance,
+    referralDefinition?.balanceThreshold ?? 1,
+  )
   const bonusRate = (1 + (referralDefinition?.bonusRate ?? 0)).toFixed(2)
 
   return (
@@ -46,12 +49,14 @@ const _CurrentReferralProgress = ({ classes, referral }: Props) => {
 
       <div className={classes.headerContainer}>
         <P>CODE: {code}</P>
-        <P className={classes.bonusText}>{progressPercentage === 100 ? 'COMPLETED' : `${bonusRate}x EARNING RATE`}</P>
+        <P className={classes.bonusText}>
+          {progressCompletePercentage === 100 ? 'COMPLETED' : `${bonusRate}x EARNING RATE`}
+        </P>
       </div>
       <ProgressBar
         className={classes.progressBackground}
         barClassName={classes.progressBar}
-        progress={progressPercentage}
+        progress={progressCompletePercentage}
       />
     </div>
   )

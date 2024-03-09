@@ -19,7 +19,7 @@ interface Props extends WithStyles<typeof styles> {
 
 const _CurrentReferralPanel = ({ classes, referral }: Props) => (
   <>
-    {referral && referral.referralDefinition && <CurrentReferralProgress referral={referral} />}
+    {referral?.referralDefinition && <CurrentReferralProgress referral={referral} />}
     {!referral && (
       <div className={classnames(classes.container)}>
         <SectionHeader>Enter A Code</SectionHeader>

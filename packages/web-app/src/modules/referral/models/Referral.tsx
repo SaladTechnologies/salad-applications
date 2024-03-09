@@ -22,5 +22,5 @@ export interface ReferralsReport {
   updatedAt: string
 }
 
-export const progressCompletePercentage = (earnedBalance: number, balanceThreshold: number): number =>
+export const getProgressCompletePercentage = (earnedBalance: number, balanceThreshold: number): number =>
   Math.max(0, Math.min(1, earnedBalance / balanceThreshold)) * 100

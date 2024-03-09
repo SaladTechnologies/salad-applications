@@ -3,7 +3,7 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { P, ProgressBar } from '../../../../components'
-import { progressCompletePercentage, type Referral } from '../../../referral/models'
+import { getProgressCompletePercentage, type Referral } from '../../../referral/models'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -50,7 +50,7 @@ const _ReferralItem = ({ classes, referral }: Props) => {
       <ProgressBar
         className={classes.progressBackground}
         barClassName={classes.progressBar}
-        progress={progressCompletePercentage(referrerEarnedBalance, referrerBonusThreshold ?? 1)}
+        progress={getProgressCompletePercentage(referrerEarnedBalance, referrerBonusThreshold ?? 1)}
       />
     </div>
   )
