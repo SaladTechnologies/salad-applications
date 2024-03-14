@@ -20,7 +20,6 @@ import type { Profile } from './modules/profile/models'
 import { ReferralStore } from './modules/referral'
 import { RewardStore } from './modules/reward'
 import { SaladCardStore } from './modules/salad-card/SaladCardStore'
-import { SeasonsStore } from './modules/seasons'
 import { StartButtonUIStore } from './modules/start-button/StartButtonUIStore'
 import { StorefrontStore } from './modules/storefront/StorefrontStore'
 import { TermsAndConditionsStore } from './modules/terms-and-conditions'
@@ -68,7 +67,6 @@ export class RootStore {
   public readonly storefront: StorefrontStore
   public readonly bonuses: BonusStore
   public readonly achievements: AchievementsStore
-  public readonly seasons: SeasonsStore
   public readonly onboarding: OnboardingStore
   public readonly startButtonUI: StartButtonUIStore
   public readonly saladCard: SaladCardStore
@@ -96,7 +94,6 @@ export class RootStore {
     this.helpScout = new HelpScoutStore(axios, this.auth)
     this.storefront = new StorefrontStore(axios)
     this.bonuses = new BonusStore(this, axios)
-    this.seasons = new SeasonsStore(axios)
     this.onboarding = new OnboardingStore(this)
     this.startButtonUI = new StartButtonUIStore(this)
     this.errorBoundary = new ErrorBoundaryStore()
