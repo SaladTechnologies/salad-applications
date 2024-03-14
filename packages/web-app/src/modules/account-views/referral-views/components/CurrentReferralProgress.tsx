@@ -1,12 +1,10 @@
 import classnames from 'classnames'
-import type { ReactNode } from 'react'
-import { Component } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { P, ProgressBar, SectionHeader } from '../../../../components'
 import type { SaladTheme } from '../../../../SaladTheme'
+import { P, ProgressBar, SectionHeader } from '../../../../components'
 import type { Referral } from '../../../referral/models'
-import { percentComplete } from '../../../referral/models'
+import { getProgressCompletePercentage } from '../../../referral/models'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -33,33 +31,35 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  referral?: Referral
+  referral: Referral
 }
 
-class _CurrentReferralProgress extends Component<Props> {
-  public override render(): ReactNode {
-    const { referral, classes } = this.props
-    if (!referral || !referral.referralDefinition) return null
-    return (
-      <div key={referral.refereeId} className={classnames(classes.container)}>
-        <SectionHeader>Your Progress</SectionHeader>
+const _CurrentReferralProgress = ({ classes, referral }: Props) => {
+  const { code, earnedBalance, refereeId, referralDefinition } = referral || {}
 
-        <div className={classes.headerContainer}>
-          <P>CODE: {referral.code}</P>
-          <P className={classes.bonusText}>
-            {percentComplete(referral) === 1
-              ? 'COMPLETED'
-              : `${(1 + referral.referralDefinition.bonusRate).toFixed(2)}x EARNING RATE`}
-          </P>
-        </div>
-        <ProgressBar
-          className={classes.progressBackground}
-          barClassName={classes.progressBar}
-          progress={percentComplete(referral) * 100}
-        />
+  const progressCompletePercentage = getProgressCompletePercentage(
+    earnedBalance,
+    referralDefinition?.balanceThreshold ?? 1,
+  )
+  const bonusRate = (1 + (referralDefinition?.bonusRate ?? 0)).toFixed(2)
+
+  return (
+    <div key={refereeId} className={classnames(classes.container)}>
+      <SectionHeader>Your Progress</SectionHeader>
+
+      <div className={classes.headerContainer}>
+        <P>CODE: {code}</P>
+        <P className={classes.bonusText}>
+          {progressCompletePercentage === 100 ? 'COMPLETED' : `${bonusRate}x EARNING RATE`}
+        </P>
       </div>
-    )
-  }
+      <ProgressBar
+        className={classes.progressBackground}
+        barClassName={classes.progressBar}
+        progress={progressCompletePercentage}
+      />
+    </div>
+  )
 }
 
 export const CurrentReferralProgress = withStyles(styles)(_CurrentReferralProgress)

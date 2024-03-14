@@ -1,5 +1,9 @@
-import type { ReferralDefinition } from './ReferralDefinition'
-import { maximumReferrerBonus } from './ReferralDefinition'
+export interface ReferralDefinition {
+  balanceThreshold: number
+  bonusRate: number
+  referrerBonus: number
+  referrerBonusThreshold: number
+}
 
 export interface Referral {
   refereeId: string
@@ -7,6 +11,7 @@ export interface Referral {
   code: string
   earnedBalance: number
   referralDefinition?: ReferralDefinition
+  referrerEarnedBalance: number
 }
 
 export interface ReferralsReport {
@@ -17,18 +22,5 @@ export interface ReferralsReport {
   updatedAt: string
 }
 
-export const completed = (referral: Referral): boolean => {
-  if (!referral || !referral.referralDefinition) return false
-  return referral.earnedBalance >= referral.referralDefinition.balanceThreshold
-}
-
-export const percentComplete = (referral: Referral): number => {
-  if (!referral || !referral.referralDefinition || referral.referralDefinition.balanceThreshold === 0) return 0
-  return Math.max(0, Math.min(1, referral.earnedBalance / referral.referralDefinition.balanceThreshold))
-}
-
-/** The maximum bonus the referrer can earn (USD) */
-export const currentEarned = (referral: Referral): number => {
-  if (!referral || !referral.referralDefinition) return 0
-  return maximumReferrerBonus(referral.referralDefinition) * percentComplete(referral)
-}
+export const getProgressCompletePercentage = (earnedBalance: number, balanceThreshold: number): number =>
+  Math.max(0, Math.min(1, earnedBalance / balanceThreshold)) * 100
