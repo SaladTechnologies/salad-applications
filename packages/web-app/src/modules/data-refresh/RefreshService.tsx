@@ -47,7 +47,6 @@ export class RefreshService {
       this.store.profile.loadAvatars()
       this.store.profile.loadSelectedAvatar()
       this.store.bonuses.loadBonuses()
-      this.store.seasons.loadCurrentSeason()
     } catch (error) {
       console.error(error)
     }
