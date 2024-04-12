@@ -11,7 +11,7 @@ export class AnalyticsStore {
   private mixpanelInitialized = false
 
   constructor() {
-    hotjar.initialize(2225817, 6)
+    hotjar.initialize({ id: 2225817, sv: 6 })
 
     const token = config.mixpanelToken
     if (!token) {
