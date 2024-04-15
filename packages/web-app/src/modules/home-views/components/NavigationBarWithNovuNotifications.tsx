@@ -39,7 +39,9 @@ export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBar
     if (isNotificationsDrawerOpened && hasUnseenNotifications) {
       handleMarkNotificationAs(unseenNovuNotificationsIds, true, false)
     }
-  }, [isNotificationsDrawerOpened, handleMarkNotificationAs, unseenNovuNotificationsIds, hasUnseenNotifications])
+    // *NOTE: We skip `unseenNovuNotificationsIds` because this ref constantly changes and
+    // `hasUnseenNotifications` is the only case when we want to fire `markAsRead..`
+  }, [isNotificationsDrawerOpened, handleMarkNotificationAs, hasUnseenNotifications])
 
   const bannerNotifications = getConfiguredNovuBannerNotifications(
     unreadNovuNotificationsWithoutStarChef,
@@ -52,21 +54,13 @@ export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBar
   const newsNotifications = bannerNotifications.filter((notification) => notification?.variant === 'news')
   const warningsNotifications = bannerNotifications.filter((notification) => notification?.variant === 'error')
 
-  const handleOpenNotificationsDrawer = () => {
-    onOpenNotificationsDrawer()
-
-    if (hasUnseenNotifications) {
-      handleMarkNotificationAs(unseenNovuNotificationsIds, true, false)
-    }
-  }
-
   const notifications = {
     ...props.notifications,
     news: newsNotifications,
     warnings: warningsNotifications,
     achievements: achievementNotifications,
     hasUnseenNotifications,
-    onOpenNotificationsDrawer: handleOpenNotificationsDrawer,
+    onOpenNotificationsDrawer,
     onCloseNotificationsDrawer,
   }
 
