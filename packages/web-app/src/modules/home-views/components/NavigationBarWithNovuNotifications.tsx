@@ -21,7 +21,7 @@ export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBar
   const unseenNovuNotificationsIds = unreadNovuNotificationsWithoutStarChef
     ?.filter((unreadNovuNotificationWithoutStarChef) => !unreadNovuNotificationWithoutStarChef.seen)
     .map((unseenNovuNotification) => unseenNovuNotification._id)
-  const unseenNovuNotificationsAmount = unseenNovuNotificationsIds?.length ?? 0
+  const hasUnseenNotifications = !!unseenNovuNotificationsIds?.length
 
   const { markNotificationsAs } = useMarkNotificationsAs()
   const handleMarkNotificationAs = useCallback(
@@ -36,10 +36,10 @@ export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBar
   )
 
   useEffect(() => {
-    if (isNotificationsDrawerOpened && unseenNovuNotificationsIds) {
+    if (isNotificationsDrawerOpened && hasUnseenNotifications) {
       handleMarkNotificationAs(unseenNovuNotificationsIds, true, false)
     }
-  }, [isNotificationsDrawerOpened, handleMarkNotificationAs, unseenNovuNotificationsIds])
+  }, [isNotificationsDrawerOpened, handleMarkNotificationAs, unseenNovuNotificationsIds, hasUnseenNotifications])
 
   const bannerNotifications = getConfiguredNovuBannerNotifications(
     unreadNovuNotificationsWithoutStarChef,
@@ -55,7 +55,7 @@ export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBar
   const handleOpenNotificationsDrawer = () => {
     onOpenNotificationsDrawer()
 
-    if (unseenNovuNotificationsIds) {
+    if (hasUnseenNotifications) {
       handleMarkNotificationAs(unseenNovuNotificationsIds, true, false)
     }
   }
@@ -65,7 +65,7 @@ export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBar
     news: newsNotifications,
     warnings: warningsNotifications,
     achievements: achievementNotifications,
-    hasUnseenNotifications: unseenNovuNotificationsAmount > 0,
+    hasUnseenNotifications,
     onOpenNotificationsDrawer: handleOpenNotificationsDrawer,
     onCloseNotificationsDrawer,
   }
