@@ -2,7 +2,7 @@ import type { IMessageId } from '@novu/notification-center'
 import { useFetchNotifications, useMarkNotificationsAs } from '@novu/notification-center'
 import { NavigationBar, type NavigationBarProps } from '@saladtechnologies/garden-components'
 import type { FunctionComponent } from 'react'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { FeatureFlags, useFeatureManager } from '../../../FeatureManager'
 import { getConfiguredNovuBannerNotifications } from '../../notifications/utils'
 
@@ -15,12 +15,18 @@ export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBar
   const fetchNotificationsData = useFetchNotifications({ query: { read: false, limit: 10 } })
   const fetchNotificationsPageData = fetchNotificationsData.data?.pages[0]
   const unreadNovuNotifications = fetchNotificationsPageData?.data
-  const unreadNovuNotificationsWithoutStarChef = unreadNovuNotifications?.filter(
-    (unreadNovuNotification) => !unreadNovuNotification.payload?.starChefStatus,
+  const unreadNovuNotificationsWithoutStarChef = useMemo(
+    () => unreadNovuNotifications?.filter((unreadNovuNotification) => !unreadNovuNotification.payload?.starChefStatus),
+    [unreadNovuNotifications],
   )
-  const unseenNovuNotificationsIds = unreadNovuNotificationsWithoutStarChef
-    ?.filter((unreadNovuNotificationWithoutStarChef) => !unreadNovuNotificationWithoutStarChef.seen)
-    .map((unseenNovuNotification) => unseenNovuNotification._id)
+
+  const unseenNovuNotificationsIds = useMemo(
+    () =>
+      unreadNovuNotificationsWithoutStarChef
+        ?.filter((unreadNovuNotificationWithoutStarChef) => !unreadNovuNotificationWithoutStarChef.seen)
+        .map((unseenNovuNotification) => unseenNovuNotification._id),
+    [unreadNovuNotificationsWithoutStarChef],
+  )
   const hasUnseenNotifications = !!unseenNovuNotificationsIds?.length
 
   const { markNotificationsAs } = useMarkNotificationsAs()
@@ -39,9 +45,7 @@ export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBar
     if (isNotificationsDrawerOpened && hasUnseenNotifications) {
       handleMarkNotificationAs(unseenNovuNotificationsIds, true, false)
     }
-    // *NOTE: We skip `unseenNovuNotificationsIds` because this ref constantly changes and
-    // `hasUnseenNotifications` is the only case when we want to fire `markAsRead..`
-  }, [isNotificationsDrawerOpened, handleMarkNotificationAs, hasUnseenNotifications])
+  }, [isNotificationsDrawerOpened, handleMarkNotificationAs, unseenNovuNotificationsIds, hasUnseenNotifications])
 
   const bannerNotifications = getConfiguredNovuBannerNotifications(
     unreadNovuNotificationsWithoutStarChef,
