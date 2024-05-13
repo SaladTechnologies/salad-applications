@@ -5,6 +5,7 @@ import { NoPageFound } from './components'
 import { ReferralOnboardingContainer, ReferralWelcomeContainer } from './modules/account-views/referral-views'
 import { ReplaceBonusModalContainer } from './modules/bonus-views'
 import { EarnInfoPage, EarningSummaryContainer } from './modules/earn-views'
+import { ExitSurveyContainer } from './modules/exit-survey-views'
 import { RewardDetailsContainer, SelectTargetRewardContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
 import { SettingsContainer } from './modules/settings-views'
@@ -45,6 +46,7 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
       {isAuthenticated && <Redirect exact from="/earn" to="/earn/summary" />}
       <Route path="/earn/summary" component={EarningSummaryContainer} />
       <Route path="/earn" component={EarnInfoPage} />
+      <Route path="/exits-survey" component={ExitSurveyContainer} />
 
       <Route
         exact
