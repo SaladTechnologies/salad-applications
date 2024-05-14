@@ -41,12 +41,12 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
 
       {/* Account */}
       <Redirect exact from="/account" to="/account/summary" />
+      <Route path="/account/exit-survey" component={ExitSurveyContainer} />
       <Route path="/account" component={SettingsContainer} />
 
       {isAuthenticated && <Redirect exact from="/earn" to="/earn/summary" />}
       <Route path="/earn/summary" component={EarningSummaryContainer} />
       <Route path="/earn" component={EarnInfoPage} />
-      <Route path="/exit-survey" component={ExitSurveyContainer} />
 
       <Route
         exact
