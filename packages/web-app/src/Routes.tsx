@@ -33,7 +33,6 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
       <Route path="/store/vault" exact component={VaultListContainer} />
       {/* Recommended Target Rewards Page */}
       <Route path="/store/select-target-reward" exact component={SelectTargetRewardContainer} />
-      <Route path="/store/exit-survey" component={ExitSurveyContainer} />
 
       {/* Modals */}
       {/* SaladPay: This is stand in until we figure out iFrames, popups... */}
@@ -42,6 +41,7 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
 
       {/* Account */}
       <Redirect exact from="/account" to="/account/summary" />
+      <Route path="/account/exit-survey" component={ExitSurveyContainer} />
       <Route path="/account" component={SettingsContainer} />
 
       {isAuthenticated && <Redirect exact from="/earn" to="/earn/summary" />}
