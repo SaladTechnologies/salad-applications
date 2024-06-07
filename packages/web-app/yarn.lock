@@ -3542,9 +3542,9 @@ __metadata:
     "@fortawesome/react-fontawesome": "npm:0.2.1"
     "@novu/notification-center": "npm:0.24.2"
     "@novu/shared": "npm:0.24.2"
-    "@saladtechnologies/garden-components": "npm:1.4.3"
+    "@saladtechnologies/garden-components": "npm:1.4.6"
     "@saladtechnologies/garden-fonts": "npm:1.0.4"
-    "@saladtechnologies/garden-icons": "npm:1.0.21"
+    "@saladtechnologies/garden-icons": "npm:1.0.23"
     "@storybook/addon-a11y": "npm:6.5.16"
     "@storybook/addon-actions": "npm:6.5.16"
     "@storybook/addon-essentials": "npm:6.5.16"
@@ -3641,9 +3641,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@saladtechnologies/garden-components@npm:1.4.3":
-  version: 1.4.3
-  resolution: "@saladtechnologies/garden-components@npm:1.4.3"
+"@saladtechnologies/garden-components@npm:1.4.6":
+  version: 1.4.6
+  resolution: "@saladtechnologies/garden-components@npm:1.4.6"
   peerDependencies:
     "@emotion/react": 11.x
     "@emotion/styled": 11.x
@@ -3658,7 +3658,7 @@ __metadata:
     react-intl: 6.x
     react-range: 1.x
     react-responsive: 9.x
-  checksum: 10c0/300d03273a0b22fd29d8d5610a33a3a1286cc5cfb9be1ac1be6d5ee4522b3913ce08db088e2763396c5cb0412c594d8e3c26b1da164ed20e1b1c03e506bbefba
+  checksum: 10c0/9634da2d11c2bf69152a5a868d04d3879da0ab20186cf45ba2df95f1a8d819a4220d3777337540e61226dd29c5f6601c9a0b6ad39c5b5c5d611ae6551d45ea29
   languageName: node
   linkType: hard
 
@@ -3669,13 +3669,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@saladtechnologies/garden-icons@npm:1.0.21":
-  version: 1.0.21
-  resolution: "@saladtechnologies/garden-icons@npm:1.0.21"
+"@saladtechnologies/garden-icons@npm:1.0.23":
+  version: 1.0.23
+  resolution: "@saladtechnologies/garden-icons@npm:1.0.23"
   peerDependencies:
     react: 18.x
     react-dom: 18.x
-  checksum: 10c0/2f3e91ab1336f6614fc2bee9e2ad51cdae66acf875f51178a3ba874ad3a8a8482fa3845db7e5a23706386e433b2cd66fcca1108009290bb88696156fab02ada3
+  checksum: 10c0/5e75ecde42f3d3b0a207f8bc16b1c983c155cfc942c5d6630397dac884e6b79406114f27725e344a7be10baf634b5f24fe6238d6fb59ff31de0ea2f6a08e5621
   languageName: node
   linkType: hard
 
