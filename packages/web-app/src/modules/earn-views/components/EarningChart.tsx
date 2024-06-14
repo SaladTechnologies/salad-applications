@@ -1,4 +1,4 @@
-import { DefaultTheme as GardenTheme } from '@saladtechnologies/garden-components'
+import { DefaultTheme as GardenTheme, Switch } from '@saladtechnologies/garden-components'
 import classnames from 'classnames'
 import { uniq } from 'lodash'
 import moment from 'moment'
@@ -24,6 +24,12 @@ const styles = (theme: SaladTheme) => ({
   },
   removeContainerPadding: {
     paddingTop: 0,
+  },
+  chartHeader: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end',
+    flexDirection: 'row',
   },
   segmentsContainer: {
     '&>label:first-child': {
@@ -91,6 +97,9 @@ const styles = (theme: SaladTheme) => ({
   },
   tickMobile: {
     display: 'block',
+  },
+  earningPerMachineSwitchWrapper: {
+    marginLeft: 32,
   },
   '@media screen and (min-width: 1025px)': {
     tickDesktop: {
@@ -286,6 +295,7 @@ interface State {
   selectedLeftToRight?: boolean
   selectedRangeIndexes: number[]
   showEarningsRange?: boolean
+  isEarningsPerMachineEnabled: boolean
 }
 
 class _EarningChart extends Component<Props, State> {
@@ -293,6 +303,7 @@ class _EarningChart extends Component<Props, State> {
     super(props)
     this.state = {
       selectedRangeIndexes: [],
+      isEarningsPerMachineEnabled: false,
     }
   }
 
@@ -320,6 +331,10 @@ class _EarningChart extends Component<Props, State> {
     }
 
     if (this.state.hoverIndex !== nextState.hoverIndex) {
+      return true
+    }
+
+    if (this.state.isEarningsPerMachineEnabled !== nextState.isEarningsPerMachineEnabled) {
       return true
     }
 
@@ -426,6 +441,12 @@ class _EarningChart extends Component<Props, State> {
 
   getTimeValue = (earningWindow: EarningWindow) => moment(earningWindow.timestamp).valueOf()
 
+  handleEarningsPerMachineClick = () => {
+    this.setState((prevState) => ({
+      isEarningsPerMachineEnabled: !prevState.isEarningsPerMachineEnabled,
+    }))
+  }
+
   public override render(): ReactNode {
     const { daysShowing, classes, earningHistory, viewLast24Hours, viewLast7Days, viewLast30Days } = this.props
     const { hoverIndex, showEarningsRange, earningsRangeSum, rangeCenterCoordinate, selectedRangeIndexes } = this.state
@@ -447,8 +468,18 @@ class _EarningChart extends Component<Props, State> {
         >
           <P>No data to display</P>
         </div>
-        <div className={classes.segmentsContainer}>
-          <Segments options={segmentOptions} />
+        <div className={classes.chartHeader}>
+          <div className={classes.segmentsContainer}>
+            <Segments options={segmentOptions} />
+          </div>
+          <div className={classes.earningPerMachineSwitchWrapper}>
+            <Switch
+              label="Earnings Per Machine"
+              checked={this.state.isEarningsPerMachineEnabled}
+              onChange={this.handleEarningsPerMachineClick}
+              variant="light"
+            />
+          </div>
         </div>
         {earningHistory && (
           <>
