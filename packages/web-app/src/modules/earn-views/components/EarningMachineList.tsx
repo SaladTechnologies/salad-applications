@@ -13,9 +13,20 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     flexDirection: 'column',
     position: 'relative',
     height: '200px',
-    width: '200px',
+    width: '210px',
     overflow: 'hidden',
     color: theme.lightGreen,
+  },
+  header: {
+    marginBottom: '8px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    flexDirection: 'column',
+  },
+  link: {
+    color: theme.mediumGreen,
+    textDecoration: 'underline',
     cursor: 'pointer',
   },
   option: {
@@ -23,6 +34,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
+    cursor: 'pointer',
   },
 })
 
@@ -72,10 +84,24 @@ const EarningMachineListRaw: FC<Props> = ({ classes }) => {
     } as MachineOptions)
   }
 
+  const machineOptionsList = Object.values(machineOptions)
+  const totalMachinesAmount = machineOptionsList.length
+  const checkedMachinesAmount = machineOptionsList.filter((machineOption) => machineOption.isChecked).length
+
+  const title = `Machines (${checkedMachinesAmount}/${totalMachinesAmount})`
+
   return (
     <div className={classes.container}>
+      <div className={classes.header}>
+        <Text variant="baseM">{title}</Text>
+        <a href="#">
+          <Text className={classes.link} variant="baseS">
+            Where to find the Machine ID?
+          </Text>
+        </a>
+      </div>
       <Scrollbars>
-        {Object.values(machineOptions).map((machineOption) => (
+        {machineOptionsList.map((machineOption) => (
           <div
             className={classes.option}
             onClick={() => handleMachineOptionClick(machineOption.id)}
