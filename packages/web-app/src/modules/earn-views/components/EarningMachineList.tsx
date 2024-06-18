@@ -75,13 +75,16 @@ const EarningMachineListRaw: FC<Props> = ({ classes }) => {
   const [machineOptions, setMachineOptions] = useState<MachineOptions>(mockedMachines)
 
   const handleMachineOptionClick = (machineId: string) => {
-    setMachineOptions({
-      ...machineOptions,
-      [machineId]: {
-        ...machineOptions[machineId],
-        isChecked: !machineOptions[machineId]?.isChecked,
-      },
-    } as MachineOptions)
+    setMachineOptions(
+      (prevMachineOptions) =>
+        ({
+          ...prevMachineOptions,
+          [machineId]: {
+            ...prevMachineOptions[machineId],
+            isChecked: !prevMachineOptions[machineId]?.isChecked,
+          },
+        } as MachineOptions),
+    )
   }
 
   const machineOptionsList = Object.values(machineOptions)
