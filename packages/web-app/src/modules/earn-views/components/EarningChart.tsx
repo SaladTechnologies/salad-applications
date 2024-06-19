@@ -12,7 +12,7 @@ import type { SaladTheme } from '../../../SaladTheme'
 import { P } from '../../../components'
 import { Segments } from '../../../components/elements/Segments'
 import { formatBalance } from '../../../utils'
-import type { EarningWindow } from '../../balance/models'
+import type { ChartDaysShowing, EarningWindow } from '../../balance/models'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -180,7 +180,7 @@ interface EarningRange {
 }
 
 interface CustomTick extends WithStyles<typeof styles> {
-  daysShowing: 1 | 7 | 30
+  daysShowing: ChartDaysShowing
   fill: string
   payload: {
     coordinate: number
@@ -282,7 +282,7 @@ interface Props extends WithStyles<typeof styles> {
   viewLast24Hours: () => void
   viewLast7Days: () => void
   viewLast30Days: () => void
-  daysShowing: 1 | 7 | 30
+  daysShowing: ChartDaysShowing
 }
 
 interface State {

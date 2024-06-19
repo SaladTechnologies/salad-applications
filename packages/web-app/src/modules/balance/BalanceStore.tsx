@@ -2,7 +2,7 @@ import type { AxiosInstance } from 'axios'
 import { action, computed, flow, observable } from 'mobx'
 import moment from 'moment'
 import type { RootStore } from '../../Store'
-import type { EarningWindow } from './models'
+import type { ChartDaysShowing, EarningWindow } from './models'
 import { batchEarningsWindow, getEarningWindowsGroupedByDay } from './utils'
 
 enum EarningChartTimeFilter {
@@ -22,7 +22,7 @@ export class BalanceStore {
   private earningHistory: Map<number, number> = new Map()
 
   @observable
-  private daysShowingEarnings: 1 | 7 | 30 = 1
+  private daysShowingEarnings: ChartDaysShowing = 1
 
   @computed
   public get earningsHistory(): EarningWindow[] {
@@ -30,7 +30,7 @@ export class BalanceStore {
   }
 
   @computed
-  public get getDaysShowingEarnings(): 1 | 7 | 30 {
+  public get getDaysShowingEarnings(): ChartDaysShowing {
     return this.daysShowingEarnings
   }
 
@@ -73,7 +73,7 @@ export class BalanceStore {
   @observable
   public lastMonthEarnings: number = 0
 
-  private getEarningWindows = (numberOfDays: 1 | 7 | 30): EarningWindow[] => {
+  private getEarningWindows = (numberOfDays: ChartDaysShowing): EarningWindow[] => {
     const windows: EarningWindow[] = []
 
     const now = moment.utc()

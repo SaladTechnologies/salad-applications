@@ -27,3 +27,26 @@ export const earnTypes = [
     imageSrc: BandwidthImage,
   },
 ]
+
+export const earningsChartColors = [
+  '#FF33BD',
+  '#33FF57',
+  '#33FFD7',
+  '#FF5733',
+  '#33D7FF',
+  '#B3FF33',
+  '#FF3375',
+  '#FFBD33',
+  '#75FF33',
+  '#33FFBD',
+  '#FF9A33',
+  '#BD33FF',
+  '#33B3FF',
+  '#FF3333',
+  '#EFC050',
+  '#7533FF',
+  '#FFD733',
+  '#3375FF',
+  '#FF33B3',
+  '#FF3375',
+]

@@ -7,3 +7,9 @@ export interface EarningWindow {
   /** Total earnings during the window */
   earnings: number
 }
+
+export interface EarningPerMachine {
+  [key: string]: EarningWindow[]
+}
+
+export type ChartDaysShowing = 1 | 7 | 30

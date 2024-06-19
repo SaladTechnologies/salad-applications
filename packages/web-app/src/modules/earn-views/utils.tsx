@@ -1,6 +1,7 @@
 import moment from 'moment'
+import type { ChartDaysShowing, EarningWindow } from '../balance/models'
 
-export const getTooltipTimestamp = (daysShowing: 1 | 7 | 30, timestamp: Object): string => {
+export const getTooltipTimestamp = (daysShowing: ChartDaysShowing, timestamp: Object): string => {
   let displayTime: string
   switch (daysShowing) {
     case 1:
@@ -29,7 +30,7 @@ interface RangeTooltipTimestamp {
 }
 
 export const getRangeTooltipTimestamp = (
-  daysShowing: 1 | 7 | 30,
+  daysShowing: ChartDaysShowing,
   startTime: Object,
   endTime: Object,
 ): RangeTooltipTimestamp => {
@@ -69,4 +70,28 @@ export const getRangeTooltipTimestamp = (
 
 export const getNumberWithCommas = (number: string): string => {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
+
+export const normalizeEarningsPerMachineData = (earningPerMachine: EarningWindow[], daysShowing: number) => {
+  const is24HoursChart = daysShowing === 1
+  const is7DaysChart = daysShowing === 7
+
+  return earningPerMachine.map((earningPerMachine) => {
+    if (is24HoursChart) {
+      return {
+        timestamp: moment(earningPerMachine.timestamp).add(15, 'minute').format('HH'),
+        earnings: earningPerMachine.earnings,
+      }
+    } else if (is7DaysChart) {
+      return {
+        timestamp: moment(earningPerMachine.timestamp).add(15, 'minute').format('D/M'),
+        earnings: earningPerMachine.earnings,
+      }
+    } else {
+      return {
+        timestamp: moment(earningPerMachine.timestamp).add(15, 'minute').format('D'),
+        earnings: earningPerMachine.earnings,
+      }
+    }
+  })
 }
