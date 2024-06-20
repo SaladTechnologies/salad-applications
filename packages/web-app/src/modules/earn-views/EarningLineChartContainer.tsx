@@ -1,6 +1,6 @@
 import { connect } from '../../connect'
 import type { RootStore } from '../../Store'
-import { EarningLineChart } from './components/EarningLineChart'
+import { EarningLineChart } from './components'
 
 const mockedEarningsPerMachine = (daysShowing: number) => {
   const shouldShowAmPm = daysShowing === 1

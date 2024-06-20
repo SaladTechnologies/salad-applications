@@ -1,59 +1,29 @@
+import type CSS from 'csstype'
 import moment from 'moment'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import { DefaultTheme, type SaladTheme } from '../../../SaladTheme'
-import { formatBalance } from '../../../utils'
-import type { ChartDaysShowing, EarningPerMachine, EarningWindow } from '../../balance/models'
-import { earningsChartColors } from '../pages/constants'
-import { normalizeEarningsPerMachineData } from '../utils'
+import { DefaultTheme, type SaladTheme } from '../../../../SaladTheme'
+import { formatBalance } from '../../../../utils'
+import type { ChartDaysShowing, EarningPerMachine, EarningWindow } from '../../../balance/models'
+import { earningsChartColors } from '../../pages/constants'
+import { normalizeEarningsPerMachineData } from '../../utils'
+import { CustomizedXAxisTick } from './components'
 
-const styles = (theme: SaladTheme) => ({
+const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   tickFont: {
     fontFamily: 'Mallory',
     color: theme.lightGreen,
-    fontSize: 12,
+    fontSize: '12px',
   },
   tooltipWrapper: {
     color: theme.lightGreen,
-    fontSize: 14,
+    fontSize: '14px',
     padding: '2px 9px',
     borderRadius: '24px',
     border: `1px solid ${theme.green}`,
   },
 })
-
-interface CustomTick extends WithStyles<typeof styles> {
-  x: number
-  y: number
-  payload: {
-    value: string
-  }
-  fill: string
-  is24HoursChart: boolean
-}
-
-const CustomizedXAxisTick = (props: CustomTick) => {
-  const { x, y, fill, payload, is24HoursChart } = props
-  if (!payload.value || payload.value === '0') {
-    return null
-  }
-
-  const shouldShowAmPm = payload.value === '00' || payload.value === '12'
-  const timestamp = is24HoursChart ? moment(payload.value, 'HH').format(shouldShowAmPm ? 'h A' : 'h') : payload.value
-
-  const lines = timestamp.split(' ')
-
-  return (
-    <text x={x} y={y} fill={fill}>
-      {lines.map((line, index) => (
-        <tspan x={x} dy={index === 0 ? 0 : 15} dx={10} key={index}>
-          {line}
-        </tspan>
-      ))}
-    </text>
-  )
-}
 
 interface Props extends WithStyles<typeof styles> {
   earningsPerMachine: EarningPerMachine

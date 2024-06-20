@@ -50,3 +50,6 @@ export const earningsChartColors = [
   '#FF33B3',
   '#FF3375',
 ]
+
+export const MidnightHour = '00'
+export const NoonHour = '12'

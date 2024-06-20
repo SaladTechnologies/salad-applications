@@ -13,6 +13,7 @@ import { P } from '../../../components'
 import { Segments } from '../../../components/elements/Segments'
 import { formatBalance } from '../../../utils'
 import type { ChartDaysShowing, EarningWindow } from '../../balance/models'
+import { MidnightHour, NoonHour } from '../pages/constants'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -204,8 +205,8 @@ const _CustomizedXAxisTick = (props: CustomTick) => {
     return null
   }
 
-  const isMidnight = moment(payload.value).add(15, 'minute').hours() === 0
-  const isNoon = moment(payload.value).add(15, 'minute').hours() === 12
+  const isMidnight = moment(payload.value).add(15, 'minute').hours().toString() === MidnightHour
+  const isNoon = moment(payload.value).add(15, 'minute').hours().toString() === NoonHour
   const shouldShowAmPm = daysShowing === 1
   const shouldShowDateMonth = daysShowing === 7
 
