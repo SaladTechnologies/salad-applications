@@ -1,4 +1,4 @@
-import { DefaultTheme as GardenTheme, Switch } from '@saladtechnologies/garden-components'
+import { DefaultTheme as GardenTheme } from '@saladtechnologies/garden-components'
 import classnames from 'classnames'
 import { uniq } from 'lodash'
 import moment from 'moment'
@@ -10,35 +10,13 @@ import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis
 import type { CategoricalChartState } from 'recharts/types/chart/types'
 import type { SaladTheme } from '../../../SaladTheme'
 import { P } from '../../../components'
-import { Segments } from '../../../components/elements/Segments'
 import { formatBalance } from '../../../utils'
 import type { ChartDaysShowing, EarningWindow } from '../../balance/models'
 import { MidnightHour, NoonHour } from '../pages/constants'
 
 const styles = (theme: SaladTheme) => ({
-  container: {
-    display: 'flex',
-    height: 250,
-    width: '100%',
-    position: 'relative',
-    flexDirection: 'column',
-  },
   removeContainerPadding: {
     paddingTop: 0,
-  },
-  chartHeader: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-end',
-    flexDirection: 'row',
-  },
-  segmentsContainer: {
-    '&>label:first-child': {
-      borderRadius: '2px 0px 0px 2px',
-    },
-    '&>label:last-child': {
-      borderRadius: '0px 2px 2px 0px',
-    },
   },
   placeholderText: {
     fontFamily: 'Mallory',
@@ -98,9 +76,6 @@ const styles = (theme: SaladTheme) => ({
   },
   tickMobile: {
     display: 'block',
-  },
-  earningPerMachineSwitchWrapper: {
-    marginLeft: 32,
   },
   '@media screen and (min-width: 1025px)': {
     tickDesktop: {
@@ -296,7 +271,6 @@ interface State {
   selectedLeftToRight?: boolean
   selectedRangeIndexes: number[]
   showEarningsRange?: boolean
-  isEarningsPerMachineEnabled: boolean
 }
 
 class _EarningChart extends Component<Props, State> {
@@ -304,12 +278,7 @@ class _EarningChart extends Component<Props, State> {
     super(props)
     this.state = {
       selectedRangeIndexes: [],
-      isEarningsPerMachineEnabled: false,
     }
-  }
-
-  public override componentDidMount() {
-    this.props.viewLast24Hours()
   }
 
   public override shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
@@ -332,10 +301,6 @@ class _EarningChart extends Component<Props, State> {
     }
 
     if (this.state.hoverIndex !== nextState.hoverIndex) {
-      return true
-    }
-
-    if (this.state.isEarningsPerMachineEnabled !== nextState.isEarningsPerMachineEnabled) {
       return true
     }
 
@@ -442,45 +407,20 @@ class _EarningChart extends Component<Props, State> {
 
   getTimeValue = (earningWindow: EarningWindow) => moment(earningWindow.timestamp).valueOf()
 
-  handleEarningsPerMachineClick = () => {
-    this.setState((prevState) => ({
-      isEarningsPerMachineEnabled: !prevState.isEarningsPerMachineEnabled,
-    }))
-  }
-
   public override render(): ReactNode {
-    const { daysShowing, classes, earningHistory, viewLast24Hours, viewLast7Days, viewLast30Days } = this.props
+    const { daysShowing, classes, earningHistory } = this.props
     const { hoverIndex, showEarningsRange, earningsRangeSum, rangeCenterCoordinate, selectedRangeIndexes } = this.state
     const isZero: boolean =
       !earningHistory || earningHistory.length === 0 || !earningHistory.some((x) => x.earnings > 0)
 
-    const segmentOptions = [
-      { name: '24 Hours', action: viewLast24Hours },
-      { name: '7 Days', action: viewLast7Days },
-      { name: '30 Days', action: viewLast30Days },
-    ]
-
     return (
-      <div className={classnames(classes.container)}>
+      <>
         <div
           className={classnames(classes.placeholderText, {
             [classes.placeholderTextHidden]: !isZero,
           })}
         >
           <P>No data to display</P>
-        </div>
-        <div className={classes.chartHeader}>
-          <div className={classes.segmentsContainer}>
-            <Segments options={segmentOptions} />
-          </div>
-          <div className={classes.earningPerMachineSwitchWrapper}>
-            <Switch
-              label="Earnings Per Machine"
-              checked={this.state.isEarningsPerMachineEnabled}
-              onChange={this.handleEarningsPerMachineClick}
-              variant="light"
-            />
-          </div>
         </div>
         {earningHistory && (
           <>
@@ -573,7 +513,7 @@ class _EarningChart extends Component<Props, State> {
             </ResponsiveContainer>
           </>
         )}
-      </div>
+      </>
     )
   }
 }

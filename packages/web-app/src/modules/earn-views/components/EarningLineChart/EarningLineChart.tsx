@@ -39,8 +39,8 @@ const _EarningLineChart = ({ classes, earningsPerMachine, daysShowing }: Props) 
   }))
 
   return (
-    <ResponsiveContainer width="100%" height={210}>
-      <LineChart>
+    <ResponsiveContainer>
+      <LineChart margin={{ top: 30, left: 10, right: 0, bottom: 10 }}>
         <CartesianGrid vertical={false} stroke="#3B4D5C" />
         <XAxis
           allowDuplicatedCategory={false}
