@@ -26,6 +26,9 @@ const mapStoreToProps = (store: RootStore): any => {
     trackEarnPageFAQLinkClicked: store.analytics.trackEarnPageFAQLinkClicked,
     trackEarnPageViewed: store.analytics.trackEarnPageViewed,
     trackAndNavigateToRewardVaultPage,
+    viewLast24Hours: store.balance.viewLast24Hours,
+    viewLast7Days: store.balance.viewLast7Days,
+    viewLast30Days: store.balance.viewLast30Days,
   }
 }
 

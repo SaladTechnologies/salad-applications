@@ -33,6 +33,9 @@ interface Props extends WithStyles<typeof styles> {
   trackAndNavigateToRewardVaultPage: () => void
   trackEarnPageFAQLinkClicked: (faqLink: string) => void
   trackEarnPageViewed: () => void
+  viewLast24Hours: () => void
+  viewLast7Days: () => void
+  viewLast30Days: () => void
 }
 
 const _EarningSummaryPage: FC<Props> = ({
@@ -51,6 +54,9 @@ const _EarningSummaryPage: FC<Props> = ({
   trackAndNavigateToRewardVaultPage,
   trackEarnPageFAQLinkClicked,
   trackEarnPageViewed,
+  viewLast24Hours,
+  viewLast7Days,
+  viewLast30Days,
 }) => {
   useEffect(() => {
     startRedemptionsRefresh()
@@ -77,7 +83,11 @@ const _EarningSummaryPage: FC<Props> = ({
           redeemedRewardsCount={redeemedRewardsCount}
           totalChoppingHours={totalChoppingHours}
         />
-        <EarningHistory />
+        <EarningHistory
+          viewLast24Hours={viewLast24Hours}
+          viewLast7Days={viewLast7Days}
+          viewLast30Days={viewLast30Days}
+        />
         <LatestRewardsRedeemed
           latestCompletedRedeemedRewards={latestCompletedRedeemedRewardsArray}
           navigateToRewardVaultPage={trackAndNavigateToRewardVaultPage}
