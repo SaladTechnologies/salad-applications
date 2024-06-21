@@ -12,7 +12,8 @@ import type { SaladTheme } from '../../../SaladTheme'
 import { P } from '../../../components'
 import { Segments } from '../../../components/elements/Segments'
 import { formatBalance } from '../../../utils'
-import type { EarningWindow } from '../../balance/models'
+import type { ChartDaysShowing, EarningWindow } from '../../balance/models'
+import { MidnightHour, NoonHour } from '../pages/constants'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -180,7 +181,7 @@ interface EarningRange {
 }
 
 interface CustomTick extends WithStyles<typeof styles> {
-  daysShowing: 1 | 7 | 30
+  daysShowing: ChartDaysShowing
   fill: string
   payload: {
     coordinate: number
@@ -204,8 +205,8 @@ const _CustomizedXAxisTick = (props: CustomTick) => {
     return null
   }
 
-  const isMidnight = moment(payload.value).add(15, 'minute').hours() === 0
-  const isNoon = moment(payload.value).add(15, 'minute').hours() === 12
+  const isMidnight = moment(payload.value).add(15, 'minute').hours().toString() === MidnightHour
+  const isNoon = moment(payload.value).add(15, 'minute').hours().toString() === NoonHour
   const shouldShowAmPm = daysShowing === 1
   const shouldShowDateMonth = daysShowing === 7
 
@@ -282,7 +283,7 @@ interface Props extends WithStyles<typeof styles> {
   viewLast24Hours: () => void
   viewLast7Days: () => void
   viewLast30Days: () => void
-  daysShowing: 1 | 7 | 30
+  daysShowing: ChartDaysShowing
 }
 
 interface State {
