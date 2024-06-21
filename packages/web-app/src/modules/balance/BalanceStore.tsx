@@ -1,9 +1,22 @@
 import type { AxiosInstance } from 'axios'
-import { action, computed, flow, observable } from 'mobx'
+import type { Guid } from 'guid-typescript'
+import { action, computed, flow, observable, runInAction } from 'mobx'
 import moment from 'moment'
 import type { RootStore } from '../../Store'
-import type { ChartDaysShowing, EarningWindow } from './models'
-import { batchEarningsWindow, getEarningWindowsGroupedByDay } from './utils'
+import type { MachinesApiClient } from '../../api/machinesApiClient/generated/machinesApiClient'
+import type {
+  EarningHistoryTimeframeEnum,
+  Machine,
+  MachineEarningHistory,
+} from '../../api/machinesApiClient/generated/models'
+import { getMachinesApiClient } from '../../api/machinesApiClient/getMachinesApiClient'
+import type { ChartDaysShowing, EarningPerMachine, EarningWindow } from './models'
+import {
+  batchEarningsWindow,
+  getBaseKeyAsGuid,
+  getEarningWindowsGroupedByDay,
+  normalizeEarningsPerMachine,
+} from './utils'
 
 enum EarningChartTimeFilter {
   Last24Hour = '24 hour filter',
@@ -12,11 +25,19 @@ enum EarningChartTimeFilter {
 }
 
 export class BalanceStore {
+  private machinesApiClient: MachinesApiClient
+
   @observable
   public currentBalance: number = 0
 
   @observable
   public lifetimeBalance: number = 0
+
+  @observable
+  public machines: Machine[] | null = []
+
+  @observable
+  public earningsPerMachine: EarningPerMachine | null = {}
 
   @observable
   private earningHistory: Map<number, number> = new Map()
@@ -73,15 +94,75 @@ export class BalanceStore {
   @observable
   public lastMonthEarnings: number = 0
 
-  private getEarningWindows = (numberOfDays: ChartDaysShowing): EarningWindow[] => {
+  private getMachines = async () => {
+    try {
+      const machinesResponse = await this.machinesApiClient?.v2.machines.get()
+
+      if (machinesResponse?.items) {
+        return machinesResponse?.items
+      }
+    } catch (error) {
+      console.error('BalanceStore.getMultipleMachinesEarnings: ', error)
+    }
+
+    return null
+  }
+
+  private getEarningsPerMachine = async (machines: Machine[], chartsDaysShowing: ChartDaysShowing) => {
+    try {
+      return (
+        await Promise.all(
+          machines
+            .filter((machine) => machine.machine_id)
+            .map((machine) => {
+              const timeframe: EarningHistoryTimeframeEnum =
+                chartsDaysShowing === 1 ? '24h' : (`${chartsDaysShowing}d` as EarningHistoryTimeframeEnum)
+              return this.machinesApiClient?.v2.machines
+                .byMachine_id(getBaseKeyAsGuid(machine.machine_id as Guid))
+                .earningHistory.get({ queryParameters: { timeframe } })
+            }),
+        )
+      ).filter((value) => value) as MachineEarningHistory[]
+    } catch (error) {
+      console.error('BalanceStore.getEarningsPerMachine: ', error)
+      return null
+    }
+  }
+
+  @action
+  getMultipleMachinesEarnings = () => {
+    this.getMachines()
+      .then((machines) => {
+        if (machines) {
+          runInAction(() => {
+            this.machines = machines
+          })
+          return this.getEarningsPerMachine(machines, this.daysShowingEarnings)
+        }
+        throw new Error('There is no machines')
+      })
+      .then((earningsPerMachine) => {
+        if (earningsPerMachine) {
+          runInAction(() => {
+            this.earningsPerMachine = normalizeEarningsPerMachine(earningsPerMachine)
+          })
+        }
+        throw new Error('There are no earning per machines')
+      })
+      .catch((error) => {
+        console.error('BalanceStore.getMultipleMachinesEarnings: ', error)
+      })
+  }
+
+  private getEarningWindows = (chartsDaysShowing: ChartDaysShowing): EarningWindow[] => {
     const windows: EarningWindow[] = []
 
     const now = moment.utc()
 
-    const threshold = moment(now).subtract(numberOfDays, 'days')
+    const threshold = moment(now).subtract(chartsDaysShowing, 'days')
 
     let batchedEarningWindows = new Map<number, number>()
-    switch (numberOfDays) {
+    switch (chartsDaysShowing) {
       case 1:
         batchedEarningWindows = this.earningHistory
         break
@@ -108,16 +189,21 @@ export class BalanceStore {
 
     const sortedEarningWindowsByTimestamp = windows.sort((a, b) => a.timestamp.diff(b.timestamp))
 
-    if (numberOfDays === 1) {
+    if (chartsDaysShowing === 1) {
       return sortedEarningWindowsByTimestamp
     }
 
-    const groupedByTheDayEarningWindows = getEarningWindowsGroupedByDay(sortedEarningWindowsByTimestamp, numberOfDays)
+    const groupedByTheDayEarningWindows = getEarningWindowsGroupedByDay(
+      sortedEarningWindowsByTimestamp,
+      chartsDaysShowing,
+    )
 
     return groupedByTheDayEarningWindows
   }
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
+  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
+    this.machinesApiClient = getMachinesApiClient(axios)
+  }
 
   @action.bound
   refreshBalanceAndHistory = flow(function* (this: BalanceStore) {

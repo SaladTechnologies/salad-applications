@@ -9,16 +9,25 @@ import { EarningLineChartContainer } from '../EarningLineChartContainer'
 import { EarnSectionHeader } from './EarnSectionHeader'
 
 const styles = (theme: SaladTheme) => ({
-  container: {
+  earningHistoryWrapper: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    flexDirection: 'column',
+    width: '100%',
+    position: 'relative',
+  },
+  chartWrapper: {
     display: 'flex',
     flexDirection: 'column',
-    maxWidth: 860,
+    flex: 1,
     position: 'relative',
+    height: 200,
+    width: '100%',
   },
   chartContainer: {
     display: 'flex',
-    height: 250,
-    width: '100%',
+    height: 300,
     position: 'relative',
     flexDirection: 'column',
   },
@@ -65,24 +74,26 @@ const EarningHistoryRaw = ({ classes, viewLast24Hours, viewLast7Days, viewLast30
   ]
 
   return (
-    <div className={classes.container}>
+    <div className={classes.earningHistoryWrapper}>
       <EarnSectionHeader>Earning History</EarnSectionHeader>
-      <p className={classes.subtitle}>See earnings from the last...</p>
-      <div className={classes.chartHeader}>
-        <div className={classes.segmentsContainer}>
-          <Segments options={segmentOptions} />
+      <div className={classes.chartWrapper}>
+        <p className={classes.subtitle}>See earnings from the last...</p>
+        <div className={classes.chartHeader}>
+          <div className={classes.segmentsContainer}>
+            <Segments options={segmentOptions} />
+          </div>
+          <div className={classes.earningPerMachineSwitchWrapper}>
+            <Switch
+              label="Earnings Per Machine"
+              checked={isEarningsPerMachineEnabled}
+              onChange={setIsEarningsPerMachineEnabled}
+              variant="light"
+            />
+          </div>
         </div>
-        <div className={classes.earningPerMachineSwitchWrapper}>
-          <Switch
-            label="Earnings Per Machine"
-            checked={isEarningsPerMachineEnabled}
-            onChange={setIsEarningsPerMachineEnabled}
-            variant="light"
-          />
+        <div className={classes.chartContainer}>
+          {isEarningsPerMachineEnabled ? <EarningLineChartContainer /> : <EarningChartContainer />}
         </div>
-      </div>
-      <div className={classes.chartContainer}>
-        {isEarningsPerMachineEnabled ? <EarningLineChartContainer /> : <EarningChartContainer />}
       </div>
     </div>
   )
