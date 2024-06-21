@@ -87,6 +87,7 @@ interface Props extends WithStyles<typeof styles> {
   textClassName?: string
   className?: string
   onClick?: (newState: boolean) => void
+  checkedColor?: string
   dark?: boolean
 }
 
@@ -100,8 +101,19 @@ class _Checkbox extends Component<Props> {
   }
 
   public override render(): ReactNode {
-    const { textClassName, disabled, hideCheckbox, className, text, textElement, errorText, checked, dark, classes } =
-      this.props
+    const {
+      textClassName,
+      disabled,
+      hideCheckbox,
+      className,
+      text,
+      textElement,
+      errorText,
+      checked,
+      dark,
+      checkedColor,
+      classes,
+    } = this.props
 
     const hasTextElement = textElement !== undefined
     return (
@@ -116,6 +128,7 @@ class _Checkbox extends Component<Props> {
         >
           {!hideCheckbox && (
             <div
+              style={checked ? { backgroundColor: checkedColor } : undefined}
               className={classnames(classes.checkBox, { [classes.textElementEnabled]: hasTextElement })}
               onClick={this.handleClick}
             >
