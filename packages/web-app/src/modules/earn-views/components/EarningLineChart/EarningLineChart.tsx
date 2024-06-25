@@ -37,7 +37,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
 })
 
-const getInitialMachineOptions = (earningsPerMachine: EarningPerMachine) => {
+const getMachineOptions = (earningsPerMachine: EarningPerMachine) => {
   return Object.keys(earningsPerMachine).reduce((machineOptions, machineId, index) => {
     return {
       ...machineOptions,
@@ -53,19 +53,16 @@ const getInitialMachineOptions = (earningsPerMachine: EarningPerMachine) => {
 interface Props extends WithStyles<typeof styles> {
   earningsPerMachine: EarningPerMachine
   daysShowing: ChartDaysShowing
-  getMultipleMachinesEarnings: () => void
+  fetchEarningsPerMachine: () => void
 }
 
-const _EarningLineChart = ({ classes, earningsPerMachine, daysShowing, getMultipleMachinesEarnings }: Props) => {
+const _EarningLineChart = ({ classes, earningsPerMachine, daysShowing, fetchEarningsPerMachine }: Props) => {
   const is24HoursChart = daysShowing === 1
-  const [machineOptions, setMachineOptions] = useState<MachineOptions>(getInitialMachineOptions(earningsPerMachine))
+  const [machineOptions, setMachineOptions] = useState<MachineOptions>({})
 
   useEffect(() => {
-    const areMachineOptionsSet = Object.values(machineOptions).length > 0
-    if (!areMachineOptionsSet) {
-      setMachineOptions(getInitialMachineOptions(earningsPerMachine))
-    }
-  }, [earningsPerMachine, machineOptions])
+    setMachineOptions(getMachineOptions(earningsPerMachine))
+  }, [earningsPerMachine])
 
   const handleMachineOptionClick = (machineId: string) => {
     setMachineOptions(
@@ -89,8 +86,8 @@ const _EarningLineChart = ({ classes, earningsPerMachine, daysShowing, getMultip
     }))
 
   useEffect(() => {
-    getMultipleMachinesEarnings()
-  }, [getMultipleMachinesEarnings, daysShowing])
+    fetchEarningsPerMachine()
+  }, [fetchEarningsPerMachine])
 
   return (
     <div className={classes.earningLineChartWrapper}>

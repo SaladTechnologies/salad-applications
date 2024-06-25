@@ -54,25 +54,88 @@ export const normalizeEarningsPerMachine = (
 ): EarningPerMachine | null => {
   let normalizedEarningsPerMachine: EarningPerMachine | null = null
   if (earningsPerMachine) {
-    normalizedEarningsPerMachine = earningsPerMachine.reduce((earningsPerMachine, machineEarnings) => {
+    normalizedEarningsPerMachine = earningsPerMachine.reduce((aggregatedEarningsPerMachine, machineEarnings) => {
       if (machineEarnings.earnings) {
         const machineId = machineEarnings.machine_id?.toString() as string
-        const earnings = Object.keys(machineEarnings.earnings).map((timestamp: string) => {
+        const { earningHistory: earningHistoryMap } = normalizeEarningHistory(
+          machineEarnings.earnings as Record<string, number>,
+        )
+
+        const machineEarningHistory = Object.fromEntries(earningHistoryMap.entries())
+
+        const earnings = Object.keys(machineEarningHistory).map((timestamp: string) => {
+          const timestampMoment = moment(Number(timestamp) * 1000)
           return {
-            timestamp: moment(timestamp),
-            earnings: (machineEarnings.earnings as Record<string, number>)?.[timestamp] as number,
+            timestamp: timestampMoment,
+            earnings: machineEarningHistory[timestamp] ?? 0,
           }
         })
 
         return {
-          ...earningsPerMachine,
+          ...aggregatedEarningsPerMachine,
           [machineId]: earnings,
         }
       }
 
-      return earningsPerMachine
+      return aggregatedEarningsPerMachine
     }, {} as EarningPerMachine)
+
+    return normalizedEarningsPerMachine
   }
 
-  return normalizedEarningsPerMachine
+  return null
+}
+
+export const normalizeEarningHistory = (
+  earningData: Record<string, number>,
+): {
+  lastMonthEarnings: number
+  lastWeekEarnings: number
+  lastDayEarnings: number
+  earningHistory: Map<number, number>
+} => {
+  const roundedDown = Math.floor(moment().minute() / 15) * 15
+
+  const now = moment().minute(roundedDown).second(0).millisecond(0)
+
+  const threshold24Hrs = moment(now).subtract(24, 'hours')
+  const threshold7Days = moment(now).subtract(7, 'days')
+
+  const earningValues: Map<number, number> = new Map()
+
+  let total24Hrs = 0
+  let total7Days = 0
+  let total30Days = 0
+
+  //Process the input data into a usable format
+  for (let key in earningData) {
+    const timestamp = moment(key)
+    const earnings: number = earningData[key] as number
+    earningValues.set(timestamp.unix(), earnings)
+
+    if (timestamp >= threshold24Hrs) {
+      total24Hrs += earnings
+    }
+
+    if (timestamp >= threshold7Days) {
+      total7Days += earnings
+    }
+
+    total30Days += earnings
+  }
+
+  const history = new Map<number, number>()
+
+  for (let i = 0; i < 2880; ++i) {
+    const earning = earningValues.get(now.unix())
+    history.set(now.unix(), earning || 0)
+    now.subtract(15, 'minutes')
+  }
+
+  return {
+    lastMonthEarnings: total30Days,
+    lastWeekEarnings: total7Days,
+    lastDayEarnings: total24Hrs,
+    earningHistory: history,
+  }
 }

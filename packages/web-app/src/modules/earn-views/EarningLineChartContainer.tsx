@@ -6,7 +6,7 @@ const mapStoreToProps = (store: RootStore): any => {
   return {
     earningsPerMachine: store.balance.earningsPerMachine,
     daysShowing: store.balance.getDaysShowingEarnings,
-    getMultipleMachinesEarnings: store.balance.getMultipleMachinesEarnings,
+    fetchEarningsPerMachine: store.balance.fetchEarningsPerMachine,
   }
 }
 
