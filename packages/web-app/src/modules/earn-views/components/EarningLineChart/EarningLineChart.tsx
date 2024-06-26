@@ -123,11 +123,11 @@ const _EarningLineChart = ({ classes, earningsPerMachine, daysShowing, fetchEarn
             labelFormatter={(value) => (is24HoursChart ? moment(value, 'HH').format('h A') : value)}
             wrapperClassName={classes.tooltipWrapper}
           />
-          {machineEarningsData.map((machineEarning, index) => (
+          {machineEarningsData.map((machineEarning) => (
             <Line
               data={machineEarning.data}
               dataKey="earnings"
-              fill={earningsChartColors[index]}
+              fill={machineOptions[machineEarning.id]?.color}
               key={machineEarning.name}
               name={machineEarning.name}
               stroke={machineOptions[machineEarning.id]?.color}
