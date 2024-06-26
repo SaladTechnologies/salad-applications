@@ -191,7 +191,7 @@ export class BalanceStore {
 
       return {
         ...earningWindowsPerMachine,
-        [machineId]: this.getEarningWindows(chartsDaysShowing, machineEarningsMap),
+        [machineId]: this.getEarningWindows(chartsDaysShowing, machineEarningsMap, true),
       }
     }, {} as EarningPerMachine)
   }
@@ -199,6 +199,7 @@ export class BalanceStore {
   private getEarningWindows = (
     chartsDaysShowing: ChartDaysShowing,
     earningHistory: Map<number, number>,
+    isPerMachineEarning?: boolean,
   ): EarningWindow[] => {
     const windows: EarningWindow[] = []
 
@@ -209,7 +210,7 @@ export class BalanceStore {
     let batchedEarningWindows = new Map<number, number>()
     switch (chartsDaysShowing) {
       case 1:
-        batchedEarningWindows = earningHistory
+        batchedEarningWindows = isPerMachineEarning ? batchEarningsWindow(earningHistory, 4) : earningHistory
         break
       case 7:
         batchedEarningWindows = batchEarningsWindow(earningHistory, 8)
