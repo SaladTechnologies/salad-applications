@@ -63,7 +63,7 @@ const EarningMachineListRaw: FC<Props> = ({ classes, machineOptions, onSelectedM
     <div className={classes.container}>
       <div className={classes.header}>
         <Text variant="baseM">{title}</Text>
-        <a href="#">
+        <a href="https://support.salad.com/article/414-how-to-find-your-salad-machine-id">
           <Text className={classes.link} variant="baseS">
             Where to find the Machine ID?
           </Text>
