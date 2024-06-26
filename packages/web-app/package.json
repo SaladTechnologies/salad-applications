@@ -68,7 +68,10 @@
   "resolutions": {
     "@elastic/search-ui": "file:../../libs/elastic-search-ui-1.17.1+salad.tgz",
     "meow@npm:3.7.0/trim-newlines": "3.0.1",
-    "remark-parse@npm:8.0.3/trim": "0.0.3"
+    "remark-parse@npm:8.0.3/trim": "0.0.3",
+    "@microsoft/kiota-abstractions": "1.0.0-preview.53",
+    "@microsoft/kiota-http-fetchlibrary": "1.0.0-preview.52",
+    "@microsoft/kiota-serialization-json": "1.0.0-preview.53"
   },
   "dependencies": {
     "@babel/core": "7.24.5",
@@ -86,9 +89,12 @@
     "@fortawesome/free-regular-svg-icons": "6.5.2",
     "@fortawesome/free-solid-svg-icons": "6.5.2",
     "@fortawesome/react-fontawesome": "0.2.1",
+    "@microsoft/kiota-abstractions": "1.0.0-preview.53",
+    "@microsoft/kiota-http-fetchlibrary": "1.0.0-preview.52",
+    "@microsoft/kiota-serialization-json": "1.0.0-preview.53",
     "@novu/notification-center": "0.24.2",
     "@novu/shared": "0.24.2",
-    "@saladtechnologies/garden-components": "1.4.6",
+    "@saladtechnologies/garden-components": "1.4.7",
     "@saladtechnologies/garden-fonts": "1.0.4",
     "@saladtechnologies/garden-icons": "1.0.23",
     "@storybook/addon-a11y": "6.5.16",
@@ -130,6 +136,7 @@
     "eslint-plugin-compat": "4.2.0",
     "events": "3.3.0",
     "final-form": "4.20.10",
+    "guid-typescript": "1.0.9",
     "history": "4.10.1",
     "is-retry-allowed": "3.0.0",
     "lodash": "4.17.21",
