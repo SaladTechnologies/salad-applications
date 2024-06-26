@@ -37,14 +37,17 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
 })
 
+const initiallyCheckedMachineOptionsAmount = 5
+
 const getMachineOptions = (earningsPerMachine: EarningPerMachine) => {
   return Object.keys(earningsPerMachine).reduce((machineOptions, machineId, index) => {
+    const isCheckedInitially = index < initiallyCheckedMachineOptionsAmount
     return {
       ...machineOptions,
       [machineId]: {
         id: machineId,
         color: earningsChartColors[index] as string,
-        isChecked: true,
+        isChecked: isCheckedInitially,
       },
     }
   }, {} as MachineOptions)

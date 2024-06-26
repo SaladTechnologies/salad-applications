@@ -1,4 +1,4 @@
-const mockedEarningsPerMachine = (daysShowing: number) => {
+export const getMockedEarningsPerMachine = (daysShowing: number) => {
   const shouldShowAmPm = daysShowing === 1
   const shouldShowDateMonth = daysShowing === 7
   const earningsPerMachine24hours = {
