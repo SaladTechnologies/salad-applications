@@ -3125,6 +3125,43 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@microsoft/kiota-abstractions@npm:1.0.0-preview.53":
+  version: 1.0.0-preview.53
+  resolution: "@microsoft/kiota-abstractions@npm:1.0.0-preview.53"
+  dependencies:
+    "@opentelemetry/api": "npm:^1.7.0"
+    "@std-uritemplate/std-uritemplate": "npm:^0.0.57"
+    guid-typescript: "npm:^1.0.9"
+    tinyduration: "npm:^3.3.0"
+    tslib: "npm:^2.6.2"
+    uuid: "npm:^9.0.1"
+  checksum: 10c0/e0edb1729327ddc2f1bc495702641b62a18978a65da75efae1ebffdab0397506bbd7259035dc27b5769cafc6ef8839878f2fe7d217f18a6e627fab40ddbd9e53
+  languageName: node
+  linkType: hard
+
+"@microsoft/kiota-http-fetchlibrary@npm:1.0.0-preview.52":
+  version: 1.0.0-preview.52
+  resolution: "@microsoft/kiota-http-fetchlibrary@npm:1.0.0-preview.52"
+  dependencies:
+    "@microsoft/kiota-abstractions": "npm:*"
+    "@opentelemetry/api": "npm:^1.7.0"
+    guid-typescript: "npm:^1.0.9"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/4b2fa4f918e03f950a8a92b78bf6086d0b1efecb002aef88f8b0e0294a02de68393ce9d62f332704d5e6b79a825a66a653cd670b97ab36b835b10b75fc436397
+  languageName: node
+  linkType: hard
+
+"@microsoft/kiota-serialization-json@npm:1.0.0-preview.53":
+  version: 1.0.0-preview.53
+  resolution: "@microsoft/kiota-serialization-json@npm:1.0.0-preview.53"
+  dependencies:
+    "@microsoft/kiota-abstractions": "npm:*"
+    guid-typescript: "npm:^1.0.9"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/885d04000ca8e91513118f4c5a6b2be57b1b34f1cc7491e8b3060086b7068120fb306a47234aab02affbd249884e7d284e143bfaca0682389ea50bc99cf817de
+  languageName: node
+  linkType: hard
+
 "@mrmlnc/readdir-enhanced@npm:^2.2.1":
   version: 2.2.1
   resolution: "@mrmlnc/readdir-enhanced@npm:2.2.1"
@@ -3265,6 +3302,13 @@ __metadata:
     mkdirp: "npm:^1.0.4"
     rimraf: "npm:^3.0.2"
   checksum: 10c0/02e946f3dafcc6743132fe2e0e2b585a96ca7265653a38df5a3e53fcf26c7c7a57fc0f861d7c689a23fdb6d6836c7eea5050c8086abf3c994feb2208d1514ff0
+  languageName: node
+  linkType: hard
+
+"@opentelemetry/api@npm:^1.7.0":
+  version: 1.9.0
+  resolution: "@opentelemetry/api@npm:1.9.0"
+  checksum: 10c0/9aae2fe6e8a3a3eeb6c1fdef78e1939cf05a0f37f8a4fae4d6bf2e09eb1e06f966ece85805626e01ba5fab48072b94f19b835449e58b6d26720ee19a58298add
   languageName: node
   linkType: hard
 
@@ -3540,9 +3584,12 @@ __metadata:
     "@fortawesome/free-regular-svg-icons": "npm:6.5.2"
     "@fortawesome/free-solid-svg-icons": "npm:6.5.2"
     "@fortawesome/react-fontawesome": "npm:0.2.1"
+    "@microsoft/kiota-abstractions": "npm:1.0.0-preview.53"
+    "@microsoft/kiota-http-fetchlibrary": "npm:1.0.0-preview.52"
+    "@microsoft/kiota-serialization-json": "npm:1.0.0-preview.53"
     "@novu/notification-center": "npm:0.24.2"
     "@novu/shared": "npm:0.24.2"
-    "@saladtechnologies/garden-components": "npm:1.4.6"
+    "@saladtechnologies/garden-components": "npm:1.4.7"
     "@saladtechnologies/garden-fonts": "npm:1.0.4"
     "@saladtechnologies/garden-icons": "npm:1.0.23"
     "@storybook/addon-a11y": "npm:6.5.16"
@@ -3584,6 +3631,7 @@ __metadata:
     eslint-plugin-compat: "npm:4.2.0"
     events: "npm:3.3.0"
     final-form: "npm:4.20.10"
+    guid-typescript: "npm:1.0.9"
     history: "npm:4.10.1"
     is-retry-allowed: "npm:3.0.0"
     lodash: "npm:4.17.21"
@@ -3641,9 +3689,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@saladtechnologies/garden-components@npm:1.4.6":
-  version: 1.4.6
-  resolution: "@saladtechnologies/garden-components@npm:1.4.6"
+"@saladtechnologies/garden-components@npm:1.4.7":
+  version: 1.4.7
+  resolution: "@saladtechnologies/garden-components@npm:1.4.7"
   peerDependencies:
     "@emotion/react": 11.x
     "@emotion/styled": 11.x
@@ -3658,7 +3706,7 @@ __metadata:
     react-intl: 6.x
     react-range: 1.x
     react-responsive: 9.x
-  checksum: 10c0/9634da2d11c2bf69152a5a868d04d3879da0ab20186cf45ba2df95f1a8d819a4220d3777337540e61226dd29c5f6601c9a0b6ad39c5b5c5d611ae6551d45ea29
+  checksum: 10c0/d2bbbe03a43ebce92fedd8cc8ae1276668f876d34a6f475d1817d85f24498a3b4042d7d1d0d746f7f5476bcde7b079568ed9343922e2a6c2bb6b9cae7e2d1646
   languageName: node
   linkType: hard
 
@@ -3715,6 +3763,13 @@ __metadata:
   version: 3.1.1
   resolution: "@socket.io/component-emitter@npm:3.1.1"
   checksum: 10c0/e5e00cffd617c6cad1d7557c9ae5a96503cd8935f131c9708b5b665847bf9f9cd49ad4f365ffaab4ef161164d60069d529591ced5d2e3f5e74ac53a82c1c872f
+  languageName: node
+  linkType: hard
+
+"@std-uritemplate/std-uritemplate@npm:^0.0.57":
+  version: 0.0.57
+  resolution: "@std-uritemplate/std-uritemplate@npm:0.0.57"
+  checksum: 10c0/5aed0bbcb8c5492bb4c8211deebe6731539aa0656a2e8270cbd7ac046de85aa1d58ae6389a6dd80417599ddc8e010ae464eb4e081c8d3ab4f085cf060673eb23
   languageName: node
   linkType: hard
 
@@ -12386,6 +12441,13 @@ __metadata:
   version: 1.4.0
   resolution: "graphemer@npm:1.4.0"
   checksum: 10c0/e951259d8cd2e0d196c72ec711add7115d42eb9a8146c8eeda5b8d3ac91e5dd816b9cd68920726d9fd4490368e7ed86e9c423f40db87e2d8dfafa00fa17c3a31
+  languageName: node
+  linkType: hard
+
+"guid-typescript@npm:1.0.9, guid-typescript@npm:^1.0.9":
+  version: 1.0.9
+  resolution: "guid-typescript@npm:1.0.9"
+  checksum: 10c0/fa0a2b2b4e06e0976a81c947b74e114b92f6647e84b52e24ab0981d2fdbaa1a640641d8fd269004dd7c581baebeb4f9d9782b74391e717e47c9b822bea4b3be6
   languageName: node
   linkType: hard
 
@@ -21856,6 +21918,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tinyduration@npm:^3.3.0":
+  version: 3.3.1
+  resolution: "tinyduration@npm:3.3.1"
+  checksum: 10c0/2a0311065188b25bcc3b0568b3893d0d8e498b58ca5a772fba69c12c99b4294f7cc9f7a62056e9c8dd7d8194c8d6669af4ab89faa5fb7eef55b0939b730af911
+  languageName: node
+  linkType: hard
+
 "tinylogic@npm:^1.0.3":
   version: 1.0.3
   resolution: "tinylogic@npm:1.0.3"
@@ -22108,6 +22177,13 @@ __metadata:
   version: 2.6.2
   resolution: "tslib@npm:2.6.2"
   checksum: 10c0/e03a8a4271152c8b26604ed45535954c0a45296e32445b4b87f8a5abdb2421f40b59b4ca437c4346af0f28179780d604094eb64546bee2019d903d01c6c19bdb
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.6.2":
+  version: 2.6.3
+  resolution: "tslib@npm:2.6.3"
+  checksum: 10c0/2598aef53d9dbe711af75522464b2104724d6467b26a60f2bdac8297d2b5f1f6b86a71f61717384aa8fd897240467aaa7bcc36a0700a0faf751293d1331db39a
   languageName: node
   linkType: hard
 
@@ -22827,7 +22903,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:9.0.1":
+"uuid@npm:9.0.1, uuid@npm:^9.0.1":
   version: 9.0.1
   resolution: "uuid@npm:9.0.1"
   bin:
