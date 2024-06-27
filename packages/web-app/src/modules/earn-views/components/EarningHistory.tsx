@@ -1,4 +1,4 @@
-import { Switch } from '@saladtechnologies/garden-components'
+import { Switch, Text } from '@saladtechnologies/garden-components'
 import { useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
@@ -57,6 +57,10 @@ const styles = (theme: SaladTheme) => ({
   earningPerMachineSwitchWrapper: {
     marginLeft: 32,
   },
+  descriptionWrapper: {
+    paddingLeft: '70px',
+    color: theme.lightGreen,
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -94,6 +98,14 @@ const EarningHistoryRaw = ({ classes, viewLast24Hours, viewLast7Days, viewLast30
         <div className={classes.chartContainer}>
           {isEarningsPerMachineEnabled ? <EarningLineChartContainer /> : <EarningChartContainer />}
         </div>
+        {isEarningsPerMachineEnabled && (
+          <div className={classes.descriptionWrapper}>
+            <Text variant="baseXS">
+              *Per machine earnings don’t include referral earnings, earning rate multipliers or any other kind of bonus
+              earnings.
+            </Text>
+          </div>
+        )}
       </div>
     </div>
   )
