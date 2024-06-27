@@ -1,3 +1,4 @@
+import { LoadingSpinner } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
@@ -22,6 +23,13 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     alignItems: 'flex-start',
     flexDirection: 'row',
     gap: '24px',
+  },
+  loaderWrapper: {
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   tickFont: {
     fontFamily: 'Mallory',
@@ -80,63 +88,78 @@ const _EarningLineChart = ({ classes, earningsPerMachine, daysShowing, fetchEarn
     )
   }
 
-  const machineEarningsData = Object.keys(earningsPerMachine)
-    .filter((machineId) => machineOptions[machineId]?.isChecked)
-    .map((machineId) => ({
-      id: machineId,
-      name: machineId.substring(0, 8),
-      data: normalizeEarningsPerMachineData(earningsPerMachine[machineId] as EarningWindow[], daysShowing),
-    }))
+  const machineEarningsData = Object.keys(earningsPerMachine).map((machineId) => ({
+    id: machineId,
+    name: machineId.substring(0, 8),
+    data: normalizeEarningsPerMachineData(earningsPerMachine[machineId] as EarningWindow[], daysShowing),
+  }))
 
   useEffect(() => {
     fetchEarningsPerMachine()
   }, [fetchEarningsPerMachine])
 
+  const isLoading = machineEarningsData.length <= 0
+  const isNoMachineOptionChecked = !Object.values(machineOptions).some((machineOption) => machineOption.isChecked)
+
   return (
     <div className={classes.earningLineChartWrapper}>
-      <ResponsiveContainer>
-        <LineChart margin={{ top: 30, left: 10, right: 0, bottom: 10 }}>
-          <CartesianGrid vertical={false} stroke="#3B4D5C" />
-          <XAxis
-            allowDuplicatedCategory={false}
-            className={classes.tickFont}
-            dataKey="timestamp"
-            padding={{ left: 5, right: is24HoursChart ? 5 : 30 }}
-            stroke={DefaultTheme.lightGreen}
-            tickMargin={0}
-            tickSize={15}
-            // @ts-ignore
-            tick={<CustomizedXAxisTick is24HoursChart={is24HoursChart} />}
-          />
-          <YAxis
-            axisLine={false}
-            className={classes.tickFont}
-            dataKey="earnings"
-            minTickGap={2}
-            stroke={DefaultTheme.lightGreen}
-            tickFormatter={(earnings) => (earnings === 0 ? '' : `$${earnings}`)}
-            tickLine={false}
-          />
-          <Tooltip
-            contentStyle={{ backgroundColor: DefaultTheme.darkBlue }}
-            formatter={(value) => formatBalance(Number(value))}
-            labelFormatter={(value) => (is24HoursChart ? moment(value, 'HH').format('h A') : value)}
-            wrapperClassName={classes.tooltipWrapper}
-          />
-          {machineEarningsData.map((machineEarning) => (
-            <Line
-              data={machineEarning.data}
-              dataKey="earnings"
-              fill={machineOptions[machineEarning.id]?.color}
-              key={machineEarning.name}
-              name={machineEarning.name}
-              stroke={machineOptions[machineEarning.id]?.color}
-              type="monotone"
-            />
-          ))}
-        </LineChart>
-      </ResponsiveContainer>
-      <EarningMachineList machineOptions={machineOptions} onSelectedMachineChange={handleMachineOptionClick} />
+      {isLoading ? (
+        <div className={classes.loaderWrapper}>
+          <LoadingSpinner variant="light" size={100} />
+        </div>
+      ) : (
+        <>
+          <ResponsiveContainer>
+            <LineChart
+              data={isNoMachineOptionChecked ? machineEarningsData[0]?.data : []}
+              margin={{ top: 30, left: 10, right: 0, bottom: 10 }}
+            >
+              <CartesianGrid vertical={false} stroke="#3B4D5C" />
+              <XAxis
+                allowDuplicatedCategory={false}
+                className={classes.tickFont}
+                dataKey="timestamp"
+                padding={{ left: 5, right: is24HoursChart ? 5 : 30 }}
+                stroke={DefaultTheme.lightGreen}
+                tickMargin={0}
+                tickSize={15}
+                // @ts-ignore
+                tick={<CustomizedXAxisTick is24HoursChart={is24HoursChart} />}
+              />
+              <YAxis
+                axisLine={false}
+                className={classes.tickFont}
+                dataKey="earnings"
+                minTickGap={2}
+                stroke={DefaultTheme.lightGreen}
+                tickFormatter={(earnings) => (earnings === 0 ? '' : `$${earnings}`)}
+                tickLine={false}
+              />
+              <Tooltip
+                contentStyle={{ backgroundColor: DefaultTheme.darkBlue }}
+                formatter={(value) => formatBalance(Number(value))}
+                labelFormatter={(value) => (is24HoursChart ? moment(value, 'HH').format('h A') : value)}
+                wrapperClassName={classes.tooltipWrapper}
+              />
+              {machineEarningsData.map(
+                (machineEarning) =>
+                  machineOptions[machineEarning.id]?.isChecked && (
+                    <Line
+                      data={machineEarning.data}
+                      dataKey="earnings"
+                      fill={machineOptions[machineEarning.id]?.color}
+                      key={machineEarning.name}
+                      name={machineEarning.name}
+                      stroke={machineOptions[machineEarning.id]?.color}
+                      type="monotone"
+                    />
+                  ),
+              )}
+            </LineChart>
+          </ResponsiveContainer>
+          <EarningMachineList machineOptions={machineOptions} onSelectedMachineChange={handleMachineOptionClick} />
+        </>
+      )}
     </div>
   )
 }
