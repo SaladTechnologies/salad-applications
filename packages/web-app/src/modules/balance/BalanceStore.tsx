@@ -1,9 +1,24 @@
 import type { AxiosInstance } from 'axios'
-import { action, computed, flow, observable } from 'mobx'
+import type { Guid } from 'guid-typescript'
+import { action, computed, flow, observable, runInAction } from 'mobx'
+import type { Moment } from 'moment'
 import moment from 'moment'
 import type { RootStore } from '../../Store'
-import type { ChartDaysShowing, EarningWindow } from './models'
-import { batchEarningsWindow, getEarningWindowsGroupedByDay } from './utils'
+import type { MachinesApiClient } from '../../api/machinesApiClient/generated/machinesApiClient'
+import type {
+  EarningHistoryTimeframeEnum,
+  Machine,
+  MachineEarningHistory,
+} from '../../api/machinesApiClient/generated/models'
+import { getMachinesApiClient } from '../../api/machinesApiClient/getMachinesApiClient'
+import type { ChartDaysShowing, EarningPerMachine, EarningWindow } from './models'
+import {
+  batchEarningsWindow,
+  getBaseKeyAsGuid,
+  getEarningWindowsGroupedByDay,
+  normalizeEarningHistory,
+  normalizeEarningsPerMachine,
+} from './utils'
 
 enum EarningChartTimeFilter {
   Last24Hour = '24 hour filter',
@@ -12,6 +27,19 @@ enum EarningChartTimeFilter {
 }
 
 export class BalanceStore {
+  private machinesApiClient: MachinesApiClient
+
+  private _latestEarningsPerMachineFetchMoment: Moment | null = null
+
+  @observable
+  private _earningsHistory: Map<number, number> = new Map()
+
+  @observable
+  private _earningsPerMachine: EarningPerMachine | null = {}
+
+  @observable
+  private daysShowingEarnings: ChartDaysShowing = 1
+
   @observable
   public currentBalance: number = 0
 
@@ -19,14 +47,16 @@ export class BalanceStore {
   public lifetimeBalance: number = 0
 
   @observable
-  private earningHistory: Map<number, number> = new Map()
-
-  @observable
-  private daysShowingEarnings: ChartDaysShowing = 1
+  public machines: Machine[] | null = []
 
   @computed
   public get earningsHistory(): EarningWindow[] {
-    return this.getEarningWindows(this.daysShowingEarnings)
+    return this.getEarningWindows(this.daysShowingEarnings, this._earningsHistory)
+  }
+
+  @computed
+  public get earningsPerMachine(): EarningPerMachine {
+    return this.getEarningWindowsPerMachine(this.daysShowingEarnings)
   }
 
   @computed
@@ -73,26 +103,123 @@ export class BalanceStore {
   @observable
   public lastMonthEarnings: number = 0
 
-  private getEarningWindows = (numberOfDays: ChartDaysShowing): EarningWindow[] => {
+  private getMachines = async () => {
+    try {
+      const machinesResponse = await this.machinesApiClient?.v2.machines.get()
+
+      if (machinesResponse?.items) {
+        return machinesResponse?.items
+      }
+    } catch (error) {
+      console.error('BalanceStore.getMultipleMachinesEarnings: ', error)
+    }
+
+    return null
+  }
+
+  private getEarningsPerMachine = async (machines: Machine[], chartsDaysShowing: ChartDaysShowing) => {
+    try {
+      return (
+        await Promise.all(
+          machines
+            .filter((machine) => machine.machine_id)
+            .map((machine) => {
+              const timeframe: EarningHistoryTimeframeEnum =
+                chartsDaysShowing === 1 ? '24h' : (`${chartsDaysShowing}d` as EarningHistoryTimeframeEnum)
+              return this.machinesApiClient?.v2.machines
+                .byMachine_id(getBaseKeyAsGuid(machine.machine_id as Guid))
+                .earningHistory.get({ queryParameters: { timeframe } })
+            }),
+        )
+      ).filter((value) => value) as MachineEarningHistory[]
+    } catch (error) {
+      console.error('BalanceStore.getEarningsPerMachine: ', error)
+      return null
+    }
+  }
+
+  @action
+  fetchEarningsPerMachine = () => {
+    const shouldFetch =
+      this._latestEarningsPerMachineFetchMoment === null ||
+      moment().diff(this._latestEarningsPerMachineFetchMoment, 'hours') > 0
+
+    if (shouldFetch) {
+      this._latestEarningsPerMachineFetchMoment = moment()
+
+      this.getMachines()
+        .then((machines) => {
+          if (machines) {
+            runInAction(() => {
+              this.machines = machines
+            })
+            return this.getEarningsPerMachine(machines, 30)
+          }
+          throw new Error('There is no machines')
+        })
+        .then((earningsPerMachine) => {
+          if (earningsPerMachine) {
+            return runInAction(() => {
+              this._earningsPerMachine = normalizeEarningsPerMachine(earningsPerMachine)
+            })
+          }
+          throw new Error('There are no earning per machines')
+        })
+        .catch((error) => {
+          console.error('BalanceStore.getMultipleMachinesEarnings: ', error)
+        })
+    }
+  }
+
+  private getEarningWindowsPerMachine = (chartsDaysShowing: ChartDaysShowing): EarningPerMachine => {
+    if (this._earningsPerMachine === null) {
+      return {}
+    }
+    return Object.keys(this._earningsPerMachine).reduce((earningWindowsPerMachine, machineId) => {
+      if (!this._earningsPerMachine) {
+        return {}
+      }
+
+      const machineEarningsMap = this._earningsPerMachine[machineId]?.reduce((machineEarningsMap, item) => {
+        machineEarningsMap.set(item.timestamp.unix(), item.earnings)
+        return machineEarningsMap
+      }, new Map())
+
+      if (!machineEarningsMap) {
+        return {}
+      }
+
+      return {
+        ...earningWindowsPerMachine,
+        [machineId]: this.getEarningWindows(chartsDaysShowing, machineEarningsMap, true),
+      }
+    }, {} as EarningPerMachine)
+  }
+
+  private getEarningWindows = (
+    chartsDaysShowing: ChartDaysShowing,
+    earningHistory: Map<number, number>,
+    isPerMachineEarning?: boolean,
+  ): EarningWindow[] => {
     const windows: EarningWindow[] = []
 
     const now = moment.utc()
 
-    const threshold = moment(now).subtract(numberOfDays, 'days')
+    const threshold = moment(now).subtract(chartsDaysShowing, 'days')
 
     let batchedEarningWindows = new Map<number, number>()
-    switch (numberOfDays) {
+    switch (chartsDaysShowing) {
       case 1:
-        batchedEarningWindows = this.earningHistory
+        batchedEarningWindows = isPerMachineEarning ? batchEarningsWindow(earningHistory, 4) : earningHistory
         break
       case 7:
-        batchedEarningWindows = batchEarningsWindow(this.earningHistory, 8)
+        batchedEarningWindows = batchEarningsWindow(earningHistory, 8)
         break
       case 30:
-        batchedEarningWindows = batchEarningsWindow(this.earningHistory, 48)
+        batchedEarningWindows = batchEarningsWindow(earningHistory, 48)
         break
       default:
-        batchedEarningWindows = this.earningHistory
+        batchedEarningWindows = earningHistory
     }
 
     for (let [unixTime, earning] of batchedEarningWindows) {
@@ -108,16 +235,21 @@ export class BalanceStore {
 
     const sortedEarningWindowsByTimestamp = windows.sort((a, b) => a.timestamp.diff(b.timestamp))
 
-    if (numberOfDays === 1) {
+    if (chartsDaysShowing === 1) {
       return sortedEarningWindowsByTimestamp
     }
 
-    const groupedByTheDayEarningWindows = getEarningWindowsGroupedByDay(sortedEarningWindowsByTimestamp, numberOfDays)
+    const groupedByTheDayEarningWindows = getEarningWindowsGroupedByDay(
+      sortedEarningWindowsByTimestamp,
+      chartsDaysShowing,
+    )
 
     return groupedByTheDayEarningWindows
   }
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
+  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
+    this.machinesApiClient = getMachinesApiClient(axios)
+  }
 
   @action.bound
   refreshBalanceAndHistory = flow(function* (this: BalanceStore) {
@@ -143,49 +275,13 @@ export class BalanceStore {
 
       const earningData = response.data
 
-      const roundedDown = Math.floor(moment().minute() / 15) * 15
+      const { lastMonthEarnings, lastWeekEarnings, lastDayEarnings, earningHistory } =
+        normalizeEarningHistory(earningData)
 
-      const now = moment().minute(roundedDown).second(0).millisecond(0)
-
-      const threshold24Hrs = moment(now).subtract(24, 'hours')
-      const threshold7Days = moment(now).subtract(7, 'days')
-
-      const earningValues: Map<number, number> = new Map()
-
-      let total24Hrs = 0
-      let total7Days = 0
-      let total30Days = 0
-
-      //Process the input data into a usable format
-      for (let key in earningData) {
-        const timestamp = moment(key)
-        const earnings: number = earningData[key]
-        earningValues.set(timestamp.unix(), earnings)
-
-        if (timestamp >= threshold24Hrs) {
-          total24Hrs += earnings
-        }
-
-        if (timestamp >= threshold7Days) {
-          total7Days += earnings
-        }
-
-        total30Days += earnings
-      }
-
-      this.lastMonthEarnings = total30Days
-      this.lastWeekEarnings = total7Days
-      this.lastDayEarnings = total24Hrs
-
-      const history = new Map<number, number>()
-
-      for (let i = 0; i < 2880; ++i) {
-        const earning = earningValues.get(now.unix())
-        history.set(now.unix(), earning || 0)
-        now.subtract(15, 'minutes')
-      }
-
-      this.earningHistory = history
+      this.lastMonthEarnings = lastMonthEarnings
+      this.lastWeekEarnings = lastWeekEarnings
+      this.lastDayEarnings = lastDayEarnings
+      this._earningsHistory = earningHistory
     } catch (error) {
       console.error('Balance history error: ')
       console.error(error)

@@ -15,6 +15,15 @@ import type { ChartDaysShowing, EarningWindow } from '../../balance/models'
 import { MidnightHour, NoonHour } from '../pages/constants'
 
 const styles = (theme: SaladTheme) => ({
+  earningChartWrapper: {
+    height: '400px',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    gap: '24px',
+  },
   removeContainerPadding: {
     paddingTop: 0,
   },
@@ -423,7 +432,7 @@ class _EarningChart extends Component<Props, State> {
           <P>No data to display</P>
         </div>
         {earningHistory && (
-          <>
+          <div className={classes.earningChartWrapper}>
             <ResponsiveContainer>
               <BarChart
                 data={earningHistory}
@@ -511,7 +520,7 @@ class _EarningChart extends Component<Props, State> {
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
-          </>
+          </div>
         )}
       </>
     )
