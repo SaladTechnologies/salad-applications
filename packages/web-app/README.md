@@ -36,3 +36,14 @@ Each feature has 1 or more MobX stores that is accessed by the `RootStore`, allo
 - [Storybook](https://storybook.js.org/) - Storybook is a development environment for UI components.
 - [JSS](https://cssinjs.org) - JSS is an authoring tool for CSS which allows you to use JavaScript to describe styles in a declarative, conflict-free and reusable way.
 - [Typescript](https://www.typescriptlang.org/) - A language for application-scale JavaScript.
+
+
+## Machines API Client
+
+Do the following steps to run the web-app with latest updated Kiota Machines API Client:
+1. Generate TypeScript client code - [find instruction here](https://github.com/SaladTechnologies/salad-platform/tree/master/backend/src/OpenAPI/MachinesAPI)
+2. `output` folder (`salad-platform\backend\src\OpenAPI\MachinesAPI\output`) contains all the generate Machines API Client files
+3. copy files from the `output` folder and paste (replace everything) in the web-app project here `salad-applications\packages\web-ap\src\api\machinesApiClient\generated`
+4. try to run the project with `yarn start`, there probably will be errors
+5. resolve all errors manually
+6. `yarn start`
