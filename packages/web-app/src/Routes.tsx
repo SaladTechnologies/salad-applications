@@ -2,7 +2,6 @@ import type { Location } from 'history'
 import type { RouteComponentProps } from 'react-router'
 import { Redirect, Route, Switch, withRouter } from 'react-router'
 import { NoPageFound } from './components'
-import { ReferralOnboardingContainer, ReferralWelcomeContainer } from './modules/account-views/referral-views'
 import { ReplaceBonusModalContainer } from './modules/bonus-views'
 import { EarnInfoPage, EarningSummaryContainer } from './modules/earn-views'
 import { ExitSurveyContainer } from './modules/exit-survey-views'
@@ -22,11 +21,6 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
 
   return (
     <Switch location={currentLocation}>
-      {/* Onboarding */}
-      <Route exact path="/onboarding/referral" component={ReferralOnboardingContainer} />
-      <Route exact path="/onboarding/welcome" component={ReferralWelcomeContainer} />
-      <Redirect exact from="/welcome" to="/onboarding/welcome" />
-
       {/* Store Pages */}
       <Route path={['/store', '/store/search']} exact render={() => <StorefrontHomePage />} />
       <Route path="/store/rewards/:id" exact component={RewardDetailsContainer} />
