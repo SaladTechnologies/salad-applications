@@ -89,6 +89,7 @@ const mapStoreToProps = (store: RootStore): any => {
     notifications,
     withInstallReminder: store.profile.withInstallReminder,
     novuSignature: store.profile.novuSignature,
+    isUserReferralsEnabled: store.referral.isUserReferralsEnabled,
   }
 }
 

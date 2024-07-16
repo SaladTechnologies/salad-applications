@@ -20,6 +20,10 @@ export class ReferralStore {
   @observable
   public referralCode: string = ''
 
+  /** A value indicating whether referrals functionality - enabled */
+  @observable
+  public isUserReferralsEnabled: boolean = false
+
   /** A value indicating whether a referral code is being submitted. */
   @observable
   public isSubmittingReferralCode: boolean = false
@@ -52,6 +56,7 @@ export class ReferralStore {
     try {
       let res = yield this.axios.get('/api/v1/profile/referral-code')
       this.referralCode = res.data.code
+      this.isUserReferralsEnabled = res.data.userReferralsEnabled
     } catch (error) {
       console.error(error)
       throw error

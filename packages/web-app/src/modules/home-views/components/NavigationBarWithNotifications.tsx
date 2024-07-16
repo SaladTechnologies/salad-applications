@@ -8,12 +8,14 @@ import { NavigationBarWithNovuNotifications } from './NavigationBarWithNovuNotif
 export interface NavigationBarWithNotificationsProps extends NavigationBarProps {
   novuSignature?: string
   withInstallReminder: boolean
+  isUserReferralsEnabled: boolean
   onCloseInstallReminderClick: () => void
 }
 
 export const NavigationBarWithNotifications: FunctionComponent<NavigationBarWithNotificationsProps> = ({
   novuSignature,
   withInstallReminder,
+  isUserReferralsEnabled,
   onCloseInstallReminderClick,
   ...props
 }) => {
@@ -29,7 +31,7 @@ export const NavigationBarWithNotifications: FunctionComponent<NavigationBarWith
           label: 'Profile',
           link: '/account/summary',
         },
-        {
+        isUserReferralsEnabled && {
           label: 'Referrals',
           link: '/account/referrals',
         },

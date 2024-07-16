@@ -30,12 +30,13 @@ export interface MenuButton {
 }
 
 interface Props extends WithStyles<typeof styles> {
+  isUserReferralsEnabled: boolean
   appBuild?: string
   menuButtons?: MenuButton[]
   onClose?: () => void
 }
 
-const _Settings = ({ appBuild, classes, menuButtons, onClose }: Props) => {
+const _Settings = ({ appBuild, classes, menuButtons, isUserReferralsEnabled, onClose }: Props) => {
   const featureManager = useFeatureManager()
   const isAchievementsFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.Achievements)
 
@@ -61,7 +62,7 @@ const _Settings = ({ appBuild, classes, menuButtons, onClose }: Props) => {
 
   const menuItems: MenuItem[] = [
     { url: '/account/summary', text: 'Account', component: AccountContainer },
-    { url: '/account/referrals', text: 'Referrals', component: ReferralSettingsContainer },
+    isUserReferralsEnabled && { url: '/account/referrals', text: 'Referrals', component: ReferralSettingsContainer },
     { url: '/account/bonuses', text: 'Bonuses', component: BonusPageContainer },
     isAchievementsFeatureFlagEnabled && {
       url: '/account/achievements',
