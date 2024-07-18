@@ -17,7 +17,7 @@ const mapStoreToProps = (store: RootStore): any => {
           },
         ]
       : [],
-
+    isUserReferralsEnabled: store.referral.isUserReferralsEnabled,
     onClose: () => {
       store.analytics.trackSmartLink('/store', 'Back')
       store.ui.hideModal()

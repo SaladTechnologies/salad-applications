@@ -2,8 +2,8 @@ import classnames from 'classnames'
 import { useCallback, useEffect, type ComponentType } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { Route } from 'react-router'
-import { Button, Divider, LinkListUnstyled, MenuTitle } from '.'
+import { Route, Switch } from 'react-router'
+import { Button, Divider, LinkListUnstyled, MenuTitle, NoPageFound } from '.'
 import { FeatureFlags, useFeatureManager } from '../FeatureManager'
 import { AccountContainer } from '../modules/account-views/account-views'
 import { ReferralSettingsContainer } from '../modules/account-views/referral-views'
@@ -30,12 +30,13 @@ export interface MenuButton {
 }
 
 interface Props extends WithStyles<typeof styles> {
+  isUserReferralsEnabled: boolean
   appBuild?: string
   menuButtons?: MenuButton[]
   onClose?: () => void
 }
 
-const _Settings = ({ appBuild, classes, menuButtons, onClose }: Props) => {
+const _Settings = ({ appBuild, classes, menuButtons, isUserReferralsEnabled, onClose }: Props) => {
   const featureManager = useFeatureManager()
   const isAchievementsFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.Achievements)
 
@@ -61,7 +62,7 @@ const _Settings = ({ appBuild, classes, menuButtons, onClose }: Props) => {
 
   const menuItems: MenuItem[] = [
     { url: '/account/summary', text: 'Account', component: AccountContainer },
-    { url: '/account/referrals', text: 'Referrals', component: ReferralSettingsContainer },
+    isUserReferralsEnabled && { url: '/account/referrals', text: 'Referrals', component: ReferralSettingsContainer },
     { url: '/account/bonuses', text: 'Bonuses', component: BonusPageContainer },
     isAchievementsFeatureFlagEnabled && {
       url: '/account/achievements',
@@ -94,9 +95,12 @@ const _Settings = ({ appBuild, classes, menuButtons, onClose }: Props) => {
         </div>
       </div>
       <div className={classnames(classes.settings)}>
-        {menuItems?.map((x) => (
-          <Route key={x.url} exact path={x.url} component={x.component} />
-        ))}
+        <Switch>
+          {menuItems?.map((menuItem) => (
+            <Route key={menuItem.url} exact path={menuItem.url} component={menuItem.component} />
+          ))}
+          <Route component={NoPageFound} />
+        </Switch>
       </div>
     </div>
   )
