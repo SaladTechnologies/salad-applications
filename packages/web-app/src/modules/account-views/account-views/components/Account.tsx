@@ -9,6 +9,7 @@ import { DefaultTheme } from '../../../../SaladTheme'
 import { Head } from '../../../../components'
 import { withLogin } from '../../../auth-views'
 import type { Avatar, Profile } from '../../../profile/models'
+import { AccountSecurity } from './AccountSecurity'
 import { AccountTermsAndConditionsUpdate } from './AccountTermsAndConditionsUpdate'
 import { GoogleSignInForm } from './GoogleSignInForm'
 import { PayPalLoginButton } from './PayPalLoginButton'
@@ -303,6 +304,7 @@ const _Account: FC<Props> = ({
               </div>
             </div>
           </div>
+          <AccountSecurity />
         </Layout>
       </Scrollbars>
     </div>
