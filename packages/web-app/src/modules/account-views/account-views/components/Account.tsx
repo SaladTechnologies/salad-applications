@@ -105,6 +105,7 @@ interface Props extends WithStyles<typeof styles> {
   onSubmitTermsAndConditions: () => void
 }
 
+const isAccountSecurityShown = false
 let intervalId: NodeJS.Timeout
 const maxPaypalLoadRetries = 60
 
@@ -304,7 +305,7 @@ const _Account: FC<Props> = ({
               </div>
             </div>
           </div>
-          <AccountSecurity />
+          {isAccountSecurityShown && <AccountSecurity />}
         </Layout>
       </Scrollbars>
     </div>
