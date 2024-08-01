@@ -14,6 +14,7 @@ import { ErrorBoundaryStore } from './modules/error-boundary'
 import { HelpScoutStore } from './modules/helpscout/HelpScoutStore'
 import { HomeStore } from './modules/home/HomeStore'
 import { NotificationStore } from './modules/notifications'
+import { PasskeyStore } from './modules/passkey-setup'
 import { ProfileStore } from './modules/profile'
 import type { Profile } from './modules/profile/models'
 import { ReferralStore } from './modules/referral'
@@ -69,6 +70,7 @@ export class RootStore {
   public readonly startButtonUI: StartButtonUIStore
   public readonly saladCard: SaladCardStore
   public readonly errorBoundary: ErrorBoundaryStore
+  public readonly passkey: PasskeyStore
 
   constructor(axios: AxiosInstance, private readonly featureManager: FeatureManager) {
     this.routing = new RouterStore()
@@ -94,6 +96,7 @@ export class RootStore {
     this.bonuses = new BonusStore(this, axios)
     this.startButtonUI = new StartButtonUIStore(this)
     this.errorBoundary = new ErrorBoundaryStore()
+    this.passkey = new PasskeyStore()
 
     // Pass AnalyticsStore to FeatureManager
     featureManager.setAnalyticsStore(this.analytics)
