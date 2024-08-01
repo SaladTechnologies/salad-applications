@@ -9,6 +9,7 @@ import { DefaultTheme } from '../../../../SaladTheme'
 import { Head } from '../../../../components'
 import { withLogin } from '../../../auth-views'
 import type { Avatar, Profile } from '../../../profile/models'
+import { AccountSecurity } from './AccountSecurity'
 import { AccountTermsAndConditionsUpdate } from './AccountTermsAndConditionsUpdate'
 import { GoogleSignInForm } from './GoogleSignInForm'
 import { PayPalLoginButton } from './PayPalLoginButton'
@@ -104,6 +105,7 @@ interface Props extends WithStyles<typeof styles> {
   onSubmitTermsAndConditions: () => void
 }
 
+const isAccountSecurityShown = false
 let intervalId: NodeJS.Timeout
 const maxPaypalLoadRetries = 60
 
@@ -303,6 +305,7 @@ const _Account: FC<Props> = ({
               </div>
             </div>
           </div>
+          {isAccountSecurityShown && <AccountSecurity />}
         </Layout>
       </Scrollbars>
     </div>
