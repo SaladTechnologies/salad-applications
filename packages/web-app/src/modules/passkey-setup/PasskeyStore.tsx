@@ -6,11 +6,11 @@ export class PasskeyStore {
   public isPasskeySupported: boolean = false
 
   constructor() {
-    this.setIsPasskeySupport()
+    this.setIsPasskeySupported()
   }
 
   @action
-  private async setIsPasskeySupport(): Promise<void> {
+  private async setIsPasskeySupported(): Promise<void> {
     try {
       const isSupported = await getIsPasskeySupported()
       runInAction(() => {
