@@ -5,7 +5,7 @@ import { PasskeySetupPage } from './components'
 const mapStoreToProps = (store: RootStore): any => ({
   registerPasskey: () => {},
   backToProfile: () => store.routing.push(`/account/summary`),
-  isDeviceSupportPasskey: store.passkey.isDeviceSupportPasskey,
+  isPasskeySupported: store.passkey.isPasskeySupported,
 })
 
 export const PasskeySetupPageContainer = connect(mapStoreToProps, PasskeySetupPage)

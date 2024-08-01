@@ -46,19 +46,19 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 })
 
 interface Props extends WithStyles<typeof styles> {
-  isDeviceSupportPasskey: boolean
+  isPasskeySupported: boolean
   backToProfile: () => void
   registerPasskey: () => void
 }
 
-const _PasskeySetupPage: FC<Props> = ({ isDeviceSupportPasskey, backToProfile, registerPasskey, classes }) => (
+const _PasskeySetupPage: FC<Props> = ({ isPasskeySupported, backToProfile, registerPasskey, classes }) => (
   <Scrollbars>
     <div className={classes.container}>
       <div className={classes.textContainer}>
         <Text className={classes.header} as="h1" variant="headline">
           Passkey Setup
         </Text>
-        {isDeviceSupportPasskey ? (
+        {isPasskeySupported ? (
           <>
             <Text className={classes.description} variant="baseL">
               Your device supports passkeys. Once you click the button below please continue your device’s Passkey setup

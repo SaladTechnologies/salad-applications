@@ -1,25 +1,25 @@
 import { action, observable, runInAction } from 'mobx'
-import { getIsDeviceSupportPasskey } from './utils'
+import { getIsSupportPasskey } from './utils'
 
 export class PasskeyStore {
   @observable
-  public isDeviceSupportPasskey: boolean = false
+  public isPasskeySupported: boolean = false
 
   constructor() {
-    this.checkIsDeviceSupportPasskey()
+    this.setIsPasskeySupport()
   }
 
   @action
-  private async checkIsDeviceSupportPasskey(): Promise<void> {
+  private async setIsPasskeySupport(): Promise<void> {
     try {
-      const isSupported = await getIsDeviceSupportPasskey()
+      const isSupported = await getIsSupportPasskey()
       runInAction(() => {
-        this.isDeviceSupportPasskey = isSupported
+        this.isPasskeySupported = isSupported
       })
     } catch (error) {
       console.error('Error checking passkey support:', error)
       runInAction(() => {
-        this.isDeviceSupportPasskey = false
+        this.isPasskeySupported = false
       })
     }
   }
