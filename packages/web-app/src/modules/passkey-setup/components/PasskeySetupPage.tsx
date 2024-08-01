@@ -46,44 +46,42 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 })
 
 interface Props extends WithStyles<typeof styles> {
+  isDeviceSupportPasskey: boolean
   backToProfile: () => void
   registerPasskey: () => void
 }
 
-const _PasskeySetupPage: FC<Props> = ({ backToProfile, registerPasskey, classes }) => {
-  const isDeviceSupportPasskey = false
-  return (
-    <Scrollbars>
-      <div className={classes.container}>
-        <div className={classes.textContainer}>
-          <Text className={classes.header} as="h1" variant="headline">
-            Passkey Setup
-          </Text>
-          {isDeviceSupportPasskey ? (
-            <>
-              <Text className={classes.description} variant="baseL">
-                Your device supports passkeys. Once you click the button below please continue your device’s Passkey
-                setup flow. Once done you’ll be redirected back to Salad.
-              </Text>
-              <div className={classes.buttonContainer}>
-                <Button leadingIcon={<Key />} variant="primary-basic" label="Add Passkey" onClick={registerPasskey} />
-                <Button variant="outlined" label="Cancel" onClick={backToProfile} />
-              </div>
-            </>
-          ) : (
-            <>
-              <Text className={classes.description} variant="baseL">
-                This device does not support Passkeys. Please login on a device or browser that supports passkeys and
-                try again.
-              </Text>
-              <Button variant="primary-basic" label="Back to Profile" onClick={backToProfile} />
-            </>
-          )}
-        </div>
-        <img className={classes.image} src={Referrals} alt="Referrals Background" />
+const _PasskeySetupPage: FC<Props> = ({ isDeviceSupportPasskey, backToProfile, registerPasskey, classes }) => (
+  <Scrollbars>
+    <div className={classes.container}>
+      <div className={classes.textContainer}>
+        <Text className={classes.header} as="h1" variant="headline">
+          Passkey Setup
+        </Text>
+        {isDeviceSupportPasskey ? (
+          <>
+            <Text className={classes.description} variant="baseL">
+              Your device supports passkeys. Once you click the button below please continue your device’s Passkey setup
+              flow. Once done you’ll be redirected back to Salad.
+            </Text>
+            <div className={classes.buttonContainer}>
+              <Button leadingIcon={<Key />} variant="primary-basic" label="Add Passkey" onClick={registerPasskey} />
+              <Button variant="outlined" label="Cancel" onClick={backToProfile} />
+            </div>
+          </>
+        ) : (
+          <>
+            <Text className={classes.description} variant="baseL">
+              This device does not support Passkeys. Please login on a device or browser that supports passkeys and try
+              again.
+            </Text>
+            <Button variant="primary-basic" label="Back to Profile" onClick={backToProfile} />
+          </>
+        )}
       </div>
-    </Scrollbars>
-  )
-}
+      <img className={classes.image} src={Referrals} alt="Referrals Background" />
+    </div>
+  </Scrollbars>
+)
 
 export const PasskeySetupPage = withLogin(withStyles(styles)(_PasskeySetupPage))

@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react'
-
-const isDeviceSupportPasskey = async (): Promise<boolean> => {
+export const getIsDeviceSupportPasskey = async (): Promise<boolean> => {
   // Availability of `window.PublicKeyCredential` means WebAuthn is usable.
   // `isUserVerifyingPlatformAuthenticatorAvailable` means the feature detection is usable.
   // `​​isConditionalMediationAvailable` means the feature detection is usable.
@@ -25,22 +23,3 @@ const isDeviceSupportPasskey = async (): Promise<boolean> => {
   return false
 }
 
-export const usePasskeySupport = (): boolean => {
-  const [isPasskeySupported, setIsPasskeySupported] = useState<boolean>(false);
-
-  useEffect(() => {
-    const checkPasskeySupport = async () => {
-      try {
-        const isSupported = await isDeviceSupportPasskey();
-        setIsPasskeySupported(isSupported);
-      } catch (error) {
-        console.error('Error checking passkey support:', error);
-        setIsPasskeySupported(false);
-      }
-    };
-
-    checkPasskeySupport();
-  }, []);
-
-  return isPasskeySupported;
-};
