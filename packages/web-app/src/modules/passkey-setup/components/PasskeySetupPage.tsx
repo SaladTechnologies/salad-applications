@@ -1,7 +1,7 @@
 import { Button, Text } from '@saladtechnologies/garden-components'
 import { Key } from '@saladtechnologies/garden-icons'
 import type CSS from 'csstype'
-import type { FC } from 'react'
+import { type FC } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
@@ -26,6 +26,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     flexDirection: 'column',
     justifyContent: 'left',
     marginTop: '82px',
+    marginLeft: '40px',
   },
   header: {
     color: theme.lightGreen,
