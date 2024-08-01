@@ -12,9 +12,9 @@ export class PasskeyStore {
   @action
   private async setIsPasskeySupported(): Promise<void> {
     try {
-      const isSupported = await getIsPasskeySupported()
+      const isPasskeySupported = await getIsPasskeySupported()
       runInAction(() => {
-        this.isPasskeySupported = isSupported
+        this.isPasskeySupported = isPasskeySupported
       })
     } catch (error) {
       console.error('Error checking passkey support:', error)
