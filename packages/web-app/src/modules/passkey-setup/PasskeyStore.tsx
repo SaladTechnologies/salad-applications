@@ -1,5 +1,5 @@
 import { action, observable, runInAction } from 'mobx'
-import { getIsSupportPasskey } from './utils'
+import { getIsPasskeySupported } from './utils'
 
 export class PasskeyStore {
   @observable
@@ -12,7 +12,7 @@ export class PasskeyStore {
   @action
   private async setIsPasskeySupport(): Promise<void> {
     try {
-      const isSupported = await getIsSupportPasskey()
+      const isSupported = await getIsPasskeySupported()
       runInAction(() => {
         this.isPasskeySupported = isSupported
       })

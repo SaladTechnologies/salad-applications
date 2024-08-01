@@ -1,4 +1,4 @@
-export const getIsSupportPasskey = async (): Promise<boolean> => {
+export const getIsPasskeySupported = async (): Promise<boolean> => {
   // Availability of `window.PublicKeyCredential` means WebAuthn is usable.
   // `isUserVerifyingPlatformAuthenticatorAvailable` means the feature detection is usable.
   // `​​isConditionalMediationAvailable` means the feature detection is usable.
