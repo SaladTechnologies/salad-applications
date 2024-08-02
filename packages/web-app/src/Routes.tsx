@@ -6,6 +6,7 @@ import { ReplaceBonusModalContainer } from './modules/bonus-views'
 import { EarnInfoPage, EarningSummaryContainer } from './modules/earn-views'
 import { ExitSurveyContainer } from './modules/exit-survey-views'
 import { PasskeySetupPageContainer } from './modules/passkey-setup'
+import { PasskeySuccessPageContainer } from './modules/passkey-success'
 import { RewardDetailsContainer, SelectTargetRewardContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
 import { SettingsContainer } from './modules/settings-views'
@@ -47,6 +48,7 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
 
       {/* Passkey Pages */}
       {isPasskeyAvailable && <Route path="/passkey/setup" component={PasskeySetupPageContainer} />}
+      {isPasskeyAvailable && <Route path="/passkey/success" component={PasskeySuccessPageContainer} />}
 
       <Route
         exact
