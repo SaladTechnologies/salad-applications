@@ -6,8 +6,8 @@ import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
+import Referrals from '../../../assets/Referrals.svg'
 import { withLogin } from '../../auth-views'
-import Referrals from './assets/Referrals.svg'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   container: {
