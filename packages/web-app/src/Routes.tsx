@@ -21,7 +21,7 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
   const currentLocation =
     (location.state as { currentLocation: Location | undefined } | undefined)?.currentLocation || location
 
-  const isPasskeyAvailable = false
+  const isPasskeyAvailable = true
   return (
     <Switch location={currentLocation}>
       {/* Store Pages */}
