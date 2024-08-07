@@ -6,9 +6,9 @@ import { useRef, useState } from 'react'
 import { Img } from 'react-image'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { useDetectClickOutsideElement } from '../../../../../hooks/useDetectClickOutsideElement'
 import type { SaladTheme } from '../../../../../SaladTheme'
 import { Tooltips } from '../../../../../Tooltips'
+import { useDetectClickOutsideElement } from '../../../../../hooks/useDetectClickOutsideElement'
 import type { Reward } from '../../../../reward/models'
 import saladBackgroundUrl from './assets/salad-background.svg'
 import starsUrl from './assets/stars.svg'
@@ -123,16 +123,15 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 interface Props extends WithStyles<typeof styles> {
   className?: string
   reward: Reward
-  referralCode: string
   onCloseClick: () => void
   onVaultLinkClick: () => void
 }
 
-const _ReviewAfterRedemption = ({ classes, reward, referralCode, onCloseClick, onVaultLinkClick }: Props) => {
+const _ReviewAfterRedemption = ({ classes, reward, onCloseClick, onVaultLinkClick }: Props) => {
   const [isCopied, setIsCopied] = useState(false)
   const modalContainerRef = useRef(null)
   const [referralText, setReferralText] = useState(
-    `I just got ${reward?.name} through Salad! Signup with referral code ${referralCode} and get 2X earnings! salad.com/download`,
+    `I just got ${reward?.name} through Salad! Sign up to earn money with your gaming PC!  salad.com/download`,
   )
 
   useDetectClickOutsideElement(modalContainerRef, onCloseClick)
