@@ -82,7 +82,6 @@ const _PasskeySetupPage: FC<Props> = ({ isPasskeySupported, classes, backToProfi
       passkeyName: '',
     }
 
-    console.log('values.passkeyName ===> ', values.passkeyName)
     if (!values.passkeyName) {
       errors.passkeyName = 'Passkey Nickname cannot be empty'
       return errors
