@@ -170,9 +170,6 @@ const _ReviewAfterRedemption = ({ classes, reward, onCloseClick, onVaultLinkClic
           </p>
           <div>
             <h3 className={classes.subtitle}>Let the World Know</h3>
-            <p className={classes.description}>
-              Share your Salad success with your friends and get perks for every referral you get.
-            </p>
             <div className={classes.textareaContainer}>
               <textarea
                 value={referralText}
