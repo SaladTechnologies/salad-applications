@@ -67,12 +67,11 @@ interface FormValues {
 
 interface Props extends WithStyles<typeof styles> {
   isPasskeySupported: boolean
-  onUpdatePasskeyName: (passkeyName: string) => {}
-  backToProfile: () => void
   registerPasskey: (passkeyName: string) => void
+  backToProfile: () => void
 }
 
-const _PasskeySetupPage: FC<Props> = ({ isPasskeySupported, classes, backToProfile, registerPasskey }) => {
+const _PasskeySetupPage: FC<Props> = ({ classes, isPasskeySupported, registerPasskey, backToProfile }) => {
   const handleAddPasskeySubmit = (values: FormValues) => {
     registerPasskey?.(values.passkeyName)
   }
