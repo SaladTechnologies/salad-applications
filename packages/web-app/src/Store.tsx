@@ -94,9 +94,9 @@ export class RootStore {
     this.helpScout = new HelpScoutStore(axios, this.auth)
     this.storefront = new StorefrontStore(axios)
     this.bonuses = new BonusStore(this, axios)
+    this.passkey = new PasskeyStore(this, axios)
     this.startButtonUI = new StartButtonUIStore(this)
     this.errorBoundary = new ErrorBoundaryStore()
-    this.passkey = new PasskeyStore()
 
     // Pass AnalyticsStore to FeatureManager
     featureManager.setAnalyticsStore(this.analytics)

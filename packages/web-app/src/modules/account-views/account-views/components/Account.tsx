@@ -8,6 +8,7 @@ import type { SaladTheme } from '../../../../SaladTheme'
 import { DefaultTheme } from '../../../../SaladTheme'
 import { Head } from '../../../../components'
 import { withLogin } from '../../../auth-views'
+import { isPasskeyFeatureEnabled, type Passkey } from '../../../passkey-setup'
 import type { Avatar, Profile } from '../../../profile/models'
 import { AccountSecurity } from './AccountSecurity'
 import { AccountTermsAndConditionsUpdate } from './AccountTermsAndConditionsUpdate'
@@ -101,11 +102,14 @@ interface Props extends WithStyles<typeof styles> {
   checkPayPalId: () => void
   isSubmitting: boolean
   isTermsAndConditionsAccepted: boolean
+  passkeys: Passkey[]
   onToggleAcceptTermsAndConditions: (accepted: boolean) => void
   onSubmitTermsAndConditions: () => void
+  fetchPasskeys: () => void
+  onAddPasskeyClick: () => void
+  onDeletePasskeyClick: (passkeyId: string) => void
 }
 
-const isAccountSecurityShown = false
 let intervalId: NodeJS.Timeout
 const maxPaypalLoadRetries = 60
 
@@ -139,14 +143,18 @@ const _Account: FC<Props> = ({
   isPayPalIdDisconnectLoading,
   isSubmitting,
   isTermsAndConditionsAccepted,
+  passkeys,
   onSubmitTermsAndConditions,
   onToggleAcceptTermsAndConditions,
+  fetchPasskeys,
+  onAddPasskeyClick,
+  onDeletePasskeyClick,
 }) => {
   const [payPalLoadRetries, setPayPalLoadRetries] = useState(0)
 
   useEffect(() => {
     loadPayPalId()
-
+    fetchPasskeys()
     loadGoogleAccountConnection()
 
     return () => {
@@ -305,7 +313,13 @@ const _Account: FC<Props> = ({
               </div>
             </div>
           </div>
-          {isAccountSecurityShown && <AccountSecurity />}
+          {isPasskeyFeatureEnabled && (
+            <AccountSecurity
+              passkeys={passkeys}
+              onDeletePasskeyClick={onDeletePasskeyClick}
+              onAddPasskeyClick={onAddPasskeyClick}
+            />
+          )}
         </Layout>
       </Scrollbars>
     </div>

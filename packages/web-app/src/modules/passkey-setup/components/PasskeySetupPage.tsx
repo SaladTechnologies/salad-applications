@@ -3,10 +3,12 @@ import { Key } from '@saladtechnologies/garden-icons'
 import type CSS from 'csstype'
 import { type FC } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
+import { Field, Form } from 'react-final-form'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
 import Referrals from '../../../assets/Referrals.svg'
+import { TextField } from '../../../components'
 import { withLogin } from '../../auth-views'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
@@ -43,45 +45,116 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   image: {
     height: '100vh',
   },
+  formWrapper: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    flexDirection: 'column',
+    height: '200px',
+  },
+  textField: {
+    backgroundColor: theme.white,
+    height: '30px',
+    width: '450px',
+    color: theme.darkBlue,
+    fontSize: '15px',
+  },
 })
+
+interface FormValues {
+  passkeyName: string
+}
 
 interface Props extends WithStyles<typeof styles> {
   isPasskeySupported: boolean
+  onUpdatePasskeyName: (passkeyName: string) => {}
   backToProfile: () => void
-  registerPasskey: () => void
+  registerPasskey: (passkeyName: string) => void
 }
 
-const _PasskeySetupPage: FC<Props> = ({ isPasskeySupported, backToProfile, registerPasskey, classes }) => (
-  <Scrollbars>
-    <div className={classes.container}>
-      <div className={classes.textContainer}>
-        <Text className={classes.header} as="h1" variant="headline">
-          Passkey Setup
-        </Text>
-        {isPasskeySupported ? (
-          <>
-            <Text className={classes.description} variant="baseL">
-              Your device supports passkeys. Once you click the button below please continue your device’s Passkey setup
-              flow. Once done you’ll be redirected back to Salad.
-            </Text>
-            <div className={classes.buttonContainer}>
-              <Button leadingIcon={<Key />} variant="primary-basic" label="Add Passkey" onClick={registerPasskey} />
-              <Button variant="outlined" label="Cancel" onClick={backToProfile} />
-            </div>
-          </>
-        ) : (
-          <>
-            <Text className={classes.description} variant="baseL">
-              This device does not support Passkeys. Please login on a device or browser that supports passkeys and try
-              again.
-            </Text>
-            <Button variant="primary-basic" label="Back to Profile" onClick={backToProfile} />
-          </>
-        )}
+const _PasskeySetupPage: FC<Props> = ({ isPasskeySupported, classes, backToProfile, registerPasskey }) => {
+  const handleAddPasskeySubmit = (values: FormValues) => {
+    registerPasskey?.(values.passkeyName)
+  }
+
+  const validate = (values: FormValues) => {
+    const errors: FormValues = {
+      passkeyName: '',
+    }
+
+    console.log('values.passkeyName ===> ', values.passkeyName)
+    if (!values.passkeyName) {
+      errors.passkeyName = 'Passkey Nickname cannot be empty'
+      return errors
+    }
+
+    const passkeyRegExp = new RegExp(/^.{2,120}$/)
+    if (!passkeyRegExp.test(values.passkeyName)) {
+      errors.passkeyName = 'Passkey Nickname must be between 2 - 120 characters!'
+      return errors
+    }
+
+    return undefined
+  }
+
+  return (
+    <Scrollbars>
+      <div className={classes.container}>
+        <div className={classes.textContainer}>
+          <Text className={classes.header} as="h1" variant="headline">
+            Passkey Setup
+          </Text>
+          {isPasskeySupported ? (
+            <>
+              <Text className={classes.description} variant="baseL">
+                Your device supports passkeys. Once you click the button below please continue your device’s Passkey
+                setup flow. Once done you’ll be redirected back to Salad.
+              </Text>
+
+              <Form
+                onSubmit={handleAddPasskeySubmit}
+                validate={validate}
+                initialValues={{
+                  passkeyName: 'Default Passkey Name',
+                }}
+                render={({ handleSubmit }) => {
+                  return (
+                    <div className={classes.formWrapper}>
+                      <form onSubmit={handleSubmit} className={classes.formWrapper}>
+                        <Field name="passkeyName" type="text">
+                          {({ input, meta }) => (
+                            <TextField
+                              {...input}
+                              className={classes.textField}
+                              placeholder="Passkey Name"
+                              errorText={meta.error && meta.touched && meta.error}
+                            />
+                          )}
+                        </Field>
+                        <div className={classes.buttonContainer}>
+                          <Button leadingIcon={<Key />} variant="primary-basic" label="Add Passkey" type="submit" />
+                          <Button variant="outlined" label="Cancel" onClick={backToProfile} />
+                        </div>
+                      </form>
+                    </div>
+                  )
+                }}
+              />
+            </>
+          ) : (
+            <>
+              <Text className={classes.description} variant="baseL">
+                This device does not support Passkeys. Please login on a device or browser that supports passkeys and
+                try again.
+              </Text>
+              <Button variant="primary-basic" label="Back to Profile" onClick={backToProfile} />
+            </>
+          )}
+        </div>
+        <img className={classes.image} src={Referrals} alt="Referrals Background" />
       </div>
-      <img className={classes.image} src={Referrals} alt="Referrals Background" />
-    </div>
-  </Scrollbars>
-)
+    </Scrollbars>
+  )
+}
 
 export const PasskeySetupPage = withLogin(withStyles(styles)(_PasskeySetupPage))
