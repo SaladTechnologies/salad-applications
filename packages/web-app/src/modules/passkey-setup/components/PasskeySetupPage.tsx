@@ -51,7 +51,11 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     flexDirection: 'column',
+<<<<<<< HEAD
     height: '230px',
+=======
+    height: '200px',
+>>>>>>> 71329446 (passkey integration - added)
   },
   textField: {
     backgroundColor: theme.white,
@@ -68,11 +72,20 @@ interface FormValues {
 
 interface Props extends WithStyles<typeof styles> {
   isPasskeySupported: boolean
+<<<<<<< HEAD
   registerPasskey: (passkeyName: string) => void
   backToProfile: () => void
 }
 
 const _PasskeySetupPage: FC<Props> = ({ classes, isPasskeySupported, registerPasskey, backToProfile }) => {
+=======
+  onUpdatePasskeyName: (passkeyName: string) => {}
+  backToProfile: () => void
+  registerPasskey: (passkeyName: string) => void
+}
+
+const _PasskeySetupPage: FC<Props> = ({ isPasskeySupported, classes, backToProfile, registerPasskey }) => {
+>>>>>>> 71329446 (passkey integration - added)
   const handleAddPasskeySubmit = (values: FormValues) => {
     registerPasskey?.(values.passkeyName)
   }
@@ -124,7 +137,10 @@ const _PasskeySetupPage: FC<Props> = ({ classes, isPasskeySupported, registerPas
                           {({ input, meta }) => (
                             <TextField
                               {...input}
+<<<<<<< HEAD
                               label="Passkey Name"
+=======
+>>>>>>> 71329446 (passkey integration - added)
                               className={classes.textField}
                               placeholder="Passkey Name"
                               errorText={meta.error && meta.touched && meta.error}
