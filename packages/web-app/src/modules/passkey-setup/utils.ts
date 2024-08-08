@@ -58,8 +58,6 @@ export const coerceToBase64Url = (input: ArrayBuffer | Array<any>) => {
 }
 
 const coerceToArrayBuffer = (input: string, name?: string) => {
-  console.log('input ===> ', input)
-  console.log('name ===> ', name)
   let output
 
   if (typeof input === 'string') {
@@ -151,7 +149,6 @@ export const registerPasskeyCredential = async (
     publicKey: publicKeyCredentialCreationOptions,
   })) as CredentialResponse
 
-  console.log('credential ===> ', credential)
   return credential
 }
 
