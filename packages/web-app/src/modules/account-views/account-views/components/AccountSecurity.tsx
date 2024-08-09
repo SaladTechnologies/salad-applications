@@ -6,6 +6,7 @@ import moment from 'moment'
 import type { FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
+import type { Passkey } from '../../../passkey-setup'
 
 const styles: () => Record<string, CSS.Properties> = () => ({
   accountSecurityWrapper: {
@@ -64,25 +65,21 @@ const styles: () => Record<string, CSS.Properties> = () => ({
   recoveryCodesDescription: {
     marginTop: '24px',
   },
+  passkeyName: {
+    width: '200px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
 })
 
-interface Passkey {
-  name: string
-  dateAdded: Date
+interface Props extends WithStyles<typeof styles> {
+  passkeys: Passkey[]
+  onAddPasskeyClick: () => void
+  onDeletePasskeyClick: (passkeyId: string) => void
 }
 
-const mockedPasskeys: Passkey[] = [
-  {
-    name: 'Passkey Nickname #1',
-    dateAdded: new Date(),
-  },
-  { name: 'Passkey Nickname #2', dateAdded: new Date() },
-  { name: 'Passkey Nickname #3', dateAdded: new Date() },
-]
-
-interface Props extends WithStyles<typeof styles> {}
-
-const _AccountSecurity: FC<Props> = ({ classes }) => {
+const _AccountSecurity: FC<Props> = ({ classes, passkeys, onAddPasskeyClick, onDeletePasskeyClick }) => {
   return (
     <div className={classes.accountSecurityWrapper}>
       <Text variant="baseXL">Account Security</Text>
@@ -98,6 +95,7 @@ const _AccountSecurity: FC<Props> = ({ classes }) => {
           <div className={classes.passkeysListHeader}>
             <Text variant="baseM">Your Passkeys</Text>
             <Button
+              onClick={onAddPasskeyClick}
               variant="primary"
               size="small"
               label="Add a Passkey"
@@ -105,12 +103,18 @@ const _AccountSecurity: FC<Props> = ({ classes }) => {
             />
           </div>
           <div className={classes.passkeysList}></div>
-          {mockedPasskeys.map((passkey) => {
+          {passkeys.map((passkey) => {
             return (
-              <div className={classes.passkeysListItem}>
-                <Text variant="baseS">{passkey.name}</Text>
-                <Text variant="baseS">{moment(passkey.dateAdded).format('MMMM DD, YYYY')}</Text>
-                <FontAwesomeIcon icon={faTrashCan} className={classes.deletePasskeyIcon} />
+              <div className={classes.passkeysListItem} key={passkey.id}>
+                <Text variant="baseS" className={classes.passkeyName}>
+                  {passkey.displayName}
+                </Text>
+                <Text variant="baseS">{moment(passkey.createdAt).format('MMMM DD, YYYY')}</Text>
+                <FontAwesomeIcon
+                  icon={faTrashCan}
+                  className={classes.deletePasskeyIcon}
+                  onClick={() => onDeletePasskeyClick(passkey.id)}
+                />
               </div>
             )
           })}

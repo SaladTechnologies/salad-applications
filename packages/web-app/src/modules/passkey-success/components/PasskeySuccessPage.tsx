@@ -1,10 +1,10 @@
-import { Button, Text, TextField } from '@saladtechnologies/garden-components'
-import { Eye } from '@saladtechnologies/garden-icons'
+import { Button, Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
 import { type FC } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
+import { useLocation } from 'react-router'
 import type { SaladTheme } from '../../../SaladTheme'
 import Referrals from '../../../assets/Referrals.svg'
 import { withLogin } from '../../auth-views'
@@ -52,53 +52,34 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 })
 
 interface Props extends WithStyles<typeof styles> {
-  isPasskeyNicknameSubmitSuccess: boolean
-  isPasskeyNicknameSubmitting: boolean
-  onUpdatePasskeyNickname: () => void
-  viewRecoveryCodes: () => void
+  onDoneClick: () => void
 }
 
-const _PasskeySuccessPage: FC<Props> = ({
-  isPasskeyNicknameSubmitSuccess,
-  isPasskeyNicknameSubmitting,
-  onUpdatePasskeyNickname,
-  viewRecoveryCodes,
-  classes,
-}) => (
-  <Scrollbars>
-    <div className={classes.container}>
-      <div className={classes.textContainer}>
-        <Text className={classes.header} as="h1" variant="headline">
-          Success! Passkey Added
-        </Text>
-        <div className={classes.descriptionContainer}>
-          <Text variant="baseL">From now on you can login to Salad using this passkey.</Text>
-          <Text variant="baseXL">Passkey Nickname</Text>
-          <Text variant="baseL">
-            Depending on your passkey manager your passkey may work only on this device or on multiple ones. Add a
-            nickname to it so you can identify it later. For example the name of your device or passkey manager.
+const _PasskeySuccessPage: FC<Props> = ({ classes, onDoneClick }) => {
+  const location = useLocation<{ passkeyName: string }>()
+  const passkeyName = location.state.passkeyName
+
+  return (
+    <Scrollbars>
+      <div className={classes.container}>
+        <div className={classes.textContainer}>
+          <Text className={classes.header} as="h1" variant="headline">
+            Success! Passkey Added
           </Text>
-          <div className={classes.inputContainer}>
-            <TextField
-              isSubmitting={isPasskeyNicknameSubmitting}
-              isSubmitSuccess={isPasskeyNicknameSubmitSuccess}
-              validationRegexErrorMessage="Passkey Nickname must be between 2 - 120 characters!"
-              label="Passkey Nickname"
-              onSubmit={onUpdatePasskeyNickname}
-              validationRegex={/^.{2,120}$/}
-            />
+          <div className={classes.descriptionContainer}>
+            <Text variant="baseL">From now on you can login to Salad using this passkey.</Text>
+            <Text variant="baseXL">{passkeyName}</Text>
+            <Text variant="baseL">
+              Depending on your passkey manager your passkey may work only on this device or on multiple ones. Add a
+              nickname to it so you can identify it later. For example the name of your device or passkey manager.
+            </Text>
+            <Button variant="primary-basic" label="Done" onClick={onDoneClick} />
           </div>
-          <Button
-            leadingIcon={<Eye />}
-            variant="primary-basic"
-            label="View Recovery Codes"
-            onClick={viewRecoveryCodes}
-          />
         </div>
+        <img className={classes.image} src={Referrals} alt="Referrals Background" />
       </div>
-      <img className={classes.image} src={Referrals} alt="Referrals Background" />
-    </div>
-  </Scrollbars>
-)
+    </Scrollbars>
+  )
+}
 
 export const PasskeySuccessPage = withLogin(withStyles(styles)(_PasskeySuccessPage))

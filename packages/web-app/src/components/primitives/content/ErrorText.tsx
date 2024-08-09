@@ -8,9 +8,9 @@ import type { SaladTheme } from '../../../SaladTheme'
 const styles = (theme: SaladTheme) => ({
   errorText: {
     margin: '.25rem',
-    color: theme.red,
-    fontFamily: theme.fontGroteskBook25,
-    fontSize: theme.small,
+    color: '#c90000',
+    fontFamily: theme.fontMallory,
+    fontSize: theme.medium,
   },
 })
 

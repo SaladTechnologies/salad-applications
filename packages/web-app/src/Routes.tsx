@@ -5,7 +5,7 @@ import { NoPageFound } from './components'
 import { ReplaceBonusModalContainer } from './modules/bonus-views'
 import { EarnInfoPage, EarningSummaryContainer } from './modules/earn-views'
 import { ExitSurveyContainer } from './modules/exit-survey-views'
-import { PasskeySetupPageContainer } from './modules/passkey-setup'
+import { PasskeySetupPageContainer, isPasskeyFeatureEnabled } from './modules/passkey-setup'
 import { PasskeySuccessPageContainer } from './modules/passkey-success'
 import { RewardDetailsContainer, SelectTargetRewardContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
@@ -21,7 +21,6 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
   const currentLocation =
     (location.state as { currentLocation: Location | undefined } | undefined)?.currentLocation || location
 
-  const isPasskeyAvailable = false
   return (
     <Switch location={currentLocation}>
       {/* Store Pages */}
@@ -39,16 +38,14 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
       {/* Account */}
       <Redirect exact from="/account" to="/account/summary" />
       <Route path="/account/exit-survey" component={ExitSurveyContainer} />
+      {isPasskeyFeatureEnabled && <Route path="/account/passkey/setup" component={PasskeySetupPageContainer} />}
+      {isPasskeyFeatureEnabled && <Route path="/account/passkey/success" component={PasskeySuccessPageContainer} />}
       <Route path="/account" component={SettingsContainer} />
 
       {/* Earn Pages */}
       {isAuthenticated && <Redirect exact from="/earn" to="/earn/summary" />}
       <Route path="/earn/summary" component={EarningSummaryContainer} />
       <Route path="/earn" component={EarnInfoPage} />
-
-      {/* Passkey Pages */}
-      {isPasskeyAvailable && <Route path="/passkey/setup" component={PasskeySetupPageContainer} />}
-      {isPasskeyAvailable && <Route path="/passkey/success" component={PasskeySuccessPageContainer} />}
 
       <Route
         exact
