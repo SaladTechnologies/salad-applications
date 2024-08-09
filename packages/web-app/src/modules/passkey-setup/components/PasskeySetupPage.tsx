@@ -10,6 +10,7 @@ import type { SaladTheme } from '../../../SaladTheme'
 import Referrals from '../../../assets/Referrals.svg'
 import { TextField } from '../../../components'
 import { withLogin } from '../../auth-views'
+import { getDefaultPasskeyName } from './utils'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   container: {
@@ -113,7 +114,7 @@ const _PasskeySetupPage: FC<Props> = ({ classes, isPasskeySupported, registerPas
                 onSubmit={handleAddPasskeySubmit}
                 validate={validate}
                 initialValues={{
-                  passkeyName: 'Default Passkey Name',
+                  passkeyName: getDefaultPasskeyName(),
                 }}
                 render={({ handleSubmit }) => {
                   return (
