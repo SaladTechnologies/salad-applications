@@ -60,7 +60,7 @@ export class PasskeyStore {
       })
 
       if (credentialsResponse.status === 200 || credentialsResponse.status === 204) {
-        this.store.routing.push('/account/passkey/success')
+        this.store.routing.push('/account/passkey/success', { passkeyName })
       }
     } catch (error) {
       console.error('PasskeyStore -> addPasskey: ', error)
