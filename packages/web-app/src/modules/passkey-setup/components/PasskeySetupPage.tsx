@@ -50,7 +50,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     flexDirection: 'column',
-    height: '200px',
+    height: '230px',
   },
   textField: {
     backgroundColor: theme.white,
@@ -123,6 +123,7 @@ const _PasskeySetupPage: FC<Props> = ({ classes, isPasskeySupported, registerPas
                           {({ input, meta }) => (
                             <TextField
                               {...input}
+                              label="Passkey Name"
                               className={classes.textField}
                               placeholder="Passkey Name"
                               errorText={meta.error && meta.touched && meta.error}

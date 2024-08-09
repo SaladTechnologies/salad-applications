@@ -39,6 +39,12 @@ const styles = (theme: SaladTheme) => ({
     fontFamily: theme.fontMallory,
     fontSize: theme.medium,
   },
+  label: {
+    display: 'block',
+    paddingBottom: '4px',
+    fontFamily: theme.fontMallory,
+    fontSize: theme.medium,
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -50,13 +56,15 @@ interface Props extends WithStyles<typeof styles> {
   onFocus?: (event?: FocusEvent<any>) => void
   value?: any
   errorText?: string
+  label?: string
 }
 
 class _TextField extends Component<Props> {
   public override render(): ReactNode {
-    const { className, errorText, classes, ...input } = this.props
+    const { className, label, errorText, classes, ...input } = this.props
     return (
       <div className={classes.container}>
+        {label && <span className={classes.label}>{label}</span>}
         <input
           className={classnames(classes.text, className, { [classes.errorBorder]: errorText })}
           {...input}
