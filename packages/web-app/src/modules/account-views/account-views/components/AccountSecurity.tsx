@@ -65,6 +65,12 @@ const styles: () => Record<string, CSS.Properties> = () => ({
   recoveryCodesDescription: {
     marginTop: '24px',
   },
+  passkeyName: {
+    width: '200px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -100,7 +106,9 @@ const _AccountSecurity: FC<Props> = ({ classes, passkeys, onAddPasskeyClick, onD
           {passkeys.map((passkey) => {
             return (
               <div className={classes.passkeysListItem} key={passkey.id}>
-                <Text variant="baseS">{passkey.displayName}</Text>
+                <Text variant="baseS" className={classes.passkeyName}>
+                  {passkey.displayName}
+                </Text>
                 <Text variant="baseS">{moment(passkey.createdAt).format('MMMM DD, YYYY')}</Text>
                 <FontAwesomeIcon
                   icon={faTrashCan}
