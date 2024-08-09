@@ -1,9 +1,10 @@
-import { Text } from '@saladtechnologies/garden-components'
+import { Button, Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
 import { type FC } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
+import { useLocation } from 'react-router'
 import type { SaladTheme } from '../../../SaladTheme'
 import Referrals from '../../../assets/Referrals.svg'
 import { withLogin } from '../../auth-views'
@@ -50,9 +51,14 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
 })
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  onDoneClick: () => void
+}
 
-const _PasskeySuccessPage: FC<Props> = ({ classes }) => {
+const _PasskeySuccessPage: FC<Props> = ({ classes, onDoneClick }) => {
+  const location = useLocation<{ passkeyName: string }>()
+  const passkeyName = location.state.passkeyName
+
   return (
     <Scrollbars>
       <div className={classes.container}>
@@ -62,11 +68,12 @@ const _PasskeySuccessPage: FC<Props> = ({ classes }) => {
           </Text>
           <div className={classes.descriptionContainer}>
             <Text variant="baseL">From now on you can login to Salad using this passkey.</Text>
-            <Text variant="baseXL">Passkey Nickname</Text>
+            <Text variant="baseXL">{passkeyName}</Text>
             <Text variant="baseL">
               Depending on your passkey manager your passkey may work only on this device or on multiple ones. Add a
               nickname to it so you can identify it later. For example the name of your device or passkey manager.
             </Text>
+            <Button variant="primary-basic" label="Done" onClick={onDoneClick} />
           </div>
         </div>
         <img className={classes.image} src={Referrals} alt="Referrals Background" />
