@@ -11,15 +11,17 @@ const styles = (theme: SaladTheme) => ({
     display: 'inline-block',
   },
   text: {
-    backgroundColor: 'transparent',
     border: `1px solid ${theme.lightGreen}`,
     padding: '.5rem',
-    color: theme.lightGreen,
-    fontSize: '.625rem',
-    fontFamily: theme.fontGroteskLight25,
+    backgroundColor: theme.white,
+    height: '28px',
+    width: '450px',
+    color: '#000000',
+    fontFamily: theme.fontMallory,
+    fontSize: theme.medium,
     '&::placeholder': {
       opacity: 0.5,
-      color: theme.lightGreen,
+      color: '#000000',
     },
     '&:focus': {
       outlineColor: theme.mediumGreen,
@@ -34,8 +36,8 @@ const styles = (theme: SaladTheme) => ({
   errorText: {
     margin: '.25rem',
     color: theme.red,
-    fontFamily: theme.fontGroteskBook25,
-    fontSize: theme.small,
+    fontFamily: theme.fontMallory,
+    fontSize: theme.medium,
   },
 })
 
