@@ -18,6 +18,9 @@ export class PasskeyStore {
   @observable
   public passkeys: Passkey[] = []
 
+  @observable
+  public hasRegisterPasskeyFailed: boolean = false
+
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     this.setIsPasskeySupported()
   }
@@ -63,6 +66,7 @@ export class PasskeyStore {
         this.store.routing.push('/account/passkey/success', { passkeyName })
       }
     } catch (error) {
+      this.hasRegisterPasskeyFailed = true
       console.error('PasskeyStore -> addPasskey: ', error)
     }
   })
@@ -86,4 +90,9 @@ export class PasskeyStore {
       console.error('PasskeyStore -> deletePasskey: ', error)
     }
   })
+
+  @action.bound
+  setHasRegisterPasskeyFailed = (updatedHasRegisterPasskeyFailed: boolean) => {
+    this.hasRegisterPasskeyFailed = updatedHasRegisterPasskeyFailed
+  }
 }
