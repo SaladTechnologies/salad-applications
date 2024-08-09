@@ -160,7 +160,7 @@ const _Account: FC<Props> = ({
     return () => {
       clearInterval(intervalId)
     }
-  }, [])
+  }, [fetchPasskeys, loadGoogleAccountConnection, loadPayPalId])
 
   const shouldShowUpdateAccountTermsAndConditions = !!profile?.pendingTermsVersion
   const handleSubmitButtonReset = () => {
