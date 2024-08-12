@@ -1,7 +1,7 @@
 import { Button, Text } from '@saladtechnologies/garden-components'
 import { AlertCircle, Key } from '@saladtechnologies/garden-icons'
 import type CSS from 'csstype'
-import { type FC } from 'react'
+import { useEffect, type FC } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
@@ -77,6 +77,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 
 interface Props extends WithStyles<typeof styles> {
   isLastPasskey: boolean
+  isPasskeyExisting: boolean
   passkeyNickname: string
   onDeletePasskeyClick: () => void
   backToProfile: () => void
@@ -85,6 +86,7 @@ interface Props extends WithStyles<typeof styles> {
 const _PasskeyDeletePage: FC<Props> = ({
   classes,
   isLastPasskey,
+  isPasskeyExisting,
   passkeyNickname,
   onDeletePasskeyClick,
   backToProfile,
@@ -93,6 +95,12 @@ const _PasskeyDeletePage: FC<Props> = ({
     onDeletePasskeyClick()
     backToProfile()
   }
+
+  useEffect(() => {
+    if (!isPasskeyExisting) {
+      backToProfile()
+    }
+  }, [isPasskeyExisting, backToProfile])
 
   return (
     <Scrollbars>
