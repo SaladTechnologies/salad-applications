@@ -80,6 +80,8 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const _AccountSecurity: FC<Props> = ({ classes, passkeys, onAddPasskeyClick, onDeletePasskeyClick }) => {
+  const isAddPasskeyAvailable = passkeys.length < 30
+
   return (
     <div className={classes.accountSecurityWrapper}>
       <Text variant="baseXL">Account Security</Text>
@@ -94,13 +96,15 @@ const _AccountSecurity: FC<Props> = ({ classes, passkeys, onAddPasskeyClick, onD
         <div className={classes.passkeysListWrapper}>
           <div className={classes.passkeysListHeader}>
             <Text variant="baseM">Your Passkeys</Text>
-            <Button
-              onClick={onAddPasskeyClick}
-              variant="primary"
-              size="small"
-              label="Add a Passkey"
-              leadingIcon={<FontAwesomeIcon icon={faKey} className={classes.addPasskeyIcon} />}
-            />
+            {isAddPasskeyAvailable && (
+              <Button
+                onClick={onAddPasskeyClick}
+                variant="primary"
+                size="small"
+                label="Add a Passkey"
+                leadingIcon={<FontAwesomeIcon icon={faKey} className={classes.addPasskeyIcon} />}
+              />
+            )}
           </div>
           <div className={classes.passkeysList}></div>
           {passkeys.map((passkey) => {
