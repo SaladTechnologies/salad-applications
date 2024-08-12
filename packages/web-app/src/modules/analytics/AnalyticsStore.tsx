@@ -373,6 +373,13 @@ export class AnalyticsStore {
     })
   }
 
+  /** Tracks when a user has the first passkey added or the last one removed */
+  public trackPasskeyAdded = (isPasskeysAdded: boolean) => {
+    mixpanel.people.set({
+      'Passkey Added': isPasskeysAdded,
+    })
+  }
+
   /** Track when an Earn Page is viewed by the user */
   public trackEarnPageViewed = () => {
     this.track('Earning Summary Viewed')

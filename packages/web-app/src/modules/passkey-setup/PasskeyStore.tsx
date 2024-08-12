@@ -60,6 +60,11 @@ export class PasskeyStore {
       })
 
       if (credentialsResponse.status === 200 || credentialsResponse.status === 204) {
+        const isFirstPasskeyAdded = this.passkeys.length === 0
+        if (isFirstPasskeyAdded) {
+          this.store.analytics.trackPasskeyAdded(true)
+        }
+
         this.store.routing.push('/account/passkey/success', { passkeyName })
       }
     } catch (error) {
@@ -80,7 +85,15 @@ export class PasskeyStore {
   @action.bound
   deletePasskey = flow(function* (this: PasskeyStore, passkeyId: string) {
     try {
-      yield this.axios.delete(`/api/v2/passkeys/${passkeyId}`)
+      const deleteResponse = yield this.axios.delete(`/api/v2/passkeys/${passkeyId}`)
+
+      if (deleteResponse.status === 200 || deleteResponse.status === 204) {
+        const isLastPasskeyRemoved = this.passkeys.length === 1
+        if (isLastPasskeyRemoved) {
+          this.store.analytics.trackPasskeyAdded(false)
+        }
+      }
+
       this.fetchPasskeys()
     } catch (error) {
       console.error('PasskeyStore -> deletePasskey: ', error)
