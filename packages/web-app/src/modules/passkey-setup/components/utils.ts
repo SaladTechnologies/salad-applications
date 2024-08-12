@@ -1,8 +1,5 @@
 const getBrowserName = () => {
-  const opera = navigator.userAgent.indexOf('OPR') !== -1
-  console.log('opera ===> ', opera)
   if (navigator.userAgent.indexOf('Opera') !== -1 || navigator.userAgent.indexOf('OPR') !== -1) {
-    console.log('test ===> ')
     return 'Opera'
     // @ts-ignore
   } else if (navigator.userAgent.indexOf('Edg') !== -1) {
@@ -18,7 +15,7 @@ const getBrowserName = () => {
     //IF IE > 10
     return 'IE'
   } else {
-    return 'Unknown'
+    return 'Unknown Browser'
   }
 }
 
@@ -38,7 +35,7 @@ const getOsName = () => {
   } else if (/iPhone|iPad|iPod/.test(userAgent)) {
     os = 'iOS'
   } else {
-    os = 'Unknown'
+    os = 'Unknown OS'
   }
 
   return os
