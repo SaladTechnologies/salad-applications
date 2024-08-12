@@ -51,7 +51,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     flexDirection: 'column',
-    height: '230px',
+    height: '250px',
   },
   textField: {
     backgroundColor: theme.white,

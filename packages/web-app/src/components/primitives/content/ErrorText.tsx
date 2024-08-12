@@ -7,10 +7,12 @@ import type { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   errorText: {
-    margin: '.25rem',
-    color: '#c90000',
+    color: 'rgb(255, 255, 255)',
     fontFamily: theme.fontMallory,
     fontSize: theme.medium,
+    padding: '12px',
+    background: 'rgb(239, 80, 42)',
+    boxShadow: 'rgb(239, 80, 42) 0px 0px 30px',
   },
 })
 
