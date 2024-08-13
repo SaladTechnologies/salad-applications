@@ -31,7 +31,7 @@ const mapStoreToProps = (store: RootStore): any => ({
   onToggleAcceptTermsAndConditions: store.termsAndConditions.toggleAcceptTermsAndConditions,
   fetchPasskeys: store.passkey.fetchPasskeys,
   onAddPasskeyClick: () => store.routing.push('/account/passkey/setup'),
-  onDeletePasskeyClick: store.passkey.deletePasskey,
+  onDeletePasskeyClick: (passkeyId: string) => store.routing.push(`/account/passkey/delete/${passkeyId}`),
   passkeys: store.passkey.passkeys,
 })
 
