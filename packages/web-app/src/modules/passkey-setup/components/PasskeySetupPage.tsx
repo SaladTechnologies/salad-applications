@@ -1,5 +1,6 @@
+import { faKey } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Text } from '@saladtechnologies/garden-components'
-import { Key } from '@saladtechnologies/garden-icons'
 import type CSS from 'csstype'
 import { useEffect, type FC } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
@@ -59,6 +60,10 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     width: '450px',
     color: theme.darkBlue,
     fontSize: '15px',
+  },
+  addPasskeyIcon: {
+    position: 'relative',
+    top: '-3px',
   },
 })
 
@@ -156,7 +161,12 @@ const _PasskeySetupPage: FC<Props> = ({
                           }}
                         </Field>
                         <div className={classes.buttonContainer}>
-                          <Button leadingIcon={<Key />} variant="primary-basic" label="Add Passkey" type="submit" />
+                          <Button
+                            leadingIcon={<FontAwesomeIcon icon={faKey} className={classes.addPasskeyIcon} />}
+                            variant="primary-basic"
+                            label="Add Passkey"
+                            type="submit"
+                          />
                           <Button variant="outlined" label="Cancel" onClick={backToProfile} />
                         </div>
                       </form>
