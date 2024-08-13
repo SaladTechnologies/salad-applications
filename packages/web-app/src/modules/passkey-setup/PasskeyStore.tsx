@@ -3,7 +3,7 @@ import { action, flow, observable } from 'mobx'
 import type { RootStore } from '../../Store'
 import { coerceToBase64Url, getIsPasskeySupported, registerPasskeyCredential } from './utils'
 
-export const isPasskeyFeatureEnabled = false
+export const isPasskeyFeatureEnabled = true
 
 export interface Passkey {
   createdAt: string
