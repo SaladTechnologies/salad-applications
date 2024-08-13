@@ -141,9 +141,8 @@ const _PasskeySetupPage: FC<Props> = ({
                       <form onSubmit={handleSubmit} className={classes.formWrapper} onChange={handlePasskeyNameChange}>
                         <Field name="passkeyName" type="text">
                           {({ input, meta }) => {
-                            const validationErrorText =
-                              meta.error && meta.touched && (meta.error ?? addPasskeyFailedText)
-                            const addPasskeyFailedErrorText = hasRegisterPasskeyFailed && addPasskeyFailedText
+                            const validationErrorText = meta.error && meta.touched ? meta.error : null
+                            const addPasskeyFailedErrorText = hasRegisterPasskeyFailed ? addPasskeyFailedText : null
                             const errorText = validationErrorText ?? addPasskeyFailedErrorText
                             return (
                               <TextField
