@@ -8,6 +8,7 @@ import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
 import Referrals from '../../../assets/Referrals.svg'
 import { withLogin } from '../../auth-views'
+import type { Passkey } from '../../passkey-setup'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   container: {
@@ -77,20 +78,15 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 
 interface Props extends WithStyles<typeof styles> {
   isLastPasskey: boolean
-  isPasskeyExisting: boolean
-  passkeyNickname: string
+  passkey?: Passkey
   onDeletePasskeyClick: () => void
   backToProfile: () => void
 }
 
-const _PasskeyDeletePage: FC<Props> = ({
-  classes,
-  isLastPasskey,
-  isPasskeyExisting,
-  passkeyNickname,
-  onDeletePasskeyClick,
-  backToProfile,
-}) => {
+const _PasskeyDeletePage: FC<Props> = ({ classes, passkey, isLastPasskey, onDeletePasskeyClick, backToProfile }) => {
+  const passkeyNickname = passkey?.displayName
+  const isPasskeyExisting = !!passkey
+
   const handleDeletePasskey = () => {
     onDeletePasskeyClick()
     backToProfile()
