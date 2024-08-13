@@ -1,4 +1,4 @@
-import { faEye, faKey, faTrashCan } from '@fortawesome/free-solid-svg-icons'
+import { faKey, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
@@ -49,21 +49,6 @@ const styles: () => Record<string, CSS.Properties> = () => ({
   },
   deletePasskeyIcon: {
     cursor: 'pointer',
-  },
-  recoveryCodesWrapper: {
-    paddingTop: '32px',
-    width: '100%',
-  },
-  recoveryCodesHeader: {
-    width: '220px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    flexDirection: 'column',
-    gap: '16px',
-  },
-  recoveryCodesDescription: {
-    marginTop: '24px',
   },
   passkeyName: {
     width: '200px',
@@ -122,23 +107,6 @@ const _AccountSecurity: FC<Props> = ({ classes, passkeys, onAddPasskeyClick, onD
               </div>
             )
           })}
-        </div>
-        <div className={classes.recoveryCodesWrapper}>
-          <div className={classes.recoveryCodesHeader}>
-            <Text variant="baseM">Recovery Codes</Text>
-            <Button
-              variant="primary"
-              size="small"
-              label="View Recovery Codes"
-              leadingIcon={<FontAwesomeIcon icon={faEye} className={classes.addPasskeyIcon} />}
-            />
-          </div>
-          <div className={classes.recoveryCodesDescription}>
-            <Text variant="baseS">
-              Recovery codes are single-use codes that will allow you to login when you don’t have access to your
-              passkeys.
-            </Text>
-          </div>
         </div>
       </div>
     </div>
