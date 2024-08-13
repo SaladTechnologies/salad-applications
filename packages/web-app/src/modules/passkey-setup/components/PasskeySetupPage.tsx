@@ -1,7 +1,7 @@
 import { Button, Text } from '@saladtechnologies/garden-components'
 import { Key } from '@saladtechnologies/garden-icons'
 import type CSS from 'csstype'
-import { type FC } from 'react'
+import { useEffect, type FC } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 import { Field, Form } from 'react-final-form'
 import type { WithStyles } from 'react-jss'
@@ -51,7 +51,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     flexDirection: 'column',
-    height: '230px',
+    height: '250px',
   },
   textField: {
     backgroundColor: theme.white,
@@ -66,13 +66,24 @@ interface FormValues {
   passkeyName: string
 }
 
+const addPasskeyFailedText = 'There was an error setting up your passkey. Try again.'
+
 interface Props extends WithStyles<typeof styles> {
   isPasskeySupported: boolean
+  hasRegisterPasskeyFailed: boolean
   registerPasskey: (passkeyName: string) => void
+  setHasRegisterPasskeyFailed: (updatedHasRegisterPasskeyFailed: boolean) => void
   backToProfile: () => void
 }
 
-const _PasskeySetupPage: FC<Props> = ({ classes, isPasskeySupported, registerPasskey, backToProfile }) => {
+const _PasskeySetupPage: FC<Props> = ({
+  classes,
+  isPasskeySupported,
+  hasRegisterPasskeyFailed,
+  registerPasskey,
+  backToProfile,
+  setHasRegisterPasskeyFailed,
+}) => {
   const handleAddPasskeySubmit = (values: FormValues) => {
     registerPasskey?.(values.passkeyName)
   }
@@ -94,6 +105,14 @@ const _PasskeySetupPage: FC<Props> = ({ classes, isPasskeySupported, registerPas
     }
 
     return undefined
+  }
+
+  useEffect(() => {
+    return () => setHasRegisterPasskeyFailed(false)
+  }, [setHasRegisterPasskeyFailed])
+
+  const handlePasskeyNameChange = () => {
+    setHasRegisterPasskeyFailed(false)
   }
 
   return (
@@ -119,17 +138,22 @@ const _PasskeySetupPage: FC<Props> = ({ classes, isPasskeySupported, registerPas
                 render={({ handleSubmit }) => {
                   return (
                     <div className={classes.formWrapper}>
-                      <form onSubmit={handleSubmit} className={classes.formWrapper}>
+                      <form onSubmit={handleSubmit} className={classes.formWrapper} onChange={handlePasskeyNameChange}>
                         <Field name="passkeyName" type="text">
-                          {({ input, meta }) => (
-                            <TextField
-                              {...input}
-                              label="Passkey Name"
-                              className={classes.textField}
-                              placeholder="Passkey Name"
-                              errorText={meta.error && meta.touched && meta.error}
-                            />
-                          )}
+                          {({ input, meta }) => {
+                            const validationErrorText = meta.error && meta.touched ? meta.error : null
+                            const addPasskeyFailedErrorText = hasRegisterPasskeyFailed ? addPasskeyFailedText : null
+                            const errorText = validationErrorText ?? addPasskeyFailedErrorText
+                            return (
+                              <TextField
+                                {...input}
+                                label="Passkey Name"
+                                className={classes.textField}
+                                placeholder="Passkey Name"
+                                errorText={errorText}
+                              />
+                            )
+                          }}
                         </Field>
                         <div className={classes.buttonContainer}>
                           <Button leadingIcon={<Key />} variant="primary-basic" label="Add Passkey" type="submit" />
