@@ -189,8 +189,7 @@ export const getPasskeyCredential = async (
   const credential = (await navigator.credentials.get({
     publicKey: publicKeyCredentialRequestOptions,
     signal: abortController.signal,
-    // Specify 'conditional' to activate conditional UI
-    mediation: 'conditional',
+    mediation: 'optional',
   })) as AssertedCredentialResponse
 
   return credential
