@@ -69,7 +69,7 @@ class _SendReferral extends Component<Props> {
                 {({ input, meta }) => (
                   <div className={classes.container}>
                     <TextField
-                      className={classes.input}
+                      inputClassName={classes.input}
                       {...input}
                       placeholder="Email Address"
                       errorText={meta.error && meta.touched && meta.error}

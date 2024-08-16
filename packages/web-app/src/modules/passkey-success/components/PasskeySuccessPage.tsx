@@ -27,10 +27,19 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     justifyContent: 'left',
     marginTop: '82px',
     marginLeft: '40px',
+    '@media (max-width: 812px)': {
+      padding: '16px',
+      marginTop: '0px',
+      marginLeft: '0px',
+    },
   },
   header: {
     maxWidth: '600px',
     color: theme.lightGreen,
+    '@media (max-width: 812px)': {
+      fontSize: theme.xLarge,
+      lineHeight: '48px',
+    },
   },
   descriptionContainer: {
     display: 'flex',
@@ -48,6 +57,9 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
   image: {
     height: '100vh',
+    '@media (max-width: 812px)': {
+      display: 'none',
+    },
   },
 })
 
@@ -57,7 +69,7 @@ interface Props extends WithStyles<typeof styles> {
 
 const _PasskeySuccessPage: FC<Props> = ({ classes, onDoneClick }) => {
   const location = useLocation<{ passkeyName: string }>()
-  const passkeyName = location.state.passkeyName
+  const passkeyName = location.state?.passkeyName
 
   return (
     <Scrollbars>
