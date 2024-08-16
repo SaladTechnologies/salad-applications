@@ -29,10 +29,6 @@ const mapStoreToProps = (store: RootStore): any => ({
   isTermsAndConditionsAccepted: store.termsAndConditions.isTermsAndConditionsAccepted,
   onSubmitTermsAndConditions: store.termsAndConditions.submitTermsAndConditions,
   onToggleAcceptTermsAndConditions: store.termsAndConditions.toggleAcceptTermsAndConditions,
-  fetchPasskeys: store.passkey.fetchPasskeys,
-  onAddPasskeyClick: () => store.routing.push('/account/passkey/setup'),
-  onDeletePasskeyClick: (passkeyId: string) => store.routing.push(`/account/passkey/delete/${passkeyId}`),
-  passkeys: store.passkey.passkeys,
 })
 
 export const AccountContainer = connect(mapStoreToProps, Account)

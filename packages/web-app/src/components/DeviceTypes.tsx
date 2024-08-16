@@ -6,7 +6,7 @@ interface Props {
   children?: ReactNode
 }
 
-const mobileSize = 812
+export const mobileSize = 812
 
 export const MobileDevice = ({ orientation, children }: Props) => (
   <MediaQuery maxWidth={mobileSize} orientation={orientation}>

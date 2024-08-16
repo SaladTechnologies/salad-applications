@@ -3,9 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
 import moment from 'moment'
-import type { FC } from 'react'
+import { useEffect, type FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
+import { useMediaQuery } from 'react-responsive'
+import { mobileSize } from '../../../../components'
 import type { Passkey } from '../../../passkey-setup'
 
 const styles: () => Record<string, CSS.Properties> = () => ({
@@ -62,10 +64,16 @@ interface Props extends WithStyles<typeof styles> {
   passkeys: Passkey[]
   onAddPasskeyClick: () => void
   onDeletePasskeyClick: (passkeyId: string) => void
+  fetchPasskeys: () => void
 }
 
-const _AccountSecurity: FC<Props> = ({ classes, passkeys, onAddPasskeyClick, onDeletePasskeyClick }) => {
+const _AccountSecurity: FC<Props> = ({ classes, passkeys, onAddPasskeyClick, onDeletePasskeyClick, fetchPasskeys }) => {
   const isAddPasskeyAvailable = passkeys.length < 30
+  const isTabletOrMobile = useMediaQuery({ query: `(max-width: ${mobileSize}px)` })
+
+  useEffect(() => {
+    fetchPasskeys()
+  }, [fetchPasskeys])
 
   return (
     <div className={classes.accountSecurityWrapper}>
@@ -84,7 +92,7 @@ const _AccountSecurity: FC<Props> = ({ classes, passkeys, onAddPasskeyClick, onD
             {isAddPasskeyAvailable && (
               <Button
                 onClick={onAddPasskeyClick}
-                variant="primary"
+                variant={isTabletOrMobile ? 'secondary' : 'primary'}
                 size="small"
                 label="Add a Passkey"
                 leadingIcon={<FontAwesomeIcon icon={faKey} className={classes.addPasskeyIcon} />}
