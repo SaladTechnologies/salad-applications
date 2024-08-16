@@ -1,8 +1,8 @@
-import { useEffect, type FC } from 'react'
+import { type FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Button, Divider, P, StatElement } from '../../../components'
-import { AccountSecurity } from '../../account-views/account-views/components/AccountSecurity'
+import { AccountSecurityContainer } from '../../account-views/account-views'
 import { isPasskeyFeatureEnabled, type Passkey } from '../../passkey-setup'
 
 const styles = {
@@ -13,28 +13,13 @@ const styles = {
 interface Props extends WithStyles<typeof styles> {
   passkeys: Passkey[]
   username?: string
-  onAddPasskeyClick: () => void
-  onDeletePasskeyClick: (passkeyId: string) => void
   onLogout?: () => void
-  fetchPasskeys: () => void
 }
 
-const _MobileAccountSummary: FC<Props> = ({
-  classes,
-  passkeys,
-  username,
-  onAddPasskeyClick,
-  onDeletePasskeyClick,
-  onLogout,
-  fetchPasskeys,
-}) => {
+const _MobileAccountSummary: FC<Props> = ({ classes, username, onLogout }) => {
   const handleLogout = () => {
     onLogout?.()
   }
-
-  useEffect(() => {
-    fetchPasskeys()
-  }, [fetchPasskeys])
 
   return (
     <div className={classes.container}>
@@ -45,13 +30,7 @@ const _MobileAccountSummary: FC<Props> = ({
         <Button onClick={handleLogout}>Log Out</Button>
       </div>
       <Divider />
-      {isPasskeyFeatureEnabled && (
-        <AccountSecurity
-          passkeys={passkeys}
-          onDeletePasskeyClick={onDeletePasskeyClick}
-          onAddPasskeyClick={onAddPasskeyClick}
-        />
-      )}
+      {isPasskeyFeatureEnabled && <AccountSecurityContainer />}
     </div>
   )
 }

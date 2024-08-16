@@ -10,7 +10,7 @@ import { Head } from '../../../../components'
 import { withLogin } from '../../../auth-views'
 import { isPasskeyFeatureEnabled, type Passkey } from '../../../passkey-setup'
 import type { Avatar, Profile } from '../../../profile/models'
-import { AccountSecurity } from './AccountSecurity'
+import { AccountSecurityContainer } from '../AccountSecurityContainer'
 import { AccountTermsAndConditionsUpdate } from './AccountTermsAndConditionsUpdate'
 import { GoogleSignInForm } from './GoogleSignInForm'
 import { PayPalLoginButton } from './PayPalLoginButton'
@@ -143,24 +143,19 @@ const _Account: FC<Props> = ({
   isPayPalIdDisconnectLoading,
   isSubmitting,
   isTermsAndConditionsAccepted,
-  passkeys,
   onSubmitTermsAndConditions,
   onToggleAcceptTermsAndConditions,
-  fetchPasskeys,
-  onAddPasskeyClick,
-  onDeletePasskeyClick,
 }) => {
   const [payPalLoadRetries, setPayPalLoadRetries] = useState(0)
 
   useEffect(() => {
     loadPayPalId()
-    fetchPasskeys()
     loadGoogleAccountConnection()
 
     return () => {
       clearInterval(intervalId)
     }
-  }, [fetchPasskeys, loadGoogleAccountConnection, loadPayPalId])
+  }, [loadGoogleAccountConnection, loadPayPalId])
 
   const shouldShowUpdateAccountTermsAndConditions = !!profile?.pendingTermsVersion
   const handleSubmitButtonReset = () => {
@@ -313,13 +308,7 @@ const _Account: FC<Props> = ({
               </div>
             </div>
           </div>
-          {isPasskeyFeatureEnabled && (
-            <AccountSecurity
-              passkeys={passkeys}
-              onDeletePasskeyClick={onDeletePasskeyClick}
-              onAddPasskeyClick={onAddPasskeyClick}
-            />
-          )}
+          {isPasskeyFeatureEnabled && <AccountSecurityContainer />}
         </Layout>
       </Scrollbars>
     </div>
