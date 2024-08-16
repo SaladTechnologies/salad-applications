@@ -27,7 +27,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     justifyContent: 'left',
     marginTop: '82px',
     marginLeft: '40px',
-    '@media (max-width: 720px)': {
+    '@media (max-width: 812px)': {
       padding: '16px',
       marginTop: '0px',
       marginLeft: '0px',
@@ -36,7 +36,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   header: {
     maxWidth: '600px',
     color: theme.lightGreen,
-    '@media (max-width: 720px)': {
+    '@media (max-width: 812px)': {
       fontSize: theme.xLarge,
       lineHeight: '48px',
     },
@@ -57,7 +57,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
   image: {
     height: '100vh',
-    '@media (max-width: 720px)': {
+    '@media (max-width: 812px)': {
       display: 'none',
     },
   },

@@ -32,7 +32,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     marginTop: '82px',
     marginLeft: '40px',
     boxSizing: 'border-box',
-    '@media (max-width: 720px)': {
+    '@media (max-width: 812px)': {
       padding: '16px',
       marginTop: '0px',
       marginLeft: '0px',
@@ -40,7 +40,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
   header: {
     color: theme.lightGreen,
-    '@media (max-width: 720px)': {
+    '@media (max-width: 812px)': {
       fontSize: theme.xLarge,
     },
   },
@@ -48,7 +48,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     maxWidth: '400px',
     marginBottom: '48px',
     boxSizing: 'border-box',
-    '@media (max-width: 720px)': {
+    '@media (max-width: 812px)': {
       width: '100%',
       maxWidth: '100%',
     },
@@ -60,7 +60,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
   image: {
     height: '100vh',
-    '@media (max-width: 720px)': {
+    '@media (max-width: 812px)': {
       display: 'none',
     },
   },
