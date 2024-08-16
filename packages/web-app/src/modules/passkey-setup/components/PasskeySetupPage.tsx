@@ -31,13 +31,27 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     justifyContent: 'left',
     marginTop: '82px',
     marginLeft: '40px',
+    boxSizing: 'border-box',
+    '@media (max-width: 720px)': {
+      padding: '16px',
+      marginTop: '0px',
+      marginLeft: '0px',
+    },
   },
   header: {
     color: theme.lightGreen,
+    '@media (max-width: 720px)': {
+      fontSize: theme.xLarge,
+    },
   },
   description: {
     maxWidth: '400px',
     marginBottom: '48px',
+    boxSizing: 'border-box',
+    '@media (max-width: 720px)': {
+      width: '100%',
+      maxWidth: '100%',
+    },
   },
   buttonContainer: {
     display: 'flex',
@@ -46,6 +60,9 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
   image: {
     height: '100vh',
+    '@media (max-width: 720px)': {
+      display: 'none',
+    },
   },
   formWrapper: {
     display: 'flex',
@@ -53,11 +70,13 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     alignItems: 'flex-start',
     flexDirection: 'column',
     height: '250px',
+    width: '100%',
+    boxSizing: 'border-box',
   },
   textField: {
     backgroundColor: theme.white,
     height: '30px',
-    width: '450px',
+    width: '100%',
     color: theme.darkBlue,
     fontSize: '15px',
   },
@@ -153,7 +172,7 @@ const _PasskeySetupPage: FC<Props> = ({
                               <TextField
                                 {...input}
                                 label="Passkey Name"
-                                className={classes.textField}
+                                inputClassName={classes.textField}
                                 placeholder="Passkey Name"
                                 errorText={errorText}
                               />

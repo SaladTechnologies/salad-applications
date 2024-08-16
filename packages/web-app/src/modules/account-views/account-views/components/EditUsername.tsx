@@ -97,7 +97,7 @@ class _EditUsername extends Component<Props, State> {
                     {({ input, meta }) => (
                       <div className={classes.textFieldContainer}>
                         <TextField
-                          className={classes.input}
+                          inputClassName={classes.input}
                           {...input}
                           placeholder={profile && profile.username}
                           errorText={meta.error && meta.touched && meta.error}

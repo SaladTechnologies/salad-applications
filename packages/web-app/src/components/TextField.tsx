@@ -9,16 +9,18 @@ import type { SaladTheme } from '../SaladTheme'
 const styles = (theme: SaladTheme) => ({
   container: {
     display: 'inline-block',
+    width: '100%',
   },
   text: {
     border: `1px solid ${theme.lightGreen}`,
-    padding: '.5rem',
+    padding: '24px 16px 24px 16px',
     backgroundColor: theme.white,
     height: '28px',
-    width: '450px',
+    width: '100%',
     color: '#000000',
     fontFamily: theme.fontMallory,
     fontSize: theme.medium,
+    boxSizing: 'border-box',
     '&::placeholder': {
       opacity: 0.5,
       color: '#000000',
@@ -50,7 +52,8 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   name?: string
   placeholder?: string
-  className?: string
+  inputClassName?: string
+  containerClassName?: string
   onBlur?: (event?: FocusEvent<any>) => void
   onChange?: (event: ChangeEvent<any>) => void
   onFocus?: (event?: FocusEvent<any>) => void
@@ -61,12 +64,14 @@ interface Props extends WithStyles<typeof styles> {
 
 class _TextField extends Component<Props> {
   public override render(): ReactNode {
-    const { className, label, errorText, classes, ...input } = this.props
+    const { inputClassName, containerClassName, label, errorText, classes, ...input } = this.props
     return (
-      <div className={classes.container}>
+      <div className={classnames(classes.container, containerClassName)}>
         {label && <span className={classes.label}>{label}</span>}
         <input
-          className={classnames(classes.text, className, { [classes.errorBorder]: errorText })}
+          className={classnames(classes.text, inputClassName, {
+            [classes.errorBorder]: errorText,
+          })}
           {...input}
           type="text"
         />
