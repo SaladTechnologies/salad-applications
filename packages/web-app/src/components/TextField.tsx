@@ -1,6 +1,5 @@
 import classnames from 'classnames'
-import type { ChangeEvent, FocusEvent, ReactNode } from 'react'
-import { Component } from 'react'
+import type { ChangeEvent, FC, FocusEvent, ReactNode } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { ErrorText } from '.'
@@ -62,23 +61,27 @@ interface Props extends WithStyles<typeof styles> {
   label?: string
 }
 
-class _TextField extends Component<Props> {
-  public override render(): ReactNode {
-    const { inputClassName, containerClassName, label, errorText, classes, ...input } = this.props
-    return (
-      <div className={classnames(classes.container, containerClassName)}>
-        {label && <span className={classes.label}>{label}</span>}
-        <input
-          className={classnames(classes.text, inputClassName, {
-            [classes.errorBorder]: errorText,
-          })}
-          {...input}
-          type="text"
-        />
-        {errorText && <ErrorText>{errorText}</ErrorText>}
-      </div>
-    )
-  }
+const _TextField: FC<Props> = ({
+  inputClassName,
+  containerClassName,
+  label,
+  errorText,
+  classes,
+  ...input
+}): ReactNode => {
+  return (
+    <div className={classnames(classes.container, containerClassName)}>
+      {label && <span className={classes.label}>{label}</span>}
+      <input
+        className={classnames(classes.text, inputClassName, {
+          [classes.errorBorder]: errorText,
+        })}
+        {...input}
+        type="text"
+      />
+      {errorText && <ErrorText>{errorText}</ErrorText>}
+    </div>
+  )
 }
 
 export const TextField = withStyles(styles)(_TextField)
