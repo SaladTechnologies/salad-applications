@@ -28,9 +28,18 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     justifyContent: 'left',
     marginTop: '82px',
     marginLeft: '40px',
+    '@media (max-width: 720px)': {
+      padding: '16px',
+      marginTop: '0px',
+      marginLeft: '0px',
+    },
   },
   header: {
     color: theme.lightGreen,
+    '@media (max-width: 720px)': {
+      fontSize: theme.xLarge,
+      lineHeight: '48px',
+    },
   },
   description: {
     maxWidth: '400px',
@@ -43,6 +52,9 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
   image: {
     height: '100vh',
+    '@media (max-width: 720px)': {
+      display: 'none',
+    },
   },
   formWrapper: {
     display: 'flex',
