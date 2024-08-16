@@ -6,6 +6,8 @@ import moment from 'moment'
 import type { FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
+import { useMediaQuery } from 'react-responsive'
+import { mobileSize } from '../../../../components'
 import type { Passkey } from '../../../passkey-setup'
 
 const styles: () => Record<string, CSS.Properties> = () => ({
@@ -66,6 +68,7 @@ interface Props extends WithStyles<typeof styles> {
 
 const _AccountSecurity: FC<Props> = ({ classes, passkeys, onAddPasskeyClick, onDeletePasskeyClick }) => {
   const isAddPasskeyAvailable = passkeys.length < 30
+  const isTabletOrMobile = useMediaQuery({ query: `(max-width: ${mobileSize}px)` })
 
   return (
     <div className={classes.accountSecurityWrapper}>
@@ -84,7 +87,7 @@ const _AccountSecurity: FC<Props> = ({ classes, passkeys, onAddPasskeyClick, onD
             {isAddPasskeyAvailable && (
               <Button
                 onClick={onAddPasskeyClick}
-                variant="primary"
+                variant={isTabletOrMobile ? 'secondary' : 'primary'}
                 size="small"
                 label="Add a Passkey"
                 leadingIcon={<FontAwesomeIcon icon={faKey} className={classes.addPasskeyIcon} />}
