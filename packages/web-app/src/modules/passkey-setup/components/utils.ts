@@ -35,14 +35,14 @@ const getOsName = () => {
     case platform.indexOf('Mac') !== -1:
       return 'macOS'
 
-    case platform.indexOf('Linux') !== -1:
-      return 'macOS'
-
     case /Android/.test(userAgent):
       return 'Android'
 
     case /iPhone|iPad|iPod/.test(userAgent):
       return 'iOS'
+
+    case platform.indexOf('Linux') !== -1:
+      return 'Linux'
 
     default:
       return 'Unknown OS'
