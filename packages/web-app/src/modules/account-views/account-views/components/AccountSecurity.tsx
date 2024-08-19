@@ -36,6 +36,13 @@ const styles: () => Record<string, CSS.Properties> = () => ({
     alignItems: 'center',
     flexDirection: 'row',
   },
+  passkeysListTitle: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+    width: '150px',
+  },
   passkeysList: {
     display: 'flex',
     justifyContent: 'center',
@@ -60,6 +67,8 @@ const styles: () => Record<string, CSS.Properties> = () => ({
   },
 })
 
+const passkeysAmountLimit = 30
+
 interface Props extends WithStyles<typeof styles> {
   passkeys: Passkey[]
   onAddPasskeyClick: () => void
@@ -68,7 +77,8 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const _AccountSecurity: FC<Props> = ({ classes, passkeys, onAddPasskeyClick, onDeletePasskeyClick, fetchPasskeys }) => {
-  const isAddPasskeyAvailable = passkeys.length < 30
+  const passkeysAmount = passkeys.length
+  const isAddPasskeyAvailable = passkeysAmount < passkeysAmountLimit
   const isTabletOrMobile = useMediaQuery({ query: `(max-width: ${mobileSize}px)` })
 
   useEffect(() => {
@@ -88,7 +98,12 @@ const _AccountSecurity: FC<Props> = ({ classes, passkeys, onAddPasskeyClick, onD
         </div>
         <div className={classes.passkeysListWrapper}>
           <div className={classes.passkeysListHeader}>
-            <Text variant="baseM">Your Passkeys</Text>
+            <div className={classes.passkeysListTitle}>
+              <Text variant="baseM">Your Passkeys</Text>
+              <Text variant="baseXS">
+                ({passkeysAmount}/{passkeysAmountLimit})
+              </Text>
+            </div>
             {isAddPasskeyAvailable && (
               <Button
                 onClick={onAddPasskeyClick}
