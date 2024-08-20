@@ -8,6 +8,7 @@ import { ExitSurveyContainer } from './modules/exit-survey-views'
 import { PasskeyDeletePageContainer } from './modules/passkey-delete'
 import { PasskeySetupPageContainer, isPasskeyFeatureEnabled } from './modules/passkey-setup'
 import { PasskeySuccessPageContainer } from './modules/passkey-success'
+import { ProtectedActionPageContainer } from './modules/protected-action'
 import { RewardDetailsContainer, SelectTargetRewardContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
 import { SettingsContainer } from './modules/settings-views'
@@ -45,6 +46,9 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
         <Route path="/account/passkey/delete/:id" exact component={PasskeyDeletePageContainer} />
       )}
       <Route path="/account" component={SettingsContainer} />
+
+      {/* Protected Action */}
+      {isPasskeyFeatureEnabled && <Route path="/protected-action" component={ProtectedActionPageContainer} />}
 
       {/* Earn Pages */}
       {isAuthenticated && <Redirect exact from="/earn" to="/earn/summary" />}
