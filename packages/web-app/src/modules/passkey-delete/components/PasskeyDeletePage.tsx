@@ -1,5 +1,7 @@
+import { faKey } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Text } from '@saladtechnologies/garden-components'
-import { AlertCircle, Key } from '@saladtechnologies/garden-icons'
+import { AlertCircle } from '@saladtechnologies/garden-icons'
 import type CSS from 'csstype'
 import { useEffect, type FC } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
@@ -86,6 +88,10 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     flexDirection: 'row',
     gap: '10px',
   },
+  addPasskeyIcon: {
+    position: 'relative',
+    top: '-3px',
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -130,7 +136,7 @@ const _PasskeyDeletePage: FC<Props> = ({ classes, passkey, isLastPasskey, onDele
           )}
           <div className={classes.buttonContainer}>
             <Button
-              leadingIcon={<Key />}
+              leadingIcon={<FontAwesomeIcon icon={faKey} className={classes.addPasskeyIcon} />}
               variant="primary-basic"
               label="Delete Passkey"
               onClick={handleDeletePasskey}
