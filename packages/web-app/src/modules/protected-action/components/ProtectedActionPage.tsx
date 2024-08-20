@@ -43,6 +43,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     '@media (max-width: 812px)': {
       fontSize: theme.xLarge,
     },
+    paddingBottom: '0px',
   },
   description: {
     maxWidth: '400px',
