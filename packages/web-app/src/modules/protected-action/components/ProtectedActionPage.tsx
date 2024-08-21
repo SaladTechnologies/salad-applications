@@ -88,19 +88,19 @@ interface FormValues {
 interface Props extends WithStyles<typeof styles> {
   isPasskeySupported: boolean
   onBackToPreviousPageClick: () => void
-  onVerifyWithBackupCodeClick: (backupCode: string) => void
   onVerifyWithPasskeyClick: () => void
+  verifyWithBackupCode: (backupCode: string) => void
 }
 
 const _ProtectedActionPage: FC<Props> = ({
   classes,
   isPasskeySupported,
   onBackToPreviousPageClick,
-  onVerifyWithBackupCodeClick,
   onVerifyWithPasskeyClick,
+  verifyWithBackupCode,
 }) => {
   const handleVerifyWithBackupCodeSubmit = (values: FormValues) => {
-    onVerifyWithBackupCodeClick?.(values.backupCode)
+    verifyWithBackupCode?.(values.backupCode)
   }
 
   const validate = (values: FormValues) => {

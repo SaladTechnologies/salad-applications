@@ -5,8 +5,8 @@ import { ProtectedActionPage } from './components'
 const mapStoreToProps = (store: RootStore): any => ({
   isPasskeySupported: store.passkey.isPasskeySupported,
   onBackToPreviousPageClick: () => store.routing.goBack(),
-  onVerifyWithBackupCodeClick: () => {},
   onVerifyWithPasskeyClick: () => {},
+  verifyWithBackupCode: () => {},
 })
 
 export const ProtectedActionPageContainer = connect(mapStoreToProps, ProtectedActionPage)
