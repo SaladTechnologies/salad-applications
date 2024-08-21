@@ -87,17 +87,17 @@ interface FormValues {
 
 interface Props extends WithStyles<typeof styles> {
   isPasskeySupported: boolean
-  backToPreviousPageClick: () => void
+  onBackToPreviousPageClick: () => void
   verifyWithBackupCodeClick: (backupCode: string) => void
-  verifyWithPasskeyClick: () => void
+  onVerifyPasskeyClick: () => void
 }
 
 const _ProtectedActionPage: FC<Props> = ({
   classes,
   isPasskeySupported,
-  backToPreviousPageClick,
+  onBackToPreviousPageClick,
   verifyWithBackupCodeClick,
-  verifyWithPasskeyClick,
+  onVerifyPasskeyClick,
 }) => {
   const handleVerifyWithBackupCodeSubmit = (values: FormValues) => {
     verifyWithBackupCodeClick?.(values.backupCode)
@@ -138,7 +138,7 @@ const _ProtectedActionPage: FC<Props> = ({
                 leadingIcon={<FontAwesomeIcon icon={faKey} className={classes.addPasskeyIcon} />}
                 variant="primary-basic"
                 label="Verify with Passkey"
-                onClick={verifyWithPasskeyClick}
+                onClick={onVerifyPasskeyClick}
               />
             </>
           ) : (
@@ -179,7 +179,7 @@ const _ProtectedActionPage: FC<Props> = ({
               )
             }}
           />
-          <Button variant="outlined" label="Cancel" onClick={backToPreviousPageClick} />
+          <Button variant="outlined" label="Cancel" onClick={onBackToPreviousPageClick} />
         </div>
         <img className={classes.image} src={Referrals} alt="Referrals Background" />
       </div>
