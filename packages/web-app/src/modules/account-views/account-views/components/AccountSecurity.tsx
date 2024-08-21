@@ -1,4 +1,4 @@
-import { faKey, faTrashCan } from '@fortawesome/free-solid-svg-icons'
+import { faEye, faKey, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
@@ -22,21 +22,22 @@ const styles: () => Record<string, CSS.Properties> = () => ({
   passkeysDescription: {
     paddingTop: '16px',
   },
-  passkeysListWrapper: {
+  sectionWrapper: {
     paddingTop: '32px',
     width: '100%',
   },
-  addPasskeyIcon: {
+  buttonIcon: {
     position: 'relative',
     top: '-3px',
   },
-  passkeysListHeader: {
+  sectionHeader: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
+    marginBottom: '14px',
   },
-  passkeysListTitle: {
+  sectionTitle: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -71,12 +72,22 @@ const passkeysAmountLimit = 30
 
 interface Props extends WithStyles<typeof styles> {
   passkeys: Passkey[]
+  withBackupCodes: boolean
   onAddPasskeyClick: () => void
   onDeletePasskeyClick: (passkeyId: string) => void
+  onViewBackupCodesClick: () => void
   fetchPasskeys: () => void
 }
 
-const _AccountSecurity: FC<Props> = ({ classes, passkeys, onAddPasskeyClick, onDeletePasskeyClick, fetchPasskeys }) => {
+const _AccountSecurity: FC<Props> = ({
+  classes,
+  passkeys,
+  withBackupCodes,
+  onAddPasskeyClick,
+  onDeletePasskeyClick,
+  onViewBackupCodesClick,
+  fetchPasskeys,
+}) => {
   const passkeysAmount = passkeys.length
   const isAddPasskeyAvailable = passkeysAmount < passkeysAmountLimit
   const isTabletOrMobile = useMediaQuery({ query: `(max-width: ${mobileSize}px)` })
@@ -96,9 +107,9 @@ const _AccountSecurity: FC<Props> = ({ classes, passkeys, onAddPasskeyClick, onD
             two-factor authentication codes and are quickly becoming the standard way to secure online accounts.
           </Text>
         </div>
-        <div className={classes.passkeysListWrapper}>
-          <div className={classes.passkeysListHeader}>
-            <div className={classes.passkeysListTitle}>
+        <div className={classes.sectionWrapper}>
+          <div className={classes.sectionHeader}>
+            <div className={classes.sectionTitle}>
               <Text variant="baseM">Your Passkeys</Text>
               <Text variant="baseXS">
                 ({passkeysAmount}/{passkeysAmountLimit})
@@ -110,7 +121,7 @@ const _AccountSecurity: FC<Props> = ({ classes, passkeys, onAddPasskeyClick, onD
                 variant={isTabletOrMobile ? 'secondary' : 'primary'}
                 size="small"
                 label="Add a Passkey"
-                leadingIcon={<FontAwesomeIcon icon={faKey} className={classes.addPasskeyIcon} />}
+                leadingIcon={<FontAwesomeIcon icon={faKey} className={classes.buttonIcon} />}
               />
             )}
           </div>
@@ -131,6 +142,29 @@ const _AccountSecurity: FC<Props> = ({ classes, passkeys, onAddPasskeyClick, onD
             )
           })}
         </div>
+        {withBackupCodes && (
+          <div className={classes.sectionWrapper}>
+            <div className={classes.sectionHeader}>
+              <div className={classes.sectionTitle}>
+                <Text variant="baseM">Backup Codes</Text>
+              </div>
+            </div>
+            <Button
+              onClick={onViewBackupCodesClick}
+              variant={isTabletOrMobile ? 'secondary' : 'primary'}
+              size="small"
+              width={210}
+              label="View Backup Codes"
+              leadingIcon={<FontAwesomeIcon icon={faEye} className={classes.buttonIcon} />}
+            />
+            <div className={classes.passkeysDescription}>
+              <Text variant="baseS">
+                Backup codes are single-use codes that will allow you to take actions that would require your passkey
+                when you don’t have access to your passkeys.
+              </Text>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
