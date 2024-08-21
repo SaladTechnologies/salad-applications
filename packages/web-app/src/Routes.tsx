@@ -9,6 +9,7 @@ import { PasskeyDeletePageContainer } from './modules/passkey-delete'
 import { PasskeySetupPageContainer, isPasskeyFeatureEnabled } from './modules/passkey-setup'
 import { PasskeySuccessPageContainer } from './modules/passkey-success'
 import { ProtectedActionPageContainer } from './modules/protected-action'
+import { RecoveryCodesPageContainer } from './modules/recovery-codes'
 import { RewardDetailsContainer, SelectTargetRewardContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
 import { SettingsContainer } from './modules/settings-views'
@@ -45,6 +46,7 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
       {isPasskeyFeatureEnabled && (
         <Route path="/account/passkey/delete/:id" exact component={PasskeyDeletePageContainer} />
       )}
+      {isPasskeyFeatureEnabled && <Route path="/account/backup-codes" exact component={RecoveryCodesPageContainer} />}
       <Route path="/account" component={SettingsContainer} />
 
       {/* Protected Action */}
