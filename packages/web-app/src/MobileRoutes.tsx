@@ -38,7 +38,11 @@ class _Routes extends Component<RouteComponentProps> {
             <Route exact path="/account/passkey/delete/:id" component={PasskeyDeletePageContainer} />
           )}
           {isPasskeyFeatureEnabled && (
+<<<<<<< HEAD
             <Route path="/account/backup-codes" exact component={BackupCodesPageContainer} />
+=======
+            <Route path="/account/backup-codes" exact component={RecoveryCodesPageContainer} />
+>>>>>>> c81c7427 (RecoveryCodestPage: refactored)
           )}
           <Route component={MobilePageNotFound} />
         </Switch>
