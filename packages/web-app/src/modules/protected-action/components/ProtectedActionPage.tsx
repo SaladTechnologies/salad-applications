@@ -2,7 +2,7 @@ import { faKey } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
-import { type FC } from 'react'
+import { useEffect, type FC } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 import { Field, Form } from 'react-final-form'
 import type { WithStyles } from 'react-jss'
@@ -53,6 +53,23 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
       maxWidth: '100%',
     },
   },
+  errorText: {
+    maxWidth: '400px',
+    boxSizing: 'border-box',
+    '@media (max-width: 812px)': {
+      width: '100%',
+      maxWidth: '100%',
+    },
+    color: theme.white,
+    backgroundColor: theme.red,
+    boxShadow: `0px 0px 30px ${theme.red}`,
+    padding: '12px',
+    margin: '4px 0px',
+  },
+  buttonContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
   image: {
     height: '100vh',
     '@media (max-width: 812px)': {
@@ -81,26 +98,55 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
 })
 
+const verifyBackupCodeFailedText = 'Backup code verification failure, please try again'
+
 interface FormValues {
   backupCode: string
 }
 
 interface Props extends WithStyles<typeof styles> {
   isPasskeySupported: boolean
+  hasVerifyWithBackupCodeFailed: boolean
+  hasVerifyWithPasskeyFailed: boolean
   onBackToPreviousPageClick: () => void
-  onVerifyWithPasskeyClick: () => void
+  setHasVerifyWithBackupCodeFailed: (updatedHasVerifyWithBackupCodeFailed: boolean) => void
+  setHasVerifyWithPasskeyFailed: (updatedHasVerifyWithPasskeyFailed: boolean) => void
+  verifyWithPasskey: () => void
   verifyWithBackupCode: (backupCode: string) => void
 }
 
 const _ProtectedActionPage: FC<Props> = ({
   classes,
   isPasskeySupported,
+  hasVerifyWithBackupCodeFailed,
+  hasVerifyWithPasskeyFailed,
   onBackToPreviousPageClick,
-  onVerifyWithPasskeyClick,
+  setHasVerifyWithBackupCodeFailed,
+  setHasVerifyWithPasskeyFailed,
+  verifyWithPasskey,
   verifyWithBackupCode,
 }) => {
+  useEffect(() => {
+    return () => {
+      setHasVerifyWithBackupCodeFailed(false)
+      setHasVerifyWithPasskeyFailed(false)
+    }
+  }, [setHasVerifyWithBackupCodeFailed, setHasVerifyWithPasskeyFailed])
+
   const handleVerifyWithBackupCodeSubmit = (values: FormValues) => {
+    setHasVerifyWithBackupCodeFailed(false)
+    setHasVerifyWithPasskeyFailed(false)
     verifyWithBackupCode?.(values.backupCode)
+  }
+
+  const handleVerifyWithPasskeyClick = () => {
+    setHasVerifyWithBackupCodeFailed(false)
+    setHasVerifyWithPasskeyFailed(false)
+    verifyWithPasskey()
+  }
+
+  const handleBackupCodeChange = () => {
+    setHasVerifyWithPasskeyFailed(false)
   }
 
   const validate = (values: FormValues) => {
@@ -134,12 +180,19 @@ const _ProtectedActionPage: FC<Props> = ({
               <Text className={classes.description} variant="baseL">
                 Please verify your credentials to proceed with this action.
               </Text>
-              <Button
-                leadingIcon={<FontAwesomeIcon icon={faKey} className={classes.addPasskeyIcon} />}
-                variant="primary-basic"
-                label="Verify with Passkey"
-                onClick={onVerifyWithPasskeyClick}
-              />
+              <div className={classes.buttonContainer}>
+                <Button
+                  leadingIcon={<FontAwesomeIcon icon={faKey} className={classes.addPasskeyIcon} />}
+                  variant="primary-basic"
+                  label="Verify with Passkey"
+                  onClick={handleVerifyWithPasskeyClick}
+                />
+                {hasVerifyWithPasskeyFailed && (
+                  <Text className={classes.errorText} variant="baseS">
+                    Passkey verification failure, please try again
+                  </Text>
+                )}
+              </div>
             </>
           ) : (
             <Text className={classes.description} variant="baseL">
@@ -156,17 +209,21 @@ const _ProtectedActionPage: FC<Props> = ({
             render={({ handleSubmit }) => {
               return (
                 <div className={classes.formWrapper}>
-                  <form onSubmit={handleSubmit} className={classes.formWrapper}>
+                  <form onSubmit={handleSubmit} className={classes.formWrapper} onChange={handleBackupCodeChange}>
                     <Field name="backupCode" type="text">
                       {({ input, meta }) => {
                         const validationErrorText = meta.error && meta.touched ? meta.error : null
+                        const addPasskeyFailedErrorText = hasVerifyWithBackupCodeFailed
+                          ? verifyBackupCodeFailedText
+                          : null
+                        const errorText = validationErrorText ?? addPasskeyFailedErrorText
                         return (
                           <TextField
                             {...input}
                             label="Backup Code"
                             inputClassName={classes.textField}
                             placeholder="Backup Code"
-                            errorText={validationErrorText}
+                            errorText={errorText}
                           />
                         )
                       }}
