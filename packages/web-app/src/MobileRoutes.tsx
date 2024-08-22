@@ -10,7 +10,7 @@ import { MobileEarningSummaryContainer } from './modules/earn-views-mobile'
 import { PasskeyDeletePageContainer } from './modules/passkey-delete'
 import { PasskeySetupPageContainer, isPasskeyFeatureEnabled } from './modules/passkey-setup'
 import { PasskeySuccessPageContainer } from './modules/passkey-success'
-import { BackupCodesPageContainer } from './modules/backup-codes'
+import { BackupCodesPageContainer } from './modules/backup-codes/BackupCodesPageContainer'
 import { RewardDetailsContainer } from './modules/reward-views'
 
 class _Routes extends Component<RouteComponentProps> {
