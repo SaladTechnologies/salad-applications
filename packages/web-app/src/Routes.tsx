@@ -2,6 +2,7 @@ import type { Location } from 'history'
 import type { RouteComponentProps } from 'react-router'
 import { Redirect, Route, Switch, withRouter } from 'react-router'
 import { NoPageFound } from './components'
+import { BackupCodesPageContainer } from './modules/backup-codes'
 import { ReplaceBonusModalContainer } from './modules/bonus-views'
 import { EarnInfoPage, EarningSummaryContainer } from './modules/earn-views'
 import { ExitSurveyContainer } from './modules/exit-survey-views'
@@ -9,7 +10,6 @@ import { PasskeyDeletePageContainer } from './modules/passkey-delete'
 import { PasskeySetupPageContainer, isPasskeyFeatureEnabled } from './modules/passkey-setup'
 import { PasskeySuccessPageContainer } from './modules/passkey-success'
 import { ProtectedActionPageContainer } from './modules/protected-action'
-import { RecoveryCodesPageContainer } from './modules/recovery-codes'
 import { RewardDetailsContainer, SelectTargetRewardContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
 import { SettingsContainer } from './modules/settings-views'
@@ -46,7 +46,7 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
       {isPasskeyFeatureEnabled && (
         <Route path="/account/passkey/delete/:id" exact component={PasskeyDeletePageContainer} />
       )}
-      {isPasskeyFeatureEnabled && <Route path="/account/backup-codes" exact component={RecoveryCodesPageContainer} />}
+      {isPasskeyFeatureEnabled && <Route path="/account/backup-codes" exact component={BackupCodesPageContainer} />}
       <Route path="/account" component={SettingsContainer} />
 
       {/* Protected Action */}

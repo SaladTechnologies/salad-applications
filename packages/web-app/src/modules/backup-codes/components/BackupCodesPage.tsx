@@ -64,7 +64,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
       display: 'none',
     },
   },
-  recoveryCodesWrapper: {
+  backupCodesWrapper: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
@@ -72,27 +72,22 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     maxWidth: '300px',
     flexWrap: 'wrap',
   },
-  generateRecoveryCodesButtonWrapper: {
+  generateBackupCodesButtonWrapper: {
     marginTop: '24px',
     marginBottom: '24px',
   },
-  recoveryCodeText: {
+  backupCodeText: {
     marginRight: '40px',
   },
 })
 
 interface Props extends WithStyles<typeof styles> {
-  recoveryCodes: string[]
+  backupCodes: string[]
   onBackToProfileClick: () => void
-  onGenerateNewRecoveryCodesClick: () => void
+  onGenerateNewBackupCodesClick: () => void
 }
 
-const _RecoveryCodesPage: FC<Props> = ({
-  classes,
-  recoveryCodes,
-  onBackToProfileClick,
-  onGenerateNewRecoveryCodesClick,
-}) => (
+const _BackupCodesPage: FC<Props> = ({ classes, backupCodes, onBackToProfileClick, onGenerateNewBackupCodesClick }) => (
   <Scrollbars>
     <div className={classes.pageWrapper}>
       <div className={classes.pageContent}>
@@ -109,19 +104,19 @@ const _RecoveryCodesPage: FC<Props> = ({
         <Text className={classes.description} variant="baseL">
           Codes Generated on: {moment().format('MMMM DD, YYYY')}
         </Text>
-        <div className={classes.recoveryCodesWrapper}>
-          {recoveryCodes.map((recoveryCode) => (
-            <Text className={classes.recoveryCodeText} variant="baseM">
-              {recoveryCode}
+        <div className={classes.backupCodesWrapper}>
+          {backupCodes.map((backupCode) => (
+            <Text className={classes.backupCodeText} variant="baseM">
+              {backupCode}
             </Text>
           ))}
         </div>
-        <div className={classes.generateRecoveryCodesButtonWrapper}>
+        <div className={classes.generateBackupCodesButtonWrapper}>
           <Button
             variant="primary-basic"
             size="small"
-            label="Generate New Recovery Codes"
-            onClick={onGenerateNewRecoveryCodesClick}
+            label="Generate New Backup Codes"
+            onClick={onGenerateNewBackupCodesClick}
           />
         </div>
         <Text className={classes.description} variant="baseL">
@@ -135,4 +130,4 @@ const _RecoveryCodesPage: FC<Props> = ({
   </Scrollbars>
 )
 
-export const RecoveryCodesPage = withLogin(withStyles(styles)(_RecoveryCodesPage))
+export const BackupCodesPage = withLogin(withStyles(styles)(_BackupCodesPage))

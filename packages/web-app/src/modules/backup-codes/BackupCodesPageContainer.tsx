@@ -1,8 +1,8 @@
 import { connect } from '../../connect'
 import type { RootStore } from '../../Store'
-import { RecoveryCodesPage } from './components'
+import { BackupCodesPage } from './components'
 
-const mockedGeneratedRecoveryCodes = [
+const mockedGeneratedBackupCodes = [
   '21JKH-LJLK1',
   '21JKH-LJLK1',
   '21JKH-LJLK1',
@@ -22,9 +22,9 @@ const mockedGeneratedRecoveryCodes = [
 ]
 
 const mapStoreToProps = (store: RootStore): any => ({
-  recoveryCodes: mockedGeneratedRecoveryCodes,
+  backupCodes: mockedGeneratedBackupCodes,
   onBackToProfileClick: () => store.routing.push(`/account/summary`),
-  onGenerateNewRecoveryCodesClick: () => {},
+  onGenerateNewBackupCodesClick: () => {},
 })
 
-export const RecoveryCodesPageContainer = connect(mapStoreToProps, RecoveryCodesPage)
+export const BackupCodesPageContainer = connect(mapStoreToProps, BackupCodesPage)

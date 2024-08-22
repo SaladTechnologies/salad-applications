@@ -10,7 +10,7 @@ import { MobileEarningSummaryContainer } from './modules/earn-views-mobile'
 import { PasskeyDeletePageContainer } from './modules/passkey-delete'
 import { PasskeySetupPageContainer, isPasskeyFeatureEnabled } from './modules/passkey-setup'
 import { PasskeySuccessPageContainer } from './modules/passkey-success'
-import { RecoveryCodesPageContainer } from './modules/recovery-codes'
+import { BackupCodesPageContainer } from './modules/backup-codes'
 import { RewardDetailsContainer } from './modules/reward-views'
 
 class _Routes extends Component<RouteComponentProps> {
@@ -38,7 +38,7 @@ class _Routes extends Component<RouteComponentProps> {
             <Route exact path="/account/passkey/delete/:id" component={PasskeyDeletePageContainer} />
           )}
           {isPasskeyFeatureEnabled && (
-            <Route path="/account/backup-codes" exact component={RecoveryCodesPageContainer} />
+            <Route path="/account/backup-codes" exact component={BackupCodesPageContainer} />
           )}
           <Route component={MobilePageNotFound} />
         </Switch>
