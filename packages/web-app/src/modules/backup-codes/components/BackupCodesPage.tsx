@@ -1,7 +1,7 @@
 import { Button, Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
 import moment from 'moment'
-import { type FC } from 'react'
+import { useEffect, type FC } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
@@ -88,13 +88,24 @@ interface Props extends WithStyles<typeof styles> {
   backupCodes: string[]
   onBackToProfileClick: () => void
   onGenerateNewBackupCodesClick: () => void
+  getBackupCodes: () => void
 }
 
-const _BackupCodesPage: FC<Props> = ({ classes, backupCodes, onBackToProfileClick, onGenerateNewBackupCodesClick }) => (
-  <div className={classes.pageWrapper}>
+const _BackupCodesPage: FC<Props> = ({
+  classes,
+  backupCodes,
+  onBackToProfileClick,
+  onGenerateNewBackupCodesClick,
+  getBackupCodes,
+}) => {
+  useEffect(() => {
+    getBackupCodes()
+  }, [getBackupCodes])
+
+  return (
     <Scrollbars>
-      <div className={classes.pageContent}>
-        <div className={classes.leftSideWrapper}>
+      <div className={classes.pageWrapper}>
+        <div className={classes.pageContent}>
           <Text className={classes.header} as="h1" variant="headline">
             Two-factor Backup Codes
           </Text>
@@ -109,7 +120,7 @@ const _BackupCodesPage: FC<Props> = ({ classes, backupCodes, onBackToProfileClic
             Codes Generated on: {moment().format('MMMM DD, YYYY')}
           </Text>
           <div className={classes.backupCodesWrapper}>
-            {backupCodes.map((backupCode) => (
+            {backupCodes?.map((backupCode) => (
               <Text className={classes.backupCodeText} variant="baseM">
                 {backupCode}
               </Text>
@@ -132,7 +143,7 @@ const _BackupCodesPage: FC<Props> = ({ classes, backupCodes, onBackToProfileClic
         <div className={classes.image} />
       </div>
     </Scrollbars>
-  </div>
-)
+  )
+}
 
 export const BackupCodesPage = withLogin(withStyles(styles)(_BackupCodesPage))
