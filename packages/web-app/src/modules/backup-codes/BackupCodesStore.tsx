@@ -4,14 +4,14 @@ import type { RootStore } from '../../Store'
 
 export const isPasskeyFeatureEnabled = true
 
-export interface BackupCode {
+export interface BackupCodes {
   codes: string[]
   createdAt: string
 }
 
 export class BackupCodesStore {
   @observable
-  public backupCodes?: BackupCode
+  public backupCodes?: BackupCodes
 
   @observable
   public hasVerifyWithBackupCodeFailed: boolean = false
