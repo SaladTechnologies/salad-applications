@@ -1,7 +1,7 @@
 import type { AxiosInstance } from 'axios'
 import { action, flow, observable } from 'mobx'
 import type { RootStore } from '../../Store'
-import { coerceToBase64Url, getIsPasskeySupported, registerPasskeyCredential } from './utils'
+import { coerceToBase64Url, getIsPasskeySupported, getPasskeyCredential, registerPasskeyCredential } from './utils'
 
 export const isPasskeyFeatureEnabled = true
 
@@ -20,6 +20,9 @@ export class PasskeyStore {
 
   @observable
   public hasRegisterPasskeyFailed: boolean = false
+
+  @observable
+  public hasVerifyWithPasskeyFailed: boolean = false
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     this.setIsPasskeySupported()
@@ -107,5 +110,45 @@ export class PasskeyStore {
   @action.bound
   setHasRegisterPasskeyFailed = (updatedHasRegisterPasskeyFailed: boolean) => {
     this.hasRegisterPasskeyFailed = updatedHasRegisterPasskeyFailed
+  }
+
+  @action.bound
+  verifyWithPasskey = flow(function* (this: PasskeyStore) {
+    try {
+      const { data: assertionsOptionsData } = yield this.axios.post(`/api/v2/passkeys/assertions/options`)
+      const credential = yield getPasskeyCredential(assertionsOptionsData)
+      if (!credential) {
+        throw new Error('Failed to to get passkey assertions')
+      }
+
+      const transformedCredentials = {
+        assertion: {
+          id: credential.id,
+          type: credential.type,
+          authenticatorAttachment: credential.authenticatorAttachment,
+          rawId: coerceToBase64Url(credential.rawId),
+          response: {
+            authenticatorData: coerceToBase64Url(credential.response.authenticatorData),
+            clientDataJSON: coerceToBase64Url(credential.response.clientDataJSON),
+            signature: coerceToBase64Url(credential.response.signature),
+            userHandle: coerceToBase64Url(credential.response.userHandle as ArrayBuffer),
+          },
+        },
+      }
+
+      const credentialsResponse = yield this.axios.post(`/api/v2/passkeys/assertions`, transformedCredentials)
+
+      if (credentialsResponse.status === 200 || credentialsResponse.status === 204) {
+        this.store.routing.goBack()
+      }
+    } catch (error) {
+      this.hasVerifyWithPasskeyFailed = true
+      console.error('PasskeyStore -> verifyWithPasskey: ', error)
+    }
+  })
+
+  @action.bound
+  setHasVerifyWithPasskeyFailed = (updatedHasVerifyWithPasskeyFailedFailed: boolean) => {
+    this.hasVerifyWithPasskeyFailed = updatedHasVerifyWithPasskeyFailedFailed
   }
 }

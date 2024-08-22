@@ -23,7 +23,7 @@ export const getIsPasskeySupported = async (): Promise<boolean> => {
   return false
 }
 
-export const coerceToBase64Url = (input: ArrayBuffer | Array<any>) => {
+export const coerceToBase64Url = (input: ArrayBuffer | Uint8Array | Array<any>) => {
   let base65Url
 
   // Array or ArrayBuffer to Uint8Array
@@ -35,13 +35,17 @@ export const coerceToBase64Url = (input: ArrayBuffer | Array<any>) => {
     base65Url = new Uint8Array(input)
   }
 
-  // Uint8Array to base64
   if (input instanceof Uint8Array) {
-    let str = ''
-    let len = input.byteLength
+    base65Url = input
+  }
 
-    for (let i = 0; i < len; i++) {
-      str += String.fromCharCode(input[i] as number)
+  // Uint8Array to base64
+  if (base65Url instanceof Uint8Array) {
+    let str = ''
+    const byteLength = base65Url.byteLength
+
+    for (let i = 0; i < byteLength; i++) {
+      str += String.fromCharCode(base65Url[i] as number)
     }
     base65Url = window.btoa(str)
   }
