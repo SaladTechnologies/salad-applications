@@ -6,6 +6,7 @@ import { UIStore } from './UIStore'
 import { AchievementsStore } from './modules/achievements'
 import { AnalyticsStore } from './modules/analytics'
 import { AuthStore } from './modules/auth'
+import { BackupCodesStore } from './modules/backup-codes'
 import { BalanceStore } from './modules/balance'
 import { BonusStore } from './modules/bonus'
 import { RefreshService } from './modules/data-refresh'
@@ -71,6 +72,7 @@ export class RootStore {
   public readonly saladCard: SaladCardStore
   public readonly errorBoundary: ErrorBoundaryStore
   public readonly passkey: PasskeyStore
+  public readonly backupCodes: BackupCodesStore
 
   constructor(axios: AxiosInstance, private readonly featureManager: FeatureManager) {
     this.routing = new RouterStore()
@@ -95,6 +97,7 @@ export class RootStore {
     this.storefront = new StorefrontStore(axios)
     this.bonuses = new BonusStore(this, axios)
     this.passkey = new PasskeyStore(this, axios)
+    this.backupCodes = new BackupCodesStore(this, axios)
     this.startButtonUI = new StartButtonUIStore(this)
     this.errorBoundary = new ErrorBoundaryStore()
 

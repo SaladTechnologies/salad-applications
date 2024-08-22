@@ -24,9 +24,6 @@ export class PasskeyStore {
   @observable
   public hasVerifyWithPasskeyFailed: boolean = false
 
-  @observable
-  public hasVerifyWithBackupCodeFailed: boolean = false
-
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     this.setIsPasskeySupported()
   }
@@ -153,25 +150,5 @@ export class PasskeyStore {
   @action.bound
   setHasVerifyWithPasskeyFailed = (updatedHasVerifyWithPasskeyFailedFailed: boolean) => {
     this.hasVerifyWithPasskeyFailed = updatedHasVerifyWithPasskeyFailedFailed
-  }
-
-  @action.bound
-  verifyWithBackupCode = flow(function* (this: PasskeyStore, backupCode: string) {
-    try {
-      const backupCodeVerifyResponse = yield this.axios.post(`/api/v2/backup-codes/verify`, {
-        backupCode,
-      })
-      if (backupCodeVerifyResponse.status === 200 || backupCodeVerifyResponse.status === 204) {
-        this.store.routing.goBack()
-      }
-    } catch (error) {
-      this.hasVerifyWithBackupCodeFailed = true
-      console.error('PasskeyStore -> verifyWithPasskey: ', error)
-    }
-  })
-
-  @action.bound
-  setHasVerifyWithBackupCodeFailed = (updatedHasVerifyWithBackupCodeFailed: boolean) => {
-    this.hasVerifyWithBackupCodeFailed = updatedHasVerifyWithBackupCodeFailed
   }
 }
