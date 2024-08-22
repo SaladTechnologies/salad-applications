@@ -5,6 +5,7 @@ import { useEffect, type FC } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
+import { useLocation } from 'react-router'
 import type { SaladTheme } from '../../../SaladTheme'
 import Referrals from '../../../assets/Referrals.svg'
 import { withLogin } from '../../auth-views'
@@ -106,6 +107,9 @@ const _BackupCodesPage: FC<Props> = ({
   onGenerateNewBackupCodesClick,
   getBackupCodes,
 }) => {
+  const location = useLocation<{ isFirstPasskeyAdded: string }>()
+  const isFirstPasskeyAdded = location.state?.isFirstPasskeyAdded
+
   useEffect(() => {
     getBackupCodes()
   }, [getBackupCodes])
@@ -117,10 +121,17 @@ const _BackupCodesPage: FC<Props> = ({
           <Text className={classes.header} as="h1" variant="headline">
             Two-factor Backup Codes
           </Text>
-          <Text className={classes.description} variant="baseL">
-            Backup codes are single-use codes that will allow you to take actions that would require your passkey when
-            you don’t have access to your passkey
-          </Text>
+          {isFirstPasskeyAdded ? (
+            <Text className={classes.description} variant="baseL">
+              Success! Your passkey has been added. In case you don’t have access to your passkeys you can use Backup
+              codes, single-use codes that will allow you to take actions that would otherwise require your passkey.
+            </Text>
+          ) : (
+            <Text className={classes.description} variant="baseL">
+              Backup codes are single-use codes that will allow you to take actions that would require your passkey when
+              you don’t have access to your passkey
+            </Text>
+          )}
           <Text className={classes.description} variant="baseL">
             Keep them saved or stored somewhere secure.
           </Text>
