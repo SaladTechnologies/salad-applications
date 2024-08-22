@@ -42,9 +42,9 @@ export const coerceToBase64Url = (input: ArrayBuffer | Uint8Array | Array<any>) 
   // Uint8Array to base64
   if (base65Url instanceof Uint8Array) {
     let str = ''
-    const len = base65Url.byteLength
+    const byteLength = base65Url.byteLength
 
-    for (let i = 0; i < len; i++) {
+    for (let i = 0; i < byteLength; i++) {
       str += String.fromCharCode(base65Url[i] as number)
     }
     base65Url = window.btoa(str)
