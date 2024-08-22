@@ -1,4 +1,4 @@
-import { Button, Text } from '@saladtechnologies/garden-components'
+import { Button, LoadingSpinner, Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
 import moment from 'moment'
 import { useEffect, type FC } from 'react'
@@ -8,6 +8,7 @@ import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
 import Referrals from '../../../assets/Referrals.svg'
 import { withLogin } from '../../auth-views'
+import type { BackupCodes } from '../BackupCodesStore'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   pageWrapper: {
@@ -69,23 +70,30 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
   backupCodesWrapper: {
     display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    maxWidth: '300px',
+    height: '175px',
+  },
+  backupCodesContent: {
+    display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     flexDirection: 'row',
-    maxWidth: '300px',
     flexWrap: 'wrap',
+    width: '100%',
   },
   generateBackupCodesButtonWrapper: {
     marginTop: '24px',
     marginBottom: '24px',
   },
   backupCodeText: {
-    marginRight: '40px',
+    marginRight: '0px',
   },
 })
 
 interface Props extends WithStyles<typeof styles> {
-  backupCodes: string[]
+  backupCodes: BackupCodes
   onBackToProfileClick: () => void
   onGenerateNewBackupCodesClick: () => void
   getBackupCodes: () => void
@@ -117,14 +125,22 @@ const _BackupCodesPage: FC<Props> = ({
             Keep them saved or stored somewhere secure.
           </Text>
           <Text className={classes.description} variant="baseL">
-            Codes Generated on: {moment().format('MMMM DD, YYYY')}
+            Codes Generated on: {moment(backupCodes?.createdAt).format('MMMM DD, YYYY')}
           </Text>
           <div className={classes.backupCodesWrapper}>
-            {backupCodes?.map((backupCode) => (
-              <Text className={classes.backupCodeText} variant="baseM">
-                {backupCode}
-              </Text>
-            ))}
+            {backupCodes?.codes ? (
+              <div className={classes.backupCodesContent}>
+                {backupCodes?.codes?.map((backupCode) => (
+                  <Text className={classes.backupCodeText} variant="baseM">
+                    {backupCode}
+                  </Text>
+                ))}
+              </div>
+            ) : (
+              <div className={classes.loaderWrapper}>
+                <LoadingSpinner variant="light" size={80} />
+              </div>
+            )}
           </div>
           <div className={classes.generateBackupCodesButtonWrapper}>
             <Button

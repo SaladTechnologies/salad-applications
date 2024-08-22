@@ -42,8 +42,8 @@ export class BackupCodesStore {
   generateBackupCodes = flow(function* (this: BackupCodesStore) {
     try {
       this.backupCodes = undefined
-      const newBackupCodes = yield this.axios.post(`/api/v2/backup-codes`)
-      this.backupCodes = newBackupCodes
+      const generateBackupCodesResponse = yield this.axios.post(`/api/v2/backup-codes`)
+      this.backupCodes = generateBackupCodesResponse.data
     } catch (error) {
       console.error('BackupCodesStore -> generateBackupCodes: ', error)
     }
@@ -52,7 +52,8 @@ export class BackupCodesStore {
   @action.bound
   getBackupCodes = flow(function* (this: BackupCodesStore) {
     try {
-      this.backupCodes = yield this.axios.get(`/api/v2/backup-codes`)
+      const backupCodesResponse = yield this.axios.get(`/api/v2/backup-codes`)
+      this.backupCodes = backupCodesResponse.data
     } catch (error) {
       console.error('BackupCodesStore -> getBackupCodes: ', error)
     }
