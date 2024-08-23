@@ -10,22 +10,27 @@ export interface BackupCodes {
 }
 
 export class BackupCodesStore {
+  // @ts-ignore
+  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
+
   @observable
   public backupCodes?: BackupCodes
 
   @observable
   public hasVerifyWithBackupCodeFailed: boolean = false
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
-
   @action.bound
-  verifyWithBackupCode = flow(function* (this: BackupCodesStore, backupCode: string) {
+  verifyWithBackupCode = flow(function* (
+    this: BackupCodesStore,
+    backupCode: string,
+    triggerPendingProtectedAction: () => void,
+  ) {
     try {
       const backupCodeVerifyResponse = yield this.axios.post(`/api/v2/backup-codes/verify`, {
         backupCode,
       })
       if (backupCodeVerifyResponse.status === 200 || backupCodeVerifyResponse.status === 204) {
-        this.store.routing.goBack()
+        triggerPendingProtectedAction()
       }
     } catch (error) {
       this.hasVerifyWithBackupCodeFailed = true

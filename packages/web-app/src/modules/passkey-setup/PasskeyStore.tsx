@@ -112,7 +112,7 @@ export class PasskeyStore {
   }
 
   @action.bound
-  verifyWithPasskey = flow(function* (this: PasskeyStore) {
+  verifyWithPasskey = flow(function* (this: PasskeyStore, triggerPendingProtectedAction: () => void) {
     try {
       const { data: assertionsOptionsData } = yield this.axios.post(`/api/v2/passkeys/assertions/options`)
       const credential = yield getPasskeyCredential(assertionsOptionsData)
@@ -138,7 +138,7 @@ export class PasskeyStore {
       const credentialsResponse = yield this.axios.post(`/api/v2/passkeys/assertions`, transformedCredentials)
 
       if (credentialsResponse.status === 200 || credentialsResponse.status === 204) {
-        this.store.routing.goBack()
+        triggerPendingProtectedAction()
       }
     } catch (error) {
       this.hasVerifyWithPasskeyFailed = true

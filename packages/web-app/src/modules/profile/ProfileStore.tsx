@@ -23,6 +23,11 @@ const SaladDefaultAvatar: Avatar = {
 const installReminderFeatureReleaseDate = new Date('2023-12-21T17:10:47.324Z')
 const IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY = 'IS_INSTALL_REMINDER_CLOSED'
 
+interface ProtectedActionRequestTrigger {
+  requestTriggerUrl: string
+  requestTriggerBody?: string
+}
+
 export class ProfileStore {
   @observable
   public currentSelectedAvatar?: string
@@ -79,6 +84,9 @@ export class ProfileStore {
 
   @observable
   public isInstallReminderClosed: boolean = Storage.getItem(IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY) === 'true'
+
+  @observable
+  public protectedActionRequestTrigger?: ProtectedActionRequestTrigger
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
@@ -343,4 +351,9 @@ export class ProfileStore {
       this.isPayPalIdDisconnectLoading = false
     }
   })
+
+  @action.bound
+  setProtectedActionRequestTrigger = (updatedProtectedActionRequestTrigger?: ProtectedActionRequestTrigger) => {
+    this.protectedActionRequestTrigger = updatedProtectedActionRequestTrigger
+  }
 }
