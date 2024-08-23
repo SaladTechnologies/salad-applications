@@ -7,8 +7,9 @@ import { useEffect, type FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { useMediaQuery } from 'react-responsive'
-import { mobileSize } from '../../../../components'
-import type { Passkey } from '../../../passkey-setup'
+import { ErrorText, mobileSize } from '../../../../components'
+import { SuccessText } from '../../../../components/primitives/content/SuccessText'
+import type { Passkey, RegisterPasskeyStatus } from '../../../passkey-setup'
 
 const styles: () => Record<string, CSS.Properties> = () => ({
   accountSecurityWrapper: {
@@ -21,6 +22,7 @@ const styles: () => Record<string, CSS.Properties> = () => ({
   },
   passkeysDescription: {
     paddingTop: '16px',
+    paddingBottom: '16px',
   },
   sectionWrapper: {
     paddingTop: '32px',
@@ -31,6 +33,7 @@ const styles: () => Record<string, CSS.Properties> = () => ({
     top: '-3px',
   },
   sectionHeader: {
+    position: 'relative',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -66,6 +69,14 @@ const styles: () => Record<string, CSS.Properties> = () => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
+  messageWrapper: {
+    position: 'absolute',
+    top: '-42px',
+    right: '0px',
+  },
+  passkeyButtonWrap: {
+    position: 'relative',
+  },
 })
 
 const passkeysAmountLimit = 30
@@ -73,6 +84,7 @@ const passkeysAmountLimit = 30
 interface Props extends WithStyles<typeof styles> {
   passkeys: Passkey[]
   withBackupCodes: boolean
+  registerPasskeyStatus: RegisterPasskeyStatus
   onAddPasskeyClick: () => void
   onDeletePasskeyClick: (passkeyId: string) => void
   onViewBackupCodesClick: () => void
@@ -83,6 +95,7 @@ const _AccountSecurity: FC<Props> = ({
   classes,
   passkeys,
   withBackupCodes,
+  registerPasskeyStatus,
   onAddPasskeyClick,
   onDeletePasskeyClick,
   onViewBackupCodesClick,
@@ -91,6 +104,9 @@ const _AccountSecurity: FC<Props> = ({
   const passkeysAmount = passkeys.length
   const isAddPasskeyAvailable = passkeysAmount < passkeysAmountLimit
   const isTabletOrMobile = useMediaQuery({ query: `(max-width: ${mobileSize}px)` })
+
+  const withPasskeyAddSuccess = registerPasskeyStatus === 'success'
+  const withPasskeyAddFailure = registerPasskeyStatus === 'failure'
 
   useEffect(() => {
     fetchPasskeys()
@@ -109,21 +125,27 @@ const _AccountSecurity: FC<Props> = ({
         </div>
         <div className={classes.sectionWrapper}>
           <div className={classes.sectionHeader}>
+            <div className={classes.messageWrapper}>
+              {withPasskeyAddSuccess && <SuccessText>Success! Passkey Added</SuccessText>}
+              {withPasskeyAddFailure && <ErrorText>There was an error setting up your passkey. Try again.</ErrorText>}
+            </div>
             <div className={classes.sectionTitle}>
               <Text variant="baseM">Your Passkeys</Text>
               <Text variant="baseXS">
                 ({passkeysAmount}/{passkeysAmountLimit})
               </Text>
             </div>
-            {isAddPasskeyAvailable && (
-              <Button
-                onClick={onAddPasskeyClick}
-                variant={isTabletOrMobile ? 'secondary' : 'primary'}
-                size="small"
-                label="Add a Passkey"
-                leadingIcon={<FontAwesomeIcon icon={faKey} className={classes.buttonIcon} />}
-              />
-            )}
+            <div className={classes.passkeyButtonWrap}>
+              {isAddPasskeyAvailable && (
+                <Button
+                  onClick={onAddPasskeyClick}
+                  variant={isTabletOrMobile ? 'secondary' : 'primary'}
+                  size="small"
+                  label="Add a Passkey"
+                  leadingIcon={<FontAwesomeIcon icon={faKey} className={classes.buttonIcon} />}
+                />
+              )}
+            </div>
           </div>
           <div className={classes.passkeysList}></div>
           {passkeys.map((passkey) => {

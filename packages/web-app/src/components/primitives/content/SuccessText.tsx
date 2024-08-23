@@ -7,12 +7,12 @@ import type { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   errorText: {
-    color: 'rgb(255, 255, 255)',
+    color: theme.darkBlue,
     fontFamily: theme.fontMallory,
     fontSize: theme.medium,
     padding: '8px 12px',
-    background: 'rgb(239, 80, 42)',
-    boxShadow: 'rgb(239, 80, 42) 0px 0px 30px',
+    background: theme.green,
+    boxShadow: `${theme.green} 0px 0px 30px`,
   },
 })
 
@@ -20,7 +20,7 @@ interface Props extends WithStyles<typeof styles> {
   children?: ReactNode
 }
 
-class _ErrorText extends Component<Props> {
+class _SuccessText extends Component<Props> {
   public override render(): ReactNode {
     const { children, classes } = this.props
 
@@ -28,4 +28,4 @@ class _ErrorText extends Component<Props> {
   }
 }
 
-export const ErrorText = withStyles(styles)(_ErrorText)
+export const SuccessText = withStyles(styles)(_SuccessText)
