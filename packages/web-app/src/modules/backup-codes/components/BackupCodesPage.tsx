@@ -18,13 +18,17 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     left: 0,
     right: 0,
     zIndex: 2000,
+  },
+  pageContent: {
+    position: 'relative',
+    height: '100%',
     display: 'flex',
     justifyContent: 'space-around',
     flexDirection: 'row',
-    overflow: 'scroll',
-    width: '100%',
   },
-  pageContent: {
+  leftSideWrapper: {
+    position: 'relative',
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'left',
@@ -88,46 +92,48 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const _BackupCodesPage: FC<Props> = ({ classes, backupCodes, onBackToProfileClick, onGenerateNewBackupCodesClick }) => (
-  <Scrollbars>
-    <div className={classes.pageWrapper}>
+  <div className={classes.pageWrapper}>
+    <Scrollbars>
       <div className={classes.pageContent}>
-        <Text className={classes.header} as="h1" variant="headline">
-          Two-factor Backup Codes
-        </Text>
-        <Text className={classes.description} variant="baseL">
-          Backup codes are single-use codes that will allow you to take actions that would require your passkey when you
-          don’t have access to your passkey
-        </Text>
-        <Text className={classes.description} variant="baseL">
-          Keep them saved or stored somewhere secure.
-        </Text>
-        <Text className={classes.description} variant="baseL">
-          Codes Generated on: {moment().format('MMMM DD, YYYY')}
-        </Text>
-        <div className={classes.backupCodesWrapper}>
-          {backupCodes.map((backupCode) => (
-            <Text className={classes.backupCodeText} variant="baseM">
-              {backupCode}
-            </Text>
-          ))}
+        <div className={classes.leftSideWrapper}>
+          <Text className={classes.header} as="h1" variant="headline">
+            Two-factor Backup Codes
+          </Text>
+          <Text className={classes.description} variant="baseL">
+            Backup codes are single-use codes that will allow you to take actions that would require your passkey when
+            you don’t have access to your passkey
+          </Text>
+          <Text className={classes.description} variant="baseL">
+            Keep them saved or stored somewhere secure.
+          </Text>
+          <Text className={classes.description} variant="baseL">
+            Codes Generated on: {moment().format('MMMM DD, YYYY')}
+          </Text>
+          <div className={classes.backupCodesWrapper}>
+            {backupCodes.map((backupCode) => (
+              <Text className={classes.backupCodeText} variant="baseM">
+                {backupCode}
+              </Text>
+            ))}
+          </div>
+          <div className={classes.generateBackupCodesButtonWrapper}>
+            <Button
+              variant="primary-basic"
+              size="small"
+              label="Generate New Backup Codes"
+              onClick={onGenerateNewBackupCodesClick}
+            />
+          </div>
+          <Text className={classes.description} variant="baseL">
+            When you generate new codes your previous codes will not work anymore. Be sure to save or store the new
+            codes in a secure location.
+          </Text>
+          <Button variant="primary-basic" label="Back to Profile" onClick={onBackToProfileClick} width={150} />
         </div>
-        <div className={classes.generateBackupCodesButtonWrapper}>
-          <Button
-            variant="primary-basic"
-            size="small"
-            label="Generate New Backup Codes"
-            onClick={onGenerateNewBackupCodesClick}
-          />
-        </div>
-        <Text className={classes.description} variant="baseL">
-          When you generate new codes your previous codes will not work anymore. Be sure to save or store the new codes
-          in a secure location.
-        </Text>
-        <Button variant="primary-basic" label="Back to Profile" onClick={onBackToProfileClick} width={150} />
+        <div className={classes.image} />
       </div>
-      <div className={classes.image} />
-    </div>
-  </Scrollbars>
+    </Scrollbars>
+  </div>
 )
 
 export const BackupCodesPage = withLogin(withStyles(styles)(_BackupCodesPage))
