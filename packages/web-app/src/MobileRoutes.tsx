@@ -15,7 +15,6 @@ import { RewardDetailsContainer } from './modules/reward-views'
 
 class _Routes extends Component<RouteComponentProps> {
   store = getStore()
-
   public override render(): ReactNode {
     const { location } = this.props
 

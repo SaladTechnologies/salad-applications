@@ -8,7 +8,7 @@ const mapStoreToProps = (store: RootStore): any => ({
   onDeletePasskeyClick: (passkeyId: string) => store.routing.push(`/account/passkey/delete/${passkeyId}`),
   onViewBackupCodesClick: () => store.routing.push('/account/backup-codes'),
   passkeys: store.passkey.passkeys,
-  withBackupCodes: true,
+  withBackupCodes: store.passkey.passkeys.length !== 0,
 })
 
 export const AccountSecurityContainer = connect(mapStoreToProps, AccountSecurity)

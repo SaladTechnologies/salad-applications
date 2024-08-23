@@ -69,9 +69,8 @@ export class PasskeyStore {
         const isFirstPasskeyAdded = this.passkeys.length === 0
         if (isFirstPasskeyAdded) {
           this.store.analytics.trackPasskeyAdded(true)
+          this.store.routing.push('/account/backup-codes', { isFirstPasskeyAdded: true })
         }
-
-        this.store.routing.push('/account/passkey/success', { passkeyName })
       }
     } catch (error) {
       this.hasRegisterPasskeyFailed = true

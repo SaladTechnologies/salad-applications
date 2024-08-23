@@ -1,13 +1,15 @@
-import { Button, Text } from '@saladtechnologies/garden-components'
+import { Button, LoadingSpinner, Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
 import moment from 'moment'
-import { type FC } from 'react'
+import { useEffect, type FC } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
+import { useLocation } from 'react-router'
 import type { SaladTheme } from '../../../SaladTheme'
 import Referrals from '../../../assets/Referrals.svg'
 import { withLogin } from '../../auth-views'
+import type { BackupCodes } from '../BackupCodesStore'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   pageWrapper: {
@@ -54,7 +56,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     },
   },
   description: {
-    maxWidth: '400px',
+    maxWidth: '420px',
     marginBottom: '24px',
   },
   image: {
@@ -69,70 +71,108 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
   backupCodesWrapper: {
     display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    maxWidth: '310px',
+    height: '175px',
+  },
+  backupCodesContent: {
+    display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     flexDirection: 'row',
-    maxWidth: '300px',
     flexWrap: 'wrap',
+    width: '100%',
   },
   generateBackupCodesButtonWrapper: {
     marginTop: '24px',
     marginBottom: '24px',
   },
   backupCodeText: {
-    marginRight: '40px',
+    width: '150px',
   },
 })
 
 interface Props extends WithStyles<typeof styles> {
-  backupCodes: string[]
+  backupCodes: BackupCodes
   onBackToProfileClick: () => void
   onGenerateNewBackupCodesClick: () => void
+  getBackupCodes: () => void
 }
 
-const _BackupCodesPage: FC<Props> = ({ classes, backupCodes, onBackToProfileClick, onGenerateNewBackupCodesClick }) => (
-  <div className={classes.pageWrapper}>
-    <Scrollbars>
-      <div className={classes.pageContent}>
-        <div className={classes.leftSideWrapper}>
-          <Text className={classes.header} as="h1" variant="headline">
-            Two-factor Backup Codes
-          </Text>
-          <Text className={classes.description} variant="baseL">
-            Backup codes are single-use codes that will allow you to take actions that would require your passkey when
-            you don’t have access to your passkey
-          </Text>
-          <Text className={classes.description} variant="baseL">
-            Keep them saved or stored somewhere secure.
-          </Text>
-          <Text className={classes.description} variant="baseL">
-            Codes Generated on: {moment().format('MMMM DD, YYYY')}
-          </Text>
-          <div className={classes.backupCodesWrapper}>
-            {backupCodes.map((backupCode) => (
-              <Text className={classes.backupCodeText} variant="baseM">
-                {backupCode}
+const _BackupCodesPage: FC<Props> = ({
+  classes,
+  backupCodes,
+  onBackToProfileClick,
+  onGenerateNewBackupCodesClick,
+  getBackupCodes,
+}) => {
+  const location = useLocation<{ isFirstPasskeyAdded: string }>()
+  const isFirstPasskeyAdded = location.state?.isFirstPasskeyAdded
+
+  useEffect(() => {
+    getBackupCodes()
+  }, [getBackupCodes])
+
+  return (
+    <div className={classes.pageWrapper}>
+      <Scrollbars>
+        <div className={classes.pageContent}>
+          <div className={classes.leftSideWrapper}>
+            <Text className={classes.header} as="h1" variant="headline">
+              Two-factor Backup Codes
+            </Text>
+            {isFirstPasskeyAdded ? (
+              <Text className={classes.description} variant="baseL">
+                Success! Your passkey has been added. In case you don’t have access to your passkeys you can use Backup
+                codes, single-use codes that will allow you to take actions that would otherwise require your passkey.
               </Text>
-            ))}
+            ) : (
+              <Text className={classes.description} variant="baseL">
+                Backup codes are single-use codes that will allow you to take actions that would require your passkey
+                when you don’t have access to your passkey
+              </Text>
+            )}
+            <Text className={classes.description} variant="baseL">
+              Keep them saved or stored somewhere secure.
+            </Text>
+            <Text className={classes.description} variant="baseL">
+              Codes Generated on: {moment(backupCodes?.createdAt).format('MMMM DD, YYYY, h:mm A')}
+            </Text>
+            <div className={classes.backupCodesWrapper}>
+              {backupCodes?.codes ? (
+                <div className={classes.backupCodesContent}>
+                  {backupCodes?.codes?.map((backupCode) => (
+                    <Text className={classes.backupCodeText} variant="baseM">
+                      {backupCode}
+                    </Text>
+                  ))}
+                </div>
+              ) : (
+                <div className={classes.loaderWrapper}>
+                  <LoadingSpinner variant="light" size={80} />
+                </div>
+              )}
+            </div>
+            <div className={classes.generateBackupCodesButtonWrapper}>
+              <Button
+                variant="primary-basic"
+                size="small"
+                label="Generate New Backup Codes"
+                onClick={onGenerateNewBackupCodesClick}
+              />
+            </div>
+            <Text className={classes.description} variant="baseL">
+              When you generate new codes your previous codes will not work anymore. Be sure to save or store the new
+              codes in a secure location.
+            </Text>
+            <Button variant="primary-basic" label="Back to Profile" onClick={onBackToProfileClick} width={150} />
           </div>
-          <div className={classes.generateBackupCodesButtonWrapper}>
-            <Button
-              variant="primary-basic"
-              size="small"
-              label="Generate New Backup Codes"
-              onClick={onGenerateNewBackupCodesClick}
-            />
-          </div>
-          <Text className={classes.description} variant="baseL">
-            When you generate new codes your previous codes will not work anymore. Be sure to save or store the new
-            codes in a secure location.
-          </Text>
-          <Button variant="primary-basic" label="Back to Profile" onClick={onBackToProfileClick} width={150} />
+          <div className={classes.image} />
         </div>
-        <div className={classes.image} />
-      </div>
-    </Scrollbars>
-  </div>
-)
+      </Scrollbars>
+    </div>
+  )
+}
 
 export const BackupCodesPage = withLogin(withStyles(styles)(_BackupCodesPage))
