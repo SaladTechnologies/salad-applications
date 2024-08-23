@@ -56,7 +56,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     },
   },
   description: {
-    maxWidth: '400px',
+    maxWidth: '420px',
     marginBottom: '24px',
   },
   image: {
@@ -73,7 +73,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    maxWidth: '300px',
+    maxWidth: '310px',
     height: '175px',
   },
   backupCodesContent: {
@@ -89,7 +89,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     marginBottom: '24px',
   },
   backupCodeText: {
-    marginRight: '0px',
+    width: '150px',
   },
 })
 
@@ -115,61 +115,63 @@ const _BackupCodesPage: FC<Props> = ({
   }, [getBackupCodes])
 
   return (
-    <Scrollbars>
-      <div className={classes.pageWrapper}>
+    <div className={classes.pageWrapper}>
+      <Scrollbars>
         <div className={classes.pageContent}>
-          <Text className={classes.header} as="h1" variant="headline">
-            Two-factor Backup Codes
-          </Text>
-          {isFirstPasskeyAdded ? (
-            <Text className={classes.description} variant="baseL">
-              Success! Your passkey has been added. In case you don’t have access to your passkeys you can use Backup
-              codes, single-use codes that will allow you to take actions that would otherwise require your passkey.
+          <div className={classes.leftSideWrapper}>
+            <Text className={classes.header} as="h1" variant="headline">
+              Two-factor Backup Codes
             </Text>
-          ) : (
-            <Text className={classes.description} variant="baseL">
-              Backup codes are single-use codes that will allow you to take actions that would require your passkey when
-              you don’t have access to your passkey
-            </Text>
-          )}
-          <Text className={classes.description} variant="baseL">
-            Keep them saved or stored somewhere secure.
-          </Text>
-          <Text className={classes.description} variant="baseL">
-            Codes Generated on: {moment(backupCodes?.createdAt).format('MMMM DD, YYYY')}
-          </Text>
-          <div className={classes.backupCodesWrapper}>
-            {backupCodes?.codes ? (
-              <div className={classes.backupCodesContent}>
-                {backupCodes?.codes?.map((backupCode) => (
-                  <Text className={classes.backupCodeText} variant="baseM">
-                    {backupCode}
-                  </Text>
-                ))}
-              </div>
+            {isFirstPasskeyAdded ? (
+              <Text className={classes.description} variant="baseL">
+                Success! Your passkey has been added. In case you don’t have access to your passkeys you can use Backup
+                codes, single-use codes that will allow you to take actions that would otherwise require your passkey.
+              </Text>
             ) : (
-              <div className={classes.loaderWrapper}>
-                <LoadingSpinner variant="light" size={80} />
-              </div>
+              <Text className={classes.description} variant="baseL">
+                Backup codes are single-use codes that will allow you to take actions that would require your passkey
+                when you don’t have access to your passkey
+              </Text>
             )}
+            <Text className={classes.description} variant="baseL">
+              Keep them saved or stored somewhere secure.
+            </Text>
+            <Text className={classes.description} variant="baseL">
+              Codes Generated on: {moment(backupCodes?.createdAt).format('MMMM DD, YYYY, h:mm A')}
+            </Text>
+            <div className={classes.backupCodesWrapper}>
+              {backupCodes?.codes ? (
+                <div className={classes.backupCodesContent}>
+                  {backupCodes?.codes?.map((backupCode) => (
+                    <Text className={classes.backupCodeText} variant="baseM">
+                      {backupCode}
+                    </Text>
+                  ))}
+                </div>
+              ) : (
+                <div className={classes.loaderWrapper}>
+                  <LoadingSpinner variant="light" size={80} />
+                </div>
+              )}
+            </div>
+            <div className={classes.generateBackupCodesButtonWrapper}>
+              <Button
+                variant="primary-basic"
+                size="small"
+                label="Generate New Backup Codes"
+                onClick={onGenerateNewBackupCodesClick}
+              />
+            </div>
+            <Text className={classes.description} variant="baseL">
+              When you generate new codes your previous codes will not work anymore. Be sure to save or store the new
+              codes in a secure location.
+            </Text>
+            <Button variant="primary-basic" label="Back to Profile" onClick={onBackToProfileClick} width={150} />
           </div>
-          <div className={classes.generateBackupCodesButtonWrapper}>
-            <Button
-              variant="primary-basic"
-              size="small"
-              label="Generate New Backup Codes"
-              onClick={onGenerateNewBackupCodesClick}
-            />
-          </div>
-          <Text className={classes.description} variant="baseL">
-            When you generate new codes your previous codes will not work anymore. Be sure to save or store the new
-            codes in a secure location.
-          </Text>
-          <Button variant="primary-basic" label="Back to Profile" onClick={onBackToProfileClick} width={150} />
+          <div className={classes.image} />
         </div>
-        <div className={classes.image} />
-      </div>
-    </Scrollbars>
+      </Scrollbars>
+    </div>
   )
 }
 
