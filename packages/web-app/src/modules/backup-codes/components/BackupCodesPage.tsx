@@ -28,7 +28,6 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
   leftSideWrapper: {
     position: 'relative',
-    height: '100%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'left',
