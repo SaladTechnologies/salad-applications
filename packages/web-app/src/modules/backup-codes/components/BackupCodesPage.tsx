@@ -75,6 +75,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     alignItems: 'center',
     maxWidth: '310px',
     height: '175px',
+    userSelect: 'text',
   },
   backupCodesContent: {
     display: 'flex',
