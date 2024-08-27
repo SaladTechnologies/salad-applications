@@ -1,6 +1,7 @@
 import { faEye, faKey, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Text } from '@saladtechnologies/garden-components'
+import classNames from 'classnames'
 import type CSS from 'csstype'
 import moment from 'moment'
 import { useEffect, type FC } from 'react'
@@ -24,7 +25,10 @@ const styles: () => Record<string, CSS.Properties> = () => ({
     paddingTop: '16px',
     paddingBottom: '16px',
   },
-  sectionWrapper: {
+  passkeysSectionWrapper: {
+    width: '100%',
+  },
+  backupCodesSectionWrapper: {
     paddingTop: '32px',
     width: '100%',
   },
@@ -70,9 +74,23 @@ const styles: () => Record<string, CSS.Properties> = () => ({
     textOverflow: 'ellipsis',
   },
   messageWrapper: {
-    position: 'absolute',
-    top: '-42px',
-    right: '0px',
+    position: 'relative',
+    width: '100%',
+    opacity: 0,
+    height: '26px',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+    flexDirection: 'column',
+    transition: '1s ease',
+    '@media (max-width: 812px)': {
+      height: '50px',
+    },
+  },
+  messageWrapperVisible: {
+    position: 'relative',
+    width: '100%',
+    opacity: 1,
   },
   passkeyButtonWrap: {
     position: 'relative',
@@ -107,6 +125,7 @@ const _AccountSecurity: FC<Props> = ({
 
   const withPasskeyAddSuccess = registerPasskeyStatus === 'success'
   const withPasskeyAddFailure = registerPasskeyStatus === 'failure'
+  const withPasskeyMassage = withPasskeyAddSuccess || withPasskeyAddFailure
 
   useEffect(() => {
     fetchPasskeys()
@@ -123,12 +142,12 @@ const _AccountSecurity: FC<Props> = ({
             two-factor authentication codes and are quickly becoming the standard way to secure online accounts.
           </Text>
         </div>
-        <div className={classes.sectionWrapper}>
+        <div className={classNames(classes.messageWrapper, withPasskeyMassage && classes.messageWrapperVisible)}>
+          {withPasskeyAddSuccess && <SuccessText>Success! Passkey Added</SuccessText>}
+          {withPasskeyAddFailure && <ErrorText>There was an error setting up your passkey. Try again.</ErrorText>}
+        </div>
+        <div className={classes.passkeysSectionWrapper}>
           <div className={classes.sectionHeader}>
-            <div className={classes.messageWrapper}>
-              {withPasskeyAddSuccess && <SuccessText>Success! Passkey Added</SuccessText>}
-              {withPasskeyAddFailure && <ErrorText>There was an error setting up your passkey. Try again.</ErrorText>}
-            </div>
             <div className={classes.sectionTitle}>
               <Text variant="baseM">Your Passkeys</Text>
               <Text variant="baseXS">
@@ -165,7 +184,7 @@ const _AccountSecurity: FC<Props> = ({
           })}
         </div>
         {withBackupCodes && (
-          <div className={classes.sectionWrapper}>
+          <div className={classes.backupCodesSectionWrapper}>
             <div className={classes.sectionHeader}>
               <div className={classes.sectionTitle}>
                 <Text variant="baseM">Backup Codes</Text>

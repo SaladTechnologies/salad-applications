@@ -99,7 +99,7 @@ export class PasskeyStore {
       runInAction(() => {
         this.registerPasskeyStatus = 'unknown'
       })
-    }, 3000)
+    }, 6000)
   })
 
   @action.bound
