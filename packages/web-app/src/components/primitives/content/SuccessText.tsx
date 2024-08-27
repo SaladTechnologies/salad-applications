@@ -5,7 +5,7 @@ import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
-  errorText: {
+  successText: {
     color: theme.darkBlue,
     fontFamily: theme.fontMallory,
     fontSize: theme.medium,
@@ -20,7 +20,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const _SuccessText: FC<Props> = ({ classes, children }) => {
-  return <div className={classnames(classes.errorText)}>{children}</div>
+  return <div className={classnames(classes.successText)}>{children}</div>
 }
 
 export const SuccessText = withStyles(styles)(_SuccessText)
