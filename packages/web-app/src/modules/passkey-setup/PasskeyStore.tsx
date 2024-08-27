@@ -174,4 +174,9 @@ export class PasskeyStore {
   setHasVerifyWithPasskeyFailed = (updatedHasVerifyWithPasskeyFailedFailed: boolean) => {
     this.hasVerifyWithPasskeyFailed = updatedHasVerifyWithPasskeyFailedFailed
   }
+
+  @action.bound
+  setRegisterPasskeyStatus = (registerPasskeyStatus: RegisterPasskeyStatus) => {
+    this.registerPasskeyStatus = registerPasskeyStatus
+  }
 }

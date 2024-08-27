@@ -104,6 +104,7 @@ interface Props extends WithStyles<typeof styles> {
   onDeletePasskeyClick: (passkeyId: string) => void
   onViewBackupCodesClick: () => void
   fetchPasskeys: () => void
+  setRegisterPasskeyStatus: (registerPasskeyStatus: RegisterPasskeyStatus) => void
 }
 
 const _AccountSecurity: FC<Props> = ({
@@ -115,6 +116,7 @@ const _AccountSecurity: FC<Props> = ({
   onDeletePasskeyClick,
   onViewBackupCodesClick,
   fetchPasskeys,
+  setRegisterPasskeyStatus,
 }) => {
   const passkeysAmount = passkeys.length
   const isAddPasskeyAvailable = passkeysAmount < passkeysAmountLimit
@@ -126,7 +128,8 @@ const _AccountSecurity: FC<Props> = ({
 
   useEffect(() => {
     fetchPasskeys()
-  }, [fetchPasskeys])
+    return () => setRegisterPasskeyStatus('unknown')
+  }, [fetchPasskeys, setRegisterPasskeyStatus])
 
   return (
     <div className={classes.accountSecurityWrapper}>
