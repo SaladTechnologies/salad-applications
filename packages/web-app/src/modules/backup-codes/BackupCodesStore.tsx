@@ -1,7 +1,7 @@
 import type { AxiosInstance } from 'axios'
 import { action, flow, observable } from 'mobx'
 import type { RootStore } from '../../Store'
-import { handlePostProtectedAction } from '../protected-action/utils'
+import { handlePendingProtectedAction } from '../protected-action/utils'
 
 export const isPasskeyFeatureEnabled = true
 
@@ -27,7 +27,7 @@ export class BackupCodesStore {
         backupCode,
       })
       if (backupCodeVerifyResponse.status === 200 || backupCodeVerifyResponse.status === 204) {
-        handlePostProtectedAction(this.store)
+        handlePendingProtectedAction(this.store)
       }
     } catch (error) {
       this.hasVerifyWithBackupCodeFailed = true

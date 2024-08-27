@@ -7,7 +7,7 @@ enum PendingProtectedActionTrigger {
   DeletePasskey = 'delete:/api/v2/passkeys',
 }
 
-export const handlePostProtectedAction = (store: RootStore) => {
+export const handlePendingProtectedAction = (store: RootStore) => {
   const pendingProtectedActionKey = `${store.profile.pendingProtectedAction?.method}:${store.profile.pendingProtectedAction?.url}`
   switch (true) {
     case pendingProtectedActionKey?.includes(PendingProtectedActionTrigger.GetBackupCodes):

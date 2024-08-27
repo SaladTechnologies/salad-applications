@@ -1,7 +1,7 @@
 import type { AxiosInstance } from 'axios'
 import { action, flow, observable } from 'mobx'
 import type { RootStore } from '../../Store'
-import { handlePostProtectedAction } from '../protected-action/utils'
+import { handlePendingProtectedAction } from '../protected-action/utils'
 import { coerceToBase64Url, getIsPasskeySupported, getPasskeyCredential, registerPasskeyCredential } from './utils'
 
 export const isPasskeyFeatureEnabled = true
@@ -139,7 +139,7 @@ export class PasskeyStore {
       const credentialsResponse = yield this.axios.post(`/api/v2/passkeys/assertions`, transformedCredentials)
 
       if (credentialsResponse.status === 200 || credentialsResponse.status === 204) {
-        handlePostProtectedAction(this.store)
+        handlePendingProtectedAction(this.store)
       }
     } catch (error) {
       this.hasVerifyWithPasskeyFailed = true
