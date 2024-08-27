@@ -23,9 +23,10 @@ const SaladDefaultAvatar: Avatar = {
 const installReminderFeatureReleaseDate = new Date('2023-12-21T17:10:47.324Z')
 const IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY = 'IS_INSTALL_REMINDER_CLOSED'
 
-interface ProtectedActionRequestTrigger {
-  requestTriggerUrl: string
-  requestTriggerBody?: string
+interface PendingProtectedAction {
+  method: string
+  url: string
+  body?: string
 }
 
 export class ProfileStore {
@@ -86,7 +87,7 @@ export class ProfileStore {
   public isInstallReminderClosed: boolean = Storage.getItem(IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY) === 'true'
 
   @observable
-  public protectedActionRequestTrigger?: ProtectedActionRequestTrigger
+  public pendingProtectedAction?: PendingProtectedAction
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
@@ -353,7 +354,7 @@ export class ProfileStore {
   })
 
   @action.bound
-  setProtectedActionRequestTrigger = (updatedProtectedActionRequestTrigger?: ProtectedActionRequestTrigger) => {
-    this.protectedActionRequestTrigger = updatedProtectedActionRequestTrigger
+  setPendingProtectedAction = (updatedPendingProtectedAction?: PendingProtectedAction) => {
+    this.pendingProtectedAction = updatedPendingProtectedAction
   }
 }
