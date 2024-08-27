@@ -1,6 +1,7 @@
 import type { AxiosInstance } from 'axios'
 import { action, flow, observable } from 'mobx'
 import type { RootStore } from '../../Store'
+import { handlePostProtectedAction } from '../protected-action/utils'
 
 export const isPasskeyFeatureEnabled = true
 
@@ -20,17 +21,13 @@ export class BackupCodesStore {
   public hasVerifyWithBackupCodeFailed: boolean = false
 
   @action.bound
-  verifyWithBackupCode = flow(function* (
-    this: BackupCodesStore,
-    backupCode: string,
-    triggerPendingProtectedAction: () => void,
-  ) {
+  verifyWithBackupCode = flow(function* (this: BackupCodesStore, backupCode: string) {
     try {
       const backupCodeVerifyResponse = yield this.axios.post(`/api/v2/backup-codes/verify`, {
         backupCode,
       })
       if (backupCodeVerifyResponse.status === 200 || backupCodeVerifyResponse.status === 204) {
-        triggerPendingProtectedAction()
+        handlePostProtectedAction(this.store)
       }
     } catch (error) {
       this.hasVerifyWithBackupCodeFailed = true

@@ -132,24 +132,22 @@ interface FormValues {
 
 interface Props extends WithStyles<typeof styles> {
   isPasskeySupported: boolean
-  isProtectedActionRequestTriggerExist: boolean
+  isPendingProtectedActionExist: boolean
   hasVerifyWithBackupCodeFailed: boolean
   hasVerifyWithPasskeyFailed: boolean
-  triggerPendingProtectedAction: () => void
   backToAccount: () => void
   setHasVerifyWithBackupCodeFailed: (updatedHasVerifyWithBackupCodeFailed: boolean) => void
   setHasVerifyWithPasskeyFailed: (updatedHasVerifyWithPasskeyFailed: boolean) => void
-  verifyWithPasskey: (triggerPendingProtectedAction: () => void) => void
-  verifyWithBackupCode: (backupCode: string, triggerPendingProtectedAction: () => void) => void
+  verifyWithPasskey: () => void
+  verifyWithBackupCode: (backupCode: string) => void
 }
 
 const _ProtectedActionPage: FC<Props> = ({
   classes,
   isPasskeySupported,
-  isProtectedActionRequestTriggerExist,
+  isPendingProtectedActionExist,
   hasVerifyWithBackupCodeFailed,
   hasVerifyWithPasskeyFailed,
-  triggerPendingProtectedAction,
   backToAccount,
   setHasVerifyWithBackupCodeFailed,
   setHasVerifyWithPasskeyFailed,
@@ -157,30 +155,28 @@ const _ProtectedActionPage: FC<Props> = ({
   verifyWithBackupCode,
 }) => {
   useEffect(() => {
-    if (!isProtectedActionRequestTriggerExist) {
+    if (!isPendingProtectedActionExist) {
       backToAccount()
     }
+  }, [isPendingProtectedActionExist, backToAccount])
+
+  useEffect(() => {
     return () => {
       setHasVerifyWithBackupCodeFailed(false)
       setHasVerifyWithPasskeyFailed(false)
     }
-  }, [
-    isProtectedActionRequestTriggerExist,
-    backToAccount,
-    setHasVerifyWithBackupCodeFailed,
-    setHasVerifyWithPasskeyFailed,
-  ])
+  }, [setHasVerifyWithBackupCodeFailed, setHasVerifyWithPasskeyFailed])
 
   const handleVerifyWithBackupCodeSubmit = (values: FormValues) => {
     setHasVerifyWithBackupCodeFailed(false)
     setHasVerifyWithPasskeyFailed(false)
-    verifyWithBackupCode?.(values.backupCode, triggerPendingProtectedAction)
+    verifyWithBackupCode?.(values.backupCode)
   }
 
   const handleVerifyWithPasskeyClick = () => {
     setHasVerifyWithBackupCodeFailed(false)
     setHasVerifyWithPasskeyFailed(false)
-    verifyWithPasskey(triggerPendingProtectedAction)
+    verifyWithPasskey()
   }
 
   const handleBackupCodeChange = () => {

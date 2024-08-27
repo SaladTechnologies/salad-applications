@@ -49,9 +49,10 @@ export const createClient = (): AxiosInstance => {
         if (error.response.status === 401 && error.config.baseURL === config.apiBaseUrl) {
           const store = getStore()
           if (error.response.headers.get('www-authenticate') === 'Sudo-Cookies') {
-            store.profile.setProtectedActionRequestTrigger({
-              requestTriggerUrl: `${error.response.config.method}${error.response.config.url}`,
-              requestTriggerBody: error.config.data,
+            store.profile.setPendingProtectedAction({
+              method: error.response.config.method,
+              url: error.response.config.url,
+              body: error.config.data,
             })
             store.routing.push('/protected-action')
           } else {

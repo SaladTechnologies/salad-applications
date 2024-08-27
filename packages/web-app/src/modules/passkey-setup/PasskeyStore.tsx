@@ -1,6 +1,7 @@
 import type { AxiosInstance } from 'axios'
 import { action, flow, observable } from 'mobx'
 import type { RootStore } from '../../Store'
+import { handlePostProtectedAction } from '../protected-action/utils'
 import { coerceToBase64Url, getIsPasskeySupported, getPasskeyCredential, registerPasskeyCredential } from './utils'
 
 export const isPasskeyFeatureEnabled = true
@@ -112,7 +113,7 @@ export class PasskeyStore {
   }
 
   @action.bound
-  verifyWithPasskey = flow(function* (this: PasskeyStore, triggerPendingProtectedAction: () => void) {
+  verifyWithPasskey = flow(function* (this: PasskeyStore) {
     try {
       const { data: assertionsOptionsData } = yield this.axios.post(`/api/v2/passkeys/assertions/options`)
       const credential = yield getPasskeyCredential(assertionsOptionsData)
@@ -138,7 +139,7 @@ export class PasskeyStore {
       const credentialsResponse = yield this.axios.post(`/api/v2/passkeys/assertions`, transformedCredentials)
 
       if (credentialsResponse.status === 200 || credentialsResponse.status === 204) {
-        triggerPendingProtectedAction()
+        handlePostProtectedAction(this.store)
       }
     } catch (error) {
       this.hasVerifyWithPasskeyFailed = true

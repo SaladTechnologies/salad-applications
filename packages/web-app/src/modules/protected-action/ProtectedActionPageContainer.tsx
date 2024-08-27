@@ -1,14 +1,12 @@
 import { connect } from '../../connect'
 import type { RootStore } from '../../Store'
 import { ProtectedActionPage } from './components'
-import { handlePostProtectedAction } from './utils'
 
 const mapStoreToProps = (store: RootStore): any => ({
   isPasskeySupported: store.passkey.isPasskeySupported,
-  isProtectedActionRequestTriggerExist: !!store.profile.protectedActionRequestTrigger,
+  isPendingProtectedActionExist: !!store.profile.pendingProtectedAction,
   hasVerifyWithBackupCodeFailed: store.backupCodes.hasVerifyWithBackupCodeFailed,
   hasVerifyWithPasskeyFailed: store.passkey.hasVerifyWithPasskeyFailed,
-  triggerPendingProtectedAction: handlePostProtectedAction(store),
   backToAccount: () => store.routing.push('/account'),
   setHasVerifyWithBackupCodeFailed: store.backupCodes.setHasVerifyWithBackupCodeFailed,
   setHasVerifyWithPasskeyFailed: store.passkey.setHasVerifyWithPasskeyFailed,
