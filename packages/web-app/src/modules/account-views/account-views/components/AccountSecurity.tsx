@@ -79,7 +79,7 @@ const styles: () => Record<string, CSS.Properties> = () => ({
     opacity: 0,
     height: '26px',
     display: 'flex',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     alignItems: 'flex-end',
     flexDirection: 'column',
     transition: '1s ease',
