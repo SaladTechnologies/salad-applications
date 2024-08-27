@@ -24,6 +24,12 @@ export class PasskeyStore {
   @observable
   public hasVerifyWithPasskeyFailed: boolean = false
 
+  @observable
+  public isEditPasskeySubmitting: boolean = false
+
+  @observable
+  public isEditPasskeyNameSubmitSuccess: boolean = false
+
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     this.setIsPasskeySupported()
   }
@@ -150,4 +156,19 @@ export class PasskeyStore {
   setHasVerifyWithPasskeyFailed = (updatedHasVerifyWithPasskeyFailedFailed: boolean) => {
     this.hasVerifyWithPasskeyFailed = updatedHasVerifyWithPasskeyFailedFailed
   }
+
+  @action.bound
+  editPasskeyName = flow(function* (this: PasskeyStore, passkeyId: string, passkeyName: string) {
+    try {
+      this.isEditPasskeySubmitting = true
+      yield this.axios.patch(`/api/v2/passkeys/${passkeyId}`, {
+        passkeyName,
+      })
+      this.isEditPasskeySubmitting = false
+      this.isEditPasskeyNameSubmitSuccess = true
+    } catch (error) {
+      this.isEditPasskeySubmitting = false
+      console.error('PasskeyStore -> editPasskeyName: ', error)
+    }
+  })
 }
