@@ -1,6 +1,7 @@
 import type { AxiosInstance } from 'axios'
-import { action, flow, observable } from 'mobx'
+import { action, flow, observable, runInAction } from 'mobx'
 import type { RootStore } from '../../Store'
+import { getDefaultPasskeyName } from './components/utils'
 import { coerceToBase64Url, getIsPasskeySupported, getPasskeyCredential, registerPasskeyCredential } from './utils'
 
 export const isPasskeyFeatureEnabled = true
@@ -11,6 +12,8 @@ export interface Passkey {
   id: string
 }
 
+export type RegisterPasskeyStatus = 'success' | 'failure' | 'unknown'
+
 export class PasskeyStore {
   @observable
   public isPasskeySupported: boolean = false
@@ -20,6 +23,11 @@ export class PasskeyStore {
 
   @observable
   public hasRegisterPasskeyFailed: boolean = false
+
+  @observable
+  public registerPasskeyStatus: RegisterPasskeyStatus = 'unknown'
+
+  private registerPasskeyStatusTimeout: NodeJS.Timeout | null = null
 
   @observable
   public hasVerifyWithPasskeyFailed: boolean = false
@@ -40,7 +48,14 @@ export class PasskeyStore {
   })
 
   @action.bound
-  registerPasskey = flow(function* (this: PasskeyStore, passkeyName: string) {
+  registerPasskey = flow(function* (this: PasskeyStore) {
+    const passkeyName = getDefaultPasskeyName()
+
+    if (this.registerPasskeyStatusTimeout) {
+      this.registerPasskeyStatus = 'unknown'
+      clearTimeout(this.registerPasskeyStatusTimeout)
+    }
+
     try {
       const { data: credentialsOptionsData } = yield this.axios.post(`/api/v2/passkeys/credentials/options`, {
         passkeyName,
@@ -66,6 +81,8 @@ export class PasskeyStore {
       })
 
       if (credentialsResponse.status === 200 || credentialsResponse.status === 204) {
+        this.fetchPasskeys()
+        this.registerPasskeyStatus = 'success'
         const isFirstPasskeyAdded = this.passkeys.length === 0
         if (isFirstPasskeyAdded) {
           this.store.analytics.trackPasskeyAdded(true)
@@ -73,9 +90,16 @@ export class PasskeyStore {
         }
       }
     } catch (error) {
+      this.registerPasskeyStatus = 'failure'
       this.hasRegisterPasskeyFailed = true
       console.error('PasskeyStore -> addPasskey: ', error)
     }
+
+    this.registerPasskeyStatusTimeout = setTimeout(() => {
+      runInAction(() => {
+        this.registerPasskeyStatus = 'unknown'
+      })
+    }, 6000)
   })
 
   @action.bound
@@ -149,5 +173,10 @@ export class PasskeyStore {
   @action.bound
   setHasVerifyWithPasskeyFailed = (updatedHasVerifyWithPasskeyFailedFailed: boolean) => {
     this.hasVerifyWithPasskeyFailed = updatedHasVerifyWithPasskeyFailedFailed
+  }
+
+  @action.bound
+  setRegisterPasskeyStatus = (registerPasskeyStatus: RegisterPasskeyStatus) => {
+    this.registerPasskeyStatus = registerPasskeyStatus
   }
 }

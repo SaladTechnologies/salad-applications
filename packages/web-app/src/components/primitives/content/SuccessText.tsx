@@ -5,13 +5,13 @@ import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
-  errorText: {
-    color: 'rgb(255, 255, 255)',
+  successText: {
+    color: theme.darkBlue,
     fontFamily: theme.fontMallory,
     fontSize: theme.medium,
     padding: '8px 12px',
-    background: 'rgb(239, 80, 42)',
-    boxShadow: 'rgb(239, 80, 42) 0px 0px 30px',
+    background: theme.green,
+    boxShadow: `${theme.green} 0px 0px 30px`,
   },
 })
 
@@ -19,8 +19,8 @@ interface Props extends WithStyles<typeof styles> {
   children?: ReactNode
 }
 
-const _ErrorText: FC<Props> = ({ children, classes }) => {
-  return <div className={classnames(classes.errorText)}>{children}</div>
+const _SuccessText: FC<Props> = ({ classes, children }) => {
+  return <div className={classnames(classes.successText)}>{children}</div>
 }
 
-export const ErrorText = withStyles(styles)(_ErrorText)
+export const SuccessText = withStyles(styles)(_SuccessText)
