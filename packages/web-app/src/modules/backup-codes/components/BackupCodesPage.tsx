@@ -179,6 +179,7 @@ const _BackupCodesPage: FC<Props> = ({
               <Button
                 onClick={handleCopyClick}
                 label={isCopied ? 'Copied!' : 'Copy'}
+                disabled={!backupCodes?.codes}
                 variant="primary-basic"
                 leadingIcon={
                   isCopied ? null : (
