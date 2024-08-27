@@ -1,14 +1,16 @@
 import { faEye, faKey, faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Text, TextField } from '@saladtechnologies/garden-components'
+import classNames from 'classnames'
 import type CSS from 'csstype'
 import moment from 'moment'
 import { useEffect, useState, type FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { useMediaQuery } from 'react-responsive'
-import { mobileSize } from '../../../../components'
-import type { Passkey } from '../../../passkey-setup'
+import { ErrorText, mobileSize } from '../../../../components'
+import { SuccessText } from '../../../../components/primitives/content/SuccessText'
+import type { Passkey, RegisterPasskeyStatus } from '../../../passkey-setup'
 import type { FormValues } from './Account'
 
 const styles: () => Record<string, CSS.Properties> = () => ({
@@ -22,8 +24,12 @@ const styles: () => Record<string, CSS.Properties> = () => ({
   },
   passkeysDescription: {
     paddingTop: '16px',
+    paddingBottom: '16px',
   },
-  sectionWrapper: {
+  passkeysSectionWrapper: {
+    width: '100%',
+  },
+  backupCodesSectionWrapper: {
     paddingTop: '32px',
     width: '100%',
   },
@@ -32,6 +38,7 @@ const styles: () => Record<string, CSS.Properties> = () => ({
     top: '-3px',
   },
   sectionHeader: {
+    position: 'relative',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -73,6 +80,25 @@ const styles: () => Record<string, CSS.Properties> = () => ({
     width: '200px',
     alignContent: 'center',
   },
+  messageWrapper: {
+    position: 'relative',
+    width: '100%',
+    opacity: 0,
+    height: '50px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    flexDirection: 'column',
+    transition: '1s ease',
+  },
+  messageWrapperVisible: {
+    position: 'relative',
+    width: '100%',
+    opacity: 1,
+  },
+  passkeyButtonWrap: {
+    position: 'relative',
+  },
 })
 
 const passkeysAmountLimit = 30
@@ -81,12 +107,14 @@ interface Props extends WithStyles<typeof styles> {
   isEditPasskeyNameSubmitSuccess: boolean
   isEditPasskeySubmitting: boolean
   passkeys: Passkey[]
+  registerPasskeyStatus: RegisterPasskeyStatus
   withBackupCodes: boolean
   editPasskeyName: (passkeyId: string, passkeyName: string) => void
   onAddPasskeyClick: () => void
   onDeletePasskeyClick: (passkeyId: string) => void
   onViewBackupCodesClick: () => void
   fetchPasskeys: () => void
+  setRegisterPasskeyStatus: (registerPasskeyStatus: RegisterPasskeyStatus) => void
 }
 
 const _AccountSecurity: FC<Props> = ({
@@ -94,18 +122,24 @@ const _AccountSecurity: FC<Props> = ({
   isEditPasskeyNameSubmitSuccess,
   isEditPasskeySubmitting,
   passkeys,
+  registerPasskeyStatus,
   withBackupCodes,
   editPasskeyName,
   onAddPasskeyClick,
   onDeletePasskeyClick,
   onViewBackupCodesClick,
   fetchPasskeys,
+  setRegisterPasskeyStatus,
 }) => {
   const [editPasskeyId, setEditPasskeyId] = useState<string | null>(null)
 
   const passkeysAmount = passkeys.length
   const isAddPasskeyAvailable = passkeysAmount < passkeysAmountLimit
   const isTabletOrMobile = useMediaQuery({ query: `(max-width: ${mobileSize}px)` })
+
+  const withPasskeyAddSuccess = registerPasskeyStatus === 'success'
+  const withPasskeyAddFailure = registerPasskeyStatus === 'failure'
+  const withPasskeyMassage = withPasskeyAddSuccess || withPasskeyAddFailure
 
   const handleEditPasskeyIconClick = (passkeyId: string) => {
     if (passkeyId === editPasskeyId) {
@@ -124,7 +158,8 @@ const _AccountSecurity: FC<Props> = ({
 
   useEffect(() => {
     fetchPasskeys()
-  }, [fetchPasskeys])
+    return () => setRegisterPasskeyStatus('unknown')
+  }, [fetchPasskeys, setRegisterPasskeyStatus])
 
   return (
     <div className={classes.accountSecurityWrapper}>
@@ -137,7 +172,11 @@ const _AccountSecurity: FC<Props> = ({
             two-factor authentication codes and are quickly becoming the standard way to secure online accounts.
           </Text>
         </div>
-        <div className={classes.sectionWrapper}>
+        <div className={classNames(classes.messageWrapper, withPasskeyMassage && classes.messageWrapperVisible)}>
+          {withPasskeyAddSuccess && <SuccessText>Success! Passkey Added</SuccessText>}
+          {withPasskeyAddFailure && <ErrorText>There was an error setting up your passkey. Try again.</ErrorText>}
+        </div>
+        <div className={classes.passkeysSectionWrapper}>
           <div className={classes.sectionHeader}>
             <div className={classes.sectionTitle}>
               <Text variant="baseM">Your Passkeys</Text>
@@ -145,15 +184,17 @@ const _AccountSecurity: FC<Props> = ({
                 ({passkeysAmount}/{passkeysAmountLimit})
               </Text>
             </div>
-            {isAddPasskeyAvailable && (
-              <Button
-                onClick={onAddPasskeyClick}
-                variant={isTabletOrMobile ? 'secondary' : 'primary'}
-                size="small"
-                label="Add a Passkey"
-                leadingIcon={<FontAwesomeIcon icon={faKey} className={classes.buttonIcon} />}
-              />
-            )}
+            <div className={classes.passkeyButtonWrap}>
+              {isAddPasskeyAvailable && (
+                <Button
+                  onClick={onAddPasskeyClick}
+                  variant={isTabletOrMobile ? 'secondary' : 'primary'}
+                  size="small"
+                  label="Add a Passkey"
+                  leadingIcon={<FontAwesomeIcon icon={faKey} className={classes.buttonIcon} />}
+                />
+              )}
+            </div>
           </div>
           <div className={classes.passkeysList}></div>
           {passkeys.map((passkey) => {
@@ -192,7 +233,7 @@ const _AccountSecurity: FC<Props> = ({
           })}
         </div>
         {withBackupCodes && (
-          <div className={classes.sectionWrapper}>
+          <div className={classes.backupCodesSectionWrapper}>
             <div className={classes.sectionHeader}>
               <div className={classes.sectionTitle}>
                 <Text variant="baseM">Backup Codes</Text>
