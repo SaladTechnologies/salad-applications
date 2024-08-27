@@ -77,15 +77,12 @@ const styles: () => Record<string, CSS.Properties> = () => ({
     position: 'relative',
     width: '100%',
     opacity: 0,
-    height: '26px',
+    height: '50px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'flex-end',
     flexDirection: 'column',
     transition: '1s ease',
-    '@media (max-width: 812px)': {
-      height: '50px',
-    },
   },
   messageWrapperVisible: {
     position: 'relative',
