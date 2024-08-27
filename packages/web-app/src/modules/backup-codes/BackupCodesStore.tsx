@@ -11,7 +11,6 @@ export interface BackupCodes {
 }
 
 export class BackupCodesStore {
-  // @ts-ignore
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   @observable

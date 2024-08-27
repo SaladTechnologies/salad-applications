@@ -25,7 +25,7 @@ export const handlePendingProtectedAction = (store: RootStore) => {
       store.routing.push('/account/backup-codes')
       break
     case pendingProtectedActionKey?.includes(PendingProtectedActionTrigger.DeletePasskey):
-      const passkeyId = pendingProtectedActionKey?.split('/').pop()
+      const passkeyId = store.profile.pendingProtectedAction?.url.split('/').pop()
       if (passkeyId) {
         store.passkey.deletePasskey(passkeyId)
       }
