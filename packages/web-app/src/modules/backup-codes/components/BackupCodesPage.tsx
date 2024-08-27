@@ -1,7 +1,8 @@
 import { Button, LoadingSpinner, Text } from '@saladtechnologies/garden-components'
+import { Copy } from '@saladtechnologies/garden-icons'
 import type CSS from 'csstype'
 import moment from 'moment'
-import { useEffect, type FC } from 'react'
+import { useEffect, useState, type FC } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
@@ -85,12 +86,21 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     flexWrap: 'wrap',
     width: '100%',
   },
-  generateBackupCodesButtonWrapper: {
+  backupCodesButtonsWrapper: {
     marginTop: '24px',
     marginBottom: '24px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    flexDirection: 'column',
+    gap: '8px',
   },
   backupCodeText: {
     width: '150px',
+  },
+  buttonIcon: {
+    position: 'relative',
+    top: '-2gpx',
   },
 })
 
@@ -108,8 +118,18 @@ const _BackupCodesPage: FC<Props> = ({
   onGenerateNewBackupCodesClick,
   getBackupCodes,
 }) => {
+  const [isCopied, setIsCopied] = useState(false)
   const location = useLocation<{ isFirstPasskeyAdded: string }>()
   const isFirstPasskeyAdded = location.state?.isFirstPasskeyAdded
+
+  const handleCopyClick = () => {
+    // eslint-disable-next-line compat/compat
+    window.navigator.clipboard.writeText(backupCodes.codes.join('\n'))
+    setIsCopied(true)
+    setTimeout(() => {
+      setIsCopied(false)
+    }, 2000)
+  }
 
   useEffect(() => {
     getBackupCodes()
@@ -155,7 +175,22 @@ const _BackupCodesPage: FC<Props> = ({
                 </div>
               )}
             </div>
-            <div className={classes.generateBackupCodesButtonWrapper}>
+            <div className={classes.backupCodesButtonsWrapper}>
+              <Button
+                onClick={handleCopyClick}
+                label={isCopied ? 'Copied!' : 'Copy'}
+                variant="primary-basic"
+                leadingIcon={
+                  isCopied ? null : (
+                    <div className={classes.buttonIcon}>
+                      <Copy />
+                    </div>
+                  )
+                }
+                width={90}
+                size="small"
+                data-rh={'Keep chopping to discover this veggie'}
+              />
               <Button
                 variant="primary-basic"
                 size="small"
