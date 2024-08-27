@@ -1,6 +1,5 @@
 import classnames from 'classnames'
-import type { ReactNode } from 'react'
-import { Component } from 'react'
+import type { FC, ReactNode } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
@@ -20,12 +19,8 @@ interface Props extends WithStyles<typeof styles> {
   children?: ReactNode
 }
 
-class _ErrorText extends Component<Props> {
-  public override render(): ReactNode {
-    const { children, classes } = this.props
-
-    return <div className={classnames(classes.errorText)}>{children}</div>
-  }
+const _ErrorText: FC<Props> = ({ children, classes }) => {
+  return <div className={classnames(classes.errorText)}>{children}</div>
 }
 
 export const ErrorText = withStyles(styles)(_ErrorText)
