@@ -4,10 +4,12 @@ import { AccountSecurity } from './components/AccountSecurity'
 
 const mapStoreToProps = (store: RootStore): any => ({
   fetchPasskeys: store.passkey.fetchPasskeys,
-  onAddPasskeyClick: () => store.routing.push('/account/passkey/setup'),
+  onAddPasskeyClick: store.passkey.registerPasskey,
   onDeletePasskeyClick: (passkeyId: string) => store.routing.push(`/account/passkey/delete/${passkeyId}`),
   onViewBackupCodesClick: () => store.routing.push('/account/backup-codes'),
+  setRegisterPasskeyStatus: store.passkey.setRegisterPasskeyStatus,
   passkeys: store.passkey.passkeys,
+  registerPasskeyStatus: store.passkey.registerPasskeyStatus,
   withBackupCodes: store.passkey.passkeys.length !== 0,
 })
 
