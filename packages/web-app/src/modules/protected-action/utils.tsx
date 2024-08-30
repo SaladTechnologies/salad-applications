@@ -15,9 +15,9 @@ export const handlePendingProtectedAction = (store: RootStore) => {
       store.routing.push('/account/backup-codes')
       break
     case pendingProtectedActionKey?.includes(PendingProtectedActionTrigger.CreatePasskey):
-      // TODO: Update it after removing passkey setup page
       store.profile.setPendingProtectedAction(undefined)
-      store.routing.push('/account/passkey/setup')
+      store.routing.push('/account/summary')
+      store.passkey.registerPasskey()
       break
     case pendingProtectedActionKey?.includes(PendingProtectedActionTrigger.GenerateBackupCodes):
       store.backupCodes.generateBackupCodes()
