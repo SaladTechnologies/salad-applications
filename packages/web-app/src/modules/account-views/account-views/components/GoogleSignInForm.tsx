@@ -1,24 +1,22 @@
+import type { AxiosResponse } from 'axios'
 import classNames from 'classnames'
-import type { FunctionComponent } from 'react'
+import { useCallback, useEffect, useRef, type FunctionComponent } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { config } from '../../../../config'
+import { ChallengeSudoModeTrigger } from '../../../auth'
+import { GoogleHiddenSignInForm } from './GoogleHiddenSignInForm'
 import GoogleSigninDarkDisabled from './assets/GoogleSigninDarkDisabled.svg'
 import GoogleSigninDarkFocused from './assets/GoogleSigninDarkFocused.svg'
 import GoogleSigninDarkNormal from './assets/GoogleSigninDarkNormal.svg'
 import GoogleSigninDarkPressed from './assets/GoogleSigninDarkPressed.svg'
 
 const styles = {
-  formContainer: {
+  googleSigninButton: {
     width: 191,
     height: 46,
-  },
-  googleSigninButton: {
     padding: 0,
     margin: 0,
     border: 'none',
-    width: '100%',
-    height: '100%',
     background: 'transparent',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
@@ -53,34 +51,54 @@ const styles = {
 export interface GoogleSignInFormProps extends WithStyles<typeof styles> {
   isTermsAndConditionsAccepted: boolean
   isTermsAndConditionsRequired: boolean
+  isGoogleSignInFormTriggered: boolean
+  challengeSudoMode: (challengeSudoModeTrigger: ChallengeSudoModeTrigger) => Promise<AxiosResponse<any> | null>
 }
 export const _GoogleSignInForm: FunctionComponent<GoogleSignInFormProps> = ({
   classes,
   isTermsAndConditionsAccepted,
   isTermsAndConditionsRequired,
+  isGoogleSignInFormTriggered,
+  challengeSudoMode,
 }) => {
   const shouldEnableGoogleSignInButton = !isTermsAndConditionsRequired || isTermsAndConditionsAccepted
   const shouldDisableGoogleSignInButton = isTermsAndConditionsRequired && !isTermsAndConditionsAccepted
 
+  const hiddenFormRef = useRef<HTMLFormElement>(null)
+
+  const handleSignInWithGoogle = useCallback(async () => {
+    try {
+      const response = await challengeSudoMode(ChallengeSudoModeTrigger.GoogleSignIn)
+      if (response) {
+        hiddenFormRef.current?.submit()
+      }
+    } catch (error) {
+      console.log('Please verify your credentials to proceed with this action.')
+    }
+  }, [challengeSudoMode])
+
+  useEffect(() => {
+    if (isGoogleSignInFormTriggered) {
+      handleSignInWithGoogle()
+    }
+  }, [isGoogleSignInFormTriggered, handleSignInWithGoogle])
+
   return (
-    <form
-      className={classes.formContainer}
-      action={`${config.apiBaseUrl}/api/v2/authentication/external`}
-      method="POST"
-    >
-      <input type="hidden" name="provider" value="google" />
-      {isTermsAndConditionsRequired && (
-        <input type="hidden" name="termsAccepted" value={`${isTermsAndConditionsAccepted}`} />
-      )}
+    <>
+      <GoogleHiddenSignInForm
+        isTermsAndConditionsAccepted={isTermsAndConditionsAccepted}
+        isTermsAndConditionsRequired={isTermsAndConditionsRequired}
+        hiddenFormRef={hiddenFormRef}
+      />
       <button
         className={classNames(classes.googleSigninButton, {
           [classes.googleSigninButtonEnabled]: shouldEnableGoogleSignInButton,
           [classes.googleSigninButtonDisabled]: shouldDisableGoogleSignInButton,
         })}
-        type="submit"
+        onClick={handleSignInWithGoogle}
         disabled={shouldDisableGoogleSignInButton}
       />
-    </form>
+    </>
   )
 }
 

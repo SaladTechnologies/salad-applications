@@ -1,13 +1,21 @@
 import type { AxiosInstance } from 'axios'
-import { action, observable, runInAction } from 'mobx'
+import { action, flow, observable, runInAction } from 'mobx'
 import type { RootStore } from '../../Store'
 import { config } from '../../config'
 import { NotificationMessageCategory } from '../notifications/models'
+
+export enum ChallengeSudoModeTrigger {
+  GoogleSignIn = 'GoogleSignIn',
+  PayPalLogIn = 'PayPalLogIn',
+}
 
 export class AuthStore {
   /** A value indicating whether the user is authenticated. */
   @observable
   public isAuthenticated?: boolean = undefined
+
+  @observable
+  public challengeSudoModeTrigger?: ChallengeSudoModeTrigger
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     this.axios
@@ -68,5 +76,22 @@ export class AuthStore {
   @action
   public setIsAuthenticated = (isAuthenticated: boolean) => {
     this.isAuthenticated = isAuthenticated
+  }
+
+  @action.bound
+  challengeSudoMode = flow(function* (this: AuthStore, challengeSudoModeTrigger: ChallengeSudoModeTrigger) {
+    try {
+      const response = yield this.axios.post('/api/v2/authentication-sessions/sudo')
+      return response
+    } catch (error) {
+      this.challengeSudoModeTrigger = challengeSudoModeTrigger
+      console.error('AuthStore -> challengeSudoMode: ', error)
+      return null
+    }
+  })
+
+  @action.bound
+  setChallengeSudoModeTrigger = (updatedChallengeSudoModeTrigger?: ChallengeSudoModeTrigger) => {
+    this.challengeSudoModeTrigger = updatedChallengeSudoModeTrigger
   }
 }

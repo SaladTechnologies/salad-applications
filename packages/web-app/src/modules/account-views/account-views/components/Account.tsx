@@ -1,12 +1,15 @@
 import { AvatarSelectionForm, Button, Layout, Text, TextField } from '@saladtechnologies/garden-components'
+import type { AxiosResponse } from 'axios'
 import type { FC } from 'react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
+import { useLocation } from 'react-router'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { DefaultTheme } from '../../../../SaladTheme'
 import { Head } from '../../../../components'
+import type { ChallengeSudoModeTrigger } from '../../../auth'
 import { withLogin } from '../../../auth-views'
 import { isPasskeyFeatureEnabled, type Passkey } from '../../../passkey-setup'
 import type { Avatar, Profile } from '../../../profile/models'
@@ -108,6 +111,7 @@ interface Props extends WithStyles<typeof styles> {
   fetchPasskeys: () => void
   onAddPasskeyClick: () => void
   onDeletePasskeyClick: (passkeyId: string) => void
+  challengeSudoMode: (challengeSudoModeTrigger: ChallengeSudoModeTrigger) => Promise<AxiosResponse<any> | null>
 }
 
 let intervalId: NodeJS.Timeout
@@ -145,8 +149,22 @@ const _Account: FC<Props> = ({
   isTermsAndConditionsAccepted,
   onSubmitTermsAndConditions,
   onToggleAcceptTermsAndConditions,
+  challengeSudoMode,
 }) => {
+  const location = useLocation<{ isGoogleSignInFormTriggered: string; isPayPalLogInTriggered: string }>()
+  const isGoogleSignInFormTriggered = !!location.state?.isGoogleSignInFormTriggered
+  const isPayPalLogInTriggered = !!location.state?.isPayPalLogInTriggered
+
   const [payPalLoadRetries, setPayPalLoadRetries] = useState(0)
+
+  const handleCheckPayPalId = useCallback(() => {
+    clearInterval(intervalId)
+    setPayPalLoadRetries(0)
+    intervalId = setInterval(() => {
+      loadPayPalId()
+      setPayPalLoadRetries((previousCount) => previousCount + 1)
+    }, 5000)
+  }, [loadPayPalId])
 
   useEffect(() => {
     loadPayPalId()
@@ -157,6 +175,12 @@ const _Account: FC<Props> = ({
     }
   }, [loadGoogleAccountConnection, loadPayPalId])
 
+  useEffect(() => {
+    if (isPayPalLogInTriggered) {
+      handleCheckPayPalId()
+    }
+  }, [isPayPalLogInTriggered, handleCheckPayPalId])
+
   const shouldShowUpdateAccountTermsAndConditions = !!profile?.pendingTermsVersion
   const handleSubmitButtonReset = () => {
     isUserNameSubmitSuccess && onResetUsernameSuccess()
@@ -165,15 +189,6 @@ const _Account: FC<Props> = ({
 
   if (payPalLoadRetries === maxPaypalLoadRetries || payPalId) {
     clearInterval(intervalId)
-  }
-
-  const handleCheckPayPalId = () => {
-    clearInterval(intervalId)
-    setPayPalLoadRetries(0)
-    intervalId = setInterval(() => {
-      loadPayPalId()
-      setPayPalLoadRetries((previousCount) => previousCount + 1)
-    }, 5000)
   }
 
   return (
@@ -238,11 +253,14 @@ const _Account: FC<Props> = ({
                   </Text>
                 ) : (
                   <>
-                    <PayPalLoginButton onClick={handleCheckPayPalId} />
+                    <PayPalLoginButton
+                      handleCheckPayPalId={handleCheckPayPalId}
+                      challengeSudoMode={challengeSudoMode}
+                    />
                     <div className={classes.connectAccountDescription}>
                       <Text variant="baseS">
                         Connect Salad to your PayPal account. A PayPal account is required to redeem all PayPal rewards.
-                        This enables transfering Salad Balance to your PayPal wallet.
+                        This enables transferring Salad Balance to your PayPal wallet.
                       </Text>
                     </div>
                   </>
@@ -266,6 +284,8 @@ const _Account: FC<Props> = ({
                     <GoogleSignInForm
                       isTermsAndConditionsAccepted={isTermsAndConditionsAccepted}
                       isTermsAndConditionsRequired={shouldShowUpdateAccountTermsAndConditions}
+                      isGoogleSignInFormTriggered={isGoogleSignInFormTriggered}
+                      challengeSudoMode={challengeSudoMode}
                     />
                     {isLoadConnectedGoogleAccountEmailError && (
                       <div className={classes.connectAccountError}>

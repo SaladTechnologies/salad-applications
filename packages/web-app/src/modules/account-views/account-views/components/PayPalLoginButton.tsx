@@ -1,26 +1,35 @@
-import { ButtonLink } from '@saladtechnologies/garden-components'
+import { Button } from '@saladtechnologies/garden-components'
+import type { AxiosResponse } from 'axios'
 import type { FunctionComponent } from 'react'
-import type { WithStyles } from 'react-jss'
-import withStyles from 'react-jss'
 import { config } from '../../../../config'
+import { ChallengeSudoModeTrigger } from '../../../auth'
 
-const styles = {
-  container: {
-    display: 'inline-block',
-  },
+interface PayPalLoginButtonProps {
+  handleCheckPayPalId: () => void
+  challengeSudoMode: (challengeSudoModeTrigger: ChallengeSudoModeTrigger) => Promise<AxiosResponse<any> | null>
 }
 
-interface PayPalLoginButtonProps extends WithStyles<typeof styles> {
-  onClick: () => void
-}
+export const PayPalLoginButton: FunctionComponent<PayPalLoginButtonProps> = ({
+  handleCheckPayPalId,
+  challengeSudoMode,
+}) => {
+  const handlePaypalLogInClick = async () => {
+    try {
+      const response = await challengeSudoMode(ChallengeSudoModeTrigger.PayPalLogIn)
+      if (response) {
+        handleCheckPayPalId()
+        window.open(config.paypalUrl)
+      }
+    } catch (error) {
+      console.log('Please verify your credentials to proceed with this action.')
+    }
+  }
 
-const _PayPalLoginButton: FunctionComponent<PayPalLoginButtonProps> = ({ onClick, classes }) => (
-  <span onClick={onClick} className={classes.container}>
-    <ButtonLink
+  return (
+    <Button
       label="Log in with PayPal"
       fill="#0070BA"
-      target="_blank"
-      to={config.paypalUrl}
+      onClick={handlePaypalLogInClick}
       size="large"
       leadingIcon={
         <svg
@@ -47,7 +56,5 @@ const _PayPalLoginButton: FunctionComponent<PayPalLoginButtonProps> = ({ onClick
         </svg>
       }
     />
-  </span>
-)
-
-export const PayPalLoginButton = withStyles(styles)(_PayPalLoginButton)
+  )
+}

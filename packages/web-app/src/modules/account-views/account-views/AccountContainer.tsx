@@ -29,6 +29,7 @@ const mapStoreToProps = (store: RootStore): any => ({
   isTermsAndConditionsAccepted: store.termsAndConditions.isTermsAndConditionsAccepted,
   onSubmitTermsAndConditions: store.termsAndConditions.submitTermsAndConditions,
   onToggleAcceptTermsAndConditions: store.termsAndConditions.toggleAcceptTermsAndConditions,
+  challengeSudoMode: store.auth.challengeSudoMode,
 })
 
 export const AccountContainer = connect(mapStoreToProps, Account)
