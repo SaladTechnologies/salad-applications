@@ -52,7 +52,7 @@ export const createClient = (): AxiosInstance => {
             store.profile.setPendingProtectedAction({
               method: error.response.config.method,
               url: error.response.config.url,
-              body: error.config.data,
+              data: error.config.data,
             })
             store.routing.push('/protected-action')
           } else {
