@@ -69,16 +69,19 @@ const styles: () => Record<string, CSS.Properties> = () => ({
     cursor: 'pointer',
     marginRight: '5px',
   },
-  passkeyName: {
+  passkeyNameWrapper: {
     width: '200px',
+    height: '30px',
+  },
+  passkeyName: {
+    display: 'flex',
+    width: '100%',
+    height: '100%',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-  },
-  passkeyNameContainer: {
-    height: '30px',
-    width: '200px',
-    alignContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'yellow',
   },
   messageWrapper: {
     position: 'relative',
@@ -200,7 +203,7 @@ const _AccountSecurity: FC<Props> = ({
           {passkeys.map((passkey) => {
             return (
               <div className={classes.passkeysListItem} key={passkey.id}>
-                <div className={classes.passkeyNameContainer}>
+                <div className={classes.passkeyNameWrapper}>
                   {passkey.id === editPasskeyId ? (
                     <TextField
                       isSubmitting={isEditPasskeySubmitting}
