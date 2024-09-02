@@ -3,8 +3,7 @@ import type { RootStore } from '../../../Store'
 import { AccountSecurity } from './components/AccountSecurity'
 
 const mapStoreToProps = (store: RootStore): any => ({
-  isEditPasskeyNameSubmitSuccess: store.passkey.isEditPasskeyNameSubmitSuccess,
-  isEditPasskeySubmitting: store.passkey.isEditPasskeySubmitting,
+  editPasskeyNameStatus: store.passkey.editPasskeyNameStatus,
   passkeys: store.passkey.passkeys,
   registerPasskeyStatus: store.passkey.registerPasskeyStatus,
   withBackupCodes: store.passkey.passkeys.length !== 0,

@@ -10,7 +10,7 @@ import withStyles from 'react-jss'
 import { useMediaQuery } from 'react-responsive'
 import { ErrorText, mobileSize } from '../../../../components'
 import { SuccessText } from '../../../../components/primitives/content/SuccessText'
-import type { Passkey, RegisterPasskeyStatus } from '../../../passkey-setup'
+import type { EditPasskeyNameStatus, Passkey, RegisterPasskeyStatus } from '../../../passkey-setup'
 import type { FormValues } from './Account'
 
 const styles: () => Record<string, CSS.Properties> = () => ({
@@ -108,8 +108,7 @@ const styles: () => Record<string, CSS.Properties> = () => ({
 const passkeysAmountLimit = 30
 
 interface Props extends WithStyles<typeof styles> {
-  isEditPasskeyNameSubmitSuccess: boolean
-  isEditPasskeySubmitting: boolean
+  editPasskeyNameStatus: EditPasskeyNameStatus
   passkeys: Passkey[]
   registerPasskeyStatus: RegisterPasskeyStatus
   withBackupCodes: boolean
@@ -123,8 +122,7 @@ interface Props extends WithStyles<typeof styles> {
 
 const _AccountSecurity: FC<Props> = ({
   classes,
-  isEditPasskeyNameSubmitSuccess,
-  isEditPasskeySubmitting,
+  editPasskeyNameStatus,
   passkeys,
   registerPasskeyStatus,
   withBackupCodes,
@@ -136,6 +134,10 @@ const _AccountSecurity: FC<Props> = ({
   setRegisterPasskeyStatus,
 }) => {
   const [editPasskeyId, setEditPasskeyId] = useState<string | null>(null)
+
+  const isEditPasskeyNameSuccess = editPasskeyNameStatus === 'success'
+  const isEditPasskeyNameInactive = editPasskeyNameStatus === 'inactive'
+  const isEditPasskeyNameSubmitting = editPasskeyNameStatus === 'submitting'
 
   const passkeysAmount = passkeys.length
   const isAddPasskeyAvailable = passkeysAmount < passkeysAmountLimit
@@ -155,10 +157,15 @@ const _AccountSecurity: FC<Props> = ({
 
   const handleEditPasskeySubmit = (passkeyId: string, passkeyName?: string) => {
     if (passkeyName) {
-      editPasskeyName(passkeyId, passkeyName)
+      editPasskeyName(passkeyId, passkeyName?.trim())
     }
-    setEditPasskeyId(null)
   }
+
+  useEffect(() => {
+    if (isEditPasskeyNameSuccess || isEditPasskeyNameInactive) {
+      setEditPasskeyId(null)
+    }
+  }, [isEditPasskeyNameSuccess, isEditPasskeyNameInactive])
 
   useEffect(() => {
     fetchPasskeys()
@@ -207,11 +214,10 @@ const _AccountSecurity: FC<Props> = ({
                 <div className={classes.passkeyNameWrapper}>
                   {passkey.id === editPasskeyId ? (
                     <TextField
-                      isSubmitting={isEditPasskeySubmitting}
-                      isSubmitSuccess={isEditPasskeyNameSubmitSuccess}
+                      isSubmitting={isEditPasskeyNameSubmitting}
+                      isSubmitSuccess={isEditPasskeyNameSuccess}
                       validationRegexErrorMessage="Passkey Nickname must be between 2 - 120 characters!"
-                      onSubmit={(data: FormValues) => handleEditPasskeySubmit
-                    (passkey.id, data.input)}
+                      onSubmit={(data: FormValues) => handleEditPasskeySubmit(passkey.id, data.input)}
                       validationRegex={/^.{2,120}$/}
                       defaultValue={passkey.displayName}
                       height={30}

@@ -13,6 +13,7 @@ export interface Passkey {
 }
 
 export type RegisterPasskeyStatus = 'success' | 'failure' | 'unknown'
+export type EditPasskeyNameStatus = 'success' | 'inactive' | 'submitting'
 
 export class PasskeyStore {
   @observable
@@ -27,16 +28,13 @@ export class PasskeyStore {
   @observable
   public registerPasskeyStatus: RegisterPasskeyStatus = 'unknown'
 
-  private registerPasskeyStatusTimeout: NodeJS.Timeout | null = null
+  @observable
+  public editPasskeyNameStatus: EditPasskeyNameStatus = 'inactive'
 
   @observable
   public hasVerifyWithPasskeyFailed: boolean = false
 
-  @observable
-  public isEditPasskeySubmitting: boolean = false
-
-  @observable
-  public isEditPasskeyNameSubmitSuccess: boolean = false
+  private registerPasskeyStatusTimeout: NodeJS.Timeout | null = null
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     this.setIsPasskeySupported()
@@ -189,15 +187,20 @@ export class PasskeyStore {
   @action.bound
   editPasskeyName = flow(function* (this: PasskeyStore, passkeyId: string, passkeyName: string) {
     try {
-      this.isEditPasskeySubmitting = true
+      this.editPasskeyNameStatus = 'submitting'
       yield this.axios.patch(`/api/v2/passkeys/${passkeyId}`, {
         passkeyName,
       })
-      this.isEditPasskeySubmitting = false
-      this.isEditPasskeyNameSubmitSuccess = true
-      this.fetchPasskeys()
+      this.editPasskeyNameStatus = 'success'
+
+      yield this.fetchPasskeys()
+      setTimeout(() => {
+        runInAction(() => {
+          this.editPasskeyNameStatus = 'inactive'
+        })
+      }, 1000)
     } catch (error) {
-      this.isEditPasskeySubmitting = false
+      this.editPasskeyNameStatus = 'inactive'
       console.error('PasskeyStore -> editPasskeyName: ', error)
     }
   })
