@@ -195,6 +195,7 @@ export class PasskeyStore {
       })
       this.isEditPasskeySubmitting = false
       this.isEditPasskeyNameSubmitSuccess = true
+      this.fetchPasskeys()
     } catch (error) {
       this.isEditPasskeySubmitting = false
       console.error('PasskeyStore -> editPasskeyName: ', error)

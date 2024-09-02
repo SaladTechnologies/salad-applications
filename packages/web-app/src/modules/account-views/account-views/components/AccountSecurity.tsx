@@ -153,7 +153,7 @@ const _AccountSecurity: FC<Props> = ({
     }
   }
 
-  const handleEditPasskey = (passkeyId: string, passkeyName?: string) => {
+  const handleEditPasskeySubmit = (passkeyId: string, passkeyName?: string) => {
     if (passkeyName) {
       editPasskeyName(passkeyId, passkeyName)
     }
@@ -210,7 +210,8 @@ const _AccountSecurity: FC<Props> = ({
                       isSubmitting={isEditPasskeySubmitting}
                       isSubmitSuccess={isEditPasskeyNameSubmitSuccess}
                       validationRegexErrorMessage="Passkey Nickname must be between 2 - 120 characters!"
-                      onSubmit={(data: FormValues) => handleEditPasskey(passkey.id, data.input)}
+                      onSubmit={(data: FormValues) => handleEditPasskeySubmit
+                    (passkey.id, data.input)}
                       validationRegex={/^.{2,120}$/}
                       defaultValue={passkey.displayName}
                       height={30}
