@@ -74,14 +74,15 @@ const styles: () => Record<string, CSS.Properties> = () => ({
     height: '30px',
   },
   passkeyName: {
-    display: 'flex',
+    display: 'block',
     width: '100%',
     height: '100%',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     alignItems: 'center',
-    backgroundColor: 'yellow',
+    paddingTop: '6px',
+    boxSizing: 'border-box',
   },
   messageWrapper: {
     position: 'relative',
