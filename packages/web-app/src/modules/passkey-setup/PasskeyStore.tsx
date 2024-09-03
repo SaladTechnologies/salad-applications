@@ -19,6 +19,7 @@ export interface Passkey {
 }
 
 export type RegisterPasskeyStatus = 'success' | 'failure' | 'unknown'
+export type EditPasskeyNameStatus = 'success' | 'inactive' | 'submitting'
 
 export class PasskeyStore {
   @observable
@@ -33,10 +34,13 @@ export class PasskeyStore {
   @observable
   public registerPasskeyStatus: RegisterPasskeyStatus = 'unknown'
 
-  private registerPasskeyStatusTimeout: NodeJS.Timeout | null = null
+  @observable
+  public editPasskeyNameStatus: EditPasskeyNameStatus = 'inactive'
 
   @observable
   public hasVerifyWithPasskeyFailed: boolean = false
+
+  private registerPasskeyStatusTimeout: NodeJS.Timeout | null = null
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     this.setIsPasskeySupported()
@@ -181,4 +185,25 @@ export class PasskeyStore {
   setRegisterPasskeyStatus = (registerPasskeyStatus: RegisterPasskeyStatus) => {
     this.registerPasskeyStatus = registerPasskeyStatus
   }
+
+  @action.bound
+  editPasskeyName = flow(function* (this: PasskeyStore, passkeyId: string, passkeyName: string) {
+    try {
+      this.editPasskeyNameStatus = 'submitting'
+      yield this.axios.patch(`/api/v2/passkeys/${passkeyId}`, {
+        passkeyName,
+      })
+      this.editPasskeyNameStatus = 'success'
+
+      yield this.fetchPasskeys()
+      setTimeout(() => {
+        runInAction(() => {
+          this.editPasskeyNameStatus = 'inactive'
+        })
+      }, 1000)
+    } catch (error) {
+      this.editPasskeyNameStatus = 'inactive'
+      console.error('PasskeyStore -> editPasskeyName: ', error)
+    }
+  })
 }
