@@ -1,6 +1,6 @@
 import type { RootStore } from '../../Store'
-import { backupCodesEndpointPath } from '../backup-codes'
-import { passkeysCredentialsOptionsEndpointPath, passkeysEndpointPath } from '../passkey-setup'
+import { backupCodesEndpointPath } from '../backup-codes/constants'
+import { passkeysCredentialsOptionsEndpointPath, passkeysEndpointPath } from '../passkey-setup/constants'
 
 enum PendingProtectedActionTrigger {
   GetBackupCodes = `get:${backupCodesEndpointPath}`,

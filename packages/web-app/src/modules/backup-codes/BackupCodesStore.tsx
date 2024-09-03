@@ -2,6 +2,7 @@ import type { AxiosInstance } from 'axios'
 import { action, flow, observable } from 'mobx'
 import type { RootStore } from '../../Store'
 import { handlePendingProtectedAction } from '../protected-action/utils'
+import { backupCodesEndpointPath, backupCodesVerifyEndpointPath } from './constants'
 
 export const isPasskeyFeatureEnabled = true
 
@@ -9,9 +10,6 @@ export interface BackupCodes {
   codes: string[]
   createdAt: string
 }
-
-export const backupCodesEndpointPath = '/api/v2/backup-codes'
-export const backupCodesVerifyEndpointPath = '/api/v2/backup-codes/verify'
 
 export class BackupCodesStore {
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}

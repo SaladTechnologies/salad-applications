@@ -2,6 +2,12 @@ import type { AxiosInstance } from 'axios'
 import { action, flow, observable, runInAction } from 'mobx'
 import type { RootStore } from '../../Store'
 import { handlePendingProtectedAction } from '../protected-action/utils'
+import {
+  passkeysAssertionsEndpointPath,
+  passkeysAssertionsOptionsEndpointPath,
+  passkeysCredentialsEndpointPath,
+  passkeysEndpointPath,
+} from './constants'
 import { coerceToBase64Url, getIsPasskeySupported, getPasskeyCredential, registerPasskeyCredential } from './utils'
 
 export const isPasskeyFeatureEnabled = true
@@ -13,12 +19,6 @@ export interface Passkey {
 }
 
 export type RegisterPasskeyStatus = 'success' | 'failure' | 'unknown'
-
-export const passkeysEndpointPath = '/api/v2/passkeys'
-export const passkeysCredentialsEndpointPath = '/api/v2/passkeys/credentials'
-export const passkeysCredentialsOptionsEndpointPath = '/api/v2/passkeys/credentials/options'
-export const passkeysAssertionsEndpointPath = '/api/v2/passkeys/assertions'
-export const passkeysAssertionsOptionsEndpointPath = '/api/v2/passkeys/assertions/options'
 
 export class PasskeyStore {
   @observable
