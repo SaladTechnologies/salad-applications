@@ -1,10 +1,12 @@
 import type { RootStore } from '../../Store'
+import { backupCodesEndpointPath } from '../backup-codes'
+import { passkeysCredentialsOptionsEndpointPath, passkeysEndpointPath } from '../passkey-setup'
 
 enum PendingProtectedActionTrigger {
-  GetBackupCodes = 'get:/api/v2/backup-codes',
-  CreatePasskey = 'post:/api/v2/passkeys/credentials/options',
-  GenerateBackupCodes = 'post:/api/v2/backup-codes',
-  DeletePasskey = 'delete:/api/v2/passkeys',
+  GetBackupCodes = `get:${backupCodesEndpointPath}`,
+  CreatePasskey = `post:${passkeysCredentialsOptionsEndpointPath}`,
+  GenerateBackupCodes = `post:${backupCodesEndpointPath}`,
+  DeletePasskey = `delete:${passkeysEndpointPath}`,
 }
 
 export const handlePendingProtectedAction = (store: RootStore) => {

@@ -10,6 +10,9 @@ export interface BackupCodes {
   createdAt: string
 }
 
+export const backupCodesEndpointPath = '/api/v2/backup-codes'
+export const backupCodesVerifyEndpointPath = '/api/v2/backup-codes/verify'
+
 export class BackupCodesStore {
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
@@ -22,7 +25,7 @@ export class BackupCodesStore {
   @action.bound
   verifyWithBackupCode = flow(function* (this: BackupCodesStore, backupCode: string) {
     try {
-      const backupCodeVerifyResponse = yield this.axios.post(`/api/v2/backup-codes/verify`, {
+      const backupCodeVerifyResponse = yield this.axios.post(backupCodesVerifyEndpointPath, {
         backupCode,
       })
       if (backupCodeVerifyResponse.status === 200 || backupCodeVerifyResponse.status === 204) {
@@ -43,7 +46,7 @@ export class BackupCodesStore {
   generateBackupCodes = flow(function* (this: BackupCodesStore) {
     try {
       this.backupCodes = undefined
-      const generateBackupCodesResponse = yield this.axios.post(`/api/v2/backup-codes`)
+      const generateBackupCodesResponse = yield this.axios.post(backupCodesEndpointPath)
       this.backupCodes = generateBackupCodesResponse.data
     } catch (error) {
       console.error('BackupCodesStore -> generateBackupCodes: ', error)
@@ -53,7 +56,7 @@ export class BackupCodesStore {
   @action.bound
   getBackupCodes = flow(function* (this: BackupCodesStore) {
     try {
-      const backupCodesResponse = yield this.axios.get(`/api/v2/backup-codes`)
+      const backupCodesResponse = yield this.axios.get(backupCodesEndpointPath)
       this.backupCodes = backupCodesResponse.data
     } catch (error) {
       console.error('BackupCodesStore -> getBackupCodes: ', error)

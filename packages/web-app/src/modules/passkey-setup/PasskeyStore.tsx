@@ -15,6 +15,12 @@ export interface Passkey {
 
 export type RegisterPasskeyStatus = 'success' | 'failure' | 'unknown'
 
+export const passkeysEndpointPath = '/api/v2/passkeys'
+export const passkeysCredentialsEndpointPath = '/api/v2/passkeys/credentials'
+export const passkeysCredentialsOptionsEndpointPath = '/api/v2/passkeys/credentials/options'
+export const passkeysAssertionsEndpointPath = '/api/v2/passkeys/assertions'
+export const passkeysAssertionsOptionsEndpointPath = '/api/v2/passkeys/assertions/options'
+
 export class PasskeyStore {
   @observable
   public isPasskeySupported: boolean = false
@@ -58,7 +64,7 @@ export class PasskeyStore {
     }
 
     try {
-      const { data: credentialsOptionsData } = yield this.axios.post(`/api/v2/passkeys/credentials/options`, {
+      const { data: credentialsOptionsData } = yield this.axios.post(passkeysCredentialsOptionsEndpointPath, {
         passkeyName,
       })
       const credential = yield registerPasskeyCredential(credentialsOptionsData)
@@ -69,7 +75,7 @@ export class PasskeyStore {
       const clientDataJSON = new Uint8Array(credential.response.clientDataJSON)
       const rawId = new Uint8Array(credential.rawId)
 
-      const credentialsResponse = yield this.axios.post(`/api/v2/passkeys/credentials`, {
+      const credentialsResponse = yield this.axios.post(passkeysCredentialsEndpointPath, {
         id: credential.id,
         rawId: coerceToBase64Url(rawId),
         type: credential.type,
@@ -106,7 +112,7 @@ export class PasskeyStore {
   @action.bound
   fetchPasskeys = flow(function* (this: PasskeyStore) {
     try {
-      const { data } = yield this.axios.get(`/api/v2/passkeys`)
+      const { data } = yield this.axios.get(passkeysEndpointPath)
       this.passkeys = data
     } catch (error) {
       console.error('PasskeyStore -> fetchPasskeys: ', error)
@@ -116,7 +122,7 @@ export class PasskeyStore {
   @action.bound
   deletePasskey = flow(function* (this: PasskeyStore, passkeyId: string) {
     try {
-      const deleteResponse = yield this.axios.delete(`/api/v2/passkeys/${passkeyId}`)
+      const deleteResponse = yield this.axios.delete(`${passkeysEndpointPath}/${passkeyId}`)
 
       if (deleteResponse.status === 200 || deleteResponse.status === 204) {
         const isLastPasskeyRemoved = this.passkeys.length === 1
@@ -139,7 +145,7 @@ export class PasskeyStore {
   @action.bound
   verifyWithPasskey = flow(function* (this: PasskeyStore) {
     try {
-      const { data: assertionsOptionsData } = yield this.axios.post(`/api/v2/passkeys/assertions/options`)
+      const { data: assertionsOptionsData } = yield this.axios.post(passkeysAssertionsOptionsEndpointPath)
       const credential = yield getPasskeyCredential(assertionsOptionsData)
       if (!credential) {
         throw new Error('Failed to to get passkey assertions')
@@ -160,7 +166,7 @@ export class PasskeyStore {
         },
       }
 
-      const credentialsResponse = yield this.axios.post(`/api/v2/passkeys/assertions`, transformedCredentials)
+      const credentialsResponse = yield this.axios.post(passkeysAssertionsEndpointPath, transformedCredentials)
 
       if (credentialsResponse.status === 200 || credentialsResponse.status === 204) {
         handlePendingProtectedAction(this.store)
