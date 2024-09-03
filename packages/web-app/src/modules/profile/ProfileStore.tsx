@@ -26,7 +26,7 @@ const IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY = 'IS_INSTALL_REMINDER_CLOSED'
 interface PendingProtectedAction {
   method: string
   url: string
-  body?: string
+  data?: string
 }
 
 export class ProfileStore {
