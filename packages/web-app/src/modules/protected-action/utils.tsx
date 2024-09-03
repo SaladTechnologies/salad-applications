@@ -1,6 +1,7 @@
 import type { RootStore } from '../../Store'
 import { config } from '../../config'
 import { ChallengeSudoModeTrigger } from '../auth'
+import { authenticationSessionsSudoEndpointPath } from '../auth/constants'
 import { backupCodesEndpointPath } from '../backup-codes/constants'
 import { passkeysCredentialsOptionsEndpointPath, passkeysEndpointPath } from '../passkey-setup/constants'
 
@@ -9,7 +10,7 @@ enum PendingProtectedActionTrigger {
   CreatePasskey = `post:${passkeysCredentialsOptionsEndpointPath}`,
   GenerateBackupCodes = `post:${backupCodesEndpointPath}`,
   DeletePasskey = `delete:${passkeysEndpointPath}`,
-  ChallengeSudoMode = 'post:/api/v2/authentication-sessions/sudo',
+  ChallengeSudoMode = `post:${authenticationSessionsSudoEndpointPath}`,
 }
 
 export const handlePendingProtectedAction = (store: RootStore) => {

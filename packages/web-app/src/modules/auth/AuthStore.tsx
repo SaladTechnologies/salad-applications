@@ -3,6 +3,7 @@ import { action, flow, observable, runInAction } from 'mobx'
 import type { RootStore } from '../../Store'
 import { config } from '../../config'
 import { NotificationMessageCategory } from '../notifications/models'
+import { authenticationSessionsSudoEndpointPath } from './constants'
 
 export enum ChallengeSudoModeTrigger {
   GoogleSignIn = 'GoogleSignIn',
@@ -81,7 +82,7 @@ export class AuthStore {
   @action.bound
   challengeSudoMode = flow(function* (this: AuthStore, challengeSudoModeTrigger: ChallengeSudoModeTrigger) {
     try {
-      const response = yield this.axios.post('/api/v2/authentication-sessions/sudo')
+      const response = yield this.axios.post(authenticationSessionsSudoEndpointPath)
       return response
     } catch (error) {
       this.challengeSudoModeTrigger = challengeSudoModeTrigger
