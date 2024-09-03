@@ -10,7 +10,7 @@ import withStyles from 'react-jss'
 import { useMediaQuery } from 'react-responsive'
 import { ErrorText, mobileSize } from '../../../../components'
 import { SuccessText } from '../../../../components/primitives/content/SuccessText'
-import type { Passkey, RegisterPasskeyStatus } from '../../../passkey-setup'
+import type { EditPasskeyNameStatus, Passkey, RegisterPasskeyStatus } from '../../../passkey-setup'
 import type { FormValues } from './Account'
 
 const styles: () => Record<string, CSS.Properties> = () => ({
@@ -69,16 +69,20 @@ const styles: () => Record<string, CSS.Properties> = () => ({
     cursor: 'pointer',
     marginRight: '5px',
   },
-  passkeyName: {
+  passkeyNameWrapper: {
     width: '200px',
+    height: '30px',
+  },
+  passkeyName: {
+    display: 'block',
+    width: '100%',
+    height: '100%',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-  },
-  passkeyNameContainer: {
-    height: '30px',
-    width: '200px',
-    alignContent: 'center',
+    alignItems: 'center',
+    paddingTop: '6px',
+    boxSizing: 'border-box',
   },
   messageWrapper: {
     position: 'relative',
@@ -104,8 +108,7 @@ const styles: () => Record<string, CSS.Properties> = () => ({
 const passkeysAmountLimit = 30
 
 interface Props extends WithStyles<typeof styles> {
-  isEditPasskeyNameSubmitSuccess: boolean
-  isEditPasskeySubmitting: boolean
+  editPasskeyNameStatus: EditPasskeyNameStatus
   passkeys: Passkey[]
   registerPasskeyStatus: RegisterPasskeyStatus
   withBackupCodes: boolean
@@ -119,8 +122,7 @@ interface Props extends WithStyles<typeof styles> {
 
 const _AccountSecurity: FC<Props> = ({
   classes,
-  isEditPasskeyNameSubmitSuccess,
-  isEditPasskeySubmitting,
+  editPasskeyNameStatus,
   passkeys,
   registerPasskeyStatus,
   withBackupCodes,
@@ -132,6 +134,10 @@ const _AccountSecurity: FC<Props> = ({
   setRegisterPasskeyStatus,
 }) => {
   const [editPasskeyId, setEditPasskeyId] = useState<string | null>(null)
+
+  const isEditPasskeyNameSuccess = editPasskeyNameStatus === 'success'
+  const isEditPasskeyNameInactive = editPasskeyNameStatus === 'inactive'
+  const isEditPasskeyNameSubmitting = editPasskeyNameStatus === 'submitting'
 
   const passkeysAmount = passkeys.length
   const isAddPasskeyAvailable = passkeysAmount < passkeysAmountLimit
@@ -149,12 +155,17 @@ const _AccountSecurity: FC<Props> = ({
     }
   }
 
-  const handleEditPasskey = (passkeyId: string, passkeyName?: string) => {
+  const handleEditPasskeySubmit = (passkeyId: string, passkeyName?: string) => {
     if (passkeyName) {
-      editPasskeyName(passkeyId, passkeyName)
+      editPasskeyName(passkeyId, passkeyName?.trim())
     }
-    setEditPasskeyId(null)
   }
+
+  useEffect(() => {
+    if (isEditPasskeyNameSuccess || isEditPasskeyNameInactive) {
+      setEditPasskeyId(null)
+    }
+  }, [isEditPasskeyNameSuccess, isEditPasskeyNameInactive])
 
   useEffect(() => {
     fetchPasskeys()
@@ -200,13 +211,13 @@ const _AccountSecurity: FC<Props> = ({
           {passkeys.map((passkey) => {
             return (
               <div className={classes.passkeysListItem} key={passkey.id}>
-                <div className={classes.passkeyNameContainer}>
+                <div className={classes.passkeyNameWrapper}>
                   {passkey.id === editPasskeyId ? (
                     <TextField
-                      isSubmitting={isEditPasskeySubmitting}
-                      isSubmitSuccess={isEditPasskeyNameSubmitSuccess}
+                      isSubmitting={isEditPasskeyNameSubmitting}
+                      isSubmitSuccess={isEditPasskeyNameSuccess}
                       validationRegexErrorMessage="Passkey Nickname must be between 2 - 120 characters!"
-                      onSubmit={(data: FormValues) => handleEditPasskey(passkey.id, data.input)}
+                      onSubmit={(data: FormValues) => handleEditPasskeySubmit(passkey.id, data.input)}
                       validationRegex={/^.{2,120}$/}
                       defaultValue={passkey.displayName}
                       height={30}
