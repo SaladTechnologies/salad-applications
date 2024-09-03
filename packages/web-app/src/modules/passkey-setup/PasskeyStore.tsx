@@ -2,7 +2,6 @@ import type { AxiosInstance } from 'axios'
 import { action, flow, observable, runInAction } from 'mobx'
 import type { RootStore } from '../../Store'
 import { handlePendingProtectedAction } from '../protected-action/utils'
-import { getDefaultPasskeyName } from './components/utils'
 import { coerceToBase64Url, getIsPasskeySupported, getPasskeyCredential, registerPasskeyCredential } from './utils'
 
 export const isPasskeyFeatureEnabled = true
@@ -56,17 +55,13 @@ export class PasskeyStore {
 
   @action.bound
   registerPasskey = flow(function* (this: PasskeyStore) {
-    const passkeyName = getDefaultPasskeyName()
-
     if (this.registerPasskeyStatusTimeout) {
       this.registerPasskeyStatus = 'unknown'
       clearTimeout(this.registerPasskeyStatusTimeout)
     }
 
     try {
-      const { data: credentialsOptionsData } = yield this.axios.post(passkeysCredentialsOptionsEndpointPath, {
-        passkeyName,
-      })
+      const { data: credentialsOptionsData } = yield this.axios.post(`/api/v2/passkeys/credentials/options`)
       const credential = yield registerPasskeyCredential(credentialsOptionsData)
       if (!credential) {
         throw new Error('Failed to to get passkey credentials')
