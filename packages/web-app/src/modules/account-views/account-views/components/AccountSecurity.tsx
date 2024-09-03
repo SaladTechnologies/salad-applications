@@ -72,6 +72,7 @@ const styles: () => Record<string, CSS.Properties> = () => ({
   passkeyNameWrapper: {
     width: '200px',
     height: '30px',
+    overflow: 'hidden',
   },
   passkeyName: {
     display: 'block',
