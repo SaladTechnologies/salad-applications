@@ -54,6 +54,7 @@ export class BackupCodesStore {
   @action.bound
   getBackupCodes = flow(function* (this: BackupCodesStore) {
     try {
+      this.backupCodes = undefined
       const backupCodesResponse = yield this.axios.get(backupCodesEndpointPath)
       this.backupCodes = backupCodesResponse.data
     } catch (error) {
