@@ -4,9 +4,10 @@ import { ProtectedActionPage } from './components'
 
 const mapStoreToProps = (store: RootStore): any => ({
   isPasskeySupported: store.passkey.isPasskeySupported,
+  isPendingProtectedActionExist: !!store.profile.pendingProtectedAction,
   hasVerifyWithBackupCodeFailed: store.backupCodes.hasVerifyWithBackupCodeFailed,
   hasVerifyWithPasskeyFailed: store.passkey.hasVerifyWithPasskeyFailed,
-  onBackToPreviousPageClick: () => store.routing.goBack(),
+  backToAccount: () => store.routing.push('/account'),
   setHasVerifyWithBackupCodeFailed: store.backupCodes.setHasVerifyWithBackupCodeFailed,
   setHasVerifyWithPasskeyFailed: store.passkey.setHasVerifyWithPasskeyFailed,
   verifyWithBackupCode: store.backupCodes.verifyWithBackupCode,

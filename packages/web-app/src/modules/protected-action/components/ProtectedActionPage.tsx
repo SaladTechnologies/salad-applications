@@ -13,7 +13,7 @@ import { TextField } from '../../../components'
 import { withLogin } from '../../auth-views'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
-  container: {
+  pageWrapper: {
     backgroundImage: 'linear-gradient(to right, #56A431 , #AACF40)',
     position: 'fixed',
     top: 0,
@@ -21,8 +21,30 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     left: 0,
     right: 0,
     zIndex: 2000,
+  },
+  pageContent: {
+    position: 'relative',
+    height: '100%',
     display: 'flex',
     justifyContent: 'space-around',
+    flexDirection: 'row',
+  },
+  leftSideWrapper: {
+    position: 'relative',
+    display: 'flex',
+    gap: '48px',
+    flexDirection: 'column',
+    justifyContent: 'left',
+    marginTop: '82px',
+    marginLeft: '40px',
+    boxSizing: 'border-box',
+    width: '50%',
+    '@media (max-width: 812px)': {
+      padding: '16px',
+      marginTop: '0px',
+      marginLeft: '0px',
+      width: '100%',
+    },
   },
   textContainer: {
     display: 'flex',
@@ -71,7 +93,11 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     flexDirection: 'column',
   },
   image: {
-    height: '100vh',
+    position: 'relative',
+    width: '50%',
+    height: '100%',
+    backgroundImage: `url(${Referrals})`,
+    backgroundRepeat: 'no-repeat',
     '@media (max-width: 812px)': {
       display: 'none',
     },
@@ -106,9 +132,10 @@ interface FormValues {
 
 interface Props extends WithStyles<typeof styles> {
   isPasskeySupported: boolean
+  isPendingProtectedActionExist: boolean
   hasVerifyWithBackupCodeFailed: boolean
   hasVerifyWithPasskeyFailed: boolean
-  onBackToPreviousPageClick: () => void
+  backToAccount: () => void
   setHasVerifyWithBackupCodeFailed: (updatedHasVerifyWithBackupCodeFailed: boolean) => void
   setHasVerifyWithPasskeyFailed: (updatedHasVerifyWithPasskeyFailed: boolean) => void
   verifyWithPasskey: () => void
@@ -118,14 +145,21 @@ interface Props extends WithStyles<typeof styles> {
 const _ProtectedActionPage: FC<Props> = ({
   classes,
   isPasskeySupported,
+  isPendingProtectedActionExist,
   hasVerifyWithBackupCodeFailed,
   hasVerifyWithPasskeyFailed,
-  onBackToPreviousPageClick,
+  backToAccount,
   setHasVerifyWithBackupCodeFailed,
   setHasVerifyWithPasskeyFailed,
   verifyWithPasskey,
   verifyWithBackupCode,
 }) => {
+  useEffect(() => {
+    if (!isPendingProtectedActionExist) {
+      backToAccount()
+    }
+  }, [isPendingProtectedActionExist, backToAccount])
+
   useEffect(() => {
     return () => {
       setHasVerifyWithBackupCodeFailed(false)
@@ -169,78 +203,82 @@ const _ProtectedActionPage: FC<Props> = ({
   }
 
   return (
-    <Scrollbars>
-      <div className={classes.container}>
-        <div className={classes.textContainer}>
-          <Text className={classes.header} as="h1" variant="headline">
-            Protected Action
-          </Text>
-          {isPasskeySupported ? (
-            <>
-              <Text className={classes.description} variant="baseL">
-                Please verify your credentials to proceed with this action.
-              </Text>
-              <div className={classes.buttonContainer}>
-                <Button
-                  leadingIcon={<FontAwesomeIcon icon={faKey} className={classes.addPasskeyIcon} />}
-                  variant="primary-basic"
-                  label="Verify with Passkey"
-                  onClick={handleVerifyWithPasskeyClick}
-                />
-                {hasVerifyWithPasskeyFailed && (
-                  <Text className={classes.errorText} variant="baseS">
-                    Passkey verification failure, please try again
-                  </Text>
-                )}
-              </div>
-            </>
-          ) : (
-            <Text className={classes.description} variant="baseL">
-              This device does not support Passkeys. Please login on a device or browser that supports passkeys and try
-              again.
+    <div className={classes.pageWrapper}>
+      <Scrollbars>
+        <div className={classes.pageContent}>
+          <div className={classes.leftSideWrapper}>
+            <Text className={classes.header} as="h1" variant="headline">
+              Protected Action
             </Text>
-          )}
-          <Text className={classes.description} variant="baseL">
-            Or verify with a one-time backup code:
-          </Text>
-          <Form
-            onSubmit={handleVerifyWithBackupCodeSubmit}
-            validate={validate}
-            render={({ handleSubmit }) => {
-              return (
-                <div className={classes.formWrapper}>
-                  <form onSubmit={handleSubmit} className={classes.formWrapper} onChange={handleBackupCodeChange}>
-                    <Field name="backupCode" type="text">
-                      {({ input, meta }) => {
-                        const validationErrorText = meta.error && meta.touched ? meta.error : null
-                        const addPasskeyFailedErrorText = hasVerifyWithBackupCodeFailed
-                          ? verifyBackupCodeFailedText
-                          : null
-                        const errorText = validationErrorText ?? addPasskeyFailedErrorText
-                        return (
-                          <TextField
-                            {...input}
-                            label="Backup Code"
-                            inputClassName={classes.textField}
-                            placeholder="Backup Code"
-                            errorText={errorText}
-                          />
-                        )
-                      }}
-                    </Field>
-                    <div>
-                      <Button variant="primary-basic" label="Verify with Backup Code" type="submit" />
-                    </div>
-                  </form>
+            {isPasskeySupported ? (
+              <>
+                <Text className={classes.description} variant="baseL">
+                  Please verify your credentials to proceed with this action.
+                </Text>
+                <div className={classes.buttonContainer}>
+                  <Button
+                    leadingIcon={<FontAwesomeIcon icon={faKey} className={classes.addPasskeyIcon} />}
+                    variant="primary-basic"
+                    label="Verify with Passkey"
+                    onClick={handleVerifyWithPasskeyClick}
+                  />
+                  {hasVerifyWithPasskeyFailed && (
+                    <Text className={classes.errorText} variant="baseS">
+                      Passkey verification failure, please try again
+                    </Text>
+                  )}
                 </div>
-              )
-            }}
-          />
-          <Button variant="outlined" label="Cancel" onClick={onBackToPreviousPageClick} />
+              </>
+            ) : (
+              <Text className={classes.description} variant="baseL">
+                This device does not support Passkeys. Please login on a device or browser that supports passkeys and
+                try again.
+              </Text>
+            )}
+            <Text className={classes.description} variant="baseL">
+              Or verify with a one-time backup code:
+            </Text>
+            <Form
+              onSubmit={handleVerifyWithBackupCodeSubmit}
+              validate={validate}
+              render={({ handleSubmit }) => {
+                return (
+                  <div className={classes.formWrapper}>
+                    <form onSubmit={handleSubmit} className={classes.formWrapper} onChange={handleBackupCodeChange}>
+                      <Field name="backupCode" type="text">
+                        {({ input, meta }) => {
+                          const validationErrorText = meta.error && meta.touched ? meta.error : null
+                          const addPasskeyFailedErrorText = hasVerifyWithBackupCodeFailed
+                            ? verifyBackupCodeFailedText
+                            : null
+                          const errorText = validationErrorText ?? addPasskeyFailedErrorText
+                          return (
+                            <TextField
+                              {...input}
+                              label="Backup Code"
+                              inputClassName={classes.textField}
+                              placeholder="Backup Code"
+                              errorText={errorText}
+                            />
+                          )
+                        }}
+                      </Field>
+                      <div>
+                        <Button variant="primary-basic" label="Verify with Backup Code" type="submit" />
+                      </div>
+                    </form>
+                  </div>
+                )
+              }}
+            />
+            <div>
+              <Button variant="outlined" label="Cancel" onClick={backToAccount} />
+            </div>
+          </div>
+          <div className={classes.image} />
         </div>
-        <img className={classes.image} src={Referrals} alt="Referrals Background" />
-      </div>
-    </Scrollbars>
+      </Scrollbars>
+    </div>
   )
 }
 

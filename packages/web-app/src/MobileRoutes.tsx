@@ -10,6 +10,7 @@ import { BackupCodesPageContainer } from './modules/backup-codes/BackupCodesPage
 import { MobileEarningSummaryContainer } from './modules/earn-views-mobile'
 import { PasskeyDeletePageContainer } from './modules/passkey-delete'
 import { isPasskeyFeatureEnabled } from './modules/passkey-setup'
+import { ProtectedActionPageContainer } from './modules/protected-action'
 import { RewardDetailsContainer } from './modules/reward-views'
 
 class _Routes extends Component<RouteComponentProps> {
@@ -30,6 +31,7 @@ class _Routes extends Component<RouteComponentProps> {
             <Route exact path="/account/passkey/delete/:id" component={PasskeyDeletePageContainer} />
           )}
           {isPasskeyFeatureEnabled && <Route path="/account/backup-codes" exact component={BackupCodesPageContainer} />}
+          {isPasskeyFeatureEnabled && <Route path="/protected-action" exact component={ProtectedActionPageContainer} />}
           <Route component={MobilePageNotFound} />
         </Switch>
       </>
