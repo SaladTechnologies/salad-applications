@@ -1,16 +1,17 @@
-import { faEye, faKey, faTrashCan } from '@fortawesome/free-solid-svg-icons'
+import { faEye, faKey, faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Button, Text } from '@saladtechnologies/garden-components'
+import { Button, Text, TextField } from '@saladtechnologies/garden-components'
 import classNames from 'classnames'
 import type CSS from 'csstype'
 import moment from 'moment'
-import { useEffect, type FC } from 'react'
+import { useEffect, useState, type FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { useMediaQuery } from 'react-responsive'
 import { ErrorText, mobileSize } from '../../../../components'
 import { SuccessText } from '../../../../components/primitives/content/SuccessText'
-import type { Passkey, RegisterPasskeyStatus } from '../../../passkey-setup'
+import type { EditPasskeyNameStatus, Passkey, RegisterPasskeyStatus } from '../../../passkey-setup'
+import type { FormValues } from './Account'
 
 const styles: () => Record<string, CSS.Properties> = () => ({
   accountSecurityWrapper: {
@@ -58,20 +59,31 @@ const styles: () => Record<string, CSS.Properties> = () => ({
     flexDirection: 'column',
   },
   passkeysListItem: {
-    marginTop: '16px',
+    marginTop: '4px',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
   },
-  deletePasskeyIcon: {
+  passkeyIcon: {
     cursor: 'pointer',
+    marginRight: '5px',
+  },
+  passkeyNameWrapper: {
+    width: '200px',
+    height: '30px',
+    overflow: 'hidden',
   },
   passkeyName: {
-    width: '200px',
+    display: 'block',
+    width: '100%',
+    height: '100%',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    alignItems: 'center',
+    paddingTop: '6px',
+    boxSizing: 'border-box',
   },
   messageWrapper: {
     position: 'relative',
@@ -97,9 +109,11 @@ const styles: () => Record<string, CSS.Properties> = () => ({
 const passkeysAmountLimit = 30
 
 interface Props extends WithStyles<typeof styles> {
+  editPasskeyNameStatus: EditPasskeyNameStatus
   passkeys: Passkey[]
-  withBackupCodes: boolean
   registerPasskeyStatus: RegisterPasskeyStatus
+  withBackupCodes: boolean
+  editPasskeyName: (passkeyId: string, passkeyName: string) => void
   onAddPasskeyClick: () => void
   onDeletePasskeyClick: (passkeyId: string) => void
   onViewBackupCodesClick: () => void
@@ -109,15 +123,23 @@ interface Props extends WithStyles<typeof styles> {
 
 const _AccountSecurity: FC<Props> = ({
   classes,
+  editPasskeyNameStatus,
   passkeys,
-  withBackupCodes,
   registerPasskeyStatus,
+  withBackupCodes,
+  editPasskeyName,
   onAddPasskeyClick,
   onDeletePasskeyClick,
   onViewBackupCodesClick,
   fetchPasskeys,
   setRegisterPasskeyStatus,
 }) => {
+  const [editPasskeyId, setEditPasskeyId] = useState<string | null>(null)
+
+  const isEditPasskeyNameSuccess = editPasskeyNameStatus === 'success'
+  const isEditPasskeyNameInactive = editPasskeyNameStatus === 'inactive'
+  const isEditPasskeyNameSubmitting = editPasskeyNameStatus === 'submitting'
+
   const passkeysAmount = passkeys.length
   const isAddPasskeyAvailable = passkeysAmount < passkeysAmountLimit
   const isTabletOrMobile = useMediaQuery({ query: `(max-width: ${mobileSize}px)` })
@@ -125,6 +147,26 @@ const _AccountSecurity: FC<Props> = ({
   const withPasskeyAddSuccess = registerPasskeyStatus === 'success'
   const withPasskeyAddFailure = registerPasskeyStatus === 'failure'
   const withPasskeyMassage = withPasskeyAddSuccess || withPasskeyAddFailure
+
+  const handleEditPasskeyIconClick = (passkeyId: string) => {
+    if (passkeyId === editPasskeyId) {
+      setEditPasskeyId(null)
+    } else {
+      setEditPasskeyId(passkeyId)
+    }
+  }
+
+  const handleEditPasskeySubmit = (passkeyId: string, passkeyName?: string) => {
+    if (passkeyName) {
+      editPasskeyName(passkeyId, passkeyName?.trim())
+    }
+  }
+
+  useEffect(() => {
+    if (isEditPasskeyNameSuccess || isEditPasskeyNameInactive) {
+      setEditPasskeyId(null)
+    }
+  }, [isEditPasskeyNameSuccess, isEditPasskeyNameInactive])
 
   useEffect(() => {
     fetchPasskeys()
@@ -170,13 +212,32 @@ const _AccountSecurity: FC<Props> = ({
           {passkeys.map((passkey) => {
             return (
               <div className={classes.passkeysListItem} key={passkey.id}>
-                <Text variant="baseS" className={classes.passkeyName}>
-                  {passkey.displayName}
-                </Text>
+                <div className={classes.passkeyNameWrapper}>
+                  {passkey.id === editPasskeyId ? (
+                    <TextField
+                      isSubmitting={isEditPasskeyNameSubmitting}
+                      isSubmitSuccess={isEditPasskeyNameSuccess}
+                      validationRegexErrorMessage="Passkey Nickname must be between 2 - 120 characters!"
+                      onSubmit={(data: FormValues) => handleEditPasskeySubmit(passkey.id, data.input)}
+                      validationRegex={/^.{2,120}$/}
+                      defaultValue={passkey.displayName}
+                      height={30}
+                    />
+                  ) : (
+                    <Text variant="baseS" className={classes.passkeyName}>
+                      {passkey.displayName}
+                    </Text>
+                  )}
+                </div>
                 <Text variant="baseS">{moment(passkey.createdAt).format('MMMM DD, YYYY')}</Text>
                 <FontAwesomeIcon
+                  icon={faPenToSquare}
+                  className={classes.passkeyIcon}
+                  onClick={() => handleEditPasskeyIconClick(passkey.id)}
+                />
+                <FontAwesomeIcon
                   icon={faTrashCan}
-                  className={classes.deletePasskeyIcon}
+                  className={classes.passkeyIcon}
                   onClick={() => onDeletePasskeyClick(passkey.id)}
                 />
               </div>
