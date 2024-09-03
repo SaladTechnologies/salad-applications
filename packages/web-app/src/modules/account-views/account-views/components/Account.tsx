@@ -1,5 +1,4 @@
 import { AvatarSelectionForm, Button, Layout, Text, TextField } from '@saladtechnologies/garden-components'
-import type { AxiosResponse } from 'axios'
 import type { FC } from 'react'
 import { useEffect } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
@@ -9,7 +8,6 @@ import { useLocation } from 'react-router'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { DefaultTheme } from '../../../../SaladTheme'
 import { Head } from '../../../../components'
-import type { ChallengeSudoModeTrigger } from '../../../auth'
 import { withLogin } from '../../../auth-views'
 import { isPasskeyFeatureEnabled, type Passkey } from '../../../passkey-setup'
 import type { Avatar, Profile } from '../../../profile/models'
@@ -114,7 +112,6 @@ interface Props extends WithStyles<typeof styles> {
   checkPayPalIdWithInterval: () => void
   payPalLogInChallengeSudoMode: () => void
   googleSignInChallengeSudoMode: (googleSignIn: () => void) => void
-  challengeSudoMode: (challengeSudoModeTrigger: ChallengeSudoModeTrigger) => Promise<AxiosResponse<any> | null>
 }
 
 export type FormValues = {
