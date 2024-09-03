@@ -4,7 +4,7 @@ import { ProtectedActionPage } from './components'
 
 const mapStoreToProps = (store: RootStore): any => ({
   isPasskeySupported: store.passkey.isPasskeySupported,
-  isPendingProtectedActionExist: !!store.profile.pendingProtectedAction,
+  isPendingProtectedActionExist: !!store.auth.pendingProtectedAction,
   hasVerifyWithBackupCodeFailed: store.backupCodes.hasVerifyWithBackupCodeFailed,
   hasVerifyWithPasskeyFailed: store.passkey.hasVerifyWithPasskeyFailed,
   backToAccount: () => store.routing.push('/account'),

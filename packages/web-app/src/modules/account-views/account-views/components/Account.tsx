@@ -1,7 +1,7 @@
 import { AvatarSelectionForm, Button, Layout, Text, TextField } from '@saladtechnologies/garden-components'
 import type { AxiosResponse } from 'axios'
 import type { FC } from 'react'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
@@ -111,11 +111,11 @@ interface Props extends WithStyles<typeof styles> {
   fetchPasskeys: () => void
   onAddPasskeyClick: () => void
   onDeletePasskeyClick: (passkeyId: string) => void
+  checkPayPalIdWithInterval: () => void
+  payPalLogInChallengeSudoMode: () => void
+  googleSignInChallengeSudoMode: (googleSignIn: () => void) => void
   challengeSudoMode: (challengeSudoModeTrigger: ChallengeSudoModeTrigger) => Promise<AxiosResponse<any> | null>
 }
-
-let intervalId: NodeJS.Timeout
-const maxPaypalLoadRetries = 60
 
 export type FormValues = {
   input?: string
@@ -149,46 +149,29 @@ const _Account: FC<Props> = ({
   isTermsAndConditionsAccepted,
   onSubmitTermsAndConditions,
   onToggleAcceptTermsAndConditions,
-  challengeSudoMode,
+  checkPayPalIdWithInterval,
+  payPalLogInChallengeSudoMode,
+  googleSignInChallengeSudoMode,
 }) => {
   const location = useLocation<{ isGoogleSignInFormTriggered: string; isPayPalLogInTriggered: string }>()
   const isGoogleSignInFormTriggered = !!location.state?.isGoogleSignInFormTriggered
   const isPayPalLogInTriggered = !!location.state?.isPayPalLogInTriggered
 
-  const [payPalLoadRetries, setPayPalLoadRetries] = useState(0)
-
-  const handleCheckPayPalId = useCallback(() => {
-    clearInterval(intervalId)
-    setPayPalLoadRetries(0)
-    intervalId = setInterval(() => {
-      loadPayPalId()
-      setPayPalLoadRetries((previousCount) => previousCount + 1)
-    }, 5000)
-  }, [loadPayPalId])
-
   useEffect(() => {
     loadPayPalId()
     loadGoogleAccountConnection()
-
-    return () => {
-      clearInterval(intervalId)
-    }
   }, [loadGoogleAccountConnection, loadPayPalId])
 
   useEffect(() => {
     if (isPayPalLogInTriggered) {
-      handleCheckPayPalId()
+      checkPayPalIdWithInterval()
     }
-  }, [isPayPalLogInTriggered, handleCheckPayPalId])
+  }, [isPayPalLogInTriggered, checkPayPalIdWithInterval])
 
   const shouldShowUpdateAccountTermsAndConditions = !!profile?.pendingTermsVersion
   const handleSubmitButtonReset = () => {
     isUserNameSubmitSuccess && onResetUsernameSuccess()
     isMinecraftUserNameSubmitSuccess && onResetMinecraftUsernameSuccess()
-  }
-
-  if (payPalLoadRetries === maxPaypalLoadRetries || payPalId) {
-    clearInterval(intervalId)
   }
 
   return (
@@ -253,10 +236,7 @@ const _Account: FC<Props> = ({
                   </Text>
                 ) : (
                   <>
-                    <PayPalLoginButton
-                      handleCheckPayPalId={handleCheckPayPalId}
-                      challengeSudoMode={challengeSudoMode}
-                    />
+                    <PayPalLoginButton payPalLogInChallengeSudoMode={payPalLogInChallengeSudoMode} />
                     <div className={classes.connectAccountDescription}>
                       <Text variant="baseS">
                         Connect Salad to your PayPal account. A PayPal account is required to redeem all PayPal rewards.
@@ -285,7 +265,7 @@ const _Account: FC<Props> = ({
                       isTermsAndConditionsAccepted={isTermsAndConditionsAccepted}
                       isTermsAndConditionsRequired={shouldShowUpdateAccountTermsAndConditions}
                       isGoogleSignInFormTriggered={isGoogleSignInFormTriggered}
-                      challengeSudoMode={challengeSudoMode}
+                      googleSignInChallengeSudoMode={googleSignInChallengeSudoMode}
                     />
                     {isLoadConnectedGoogleAccountEmailError && (
                       <div className={classes.connectAccountError}>

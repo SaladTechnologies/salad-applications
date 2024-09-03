@@ -10,6 +10,12 @@ export enum ChallengeSudoModeTrigger {
   PayPalLogIn = 'PayPalLogIn',
 }
 
+interface PendingProtectedAction {
+  method: string
+  url: string
+  data?: string
+}
+
 export class AuthStore {
   /** A value indicating whether the user is authenticated. */
   @observable
@@ -17,6 +23,9 @@ export class AuthStore {
 
   @observable
   public challengeSudoModeTrigger?: ChallengeSudoModeTrigger
+
+  @observable
+  public pendingProtectedAction?: PendingProtectedAction
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     this.axios
@@ -91,8 +100,36 @@ export class AuthStore {
     }
   })
 
+  googleSignInChallengeSudoMode = async (googleSignIn: () => void): Promise<void> => {
+    try {
+      const response = await this.challengeSudoMode(ChallengeSudoModeTrigger.GoogleSignIn)
+      if (response) {
+        googleSignIn()
+      }
+    } catch (error) {
+      console.error('AuthStore -> googleSignInChallengeSudoMode: ', error)
+    }
+  }
+
+  payPalLogInChallengeSudoMode = async (): Promise<void> => {
+    try {
+      const response = await this.challengeSudoMode(ChallengeSudoModeTrigger.PayPalLogIn)
+      if (response) {
+        this.store.profile.checkPayPalIdWithInterval()
+        window.open(config.paypalUrl)
+      }
+    } catch (error) {
+      console.error('AuthStore -> payPalLogInChallengeSudoMode: ', error)
+    }
+  }
+
   @action.bound
   setChallengeSudoModeTrigger = (updatedChallengeSudoModeTrigger?: ChallengeSudoModeTrigger) => {
     this.challengeSudoModeTrigger = updatedChallengeSudoModeTrigger
+  }
+
+  @action.bound
+  setPendingProtectedAction = (updatedPendingProtectedAction?: PendingProtectedAction) => {
+    this.pendingProtectedAction = updatedPendingProtectedAction
   }
 }
