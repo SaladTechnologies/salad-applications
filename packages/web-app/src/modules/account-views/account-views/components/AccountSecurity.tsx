@@ -224,9 +224,11 @@ const _AccountSecurity: FC<Props> = ({
                       height={30}
                     />
                   ) : (
-                    <Text variant="baseS" className={classes.passkeyName}>
-                      {passkey.displayName}
-                    </Text>
+                    <div title={passkey.displayName}>
+                      <Text variant="baseS" className={classes.passkeyName}>
+                        {passkey.displayName}
+                      </Text>
+                    </div>
                   )}
                 </div>
                 <Text variant="baseS">{moment(passkey.createdAt).format('MMMM DD, YYYY')}</Text>
