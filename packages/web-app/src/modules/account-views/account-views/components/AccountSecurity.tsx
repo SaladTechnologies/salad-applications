@@ -1,19 +1,20 @@
 import { faEye, faKey, faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Text, TextField } from '@saladtechnologies/garden-components'
-import classNames from 'classnames'
+import { default as classNames } from 'classnames'
 import type CSS from 'csstype'
 import moment from 'moment'
 import { useEffect, useState, type FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { useMediaQuery } from 'react-responsive'
+import type { SaladTheme } from '../../../../SaladTheme'
 import { ErrorText, mobileSize } from '../../../../components'
 import { SuccessText } from '../../../../components/primitives/content/SuccessText'
 import type { EditPasskeyNameStatus, Passkey, RegisterPasskeyStatus } from '../../../passkey-setup'
 import type { FormValues } from './Account'
 
-const styles: () => Record<string, CSS.Properties> = () => ({
+const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   accountSecurityWrapper: {
     flex: 1,
     marginTop: '32px',
@@ -28,6 +29,7 @@ const styles: () => Record<string, CSS.Properties> = () => ({
   },
   passkeysSectionWrapper: {
     width: '100%',
+    position: 'relative',
   },
   backupCodesSectionWrapper: {
     paddingTop: '32px',
@@ -64,12 +66,40 @@ const styles: () => Record<string, CSS.Properties> = () => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
+    position: 'relative',
   },
   passkeyIcon: {
     cursor: 'pointer',
     marginRight: '5px',
   },
-  passkeyNameWrapper: {
+  displayPasskeyNameWrapper: {
+    width: '200px',
+    height: '30px',
+    overflow: 'hidden',
+    '&::after': {
+      content: 'attr(data-tooltip)',
+      width: '100%',
+      position: 'absolute',
+      bottom: '75%',
+      left: '60%',
+      transform: 'translateX(-50%)',
+      backgroundColor: theme.lightGreen,
+      color: theme.darkBlue,
+      borderRadius: '24px',
+      border: `1px solid ${theme.green}`,
+      textAlign: 'center',
+      padding: '5px',
+      opacity: 0,
+      visibility: 'hidden',
+      zIndex: 1,
+      transition: 'opacity 0.3s',
+    },
+    '&:hover::after': {
+      opacity: 1,
+      visibility: 'visible',
+    },
+  },
+  editPasskeyWrapper: {
     width: '200px',
     height: '30px',
     overflow: 'hidden',
@@ -212,23 +242,27 @@ const _AccountSecurity: FC<Props> = ({
           {passkeys.map((passkey) => {
             return (
               <div className={classes.passkeysListItem} key={passkey.id}>
-                <div className={classes.passkeyNameWrapper}>
+                <>
                   {passkey.id === editPasskeyId ? (
-                    <TextField
-                      isSubmitting={isEditPasskeyNameSubmitting}
-                      isSubmitSuccess={isEditPasskeyNameSuccess}
-                      validationRegexErrorMessage="Passkey Nickname must be between 2 - 120 characters!"
-                      onSubmit={(data: FormValues) => handleEditPasskeySubmit(passkey.id, data.input)}
-                      validationRegex={/^.{2,120}$/}
-                      defaultValue={passkey.displayName}
-                      height={30}
-                    />
+                    <div className={classes.editPasskeyWrapper}>
+                      <TextField
+                        isSubmitting={isEditPasskeyNameSubmitting}
+                        isSubmitSuccess={isEditPasskeyNameSuccess}
+                        validationRegexErrorMessage="Passkey Nickname must be between 2 - 120 characters!"
+                        onSubmit={(data: FormValues) => handleEditPasskeySubmit(passkey.id, data.input)}
+                        validationRegex={/^.{2,120}$/}
+                        defaultValue={passkey.displayName}
+                        height={30}
+                      />
+                    </div>
                   ) : (
-                    <Text variant="baseS" className={classes.passkeyName}>
-                      {passkey.displayName}
-                    </Text>
+                    <div className={classes.displayPasskeyNameWrapper} data-tooltip={passkey.displayName}>
+                      <Text variant="baseS" className={classes.passkeyName}>
+                        {passkey.displayName}
+                      </Text>
+                    </div>
                   )}
-                </div>
+                </>
                 <Text variant="baseS">{moment(passkey.createdAt).format('MMMM DD, YYYY')}</Text>
                 <FontAwesomeIcon
                   icon={faPenToSquare}
