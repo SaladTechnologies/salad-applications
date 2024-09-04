@@ -110,8 +110,8 @@ interface Props extends WithStyles<typeof styles> {
   onAddPasskeyClick: () => void
   onDeletePasskeyClick: (passkeyId: string) => void
   checkPayPalIdWithInterval: () => void
-  payPalLogInChallengeSudoMode: () => void
-  googleSignInChallengeSudoMode: (googleSignIn: () => void) => void
+  logInWithPayPalChallengeSudoMode: () => void
+  signInWithGoogleChallengeSudoMode: (signInWithGoogle: () => void) => void
 }
 
 export type FormValues = {
@@ -147,8 +147,8 @@ const _Account: FC<Props> = ({
   onSubmitTermsAndConditions,
   onToggleAcceptTermsAndConditions,
   checkPayPalIdWithInterval,
-  payPalLogInChallengeSudoMode,
-  googleSignInChallengeSudoMode,
+  logInWithPayPalChallengeSudoMode,
+  signInWithGoogleChallengeSudoMode,
 }) => {
   const location = useLocation<{ isGoogleSignInFormTriggered: string; isPayPalLogInTriggered: string }>()
   const isGoogleSignInFormTriggered = !!location.state?.isGoogleSignInFormTriggered
@@ -233,7 +233,7 @@ const _Account: FC<Props> = ({
                   </Text>
                 ) : (
                   <>
-                    <PayPalLoginButton payPalLogInChallengeSudoMode={payPalLogInChallengeSudoMode} />
+                    <PayPalLoginButton logInWithPayPalChallengeSudoMode={logInWithPayPalChallengeSudoMode} />
                     <div className={classes.connectAccountDescription}>
                       <Text variant="baseS">
                         Connect Salad to your PayPal account. A PayPal account is required to redeem all PayPal rewards.
@@ -262,7 +262,7 @@ const _Account: FC<Props> = ({
                       isTermsAndConditionsAccepted={isTermsAndConditionsAccepted}
                       isTermsAndConditionsRequired={shouldShowUpdateAccountTermsAndConditions}
                       isGoogleSignInFormTriggered={isGoogleSignInFormTriggered}
-                      googleSignInChallengeSudoMode={googleSignInChallengeSudoMode}
+                      signInWithGoogleChallengeSudoMode={signInWithGoogleChallengeSudoMode}
                     />
                     {isLoadConnectedGoogleAccountEmailError && (
                       <div className={classes.connectAccountError}>

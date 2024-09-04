@@ -2,14 +2,14 @@ import { Button } from '@saladtechnologies/garden-components'
 import type { FunctionComponent } from 'react'
 
 interface PayPalLoginButtonProps {
-  payPalLogInChallengeSudoMode: () => void
+  logInWithPayPalChallengeSudoMode: () => void
 }
 
-export const PayPalLoginButton: FunctionComponent<PayPalLoginButtonProps> = ({ payPalLogInChallengeSudoMode }) => (
+export const PayPalLoginButton: FunctionComponent<PayPalLoginButtonProps> = ({ logInWithPayPalChallengeSudoMode }) => (
   <Button
     label="Log in with PayPal"
     fill="#0070BA"
-    onClick={payPalLogInChallengeSudoMode}
+    onClick={logInWithPayPalChallengeSudoMode}
     size="large"
     leadingIcon={
       <svg

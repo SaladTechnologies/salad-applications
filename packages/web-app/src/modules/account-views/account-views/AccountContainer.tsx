@@ -30,8 +30,8 @@ const mapStoreToProps = (store: RootStore): any => ({
   onSubmitTermsAndConditions: store.termsAndConditions.submitTermsAndConditions,
   onToggleAcceptTermsAndConditions: store.termsAndConditions.toggleAcceptTermsAndConditions,
   checkPayPalIdWithInterval: store.profile.checkPayPalIdWithInterval,
-  googleSignInChallengeSudoMode: store.auth.googleSignInChallengeSudoMode,
-  payPalLogInChallengeSudoMode: store.auth.payPalLogInChallengeSudoMode,
+  signInWithGoogleChallengeSudoMode: store.auth.signInWithGoogleChallengeSudoMode,
+  logInWithPayPalChallengeSudoMode: store.auth.logInWithPayPalChallengeSudoMode,
 })
 
 export const AccountContainer = connect(mapStoreToProps, Account)

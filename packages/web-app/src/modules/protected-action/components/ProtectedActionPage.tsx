@@ -132,7 +132,7 @@ interface FormValues {
 
 interface Props extends WithStyles<typeof styles> {
   isPasskeySupported: boolean
-  isPendingProtectedActionExist: boolean
+  withPendingProtectedAction: boolean
   hasVerifyWithBackupCodeFailed: boolean
   hasVerifyWithPasskeyFailed: boolean
   backToAccount: () => void
@@ -145,7 +145,7 @@ interface Props extends WithStyles<typeof styles> {
 const _ProtectedActionPage: FC<Props> = ({
   classes,
   isPasskeySupported,
-  isPendingProtectedActionExist,
+  withPendingProtectedAction,
   hasVerifyWithBackupCodeFailed,
   hasVerifyWithPasskeyFailed,
   backToAccount,
@@ -155,10 +155,10 @@ const _ProtectedActionPage: FC<Props> = ({
   verifyWithBackupCode,
 }) => {
   useEffect(() => {
-    if (!isPendingProtectedActionExist) {
+    if (!withPendingProtectedAction) {
       backToAccount()
     }
-  }, [isPendingProtectedActionExist, backToAccount])
+  }, [withPendingProtectedAction, backToAccount])
 
   useEffect(() => {
     return () => {

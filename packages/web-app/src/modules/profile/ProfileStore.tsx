@@ -23,8 +23,6 @@ const SaladDefaultAvatar: Avatar = {
 const installReminderFeatureReleaseDate = new Date('2023-12-21T17:10:47.324Z')
 const IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY = 'IS_INSTALL_REMINDER_CLOSED'
 
-let timeoutId: NodeJS.Timeout
-
 export class ProfileStore {
   @observable
   public currentSelectedAvatar?: string
@@ -69,6 +67,8 @@ export class ProfileStore {
 
   @observable
   public payPalId?: string
+
+  private timeoutId?: NodeJS.Timeout
 
   @observable
   public connectedGoogleAccountEmail?: string
@@ -288,7 +288,7 @@ export class ProfileStore {
     const loadPayPalIdWithRetry = async () => {
       try {
         if (payPalLoadRetries >= maxPaypalLoadRetries || this.payPalId) {
-          clearTimeout(timeoutId)
+          clearTimeout(this.timeoutId)
           return
         }
 
@@ -296,9 +296,9 @@ export class ProfileStore {
 
         if (!this.payPalId) {
           payPalLoadRetries++
-          timeoutId = setTimeout(loadPayPalIdWithRetry, 5000)
+          this.timeoutId = setTimeout(loadPayPalIdWithRetry, 5000)
         } else {
-          clearTimeout(timeoutId)
+          clearTimeout(this.timeoutId)
           return
         }
       } catch (error) {
@@ -306,7 +306,7 @@ export class ProfileStore {
       }
     }
 
-    clearTimeout(timeoutId)
+    clearTimeout(this.timeoutId)
     loadPayPalIdWithRetry()
   }
 

@@ -100,18 +100,18 @@ export class AuthStore {
     }
   })
 
-  googleSignInChallengeSudoMode = async (googleSignIn: () => void): Promise<void> => {
+  signInWithGoogleChallengeSudoMode = async (signInWithGoogle: () => void): Promise<void> => {
     try {
       const response = await this.challengeSudoMode(ChallengeSudoModeTrigger.GoogleSignIn)
       if (response) {
-        googleSignIn()
+        signInWithGoogle()
       }
     } catch (error) {
-      console.error('AuthStore -> googleSignInChallengeSudoMode: ', error)
+      console.error('AuthStore -> signInWithGoogleChallengeSudoMode: ', error)
     }
   }
 
-  payPalLogInChallengeSudoMode = async (): Promise<void> => {
+  logInWithPayPalChallengeSudoMode = async (): Promise<void> => {
     try {
       const response = await this.challengeSudoMode(ChallengeSudoModeTrigger.PayPalLogIn)
       if (response) {
@@ -119,7 +119,7 @@ export class AuthStore {
         window.open(config.paypalUrl)
       }
     } catch (error) {
-      console.error('AuthStore -> payPalLogInChallengeSudoMode: ', error)
+      console.error('AuthStore -> logInWithPayPalChallengeSudoMode: ', error)
     }
   }
 
