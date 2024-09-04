@@ -57,6 +57,10 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     },
   },
   description: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    flexDirection: 'column',
     maxWidth: '420px',
     marginBottom: '24px',
   },
@@ -157,9 +161,10 @@ const _BackupCodesPage: FC<Props> = ({
             <Text className={classes.description} variant="baseL">
               Keep them saved or stored somewhere secure.
             </Text>
-            <Text className={classes.description} variant="baseL">
-              Codes Generated on: {moment(backupCodes?.createdAt).format('MMMM DD, YYYY, h:mm A')}
-            </Text>
+            <div className={classes.description}>
+              <Text variant="baseL">Codes generated on:</Text>
+              <Text variant="baseL">{moment(backupCodes?.createdAt).format('MMMM DD, YYYY, h:mm A')}</Text>
+            </div>
             <div className={classes.backupCodesWrapper}>
               {backupCodes?.codes ? (
                 <div className={classes.backupCodesContent}>
