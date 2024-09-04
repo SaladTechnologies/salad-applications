@@ -1,7 +1,7 @@
 import { faEye, faKey, faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Text, TextField } from '@saladtechnologies/garden-components'
-import { default as classNames } from 'classnames'
+import classNames from 'classnames'
 import type CSS from 'csstype'
 import moment from 'moment'
 import { useEffect, useState, type FC } from 'react'
