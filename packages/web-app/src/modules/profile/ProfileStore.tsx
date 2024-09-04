@@ -23,12 +23,6 @@ const SaladDefaultAvatar: Avatar = {
 const installReminderFeatureReleaseDate = new Date('2023-12-21T17:10:47.324Z')
 const IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY = 'IS_INSTALL_REMINDER_CLOSED'
 
-interface PendingProtectedAction {
-  method: string
-  url: string
-  data?: string
-}
-
 export class ProfileStore {
   @observable
   public currentSelectedAvatar?: string
@@ -74,6 +68,8 @@ export class ProfileStore {
   @observable
   public payPalId?: string
 
+  private timeoutId?: NodeJS.Timeout
+
   @observable
   public connectedGoogleAccountEmail?: string
 
@@ -85,9 +81,6 @@ export class ProfileStore {
 
   @observable
   public isInstallReminderClosed: boolean = Storage.getItem(IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY) === 'true'
-
-  @observable
-  public pendingProtectedAction?: PendingProtectedAction
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
@@ -287,6 +280,36 @@ export class ProfileStore {
       console.log(err)
     }
   })
+
+  checkPayPalIdWithInterval = async (): Promise<void> => {
+    let payPalLoadRetries = 0
+    const maxPaypalLoadRetries = 50
+
+    const loadPayPalIdWithRetry = async () => {
+      try {
+        if (payPalLoadRetries >= maxPaypalLoadRetries || this.payPalId) {
+          clearTimeout(this.timeoutId)
+          return
+        }
+
+        await this.loadPayPalId()
+
+        if (!this.payPalId) {
+          payPalLoadRetries++
+          this.timeoutId = setTimeout(loadPayPalIdWithRetry, 5000)
+        } else {
+          clearTimeout(this.timeoutId)
+          return
+        }
+      } catch (error) {
+        console.error('ProfileStore -> checkPayPalIdWithInterval: ', error)
+      }
+    }
+
+    clearTimeout(this.timeoutId)
+    loadPayPalIdWithRetry()
+  }
+
   @action.bound
   connectExternalAccountProvider = () => {
     const urlSearchParams = new URLSearchParams(window.location.search)
@@ -352,9 +375,4 @@ export class ProfileStore {
       this.isPayPalIdDisconnectLoading = false
     }
   })
-
-  @action.bound
-  setPendingProtectedAction = (updatedPendingProtectedAction?: PendingProtectedAction) => {
-    this.pendingProtectedAction = updatedPendingProtectedAction
-  }
 }

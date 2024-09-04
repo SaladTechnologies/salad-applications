@@ -1,13 +1,31 @@
 import type { AxiosInstance } from 'axios'
-import { action, observable, runInAction } from 'mobx'
+import { action, flow, observable, runInAction } from 'mobx'
 import type { RootStore } from '../../Store'
 import { config } from '../../config'
 import { NotificationMessageCategory } from '../notifications/models'
+import { authenticationSessionsSudoEndpointPath } from './constants'
+
+export enum ChallengeSudoModeTrigger {
+  GoogleSignIn = 'GoogleSignIn',
+  PayPalLogIn = 'PayPalLogIn',
+}
+
+interface PendingProtectedAction {
+  method: string
+  url: string
+  data?: string
+}
 
 export class AuthStore {
   /** A value indicating whether the user is authenticated. */
   @observable
   public isAuthenticated?: boolean = undefined
+
+  @observable
+  public challengeSudoModeTrigger?: ChallengeSudoModeTrigger
+
+  @observable
+  public pendingProtectedAction?: PendingProtectedAction
 
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     this.axios
@@ -68,5 +86,50 @@ export class AuthStore {
   @action
   public setIsAuthenticated = (isAuthenticated: boolean) => {
     this.isAuthenticated = isAuthenticated
+  }
+
+  @action.bound
+  challengeSudoMode = flow(function* (this: AuthStore, challengeSudoModeTrigger: ChallengeSudoModeTrigger) {
+    try {
+      const response = yield this.axios.post(authenticationSessionsSudoEndpointPath)
+      return response
+    } catch (error) {
+      this.challengeSudoModeTrigger = challengeSudoModeTrigger
+      console.error('AuthStore -> challengeSudoMode: ', error)
+      return null
+    }
+  })
+
+  signInWithGoogleChallengeSudoMode = async (signInWithGoogle: () => void): Promise<void> => {
+    try {
+      const response = await this.challengeSudoMode(ChallengeSudoModeTrigger.GoogleSignIn)
+      if (response) {
+        signInWithGoogle()
+      }
+    } catch (error) {
+      console.error('AuthStore -> signInWithGoogleChallengeSudoMode: ', error)
+    }
+  }
+
+  logInWithPayPalChallengeSudoMode = async (): Promise<void> => {
+    try {
+      const response = await this.challengeSudoMode(ChallengeSudoModeTrigger.PayPalLogIn)
+      if (response) {
+        this.store.profile.checkPayPalIdWithInterval()
+        window.open(config.paypalUrl)
+      }
+    } catch (error) {
+      console.error('AuthStore -> logInWithPayPalChallengeSudoMode: ', error)
+    }
+  }
+
+  @action.bound
+  setChallengeSudoModeTrigger = (updatedChallengeSudoModeTrigger?: ChallengeSudoModeTrigger) => {
+    this.challengeSudoModeTrigger = updatedChallengeSudoModeTrigger
+  }
+
+  @action.bound
+  setPendingProtectedAction = (updatedPendingProtectedAction?: PendingProtectedAction) => {
+    this.pendingProtectedAction = updatedPendingProtectedAction
   }
 }
