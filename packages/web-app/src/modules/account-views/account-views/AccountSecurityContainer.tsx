@@ -6,7 +6,6 @@ const mapStoreToProps = (store: RootStore): any => ({
   editPasskeyNameStatus: store.passkey.editPasskeyNameStatus,
   passkeys: store.passkey.passkeys,
   registerPasskeyStatus: store.passkey.registerPasskeyStatus,
-  withBackupCodes: store.passkey.passkeys.length !== 0,
   editPasskeyName: store.passkey.editPasskeyName,
   fetchPasskeys: store.passkey.fetchPasskeys,
   onAddPasskeyClick: store.passkey.registerPasskey,
