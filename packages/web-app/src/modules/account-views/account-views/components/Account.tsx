@@ -9,7 +9,7 @@ import type { SaladTheme } from '../../../../SaladTheme'
 import { DefaultTheme } from '../../../../SaladTheme'
 import { Head } from '../../../../components'
 import { withLogin } from '../../../auth-views'
-import { isPasskeyFeatureEnabled, type Passkey } from '../../../passkey-setup'
+import { type Passkey } from '../../../passkey-setup'
 import type { Avatar, Profile } from '../../../profile/models'
 import { AccountSecurityContainer } from '../AccountSecurityContainer'
 import { AccountTermsAndConditionsUpdate } from './AccountTermsAndConditionsUpdate'
@@ -305,7 +305,7 @@ const _Account: FC<Props> = ({
               </div>
             </div>
           </div>
-          {isPasskeyFeatureEnabled && <AccountSecurityContainer />}
+          <AccountSecurityContainer />
         </Layout>
       </Scrollbars>
     </div>

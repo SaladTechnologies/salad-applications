@@ -7,7 +7,6 @@ import { ReplaceBonusModalContainer } from './modules/bonus-views'
 import { EarnInfoPage, EarningSummaryContainer } from './modules/earn-views'
 import { ExitSurveyContainer } from './modules/exit-survey-views'
 import { PasskeyDeletePageContainer } from './modules/passkey-delete'
-import { isPasskeyFeatureEnabled } from './modules/passkey-setup'
 import { ProtectedActionPageContainer } from './modules/protected-action'
 import { RewardDetailsContainer, SelectTargetRewardContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
@@ -40,14 +39,12 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
       {/* Account */}
       <Redirect exact from="/account" to="/account/summary" />
       <Route path="/account/exit-survey" component={ExitSurveyContainer} />
-      {isPasskeyFeatureEnabled && (
-        <Route path="/account/passkey/delete/:id" exact component={PasskeyDeletePageContainer} />
-      )}
-      {isPasskeyFeatureEnabled && <Route path="/account/backup-codes" exact component={BackupCodesPageContainer} />}
+      <Route path="/account/passkey/delete/:id" exact component={PasskeyDeletePageContainer} />
+      <Route path="/account/backup-codes" exact component={BackupCodesPageContainer} />
       <Route path="/account" component={SettingsContainer} />
 
       {/* Protected Action */}
-      {isPasskeyFeatureEnabled && <Route path="/protected-action" component={ProtectedActionPageContainer} />}
+      <Route path="/protected-action" component={ProtectedActionPageContainer} />
 
       {/* Earn Pages */}
       {isAuthenticated && <Redirect exact from="/earn" to="/earn/summary" />}
