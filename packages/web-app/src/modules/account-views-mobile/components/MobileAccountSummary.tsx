@@ -3,7 +3,7 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Button, Divider, P, StatElement } from '../../../components'
 import { AccountSecurityContainer } from '../../account-views/account-views'
-import { isPasskeyFeatureEnabled, type Passkey } from '../../passkey-setup'
+import { type Passkey } from '../../passkey-setup'
 
 const styles = {
   container: { display: 'flex', flexDirection: 'column' },
@@ -30,7 +30,7 @@ const _MobileAccountSummary: FC<Props> = ({ classes, username, onLogout }) => {
         <Button onClick={handleLogout}>Log Out</Button>
       </div>
       <Divider />
-      {isPasskeyFeatureEnabled && <AccountSecurityContainer />}
+      <AccountSecurityContainer />
     </div>
   )
 }

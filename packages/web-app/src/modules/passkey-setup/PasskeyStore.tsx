@@ -10,8 +10,6 @@ import {
 } from './constants'
 import { coerceToBase64Url, getIsPasskeySupported, getPasskeyCredential, registerPasskeyCredential } from './utils'
 
-export const isPasskeyFeatureEnabled = true
-
 export interface Passkey {
   createdAt: string
   displayName: string

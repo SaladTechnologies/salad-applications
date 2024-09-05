@@ -4,8 +4,6 @@ import type { RootStore } from '../../Store'
 import { handlePendingProtectedAction } from '../protected-action/utils'
 import { backupCodesEndpointPath, backupCodesVerifyEndpointPath } from './constants'
 
-export const isPasskeyFeatureEnabled = true
-
 export interface BackupCodes {
   codes: string[]
   createdAt: string
