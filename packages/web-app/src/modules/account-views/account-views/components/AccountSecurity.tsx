@@ -1,6 +1,6 @@
 import { faEye, faKey, faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Button, Text, TextField } from '@saladtechnologies/garden-components'
+import { Button, Switch, Text, TextField } from '@saladtechnologies/garden-components'
 import classNames from 'classnames'
 import type CSS from 'csstype'
 import moment from 'moment'
@@ -22,9 +22,8 @@ const styles: () => Record<string, CSS.Properties> = () => ({
   accountSecurityContent: {
     paddingTop: '32px',
   },
-  passkeysDescription: {
+  description: {
     paddingTop: '16px',
-    paddingBottom: '16px',
   },
   passkeysSectionWrapper: {
     width: '100%',
@@ -85,7 +84,7 @@ const styles: () => Record<string, CSS.Properties> = () => ({
     paddingTop: '6px',
     boxSizing: 'border-box',
   },
-  messageWrapper: {
+  passkeyMessageWrapper: {
     position: 'relative',
     width: '100%',
     opacity: 0,
@@ -104,15 +103,34 @@ const styles: () => Record<string, CSS.Properties> = () => ({
   passkeyButtonWrap: {
     position: 'relative',
   },
+  protectedActionOptionWrapper: {
+    paddingTop: '8px',
+    paddingRight: '16px',
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    flexDirection: 'column',
+  },
+  protectedActionOption: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: '16px',
+  },
+  protectedActionMessageWrapper: {
+    height: '40px',
+    width: '100%',
+  },
 })
 
 const passkeysAmountLimit = 30
+const isProtectedActionOptionsEnabled = false
 
 interface Props extends WithStyles<typeof styles> {
   editPasskeyNameStatus: EditPasskeyNameStatus
   passkeys: Passkey[]
   registerPasskeyStatus: RegisterPasskeyStatus
-  withBackupCodes: boolean
   editPasskeyName: (passkeyId: string, passkeyName: string) => void
   onAddPasskeyClick: () => void
   onDeletePasskeyClick: (passkeyId: string) => void
@@ -126,7 +144,6 @@ const _AccountSecurity: FC<Props> = ({
   editPasskeyNameStatus,
   passkeys,
   registerPasskeyStatus,
-  withBackupCodes,
   editPasskeyName,
   onAddPasskeyClick,
   onDeletePasskeyClick,
@@ -135,6 +152,11 @@ const _AccountSecurity: FC<Props> = ({
   setRegisterPasskeyStatus,
 }) => {
   const [editPasskeyId, setEditPasskeyId] = useState<string | null>(null)
+
+  const withPasskeyAdded = passkeys.length !== 0
+
+  const isRedeemingRewardProtected = true
+  const withProtectedActionChangeFailure = false
 
   const isEditPasskeyNameSuccess = editPasskeyNameStatus === 'success'
   const isEditPasskeyNameInactive = editPasskeyNameStatus === 'inactive'
@@ -178,13 +200,13 @@ const _AccountSecurity: FC<Props> = ({
       <Text variant="baseXL">Account Security</Text>
       <div className={classes.accountSecurityContent}>
         <Text variant="baseL">Passkeys</Text>
-        <div className={classes.passkeysDescription}>
+        <div className={classes.description}>
           <Text variant="baseS">
             Passkeys are a convenient and secure way to access your online accounts. They replace passwords and
             two-factor authentication codes and are quickly becoming the standard way to secure online accounts.
           </Text>
         </div>
-        <div className={classNames(classes.messageWrapper, withPasskeyMassage && classes.messageWrapperVisible)}>
+        <div className={classNames(classes.passkeyMessageWrapper, withPasskeyMassage && classes.messageWrapperVisible)}>
           {withPasskeyAddSuccess && <SuccessText>Success! Passkey Added</SuccessText>}
           {withPasskeyAddFailure && <ErrorText>There was an error setting up your passkey. Try again.</ErrorText>}
         </div>
@@ -246,7 +268,7 @@ const _AccountSecurity: FC<Props> = ({
             )
           })}
         </div>
-        {withBackupCodes && (
+        {withPasskeyAdded && (
           <div className={classes.backupCodesSectionWrapper}>
             <div className={classes.sectionHeader}>
               <div className={classes.sectionTitle}>
@@ -261,11 +283,40 @@ const _AccountSecurity: FC<Props> = ({
               label="View Backup Codes"
               leadingIcon={<FontAwesomeIcon icon={faEye} className={classes.buttonIcon} />}
             />
-            <div className={classes.passkeysDescription}>
+            <div className={classes.description}>
               <Text variant="baseS">
                 Backup codes are single-use codes that will allow you to take actions that would require your passkey
                 when you don’t have access to your passkeys.
               </Text>
+            </div>
+          </div>
+        )}
+        {withPasskeyAdded && isProtectedActionOptionsEnabled && (
+          <div className={classes.backupCodesSectionWrapper}>
+            <div className={classes.sectionTitle}>
+              <Text variant="baseM">Protected Actions</Text>
+            </div>
+            <div className={classes.description}>
+              <Text variant="baseS">
+                Sensitive actions in your account will require you to use your passkey or backup code to complete them.
+                Some of these may be optional and controlled here.
+              </Text>
+            </div>
+            <div className={classes.protectedActionOptionWrapper}>
+              <div
+                className={classNames(
+                  classes.protectedActionMessageWrapper,
+                  withPasskeyMassage && classes.messageWrapperVisible,
+                )}
+              >
+                {withProtectedActionChangeFailure && (
+                  <ErrorText>Error occurred setting up protected action. Try again.</ErrorText>
+                )}
+              </div>
+              <div className={classes.protectedActionOption}>
+                <Switch checked={isRedeemingRewardProtected} onChange={() => {}} variant="light" />
+                <Text variant="baseS">Require a protected action check when redeeming a reward on the store.</Text>
+              </div>
             </div>
           </div>
         )}
