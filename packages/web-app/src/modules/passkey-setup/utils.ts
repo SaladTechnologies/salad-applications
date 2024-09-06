@@ -103,7 +103,6 @@ interface CredentialOptions {
   user: {
     name: string
     id: string
-    displayName: string
   }
   challenge: string
   pubKeyCredParams: Array<PublicKeyCredentialParameters>
@@ -138,7 +137,8 @@ export const registerPasskeyCredential = async (
     user: {
       id: userId,
       name: credentialOptions.user.name,
-      displayName: credentialOptions.user.displayName,
+      // Some password managers require not null value for displayName
+      displayName: "",
     },
     pubKeyCredParams: credentialOptions.pubKeyCredParams,
     excludeCredentials: credentialOptions.excludeCredentials.map((credential) => {
