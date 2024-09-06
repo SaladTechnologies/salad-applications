@@ -84,7 +84,7 @@ const styles: () => Record<string, CSS.Properties> = () => ({
     paddingTop: '6px',
     boxSizing: 'border-box',
   },
-  messageWrapper: {
+  passkeyMessageWrapper: {
     position: 'relative',
     width: '100%',
     opacity: 0,
@@ -103,18 +103,29 @@ const styles: () => Record<string, CSS.Properties> = () => ({
   passkeyButtonWrap: {
     position: 'relative',
   },
-  protectedActionOption: {
-    paddingTop: '24px',
+  protectedActionOptionWrapper: {
+    paddingTop: '8px',
     paddingRight: '16px',
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    flexDirection: 'column',
+  },
+  protectedActionOption: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
     gap: '16px',
   },
+  protectedActionMessageWrapper: {
+    height: '40px',
+    width: '100%',
+  },
 })
 
 const passkeysAmountLimit = 30
+const isProtectedActionOptionsEnabled = false
 
 interface Props extends WithStyles<typeof styles> {
   editPasskeyNameStatus: EditPasskeyNameStatus
@@ -143,6 +154,9 @@ const _AccountSecurity: FC<Props> = ({
   const [editPasskeyId, setEditPasskeyId] = useState<string | null>(null)
 
   const withPasskeyAdded = passkeys.length !== 0
+
+  const isRedeemingRewardProtected = true
+  const withProtectedActionChangeFailure = false
 
   const isEditPasskeyNameSuccess = editPasskeyNameStatus === 'success'
   const isEditPasskeyNameInactive = editPasskeyNameStatus === 'inactive'
@@ -192,7 +206,7 @@ const _AccountSecurity: FC<Props> = ({
             two-factor authentication codes and are quickly becoming the standard way to secure online accounts.
           </Text>
         </div>
-        <div className={classNames(classes.messageWrapper, withPasskeyMassage && classes.messageWrapperVisible)}>
+        <div className={classNames(classes.passkeyMessageWrapper, withPasskeyMassage && classes.messageWrapperVisible)}>
           {withPasskeyAddSuccess && <SuccessText>Success! Passkey Added</SuccessText>}
           {withPasskeyAddFailure && <ErrorText>There was an error setting up your passkey. Try again.</ErrorText>}
         </div>
@@ -277,7 +291,7 @@ const _AccountSecurity: FC<Props> = ({
             </div>
           </div>
         )}
-        {withPasskeyAdded && (
+        {withPasskeyAdded && isProtectedActionOptionsEnabled && (
           <div className={classes.backupCodesSectionWrapper}>
             <div className={classes.sectionTitle}>
               <Text variant="baseM">Protected Actions</Text>
@@ -288,9 +302,21 @@ const _AccountSecurity: FC<Props> = ({
                 Some of these may be optional and controlled here.
               </Text>
             </div>
-            <div className={classes.protectedActionOption}>
-              <Switch checked={true} onChange={() => {}} variant="light" />
-              <Text variant="baseS">Require a protected action check when redeeming a reward on the store.</Text>
+            <div className={classes.protectedActionOptionWrapper}>
+              <div
+                className={classNames(
+                  classes.protectedActionMessageWrapper,
+                  withPasskeyMassage && classes.messageWrapperVisible,
+                )}
+              >
+                {withProtectedActionChangeFailure && (
+                  <ErrorText>Error occurred setting up protected action. Try again.</ErrorText>
+                )}
+              </div>
+              <div className={classes.protectedActionOption}>
+                <Switch checked={isRedeemingRewardProtected} onChange={() => {}} variant="light" />
+                <Text variant="baseS">Require a protected action check when redeeming a reward on the store.</Text>
+              </div>
             </div>
           </div>
         )}
