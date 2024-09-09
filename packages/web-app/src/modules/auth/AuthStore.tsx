@@ -8,6 +8,7 @@ import { authenticationSessionsSudoEndpointPath } from './constants'
 export enum ChallengeSudoModeTrigger {
   GoogleSignIn = 'GoogleSignIn',
   PayPalLogIn = 'PayPalLogIn',
+  RewardRedeem = 'RewardRedeem',
 }
 
 interface PendingProtectedAction {

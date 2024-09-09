@@ -1,12 +1,12 @@
 import classNames from 'classnames'
-import type { ReactNode } from 'react'
-import { Component } from 'react'
+import type { FC } from 'react'
+import { useEffect } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { SaladPayPage } from '.'
+import type { SaladTheme } from '../../../SaladTheme'
 import { SmartLink } from '../../../components'
 import { currencyFormatter } from '../../../formatters'
-import type { SaladTheme } from '../../../SaladTheme'
 import type { SaladPaymentRequestOptions } from '../../salad-pay/models'
 import { SaladPayCheckoutButton } from './SaladPayCheckoutButton'
 
@@ -75,106 +75,93 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  request?: SaladPaymentRequestOptions
   availableBalance?: number
   processing?: boolean
-  onConfirm?: () => void
-  onClose?: () => void
-  onAbort?: () => void
+  request?: SaladPaymentRequestOptions
+  onConfirm: () => void
+  onCloseClick: () => void
+  onAbort: () => void
 }
 
 const moneyFormat = (amount?: number): string => currencyFormatter.format(amount ?? 0)
 
-class _SaladPayOrderSummaryPage extends Component<Props> {
-  hasBalance = (): boolean => {
-    const { request, availableBalance } = this.props
+const _SaladPayOrderSummaryPage: FC<Props> = ({
+  classes,
+  availableBalance,
+  processing,
+  request,
+  onConfirm,
+  onCloseClick,
+  onAbort,
+}) => {
+  const hasEnoughBalance =
+    availableBalance !== undefined && request !== undefined && availableBalance >= request.total.amount
 
-    return availableBalance !== undefined && request !== undefined && availableBalance >= request.total.amount
-  }
-
-  handleConfirm = () => {
-    const { onConfirm } = this.props
-
-    if (onConfirm && this.hasBalance()) {
+  const handleConfirmClick = () => {
+    if (hasEnoughBalance) {
       onConfirm()
     }
   }
 
-  handleAbort = () => {
-    const { onAbort } = this.props
-
-    if (onAbort) {
-      onAbort()
+  useEffect(() => {
+    window.addEventListener('popstate', onAbort)
+    return () => {
+      setTimeout(() => {
+        window.removeEventListener('popstate', onAbort)
+      })
     }
-  }
+  }, [onAbort])
 
-  public override componentDidMount() {
-    window.addEventListener('popstate', this.handleAbort)
-  }
-
-  public override componentWillUnmount() {
-    setTimeout(() => {
-      window.removeEventListener('popstate', this.handleAbort)
-    })
-  }
-
-  public override render(): ReactNode {
-    const { request, availableBalance, processing, onClose, classes } = this.props
-
-    if (!request) {
-      return (
-        <SaladPayPage onClose={onClose}>
+  return (
+    <>
+      {!request ? (
+        <SaladPayPage onClose={onCloseClick}>
           <div className={classes.title}>No Order Found</div>
         </SaladPayPage>
-      )
-    }
-
-    //Does the user have enough balance
-    let hasBalance = this.hasBalance()
-
-    return (
-      <SaladPayPage onClose={onClose}>
-        <div className={classes.container}>
-          <div className={classes.title}>ORDER SUMMARY</div>
-          {request.displayItems && (
-            <div className={classes.itemList}>
-              {request.displayItems.map((x, i) => (
-                <div key={i} className={classNames(classes.row, classes.item)}>
-                  <div className={classes.leftText}>{x.label}</div>
-                  <div>{moneyFormat(x.amount)}</div>
-                </div>
-              ))}
-            </div>
-          )}
-          <div className={classNames(classes.row, classes.total)}>
-            <div className={classes.leftText}>{request.total.label}</div>
-            <div>{moneyFormat(request.total.amount)}</div>
-          </div>
-          <div className={classNames(classes.row, classes.balanceRow)}>
-            <div className={classes.leftText}>
-              <div className={classes.title}>Available Balance</div>
-              <div
-                className={classNames(classes.balance, {
-                  [classes.missingBalance]: !hasBalance,
-                })}
-              >
-                {moneyFormat(availableBalance)}
+      ) : (
+        <SaladPayPage onClose={onCloseClick}>
+          <div className={classes.container}>
+            <div className={classes.title}>ORDER SUMMARY</div>
+            {request.displayItems && (
+              <div className={classes.itemList}>
+                {request.displayItems.map((x, i) => (
+                  <div key={i} className={classNames(classes.row, classes.item)}>
+                    <div className={classes.leftText}>{x.label}</div>
+                    <div>{moneyFormat(x.amount)}</div>
+                  </div>
+                ))}
               </div>
-              {!hasBalance && (
-                <div className={classes.earnBalanceLink}>
-                  <SmartLink to="/earn/summary">Earn More Balance</SmartLink>
-                </div>
-              )}
+            )}
+            <div className={classNames(classes.row, classes.total)}>
+              <div className={classes.leftText}>{request.total.label}</div>
+              <div>{moneyFormat(request.total.amount)}</div>
             </div>
-            <div>
-              <SaladPayCheckoutButton onClick={this.handleConfirm} loading={processing} enabled={hasBalance} />
-              <div className={classes.disclaimer}>Salad Plays for Keeps, No Refunds</div>
+            <div className={classNames(classes.row, classes.balanceRow)}>
+              <div className={classes.leftText}>
+                <div className={classes.title}>Available Balance</div>
+                <div
+                  className={classNames(classes.balance, {
+                    [classes.missingBalance]: !hasEnoughBalance,
+                  })}
+                >
+                  {moneyFormat(availableBalance)}
+                </div>
+                {!hasEnoughBalance && (
+                  <div className={classes.earnBalanceLink}>
+                    <SmartLink to="/earn/summary">Earn More Balance</SmartLink>
+                  </div>
+                )}
+              </div>
+              <div>
+                <SaladPayCheckoutButton onClick={handleConfirmClick} loading={processing} enabled={hasEnoughBalance} />
+                <div className={classes.disclaimer}>Salad Plays for Keeps, No Refunds</div>
+              </div>
             </div>
           </div>
-        </div>
-      </SaladPayPage>
-    )
-  }
+        </SaladPayPage>
+      )}
+    </>
+  )
 }
 
 export const SaladPayOrderSummaryPage = withStyles(styles)(_SaladPayOrderSummaryPage)

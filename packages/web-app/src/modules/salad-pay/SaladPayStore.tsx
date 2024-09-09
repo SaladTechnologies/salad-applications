@@ -19,6 +19,7 @@ export class SaladPayStore {
   //SaladPay: This is stand in until we figure out iFrames, popups...
   private routing = getStore().routing
   private balance = getStore().balance
+  private rewards = getStore().rewards
 
   private currentRequest?: SaladAppPaymentRequest
 
@@ -68,8 +69,14 @@ export class SaladPayStore {
     }
   }
 
-  goBack = () => {
-    this.routing.goBack()
+  goBackToReward = () => {
+    const lastRewardId = this.rewards.lastRewardId
+    if (lastRewardId) {
+      // Use replace to make the browser's "back" button works properly
+      this.routing.replace(`/rewards/${lastRewardId}`)
+    } else {
+      this.routing.goBack()
+    }
   }
 
   @action
@@ -85,7 +92,7 @@ export class SaladPayStore {
       },
       complete: () => {
         console.log('SaladPay "complete" called')
-        this.goBack()
+        this.goBackToReward()
         this.currentRequest?.emit('complete')
         this.processing = false
       },
