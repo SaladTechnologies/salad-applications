@@ -2,9 +2,10 @@ import type { AxiosInstance, AxiosResponse } from 'axios'
 import Axios from 'axios'
 import { action, computed, flow, observable } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
-import { SaladError } from '../../axiosFactory'
 import type { RootStore } from '../../Store'
+import { SaladError } from '../../axiosFactory'
 import { isProblemDetail } from '../../utils'
+import { ChallengeSudoModeTrigger } from '../auth'
 import type { NotificationMessage } from '../notifications/models'
 import { NotificationMessageCategory } from '../notifications/models'
 import type { ProfileStore } from '../profile'
@@ -17,6 +18,8 @@ import type { RewardResource } from './models/RewardResource'
 import { rewardFromResource } from './utils'
 
 const timeoutMessage = 'request-timeout'
+
+const isRedeemingRewardProtected = false
 
 export class RewardStore {
   private readonly saladPay = new SaladPay('43e8e26fa9077bb9c932d1849f52ef68e89c3ca39287c949275e0f18be6d074b')
@@ -45,9 +48,10 @@ export class RewardStore {
   @observable
   public isSelecting: boolean = false
 
-  private lastRedemptionId?: string = undefined
+  @observable
+  public lastRewardId?: string = undefined
 
-  private lastRewardId?: string = undefined
+  private lastRedemptionId?: string = undefined
 
   @computed get choppingCart(): Reward[] | undefined {
     const selectedTargetReward = this.getReward(this.selectedTargetRewardId)
@@ -236,6 +240,13 @@ export class RewardStore {
       yield this.store.auth.login()
     } catch {
       return
+    }
+
+    if (isRedeemingRewardProtected) {
+      const challengeSudoModeResponse = yield this.store.auth.challengeSudoMode(ChallengeSudoModeTrigger.RewardRedeem)
+      if (challengeSudoModeResponse === null) {
+        return
+      }
     }
 
     this.isRedeeming = true

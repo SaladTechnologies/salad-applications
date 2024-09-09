@@ -22,6 +22,14 @@ const handleChallengeSudoModeTrigger = (store: RootStore) => {
       window.open(config.paypalUrl)
       store.routing.push('/account/summary', { isPayPalLogInTriggered: true })
       break
+    case ChallengeSudoModeTrigger.RewardRedeem:
+      const pendingLastReward = store.rewards.getReward(store.rewards.lastRewardId)
+      if (pendingLastReward) {
+        store.rewards.redeemReward(pendingLastReward)
+      } else {
+        store.routing.push('/store')
+      }
+      break
   }
   store.auth.setChallengeSudoModeTrigger(undefined)
 }
