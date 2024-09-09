@@ -6,6 +6,7 @@ import {
   passkeysAssertionsEndpointPath,
   passkeysAssertionsOptionsEndpointPath,
   passkeysCredentialsEndpointPath,
+  passkeysCredentialsOptionsEndpointPath,
   passkeysEndpointPath,
 } from './constants'
 import { coerceToBase64Url, getIsPasskeySupported, getPasskeyCredential, registerPasskeyCredential } from './utils'
@@ -63,7 +64,7 @@ export class PasskeyStore {
     }
 
     try {
-      const { data: credentialsOptionsData } = yield this.axios.post(`/api/v2/passkeys/credentials/options`)
+      const { data: credentialsOptionsData } = yield this.axios.post(passkeysCredentialsOptionsEndpointPath)
       const credential = yield registerPasskeyCredential(credentialsOptionsData)
       if (!credential) {
         throw new Error('Failed to to get passkey credentials')
