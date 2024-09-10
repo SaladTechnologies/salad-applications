@@ -4,12 +4,14 @@ import { ChallengeSudoModeTrigger } from '../auth'
 import { authenticationSessionsSudoEndpointPath } from '../auth/constants'
 import { backupCodesEndpointPath } from '../backup-codes/constants'
 import { passkeysCredentialsOptionsEndpointPath, passkeysEndpointPath } from '../passkey-setup/constants'
+import { protectRewardsRedemptionEndpointPath } from '../profile/constants'
 
 enum PendingProtectedActionTrigger {
   GetBackupCodes = `get:${backupCodesEndpointPath}`,
   CreatePasskey = `post:${passkeysCredentialsOptionsEndpointPath}`,
   GenerateBackupCodes = `post:${backupCodesEndpointPath}`,
   DeletePasskey = `delete:${passkeysEndpointPath}`,
+  ProtectRewardsRedemption = `post:${protectRewardsRedemptionEndpointPath}`,
   ChallengeSudoMode = `post:${authenticationSessionsSudoEndpointPath}`,
 }
 
@@ -55,6 +57,17 @@ export const handlePendingProtectedAction = (store: RootStore) => {
       const passkeyId = store.auth.pendingProtectedAction?.url.split('/').pop()
       if (passkeyId) {
         store.passkey.deletePasskey(passkeyId)
+      }
+      store.auth.setPendingProtectedAction(undefined)
+      store.routing.push('/account/summary')
+      break
+    case pendingProtectedActionKey?.includes(PendingProtectedActionTrigger.ProtectRewardsRedemption):
+      if (store.auth.pendingProtectedAction?.data) {
+        const pendingProtectedActionData = JSON.parse(store.auth.pendingProtectedAction?.data)
+        const redemptionsTfaEnabled = pendingProtectedActionData.redemptionsTfaEnabled
+        store.profile.protectRewardsRedemption(redemptionsTfaEnabled)
+      } else {
+        store.profile.setProtectRewardsRedemptionStatusStatus('failure')
       }
       store.auth.setPendingProtectedAction(undefined)
       store.routing.push('/account/summary')

@@ -6,6 +6,15 @@ import type { RootStore } from '../../Store'
 import type { FormValues } from '../account-views/account-views/components/'
 import { NotificationMessageCategory } from '../notifications/models'
 import {
+  authenticationExternalEndpointPath,
+  avatarsEndpointPath,
+  avatarsSelectedEndpointPath,
+  novuSignaturesEndpointPath,
+  paypalUsersEndpointPath,
+  profileEndpointPath,
+  protectRewardsRedemptionEndpointPath,
+} from './constants'
+import {
   ExternalAuthProviderLoginAction,
   ExternalAuthProviderLoginStatus,
   type Avatar,
@@ -13,6 +22,8 @@ import {
   type Profile,
   type payPalResponse,
 } from './models'
+
+export type ProtectRewardsRedemptionStatus = 'success' | 'failure' | 'unknown'
 
 const SaladDefaultAvatar: Avatar = {
   name: 'Default',
@@ -82,6 +93,9 @@ export class ProfileStore {
   @observable
   public isInstallReminderClosed: boolean = Storage.getItem(IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY) === 'true'
 
+  @observable
+  public protectRewardsRedemptionStatus: ProtectRewardsRedemptionStatus = 'unknown'
+
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   @computed
@@ -112,7 +126,7 @@ export class ProfileStore {
   @action.bound
   loadProfile = flow(function* (this: ProfileStore) {
     try {
-      let profile = yield this.axios.get('/api/v1/profile')
+      let profile = yield this.axios.get(profileEndpointPath)
       this.currentProfile = profile.data
       this.store.errorBoundary.resetErrorBoundary()
     } catch (err) {
@@ -129,7 +143,7 @@ export class ProfileStore {
         return
       }
 
-      let novuSignature = yield this.axios.post('/api/v2/novu-signatures')
+      let novuSignature = yield this.axios.post(novuSignaturesEndpointPath)
       this.novuSignature = novuSignature.data.signature
     } catch (_error) {
       console.error('Failed to Load Novu Signature')
@@ -139,7 +153,7 @@ export class ProfileStore {
   @action.bound
   loadAvatars = flow(function* (this: ProfileStore) {
     try {
-      let avatar = yield this.axios.get('/api/v2/avatars')
+      let avatar = yield this.axios.get(avatarsEndpointPath)
       this.avatars = avatar.data
       this.avatars?.unshift(SaladDefaultAvatar)
     } catch (err) {}
@@ -148,7 +162,7 @@ export class ProfileStore {
   @action.bound
   loadSelectedAvatar = flow(function* (this: ProfileStore) {
     try {
-      let selectedAvatar = yield this.axios.get('/api/v2/avatars/selected')
+      let selectedAvatar = yield this.axios.get(avatarsSelectedEndpointPath)
       this.currentSelectedAvatar = this.selectedAvatar = selectedAvatar.data?.id
     } catch (err) {
       this.currentSelectedAvatar = this.selectedAvatar = SaladDefaultAvatar.id
@@ -167,7 +181,7 @@ export class ProfileStore {
     }
 
     try {
-      const response = yield this.axios.patch('/api/v1/profile', {
+      const response = yield this.axios.patch(profileEndpointPath, {
         lastSeenApplicationVersion: whatsNewVersion,
       })
 
@@ -191,7 +205,7 @@ export class ProfileStore {
       avatarId = id
     }
     try {
-      let patch = yield this.axios.patch('/api/v2/avatars/selected', { avatarId })
+      let patch = yield this.axios.patch(avatarsSelectedEndpointPath, { avatarId })
       this.currentSelectedAvatar = this.selectedAvatar = patch.data?.id
     } catch (err) {
       this.avatarError = {
@@ -215,7 +229,7 @@ export class ProfileStore {
     this.isUserNameSubmitting = true
     this.isUserNameSubmitSuccess = false
     try {
-      let patch = yield this.axios.patch('/api/v1/profile', { username: username.input })
+      let patch = yield this.axios.patch(profileEndpointPath, { username: username.input })
       let profile = patch.data
       this.isUserNameSubmitting = false
       this.isUserNameSubmitSuccess = true
@@ -238,7 +252,7 @@ export class ProfileStore {
     this.isMinecraftUserNameSubmitting = true
     this.isMinecraftUserNameSubmitSuccess = false
     try {
-      let patch = yield this.axios.patch('/api/v1/profile', {
+      let patch = yield this.axios.patch(profileEndpointPath, {
         extensions:
           this.currentProfile.extensions === undefined
             ? {
@@ -274,7 +288,7 @@ export class ProfileStore {
   @action.bound
   loadPayPalId = flow(function* (this: ProfileStore) {
     try {
-      let res: AxiosResponse<payPalResponse> = yield this.axios.get('/api/v2/paypal/users') as payPalResponse
+      let res: AxiosResponse<payPalResponse> = yield this.axios.get(paypalUsersEndpointPath) as payPalResponse
       this.payPalId = res?.data?.email
     } catch (err) {
       console.log(err)
@@ -339,7 +353,7 @@ export class ProfileStore {
       this.connectExternalAccountProvider()
 
       const authProviderConnections: AxiosResponse<ExternalAuthProvider[]> = yield this.axios.get(
-        '/api/v2/authentication/external',
+        authenticationExternalEndpointPath,
       )
 
       if (authProviderConnections.data?.length > 0) {
@@ -366,7 +380,7 @@ export class ProfileStore {
   disconnectPayPalId = flow(function* (this: ProfileStore) {
     this.isPayPalIdDisconnectLoading = true
     try {
-      let res: AxiosResponse<payPalResponse> = yield this.axios.delete('/api/v2/paypal/users')
+      let res: AxiosResponse<payPalResponse> = yield this.axios.delete(paypalUsersEndpointPath)
       this.payPalId = res?.data?.email
       this.isPayPalIdDisconnectLoading = false
       this.loadPayPalId()
@@ -375,4 +389,23 @@ export class ProfileStore {
       this.isPayPalIdDisconnectLoading = false
     }
   })
+
+  @action.bound
+  protectRewardsRedemption = flow(function* (this: ProfileStore, isRedeemingRewardProtected: boolean) {
+    try {
+      yield this.axios.post(protectRewardsRedemptionEndpointPath, {
+        redemptionsTfaEnabled: isRedeemingRewardProtected,
+      })
+      this.loadProfile()
+      this.protectRewardsRedemptionStatus = 'success'
+    } catch (error) {
+      this.protectRewardsRedemptionStatus = 'failure'
+      console.error('ProfileStore -> protectRewardsRedemption: ', error)
+    }
+  })
+
+  @action.bound
+  setProtectRewardsRedemptionStatusStatus = (protectRewardsRedemptionStatus: ProtectRewardsRedemptionStatus) => {
+    this.protectRewardsRedemptionStatus = protectRewardsRedemptionStatus
+  }
 }

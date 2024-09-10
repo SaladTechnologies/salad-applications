@@ -6,6 +6,7 @@ export interface Profile {
     minecraftUsername?: string
   }
   lastSeenApplicationVersion: string | undefined
+  redemptionTfaEnabled: boolean
   saladBowlFirstLoginAt: string | undefined | null
   createdAt: string | undefined
   pendingTermsVersion: string | undefined
