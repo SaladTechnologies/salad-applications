@@ -176,7 +176,6 @@ const _AccountSecurity: FC<Props> = ({
   const withPasskeyMassage = withPasskeyAddSuccess || withPasskeyAddFailure
 
   const withProtectedActionChangeFailure = protectRewardsRedemptionStatus === 'failure'
-  const withProtectedActionChangeLoading = protectRewardsRedemptionStatus === 'loading'
 
   const handleEditPasskeyIconClick = (passkeyId: string) => {
     if (passkeyId === editPasskeyId) {
@@ -326,7 +325,6 @@ const _AccountSecurity: FC<Props> = ({
                 <Switch
                   checked={isProtectRewardsRedemptionEnabled}
                   onChange={onSetProtectRewardsRedemptionChange}
-                  disabled={withProtectedActionChangeLoading}
                   variant="light"
                 />
                 <Text variant="baseS">Require a protected action check when redeeming a reward on the store.</Text>

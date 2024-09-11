@@ -394,6 +394,8 @@ export class ProfileStore {
 
   @action.bound
   setProtectRewardsRedemption = flow(function* (this: ProfileStore, isProtectRewardsRedemptionEnabled: boolean) {
+    this.currentProfile!.redemptionTfaEnabled = isProtectRewardsRedemptionEnabled
+
     if (this.protectRewardsRedemptionStatus === 'loading') {
       return
     }
@@ -411,6 +413,7 @@ export class ProfileStore {
       this.loadProfile()
       this.protectRewardsRedemptionStatus = 'success'
     } catch (error) {
+      this.loadProfile()
       this.protectRewardsRedemptionStatus = 'failure'
       console.error('ProfileStore -> setProtectRewardsRedemption: ', error)
     }
