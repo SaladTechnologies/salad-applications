@@ -136,8 +136,8 @@ interface Props extends WithStyles<typeof styles> {
   editPasskeyName: (passkeyId: string, passkeyName: string) => void
   onAddPasskeyClick: () => void
   onDeletePasskeyClick: (passkeyId: string) => void
+  onSetProtectRewardsRedemptionChange: (isProtectRewardsRedemptionEnabled: boolean) => void
   onViewBackupCodesClick: () => void
-  setProtectRewardsRedemption: (isProtectRewardsRedemptionEnabled: boolean) => void
   fetchPasskeys: () => void
   loadProfile: () => void
   setRegisterPasskeyStatus: (registerPasskeyStatus: RegisterPasskeyStatus) => void
@@ -153,8 +153,8 @@ const _AccountSecurity: FC<Props> = ({
   editPasskeyName,
   onAddPasskeyClick,
   onDeletePasskeyClick,
+  onSetProtectRewardsRedemptionChange,
   onViewBackupCodesClick,
-  setProtectRewardsRedemption,
   fetchPasskeys,
   loadProfile,
   setRegisterPasskeyStatus,
@@ -177,12 +177,6 @@ const _AccountSecurity: FC<Props> = ({
 
   const withProtectedActionChangeFailure = protectRewardsRedemptionStatus === 'failure'
   const withProtectedActionChangeLoading = protectRewardsRedemptionStatus === 'loading'
-
-  const handleProtectRewardsRedemptionChange = (isProtectRewardsRedemptionEnabled: boolean) => {
-    if (!withProtectedActionChangeLoading) {
-      setProtectRewardsRedemption(isProtectRewardsRedemptionEnabled)
-    }
-  }
 
   const handleEditPasskeyIconClick = (passkeyId: string) => {
     if (passkeyId === editPasskeyId) {
@@ -331,7 +325,7 @@ const _AccountSecurity: FC<Props> = ({
               <div className={classes.protectedActionOption}>
                 <Switch
                   checked={isProtectRewardsRedemptionEnabled}
-                  onChange={handleProtectRewardsRedemptionChange}
+                  onChange={onSetProtectRewardsRedemptionChange}
                   disabled={withProtectedActionChangeLoading}
                   variant="light"
                 />

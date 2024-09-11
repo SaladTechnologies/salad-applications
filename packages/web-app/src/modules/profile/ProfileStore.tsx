@@ -394,6 +394,10 @@ export class ProfileStore {
 
   @action.bound
   setProtectRewardsRedemption = flow(function* (this: ProfileStore, isProtectRewardsRedemptionEnabled: boolean) {
+    if (this.protectRewardsRedemptionStatus === 'loading') {
+      return
+    }
+
     if (this.protectRewardsRedemptionStatusTimeout) {
       this.protectRewardsRedemptionStatus = 'unknown'
       clearTimeout(this.protectRewardsRedemptionStatusTimeout)
