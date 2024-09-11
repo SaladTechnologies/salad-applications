@@ -58,11 +58,11 @@ export const handlePendingProtectedAction = (store: RootStore) => {
       store.routing.push('/account/summary')
       break
     case pendingProtectedActionKey?.includes(PendingProtectedActionTrigger.ProtectRewardsRedemption):
-      const pendingProtectedActionData = store.auth.pendingProtectedAction?.data
-      const isRedemptionsTfaEnabled = pendingProtectedActionData?.redemptionsTfaEnabled
+      const protectRewardsRedemptionData = store.auth.pendingProtectedAction?.data
+      const isRedemptionsTfaEnabled = protectRewardsRedemptionData?.redemptionsTfaEnabled
 
       if (isRedemptionsTfaEnabled) {
-        store.profile.protectRewardsRedemption(isRedemptionsTfaEnabled)
+        store.profile.setProtectRewardsRedemption(isRedemptionsTfaEnabled)
       } else {
         store.profile.setProtectRewardsRedemptionStatus('failure')
       }
