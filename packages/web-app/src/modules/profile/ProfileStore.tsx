@@ -1,6 +1,6 @@
 import SaladDefaultAvatarSrc from '@saladtechnologies/garden-components/lib/components/Avatar/assets/SaladAvatar.png'
 import type { AxiosInstance, AxiosResponse } from 'axios'
-import { action, computed, flow, observable } from 'mobx'
+import { action, computed, flow, observable, runInAction } from 'mobx'
 import * as Storage from '../../Storage'
 import type { RootStore } from '../../Store'
 import type { FormValues } from '../account-views/account-views/components/'
@@ -96,6 +96,8 @@ export class ProfileStore {
   @observable
   public protectRewardsRedemptionStatus: ProtectRewardsRedemptionStatus = 'unknown'
 
+  private protectRewardsRedemptionStatusTimeout: NodeJS.Timeout | null = null
+
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   @computed
@@ -126,7 +128,7 @@ export class ProfileStore {
   @action.bound
   loadProfile = flow(function* (this: ProfileStore) {
     try {
-      let profile = yield this.axios.get(profileEndpointPath)
+      const profile = yield this.axios.get(profileEndpointPath)
       this.currentProfile = profile.data
       this.store.errorBoundary.resetErrorBoundary()
     } catch (err) {
@@ -143,7 +145,7 @@ export class ProfileStore {
         return
       }
 
-      let novuSignature = yield this.axios.post(novuSignaturesEndpointPath)
+      const novuSignature = yield this.axios.post(novuSignaturesEndpointPath)
       this.novuSignature = novuSignature.data.signature
     } catch (_error) {
       console.error('Failed to Load Novu Signature')
@@ -153,7 +155,7 @@ export class ProfileStore {
   @action.bound
   loadAvatars = flow(function* (this: ProfileStore) {
     try {
-      let avatar = yield this.axios.get(avatarsEndpointPath)
+      const avatar = yield this.axios.get(avatarsEndpointPath)
       this.avatars = avatar.data
       this.avatars?.unshift(SaladDefaultAvatar)
     } catch (err) {}
@@ -162,7 +164,7 @@ export class ProfileStore {
   @action.bound
   loadSelectedAvatar = flow(function* (this: ProfileStore) {
     try {
-      let selectedAvatar = yield this.axios.get(avatarsSelectedEndpointPath)
+      const selectedAvatar = yield this.axios.get(avatarsSelectedEndpointPath)
       this.currentSelectedAvatar = this.selectedAvatar = selectedAvatar.data?.id
     } catch (err) {
       this.currentSelectedAvatar = this.selectedAvatar = SaladDefaultAvatar.id
@@ -205,7 +207,7 @@ export class ProfileStore {
       avatarId = id
     }
     try {
-      let patch = yield this.axios.patch(avatarsSelectedEndpointPath, { avatarId })
+      const patch = yield this.axios.patch(avatarsSelectedEndpointPath, { avatarId })
       this.currentSelectedAvatar = this.selectedAvatar = patch.data?.id
     } catch (err) {
       this.avatarError = {
@@ -229,8 +231,8 @@ export class ProfileStore {
     this.isUserNameSubmitting = true
     this.isUserNameSubmitSuccess = false
     try {
-      let patch = yield this.axios.patch(profileEndpointPath, { username: username.input })
-      let profile = patch.data
+      const patch = yield this.axios.patch(profileEndpointPath, { username: username.input })
+      const profile = patch.data
       this.isUserNameSubmitting = false
       this.isUserNameSubmitSuccess = true
       this.currentProfile = profile
@@ -252,7 +254,7 @@ export class ProfileStore {
     this.isMinecraftUserNameSubmitting = true
     this.isMinecraftUserNameSubmitSuccess = false
     try {
-      let patch = yield this.axios.patch(profileEndpointPath, {
+      const patch = yield this.axios.patch(profileEndpointPath, {
         extensions:
           this.currentProfile.extensions === undefined
             ? {
@@ -263,7 +265,7 @@ export class ProfileStore {
                 minecraftUsername: minecraftUsername.input,
               },
       })
-      let profile = patch.data
+      const profile = patch.data
       this.isMinecraftUserNameSubmitting = false
       this.isMinecraftUserNameSubmitSuccess = true
       this.currentProfile = profile
@@ -288,7 +290,7 @@ export class ProfileStore {
   @action.bound
   loadPayPalId = flow(function* (this: ProfileStore) {
     try {
-      let res: AxiosResponse<payPalResponse> = yield this.axios.get(paypalUsersEndpointPath) as payPalResponse
+      const res: AxiosResponse<payPalResponse> = yield this.axios.get(paypalUsersEndpointPath) as payPalResponse
       this.payPalId = res?.data?.email
     } catch (err) {
       console.log(err)
@@ -380,7 +382,7 @@ export class ProfileStore {
   disconnectPayPalId = flow(function* (this: ProfileStore) {
     this.isPayPalIdDisconnectLoading = true
     try {
-      let res: AxiosResponse<payPalResponse> = yield this.axios.delete(paypalUsersEndpointPath)
+      const res: AxiosResponse<payPalResponse> = yield this.axios.delete(paypalUsersEndpointPath)
       this.payPalId = res?.data?.email
       this.isPayPalIdDisconnectLoading = false
       this.loadPayPalId()
@@ -391,10 +393,15 @@ export class ProfileStore {
   })
 
   @action.bound
-  protectRewardsRedemption = flow(function* (this: ProfileStore, isRedeemingRewardProtected: boolean) {
+  protectRewardsRedemption = flow(function* (this: ProfileStore, isProtectRewardsRedemptionEnabled: boolean) {
+    if (this.protectRewardsRedemptionStatusTimeout) {
+      this.protectRewardsRedemptionStatus = 'unknown'
+      clearTimeout(this.protectRewardsRedemptionStatusTimeout)
+    }
+
     try {
       yield this.axios.post(protectRewardsRedemptionEndpointPath, {
-        redemptionsTfaEnabled: isRedeemingRewardProtected,
+        redemptionsTfaEnabled: isProtectRewardsRedemptionEnabled,
       })
       this.loadProfile()
       this.protectRewardsRedemptionStatus = 'success'
@@ -402,10 +409,16 @@ export class ProfileStore {
       this.protectRewardsRedemptionStatus = 'failure'
       console.error('ProfileStore -> protectRewardsRedemption: ', error)
     }
+
+    this.protectRewardsRedemptionStatusTimeout = setTimeout(() => {
+      runInAction(() => {
+        this.protectRewardsRedemptionStatus = 'unknown'
+      })
+    }, 6000)
   })
 
   @action.bound
-  setProtectRewardsRedemptionStatusStatus = (protectRewardsRedemptionStatus: ProtectRewardsRedemptionStatus) => {
+  setProtectRewardsRedemptionStatus = (protectRewardsRedemptionStatus: ProtectRewardsRedemptionStatus) => {
     this.protectRewardsRedemptionStatus = protectRewardsRedemptionStatus
   }
 }

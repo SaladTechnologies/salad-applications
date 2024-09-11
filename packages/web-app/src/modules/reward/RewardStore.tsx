@@ -240,8 +240,8 @@ export class RewardStore {
       return
     }
 
-    const isRedeemingRewardProtected = this.store.profile.currentProfile?.redemptionTfaEnabled
-    if (isRedeemingRewardProtected) {
+    const isProtectRewardsRedemptionEnabled = this.store.profile.currentProfile?.redemptionTfaEnabled
+    if (isProtectRewardsRedemptionEnabled) {
       const challengeSudoModeResponse = yield this.store.auth.challengeSudoMode(ChallengeSudoModeTrigger.RewardRedeem)
       if (challengeSudoModeResponse === null) {
         return

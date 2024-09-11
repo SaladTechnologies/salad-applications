@@ -130,14 +130,14 @@ const isProtectedActionOptionsEnabled = false
 
 interface Props extends WithStyles<typeof styles> {
   editPasskeyNameStatus: EditPasskeyNameStatus
-  isRedeemingRewardProtected: boolean
+  isProtectRewardsRedemptionEnabled: boolean
   passkeys: Passkey[]
   protectRewardsRedemptionStatus: ProtectRewardsRedemptionStatus
   registerPasskeyStatus: RegisterPasskeyStatus
   editPasskeyName: (passkeyId: string, passkeyName: string) => void
   onAddPasskeyClick: () => void
   onDeletePasskeyClick: (passkeyId: string) => void
-  onProtectRewardsRedemptionChange: (isRedeemingRewardProtected: boolean) => void
+  onProtectRewardsRedemptionChange: (isProtectRewardsRedemptionEnabled: boolean) => void
   onViewBackupCodesClick: () => void
   fetchPasskeys: () => void
   loadProfile: () => void
@@ -147,7 +147,7 @@ interface Props extends WithStyles<typeof styles> {
 const _AccountSecurity: FC<Props> = ({
   classes,
   editPasskeyNameStatus,
-  isRedeemingRewardProtected,
+  isProtectRewardsRedemptionEnabled,
   passkeys,
   protectRewardsRedemptionStatus,
   registerPasskeyStatus,
@@ -324,7 +324,7 @@ const _AccountSecurity: FC<Props> = ({
               </div>
               <div className={classes.protectedActionOption}>
                 <Switch
-                  checked={isRedeemingRewardProtected}
+                  checked={isProtectRewardsRedemptionEnabled}
                   onChange={onProtectRewardsRedemptionChange}
                   variant="light"
                 />

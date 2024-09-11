@@ -4,7 +4,7 @@ import { AccountSecurity } from './components/AccountSecurity'
 
 const mapStoreToProps = (store: RootStore): any => ({
   editPasskeyNameStatus: store.passkey.editPasskeyNameStatus,
-  isRedeemingRewardProtected: store.profile.currentProfile?.redemptionTfaEnabled,
+  isProtectRewardsRedemptionEnabled: store.profile.currentProfile?.redemptionTfaEnabled,
   passkeys: store.passkey.passkeys,
   protectRewardsRedemptionStatus: store.profile.protectRewardsRedemptionStatus,
   registerPasskeyStatus: store.passkey.registerPasskeyStatus,

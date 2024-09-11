@@ -40,17 +40,14 @@ export const handlePendingProtectedAction = (store: RootStore) => {
   const pendingProtectedActionKey = `${store.auth.pendingProtectedAction?.method}:${store.auth.pendingProtectedAction?.url}`
   switch (true) {
     case pendingProtectedActionKey?.includes(PendingProtectedActionTrigger.GetBackupCodes):
-      store.auth.setPendingProtectedAction(undefined)
       store.routing.push('/account/backup-codes')
       break
     case pendingProtectedActionKey?.includes(PendingProtectedActionTrigger.CreatePasskey):
-      store.auth.setPendingProtectedAction(undefined)
       store.routing.push('/account/summary')
       store.passkey.registerPasskey()
       break
     case pendingProtectedActionKey?.includes(PendingProtectedActionTrigger.GenerateBackupCodes):
       store.backupCodes.generateBackupCodes()
-      store.auth.setPendingProtectedAction(undefined)
       store.routing.push('/account/backup-codes')
       break
     case pendingProtectedActionKey?.includes(PendingProtectedActionTrigger.DeletePasskey):
@@ -58,25 +55,24 @@ export const handlePendingProtectedAction = (store: RootStore) => {
       if (passkeyId) {
         store.passkey.deletePasskey(passkeyId)
       }
-      store.auth.setPendingProtectedAction(undefined)
       store.routing.push('/account/summary')
       break
     case pendingProtectedActionKey?.includes(PendingProtectedActionTrigger.ProtectRewardsRedemption):
-      if (store.auth.pendingProtectedAction?.data) {
-        const pendingProtectedActionData = JSON.parse(store.auth.pendingProtectedAction?.data)
-        const redemptionsTfaEnabled = pendingProtectedActionData.redemptionsTfaEnabled
-        store.profile.protectRewardsRedemption(redemptionsTfaEnabled)
+      const pendingProtectedActionData = store.auth.pendingProtectedAction?.data
+      const isRedemptionsTfaEnabled = pendingProtectedActionData?.redemptionsTfaEnabled
+
+      if (isRedemptionsTfaEnabled) {
+        store.profile.protectRewardsRedemption(isRedemptionsTfaEnabled)
       } else {
-        store.profile.setProtectRewardsRedemptionStatusStatus('failure')
+        store.profile.setProtectRewardsRedemptionStatus('failure')
       }
-      store.auth.setPendingProtectedAction(undefined)
       store.routing.push('/account/summary')
       break
     case pendingProtectedActionKey?.includes(PendingProtectedActionTrigger.ChallengeSudoMode):
-      store.auth.setPendingProtectedAction(undefined)
       handleChallengeSudoModeTrigger(store)
       break
     default:
       store.routing.push('/')
   }
+  store.auth.setPendingProtectedAction(undefined)
 }
