@@ -160,9 +160,6 @@ const _AccountSecurity: FC<Props> = ({
   setRegisterPasskeyStatus,
 }) => {
   const [editPasskeyId, setEditPasskeyId] = useState<string | null>(null)
-  const [isProtectRewardsRedemptionEnabledState, setIsProtectRewardsRedemptionEnabledState] = useState<boolean>(
-    isProtectRewardsRedemptionEnabled,
-  )
 
   const withPasskeyAdded = passkeys.length !== 0
 
@@ -179,10 +176,12 @@ const _AccountSecurity: FC<Props> = ({
   const withPasskeyMassage = withPasskeyAddSuccess || withPasskeyAddFailure
 
   const withProtectedActionChangeFailure = protectRewardsRedemptionStatus === 'failure'
+  const withProtectedActionChangeLoading = protectRewardsRedemptionStatus === 'loading'
 
   const handleProtectRewardsRedemptionChange = (isProtectRewardsRedemptionEnabled: boolean) => {
-    setIsProtectRewardsRedemptionEnabledState(isProtectRewardsRedemptionEnabled)
-    protectRewardsRedemption(isProtectRewardsRedemptionEnabled)
+    if (!withProtectedActionChangeLoading) {
+      protectRewardsRedemption(isProtectRewardsRedemptionEnabled)
+    }
   }
 
   const handleEditPasskeyIconClick = (passkeyId: string) => {
@@ -210,10 +209,6 @@ const _AccountSecurity: FC<Props> = ({
     loadProfile()
     return () => setRegisterPasskeyStatus('unknown')
   }, [fetchPasskeys, loadProfile, setRegisterPasskeyStatus])
-
-  useEffect(() => {
-    setIsProtectRewardsRedemptionEnabledState(isProtectRewardsRedemptionEnabled)
-  }, [isProtectRewardsRedemptionEnabled])
 
   return (
     <div className={classes.accountSecurityWrapper}>
@@ -335,8 +330,9 @@ const _AccountSecurity: FC<Props> = ({
               </div>
               <div className={classes.protectedActionOption}>
                 <Switch
-                  checked={isProtectRewardsRedemptionEnabledState}
+                  checked={isProtectRewardsRedemptionEnabled}
                   onChange={handleProtectRewardsRedemptionChange}
+                  disabled={withProtectedActionChangeLoading}
                   variant="light"
                 />
                 <Text variant="baseS">Require a protected action check when redeeming a reward on the store.</Text>

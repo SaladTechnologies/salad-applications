@@ -23,7 +23,7 @@ import {
   type payPalResponse,
 } from './models'
 
-export type ProtectRewardsRedemptionStatus = 'success' | 'failure' | 'unknown'
+export type ProtectRewardsRedemptionStatus = 'success' | 'failure' | 'loading' | 'unknown'
 
 const SaladDefaultAvatar: Avatar = {
   name: 'Default',
@@ -400,6 +400,7 @@ export class ProfileStore {
     }
 
     try {
+      this.protectRewardsRedemptionStatus = 'loading'
       yield this.axios.post(protectRewardsRedemptionEndpointPath, {
         redemptionsTfaEnabled: isProtectRewardsRedemptionEnabled,
       })
