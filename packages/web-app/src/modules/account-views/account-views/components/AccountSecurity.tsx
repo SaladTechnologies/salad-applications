@@ -137,7 +137,7 @@ interface Props extends WithStyles<typeof styles> {
   onAddPasskeyClick: () => void
   onDeletePasskeyClick: (passkeyId: string) => void
   onViewBackupCodesClick: () => void
-  protectRewardsRedemption: (isProtectRewardsRedemptionEnabled: boolean) => void
+  setProtectRewardsRedemption: (isProtectRewardsRedemptionEnabled: boolean) => void
   fetchPasskeys: () => void
   loadProfile: () => void
   setRegisterPasskeyStatus: (registerPasskeyStatus: RegisterPasskeyStatus) => void
@@ -154,7 +154,7 @@ const _AccountSecurity: FC<Props> = ({
   onAddPasskeyClick,
   onDeletePasskeyClick,
   onViewBackupCodesClick,
-  protectRewardsRedemption,
+  setProtectRewardsRedemption,
   fetchPasskeys,
   loadProfile,
   setRegisterPasskeyStatus,
@@ -180,7 +180,7 @@ const _AccountSecurity: FC<Props> = ({
 
   const handleProtectRewardsRedemptionChange = (isProtectRewardsRedemptionEnabled: boolean) => {
     if (!withProtectedActionChangeLoading) {
-      protectRewardsRedemption(isProtectRewardsRedemptionEnabled)
+      setProtectRewardsRedemption(isProtectRewardsRedemptionEnabled)
     }
   }
 

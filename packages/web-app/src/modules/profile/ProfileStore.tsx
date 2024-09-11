@@ -393,7 +393,7 @@ export class ProfileStore {
   })
 
   @action.bound
-  protectRewardsRedemption = flow(function* (this: ProfileStore, isProtectRewardsRedemptionEnabled: boolean) {
+  setProtectRewardsRedemption = flow(function* (this: ProfileStore, isProtectRewardsRedemptionEnabled: boolean) {
     if (this.protectRewardsRedemptionStatusTimeout) {
       this.protectRewardsRedemptionStatus = 'unknown'
       clearTimeout(this.protectRewardsRedemptionStatusTimeout)
@@ -408,7 +408,7 @@ export class ProfileStore {
       this.protectRewardsRedemptionStatus = 'success'
     } catch (error) {
       this.protectRewardsRedemptionStatus = 'failure'
-      console.error('ProfileStore -> protectRewardsRedemption: ', error)
+      console.error('ProfileStore -> setProtectRewardsRedemption: ', error)
     }
 
     this.protectRewardsRedemptionStatusTimeout = setTimeout(() => {
