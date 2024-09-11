@@ -14,7 +14,7 @@ export enum ChallengeSudoModeTrigger {
 interface PendingProtectedAction {
   method: string
   url: string
-  data?: string
+  data?: Record<string, any>
 }
 
 export class AuthStore {

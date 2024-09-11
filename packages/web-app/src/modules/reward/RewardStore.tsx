@@ -19,8 +19,6 @@ import { rewardFromResource } from './utils'
 
 const timeoutMessage = 'request-timeout'
 
-const isRedeemingRewardProtected = false
-
 export class RewardStore {
   private readonly saladPay = new SaladPay('43e8e26fa9077bb9c932d1849f52ef68e89c3ca39287c949275e0f18be6d074b')
 
@@ -242,7 +240,8 @@ export class RewardStore {
       return
     }
 
-    if (isRedeemingRewardProtected) {
+    const isProtectRewardsRedemptionEnabled = this.store.profile.currentProfile?.redemptionTfaEnabled
+    if (isProtectRewardsRedemptionEnabled) {
       const challengeSudoModeResponse = yield this.store.auth.challengeSudoMode(ChallengeSudoModeTrigger.RewardRedeem)
       if (challengeSudoModeResponse === null) {
         return
