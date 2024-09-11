@@ -126,7 +126,6 @@ const styles: () => Record<string, CSS.Properties> = () => ({
 })
 
 const passkeysAmountLimit = 30
-const isProtectedActionOptionsEnabled = false
 
 interface Props extends WithStyles<typeof styles> {
   editPasskeyNameStatus: EditPasskeyNameStatus
@@ -137,8 +136,8 @@ interface Props extends WithStyles<typeof styles> {
   editPasskeyName: (passkeyId: string, passkeyName: string) => void
   onAddPasskeyClick: () => void
   onDeletePasskeyClick: (passkeyId: string) => void
-  onProtectRewardsRedemptionChange: (isProtectRewardsRedemptionEnabled: boolean) => void
   onViewBackupCodesClick: () => void
+  protectRewardsRedemption: (isProtectRewardsRedemptionEnabled: boolean) => void
   fetchPasskeys: () => void
   loadProfile: () => void
   setRegisterPasskeyStatus: (registerPasskeyStatus: RegisterPasskeyStatus) => void
@@ -154,13 +153,16 @@ const _AccountSecurity: FC<Props> = ({
   editPasskeyName,
   onAddPasskeyClick,
   onDeletePasskeyClick,
-  onProtectRewardsRedemptionChange,
   onViewBackupCodesClick,
+  protectRewardsRedemption,
   fetchPasskeys,
   loadProfile,
   setRegisterPasskeyStatus,
 }) => {
   const [editPasskeyId, setEditPasskeyId] = useState<string | null>(null)
+  const [isProtectRewardsRedemptionEnabledState, setIsProtectRewardsRedemptionEnabledState] = useState<boolean>(
+    isProtectRewardsRedemptionEnabled,
+  )
 
   const withPasskeyAdded = passkeys.length !== 0
 
@@ -177,6 +179,11 @@ const _AccountSecurity: FC<Props> = ({
   const withPasskeyMassage = withPasskeyAddSuccess || withPasskeyAddFailure
 
   const withProtectedActionChangeFailure = protectRewardsRedemptionStatus === 'failure'
+
+  const handleProtectRewardsRedemptionChange = (isProtectRewardsRedemptionEnabled: boolean) => {
+    setIsProtectRewardsRedemptionEnabledState(isProtectRewardsRedemptionEnabled)
+    protectRewardsRedemption(isProtectRewardsRedemptionEnabled)
+  }
 
   const handleEditPasskeyIconClick = (passkeyId: string) => {
     if (passkeyId === editPasskeyId) {
@@ -203,6 +210,10 @@ const _AccountSecurity: FC<Props> = ({
     loadProfile()
     return () => setRegisterPasskeyStatus('unknown')
   }, [fetchPasskeys, loadProfile, setRegisterPasskeyStatus])
+
+  useEffect(() => {
+    setIsProtectRewardsRedemptionEnabledState(isProtectRewardsRedemptionEnabled)
+  }, [isProtectRewardsRedemptionEnabled])
 
   return (
     <div className={classes.accountSecurityWrapper}>
@@ -300,7 +311,7 @@ const _AccountSecurity: FC<Props> = ({
             </div>
           </div>
         )}
-        {withPasskeyAdded && isProtectedActionOptionsEnabled && (
+        {withPasskeyAdded && (
           <div className={classes.backupCodesSectionWrapper}>
             <div className={classes.sectionTitle}>
               <Text variant="baseM">Protected Actions</Text>
@@ -324,8 +335,8 @@ const _AccountSecurity: FC<Props> = ({
               </div>
               <div className={classes.protectedActionOption}>
                 <Switch
-                  checked={isProtectRewardsRedemptionEnabled}
-                  onChange={onProtectRewardsRedemptionChange}
+                  checked={isProtectRewardsRedemptionEnabledState}
+                  onChange={handleProtectRewardsRedemptionChange}
                   variant="light"
                 />
                 <Text variant="baseS">Require a protected action check when redeeming a reward on the store.</Text>

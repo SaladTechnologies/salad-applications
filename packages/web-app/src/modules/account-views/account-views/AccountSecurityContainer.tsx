@@ -13,8 +13,8 @@ const mapStoreToProps = (store: RootStore): any => ({
   loadProfile: store.profile.loadProfile,
   onAddPasskeyClick: store.passkey.registerPasskey,
   onDeletePasskeyClick: (passkeyId: string) => store.routing.push(`/account/passkey/delete/${passkeyId}`),
-  onProtectRewardsRedemptionChange: store.profile.protectRewardsRedemption,
   onViewBackupCodesClick: () => store.routing.push('/account/backup-codes'),
+  protectRewardsRedemption: store.profile.protectRewardsRedemption,
   setRegisterPasskeyStatus: store.passkey.setRegisterPasskeyStatus,
 })
 
