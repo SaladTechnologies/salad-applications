@@ -301,98 +301,104 @@ export class RewardStore {
     } catch (error) {
       if (!(error instanceof AbortError) && (Axios.isAxiosError(error) || error instanceof SaladError)) {
         const errorResponse = error.response
-        response?.complete('fail')
-        let notification: NotificationMessage | undefined
+        if (errorResponse?.status === 401 && !!this.store.auth.pendingProtectedAction) {
+          return
+        } else {
+          response?.complete('fail')
+          let notification: NotificationMessage | undefined
 
-        switch (errorResponse?.status) {
-          case 404:
-            this.clearRedemptionInfo()
-            notification = {
-              category: NotificationMessageCategory.Error,
-              title: 'Sorry, Chef! This reward is unavailable.',
-              message: "Looks like we're fresh out of that. Head to the Storefront to browse more great rewards.",
-              autoClose: false,
-              onClick: () => this.store.routing.push('/store'),
-              type: 'error',
-            }
-            break
-          case 409:
-            this.clearRedemptionInfo()
-            notification = {
-              category: NotificationMessageCategory.Redemption,
-              title: `Thank you for ordering ${reward.name}!`,
-              message: 'Congrats on your pick! Your item is on its way. Check your reward vault for more details.',
-              onClick: () => this.store.routing.push('/store/vault'),
-              autoClose: false,
-            }
-            break
-          case 400:
-            this.clearRedemptionInfo()
-            const data = errorResponse.data as unknown
-            if (isProblemDetail(data)) {
-              if (data.type === 'redemptions:invalid:price') {
-                this.fetchReward(reward.id)
-                notification = {
-                  category: NotificationMessageCategory.Error,
-                  title: 'Uh-oh! The reward price has changed.',
-                  message: 'Our vendors updated the price of this item. Please try again or return to the Storefront.',
-                  autoClose: false,
-                  onClick: () => this.store.routing.push(`/rewards/${reward.id}`),
-                  type: 'error',
-                }
-              } else if (data.type === 'redemptions:requires:minecraftUsername') {
-                notification = {
-                  category: NotificationMessageCategory.FurtherActionRequired,
-                  title: 'You need a Minecraft Username to redeem this reward.',
-                  message: 'Go to your account page to add your Minecraft Username.',
-                  autoClose: false,
-                  onClick: () => this.store.routing.push('/account/summary'),
-                  type: 'error',
-                }
-              } else if (data.type === 'redemptions:requires:payPalAccount') {
-                notification = {
-                  category: NotificationMessageCategory.FurtherActionRequired,
-                  title: 'A Paypal account is needed for this reward.',
-                  message: 'Go to your account page to link your PayPal account, then try redeeming this reward again.',
-                  autoClose: false,
-                  onClick: () => this.store.routing.push('/account/summary'),
-                  type: 'error',
-                }
-              } else if (data.type === 'redemptions:dailySpendLimitExceeded') {
-                notification = {
-                  category: NotificationMessageCategory.Error,
-                  title: 'Daily redemption limit has been reached.',
-                  message:
-                    "Sorry, Chef! It looks like you've reached your daily redemption limit. Click here to learn more about daily limits, and come back tomorrow.",
-                  autoClose: false,
-                  onClick: () => window.open('https://support.salad.com/hc/en-us/articles/4405644006932', '_blank'),
-                  type: 'error',
-                }
-              } else if (data.type === 'redemptions:notEnoughXp') {
-                notification = {
-                  category: NotificationMessageCategory.Error,
-                  title: 'Redemption Error',
-                  message:
-                    'This Salad account is too new to redeem. Please keep chopping with Salad and try again later.',
-                  autoClose: false,
-                  type: 'error',
+          switch (errorResponse?.status) {
+            case 404:
+              this.clearRedemptionInfo()
+              notification = {
+                category: NotificationMessageCategory.Error,
+                title: 'Sorry, Chef! This reward is unavailable.',
+                message: "Looks like we're fresh out of that. Head to the Storefront to browse more great rewards.",
+                autoClose: false,
+                onClick: () => this.store.routing.push('/store'),
+                type: 'error',
+              }
+              break
+            case 409:
+              this.clearRedemptionInfo()
+              notification = {
+                category: NotificationMessageCategory.Redemption,
+                title: `Thank you for ordering ${reward.name}!`,
+                message: 'Congrats on your pick! Your item is on its way. Check your reward vault for more details.',
+                onClick: () => this.store.routing.push('/store/vault'),
+                autoClose: false,
+              }
+              break
+            case 400:
+              this.clearRedemptionInfo()
+              const data = errorResponse.data as unknown
+              if (isProblemDetail(data)) {
+                if (data.type === 'redemptions:invalid:price') {
+                  this.fetchReward(reward.id)
+                  notification = {
+                    category: NotificationMessageCategory.Error,
+                    title: 'Uh-oh! The reward price has changed.',
+                    message:
+                      'Our vendors updated the price of this item. Please try again or return to the Storefront.',
+                    autoClose: false,
+                    onClick: () => this.store.routing.push(`/rewards/${reward.id}`),
+                    type: 'error',
+                  }
+                } else if (data.type === 'redemptions:requires:minecraftUsername') {
+                  notification = {
+                    category: NotificationMessageCategory.FurtherActionRequired,
+                    title: 'You need a Minecraft Username to redeem this reward.',
+                    message: 'Go to your account page to add your Minecraft Username.',
+                    autoClose: false,
+                    onClick: () => this.store.routing.push('/account/summary'),
+                    type: 'error',
+                  }
+                } else if (data.type === 'redemptions:requires:payPalAccount') {
+                  notification = {
+                    category: NotificationMessageCategory.FurtherActionRequired,
+                    title: 'A Paypal account is needed for this reward.',
+                    message:
+                      'Go to your account page to link your PayPal account, then try redeeming this reward again.',
+                    autoClose: false,
+                    onClick: () => this.store.routing.push('/account/summary'),
+                    type: 'error',
+                  }
+                } else if (data.type === 'redemptions:dailySpendLimitExceeded') {
+                  notification = {
+                    category: NotificationMessageCategory.Error,
+                    title: 'Daily redemption limit has been reached.',
+                    message:
+                      "Sorry, Chef! It looks like you've reached your daily redemption limit. Click here to learn more about daily limits, and come back tomorrow.",
+                    autoClose: false,
+                    onClick: () => window.open('https://support.salad.com/hc/en-us/articles/4405644006932', '_blank'),
+                    type: 'error',
+                  }
+                } else if (data.type === 'redemptions:notEnoughXp') {
+                  notification = {
+                    category: NotificationMessageCategory.Error,
+                    title: 'Redemption Error',
+                    message:
+                      'This Salad account is too new to redeem. Please keep chopping with Salad and try again later.',
+                    autoClose: false,
+                    type: 'error',
+                  }
                 }
               }
-            }
-            break
-        }
-
-        if (notification == null) {
-          notification = {
-            category: NotificationMessageCategory.Error,
-            title: `Uh Oh. Something went wrong.`,
-            message: error.message || 'Please try again later',
-            autoClose: false,
-            type: 'error',
+              break
           }
-        }
 
-        this.store.notifications.sendNotification(notification)
+          if (notification == null) {
+            notification = {
+              category: NotificationMessageCategory.Error,
+              title: `Uh Oh. Something went wrong.`,
+              message: error.message || 'Please try again later',
+              autoClose: false,
+              type: 'error',
+            }
+          }
+
+          this.store.notifications.sendNotification(notification)
+        }
       }
     } finally {
       yield this.store.balance.refreshBalance()
