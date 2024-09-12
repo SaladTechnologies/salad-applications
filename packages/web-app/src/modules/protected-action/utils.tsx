@@ -5,6 +5,7 @@ import { authenticationSessionsSudoEndpointPath } from '../auth/constants'
 import { backupCodesEndpointPath } from '../backup-codes/constants'
 import { passkeysCredentialsOptionsEndpointPath, passkeysEndpointPath } from '../passkey-setup/constants'
 import { protectRewardsRedemptionEndpointPath } from '../profile/constants'
+import { redemptionsEndpointPath } from '../reward/constants'
 
 enum PendingProtectedActionTrigger {
   GetBackupCodes = `get:${backupCodesEndpointPath}`,
@@ -12,6 +13,7 @@ enum PendingProtectedActionTrigger {
   GenerateBackupCodes = `post:${backupCodesEndpointPath}`,
   DeletePasskey = `delete:${passkeysEndpointPath}`,
   ProtectRewardsRedemption = `post:${protectRewardsRedemptionEndpointPath}`,
+  RewardRedemption = `post:${redemptionsEndpointPath}`,
   ChallengeSudoMode = `post:${authenticationSessionsSudoEndpointPath}`,
 }
 
@@ -67,6 +69,14 @@ export const handlePendingProtectedAction = (store: RootStore) => {
         store.profile.setProtectRewardsRedemptionStatus('failure')
       }
       store.routing.push('/account/summary')
+      break
+    case pendingProtectedActionKey?.includes(PendingProtectedActionTrigger.RewardRedemption):
+      const pendingLastReward = store.rewards.getReward(store.rewards.lastRewardId)
+      if (pendingLastReward) {
+        store.rewards.redeemReward(pendingLastReward)
+      } else {
+        store.routing.push('/store')
+      }
       break
     case pendingProtectedActionKey?.includes(PendingProtectedActionTrigger.ChallengeSudoMode):
       handleChallengeSudoModeTrigger(store)

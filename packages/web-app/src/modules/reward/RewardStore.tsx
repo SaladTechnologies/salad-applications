@@ -13,6 +13,12 @@ import type { SaladCardStore } from '../salad-card/SaladCardStore'
 import type { SaladPaymentResponse } from '../salad-pay'
 import { AbortError } from '../salad-pay'
 import { SaladPay } from '../salad-pay/SaladPay'
+import {
+  redemptionsEndpointPath,
+  rewardsEndpointPath,
+  rewardsRecommendationsEndpointPath,
+  selectedRewardEndpointPath,
+} from './constants'
 import type { Reward } from './models/Reward'
 import type { RewardResource } from './models/RewardResource'
 import { rewardFromResource } from './utils'
@@ -117,8 +123,8 @@ export class RewardStore {
     function* (this: RewardStore, rewardId?: string) {
       try {
         if (rewardId) {
-          let res: AxiosResponse<RewardResource> = yield this.axios.get(`/api/v1/rewards/${rewardId}`)
-          let reward: Reward = rewardFromResource(res.data)
+          const res: AxiosResponse<RewardResource> = yield this.axios.get(`${rewardsEndpointPath}/${rewardId}`)
+          const reward: Reward = rewardFromResource(res.data)
           this.rewards.set(reward.id, reward)
         }
       } catch (err) {
@@ -156,7 +162,7 @@ export class RewardStore {
 
   @action.bound
   fetchSelectedTargetReward = flow(function* (this: RewardStore) {
-    var res = yield this.axios.get('/api/v1/profile/selected-reward')
+    const res = yield this.axios.get(selectedRewardEndpointPath)
     yield this.fetchReward(res.data.rewardId)
     this.selectedTargetRewardId = res.data.rewardId
   })
@@ -177,7 +183,7 @@ export class RewardStore {
     this.isSelecting = true
 
     try {
-      var res = yield this.axios.patch('/api/v1/profile/selected-reward', request)
+      const res = yield this.axios.patch(selectedRewardEndpointPath, request)
       this.selectedTargetRewardId = res.data.rewardId
       this.rewards.set(reward.id, reward)
       if (reward) this.store.analytics.trackSelectedReward(reward)
@@ -197,7 +203,7 @@ export class RewardStore {
     this.isSelecting = true
 
     try {
-      var res = yield this.axios.patch('/api/v1/profile/selected-reward', request)
+      const res = yield this.axios.patch(selectedRewardEndpointPath, request)
       this.selectedTargetRewardId = res.data.rewardId
     } catch (error) {
       console.error(error)
@@ -209,7 +215,7 @@ export class RewardStore {
   @action.bound
   fetchRecommendedRewards = flow(function* (this: RewardStore) {
     try {
-      var res = yield this.axios.get('api/v1/rewards/recommendations')
+      const res = yield this.axios.get(rewardsRecommendationsEndpointPath)
       this.recommendedRewards = res.data.map(rewardFromResource)
     } catch (error) {
       console.error(error)
@@ -275,7 +281,7 @@ export class RewardStore {
       console.log(`Completed SaladPay transaction ${response?.details.transactionToken}`)
 
       const newRedemption = yield this.axios.post(
-        'api/v2/redemptions',
+        redemptionsEndpointPath,
         { id: this.lastRedemptionId, price: reward.price, rewardId: reward.id },
         { timeoutErrorMessage: timeoutMessage },
       )
@@ -293,100 +299,109 @@ export class RewardStore {
 
       this.isReviewing = true
     } catch (error) {
-      response?.complete('fail')
       if (!(error instanceof AbortError) && (Axios.isAxiosError(error) || error instanceof SaladError)) {
-        const response = error.response
-        let notification: NotificationMessage | undefined
+        const errorResponse = error.response
+        const isProtectedActionVerifyRequired =
+          errorResponse?.status === 401 && !!this.store.auth.pendingProtectedAction
 
-        switch (response?.status) {
-          case 404:
-            this.clearRedemptionInfo()
-            notification = {
-              category: NotificationMessageCategory.Error,
-              title: 'Sorry, Chef! This reward is unavailable.',
-              message: "Looks like we're fresh out of that. Head to the Storefront to browse more great rewards.",
-              autoClose: false,
-              onClick: () => this.store.routing.push('/store'),
-              type: 'error',
-            }
-            break
-          case 409:
-            this.clearRedemptionInfo()
-            notification = {
-              category: NotificationMessageCategory.Redemption,
-              title: `Thank you for ordering ${reward.name}!`,
-              message: 'Congrats on your pick! Your item is on its way. Check your reward vault for more details.',
-              onClick: () => this.store.routing.push('/store/vault'),
-              autoClose: false,
-            }
-            break
-          case 400:
-            this.clearRedemptionInfo()
-            const data = response.data as unknown
-            if (isProblemDetail(data)) {
-              if (data.type === 'redemptions:invalid:price') {
-                this.fetchReward(reward.id)
-                notification = {
-                  category: NotificationMessageCategory.Error,
-                  title: 'Uh-oh! The reward price has changed.',
-                  message: 'Our vendors updated the price of this item. Please try again or return to the Storefront.',
-                  autoClose: false,
-                  onClick: () => this.store.routing.push(`/rewards/${reward.id}`),
-                  type: 'error',
-                }
-              } else if (data.type === 'redemptions:requires:minecraftUsername') {
-                notification = {
-                  category: NotificationMessageCategory.FurtherActionRequired,
-                  title: 'You need a Minecraft Username to redeem this reward.',
-                  message: 'Go to your account page to add your Minecraft Username.',
-                  autoClose: false,
-                  onClick: () => this.store.routing.push('/account/summary'),
-                  type: 'error',
-                }
-              } else if (data.type === 'redemptions:requires:payPalAccount') {
-                notification = {
-                  category: NotificationMessageCategory.FurtherActionRequired,
-                  title: 'A Paypal account is needed for this reward.',
-                  message: 'Go to your account page to link your PayPal account, then try redeeming this reward again.',
-                  autoClose: false,
-                  onClick: () => this.store.routing.push('/account/summary'),
-                  type: 'error',
-                }
-              } else if (data.type === 'redemptions:dailySpendLimitExceeded') {
-                notification = {
-                  category: NotificationMessageCategory.Error,
-                  title: 'Daily redemption limit has been reached.',
-                  message:
-                    "Sorry, Chef! It looks like you've reached your daily redemption limit. Click here to learn more about daily limits, and come back tomorrow.",
-                  autoClose: false,
-                  onClick: () => window.open('https://support.salad.com/hc/en-us/articles/4405644006932', '_blank'),
-                  type: 'error',
-                }
-              } else if (data.type === 'redemptions:notEnoughXp') {
-                notification = {
-                  category: NotificationMessageCategory.Error,
-                  title: 'Redemption Error',
-                  message:
-                    'This Salad account is too new to redeem. Please keep chopping with Salad and try again later.',
-                  autoClose: false,
-                  type: 'error',
+        response?.complete('fail', isProtectedActionVerifyRequired)
+        if (isProtectedActionVerifyRequired) {
+          return
+        } else {
+          let notification: NotificationMessage | undefined
+
+          switch (errorResponse?.status) {
+            case 404:
+              this.clearRedemptionInfo()
+              notification = {
+                category: NotificationMessageCategory.Error,
+                title: 'Sorry, Chef! This reward is unavailable.',
+                message: "Looks like we're fresh out of that. Head to the Storefront to browse more great rewards.",
+                autoClose: false,
+                onClick: () => this.store.routing.push('/store'),
+                type: 'error',
+              }
+              break
+            case 409:
+              this.clearRedemptionInfo()
+              notification = {
+                category: NotificationMessageCategory.Redemption,
+                title: `Thank you for ordering ${reward.name}!`,
+                message: 'Congrats on your pick! Your item is on its way. Check your reward vault for more details.',
+                onClick: () => this.store.routing.push('/store/vault'),
+                autoClose: false,
+              }
+              break
+            case 400:
+              this.clearRedemptionInfo()
+              const data = errorResponse.data as unknown
+              if (isProblemDetail(data)) {
+                if (data.type === 'redemptions:invalid:price') {
+                  this.fetchReward(reward.id)
+                  notification = {
+                    category: NotificationMessageCategory.Error,
+                    title: 'Uh-oh! The reward price has changed.',
+                    message:
+                      'Our vendors updated the price of this item. Please try again or return to the Storefront.',
+                    autoClose: false,
+                    onClick: () => this.store.routing.push(`/rewards/${reward.id}`),
+                    type: 'error',
+                  }
+                } else if (data.type === 'redemptions:requires:minecraftUsername') {
+                  notification = {
+                    category: NotificationMessageCategory.FurtherActionRequired,
+                    title: 'You need a Minecraft Username to redeem this reward.',
+                    message: 'Go to your account page to add your Minecraft Username.',
+                    autoClose: false,
+                    onClick: () => this.store.routing.push('/account/summary'),
+                    type: 'error',
+                  }
+                } else if (data.type === 'redemptions:requires:payPalAccount') {
+                  notification = {
+                    category: NotificationMessageCategory.FurtherActionRequired,
+                    title: 'A Paypal account is needed for this reward.',
+                    message:
+                      'Go to your account page to link your PayPal account, then try redeeming this reward again.',
+                    autoClose: false,
+                    onClick: () => this.store.routing.push('/account/summary'),
+                    type: 'error',
+                  }
+                } else if (data.type === 'redemptions:dailySpendLimitExceeded') {
+                  notification = {
+                    category: NotificationMessageCategory.Error,
+                    title: 'Daily redemption limit has been reached.',
+                    message:
+                      "Sorry, Chef! It looks like you've reached your daily redemption limit. Click here to learn more about daily limits, and come back tomorrow.",
+                    autoClose: false,
+                    onClick: () => window.open('https://support.salad.com/hc/en-us/articles/4405644006932', '_blank'),
+                    type: 'error',
+                  }
+                } else if (data.type === 'redemptions:notEnoughXp') {
+                  notification = {
+                    category: NotificationMessageCategory.Error,
+                    title: 'Redemption Error',
+                    message:
+                      'This Salad account is too new to redeem. Please keep chopping with Salad and try again later.',
+                    autoClose: false,
+                    type: 'error',
+                  }
                 }
               }
-            }
-            break
-        }
-
-        if (notification == null) {
-          notification = {
-            category: NotificationMessageCategory.Error,
-            title: `Uh Oh. Something went wrong.`,
-            message: error.message || 'Please try again later',
-            autoClose: false,
-            type: 'error',
+              break
           }
-        }
 
-        this.store.notifications.sendNotification(notification)
+          if (notification == null) {
+            notification = {
+              category: NotificationMessageCategory.Error,
+              title: `Uh Oh. Something went wrong.`,
+              message: error.message || 'Please try again later',
+              autoClose: false,
+              type: 'error',
+            }
+          }
+
+          this.store.notifications.sendNotification(notification)
+        }
       }
     } finally {
       yield this.store.balance.refreshBalance()
