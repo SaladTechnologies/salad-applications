@@ -301,10 +301,11 @@ export class RewardStore {
     } catch (error) {
       if (!(error instanceof AbortError) && (Axios.isAxiosError(error) || error instanceof SaladError)) {
         const errorResponse = error.response
-        const isProtectedActionRequired = errorResponse?.status === 401 && !!this.store.auth.pendingProtectedAction
+        const isProtectedActionVerifyRequired =
+          errorResponse?.status === 401 && !!this.store.auth.pendingProtectedAction
 
-        response?.complete('fail', isProtectedActionRequired)
-        if (isProtectedActionRequired) {
+        response?.complete('fail', isProtectedActionVerifyRequired)
+        if (isProtectedActionVerifyRequired) {
           return
         } else {
           let notification: NotificationMessage | undefined

@@ -6,5 +6,5 @@ export interface SaladPaymentResponse {
   /** An object containing the payment details. */
   details: SaladPaymentResponseDetails
   /** A Salad provided function. Call this when you have processed the token data provided by SaladPay. */
-  complete: (reason: 'success' | 'fail', isProtectedActionRequired?: boolean) => void
+  complete: (reason: 'success' | 'fail', isProtectedActionVerifyRequired?: boolean) => void
 }

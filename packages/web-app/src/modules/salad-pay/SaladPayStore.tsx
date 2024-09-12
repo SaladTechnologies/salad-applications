@@ -90,9 +90,9 @@ export class SaladPayStore {
       details: {
         transactionToken: 'hello',
       },
-      complete: (_, isProtectedActionRequired) => {
+      complete: (_, isProtectedActionVerifyRequired) => {
         console.log('SaladPay "complete" called')
-        !isProtectedActionRequired && this.goBackToReward()
+        !isProtectedActionVerifyRequired && this.goBackToReward()
         this.currentRequest?.emit('complete')
         this.processing = false
       },
