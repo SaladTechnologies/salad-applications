@@ -389,6 +389,11 @@ export class AnalyticsStore {
     this.track('Earning Summary Viewed')
   }
 
+  /** Track when user load exit-survey page as a result of the app uninstall */
+  public trackUninstall = () => {
+    this.track('Uninstall')
+  }
+
   public trackUnleashEvent = (event: string, properties: { [key: string]: any }) => {
     this.track(event, properties)
   }
