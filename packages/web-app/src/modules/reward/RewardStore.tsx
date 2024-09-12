@@ -13,6 +13,12 @@ import type { SaladCardStore } from '../salad-card/SaladCardStore'
 import type { SaladPaymentResponse } from '../salad-pay'
 import { AbortError } from '../salad-pay'
 import { SaladPay } from '../salad-pay/SaladPay'
+import {
+  redemptionsEndpointPath,
+  rewardsEndpointPath,
+  rewardsRecommendationsEndpointPath,
+  selectedRewardEndpointPath,
+} from './constants'
 import type { Reward } from './models/Reward'
 import type { RewardResource } from './models/RewardResource'
 import { rewardFromResource } from './utils'
@@ -117,8 +123,8 @@ export class RewardStore {
     function* (this: RewardStore, rewardId?: string) {
       try {
         if (rewardId) {
-          let res: AxiosResponse<RewardResource> = yield this.axios.get(`/api/v1/rewards/${rewardId}`)
-          let reward: Reward = rewardFromResource(res.data)
+          const res: AxiosResponse<RewardResource> = yield this.axios.get(`${rewardsEndpointPath}/${rewardId}`)
+          const reward: Reward = rewardFromResource(res.data)
           this.rewards.set(reward.id, reward)
         }
       } catch (err) {
@@ -156,7 +162,7 @@ export class RewardStore {
 
   @action.bound
   fetchSelectedTargetReward = flow(function* (this: RewardStore) {
-    var res = yield this.axios.get('/api/v1/profile/selected-reward')
+    const res = yield this.axios.get(selectedRewardEndpointPath)
     yield this.fetchReward(res.data.rewardId)
     this.selectedTargetRewardId = res.data.rewardId
   })
@@ -177,7 +183,7 @@ export class RewardStore {
     this.isSelecting = true
 
     try {
-      var res = yield this.axios.patch('/api/v1/profile/selected-reward', request)
+      const res = yield this.axios.patch(selectedRewardEndpointPath, request)
       this.selectedTargetRewardId = res.data.rewardId
       this.rewards.set(reward.id, reward)
       if (reward) this.store.analytics.trackSelectedReward(reward)
@@ -197,7 +203,7 @@ export class RewardStore {
     this.isSelecting = true
 
     try {
-      var res = yield this.axios.patch('/api/v1/profile/selected-reward', request)
+      const res = yield this.axios.patch(selectedRewardEndpointPath, request)
       this.selectedTargetRewardId = res.data.rewardId
     } catch (error) {
       console.error(error)
@@ -209,7 +215,7 @@ export class RewardStore {
   @action.bound
   fetchRecommendedRewards = flow(function* (this: RewardStore) {
     try {
-      var res = yield this.axios.get('api/v1/rewards/recommendations')
+      const res = yield this.axios.get(rewardsRecommendationsEndpointPath)
       this.recommendedRewards = res.data.map(rewardFromResource)
     } catch (error) {
       console.error(error)
@@ -275,7 +281,7 @@ export class RewardStore {
       console.log(`Completed SaladPay transaction ${response?.details.transactionToken}`)
 
       const newRedemption = yield this.axios.post(
-        'api/v2/redemptions',
+        redemptionsEndpointPath,
         { id: this.lastRedemptionId, price: reward.price, rewardId: reward.id },
         { timeoutErrorMessage: timeoutMessage },
       )
@@ -293,12 +299,12 @@ export class RewardStore {
 
       this.isReviewing = true
     } catch (error) {
-      response?.complete('fail')
       if (!(error instanceof AbortError) && (Axios.isAxiosError(error) || error instanceof SaladError)) {
-        const response = error.response
+        const errorResponse = error.response
+        response?.complete('fail')
         let notification: NotificationMessage | undefined
 
-        switch (response?.status) {
+        switch (errorResponse?.status) {
           case 404:
             this.clearRedemptionInfo()
             notification = {
@@ -322,7 +328,7 @@ export class RewardStore {
             break
           case 400:
             this.clearRedemptionInfo()
-            const data = response.data as unknown
+            const data = errorResponse.data as unknown
             if (isProblemDetail(data)) {
               if (data.type === 'redemptions:invalid:price') {
                 this.fetchReward(reward.id)
