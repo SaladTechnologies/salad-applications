@@ -19,9 +19,7 @@ export const StorefrontHeroBlock = ({ block }: Props) => {
           ? `$${hero.reward?.price.toFixed(2)}`
           : undefined
         const buttonLink = hero.button_link || rewardRoute(hero.reward?.uuid)
-        const image = hero.image?.url
-          ? new URL(hero.image?.url, config.strapiUploadUrl).href
-          : undefined || hero.reward?.heroImage
+        const image = hero.image?.url ? new URL(hero.image?.url, config.strapiUploadUrl).href : hero.reward?.heroImage
         const outOfStock = hero.reward?.quantity === 0
         const lowQuanity = hero.reward?.quantity !== undefined && hero.reward.quantity > 0
         const reward = hero.reward
