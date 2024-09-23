@@ -66,7 +66,9 @@ const _StorefrontContentPanel = ({ body, color, image, imagePosition, title, cla
       })}
     >
       <div
-        className={classnames(classes.column, { [classes.columnSideBySide]: imagePosition === ('left' || 'right') })}
+        className={classnames(classes.column, {
+          [classes.columnSideBySide]: imagePosition === 'left' || imagePosition === 'right',
+        })}
       >
         <HeroTitle>{title}</HeroTitle>
         <Remark
