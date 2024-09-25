@@ -1,6 +1,6 @@
-import { connect } from '../../../connect'
-import type { RootStore } from '../../../Store'
-import { AccountSecurity } from './components/AccountSecurity'
+import { connect } from '../../../../../connect'
+import type { RootStore } from '../../../../../Store'
+import { AccountSecurity } from './AccountSecurity'
 
 const mapStoreToProps = (store: RootStore): any => ({
   editPasskeyNameStatus: store.passkey.editPasskeyNameStatus,
