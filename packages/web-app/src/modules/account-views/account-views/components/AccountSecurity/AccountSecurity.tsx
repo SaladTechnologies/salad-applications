@@ -8,11 +8,11 @@ import { useEffect, useState, type FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { useMediaQuery } from 'react-responsive'
-import { ErrorText, mobileSize } from '../../../../components'
-import { SuccessText } from '../../../../components/primitives/content/SuccessText'
-import type { EditPasskeyNameStatus, Passkey, RegisterPasskeyStatus } from '../../../passkey-setup'
-import type { ProtectRewardsRedemptionStatus } from '../../../profile'
-import type { FormValues } from './Account'
+import { ErrorText, mobileSize } from '../../../../../components'
+import { SuccessText } from '../../../../../components/primitives/content/SuccessText'
+import type { EditPasskeyNameStatus, Passkey, RegisterPasskeyStatus } from '../../../../passkey-setup'
+import type { ProtectRewardsRedemptionStatus } from '../../../../profile'
+import type { FormValues } from '../Account'
 
 const styles: () => Record<string, CSS.Properties> = () => ({
   accountSecurityWrapper: {

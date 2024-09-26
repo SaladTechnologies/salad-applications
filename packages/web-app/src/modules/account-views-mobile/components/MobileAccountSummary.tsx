@@ -2,7 +2,7 @@ import { type FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Button, Divider, P, StatElement } from '../../../components'
-import { AccountSecurityContainer } from '../../account-views/account-views'
+import { AccountSecurityContainer } from '../../account-views/account-views/components/AccountSecurity'
 import { type Passkey } from '../../passkey-setup'
 
 const styles = {
