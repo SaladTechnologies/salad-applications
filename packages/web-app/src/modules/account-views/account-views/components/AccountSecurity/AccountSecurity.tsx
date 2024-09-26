@@ -13,6 +13,7 @@ import { SuccessText } from '../../../../../components/primitives/content/Succes
 import type { EditPasskeyNameStatus, Passkey, RegisterPasskeyStatus } from '../../../../passkey-setup'
 import type { ProtectRewardsRedemptionStatus } from '../../../../profile'
 import type { FormValues } from '../Account'
+import { passkeyVendorIcons } from './constants'
 
 const styles: () => Record<string, CSS.Properties> = () => ({
   accountSecurityWrapper: {
@@ -70,7 +71,7 @@ const styles: () => Record<string, CSS.Properties> = () => ({
     marginRight: '5px',
   },
   passkeyNameWrapper: {
-    width: '200px',
+    width: '180px',
     height: '30px',
     overflow: 'hidden',
   },
@@ -122,6 +123,10 @@ const styles: () => Record<string, CSS.Properties> = () => ({
   protectedActionMessageWrapper: {
     height: '40px',
     width: '100%',
+  },
+  passkeyVendorIcon: {
+    width: '15px',
+    height: '15px',
   },
 })
 
@@ -240,8 +245,14 @@ const _AccountSecurity: FC<Props> = ({
           </div>
           <div className={classes.passkeysList}></div>
           {passkeys.map((passkey) => {
+            const passkeyVendorIcon = passkeyVendorIcons[passkey.aaGuid]
             return (
               <div className={classes.passkeysListItem} key={passkey.id}>
+                <img
+                  className={classes.passkeyVendorIcon}
+                  src={isTabletOrMobile ? passkeyVendorIcon?.iconLight : passkeyVendorIcon?.iconDark}
+                  alt={passkeyVendorIcon?.alt}
+                />
                 <div className={classes.passkeyNameWrapper}>
                   {passkey.id === editPasskeyId ? (
                     <TextField
