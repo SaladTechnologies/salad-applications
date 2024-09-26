@@ -15,6 +15,7 @@ export interface Passkey {
   createdAt: string
   displayName: string
   id: string
+  aaGuid: string
 }
 
 export type RegisterPasskeyStatus = 'success' | 'failure' | 'unknown'
