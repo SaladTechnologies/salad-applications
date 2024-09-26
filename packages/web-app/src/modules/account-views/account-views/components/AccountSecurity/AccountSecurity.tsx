@@ -13,6 +13,7 @@ import { SuccessText } from '../../../../../components/primitives/content/Succes
 import type { EditPasskeyNameStatus, Passkey, RegisterPasskeyStatus } from '../../../../passkey-setup'
 import type { ProtectRewardsRedemptionStatus } from '../../../../profile'
 import type { FormValues } from '../Account'
+import DefaultPasskeyIcon from './assets/DefaultPasskeyIcon.svg'
 import { passkeyVendorIcons } from './constants'
 
 const styles: () => Record<string, CSS.Properties> = () => ({
@@ -246,11 +247,12 @@ const _AccountSecurity: FC<Props> = ({
           <div className={classes.passkeysList}></div>
           {passkeys.map((passkey) => {
             const passkeyVendorIcon = passkeyVendorIcons[passkey.aaGuid]
+            const icon = isTabletOrMobile ? passkeyVendorIcon?.iconLight : passkeyVendorIcon?.iconDark
             return (
               <div className={classes.passkeysListItem} key={passkey.id}>
                 <img
                   className={classes.passkeyVendorIcon}
-                  src={isTabletOrMobile ? passkeyVendorIcon?.iconLight : passkeyVendorIcon?.iconDark}
+                  src={icon ?? DefaultPasskeyIcon}
                   alt={passkeyVendorIcon?.alt}
                 />
                 <div className={classes.passkeyNameWrapper}>
