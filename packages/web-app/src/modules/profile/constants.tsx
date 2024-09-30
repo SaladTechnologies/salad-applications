@@ -12,7 +12,7 @@ export const protectRewardsRedemptionEndpointPath = '/api/v1/profile/redemptions
 export const paypalSuccessNotification: NotificationMessage = {
   category: NotificationMessageCategory.PayPalSuccess,
   title: 'Congratulations!',
-  message: 'You have successfully linked your PayPal account to Salad. Feel free to close this window at any time.',
+  message: 'You have successfully linked your PayPal account to Salad.',
 }
 
 export const paypalRetryNotification: NotificationMessage = {
