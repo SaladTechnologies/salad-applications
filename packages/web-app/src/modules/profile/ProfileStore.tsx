@@ -10,6 +10,10 @@ import {
   avatarsEndpointPath,
   avatarsSelectedEndpointPath,
   novuSignaturesEndpointPath,
+  paypalAccountInUseNotification,
+  paypalFailureNotification,
+  paypalRetryNotification,
+  paypalSuccessNotification,
   paypalUsersEndpointPath,
   profileEndpointPath,
   protectRewardsRedemptionEndpointPath,
@@ -287,11 +291,37 @@ export class ProfileStore {
     this.isMinecraftUserNameSubmitSuccess = false
   }
 
+  @action
+  private showPaypalNotification = () => {
+    const urlSearchParams = new URLSearchParams(window.location.search)
+    const paypalActionStatus = urlSearchParams.get('paypalAction')
+
+    if (paypalActionStatus) {
+      this.store.routing.replace('/account/summary')
+
+      switch (paypalActionStatus) {
+        case 'success':
+          this.store.notifications.sendNotification(paypalSuccessNotification)
+          break
+        case 'retry':
+          this.store.notifications.sendNotification(paypalRetryNotification)
+          break
+        case 'failure':
+          this.store.notifications.sendNotification(paypalFailureNotification)
+          break
+        case 'account_in_use':
+          this.store.notifications.sendNotification(paypalAccountInUseNotification)
+          break
+      }
+    }
+  }
+
   @action.bound
   loadPayPalId = flow(function* (this: ProfileStore) {
     try {
       const res: AxiosResponse<payPalResponse> = yield this.axios.get(paypalUsersEndpointPath) as payPalResponse
       this.payPalId = res?.data?.email
+      this.showPaypalNotification()
     } catch (err) {
       console.log(err)
     }
@@ -314,6 +344,7 @@ export class ProfileStore {
           payPalLoadRetries++
           this.timeoutId = setTimeout(loadPayPalIdWithRetry, 5000)
         } else {
+          this.store.notifications.sendNotification(paypalSuccessNotification)
           clearTimeout(this.timeoutId)
           return
         }

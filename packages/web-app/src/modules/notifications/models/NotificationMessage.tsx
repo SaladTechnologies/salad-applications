@@ -14,6 +14,10 @@ export enum NotificationMessageCategory {
   ReferralCodeInvalid = 'Referral Code Invalid',
   ReferralCodeDoesNotExist = 'Referral Code Does Not Exist',
   ReferralCodeError = 'Referral Code Error',
+  PayPalSuccess = 'PayPalSuccess',
+  PayPalRetry = 'PayPalRetry',
+  PayPalFailure = 'PayPalFailure',
+  PayPalAccountInUse = 'PayPalAccountInUse',
 }
 
 export interface NotificationMessage {
