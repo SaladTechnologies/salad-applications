@@ -116,8 +116,7 @@ export class AuthStore {
     try {
       const response = await this.challengeSudoMode(ChallengeSudoModeTrigger.PayPalLogIn)
       if (response) {
-        this.store.profile.checkPayPalIdWithInterval()
-        window.open(config.paypalUrl)
+        window.location.href = config.paypalUrl
       }
     } catch (error) {
       console.error('AuthStore -> logInWithPayPalChallengeSudoMode: ', error)

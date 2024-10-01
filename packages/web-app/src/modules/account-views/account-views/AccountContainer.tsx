@@ -29,7 +29,6 @@ const mapStoreToProps = (store: RootStore): any => ({
   isTermsAndConditionsAccepted: store.termsAndConditions.isTermsAndConditionsAccepted,
   onSubmitTermsAndConditions: store.termsAndConditions.submitTermsAndConditions,
   onToggleAcceptTermsAndConditions: store.termsAndConditions.toggleAcceptTermsAndConditions,
-  checkPayPalIdWithInterval: store.profile.checkPayPalIdWithInterval,
   signInWithGoogleChallengeSudoMode: store.auth.signInWithGoogleChallengeSudoMode,
   logInWithPayPalChallengeSudoMode: store.auth.logInWithPayPalChallengeSudoMode,
 })

@@ -83,8 +83,6 @@ export class ProfileStore {
   @observable
   public payPalId?: string
 
-  private timeoutId?: NodeJS.Timeout
-
   @observable
   public connectedGoogleAccountEmail?: string
 
@@ -323,39 +321,10 @@ export class ProfileStore {
       this.payPalId = res?.data?.email
       this.showPaypalNotification()
     } catch (err) {
+      this.showPaypalNotification()
       console.log(err)
     }
   })
-
-  checkPayPalIdWithInterval = async (): Promise<void> => {
-    let payPalLoadRetries = 0
-    const maxPaypalLoadRetries = 50
-
-    const loadPayPalIdWithRetry = async () => {
-      try {
-        if (payPalLoadRetries >= maxPaypalLoadRetries || this.payPalId) {
-          clearTimeout(this.timeoutId)
-          return
-        }
-
-        await this.loadPayPalId()
-
-        if (!this.payPalId) {
-          payPalLoadRetries++
-          this.timeoutId = setTimeout(loadPayPalIdWithRetry, 5000)
-        } else {
-          this.store.notifications.sendNotification(paypalSuccessNotification)
-          clearTimeout(this.timeoutId)
-          return
-        }
-      } catch (error) {
-        console.error('ProfileStore -> checkPayPalIdWithInterval: ', error)
-      }
-    }
-
-    clearTimeout(this.timeoutId)
-    loadPayPalIdWithRetry()
-  }
 
   @action.bound
   connectExternalAccountProvider = () => {
