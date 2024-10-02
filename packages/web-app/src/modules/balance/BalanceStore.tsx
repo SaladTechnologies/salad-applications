@@ -1,5 +1,6 @@
 import type { AxiosInstance } from 'axios'
 import type { Guid } from 'guid-typescript'
+import { DateTime } from 'luxon'
 import { action, computed, flow, observable, runInAction } from 'mobx'
 import type { Moment } from 'moment'
 import moment from 'moment'
@@ -108,8 +109,17 @@ export class BalanceStore {
       const machinesResponse = await this.machinesApiClient?.v2.machines.get()
 
       if (machinesResponse?.items) {
-        return machinesResponse?.items
+        const machines = machinesResponse?.items.filter((machine) => {
+          if (machine.update_time) {
+            return DateTime.fromJSDate(machine.update_time) > DateTime.now().minus({ days: 32 })
+          }
+          return false
+        })
+
+        return machines.length > 0 ? machines : null
       }
+
+      return null
     } catch (error) {
       console.error('BalanceStore.getMultipleMachinesEarnings: ', error)
     }
@@ -149,13 +159,15 @@ export class BalanceStore {
 
       this.getMachines()
         .then((machines) => {
-          if (machines) {
-            runInAction(() => {
-              this.machines = machines
-            })
-            return this.getEarningsPerMachine(machines, 30)
+          runInAction(() => {
+            this.machines = machines
+          })
+
+          if (machines === null) {
+            throw new Error('There is no machines')
           }
-          throw new Error('There is no machines')
+
+          return this.getEarningsPerMachine(machines, 30)
         })
         .then((earningsPerMachine) => {
           if (earningsPerMachine) {

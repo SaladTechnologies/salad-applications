@@ -1,10 +1,11 @@
-import { LoadingSpinner } from '@saladtechnologies/garden-components'
+import { LoadingSpinner, Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import type { Machine } from '../../../../api/machinesApiClient/generated/models'
 import { DefaultTheme, type SaladTheme } from '../../../../SaladTheme'
 import { formatBalance } from '../../../../utils'
 import type { ChartDaysShowing, EarningPerMachine, EarningWindow } from '../../../balance/models'
@@ -30,6 +31,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    color: theme.lightGreen,
   },
   tickFont: {
     fontFamily: 'Mallory',
@@ -63,11 +65,12 @@ const getMachineOptions = (earningsPerMachine: EarningPerMachine) => {
 
 interface Props extends WithStyles<typeof styles> {
   earningsPerMachine: EarningPerMachine
+  machines: Machine[] | null
   daysShowing: ChartDaysShowing
   fetchEarningsPerMachine: () => void
 }
 
-const _EarningLineChart = ({ classes, earningsPerMachine, daysShowing, fetchEarningsPerMachine }: Props) => {
+const _EarningLineChart = ({ classes, machines, earningsPerMachine, daysShowing, fetchEarningsPerMachine }: Props) => {
   const is24HoursChart = daysShowing === 1
   const [machineOptions, setMachineOptions] = useState<MachineOptions>({})
 
@@ -98,9 +101,19 @@ const _EarningLineChart = ({ classes, earningsPerMachine, daysShowing, fetchEarn
     fetchEarningsPerMachine()
   }, [fetchEarningsPerMachine])
 
+  const withMachinesData = machines !== null
   const isLoading = machineEarningsData.length <= 0
   const isNoMachineOptionChecked = !Object.values(machineOptions).some((machineOption) => machineOption.isChecked)
 
+  if (!withMachinesData) {
+    return (
+      <div className={classes.earningLineChartWrapper}>
+        <div className={classes.loaderWrapper}>
+          <Text variant="baseM">There haven't been earnings last 32 days.</Text>
+        </div>
+      </div>
+    )
+  }
   return (
     <div className={classes.earningLineChartWrapper}>
       {isLoading ? (
