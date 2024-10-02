@@ -9,13 +9,20 @@ export const paypalUsersEndpointPath = '/api/v2/paypal/users'
 export const authenticationExternalEndpointPath = '/api/v2/authentication/external'
 export const protectRewardsRedemptionEndpointPath = '/api/v1/profile/redemptions/tfa'
 
-export const paypalSuccessNotification: NotificationMessage = {
+export enum PaypalActionStatus {
+  Success = 'success',
+  Retry = 'retry',
+  Failure = 'failure',
+  AccountInUse = 'account_in_use',
+}
+
+const paypalSuccessNotification: NotificationMessage = {
   category: NotificationMessageCategory.PayPalSuccess,
   title: 'Congratulations!',
   message: 'You have successfully linked your PayPal account to Salad.',
 }
 
-export const paypalRetryNotification: NotificationMessage = {
+const paypalRetryNotification: NotificationMessage = {
   category: NotificationMessageCategory.PayPalRetry,
   title: `Oops! Let's fix that`,
   message:
@@ -29,7 +36,7 @@ export const paypalRetryNotification: NotificationMessage = {
     ),
 }
 
-export const paypalFailureNotification: NotificationMessage = {
+const paypalFailureNotification: NotificationMessage = {
   category: NotificationMessageCategory.PayPalFailure,
   title: `Let's try that again`,
   message: `We weren't able to connect your PayPal account to Salad. Feel free to try again whenever you like. If the problem persists, please contact Salad Support.`,
@@ -42,7 +49,7 @@ export const paypalFailureNotification: NotificationMessage = {
     ),
 }
 
-export const paypalAccountInUseNotification: NotificationMessage = {
+const paypalAccountInUseNotification: NotificationMessage = {
   category: NotificationMessageCategory.PayPalAccountInUse,
   title: `Let's try that again`,
   message: 'This PayPal account cannot be linked to this Salad account. Learn More.',
@@ -53,4 +60,18 @@ export const paypalAccountInUseNotification: NotificationMessage = {
       '_blank',
       'noopener, noreferrer',
     ),
+}
+
+export const getPaypalNotification = (paypalActionStatus: PaypalActionStatus) => {
+  switch (paypalActionStatus) {
+    case PaypalActionStatus.Success:
+      return paypalSuccessNotification
+    case PaypalActionStatus.Retry:
+      return paypalRetryNotification
+    case PaypalActionStatus.AccountInUse:
+      return paypalAccountInUseNotification
+    case PaypalActionStatus.Failure:
+    default:
+      return paypalFailureNotification
+  }
 }

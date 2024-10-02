@@ -109,7 +109,6 @@ interface Props extends WithStyles<typeof styles> {
   fetchPasskeys: () => void
   onAddPasskeyClick: () => void
   onDeletePasskeyClick: (passkeyId: string) => void
-  checkPayPalIdWithInterval: () => void
   logInWithPayPalChallengeSudoMode: () => void
   signInWithGoogleChallengeSudoMode: (signInWithGoogle: () => void) => void
 }
@@ -146,24 +145,16 @@ const _Account: FC<Props> = ({
   isTermsAndConditionsAccepted,
   onSubmitTermsAndConditions,
   onToggleAcceptTermsAndConditions,
-  checkPayPalIdWithInterval,
   logInWithPayPalChallengeSudoMode,
   signInWithGoogleChallengeSudoMode,
 }) => {
-  const location = useLocation<{ isGoogleSignInFormTriggered: string; isPayPalLogInTriggered: string }>()
+  const location = useLocation<{ isGoogleSignInFormTriggered: string }>()
   const isGoogleSignInFormTriggered = !!location.state?.isGoogleSignInFormTriggered
-  const isPayPalLogInTriggered = !!location.state?.isPayPalLogInTriggered
 
   useEffect(() => {
     loadPayPalId()
     loadGoogleAccountConnection()
   }, [loadGoogleAccountConnection, loadPayPalId])
-
-  useEffect(() => {
-    if (isPayPalLogInTriggered) {
-      checkPayPalIdWithInterval()
-    }
-  }, [isPayPalLogInTriggered, checkPayPalIdWithInterval])
 
   const shouldShowUpdateAccountTermsAndConditions = !!profile?.pendingTermsVersion
   const handleSubmitButtonReset = () => {

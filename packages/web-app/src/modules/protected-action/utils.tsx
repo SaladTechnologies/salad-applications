@@ -23,8 +23,7 @@ const handleChallengeSudoModeTrigger = (store: RootStore) => {
       store.routing.push('/account/summary', { isGoogleSignInFormTriggered: true })
       break
     case ChallengeSudoModeTrigger.PayPalLogIn:
-      window.open(config.paypalUrl)
-      store.routing.push('/account/summary', { isPayPalLogInTriggered: true })
+      window.location.href = config.paypalUrl
       break
     case ChallengeSudoModeTrigger.RewardRedeem:
       const pendingLastReward = store.rewards.getReward(store.rewards.lastRewardId)

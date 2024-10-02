@@ -5,15 +5,13 @@ import * as Storage from '../../Storage'
 import type { RootStore } from '../../Store'
 import type { FormValues } from '../account-views/account-views/components/'
 import { NotificationMessageCategory } from '../notifications/models'
+import type { PaypalActionStatus } from './constants'
 import {
   authenticationExternalEndpointPath,
   avatarsEndpointPath,
   avatarsSelectedEndpointPath,
+  getPaypalNotification,
   novuSignaturesEndpointPath,
-  paypalAccountInUseNotification,
-  paypalFailureNotification,
-  paypalRetryNotification,
-  paypalSuccessNotification,
   paypalUsersEndpointPath,
   profileEndpointPath,
   protectRewardsRedemptionEndpointPath,
@@ -23,8 +21,8 @@ import {
   ExternalAuthProviderLoginStatus,
   type Avatar,
   type ExternalAuthProvider,
-  type Profile,
   type payPalResponse,
+  type Profile,
 } from './models'
 
 export type ProtectRewardsRedemptionStatus = 'success' | 'failure' | 'loading' | 'unknown'
@@ -82,8 +80,6 @@ export class ProfileStore {
 
   @observable
   public payPalId?: string
-
-  private timeoutId?: NodeJS.Timeout
 
   @observable
   public connectedGoogleAccountEmail?: string
@@ -298,64 +294,20 @@ export class ProfileStore {
 
     if (paypalActionStatus) {
       this.store.routing.replace('/account/summary')
-
-      switch (paypalActionStatus) {
-        case 'success':
-          this.store.notifications.sendNotification(paypalSuccessNotification)
-          break
-        case 'retry':
-          this.store.notifications.sendNotification(paypalRetryNotification)
-          break
-        case 'failure':
-          this.store.notifications.sendNotification(paypalFailureNotification)
-          break
-        case 'account_in_use':
-          this.store.notifications.sendNotification(paypalAccountInUseNotification)
-          break
-      }
+      this.store.notifications.sendNotification(getPaypalNotification(paypalActionStatus as PaypalActionStatus))
     }
   }
 
   @action.bound
   loadPayPalId = flow(function* (this: ProfileStore) {
+    this.showPaypalNotification()
     try {
       const res: AxiosResponse<payPalResponse> = yield this.axios.get(paypalUsersEndpointPath) as payPalResponse
       this.payPalId = res?.data?.email
-      this.showPaypalNotification()
     } catch (err) {
       console.log(err)
     }
   })
-
-  checkPayPalIdWithInterval = async (): Promise<void> => {
-    let payPalLoadRetries = 0
-    const maxPaypalLoadRetries = 50
-
-    const loadPayPalIdWithRetry = async () => {
-      try {
-        if (payPalLoadRetries >= maxPaypalLoadRetries || this.payPalId) {
-          clearTimeout(this.timeoutId)
-          return
-        }
-
-        await this.loadPayPalId()
-
-        if (!this.payPalId) {
-          payPalLoadRetries++
-          this.timeoutId = setTimeout(loadPayPalIdWithRetry, 5000)
-        } else {
-          this.store.notifications.sendNotification(paypalSuccessNotification)
-          clearTimeout(this.timeoutId)
-          return
-        }
-      } catch (error) {
-        console.error('ProfileStore -> checkPayPalIdWithInterval: ', error)
-      }
-    }
-
-    clearTimeout(this.timeoutId)
-    loadPayPalIdWithRetry()
-  }
 
   @action.bound
   connectExternalAccountProvider = () => {
