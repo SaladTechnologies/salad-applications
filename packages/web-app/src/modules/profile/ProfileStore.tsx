@@ -316,12 +316,11 @@ export class ProfileStore {
 
   @action.bound
   loadPayPalId = flow(function* (this: ProfileStore) {
+    this.showPaypalNotification()
     try {
       const res: AxiosResponse<payPalResponse> = yield this.axios.get(paypalUsersEndpointPath) as payPalResponse
       this.payPalId = res?.data?.email
-      this.showPaypalNotification()
     } catch (err) {
-      this.showPaypalNotification()
       console.log(err)
     }
   })
