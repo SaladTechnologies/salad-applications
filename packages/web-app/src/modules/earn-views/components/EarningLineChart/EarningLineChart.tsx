@@ -109,7 +109,7 @@ const _EarningLineChart = ({ classes, machines, earningsPerMachine, daysShowing,
     return (
       <div className={classes.earningLineChartWrapper}>
         <div className={classes.loaderWrapper}>
-          <Text variant="baseM">There haven't been earnings last 32 days.</Text>
+          <Text variant="baseM">No data to display</Text>
         </div>
       </div>
     )
