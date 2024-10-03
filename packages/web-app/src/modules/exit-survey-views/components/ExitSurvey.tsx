@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import type { Profile } from '../../profile/models'
 
 interface Props {
-  currentProfile: Profile
+  currentProfile?: Profile
   trackUninstall: () => void
 }
 
@@ -15,6 +15,6 @@ export const ExitSurvey: FC<Props> = ({ currentProfile, trackUninstall }) => {
     } else {
       window.location.replace('https://p1atjy4hixj.typeform.com/saladexitsurvey')
     }
-  }, [currentProfile.id, trackUninstall])
+  }, [currentProfile?.id, trackUninstall])
   return null
 }
