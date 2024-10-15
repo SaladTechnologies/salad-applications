@@ -35,7 +35,6 @@ const _StorefrontPage = ({ data, classes }: Props) => {
   const { href, origin } = window.location
 
   const ogMetaTags = {
-    site_name: 'Salad',
     url: href,
     title: 'Salad - Official Store',
     description:
