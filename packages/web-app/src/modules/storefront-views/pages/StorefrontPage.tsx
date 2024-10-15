@@ -1,6 +1,7 @@
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Head, Scrollbar } from '../../../components'
+import { useOgMetaTags } from '../../../hooks/useOgMetaTags'
 import { NotificationBannerContainer } from '../../home-views/NotificationBannerContainer'
 import type {
   StorefrontCommunityChallengeProps,
@@ -31,6 +32,19 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const _StorefrontPage = ({ data, classes }: Props) => {
+  const { href, origin } = window.location
+
+  const ogMetaTags = {
+    site_name: 'Salad',
+    url: href,
+    title: 'Salad - Official Store',
+    description:
+      'Salad helps you earn your way to new Steam Games, Discord Nitro, gift cards, and more from the Salad Storefront. You can even send Salad Balance to PayPal and redeem digital Visa and Mastercard that can be used worldwide!',
+    image: `${origin}/og-official-store.png`,
+    'image:alt': 'Salad - Official Store',
+  }
+  useOgMetaTags(ogMetaTags)
+
   return (
     <Scrollbar>
       <Head title="Official Store" />

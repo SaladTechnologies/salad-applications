@@ -1,8 +1,10 @@
-import type { ReactNode } from 'react'
-import { Component } from 'react'
+import type { FC } from 'react'
+import { useEffect } from 'react'
+import { Helmet } from 'react-helmet'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Head, Scrollbar } from '../../../../components'
+import { useOgMetaTags } from '../../../../hooks/useOgMetaTags'
 import type { SaladTheme } from '../../../../SaladTheme'
 import type { Reward } from '../../../reward/models'
 import {
@@ -49,57 +51,76 @@ interface Props extends WithStyles<typeof styles> {
   onTargetThisRewardClick: (reward: Reward) => void
 }
 
-class _RewardDetailsPage extends Component<Props> {
-  public override componentDidMount = () => {
-    const { rewardId, loadReward } = this.props
+const _RewardDetailsPage: FC<Props> = ({
+  classes,
+  rewardId,
+  reward,
+  requiresMinecraftUsername,
+  requiresSaladCard,
+  requiresPayPalAccount,
+  isTargetReward,
+  isReviewing,
+  loadReward,
+  onRedeem,
+  onBack,
+  onRemoveTargetRewardClick,
+  trackDisabledBuyNowClick,
+  onTargetThisRewardClick,
+  ...rest
+}) => {
+  useEffect(() => {
     loadReward?.(rewardId)
-  }
+  }, [loadReward, rewardId])
 
-  public override render(): ReactNode {
-    const {
-      reward,
-      onRedeem,
-      onBack,
-      requiresMinecraftUsername,
-      requiresPayPalAccount,
-      requiresSaladCard,
-      isTargetReward,
-      trackDisabledBuyNowClick,
-      onTargetThisRewardClick,
-      onRemoveTargetRewardClick,
-      classes,
-      ...rest
-    } = this.props
-    return (
-      <div className={classes.container}>
-        {this.props.isReviewing && <ReviewAfterRedemptionContainer />}
-        <Head title={reward?.name} />
-        <RewardHeaderBar
-          reward={reward}
-          onBack={onBack}
-          onRedeem={onRedeem}
-          requiresMinecraftUsername={requiresMinecraftUsername}
-          requiresPayPalAccount={requiresPayPalAccount}
-          requiresSaladCard={requiresSaladCard}
-          isTargetReward={isTargetReward}
-          onTargetThisRewardClick={onTargetThisRewardClick}
-          onRemoveTargetRewardClick={onRemoveTargetRewardClick}
-          trackDisabledBuyNowClick={trackDisabledBuyNowClick}
-          {...rest}
-        />
-        <Scrollbar>
-          <div className={classes.scrollContent}>
-            <RewardImageCarousel reward={reward} />
-            <RewardInfoPanel reward={reward} />
-            <RewardHowToPanel reward={reward} {...rest} />
-            <RewardDescriptionPanel reward={reward} />
-            <RewardRequirementsPanel reward={reward} />
-            <RewardDisclaimers />
-          </div>
-        </Scrollbar>
-      </div>
-    )
+  const locationHref = window.location.href
+  const { name, heroImage, coverImage } = reward || {}
+
+  const ogMetaTags = {
+    site_name: 'Salad',
+    url: locationHref,
+    title: `Get ${name} with the power of your PC with Salad`,
+    description: `Salad helps you earn your way to rewards like ${name}, Steam Games, Discord Nitro, and more from the Salad Storefront. You can even send Salad Balance to PayPal and redeem digital Visa and Mastercard that can be used worldwide!`,
+    image: heroImage ?? coverImage ?? '',
+    'image:alt': name ?? '',
   }
+  useOgMetaTags(ogMetaTags)
+
+  return (
+    <div className={classes.container}>
+      {isReviewing && <ReviewAfterRedemptionContainer />}
+      <Helmet>
+        <title>My Title</title>
+        <meta
+          property="og:url"
+          content="http://www.nytimes.com/2015/02/19/arts/international/when-great-minds-dont-think-alike.html"
+        />
+      </Helmet>
+      <Head title={reward?.name} />
+      <RewardHeaderBar
+        reward={reward}
+        onBack={onBack}
+        onRedeem={onRedeem}
+        requiresMinecraftUsername={requiresMinecraftUsername}
+        requiresPayPalAccount={requiresPayPalAccount}
+        requiresSaladCard={requiresSaladCard}
+        isTargetReward={isTargetReward}
+        onTargetThisRewardClick={onTargetThisRewardClick}
+        onRemoveTargetRewardClick={onRemoveTargetRewardClick}
+        trackDisabledBuyNowClick={trackDisabledBuyNowClick}
+        {...rest}
+      />
+      <Scrollbar>
+        <div className={classes.scrollContent}>
+          <RewardImageCarousel reward={reward} />
+          <RewardInfoPanel reward={reward} />
+          <RewardHowToPanel reward={reward} {...rest} />
+          <RewardDescriptionPanel reward={reward} />
+          <RewardRequirementsPanel reward={reward} />
+          <RewardDisclaimers />
+        </div>
+      </Scrollbar>
+    </div>
+  )
 }
 
 export const RewardDetailsPage = withStyles(styles)(_RewardDetailsPage)
