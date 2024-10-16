@@ -1,10 +1,15 @@
 import { useEffect } from 'react'
 
-export const useAddOgMetaTags = (ogMetaTagsRecord: Record<string, string>) => {
+const defaultOgMetaTags = {
+  url: window.location.href,
+  type: 'website',
+}
+
+export const useAddOgMetaTags = (ogMetaTags: Record<string, string>) => {
   useEffect(() => {
-    Object.keys(ogMetaTagsRecord).forEach((ogMetaTagPropertyName) => {
+    Object.keys({ ...ogMetaTags, ...defaultOgMetaTags }).forEach((ogMetaTagPropertyName) => {
       const ogMetaTag = document.querySelector(`meta[property='og:${ogMetaTagPropertyName}']`)
-      const ogMetaTagContent = ogMetaTagsRecord[ogMetaTagPropertyName] as string
+      const ogMetaTagContent = ogMetaTags[ogMetaTagPropertyName] as string
 
       if (ogMetaTag) {
         ogMetaTag.setAttribute('content', ogMetaTagContent)
@@ -15,5 +20,5 @@ export const useAddOgMetaTags = (ogMetaTagsRecord: Record<string, string>) => {
         document.head.appendChild(newOgMetaTag)
       }
     })
-  }, [ogMetaTagsRecord])
+  }, [ogMetaTags])
 }

@@ -32,14 +32,11 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const _StorefrontPage = ({ data, classes }: Props) => {
-  const { href, origin } = window.location
-
   const ogMetaTags = {
-    url: href,
     title: 'Salad - Official Store',
     description:
       'Salad helps you earn your way to new Steam Games, Discord Nitro, gift cards, and more from the Salad Storefront. You can even send Salad Balance to PayPal and redeem digital Visa and Mastercard that can be used worldwide!',
-    image: `${origin}/og-official-store.png`,
+    image: `${window.location.origin}/og-official-store.png`,
     'image:alt': 'Salad - Official Store',
   }
   useAddOgMetaTags(ogMetaTags)
