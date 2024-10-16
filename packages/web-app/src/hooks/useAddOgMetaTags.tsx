@@ -1,15 +1,18 @@
 import { useEffect } from 'react'
 
-const defaultOgMetaTags = {
+const defaultOgMetaTags: Record<string, string> = {
   url: window.location.href,
   type: 'website',
+  image: `${window.location.origin}/og-official-store.png`,
+  'image:alt': 'Salad',
 }
 
 export const useAddOgMetaTags = (ogMetaTags: Record<string, string>) => {
   useEffect(() => {
-    Object.keys({ ...ogMetaTags, ...defaultOgMetaTags }).forEach((ogMetaTagPropertyName) => {
+    const combinedOgMetaTags = { ...defaultOgMetaTags, ...ogMetaTags }
+    Object.keys(combinedOgMetaTags).forEach((ogMetaTagPropertyName) => {
       const ogMetaTag = document.querySelector(`meta[property='og:${ogMetaTagPropertyName}']`)
-      const ogMetaTagContent = ogMetaTags[ogMetaTagPropertyName] as string
+      const ogMetaTagContent = combinedOgMetaTags[ogMetaTagPropertyName] as string
 
       if (ogMetaTag) {
         ogMetaTag.setAttribute('content', ogMetaTagContent)

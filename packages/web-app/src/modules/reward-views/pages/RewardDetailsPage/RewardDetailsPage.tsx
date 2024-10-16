@@ -77,8 +77,8 @@ const _RewardDetailsPage: FC<Props> = ({
   const ogMetaTags = {
     title: `Get ${name} with the power of your PC with Salad`,
     description: `Salad helps you earn your way to rewards like ${name}, Steam Games, Discord Nitro, and more from the Salad Storefront. You can even send Salad Balance to PayPal and redeem digital Visa and Mastercard that can be used worldwide!`,
-    image: heroImage ?? coverImage ?? '',
-    'image:alt': name ?? '',
+    image: heroImage ?? coverImage ?? `${window.location.origin}/og-official-store.png`,
+    'image:alt': name ?? 'Reward Image',
   }
   useAddOgMetaTags(ogMetaTags)
 
