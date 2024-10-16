@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Head, Scrollbar } from '../../../../components'
-import { useOgMetaTags } from '../../../../hooks/useOgMetaTags'
+import { useAddOgMetaTags } from '../../../../hooks/useAddOgMetaTags'
 import type { SaladTheme } from '../../../../SaladTheme'
 import type { Reward } from '../../../reward/models'
 import {
@@ -82,7 +82,7 @@ const _RewardDetailsPage: FC<Props> = ({
     image: heroImage ?? coverImage ?? '',
     'image:alt': name ?? '',
   }
-  useOgMetaTags(ogMetaTags)
+  useAddOgMetaTags(ogMetaTags)
 
   return (
     <div className={classes.container}>

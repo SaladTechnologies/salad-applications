@@ -1,7 +1,7 @@
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Head, Scrollbar } from '../../../components'
-import { useOgMetaTags } from '../../../hooks/useOgMetaTags'
+import { useAddOgMetaTags } from '../../../hooks/useAddOgMetaTags'
 import { NotificationBannerContainer } from '../../home-views/NotificationBannerContainer'
 import type {
   StorefrontCommunityChallengeProps,
@@ -42,7 +42,7 @@ const _StorefrontPage = ({ data, classes }: Props) => {
     image: `${origin}/og-official-store.png`,
     'image:alt': 'Salad - Official Store',
   }
-  useOgMetaTags(ogMetaTags)
+  useAddOgMetaTags(ogMetaTags)
 
   return (
     <Scrollbar>

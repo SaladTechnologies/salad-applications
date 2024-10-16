@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-export const useOgMetaTags = (ogMetaTagsRecord: Record<string, string>) => {
+export const useAddOgMetaTags = (ogMetaTagsRecord: Record<string, string>) => {
   useEffect(() => {
     Object.keys(ogMetaTagsRecord).forEach((ogMetaTagPropertyName) => {
       const ogMetaTag = document.querySelector(`meta[property='og:${ogMetaTagPropertyName}']`)
