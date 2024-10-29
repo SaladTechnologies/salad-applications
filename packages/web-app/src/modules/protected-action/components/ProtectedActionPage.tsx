@@ -122,6 +122,11 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     position: 'relative',
     top: '-3px',
   },
+  link: {
+    color: theme.darkBlue,
+    textDecoration: 'underline',
+    cursor: 'pointer',
+  },
 })
 
 const verifyBackupCodeFailedText = 'Backup code verification failure, please try again'
@@ -232,7 +237,11 @@ const _ProtectedActionPage: FC<Props> = ({
             ) : (
               <Text className={classes.description} variant="baseL">
                 This device does not support Passkeys. Please login on a device or browser that supports passkeys and
-                try again.
+                try again. Or see our&nbsp;
+                <a className={classes.link} href="https://support.salad.com/article/609-passkey-troubleshoot-guide">
+                  Passkey support guide
+                </a>
+                . There are devices that require extra setup steps to use Passkeys.
               </Text>
             )}
             <Text className={classes.description} variant="baseL">
