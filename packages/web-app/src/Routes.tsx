@@ -5,6 +5,7 @@ import { NoPageFound } from './components'
 import { FeatureFlags, useFeatureManager } from './FeatureManager'
 import { BackupCodesPageContainer } from './modules/backup-codes/BackupCodesPageContainer'
 import { ReplaceBonusModalContainer } from './modules/bonus-views'
+import { DemandMonitorPageContainer } from './modules/demand-monitor-views/DemandMonitorPage'
 import { EarnInfoPage, EarningSummaryContainer } from './modules/earn-views'
 import { ExitSurveyContainer } from './modules/exit-survey-views'
 import { PasskeyDeletePageContainer } from './modules/passkey-delete'
@@ -36,6 +37,7 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
       <Route path="/store/vault" exact component={VaultListContainer} />
       {/* Recommended Target Rewards Page */}
       <Route path="/store/select-target-reward" exact component={SelectTargetRewardContainer} />
+      <Route path="/demand" exact component={DemandMonitorPageContainer} />
 
       {/* Modals */}
       {/* SaladPay: This is stand in until we figure out iFrames, popups... */}
