@@ -24,6 +24,8 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     justifyContent: 'center',
     backgroundColor: '#00000070',
     fontFamily: 'Mallory',
+    top: '0px',
+    left: '0px',
   },
   modalContainer: {
     position: 'relative',
