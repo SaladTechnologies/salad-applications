@@ -8,16 +8,11 @@ import type { SaladTheme } from '../../../../SaladTheme'
 import { demandPillColors } from './constants'
 import { mockedDemandMonitorData } from './mocks'
 
-<<<<<<< HEAD
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
-=======
-export const styles = (theme: SaladTheme): Record<string, CSS.Properties> => ({
->>>>>>> eb95efdd (DemandMonitorTable - added)
   tableWrapper: {
     fontFamily: 'Mallory',
     color: theme.lightGreen,
     fontSize: '16px',
-<<<<<<< HEAD
     width: '100%',
     '@media (max-width: 900px)': {
       overflow: 'scroll',
@@ -32,22 +27,12 @@ export const styles = (theme: SaladTheme): Record<string, CSS.Properties> => ({
       minWidth: '1000px',
     },
   },
-=======
-  },
-  tableContent: { overflow: 'hidden', borderRadius: '6px', border: `1px ${theme.green} solid` },
->>>>>>> eb95efdd (DemandMonitorTable - added)
   table: {
     width: '100%',
     borderRadius: '6px',
     borderCollapse: 'collapse',
     boxSizing: 'border-box',
   },
-<<<<<<< HEAD
-=======
-  tableHeader: {
-    fontWeight: 100,
-  },
->>>>>>> eb95efdd (DemandMonitorTable - added)
   greenTableCell: {
     backgroundColor: theme.green,
     color: theme.darkBlue,
@@ -62,15 +47,10 @@ export const styles = (theme: SaladTheme): Record<string, CSS.Properties> => ({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
-<<<<<<< HEAD
     borderTop: `1px ${theme.darkBlue} solid`,
   },
   gpuName: {
     fontWeight: 700,
-=======
-  },
-  gpuName: {
->>>>>>> eb95efdd (DemandMonitorTable - added)
     marginBottom: '8px',
   },
   boldText: {
