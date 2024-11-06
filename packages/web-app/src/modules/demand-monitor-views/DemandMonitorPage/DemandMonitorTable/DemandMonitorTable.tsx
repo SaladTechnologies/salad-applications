@@ -8,13 +8,25 @@ import type { SaladTheme } from '../../../../SaladTheme'
 import { demandPillColors } from './constants'
 import { mockedDemandMonitorData } from './mocks'
 
-export const styles = (theme: SaladTheme): Record<string, CSS.Properties> => ({
+const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   tableWrapper: {
     fontFamily: 'Mallory',
     color: theme.lightGreen,
     fontSize: '16px',
+    width: '100%',
+    '@media (max-width: 900px)': {
+      overflow: 'scroll',
+    },
   },
-  tableContent: { overflow: 'hidden', borderRadius: '6px', border: `1px ${theme.green} solid` },
+  tableContent: {
+    overflow: 'hidden',
+    borderRadius: '6px',
+    border: `1px ${theme.green} solid`,
+    minWidth: '900px',
+    '@media (max-width: 900px)': {
+      minWidth: '1000px',
+    },
+  },
   table: {
     width: '100%',
     borderRadius: '6px',

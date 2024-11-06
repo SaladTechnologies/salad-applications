@@ -3,21 +3,29 @@ import type CSS from 'csstype'
 import type { FunctionComponent } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { Scrollbar } from '../../../components'
+import { useMediaQuery } from 'react-responsive'
+import { mobileSize, Scrollbar } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
 import { DemandMonitorFAQ } from './DemandMonitorFAQ'
 import { DemandMonitorTable } from './DemandMonitorTable'
 
-export const styles = (theme: SaladTheme): Record<string, CSS.Properties> => ({
+const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   pageWrapper: {
     display: 'flex',
     height: '100%',
     width: '100%',
     padding: '64px 32px 0px 32px',
     flexDirection: 'column',
+    boxSizing: 'border-box',
+    '@media (max-width: 812px)': {
+      padding: '16px 4px 4px 4px',
+      marginTop: '0px',
+      marginLeft: '0px',
+      width: '100%',
+    },
   },
   pageContent: {
-    maxWidth: '900px',
+    maxWidth: '820px',
   },
   header: {
     margin: 0,
@@ -38,14 +46,15 @@ export const styles = (theme: SaladTheme): Record<string, CSS.Properties> => ({
   },
   sectionWrapper: {
     padding: '24px 0px',
+    width: '100%',
   },
 })
 
 interface Props extends WithStyles<typeof styles> {}
 
 const _DemandMonitorPage: FunctionComponent<Props> = ({ classes }) => {
-  return (
-    <Scrollbar>
+  const getPageContent = () => {
+    return (
       <div className={classes.pageWrapper}>
         <div className={classes.pageContent}>
           <Text as="h1" className={classes.header}>
@@ -65,8 +74,12 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({ classes }) => {
           </div>
         </div>
       </div>
-    </Scrollbar>
-  )
+    )
+  }
+
+  const isTabletOrMobile = useMediaQuery({ query: `(max-width: ${mobileSize}px)` })
+
+  return isTabletOrMobile ? getPageContent() : <Scrollbar>{getPageContent()}</Scrollbar>
 }
 
 export const DemandMonitorPage = withStyles(styles)(_DemandMonitorPage)
