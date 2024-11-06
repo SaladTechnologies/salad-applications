@@ -6,6 +6,7 @@ import type { AnalyticsStore } from './modules/analytics'
 export enum FeatureFlags {
   Achievements = 'app_saladachievements',
   NewChefDownload = 'app_newchefdw',
+  DemandMonitor = 'app_DemandMonitor',
 }
 
 export interface FeatureManager {
