@@ -5,6 +5,7 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Scrollbar } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
+import { DemandMonitorFAQ } from './DemandMonitorFAQ'
 import { DemandMonitorTable } from './DemandMonitorTable'
 
 export const styles = (theme: SaladTheme): Record<string, CSS.Properties> => ({
@@ -35,7 +36,7 @@ export const styles = (theme: SaladTheme): Record<string, CSS.Properties> => ({
     fontSize: '16px',
     lineHeight: '24px',
   },
-  demandMonitorTableWrapper: {
+  sectionWrapper: {
     padding: '24px 0px',
   },
 })
@@ -56,8 +57,11 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({ classes }) => {
               refreshed hourly.
             </Text>
           </div>
-          <div className={classes.demandMonitorTableWrapper}>
+          <div className={classes.sectionWrapper}>
             <DemandMonitorTable />
+          </div>
+          <div className={classes.sectionWrapper}>
+            <DemandMonitorFAQ />
           </div>
         </div>
       </div>
