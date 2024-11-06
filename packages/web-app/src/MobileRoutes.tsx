@@ -7,6 +7,7 @@ import { getStore } from './Store'
 import { MobilePageNotFound } from './components'
 import { MobileAccountSummaryContainer } from './modules/account-views-mobile'
 import { BackupCodesPageContainer } from './modules/backup-codes/BackupCodesPageContainer'
+import { DemandMonitorPageContainer } from './modules/demand-monitor-views'
 import { MobileEarningSummaryContainer } from './modules/earn-views-mobile'
 import { PasskeyDeletePageContainer } from './modules/passkey-delete'
 import { ProtectedActionPageContainer } from './modules/protected-action'
@@ -23,6 +24,7 @@ class _Routes extends Component<RouteComponentProps> {
       <>
         <Switch location={currentLocation}>
           <Route exact path="/earn/summary" component={MobileEarningSummaryContainer} />
+          <Route exact path="/demand" component={DemandMonitorPageContainer} />
           <Route path="/account/summary" component={MobileAccountSummaryContainer} />
           <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
           <Redirect exact from="/account/summary" to="/account/summary" />
