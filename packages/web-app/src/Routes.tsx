@@ -2,6 +2,7 @@ import type { Location } from 'history'
 import type { RouteComponentProps } from 'react-router'
 import { Redirect, Route, Switch, withRouter } from 'react-router'
 import { NoPageFound } from './components'
+import { FeatureFlags, useFeatureManager } from './FeatureManager'
 import { BackupCodesPageContainer } from './modules/backup-codes/BackupCodesPageContainer'
 import { ReplaceBonusModalContainer } from './modules/bonus-views'
 import { EarnInfoPage, EarningSummaryContainer } from './modules/earn-views'
@@ -19,6 +20,11 @@ interface Props extends RouteComponentProps {
 }
 
 const _Routes = ({ location, isAuthenticated }: Props) => {
+  const featureManager = useFeatureManager()
+  // TODO: remove @ts-ignore after adding FF to route
+  // @ts-ignore
+  const isDemandMonitorFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.DemandMonitor)
+
   const currentLocation =
     (location.state as { currentLocation: Location | undefined } | undefined)?.currentLocation || location
 
