@@ -22,8 +22,6 @@ interface Props extends RouteComponentProps {
 
 const _Routes = ({ location, isAuthenticated }: Props) => {
   const featureManager = useFeatureManager()
-  // TODO: remove @ts-ignore after adding FF to route
-  // @ts-ignore
   const isDemandMonitorFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.DemandMonitor)
 
   const currentLocation =
@@ -37,28 +35,23 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
       <Route path="/store/vault" exact component={VaultListContainer} />
       {/* Recommended Target Rewards Page */}
       <Route path="/store/select-target-reward" exact component={SelectTargetRewardContainer} />
-      <Route path="/demand" exact component={DemandMonitorPageContainer} />
-
+      {isDemandMonitorFeatureFlagEnabled && <Route path="/demand" exact component={DemandMonitorPageContainer} />}
       {/* Modals */}
       {/* SaladPay: This is stand in until we figure out iFrames, popups... */}
       <Route exact path="/salad-pay/order-summary" component={SaladPayOrderSummaryContainer} />
       <Route exact path="/bonuses/replace-bonus" component={ReplaceBonusModalContainer} />
-
       {/* Account */}
       <Redirect exact from="/account" to="/account/summary" />
       <Route path="/account/exit-survey" component={ExitSurveyContainer} />
       <Route path="/account/passkey/delete/:id" exact component={PasskeyDeletePageContainer} />
       <Route path="/account/backup-codes" exact component={BackupCodesPageContainer} />
       <Route path="/account" component={SettingsContainer} />
-
       {/* Protected Action */}
       <Route path="/protected-action" component={ProtectedActionPageContainer} />
-
       {/* Earn Pages */}
       {isAuthenticated && <Redirect exact from="/earn" to="/earn/summary" />}
       <Route path="/earn/summary" component={EarningSummaryContainer} />
       <Route path="/earn" component={EarnInfoPage} />
-
       <Route
         exact
         path="/search"
@@ -73,7 +66,6 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
       />
       <Redirect exact from="/rewards/:id" to="/store/rewards/:id" />
       <Redirect exact from="/" to="/store" />
-
       <Route component={NoPageFound} />
     </Switch>
   )

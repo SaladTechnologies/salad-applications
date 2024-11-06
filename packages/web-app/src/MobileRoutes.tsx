@@ -15,24 +15,23 @@ const _Routes = ({ location }: RouteComponentProps) => {
   const featureManager = useFeatureManager()
   const isDemandMonitorFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.DemandMonitor)
 
-    const currentLocation =
-      (location.state as { currentLocation: Location | undefined } | undefined)?.currentLocation || location
-    return (
-      <>
-        <Switch location={currentLocation}>
-          <Route exact path="/earn/summary" component={MobileEarningSummaryContainer} />
-          {isDemandMonitorFeatureFlagEnabled && <Route exact path="/demand" component={DemandMonitorPageContainer} />}
-          <Route path="/account/summary" component={MobileAccountSummaryContainer} />
-          <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
-          <Redirect exact from="/account/summary" to="/account/summary" />
-          <Route exact path="/account/passkey/delete/:id" component={PasskeyDeletePageContainer} />
-          <Route path="/account/backup-codes" exact component={BackupCodesPageContainer} />
-          <Route path="/protected-action" exact component={ProtectedActionPageContainer} />
-          <Route component={MobilePageNotFound} />
-        </Switch>
-      </>
-    )
-  }
+  const currentLocation =
+    (location.state as { currentLocation: Location | undefined } | undefined)?.currentLocation || location
+  return (
+    <>
+      <Switch location={currentLocation}>
+        <Route exact path="/earn/summary" component={MobileEarningSummaryContainer} />
+        {isDemandMonitorFeatureFlagEnabled && <Route exact path="/demand" component={DemandMonitorPageContainer} />}
+        <Route path="/account/summary" component={MobileAccountSummaryContainer} />
+        <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
+        <Redirect exact from="/account/summary" to="/account/summary" />
+        <Route exact path="/account/passkey/delete/:id" component={PasskeyDeletePageContainer} />
+        <Route path="/account/backup-codes" exact component={BackupCodesPageContainer} />
+        <Route path="/protected-action" exact component={ProtectedActionPageContainer} />
+        <Route component={MobilePageNotFound} />
+      </Switch>
+    </>
+  )
 }
 
 export const MobileRoutes = withRouter(_Routes)
