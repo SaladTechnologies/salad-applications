@@ -21,9 +21,6 @@ export const styles = (theme: SaladTheme): Record<string, CSS.Properties> => ({
     borderCollapse: 'collapse',
     boxSizing: 'border-box',
   },
-  tableHeader: {
-    fontWeight: 100,
-  },
   greenTableCell: {
     backgroundColor: theme.green,
     color: theme.darkBlue,
@@ -74,9 +71,9 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({ classes }) => {
     <div className={classes.tableWrapper}>
       <div className={classes.tableContent}>
         <table className={classes.table}>
-          <tr className={classNames(classes.tableHeader, classes.greenTableCell)}>
+          <tr className={classes.greenTableCell}>
             <th className={classes.tableCell}>
-              <Text variant="baseL">GPU</Text>
+              <Text variant="baseXS">GPU</Text>
             </th>
             <th className={classes.tableCell}>
               <Text variant="baseXS">Recommended Specs</Text>
@@ -94,7 +91,7 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({ classes }) => {
           {mockedDemandMonitorData.map(({ gpu, hourlyRate, recommendedSpecs, demand, avgEarnings, avgRunningTime }) => (
             <tr className={classes.tableRow}>
               <td className={classNames(classes.gpuWrapper, classes.tableCell, classes.greenTableCell)}>
-                <Text className={classes.gpuName} variant="baseM">
+                <Text className={classes.gpuName} variant="baseS">
                   {gpu}
                 </Text>
                 <Text variant="baseXS">HOURLY RATE</Text>
