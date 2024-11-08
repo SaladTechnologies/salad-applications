@@ -47,8 +47,10 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
+    borderTop: `1px ${theme.darkBlue} solid`,
   },
   gpuName: {
+    fontWeight: 700,
     marginBottom: '8px',
   },
   boldText: {
@@ -101,7 +103,7 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({ classes }) => {
             </th>
           </tr>
           {mockedDemandMonitorData.map(({ gpu, hourlyRate, recommendedSpecs, demand, avgEarnings, avgRunningTime }) => (
-            <tr className={classes.tableRow}>
+            <tr>
               <td className={classNames(classes.gpuWrapper, classes.tableCell, classes.greenTableCell)}>
                 <Text className={classes.gpuName} variant="baseS">
                   {gpu}
