@@ -5,6 +5,7 @@ import { MobilePageNotFound } from './components'
 import { FeatureFlags, useFeatureManager } from './FeatureManager'
 import { MobileAccountSummaryContainer } from './modules/account-views-mobile'
 import { BackupCodesPageContainer } from './modules/backup-codes/BackupCodesPageContainer'
+import { DemandMonitorPageContainer } from './modules/demand-monitor-views'
 import { MobileEarningSummaryContainer } from './modules/earn-views-mobile'
 import { PasskeyDeletePageContainer } from './modules/passkey-delete'
 import { ProtectedActionPageContainer } from './modules/protected-action'
@@ -12,8 +13,6 @@ import { RewardDetailsContainer } from './modules/reward-views'
 
 const _Routes = ({ location }: RouteComponentProps) => {
   const featureManager = useFeatureManager()
-  // TODO: remove @ts-ignore after adding FF to route
-  // @ts-ignore
   const isDemandMonitorFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.DemandMonitor)
 
   const currentLocation =
@@ -22,6 +21,7 @@ const _Routes = ({ location }: RouteComponentProps) => {
     <>
       <Switch location={currentLocation}>
         <Route exact path="/earn/summary" component={MobileEarningSummaryContainer} />
+        {isDemandMonitorFeatureFlagEnabled && <Route exact path="/demand" component={DemandMonitorPageContainer} />}
         <Route path="/account/summary" component={MobileAccountSummaryContainer} />
         <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
         <Redirect exact from="/account/summary" to="/account/summary" />
