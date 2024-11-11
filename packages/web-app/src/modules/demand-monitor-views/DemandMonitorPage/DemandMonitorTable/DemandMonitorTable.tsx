@@ -1,6 +1,6 @@
 import { faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Text } from '@saladtechnologies/garden-components'
+import { LoadingSpinner, Text } from '@saladtechnologies/garden-components'
 import classNames from 'classnames'
 import type CSS from 'csstype'
 import { toJS } from 'mobx'
@@ -101,6 +101,15 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   demandPillText: {
     color: theme.darkBlue,
   },
+  loadingSpinnerWrap: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '64px',
+    marginBottom: '64px',
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -116,7 +125,13 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({ classes, demandedHardwa
   const [sortOrder, setSortOrder] = useState<DemandMonitorTableSortOrder>({ columnKey: 'demand', sorted: 'descending' })
 
   if (!demandedHardwarePerformanceList) {
-    return null
+    return (
+      !demandedHardwarePerformanceList && (
+        <div className={classes.loadingSpinnerWrap}>
+          <LoadingSpinner variant="light" size={100} />
+        </div>
+      )
+    )
   }
 
   const handleColumnHeaderClick = (columnKey: DemandMonitorTableColumn['key']) => {
