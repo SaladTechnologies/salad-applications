@@ -10,6 +10,7 @@ import { BackupCodesStore } from './modules/backup-codes'
 import { BalanceStore } from './modules/balance'
 import { BonusStore } from './modules/bonus'
 import { RefreshService } from './modules/data-refresh'
+import { DemandMonitorStore } from './modules/demand-monitor-views/DemandMonitorStore'
 import { EngagementStore } from './modules/engagement'
 import { ErrorBoundaryStore } from './modules/error-boundary'
 import { HelpScoutStore } from './modules/helpscout/HelpScoutStore'
@@ -73,6 +74,7 @@ export class RootStore {
   public readonly errorBoundary: ErrorBoundaryStore
   public readonly passkey: PasskeyStore
   public readonly backupCodes: BackupCodesStore
+  public readonly demandMonitor: DemandMonitorStore
 
   constructor(axios: AxiosInstance, private readonly featureManager: FeatureManager) {
     this.routing = new RouterStore()
@@ -100,6 +102,7 @@ export class RootStore {
     this.backupCodes = new BackupCodesStore(this, axios)
     this.startButtonUI = new StartButtonUIStore(this)
     this.errorBoundary = new ErrorBoundaryStore()
+    this.demandMonitor = new DemandMonitorStore(axios)
 
     // Pass AnalyticsStore to FeatureManager
     featureManager.setAnalyticsStore(this.analytics)

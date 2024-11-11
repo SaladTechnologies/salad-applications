@@ -1,11 +1,12 @@
 import { Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
-import type { FunctionComponent } from 'react'
+import { useEffect, type FunctionComponent } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { useMediaQuery } from 'react-responsive'
 import { mobileSize, Scrollbar } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
+import type { DemandedHardwarePerformance } from '../DemandMonitorStore'
 import { DemandMonitorFAQ } from './DemandMonitorFAQ'
 import { DemandMonitorTable } from './DemandMonitorTable'
 
@@ -50,9 +51,20 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
 })
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  fetchDemandedHardwarePerformanceList: () => void
+  demandedHardwarePerformanceList: DemandedHardwarePerformance[]
+}
 
-const _DemandMonitorPage: FunctionComponent<Props> = ({ classes }) => {
+const _DemandMonitorPage: FunctionComponent<Props> = ({
+  classes,
+  fetchDemandedHardwarePerformanceList,
+  demandedHardwarePerformanceList,
+}) => {
+  useEffect(() => {
+    fetchDemandedHardwarePerformanceList()
+  }, [fetchDemandedHardwarePerformanceList])
+
   const getPageContent = () => {
     return (
       <div className={classes.pageWrapper}>
@@ -67,7 +79,7 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({ classes }) => {
             </Text>
           </div>
           <div className={classes.sectionWrapper}>
-            <DemandMonitorTable />
+            <DemandMonitorTable demandedHardwarePerformanceList={demandedHardwarePerformanceList} />
           </div>
           <div className={classes.sectionWrapper}>
             <DemandMonitorFAQ />

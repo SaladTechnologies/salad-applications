@@ -3,8 +3,10 @@ import type { RootStore } from '../../../Store'
 import { DemandMonitorPage } from './DemandMonitorPage'
 
 const mapStoreToProps = (store: RootStore): any => {
-  console.log('test ===> ', !store)
-  return {}
+  return {
+    fetchDemandedHardwarePerformanceList: store.demandMonitor.fetchDemandedHardwarePerformanceList,
+    demandedHardwarePerformanceList: store.demandMonitor.demandedHardwarePerformanceList,
+  }
 }
 
 export const DemandMonitorPageContainer = connect(mapStoreToProps, DemandMonitorPage)
