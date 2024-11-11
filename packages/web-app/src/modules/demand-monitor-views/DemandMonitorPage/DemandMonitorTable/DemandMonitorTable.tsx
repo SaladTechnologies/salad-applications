@@ -1,12 +1,16 @@
+import { faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Text } from '@saladtechnologies/garden-components'
 import classNames from 'classnames'
 import type CSS from 'csstype'
-import type { FunctionComponent } from 'react'
+import { toJS } from 'mobx'
+import { useState, type FunctionComponent } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
 import type { DemandedHardwarePerformance } from '../../DemandMonitorStore'
-import { demandPillColors } from './constants'
+import type { DemandMonitorTableColumn } from './constants'
+import { demandMonitorTableColumns, demandPillColors } from './constants'
 import { getHardwareDemandLevel, sortHardwareDemandPerformance } from './utils'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
@@ -23,10 +27,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     overflow: 'hidden',
     borderRadius: '6px',
     border: `1px ${theme.green} solid`,
-    minWidth: '970px',
-    '@media (max-width: 900px)': {
-      minWidth: '1000px',
-    },
+    minWidth: '1100px',
   },
   table: {
     width: '100%',
@@ -42,6 +43,29 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     border: `1px ${theme.green} solid`,
     borderCollapse: 'collapse',
     padding: '10px 24px',
+  },
+  columnHeader: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: '8px',
+  },
+  clickable: {
+    cursor: 'pointer',
+  },
+  sortOrderIconWrapper: {
+    position: 'relative',
+    height: '100%',
+    width: '5px',
+  },
+  sortOrderIconDown: {
+    position: 'relative',
+    top: '-4px',
+  },
+  sortOrderIconUp: {
+    position: 'relative',
+    top: '5px',
   },
   gpuWrapper: {
     display: 'flex',
@@ -83,33 +107,63 @@ interface Props extends WithStyles<typeof styles> {
   demandedHardwarePerformanceList?: DemandedHardwarePerformance[]
 }
 
+interface DemandMonitorTableSortOrder {
+  columnKey: DemandMonitorTableColumn['key']
+  sorted: 'ascending' | 'descending' | 'none'
+}
+
 const _DemandMonitorTable: FunctionComponent<Props> = ({ classes, demandedHardwarePerformanceList }) => {
+  const [sortOrder, setSortOrder] = useState<DemandMonitorTableSortOrder>({ columnKey: 'demand', sorted: 'descending' })
+
   if (!demandedHardwarePerformanceList) {
     return null
   }
 
-  const sortedDemandedHardwarePerformanceList = sortHardwareDemandPerformance(demandedHardwarePerformanceList)
+  const handleColumnHeaderClick = (columnKey: DemandMonitorTableColumn['key']) => {
+    if (sortOrder.columnKey === columnKey) {
+      setSortOrder({ columnKey, sorted: sortOrder.sorted === 'descending' ? 'ascending' : 'descending' })
+      return
+    }
+
+    setSortOrder({ columnKey, sorted: 'descending' })
+  }
+
+  let sortedDemandedHardwarePerformanceList = sortHardwareDemandPerformance(
+    toJS(demandedHardwarePerformanceList),
+    demandMonitorTableColumns[sortOrder.columnKey].sortRule,
+  )
+
+  if (sortOrder.sorted === 'ascending') {
+    sortedDemandedHardwarePerformanceList = sortedDemandedHardwarePerformanceList.reverse()
+  }
 
   return (
     <div className={classes.tableWrapper}>
       <div className={classes.tableContent}>
         <table className={classes.table}>
           <tr className={classes.greenTableCell}>
-            <th className={classes.tableCell}>
-              <Text variant="baseXS">GPU</Text>
-            </th>
-            <th className={classes.tableCell}>
-              <Text variant="baseXS">Recommended Specs</Text>
-            </th>
-            <th className={classes.tableCell}>
-              <Text variant="baseXS">Demand</Text>
-            </th>
-            <th className={classes.tableCell}>
-              <Text variant="baseXS">Average Earnings 24/h</Text>
-            </th>
-            <th className={classes.tableCell}>
-              <Text variant="baseXS">Average Running Time 24/h</Text>
-            </th>
+            {Object.values(demandMonitorTableColumns).map(({ displayName, key }) => {
+              const isTableSortedByColumn = key === sortOrder.columnKey
+              const isSortedAscending = sortOrder.sorted === 'ascending'
+              return (
+                <th
+                  className={classNames(classes.tableCell, classes.clickable)}
+                  onClick={() => handleColumnHeaderClick(key)}
+                >
+                  <div className={classes.columnHeader}>
+                    <Text variant="baseXS">{displayName}</Text>
+                    <div className={classes.sortOrderIconWrapper}>
+                      {isTableSortedByColumn && (
+                        <FontAwesomeIcon
+                          className={isSortedAscending ? classes.sortOrderIconUp : classes.sortOrderIconDown}
+                          icon={isSortedAscending ? faSortUp : faSortDown}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </th>
+              )
+            })}
           </tr>
           {sortedDemandedHardwarePerformanceList.map(({ name, earningRates, recommendedSpecs, utilizationPct }) => {
             const demand = getHardwareDemandLevel(utilizationPct)

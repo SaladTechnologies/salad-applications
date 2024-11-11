@@ -1,4 +1,5 @@
 import type { DemandedHardwarePerformance } from '../../DemandMonitorStore'
+import type { DemandMonitorTableSortRule } from './constants'
 import type { Demand } from './types'
 
 export const getHardwareDemandLevel = (utilizationPercentage: number): Demand => {
@@ -14,8 +15,28 @@ export const getHardwareDemandLevel = (utilizationPercentage: number): Demand =>
 
 export const sortHardwareDemandPerformance = (
   demandedHardwarePerformanceList: DemandedHardwarePerformance[],
+  sortRule?: DemandMonitorTableSortRule,
 ): DemandedHardwarePerformance[] => {
-  return demandedHardwarePerformanceList.sort(
-    (hardwareA, hardwareB) => hardwareB.utilizationPct - hardwareA.utilizationPct,
-  )
+  if (!sortRule) {
+    return demandedHardwarePerformanceList
+  }
+
+  return demandedHardwarePerformanceList.sort(sortRule)
 }
+
+export const sortByDemand = (hardwareA: DemandedHardwarePerformance, hardwareB: DemandedHardwarePerformance) =>
+  hardwareB.utilizationPct - hardwareA.utilizationPct
+
+export const sortByAvgEarnings = (hardwareA: DemandedHardwarePerformance, hardwareB: DemandedHardwarePerformance) =>
+  hardwareB.earningRates.avgEarning - hardwareA.earningRates.avgEarning
+
+export const sortByAvgRunningTime = (hardwareA: DemandedHardwarePerformance, hardwareB: DemandedHardwarePerformance) =>
+  hardwareB.earningRates.avgEarningTimeMinutes - hardwareA.earningRates.avgEarningTimeMinutes
+
+export const sortByRecommendedSpecs = (
+  hardwareA: DemandedHardwarePerformance,
+  hardwareB: DemandedHardwarePerformance,
+) => hardwareB.recommendedSpecs.ramGb - hardwareA.recommendedSpecs.ramGb
+
+export const sortByHourlyRate = (hardwareA: DemandedHardwarePerformance, hardwareB: DemandedHardwarePerformance) =>
+  hardwareB.earningRates.maxEarningRate - hardwareA.earningRates.maxEarningRate
