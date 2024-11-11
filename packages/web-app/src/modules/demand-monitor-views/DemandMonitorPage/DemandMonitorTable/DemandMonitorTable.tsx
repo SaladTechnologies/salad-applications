@@ -193,7 +193,7 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({ classes, demandedHardwa
                   </Text>
                   <Text variant="baseXS">HOURLY RATE</Text>
                   <Text variant="baseXS">
-                    {earningRates.minEarningRate}$ - {earningRates.maxEarningRate}$
+                    ${earningRates.minEarningRate} - ${earningRates.maxEarningRate}
                   </Text>
                 </td>
                 <td className={classes.tableCell}>
@@ -216,7 +216,7 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({ classes, demandedHardwa
                 <td className={classes.tableCell}>
                   <div className={classes.tableCellCentered}>
                     <Text className={classes.boldText} variant="baseM">
-                      {earningRates.avgEarning}$
+                      ${earningRates.avgEarning}
                     </Text>
                   </div>
                 </td>
