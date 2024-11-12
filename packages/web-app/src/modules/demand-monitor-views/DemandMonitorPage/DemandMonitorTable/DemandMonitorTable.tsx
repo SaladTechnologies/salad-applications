@@ -26,22 +26,31 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     overflow: 'hidden',
     borderRadius: '6px',
     border: `1px ${theme.green} solid`,
+    boxSizing: 'border-box',
     minWidth: '1100px',
   },
   table: {
     width: '100%',
     borderRadius: '6px',
     borderCollapse: 'collapse',
-    boxSizing: 'border-box',
+  },
+  greenTableCellDivider: {
+    backgroundColor: theme.darkBlue,
+    width: '100%',
+    height: '0.5px',
+    marginBottom: '10px',
+  },
+  tableCell: {
+    boxShadow: `inset 0px 0px 0px 0.5px ${theme.green}`,
+    borderCollapse: 'collapse',
+    padding: '10px 24px',
   },
   greenTableCell: {
     backgroundColor: theme.green,
     color: theme.darkBlue,
-  },
-  tableCell: {
-    border: `1px ${theme.green} solid`,
-    borderCollapse: 'collapse',
-    padding: '10px 24px',
+    paddingTop: '0px',
+    paddingLeft: '0px',
+    paddingRight: '0px',
   },
   columnHeader: {
     display: 'flex',
@@ -68,14 +77,15 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
   gpuWrapper: {
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'column',
-    borderTop: `1px ${theme.darkBlue} solid`,
   },
   gpuName: {
     fontWeight: 700,
     marginBottom: '8px',
+    paddingLeft: '10px',
+    paddingRight: '10px',
   },
   boldText: {
     fontWeight: 700,
@@ -197,8 +207,9 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({
               const avgRunningTime = Math.round(avgEarningTimeHours * 10) / 10
 
               return (
-                <tr className={classes.tableRow} key={name}>
+                <tr key={name}>
                   <td className={classNames(classes.gpuWrapper, classes.tableCell, classes.greenTableCell)}>
+                    <div className={classes.greenTableCellDivider}></div>
                     <Text className={classes.gpuName} variant="baseS">
                       {name}
                     </Text>
