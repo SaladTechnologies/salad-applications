@@ -9,8 +9,8 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
 import type { DemandedHardwarePerformance } from '../../DemandMonitorStore'
-import type { DemandMonitorTableColumn } from './constants'
 import { demandMonitorTableColumns, demandPillColors } from './constants'
+import type { DemandMonitorTableColumn, DemandMonitorTableSortOrder } from './types'
 import { getHardwareDemandLevel, sortHardwareDemandPerformance } from './utils'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
@@ -116,11 +116,6 @@ interface Props extends WithStyles<typeof styles> {
   demandedHardwarePerformanceList?: DemandedHardwarePerformance[]
 }
 
-interface DemandMonitorTableSortOrder {
-  columnKey: DemandMonitorTableColumn['key']
-  sorted: 'ascending' | 'descending' | 'none'
-}
-
 const _DemandMonitorTable: FunctionComponent<Props> = ({ classes, demandedHardwarePerformanceList }) => {
   const [sortOrder, setSortOrder] = useState<DemandMonitorTableSortOrder>({ columnKey: 'demand', sorted: 'descending' })
 
@@ -142,14 +137,11 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({ classes, demandedHardwa
     }
   }
 
-  let sortedDemandedHardwarePerformanceList = sortHardwareDemandPerformance(
-    toJS(demandedHardwarePerformanceList),
-    demandMonitorTableColumns[sortOrder.columnKey].sortRule,
-  )
-
-  if (sortOrder.sorted === 'ascending') {
-    sortedDemandedHardwarePerformanceList = sortedDemandedHardwarePerformanceList.reverse()
-  }
+  const sortedDemandedHardwarePerformanceList = sortHardwareDemandPerformance({
+    demandedHardwarePerformanceList: toJS(demandedHardwarePerformanceList),
+    sortRule: demandMonitorTableColumns[sortOrder.columnKey].sortRule,
+    sortOrder: sortOrder.sorted,
+  })
 
   return (
     <div className={classes.tableWrapper}>

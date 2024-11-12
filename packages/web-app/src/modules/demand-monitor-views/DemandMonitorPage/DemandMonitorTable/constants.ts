@@ -1,5 +1,4 @@
-import type { DemandedHardwarePerformance } from '../../DemandMonitorStore'
-import type { Demand } from './types'
+import type { Demand, DemandMonitorTableColumn } from './types'
 import {
   sortByAvgEarnings,
   sortByAvgRunningTime,
@@ -26,17 +25,6 @@ export const demandPillColors: Record<Demand, DemandPillColors> = {
     text: '#00008b',
     background: '#B2D530',
   },
-}
-
-export type DemandMonitorTableSortRule = (
-  hardwareA: DemandedHardwarePerformance,
-  hardwareB: DemandedHardwarePerformance,
-) => number
-
-export interface DemandMonitorTableColumn {
-  key: 'gpu' | 'recommendedSpecs' | 'demand' | 'avgEarning' | 'avgRunningTime'
-  displayName: string
-  sortRule: DemandMonitorTableSortRule
 }
 
 export const demandMonitorTableColumns: Record<DemandMonitorTableColumn['key'], DemandMonitorTableColumn> = {

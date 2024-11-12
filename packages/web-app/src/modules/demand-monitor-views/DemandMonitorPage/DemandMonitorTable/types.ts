@@ -1,3 +1,5 @@
+import type { DemandedHardwarePerformance } from '../../DemandMonitorStore'
+
 export type Demand = 'Low' | 'Moderate' | 'High'
 
 export interface DemandMonitorItem {
@@ -7,4 +9,19 @@ export interface DemandMonitorItem {
   demand: Demand
   avgEarnings: string
   avgRunningTime: string
+}
+
+export type DemandMonitorTableSortRule = (
+  hardwareA: DemandedHardwarePerformance,
+  hardwareB: DemandedHardwarePerformance,
+) => number
+
+export interface DemandMonitorTableSortOrder {
+  columnKey: DemandMonitorTableColumn['key']
+  sorted: 'ascending' | 'descending' | 'none'
+}
+export interface DemandMonitorTableColumn {
+  key: 'gpu' | 'recommendedSpecs' | 'demand' | 'avgEarning' | 'avgRunningTime'
+  displayName: string
+  sortRule: DemandMonitorTableSortRule
 }
