@@ -27,7 +27,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     borderRadius: '6px',
     border: `1px ${theme.green} solid`,
     boxSizing: 'border-box',
-    minWidth: '1100px',
+    minWidth: '1000px',
   },
   table: {
     width: '100%',
@@ -52,15 +52,17 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     paddingLeft: '0px',
     paddingRight: '0px',
   },
-  columnHeader: {
+  columnHeaderContent: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
     gap: '8px',
   },
-  clickable: {
+  columnHeaderWrapper: {
     cursor: 'pointer',
+    paddingLeft: '0px',
+    paddingRight: '0px',
   },
   sortOrderIconWrapper: {
     position: 'relative',
@@ -180,11 +182,11 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({
                 const isSortedAscending = sortOrder.sorted === 'ascending'
                 return (
                   <th
-                    className={classNames(classes.tableCell, classes.clickable)}
+                    className={classNames(classes.tableCell, classes.columnHeaderWrapper)}
                     onClick={() => handleColumnHeaderClick(key)}
                     key={key}
                   >
-                    <div className={classes.columnHeader}>
+                    <div className={classes.columnHeaderContent}>
                       <Text variant="baseXS">{displayName}</Text>
                       <div className={classes.sortOrderIconWrapper}>
                         {isTableSortedByColumn && (
