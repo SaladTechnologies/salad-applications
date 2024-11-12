@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { LoadingSpinner, Text } from '@saladtechnologies/garden-components'
 import classNames from 'classnames'
 import type CSS from 'csstype'
-import { toJS } from 'mobx'
 import { useState, type FunctionComponent } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
@@ -138,7 +137,7 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({ classes, demandedHardwa
   }
 
   const sortedDemandedHardwarePerformanceList = sortHardwareDemandPerformance({
-    demandedHardwarePerformanceList: toJS(demandedHardwarePerformanceList),
+    demandedHardwarePerformanceList,
     sortRule: demandMonitorTableColumns[sortOrder.columnKey].sortRule,
     sortOrder: sortOrder.sorted,
   })
@@ -147,80 +146,85 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({ classes, demandedHardwa
     <div className={classes.tableWrapper}>
       <div className={classes.tableContent}>
         <table className={classes.table}>
-          <tr className={classes.greenTableCell}>
-            {Object.values(demandMonitorTableColumns).map(({ displayName, key }) => {
-              const isTableSortedByColumn = key === sortOrder.columnKey
-              const isSortedAscending = sortOrder.sorted === 'ascending'
-              return (
-                <th
-                  className={classNames(classes.tableCell, classes.clickable)}
-                  onClick={() => handleColumnHeaderClick(key)}
-                >
-                  <div className={classes.columnHeader}>
-                    <Text variant="baseXS">{displayName}</Text>
-                    <div className={classes.sortOrderIconWrapper}>
-                      {isTableSortedByColumn && (
-                        <FontAwesomeIcon
-                          className={isSortedAscending ? classes.sortOrderIconUp : classes.sortOrderIconDown}
-                          icon={isSortedAscending ? faSortUp : faSortDown}
-                        />
-                      )}
+          <thead>
+            <tr className={classes.greenTableCell}>
+              {Object.values(demandMonitorTableColumns).map(({ displayName, key }) => {
+                const isTableSortedByColumn = key === sortOrder.columnKey
+                const isSortedAscending = sortOrder.sorted === 'ascending'
+                return (
+                  <th
+                    className={classNames(classes.tableCell, classes.clickable)}
+                    onClick={() => handleColumnHeaderClick(key)}
+                    key={key}
+                  >
+                    <div className={classes.columnHeader}>
+                      <Text variant="baseXS">{displayName}</Text>
+                      <div className={classes.sortOrderIconWrapper}>
+                        {isTableSortedByColumn && (
+                          <FontAwesomeIcon
+                            className={isSortedAscending ? classes.sortOrderIconUp : classes.sortOrderIconDown}
+                            icon={isSortedAscending ? faSortUp : faSortDown}
+                          />
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </th>
+                  </th>
+                )
+              })}
+            </tr>
+          </thead>
+          <tbody>
+            {sortedDemandedHardwarePerformanceList.map(({ name, earningRates, recommendedSpecs, utilizationPct }) => {
+              const demand = getHardwareDemandLevel(utilizationPct)
+              const avgEarningTimeHours = earningRates.avgEarningTimeMinutes / 60
+              const avgRunningTime = Math.round(avgEarningTimeHours * 10) / 10
+
+              return (
+                <tr className={classes.tableRow} key={name}>
+                  <td className={classNames(classes.gpuWrapper, classes.tableCell, classes.greenTableCell)}>
+                    <Text className={classes.gpuName} variant="baseS">
+                      {name}
+                    </Text>
+                    <Text variant="baseXS">HOURLY RATE</Text>
+                    <Text variant="baseXS">
+                      ${earningRates.minEarningRate} - ${earningRates.maxEarningRate}
+                    </Text>
+                  </td>
+                  <td className={classes.tableCell}>
+                    <div className={classes.tableCellCentered}>
+                      <Text variant="baseXS">{recommendedSpecs.ramGb} GB System RAM</Text>
+                      {/* <Text variant="baseXS">{recommendedSpecs.storage}</Text> */}
+                    </div>
+                  </td>
+                  <td className={classes.tableCell}>
+                    <div
+                      className={classes.demandPill}
+                      style={{
+                        backgroundColor: demandPillColors[demand].background,
+                        color: demandPillColors[demand].text,
+                      }}
+                    >
+                      <Text variant="baseXS">{demand}</Text>
+                    </div>
+                  </td>
+                  <td className={classes.tableCell}>
+                    <div className={classes.tableCellCentered}>
+                      <Text className={classes.boldText} variant="baseM">
+                        ${earningRates.avgEarning}
+                      </Text>
+                    </div>
+                  </td>
+                  <td className={classes.tableCell}>
+                    <div className={classes.tableCellCentered}>
+                      <Text className={classes.boldText} variant="baseM">
+                        {avgRunningTime} hours
+                      </Text>
+                    </div>
+                  </td>
+                </tr>
               )
             })}
-          </tr>
-          {sortedDemandedHardwarePerformanceList.map(({ name, earningRates, recommendedSpecs, utilizationPct }) => {
-            const demand = getHardwareDemandLevel(utilizationPct)
-            const avgEarningTimeHours = earningRates.avgEarningTimeMinutes / 60
-            const avgRunningTime = Math.round(avgEarningTimeHours * 10) / 10
-
-            return (
-              <tr className={classes.tableRow}>
-                <td className={classNames(classes.gpuWrapper, classes.tableCell, classes.greenTableCell)}>
-                  <Text className={classes.gpuName} variant="baseS">
-                    {name}
-                  </Text>
-                  <Text variant="baseXS">HOURLY RATE</Text>
-                  <Text variant="baseXS">
-                    ${earningRates.minEarningRate} - ${earningRates.maxEarningRate}
-                  </Text>
-                </td>
-                <td className={classes.tableCell}>
-                  <div className={classes.tableCellCentered}>
-                    <Text variant="baseXS">{recommendedSpecs.ramGb} GB System RAM</Text>
-                    {/* <Text variant="baseXS">{recommendedSpecs.storage}</Text> */}
-                  </div>
-                </td>
-                <td className={classes.tableCell}>
-                  <div
-                    className={classes.demandPill}
-                    style={{
-                      backgroundColor: demandPillColors[demand].background,
-                      color: demandPillColors[demand].text,
-                    }}
-                  >
-                    <Text variant="baseXS">{demand}</Text>
-                  </div>
-                </td>
-                <td className={classes.tableCell}>
-                  <div className={classes.tableCellCentered}>
-                    <Text className={classes.boldText} variant="baseM">
-                      ${earningRates.avgEarning}
-                    </Text>
-                  </div>
-                </td>
-                <td className={classes.tableCell}>
-                  <div className={classes.tableCellCentered}>
-                    <Text className={classes.boldText} variant="baseM">
-                      {avgRunningTime} hours
-                    </Text>
-                  </div>
-                </td>
-              </tr>
-            )
-          })}
+          </tbody>
         </table>
       </div>
     </div>

@@ -66,6 +66,7 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
   const updateTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
+    fetchDemandedHardwarePerformanceList()
     updateTimerRef.current = setInterval(fetchDemandedHardwarePerformanceList, oneHourInMilliseconds)
 
     return () => {
