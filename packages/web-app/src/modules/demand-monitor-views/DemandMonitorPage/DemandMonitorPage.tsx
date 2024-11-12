@@ -1,14 +1,13 @@
 import { Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
-import { useEffect, useRef, type FunctionComponent } from 'react'
+import { type FunctionComponent } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { useMediaQuery } from 'react-responsive'
 import { mobileSize, Scrollbar } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
-import type { DemandedHardwarePerformance } from '../DemandMonitorStore'
 import { DemandMonitorFAQ } from './DemandMonitorFAQ'
-import { DemandMonitorTable } from './DemandMonitorTable'
+import { DemandMonitorTableContainer } from './DemandMonitorTable/DemandMonitorTableContainer'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   pageWrapper: {
@@ -50,32 +49,9 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     width: '100%',
   },
 })
+interface Props extends WithStyles<typeof styles> {}
 
-const oneHourInMilliseconds = 1000 * 60 * 60
-
-interface Props extends WithStyles<typeof styles> {
-  fetchDemandedHardwarePerformanceList: () => void
-  demandedHardwarePerformanceList: DemandedHardwarePerformance[]
-}
-
-const _DemandMonitorPage: FunctionComponent<Props> = ({
-  classes,
-  fetchDemandedHardwarePerformanceList,
-  demandedHardwarePerformanceList,
-}) => {
-  const updateTimerRef = useRef<NodeJS.Timeout | null>(null)
-
-  useEffect(() => {
-    fetchDemandedHardwarePerformanceList()
-    updateTimerRef.current = setInterval(fetchDemandedHardwarePerformanceList, oneHourInMilliseconds)
-
-    return () => {
-      if (updateTimerRef.current) {
-        clearInterval(updateTimerRef.current)
-      }
-    }
-  }, [fetchDemandedHardwarePerformanceList])
-
+const _DemandMonitorPage: FunctionComponent<Props> = ({ classes }) => {
   const getPageContent = () => {
     return (
       <div className={classes.pageWrapper}>
@@ -90,7 +66,7 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
             </Text>
           </div>
           <div className={classes.sectionWrapper}>
-            <DemandMonitorTable demandedHardwarePerformanceList={demandedHardwarePerformanceList} />
+            <DemandMonitorTableContainer />
           </div>
           <div className={classes.sectionWrapper}>
             <DemandMonitorFAQ />

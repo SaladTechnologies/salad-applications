@@ -54,3 +54,5 @@ export const demandMonitorTableColumns: Record<DemandMonitorTableColumn['key'], 
     sortRule: sortByAvgRunningTime,
   },
 }
+
+export const oneHourInMilliseconds = 1000 * 60 * 60

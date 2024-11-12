@@ -1,1 +1,1 @@
-export * from './DemandMonitorPageContainer'
+export * from './DemandMonitorPage'

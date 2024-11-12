@@ -1,6 +1,6 @@
-import { connect } from '../../../connect'
-import type { RootStore } from '../../../Store'
-import { DemandMonitorPage } from './DemandMonitorPage'
+import { connect } from '../../../../connect'
+import type { RootStore } from '../../../../Store'
+import { DemandMonitorTable } from './DemandMonitorTable'
 
 const mapStoreToProps = (store: RootStore): any => {
   return {
@@ -9,4 +9,4 @@ const mapStoreToProps = (store: RootStore): any => {
   }
 }
 
-export const DemandMonitorPageContainer = connect(mapStoreToProps, DemandMonitorPage)
+export const DemandMonitorTableContainer = connect(mapStoreToProps, DemandMonitorTable)
