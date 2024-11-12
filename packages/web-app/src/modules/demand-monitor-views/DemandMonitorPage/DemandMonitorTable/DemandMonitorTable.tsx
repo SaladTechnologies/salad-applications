@@ -221,7 +221,7 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({
                   <td className={classes.tableCell}>
                     <div className={classes.tableCellCentered}>
                       <Text variant="baseXS">{recommendedSpecs.ramGb} GB System RAM</Text>
-                      {/* <Text variant="baseXS">{recommendedSpecs.storage}</Text> */}
+                      <Text variant="baseXS">120 GB Storage</Text>
                     </div>
                   </td>
                   <td className={classes.tableCell}>
