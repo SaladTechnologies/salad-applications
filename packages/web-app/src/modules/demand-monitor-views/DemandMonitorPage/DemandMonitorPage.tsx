@@ -1,6 +1,6 @@
 import { Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
-import { useEffect, type FunctionComponent } from 'react'
+import { useEffect, useRef, type FunctionComponent } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { useMediaQuery } from 'react-responsive'
@@ -51,6 +51,8 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
 })
 
+const oneHourInMilliseconds = 1000 * 60 * 60
+
 interface Props extends WithStyles<typeof styles> {
   fetchDemandedHardwarePerformanceList: () => void
   demandedHardwarePerformanceList: DemandedHardwarePerformance[]
@@ -61,8 +63,16 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
   fetchDemandedHardwarePerformanceList,
   demandedHardwarePerformanceList,
 }) => {
+  const updateTimerRef = useRef<NodeJS.Timeout | null>(null)
+
   useEffect(() => {
-    fetchDemandedHardwarePerformanceList()
+    updateTimerRef.current = setInterval(fetchDemandedHardwarePerformanceList, oneHourInMilliseconds)
+
+    return () => {
+      if (updateTimerRef.current) {
+        clearInterval(updateTimerRef.current)
+      }
+    }
   }, [fetchDemandedHardwarePerformanceList])
 
   const getPageContent = () => {
