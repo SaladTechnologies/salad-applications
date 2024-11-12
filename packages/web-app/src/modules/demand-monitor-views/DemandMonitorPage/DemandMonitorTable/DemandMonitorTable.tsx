@@ -137,10 +137,9 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({ classes, demandedHardwa
   const handleColumnHeaderClick = (columnKey: DemandMonitorTableColumn['key']) => {
     if (sortOrder.columnKey === columnKey) {
       setSortOrder({ columnKey, sorted: sortOrder.sorted === 'descending' ? 'ascending' : 'descending' })
-      return
+    } else {
+      setSortOrder({ columnKey, sorted: 'descending' })
     }
-
-    setSortOrder({ columnKey, sorted: 'descending' })
   }
 
   let sortedDemandedHardwarePerformanceList = sortHardwareDemandPerformance(
