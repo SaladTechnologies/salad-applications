@@ -9,7 +9,7 @@ import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
 import type { DemandedHardwarePerformance } from '../../DemandMonitorStore'
 import { demandMonitorTableColumns, demandPillColors, oneHourInMilliseconds } from './constants'
-import type { DemandMonitorTableColumn, DemandMonitorTableSortOrder } from './types'
+import type { DemandMonitorTableColumn, DemandMonitorTableSort } from './types'
 import { getHardwareDemandLevel, sortHardwareDemandPerformance } from './utils'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
@@ -133,7 +133,10 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({
   demandedHardwarePerformanceList,
   fetchDemandedHardwarePerformanceList,
 }) => {
-  const [sortOrder, setSortOrder] = useState<DemandMonitorTableSortOrder>({ columnKey: 'demand', sorted: 'descending' })
+  const [tableSort, setTableSort] = useState<DemandMonitorTableSort>({
+    columnKey: 'demand',
+    sortOrder: 'descending',
+  })
   const updateTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
@@ -158,17 +161,17 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({
   }
 
   const handleColumnHeaderClick = (columnKey: DemandMonitorTableColumn['key']) => {
-    if (sortOrder.columnKey === columnKey) {
-      setSortOrder({ columnKey, sorted: sortOrder.sorted === 'descending' ? 'ascending' : 'descending' })
+    if (tableSort.columnKey === columnKey) {
+      setTableSort({ columnKey, sortOrder: tableSort.sortOrder === 'descending' ? 'ascending' : 'descending' })
     } else {
-      setSortOrder({ columnKey, sorted: 'descending' })
+      setTableSort({ columnKey, sortOrder: 'descending' })
     }
   }
 
   const sortedDemandedHardwarePerformanceList = sortHardwareDemandPerformance({
     demandedHardwarePerformanceList,
-    sortRule: demandMonitorTableColumns[sortOrder.columnKey].sortRule,
-    sortOrder: sortOrder.sorted,
+    sortRule: demandMonitorTableColumns[tableSort.columnKey].sortRule,
+    sortOrder: tableSort.sortOrder,
   })
 
   return (
@@ -178,8 +181,8 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({
           <thead>
             <tr className={classes.greenTableCell}>
               {Object.values(demandMonitorTableColumns).map(({ displayName, key }) => {
-                const isTableSortedByColumn = key === sortOrder.columnKey
-                const isSortedAscending = sortOrder.sorted === 'ascending'
+                const isTableSortedByColumn = key === tableSort.columnKey
+                const isSortedAscending = tableSort.sortOrder === 'ascending'
                 return (
                   <th
                     className={classNames(classes.tableCell, classes.columnHeaderWrapper)}

@@ -1,5 +1,5 @@
 import type { DemandedHardwarePerformance } from '../../DemandMonitorStore'
-import type { Demand, DemandMonitorTableSortOrder, DemandMonitorTableSortRule } from './types'
+import type { Demand, DemandMonitorTableSort, DemandMonitorTableSortRule } from './types'
 
 export const getHardwareDemandLevel = (utilizationPercentage: number): Demand => {
   if (utilizationPercentage > 80) {
@@ -15,7 +15,7 @@ export const getHardwareDemandLevel = (utilizationPercentage: number): Demand =>
 interface SortHardwareDemandPerformanceParams {
   demandedHardwarePerformanceList: DemandedHardwarePerformance[]
   sortRule?: DemandMonitorTableSortRule
-  sortOrder: DemandMonitorTableSortOrder['sorted']
+  sortOrder: DemandMonitorTableSort['sortOrder']
 }
 
 export const sortHardwareDemandPerformance = ({

@@ -16,9 +16,9 @@ export type DemandMonitorTableSortRule = (
   hardwareB: DemandedHardwarePerformance,
 ) => number
 
-export interface DemandMonitorTableSortOrder {
+export interface DemandMonitorTableSort {
   columnKey: DemandMonitorTableColumn['key']
-  sorted: 'ascending' | 'descending' | 'none'
+  sortOrder: 'ascending' | 'descending' | 'none'
 }
 export interface DemandMonitorTableColumn {
   key: 'gpu' | 'recommendedSpecs' | 'demand' | 'avgEarning' | 'avgRunningTime'
