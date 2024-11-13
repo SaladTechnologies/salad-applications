@@ -1,12 +1,16 @@
-import { Text } from '@saladtechnologies/garden-components'
+import { faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { LoadingSpinner, Text } from '@saladtechnologies/garden-components'
 import classNames from 'classnames'
 import type CSS from 'csstype'
-import type { FunctionComponent } from 'react'
+import { useEffect, useRef, useState, type FunctionComponent } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
-import { demandPillColors } from './constants'
-import { mockedDemandMonitorData } from './mocks'
+import type { DemandedHardwarePerformance } from '../../DemandMonitorStore'
+import { demandMonitorTableColumns, demandPillColors, oneHourInMilliseconds } from './constants'
+import type { DemandMonitorTableColumn, DemandMonitorTableSort } from './types'
+import { getHardwareDemandLevel, sortHardwareDemandPerformance } from './utils'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   tableWrapper: {
@@ -22,36 +26,68 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     overflow: 'hidden',
     borderRadius: '6px',
     border: `1px ${theme.green} solid`,
-    minWidth: '900px',
-    '@media (max-width: 900px)': {
-      minWidth: '1000px',
-    },
+    boxSizing: 'border-box',
+    minWidth: '1000px',
   },
   table: {
     width: '100%',
     borderRadius: '6px',
     borderCollapse: 'collapse',
-    boxSizing: 'border-box',
+  },
+  greenTableCellDivider: {
+    backgroundColor: theme.darkBlue,
+    width: '100%',
+    height: '0.5px',
+    marginBottom: '10px',
+  },
+  tableCell: {
+    boxShadow: `inset 0px 0px 0px 0.5px ${theme.green}`,
+    borderCollapse: 'collapse',
+    padding: '10px 24px',
   },
   greenTableCell: {
     backgroundColor: theme.green,
     color: theme.darkBlue,
+    paddingTop: '0px',
+    paddingLeft: '0px',
+    paddingRight: '0px',
   },
-  tableCell: {
-    border: `1px ${theme.green} solid`,
-    borderCollapse: 'collapse',
-    padding: '10px 24px',
-  },
-  gpuWrapper: {
+  columnHeaderContent: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: 'row',
+    gap: '8px',
+  },
+  columnHeaderWrapper: {
+    cursor: 'pointer',
+    paddingLeft: '0px',
+    paddingRight: '0px',
+  },
+  sortOrderIconWrapper: {
+    position: 'relative',
+    height: '100%',
+    width: '5px',
+  },
+  sortOrderIconDown: {
+    position: 'relative',
+    top: '-4px',
+  },
+  sortOrderIconUp: {
+    position: 'relative',
+    top: '5px',
+  },
+  gpuWrapper: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     flexDirection: 'column',
-    borderTop: `1px ${theme.darkBlue} solid`,
   },
   gpuName: {
     fontWeight: 700,
     marginBottom: '8px',
+    paddingLeft: '10px',
+    paddingRight: '10px',
   },
   boldText: {
     fontWeight: 700,
@@ -76,74 +112,152 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   demandPillText: {
     color: theme.darkBlue,
   },
+  loadingSpinnerWrap: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '64px',
+    marginBottom: '64px',
+  },
 })
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  demandedHardwarePerformanceList?: DemandedHardwarePerformance[]
+  fetchDemandedHardwarePerformanceList: () => void
+}
 
-const _DemandMonitorTable: FunctionComponent<Props> = ({ classes }) => {
+const _DemandMonitorTable: FunctionComponent<Props> = ({
+  classes,
+  demandedHardwarePerformanceList,
+  fetchDemandedHardwarePerformanceList,
+}) => {
+  const [tableSort, setTableSort] = useState<DemandMonitorTableSort>({
+    columnKey: 'demand',
+    sortOrder: 'descending',
+  })
+  const updateTimerRef = useRef<NodeJS.Timeout | null>(null)
+
+  useEffect(() => {
+    fetchDemandedHardwarePerformanceList()
+    updateTimerRef.current = setInterval(fetchDemandedHardwarePerformanceList, oneHourInMilliseconds)
+
+    return () => {
+      if (updateTimerRef.current) {
+        clearInterval(updateTimerRef.current)
+      }
+    }
+  }, [fetchDemandedHardwarePerformanceList])
+
+  if (!demandedHardwarePerformanceList) {
+    return (
+      !demandedHardwarePerformanceList && (
+        <div className={classes.loadingSpinnerWrap}>
+          <LoadingSpinner variant="light" size={100} />
+        </div>
+      )
+    )
+  }
+
+  const handleColumnHeaderClick = (columnKey: DemandMonitorTableColumn['key']) => {
+    if (tableSort.columnKey === columnKey) {
+      setTableSort({ columnKey, sortOrder: tableSort.sortOrder === 'descending' ? 'ascending' : 'descending' })
+    } else {
+      setTableSort({ columnKey, sortOrder: 'descending' })
+    }
+  }
+
+  const sortedDemandedHardwarePerformanceList = sortHardwareDemandPerformance({
+    demandedHardwarePerformanceList,
+    sortRule: demandMonitorTableColumns[tableSort.columnKey].sortRule,
+    sortOrder: tableSort.sortOrder,
+  })
+
   return (
     <div className={classes.tableWrapper}>
       <div className={classes.tableContent}>
         <table className={classes.table}>
-          <tr className={classes.greenTableCell}>
-            <th className={classes.tableCell}>
-              <Text variant="baseXS">GPU</Text>
-            </th>
-            <th className={classes.tableCell}>
-              <Text variant="baseXS">Recommended Specs</Text>
-            </th>
-            <th className={classes.tableCell}>
-              <Text variant="baseXS">Demand</Text>
-            </th>
-            <th className={classes.tableCell}>
-              <Text variant="baseXS">Average Earnings 24/h</Text>
-            </th>
-            <th className={classes.tableCell}>
-              <Text variant="baseXS">Average Running Time 24/h</Text>
-            </th>
-          </tr>
-          {mockedDemandMonitorData.map(({ gpu, hourlyRate, recommendedSpecs, demand, avgEarnings, avgRunningTime }) => (
-            <tr>
-              <td className={classNames(classes.gpuWrapper, classes.tableCell, classes.greenTableCell)}>
-                <Text className={classes.gpuName} variant="baseS">
-                  {gpu}
-                </Text>
-                <Text variant="baseXS">HOURLY RATE</Text>
-                <Text variant="baseXS">{hourlyRate}</Text>
-              </td>
-              <td className={classes.tableCell}>
-                <div className={classes.tableCellCentered}>
-                  <Text variant="baseXS">{recommendedSpecs.ram}</Text>
-                  <Text variant="baseXS">{recommendedSpecs.storage}</Text>
-                </div>
-              </td>
-              <td className={classes.tableCell}>
-                <div
-                  className={classes.demandPill}
-                  style={{
-                    backgroundColor: demandPillColors[demand].background,
-                    color: demandPillColors[demand].text,
-                  }}
-                >
-                  <Text variant="baseXS">{demand}</Text>
-                </div>
-              </td>
-              <td className={classes.tableCell}>
-                <div className={classes.tableCellCentered}>
-                  <Text className={classes.boldText} variant="baseM">
-                    {avgEarnings}
-                  </Text>
-                </div>
-              </td>
-              <td className={classes.tableCell}>
-                <div className={classes.tableCellCentered}>
-                  <Text className={classes.boldText} variant="baseM">
-                    {avgRunningTime}
-                  </Text>
-                </div>
-              </td>
+          <thead>
+            <tr className={classes.greenTableCell}>
+              {Object.values(demandMonitorTableColumns).map(({ displayName, key }) => {
+                const isTableSortedByColumn = key === tableSort.columnKey
+                const isSortedAscending = tableSort.sortOrder === 'ascending'
+                return (
+                  <th
+                    className={classNames(classes.tableCell, classes.columnHeaderWrapper)}
+                    onClick={() => handleColumnHeaderClick(key)}
+                    key={key}
+                  >
+                    <div className={classes.columnHeaderContent}>
+                      <Text variant="baseXS">{displayName}</Text>
+                      <div className={classes.sortOrderIconWrapper}>
+                        {isTableSortedByColumn && (
+                          <FontAwesomeIcon
+                            className={isSortedAscending ? classes.sortOrderIconUp : classes.sortOrderIconDown}
+                            icon={isSortedAscending ? faSortUp : faSortDown}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </th>
+                )
+              })}
             </tr>
-          ))}
+          </thead>
+          <tbody>
+            {sortedDemandedHardwarePerformanceList.map(({ name, earningRates, recommendedSpecs, utilizationPct }) => {
+              const demand = getHardwareDemandLevel(utilizationPct)
+              const avgEarningTimeHours = earningRates.avgEarningTimeMinutes / 60
+              const avgRunningTime = Math.round(avgEarningTimeHours * 10) / 10
+
+              return (
+                <tr key={name}>
+                  <td className={classNames(classes.gpuWrapper, classes.tableCell, classes.greenTableCell)}>
+                    <div className={classes.greenTableCellDivider}></div>
+                    <Text className={classes.gpuName} variant="baseS">
+                      {name}
+                    </Text>
+                    <Text variant="baseXS">HOURLY RATE</Text>
+                    <Text variant="baseXS">
+                      ${earningRates.minEarningRate} - ${earningRates.maxEarningRate}
+                    </Text>
+                  </td>
+                  <td className={classes.tableCell}>
+                    <div className={classes.tableCellCentered}>
+                      <Text variant="baseXS">{recommendedSpecs.ramGb} GB System RAM</Text>
+                      <Text variant="baseXS">120 GB Storage</Text>
+                    </div>
+                  </td>
+                  <td className={classes.tableCell}>
+                    <div
+                      className={classes.demandPill}
+                      style={{
+                        backgroundColor: demandPillColors[demand].background,
+                        color: demandPillColors[demand].text,
+                      }}
+                    >
+                      <Text variant="baseXS">{demand}</Text>
+                    </div>
+                  </td>
+                  <td className={classes.tableCell}>
+                    <div className={classes.tableCellCentered}>
+                      <Text className={classes.boldText} variant="baseM">
+                        ${earningRates.avgEarning}
+                      </Text>
+                    </div>
+                  </td>
+                  <td className={classes.tableCell}>
+                    <div className={classes.tableCellCentered}>
+                      <Text className={classes.boldText} variant="baseM">
+                        {avgRunningTime} hours
+                      </Text>
+                    </div>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
         </table>
       </div>
     </div>

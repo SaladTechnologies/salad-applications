@@ -1,13 +1,13 @@
 import { Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
-import type { FunctionComponent } from 'react'
+import { type FunctionComponent } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { useMediaQuery } from 'react-responsive'
 import { mobileSize, Scrollbar } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
 import { DemandMonitorFAQ } from './DemandMonitorFAQ'
-import { DemandMonitorTable } from './DemandMonitorTable'
+import { DemandMonitorTableContainer } from './DemandMonitorTable/DemandMonitorTableContainer'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   pageWrapper: {
@@ -49,7 +49,6 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     width: '100%',
   },
 })
-
 interface Props extends WithStyles<typeof styles> {}
 
 const _DemandMonitorPage: FunctionComponent<Props> = ({ classes }) => {
@@ -67,7 +66,7 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({ classes }) => {
             </Text>
           </div>
           <div className={classes.sectionWrapper}>
-            <DemandMonitorTable />
+            <DemandMonitorTableContainer />
           </div>
           <div className={classes.sectionWrapper}>
             <DemandMonitorFAQ />

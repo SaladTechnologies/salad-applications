@@ -1,4 +1,11 @@
-import type { Demand } from './types'
+import type { Demand, DemandMonitorTableColumn } from './types'
+import {
+  sortByAvgEarnings,
+  sortByAvgRunningTime,
+  sortByDemand,
+  sortByHourlyRate,
+  sortByRecommendedSpecs,
+} from './utils'
 
 interface DemandPillColors {
   text: string
@@ -19,3 +26,33 @@ export const demandPillColors: Record<Demand, DemandPillColors> = {
     background: '#B2D530',
   },
 }
+
+export const demandMonitorTableColumns: Record<DemandMonitorTableColumn['key'], DemandMonitorTableColumn> = {
+  gpu: {
+    key: 'gpu',
+    displayName: 'GPU',
+    sortRule: sortByHourlyRate,
+  },
+  recommendedSpecs: {
+    key: 'recommendedSpecs',
+    displayName: 'Recommended Specs',
+    sortRule: sortByRecommendedSpecs,
+  },
+  demand: {
+    key: 'demand',
+    displayName: 'Demand',
+    sortRule: sortByDemand,
+  },
+  avgEarning: {
+    key: 'avgEarning',
+    displayName: 'Average Earnings 24/h',
+    sortRule: sortByAvgEarnings,
+  },
+  avgRunningTime: {
+    key: 'avgRunningTime',
+    displayName: 'Average Running Time 24/h',
+    sortRule: sortByAvgRunningTime,
+  },
+}
+
+export const oneHourInMilliseconds = 1000 * 60 * 60
