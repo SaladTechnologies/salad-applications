@@ -12,7 +12,7 @@ type ReportData = {
 }
 
 export const StorefrontCommunityChallengeBlock = ({ block }: Props) => {
-  const reportData: ReportData = JSON.parse(block.data?.data || '')
+  const reportData: ReportData = JSON.parse(block.data?.data || '{}')
 
   return (
     <StorefrontCommunityChallengePanel
