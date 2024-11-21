@@ -35,7 +35,6 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
       <Route path="/store/vault" exact component={VaultListContainer} />
       {/* Recommended Target Rewards Page */}
       <Route path="/store/select-target-reward" exact component={SelectTargetRewardContainer} />
-      {isDemandMonitorFeatureFlagEnabled && <Route path="/demand" exact component={DemandMonitorPage} />}
       {/* Modals */}
       {/* SaladPay: This is stand in until we figure out iFrames, popups... */}
       <Route exact path="/salad-pay/order-summary" component={SaladPayOrderSummaryContainer} />
@@ -51,6 +50,7 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
       {/* Earn Pages */}
       {isAuthenticated && <Redirect exact from="/earn" to="/earn/summary" />}
       <Route path="/earn/summary" component={EarningSummaryContainer} />
+      {isDemandMonitorFeatureFlagEnabled && <Route path="/earn/demand" exact component={DemandMonitorPage} />}
       <Route path="/earn" component={EarnInfoPage} />
       <Route
         exact

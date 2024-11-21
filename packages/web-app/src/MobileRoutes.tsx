@@ -21,7 +21,7 @@ const _Routes = ({ location }: RouteComponentProps) => {
     <>
       <Switch location={currentLocation}>
         <Route exact path="/earn/summary" component={MobileEarningSummaryContainer} />
-        {isDemandMonitorFeatureFlagEnabled && <Route exact path="/demand" component={DemandMonitorPage} />}
+        {isDemandMonitorFeatureFlagEnabled && <Route path="/earn/demand" exact component={DemandMonitorPage} />}
         <Route path="/account/summary" component={MobileAccountSummaryContainer} />
         <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
         <Redirect exact from="/account/summary" to="/account/summary" />
