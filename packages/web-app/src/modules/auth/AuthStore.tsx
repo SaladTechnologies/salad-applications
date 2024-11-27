@@ -31,8 +31,17 @@ export class AuthStore {
   constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
     this.axios
       .get('/api/v1/profile')
-      .then(() => runInAction(() => (this.isAuthenticated = true)))
-      .catch(() => runInAction(() => (this.isAuthenticated = false)))
+      .then(() => {
+        runInAction(() => (this.isAuthenticated = true))
+      })
+      .catch((response) => {
+        runInAction(() => (this.isAuthenticated = false))
+        if (response.status === 401) {
+          // we have to clear localStorage for deleted account
+          // expected response status code for deleted account is 401 (the same for unauthorized user)
+          localStorage.clear()
+        }
+      })
   }
 
   @action
