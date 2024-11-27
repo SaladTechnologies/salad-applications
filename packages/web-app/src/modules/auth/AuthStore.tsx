@@ -37,8 +37,6 @@ export class AuthStore {
       .catch((response) => {
         runInAction(() => (this.isAuthenticated = false))
         if (response.status === 401) {
-          // we have to clear localStorage for deleted account
-          // expected response status code for deleted account is 401 (the same for unauthorized user)
           localStorage.clear()
         }
       })
