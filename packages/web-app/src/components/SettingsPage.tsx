@@ -9,6 +9,7 @@ import { AccountContainer } from '../modules/account-views/account-views'
 import { ReferralSettingsContainer } from '../modules/account-views/referral-views'
 import { AchievementPageContainer } from '../modules/achievements-views'
 import { BonusPageContainer } from '../modules/bonus-views'
+import { DemandAlertsPageContainer } from '../modules/demand-alerts-views'
 import { IconArrowLeft } from '../modules/reward-views/components/assets'
 import { styles } from './SettingsPage.styles'
 
@@ -39,6 +40,7 @@ interface Props extends WithStyles<typeof styles> {
 const _Settings = ({ appBuild, classes, menuButtons, isUserReferralsEnabled, onClose }: Props) => {
   const featureManager = useFeatureManager()
   const isAchievementsFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.Achievements)
+  const isDemandNotificationsFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.DemandNotifications)
 
   const handleCloseClicked = () => {
     onClose?.()
@@ -68,6 +70,11 @@ const _Settings = ({ appBuild, classes, menuButtons, isUserReferralsEnabled, onC
       url: '/account/achievements',
       text: 'Achievements',
       component: AchievementPageContainer,
+    },
+    isDemandNotificationsFeatureFlagEnabled && {
+      url: '/account/alerts',
+      text: 'Demand Alerts',
+      component: DemandAlertsPageContainer,
     },
   ].filter((menuItem) => menuItem) as MenuItem[]
 
