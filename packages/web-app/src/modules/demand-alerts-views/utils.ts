@@ -13,7 +13,7 @@ export const demandScenarios = [
   { label: 'Low Demand', value: 'lowDemand' },
 ]
 
-export const customDropdownStyles = {
+export const customSetUpDropdownStyles = {
   control: (provided: CSSObjectWithLabel) => ({
     ...provided,
     backgroundColor: DefaultTheme.lightGreen,
