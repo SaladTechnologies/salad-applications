@@ -9,6 +9,8 @@ import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../../SaladTheme'
 import { ModalWithOverlay } from '../../../../../components/ModalWithOverlay'
 import type { Reward } from '../../../../reward/models'
+import saladBackgroundUrl from './assets/salad-background.svg'
+import starsUrl from './assets/stars.svg'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   modalContent: {

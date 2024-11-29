@@ -121,7 +121,7 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
           </Text>
           <div className={classes.descriptionWrapper}>
             <Text className={classes.description}>
-              Take a birds eye view on how different hardware is performing on the Salad network. This information is
+              f Take a birds eye view on how different hardware is performing on the Salad network. This information is
               refreshed hourly.
             </Text>
             {withGetNotifiedButton && (
