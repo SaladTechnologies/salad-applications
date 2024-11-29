@@ -1,7 +1,7 @@
 import { Button, Text } from '@saladtechnologies/garden-components'
 import { Bell } from '@saladtechnologies/garden-icons'
 import type CSS from 'csstype'
-import { type FunctionComponent } from 'react'
+import { useState, type FunctionComponent } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { useMediaQuery } from 'react-responsive'
@@ -9,6 +9,7 @@ import { mobileSize, Scrollbar } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
 import { DemandMonitorFAQ } from './DemandMonitorFAQ'
 import { DemandMonitorTableContainer } from './DemandMonitorTable/DemandMonitorTableContainer'
+import { GetNotifiedDemandChangesModal } from './GetNotifiedDemandChangesModal/GetNotifiedDemandChangesModal'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   pageWrapper: {
@@ -65,6 +66,16 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const _DemandMonitorPage: FunctionComponent<Props> = ({ classes, withGetNotifiedButton }) => {
+  const [isModalShown, setIsModalShown] = useState(true)
+
+  const handleModalCloseClick = () => {
+    setIsModalShown(false)
+  }
+
+  const handleModalContinueClick = () => {
+    setIsModalShown(false)
+  }
+
   const getPageContent = () => {
     return (
       <div className={classes.pageWrapper}>
@@ -74,7 +85,7 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({ classes, withGetNotified
           </Text>
           <div className={classes.descriptionWrapper}>
             <Text className={classes.description}>
-              Take a birds eye view on how different hardware is performing on the Salad network. This information is
+              f Take a birds eye view on how different hardware is performing on the Salad network. This information is
               refreshed hourly.
             </Text>
             {withGetNotifiedButton && (
@@ -88,6 +99,19 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({ classes, withGetNotified
             <DemandMonitorFAQ />
           </div>
         </div>
+        {/* <ModalWithOverlay
+          onCloseClick={function (): void {
+            throw new Error('Function not implemented.')
+          }}
+        >
+          <div></div>
+        </ModalWithOverlay> */}
+        {isModalShown && (
+          <GetNotifiedDemandChangesModal
+            onCloseClick={handleModalCloseClick}
+            onContinuesClick={handleModalContinueClick}
+          />
+        )}
       </div>
     )
   }

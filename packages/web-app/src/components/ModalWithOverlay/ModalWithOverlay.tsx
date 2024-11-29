@@ -2,14 +2,10 @@ import { X } from '@saladtechnologies/garden-icons'
 import type CSS from 'csstype'
 import type { FC } from 'react'
 import { useRef } from 'react'
-import { Img } from 'react-image'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { useDetectClickOutsideElement } from '../../hooks/useDetectClickOutsideElement'
 import type { SaladTheme } from '../../SaladTheme'
-import { Tooltips } from '../../Tooltips'
-import saladBackgroundUrl from './assets/salad-background.svg'
-import starsUrl from './assets/stars.svg'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   modalOverlay: {
@@ -27,24 +23,9 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
   modalContainer: {
     position: 'relative',
-    width: '80%',
-    display: 'flex',
-    flexDirection: 'row',
-    height: '470px',
     backgroundColor: theme.darkBlue,
-    padding: '48px 28px',
     overflow: 'hidden',
-    maxWidth: '870px',
-  },
-  starsImage: {
-    position: 'absolute',
-    bottom: '190px',
-    left: '0px',
-  },
-  saladImage: {
-    position: 'absolute',
-    bottom: '0px',
-    left: '0px',
+    boxSizing: 'border-box',
   },
   closeIcon: {
     position: 'absolute',
@@ -70,11 +51,8 @@ const _ModalWithOverlay: FC<Props> = ({ classes, onCloseClick, children }) => {
   return (
     <div className={classes.modalOverlay}>
       <div className={classes.modalContainer} ref={modalContainerRef}>
-        <Tooltips />
-        <X className={classes.closeIcon} onClick={onCloseClick} />
-        <Img className={classes.saladImage} src={saladBackgroundUrl} alt="salad-background" />
-        <Img className={classes.starsImage} src={starsUrl} alt="stars" />
         {children}
+        <X className={classes.closeIcon} onClick={onCloseClick} />
       </div>
     </div>
   )

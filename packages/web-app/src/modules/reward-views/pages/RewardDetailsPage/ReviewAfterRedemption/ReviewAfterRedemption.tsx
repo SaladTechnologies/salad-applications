@@ -3,17 +3,26 @@ import { Copy } from '@saladtechnologies/garden-icons'
 import type CSS from 'csstype'
 import type { ChangeEvent } from 'react'
 import { useState } from 'react'
+import { Img } from 'react-image'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../../SaladTheme'
 import { ModalWithOverlay } from '../../../../../components/ModalWithOverlay/ModalWithOverlay'
 import type { Reward } from '../../../../reward/models'
+import saladBackgroundUrl from './assets/salad-background.svg'
+import starsUrl from './assets/stars.svg'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   modalContent: {
     position: 'relative',
-    flex: 2,
-    marginLeft: '35%',
+    width: '100%',
+    display: 'flex',
+    backgroundColor: theme.darkBlue,
+    padding: '48px 110px 72px 300px',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    maxWidth: '1000px',
+    boxSizing: 'border-box',
   },
   title: {
     color: theme.green,
@@ -158,6 +167,8 @@ const _ReviewAfterRedemption = ({ classes, reward, onCloseClick, onVaultLinkClic
           </a>{' '}
           to help our Kitchen grow.
         </p>
+        <Img className={classes.saladImage} src={saladBackgroundUrl} alt="salad-background" />
+        <Img className={classes.starsImage} src={starsUrl} alt="stars" />
       </div>
     </ModalWithOverlay>
   )
