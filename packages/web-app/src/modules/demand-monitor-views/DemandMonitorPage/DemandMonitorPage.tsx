@@ -53,9 +53,14 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     width: '100%',
   },
 })
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  isAuthenticated: boolean
+  isDemandNotificationsFeatureFlagEnabled: boolean
+}
 
-const _DemandMonitorPage: FunctionComponent<Props> = ({ classes }) => {
+const _DemandMonitorPage: FunctionComponent<Props> = ({ classes, isAuthenticated, isDemandNotificationsFeatureFlagEnabled }) => {
+  const shouldShowEarningDemandGetNotifiedButton = !isAuthenticated && isDemandNotificationsFeatureFlagEnabled
+
   const getPageContent = () => {
     return (
       <div className={classes.pageWrapper}>
@@ -68,7 +73,7 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({ classes }) => {
               Take a birds eye view on how different hardware is performing on the Salad network. This information is
               refreshed hourly.
             </Text>
-            <Button width={148} leadingIcon={<Bell />} label='Get Notified' variant='secondary' />
+            {shouldShowEarningDemandGetNotifiedButton && <Button width={148} leadingIcon={<Bell />} label='Get Notified' variant='secondary' />}
           </div>
           <div className={classes.sectionWrapper}>
             <DemandMonitorTableContainer />

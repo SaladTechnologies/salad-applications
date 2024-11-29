@@ -7,6 +7,7 @@ export enum FeatureFlags {
   Achievements = 'app_saladachievements',
   NewChefDownload = 'app_newchefdw',
   DemandMonitor = 'app_DemandMonitor',
+  DemandNotifications = 'app_DemandNotifications',
 }
 
 export interface FeatureManager {

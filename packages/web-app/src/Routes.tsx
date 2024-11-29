@@ -23,6 +23,7 @@ interface Props extends RouteComponentProps {
 const _Routes = ({ location, isAuthenticated }: Props) => {
   const featureManager = useFeatureManager()
   const isDemandMonitorFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.DemandMonitor)
+  const isDemandNotificationsFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.DemandNotifications)
 
   const currentLocation =
     (location.state as { currentLocation: Location | undefined } | undefined)?.currentLocation || location
@@ -50,7 +51,7 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
       {/* Earn Pages */}
       {isAuthenticated && <Redirect exact from="/earn" to="/earn/summary" />}
       <Route path="/earn/summary" component={EarningSummaryContainer} />
-      {isDemandMonitorFeatureFlagEnabled && <Route path="/earn/demand" exact component={DemandMonitorPage} />}
+      {isDemandMonitorFeatureFlagEnabled && <Route path="/earn/demand" exact component={() => <DemandMonitorPage isAuthenticated={isAuthenticated} isDemandNotificationsFeatureFlagEnabled={isDemandNotificationsFeatureFlagEnabled} />} />}
       <Route path="/earn" component={EarnInfoPage} />
       <Route
         exact
