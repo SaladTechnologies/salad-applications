@@ -8,9 +8,9 @@ export const mockedGpuNames = [
 ]
 
 export const demandScenarios = [
-  { label: 'Low Demand', value: 'lowDemand' },
-  { label: 'Moderate Demand', value: 'moderateDemand' },
   { label: 'High Demand', value: 'highDemand' },
+  { label: 'Moderate Demand', value: 'moderateDemand' },
+  { label: 'Low Demand', value: 'lowDemand' },
 ]
 
 export const customDropdownStyles = {
