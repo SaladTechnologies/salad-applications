@@ -5,7 +5,7 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { DefaultTheme } from '../../../../SaladTheme'
 import { Dropdown } from '../../../../components/Dropdown'
-import { customSetUpDropdownStyles, demandScenarios, mockedGpuNames } from '../../utils'
+import { customSetUpDropdownStyles, demandScenarios, mockedGpuNames } from '../../constants'
 
 const styles: () => Record<string, CSS.Properties> = () => ({
   container: {
