@@ -22,7 +22,7 @@ const _Routes = ({ location }: RouteComponentProps) => {
       <Switch location={currentLocation}>
         <Route exact path="/earn/summary" component={MobileEarningSummaryContainer} />
         {isDemandMonitorFeatureFlagEnabled && (
-          <Route path="/earn/demand" exact component={() => <DemandMonitorPageContainer isMobile={true} />} />
+          <Route path="/earn/demand" exact component={DemandMonitorPageContainer} />
         )}
         <Route path="/account/summary" component={MobileAccountSummaryContainer} />
         <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
