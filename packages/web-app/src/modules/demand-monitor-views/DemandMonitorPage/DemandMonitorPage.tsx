@@ -1,14 +1,16 @@
 import { Button, Text } from '@saladtechnologies/garden-components'
 import { Bell } from '@saladtechnologies/garden-icons'
 import type CSS from 'csstype'
-import { useState, type FunctionComponent } from 'react'
+import { useEffect, useRef, useState, type FunctionComponent } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { useMediaQuery } from 'react-responsive'
 import { mobileSize, Scrollbar } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
+import type { DemandedHardwarePerformance } from '../DemandMonitorStore'
 import { DemandMonitorFAQ } from './DemandMonitorFAQ'
-import { DemandMonitorTableContainer } from './DemandMonitorTable/DemandMonitorTableContainer'
+import { DemandMonitorTable } from './DemandMonitorTable'
+import { oneHourInMilliseconds } from './DemandMonitorTable/constants'
 import { GetNotifiedDemandChangesModal } from './GetNotifiedDemandChangesModal/GetNotifiedDemandChangesModal'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
@@ -61,12 +63,34 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     width: '100%',
   },
 })
-interface Props extends WithStyles<typeof styles> {
+export interface Props extends WithStyles<typeof styles> {
+  demandedHardwarePerformanceList?: DemandedHardwarePerformance[]
   withGetNotifiedButton: boolean
+  fetchDemandedHardwarePerformanceList: () => void
+  onLoginClick: () => void
 }
 
-const _DemandMonitorPage: FunctionComponent<Props> = ({ classes, withGetNotifiedButton }) => {
+const _DemandMonitorPage: FunctionComponent<Props> = ({
+  fetchDemandedHardwarePerformanceList,
+  onLoginClick,
+  withGetNotifiedButton,
+  demandedHardwarePerformanceList,
+  classes,
+}) => {
   const [isModalShown, setIsModalShown] = useState(true)
+
+  const updateTimerRef = useRef<NodeJS.Timeout | null>(null)
+
+  useEffect(() => {
+    fetchDemandedHardwarePerformanceList()
+    updateTimerRef.current = setInterval(fetchDemandedHardwarePerformanceList, oneHourInMilliseconds)
+
+    return () => {
+      if (updateTimerRef.current) {
+        clearInterval(updateTimerRef.current)
+      }
+    }
+  }, [fetchDemandedHardwarePerformanceList])
 
   const handleModalCloseClick = () => {
     setIsModalShown(false)
@@ -85,7 +109,7 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({ classes, withGetNotified
           </Text>
           <div className={classes.descriptionWrapper}>
             <Text className={classes.description}>
-              f Take a birds eye view on how different hardware is performing on the Salad network. This information is
+              Take a birds eye view on how different hardware is performing on the Salad network. This information is
               refreshed hourly.
             </Text>
             {withGetNotifiedButton && (
@@ -93,23 +117,18 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({ classes, withGetNotified
             )}
           </div>
           <div className={classes.sectionWrapper}>
-            <DemandMonitorTableContainer />
+            <DemandMonitorTable demandedHardwarePerformanceList={demandedHardwarePerformanceList} />
           </div>
           <div className={classes.sectionWrapper}>
             <DemandMonitorFAQ />
           </div>
         </div>
-        {/* <ModalWithOverlay
-          onCloseClick={function (): void {
-            throw new Error('Function not implemented.')
-          }}
-        >
-          <div></div>
-        </ModalWithOverlay> */}
         {isModalShown && (
           <GetNotifiedDemandChangesModal
+            onLoginClick={onLoginClick}
             onCloseClick={handleModalCloseClick}
             onContinuesClick={handleModalContinueClick}
+            demandedHardwarePerformanceList={demandedHardwarePerformanceList}
           />
         )}
       </div>

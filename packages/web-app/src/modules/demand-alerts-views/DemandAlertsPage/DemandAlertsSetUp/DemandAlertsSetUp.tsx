@@ -4,8 +4,8 @@ import type { FunctionComponent } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { DefaultTheme } from '../../../../SaladTheme'
-import { Dropdown } from '../../../../components/Dropdown'
-import { customSetUpDropdownStyles, demandScenarios, mockedGpuNames } from '../../constants'
+import { DropdownLight } from '../../../../components/Dropdown'
+import { demandScenarios, mockedGpuNames } from '../../constants'
 
 const styles: () => Record<string, CSS.Properties> = () => ({
   container: {
@@ -34,11 +34,11 @@ const _DemandAlertsSetUp: FunctionComponent<Props> = ({ classes }) => {
       <div className={classes.dropdownContainer}>
         <div className={classes.dropdownContentContainer}>
           <Text variant="baseS">GPU</Text>
-          <Dropdown customStyles={customSetUpDropdownStyles} options={mockedGpuNames} />
+          <DropdownLight options={mockedGpuNames} />
         </div>
         <div className={classes.dropdownContentContainer}>
           <Text variant="baseS">Demand Scenario</Text>
-          <Dropdown customStyles={customSetUpDropdownStyles} options={demandScenarios} />
+          <DropdownLight options={demandScenarios} />
         </div>
       </div>
       <Button onClick={() => {}} label="Add Alert" outlineColor={DefaultTheme.darkBlue} />

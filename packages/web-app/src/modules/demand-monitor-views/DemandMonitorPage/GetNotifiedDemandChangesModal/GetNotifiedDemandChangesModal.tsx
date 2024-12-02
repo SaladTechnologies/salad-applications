@@ -4,7 +4,9 @@ import { Img } from 'react-image'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
+import { DropdownLight } from '../../../../components/Dropdown'
 import { ModalWithOverlay } from '../../../../components/ModalWithOverlay'
+import type { DemandedHardwarePerformance } from '../../DemandMonitorStore'
 import saladBackgroundUrl from './assets/background.png'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
@@ -62,21 +64,47 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     height: '16px',
     cursor: 'pointer',
   },
-  continueButtonWrapper: {
+  controlsWrapper: {
+    position: 'relative',
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    flexDirection: 'row',
+    width: '500px',
     marginTop: '24px',
+  },
+  dropdownWrapper: {
+    position: 'absolute',
+    top: '0px',
+    left: '0px',
+  },
+  dropdown: {
+    position: 'fixed',
+  },
+  continueButtonWrapper: {
+    marginLeft: '260px',
   },
 })
 
 interface Props extends WithStyles<typeof styles> {
   className?: string
+  demandedHardwarePerformanceList?: DemandedHardwarePerformance[]
+  onLoginClick: () => void
   onCloseClick: () => void
   onContinuesClick: () => void
 }
 
-const _GetNotifiedDemandChangesModal = ({ classes, onCloseClick }: Props) => {
-  function onContinuesClick(): void {
-    throw new Error('Function not implemented.')
-  }
+const _GetNotifiedDemandChangesModal = ({
+  classes,
+  demandedHardwarePerformanceList,
+  onLoginClick,
+  onCloseClick,
+  onContinuesClick,
+}: Props) => {
+  const demandHardwareOptions = demandedHardwarePerformanceList?.map((demandHardware) => ({
+    label: demandHardware.name,
+    value: demandHardware.name,
+  }))
 
   return (
     <ModalWithOverlay onCloseClick={onCloseClick}>
@@ -90,7 +118,7 @@ const _GetNotifiedDemandChangesModal = ({ classes, onCloseClick }: Props) => {
           <h3 className={classes.subtitle}>Already have an account?</h3>
           <p className={classes.description}>
             Setting up alerts is easier and more powerful while{' '}
-            <span onClick={() => {}} className={classes.link}>
+            <span onClick={onLoginClick} className={classes.link}>
               logged in
             </span>
           </p>
@@ -99,8 +127,15 @@ const _GetNotifiedDemandChangesModal = ({ classes, onCloseClick }: Props) => {
         <p className={classes.description}>
           No need to create an account, simply select the GPU you wish to get alerts for and click continue.
         </p>
-        <div className={classes.continueButtonWrapper}>
-          <Button variant="secondary" onClick={onContinuesClick} label="Continue" />
+        <div className={classes.controlsWrapper}>
+          <div className={classes.dropdownWrapper}>
+            <div className={classes.dropdown}>
+              {demandHardwareOptions && <DropdownLight options={demandHardwareOptions} />}
+            </div>
+          </div>
+          <div className={classes.continueButtonWrapper}>
+            <Button variant="secondary" onClick={onContinuesClick} label="Continue" width={100} />
+          </div>
         </div>
         <Img className={classes.saladImage} src={saladBackgroundUrl} alt="salad-background" />
       </div>

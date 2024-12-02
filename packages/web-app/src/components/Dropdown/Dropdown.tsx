@@ -3,7 +3,7 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select'
 import Select from 'react-select'
-import { DefaultTheme, type SaladTheme } from '../SaladTheme'
+import { DefaultTheme, type SaladTheme } from '../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -18,7 +18,7 @@ interface Option {
 
 export type DropdownStylesConfig = StylesConfig<Option | '', false, GroupBase<Option | ''>>
 
-interface Props extends WithStyles<typeof styles> {
+export interface Props extends WithStyles<typeof styles> {
   customStyles?: DropdownStylesConfig
   options?: Option[]
   value?: string

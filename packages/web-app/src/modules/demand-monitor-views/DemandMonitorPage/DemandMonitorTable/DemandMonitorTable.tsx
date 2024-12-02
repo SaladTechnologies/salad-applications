@@ -3,12 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { LoadingSpinner, Text } from '@saladtechnologies/garden-components'
 import classNames from 'classnames'
 import type CSS from 'csstype'
-import { useEffect, useRef, useState, type FunctionComponent } from 'react'
+import { useState, type FunctionComponent } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
 import type { DemandedHardwarePerformance } from '../../DemandMonitorStore'
-import { demandMonitorTableColumns, demandPillColors, oneHourInMilliseconds } from './constants'
+import { demandMonitorTableColumns, demandPillColors } from './constants'
 import type { DemandMonitorTableColumn, DemandMonitorTableSort } from './types'
 import { getHardwareDemandLevel, sortHardwareDemandPerformance } from './utils'
 
@@ -125,30 +125,13 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 
 interface Props extends WithStyles<typeof styles> {
   demandedHardwarePerformanceList?: DemandedHardwarePerformance[]
-  fetchDemandedHardwarePerformanceList: () => void
 }
 
-const _DemandMonitorTable: FunctionComponent<Props> = ({
-  classes,
-  demandedHardwarePerformanceList,
-  fetchDemandedHardwarePerformanceList,
-}) => {
+const _DemandMonitorTable: FunctionComponent<Props> = ({ classes, demandedHardwarePerformanceList }) => {
   const [tableSort, setTableSort] = useState<DemandMonitorTableSort>({
     columnKey: 'demand',
     sortOrder: 'descending',
   })
-  const updateTimerRef = useRef<NodeJS.Timeout | null>(null)
-
-  useEffect(() => {
-    fetchDemandedHardwarePerformanceList()
-    updateTimerRef.current = setInterval(fetchDemandedHardwarePerformanceList, oneHourInMilliseconds)
-
-    return () => {
-      if (updateTimerRef.current) {
-        clearInterval(updateTimerRef.current)
-      }
-    }
-  }, [fetchDemandedHardwarePerformanceList])
 
   if (!demandedHardwarePerformanceList) {
     return (
