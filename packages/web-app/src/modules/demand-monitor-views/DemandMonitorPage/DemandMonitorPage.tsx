@@ -96,6 +96,17 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
     }
   }, [fetchDemandedHardwarePerformanceList])
 
+  useEffect(() => {
+    fetchDemandedHardwarePerformanceList()
+    updateTimerRef.current = setInterval(fetchDemandedHardwarePerformanceList, oneHourInMilliseconds)
+
+    return () => {
+      if (updateTimerRef.current) {
+        clearInterval(updateTimerRef.current)
+      }
+    }
+  }, [fetchDemandedHardwarePerformanceList])
+
   const handleModalCloseClick = () => {
     setIsModalShown(false)
   }
@@ -121,7 +132,7 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
           </Text>
           <div className={classes.descriptionWrapper}>
             <Text className={classes.description}>
-              f Take a birds eye view on how different hardware is performing on the Salad network. This information is
+              Take a birds eye view on how different hardware is performing on the Salad network. This information is
               refreshed hourly.
             </Text>
             {withGetNotifiedButton && (
