@@ -15,8 +15,11 @@ interface Option {
   label: string
   value: string
 }
+
+export type DropdownStylesConfig = StylesConfig<Option | '', false, GroupBase<Option | ''>>
+
 interface Props extends WithStyles<typeof styles> {
-  customStyles?: StylesConfig<Option | '', false, GroupBase<Option | ''>>
+  customStyles?: DropdownStylesConfig
   options?: Option[]
   value?: string
   onChange?: (value?: any) => void
@@ -25,7 +28,7 @@ interface Props extends WithStyles<typeof styles> {
 const _Dropdown: FC<Props> = ({ classes, customStyles, options, value, onChange }) => {
   const selectedValue = value && options?.find((option) => option.value === value)
 
-  const defaultStyles = {
+  const defaultStyles: DropdownStylesConfig = {
     control: (baseStyles: CSSObjectWithLabel) => ({
       ...baseStyles,
       backgroundColor: DefaultTheme.darkBlue,

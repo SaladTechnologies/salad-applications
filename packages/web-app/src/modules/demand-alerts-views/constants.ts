@@ -1,5 +1,6 @@
 import type { CSSObjectWithLabel } from "react-select";
 import { DefaultTheme } from "../../SaladTheme";
+import type { DropdownStylesConfig } from "../../components/Dropdown";
 
 export const mockedGpuNames = [
   { label: 'NVIDIA RTX 4090', value: 'NVIDIA RTX 4090' },
@@ -13,7 +14,7 @@ export const demandScenarios = [
   { label: 'Low Demand', value: 'lowDemand' },
 ]
 
-export const customSetUpDropdownStyles = {
+export const customSetUpDropdownStyles: DropdownStylesConfig = {
   control: (baseStyles: CSSObjectWithLabel) => ({
     ...baseStyles,
     backgroundColor: DefaultTheme.lightGreen,
