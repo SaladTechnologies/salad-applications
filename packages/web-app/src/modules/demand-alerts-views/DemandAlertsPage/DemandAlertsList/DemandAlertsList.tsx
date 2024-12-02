@@ -5,7 +5,7 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { DefaultTheme } from '../../../../SaladTheme'
-import { mockedExistingAlertsList } from '../../utils'
+import { mockedExistingAlertsList } from '../../mocks'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   container: {
