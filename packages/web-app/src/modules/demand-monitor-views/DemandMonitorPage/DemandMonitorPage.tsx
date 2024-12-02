@@ -33,6 +33,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     fontFamily: theme.fontMallory,
     color: theme.green,
     fontSize: '32px',
+    lineHeight: '32px',
     fontWeight: 500,
     textShadow: '0px 0px 24px rgba(178, 213, 48, 0.7)',
     paddingBottom: '16px',
@@ -40,7 +41,13 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   descriptionWrapper: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'baseline'
+    alignItems: 'baseline',
+
+    '@media (max-width: 812px)': {
+      flexDirection: 'column',
+      gap: '12px',
+      alignItems: 'end',
+    },
   },
   description: {
     fontFamily: 'Mallory',
@@ -54,13 +61,10 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
 })
 interface Props extends WithStyles<typeof styles> {
-  isAuthenticated: boolean
-  isDemandNotificationsFeatureFlagEnabled: boolean
+  withGetNotifiedButton: boolean
 }
 
-const _DemandMonitorPage: FunctionComponent<Props> = ({ classes, isAuthenticated, isDemandNotificationsFeatureFlagEnabled }) => {
-  const shouldShowEarningDemandGetNotifiedButton = !isAuthenticated && isDemandNotificationsFeatureFlagEnabled
-
+const _DemandMonitorPage: FunctionComponent<Props> = ({ classes, withGetNotifiedButton }) => {
   const getPageContent = () => {
     return (
       <div className={classes.pageWrapper}>
@@ -73,7 +77,9 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({ classes, isAuthenticated
               Take a birds eye view on how different hardware is performing on the Salad network. This information is
               refreshed hourly.
             </Text>
-            {shouldShowEarningDemandGetNotifiedButton && <Button width={148} leadingIcon={<Bell />} label='Get Notified' variant='secondary' />}
+            {withGetNotifiedButton && (
+              <Button width={148} leadingIcon={<Bell />} label="Get Notified" variant="secondary" />
+            )}
           </div>
           <div className={classes.sectionWrapper}>
             <DemandMonitorTableContainer />
