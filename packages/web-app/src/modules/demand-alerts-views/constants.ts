@@ -14,18 +14,18 @@ export const demandScenarios = [
 ]
 
 export const customSetUpDropdownStyles = {
-  control: (provided: CSSObjectWithLabel) => ({
-    ...provided,
+  control: (baseStyles: CSSObjectWithLabel) => ({
+    ...baseStyles,
     backgroundColor: DefaultTheme.lightGreen,
     width: '230px',
     borderRadius: 0,
   }),
-  menu: (provided: CSSObjectWithLabel) => ({
-    ...provided,
+  menu: (baseStyles: CSSObjectWithLabel) => ({
+    ...baseStyles,
     color: DefaultTheme.darkBlue,
     backgroundColor: DefaultTheme.lightGreen,
   }),
-  option: (provided: CSSObjectWithLabel, state: { isSelected: boolean; isFocused: boolean }) => {
+  option: (baseStyles: CSSObjectWithLabel, state: { isSelected: boolean; isFocused: boolean }) => {
     let backgroundColor = DefaultTheme.lightGreen
     if (state.isSelected) {
       backgroundColor = DefaultTheme.darkBlue
@@ -34,14 +34,14 @@ export const customSetUpDropdownStyles = {
     }
 
     return {
-      ...provided,
+      ...baseStyles,
       backgroundColor,
       color: state.isSelected ? DefaultTheme.lightGreen : DefaultTheme.darkBlue,
       cursor: 'pointer',
     }
   },
-  singleValue: (provided: CSSObjectWithLabel) => ({
-    ...provided,
+  singleValue: (baseStyles: CSSObjectWithLabel) => ({
+    ...baseStyles,
     transition: 'opacity 300ms',
     color: DefaultTheme.darkBlue,
   }),

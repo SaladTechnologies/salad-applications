@@ -26,17 +26,17 @@ const _Dropdown: FC<Props> = ({ classes, customStyles, options, value, onChange 
   const selectedValue = value && options?.find((option) => option.value === value)
 
   const defaultStyles = {
-    control: (provided: CSSObjectWithLabel) => ({
-      ...provided,
+    control: (baseStyles: CSSObjectWithLabel) => ({
+      ...baseStyles,
       backgroundColor: DefaultTheme.darkBlue,
       borderRadius: 0,
     }),
-    menu: (provided: CSSObjectWithLabel) => ({
-      ...provided,
+    menu: (baseStyles: CSSObjectWithLabel) => ({
+      ...baseStyles,
       color: DefaultTheme.lightGreen,
       backgroundColor: DefaultTheme.darkBlue,
     }),
-    option: (provided: CSSObjectWithLabel, state: { isSelected: boolean; isFocused: boolean }) => {
+    option: (baseStyles: CSSObjectWithLabel, state: { isSelected: boolean; isFocused: boolean }) => {
       let backgroundColor = DefaultTheme.darkBlue
       if (state.isSelected) {
         backgroundColor = DefaultTheme.lightGreen
@@ -45,14 +45,14 @@ const _Dropdown: FC<Props> = ({ classes, customStyles, options, value, onChange 
       }
 
       return {
-        ...provided,
+        ...baseStyles,
         backgroundColor,
         color: state.isSelected ? DefaultTheme.darkBlue : DefaultTheme.lightGreen,
         cursor: 'pointer',
       }
     },
-    singleValue: (provided: CSSObjectWithLabel, state: { isDisabled: boolean }) => ({
-      ...provided,
+    singleValue: (baseStyles: CSSObjectWithLabel, state: { isDisabled: boolean }) => ({
+      ...baseStyles,
       opacity: state.isDisabled ? 0.5 : 1,
       transition: 'opacity 300ms',
       color: DefaultTheme.lightGreen,
