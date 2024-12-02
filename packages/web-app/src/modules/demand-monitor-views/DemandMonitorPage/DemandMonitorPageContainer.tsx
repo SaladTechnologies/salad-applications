@@ -6,16 +6,19 @@ import { DemandMonitorPage } from './DemandMonitorPage'
 
 interface Props {
   isAuthenticated: boolean
+  isMobile: boolean
 }
 
-export const _DemandMonitorPageContainer: FC<Props> = ({ isAuthenticated }) => {
+export const _DemandMonitorPageContainer: FC<Props> = ({ isAuthenticated, isMobile }) => {
   const featureManager = useFeatureManager()
   const isDemandNotificationsFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.DemandNotifications)
+  const withGetNotifiedButton = isDemandNotificationsFeatureFlagEnabled && !isMobile && !isAuthenticated
 
-  return <DemandMonitorPage withGetNotifiedButton={!isAuthenticated && isDemandNotificationsFeatureFlagEnabled} />
+  return <DemandMonitorPage withGetNotifiedButton={withGetNotifiedButton} />
 }
 
-const mapStoreToProps = (store: RootStore): any => ({
+const mapStoreToProps = (store: RootStore, props: Props): any => ({
+  ...props,
   isAuthenticated: store.auth.isAuthenticated,
 })
 
