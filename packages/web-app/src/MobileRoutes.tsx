@@ -5,6 +5,7 @@ import { MobilePageNotFound } from './components'
 import { FeatureFlags, useFeatureManager } from './FeatureManager'
 import { MobileAccountSummaryContainer } from './modules/account-views-mobile'
 import { BackupCodesPageContainer } from './modules/backup-codes/BackupCodesPageContainer'
+import { DemandAlertsPageContainer } from './modules/demand-alerts-views'
 import { DemandMonitorPageContainer } from './modules/demand-monitor-views'
 import { MobileEarningSummaryContainer } from './modules/earn-views-mobile'
 import { PasskeyDeletePageContainer } from './modules/passkey-delete'
@@ -14,7 +15,7 @@ import { RewardDetailsContainer } from './modules/reward-views'
 const _Routes = ({ location }: RouteComponentProps) => {
   const featureManager = useFeatureManager()
   const isDemandMonitorFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.DemandMonitor)
-
+  const isDemandNotificationsFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.DemandNotifications)
   const currentLocation =
     (location.state as { currentLocation: Location | undefined } | undefined)?.currentLocation || location
   return (
@@ -23,6 +24,9 @@ const _Routes = ({ location }: RouteComponentProps) => {
         <Route exact path="/earn/summary" component={MobileEarningSummaryContainer} />
         {isDemandMonitorFeatureFlagEnabled && (
           <Route path="/earn/demand" exact component={DemandMonitorPageContainer} />
+        )}
+        {isDemandNotificationsFeatureFlagEnabled && (
+          <Route path="/account/alerts" exact component={DemandAlertsPageContainer} />
         )}
         <Route path="/account/summary" component={MobileAccountSummaryContainer} />
         <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
