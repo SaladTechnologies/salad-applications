@@ -4,16 +4,16 @@ import { FeatureFlags, useFeatureManager } from '../../../FeatureManager'
 import type { RootStore } from '../../../Store'
 import { DemandMonitorPage, type Props as DemandMonitorPageProps } from './DemandMonitorPage'
 
-interface Props extends DemandMonitorPageProps {
-  isAuthenticated: boolean
-}
-
-export const _DemandMonitorPageContainer: FC<Props> = ({ isAuthenticated, ...props }: Props) => {
+export const _DemandMonitorPageContainer: FC<DemandMonitorPageProps> = ({ isAuthenticated, ...props }) => {
   const featureManager = useFeatureManager()
   const isDemandNotificationsFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.DemandNotifications)
-  const withGetNotifiedButton = isDemandNotificationsFeatureFlagEnabled && !isAuthenticated
-
-  return <DemandMonitorPage {...props} withGetNotifiedButton={withGetNotifiedButton} />
+  return (
+    <DemandMonitorPage
+      {...props}
+      isAuthenticated={isAuthenticated}
+      withGetNotifiedButton={isDemandNotificationsFeatureFlagEnabled}
+    />
+  )
 }
 
 const mapStoreToProps = (store: RootStore): any => ({
@@ -22,6 +22,7 @@ const mapStoreToProps = (store: RootStore): any => ({
     store.auth.login()
   },
   fetchDemandedHardwarePerformanceList: store.demandMonitor.fetchDemandedHardwarePerformanceList,
+  navigateToDemandAlerts: () => store.routing.push('/account/alerts'),
   isAuthenticated: store.auth.isAuthenticated,
   demandedHardwarePerformanceList: store.demandMonitor.demandedHardwarePerformanceList,
 })
