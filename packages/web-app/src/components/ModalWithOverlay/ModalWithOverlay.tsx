@@ -31,7 +31,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     position: 'absolute',
     right: '16px',
     top: '16px',
-    color: '#DBF1C1',
+    color: theme.lightGreen,
     width: '16px',
     height: '16px',
     cursor: 'pointer',

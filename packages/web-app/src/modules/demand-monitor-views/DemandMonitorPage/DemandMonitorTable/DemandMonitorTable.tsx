@@ -14,7 +14,7 @@ import { getHardwareDemandLevel, sortHardwareDemandPerformance } from './utils'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   tableWrapper: {
-    fontFamily: 'Mallory',
+    fontFamily: theme.fontMallory,
     color: theme.lightGreen,
     fontSize: '16px',
     width: '100%',

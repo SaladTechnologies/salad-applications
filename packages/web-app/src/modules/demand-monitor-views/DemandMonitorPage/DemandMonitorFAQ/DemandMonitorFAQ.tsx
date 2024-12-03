@@ -17,14 +17,14 @@ export const styles = (theme: SaladTheme): Record<string, CSS.Properties> => ({
     textShadow: '0px 0px 24px rgba(178, 213, 48, 0.7)',
   },
   descriptionHeader: {
-    fontFamily: 'Mallory',
+    fontFamily: theme.fontMallory,
     color: theme.mediumGreen,
     fontSize: '16px',
     lineHeight: '24px',
     paddingBottom: '0px',
   },
   description: {
-    fontFamily: 'Mallory',
+    fontFamily: theme.fontMallory,
     color: theme.lightGreen,
     fontSize: '16px',
     lineHeight: '24px',

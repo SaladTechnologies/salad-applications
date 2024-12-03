@@ -53,7 +53,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     },
   },
   description: {
-    fontFamily: 'Mallory',
+    fontFamily: theme.fontMallory,
     color: theme.lightGreen,
     fontSize: '16px',
     lineHeight: '24px',

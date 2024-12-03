@@ -59,7 +59,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     position: 'absolute',
     right: '16px',
     top: '16px',
-    color: '#DBF1C1',
+    color: theme.lightGreen,
     width: '16px',
     height: '16px',
     cursor: 'pointer',
@@ -115,7 +115,7 @@ const _GetNotifiedDemandChangesModal = ({
           specific priority tier.
         </p>
         <div>
-          <h3 className={classes.subtitle}>Already have an account?</h3>
+          <h2 className={classes.subtitle}>Already have an account?</h2>
           <p className={classes.description}>
             Setting up alerts is easier and more powerful while{' '}
             <span onClick={onLoginClick} className={classes.link}>
@@ -123,7 +123,7 @@ const _GetNotifiedDemandChangesModal = ({
             </span>
           </p>
         </div>
-        <h3 className={classes.subtitle}>Not yet a chef? No problem!</h3>
+        <h2 className={classes.subtitle}>Not yet a chef? No problem!</h2>
         <p className={classes.description}>
           No need to create an account, simply select the GPU you wish to get alerts for and click continue.
         </p>
