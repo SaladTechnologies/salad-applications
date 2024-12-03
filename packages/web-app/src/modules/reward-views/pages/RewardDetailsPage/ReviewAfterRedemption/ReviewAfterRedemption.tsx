@@ -47,7 +47,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     height: '105px',
     flexGrow: 1,
     justifyContent: 'space-between',
-    minWidth: '500px',
+    minWidth: '550px',
     '& button': {
       height: '100%',
       width: '100%',
