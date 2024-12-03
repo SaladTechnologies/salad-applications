@@ -21,6 +21,7 @@ export const NavigationBarWithNotifications: FunctionComponent<NavigationBarWith
 }) => {
   const featureManager = useFeatureManager()
   const isAchievementsFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.Achievements)
+  const isDemandNotificationsFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.DemandNotifications)
 
   const accountNavigationMenuitems = [
     {
@@ -42,6 +43,10 @@ export const NavigationBarWithNotifications: FunctionComponent<NavigationBarWith
         isAchievementsFeatureFlagEnabled && {
           label: 'Achievements',
           link: '/account/achievements',
+        },
+        isDemandNotificationsFeatureFlagEnabled && {
+          label: 'Demand Alerts',
+          link: '/account/alerts',
         },
         {
           label: 'Logout',
