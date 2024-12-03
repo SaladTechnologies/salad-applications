@@ -18,7 +18,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     width: '100%',
     display: 'flex',
     backgroundColor: theme.darkBlue,
-    padding: '48px 110px 72px 300px',
+    padding: '48px 80px 72px 300px',
     flexDirection: 'column',
     alignItems: 'flex-start',
     maxWidth: '1000px',
@@ -47,6 +47,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     height: '105px',
     flexGrow: 1,
     justifyContent: 'space-between',
+    minWidth: '500px',
     '& button': {
       height: '100%',
       width: '100%',
