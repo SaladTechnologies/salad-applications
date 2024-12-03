@@ -1,14 +1,17 @@
 import { Button, Text } from '@saladtechnologies/garden-components'
 import { Bell } from '@saladtechnologies/garden-icons'
 import type CSS from 'csstype'
-import { type FunctionComponent } from 'react'
+import { useEffect, useRef, useState, type FunctionComponent } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { useMediaQuery } from 'react-responsive'
 import { mobileSize, Scrollbar } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
+import type { DemandedHardwarePerformance } from '../DemandMonitorStore'
 import { DemandMonitorFAQ } from './DemandMonitorFAQ'
-import { DemandMonitorTableContainer } from './DemandMonitorTable/DemandMonitorTableContainer'
+import { DemandMonitorTable } from './DemandMonitorTable'
+import { oneHourInMilliseconds } from './DemandMonitorTable/constants'
+import { GetNotifiedDemandChangesModal } from './GetNotifiedDemandChangesModal/GetNotifiedDemandChangesModal'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   pageWrapper: {
@@ -50,7 +53,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     },
   },
   description: {
-    fontFamily: 'Mallory',
+    fontFamily: theme.fontMallory,
     color: theme.lightGreen,
     fontSize: '16px',
     lineHeight: '24px',
@@ -60,11 +63,47 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     width: '100%',
   },
 })
-interface Props extends WithStyles<typeof styles> {
+export interface Props extends WithStyles<typeof styles> {
+  demandedHardwarePerformanceList?: DemandedHardwarePerformance[]
   withGetNotifiedButton: boolean
+  fetchDemandedHardwarePerformanceList: () => void
+  onLoginClick: () => void
 }
 
-const _DemandMonitorPage: FunctionComponent<Props> = ({ classes, withGetNotifiedButton }) => {
+const _DemandMonitorPage: FunctionComponent<Props> = ({
+  fetchDemandedHardwarePerformanceList,
+  onLoginClick,
+  withGetNotifiedButton,
+  demandedHardwarePerformanceList,
+  classes,
+}) => {
+  const [isModalShown, setIsModalShown] = useState(false)
+
+  const updateTimerRef = useRef<NodeJS.Timeout | null>(null)
+
+  useEffect(() => {
+    fetchDemandedHardwarePerformanceList()
+    updateTimerRef.current = setInterval(fetchDemandedHardwarePerformanceList, oneHourInMilliseconds)
+
+    return () => {
+      if (updateTimerRef.current) {
+        clearInterval(updateTimerRef.current)
+      }
+    }
+  }, [fetchDemandedHardwarePerformanceList])
+
+  const handleModalCloseClick = () => {
+    setIsModalShown(false)
+  }
+
+  const handleModalContinueClick = () => {
+    setIsModalShown(false)
+  }
+
+  const handleGetNotifiedButtonClick = () => {
+    setIsModalShown(true)
+  }
+
   const getPageContent = () => {
     return (
       <div className={classes.pageWrapper}>
@@ -78,16 +117,30 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({ classes, withGetNotified
               refreshed hourly.
             </Text>
             {withGetNotifiedButton && (
-              <Button width={148} leadingIcon={<Bell />} label="Get Notified" variant="secondary" />
+              <Button
+                width={148}
+                leadingIcon={<Bell />}
+                label="Get Notified"
+                variant="secondary"
+                onClick={handleGetNotifiedButtonClick}
+              />
             )}
           </div>
           <div className={classes.sectionWrapper}>
-            <DemandMonitorTableContainer />
+            <DemandMonitorTable demandedHardwarePerformanceList={demandedHardwarePerformanceList} />
           </div>
           <div className={classes.sectionWrapper}>
             <DemandMonitorFAQ />
           </div>
         </div>
+        {isModalShown && (
+          <GetNotifiedDemandChangesModal
+            onLoginClick={onLoginClick}
+            onCloseClick={handleModalCloseClick}
+            onContinuesClick={handleModalContinueClick}
+            demandedHardwarePerformanceList={demandedHardwarePerformanceList}
+          />
+        )}
       </div>
     )
   }
