@@ -17,7 +17,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#00000070',
-    fontFamily: 'Mallory',
+    fontFamily: theme.fontMallory,
     top: '0px',
     left: '0px',
   },
