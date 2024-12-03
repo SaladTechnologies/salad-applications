@@ -16,6 +16,10 @@ const styles: () => Record<string, CSS.Properties> = () => ({
   dropdownContainer: {
     display: 'flex',
     gap: '20px',
+    flexDirection: 'row',
+    '@media (max-width: 812px)': {
+      flexDirection: 'column',
+    },
   },
   dropdownContentContainer: {
     display: 'flex',
