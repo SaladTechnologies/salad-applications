@@ -6,6 +6,8 @@ import { useMediaQuery } from 'react-responsive'
 import { Head, mobileSize, Scrollbar } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
 import { withLogin } from '../../auth-views'
+import { DemandAlertsList } from './DemandAlertsList'
+import { DemandAlertsSetUp } from './DemandAlertsSetUp'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   page: {
@@ -16,6 +18,13 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
   demandAlertsPageDescription: {
     display: 'block',
+    maxWidth: '650px',
+  },
+  demandContentContainer: {
+    marginTop: '20px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '20px',
     maxWidth: '650px',
   },
 })
@@ -33,6 +42,10 @@ const _DemandAlertsPage = ({ classes }: Props) => {
           You can set up alerts to be notified when the demand level of a GPU reaches your sweet spot, even at a
           specific payout tier. When that scenario arrives we will notify you through email and an in-app message.
         </Text>
+        <div className={classes.demandContentContainer}>
+          <DemandAlertsSetUp />
+          <DemandAlertsList />
+        </div>
       </Layout>
     </div>
   )
