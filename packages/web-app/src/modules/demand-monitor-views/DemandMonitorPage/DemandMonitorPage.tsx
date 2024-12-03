@@ -77,7 +77,7 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
   demandedHardwarePerformanceList,
   classes,
 }) => {
-  const [isModalShown, setIsModalShown] = useState(true)
+  const [isModalShown, setIsModalShown] = useState(false)
 
   const updateTimerRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -100,6 +100,10 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
     setIsModalShown(false)
   }
 
+  const handleGetNotifiedButtonClick = () => {
+    setIsModalShown(true)
+  }
+
   const getPageContent = () => {
     return (
       <div className={classes.pageWrapper}>
@@ -113,7 +117,13 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
               refreshed hourly.
             </Text>
             {withGetNotifiedButton && (
-              <Button width={148} leadingIcon={<Bell />} label="Get Notified" variant="secondary" />
+              <Button
+                width={148}
+                leadingIcon={<Bell />}
+                label="Get Notified"
+                variant="secondary"
+                onClick={handleGetNotifiedButtonClick}
+              />
             )}
           </div>
           <div className={classes.sectionWrapper}>
