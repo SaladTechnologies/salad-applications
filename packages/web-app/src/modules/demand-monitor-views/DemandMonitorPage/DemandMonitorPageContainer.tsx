@@ -17,7 +17,10 @@ export const _DemandMonitorPageContainer: FC<Props> = ({ isAuthenticated, ...pro
 }
 
 const mapStoreToProps = (store: RootStore): any => ({
-  onLoginClick: store.auth.login,
+  onLoginClick: () => {
+    store.analytics.trackButtonClicked('login_button', 'Log In Button', 'enabled')
+    store.auth.login()
+  },
   fetchDemandedHardwarePerformanceList: store.demandMonitor.fetchDemandedHardwarePerformanceList,
   isAuthenticated: store.auth.isAuthenticated,
   demandedHardwarePerformanceList: store.demandMonitor.demandedHardwarePerformanceList,
