@@ -92,6 +92,17 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
     }
   }, [fetchDemandedHardwarePerformanceList])
 
+  useEffect(() => {
+    fetchDemandedHardwarePerformanceList()
+    updateTimerRef.current = setInterval(fetchDemandedHardwarePerformanceList, oneHourInMilliseconds)
+
+    return () => {
+      if (updateTimerRef.current) {
+        clearInterval(updateTimerRef.current)
+      }
+    }
+  }, [fetchDemandedHardwarePerformanceList])
+
   const handleModalCloseClick = () => {
     setIsModalShown(false)
   }

@@ -4,6 +4,7 @@ import { demandMonitorGpuEndpointPath } from './constants'
 
 export interface DemandedHardwarePerformance {
   name: string
+  displayName: string
   earningRates: {
     avgEarning: number
     avgEarningTimeMinutes: number
