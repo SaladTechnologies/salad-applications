@@ -20,6 +20,9 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     fontFamily: theme.fontMallory,
     top: '0px',
     left: '0px',
+    '@media (max-height: 670px)': {
+      alignItems: 'flex-start',
+    },
   },
   modalContainer: {
     position: 'relative',
