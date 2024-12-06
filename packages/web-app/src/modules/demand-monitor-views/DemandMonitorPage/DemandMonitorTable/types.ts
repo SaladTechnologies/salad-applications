@@ -21,7 +21,7 @@ export interface DemandMonitorTableSort {
   sortOrder: 'ascending' | 'descending' | 'none'
 }
 export interface DemandMonitorTableColumn {
-  key: 'gpu' | 'recommendedSpecs' | 'demand' | 'avgEarning' | 'avgRunningTime'
+  key: 'gpu' | 'recommendedSpecs' | 'demand' | 'avgEarningRate'
   displayName: string
   sortRule: DemandMonitorTableSortRule
 }
