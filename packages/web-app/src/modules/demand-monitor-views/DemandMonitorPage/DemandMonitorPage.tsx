@@ -65,17 +65,21 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 })
 export interface Props extends WithStyles<typeof styles> {
   demandedHardwarePerformanceList?: DemandedHardwarePerformance[]
+  isAuthenticated: boolean
   withGetNotifiedButton: boolean
+  navigateToDemandAlerts: () => void
   fetchDemandedHardwarePerformanceList: () => void
   onLoginClick: () => void
 }
 
 const _DemandMonitorPage: FunctionComponent<Props> = ({
+  demandedHardwarePerformanceList,
+  isAuthenticated,
+  withGetNotifiedButton,
+  classes,
+  navigateToDemandAlerts,
   fetchDemandedHardwarePerformanceList,
   onLoginClick,
-  withGetNotifiedButton,
-  demandedHardwarePerformanceList,
-  classes,
 }) => {
   const [isModalShown, setIsModalShown] = useState(false)
 
@@ -101,7 +105,11 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
   }
 
   const handleGetNotifiedButtonClick = () => {
-    setIsModalShown(true)
+    if (isAuthenticated) {
+      navigateToDemandAlerts()
+    } else {
+      setIsModalShown(true)
+    }
   }
 
   const getPageContent = () => {
