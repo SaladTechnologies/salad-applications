@@ -33,8 +33,21 @@ export const sortHardwareDemandPerformance = ({
 export const sortByDemand = (hardwareA: DemandedHardwarePerformance, hardwareB: DemandedHardwarePerformance) =>
   hardwareB.utilizationPct - hardwareA.utilizationPct
 
-export const sortByAvgEarnings = (hardwareA: DemandedHardwarePerformance, hardwareB: DemandedHardwarePerformance) =>
-  hardwareB.earningRates.avgEarning - hardwareA.earningRates.avgEarning
+export const sortByAvgEarningsRate = (
+  hardwareA: DemandedHardwarePerformance,
+  hardwareB: DemandedHardwarePerformance,
+) => {
+  const avgEarningTimeHoursHardwareA = hardwareA.earningRates.avgEarningTimeMinutes / 60
+  const avgRunningTimeHardwareA = Math.round(avgEarningTimeHoursHardwareA * 10) / 10
+  const avgEarningTimeHoursHardwareB = hardwareB.earningRates.avgEarningTimeMinutes / 60
+  const avgRunningTimeHardwareB = Math.round(avgEarningTimeHoursHardwareB * 10) / 10
+  const avgEarningsRateHardwareA =
+    avgRunningTimeHardwareA && hardwareA.earningRates.avgEarning / avgRunningTimeHardwareA
+  const avgEarningsRateHardwareB =
+    avgRunningTimeHardwareB && hardwareB.earningRates.avgEarning / avgRunningTimeHardwareB
+
+  return avgEarningsRateHardwareB - avgEarningsRateHardwareA
+}
 
 export const sortByAvgRunningTime = (hardwareA: DemandedHardwarePerformance, hardwareB: DemandedHardwarePerformance) =>
   hardwareB.earningRates.avgEarningTimeMinutes - hardwareA.earningRates.avgEarningTimeMinutes
