@@ -27,6 +27,10 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     flexDirection: 'column',
     alignItems: 'flex-start',
     boxSizing: 'border-box',
+    '@media (max-width: 812px)': {
+      padding: '24px 16px 36px 16px',
+      width: '100%',
+    },
   },
   title: {
     color: theme.green,
@@ -34,6 +38,9 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     display: 'flex',
     flexDirection: 'column',
     fontSize: '28px',
+    '@media (max-width: 812px)': {
+      fontSize: '20px',
+    },
   },
   subtitle: {
     color: theme.green,
@@ -61,6 +68,9 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     position: 'relative',
     height: '500px',
     width: '35%',
+    '@media (max-width: 812px)': {
+      display: 'none',
+    },
   },
   saladImage: {
     position: 'absolute',
