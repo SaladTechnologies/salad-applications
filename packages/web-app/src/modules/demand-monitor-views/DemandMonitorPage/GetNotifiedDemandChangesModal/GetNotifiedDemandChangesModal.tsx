@@ -129,7 +129,7 @@ const _GetNotifiedDemandChangesModal = ({
   onContinuesClick,
 }: Props) => {
   const demandHardwareOptions = demandedHardwarePerformanceList?.map((demandHardware) => ({
-    label: demandHardware.name,
+    label: demandHardware.displayName,
     value: demandHardware.name,
   }))
 
