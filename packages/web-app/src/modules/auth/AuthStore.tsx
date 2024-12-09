@@ -36,12 +36,12 @@ export class AuthStore {
   }
 
   @action
-  public login = async (): Promise<void> => {
+  public login = async (redirect_uri?: string): Promise<void> => {
     // Don't do anything if we are already logged in
     try {
       await this.axios.get('/api/v1/profile').then(() => runInAction(() => (this.isAuthenticated = true)))
     } catch {
-      const routeWithoutTrailingSlash = this.store.routing.location.pathname.slice(1)
+      const routeWithoutTrailingSlash = redirect_uri ?? this.store.routing.location.pathname.slice(1)
 
       window.location.assign(`${config.loginUrl}?redirect_uri=${routeWithoutTrailingSlash}`)
     }
