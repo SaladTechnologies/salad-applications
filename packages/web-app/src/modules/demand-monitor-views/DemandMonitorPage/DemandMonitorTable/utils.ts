@@ -33,7 +33,7 @@ export const sortHardwareDemandPerformance = ({
 export const sortByDemand = (hardwareA: DemandedHardwarePerformance, hardwareB: DemandedHardwarePerformance) =>
   hardwareB.utilizationPct - hardwareA.utilizationPct
 
-export const sortByAvgEarnings = (hardwareA: DemandedHardwarePerformance, hardwareB: DemandedHardwarePerformance) =>
+export const sortByAvgEarningsRate = (hardwareA: DemandedHardwarePerformance, hardwareB: DemandedHardwarePerformance) =>
   hardwareB.earningRates.avgEarning - hardwareA.earningRates.avgEarning
 
 export const sortByAvgRunningTime = (hardwareA: DemandedHardwarePerformance, hardwareB: DemandedHardwarePerformance) =>

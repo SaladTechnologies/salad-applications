@@ -191,8 +191,6 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({ classes, demandedHardwa
           <tbody>
             {sortedDemandedHardwarePerformanceList.map(({ name, earningRates, recommendedSpecs, utilizationPct }) => {
               const demand = getHardwareDemandLevel(utilizationPct)
-              const avgEarningTimeHours = earningRates.avgEarningTimeMinutes / 60
-              const avgRunningTime = Math.round(avgEarningTimeHours * 10) / 10
 
               return (
                 <tr key={name}>
@@ -227,13 +225,6 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({ classes, demandedHardwa
                     <div className={classes.tableCellCentered}>
                       <Text className={classes.boldText} variant="baseM">
                         ${earningRates.avgEarning}
-                      </Text>
-                    </div>
-                  </td>
-                  <td className={classes.tableCell}>
-                    <div className={classes.tableCellCentered}>
-                      <Text className={classes.boldText} variant="baseM">
-                        {avgRunningTime} hours
                       </Text>
                     </div>
                   </td>
