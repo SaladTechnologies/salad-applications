@@ -19,7 +19,7 @@ export const _DemandMonitorPageContainer: FC<DemandMonitorPageProps> = ({ isAuth
 const mapStoreToProps = (store: RootStore): any => ({
   onLoginClick: () => {
     store.analytics.trackButtonClicked('login_button', 'Log In Button', 'enabled')
-    store.auth.login()
+    store.auth.login('/account/alerts')
   },
   fetchDemandedHardwarePerformanceList: store.demandMonitor.fetchDemandedHardwarePerformanceList,
   navigateToDemandAlerts: () => store.routing.push('/account/alerts'),
