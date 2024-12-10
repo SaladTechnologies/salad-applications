@@ -394,6 +394,11 @@ export class AnalyticsStore {
     this.track('Uninstall')
   }
 
+  /** Track when marketing touchpoint data in the storage */
+  public trackMarketingTouchpoint = (marketingTouchpointTimestamp: string, utmTags: Record<string, string>) => {
+    this.track('Marketing Touchpoint', { OriginalTimestamp: marketingTouchpointTimestamp, ...utmTags })
+  }
+
   public trackUnleashEvent = (event: string, properties: { [key: string]: any }) => {
     this.track(event, properties)
   }
