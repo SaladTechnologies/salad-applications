@@ -12,6 +12,7 @@ import { DemandMonitorFAQ } from './DemandMonitorFAQ'
 import { DemandMonitorTable } from './DemandMonitorTable'
 import { oneHourInMilliseconds } from './DemandMonitorTable/constants'
 import { GetNotifiedDemandChangesModal } from './GetNotifiedDemandChangesModal/GetNotifiedDemandChangesModal'
+import { SubscriptionDemandChangesModal } from './SubscriptionDemandChangesModal/SubscriptionDemandChangesModal'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   pageWrapper: {
@@ -63,6 +64,13 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     width: '100%',
   },
 })
+
+enum SubscriptionStep {
+  'SelectGpu' = 'SelectGpu',
+  'Subscribe' = 'Subscribe',
+  'Inactive' = 'Inactive',
+}
+
 export interface Props extends WithStyles<typeof styles> {
   demandedHardwarePerformanceList?: DemandedHardwarePerformance[]
   isAuthenticated: boolean
@@ -81,7 +89,15 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
   fetchDemandedHardwarePerformanceList,
   onLoginClick,
 }) => {
-  const [isModalShown, setIsModalShown] = useState(false)
+  const [currentSubscriptionStep, setCurrentSubscriptionStep] = useState<SubscriptionStep>(SubscriptionStep.Inactive)
+  const initialSelectedDemandHardwareName = demandedHardwarePerformanceList?.[0]?.name
+  const [selectedDemandHardwareName, setSelectedDemandHardwareName] = useState<string | undefined>(
+    initialSelectedDemandHardwareName,
+  )
+
+  useEffect(() => {
+    setSelectedDemandHardwareName(initialSelectedDemandHardwareName)
+  }, [initialSelectedDemandHardwareName])
 
   const updateTimerRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -96,20 +112,24 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
     }
   }, [fetchDemandedHardwarePerformanceList])
 
-  const handleModalCloseClick = () => {
-    setIsModalShown(false)
-  }
-
-  const handleModalContinueClick = () => {
-    setIsModalShown(false)
-  }
-
   const handleGetNotifiedButtonClick = () => {
     if (isAuthenticated) {
       navigateToDemandAlerts()
     } else {
-      setIsModalShown(true)
+      setCurrentSubscriptionStep(SubscriptionStep.SelectGpu)
     }
+  }
+
+  const handleModalCloseClick = () => {
+    setCurrentSubscriptionStep(SubscriptionStep.Inactive)
+  }
+
+  const handleGetNotifiedContinueButtonClick = () => {
+    setCurrentSubscriptionStep(SubscriptionStep.Subscribe)
+  }
+
+  const handleSelectedHardwareNameChange = (selectedDemandHardwareName: string) => {
+    setSelectedDemandHardwareName(selectedDemandHardwareName)
   }
 
   const getPageContent = () => {
@@ -141,12 +161,19 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
             <DemandMonitorFAQ />
           </div>
         </div>
-        {isModalShown && (
+        {currentSubscriptionStep === SubscriptionStep.SelectGpu && (
           <GetNotifiedDemandChangesModal
             onLoginClick={onLoginClick}
             onCloseClick={handleModalCloseClick}
-            onContinuesClick={handleModalContinueClick}
+            onContinueClick={handleGetNotifiedContinueButtonClick}
             demandedHardwarePerformanceList={demandedHardwarePerformanceList}
+            onSelectedHardwareNameChange={handleSelectedHardwareNameChange}
+          />
+        )}
+        {currentSubscriptionStep === SubscriptionStep.Subscribe && selectedDemandHardwareName && (
+          <SubscriptionDemandChangesModal
+            onCloseClick={handleModalCloseClick}
+            demandHardwareName={selectedDemandHardwareName}
           />
         )}
       </div>

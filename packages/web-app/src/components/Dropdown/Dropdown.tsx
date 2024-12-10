@@ -11,16 +11,16 @@ const styles = (theme: SaladTheme) => ({
     fontSize: 12,
   },
 })
-interface Option {
+export interface DropdownOption {
   label: string
   value: string
 }
 
-export type DropdownStylesConfig = StylesConfig<Option | '', false, GroupBase<Option | ''>>
+export type DropdownStylesConfig = StylesConfig<DropdownOption | '', false, GroupBase<DropdownOption | ''>>
 
 export interface Props extends WithStyles<typeof styles> {
   customStyles?: DropdownStylesConfig
-  options?: Option[]
+  options?: DropdownOption[]
   value?: string
   onChange?: (value?: any) => void
 }
