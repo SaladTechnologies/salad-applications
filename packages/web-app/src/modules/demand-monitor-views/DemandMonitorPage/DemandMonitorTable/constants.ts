@@ -1,5 +1,11 @@
 import type { Demand, DemandMonitorTableColumn } from './types'
-import { sortByAvgEarningsRate, sortByDemand, sortByHourlyRate, sortByRecommendedSpecs } from './utils'
+import {
+  sortByAvgEarningRate,
+  sortByDemand,
+  sortByHourlyRate,
+  sortByRecommendedSpecs,
+  sortByTop25PctEarningRate,
+} from './utils'
 
 interface DemandPillColors {
   text: string
@@ -39,8 +45,13 @@ export const demandMonitorTableColumns: Record<DemandMonitorTableColumn['key'], 
   },
   avgEarningRate: {
     key: 'avgEarningRate',
-    displayName: 'Average Earnings Rate',
-    sortRule: sortByAvgEarningsRate,
+    displayName: 'Average Earning Rate, hourly',
+    sortRule: sortByAvgEarningRate,
+  },
+  top25PctEarningRate: {
+    key: 'top25PctEarningRate',
+    displayName: 'Average Earning Rate Top 25%, hourly',
+    sortRule: sortByTop25PctEarningRate,
   },
 }
 

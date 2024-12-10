@@ -6,8 +6,8 @@ export interface DemandedHardwarePerformance {
   name: string
   displayName: string
   earningRates: {
-    avgEarning: number
-    avgEarningTimeMinutes: number
+    avgEarningRate: number
+    top25PctEarningRate: number
     maxEarningRate: number
     minEarningRate: number
   }
