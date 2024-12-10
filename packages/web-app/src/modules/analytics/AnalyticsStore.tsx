@@ -394,7 +394,7 @@ export class AnalyticsStore {
     this.track('Uninstall')
   }
 
-  /** Track when marketing touchpoint data in the storage */
+  /** Tracks marketing touchpoint data when available from cookies and local storage. */
   public trackMarketingTouchpoint = (marketingTouchpointTimestamp: string, utmTags: Record<string, string>) => {
     this.track('Marketing Touchpoint', { OriginalTimestamp: marketingTouchpointTimestamp, ...utmTags })
   }
