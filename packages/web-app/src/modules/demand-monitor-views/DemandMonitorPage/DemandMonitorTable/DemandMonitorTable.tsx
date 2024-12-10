@@ -189,57 +189,59 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({ classes, demandedHardwa
             </tr>
           </thead>
           <tbody>
-            {sortedDemandedHardwarePerformanceList.map(({ name, earningRates, recommendedSpecs, utilizationPct }) => {
-              const demand = getHardwareDemandLevel(utilizationPct)
-              const avgEarningTimeHours = earningRates.avgEarningTimeMinutes / 60
-              const avgRunningTime = Math.round(avgEarningTimeHours * 10) / 10
+            {sortedDemandedHardwarePerformanceList.map(
+              ({ displayName, earningRates, recommendedSpecs, utilizationPct }) => {
+                const demand = getHardwareDemandLevel(utilizationPct)
+                const avgEarningTimeHours = earningRates.avgEarningTimeMinutes / 60
+                const avgRunningTime = Math.round(avgEarningTimeHours * 10) / 10
 
-              return (
-                <tr key={name}>
-                  <td className={classNames(classes.gpuWrapper, classes.tableCell, classes.greenTableCell)}>
-                    <div className={classes.greenTableCellDivider}></div>
-                    <Text className={classes.gpuName} variant="baseS">
-                      {name}
-                    </Text>
-                    <Text variant="baseXS">HOURLY RATE</Text>
-                    <Text variant="baseXS">
-                      ${earningRates.minEarningRate} - ${earningRates.maxEarningRate}
-                    </Text>
-                  </td>
-                  <td className={classes.tableCell}>
-                    <div className={classes.tableCellCentered}>
-                      <Text variant="baseXS">{recommendedSpecs.ramGb} GB System RAM</Text>
-                      <Text variant="baseXS">120 GB Storage</Text>
-                    </div>
-                  </td>
-                  <td className={classes.tableCell}>
-                    <div
-                      className={classes.demandPill}
-                      style={{
-                        backgroundColor: demandPillColors[demand].background,
-                        color: demandPillColors[demand].text,
-                      }}
-                    >
-                      <Text variant="baseXS">{demand}</Text>
-                    </div>
-                  </td>
-                  <td className={classes.tableCell}>
-                    <div className={classes.tableCellCentered}>
-                      <Text className={classes.boldText} variant="baseM">
-                        ${earningRates.avgEarning}
+                return (
+                  <tr key={displayName}>
+                    <td className={classNames(classes.gpuWrapper, classes.tableCell, classes.greenTableCell)}>
+                      <div className={classes.greenTableCellDivider}></div>
+                      <Text className={classes.gpuName} variant="baseS">
+                        {displayName}
                       </Text>
-                    </div>
-                  </td>
-                  <td className={classes.tableCell}>
-                    <div className={classes.tableCellCentered}>
-                      <Text className={classes.boldText} variant="baseM">
-                        {avgRunningTime} hours
+                      <Text variant="baseXS">HOURLY RATE</Text>
+                      <Text variant="baseXS">
+                        ${earningRates.minEarningRate} - ${earningRates.maxEarningRate}
                       </Text>
-                    </div>
-                  </td>
-                </tr>
-              )
-            })}
+                    </td>
+                    <td className={classes.tableCell}>
+                      <div className={classes.tableCellCentered}>
+                        <Text variant="baseXS">{recommendedSpecs.ramGb} GB System RAM</Text>
+                        <Text variant="baseXS">120 GB Storage</Text>
+                      </div>
+                    </td>
+                    <td className={classes.tableCell}>
+                      <div
+                        className={classes.demandPill}
+                        style={{
+                          backgroundColor: demandPillColors[demand].background,
+                          color: demandPillColors[demand].text,
+                        }}
+                      >
+                        <Text variant="baseXS">{demand}</Text>
+                      </div>
+                    </td>
+                    <td className={classes.tableCell}>
+                      <div className={classes.tableCellCentered}>
+                        <Text className={classes.boldText} variant="baseM">
+                          ${earningRates.avgEarning}
+                        </Text>
+                      </div>
+                    </td>
+                    <td className={classes.tableCell}>
+                      <div className={classes.tableCellCentered}>
+                        <Text className={classes.boldText} variant="baseM">
+                          {avgRunningTime} hours
+                        </Text>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              },
+            )}
           </tbody>
         </table>
       </div>
