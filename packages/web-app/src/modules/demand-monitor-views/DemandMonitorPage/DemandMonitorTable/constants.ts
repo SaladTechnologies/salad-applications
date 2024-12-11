@@ -1,10 +1,10 @@
 import type { Demand, DemandMonitorTableColumn } from './types'
 import {
-  sortByAvgEarnings,
-  sortByAvgRunningTime,
+  sortByAvgEarningRate,
   sortByDemand,
   sortByHourlyRate,
   sortByRecommendedSpecs,
+  sortByTop25PctEarningRate,
 } from './utils'
 
 interface DemandPillColors {
@@ -43,15 +43,15 @@ export const demandMonitorTableColumns: Record<DemandMonitorTableColumn['key'], 
     displayName: 'Demand',
     sortRule: sortByDemand,
   },
-  avgEarning: {
-    key: 'avgEarning',
-    displayName: 'Average Earnings 24/h',
-    sortRule: sortByAvgEarnings,
+  avgEarningRate: {
+    key: 'avgEarningRate',
+    displayName: 'Average Earning Rate, hourly',
+    sortRule: sortByAvgEarningRate,
   },
-  avgRunningTime: {
-    key: 'avgRunningTime',
-    displayName: 'Average Running Time 24/h',
-    sortRule: sortByAvgRunningTime,
+  top25PctEarningRate: {
+    key: 'top25PctEarningRate',
+    displayName: 'Average Earning Rate Top 25%, hourly',
+    sortRule: sortByTop25PctEarningRate,
   },
 }
 
