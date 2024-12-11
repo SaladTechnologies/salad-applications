@@ -19,7 +19,6 @@ import { NovuNotificationBanner } from './modules/notifications-views/components
 import { Routes } from './Routes'
 import type { SaladTheme } from './SaladTheme'
 import type { RootStore } from './Store'
-import { getCookie } from './utils'
 
 const styles = (theme: SaladTheme) => ({
   mainWindow: {
@@ -109,7 +108,6 @@ const searchConfig = {
 interface AppProps extends WithStyles<typeof styles> {
   isAuthenticated: boolean
   setErrorBoundary: (errorBoundary: UseErrorBoundaryApi<Error>) => void
-  trackMarketingTouchpoint: (marketingTouchpointTimestamp: string, utmTags: Record<string, string>) => void
   withInstallReminder: boolean
   novuSignature: string
   history: History
@@ -120,7 +118,6 @@ export const _App = ({
   history,
   isAuthenticated,
   setErrorBoundary,
-  trackMarketingTouchpoint,
   novuSignature,
   withInstallReminder,
 }: AppProps) => {
@@ -133,29 +130,6 @@ export const _App = ({
   useEffect(() => {
     setErrorBoundary(errorBoundary)
   }, [setErrorBoundary, errorBoundary])
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      const marketingTouchpointTimestamp = localStorage.getItem('marketingTouchpointTimestamp')
-
-      const mixpanelCookie = JSON.parse(getCookie('mp_68db9194f229525012624f3cf368921f_mixpanel') ?? '{}')
-      const utmTagsKeys = Object.keys(mixpanelCookie).filter((key: string) => key.startsWith('utm_'))
-
-      if (marketingTouchpointTimestamp && utmTagsKeys.length > 0) {
-        const utmTags = utmTagsKeys.reduce<Record<string, string>>((acc, key) => {
-          // Transform keys by removing underscores because Mixpanel does not support keys in snake case.
-          const normalizedKey = key.replace('_', '')
-          if (mixpanelCookie[key]) {
-            acc[normalizedKey] = mixpanelCookie[key]
-          }
-          return acc
-        }, {})
-
-        localStorage.removeItem('marketingTouchpointTimestamp')
-        trackMarketingTouchpoint(marketingTouchpointTimestamp, utmTags)
-      }
-    }
-  }, [isAuthenticated, trackMarketingTouchpoint])
 
   return (
     <>
@@ -204,7 +178,6 @@ const mapStoreToProps = (store: RootStore, props: AppProps): any => ({
   isAuthenticated: store.auth.isAuthenticated,
   novuSignature: store.profile.novuSignature,
   setErrorBoundary: store.errorBoundary.setErrorBoundary,
-  trackMarketingTouchpoint: store.analytics.trackMarketingTouchpoint,
   withInstallReminder: store.profile.withInstallReminder,
 })
 
