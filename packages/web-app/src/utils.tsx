@@ -49,3 +49,11 @@ export const isProblemDetail = (data: unknown): data is { type: string; [key: st
 
   return false
 }
+
+export const getCookie = (name: string): string | null => {
+  const matches = document.cookie.match(
+    new RegExp('(?:^|; )' + name.replace(/([\\.$?*|{}\\(\\)\\[\]\\\\/\\+^])/g, '\\$1') + '=([^;]*)'),
+  )
+
+  return matches && matches[1] ? decodeURIComponent(matches[1]) : null
+}

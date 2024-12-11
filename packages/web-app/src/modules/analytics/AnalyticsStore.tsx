@@ -1,16 +1,19 @@
 import mixpanel from 'mixpanel-browser'
+import { autorun } from 'mobx'
 import { hotjar } from 'react-hotjar'
 import { config } from '../../config'
+import type { AuthStore } from '../auth'
 import type { NotificationMessage } from '../notifications/models'
 import type { Profile } from '../profile/models'
 import type { Reward } from '../reward/models'
 import { getRewardAvailability } from '../reward/utils'
+import { getUtmTagsFromCookie } from './util'
 
 export class AnalyticsStore {
   private started = false
   private mixpanelInitialized = false
 
-  constructor() {
+  constructor(private readonly auth: AuthStore) {
     hotjar.initialize({ id: 2225817, sv: 6 })
 
     const token = config.mixpanelToken
@@ -24,6 +27,19 @@ export class AnalyticsStore {
       api_host: `${config.apiBaseUrl}/api/v2/mixpanel`,
       ignore_dnt: true,
       secure_cookie: true,
+      loaded: () => {
+        autorun(() => {
+          if (this.auth.isAuthenticated) {
+            const marketingTouchpointTimestamp = localStorage.getItem('marketingTouchpointTimestamp')
+            const utmTags = getUtmTagsFromCookie()
+
+            if (marketingTouchpointTimestamp && Object.keys(utmTags).length > 0) {
+              localStorage.removeItem('marketingTouchpointTimestamp')
+              this.trackMarketingTouchpoint(marketingTouchpointTimestamp, utmTags)
+            }
+          }
+        })
+      },
     })
   }
 
@@ -392,6 +408,11 @@ export class AnalyticsStore {
   /** Track when user load exit-survey page as a result of the app uninstall */
   public trackUninstall = () => {
     this.track('Uninstall')
+  }
+
+  /** Tracks marketing touchpoint data when available from cookies and local storage. */
+  public trackMarketingTouchpoint = (marketingTouchpointTimestamp: string, utmTags: Record<string, string>) => {
+    this.track('Marketing Touchpoint', { OriginalTimestamp: marketingTouchpointTimestamp, ...utmTags })
   }
 
   public trackUnleashEvent = (event: string, properties: { [key: string]: any }) => {
