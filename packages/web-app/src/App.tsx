@@ -135,25 +135,27 @@ export const _App = ({
   }, [setErrorBoundary, errorBoundary])
 
   useEffect(() => {
-    const marketingTouchpointTimestamp = localStorage.getItem('marketingTouchpointTimestamp')
+    if (isAuthenticated) {
+      const marketingTouchpointTimestamp = localStorage.getItem('marketingTouchpointTimestamp')
 
-    const mixpanelCookie = JSON.parse(getCookie('mp_68db9194f229525012624f3cf368921f_mixpanel') ?? '{}')
-    const utmTagsKeys = Object.keys(mixpanelCookie).filter((key: string) => key.startsWith('utm_'))
+      const mixpanelCookie = JSON.parse(getCookie('mp_68db9194f229525012624f3cf368921f_mixpanel') ?? '{}')
+      const utmTagsKeys = Object.keys(mixpanelCookie).filter((key: string) => key.startsWith('utm_'))
 
-    if (marketingTouchpointTimestamp && utmTagsKeys.length > 0) {
-      const utmTags = utmTagsKeys.reduce<Record<string, string>>((acc, key) => {
-        // Transform keys by removing underscores because Mixpanel does not support keys in snake case.
-        const normalizedKey = key.replace('_', '')
-        if (mixpanelCookie[key]) {
-          acc[normalizedKey] = mixpanelCookie[key]
-        }
-        return acc
-      }, {})
+      if (marketingTouchpointTimestamp && utmTagsKeys.length > 0) {
+        const utmTags = utmTagsKeys.reduce<Record<string, string>>((acc, key) => {
+          // Transform keys by removing underscores because Mixpanel does not support keys in snake case.
+          const normalizedKey = key.replace('_', '')
+          if (mixpanelCookie[key]) {
+            acc[normalizedKey] = mixpanelCookie[key]
+          }
+          return acc
+        }, {})
 
-      localStorage.removeItem('marketingTouchpointTimestamp')
-      trackMarketingTouchpoint(marketingTouchpointTimestamp, utmTags)
+        localStorage.removeItem('marketingTouchpointTimestamp')
+        trackMarketingTouchpoint(marketingTouchpointTimestamp, utmTags)
+      }
     }
-  }, [trackMarketingTouchpoint])
+  }, [isAuthenticated, trackMarketingTouchpoint])
 
   return (
     <>
