@@ -1,13 +1,12 @@
-import { Button } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
+import { useEffect } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
-import type { DropdownOption } from '../../../../components/Dropdown'
-import { DropdownLight } from '../../../../components/Dropdown'
 import { ModalWithOverlay } from '../../../../components/ModalWithOverlay'
-import type { DemandedHardwarePerformance } from '../../DemandMonitorStore'
 import saladBackgroundUrl from '../assets/background.png'
+import { mailchimpFormDataByHardwareName } from './constants'
+import { getMailchimpSubscriptionForm } from './utils'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   modalWrapper: {
@@ -16,8 +15,10 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     flexDirection: 'row',
-    maxWidth: '700px',
-    maxHeight: '430px',
+    '@media (min-width: 812px)': {
+      width: '736px',
+      maxWidth: 'none',
+    },
   },
   modalContent: {
     position: 'relative',
@@ -27,7 +28,6 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     flexDirection: 'column',
     alignItems: 'flex-start',
     boxSizing: 'border-box',
-    maxWidth: '560px',
     '@media (max-width: 812px)': {
       padding: '24px 16px 36px 16px',
       width: '100%',
@@ -112,33 +112,34 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   continueButtonWrapper: {
     marginLeft: '260px',
   },
+  subscriptionFormWrapper: {
+    color: theme.darkBlue,
+    backgroundColor: theme.white,
+    width: '500px',
+    '@media (max-width: 812px)': {
+      width: '100%',
+    },
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
+  demandHardwareName: string
   className?: string
-  demandedHardwarePerformanceList?: DemandedHardwarePerformance[]
-  onLoginClick: () => void
   onCloseClick: () => void
-  onContinueClick: () => void
-  onSelectedHardwareNameChange: (selectedDemandHardwareName: string) => void
 }
 
-const _GetNotifiedDemandChangesModal = ({
-  classes,
-  demandedHardwarePerformanceList,
-  onLoginClick,
-  onCloseClick,
-  onContinueClick,
-  onSelectedHardwareNameChange,
-}: Props) => {
-  const demandHardwareOptions = demandedHardwarePerformanceList?.map((demandHardware) => ({
-    label: demandHardware.displayName,
-    value: demandHardware.name,
-  }))
+const _SubscriptionDemandChangesModal = ({ classes, demandHardwareName, onCloseClick }: Props) => {
+  useEffect(() => {
+    const subscriptionForm = document.getElementById('mc-embedded-subscribe-form') as HTMLFormElement
+    subscriptionForm.onsubmit = () => {
+      onCloseClick()
+      subscriptionForm.submit()
+    }
+  }, [onCloseClick])
 
-  const handleHardwareOptionChange = (demandHardwareOption: DropdownOption) => {
-    onSelectedHardwareNameChange(demandHardwareOption.value)
-  }
+  const formHtml = mailchimpFormDataByHardwareName[demandHardwareName]
+    ? getMailchimpSubscriptionForm(mailchimpFormDataByHardwareName[demandHardwareName])
+    : null
 
   return (
     <ModalWithOverlay onCloseClick={onCloseClick}>
@@ -148,39 +149,13 @@ const _GetNotifiedDemandChangesModal = ({
         </div>
         <div className={classes.modalContent}>
           <h1 className={classes.title}>Get Notified Of Demand Changes</h1>
-          <p className={classes.description}>
-            You can set up alerts to be notified when the demand level of a GPU reaches your sweet spot, even at a
-            specific priority tier.
-          </p>
-          <div>
-            <h2 className={classes.subtitle}>Already have an account?</h2>
-            <p className={classes.description}>
-              Setting up alerts is easier and more powerful while{' '}
-              <span onClick={onLoginClick} className={classes.link}>
-                logged in
-              </span>
-            </p>
-          </div>
-          <h2 className={classes.subtitle}>Not yet a chef? No problem!</h2>
-          <p className={classes.description}>
-            No need to create an account, simply select the GPU you wish to get alerts for and click continue.
-          </p>
-          <div className={classes.controlsWrapper}>
-            <div className={classes.dropdownWrapper}>
-              <div className={classes.dropdown}>
-                {demandHardwareOptions && (
-                  <DropdownLight options={demandHardwareOptions} onChange={handleHardwareOptionChange} />
-                )}
-              </div>
-            </div>
-            <div className={classes.continueButtonWrapper}>
-              <Button variant="secondary" onClick={onContinueClick} label="Continue" width={100} />
-            </div>
-          </div>
+          {formHtml && (
+            <div className={classes.subscriptionFormWrapper} dangerouslySetInnerHTML={{ __html: formHtml }} />
+          )}
         </div>
       </div>
     </ModalWithOverlay>
   )
 }
 
-export const GetNotifiedDemandChangesModal = withStyles(styles)(_GetNotifiedDemandChangesModal)
+export const SubscriptionDemandChangesModal = withStyles(styles)(_SubscriptionDemandChangesModal)
