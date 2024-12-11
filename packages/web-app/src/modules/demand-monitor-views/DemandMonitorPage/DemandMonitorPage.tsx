@@ -128,10 +128,6 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
     setCurrentSubscriptionStep(SubscriptionStep.Subscribe)
   }
 
-  const handleSelectedHardwareNameChange = (selectedDemandHardwareName: string) => {
-    setSelectedDemandHardwareName(selectedDemandHardwareName)
-  }
-
   const getPageContent = () => {
     return (
       <div className={classes.pageWrapper}>
@@ -167,7 +163,7 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
             onCloseClick={handleModalCloseClick}
             onContinueClick={handleGetNotifiedContinueButtonClick}
             demandedHardwarePerformanceList={demandedHardwarePerformanceList}
-            onSelectedHardwareNameChange={handleSelectedHardwareNameChange}
+            onSelectedHardwareNameChange={setSelectedDemandHardwareName}
           />
         )}
         {currentSubscriptionStep === SubscriptionStep.Subscribe && selectedDemandHardwareName && (
