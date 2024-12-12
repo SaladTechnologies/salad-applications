@@ -115,7 +115,6 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 })
 
 interface Props extends WithStyles<typeof styles> {
-  className?: string
   demandedHardwarePerformanceList?: DemandedHardwarePerformance[]
   onLoginClick: () => void
   onCloseClick: () => void
