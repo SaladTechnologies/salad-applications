@@ -1,6 +1,6 @@
 import type { AxiosInstance } from 'axios'
 import { action, flow, observable } from 'mobx'
-import { demandMonitorSubscriptionsPath } from './constants'
+import { demandSubscriptionsPath } from './constants'
 
 export interface DemandedSubscription {
   createdAt: string
@@ -10,7 +10,7 @@ export interface DemandedSubscription {
   utilizationPct: number
 }
 
-export enum CreateNewSubscriptionStatus {
+export enum SubscribeToDemandAlertStatus {
   UNKNOWN = 'unknown',
   SUBMITTING = 'submitting',
   SUCCESS = 'success',
@@ -18,7 +18,7 @@ export enum CreateNewSubscriptionStatus {
   ALREADY_EXISTS = 'failure:subscription-already-exists',
   INVALID_GPU = 'failure:invalid-gpu',
 }
-export enum CancelSubscriptionStatus {
+export enum UnsubscribeFromDemandAlertStatus {
   UNKNOWN = 'unknown',
   SUBMITTING = 'submitting',
   SUCCESS = 'success',
@@ -29,74 +29,74 @@ export class DemandAlertsStore {
   constructor(private readonly axios: AxiosInstance) {}
 
   @observable
-  public createNewSubscriptionStatus: CreateNewSubscriptionStatus = CreateNewSubscriptionStatus.UNKNOWN
+  public subscribeToDemandAlertStatus: SubscribeToDemandAlertStatus = SubscribeToDemandAlertStatus.UNKNOWN
 
   @observable
-  public cancelSubscriptionStatus: CancelSubscriptionStatus = CancelSubscriptionStatus.UNKNOWN
+  public unsubscribeFromDemandAlertStatus: UnsubscribeFromDemandAlertStatus = UnsubscribeFromDemandAlertStatus.UNKNOWN
 
   @observable
-  public demandedSubscriptionList?: DemandedSubscription[]
+  public demandAlertSubscriptionList?: DemandedSubscription[]
 
   @action.bound
-  fetchDemandedSubscriptionList = flow(function* (this: DemandAlertsStore) {
+  fetchDemandAlertSubscriptionList = flow(function* (this: DemandAlertsStore) {
     try {
-      const demandedSubscriptionListResponse = yield this.axios.get(demandMonitorSubscriptionsPath)
-      this.demandedSubscriptionList = demandedSubscriptionListResponse.data
+      const demandAlertSubscriptionListResponse = yield this.axios.get(demandSubscriptionsPath)
+      this.demandAlertSubscriptionList = demandAlertSubscriptionListResponse.data
     } catch (error) {
-      console.error('DemandAlertsStore -> fetchDemandedSubscriptionList: ', error)
+      console.error('DemandAlertsStore -> fetchDemandAlertSubscriptionList: ', error)
     }
   })
 
   @action.bound
-  createNewSubscription = flow(function* (this: DemandAlertsStore, gpuName: string, utilizationPct: number) {
+  subscribeToDemandAlert = flow(function* (this: DemandAlertsStore, gpuName: string, utilizationPct: number) {
     try {
-      this.createNewSubscriptionStatus = CreateNewSubscriptionStatus.SUBMITTING
-      yield this.axios.post(demandMonitorSubscriptionsPath, {
+      this.subscribeToDemandAlertStatus = SubscribeToDemandAlertStatus.SUBMITTING
+      yield this.axios.post(demandSubscriptionsPath, {
         gpuName,
         utilizationPct,
       })
-      this.fetchDemandedSubscriptionList()
-      this.createNewSubscriptionStatus = CreateNewSubscriptionStatus.SUCCESS
+      this.fetchDemandAlertSubscriptionList()
+      this.subscribeToDemandAlertStatus = SubscribeToDemandAlertStatus.SUCCESS
     } catch (error) {
-      this.createNewSubscriptionStatus = this.mapErrorToCreateNewSubscriptionStatus(error)
-      console.error('DemandAlertsStore -> createNewSubscription: ', error)
+      this.subscribeToDemandAlertStatus = this.mapErrorToSubscribeToDemandAlertStatus(error)
+      console.error('DemandAlertsStore -> subscribeToDemandAlert: ', error)
     }
   })
 
-  private mapErrorToCreateNewSubscriptionStatus(error: any): CreateNewSubscriptionStatus {
-    if (!error || typeof error !== 'object') return CreateNewSubscriptionStatus.FAILURE
+  private mapErrorToSubscribeToDemandAlertStatus(error: any): SubscribeToDemandAlertStatus {
+    if (!error || typeof error !== 'object') return SubscribeToDemandAlertStatus.FAILURE
 
     const errorResponse = error.response?.data
     switch (errorResponse?.type) {
       case 'subscription:create:already-exists':
-        return CreateNewSubscriptionStatus.ALREADY_EXISTS
+        return SubscribeToDemandAlertStatus.ALREADY_EXISTS
       case 'subscription:create:invalid-gpu':
-        return CreateNewSubscriptionStatus.INVALID_GPU
+        return SubscribeToDemandAlertStatus.INVALID_GPU
       default:
-        return CreateNewSubscriptionStatus.FAILURE
+        return SubscribeToDemandAlertStatus.FAILURE
     }
   }
 
   @action.bound
-  setCreateNewSubscriptionStatus = (createNewSubscriptionStatus: CreateNewSubscriptionStatus) => {
-    this.createNewSubscriptionStatus = createNewSubscriptionStatus
+  setSubscribeToDemandAlertStatus = (subscribeToDemandAlertStatus: SubscribeToDemandAlertStatus) => {
+    this.subscribeToDemandAlertStatus = subscribeToDemandAlertStatus
   }
 
   @action.bound
-  cancelSubscription = flow(function* (this: DemandAlertsStore, subscriptionId: string) {
+  unsubscribeFromDemandAlert = flow(function* (this: DemandAlertsStore, subscriptionId: string) {
     try {
-      this.cancelSubscriptionStatus = CancelSubscriptionStatus.SUBMITTING
-      yield this.axios.delete(`${demandMonitorSubscriptionsPath}/${subscriptionId}`)
-      this.fetchDemandedSubscriptionList()
-      this.cancelSubscriptionStatus = CancelSubscriptionStatus.SUCCESS
+      this.unsubscribeFromDemandAlertStatus = UnsubscribeFromDemandAlertStatus.SUBMITTING
+      yield this.axios.delete(`${demandSubscriptionsPath}/${subscriptionId}`)
+      this.fetchDemandAlertSubscriptionList()
+      this.unsubscribeFromDemandAlertStatus = UnsubscribeFromDemandAlertStatus.SUCCESS
     } catch (error) {
-      this.cancelSubscriptionStatus = CancelSubscriptionStatus.FAILURE
-      console.error('DemandAlertsStore -> cancelSubscription: ', error)
+      this.unsubscribeFromDemandAlertStatus = UnsubscribeFromDemandAlertStatus.FAILURE
+      console.error('DemandAlertsStore -> unsubscribeFromDemandAlert: ', error)
     }
   })
 
   @action.bound
-  setCancelSubscriptionStatus = (cancelSubscriptionStatus: CancelSubscriptionStatus) => {
-    this.cancelSubscriptionStatus = cancelSubscriptionStatus
+  setUnsubscribeFromDemandAlertStatus = (unsubscribeFromDemandAlertStatus: UnsubscribeFromDemandAlertStatus) => {
+    this.unsubscribeFromDemandAlertStatus = unsubscribeFromDemandAlertStatus
   }
 }

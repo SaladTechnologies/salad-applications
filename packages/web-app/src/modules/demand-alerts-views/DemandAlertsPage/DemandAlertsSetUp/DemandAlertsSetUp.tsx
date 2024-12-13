@@ -9,7 +9,7 @@ import { DropdownLight } from '../../../../components/Dropdown'
 import { DefaultTheme } from '../../../../SaladTheme'
 import type { DemandedHardwarePerformance } from '../../../demand-monitor-views/DemandMonitorStore'
 import { demandScenario } from '../../constants'
-import { CreateNewSubscriptionStatus } from '../../DemandAlertsStore'
+import { SubscribeToDemandAlertStatus } from '../../DemandAlertsStore'
 import { getCreateNewSubscriptionErrorText } from './utils'
 
 const styles: () => Record<string, CSS.Properties> = () => ({
@@ -41,22 +41,22 @@ const styles: () => Record<string, CSS.Properties> = () => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  createNewSubscription: (gpuName: string, utilizationPct: number) => void
-  createNewSubscriptionStatus: CreateNewSubscriptionStatus
   demandedHardwarePerformanceList?: DemandedHardwarePerformance[]
   fetchDemandedHardwarePerformanceList: () => void
-  setCreateNewSubscriptionStatus: (createNewSubscriptionStatus: CreateNewSubscriptionStatus) => void
+  setSubscribeToDemandAlertStatus: (subscribeToDemandAlertStatus: SubscribeToDemandAlertStatus) => void
+  subscribeToDemandAlert: (gpuName: string, utilizationPct: number) => void
+  subscribeToDemandAlertStatus: SubscribeToDemandAlertStatus
 }
 
 const _DemandAlertsSetUp: FunctionComponent<Props> = ({
   classes,
-  createNewSubscription,
-  createNewSubscriptionStatus,
   demandedHardwarePerformanceList,
   fetchDemandedHardwarePerformanceList,
-  setCreateNewSubscriptionStatus,
+  setSubscribeToDemandAlertStatus,
+  subscribeToDemandAlert,
+  subscribeToDemandAlertStatus,
 }) => {
-  const createNewSubscriptionErrorText = getCreateNewSubscriptionErrorText(createNewSubscriptionStatus)
+  const createNewSubscriptionErrorText = getCreateNewSubscriptionErrorText(subscribeToDemandAlertStatus)
 
   const demandHardwareOptions = demandedHardwarePerformanceList?.map((demandHardware) => ({
     label: demandHardware.displayName,
@@ -77,23 +77,23 @@ const _DemandAlertsSetUp: FunctionComponent<Props> = ({
     fetchDemandedHardwarePerformanceList()
     setSelectedDemandHardwareValue(initialSelectedDemandHardwareValue)
     return () => {
-      setCreateNewSubscriptionStatus(CreateNewSubscriptionStatus.UNKNOWN)
+      setSubscribeToDemandAlertStatus(SubscribeToDemandAlertStatus.UNKNOWN)
     }
-  }, [initialSelectedDemandHardwareValue, fetchDemandedHardwarePerformanceList, setCreateNewSubscriptionStatus])
+  }, [initialSelectedDemandHardwareValue, fetchDemandedHardwarePerformanceList, setSubscribeToDemandAlertStatus])
 
   const handleDemandHardwareOptionChange = (demandHardwareOption: DropdownOption) => {
     setSelectedDemandHardwareValue(demandHardwareOption.value)
-    setCreateNewSubscriptionStatus(CreateNewSubscriptionStatus.UNKNOWN)
+    setSubscribeToDemandAlertStatus(SubscribeToDemandAlertStatus.UNKNOWN)
   }
 
   const handleDemandScenarioOptionChange = (demandScenarioOption: DropdownOption) => {
     setSelectedDemandScenarioValue(demandScenarioOption.value)
-    setCreateNewSubscriptionStatus(CreateNewSubscriptionStatus.UNKNOWN)
+    setSubscribeToDemandAlertStatus(SubscribeToDemandAlertStatus.UNKNOWN)
   }
 
   const handleAddAlert = () => {
     if (selectedDemandHardwareValue && selectedDemandScenarioValue) {
-      createNewSubscription(selectedDemandHardwareValue, Number(selectedDemandScenarioValue))
+      subscribeToDemandAlert(selectedDemandHardwareValue, Number(selectedDemandScenarioValue))
     }
   }
 
@@ -114,7 +114,7 @@ const _DemandAlertsSetUp: FunctionComponent<Props> = ({
             </div>
           </div>
           <Button
-            isLoading={createNewSubscriptionStatus === CreateNewSubscriptionStatus.SUBMITTING}
+            isLoading={subscribeToDemandAlertStatus === SubscribeToDemandAlertStatus.SUBMITTING}
             onClick={handleAddAlert}
             label="Add Alert"
             outlineColor={DefaultTheme.darkBlue}

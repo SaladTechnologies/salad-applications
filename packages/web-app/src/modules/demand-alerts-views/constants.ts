@@ -1,4 +1,4 @@
-export const demandMonitorSubscriptionsPath = '/api/v2/demand-monitor/subscriptions'
+export const demandSubscriptionsPath = '/api/v2/demand-monitor/subscriptions'
 
 export const mockedGpuNames = [
   { label: 'NVIDIA RTX 4090', value: 'NVIDIA RTX 4090' },

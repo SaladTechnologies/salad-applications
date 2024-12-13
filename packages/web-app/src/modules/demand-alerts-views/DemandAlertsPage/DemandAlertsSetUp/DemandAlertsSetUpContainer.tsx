@@ -3,11 +3,11 @@ import type { RootStore } from '../../../../Store'
 import { DemandAlertsSetUp } from './DemandAlertsSetUp'
 
 const mapStoreToProps = (store: RootStore): any => ({
-  createNewSubscription: store.demandAlerts.createNewSubscription,
-  createNewSubscriptionStatus: store.demandAlerts.createNewSubscriptionStatus,
   demandedHardwarePerformanceList: store.demandMonitor.demandedHardwarePerformanceList,
   fetchDemandedHardwarePerformanceList: store.demandMonitor.fetchDemandedHardwarePerformanceList,
-  setCreateNewSubscriptionStatus: store.demandAlerts.setCreateNewSubscriptionStatus,
+  setSubscribeToDemandAlertStatus: store.demandAlerts.setSubscribeToDemandAlertStatus,
+  subscribeToDemandAlert: store.demandAlerts.subscribeToDemandAlert,
+  subscribeToDemandAlertStatus: store.demandAlerts.subscribeToDemandAlertStatus,
 })
 
 export const DemandAlertsSetUpContainer = connect(mapStoreToProps, DemandAlertsSetUp)

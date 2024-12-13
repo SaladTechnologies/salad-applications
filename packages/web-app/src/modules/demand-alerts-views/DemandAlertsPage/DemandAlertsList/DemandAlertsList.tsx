@@ -7,7 +7,7 @@ import { ErrorText } from '../../../../components'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { DefaultTheme } from '../../../../SaladTheme'
 import type { DemandedSubscription } from '../../DemandAlertsStore'
-import { CancelSubscriptionStatus } from '../../DemandAlertsStore'
+import { UnsubscribeFromDemandAlertStatus } from '../../DemandAlertsStore'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   container: {
@@ -39,20 +39,20 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 })
 
 interface Props extends WithStyles<typeof styles> {
-  cancelSubscription: (subscriptionId: string) => void
-  cancelSubscriptionStatus: CancelSubscriptionStatus
-  demandedSubscriptionList?: DemandedSubscription[]
-  fetchDemandedSubscriptionList: () => void
-  setCancelSubscriptionStatus: (cancelSubscriptionStatus: CancelSubscriptionStatus) => void
+  demandAlertSubscriptionList?: DemandedSubscription[]
+  fetchDemandAlertSubscriptionList: () => void
+  setUnsubscribeFromDemandAlertStatus: (unsubscribeFromDemandAlertStatus: UnsubscribeFromDemandAlertStatus) => void
+  unsubscribeFromDemandAlert: (subscriptionId: string) => void
+  unsubscribeFromDemandAlertStatus: UnsubscribeFromDemandAlertStatus
 }
 
 const _DemandAlertsList: FunctionComponent<Props> = ({
   classes,
-  cancelSubscription,
-  cancelSubscriptionStatus,
-  demandedSubscriptionList,
-  fetchDemandedSubscriptionList,
-  setCancelSubscriptionStatus,
+  demandAlertSubscriptionList,
+  fetchDemandAlertSubscriptionList,
+  setUnsubscribeFromDemandAlertStatus,
+  unsubscribeFromDemandAlert,
+  unsubscribeFromDemandAlertStatus,
 }) => {
   const [currentDemandedSubscriptionId, setCurrentDemandedSubscriptionId] = useState<string | null>(null)
 
@@ -63,39 +63,41 @@ const _DemandAlertsList: FunctionComponent<Props> = ({
   }
 
   useEffect(() => {
-    fetchDemandedSubscriptionList()
+    fetchDemandAlertSubscriptionList()
     return () => {
-      setCancelSubscriptionStatus(CancelSubscriptionStatus.UNKNOWN)
+      setUnsubscribeFromDemandAlertStatus(UnsubscribeFromDemandAlertStatus.UNKNOWN)
     }
-  }, [fetchDemandedSubscriptionList, setCancelSubscriptionStatus])
+  }, [fetchDemandAlertSubscriptionList, setUnsubscribeFromDemandAlertStatus])
 
   const handleCancelSubscription = (demandedSubscriptionId: string) => {
-    cancelSubscription(demandedSubscriptionId)
+    unsubscribeFromDemandAlert(demandedSubscriptionId)
     setCurrentDemandedSubscriptionId(demandedSubscriptionId)
   }
 
   return (
-    demandedSubscriptionList &&
-    demandedSubscriptionList?.length > 0 && (
+    demandAlertSubscriptionList &&
+    demandAlertSubscriptionList?.length > 0 && (
       <div className={classes.container}>
         <Text variant="baseXL">Manage your existing alerts</Text>
         <Text variant="baseS">You will get alerted on the following scenarios:</Text>
         <div className={classes.existingAlertsContainer}>
-          {demandedSubscriptionList.map((demandedSubscription) => {
-            const isCurrentDemandedSubscriptionId = currentDemandedSubscriptionId === demandedSubscription.id
+          {demandAlertSubscriptionList.map((demandAlertSubscription) => {
+            const isCurrentDemandedSubscriptionId = currentDemandedSubscriptionId === demandAlertSubscription.id
 
             const withCancelSubscriptionSubmitting =
-              cancelSubscriptionStatus === CancelSubscriptionStatus.SUBMITTING && isCurrentDemandedSubscriptionId
+              unsubscribeFromDemandAlertStatus === UnsubscribeFromDemandAlertStatus.SUBMITTING &&
+              isCurrentDemandedSubscriptionId
             const withCancelSubscriptionFailure =
-              cancelSubscriptionStatus === CancelSubscriptionStatus.FAILURE && isCurrentDemandedSubscriptionId
+              unsubscribeFromDemandAlertStatus === UnsubscribeFromDemandAlertStatus.FAILURE &&
+              isCurrentDemandedSubscriptionId
             return (
               <>
                 <div className={classes.alertContainer}>
                   <Text variant="baseS">
-                    {demandedSubscription.gpuDisplayName} @ {demandScenario[demandedSubscription.utilizationPct]}
+                    {demandAlertSubscription.gpuDisplayName} @ {demandScenario[demandAlertSubscription.utilizationPct]}
                   </Text>
                   <Button
-                    onClick={() => handleCancelSubscription(demandedSubscription.id)}
+                    onClick={() => handleCancelSubscription(demandAlertSubscription.id)}
                     isLoading={withCancelSubscriptionSubmitting}
                     outlineColor={DefaultTheme.white}
                     label="Unsubscribe"
