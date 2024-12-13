@@ -110,7 +110,7 @@ const _DemandAlertsSetUp: FunctionComponent<Props> = ({
             </div>
             <div className={classes.dropdownContentContainer}>
               <Text variant="baseS">Demand Scenario</Text>
-              <DropdownLight options={demandScenario} onChange={handleDemandScenarioOptionChange} />
+              <DropdownLight options={Object.values(demandScenario)} onChange={handleDemandScenarioOptionChange} />
             </div>
           </div>
           <Button

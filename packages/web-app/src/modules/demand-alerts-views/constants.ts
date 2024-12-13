@@ -1,3 +1,5 @@
+import type { DropdownOption } from "../../components/Dropdown"
+
 export const demandSubscriptionsPath = '/api/v2/demand-monitor/subscriptions'
 
 export const mockedGpuNames = [
@@ -6,8 +8,8 @@ export const mockedGpuNames = [
   { label: 'NVIDIA RTX 4070 Ti Super', value: 'NVIDIA RTX 4070 Ti Super' },
 ]
 
-export const demandScenario = [
-  { label: 'High Demand', value: '80' },
-  { label: 'Moderate Demand', value: '50' },
-  { label: 'Low Demand', value: '0' },
-]
+export const demandScenario: Record<number, DropdownOption> = {
+  80: { label: 'High Demand', value: '80' },
+  50: { label: 'Moderate Demand', value: '50' },
+  0: { label: 'Low Demand', value: '0' },
+}

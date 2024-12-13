@@ -6,6 +6,7 @@ import withStyles from 'react-jss'
 import { ErrorText } from '../../../../components'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { DefaultTheme } from '../../../../SaladTheme'
+import { demandScenario } from '../../constants'
 import type { DemandedSubscription } from '../../DemandAlertsStore'
 import { UnsubscribeFromDemandAlertStatus } from '../../DemandAlertsStore'
 
@@ -56,12 +57,6 @@ const _DemandAlertsList: FunctionComponent<Props> = ({
 }) => {
   const [currentDemandedSubscriptionId, setCurrentDemandedSubscriptionId] = useState<string | null>(null)
 
-  const demandScenario: Record<number, string> = {
-    0: 'Low Demand',
-    50: 'Moderate Demand',
-    80: 'High Demand',
-  }
-
   useEffect(() => {
     fetchDemandAlertSubscriptionList()
     return () => {
@@ -90,11 +85,13 @@ const _DemandAlertsList: FunctionComponent<Props> = ({
             const withCancelSubscriptionFailure =
               unsubscribeFromDemandAlertStatus === UnsubscribeFromDemandAlertStatus.FAILURE &&
               isCurrentDemandedSubscriptionId
+            const utilizationPctLabel = demandScenario[demandAlertSubscription.utilizationPct]?.label
+
             return (
               <>
                 <div className={classes.alertContainer}>
                   <Text variant="baseS">
-                    {demandAlertSubscription.gpuDisplayName} @ {demandScenario[demandAlertSubscription.utilizationPct]}
+                    {demandAlertSubscription.gpuDisplayName} @ {utilizationPctLabel}
                   </Text>
                   <Button
                     onClick={() => handleCancelSubscription(demandAlertSubscription.id)}
