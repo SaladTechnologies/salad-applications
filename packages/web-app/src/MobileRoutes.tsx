@@ -5,7 +5,7 @@ import { MobilePageNotFound } from './components'
 import { FeatureFlags, useFeatureManager } from './FeatureManager'
 import { MobileAccountSummaryContainer } from './modules/account-views-mobile'
 import { BackupCodesPageContainer } from './modules/backup-codes/BackupCodesPageContainer'
-import { DemandAlertsPageContainer } from './modules/demand-alerts-views'
+import { DemandAlertsPage } from './modules/demand-alerts-views'
 import { DemandMonitorPageContainer } from './modules/demand-monitor-views'
 import { MobileEarningSummaryContainer } from './modules/earn-views-mobile'
 import { PasskeyDeletePageContainer } from './modules/passkey-delete'
@@ -25,9 +25,7 @@ const _Routes = ({ location }: RouteComponentProps) => {
         {isDemandMonitorFeatureFlagEnabled && (
           <Route path="/earn/demand" exact component={DemandMonitorPageContainer} />
         )}
-        {isDemandNotificationsFeatureFlagEnabled && (
-          <Route path="/account/alerts" exact component={DemandAlertsPageContainer} />
-        )}
+        {isDemandNotificationsFeatureFlagEnabled && <Route path="/account/alerts" exact component={DemandAlertsPage} />}
         <Route path="/account/summary" component={MobileAccountSummaryContainer} />
         <Route exact path="/rewards/:id" component={RewardDetailsContainer} />
         <Redirect exact from="/account/summary" to="/account/summary" />
