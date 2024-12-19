@@ -6,8 +6,8 @@ import { useMediaQuery } from 'react-responsive'
 import { Head, mobileSize, Scrollbar } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
 import { withLogin } from '../../auth-views'
-import { DemandAlertsList } from './DemandAlertsList'
-import { DemandAlertsSetUp } from './DemandAlertsSetUp'
+import { DemandAlertsListContainer } from './DemandAlertsList'
+import { DemandAlertsSetUpContainer } from './DemandAlertsSetUp'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   page: {
@@ -43,8 +43,8 @@ const _DemandAlertsPage = ({ classes }: Props) => {
           specific payout tier. When that scenario arrives we will notify you through email and an in-app message.
         </Text>
         <div className={classes.demandContentContainer}>
-          <DemandAlertsSetUp />
-          <DemandAlertsList />
+          <DemandAlertsSetUpContainer />
+          <DemandAlertsListContainer />
         </div>
       </Layout>
     </div>
