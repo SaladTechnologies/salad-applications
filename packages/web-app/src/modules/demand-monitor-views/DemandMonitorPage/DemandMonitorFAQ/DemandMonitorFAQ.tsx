@@ -46,7 +46,7 @@ interface Props extends WithStyles<typeof styles> {}
 
 const _DemandMonitorFAQ: FunctionComponent<Props> = ({ classes }) => {
   const handleAllFaqClick = () => {
-    window.location.href = 'https://support.salad.com/collection/13-faq'
+    window.location.href = 'https://support.salad.com/article/613-network-monitor'
   }
 
   return (
