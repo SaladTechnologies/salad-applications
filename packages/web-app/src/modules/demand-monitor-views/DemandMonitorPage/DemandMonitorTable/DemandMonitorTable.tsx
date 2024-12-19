@@ -202,7 +202,7 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({ classes, demandedHardwa
                       </Text>
                       <Text variant="baseXS">HOURLY RATE</Text>
                       <Text variant="baseXS">
-                        ${earningRates.minEarningRate} - ${earningRates.maxEarningRate}
+                        ${earningRates.maxEarningRate} - ${earningRates.minEarningRate}
                       </Text>
                     </td>
                     <td className={classes.tableCell}>
