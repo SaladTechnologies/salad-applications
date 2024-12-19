@@ -1,4 +1,5 @@
-import type { Demand, DemandMonitorTableColumn } from './types'
+import type { DemandedHardwarePerformance } from '../../DemandMonitorStore'
+import type { DemandMonitorTableColumn } from './types'
 import {
   sortByAvgEarningRate,
   sortByDemand,
@@ -12,7 +13,7 @@ interface DemandPillColors {
   background: string
 }
 
-export const demandPillColors: Record<Demand, DemandPillColors> = {
+export const demandPillColors: Record<DemandedHardwarePerformance['demandTierName'], DemandPillColors> = {
   Low: {
     text: 'white',
     background: '#546470',

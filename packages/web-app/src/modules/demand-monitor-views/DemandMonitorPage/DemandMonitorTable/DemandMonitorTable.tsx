@@ -10,7 +10,7 @@ import type { SaladTheme } from '../../../../SaladTheme'
 import type { DemandedHardwarePerformance } from '../../DemandMonitorStore'
 import { demandMonitorTableColumns, demandPillColors } from './constants'
 import type { DemandMonitorTableColumn, DemandMonitorTableSort } from './types'
-import { getHardwareDemandLevel, sortHardwareDemandPerformance } from './utils'
+import { sortHardwareDemandPerformance } from './utils'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   tableWrapper: {
@@ -190,9 +190,7 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({ classes, demandedHardwa
           </thead>
           <tbody>
             {sortedDemandedHardwarePerformanceList.map(
-              ({ displayName, earningRates, recommendedSpecs, utilizationPct }) => {
-                const demand = getHardwareDemandLevel(utilizationPct)
-
+              ({ displayName, earningRates, recommendedSpecs, demandTierName }) => {
                 return (
                   <tr key={displayName}>
                     <td className={classNames(classes.gpuWrapper, classes.tableCell, classes.greenTableCell)}>
@@ -215,11 +213,11 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({ classes, demandedHardwa
                       <div
                         className={classes.demandPill}
                         style={{
-                          backgroundColor: demandPillColors[demand].background,
-                          color: demandPillColors[demand].text,
+                          backgroundColor: demandPillColors[demandTierName].background,
+                          color: demandPillColors[demandTierName].text,
                         }}
                       >
-                        <Text variant="baseXS">{demand}</Text>
+                        <Text variant="baseXS">{demandTierName}</Text>
                       </div>
                     </td>
                     <td className={classes.tableCell}>
