@@ -1,2 +1,1 @@
-export * from './DemandAlertsPageContainer'
-
+export * from './DemandAlertsPage'
