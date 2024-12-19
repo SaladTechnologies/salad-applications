@@ -46,7 +46,7 @@ interface Props extends WithStyles<typeof styles> {}
 
 const _DemandMonitorFAQ: FunctionComponent<Props> = ({ classes }) => {
   const handleAllFaqClick = () => {
-    window.location.href = 'https://support.salad.com/collection/13-faq'
+    window.location.href = 'https://support.salad.com/article/613-network-monitor'
   }
 
   return (
@@ -73,27 +73,50 @@ const _DemandMonitorFAQ: FunctionComponent<Props> = ({ classes }) => {
           </Text>
         </div>
         <Text as="h3" className={classes.descriptionHeader}>
-          What do the demand levels mean?
+          What do the demand levels mean:
         </Text>
         <div className={classes.descriptionWrapper}>
           <Text className={classes.description}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin mattis quam lacinia vestibulum efficitur.
-            Donec a ex ut elit sollicitudin rhoncus a nec ipsum. Quisque mattis tincidunt dolor, vel molestie diam
-            fermentum ut. Maecenas aliquet in elit id pharetra. Ut tortor tellus, interdum quis faucibus quis, pulvinar
-            id lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec suscipit nunc. Nunc velit
-            nulla, tincidunt vel lacinia ac, porta et velit. 
+            The demand for any GPU in the table (each line) can be marked with one of the three following values:
+            <ul>
+              <li>
+                <strong>Low</strong>
+              </li>
+            </ul>
+            A GPU marked with Low demand suggests that there are currently more Chefs that are actively Chopping and
+            waiting for a job than there are jobs available.
+            <ul>
+              <li>
+                <strong>Moderate</strong>
+              </li>
+            </ul>
+            A GPU marked with Moderate demand suggests that jobs are available in the network for this GPU class, but
+            there may still be some periods where the machine remains idle since there are more Chefs Chopping than
+            there are jobs.
+            <ul>
+              <li>
+                <strong>High</strong>
+              </li>
+            </ul>
+            A GPU marked with High demand suggests that Chefs with this type of hardware should see minimal gaps in
+            their earning experience, and the machines should be able to get jobs fairly consistently.
+          </Text>
+        </div>
+        <div className={classes.descriptionWrapper}>
+          <Text className={classes.description}>
+            Note that even though a GPU type may be in Low or Moderate supply, there are likely still jobs available for
+            these machines - though Chefs can expect there to be some gaps in the earning experience after a job ends
+            and the machine looks for the next job it can run on the network.
           </Text>
         </div>
         <Text as="h3" className={classes.descriptionHeader}>
-          What is the average running time?
+          Why does higher demand not always equal higher payouts?
         </Text>
         <div className={classes.descriptionWrapper}>
           <Text className={classes.description}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin mattis quam lacinia vestibulum efficitur.
-            Donec a ex ut elit sollicitudin rhoncus a nec ipsum. Quisque mattis tincidunt dolor, vel molestie diam
-            fermentum ut. Maecenas aliquet in elit id pharetra. Ut tortor tellus, interdum quis faucibus quis, pulvinar
-            id lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec suscipit nunc. Nunc velit
-            nulla, tincidunt vel lacinia ac, porta et velit. 
+            Salad offers GPUs at different priority tiers, each commanding a different hourly rate, so job availability
+            (demand) is not tied to what those jobs are paying. Chefs should make an informed decision using all
+            available data.
           </Text>
         </div>
       </div>
