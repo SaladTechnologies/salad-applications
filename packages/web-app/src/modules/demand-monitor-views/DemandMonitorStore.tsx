@@ -5,6 +5,8 @@ import { demandMonitorGpuEndpointPath } from './constants'
 export interface DemandedHardwarePerformance {
   name: string
   displayName: string
+  demandTier: 'low' | 'mid' | 'high'
+  demandTierName: 'Low' | 'Moderate' | 'High'
   earningRates: {
     avgEarningRate: number
     top25PctEarningRate: number
