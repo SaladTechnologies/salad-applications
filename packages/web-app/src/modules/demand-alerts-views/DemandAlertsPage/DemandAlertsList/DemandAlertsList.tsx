@@ -85,7 +85,7 @@ const _DemandAlertsList: FunctionComponent<Props> = ({
             const withCancelSubscriptionFailure =
               unsubscribeFromDemandAlertStatus === UnsubscribeFromDemandAlertStatus.FAILURE &&
               isCurrentDemandedSubscriptionId
-            const utilizationPctLabel = demandScenario[demandAlertSubscription.utilizationPct]?.label
+            const utilizationPctLabel = demandScenario[demandAlertSubscription.demandTier]?.label
 
             return (
               <>

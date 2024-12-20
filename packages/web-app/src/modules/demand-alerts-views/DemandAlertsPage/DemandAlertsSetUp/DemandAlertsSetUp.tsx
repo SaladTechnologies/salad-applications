@@ -7,7 +7,8 @@ import { ErrorText } from '../../../../components'
 import type { DropdownOption } from '../../../../components/Dropdown'
 import { DropdownLight } from '../../../../components/Dropdown'
 import { DefaultTheme } from '../../../../SaladTheme'
-import type { DemandedHardwarePerformance } from '../../../demand-monitor-views/DemandMonitorStore'
+import type { DemandedHardwarePerformance, DemandTier } from '../../../demand-monitor-views/DemandMonitorStore'
+import type { DemandScenarioDropdownOption } from '../../constants'
 import { demandScenario } from '../../constants'
 import { SubscribeToDemandAlertStatus } from '../../DemandAlertsStore'
 import { getCreateNewSubscriptionErrorText } from './utils'
@@ -44,7 +45,7 @@ interface Props extends WithStyles<typeof styles> {
   demandedHardwarePerformanceList?: DemandedHardwarePerformance[]
   fetchDemandedHardwarePerformanceList: () => void
   setSubscribeToDemandAlertStatus: (subscribeToDemandAlertStatus: SubscribeToDemandAlertStatus) => void
-  subscribeToDemandAlert: (gpuName: string, utilizationPct: number) => void
+  subscribeToDemandAlert: (gpuName: string, demandTier: DemandTier) => void
   subscribeToDemandAlertStatus: SubscribeToDemandAlertStatus
 }
 
@@ -64,12 +65,12 @@ const _DemandAlertsSetUp: FunctionComponent<Props> = ({
   }))
 
   const initialSelectedDemandHardwareValue = demandHardwareOptions?.[0]?.value
-  const initialSelectedDemandScenarioValue = demandScenario[0]?.value
+  const initialSelectedDemandScenarioValue = demandScenario.high.value
 
   const [selectedDemandHardwareValue, setSelectedDemandHardwareValue] = useState<string | undefined>(
     initialSelectedDemandHardwareValue,
   )
-  const [selectedDemandScenarioValue, setSelectedDemandScenarioValue] = useState<string | undefined>(
+  const [selectedDemandScenarioValue, setSelectedDemandScenarioValue] = useState<DemandTier | undefined>(
     initialSelectedDemandScenarioValue,
   )
 
@@ -86,14 +87,14 @@ const _DemandAlertsSetUp: FunctionComponent<Props> = ({
     setSubscribeToDemandAlertStatus(SubscribeToDemandAlertStatus.UNKNOWN)
   }
 
-  const handleDemandScenarioOptionChange = (demandScenarioOption: DropdownOption) => {
+  const handleDemandScenarioOptionChange = (demandScenarioOption: DemandScenarioDropdownOption) => {
     setSelectedDemandScenarioValue(demandScenarioOption.value)
     setSubscribeToDemandAlertStatus(SubscribeToDemandAlertStatus.UNKNOWN)
   }
 
   const handleAddAlert = () => {
     if (selectedDemandHardwareValue && selectedDemandScenarioValue) {
-      subscribeToDemandAlert(selectedDemandHardwareValue, Number(selectedDemandScenarioValue))
+      subscribeToDemandAlert(selectedDemandHardwareValue, selectedDemandScenarioValue)
     }
   }
 

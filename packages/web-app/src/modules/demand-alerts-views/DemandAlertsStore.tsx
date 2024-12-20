@@ -1,5 +1,6 @@
 import type { AxiosInstance } from 'axios'
 import { action, flow, observable } from 'mobx'
+import type { DemandTier } from '../demand-monitor-views/DemandMonitorStore'
 import { demandSubscriptionsPath } from './constants'
 
 export interface DemandedSubscription {
@@ -7,7 +8,7 @@ export interface DemandedSubscription {
   gpuDisplayName: string
   gpuName: string
   id: string
-  utilizationPct: number
+  demandTier: DemandTier
 }
 
 export enum SubscribeToDemandAlertStatus {
@@ -48,12 +49,12 @@ export class DemandAlertsStore {
   })
 
   @action.bound
-  subscribeToDemandAlert = flow(function* (this: DemandAlertsStore, gpuName: string, utilizationPct: number) {
+  subscribeToDemandAlert = flow(function* (this: DemandAlertsStore, gpuName: string, demandTier: DemandTier) {
     try {
       this.subscribeToDemandAlertStatus = SubscribeToDemandAlertStatus.SUBMITTING
       yield this.axios.post(demandSubscriptionsPath, {
         gpuName,
-        utilizationPct,
+        demandTier,
       })
       this.fetchDemandAlertSubscriptionList()
       this.subscribeToDemandAlertStatus = SubscribeToDemandAlertStatus.SUCCESS
