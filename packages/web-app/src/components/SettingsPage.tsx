@@ -9,7 +9,7 @@ import { AccountContainer } from '../modules/account-views/account-views'
 import { ReferralSettingsContainer } from '../modules/account-views/referral-views'
 import { AchievementPageContainer } from '../modules/achievements-views'
 import { BonusPageContainer } from '../modules/bonus-views'
-import { DemandAlertsPageContainer } from '../modules/demand-alerts-views'
+import { DemandAlertsPage } from '../modules/demand-alerts-views'
 import { IconArrowLeft } from '../modules/reward-views/components/assets'
 import { styles } from './SettingsPage.styles'
 
@@ -74,7 +74,7 @@ const _Settings = ({ appBuild, classes, menuButtons, isUserReferralsEnabled, onC
     isDemandNotificationsFeatureFlagEnabled && {
       url: '/account/alerts',
       text: 'Demand Alerts',
-      component: DemandAlertsPageContainer,
+      component: DemandAlertsPage,
     },
   ].filter((menuItem) => menuItem) as MenuItem[]
 
