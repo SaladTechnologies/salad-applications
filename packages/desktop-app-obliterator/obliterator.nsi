@@ -17,12 +17,12 @@
 
   VIAddVersionKey "ProductName" "Salad Obliterator"
   VIAddVersionKey "CompanyName" "Salad Technologies, Inc."
-  VIAddVersionKey "LegalCopyright" "Copyright © 2020-2023 Salad Technologies, Inc."
+  VIAddVersionKey "LegalCopyright" "Copyright © 2020-2025 Salad Technologies, Inc."
   VIAddVersionKey "FileDescription" "Uninstalls broken Salad installations"
-  VIAddVersionKey "FileVersion" "1.2.0.0"
-  VIAddVersionKey "ProductVersion" "1.2.0"
-  VIFileVersion 1.2.0.0
-  VIProductVersion 1.2.0.0
+  VIAddVersionKey "FileVersion" "1.2.1.0"
+  VIAddVersionKey "ProductVersion" "1.2.1"
+  VIFileVersion 1.2.1.0
+  VIProductVersion 1.2.1.0
 
 ;--------------------------------
 ;Interface Settings
