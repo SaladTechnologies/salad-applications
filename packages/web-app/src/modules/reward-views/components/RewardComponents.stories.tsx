@@ -231,7 +231,6 @@ storiesOf('Modules/Rewards/Reward Header Bar', module)
         onRedeem={action('redeem')}
         requiresMinecraftUsername={boolean('Requires Minecraft Username', false)}
         requiresPayPalAccount={boolean('Requires PayPal Account', false)}
-        requiresSaladCard={boolean('Requires SaladCard', false)}
         trackDisabledBuyNowClick={action('Tracks Disabled Button Click')}
       />
     )
@@ -245,7 +244,6 @@ storiesOf('Modules/Rewards/Reward Header Bar', module)
         onRedeem={action('redeem')}
         requiresMinecraftUsername={boolean('Requires Minecraft Username', false)}
         requiresPayPalAccount={boolean('Requires PayPal Account', false)}
-        requiresSaladCard={boolean('Requires SaladCard', false)}
         trackDisabledBuyNowClick={action('Tracks Disabled Button Click')}
       />
     )
@@ -260,7 +258,6 @@ storiesOf('Modules/Rewards/Reward Header Bar', module)
         onRedeem={action('redeem')}
         requiresMinecraftUsername={boolean('Requires Minecraft Username', false)}
         requiresPayPalAccount={boolean('Requires PayPal Account', false)}
-        requiresSaladCard={boolean('Requires SaladCard', false)}
         trackDisabledBuyNowClick={action('Tracks Disabled Button Click')}
       />
     )
@@ -275,7 +272,6 @@ storiesOf('Modules/Rewards/Reward Header Bar', module)
         onRedeem={action('redeem')}
         requiresMinecraftUsername={boolean('Requires Minecraft Username', false)}
         requiresPayPalAccount={boolean('Requires PayPal Account', false)}
-        requiresSaladCard={boolean('Requires SaladCard', false)}
         trackDisabledBuyNowClick={action('Tracks Disabled Button Click')}
       />
     )
@@ -290,7 +286,6 @@ storiesOf('Modules/Rewards/Reward Header Bar', module)
         onRedeem={action('redeem')}
         requiresMinecraftUsername={boolean('Requires Minecraft Username', false)}
         requiresPayPalAccount={boolean('Requires PayPal Account', false)}
-        requiresSaladCard={boolean('Requires SaladCard', false)}
         trackDisabledBuyNowClick={action('Tracks Disabled Button Click')}
       />
     )
