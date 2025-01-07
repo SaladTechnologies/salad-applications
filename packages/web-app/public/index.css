@@ -5,19 +5,6 @@ html, body {
 	font-family: 'Mallory', sans-serif;
 }
 
-#card {
-	background-image: url(./saladCardBackground.png);
-	background-color: #54a745;
-	color: #0a2133;
-	font-size: 14px;
-	height: 250px;
-	left: 50%;
-	position: absolute;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	width: 400px;
-}
-
 #pan {
 	bottom: 110px;
 	font-size: 24px;

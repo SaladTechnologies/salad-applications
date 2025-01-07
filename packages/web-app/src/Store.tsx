@@ -21,7 +21,6 @@ import { ProfileStore } from './modules/profile'
 import type { Profile } from './modules/profile/models'
 import { ReferralStore } from './modules/referral'
 import { RewardStore } from './modules/reward'
-import { SaladCardStore } from './modules/salad-card/SaladCardStore'
 import { StartButtonUIStore } from './modules/start-button/StartButtonUIStore'
 import { StorefrontStore } from './modules/storefront/StorefrontStore'
 import { TermsAndConditionsStore } from './modules/terms-and-conditions'
@@ -70,7 +69,6 @@ export class RootStore {
   public readonly bonuses: BonusStore
   public readonly achievements: AchievementsStore
   public readonly startButtonUI: StartButtonUIStore
-  public readonly saladCard: SaladCardStore
   public readonly errorBoundary: ErrorBoundaryStore
   public readonly passkey: PasskeyStore
   public readonly backupCodes: BackupCodesStore
@@ -85,8 +83,7 @@ export class RootStore {
     this.achievements = new AchievementsStore(axios)
     this.profile = new ProfileStore(this, axios)
     this.termsAndConditions = new TermsAndConditionsStore(axios, this.profile)
-    this.saladCard = new SaladCardStore(this, axios)
-    this.rewards = new RewardStore(this, axios, this.profile, this.saladCard)
+    this.rewards = new RewardStore(this, axios, this.profile)
     this.analytics = new AnalyticsStore(this.auth)
     this.balance = new BalanceStore(this, axios)
     this.ui = new UIStore(this)
@@ -155,7 +152,6 @@ export class RootStore {
         this.referral.loadReferralCode(),
         this.refresh.refreshData(),
         this.profile.loadPayPalId(),
-        this.saladCard.loadSaladCard(),
         this.helpScout.login({
           name: profile.username,
           email: profile.email,
