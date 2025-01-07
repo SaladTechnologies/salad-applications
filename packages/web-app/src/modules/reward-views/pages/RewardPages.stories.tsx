@@ -16,7 +16,6 @@ storiesOf('Modules/Reward Pages/Reward Details Page', module)
         onRemoveFromCart={action('remove from cart')}
         requiresMinecraftUsername={boolean('Requires Minecraft Username', false)}
         requiresPayPalAccount={boolean('Requires PayPal Account', false)}
-        requiresSaladCard={boolean('Requires SaladCard', false)}
         trackDisabledBuyNowClick={action('Tracks Disabled Button Click')}
       />
     )
@@ -32,7 +31,6 @@ storiesOf('Modules/Reward Pages/Reward Details Page', module)
         onRemoveFromCart={action('remove from cart')}
         requiresMinecraftUsername={boolean('Requires Minecraft Username', false)}
         requiresPayPalAccount={boolean('Requires PayPal Account', false)}
-        requiresSaladCard={boolean('Requires SaladCard', false)}
         trackDisabledBuyNowClick={action('Tracks Disabled Button Click')}
       />
     )
