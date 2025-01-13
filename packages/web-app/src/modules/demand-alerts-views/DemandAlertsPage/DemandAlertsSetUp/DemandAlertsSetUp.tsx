@@ -11,7 +11,7 @@ import type { DemandedHardwarePerformance, DemandTier } from '../../../demand-mo
 import type { DemandScenarioDropdownOption } from '../../constants'
 import { demandScenario } from '../../constants'
 import { SubscribeToDemandAlertStatus } from '../../DemandAlertsStore'
-import { getCreateNewSubscriptionErrorText } from './utils'
+import { createNewSubscriptionErrorTexts } from './utils'
 
 const styles: () => Record<string, CSS.Properties> = () => ({
   container: {
@@ -57,7 +57,7 @@ const _DemandAlertsSetUp: FunctionComponent<Props> = ({
   subscribeToDemandAlert,
   subscribeToDemandAlertStatus,
 }) => {
-  const createNewSubscriptionErrorText = getCreateNewSubscriptionErrorText(subscribeToDemandAlertStatus)
+  const createNewSubscriptionErrorText = createNewSubscriptionErrorTexts[subscribeToDemandAlertStatus]
 
   const demandHardwareOptions = demandedHardwarePerformanceList?.map((demandHardware) => ({
     label: demandHardware.displayName,

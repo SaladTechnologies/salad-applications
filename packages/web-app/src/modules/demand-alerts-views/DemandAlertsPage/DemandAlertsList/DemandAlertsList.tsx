@@ -77,14 +77,14 @@ const _DemandAlertsList: FunctionComponent<Props> = ({
         <Text variant="baseS">You will get alerted on the following scenarios:</Text>
         <div className={classes.existingAlertsContainer}>
           {demandAlertSubscriptionList.map((demandAlertSubscription) => {
-            const isCurrentDemandedSubscriptionId = currentDemandedSubscriptionId === demandAlertSubscription.id
+            const isCurrentDemandedSubscription = currentDemandedSubscriptionId === demandAlertSubscription.id
 
             const isCancelSubscriptionSubmitting =
               unsubscribeFromDemandAlertStatus === UnsubscribeFromDemandAlertStatus.SUBMITTING &&
-              isCurrentDemandedSubscriptionId
+              isCurrentDemandedSubscription
             const isCancelSubscriptionFailure =
               unsubscribeFromDemandAlertStatus === UnsubscribeFromDemandAlertStatus.FAILURE &&
-              isCurrentDemandedSubscriptionId
+              isCurrentDemandedSubscription
 
             const utilizationPctLabel = demandScenario[demandAlertSubscription.demandTier]?.label
 

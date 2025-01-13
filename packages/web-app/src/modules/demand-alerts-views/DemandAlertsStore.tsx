@@ -12,18 +12,24 @@ export interface DemandedSubscription {
 }
 
 export enum SubscribeToDemandAlertStatus {
-  UNKNOWN = 'unknown',
-  SUBMITTING = 'submitting',
-  SUCCESS = 'success',
-  FAILURE = 'failure',
-  ALREADY_EXISTS = 'failure:subscription-already-exists',
-  INVALID_GPU = 'failure:invalid-gpu',
+  UNKNOWN = 'UNKNOWN',
+  SUBMITTING = 'SUBMITTING',
+  SUCCESS = 'SUCCESS',
+  FAILURE = 'FAILURE',
+  ALREADY_EXISTS = 'FAILURE:SUBSCRIPTION-ALREADY-EXISTS',
+  INVALID_GPU = 'FAILURE:INVALID-GPU',
 }
+
 export enum UnsubscribeFromDemandAlertStatus {
-  UNKNOWN = 'unknown',
-  SUBMITTING = 'submitting',
-  SUCCESS = 'success',
-  FAILURE = 'failure',
+  UNKNOWN = 'UNKNOWN',
+  SUBMITTING = 'SUBMITTING',
+  SUCCESS = 'SUCCESS',
+  FAILURE = 'FAILURE',
+}
+
+enum SubscribeToDemandAlertErrorType {
+  ALREADY_EXISTS = 'subscription:create:already-exists',
+  INVALID_GPU = 'subscription:create:invalid-gpu',
 }
 
 export class DemandAlertsStore {
@@ -59,23 +65,28 @@ export class DemandAlertsStore {
       this.fetchDemandAlertSubscriptionList()
       this.subscribeToDemandAlertStatus = SubscribeToDemandAlertStatus.SUCCESS
     } catch (error) {
-      this.subscribeToDemandAlertStatus = this.mapErrorToSubscribeToDemandAlertStatus(error)
+      this.subscribeToDemandAlertStatus = this.getSubscribeToDemandAlertStatusFromError(error)
       console.error('DemandAlertsStore -> subscribeToDemandAlert: ', error)
     }
   })
 
-  private mapErrorToSubscribeToDemandAlertStatus(error: any): SubscribeToDemandAlertStatus {
+  private getSubscribeToDemandAlertStatusFromError(error: any): SubscribeToDemandAlertStatus {
     if (!error || typeof error !== 'object') return SubscribeToDemandAlertStatus.FAILURE
 
     const errorResponse = error.response?.data
-    switch (errorResponse?.type) {
-      case 'subscription:create:already-exists':
-        return SubscribeToDemandAlertStatus.ALREADY_EXISTS
-      case 'subscription:create:invalid-gpu':
-        return SubscribeToDemandAlertStatus.INVALID_GPU
-      default:
-        return SubscribeToDemandAlertStatus.FAILURE
+
+    const subscribeToDemandAlertStatusByErrorType: Record<
+      SubscribeToDemandAlertErrorType,
+      SubscribeToDemandAlertStatus
+    > = {
+      [SubscribeToDemandAlertErrorType.ALREADY_EXISTS]: SubscribeToDemandAlertStatus.ALREADY_EXISTS,
+      [SubscribeToDemandAlertErrorType.INVALID_GPU]: SubscribeToDemandAlertStatus.INVALID_GPU,
     }
+
+    return (
+      subscribeToDemandAlertStatusByErrorType[errorResponse?.type as SubscribeToDemandAlertErrorType] ??
+      SubscribeToDemandAlertStatus.FAILURE
+    )
   }
 
   @action.bound
