@@ -1,7 +1,13 @@
 import type { AxiosInstance } from 'axios'
 import { action, flow, observable } from 'mobx'
 import type { DemandTier } from '../demand-monitor-views/DemandMonitorStore'
-import { demandSubscriptionsPath, subscribeToDemandAlertStatusByErrorType } from './constants'
+import type { SubscribeToDemandAlertErrorType } from './constants'
+import {
+  demandSubscriptionsPath,
+  SubscribeToDemandAlertStatus,
+  subscribeToDemandAlertStatusByErrorType,
+  UnsubscribeFromDemandAlertStatus,
+} from './constants'
 
 export interface DemandedSubscription {
   createdAt: string
@@ -9,27 +15,6 @@ export interface DemandedSubscription {
   gpuName: string
   id: string
   demandTier: DemandTier
-}
-
-export enum SubscribeToDemandAlertStatus {
-  Unknown = 'UNKNOWN',
-  Submitting = 'SUBMITTING',
-  Success = 'SUCCESS',
-  Failure = 'FAILURE',
-  AlreadyExists = 'FAILURE:SUBSCRIPTION-ALREADY-EXISTS',
-  InvalidGpu = 'FAILURE:INVALID-GPU',
-}
-
-export enum UnsubscribeFromDemandAlertStatus {
-  Unknown = 'UNKNOWN',
-  Submitting = 'SUBMITTING',
-  Success = 'SUCCESS',
-  Failure = 'FAILURE',
-}
-
-export enum SubscribeToDemandAlertErrorType {
-  AlreadyExists = 'subscription:create:already-exists',
-  InvalidGpu = 'subscription:create:invalid-gpu',
 }
 
 export class DemandAlertsStore {

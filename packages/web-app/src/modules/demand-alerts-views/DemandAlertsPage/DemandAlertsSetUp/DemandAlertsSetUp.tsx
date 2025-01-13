@@ -9,8 +9,7 @@ import { DropdownLight } from '../../../../components/Dropdown'
 import { DefaultTheme } from '../../../../SaladTheme'
 import type { DemandedHardwarePerformance, DemandTier } from '../../../demand-monitor-views/DemandMonitorStore'
 import type { DemandScenarioDropdownOption } from '../../constants'
-import { demandScenario } from '../../constants'
-import { SubscribeToDemandAlertStatus } from '../../DemandAlertsStore'
+import { demandScenario, SubscribeToDemandAlertStatus } from '../../constants'
 import { createNewSubscriptionErrorTexts } from './utils'
 
 const styles: () => Record<string, CSS.Properties> = () => ({

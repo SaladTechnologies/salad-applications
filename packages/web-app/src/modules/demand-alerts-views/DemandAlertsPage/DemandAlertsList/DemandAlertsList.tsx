@@ -6,9 +6,8 @@ import withStyles from 'react-jss'
 import { ErrorText } from '../../../../components'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { DefaultTheme } from '../../../../SaladTheme'
-import { demandScenario } from '../../constants'
+import { demandScenario, UnsubscribeFromDemandAlertStatus } from '../../constants'
 import type { DemandedSubscription } from '../../DemandAlertsStore'
-import { UnsubscribeFromDemandAlertStatus } from '../../DemandAlertsStore'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   container: {
@@ -60,7 +59,7 @@ const _DemandAlertsList: FunctionComponent<Props> = ({
   useEffect(() => {
     fetchDemandAlertSubscriptionList()
     return () => {
-      setUnsubscribeFromDemandAlertStatus(UnsubscribeFromDemandAlertStatus.UNKNOWN)
+      setUnsubscribeFromDemandAlertStatus(UnsubscribeFromDemandAlertStatus.Unknown)
     }
   }, [fetchDemandAlertSubscriptionList, setUnsubscribeFromDemandAlertStatus])
 
@@ -80,10 +79,10 @@ const _DemandAlertsList: FunctionComponent<Props> = ({
             const isCurrentDemandedSubscription = currentDemandedSubscriptionId === demandAlertSubscription.id
 
             const isCancelSubscriptionSubmitting =
-              unsubscribeFromDemandAlertStatus === UnsubscribeFromDemandAlertStatus.SUBMITTING &&
+              unsubscribeFromDemandAlertStatus === UnsubscribeFromDemandAlertStatus.Submitting &&
               isCurrentDemandedSubscription
             const isCancelSubscriptionFailure =
-              unsubscribeFromDemandAlertStatus === UnsubscribeFromDemandAlertStatus.FAILURE &&
+              unsubscribeFromDemandAlertStatus === UnsubscribeFromDemandAlertStatus.Failure &&
               isCurrentDemandedSubscription
 
             const utilizationPctLabel = demandScenario[demandAlertSubscription.demandTier]?.label
