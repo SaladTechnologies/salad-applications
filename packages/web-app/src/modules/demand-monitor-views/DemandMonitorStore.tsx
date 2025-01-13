@@ -2,10 +2,12 @@ import type { AxiosInstance } from 'axios'
 import { action, flow, observable } from 'mobx'
 import { demandMonitorGpuEndpointPath } from './constants'
 
+export type DemandTier = 'low' | 'mid' | 'high'
+
 export interface DemandedHardwarePerformance {
   name: string
   displayName: string
-  demandTier: 'low' | 'mid' | 'high'
+  demandTier: DemandTier
   demandTierName: 'Low' | 'Moderate' | 'High'
   earningRates: {
     avgEarningRate: number
