@@ -79,12 +79,13 @@ const _DemandAlertsList: FunctionComponent<Props> = ({
           {demandAlertSubscriptionList.map((demandAlertSubscription) => {
             const isCurrentDemandedSubscriptionId = currentDemandedSubscriptionId === demandAlertSubscription.id
 
-            const withCancelSubscriptionSubmitting =
+            const isCancelSubscriptionSubmitting =
               unsubscribeFromDemandAlertStatus === UnsubscribeFromDemandAlertStatus.SUBMITTING &&
               isCurrentDemandedSubscriptionId
-            const withCancelSubscriptionFailure =
+            const isCancelSubscriptionFailure =
               unsubscribeFromDemandAlertStatus === UnsubscribeFromDemandAlertStatus.FAILURE &&
               isCurrentDemandedSubscriptionId
+
             const utilizationPctLabel = demandScenario[demandAlertSubscription.demandTier]?.label
 
             return (
@@ -95,14 +96,14 @@ const _DemandAlertsList: FunctionComponent<Props> = ({
                   </Text>
                   <Button
                     onClick={() => handleCancelSubscription(demandAlertSubscription.id)}
-                    isLoading={withCancelSubscriptionSubmitting}
+                    isLoading={isCancelSubscriptionSubmitting}
                     outlineColor={DefaultTheme.white}
                     label="Unsubscribe"
                     variant="primary"
                     size="small"
                   />
                 </div>
-                {withCancelSubscriptionFailure && <ErrorText>Something went wrong. Please try again later</ErrorText>}
+                {isCancelSubscriptionFailure && <ErrorText>Something went wrong. Please try again later</ErrorText>}
               </>
             )
           })}
