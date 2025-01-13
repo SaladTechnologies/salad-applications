@@ -78,18 +78,18 @@ const _DemandAlertsSetUp: FunctionComponent<Props> = ({
     fetchDemandedHardwarePerformanceList()
     setSelectedDemandHardwareValue(initialSelectedDemandHardwareValue)
     return () => {
-      setSubscribeToDemandAlertStatus(SubscribeToDemandAlertStatus.UNKNOWN)
+      setSubscribeToDemandAlertStatus(SubscribeToDemandAlertStatus.Unknown)
     }
   }, [initialSelectedDemandHardwareValue, fetchDemandedHardwarePerformanceList, setSubscribeToDemandAlertStatus])
 
   const handleDemandHardwareOptionChange = (demandHardwareOption: DropdownOption) => {
     setSelectedDemandHardwareValue(demandHardwareOption.value)
-    setSubscribeToDemandAlertStatus(SubscribeToDemandAlertStatus.UNKNOWN)
+    setSubscribeToDemandAlertStatus(SubscribeToDemandAlertStatus.Unknown)
   }
 
   const handleDemandScenarioOptionChange = (demandScenarioOption: DemandScenarioDropdownOption) => {
     setSelectedDemandScenarioValue(demandScenarioOption.value)
-    setSubscribeToDemandAlertStatus(SubscribeToDemandAlertStatus.UNKNOWN)
+    setSubscribeToDemandAlertStatus(SubscribeToDemandAlertStatus.Unknown)
   }
 
   const handleAddAlert = () => {
@@ -115,7 +115,7 @@ const _DemandAlertsSetUp: FunctionComponent<Props> = ({
             </div>
           </div>
           <Button
-            isLoading={subscribeToDemandAlertStatus === SubscribeToDemandAlertStatus.SUBMITTING}
+            isLoading={subscribeToDemandAlertStatus === SubscribeToDemandAlertStatus.Submitting}
             onClick={handleAddAlert}
             label="Add Alert"
             outlineColor={DefaultTheme.darkBlue}

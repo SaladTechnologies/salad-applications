@@ -1,7 +1,7 @@
 import type { AxiosInstance } from 'axios'
 import { action, flow, observable } from 'mobx'
 import type { DemandTier } from '../demand-monitor-views/DemandMonitorStore'
-import { demandSubscriptionsPath } from './constants'
+import { demandSubscriptionsPath, subscribeToDemandAlertStatusByErrorType } from './constants'
 
 export interface DemandedSubscription {
   createdAt: string
@@ -12,34 +12,34 @@ export interface DemandedSubscription {
 }
 
 export enum SubscribeToDemandAlertStatus {
-  UNKNOWN = 'UNKNOWN',
-  SUBMITTING = 'SUBMITTING',
-  SUCCESS = 'SUCCESS',
-  FAILURE = 'FAILURE',
-  ALREADY_EXISTS = 'FAILURE:SUBSCRIPTION-ALREADY-EXISTS',
-  INVALID_GPU = 'FAILURE:INVALID-GPU',
+  Unknown = 'UNKNOWN',
+  Submitting = 'SUBMITTING',
+  Success = 'SUCCESS',
+  Failure = 'FAILURE',
+  AlreadyExists = 'FAILURE:SUBSCRIPTION-ALREADY-EXISTS',
+  InvalidGpu = 'FAILURE:INVALID-GPU',
 }
 
 export enum UnsubscribeFromDemandAlertStatus {
-  UNKNOWN = 'UNKNOWN',
-  SUBMITTING = 'SUBMITTING',
-  SUCCESS = 'SUCCESS',
-  FAILURE = 'FAILURE',
+  Unknown = 'UNKNOWN',
+  Submitting = 'SUBMITTING',
+  Success = 'SUCCESS',
+  Failure = 'FAILURE',
 }
 
-enum SubscribeToDemandAlertErrorType {
-  ALREADY_EXISTS = 'subscription:create:already-exists',
-  INVALID_GPU = 'subscription:create:invalid-gpu',
+export enum SubscribeToDemandAlertErrorType {
+  AlreadyExists = 'subscription:create:already-exists',
+  InvalidGpu = 'subscription:create:invalid-gpu',
 }
 
 export class DemandAlertsStore {
   constructor(private readonly axios: AxiosInstance) {}
 
   @observable
-  public subscribeToDemandAlertStatus: SubscribeToDemandAlertStatus = SubscribeToDemandAlertStatus.UNKNOWN
+  public subscribeToDemandAlertStatus: SubscribeToDemandAlertStatus = SubscribeToDemandAlertStatus.Unknown
 
   @observable
-  public unsubscribeFromDemandAlertStatus: UnsubscribeFromDemandAlertStatus = UnsubscribeFromDemandAlertStatus.UNKNOWN
+  public unsubscribeFromDemandAlertStatus: UnsubscribeFromDemandAlertStatus = UnsubscribeFromDemandAlertStatus.Unknown
 
   @observable
   public demandAlertSubscriptionList?: DemandedSubscription[]
@@ -57,13 +57,13 @@ export class DemandAlertsStore {
   @action.bound
   subscribeToDemandAlert = flow(function* (this: DemandAlertsStore, gpuName: string, demandTier: DemandTier) {
     try {
-      this.subscribeToDemandAlertStatus = SubscribeToDemandAlertStatus.SUBMITTING
+      this.subscribeToDemandAlertStatus = SubscribeToDemandAlertStatus.Submitting
       yield this.axios.post(demandSubscriptionsPath, {
         gpuName,
         demandTier,
       })
       this.fetchDemandAlertSubscriptionList()
-      this.subscribeToDemandAlertStatus = SubscribeToDemandAlertStatus.SUCCESS
+      this.subscribeToDemandAlertStatus = SubscribeToDemandAlertStatus.Success
     } catch (error) {
       this.subscribeToDemandAlertStatus = this.getSubscribeToDemandAlertStatusFromError(error)
       console.error('DemandAlertsStore -> subscribeToDemandAlert: ', error)
@@ -71,21 +71,13 @@ export class DemandAlertsStore {
   })
 
   private getSubscribeToDemandAlertStatusFromError(error: any): SubscribeToDemandAlertStatus {
-    if (!error || typeof error !== 'object') return SubscribeToDemandAlertStatus.FAILURE
+    if (!error || typeof error !== 'object') return SubscribeToDemandAlertStatus.Failure
 
     const errorResponse = error.response?.data
 
-    const subscribeToDemandAlertStatusByErrorType: Record<
-      SubscribeToDemandAlertErrorType,
-      SubscribeToDemandAlertStatus
-    > = {
-      [SubscribeToDemandAlertErrorType.ALREADY_EXISTS]: SubscribeToDemandAlertStatus.ALREADY_EXISTS,
-      [SubscribeToDemandAlertErrorType.INVALID_GPU]: SubscribeToDemandAlertStatus.INVALID_GPU,
-    }
-
     return (
       subscribeToDemandAlertStatusByErrorType[errorResponse?.type as SubscribeToDemandAlertErrorType] ??
-      SubscribeToDemandAlertStatus.FAILURE
+      SubscribeToDemandAlertStatus.Failure
     )
   }
 
@@ -97,12 +89,12 @@ export class DemandAlertsStore {
   @action.bound
   unsubscribeFromDemandAlert = flow(function* (this: DemandAlertsStore, subscriptionId: string) {
     try {
-      this.unsubscribeFromDemandAlertStatus = UnsubscribeFromDemandAlertStatus.SUBMITTING
+      this.unsubscribeFromDemandAlertStatus = UnsubscribeFromDemandAlertStatus.Submitting
       yield this.axios.delete(`${demandSubscriptionsPath}/${subscriptionId}`)
       this.fetchDemandAlertSubscriptionList()
-      this.unsubscribeFromDemandAlertStatus = UnsubscribeFromDemandAlertStatus.SUCCESS
+      this.unsubscribeFromDemandAlertStatus = UnsubscribeFromDemandAlertStatus.Success
     } catch (error) {
-      this.unsubscribeFromDemandAlertStatus = UnsubscribeFromDemandAlertStatus.FAILURE
+      this.unsubscribeFromDemandAlertStatus = UnsubscribeFromDemandAlertStatus.Failure
       console.error('DemandAlertsStore -> unsubscribeFromDemandAlert: ', error)
     }
   })
