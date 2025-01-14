@@ -35,22 +35,24 @@ const _DemandAlertsPage = ({ classes }: Props) => {
   const isTabletOrMobile = useMediaQuery({ query: `(max-width: ${mobileSize}px)` })
 
   const getPageContent = () => (
-    <div className={classes.page}>
-      <Layout background="transparent" title="Demand Alerts">
-        <Head title="Demand Alerts" />
-        <Text className={classes.demandAlertsPageDescription} variant="baseM">
-          You can set up alerts to be notified when the demand level of a GPU reaches your sweet spot, even at a
-          specific payout tier. When that scenario arrives we will notify you through email and an in-app message.
-        </Text>
-        <div className={classes.demandContentContainer}>
-          <DemandAlertsSetUpContainer />
-          <DemandAlertsListContainer />
-        </div>
-      </Layout>
-    </div>
+    <Layout background="transparent" title="Demand Alerts">
+      <Head title="Demand Alerts" />
+      <Text className={classes.demandAlertsPageDescription} variant="baseM">
+        You can set up alerts to be notified when the demand level of a GPU reaches your sweet spot, even at a specific
+        payout tier. When that scenario arrives we will notify you through email and an in-app message.
+      </Text>
+      <div className={classes.demandContentContainer}>
+        <DemandAlertsSetUpContainer />
+        <DemandAlertsListContainer />
+      </div>
+    </Layout>
   )
 
-  return isTabletOrMobile ? getPageContent() : <Scrollbar>{getPageContent()}</Scrollbar>
+  return (
+    <div className={classes.page}>
+      {isTabletOrMobile ? getPageContent() : <Scrollbar>{getPageContent()}</Scrollbar>}
+    </div>
+  )
 }
 
 export const DemandAlertsPage = withLogin(withStyles(styles)(_DemandAlertsPage))
