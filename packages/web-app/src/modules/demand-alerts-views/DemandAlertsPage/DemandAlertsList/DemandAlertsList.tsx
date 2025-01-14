@@ -51,7 +51,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 })
 
 interface Props extends WithStyles<typeof styles> {
-  demandAlertSubscriptionList?: DemandedSubscription[]
+  demandAlertSubscriptionList: DemandedSubscription[]
   fetchDemandAlertSubscriptionList: () => void
   setUnsubscribeFromDemandAlertStatus: (unsubscribeFromDemandAlertStatus: UnsubscribeFromDemandAlertStatus) => void
   unsubscribeFromDemandAlert: (subscriptionId: string) => void
@@ -68,7 +68,7 @@ const _DemandAlertsList: FunctionComponent<Props> = ({
 }) => {
   const [currentDemandedSubscriptionId, setCurrentDemandedSubscriptionId] = useState<string | null>(null)
 
-  const sortedDemandAlertSubscriptionList = demandAlertSubscriptionList?.sort(
+  const sortedDemandAlertSubscriptionList = demandAlertSubscriptionList.sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   )
 
@@ -85,8 +85,7 @@ const _DemandAlertsList: FunctionComponent<Props> = ({
   }
 
   return (
-    sortedDemandAlertSubscriptionList &&
-    sortedDemandAlertSubscriptionList?.length > 0 && (
+    sortedDemandAlertSubscriptionList.length > 0 && (
       <div className={classes.container}>
         <Text variant="baseXL">Manage your existing alerts</Text>
         <Text variant="baseS">You will get alerted on the following scenarios:</Text>

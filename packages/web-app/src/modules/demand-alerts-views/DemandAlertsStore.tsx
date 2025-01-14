@@ -27,7 +27,7 @@ export class DemandAlertsStore {
   public unsubscribeFromDemandAlertStatus: UnsubscribeFromDemandAlertStatus = UnsubscribeFromDemandAlertStatus.Unknown
 
   @observable
-  public demandAlertSubscriptionList?: DemandedSubscription[]
+  public demandAlertSubscriptionList: DemandedSubscription[] = []
 
   @action.bound
   fetchDemandAlertSubscriptionList = flow(function* (this: DemandAlertsStore) {
