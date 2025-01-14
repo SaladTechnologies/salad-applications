@@ -68,6 +68,10 @@ const _DemandAlertsList: FunctionComponent<Props> = ({
 }) => {
   const [currentDemandedSubscriptionId, setCurrentDemandedSubscriptionId] = useState<string | null>(null)
 
+  const sortedDemandAlertSubscriptionList = demandAlertSubscriptionList?.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  )
+
   useEffect(() => {
     fetchDemandAlertSubscriptionList()
     return () => {
@@ -81,13 +85,13 @@ const _DemandAlertsList: FunctionComponent<Props> = ({
   }
 
   return (
-    demandAlertSubscriptionList &&
-    demandAlertSubscriptionList?.length > 0 && (
+    sortedDemandAlertSubscriptionList &&
+    sortedDemandAlertSubscriptionList?.length > 0 && (
       <div className={classes.container}>
         <Text variant="baseXL">Manage your existing alerts</Text>
         <Text variant="baseS">You will get alerted on the following scenarios:</Text>
         <div className={classes.existingAlertsContainer}>
-          {demandAlertSubscriptionList.map((demandAlertSubscription) => {
+          {sortedDemandAlertSubscriptionList.map((demandAlertSubscription) => {
             const isCurrentDemandedSubscription = currentDemandedSubscriptionId === demandAlertSubscription.id
 
             const isCancelSubscriptionSubmitting =
