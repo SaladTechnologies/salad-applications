@@ -28,6 +28,18 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    flexDirection: 'row',
+    '@media (max-width: 670px)': {
+      alignItems: 'baseline',
+      flexDirection: 'column',
+    },
+  },
+  buttonContainer: {
+    margin: '0px',
+    '@media (max-width: 670px)': {
+      width: '100%',
+      marginTop: '8px',
+    },
   },
   loadingSpinnerWrap: {
     width: '100%',
@@ -93,14 +105,16 @@ const _DemandAlertsList: FunctionComponent<Props> = ({
                   <Text variant="baseS">
                     {demandAlertSubscription.gpuDisplayName} @ {utilizationPctLabel}
                   </Text>
-                  <Button
-                    onClick={() => handleCancelSubscription(demandAlertSubscription.id)}
-                    isLoading={isCancelSubscriptionSubmitting}
-                    outlineColor={DefaultTheme.white}
-                    label="Unsubscribe"
-                    variant="primary"
-                    size="small"
-                  />
+                  <div className={classes.buttonContainer}>
+                    <Button
+                      onClick={() => handleCancelSubscription(demandAlertSubscription.id)}
+                      isLoading={isCancelSubscriptionSubmitting}
+                      outlineColor={DefaultTheme.white}
+                      label="Unsubscribe"
+                      variant="primary"
+                      size="small"
+                    />
+                  </div>
                 </div>
                 {isCancelSubscriptionFailure && <ErrorText>Something went wrong. Please try again later</ErrorText>}
               </>
