@@ -49,6 +49,16 @@ const convertAxiosResponseToFetchResponse = <T = any>(axiosResponse: AxiosRespon
       }
       return buffer
     },
+    async bytes() {
+      if (this.bodyUsed) throw new TypeError('Already read');
+      this.bodyUsed = true;
+      const data = JSON.stringify(axiosResponse.data);
+      const uint8Array = new Uint8Array(data.length);
+      for (let i = 0; i < data.length; i++) {
+        uint8Array[i] = data.charCodeAt(i);
+      }
+      return uint8Array;
+    },
     async formData() {
       if (this.bodyUsed) throw new TypeError('Already read')
       this.bodyUsed = true
