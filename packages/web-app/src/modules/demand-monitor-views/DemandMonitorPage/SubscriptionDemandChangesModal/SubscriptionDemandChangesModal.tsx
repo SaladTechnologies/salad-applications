@@ -131,8 +131,19 @@ const _SubscriptionDemandChangesModal = ({ classes, demandHardwareName, onCloseC
   useEffect(() => {
     const subscriptionForm = document.getElementById('mc-embedded-subscribe-form') as HTMLFormElement
     subscriptionForm.onsubmit = () => {
+      const inputs = subscriptionForm.querySelectorAll('input')
+      const checkboxes = Array.from(inputs).filter((input) => input.type === 'checkbox')
+      const withAtLeastOneCheckboxSelected = checkboxes.some((checkbox) => checkbox.checked)
+      if (withAtLeastOneCheckboxSelected) {
+        subscriptionForm.submit()
+      } else {
+        checkboxes.forEach((checkboxes) => {
+          checkboxes.checked = true
+        })
+
+        subscriptionForm.submit()
+      }
       onCloseClick()
-      subscriptionForm.submit()
     }
   }, [onCloseClick])
 
