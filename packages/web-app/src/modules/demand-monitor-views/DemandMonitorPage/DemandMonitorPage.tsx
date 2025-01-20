@@ -116,6 +116,7 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
     if (isAuthenticated) {
       navigateToDemandAlerts()
     } else {
+      setSelectedDemandHardwareName(initialSelectedDemandHardwareName)
       setCurrentSubscriptionStep(SubscriptionStep.SelectGpu)
     }
   }
