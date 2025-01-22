@@ -4,7 +4,7 @@ export const mailchimpFormDataByHardwareName: Record<string, GetMailchimpSubscri
   'NVIDIA GeForce RTX 4090': {
     name: 'NVIDIA RTX 4090',
     id: '47a0417a3d',
-    fId: '00d636e3f0',
+    fId: '00c836e3f0',
     groupId: '78325',
   },
   'NVIDIA GeForce RTX 3090 Ti': {

@@ -1,5 +1,6 @@
+import { Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
@@ -113,12 +114,34 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     marginLeft: '260px',
   },
   subscriptionFormWrapper: {
+    position: 'relative',
     color: theme.darkBlue,
     backgroundColor: theme.white,
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    flexDirection: 'column',
     width: '500px',
     '@media (max-width: 812px)': {
       width: '100%',
     },
+  },
+  subscriptionFormContent: {
+    width: '100%',
+  },
+  errorTextWrapper: {
+    position: 'absolute',
+    left: '0px',
+    bottom: '0px',
+    width: '100%',
+    height: '32px',
+    color: theme.red,
+    boxSizing: 'border-box',
+    padding: '8px',
+    paddingLeft: '20px',
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   },
 })
 
@@ -128,22 +151,24 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const _SubscriptionDemandChangesModal = ({ classes, demandHardwareName, onCloseClick }: Props) => {
+  const [withError, setWithError] = useState(false)
   useEffect(() => {
     const subscriptionForm = document.getElementById('mc-embedded-subscribe-form') as HTMLFormElement
-    subscriptionForm.onsubmit = () => {
+    subscriptionForm.onsubmit = (event) => {
       const inputs = subscriptionForm.querySelectorAll('input')
       const checkboxes = Array.from(inputs).filter((input) => input.type === 'checkbox')
       const withAtLeastOneCheckboxSelected = checkboxes.some((checkbox) => checkbox.checked)
       if (withAtLeastOneCheckboxSelected) {
         subscriptionForm.submit()
+        onCloseClick()
       } else {
-        checkboxes.forEach((checkboxes) => {
-          checkboxes.checked = true
-        })
-
-        subscriptionForm.submit()
+        event.preventDefault()
+        setWithError(true)
       }
-      onCloseClick()
+    }
+
+    subscriptionForm.onchange = () => {
+      setWithError(false)
     }
   }, [onCloseClick])
 
@@ -160,7 +185,12 @@ const _SubscriptionDemandChangesModal = ({ classes, demandHardwareName, onCloseC
         <div className={classes.modalContent}>
           <h1 className={classes.title}>Get Notified Of Demand Changes</h1>
           {formHtml && (
-            <div className={classes.subscriptionFormWrapper} dangerouslySetInnerHTML={{ __html: formHtml }} />
+            <div className={classes.subscriptionFormWrapper}>
+              <div className={classes.subscriptionFormContent} dangerouslySetInnerHTML={{ __html: formHtml }} />
+              <div className={classes.errorTextWrapper}>
+                {withError && <Text variant="baseXS">Please select at least one demand alert.</Text>}
+              </div>
+            </div>
           )}
         </div>
       </div>
