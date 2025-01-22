@@ -5,7 +5,6 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { ModalWithOverlay } from '../../../../components/ModalWithOverlay'
-import type { DemandedHardwarePerformance } from '../../DemandMonitorStore'
 import saladBackgroundUrl from '../assets/background.png'
 import { mailchimpFormDataByHardwareName } from './constants'
 import type { GetMailchimpSubscriptionFormParams } from './utils'
@@ -148,11 +147,11 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 })
 
 interface Props extends WithStyles<typeof styles> {
-  demandedHardwarePerformance: DemandedHardwarePerformance
+  demandedHardwareName: string
   onCloseClick: () => void
 }
 
-const _SubscriptionDemandChangesModal = ({ classes, demandedHardwarePerformance, onCloseClick }: Props) => {
+const _SubscriptionDemandChangesModal = ({ classes, demandedHardwareName, onCloseClick }: Props) => {
   const [withError, setWithError] = useState(false)
   useEffect(() => {
     const subscriptionForm = document.getElementById('mc-embedded-subscribe-form') as HTMLFormElement
@@ -175,11 +174,11 @@ const _SubscriptionDemandChangesModal = ({ classes, demandedHardwarePerformance,
   }, [onCloseClick])
 
   const getMailchimpSubscriptionFormParams: GetMailchimpSubscriptionFormParams | null = mailchimpFormDataByHardwareName[
-    demandedHardwarePerformance.name
+    demandedHardwareName
   ]
     ? ({
-        ...mailchimpFormDataByHardwareName[demandedHardwarePerformance.name],
-        name: demandedHardwarePerformance.name,
+        ...mailchimpFormDataByHardwareName[demandedHardwareName],
+        name: demandedHardwareName,
       } as GetMailchimpSubscriptionFormParams)
     : null
 
