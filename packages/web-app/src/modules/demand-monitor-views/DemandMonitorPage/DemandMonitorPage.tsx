@@ -90,14 +90,14 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
   onLoginClick,
 }) => {
   const [currentSubscriptionStep, setCurrentSubscriptionStep] = useState<SubscriptionStep>(SubscriptionStep.Inactive)
-  const initialSelectedDemandHardwareName = demandedHardwarePerformanceList?.[0]?.name
-  const [selectedDemandHardwareName, setSelectedDemandHardwareName] = useState<string | undefined>(
-    initialSelectedDemandHardwareName,
+  const initialSelectedDemandedHardwareName = demandedHardwarePerformanceList?.[0]?.name
+  const [selectedDemandedHardwareName, setSelectedDemandedHardwareName] = useState<string | undefined>(
+    initialSelectedDemandedHardwareName,
   )
 
   useEffect(() => {
-    setSelectedDemandHardwareName(initialSelectedDemandHardwareName)
-  }, [initialSelectedDemandHardwareName])
+    setSelectedDemandedHardwareName(initialSelectedDemandedHardwareName)
+  }, [initialSelectedDemandedHardwareName])
 
   const updateTimerRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -116,7 +116,7 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
     if (isAuthenticated) {
       navigateToDemandAlerts()
     } else {
-      setSelectedDemandHardwareName(initialSelectedDemandHardwareName)
+      setSelectedDemandedHardwareName(initialSelectedDemandedHardwareName)
       setCurrentSubscriptionStep(SubscriptionStep.SelectGpu)
     }
   }
@@ -164,13 +164,13 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
             onCloseClick={handleModalCloseClick}
             onContinueClick={handleGetNotifiedContinueButtonClick}
             demandedHardwarePerformanceList={demandedHardwarePerformanceList}
-            onSelectedHardwareNameChange={setSelectedDemandHardwareName}
+            onSelectedHardwareNameChange={setSelectedDemandedHardwareName}
           />
         )}
-        {currentSubscriptionStep === SubscriptionStep.Subscribe && selectedDemandHardwareName && (
+        {currentSubscriptionStep === SubscriptionStep.Subscribe && selectedDemandedHardwareName && (
           <SubscriptionDemandChangesModal
             onCloseClick={handleModalCloseClick}
-            demandHardwareName={selectedDemandHardwareName}
+            demandedHardwareName={selectedDemandedHardwareName}
           />
         )}
       </div>
