@@ -1,6 +1,6 @@
 import type { GetMailchimpSubscriptionFormParams } from './utils'
 
-export const mailchimpFormDataByHardwareName: Record<string, Partial<GetMailchimpSubscriptionFormParams>> = {
+export const mailchimpFormDataByHardwareName: Record<string, Omit<GetMailchimpSubscriptionFormParams, 'name'>> = {
   'NVIDIA GeForce RTX 4090': {
     id: '47a0417a3d',
     fId: '00c836e3f0',
