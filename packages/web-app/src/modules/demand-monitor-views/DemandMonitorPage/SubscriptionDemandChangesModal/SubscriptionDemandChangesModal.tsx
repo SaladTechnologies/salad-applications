@@ -5,8 +5,10 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { ModalWithOverlay } from '../../../../components/ModalWithOverlay'
+import type { DemandedHardwarePerformance } from '../../DemandMonitorStore'
 import saladBackgroundUrl from '../assets/background.png'
 import { mailchimpFormDataByHardwareName } from './constants'
+import type { GetMailchimpSubscriptionFormParams } from './utils'
 import { getMailchimpSubscriptionForm } from './utils'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
@@ -146,11 +148,11 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 })
 
 interface Props extends WithStyles<typeof styles> {
-  demandHardwareName: string
+  demandedHardwarePerformance: DemandedHardwarePerformance
   onCloseClick: () => void
 }
 
-const _SubscriptionDemandChangesModal = ({ classes, demandHardwareName, onCloseClick }: Props) => {
+const _SubscriptionDemandChangesModal = ({ classes, demandedHardwarePerformance, onCloseClick }: Props) => {
   const [withError, setWithError] = useState(false)
   useEffect(() => {
     const subscriptionForm = document.getElementById('mc-embedded-subscribe-form') as HTMLFormElement
@@ -172,8 +174,17 @@ const _SubscriptionDemandChangesModal = ({ classes, demandHardwareName, onCloseC
     }
   }, [onCloseClick])
 
-  const formHtml = mailchimpFormDataByHardwareName[demandHardwareName]
-    ? getMailchimpSubscriptionForm(mailchimpFormDataByHardwareName[demandHardwareName])
+  const getMailchimpSubscriptionFormParams: GetMailchimpSubscriptionFormParams | null = mailchimpFormDataByHardwareName[
+    demandedHardwarePerformance.name
+  ]
+    ? ({
+        ...mailchimpFormDataByHardwareName[demandedHardwarePerformance.name],
+        name: demandedHardwarePerformance.name,
+      } as GetMailchimpSubscriptionFormParams)
+    : null
+
+  const formHtml = getMailchimpSubscriptionFormParams
+    ? getMailchimpSubscriptionForm(getMailchimpSubscriptionFormParams)
     : null
 
   return (

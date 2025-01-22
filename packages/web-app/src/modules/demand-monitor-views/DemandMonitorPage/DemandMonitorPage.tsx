@@ -95,6 +95,10 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
     initialSelectedDemandHardwareName,
   )
 
+  const selectedDemandedHardwarePerformance = demandedHardwarePerformanceList?.find(
+    (demandedHardwarePerformance) => demandedHardwarePerformance.name === selectedDemandHardwareName,
+  )
+
   useEffect(() => {
     setSelectedDemandHardwareName(initialSelectedDemandHardwareName)
   }, [initialSelectedDemandHardwareName])
@@ -167,10 +171,10 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
             onSelectedHardwareNameChange={setSelectedDemandHardwareName}
           />
         )}
-        {currentSubscriptionStep === SubscriptionStep.Subscribe && selectedDemandHardwareName && (
+        {currentSubscriptionStep === SubscriptionStep.Subscribe && selectedDemandedHardwarePerformance && (
           <SubscriptionDemandChangesModal
             onCloseClick={handleModalCloseClick}
-            demandHardwareName={selectedDemandHardwareName}
+            demandedHardwarePerformance={selectedDemandedHardwarePerformance}
           />
         )}
       </div>

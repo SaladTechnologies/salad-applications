@@ -1,8 +1,8 @@
 export interface GetMailchimpSubscriptionFormParams {
-  name: string
   id: string
   fId: string
   groupId: string
+  name: string
 }
 
 export const getMailchimpSubscriptionForm = ({ id, fId, groupId, name }: GetMailchimpSubscriptionFormParams) => {
