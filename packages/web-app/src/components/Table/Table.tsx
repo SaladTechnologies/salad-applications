@@ -4,7 +4,7 @@ import { type FunctionComponent } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../SaladTheme'
-import type { TableContent } from './types'
+import type { TableRow, TableTitles } from './types'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   tableWrapper: {
@@ -34,17 +34,18 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 })
 
 interface Props extends WithStyles<typeof styles> {
-  tableContent: TableContent
+  titles: TableTitles
+  rows: Array<TableRow>
 }
 
-const _Table: FunctionComponent<Props> = ({ classes, tableContent }) => {
+const _Table: FunctionComponent<Props> = ({ classes, titles, rows }) => {
   return (
     <div className={classes.tableWrapper}>
       <div className={classes.tableContent}>
         <table className={classes.table}>
           <thead>
             <tr className={classes.tableHeaderRow}>
-              {tableContent.titles.map((title) => {
+              {titles.map((title) => {
                 const titleJSX = typeof title === 'object' ? title : <Text variant="baseXS">{title}</Text>
                 return (
                   <th className={classes.tableCell} key={title.toString()}>
@@ -55,7 +56,7 @@ const _Table: FunctionComponent<Props> = ({ classes, tableContent }) => {
             </tr>
           </thead>
           <tbody>
-            {tableContent.rows.map((row, index) => {
+            {rows.map((row, index) => {
               return (
                 <tr key={index} className={classes.tableRow}>
                   {row.map((rowItem) => {

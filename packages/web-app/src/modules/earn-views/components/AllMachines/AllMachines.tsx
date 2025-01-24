@@ -7,7 +7,7 @@ import { DateTime } from 'luxon'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Table } from '../../../../components/Table'
-import type { TableContent } from '../../../../components/Table/types'
+import type { TableRow } from '../../../../components/Table/types'
 import { EarnSectionHeader } from '../EarnSectionHeader'
 import { generatedMockedMachines } from './mocks'
 
@@ -93,7 +93,7 @@ const _AllMachines = ({ classes }: Props) => {
     ]
   }
 
-  const getRows = (): TableContent['rows'] => {
+  const getRows = (): Array<TableRow> => {
     return generatedMockedMachines
       .map((machineRow) => {
         return {
@@ -131,12 +131,7 @@ const _AllMachines = ({ classes }: Props) => {
     <div className={classes.allMachinesWrapper}>
       <EarnSectionHeader>All Machines</EarnSectionHeader>
       <div className={classes.tableWrapper}>
-        <Table
-          tableContent={{
-            titles: getTitles(),
-            rows: getRows(),
-          }}
-        />
+        <Table titles={getTitles()} rows={getRows()} />
       </div>
     </div>
   )

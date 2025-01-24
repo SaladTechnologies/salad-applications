@@ -1,8 +1,5 @@
-type TableRowItem = string | number | JSX.Element
+export type TableRowItem = string | number | JSX.Element
 
-type TableRow = Array<TableRowItem>
+export type TableRow = Array<TableRowItem>
 
-export interface TableContent {
-  titles: Array<JSX.Element | string>
-  rows: Array<TableRow>
-}
+export type TableTitles = Array<JSX.Element | string>
