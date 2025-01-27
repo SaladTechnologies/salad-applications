@@ -97,7 +97,7 @@ const _AllMachines = ({ classes }: Props) => {
     return generatedMockedMachines
       .map((machineRow) => {
         return {
-          checkboxes: (
+          checkbox: (
             <div className={classNames(classes.tableCell, classes.tableCellCentered)}>
               <Checkbox onChange={() => {}} checked={false} />
             </div>
