@@ -4,6 +4,7 @@ import { Checkbox, Text } from '@saladtechnologies/garden-components'
 import classNames from 'classnames'
 import type CSS from 'csstype'
 import { DateTime } from 'luxon'
+import { useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Table } from '../../../../components/Table'
@@ -81,6 +82,12 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 interface Props extends WithStyles<typeof styles> {}
 
 const _AllMachines = ({ classes }: Props) => {
+  const [selectedMachineIds, setSelectedMachineIds] = useState<Record<string, boolean>>(() =>
+    generatedMockedMachines.reduce((aggregatedSelectedMachineIds, machine) => {
+      return { ...aggregatedSelectedMachineIds, [machine.id]: false }
+    }, {}),
+  )
+
   const getTitles = () => {
     return [
       <div className={(classes.tableHeaderCell, classes.tableCellCentered)}>
@@ -106,25 +113,31 @@ const _AllMachines = ({ classes }: Props) => {
 
   const getRows = (): Array<TableRow> => {
     return generatedMockedMachines
-      .map((machineRow) => {
+      .map((machine) => {
         return {
           checkbox: (
             <div className={classNames(classes.tableCell, classes.tableCellCentered)}>
               <div className={classes.checkboxWrapper}>
-                <Checkbox onChange={() => {}} checked={true} />
+                <Checkbox
+                  onChange={(checked) =>
+                    setSelectedMachineIds((previousSelectedMachineIds) => ({
+                      ...previousSelectedMachineIds,
+                      [machine.id]: checked,
+                    }))
+                  }
+                  checked={selectedMachineIds[machine.id]}
+                />
               </div>
             </div>
           ),
-          ...machineRow,
-          lastSeen: DateTime.fromJSDate(machineRow.lastSeen).toFormat('MMM d, yyyy'),
+          ...machine,
+          lastSeen: DateTime.fromJSDate(machine.lastSeen).toFormat('MMM d, yyyy'),
           currentEarningRate: (
-            <div className={classNames(classes.tableCell, classes.tableCellCentered)}>
-              {machineRow.currentEarningRate}
-            </div>
+            <div className={classNames(classes.tableCell, classes.tableCellCentered)}>{machine.currentEarningRate}</div>
           ),
           warnings: (
             <div className={classes.warningPillWrapper}>
-              {machineRow.warnings.map((warningText) => (
+              {machine.warnings.map((warningText) => (
                 <div className={classes.warningPill}>
                   <Text variant="baseXS">{warningText}</Text>
                 </div>
