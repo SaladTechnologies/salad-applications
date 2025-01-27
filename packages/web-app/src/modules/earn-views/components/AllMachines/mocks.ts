@@ -34,8 +34,6 @@ const generateMockedMachines = () => {
 
 export const generatedMockedMachines = generateMockedMachines()
 
-console.log('generatedMockedMachines ===> ', generatedMockedMachines)
-
 export const mockedMachines: MachineState[] = [
   {
     id: '0',
