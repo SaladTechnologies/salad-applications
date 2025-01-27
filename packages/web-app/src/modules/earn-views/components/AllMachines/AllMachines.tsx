@@ -8,10 +8,11 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Table } from '../../../../components/Table'
 import type { TableRow } from '../../../../components/Table/types'
+import type { SaladTheme } from '../../../../SaladTheme'
 import { EarnSectionHeader } from '../EarnSectionHeader'
 import { generatedMockedMachines } from './mocks'
 
-const styles: () => Record<string, CSS.Properties> = () => ({
+const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   allMachinesWrapper: {
     display: 'flex',
     justifyContent: 'flex-start',
@@ -30,6 +31,7 @@ const styles: () => Record<string, CSS.Properties> = () => ({
     maxWidth: '700px',
   },
   tableCell: {
+    padding: '5px',
     fontSize: '14px',
   },
   tableHeaderCell: {
@@ -41,7 +43,6 @@ const styles: () => Record<string, CSS.Properties> = () => ({
     flexDirection: 'row',
   },
   tableCellCentered: {
-    padding: '10px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -64,6 +65,16 @@ const styles: () => Record<string, CSS.Properties> = () => ({
     borderRadius: '16px',
     backgroundColor: '#F6931D',
     width: 'auto',
+  },
+  checkboxWrapper: {
+    width: '22px',
+    height: '22px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    border: `1px ${theme.lightGreen} solid`,
+    transform: 'scale(0.9)',
   },
 })
 
@@ -99,7 +110,9 @@ const _AllMachines = ({ classes }: Props) => {
         return {
           checkbox: (
             <div className={classNames(classes.tableCell, classes.tableCellCentered)}>
-              <Checkbox onChange={() => {}} checked={false} />
+              <div className={classes.checkboxWrapper}>
+                <Checkbox onChange={() => {}} checked={true} />
+              </div>
             </div>
           ),
           ...machineRow,
