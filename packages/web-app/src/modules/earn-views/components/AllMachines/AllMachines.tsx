@@ -7,6 +7,8 @@ import { DateTime } from 'luxon'
 import { useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
+import { Pagination } from '../../../../components/Pagination'
+import { usePagination } from '../../../../components/Pagination/usePagination'
 import { Table } from '../../../../components/Table'
 import type { TableRow } from '../../../../components/Table/types'
 import { DefaultTheme, type SaladTheme } from '../../../../SaladTheme'
@@ -105,6 +107,9 @@ const _AllMachines = ({ classes }: Props) => {
     window.location.href = 'https://support.salad.com/article/414-how-to-find-your-salad-machine-id'
   }
 
+  const { minItemNumberOnPage, maxItemNumberOnPage, currentPageNumber, itemsPerPageAmount, setCurrentPageNumber } =
+    usePagination()
+
   const getTitles = () => {
     return [
       <div className={(classes.tableHeaderCell, classes.tableCellCentered)}>
@@ -138,6 +143,10 @@ const _AllMachines = ({ classes }: Props) => {
 
   const getRows = (): Array<TableRow> => {
     return generatedMockedMachines
+      .filter((_machine, index) => {
+        const itemNumber = index + 1
+        return itemNumber >= minItemNumberOnPage && itemNumber < maxItemNumberOnPage
+      })
       .map((machine) => {
         return {
           checkbox: (
@@ -183,6 +192,12 @@ const _AllMachines = ({ classes }: Props) => {
       <EarnSectionHeader>All Machines</EarnSectionHeader>
       <div className={classes.tableWrapper}>
         <Table titles={getTitles()} rows={getRows()} />
+        <Pagination
+          itemsTotalAmount={generatedMockedMachines.length}
+          itemsPerPageAmount={itemsPerPageAmount}
+          currentPageNumber={currentPageNumber}
+          onPageChange={(pageNumber: number) => setCurrentPageNumber(pageNumber)}
+        />
       </div>
     </div>
   )
