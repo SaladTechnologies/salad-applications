@@ -32,7 +32,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     maxWidth: '700px',
   },
   tableCell: {
-    padding: '5px',
+    padding: '4px',
     fontSize: '14px',
   },
   tableHeaderCell: {
@@ -75,7 +75,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     alignItems: 'center',
     flexDirection: 'row',
     border: `1px ${theme.lightGreen} solid`,
-    transform: 'scale(0.9)',
+    transform: 'scale(0.8)',
   },
 })
 

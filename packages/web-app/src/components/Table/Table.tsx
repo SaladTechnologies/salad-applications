@@ -10,7 +10,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   tableWrapper: {
     fontFamily: theme.fontMallory,
     color: theme.lightGreen,
-    fontSize: '16px',
+    fontSize: '14px',
     width: '100%',
     '@media (max-width: 900px)': {
       overflow: 'scroll',
@@ -25,10 +25,10 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     borderCollapse: 'collapse',
   },
   tableHeaderRow: {
-    borderBottom: `1px ${theme.lightGreen} solid`,
+    borderBottom: `1px #3B4D5C solid`,
   },
   tableRow: {
-    borderBottom: `1px ${theme.lightGreen} solid`,
+    borderBottom: `1px #3B4D5C solid`,
   },
   tableCell: {},
 })
