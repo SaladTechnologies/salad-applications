@@ -1,4 +1,5 @@
 import { Button, Text } from '@saladtechnologies/garden-components'
+import classNames from 'classnames'
 import type CSS from 'csstype'
 import type { FunctionComponent } from 'react'
 import type { WithStyles } from 'react-jss'
@@ -19,33 +20,52 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   navigationButtonWrapper: {
     width: '100px',
   },
+  pagesNavigationWrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: '6px',
+    width: '250px',
+  },
   centralPagesWrapper: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
     gap: '6px',
-    width: '300px',
   },
-  currentPageWrapper: {
-    backgroundColor: theme.lightGreen,
-    width: '32px',
-    height: '32px',
+  edgePagesWrapper: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
+    gap: '6px',
+    width: '60px',
   },
   currentPageText: {
     color: theme.darkBlue,
   },
-  dotsWrapper: {
-    width: '32px',
+  button: {
+    minWidth: '32px',
+    padding: '0px 6px',
     height: '32px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
+    backgroundColor: 'transparent',
+    color: 'inherit',
+    border: `1px solid ${theme.lightGreen}`,
+    font: 'inherit',
+    cursor: 'pointer',
+    outline: 'inherit',
+    fontFamily: theme.fontMallory,
+  },
+  currentPageButton: {
+    backgroundColor: theme.lightGreen,
+    color: theme.darkBlue,
+    fontWeight: 500,
   },
 })
 
@@ -89,62 +109,48 @@ const _Pagination: FunctionComponent<Props> = ({
           />
         )}
       </div>
-      <div className={classes.centralPagesWrapper}>
-        {withPreviousPage && !isPreviousPageFirst && (
-          <Button
-            width={32}
-            outlineColor={DefaultTheme.lightGreen}
-            variant="outlined"
-            label={firstPageNumber.toString()}
-            size="small"
-            onClick={() => onPageChange(firstPageNumber)}
-          />
-        )}
-        {withPreviousDots && withPreviousPage && (
-          <div className={classes.dotsWrapper}>
-            <Text variant="baseM">...</Text>
-          </div>
-        )}
-        {withPreviousPage && (
-          <Button
-            width={32}
-            outlineColor={DefaultTheme.lightGreen}
-            variant="outlined"
-            label={previousPageNumber.toString()}
-            size="small"
-            onClick={() => onPageChange(previousPageNumber)}
-          />
-        )}
-        <div className={classes.currentPageWrapper}>
-          <Text className={classes.currentPageText} variant="baseL">
-            {currentPageNumber}
-          </Text>
+      <div className={classes.pagesNavigationWrapper}>
+        <div className={classes.edgePagesWrapper}>
+          {withPreviousPage && !isPreviousPageFirst && (
+            <button onClick={() => onPageChange(firstPageNumber)} className={classes.button}>
+              {firstPageNumber}
+            </button>
+          )}
+          {withPreviousDots && withPreviousPage && (
+            <div className={classes.dotsWrapper}>
+              <Text variant="baseM">...</Text>
+            </div>
+          )}
         </div>
-        {withNextPage && withNextPage && (
-          <Button
-            width={32}
-            outlineColor={DefaultTheme.lightGreen}
-            variant="outlined"
-            label={nextPageNumber.toString()}
-            size="small"
-            onClick={() => onPageChange(nextPageNumber)}
-          />
-        )}
-        {withNextDots && withNextPage && (
-          <div className={classes.dotsWrapper}>
-            <Text variant="baseM">...</Text>
-          </div>
-        )}
-        {!isNextPageLast && withNextPage && (
-          <Button
-            width={32}
-            outlineColor={DefaultTheme.lightGreen}
-            variant="outlined"
-            label={totalPagesAmount.toString()}
-            size="small"
-            onClick={() => onPageChange(lastPageNumber)}
-          />
-        )}
+        <div className={classes.centralPagesWrapper}>
+          {withPreviousPage && (
+            <button onClick={() => onPageChange(previousPageNumber)} className={classes.button}>
+              {previousPageNumber}
+            </button>
+          )}
+          <button className={classNames(classes.button, classes.currentPageButton)}>
+            <Text className={classes.currentPageText} variant="baseL">
+              {currentPageNumber}
+            </Text>
+          </button>
+          {withNextPage && (
+            <button onClick={() => onPageChange(nextPageNumber)} className={classes.button}>
+              {nextPageNumber}
+            </button>
+          )}
+        </div>
+        <div className={classes.edgePagesWrapper}>
+          {withNextDots && withNextPage && (
+            <div className={classes.dotsWrapper}>
+              <Text variant="baseM">...</Text>
+            </div>
+          )}
+          {!isNextPageLast && withNextPage && (
+            <button onClick={() => onPageChange(lastPageNumber)} className={classes.button}>
+              {lastPageNumber}
+            </button>
+          )}
+        </div>
       </div>
       <div className={classes.navigationButtonWrapper}>
         {withNextPage && (

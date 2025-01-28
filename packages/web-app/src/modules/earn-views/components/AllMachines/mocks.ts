@@ -21,7 +21,7 @@ export const getRandomId = (): string => {
 }
 
 const generateMockedMachines = () => {
-  return Array(100)
+  return Array(5000)
     .fill(null)
     .map(() => ({
       id: getRandomId().toLocaleLowerCase(),
