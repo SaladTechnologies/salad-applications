@@ -70,18 +70,18 @@ interface Props extends WithStyles<typeof styles> {
 const EarningHistoryRaw = ({ classes, viewLast24Hours, viewLast7Days, viewLast30Days }: Props) => {
   const [viewType, setViewType] = useState<ViewType>(ViewType.Graph)
 
-  const rangeOptions = [
+  const viewTypeOptions = [
+    { name: ViewType.Graph, action: () => setViewType(ViewType.Graph) },
+    { name: ViewType.Table, action: () => setViewType(ViewType.Table) },
+  ]
+
+  const viewRangeOptions = [
     { name: '24 Hours', action: viewLast24Hours },
     { name: '7 Days', action: viewLast7Days },
     { name: '30 Days', action: viewLast30Days },
   ]
 
-  const typeOptions = [
-    { name: ViewType.Graph, action: () => setViewType(ViewType.Graph) },
-    { name: ViewType.Table, action: () => setViewType(ViewType.Table) },
-  ]
-
-  const dataOptions = [
+  const viewDataOptions = [
     { name: 'Individual', action: () => {} },
     { name: 'Aggregate', action: () => {} },
   ]
@@ -93,15 +93,15 @@ const EarningHistoryRaw = ({ classes, viewLast24Hours, viewLast7Days, viewLast30
         <div className={classes.chartHeader}>
           <div>
             <p className={classes.subtitle}>View Type</p>
-            <Segments options={typeOptions} />
+            <Segments options={viewTypeOptions} />
           </div>
           <div>
             <p className={classes.subtitle}>View Range</p>
-            <Segments options={rangeOptions} />
+            <Segments options={viewRangeOptions} />
           </div>
           <div>
             <p className={classes.subtitle}>View Data as</p>
-            <Segments options={dataOptions} />
+            <Segments options={viewDataOptions} />
           </div>
         </div>
         <div className={classes.chartContainer}>
