@@ -7,8 +7,8 @@ import type { SaladTheme } from '../../../SaladTheme'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   btn: {
-    border: '1px solid ' + theme.green,
-    color: theme.green,
+    border: '1px solid ' + theme.lightGreen,
+    color: theme.lightGreen,
     display: 'inline-block',
     padding: '6px 12px',
     position: 'relative',
@@ -21,7 +21,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     lineHeight: '20px',
   },
   active: {
-    backgroundColor: theme.green,
+    backgroundColor: theme.lightGreen,
     color: theme.darkBlue,
     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
     cursor: 'default',
