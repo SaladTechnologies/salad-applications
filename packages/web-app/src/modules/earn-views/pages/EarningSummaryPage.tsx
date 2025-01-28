@@ -7,7 +7,6 @@ import { withLogin } from '../../auth-views'
 import type { RedeemedReward } from '../../balance/models/RedeemedReward'
 import type { RewardVaultItem } from '../../vault/models'
 import { EarningFrequentlyAskedQuestions, EarningHistory, EarningSummary, LatestRewardsRedeemed } from '../components'
-import { AllMachines } from '../components/AllMachines'
 
 const styles = () => ({
   content: {
@@ -89,7 +88,7 @@ const _EarningSummaryPage: FC<Props> = ({
           viewLast7Days={viewLast7Days}
           viewLast30Days={viewLast30Days}
         />
-        <AllMachines />
+        {/* <AllMachines /> */}
         <LatestRewardsRedeemed
           latestCompletedRedeemedRewards={latestCompletedRedeemedRewardsArray}
           navigateToRewardVaultPage={trackAndNavigateToRewardVaultPage}
