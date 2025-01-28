@@ -107,7 +107,7 @@ const _AllMachines = ({ classes }: Props) => {
     window.location.href = 'https://support.salad.com/article/414-how-to-find-your-salad-machine-id'
   }
 
-  const { minItemNumberOnPage, maxItemNumberOnPage, currentPageNumber, itemsPerPageAmount, setCurrentPageNumber } =
+  const { lowerItemNumberOnPage, higherItemNumberOnPage, currentPageNumber, itemsPerPageAmount, setCurrentPageNumber } =
     usePagination()
 
   const getTitles = () => {
@@ -145,7 +145,7 @@ const _AllMachines = ({ classes }: Props) => {
     return generatedMockedMachines
       .filter((_machine, index) => {
         const itemNumber = index + 1
-        return itemNumber >= minItemNumberOnPage && itemNumber < maxItemNumberOnPage
+        return itemNumber >= lowerItemNumberOnPage && itemNumber <= higherItemNumberOnPage
       })
       .map((machine) => {
         return {

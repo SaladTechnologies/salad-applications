@@ -6,7 +6,7 @@ interface UsePaginationParams {
 }
 
 const defaultItemsPerPageAmount = 10
-const defaultInitialCurrentPageNumber = 10
+const defaultInitialCurrentPageNumber = 1
 
 export const usePagination = (params?: UsePaginationParams) => {
   const { itemsPerPageAmount = defaultItemsPerPageAmount, initialCurrentPageNumber = defaultInitialCurrentPageNumber } =
@@ -19,14 +19,14 @@ export const usePagination = (params?: UsePaginationParams) => {
 
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(initialCurrentPageNumber)
 
-  const minItemNumberOnPage = itemsPerPageAmount * currentPageNumber
-  const maxItemNumberOnPage = minItemNumberOnPage + itemsPerPageAmount
+  const higherItemNumberOnPage = itemsPerPageAmount * currentPageNumber
+  const lowerItemNumberOnPage = higherItemNumberOnPage - itemsPerPageAmount + 1
 
   return {
     setCurrentPageNumber,
+    lowerItemNumberOnPage,
+    higherItemNumberOnPage,
     currentPageNumber,
-    minItemNumberOnPage,
-    maxItemNumberOnPage,
     itemsPerPageAmount,
   }
 }
