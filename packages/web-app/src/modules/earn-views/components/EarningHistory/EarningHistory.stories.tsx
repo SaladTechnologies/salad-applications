@@ -1,7 +1,7 @@
 import type { Meta } from '@storybook/react'
 import moment from 'moment'
 import { EarningHistory } from '.'
-import type { EarningWindow } from '../../balance/models'
+import type { EarningWindow } from '../../../balance/models'
 
 export default {
   title: 'Modules/Earn/components/Earning History',
