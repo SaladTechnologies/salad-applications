@@ -11,11 +11,12 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     width: '100%',
     color: theme.lightGreen,
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row',
     gap: '16px',
     padding: '16px',
+    paddingLeft: '12px',
   },
   navigationButtonWrapper: {
     width: '100px',
@@ -27,6 +28,8 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     flexDirection: 'row',
     gap: '6px',
     width: '250px',
+    paddingLeft: '12px',
+    paddingRight: '12px',
   },
   centralPagesWrapper: {
     display: 'flex',
@@ -40,8 +43,10 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    gap: '6px',
-    width: '60px',
+    gap: '10px',
+    width: '65px',
+    paddingLeft: '4px',
+    paddingRight: '4px',
   },
   currentPageText: {
     color: theme.darkBlue,
@@ -67,6 +72,9 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     color: theme.darkBlue,
     fontWeight: 500,
   },
+  disabled: {
+    opacity: 0.5,
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -84,8 +92,8 @@ const _Pagination: FunctionComponent<Props> = ({
   onPageChange,
 }) => {
   const totalPagesAmount = Math.ceil(itemsTotalAmount / itemsPerPageAmount)
-  const withPreviousPage = currentPageNumber !== 1
-  const withNextPage = totalPagesAmount - currentPageNumber > 0
+  const isPreviousPageEnabled = currentPageNumber !== 1
+  const isNextPageEnabled = totalPagesAmount - currentPageNumber > 0
   const firstPageNumber = 1
   const lastPageNumber = totalPagesAmount
   const nextPageNumber = currentPageNumber + 1
@@ -97,33 +105,32 @@ const _Pagination: FunctionComponent<Props> = ({
 
   return (
     <div className={classes.paginationWrapper}>
-      <div className={classes.navigationButtonWrapper}>
-        {withPreviousPage && (
-          <Button
-            width={100}
-            outlineColor={DefaultTheme.lightGreen}
-            variant="outlined"
-            label="Previous"
-            size="small"
-            onClick={() => onPageChange(previousPageNumber)}
-          />
-        )}
+      <div className={classNames(classes.navigationButtonWrapper, !isPreviousPageEnabled && classes.disabled)}>
+        <Button
+          width={100}
+          outlineColor={DefaultTheme.lightGreen}
+          variant="outlined"
+          label="Previous"
+          size="small"
+          disabled={!isPreviousPageEnabled}
+          onClick={() => onPageChange(previousPageNumber)}
+        />
       </div>
       <div className={classes.pagesNavigationWrapper}>
         <div className={classes.edgePagesWrapper}>
-          {withPreviousPage && !isPreviousPageFirst && (
+          {isPreviousPageEnabled && !isPreviousPageFirst && (
             <button onClick={() => onPageChange(firstPageNumber)} className={classes.button}>
               {firstPageNumber}
             </button>
           )}
-          {withPreviousDots && withPreviousPage && (
+          {withPreviousDots && isPreviousPageEnabled && (
             <div className={classes.dotsWrapper}>
               <Text variant="baseM">...</Text>
             </div>
           )}
         </div>
         <div className={classes.centralPagesWrapper}>
-          {withPreviousPage && (
+          {isPreviousPageEnabled && (
             <button onClick={() => onPageChange(previousPageNumber)} className={classes.button}>
               {previousPageNumber}
             </button>
@@ -133,36 +140,35 @@ const _Pagination: FunctionComponent<Props> = ({
               {currentPageNumber}
             </Text>
           </button>
-          {withNextPage && (
+          {isNextPageEnabled && (
             <button onClick={() => onPageChange(nextPageNumber)} className={classes.button}>
               {nextPageNumber}
             </button>
           )}
         </div>
         <div className={classes.edgePagesWrapper}>
-          {withNextDots && withNextPage && (
+          {withNextDots && isNextPageEnabled && (
             <div className={classes.dotsWrapper}>
               <Text variant="baseM">...</Text>
             </div>
           )}
-          {!isNextPageLast && withNextPage && (
+          {!isNextPageLast && isNextPageEnabled && (
             <button onClick={() => onPageChange(lastPageNumber)} className={classes.button}>
               {lastPageNumber}
             </button>
           )}
         </div>
       </div>
-      <div className={classes.navigationButtonWrapper}>
-        {withNextPage && (
-          <Button
-            width={100}
-            outlineColor={DefaultTheme.lightGreen}
-            variant="outlined"
-            label="Next"
-            size="small"
-            onClick={() => onPageChange(nextPageNumber)}
-          />
-        )}
+      <div className={classNames(classes.navigationButtonWrapper, !isNextPageEnabled && classes.disabled)}>
+        <Button
+          width={100}
+          outlineColor={DefaultTheme.lightGreen}
+          variant="outlined"
+          label="Next"
+          size="small"
+          disabled={!isNextPageEnabled}
+          onClick={() => onPageChange(nextPageNumber)}
+        />
       </div>
     </div>
   )
