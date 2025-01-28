@@ -1,4 +1,4 @@
-import { faList } from '@fortawesome/free-solid-svg-icons'
+import { faCircleQuestion, faList } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Checkbox, Text } from '@saladtechnologies/garden-components'
 import classNames from 'classnames'
@@ -9,7 +9,7 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Table } from '../../../../components/Table'
 import type { TableRow } from '../../../../components/Table/types'
-import type { SaladTheme } from '../../../../SaladTheme'
+import { DefaultTheme, type SaladTheme } from '../../../../SaladTheme'
 import { EarnSectionHeader } from '../EarnSectionHeader'
 import { generatedMockedMachines } from './mocks'
 
@@ -79,6 +79,19 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     border: `1px ${theme.lightGreen} solid`,
     transform: 'scale(0.8)',
   },
+  questionIconWrapper: {
+    marginLeft: '6px',
+    backgroundColor: theme.lightGreen,
+    border: `.5px solid ${theme.lightGreen}`,
+    borderRadius: '100%',
+    width: '13px',
+    height: '13px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    cursor: 'pointer',
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {}
@@ -90,6 +103,10 @@ const _AllMachines = ({ classes }: Props) => {
     }, {}),
   )
 
+  const handleMachineIdQuestionIconClick = () => {
+    window.location.href = 'https://support.salad.com/article/414-how-to-find-your-salad-machine-id'
+  }
+
   const getTitles = () => {
     return [
       <div className={(classes.tableHeaderCell, classes.tableCellCentered)}>
@@ -97,6 +114,14 @@ const _AllMachines = ({ classes }: Props) => {
       </div>,
       <div className={classes.tableHeaderCell}>
         <Text variant="baseXS">Machine ID</Text>
+        <div className={classes.questionIconWrapper} onClick={handleMachineIdQuestionIconClick}>
+          <FontAwesomeIcon
+            size="sm"
+            icon={faCircleQuestion}
+            fill={DefaultTheme.darkBlue}
+            color={DefaultTheme.darkBlue}
+          />
+        </div>
       </div>,
       <div className={classes.tableHeaderCell}>
         <Text variant="baseXS">Running Status</Text>
