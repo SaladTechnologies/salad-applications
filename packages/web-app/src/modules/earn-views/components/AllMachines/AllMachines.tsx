@@ -66,6 +66,8 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     borderRadius: '16px',
     backgroundColor: '#F6931D',
     width: 'auto',
+    color: theme.darkBlue,
+    textDecoration: 'underline',
   },
   checkboxWrapper: {
     width: '22px',
