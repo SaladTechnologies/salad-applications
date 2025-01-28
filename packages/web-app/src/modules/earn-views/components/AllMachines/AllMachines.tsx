@@ -98,9 +98,7 @@ interface Props extends WithStyles<typeof styles> {}
 
 const _AllMachines = ({ classes }: Props) => {
   const [selectedMachineIds, setSelectedMachineIds] = useState<Record<string, boolean>>(() =>
-    generatedMockedMachines.reduce((aggregatedSelectedMachineIds, machine) => {
-      return { ...aggregatedSelectedMachineIds, [machine.id]: false }
-    }, {}),
+    Object.fromEntries(generatedMockedMachines.map((machine) => [machine.id, false])),
   )
 
   const handleMachineIdQuestionIconClick = () => {
