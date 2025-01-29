@@ -19,6 +19,7 @@ export interface DemandedHardwarePerformance {
     ramGb: number
   }
   utilizationPct: number
+  variantNames: string[]
 }
 
 export class DemandMonitorStore {
