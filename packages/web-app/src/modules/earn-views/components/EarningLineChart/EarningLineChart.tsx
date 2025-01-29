@@ -10,7 +10,7 @@ import { DefaultTheme, type SaladTheme } from '../../../../SaladTheme'
 import { formatBalance } from '../../../../utils'
 import type { ChartDaysShowing, EarningPerMachine, EarningWindow } from '../../../balance/models'
 import { normalizeEarningsPerMachineData } from '../../utils'
-import { ViewData } from '../EarningHistory'
+import { ViewData } from '../EarningHistory/utils'
 import { CustomizedXAxisTick } from './components'
 import type { MachineOptions } from './components/EarningMachineList'
 import { EarningMachineList } from './components/EarningMachineList'
@@ -55,6 +55,7 @@ interface Props extends WithStyles<typeof styles> {
   daysShowing: ChartDaysShowing
   isAggregateView: boolean
   fetchEarningsPerMachine: () => void
+  setIsIndividualViewDataDisabled: (isDisabled: boolean) => void
   setViewData: (viewData: ViewData) => void
 }
 
@@ -65,6 +66,7 @@ const _EarningLineChart = ({
   daysShowing,
   isAggregateView,
   fetchEarningsPerMachine,
+  setIsIndividualViewDataDisabled,
   setViewData,
 }: Props) => {
   const is24HoursChart = daysShowing === 1
@@ -79,11 +81,13 @@ const _EarningLineChart = ({
   }, [earningsPerMachine, isAggregateView])
 
   useEffect(() => {
-    const checkedMachineOptions = Object.values(machineOptions).filter((item) => item.isChecked)
-    if (checkedMachineOptions.length > 10) {
+    if (Object.values(machineOptions).length > 10) {
       setViewData(ViewData.Aggregate)
+      setIsIndividualViewDataDisabled(true)
+    } else if (!isAggregateView) {
+      setIsIndividualViewDataDisabled(false)
     }
-  }, [machineOptions, setViewData])
+  }, [machineOptions, isAggregateView, setIsIndividualViewDataDisabled, setViewData])
 
   const handleMachineOptionClick = (machineId: string) => {
     setMachineOptions(

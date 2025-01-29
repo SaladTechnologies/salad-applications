@@ -7,7 +7,7 @@ import { Segments } from '../../../components/elements/Segments'
 import { formatBalance } from '../../../utils'
 import { EarningChartContainer } from '../../earn-views'
 import { EarningLineChartContainer } from '../../earn-views/EarningLineChartContainer'
-import { ViewData, ViewType } from '../../earn-views/components'
+import { ViewData, ViewRange, ViewType } from '../../earn-views/components/EarningHistory/utils'
 
 const styles = (theme: SaladTheme) => ({
   item: {
@@ -66,7 +66,10 @@ const _MobileEarningSummary = ({
   viewLast30Days,
 }: Props) => {
   const [viewType, setViewType] = useState<ViewType>(ViewType.Graph)
+  const [viewRange, setViewRange] = useState<ViewRange>(ViewRange.Last24Hours)
   const [viewData, setViewData] = useState<ViewData>(ViewData.Individual)
+
+  const [isIndividualViewDataDisabled, setIsIndividualViewDataDisabled] = useState<boolean>(false)
 
   const isAggregateView = viewData === ViewData.Aggregate
 
@@ -76,15 +79,50 @@ const _MobileEarningSummary = ({
   ]
 
   const viewRangeOptions = [
-    { name: '24 Hours', action: viewLast24Hours },
-    { name: '7 Days', action: viewLast7Days },
-    { name: '30 Days', action: viewLast30Days },
+    {
+      name: ViewRange.Last24Hours,
+      action: () => {
+        viewLast24Hours()
+        setViewRange(ViewRange.Last24Hours)
+      },
+    },
+    {
+      name: ViewRange.Last7Days,
+      action: () => {
+        viewLast7Days()
+        setViewRange(ViewRange.Last7Days)
+      },
+    },
+    {
+      name: ViewRange.Last30Days,
+      action: () => {
+        viewLast30Days()
+        setViewRange(ViewRange.Last30Days)
+      },
+    },
   ]
 
   const viewDataOptions = [
-    { name: ViewData.Individual, action: () => setViewData(ViewData.Individual) },
-    { name: ViewData.Aggregate, action: () => setViewData(ViewData.Aggregate) },
+    {
+      name: ViewData.Individual,
+      action: () => setViewData(ViewData.Individual),
+      disabled: isIndividualViewDataDisabled,
+    },
+    {
+      name: ViewData.Aggregate,
+      action: () => {
+        setViewData(ViewData.Aggregate)
+      },
+    },
   ]
+
+  const handleRangeOptionChange = (name: ViewRange) => {
+    viewRangeOptions.find((option) => option.name === name)?.action()
+  }
+
+  const handleDataOptionChange = (name: ViewData) => {
+    viewDataOptions.find((option) => option.name === name && !option.disabled)?.action()
+  }
 
   return (
     <>
@@ -135,19 +173,36 @@ const _MobileEarningSummary = ({
       <SectionHeader>Earning History</SectionHeader>
       <div>
         <p className={classes.subtitle}>View Type</p>
-        <Segments options={viewTypeOptions} />
+        <Segments
+          options={viewTypeOptions}
+          onOptionChange={(name) => setViewType(name as ViewType)}
+          selectedOptionName={viewType}
+        />
       </div>
       <div>
         <p className={classes.subtitle}>View Range</p>
-        <Segments options={viewRangeOptions} />
+        <Segments
+          options={viewRangeOptions}
+          onOptionChange={(name) => handleRangeOptionChange(name as ViewRange)}
+          selectedOptionName={viewRange}
+        />
       </div>
       <div>
         <p className={classes.subtitle}>View Data as</p>
-        <Segments options={viewDataOptions} />
+        <Segments
+          options={viewDataOptions}
+          onOptionChange={(name) => handleDataOptionChange(name as ViewData)}
+          selectedOptionName={viewData}
+        />
       </div>
       <div className={classes.chartContainer}>
         {viewType === ViewType.Graph && (
-          <EarningLineChartContainer isAggregateView={isAggregateView} viewData={viewData} setViewData={setViewData} />
+          <EarningLineChartContainer
+            isAggregateView={isAggregateView}
+            viewData={viewData}
+            setIsIndividualViewDataDisabled={setIsIndividualViewDataDisabled}
+            setViewData={setViewData}
+          />
         )}
         {viewType === ViewType.Table && <EarningChartContainer />}
       </div>

@@ -8,6 +8,7 @@ import { Segments } from '../../../../components/elements/Segments'
 import { EarningChartContainer } from '../../EarningChartContainer'
 import { EarningLineChartContainer } from '../../EarningLineChartContainer'
 import { EarnSectionHeader } from '../EarnSectionHeader'
+import { ViewData, ViewRange, ViewType } from './utils'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties | Record<string, CSS.Properties>> = (
   theme: SaladTheme,
@@ -56,16 +57,6 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties | Record<stri
   },
 })
 
-export enum ViewType {
-  Graph = 'Graph',
-  Table = 'Table',
-}
-
-export enum ViewData {
-  Individual = 'Individual',
-  Aggregate = 'Aggregate',
-}
-
 interface Props extends WithStyles<typeof styles> {
   viewLast24Hours: () => void
   viewLast7Days: () => void
@@ -74,7 +65,10 @@ interface Props extends WithStyles<typeof styles> {
 
 const EarningHistoryRaw = ({ classes, viewLast24Hours, viewLast7Days, viewLast30Days }: Props) => {
   const [viewType, setViewType] = useState<ViewType>(ViewType.Graph)
+  const [viewRange, setViewRange] = useState<ViewRange>(ViewRange.Last24Hours)
   const [viewData, setViewData] = useState<ViewData>(ViewData.Individual)
+
+  const [isIndividualViewDataDisabled, setIsIndividualViewDataDisabled] = useState<boolean>(false)
 
   const isAggregateView = viewData === ViewData.Aggregate
 
@@ -84,15 +78,50 @@ const EarningHistoryRaw = ({ classes, viewLast24Hours, viewLast7Days, viewLast30
   ]
 
   const viewRangeOptions = [
-    { name: '24 Hours', action: viewLast24Hours },
-    { name: '7 Days', action: viewLast7Days },
-    { name: '30 Days', action: viewLast30Days },
+    {
+      name: ViewRange.Last24Hours,
+      action: () => {
+        viewLast24Hours()
+        setViewRange(ViewRange.Last24Hours)
+      },
+    },
+    {
+      name: ViewRange.Last7Days,
+      action: () => {
+        viewLast7Days()
+        setViewRange(ViewRange.Last7Days)
+      },
+    },
+    {
+      name: ViewRange.Last30Days,
+      action: () => {
+        viewLast30Days()
+        setViewRange(ViewRange.Last30Days)
+      },
+    },
   ]
 
   const viewDataOptions = [
-    { name: ViewData.Individual, action: () => setViewData(ViewData.Individual) },
-    { name: ViewData.Aggregate, action: () => setViewData(ViewData.Aggregate) },
+    {
+      name: ViewData.Individual,
+      action: () => setViewData(ViewData.Individual),
+      disabled: isIndividualViewDataDisabled,
+    },
+    {
+      name: ViewData.Aggregate,
+      action: () => {
+        setViewData(ViewData.Aggregate)
+      },
+    },
   ]
+
+  const handleRangeOptionChange = (name: ViewRange) => {
+    viewRangeOptions.find((option) => option.name === name)?.action()
+  }
+
+  const handleDataOptionChange = (name: ViewData) => {
+    viewDataOptions.find((option) => option.name === name && !option.disabled)?.action()
+  }
 
   return (
     <div className={classes.earningHistoryWrapper}>
@@ -101,15 +130,27 @@ const EarningHistoryRaw = ({ classes, viewLast24Hours, viewLast7Days, viewLast30
         <div className={classes.chartHeader}>
           <div>
             <p className={classes.subtitle}>View Type</p>
-            <Segments options={viewTypeOptions} />
+            <Segments
+              options={viewTypeOptions}
+              onOptionChange={(name) => setViewType(name as ViewType)}
+              selectedOptionName={viewType}
+            />
           </div>
           <div>
             <p className={classes.subtitle}>View Range</p>
-            <Segments options={viewRangeOptions} />
+            <Segments
+              options={viewRangeOptions}
+              onOptionChange={(name) => handleRangeOptionChange(name as ViewRange)}
+              selectedOptionName={viewRange}
+            />
           </div>
           <div>
             <p className={classes.subtitle}>View Data as</p>
-            <Segments options={viewDataOptions} />
+            <Segments
+              options={viewDataOptions}
+              onOptionChange={(name) => handleDataOptionChange(name as ViewData)}
+              selectedOptionName={viewData}
+            />
           </div>
         </div>
         <div className={classes.chartContainer}>
@@ -117,6 +158,7 @@ const EarningHistoryRaw = ({ classes, viewLast24Hours, viewLast7Days, viewLast30
             <EarningLineChartContainer
               isAggregateView={isAggregateView}
               viewData={viewData}
+              setIsIndividualViewDataDisabled={setIsIndividualViewDataDisabled}
               setViewData={setViewData}
             />
           )}
