@@ -3,7 +3,7 @@ import { useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
-import { Segments } from '../../../components/elements/Segments'
+import { OldSegments } from '../../../components/elements/OldSegments'
 import { EarningChartContainer } from '../EarningChartContainer'
 import { EarningLineChartContainer } from '../EarningLineChartContainer'
 import { EarnSectionHeader } from './EarnSectionHeader'
@@ -69,7 +69,7 @@ interface Props extends WithStyles<typeof styles> {
   viewLast30Days: () => void
 }
 
-const EarningHistoryRaw = ({ classes, viewLast24Hours, viewLast7Days, viewLast30Days }: Props) => {
+const OldEarningHistoryRaw = ({ classes, viewLast24Hours, viewLast7Days, viewLast30Days }: Props) => {
   const [isEarningsPerMachineEnabled, setIsEarningsPerMachineEnabled] = useState(false)
   const segmentOptions = [
     { name: '24 Hours', action: viewLast24Hours },
@@ -84,7 +84,7 @@ const EarningHistoryRaw = ({ classes, viewLast24Hours, viewLast7Days, viewLast30
         <p className={classes.subtitle}>See earnings from the last...</p>
         <div className={classes.chartHeader}>
           <div className={classes.segmentsContainer}>
-            <Segments options={segmentOptions} />
+            <OldSegments options={segmentOptions} />
           </div>
           <div className={classes.earningPerMachineSwitchWrapper}>
             <Switch
@@ -111,4 +111,4 @@ const EarningHistoryRaw = ({ classes, viewLast24Hours, viewLast7Days, viewLast30
   )
 }
 
-export const EarningHistory = withStyles(styles)(EarningHistoryRaw)
+export const OldEarningHistory = withStyles(styles)(OldEarningHistoryRaw)

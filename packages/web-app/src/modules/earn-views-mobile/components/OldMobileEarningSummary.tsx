@@ -4,7 +4,7 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
 import { Divider, SectionHeader, StatElement } from '../../../components'
-import { Segments } from '../../../components/elements/Segments'
+import { OldSegments } from '../../../components/elements/OldSegments'
 import { formatBalance } from '../../../utils'
 import { EarningChartContainer } from '../../earn-views'
 import { EarningLineChartContainer } from '../../earn-views/EarningLineChartContainer'
@@ -123,7 +123,7 @@ const _OldMobileEarningSummary = ({
       <SectionHeader>Earning History</SectionHeader>
       <div className={classes.chartHeader}>
         <div className={classes.segmentsContainer}>
-          <Segments options={segmentOptions} />
+          <OldSegments options={segmentOptions} />
         </div>
         <div className={classes.earningPerMachineSwitchWrapper}>
           <Switch

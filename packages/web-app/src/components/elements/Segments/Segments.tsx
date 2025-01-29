@@ -1,27 +1,27 @@
 import classnames from 'classnames'
-import type { ReactNode } from 'react'
-import { Component } from 'react'
+import type CSS from 'csstype'
+import { useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
 
-const styles = (theme: SaladTheme) => ({
+const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   btn: {
-    border: '1px solid ' + theme.green,
-    color: theme.green,
+    border: '1px solid ' + theme.lightGreen,
+    color: theme.lightGreen,
     display: 'inline-block',
     padding: '6px 12px',
     position: 'relative',
     textAlign: 'center',
-    transition: 'background 600ms ease, color 600ms ease',
+    transition: 'background 300ms ease, color 300ms ease',
     userSelect: 'none',
     fontFamily: 'Mallory',
-    fontSize: 16,
-    minWidth: 50,
+    fontSize: '16px',
+    minWidth: '50px',
     lineHeight: '20px',
   },
   active: {
-    backgroundColor: theme.green,
+    backgroundColor: theme.lightGreen,
     color: theme.darkBlue,
     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
     cursor: 'default',
@@ -32,63 +32,48 @@ const styles = (theme: SaladTheme) => ({
   },
   disabled: {
     boxShadow: 'none',
-    opacity: 0.5,
+    opacity: '0.5',
     color: theme.lightGreen,
     cursor: 'not-allowed',
   },
 })
 
+interface Option {
+  name: string
+  action: () => void
+  disabled?: boolean
+}
+
 interface Props extends WithStyles<typeof styles> {
-  options: { name: string; action: () => void }[]
+  options: Option[]
 }
 
-interface State {
-  [key: string]: boolean
-}
+const _Segments = ({ classes, options }: Props) => {
+  const [selectedOptionName, setSelectedOptionName] = useState<string>(options[0]?.name || '')
 
-class _Segments extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = {}
-  }
-
-  public override componentDidMount() {
-    const options = this.props.options
-    options.forEach((option, index) => {
-      this.setState({
-        [option.name]: index === 0,
-      })
-    })
-  }
-
-  onSelect = (action: () => void, name: string) => {
-    for (const [key] of Object.entries(this.state)) {
-      this.setState({
-        [key]: key === name,
-      })
-    }
+  const handleSelect = (action: () => void, name: string, disabled?: boolean) => {
+    if (disabled) return
+    setSelectedOptionName(name)
     action()
   }
 
-  public override render(): ReactNode {
-    const { classes, options } = this.props
-    return (
-      <>
-        {options.map((option, index) => (
-          <label
-            className={classnames(classes.btn, {
-              [classes.active]: this.state[option.name],
-              [classes.inactive]: !this.state[option.name],
-            })}
-            onClick={() => this.onSelect(option.action, option.name)}
-            key={index}
-          >
-            {option.name}
-          </label>
-        ))}
-      </>
-    )
-  }
+  return (
+    <>
+      {options.map((option, index) => (
+        <label
+          className={classnames(
+            classes.btn,
+            selectedOptionName === option.name ? classes.active : classes.inactive,
+            option.disabled && classes.disabled,
+          )}
+          onClick={() => handleSelect(option.action, option.name, option.disabled)}
+          key={index}
+        >
+          {option.name}
+        </label>
+      ))}
+    </>
+  )
 }
 
 export const Segments = withStyles(styles)(_Segments)

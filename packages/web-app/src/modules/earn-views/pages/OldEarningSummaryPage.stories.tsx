@@ -1,11 +1,11 @@
 import type { Meta } from '@storybook/react'
 import moment from 'moment'
 import type { EarningWindow } from '../../balance/models'
-import { EarningSummaryPage } from './EarningSummaryPage'
+import { OldEarningSummaryPage } from './OldEarningSummaryPage'
 
 export default {
   title: 'Modules/Earn/pages/Earning Summary Page',
-  component: EarningSummaryPage,
+  component: OldEarningSummaryPage,
   decorators: [
     (storyFn: any) => <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}>{storyFn()}</div>,
   ],
@@ -16,9 +16,9 @@ const data: EarningWindow[] = [...Array(96)].map((_, i) => ({
   earnings: Math.random(),
 }))
 
-export const Empty = () => <EarningSummaryPage />
+export const Empty = () => <OldEarningSummaryPage />
 export const Complete = () => (
-  <EarningSummaryPage
+  <OldEarningSummaryPage
     currentBalance={456.789}
     lifetimeBalance={12345.678}
     totalXp={123456}
