@@ -5,7 +5,7 @@ import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
 import { OldSegments } from '../../../components/elements/OldSegments'
 import { EarningChartContainer } from '../EarningChartContainer'
-import { EarningLineChartContainer } from '../EarningLineChartContainer'
+import { OldEarningLineChartContainer } from '../OldEarningLineChartContainer'
 import { EarnSectionHeader } from './EarnSectionHeader'
 
 const styles = (theme: SaladTheme) => ({
@@ -96,7 +96,7 @@ const OldEarningHistoryRaw = ({ classes, viewLast24Hours, viewLast7Days, viewLas
           </div>
         </div>
         <div className={classes.chartContainer}>
-          {isEarningsPerMachineEnabled ? <EarningLineChartContainer /> : <EarningChartContainer />}
+          {isEarningsPerMachineEnabled ? <OldEarningLineChartContainer /> : <EarningChartContainer />}
         </div>
         {isEarningsPerMachineEnabled && (
           <div className={classes.descriptionWrapper}>
