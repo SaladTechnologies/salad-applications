@@ -6,7 +6,12 @@ import { Scrollbar } from '../../../components'
 import { withLogin } from '../../auth-views'
 import type { RedeemedReward } from '../../balance/models/RedeemedReward'
 import type { RewardVaultItem } from '../../vault/models'
-import { EarningFrequentlyAskedQuestions, EarningHistory, EarningSummary, LatestRewardsRedeemed } from '../components'
+import {
+  EarningFrequentlyAskedQuestions,
+  EarningSummary,
+  LatestRewardsRedeemed,
+  OldEarningHistory,
+} from '../components'
 
 const styles = () => ({
   content: {
@@ -83,7 +88,7 @@ const _OldEarningSummaryPage: FC<Props> = ({
           redeemedRewardsCount={redeemedRewardsCount}
           totalChoppingHours={totalChoppingHours}
         />
-        <EarningHistory
+        <OldEarningHistory
           viewLast24Hours={viewLast24Hours}
           viewLast7Days={viewLast7Days}
           viewLast30Days={viewLast30Days}
