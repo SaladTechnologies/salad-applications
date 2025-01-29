@@ -86,7 +86,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   gpuName: {
     fontWeight: 700,
   },
-  headerWrapper: {
+  cellHeaderWrapper: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -198,7 +198,7 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({ classes, demandedHardwa
                   <tr key={displayName}>
                     <td className={classNames(classes.gpuWrapper, classes.tableCell, classes.greenTableCell)}>
                       <div className={classes.greenTableCellDivider}></div>
-                      <div className={classes.headerWrapper}>
+                      <div className={classes.cellHeaderWrapper}>
                         <Text className={classes.gpuName} variant="baseS">
                           {displayName}
                         </Text>
