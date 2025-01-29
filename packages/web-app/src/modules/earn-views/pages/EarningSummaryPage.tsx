@@ -88,6 +88,7 @@ const _EarningSummaryPage: FC<Props> = ({
           viewLast7Days={viewLast7Days}
           viewLast30Days={viewLast30Days}
         />
+        {/* <AllMachines /> */}
         <LatestRewardsRedeemed
           latestCompletedRedeemedRewards={latestCompletedRedeemedRewardsArray}
           navigateToRewardVaultPage={trackAndNavigateToRewardVaultPage}
