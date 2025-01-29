@@ -85,9 +85,12 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
   gpuName: {
     fontWeight: 700,
+  },
+  cellHeaderWrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
     marginBottom: '8px',
-    paddingLeft: '10px',
-    paddingRight: '10px',
   },
   boldText: {
     fontWeight: 700,
@@ -190,14 +193,17 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({ classes, demandedHardwa
           </thead>
           <tbody>
             {sortedDemandedHardwarePerformanceList.map(
-              ({ displayName, earningRates, recommendedSpecs, demandTierName }) => {
+              ({ displayName, earningRates, recommendedSpecs, demandTierName, variantNames }) => {
                 return (
                   <tr key={displayName}>
                     <td className={classNames(classes.gpuWrapper, classes.tableCell, classes.greenTableCell)}>
                       <div className={classes.greenTableCellDivider}></div>
-                      <Text className={classes.gpuName} variant="baseS">
-                        {displayName}
-                      </Text>
+                      <div className={classes.cellHeaderWrapper}>
+                        <Text className={classes.gpuName} variant="baseS">
+                          {displayName}
+                        </Text>
+                        {variantNames.length > 0 && <Text variant="baseXS">(Inc. Super Variant)</Text>}
+                      </div>
                       <Text variant="baseXS">HOURLY RATE</Text>
                       <Text variant="baseXS">
                         ${earningRates.maxEarningRate} - ${earningRates.minEarningRate}

@@ -38,7 +38,7 @@ interface Props extends WithStyles<typeof styles> {
   viewLast30Days: () => void
 }
 
-const _EarningSummaryPage: FC<Props> = ({
+const _OldEarningSummaryPage: FC<Props> = ({
   classes,
   currentBalance,
   lifetimeBalance,
@@ -88,7 +88,6 @@ const _EarningSummaryPage: FC<Props> = ({
           viewLast7Days={viewLast7Days}
           viewLast30Days={viewLast30Days}
         />
-        {/* <AllMachines /> */}
         <LatestRewardsRedeemed
           latestCompletedRedeemedRewards={latestCompletedRedeemedRewardsArray}
           navigateToRewardVaultPage={trackAndNavigateToRewardVaultPage}
@@ -100,4 +99,4 @@ const _EarningSummaryPage: FC<Props> = ({
   )
 }
 
-export const EarningSummaryPage = withLogin(withStyles(styles)(_EarningSummaryPage))
+export const OldEarningSummaryPage = withLogin(withStyles(styles)(_OldEarningSummaryPage))
