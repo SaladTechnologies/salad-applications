@@ -61,6 +61,11 @@ enum ViewType {
   Table = 'Table',
 }
 
+export enum ViewData {
+  Individual = 'Individual',
+  Aggregate = 'Aggregate',
+}
+
 interface Props extends WithStyles<typeof styles> {
   viewLast24Hours: () => void
   viewLast7Days: () => void
@@ -69,6 +74,9 @@ interface Props extends WithStyles<typeof styles> {
 
 const EarningHistoryRaw = ({ classes, viewLast24Hours, viewLast7Days, viewLast30Days }: Props) => {
   const [viewType, setViewType] = useState<ViewType>(ViewType.Graph)
+  const [viewData, setViewData] = useState<ViewData>(ViewData.Individual)
+
+  const isAggregateView = viewData === ViewData.Aggregate
 
   const viewTypeOptions = [
     { name: ViewType.Graph, action: () => setViewType(ViewType.Graph) },
@@ -82,8 +90,8 @@ const EarningHistoryRaw = ({ classes, viewLast24Hours, viewLast7Days, viewLast30
   ]
 
   const viewDataOptions = [
-    { name: 'Individual', action: () => {} },
-    { name: 'Aggregate', action: () => {} },
+    { name: ViewData.Individual, action: () => setViewData(ViewData.Individual) },
+    { name: ViewData.Aggregate, action: () => setViewData(ViewData.Aggregate) },
   ]
 
   return (
@@ -105,7 +113,13 @@ const EarningHistoryRaw = ({ classes, viewLast24Hours, viewLast7Days, viewLast30
           </div>
         </div>
         <div className={classes.chartContainer}>
-          {viewType === ViewType.Graph && <EarningLineChartContainer />}
+          {viewType === ViewType.Graph && (
+            <EarningLineChartContainer
+              isAggregateView={isAggregateView}
+              viewData={viewData}
+              setViewData={setViewData}
+            />
+          )}
           {viewType === ViewType.Table && <EarningChartContainer />}
         </div>
         <div className={classes.descriptionWrapper}>

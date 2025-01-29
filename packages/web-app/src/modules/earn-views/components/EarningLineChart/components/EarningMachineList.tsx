@@ -25,11 +25,6 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     alignItems: 'flex-start',
     flexDirection: 'column',
   },
-  link: {
-    color: theme.mediumGreen,
-    textDecoration: 'underline',
-    cursor: 'pointer',
-  },
   option: {
     display: 'flex',
     flexDirection: 'row',
@@ -48,11 +43,12 @@ interface MachineOption {
 export type MachineOptions = Record<string, MachineOption>
 
 interface Props extends WithStyles<typeof styles> {
+  isAggregateView: boolean
   machineOptions: MachineOptions
   onSelectedMachineChange: (machineId: string) => void
 }
 
-const EarningMachineListRaw: FC<Props> = ({ classes, machineOptions, onSelectedMachineChange }) => {
+const EarningMachineListRaw: FC<Props> = ({ classes, machineOptions, isAggregateView, onSelectedMachineChange }) => {
   const machineOptionsList = Object.values(machineOptions)
   const totalMachinesAmount = machineOptionsList.length
   const checkedMachinesAmount = machineOptionsList.filter((machineOption) => machineOption.isChecked).length
@@ -63,11 +59,6 @@ const EarningMachineListRaw: FC<Props> = ({ classes, machineOptions, onSelectedM
     <div className={classes.container}>
       <div className={classes.header}>
         <Text variant="baseM">{title}</Text>
-        <a href="https://support.salad.com/article/414-how-to-find-your-salad-machine-id">
-          <Text className={classes.link} variant="baseS">
-            Where to find the Machine ID?
-          </Text>
-        </a>
       </div>
       <Scrollbars>
         {machineOptionsList.map((machineOption, index) => (
@@ -77,7 +68,7 @@ const EarningMachineListRaw: FC<Props> = ({ classes, machineOptions, onSelectedM
             key={machineOption.id}
           >
             <Checkbox checked={machineOption.isChecked} checkedColor={earningsChartColors[index]} />
-            <Text variant="baseM">{machineOption.id.substring(0, 8)}</Text>
+            <Text variant="baseM">{isAggregateView ? machineOption.id : machineOption.id.substring(0, 8)}</Text>
           </div>
         ))}
       </Scrollbars>

@@ -9,11 +9,13 @@ import type { Machine } from '../../../../api/machinesApiClient/generated/models
 import { DefaultTheme, type SaladTheme } from '../../../../SaladTheme'
 import { formatBalance } from '../../../../utils'
 import type { ChartDaysShowing, EarningPerMachine, EarningWindow } from '../../../balance/models'
-import { earningsChartColors } from '../../pages/constants'
 import { normalizeEarningsPerMachineData } from '../../utils'
+import { ViewData } from '../EarningHistory'
 import { CustomizedXAxisTick } from './components'
 import type { MachineOptions } from './components/EarningMachineList'
 import { EarningMachineList } from './components/EarningMachineList'
+import { aggregateMachineOption } from './constants'
+import { getAggregatedMachineEarningsValue, getMachineOptions } from './utils'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   earningLineChartWrapper: {
@@ -47,36 +49,41 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
 })
 
-const initiallyCheckedMachineOptionsAmount = 5
-
-const getMachineOptions = (earningsPerMachine: EarningPerMachine) => {
-  return Object.keys(earningsPerMachine).reduce((machineOptions, machineId, index) => {
-    const isCheckedInitially = index < initiallyCheckedMachineOptionsAmount
-    return {
-      ...machineOptions,
-      [machineId]: {
-        id: machineId,
-        color: earningsChartColors[index] as string,
-        isChecked: isCheckedInitially,
-      },
-    }
-  }, {} as MachineOptions)
-}
-
 interface Props extends WithStyles<typeof styles> {
   earningsPerMachine: EarningPerMachine
   machines: Machine[] | null
   daysShowing: ChartDaysShowing
+  isAggregateView: boolean
   fetchEarningsPerMachine: () => void
+  setViewData: (viewData: ViewData) => void
 }
 
-const _EarningLineChart = ({ classes, machines, earningsPerMachine, daysShowing, fetchEarningsPerMachine }: Props) => {
+const _EarningLineChart = ({
+  classes,
+  machines,
+  earningsPerMachine,
+  daysShowing,
+  isAggregateView,
+  fetchEarningsPerMachine,
+  setViewData,
+}: Props) => {
   const is24HoursChart = daysShowing === 1
   const [machineOptions, setMachineOptions] = useState<MachineOptions>({})
 
   useEffect(() => {
-    setMachineOptions(getMachineOptions(earningsPerMachine))
-  }, [earningsPerMachine])
+    fetchEarningsPerMachine()
+  }, [fetchEarningsPerMachine])
+
+  useEffect(() => {
+    setMachineOptions(isAggregateView ? aggregateMachineOption : getMachineOptions(earningsPerMachine))
+  }, [earningsPerMachine, isAggregateView])
+
+  useEffect(() => {
+    const checkedMachineOptions = Object.values(machineOptions).filter((item) => item.isChecked)
+    if (checkedMachineOptions.length > 10) {
+      setViewData(ViewData.Aggregate)
+    }
+  }, [machineOptions, setViewData])
 
   const handleMachineOptionClick = (machineId: string) => {
     setMachineOptions(
@@ -91,15 +98,23 @@ const _EarningLineChart = ({ classes, machines, earningsPerMachine, daysShowing,
     )
   }
 
-  const machineEarningsData = Object.keys(earningsPerMachine).map((machineId) => ({
+  const individualMachineEarningsData = Object.keys(earningsPerMachine).map((machineId) => ({
     id: machineId,
     name: machineId.substring(0, 8),
     data: normalizeEarningsPerMachineData(earningsPerMachine[machineId] as EarningWindow[], daysShowing),
   }))
 
-  useEffect(() => {
-    fetchEarningsPerMachine()
-  }, [fetchEarningsPerMachine])
+  const aggregatedMachineEarningsValue = getAggregatedMachineEarningsValue(earningsPerMachine)
+
+  const aggregateMachineEarningsData = [
+    {
+      id: 'Aggregate',
+      name: 'Aggregate',
+      data: normalizeEarningsPerMachineData(aggregatedMachineEarningsValue as EarningWindow[], daysShowing),
+    },
+  ]
+
+  const machineEarningsData = isAggregateView ? aggregateMachineEarningsData : individualMachineEarningsData
 
   const withMachinesData = machines !== null
   const isLoading = machineEarningsData.length <= 0
@@ -114,6 +129,7 @@ const _EarningLineChart = ({ classes, machines, earningsPerMachine, daysShowing,
       </div>
     )
   }
+
   return (
     <div className={classes.earningLineChartWrapper}>
       {isLoading ? (
@@ -170,7 +186,11 @@ const _EarningLineChart = ({ classes, machines, earningsPerMachine, daysShowing,
               )}
             </LineChart>
           </ResponsiveContainer>
-          <EarningMachineList machineOptions={machineOptions} onSelectedMachineChange={handleMachineOptionClick} />
+          <EarningMachineList
+            isAggregateView={isAggregateView}
+            machineOptions={machineOptions}
+            onSelectedMachineChange={handleMachineOptionClick}
+          />
         </>
       )}
     </div>
