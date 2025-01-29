@@ -19,13 +19,13 @@ export const usePagination = (params?: UsePaginationParams) => {
 
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(initialCurrentPageNumber)
 
-  const higherItemNumberOnPage = itemsPerPageAmount * currentPageNumber
-  const lowerItemNumberOnPage = higherItemNumberOnPage - itemsPerPageAmount + 1
+  const highestItemNumberOnPage = itemsPerPageAmount * currentPageNumber
+  const lowestItemNumberOnPage = highestItemNumberOnPage - itemsPerPageAmount + 1
 
   return {
     setCurrentPageNumber,
-    lowerItemNumberOnPage,
-    higherItemNumberOnPage,
+    lowestItemNumberOnPage,
+    highestItemNumberOnPage,
     currentPageNumber,
     itemsPerPageAmount,
   }
