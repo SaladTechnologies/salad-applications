@@ -8,6 +8,7 @@ import { BackupCodesPageContainer } from './modules/backup-codes/BackupCodesPage
 import { DemandAlertsPage } from './modules/demand-alerts-views'
 import { DemandMonitorPageContainer } from './modules/demand-monitor-views'
 import { MobileEarningSummaryContainer } from './modules/earn-views-mobile'
+import { OldMobileEarningSummaryContainer } from './modules/earn-views-mobile/OldMobileEarningSummaryContainer'
 import { PasskeyDeletePageContainer } from './modules/passkey-delete'
 import { ProtectedActionPageContainer } from './modules/protected-action'
 import { RewardDetailsContainer } from './modules/reward-views'
@@ -16,12 +17,19 @@ const _Routes = ({ location }: RouteComponentProps) => {
   const featureManager = useFeatureManager()
   const isDemandMonitorFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.DemandMonitor)
   const isDemandNotificationsFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.DemandNotifications)
+  const isFleetDashboardFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.FleetDashboard)
   const currentLocation =
     (location.state as { currentLocation: Location | undefined } | undefined)?.currentLocation || location
   return (
     <>
       <Switch location={currentLocation}>
-        <Route exact path="/earn/summary" component={MobileEarningSummaryContainer} />
+        <Route
+          exact
+          path="/earn/summary"
+          component={
+            isFleetDashboardFeatureFlagEnabled ? MobileEarningSummaryContainer : OldMobileEarningSummaryContainer
+          }
+        />
         {isDemandMonitorFeatureFlagEnabled && (
           <Route path="/earn/demand" exact component={DemandMonitorPageContainer} />
         )}
