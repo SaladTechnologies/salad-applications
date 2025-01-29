@@ -56,7 +56,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties | Record<stri
   },
 })
 
-enum ViewType {
+export enum ViewType {
   Graph = 'Graph',
   Table = 'Table',
 }

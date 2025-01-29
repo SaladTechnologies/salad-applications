@@ -1,4 +1,3 @@
-import { Switch, Text } from '@saladtechnologies/garden-components'
 import { useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
@@ -8,6 +7,7 @@ import { Segments } from '../../../components/elements/Segments'
 import { formatBalance } from '../../../utils'
 import { EarningChartContainer } from '../../earn-views'
 import { EarningLineChartContainer } from '../../earn-views/EarningLineChartContainer'
+import { ViewData, ViewType } from '../../earn-views/components'
 
 const styles = (theme: SaladTheme) => ({
   item: {
@@ -20,12 +20,6 @@ const styles = (theme: SaladTheme) => ({
     position: 'relative',
     flexDirection: 'column',
   },
-  chartHeader: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-end',
-    flexDirection: 'row',
-  },
   segmentsContainer: {
     '&>label:first-child': {
       borderRadius: '2px 0px 0px 2px',
@@ -34,12 +28,16 @@ const styles = (theme: SaladTheme) => ({
       borderRadius: '0px 2px 2px 0px',
     },
   },
-  earningPerMachineSwitchWrapper: {
-    marginLeft: 32,
-  },
   descriptionWrapper: {
     paddingLeft: '70px',
     color: theme.lightGreen,
+  },
+  subtitle: {
+    fontFamily: 'Mallory',
+    fontSize: '16px',
+    color: theme.lightGreen,
+    lineHeight: '1.5',
+    marginBottom: '10px',
   },
 })
 
@@ -67,11 +65,25 @@ const _MobileEarningSummary = ({
   viewLast7Days,
   viewLast30Days,
 }: Props) => {
-  const [isEarningsPerMachineEnabled, setIsEarningsPerMachineEnabled] = useState(false)
-  const segmentOptions = [
+  const [viewType, setViewType] = useState<ViewType>(ViewType.Graph)
+  const [viewData, setViewData] = useState<ViewData>(ViewData.Individual)
+
+  const isAggregateView = viewData === ViewData.Aggregate
+
+  const viewTypeOptions = [
+    { name: ViewType.Graph, action: () => setViewType(ViewType.Graph) },
+    { name: ViewType.Table, action: () => setViewType(ViewType.Table) },
+  ]
+
+  const viewRangeOptions = [
     { name: '24 Hours', action: viewLast24Hours },
     { name: '7 Days', action: viewLast7Days },
     { name: '30 Days', action: viewLast30Days },
+  ]
+
+  const viewDataOptions = [
+    { name: ViewData.Individual, action: () => setViewData(ViewData.Individual) },
+    { name: ViewData.Aggregate, action: () => setViewData(ViewData.Aggregate) },
   ]
 
   return (
@@ -121,30 +133,24 @@ const _MobileEarningSummary = ({
       </div>
       <Divider />
       <SectionHeader>Earning History</SectionHeader>
-      <div className={classes.chartHeader}>
-        <div className={classes.segmentsContainer}>
-          <Segments options={segmentOptions} />
-        </div>
-        <div className={classes.earningPerMachineSwitchWrapper}>
-          <Switch
-            label="Earnings Per Machine"
-            checked={isEarningsPerMachineEnabled}
-            onChange={setIsEarningsPerMachineEnabled}
-            variant="light"
-          />
-        </div>
+      <div>
+        <p className={classes.subtitle}>View Type</p>
+        <Segments options={viewTypeOptions} />
+      </div>
+      <div>
+        <p className={classes.subtitle}>View Range</p>
+        <Segments options={viewRangeOptions} />
+      </div>
+      <div>
+        <p className={classes.subtitle}>View Data as</p>
+        <Segments options={viewDataOptions} />
       </div>
       <div className={classes.chartContainer}>
-        {isEarningsPerMachineEnabled ? <EarningLineChartContainer /> : <EarningChartContainer />}
+        {viewType === ViewType.Graph && (
+          <EarningLineChartContainer isAggregateView={isAggregateView} viewData={viewData} setViewData={setViewData} />
+        )}
+        {viewType === ViewType.Table && <EarningChartContainer />}
       </div>
-      {isEarningsPerMachineEnabled && (
-        <div className={classes.descriptionWrapper}>
-          <Text variant="baseXS">
-            *Per machine earnings don’t include referral earnings, earning rate multipliers or any other kind of bonus
-            earnings.
-          </Text>
-        </div>
-      )}
       <Divider />
     </>
   )
