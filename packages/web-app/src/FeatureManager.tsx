@@ -8,6 +8,7 @@ export enum FeatureFlags {
   NewChefDownload = 'app_newchefdw',
   DemandMonitor = 'app_DemandMonitor',
   DemandNotifications = 'app_DemandNotifications',
+  FleetDashboard = 'app_fleetdashboard ',
 }
 
 export interface FeatureManager {
