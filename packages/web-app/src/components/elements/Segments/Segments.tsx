@@ -13,7 +13,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     padding: '6px 12px',
     position: 'relative',
     textAlign: 'center',
-    transition: 'background 600ms ease, color 600ms ease',
+    transition: 'background 300ms ease, color 300ms ease',
     userSelect: 'none',
     fontFamily: 'Mallory',
     fontSize: '16px',
