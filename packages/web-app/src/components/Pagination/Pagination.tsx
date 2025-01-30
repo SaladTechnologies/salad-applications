@@ -92,7 +92,7 @@ const _Pagination: FunctionComponent<Props> = ({
   onPageChange,
 }) => {
   const totalPagesAmount = Math.ceil(itemsTotalAmount / itemsPerPageAmount)
-  const isPreviousPageEnabled = currentPageNumber !== 1
+  const isPreviousPageEnabled = currentPageNumber > 1
   const isNextPageEnabled = currentPageNumber < totalPagesAmount
   const firstPageNumber = 1
   const lastPageNumber = totalPagesAmount
