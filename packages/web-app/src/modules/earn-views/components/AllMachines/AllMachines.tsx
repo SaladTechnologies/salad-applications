@@ -13,6 +13,7 @@ import { Table } from '../../../../components/Table'
 import type { TableRow } from '../../../../components/Table/types'
 import { DefaultTheme, type SaladTheme } from '../../../../SaladTheme'
 import { EarnSectionHeader } from '../EarnSectionHeader'
+import type { MachineState } from './mocks'
 import { generatedMockedMachines } from './mocks'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
@@ -94,11 +95,19 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     flexDirection: 'row',
     cursor: 'pointer',
   },
+  idWrapper: {
+    cursor: 'pointer',
+    '&:hover': {
+      textDecoration: 'underline',
+    },
+  },
 })
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  onOpenMachineDetails: (machine: MachineState) => void
+}
 
-const _AllMachines = ({ classes }: Props) => {
+const _AllMachines = ({ classes, onOpenMachineDetails }: Props) => {
   const [selectedMachineIds, setSelectedMachineIds] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(generatedMockedMachines.map((machine) => [machine.id, false])),
   )
@@ -170,6 +179,14 @@ const _AllMachines = ({ classes }: Props) => {
             </div>
           ),
           ...machine,
+          id: (
+            <div
+              className={classNames(classes.tableCell, classes.idWrapper)}
+              onClick={() => onOpenMachineDetails(machine as MachineState)}
+            >
+              <Text variant="baseXS">{machine.id}</Text>
+            </div>
+          ),
           lastSeen: DateTime.fromJSDate(machine.lastSeen).toFormat('MMM d, yyyy'),
           currentEarningRate: (
             <div className={classNames(classes.tableCell, classes.tableCellCentered)}>{machine.currentEarningRate}</div>

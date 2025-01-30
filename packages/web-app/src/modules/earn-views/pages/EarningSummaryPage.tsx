@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Scrollbar } from '../../../components'
@@ -7,6 +7,8 @@ import { withLogin } from '../../auth-views'
 import type { RedeemedReward } from '../../balance/models/RedeemedReward'
 import type { RewardVaultItem } from '../../vault/models'
 import { EarningFrequentlyAskedQuestions, EarningHistory, EarningSummary, LatestRewardsRedeemed } from '../components'
+import type { MachineState } from '../components/AllMachines/mocks'
+import { MachineDetailsModal } from '../components/MachineDetailsModal'
 
 const styles = () => ({
   content: {
@@ -58,6 +60,12 @@ const _EarningSummaryPage: FC<Props> = ({
   viewLast7Days,
   viewLast30Days,
 }) => {
+  const [selectedMachine, setSelectedMachine] = useState<MachineState | null>(null)
+
+  const handleCloseMachineDetailsModal = () => {
+    setSelectedMachine(null)
+  }
+
   useEffect(() => {
     startRedemptionsRefresh()
     trackEarnPageViewed()
@@ -88,7 +96,8 @@ const _EarningSummaryPage: FC<Props> = ({
           viewLast7Days={viewLast7Days}
           viewLast30Days={viewLast30Days}
         />
-        {/* <AllMachines /> */}
+        {/* <AllMachines onOpenMachineDetails={setSelectedMachine} /> */}
+        {selectedMachine && <MachineDetailsModal {...selectedMachine} onCloseClick={handleCloseMachineDetailsModal} />}
         <LatestRewardsRedeemed
           latestCompletedRedeemedRewards={latestCompletedRedeemedRewardsArray}
           navigateToRewardVaultPage={trackAndNavigateToRewardVaultPage}

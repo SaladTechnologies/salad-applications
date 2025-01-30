@@ -3,11 +3,10 @@ export interface MachineState {
   status: RunningStatus
   lastSeen: Date
   currentEarningRate: number
-  warnings: MachineWarnings[]
+  warnings: string[]
 }
 
-type RunningStatus = 'Idle' | 'Offline' | 'Downloading Job' | 'Downloading Job' | 'Running Job'
-type MachineWarnings = 'Idle' | 'Wsl Update' | 'Network Blocked'
+export type RunningStatus = 'Idle' | 'Offline' | 'Downloading Job' | 'Downloading Job' | 'Running Job'
 
 export const getRandomId = (): string => {
   let text: string = ''
@@ -25,7 +24,7 @@ const generateMockedMachines = () => {
     .fill(null)
     .map(() => ({
       id: getRandomId().toLocaleLowerCase(),
-      status: 'Idle',
+      status: 'Idle' as RunningStatus,
       lastSeen: new Date(),
       currentEarningRate: 0.018,
       warnings: ['Wsl Update', 'Network Blocked'],
