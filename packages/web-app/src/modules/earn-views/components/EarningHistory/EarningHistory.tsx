@@ -63,14 +63,12 @@ interface Props extends WithStyles<typeof styles> {
   viewLast30Days: () => void
 }
 
-const EarningHistoryRaw = ({ classes, viewLast24Hours, viewLast7Days, viewLast30Days }: Props) => {
+const _EarningHistory = ({ classes, viewLast24Hours, viewLast7Days, viewLast30Days }: Props) => {
   const [viewType, setViewType] = useState<ViewType>(ViewType.Graph)
   const [viewRange, setViewRange] = useState<ViewRange>(ViewRange.Last24Hours)
   const [viewData, setViewData] = useState<ViewData>(ViewData.Individual)
 
   const [isIndividualViewDataDisabled, setIsIndividualViewDataDisabled] = useState<boolean>(false)
-
-  const isAggregateView = viewData === ViewData.Aggregate
 
   const viewTypeOptions = [
     { name: ViewType.Graph, action: () => setViewType(ViewType.Graph) },
@@ -156,7 +154,6 @@ const EarningHistoryRaw = ({ classes, viewLast24Hours, viewLast7Days, viewLast30
         <div className={classes.chartContainer}>
           {viewType === ViewType.Graph && (
             <EarningLineChartContainer
-              isAggregateView={isAggregateView}
               viewData={viewData}
               setIsIndividualViewDataDisabled={setIsIndividualViewDataDisabled}
               setViewData={setViewData}
@@ -175,4 +172,4 @@ const EarningHistoryRaw = ({ classes, viewLast24Hours, viewLast7Days, viewLast30
   )
 }
 
-export const EarningHistory = withStyles(styles)(EarningHistoryRaw)
+export const EarningHistory = withStyles(styles)(_EarningHistory)

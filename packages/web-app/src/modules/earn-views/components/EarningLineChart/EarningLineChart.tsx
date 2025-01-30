@@ -53,7 +53,7 @@ interface Props extends WithStyles<typeof styles> {
   earningsPerMachine: EarningPerMachine
   machines: Machine[] | null
   daysShowing: ChartDaysShowing
-  isAggregateView: boolean
+  viewData: ViewData
   fetchEarningsPerMachine: () => void
   setIsIndividualViewDataDisabled: (isDisabled: boolean) => void
   setViewData: (viewData: ViewData) => void
@@ -64,12 +64,13 @@ const _EarningLineChart = ({
   machines,
   earningsPerMachine,
   daysShowing,
-  isAggregateView,
+  viewData,
   fetchEarningsPerMachine,
   setIsIndividualViewDataDisabled,
   setViewData,
 }: Props) => {
   const is24HoursChart = daysShowing === 1
+  const isAggregateView = viewData === ViewData.Aggregate
   const [machineOptions, setMachineOptions] = useState<MachineOptions>({})
 
   useEffect(() => {

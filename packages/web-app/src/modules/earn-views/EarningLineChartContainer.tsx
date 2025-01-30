@@ -4,7 +4,7 @@ import type { ViewData } from './components/EarningHistory/constants'
 import { EarningLineChart } from './components/EarningLineChart'
 
 interface EarningLineChartContainerProps {
-  isAggregateView: boolean
+  viewData: ViewData
   setViewData: (viewData: ViewData) => void
   setIsIndividualViewDataDisabled: (isDisabled: boolean) => void
 }
