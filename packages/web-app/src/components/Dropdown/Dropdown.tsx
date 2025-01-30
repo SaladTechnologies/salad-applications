@@ -16,28 +16,43 @@ export interface DropdownOption {
   value: string
 }
 
-export type DropdownStylesConfig = StylesConfig<DropdownOption | '', false, GroupBase<DropdownOption | ''>>
+export type DropdownStylesConfig = StylesConfig<DropdownOption, false, GroupBase<DropdownOption>>
 
 export interface Props extends WithStyles<typeof styles> {
+  control?: JSX.Element
   customStyles?: DropdownStylesConfig
   options?: DropdownOption[]
   value?: string
+  isSearchable?: boolean
   onChange?: (value?: any) => void
 }
 
-const _Dropdown: FC<Props> = ({ classes, customStyles, options, value, onChange }) => {
-  const selectedValue = value && options?.find((option) => option.value === value)
+const _Dropdown: FC<Props> = ({ classes, control, customStyles, isSearchable=true, options, value, onChange }) => {
+  const selectedValue = value ? options?.find((option) => option.value === value) : undefined
 
   const defaultStyles: DropdownStylesConfig = {
     control: (baseStyles: CSSObjectWithLabel) => ({
       ...baseStyles,
-      backgroundColor: DefaultTheme.darkBlue,
+      backgroundColor: control ? 'transparent' : DefaultTheme.darkBlue,
       borderRadius: 0,
+      ...(control && {
+        cursor: 'pointer',
+        border: 'none',
+        outline: 'none',
+        boxShadow: 'none',
+        '& input': {
+          position: 'absolute',
+        },
+        '&:hover svg': {
+          color: DefaultTheme.green,
+        },
+      }),
     }),
     menu: (baseStyles: CSSObjectWithLabel) => ({
       ...baseStyles,
       color: DefaultTheme.lightGreen,
       backgroundColor: DefaultTheme.darkBlue,
+      ...(control && { width: '150px' }),
     }),
     option: (baseStyles: CSSObjectWithLabel, state: { isSelected: boolean; isFocused: boolean }) => {
       let backgroundColor = DefaultTheme.darkBlue
@@ -60,6 +75,10 @@ const _Dropdown: FC<Props> = ({ classes, customStyles, options, value, onChange 
       transition: 'opacity 300ms',
       color: DefaultTheme.lightGreen,
     }),
+    placeholder: (baseStyles: CSSObjectWithLabel) => ({
+      ...baseStyles,
+      ...(control && { color: DefaultTheme.lightGreen }),
+    }),
   }
 
   return (
@@ -68,8 +87,17 @@ const _Dropdown: FC<Props> = ({ classes, customStyles, options, value, onChange 
       value={selectedValue}
       options={options}
       onChange={onChange}
-      defaultValue={options && options[0]}
+      defaultValue={control ? undefined : options && options[0]}
       styles={customStyles ?? defaultStyles}
+      {...(control && {
+        components: {
+          IndicatorSeparator: () => null,
+          DropdownIndicator: () => null,
+          SingleValue: () => control,
+        },
+      })}
+      placeholder={control}
+      isSearchable={isSearchable}
     />
   )
 }

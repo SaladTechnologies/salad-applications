@@ -9,6 +9,7 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Pagination } from '../../../../components/Pagination'
 import { usePagination } from '../../../../components/Pagination/usePagination'
+import { Dropdown } from '../../../../components/Dropdown'
 import { Table } from '../../../../components/Table'
 import type { TableRow } from '../../../../components/Table/types'
 import { DefaultTheme, type SaladTheme } from '../../../../SaladTheme'
@@ -127,7 +128,28 @@ const _AllMachines = ({ classes, machines, onMachineIdClick }: Props) => {
   const getTitles = () => {
     return [
       <div className={(classes.tableHeaderCell, classes.tableCellCentered)}>
-        <FontAwesomeIcon icon={faList} />
+        <Dropdown
+          control={<FontAwesomeIcon size="xl" icon={faList} />}
+          options={[
+            {
+              value: 'Select All',
+              label: 'Select All',
+            },
+            {
+              value: 'Select All In Page',
+              label: 'Select All In Page',
+            },
+            {
+              value: 'Deselect All',
+              label: 'Deselect All',
+            },
+            {
+              value: 'Deselect All In Page',
+              label: 'Deselect All In Page',
+            },
+          ]}
+          isSearchable={false}
+        />
       </div>,
       <div className={classes.tableHeaderCell}>
         <Text variant="baseXS">Machine ID</Text>
