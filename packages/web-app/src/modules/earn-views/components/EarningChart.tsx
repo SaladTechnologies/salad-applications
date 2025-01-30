@@ -264,9 +264,6 @@ const CustomizedYAxisTick = withStyles(styles)(_CustomizedYAxisTick)
 
 interface Props extends WithStyles<typeof styles> {
   earningHistory: EarningWindow[]
-  viewLast24Hours: () => void
-  viewLast7Days: () => void
-  viewLast30Days: () => void
   daysShowing: ChartDaysShowing
 }
 

@@ -3,6 +3,7 @@ import { observable, runInAction, when } from 'mobx'
 import { hotjar } from 'react-hotjar'
 import { config } from '../../config'
 import type { AuthStore } from '../auth'
+import type { ViewData, ViewRange, ViewType } from '../earn-views/components/EarningHistory/constants'
 import type { NotificationMessage } from '../notifications/models'
 import type { Profile } from '../profile/models'
 import type { Reward } from '../reward/models'
@@ -368,10 +369,12 @@ export class AnalyticsStore {
     })
   }
 
-  /** Track when user click on time filter button on Earn page */
-  public trackEarnPageTimeFilterButtonClicked = (timeFilter: string) => {
+  /** Track when user click on any filter button on Earn page in Earning History */
+  public trackEarningHistoryFilterClicked = (viewRange: ViewRange, viewType: ViewType, viewData: ViewData) => {
     this.track('Earning Summary Action', {
-      TimeFilter: timeFilter,
+      TimeFilter: viewRange,
+      ViewFilter: viewType,
+      AggregationFilter: viewData,
     })
   }
 

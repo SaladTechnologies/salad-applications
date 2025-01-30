@@ -6,7 +6,12 @@ import { Scrollbar } from '../../../components'
 import { withLogin } from '../../auth-views'
 import type { RedeemedReward } from '../../balance/models/RedeemedReward'
 import type { RewardVaultItem } from '../../vault/models'
-import { EarningFrequentlyAskedQuestions, EarningHistory, EarningSummary, LatestRewardsRedeemed } from '../components'
+import {
+  EarningFrequentlyAskedQuestions,
+  EarningHistoryContainer,
+  EarningSummary,
+  LatestRewardsRedeemed,
+} from '../components'
 
 const styles = () => ({
   content: {
@@ -33,9 +38,6 @@ interface Props extends WithStyles<typeof styles> {
   trackAndNavigateToRewardVaultPage: () => void
   trackEarnPageFAQLinkClicked: (faqLink: string) => void
   trackEarnPageViewed: () => void
-  viewLast24Hours: () => void
-  viewLast7Days: () => void
-  viewLast30Days: () => void
 }
 
 const _EarningSummaryPage: FC<Props> = ({
@@ -54,9 +56,6 @@ const _EarningSummaryPage: FC<Props> = ({
   trackAndNavigateToRewardVaultPage,
   trackEarnPageFAQLinkClicked,
   trackEarnPageViewed,
-  viewLast24Hours,
-  viewLast7Days,
-  viewLast30Days,
 }) => {
   useEffect(() => {
     startRedemptionsRefresh()
@@ -83,11 +82,7 @@ const _EarningSummaryPage: FC<Props> = ({
           redeemedRewardsCount={redeemedRewardsCount}
           totalChoppingHours={totalChoppingHours}
         />
-        <EarningHistory
-          viewLast24Hours={viewLast24Hours}
-          viewLast7Days={viewLast7Days}
-          viewLast30Days={viewLast30Days}
-        />
+        <EarningHistoryContainer />
         {/* <AllMachines /> */}
         <LatestRewardsRedeemed
           latestCompletedRedeemedRewards={latestCompletedRedeemedRewardsArray}

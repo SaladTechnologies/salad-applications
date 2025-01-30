@@ -3,7 +3,7 @@ import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
 import { Divider, SectionHeader, StatElement } from '../../../components'
 import { formatBalance } from '../../../utils'
-import { EarningHistory } from '../../earn-views/components'
+import { EarningHistoryContainer } from '../../earn-views/components'
 
 const styles = (theme: SaladTheme) => ({
   item: {
@@ -44,9 +44,6 @@ interface Props extends WithStyles<typeof styles> {
   last30DayEarnings: number
   lifetimeBalance?: number
   totalXp?: number
-  viewLast24Hours: () => void
-  viewLast7Days: () => void
-  viewLast30Days: () => void
 }
 
 const _MobileEarningSummary = ({
@@ -57,9 +54,6 @@ const _MobileEarningSummary = ({
   last30DayEarnings,
   lifetimeBalance,
   totalXp,
-  viewLast24Hours,
-  viewLast7Days,
-  viewLast30Days,
 }: Props) => {
   return (
     <>
@@ -108,7 +102,7 @@ const _MobileEarningSummary = ({
       </div>
       <Divider />
       <SectionHeader>Earning History</SectionHeader>
-      <EarningHistory viewLast24Hours={viewLast24Hours} viewLast7Days={viewLast7Days} viewLast30Days={viewLast30Days} />
+      <EarningHistoryContainer />
       <Divider />
     </>
   )
