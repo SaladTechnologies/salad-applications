@@ -47,7 +47,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties | Record<stri
   chartHeader: {
     display: 'flex',
     justifyContent: 'flex-start',
-    alignItems: 'flex-end',
+    alignItems: 'baseline',
     flexDirection: 'row',
     gap: '32px',
   },
