@@ -8,7 +8,7 @@ import { Segments } from '../../../../components/elements/Segments'
 import { EarningChartContainer } from '../../EarningChartContainer'
 import { EarningLineChartContainer } from '../../EarningLineChartContainer'
 import { EarnSectionHeader } from '../EarnSectionHeader'
-import { ViewData, ViewRange, ViewType } from './utils'
+import { ViewData, ViewRange, ViewType } from './constants'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties | Record<string, CSS.Properties>> = (
   theme: SaladTheme,

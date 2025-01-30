@@ -1,6 +1,6 @@
 import type { RootStore } from '../../Store'
 import { connect } from '../../connect'
-import type { ViewData } from './components/EarningHistory/utils'
+import type { ViewData } from './components/EarningHistory/constants'
 import { EarningLineChart } from './components/EarningLineChart'
 
 interface EarningLineChartContainerProps {

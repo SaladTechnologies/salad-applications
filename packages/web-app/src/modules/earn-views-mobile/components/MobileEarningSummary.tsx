@@ -1,13 +1,9 @@
-import { useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
 import { Divider, SectionHeader, StatElement } from '../../../components'
-import { Segments } from '../../../components/elements/Segments'
 import { formatBalance } from '../../../utils'
-import { EarningChartContainer } from '../../earn-views'
-import { EarningLineChartContainer } from '../../earn-views/EarningLineChartContainer'
-import { ViewData, ViewRange, ViewType } from '../../earn-views/components/EarningHistory/utils'
+import { EarningHistory } from '../../earn-views/components'
 
 const styles = (theme: SaladTheme) => ({
   item: {
@@ -65,65 +61,6 @@ const _MobileEarningSummary = ({
   viewLast7Days,
   viewLast30Days,
 }: Props) => {
-  const [viewType, setViewType] = useState<ViewType>(ViewType.Graph)
-  const [viewRange, setViewRange] = useState<ViewRange>(ViewRange.Last24Hours)
-  const [viewData, setViewData] = useState<ViewData>(ViewData.Individual)
-
-  const [isIndividualViewDataDisabled, setIsIndividualViewDataDisabled] = useState<boolean>(false)
-
-  const isAggregateView = viewData === ViewData.Aggregate
-
-  const viewTypeOptions = [
-    { name: ViewType.Graph, action: () => setViewType(ViewType.Graph) },
-    { name: ViewType.Table, action: () => setViewType(ViewType.Table) },
-  ]
-
-  const viewRangeOptions = [
-    {
-      name: ViewRange.Last24Hours,
-      action: () => {
-        viewLast24Hours()
-        setViewRange(ViewRange.Last24Hours)
-      },
-    },
-    {
-      name: ViewRange.Last7Days,
-      action: () => {
-        viewLast7Days()
-        setViewRange(ViewRange.Last7Days)
-      },
-    },
-    {
-      name: ViewRange.Last30Days,
-      action: () => {
-        viewLast30Days()
-        setViewRange(ViewRange.Last30Days)
-      },
-    },
-  ]
-
-  const viewDataOptions = [
-    {
-      name: ViewData.Individual,
-      action: () => setViewData(ViewData.Individual),
-      disabled: isIndividualViewDataDisabled,
-    },
-    {
-      name: ViewData.Aggregate,
-      action: () => {
-        setViewData(ViewData.Aggregate)
-      },
-    },
-  ]
-
-  const handleRangeOptionChange = (name: ViewRange) => {
-    viewRangeOptions.find((option) => option.name === name)?.action()
-  }
-
-  const handleDataOptionChange = (name: ViewData) => {
-    viewDataOptions.find((option) => option.name === name && !option.disabled)?.action()
-  }
-
   return (
     <>
       <SectionHeader>Summary</SectionHeader>
@@ -171,41 +108,7 @@ const _MobileEarningSummary = ({
       </div>
       <Divider />
       <SectionHeader>Earning History</SectionHeader>
-      <div>
-        <p className={classes.subtitle}>View Type</p>
-        <Segments
-          options={viewTypeOptions}
-          onOptionChange={(name) => setViewType(name as ViewType)}
-          selectedOptionName={viewType}
-        />
-      </div>
-      <div>
-        <p className={classes.subtitle}>View Range</p>
-        <Segments
-          options={viewRangeOptions}
-          onOptionChange={(name) => handleRangeOptionChange(name as ViewRange)}
-          selectedOptionName={viewRange}
-        />
-      </div>
-      <div>
-        <p className={classes.subtitle}>View Data as</p>
-        <Segments
-          options={viewDataOptions}
-          onOptionChange={(name) => handleDataOptionChange(name as ViewData)}
-          selectedOptionName={viewData}
-        />
-      </div>
-      <div className={classes.chartContainer}>
-        {viewType === ViewType.Graph && (
-          <EarningLineChartContainer
-            isAggregateView={isAggregateView}
-            viewData={viewData}
-            setIsIndividualViewDataDisabled={setIsIndividualViewDataDisabled}
-            setViewData={setViewData}
-          />
-        )}
-        {viewType === ViewType.Table && <EarningChartContainer />}
-      </div>
+      <EarningHistory viewLast24Hours={viewLast24Hours} viewLast7Days={viewLast7Days} viewLast30Days={viewLast30Days} />
       <Divider />
     </>
   )
