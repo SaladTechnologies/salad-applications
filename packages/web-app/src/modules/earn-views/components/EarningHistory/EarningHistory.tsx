@@ -5,8 +5,8 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { Segments } from '../../../../components/elements/Segments'
-import { EarningChartContainer } from '../../EarningChartContainer'
 import { EarningLineChartContainer } from '../../EarningLineChartContainer'
+import { EarningTableContainer } from '../../EarningTableContainer'
 import { EarnSectionHeader } from '../EarnSectionHeader'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties | Record<string, CSS.Properties>> = (
@@ -106,7 +106,7 @@ const EarningHistoryRaw = ({ classes, viewLast24Hours, viewLast7Days, viewLast30
         </div>
         <div className={classes.chartContainer}>
           {viewType === ViewType.Graph && <EarningLineChartContainer />}
-          {viewType === ViewType.Table && <EarningChartContainer />}
+          {viewType === ViewType.Table && <EarningTableContainer />}
         </div>
         <div className={classes.descriptionWrapper}>
           <Text variant="baseXS">
