@@ -7,14 +7,17 @@ import { DateTime } from 'luxon'
 import { useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
+import type { DropdownOption } from '../../../../components/Dropdown'
+import { Dropdown } from '../../../../components/Dropdown'
 import { Pagination } from '../../../../components/Pagination'
 import { usePagination } from '../../../../components/Pagination/usePagination'
-import { Dropdown } from '../../../../components/Dropdown'
 import { Table } from '../../../../components/Table'
 import type { TableRow } from '../../../../components/Table/types'
 import { DefaultTheme, type SaladTheme } from '../../../../SaladTheme'
 import { EarnSectionHeader } from '../EarnSectionHeader'
+import { machinesTableDropdownOptions, MachinesTableDropdownOptionValue } from './constants'
 import type { MachineState } from './mocks'
+import { generatedMockedMachines } from './mocks'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   allMachinesWrapper: {
@@ -117,6 +120,52 @@ const _AllMachines = ({ classes, machines, onMachineIdClick }: Props) => {
     window.location.href = 'https://support.salad.com/article/414-how-to-find-your-salad-machine-id'
   }
 
+  const handleDropdownChange = ({ value }: DropdownOption) => {
+    switch (value) {
+      case MachinesTableDropdownOptionValue.SelectAll: {
+        setSelectedMachineIds(generatedMockedMachines.reduce((acc, machine) => ({ ...acc, [machine.id]: true }), {}))
+        break
+      }
+      case MachinesTableDropdownOptionValue.SelectAllInPage: {
+        const beginningIndex = (currentPageNumber - 1) * itemsPerPageAmount
+        const endingIndex = currentPageNumber * itemsPerPageAmount
+        const machinesToSelect = generatedMockedMachines
+          .slice(beginningIndex, endingIndex)
+          .reduce((acc, machine) => ({ ...acc, [machine.id]: true }), {})
+
+        setSelectedMachineIds((previousSelectedMachineIds) => ({
+          ...previousSelectedMachineIds,
+          ...machinesToSelect,
+        }))
+
+        break
+      }
+
+      case MachinesTableDropdownOptionValue.DeselectAll: {
+        setSelectedMachineIds({})
+        break
+      }
+
+      case MachinesTableDropdownOptionValue.DeselectAllInPage: {
+        const beginningIndex = (currentPageNumber - 1) * itemsPerPageAmount
+        const endingIndex = currentPageNumber * itemsPerPageAmount
+        const machinesToDeselect = generatedMockedMachines
+          .slice(beginningIndex, endingIndex)
+          .reduce((acc, machine) => ({ ...acc, [machine.id]: false }), {})
+
+        setSelectedMachineIds((previousSelectedMachineIds) => ({
+          ...previousSelectedMachineIds,
+          ...machinesToDeselect,
+        }))
+
+        break
+      }
+
+      default:
+        break
+    }
+  }
+
   const {
     lowestItemNumberOnPage,
     highestItemNumberOnPage,
@@ -130,25 +179,9 @@ const _AllMachines = ({ classes, machines, onMachineIdClick }: Props) => {
       <div className={(classes.tableHeaderCell, classes.tableCellCentered)}>
         <Dropdown
           control={<FontAwesomeIcon size="xl" icon={faList} />}
-          options={[
-            {
-              value: 'Select All',
-              label: 'Select All',
-            },
-            {
-              value: 'Select All In Page',
-              label: 'Select All In Page',
-            },
-            {
-              value: 'Deselect All',
-              label: 'Deselect All',
-            },
-            {
-              value: 'Deselect All In Page',
-              label: 'Deselect All In Page',
-            },
-          ]}
+          options={machinesTableDropdownOptions}
           isSearchable={false}
+          onChange={handleDropdownChange}
         />
       </div>,
       <div className={classes.tableHeaderCell}>

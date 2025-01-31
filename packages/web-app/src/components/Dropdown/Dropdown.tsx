@@ -1,4 +1,4 @@
-import type { FC } from 'react'
+import { type FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select'
@@ -27,7 +27,7 @@ export interface Props extends WithStyles<typeof styles> {
   onChange?: (value?: any) => void
 }
 
-const _Dropdown: FC<Props> = ({ classes, control, customStyles, isSearchable=true, options, value, onChange }) => {
+const _Dropdown: FC<Props> = ({ classes, control, customStyles, isSearchable = true, options, value, onChange }) => {
   const selectedValue = value ? options?.find((option) => option.value === value) : undefined
 
   const defaultStyles: DropdownStylesConfig = {
@@ -78,6 +78,10 @@ const _Dropdown: FC<Props> = ({ classes, control, customStyles, isSearchable=tru
     placeholder: (baseStyles: CSSObjectWithLabel) => ({
       ...baseStyles,
       ...(control && { color: DefaultTheme.lightGreen }),
+    }),
+    menuList: (baseStyles: CSSObjectWithLabel) => ({
+      ...baseStyles,
+      ...(control && { textAlign: 'left' }),
     }),
   }
 
