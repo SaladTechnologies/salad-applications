@@ -7,7 +7,7 @@ import { withLogin } from '../../auth-views'
 import type { RedeemedReward } from '../../balance/models/RedeemedReward'
 import type { RewardVaultItem } from '../../vault/models'
 import { EarningFrequentlyAskedQuestions, EarningHistory, EarningSummary, LatestRewardsRedeemed } from '../components'
-import type { MachineState } from '../components/AllMachines/mocks'
+import { generatedMockedMachines } from '../components/AllMachines/mocks'
 import { MachineDetailsModal } from '../components/MachineDetailsModal'
 
 const styles = () => ({
@@ -60,10 +60,10 @@ const _EarningSummaryPage: FC<Props> = ({
   viewLast7Days,
   viewLast30Days,
 }) => {
-  const [selectedMachine, setSelectedMachine] = useState<MachineState | null>(null)
+  const [selectedMachineId, setSelectedMachineId] = useState<string | null>(null)
 
   const handleCloseMachineDetailsModal = () => {
-    setSelectedMachine(null)
+    setSelectedMachineId(null)
   }
 
   useEffect(() => {
@@ -78,6 +78,8 @@ const _EarningSummaryPage: FC<Props> = ({
   const latestCompletedRedeemedRewardsArray: RedeemedReward[] = Array.from(latestCompletedRedeemedRewards.values())
 
   const redeemedRewardsCount = redeemedRewards?.length ?? 0
+
+  const selectedMachine = generatedMockedMachines.find((machine) => machine.id === selectedMachineId)
 
   return (
     <Scrollbar>
@@ -96,7 +98,7 @@ const _EarningSummaryPage: FC<Props> = ({
           viewLast7Days={viewLast7Days}
           viewLast30Days={viewLast30Days}
         />
-        {/* <AllMachines onOpenMachineDetails={setSelectedMachine} /> */}
+        {/* <AllMachines machines={generatedMockedMachines} onMachineIdClick={setSelectedMachineId} /> */}
         {selectedMachine && <MachineDetailsModal {...selectedMachine} onCloseClick={handleCloseMachineDetailsModal} />}
         <LatestRewardsRedeemed
           latestCompletedRedeemedRewards={latestCompletedRedeemedRewardsArray}

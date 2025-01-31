@@ -18,9 +18,10 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     padding: '20px 10px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '30px',
+    gap: '25px',
     position: 'relative',
     boxSizing: 'border-box',
+    borderRadius: '8px',
   },
   warningsWrapper: {
     color: theme.lightGreen,
@@ -95,7 +96,7 @@ const _MachineDetailsModal = ({ classes, id, lastSeen, status, currentEarningRat
           <Text variant="baseXS">Warnings</Text>
           <div className={classes.warningPills}>
             {warnings.map((warningText) => (
-              <div className={classes.warningPill}>
+              <div key={warningText} className={classes.warningPill}>
                 <Text variant="baseM">{warningText}</Text>
               </div>
             ))}

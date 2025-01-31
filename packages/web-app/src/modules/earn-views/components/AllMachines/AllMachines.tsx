@@ -14,7 +14,6 @@ import type { TableRow } from '../../../../components/Table/types'
 import { DefaultTheme, type SaladTheme } from '../../../../SaladTheme'
 import { EarnSectionHeader } from '../EarnSectionHeader'
 import type { MachineState } from './mocks'
-import { generatedMockedMachines } from './mocks'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   allMachinesWrapper: {
@@ -104,12 +103,13 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 })
 
 interface Props extends WithStyles<typeof styles> {
-  onOpenMachineDetails: (machine: MachineState) => void
+  machines: MachineState[]
+  onMachineIdClick: (machineId: string) => void
 }
 
-const _AllMachines = ({ classes, onOpenMachineDetails }: Props) => {
+const _AllMachines = ({ classes, machines, onMachineIdClick }: Props) => {
   const [selectedMachineIds, setSelectedMachineIds] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(generatedMockedMachines.map((machine) => [machine.id, false])),
+    Object.fromEntries(machines.map((machine) => [machine.id, false])),
   )
 
   const handleMachineIdQuestionIconClick = () => {
@@ -156,7 +156,7 @@ const _AllMachines = ({ classes, onOpenMachineDetails }: Props) => {
   }
 
   const getRows = (): Array<TableRow> => {
-    return generatedMockedMachines
+    return machines
       .filter((_machine, index) => {
         const itemNumber = index + 1
         return itemNumber >= lowestItemNumberOnPage && itemNumber <= highestItemNumberOnPage
@@ -182,9 +182,9 @@ const _AllMachines = ({ classes, onOpenMachineDetails }: Props) => {
           id: (
             <div
               className={classNames(classes.tableCell, classes.idWrapper)}
-              onClick={() => onOpenMachineDetails(machine as MachineState)}
+              onClick={() => onMachineIdClick(machine.id)}
             >
-              <Text variant="baseXS">{machine.id}</Text>
+              <Text variant="baseS">{machine.id}</Text>
             </div>
           ),
           lastSeen: DateTime.fromJSDate(machine.lastSeen).toFormat('MMM d, yyyy'),
@@ -215,7 +215,7 @@ const _AllMachines = ({ classes, onOpenMachineDetails }: Props) => {
       <div className={classes.tableWrapper}>
         <Table titles={getTitles()} rows={getRows()} />
         <Pagination
-          itemsTotalAmount={generatedMockedMachines.length}
+          itemsTotalAmount={machines.length}
           itemsPerPageAmount={itemsPerPageAmount}
           currentPageNumber={currentPageNumber}
           onPageChange={(pageNumber: number) => setCurrentPageNumber(pageNumber)}
