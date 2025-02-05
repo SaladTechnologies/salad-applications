@@ -103,7 +103,7 @@ const _EarningLineChart = ({
     )
   }
 
-  const individualMachineEarningsData = Object.keys(earningsPerMachine).map((machineId) => ({
+  const individualMachineEarnings = Object.keys(earningsPerMachine).map((machineId) => ({
     id: machineId,
     name: machineId.substring(0, 8),
     data: normalizeEarningsPerMachineData(earningsPerMachine[machineId] as EarningWindow[], daysShowing),
@@ -111,7 +111,7 @@ const _EarningLineChart = ({
 
   const aggregatedMachineEarningsValue = getAggregatedMachineEarningsValue(earningsPerMachine)
 
-  const aggregateMachineEarningsData = [
+  const aggregateMachineEarnings = [
     {
       id: 'Aggregate',
       name: 'Aggregate',
@@ -119,10 +119,10 @@ const _EarningLineChart = ({
     },
   ]
 
-  const machineEarningsData = isAggregateView ? aggregateMachineEarningsData : individualMachineEarningsData
+  const machineEarnings = isAggregateView ? aggregateMachineEarnings : individualMachineEarnings
 
   const withMachinesData = machines !== null
-  const isLoading = machineEarningsData.length <= 0
+  const isLoading = machineEarnings.length <= 0
   const isNoMachineOptionChecked = !Object.values(machineOptions).some((machineOption) => machineOption.isChecked)
 
   if (!withMachinesData) {
@@ -145,7 +145,7 @@ const _EarningLineChart = ({
         <>
           <ResponsiveContainer>
             <LineChart
-              data={isNoMachineOptionChecked ? machineEarningsData[0]?.data : []}
+              data={isNoMachineOptionChecked ? machineEarnings[0]?.data : []}
               margin={{ top: 30, left: 10, right: 0, bottom: 10 }}
             >
               <CartesianGrid vertical={false} stroke="#3B4D5C" />
@@ -175,7 +175,7 @@ const _EarningLineChart = ({
                 labelFormatter={(value) => (is24HoursChart ? moment(value, 'HH').format('h A') : value)}
                 wrapperClassName={classes.tooltipWrapper}
               />
-              {machineEarningsData.map(
+              {machineEarnings.map(
                 (machineEarning) =>
                   machineOptions[machineEarning.id]?.isChecked && (
                     <Line
