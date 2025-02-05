@@ -14,7 +14,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     flexDirection: 'column',
     position: 'relative',
     height: '100%',
-    width: '260px',
+    minWidth: '260px',
     overflow: 'hidden',
     color: theme.lightGreen,
   },
