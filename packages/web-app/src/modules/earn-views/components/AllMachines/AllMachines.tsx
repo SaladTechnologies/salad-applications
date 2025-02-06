@@ -147,10 +147,8 @@ const _AllMachines = ({ classes, machines, onMachineIdClick }: Props) => {
       }
 
       case MachinesTableDropdownOptionValue.DeselectAllInPage: {
-        const beginningIndex = (currentPageNumber - 1) * itemsPerPageAmount
-        const endingIndex = currentPageNumber * itemsPerPageAmount
         const machinesToDeselect = generatedMockedMachines
-          .slice(beginningIndex, endingIndex)
+          .slice(lowestItemNumberOnPage - 1, highestItemNumberOnPage)
           .reduce((acc, machine) => ({ ...acc, [machine.id]: false }), {})
 
         setSelectedMachineIds((previousSelectedMachineIds) => ({
