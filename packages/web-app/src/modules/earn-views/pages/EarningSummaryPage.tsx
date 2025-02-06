@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Scrollbar } from '../../../components'
@@ -7,6 +7,8 @@ import { withLogin } from '../../auth-views'
 import type { RedeemedReward } from '../../balance/models/RedeemedReward'
 import type { RewardVaultItem } from '../../vault/models'
 import { EarningFrequentlyAskedQuestions, EarningHistory, EarningSummary, LatestRewardsRedeemed } from '../components'
+import { generatedMockedMachines } from '../components/AllMachines/mocks'
+import { MachineDetailsModal } from '../components/MachineDetailsModal'
 
 const styles = () => ({
   content: {
@@ -58,6 +60,12 @@ const _EarningSummaryPage: FC<Props> = ({
   viewLast7Days,
   viewLast30Days,
 }) => {
+  const [selectedMachineId, setSelectedMachineId] = useState<string | null>(null)
+
+  const handleCloseMachineDetailsModal = () => {
+    setSelectedMachineId(null)
+  }
+
   useEffect(() => {
     startRedemptionsRefresh()
     trackEarnPageViewed()
@@ -70,6 +78,8 @@ const _EarningSummaryPage: FC<Props> = ({
   const latestCompletedRedeemedRewardsArray: RedeemedReward[] = Array.from(latestCompletedRedeemedRewards.values())
 
   const redeemedRewardsCount = redeemedRewards?.length ?? 0
+
+  const selectedMachine = generatedMockedMachines.find((machine) => machine.id === selectedMachineId)
 
   return (
     <Scrollbar>
@@ -88,7 +98,8 @@ const _EarningSummaryPage: FC<Props> = ({
           viewLast7Days={viewLast7Days}
           viewLast30Days={viewLast30Days}
         />
-        {/* <AllMachines /> */}
+        {/* <AllMachines machines={generatedMockedMachines} onMachineIdClick={setSelectedMachineId} /> */}
+        {selectedMachine && <MachineDetailsModal {...selectedMachine} onCloseClick={handleCloseMachineDetailsModal} />}
         <LatestRewardsRedeemed
           latestCompletedRedeemedRewards={latestCompletedRedeemedRewardsArray}
           navigateToRewardVaultPage={trackAndNavigateToRewardVaultPage}
