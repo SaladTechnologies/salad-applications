@@ -24,10 +24,21 @@ export interface Props extends WithStyles<typeof styles> {
   options?: DropdownOption[]
   value?: string
   isSearchable?: boolean
+  allowUnselectedClick?: boolean
+
   onChange?: (value?: any) => void
 }
 
-const _Dropdown: FC<Props> = ({ classes, control, customStyles, isSearchable = true, options, value, onChange }) => {
+const _Dropdown: FC<Props> = ({
+  classes,
+  control,
+  customStyles,
+  isSearchable = true,
+  allowUnselectedClick = false,
+  options,
+  value,
+  onChange,
+}) => {
   const selectedValue = value ? options?.find((option) => option.value === value) : undefined
 
   const defaultStyles: DropdownStylesConfig = {
@@ -88,7 +99,7 @@ const _Dropdown: FC<Props> = ({ classes, control, customStyles, isSearchable = t
   return (
     <Select
       className={classes.container}
-      value={selectedValue}
+      value={allowUnselectedClick ? null : selectedValue}
       options={options}
       onChange={onChange}
       defaultValue={control ? undefined : options && options[0]}

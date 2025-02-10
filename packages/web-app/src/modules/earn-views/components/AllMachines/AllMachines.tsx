@@ -127,10 +127,8 @@ const _AllMachines = ({ classes, machines, onMachineIdClick }: Props) => {
         break
       }
       case MachinesTableDropdownOptionValue.SelectAllInPage: {
-        const beginningIndex = (currentPageNumber - 1) * itemsPerPageAmount
-        const endingIndex = currentPageNumber * itemsPerPageAmount
         const machinesToSelect = generatedMockedMachines
-          .slice(beginningIndex, endingIndex)
+          .slice(lowestItemNumberOnPage - 1, highestItemNumberOnPage)
           .reduce((acc, machine) => ({ ...acc, [machine.id]: true }), {})
 
         setSelectedMachineIds((previousSelectedMachineIds) => ({
@@ -180,6 +178,7 @@ const _AllMachines = ({ classes, machines, onMachineIdClick }: Props) => {
           options={machinesTableDropdownOptions}
           isSearchable={false}
           onChange={handleDropdownChange}
+          allowUnselectedClick
         />
       </div>,
       <div className={classes.tableHeaderCell}>
