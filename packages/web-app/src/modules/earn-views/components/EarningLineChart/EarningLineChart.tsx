@@ -14,7 +14,7 @@ import { ViewData } from '../EarningHistory/constants'
 import { CustomizedXAxisTick } from './components'
 import type { MachineOptions } from './components/EarningMachineList'
 import { EarningMachineList } from './components/EarningMachineList'
-import { aggregateMachineOption } from './constants'
+import { aggregateMachineOption, maximumMachinesForIndividualView } from './constants'
 import { getAggregatedMachineEarningsValue, getMachineOptions } from './utils'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
@@ -82,7 +82,7 @@ const _EarningLineChart = ({
   }, [earningsPerMachine, isAggregateView])
 
   useEffect(() => {
-    if (Object.values(machineOptions).length > 10) {
+    if (Object.values(machineOptions).length > maximumMachinesForIndividualView) {
       setViewData(ViewData.Aggregate)
       setIsIndividualViewDataDisabled(true)
     } else if (!isAggregateView) {
@@ -121,11 +121,11 @@ const _EarningLineChart = ({
 
   const machineEarnings = isAggregateView ? aggregateMachineEarnings : individualMachineEarnings
 
-  const withMachinesData = machines !== null
+  const withMachines = machines !== null
   const isLoading = machineEarnings.length <= 0
   const isNoMachineOptionChecked = !Object.values(machineOptions).some((machineOption) => machineOption.isChecked)
 
-  if (!withMachinesData) {
+  if (!withMachines) {
     return (
       <div className={classes.earningLineChartWrapper}>
         <div className={classes.loaderWrapper}>
