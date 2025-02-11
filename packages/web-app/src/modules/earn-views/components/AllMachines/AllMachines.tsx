@@ -55,6 +55,9 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     alignItems: 'center',
     flexDirection: 'row',
   },
+  tableDropdownHeader: {
+    cursor: 'pointer',
+  },
   warningPillWrapper: {
     display: 'flex',
     justifyContent: 'center',
@@ -172,11 +175,10 @@ const _AllMachines = ({ classes, machines, onMachineIdClick }: Props) => {
 
   const getTitles = () => {
     return [
-      <div className={(classes.tableHeaderCell, classes.tableCellCentered)}>
+      <div className={(classes.tableHeaderCell, classes.tableCellCentered, classes.tableDropdownHeader)}>
         <Dropdown
           control={<FontAwesomeIcon size="xl" icon={faList} />}
           options={machinesTableDropdownOptions}
-          isSearchable={false}
           onChange={handleDropdownChange}
           allowUnselectedClick
         />

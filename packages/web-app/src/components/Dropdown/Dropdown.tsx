@@ -23,7 +23,6 @@ export interface Props extends WithStyles<typeof styles> {
   customStyles?: DropdownStylesConfig
   options?: DropdownOption[]
   value?: string
-  isSearchable?: boolean
   allowUnselectedClick?: boolean
 
   onChange?: (value?: any) => void
@@ -33,7 +32,6 @@ const _Dropdown: FC<Props> = ({
   classes,
   control,
   customStyles,
-  isSearchable = true,
   allowUnselectedClick = false,
   options,
   value,
@@ -94,6 +92,10 @@ const _Dropdown: FC<Props> = ({
       ...baseStyles,
       ...(control && { textAlign: 'left' }),
     }),
+    input: (baseStyles: CSSObjectWithLabel) => ({
+      ...baseStyles,
+      ...(control && { '& > input': { cursor: 'pointer' } }),
+    }),
   }
 
   return (
@@ -112,7 +114,6 @@ const _Dropdown: FC<Props> = ({
         },
       })}
       placeholder={control}
-      isSearchable={isSearchable}
     />
   )
 }
