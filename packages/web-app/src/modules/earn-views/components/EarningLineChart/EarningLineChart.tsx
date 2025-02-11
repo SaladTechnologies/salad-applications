@@ -25,7 +25,14 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     flexDirection: 'row',
+    '@media (max-width: 812px)': {
+      overflowX: 'scroll',
+      overflowY: 'hidden',
+    },
     gap: '24px',
+  },
+  noDataWrapper: {
+    height: '400px',
   },
   loaderWrapper: {
     height: '100%',
@@ -127,7 +134,7 @@ const _EarningLineChart = ({
 
   if (!withMachines) {
     return (
-      <div className={classes.earningLineChartWrapper}>
+      <div className={classes.noDataWrapper}>
         <div className={classes.loaderWrapper}>
           <Text variant="baseM">No data to display</Text>
         </div>
@@ -143,7 +150,7 @@ const _EarningLineChart = ({
         </div>
       ) : (
         <>
-          <ResponsiveContainer>
+          <ResponsiveContainer minWidth={650} minHeight={290}>
             <LineChart
               data={isNoMachineOptionChecked ? machineEarnings[0]?.data : []}
               margin={{ top: 30, left: 10, right: 0, bottom: 10 }}
