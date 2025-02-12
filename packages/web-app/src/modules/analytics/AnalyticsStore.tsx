@@ -1,6 +1,5 @@
 import mixpanel from 'mixpanel-browser'
 import { observable, runInAction, when } from 'mobx'
-import { hotjar } from 'react-hotjar'
 import { config } from '../../config'
 import type { AuthStore } from '../auth'
 import type { NotificationMessage } from '../notifications/models'
@@ -16,8 +15,6 @@ export class AnalyticsStore {
   private mixpanelInitialized = false
 
   constructor(private readonly auth: AuthStore) {
-    hotjar.initialize({ id: 2225817, sv: 6 })
-
     const token = config.mixpanelToken
     if (!token) {
       return

@@ -3560,7 +3560,6 @@ __metadata:
     react-helmet: "npm:6.1.0"
     react-hint: "npm:3.2.1"
     react-hook-form: "npm:7.54.2"
-    react-hotjar: "npm:6.3.1"
     react-html-parser: "npm:2.0.2"
     react-image: "npm:4.1.0"
     react-intl: "npm:6.8.9"
@@ -18965,13 +18964,6 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17 || ^18 || ^19
   checksum: 10c0/6eebead2900e3d369a989e7a20429f390dc75b3897142aa3107f1f6dabb9ae64fed201ea98cdcd8676e40466c97748aeb0c0d83264f5bd3a84dbc0b8e4863415
-  languageName: node
-  linkType: hard
-
-"react-hotjar@npm:6.3.1":
-  version: 6.3.1
-  resolution: "react-hotjar@npm:6.3.1"
-  checksum: 10c0/f3e158b94cde6311dcbdee3ab24fbd07318f7b08c4614089bbb08968bbfb11278d9e6869eb58e7416a5d7f55f5fc26cbb573a96524401ca5bfb3421ed2c473b8
   languageName: node
   linkType: hard
 
