@@ -7,6 +7,8 @@ import { DateTime } from 'luxon'
 import { useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
+import type { DropdownOption } from '../../../../components/Dropdown'
+import { Dropdown } from '../../../../components/Dropdown'
 import { Pagination } from '../../../../components/Pagination'
 import { usePagination } from '../../../../components/Pagination/usePagination'
 import { Table } from '../../../../components/Table'
@@ -38,6 +40,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     fontSize: '14px',
   },
   tableHeaderCell: {
+    position: 'relative',
     padding: '10px',
     paddingLeft: '0px',
     display: 'flex',
@@ -100,6 +103,12 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
       textDecoration: 'underline',
     },
   },
+  selectItemsDropdownWrap: {
+    position: 'absolute',
+    left: '10px',
+    top: '32px',
+    zIndex: 1,
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -124,10 +133,52 @@ const _AllMachines = ({ classes, machines, onMachineIdClick }: Props) => {
     setCurrentPageNumber,
   } = usePagination()
 
+  const dropdownOptions: DropdownOption<unknown>[] = [
+    {
+      displayName: 'Select All',
+      handler: () => setSelectedMachineIds(machines.reduce((acc, machine) => ({ ...acc, [machine.id]: true }), {})),
+    },
+    {
+      displayName: 'Select All in Page',
+      handler: () => {
+        const machinesToSelect = machines
+          .slice(lowestItemNumberOnPage - 1, highestItemNumberOnPage)
+          .reduce((acc, machine) => ({ ...acc, [machine.id]: true }), {})
+
+        setSelectedMachineIds((previousSelectedMachineIds) => ({
+          ...previousSelectedMachineIds,
+          ...machinesToSelect,
+        }))
+      },
+    },
+    {
+      displayName: 'Deselect All',
+      handler: () => setSelectedMachineIds({}),
+    },
+    {
+      displayName: 'Deselect All in Page',
+      handler: () => {
+        const machinesToDeselect = machines
+          .slice(lowestItemNumberOnPage - 1, highestItemNumberOnPage)
+          .reduce((acc, machine) => ({ ...acc, [machine.id]: false }), {})
+
+        setSelectedMachineIds((previousSelectedMachineIds) => ({
+          ...previousSelectedMachineIds,
+          ...machinesToDeselect,
+        }))
+      },
+    },
+  ]
+
   const getTitles = () => {
     return [
       <div className={(classes.tableHeaderCell, classes.tableCellCentered)}>
-        <FontAwesomeIcon icon={faList} />
+        <Dropdown
+          options={dropdownOptions}
+          optionKey="displayName"
+          wrapClassname={classes.selectItemsDropdownWrap}
+          toggleContent={<FontAwesomeIcon icon={faList} />}
+        />
       </div>,
       <div className={classes.tableHeaderCell}>
         <Text variant="baseXS">Machine ID</Text>
