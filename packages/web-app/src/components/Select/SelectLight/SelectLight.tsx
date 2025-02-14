@@ -1,10 +1,10 @@
 import type { FC } from 'react'
 import type { CSSObjectWithLabel } from 'react-select'
 import { DefaultTheme } from '../../../SaladTheme'
-import type { DropdownStylesConfig } from '../Dropdown'
-import { Dropdown, type Props } from '../Dropdown'
+import type { SelectStylesConfig } from '../Select'
+import { Select, type Props } from '../Select'
 
-const dropdownLightStyles: DropdownStylesConfig = {
+const selectLightStyles: SelectStylesConfig = {
   control: (baseStyles: CSSObjectWithLabel) => ({
     ...baseStyles,
     backgroundColor: DefaultTheme.lightGreen,
@@ -38,6 +38,6 @@ const dropdownLightStyles: DropdownStylesConfig = {
   }),
 }
 
-export const DropdownLight: FC<Omit<Props, 'customStyles' | 'classes'>> = ({ options, value, onChange }) => {
-  return <Dropdown customStyles={dropdownLightStyles} options={options} value={value} onChange={onChange} />
+export const SelectLight: FC<Omit<Props, 'customStyles' | 'classes'>> = ({ options, value, onChange }) => {
+  return <Select customStyles={selectLightStyles} options={options} value={value} onChange={onChange} />
 }

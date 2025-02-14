@@ -3,9 +3,9 @@ import type CSS from 'csstype'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
-import type { DropdownOption } from '../../../../components/Dropdown'
-import { DropdownLight } from '../../../../components/Dropdown'
 import { ModalWithOverlay } from '../../../../components/ModalWithOverlay'
+import type { SelectOption } from '../../../../components/Select'
+import { SelectLight } from '../../../../components/Select'
 import type { DemandedHardwarePerformance } from '../../DemandMonitorStore'
 import saladBackgroundUrl from '../assets/background.png'
 
@@ -135,7 +135,7 @@ const _GetNotifiedDemandChangesModal = ({
     value: demandHardware.name,
   }))
 
-  const handleHardwareOptionChange = (demandHardwareOption: DropdownOption) => {
+  const handleHardwareOptionChange = (demandHardwareOption: SelectOption) => {
     onSelectedHardwareNameChange(demandHardwareOption.value)
   }
 
@@ -168,7 +168,7 @@ const _GetNotifiedDemandChangesModal = ({
             <div className={classes.dropdownWrapper}>
               <div className={classes.dropdown}>
                 {demandHardwareOptions && (
-                  <DropdownLight options={demandHardwareOptions} onChange={handleHardwareOptionChange} />
+                  <SelectLight options={demandHardwareOptions} onChange={handleHardwareOptionChange} />
                 )}
               </div>
             </div>

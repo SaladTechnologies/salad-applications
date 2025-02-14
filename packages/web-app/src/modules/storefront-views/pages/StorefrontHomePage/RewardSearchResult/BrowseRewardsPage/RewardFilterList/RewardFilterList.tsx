@@ -1,7 +1,7 @@
 import { Facet, Sorting } from '@elastic/react-search-ui'
 import type { ReactNode } from 'react'
 import { Component } from 'react'
-import { Dropdown } from '../../../../../../../components/Dropdown'
+import { Select } from '../../../../../../../components/Select'
 import { RewardFilterPanel } from './RewardFilterPanel'
 import { RewardPriceFilter } from './RewardPriceFilter'
 
@@ -35,7 +35,7 @@ export class RewardFilterList extends Component<{}> {
           view={(props) => {
             const { onChange, ...rest } = props
             return (
-              <Dropdown
+              <Select
                 onChange={(o) => {
                   onChange(o.value)
                 }}
