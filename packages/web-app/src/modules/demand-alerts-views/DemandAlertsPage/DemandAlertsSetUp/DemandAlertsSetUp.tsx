@@ -4,8 +4,8 @@ import { useEffect, useState, type FunctionComponent } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { ErrorText } from '../../../../components'
-import type { DropdownOption } from '../../../../components/Dropdown'
-import { DropdownLight } from '../../../../components/Dropdown'
+import type { SelectOption } from '../../../../components/Select'
+import { SelectLight } from '../../../../components/Select'
 import { DefaultTheme } from '../../../../SaladTheme'
 import type { DemandedHardwarePerformance, DemandTier } from '../../../demand-monitor-views/DemandMonitorStore'
 import type { DemandScenarioDropdownOption } from '../../constants'
@@ -81,7 +81,7 @@ const _DemandAlertsSetUp: FunctionComponent<Props> = ({
     }
   }, [initialSelectedDemandHardwareValue, fetchDemandedHardwarePerformanceList, setSubscribeToDemandAlertStatus])
 
-  const handleDemandHardwareOptionChange = (demandHardwareOption: DropdownOption) => {
+  const handleDemandHardwareOptionChange = (demandHardwareOption: SelectOption) => {
     setSelectedDemandHardwareValue(demandHardwareOption.value)
     setSubscribeToDemandAlertStatus(SubscribeToDemandAlertStatus.Unknown)
   }
@@ -106,11 +106,11 @@ const _DemandAlertsSetUp: FunctionComponent<Props> = ({
           <div className={classes.dropdownContainer}>
             <div className={classes.dropdownContentContainer}>
               <Text variant="baseS">GPU</Text>
-              <DropdownLight options={demandHardwareOptions} onChange={handleDemandHardwareOptionChange} />
+              <SelectLight options={demandHardwareOptions} onChange={handleDemandHardwareOptionChange} />
             </div>
             <div className={classes.dropdownContentContainer}>
               <Text variant="baseS">Demand Scenario</Text>
-              <DropdownLight options={Object.values(demandScenario)} onChange={handleDemandScenarioOptionChange} />
+              <SelectLight options={Object.values(demandScenario)} onChange={handleDemandScenarioOptionChange} />
             </div>
           </div>
           <Button

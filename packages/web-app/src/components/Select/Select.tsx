@@ -2,7 +2,7 @@ import type { FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select'
-import Select from 'react-select'
+import ReactSelect from 'react-select'
 import { DefaultTheme, type SaladTheme } from '../../SaladTheme'
 
 const styles = (theme: SaladTheme) => ({
@@ -11,24 +11,24 @@ const styles = (theme: SaladTheme) => ({
     fontSize: 12,
   },
 })
-export interface DropdownOption {
+export interface SelectOption {
   label: string
   value: string
 }
 
-export type DropdownStylesConfig = StylesConfig<DropdownOption | '', false, GroupBase<DropdownOption | ''>>
+export type SelectStylesConfig = StylesConfig<SelectOption | '', false, GroupBase<SelectOption | ''>>
 
 export interface Props extends WithStyles<typeof styles> {
-  customStyles?: DropdownStylesConfig
-  options?: DropdownOption[]
+  customStyles?: SelectStylesConfig
+  options?: SelectOption[]
   value?: string
   onChange?: (value?: any) => void
 }
 
-const _Dropdown: FC<Props> = ({ classes, customStyles, options, value, onChange }) => {
+const _Select: FC<Props> = ({ classes, customStyles, options, value, onChange }) => {
   const selectedValue = value && options?.find((option) => option.value === value)
 
-  const defaultStyles: DropdownStylesConfig = {
+  const defaultStyles: SelectStylesConfig = {
     control: (baseStyles: CSSObjectWithLabel) => ({
       ...baseStyles,
       backgroundColor: DefaultTheme.darkBlue,
@@ -63,7 +63,7 @@ const _Dropdown: FC<Props> = ({ classes, customStyles, options, value, onChange 
   }
 
   return (
-    <Select
+    <ReactSelect
       className={classes.container}
       value={selectedValue}
       options={options}
@@ -74,4 +74,4 @@ const _Dropdown: FC<Props> = ({ classes, customStyles, options, value, onChange 
   )
 }
 
-export const Dropdown = withStyles(styles)(_Dropdown)
+export const Select = withStyles(styles)(_Select)
