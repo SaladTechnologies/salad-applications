@@ -9,13 +9,11 @@ import type { Machine } from '../../../../api/machinesApiClient/generated/models
 import { DefaultTheme, type SaladTheme } from '../../../../SaladTheme'
 import { formatBalance } from '../../../../utils'
 import type { ChartDaysShowing, EarningPerMachine, EarningWindow } from '../../../balance/models'
+import { earningsChartColors } from '../../pages/constants'
 import { normalizeEarningsPerMachineData } from '../../utils'
-import { ViewData } from '../EarningHistory/constants'
 import { CustomizedXAxisTick } from './components'
 import type { MachineOptions } from './components/EarningMachineList'
 import { EarningMachineList } from './components/EarningMachineList'
-import { aggregateMachineOption, maximumMachinesForIndividualView } from './constants'
-import { getAggregatedMachineEarningsValue, getMachineOptions } from './utils'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   earningLineChartWrapper: {
@@ -25,14 +23,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     flexDirection: 'row',
-    '@media (max-width: 812px)': {
-      overflowX: 'scroll',
-      overflowY: 'hidden',
-    },
     gap: '24px',
-  },
-  noDataWrapper: {
-    height: '400px',
   },
   loaderWrapper: {
     height: '100%',
@@ -56,46 +47,42 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
 })
 
+const initiallyCheckedMachineOptionsAmount = 5
+
+const getMachineOptions = (earningsPerMachine: EarningPerMachine) => {
+  return Object.keys(earningsPerMachine).reduce((machineOptions, machineId, index) => {
+    const isCheckedInitially = index < initiallyCheckedMachineOptionsAmount
+    return {
+      ...machineOptions,
+      [machineId]: {
+        id: machineId,
+        color: earningsChartColors[index] as string,
+        isChecked: isCheckedInitially,
+      },
+    }
+  }, {} as MachineOptions)
+}
+
 interface Props extends WithStyles<typeof styles> {
   earningsPerMachine: EarningPerMachine
   machines: Machine[] | null
   daysShowing: ChartDaysShowing
-  viewData: ViewData
   fetchEarningsPerMachine: () => void
-  setIsIndividualViewDataDisabled: (isDisabled: boolean) => void
-  setViewData: (viewData: ViewData) => void
 }
 
-const _EarningLineChart = ({
+const _OldEarningLineChart = ({
   classes,
   machines,
   earningsPerMachine,
   daysShowing,
-  viewData,
   fetchEarningsPerMachine,
-  setIsIndividualViewDataDisabled,
-  setViewData,
 }: Props) => {
   const is24HoursChart = daysShowing === 1
-  const isAggregateView = viewData === ViewData.Aggregate
   const [machineOptions, setMachineOptions] = useState<MachineOptions>({})
 
   useEffect(() => {
-    fetchEarningsPerMachine()
-  }, [fetchEarningsPerMachine])
-
-  useEffect(() => {
-    setMachineOptions(isAggregateView ? aggregateMachineOption : getMachineOptions(earningsPerMachine))
-  }, [earningsPerMachine, isAggregateView])
-
-  useEffect(() => {
-    if (Object.values(machineOptions).length > maximumMachinesForIndividualView) {
-      setViewData(ViewData.Aggregate)
-      setIsIndividualViewDataDisabled(true)
-    } else if (!isAggregateView) {
-      setIsIndividualViewDataDisabled(false)
-    }
-  }, [machineOptions, isAggregateView, setIsIndividualViewDataDisabled, setViewData])
+    setMachineOptions(getMachineOptions(earningsPerMachine))
+  }, [earningsPerMachine])
 
   const handleMachineOptionClick = (machineId: string) => {
     setMachineOptions(
@@ -110,38 +97,29 @@ const _EarningLineChart = ({
     )
   }
 
-  const individualMachineEarnings = Object.keys(earningsPerMachine).map((machineId) => ({
+  const machineEarningsData = Object.keys(earningsPerMachine).map((machineId) => ({
     id: machineId,
     name: machineId.substring(0, 8),
     data: normalizeEarningsPerMachineData(earningsPerMachine[machineId] as EarningWindow[], daysShowing),
   }))
 
-  const aggregatedMachineEarningsValue = getAggregatedMachineEarningsValue(earningsPerMachine)
+  useEffect(() => {
+    fetchEarningsPerMachine()
+  }, [fetchEarningsPerMachine])
 
-  const aggregateMachineEarnings = [
-    {
-      id: 'Aggregate',
-      name: 'Aggregate',
-      data: normalizeEarningsPerMachineData(aggregatedMachineEarningsValue as EarningWindow[], daysShowing),
-    },
-  ]
-
-  const machineEarnings = isAggregateView ? aggregateMachineEarnings : individualMachineEarnings
-
-  const withMachines = machines !== null
-  const isLoading = machineEarnings.length <= 0
+  const withMachinesData = machines !== null
+  const isLoading = machineEarningsData.length <= 0
   const isNoMachineOptionChecked = !Object.values(machineOptions).some((machineOption) => machineOption.isChecked)
 
-  if (!withMachines) {
+  if (!withMachinesData) {
     return (
-      <div className={classes.noDataWrapper}>
+      <div className={classes.earningLineChartWrapper}>
         <div className={classes.loaderWrapper}>
           <Text variant="baseM">No data to display</Text>
         </div>
       </div>
     )
   }
-
   return (
     <div className={classes.earningLineChartWrapper}>
       {isLoading ? (
@@ -150,9 +128,9 @@ const _EarningLineChart = ({
         </div>
       ) : (
         <>
-          <ResponsiveContainer minWidth={650} minHeight={290}>
+          <ResponsiveContainer>
             <LineChart
-              data={isNoMachineOptionChecked ? machineEarnings[0]?.data : []}
+              data={isNoMachineOptionChecked ? machineEarningsData[0]?.data : []}
               margin={{ top: 30, left: 10, right: 0, bottom: 10 }}
             >
               <CartesianGrid vertical={false} stroke="#3B4D5C" />
@@ -182,7 +160,7 @@ const _EarningLineChart = ({
                 labelFormatter={(value) => (is24HoursChart ? moment(value, 'HH').format('h A') : value)}
                 wrapperClassName={classes.tooltipWrapper}
               />
-              {machineEarnings.map(
+              {machineEarningsData.map(
                 (machineEarning) =>
                   machineOptions[machineEarning.id]?.isChecked && (
                     <Line
@@ -198,15 +176,11 @@ const _EarningLineChart = ({
               )}
             </LineChart>
           </ResponsiveContainer>
-          <EarningMachineList
-            isAggregateView={isAggregateView}
-            machineOptions={machineOptions}
-            onSelectedMachineChange={handleMachineOptionClick}
-          />
+          <EarningMachineList machineOptions={machineOptions} onSelectedMachineChange={handleMachineOptionClick} />
         </>
       )}
     </div>
   )
 }
 
-export const EarningLineChart = withStyles(styles)(_EarningLineChart)
+export const OldEarningLineChart = withStyles(styles)(_OldEarningLineChart)

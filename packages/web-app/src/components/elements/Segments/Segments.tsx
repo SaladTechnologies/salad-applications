@@ -1,6 +1,5 @@
 import classnames from 'classnames'
 import type CSS from 'csstype'
-import { useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
@@ -13,7 +12,6 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     padding: '6px 12px',
     position: 'relative',
     textAlign: 'center',
-    transition: 'background 300ms ease, color 300ms ease',
     userSelect: 'none',
     fontFamily: 'Mallory',
     fontSize: '16px',
@@ -46,17 +44,11 @@ interface Option {
 
 interface Props extends WithStyles<typeof styles> {
   options: Option[]
+  selectedOptionName: string
+  onOptionChange: (name: string) => void
 }
 
-const _Segments = ({ classes, options }: Props) => {
-  const [selectedOptionName, setSelectedOptionName] = useState<string>(options[0]?.name || '')
-
-  const handleSelect = (action: () => void, name: string, disabled?: boolean) => {
-    if (disabled) return
-    setSelectedOptionName(name)
-    action()
-  }
-
+const _Segments = ({ classes, options, selectedOptionName, onOptionChange }: Props) => {
   return (
     <>
       {options.map((option, index) => (
@@ -66,10 +58,10 @@ const _Segments = ({ classes, options }: Props) => {
             selectedOptionName === option.name ? classes.active : classes.inactive,
             option.disabled && classes.disabled,
           )}
-          onClick={() => handleSelect(option.action, option.name, option.disabled)}
+          onClick={() => !option.disabled && onOptionChange(option.name)}
           key={index}
         >
-          {option.name}
+          {String(option.name)}
         </label>
       ))}
     </>

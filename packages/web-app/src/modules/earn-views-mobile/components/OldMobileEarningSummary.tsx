@@ -7,7 +7,7 @@ import { Divider, SectionHeader, StatElement } from '../../../components'
 import { OldSegments } from '../../../components/elements/OldSegments'
 import { formatBalance } from '../../../utils'
 import { EarningChartContainer } from '../../earn-views'
-import { EarningLineChartContainer } from '../../earn-views/EarningLineChartContainer'
+import { OldEarningLineChartContainer } from '../../earn-views/OldEarningLineChartContainer'
 
 const styles = (theme: SaladTheme) => ({
   item: {
@@ -135,7 +135,7 @@ const _OldMobileEarningSummary = ({
         </div>
       </div>
       <div className={classes.chartContainer}>
-        {isEarningsPerMachineEnabled ? <EarningLineChartContainer /> : <EarningChartContainer />}
+        {isEarningsPerMachineEnabled ? <OldEarningLineChartContainer /> : <EarningChartContainer />}
       </div>
       {isEarningsPerMachineEnabled && (
         <div className={classes.descriptionWrapper}>

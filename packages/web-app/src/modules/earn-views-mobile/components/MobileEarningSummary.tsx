@@ -1,13 +1,9 @@
-import { Switch, Text } from '@saladtechnologies/garden-components'
-import { useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
 import { Divider, SectionHeader, StatElement } from '../../../components'
-import { Segments } from '../../../components/elements/Segments'
 import { formatBalance } from '../../../utils'
-import { EarningChartContainer } from '../../earn-views'
-import { EarningLineChartContainer } from '../../earn-views/EarningLineChartContainer'
+import { EarningHistory } from '../../earn-views/components'
 
 const styles = (theme: SaladTheme) => ({
   item: {
@@ -20,12 +16,6 @@ const styles = (theme: SaladTheme) => ({
     position: 'relative',
     flexDirection: 'column',
   },
-  chartHeader: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-end',
-    flexDirection: 'row',
-  },
   segmentsContainer: {
     '&>label:first-child': {
       borderRadius: '2px 0px 0px 2px',
@@ -34,12 +24,16 @@ const styles = (theme: SaladTheme) => ({
       borderRadius: '0px 2px 2px 0px',
     },
   },
-  earningPerMachineSwitchWrapper: {
-    marginLeft: 32,
-  },
   descriptionWrapper: {
     paddingLeft: '70px',
     color: theme.lightGreen,
+  },
+  subtitle: {
+    fontFamily: 'Mallory',
+    fontSize: '16px',
+    color: theme.lightGreen,
+    lineHeight: '1.5',
+    marginBottom: '10px',
   },
 })
 
@@ -67,13 +61,6 @@ const _MobileEarningSummary = ({
   viewLast7Days,
   viewLast30Days,
 }: Props) => {
-  const [isEarningsPerMachineEnabled, setIsEarningsPerMachineEnabled] = useState(false)
-  const segmentOptions = [
-    { name: '24 Hours', action: viewLast24Hours },
-    { name: '7 Days', action: viewLast7Days },
-    { name: '30 Days', action: viewLast30Days },
-  ]
-
   return (
     <>
       <SectionHeader>Summary</SectionHeader>
@@ -121,30 +108,7 @@ const _MobileEarningSummary = ({
       </div>
       <Divider />
       <SectionHeader>Earning History</SectionHeader>
-      <div className={classes.chartHeader}>
-        <div className={classes.segmentsContainer}>
-          <Segments options={segmentOptions} />
-        </div>
-        <div className={classes.earningPerMachineSwitchWrapper}>
-          <Switch
-            label="Earnings Per Machine"
-            checked={isEarningsPerMachineEnabled}
-            onChange={setIsEarningsPerMachineEnabled}
-            variant="light"
-          />
-        </div>
-      </div>
-      <div className={classes.chartContainer}>
-        {isEarningsPerMachineEnabled ? <EarningLineChartContainer /> : <EarningChartContainer />}
-      </div>
-      {isEarningsPerMachineEnabled && (
-        <div className={classes.descriptionWrapper}>
-          <Text variant="baseXS">
-            *Per machine earnings don’t include referral earnings, earning rate multipliers or any other kind of bonus
-            earnings.
-          </Text>
-        </div>
-      )}
+      <EarningHistory viewLast24Hours={viewLast24Hours} viewLast7Days={viewLast7Days} viewLast30Days={viewLast30Days} />
       <Divider />
     </>
   )
