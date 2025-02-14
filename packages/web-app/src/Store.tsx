@@ -87,7 +87,7 @@ export class RootStore {
     this.termsAndConditions = new TermsAndConditionsStore(axios, this.profile)
     this.rewards = new RewardStore(this, axios, this.profile)
     this.analytics = new AnalyticsStore(this.auth)
-    this.balance = new BalanceStore(this, axios)
+    this.balance = new BalanceStore(axios)
     this.ui = new UIStore(this)
     this.referral = new ReferralStore(this, axios)
     this.home = new HomeStore(axios)

@@ -16,6 +16,7 @@ const mapStoreToProps = (store: RootStore, props: EarningLineChartContainerProps
     machines: store.balance.machines,
     daysShowing: store.balance.getDaysShowingEarnings,
     fetchEarningsPerMachine: store.balance.fetchEarningsPerMachine,
+    ...props,
   }
 }
 

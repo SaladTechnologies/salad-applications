@@ -21,14 +21,10 @@ const mapStoreToProps = (store: RootStore): any => {
     last24HrEarnings: store.balance.lastDayEarnings,
     last7DayEarnings: store.balance.lastWeekEarnings,
     last30DayEarnings: store.balance.lastMonthEarnings,
-    earningHistory: store.balance.earningsHistory,
     bonusEarningRate: store.bonuses.currentEarningBonus,
     trackEarnPageFAQLinkClicked: store.analytics.trackEarnPageFAQLinkClicked,
     trackEarnPageViewed: store.analytics.trackEarnPageViewed,
     trackAndNavigateToRewardVaultPage,
-    viewLast24Hours: store.balance.viewLast24Hours,
-    viewLast7Days: store.balance.viewLast7Days,
-    viewLast30Days: store.balance.viewLast30Days,
   }
 }
 
