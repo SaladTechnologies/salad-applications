@@ -5,8 +5,8 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { Segments } from '../../../../components/elements/Segments'
-import { EarningChartContainer } from '../../EarningChartContainer'
 import { EarningLineChartContainer } from '../../EarningLineChartContainer'
+import { EarningTableContainer } from '../../EarningTableContainer'
 import { EarnSectionHeader } from '../EarnSectionHeader'
 import { ViewData, ViewRange, ViewType } from './constants'
 
@@ -181,7 +181,7 @@ const _EarningHistory = ({
               setViewData={setViewData}
             />
           )}
-          {viewType === ViewType.Table && <EarningChartContainer />}
+          {viewType === ViewType.Table && <EarningTableContainer />}
         </div>
         <div className={classes.descriptionWrapper}>
           <Text variant="baseXS">

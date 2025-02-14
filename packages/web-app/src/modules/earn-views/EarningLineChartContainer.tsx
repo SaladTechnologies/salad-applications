@@ -11,6 +11,7 @@ interface EarningLineChartContainerProps {
 
 const mapStoreToProps = (store: RootStore, props: EarningLineChartContainerProps): any => {
   return {
+    ...props,
     earningsPerMachine: store.balance.earningsPerMachine,
     machines: store.balance.machines,
     daysShowing: store.balance.getDaysShowingEarnings,

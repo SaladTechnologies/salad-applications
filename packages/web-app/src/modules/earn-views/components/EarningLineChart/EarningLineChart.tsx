@@ -14,7 +14,7 @@ import { ViewData } from '../EarningHistory/constants'
 import { CustomizedXAxisTick } from './components'
 import type { MachineOptions } from './components/EarningMachineList'
 import { EarningMachineList } from './components/EarningMachineList'
-import { aggregateMachineOption } from './constants'
+import { aggregateMachineOption, maximumMachinesForIndividualView } from './constants'
 import { getAggregatedMachineEarningsValue, getMachineOptions } from './utils'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
@@ -25,7 +25,14 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     flexDirection: 'row',
+    '@media (max-width: 812px)': {
+      overflowX: 'scroll',
+      overflowY: 'hidden',
+    },
     gap: '24px',
+  },
+  noDataWrapper: {
+    height: '400px',
   },
   loaderWrapper: {
     height: '100%',
@@ -82,7 +89,7 @@ const _EarningLineChart = ({
   }, [earningsPerMachine, isAggregateView])
 
   useEffect(() => {
-    if (Object.values(machineOptions).length > 10) {
+    if (Object.values(machineOptions).length > maximumMachinesForIndividualView) {
       setViewData(ViewData.Aggregate)
       setIsIndividualViewDataDisabled(true)
     } else if (!isAggregateView) {
@@ -103,7 +110,7 @@ const _EarningLineChart = ({
     )
   }
 
-  const individualMachineEarningsData = Object.keys(earningsPerMachine).map((machineId) => ({
+  const individualMachineEarnings = Object.keys(earningsPerMachine).map((machineId) => ({
     id: machineId,
     name: machineId.substring(0, 8),
     data: normalizeEarningsPerMachineData(earningsPerMachine[machineId] as EarningWindow[], daysShowing),
@@ -111,7 +118,7 @@ const _EarningLineChart = ({
 
   const aggregatedMachineEarningsValue = getAggregatedMachineEarningsValue(earningsPerMachine)
 
-  const aggregateMachineEarningsData = [
+  const aggregateMachineEarnings = [
     {
       id: 'Aggregate',
       name: 'Aggregate',
@@ -119,15 +126,15 @@ const _EarningLineChart = ({
     },
   ]
 
-  const machineEarningsData = isAggregateView ? aggregateMachineEarningsData : individualMachineEarningsData
+  const machineEarnings = isAggregateView ? aggregateMachineEarnings : individualMachineEarnings
 
-  const withMachinesData = machines !== null
-  const isLoading = machineEarningsData.length <= 0
+  const withMachines = machines !== null
+  const isLoading = machineEarnings.length <= 0
   const isNoMachineOptionChecked = !Object.values(machineOptions).some((machineOption) => machineOption.isChecked)
 
-  if (!withMachinesData) {
+  if (!withMachines) {
     return (
-      <div className={classes.earningLineChartWrapper}>
+      <div className={classes.noDataWrapper}>
         <div className={classes.loaderWrapper}>
           <Text variant="baseM">No data to display</Text>
         </div>
@@ -143,9 +150,9 @@ const _EarningLineChart = ({
         </div>
       ) : (
         <>
-          <ResponsiveContainer>
+          <ResponsiveContainer minWidth={650} minHeight={290}>
             <LineChart
-              data={isNoMachineOptionChecked ? machineEarningsData[0]?.data : []}
+              data={isNoMachineOptionChecked ? machineEarnings[0]?.data : []}
               margin={{ top: 30, left: 10, right: 0, bottom: 10 }}
             >
               <CartesianGrid vertical={false} stroke="#3B4D5C" />
@@ -175,7 +182,7 @@ const _EarningLineChart = ({
                 labelFormatter={(value) => (is24HoursChart ? moment(value, 'HH').format('h A') : value)}
                 wrapperClassName={classes.tooltipWrapper}
               />
-              {machineEarningsData.map(
+              {machineEarnings.map(
                 (machineEarning) =>
                   machineOptions[machineEarning.id]?.isChecked && (
                     <Line

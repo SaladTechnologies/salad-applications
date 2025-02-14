@@ -36,19 +36,19 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
 })
 
-interface Option<T> {
-  name: T
+interface Option {
+  name: string
   action: () => void
   disabled?: boolean
 }
 
-interface Props<T> extends WithStyles<typeof styles> {
-  options: Option<T>[]
-  selectedOptionName: T
-  onOptionChange: (name: T) => void
+interface Props extends WithStyles<typeof styles> {
+  options: Option[]
+  selectedOptionName: string
+  onOptionChange: (name: string) => void
 }
 
-const _Segments = <T,>({ classes, options, selectedOptionName, onOptionChange }: Props<T>) => {
+const _Segments = ({ classes, options, selectedOptionName, onOptionChange }: Props) => {
   return (
     <>
       {options.map((option, index) => (

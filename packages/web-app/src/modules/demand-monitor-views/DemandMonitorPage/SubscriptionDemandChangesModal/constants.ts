@@ -1,6 +1,26 @@
 import type { GetMailchimpSubscriptionFormParams } from './utils'
 
 export const mailchimpFormDataByHardwareName: Record<string, Omit<GetMailchimpSubscriptionFormParams, 'name'>> = {
+  'NVIDIA GeForce RTX 5090': {
+    id: '4fc38bd364',
+    fId: '00f736e3f0',
+    groupId: '78345',
+  },
+  'NVIDIA GeForce RTX 5080': {
+    id: '0cd4fd1d59',
+    fId: '00f036e3f0',
+    groupId: '78344',
+  },
+  'NVIDIA GeForce RTX 5070 Ti': {
+    id: '5a405d6ee6',
+    fId: '00f136e3f0',
+    groupId: '78343',
+  },
+  'NVIDIA GeForce RTX 5070': {
+    id: 'a9d61cf961',
+    fId: '00f236e3f0',
+    groupId: '78342',
+  },
   'NVIDIA GeForce RTX 4090': {
     id: '47a0417a3d',
     fId: '00c836e3f0',
