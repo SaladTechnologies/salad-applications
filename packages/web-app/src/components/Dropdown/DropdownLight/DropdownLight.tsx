@@ -38,6 +38,6 @@ const dropdownLightStyles: DropdownStylesConfig = {
   }),
 }
 
-export const DropdownLight: FC<Omit<Props, 'customStyles' | 'classes'>> = ({ options, value, onChange }) => {
-  return <Dropdown customStyles={dropdownLightStyles} options={options} value={value} onChange={onChange} />
+export const DropdownLight: FC<Omit<Props, 'customStyles' | 'classes'>> = (props) => {
+  return <Dropdown {...props} customStyles={dropdownLightStyles}  />
 }

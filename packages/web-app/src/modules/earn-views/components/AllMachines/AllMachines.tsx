@@ -7,13 +7,17 @@ import { DateTime } from 'luxon'
 import { useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
+import type { DropdownOption } from '../../../../components/Dropdown'
+import { Dropdown } from '../../../../components/Dropdown'
 import { Pagination } from '../../../../components/Pagination'
 import { usePagination } from '../../../../components/Pagination/usePagination'
 import { Table } from '../../../../components/Table'
 import type { TableRow } from '../../../../components/Table/types'
 import { DefaultTheme, type SaladTheme } from '../../../../SaladTheme'
 import { EarnSectionHeader } from '../EarnSectionHeader'
+import { machinesTableDropdownOptions, MachinesTableDropdownOptionValue } from './constants'
 import type { MachineState } from './mocks'
+import { generatedMockedMachines } from './mocks'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   allMachinesWrapper: {
@@ -50,6 +54,9 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
+  },
+  tableDropdownHeader: {
+    cursor: 'pointer',
   },
   warningPillWrapper: {
     display: 'flex',
@@ -116,6 +123,48 @@ const _AllMachines = ({ classes, machines, onMachineIdClick }: Props) => {
     window.location.href = 'https://support.salad.com/article/414-how-to-find-your-salad-machine-id'
   }
 
+  const handleDropdownChange = ({ value }: DropdownOption) => {
+    switch (value) {
+      case MachinesTableDropdownOptionValue.SelectAll: {
+        setSelectedMachineIds(generatedMockedMachines.reduce((acc, machine) => ({ ...acc, [machine.id]: true }), {}))
+        break
+      }
+      case MachinesTableDropdownOptionValue.SelectAllInPage: {
+        const machinesToSelect = generatedMockedMachines
+          .slice(lowestItemNumberOnPage - 1, highestItemNumberOnPage)
+          .reduce((acc, machine) => ({ ...acc, [machine.id]: true }), {})
+
+        setSelectedMachineIds((previousSelectedMachineIds) => ({
+          ...previousSelectedMachineIds,
+          ...machinesToSelect,
+        }))
+
+        break
+      }
+
+      case MachinesTableDropdownOptionValue.DeselectAll: {
+        setSelectedMachineIds({})
+        break
+      }
+
+      case MachinesTableDropdownOptionValue.DeselectAllInPage: {
+        const machinesToDeselect = generatedMockedMachines
+          .slice(lowestItemNumberOnPage - 1, highestItemNumberOnPage)
+          .reduce((acc, machine) => ({ ...acc, [machine.id]: false }), {})
+
+        setSelectedMachineIds((previousSelectedMachineIds) => ({
+          ...previousSelectedMachineIds,
+          ...machinesToDeselect,
+        }))
+
+        break
+      }
+
+      default:
+        break
+    }
+  }
+
   const {
     lowestItemNumberOnPage,
     highestItemNumberOnPage,
@@ -126,8 +175,13 @@ const _AllMachines = ({ classes, machines, onMachineIdClick }: Props) => {
 
   const getTitles = () => {
     return [
-      <div className={(classes.tableHeaderCell, classes.tableCellCentered)}>
-        <FontAwesomeIcon icon={faList} />
+      <div className={(classes.tableHeaderCell, classes.tableCellCentered, classes.tableDropdownHeader)}>
+        <Dropdown
+          control={<FontAwesomeIcon size="xl" icon={faList} />}
+          options={machinesTableDropdownOptions}
+          onChange={handleDropdownChange}
+          allowUnselectedClick
+        />
       </div>,
       <div className={classes.tableHeaderCell}>
         <Text variant="baseXS">Machine ID</Text>
