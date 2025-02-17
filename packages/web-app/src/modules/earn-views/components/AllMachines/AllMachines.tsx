@@ -117,7 +117,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const _AllMachines = ({ classes, machines, onMachineIdClick }: Props) => {
-  const [selectedMachineIds, setSelectedMachineIds] = useState<Record<string, boolean>>(() =>
+  const [selectedMachinesById, setSelectedMachinesById] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(machines.map((machine) => [machine.id, false])),
   )
 
@@ -136,35 +136,35 @@ const _AllMachines = ({ classes, machines, onMachineIdClick }: Props) => {
   const dropdownOptions: DropdownOption<unknown>[] = [
     {
       displayName: 'Select All',
-      handler: () => setSelectedMachineIds(machines.reduce((acc, machine) => ({ ...acc, [machine.id]: true }), {})),
+      handler: () => setSelectedMachinesById(machines.reduce((acc, machine) => ({ ...acc, [machine.id]: true }), {})),
     },
     {
       displayName: 'Select All in Page',
       handler: () => {
-        const machinesToSelect = machines
+        const updatedSelectedMachinesById = machines
           .slice(lowestItemNumberOnPage - 1, highestItemNumberOnPage)
           .reduce((acc, machine) => ({ ...acc, [machine.id]: true }), {})
 
-        setSelectedMachineIds((previousSelectedMachineIds) => ({
-          ...previousSelectedMachineIds,
-          ...machinesToSelect,
+        setSelectedMachinesById((previousSelectedMachinesById) => ({
+          ...previousSelectedMachinesById,
+          ...updatedSelectedMachinesById,
         }))
       },
     },
     {
       displayName: 'Deselect All',
-      handler: () => setSelectedMachineIds({}),
+      handler: () => setSelectedMachinesById({}),
     },
     {
       displayName: 'Deselect All in Page',
       handler: () => {
-        const machinesToDeselect = machines
+        const updatedUnselectedMachinesById = machines
           .slice(lowestItemNumberOnPage - 1, highestItemNumberOnPage)
           .reduce((acc, machine) => ({ ...acc, [machine.id]: false }), {})
 
-        setSelectedMachineIds((previousSelectedMachineIds) => ({
+        setSelectedMachinesById((previousSelectedMachineIds) => ({
           ...previousSelectedMachineIds,
-          ...machinesToDeselect,
+          ...updatedUnselectedMachinesById,
         }))
       },
     },
@@ -219,12 +219,12 @@ const _AllMachines = ({ classes, machines, onMachineIdClick }: Props) => {
               <div className={classes.checkboxWrapper}>
                 <Checkbox
                   onChange={(checked) =>
-                    setSelectedMachineIds((previousSelectedMachineIds) => ({
+                    setSelectedMachinesById((previousSelectedMachineIds) => ({
                       ...previousSelectedMachineIds,
                       [machine.id]: checked,
                     }))
                   }
-                  checked={selectedMachineIds[machine.id]}
+                  checked={selectedMachinesById[machine.id]}
                 />
               </div>
             </div>
