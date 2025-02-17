@@ -91,7 +91,7 @@ export interface Props<TOptionValue> extends WithStyles<typeof styles> {
   optionKey?: keyof DropdownOption
 }
 
-function _Dropdown<TOptionValue = void>({
+const _Dropdown = <TOptionValue,>({
   options,
   content,
   toggleContent,
@@ -100,7 +100,7 @@ function _Dropdown<TOptionValue = void>({
   setDropdownShown: setDropdownShownExternal,
   optionKey,
   classes,
-}: Props<TOptionValue>): React.ReactElement {
+}: Props<TOptionValue>): React.ReactElement => {
   if (
     (setDropdownShownExternal === undefined && isDropdownShownExternal) ||
     (setDropdownShownExternal && isDropdownShownExternal === undefined)
