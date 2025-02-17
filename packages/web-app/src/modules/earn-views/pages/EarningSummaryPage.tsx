@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Scrollbar } from '../../../components'
@@ -7,6 +7,7 @@ import { withLogin } from '../../auth-views'
 import type { RedeemedReward } from '../../balance/models/RedeemedReward'
 import type { RewardVaultItem } from '../../vault/models'
 import { EarningFrequentlyAskedQuestions, EarningHistory, EarningSummary, LatestRewardsRedeemed } from '../components'
+import { AllMachines } from '../components/AllMachines'
 import { generatedMockedMachines } from '../components/AllMachines/mocks'
 import { MachineDetailsModal } from '../components/MachineDetailsModal'
 
@@ -28,10 +29,10 @@ interface Props extends WithStyles<typeof styles> {
   last24HrEarnings: number
   last7DayEarnings: number
   last30DayEarnings: number
+  isLatestCompletedRedeemedRewardsLoading: boolean
   startRedemptionsRefresh: () => void
   stopRedemptionsRefresh: () => void
   navigateToRewardVaultPage: () => void
-  isLatestCompletedRedeemedRewardsLoading: boolean
   trackAndNavigateToRewardVaultPage: () => void
   trackEarnPageFAQLinkClicked: (faqLink: string) => void
   trackEarnPageViewed: () => void
@@ -50,9 +51,9 @@ const _EarningSummaryPage: FC<Props> = ({
   last24HrEarnings,
   last7DayEarnings,
   last30DayEarnings,
+  isLatestCompletedRedeemedRewardsLoading,
   startRedemptionsRefresh,
   stopRedemptionsRefresh,
-  isLatestCompletedRedeemedRewardsLoading,
   trackAndNavigateToRewardVaultPage,
   trackEarnPageFAQLinkClicked,
   trackEarnPageViewed,
@@ -60,11 +61,17 @@ const _EarningSummaryPage: FC<Props> = ({
   viewLast7Days,
   viewLast30Days,
 }) => {
-  const [selectedMachineId, setSelectedMachineId] = useState<string | null>(null)
+  const [shownModalMachineId, setShownModalMachineId] = useState<string | null>(null)
+  const [selectedMachineIds, setSelectedMachineIds] = useState<string[]>([])
+  console.log('selectedMachineIds ===> ', selectedMachineIds)
 
   const handleCloseMachineDetailsModal = () => {
-    setSelectedMachineId(null)
+    setShownModalMachineId(null)
   }
+
+  const handleSelectedMachineIdsChange = useCallback((updatedSelectedMachineIds: string[]) => {
+    setSelectedMachineIds(updatedSelectedMachineIds)
+  }, [])
 
   useEffect(() => {
     startRedemptionsRefresh()
@@ -79,7 +86,7 @@ const _EarningSummaryPage: FC<Props> = ({
 
   const redeemedRewardsCount = redeemedRewards?.length ?? 0
 
-  const selectedMachine = generatedMockedMachines.find((machine) => machine.id === selectedMachineId)
+  const shownModalMachine = generatedMockedMachines.find((machine) => machine.id === shownModalMachineId)
 
   return (
     <Scrollbar>
@@ -98,8 +105,14 @@ const _EarningSummaryPage: FC<Props> = ({
           viewLast7Days={viewLast7Days}
           viewLast30Days={viewLast30Days}
         />
-        {/* <AllMachines machines={generatedMockedMachines} onMachineIdClick={setSelectedMachineId} /> */}
-        {selectedMachine && <MachineDetailsModal {...selectedMachine} onCloseClick={handleCloseMachineDetailsModal} />}
+        <AllMachines
+          machines={generatedMockedMachines}
+          onMachineIdClick={setShownModalMachineId}
+          onSelectedMachineIdsChange={handleSelectedMachineIdsChange}
+        />
+        {shownModalMachine && (
+          <MachineDetailsModal {...shownModalMachine} onCloseClick={handleCloseMachineDetailsModal} />
+        )}
         <LatestRewardsRedeemed
           latestCompletedRedeemedRewards={latestCompletedRedeemedRewardsArray}
           navigateToRewardVaultPage={trackAndNavigateToRewardVaultPage}

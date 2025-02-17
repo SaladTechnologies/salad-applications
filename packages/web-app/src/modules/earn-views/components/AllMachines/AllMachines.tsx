@@ -4,9 +4,11 @@ import { Checkbox, Text } from '@saladtechnologies/garden-components'
 import classNames from 'classnames'
 import type CSS from 'csstype'
 import { DateTime } from 'luxon'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
+import type { DropdownOption } from '../../../../components/Dropdown'
+import { Dropdown } from '../../../../components/Dropdown'
 import { Pagination } from '../../../../components/Pagination'
 import { usePagination } from '../../../../components/Pagination/usePagination'
 import { Table } from '../../../../components/Table'
@@ -38,6 +40,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     fontSize: '14px',
   },
   tableHeaderCell: {
+    position: 'relative',
     padding: '10px',
     paddingLeft: '0px',
     display: 'flex',
@@ -100,17 +103,28 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
       textDecoration: 'underline',
     },
   },
+  selectItemsDropdownWrap: {
+    position: 'absolute',
+    left: '10px',
+    top: '32px',
+    zIndex: 1,
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
   machines: MachineState[]
   onMachineIdClick: (machineId: string) => void
+  onSelectedMachineIdsChange: (machineIds: string[]) => void
 }
 
-const _AllMachines = ({ classes, machines, onMachineIdClick }: Props) => {
-  const [selectedMachineIds, setSelectedMachineIds] = useState<Record<string, boolean>>(() =>
+const _AllMachines = ({ classes, machines, onMachineIdClick, onSelectedMachineIdsChange }: Props) => {
+  const [selectedMachinesById, setSelectedMachinesById] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(machines.map((machine) => [machine.id, false])),
   )
+
+  useEffect(() => {
+    onSelectedMachineIdsChange(Object.keys(selectedMachinesById).filter((machineId) => selectedMachinesById[machineId]))
+  }, [onSelectedMachineIdsChange, selectedMachinesById])
 
   const handleMachineIdQuestionIconClick = () => {
     window.location.href = 'https://support.salad.com/article/414-how-to-find-your-salad-machine-id'
@@ -124,10 +138,52 @@ const _AllMachines = ({ classes, machines, onMachineIdClick }: Props) => {
     setCurrentPageNumber,
   } = usePagination()
 
+  const dropdownOptions: DropdownOption<unknown>[] = [
+    {
+      displayName: 'Select All',
+      handler: () => setSelectedMachinesById(machines.reduce((acc, machine) => ({ ...acc, [machine.id]: true }), {})),
+    },
+    {
+      displayName: 'Select All in Page',
+      handler: () => {
+        const updatedSelectedMachinesById = machines
+          .slice(lowestItemNumberOnPage - 1, highestItemNumberOnPage)
+          .reduce((acc, machine) => ({ ...acc, [machine.id]: true }), {})
+
+        setSelectedMachinesById((previousSelectedMachinesById) => ({
+          ...previousSelectedMachinesById,
+          ...updatedSelectedMachinesById,
+        }))
+      },
+    },
+    {
+      displayName: 'Deselect All',
+      handler: () => setSelectedMachinesById({}),
+    },
+    {
+      displayName: 'Deselect All in Page',
+      handler: () => {
+        const updatedUnselectedMachinesById = machines
+          .slice(lowestItemNumberOnPage - 1, highestItemNumberOnPage)
+          .reduce((acc, machine) => ({ ...acc, [machine.id]: false }), {})
+
+        setSelectedMachinesById((previousSelectedMachineIds) => ({
+          ...previousSelectedMachineIds,
+          ...updatedUnselectedMachinesById,
+        }))
+      },
+    },
+  ]
+
   const getTitles = () => {
     return [
       <div className={(classes.tableHeaderCell, classes.tableCellCentered)}>
-        <FontAwesomeIcon icon={faList} />
+        <Dropdown
+          options={dropdownOptions}
+          optionKey="displayName"
+          wrapClassname={classes.selectItemsDropdownWrap}
+          toggleContent={<FontAwesomeIcon icon={faList} />}
+        />
       </div>,
       <div className={classes.tableHeaderCell}>
         <Text variant="baseXS">Machine ID</Text>
@@ -168,12 +224,12 @@ const _AllMachines = ({ classes, machines, onMachineIdClick }: Props) => {
               <div className={classes.checkboxWrapper}>
                 <Checkbox
                   onChange={(checked) =>
-                    setSelectedMachineIds((previousSelectedMachineIds) => ({
+                    setSelectedMachinesById((previousSelectedMachineIds) => ({
                       ...previousSelectedMachineIds,
                       [machine.id]: checked,
                     }))
                   }
-                  checked={selectedMachineIds[machine.id]}
+                  checked={selectedMachinesById[machine.id]}
                 />
               </div>
             </div>
