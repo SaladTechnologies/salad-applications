@@ -201,19 +201,17 @@ const _Dropdown = <TOptionValue,>({
         {toggleContent}
       </div>
       {isDropdownShown && (
-        <>
-          <div
-            className={classNames(
-              classes.dropdownWrap,
-              animationType === AnimationType.appearing ? classes.shown : classes.hidden,
-              wrapClassname,
-            )}
-            ref={dropdownRef}
-            onAnimationEnd={onAnimationEnd}
-          >
-            <div className={classes.dropdownContent}>{getDropdownContent()}</div>
-          </div>
-        </>
+        <div
+          className={classNames(
+            classes.dropdownWrap,
+            animationType === AnimationType.appearing ? classes.shown : classes.hidden,
+            wrapClassname,
+          )}
+          ref={dropdownRef}
+          onAnimationEnd={onAnimationEnd}
+        >
+          <div className={classes.dropdownContent}>{getDropdownContent()}</div>
+        </div>
       )}
     </>
   )
