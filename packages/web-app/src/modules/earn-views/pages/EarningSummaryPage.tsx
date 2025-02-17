@@ -1,4 +1,3 @@
-import moment from 'moment'
 import type { FC } from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import type { WithStyles } from 'react-jss'
@@ -10,7 +9,7 @@ import type { RedeemedReward } from '../../balance/models/RedeemedReward'
 import type { RewardVaultItem } from '../../vault/models'
 import { EarningFrequentlyAskedQuestions, EarningHistory, EarningSummary, LatestRewardsRedeemed } from '../components'
 import { AllMachines } from '../components/AllMachines'
-import { generatedMockedMachines } from '../components/AllMachines/mocks'
+import { generatedMockedMachines, mockEarningPerMachine } from '../components/AllMachines/mocks'
 import { MachineDetailsModal } from '../components/MachineDetailsModal'
 
 const styles = () => ({
@@ -65,12 +64,11 @@ const _EarningSummaryPage: FC<Props> = ({
   viewLast7Days,
   viewLast30Days,
 }) => {
-  const [shownModalMachineId, setShownModalMachineId] = useState<string | null>(null)
+  const [detailsModalMachineId, setDetailsModalMachineId] = useState<string | null>(null)
   const [selectedMachineIds, setSelectedMachineIds] = useState<string[]>([])
-  console.log('selectedMachineIds ===> ', selectedMachineIds)
 
   const handleCloseMachineDetailsModal = () => {
-    setShownModalMachineId(null)
+    setDetailsModalMachineId(null)
   }
 
   const handleSelectedMachineIdsChange = useCallback((updatedSelectedMachineIds: string[]) => {
@@ -90,19 +88,12 @@ const _EarningSummaryPage: FC<Props> = ({
 
   const redeemedRewardsCount = redeemedRewards?.length ?? 0
 
-  const shownModalMachine = generatedMockedMachines.find((machine) => machine.id === shownModalMachineId)
-
-  // Mocked data for earnings per machine
-  const mockEarningPerMachine: EarningPerMachine = {
-    'id-1': Array.from({ length: 30 }, (_, i) => ({
-      timestamp: moment().subtract(i, 'days'),
-      earnings: parseFloat((Math.random() * 1).toFixed(2)),
-    })).reverse(),
-  }
+  const shownModalMachine = generatedMockedMachines.find((machine) => machine.id === detailsModalMachineId)
 
   const earningPerSelectedMachines = Object.keys(selectedMachineIds)
     .filter((id) => selectedMachineIds.includes(id))
     .reduce<EarningPerMachine>((acc, id) => {
+      // Mocked data for earnings per machine
       if (mockEarningPerMachine[id]) {
         acc[id] = mockEarningPerMachine[id]
       }
@@ -123,7 +114,7 @@ const _EarningSummaryPage: FC<Props> = ({
         />
         <AllMachines
           machines={generatedMockedMachines}
-          onMachineIdClick={setShownModalMachineId}
+          onMachineIdClick={setDetailsModalMachineId}
           onSelectedMachineIdsChange={handleSelectedMachineIdsChange}
         />
         <EarningHistory
