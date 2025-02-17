@@ -1,8 +1,11 @@
+import moment from 'moment'
+import { useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
 import { Divider, SectionHeader, StatElement } from '../../../components'
 import { formatBalance } from '../../../utils'
+import type { ChartDaysShowing, EarningPerMachine } from '../../balance/models'
 import { EarningHistory } from '../../earn-views/components'
 
 const styles = (theme: SaladTheme) => ({
@@ -39,6 +42,7 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   currentBalance?: number
+  daysShowing: ChartDaysShowing
   last24HrEarnings: number
   last7DayEarnings: number
   last30DayEarnings: number
@@ -52,6 +56,7 @@ interface Props extends WithStyles<typeof styles> {
 const _MobileEarningSummary = ({
   classes,
   currentBalance,
+  daysShowing,
   last24HrEarnings,
   last7DayEarnings,
   last30DayEarnings,
@@ -61,6 +66,26 @@ const _MobileEarningSummary = ({
   viewLast7Days,
   viewLast30Days,
 }: Props) => {
+  // Mocked data for selected machine IDs
+  const [selectedMachineIds] = useState<Record<string, boolean>>({ 'id-1': true })
+
+  // Mocked data for earnings per machine
+  const mockEarningPerMachine: EarningPerMachine = {
+    'id-1': Array.from({ length: 30 }, (_, i) => ({
+      timestamp: moment().subtract(i, 'days'),
+      earnings: parseFloat((Math.random() * 1).toFixed(2)),
+    })).reverse(),
+  }
+
+  const earningPerSelectedMachines = Object.keys(selectedMachineIds)
+    .filter((id) => selectedMachineIds[id])
+    .reduce<EarningPerMachine>((acc, id) => {
+      if (mockEarningPerMachine[id]) {
+        acc[id] = mockEarningPerMachine[id]
+      }
+      return acc
+    }, {})
+
   return (
     <>
       <SectionHeader>Summary</SectionHeader>
@@ -108,7 +133,13 @@ const _MobileEarningSummary = ({
       </div>
       <Divider />
       <SectionHeader>Earning History</SectionHeader>
-      <EarningHistory viewLast24Hours={viewLast24Hours} viewLast7Days={viewLast7Days} viewLast30Days={viewLast30Days} />
+      <EarningHistory
+        daysShowing={daysShowing}
+        earningPerSelectedMachines={earningPerSelectedMachines}
+        viewLast24Hours={viewLast24Hours}
+        viewLast7Days={viewLast7Days}
+        viewLast30Days={viewLast30Days}
+      />
       <Divider />
     </>
   )
