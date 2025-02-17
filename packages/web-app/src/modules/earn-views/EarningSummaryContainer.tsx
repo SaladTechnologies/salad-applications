@@ -10,7 +10,6 @@ const mapStoreToProps = (store: RootStore): any => {
   }
 
   return {
-    daysShowing: store.balance.getDaysShowingEarnings,
     currentBalance: store.balance.currentBalance,
     lifetimeBalance: store.balance.lifetimeBalance,
     totalChoppingHours: store.xp.currentXp && getNumberWithCommas((store.xp.currentXp / 60).toFixed(0)),

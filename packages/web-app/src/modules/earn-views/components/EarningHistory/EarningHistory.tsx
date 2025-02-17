@@ -74,6 +74,7 @@ const _EarningHistory = ({
   viewLast24Hours,
   viewLast7Days,
   viewLast30Days,
+  trackEarningHistoryFilterClicked,
 }: Props) => {
   const [viewType, setViewType] = useState<ViewType>(ViewType.Graph)
   const [viewRange, setViewRange] = useState<ViewRange>(ViewRange.Last24Hours)
