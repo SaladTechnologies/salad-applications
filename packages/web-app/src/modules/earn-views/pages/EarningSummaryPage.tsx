@@ -4,11 +4,12 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Scrollbar } from '../../../components'
 import { withLogin } from '../../auth-views'
+import type { ChartDaysShowing, EarningPerMachine } from '../../balance/models'
 import type { RedeemedReward } from '../../balance/models/RedeemedReward'
 import type { RewardVaultItem } from '../../vault/models'
 import { EarningFrequentlyAskedQuestions, EarningHistory, EarningSummary, LatestRewardsRedeemed } from '../components'
 import { AllMachines } from '../components/AllMachines'
-import { generatedMockedMachines } from '../components/AllMachines/mocks'
+import { generatedMockedMachines, mockEarningPerMachine } from '../components/AllMachines/mocks'
 import { MachineDetailsModal } from '../components/MachineDetailsModal'
 
 const styles = () => ({
@@ -21,6 +22,7 @@ const styles = () => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
+  daysShowing: ChartDaysShowing
   currentBalance?: number
   lifetimeBalance?: number
   totalChoppingHours?: number
@@ -44,6 +46,7 @@ interface Props extends WithStyles<typeof styles> {
 const _EarningSummaryPage: FC<Props> = ({
   classes,
   currentBalance,
+  daysShowing,
   lifetimeBalance,
   totalChoppingHours,
   redeemedRewards,
@@ -61,12 +64,11 @@ const _EarningSummaryPage: FC<Props> = ({
   viewLast7Days,
   viewLast30Days,
 }) => {
-  const [shownModalMachineId, setShownModalMachineId] = useState<string | null>(null)
+  const [detailsModalMachineId, setDetailsModalMachineId] = useState<string | null>(null)
   const [selectedMachineIds, setSelectedMachineIds] = useState<string[]>([])
-  console.log('selectedMachineIds ===> ', selectedMachineIds)
 
   const handleCloseMachineDetailsModal = () => {
-    setShownModalMachineId(null)
+    setDetailsModalMachineId(null)
   }
 
   const handleSelectedMachineIdsChange = useCallback((updatedSelectedMachineIds: string[]) => {
@@ -86,7 +88,17 @@ const _EarningSummaryPage: FC<Props> = ({
 
   const redeemedRewardsCount = redeemedRewards?.length ?? 0
 
-  const shownModalMachine = generatedMockedMachines.find((machine) => machine.id === shownModalMachineId)
+  const shownModalMachine = generatedMockedMachines.find((machine) => machine.id === detailsModalMachineId)
+
+  const earningPerSelectedMachines = Object.keys(selectedMachineIds)
+    .filter((id) => selectedMachineIds.includes(id))
+    .reduce<EarningPerMachine>((acc, id) => {
+      // Mocked data for earnings per machine
+      if (mockEarningPerMachine[id]) {
+        acc[id] = mockEarningPerMachine[id]
+      }
+      return acc
+    }, {})
 
   return (
     <Scrollbar>
@@ -100,15 +112,17 @@ const _EarningSummaryPage: FC<Props> = ({
           redeemedRewardsCount={redeemedRewardsCount}
           totalChoppingHours={totalChoppingHours}
         />
+        <AllMachines
+          machines={generatedMockedMachines}
+          onMachineIdClick={setDetailsModalMachineId}
+          onSelectedMachineIdsChange={handleSelectedMachineIdsChange}
+        />
         <EarningHistory
+          daysShowing={daysShowing}
+          earningsPerMachine={earningPerSelectedMachines}
           viewLast24Hours={viewLast24Hours}
           viewLast7Days={viewLast7Days}
           viewLast30Days={viewLast30Days}
-        />
-        <AllMachines
-          machines={generatedMockedMachines}
-          onMachineIdClick={setShownModalMachineId}
-          onSelectedMachineIdsChange={handleSelectedMachineIdsChange}
         />
         {shownModalMachine && (
           <MachineDetailsModal {...shownModalMachine} onCloseClick={handleCloseMachineDetailsModal} />

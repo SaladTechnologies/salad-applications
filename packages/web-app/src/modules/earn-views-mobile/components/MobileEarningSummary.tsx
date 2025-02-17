@@ -1,9 +1,14 @@
+import { useCallback, useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
 import { Divider, SectionHeader, StatElement } from '../../../components'
 import { formatBalance } from '../../../utils'
+import type { ChartDaysShowing, EarningPerMachine } from '../../balance/models'
 import { EarningHistory } from '../../earn-views/components'
+import { AllMachines } from '../../earn-views/components/AllMachines'
+import { generatedMockedMachines, mockEarningPerMachine } from '../../earn-views/components/AllMachines/mocks'
+import { MachineDetailsModal } from '../../earn-views/components/MachineDetailsModal'
 
 const styles = (theme: SaladTheme) => ({
   item: {
@@ -39,6 +44,7 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   currentBalance?: number
+  daysShowing: ChartDaysShowing
   last24HrEarnings: number
   last7DayEarnings: number
   last30DayEarnings: number
@@ -52,6 +58,7 @@ interface Props extends WithStyles<typeof styles> {
 const _MobileEarningSummary = ({
   classes,
   currentBalance,
+  daysShowing,
   last24HrEarnings,
   last7DayEarnings,
   last30DayEarnings,
@@ -61,6 +68,29 @@ const _MobileEarningSummary = ({
   viewLast7Days,
   viewLast30Days,
 }: Props) => {
+  const [detailsModalMachineId, setDetailsModalMachineId] = useState<string | null>(null)
+  const [selectedMachineIds, setSelectedMachineIds] = useState<string[]>([])
+
+  const handleCloseMachineDetailsModal = () => {
+    setDetailsModalMachineId(null)
+  }
+
+  const handleSelectedMachineIdsChange = useCallback((updatedSelectedMachineIds: string[]) => {
+    setSelectedMachineIds(updatedSelectedMachineIds)
+  }, [])
+
+  const shownModalMachine = generatedMockedMachines.find((machine) => machine.id === detailsModalMachineId)
+
+  const earningPerSelectedMachines = Object.keys(selectedMachineIds)
+    .filter((id) => selectedMachineIds.includes(id))
+    .reduce<EarningPerMachine>((acc, id) => {
+      // Mocked data for earnings per machine
+      if (mockEarningPerMachine[id]) {
+        acc[id] = mockEarningPerMachine[id]
+      }
+      return acc
+    }, {})
+
   return (
     <>
       <SectionHeader>Summary</SectionHeader>
@@ -107,8 +137,21 @@ const _MobileEarningSummary = ({
         />
       </div>
       <Divider />
-      <SectionHeader>Earning History</SectionHeader>
-      <EarningHistory viewLast24Hours={viewLast24Hours} viewLast7Days={viewLast7Days} viewLast30Days={viewLast30Days} />
+      <AllMachines
+        machines={generatedMockedMachines}
+        onMachineIdClick={setDetailsModalMachineId}
+        onSelectedMachineIdsChange={handleSelectedMachineIdsChange}
+      />
+      <EarningHistory
+        daysShowing={daysShowing}
+        earningsPerMachine={earningPerSelectedMachines}
+        viewLast24Hours={viewLast24Hours}
+        viewLast7Days={viewLast7Days}
+        viewLast30Days={viewLast30Days}
+      />
+      {shownModalMachine && (
+        <MachineDetailsModal {...shownModalMachine} onCloseClick={handleCloseMachineDetailsModal} />
+      )}
       <Divider />
     </>
   )

@@ -4,6 +4,7 @@ import { withLogin } from '../auth-views'
 import { MobileEarningSummary } from './components/MobileEarningSummary'
 
 const mapStoreToProps = (store: RootStore): any => ({
+  daysShowing: store.balance.getDaysShowingEarnings,
   currentBalance: store.balance.currentBalance,
   lifetimeBalance: store.balance.lifetimeBalance,
   totalXp: store.xp.currentXp,
