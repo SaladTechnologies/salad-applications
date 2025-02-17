@@ -129,7 +129,7 @@ function _Dropdown<TOptionValue = void>({
   }, [isDropdownShownExternal])
 
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    const handleClickOutside = (event: MouseEvent) => {
       if (event.target !== toggleDropdownRef.current)
         if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
           setAnimationType(AnimationType.disappearing)
