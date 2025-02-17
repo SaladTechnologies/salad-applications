@@ -144,7 +144,7 @@ const _MobileEarningSummary = ({
       />
       <EarningHistory
         daysShowing={daysShowing}
-        earningPerSelectedMachines={earningPerSelectedMachines}
+        earningsPerMachine={earningPerSelectedMachines}
         viewLast24Hours={viewLast24Hours}
         viewLast7Days={viewLast7Days}
         viewLast30Days={viewLast30Days}
