@@ -4,7 +4,7 @@ import { Checkbox, Text } from '@saladtechnologies/garden-components'
 import classNames from 'classnames'
 import type CSS from 'csstype'
 import { DateTime } from 'luxon'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { DropdownOption } from '../../../../components/Dropdown'
@@ -114,12 +114,17 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 interface Props extends WithStyles<typeof styles> {
   machines: MachineState[]
   onMachineIdClick: (machineId: string) => void
+  onSelectedMachineIdsChange: (machineIds: string[]) => void
 }
 
-const _AllMachines = ({ classes, machines, onMachineIdClick }: Props) => {
+const _AllMachines = ({ classes, machines, onMachineIdClick, onSelectedMachineIdsChange }: Props) => {
   const [selectedMachinesById, setSelectedMachinesById] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(machines.map((machine) => [machine.id, false])),
   )
+
+  useEffect(() => {
+    onSelectedMachineIdsChange(Object.keys(selectedMachinesById).filter((machineId) => selectedMachinesById[machineId]))
+  }, [onSelectedMachineIdsChange, selectedMachinesById])
 
   const handleMachineIdQuestionIconClick = () => {
     window.location.href = 'https://support.salad.com/article/414-how-to-find-your-salad-machine-id'

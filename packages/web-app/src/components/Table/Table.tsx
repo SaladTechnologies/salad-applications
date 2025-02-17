@@ -45,10 +45,10 @@ const _Table: FunctionComponent<Props> = ({ classes, titles, rows }) => {
         <table className={classes.table}>
           <thead>
             <tr className={classes.tableHeaderRow}>
-              {titles.map((title) => {
+              {titles.map((title, index) => {
                 const titleJSX = typeof title === 'object' ? title : <Text variant="baseXS">{title}</Text>
                 return (
-                  <th className={classes.tableCell} key={title.toString()}>
+                  <th className={classes.tableCell} key={index}>
                     {titleJSX}
                   </th>
                 )
