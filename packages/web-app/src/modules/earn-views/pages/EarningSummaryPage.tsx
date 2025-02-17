@@ -92,9 +92,6 @@ const _EarningSummaryPage: FC<Props> = ({
 
   const shownModalMachine = generatedMockedMachines.find((machine) => machine.id === shownModalMachineId)
 
-  // Mocked data for selected machine IDs
-  const [selectedMachineIds] = useState<Record<string, boolean>>({ 'id-1': true })
-
   // Mocked data for earnings per machine
   const mockEarningPerMachine: EarningPerMachine = {
     'id-1': Array.from({ length: 30 }, (_, i) => ({
@@ -104,7 +101,7 @@ const _EarningSummaryPage: FC<Props> = ({
   }
 
   const earningPerSelectedMachines = Object.keys(selectedMachineIds)
-    .filter((id) => selectedMachineIds[id])
+    .filter((id) => selectedMachineIds.includes(id))
     .reduce<EarningPerMachine>((acc, id) => {
       if (mockEarningPerMachine[id]) {
         acc[id] = mockEarningPerMachine[id]
