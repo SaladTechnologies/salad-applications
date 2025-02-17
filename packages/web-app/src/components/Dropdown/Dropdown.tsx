@@ -163,6 +163,38 @@ const _Dropdown = <TOptionValue,>({
     option.handler?.(option)
   }
 
+  const getDropdownContent = () => {
+    if (content) {
+      return content
+    }
+
+    if (options && optionKey) {
+      return options
+        .filter((option) => option.shown === undefined || option.shown)
+        .map((option) => {
+          if (typeof option[optionKey] !== 'string') {
+            throw new Error('Dropdown: optionKey props should point the unique string value to use as key')
+          }
+
+          return (
+            option.content ?? (
+              <div
+                className={classes.dropdownOptionWrap}
+                key={option[optionKey] as string}
+                onClick={() => onOptionClick(option)}
+              >
+                <div className={classNames(classes.dropdownOptionContent)}>
+                  <small>{option.displayName}</small>
+                </div>
+              </div>
+            )
+          )
+        })
+    }
+
+    return null
+  }
+
   return (
     <>
       <div className={classes.toggleDropdown} onClick={toggleDropdown}>
@@ -179,33 +211,7 @@ const _Dropdown = <TOptionValue,>({
             ref={dropdownRef}
             onAnimationEnd={onAnimationEnd}
           >
-            <div className={classes.dropdownContent}>
-              {content
-                ? content
-                : options && optionKey
-                ? options
-                    .filter((option) => option.shown === undefined || option.shown)
-                    .map((option) => {
-                      if (typeof option[optionKey] !== 'string') {
-                        throw new Error('Dropdown: optionKey props should point the unique string value to use as key')
-                      }
-
-                      return (
-                        option.content ?? (
-                          <div
-                            className={classes.dropdownOptionWrap}
-                            key={option[optionKey] as string}
-                            onClick={() => onOptionClick(option)}
-                          >
-                            <div className={classNames(classes.dropdownOptionContent)}>
-                              <small>{option.displayName}</small>
-                            </div>
-                          </div>
-                        )
-                      )
-                    })
-                : null}
-            </div>
+            <div className={classes.dropdownContent}>{getDropdownContent()}</div>
           </div>
         </>
       )}
