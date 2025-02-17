@@ -5,9 +5,10 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { Segments } from '../../../../components/elements/Segments'
-import { EarningLineChartContainer } from '../../EarningLineChartContainer'
+import type { ChartDaysShowing, EarningPerMachine } from '../../../balance/models'
 import { EarningTableContainer } from '../../EarningTableContainer'
 import { EarnSectionHeader } from '../EarnSectionHeader'
+import { EarningLineChart } from '../EarningLineChart'
 import { ViewData, ViewRange, ViewType } from './constants'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties | Record<string, CSS.Properties>> = (
@@ -58,6 +59,8 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties | Record<stri
 })
 
 interface Props extends WithStyles<typeof styles> {
+  daysShowing: ChartDaysShowing
+  earningsPerMachine: EarningPerMachine
   viewLast24Hours: () => void
   viewLast7Days: () => void
   viewLast30Days: () => void
@@ -66,10 +69,11 @@ interface Props extends WithStyles<typeof styles> {
 
 const _EarningHistory = ({
   classes,
+  daysShowing,
+  earningsPerMachine,
   viewLast24Hours,
   viewLast7Days,
   viewLast30Days,
-  trackEarningHistoryFilterClicked,
 }: Props) => {
   const [viewType, setViewType] = useState<ViewType>(ViewType.Graph)
   const [viewRange, setViewRange] = useState<ViewRange>(ViewRange.Last24Hours)
@@ -175,7 +179,9 @@ const _EarningHistory = ({
         </div>
         <div className={classes.chartContainer}>
           {viewType === ViewType.Graph && (
-            <EarningLineChartContainer
+            <EarningLineChart
+              daysShowing={daysShowing}
+              earningsPerMachine={earningsPerMachine}
               viewData={viewData}
               setIsIndividualViewDataDisabled={setIsIndividualViewDataDisabled}
               setViewData={setViewData}

@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import type { Machine } from '../../../../api/machinesApiClient/generated/models'
 import { DefaultTheme, type SaladTheme } from '../../../../SaladTheme'
 import { formatBalance } from '../../../../utils'
 import type { ChartDaysShowing, EarningPerMachine, EarningWindow } from '../../../balance/models'
@@ -58,31 +57,23 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 
 interface Props extends WithStyles<typeof styles> {
   earningsPerMachine: EarningPerMachine
-  machines: Machine[] | null
   daysShowing: ChartDaysShowing
   viewData: ViewData
-  fetchEarningsPerMachine: () => void
   setIsIndividualViewDataDisabled: (isDisabled: boolean) => void
   setViewData: (viewData: ViewData) => void
 }
 
 const _EarningLineChart = ({
   classes,
-  machines,
   earningsPerMachine,
   daysShowing,
   viewData,
-  fetchEarningsPerMachine,
   setIsIndividualViewDataDisabled,
   setViewData,
 }: Props) => {
   const is24HoursChart = daysShowing === 1
   const isAggregateView = viewData === ViewData.Aggregate
   const [machineOptions, setMachineOptions] = useState<MachineOptions>({})
-
-  useEffect(() => {
-    fetchEarningsPerMachine()
-  }, [fetchEarningsPerMachine])
 
   useEffect(() => {
     setMachineOptions(isAggregateView ? aggregateMachineOption : getMachineOptions(earningsPerMachine))
@@ -128,7 +119,7 @@ const _EarningLineChart = ({
 
   const machineEarnings = isAggregateView ? aggregateMachineEarnings : individualMachineEarnings
 
-  const withMachines = machines !== null
+  const withMachines = Object.keys(earningsPerMachine).length !== 0
   const isLoading = machineEarnings.length <= 0
   const isNoMachineOptionChecked = !Object.values(machineOptions).some((machineOption) => machineOption.isChecked)
 
