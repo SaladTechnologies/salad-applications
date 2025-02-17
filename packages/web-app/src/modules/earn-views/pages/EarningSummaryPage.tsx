@@ -1,12 +1,15 @@
+import moment from 'moment'
 import type { FC } from 'react'
 import { useEffect, useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Scrollbar } from '../../../components'
 import { withLogin } from '../../auth-views'
+import type { ChartDaysShowing, EarningPerMachine } from '../../balance/models'
 import type { RedeemedReward } from '../../balance/models/RedeemedReward'
 import type { RewardVaultItem } from '../../vault/models'
 import { EarningFrequentlyAskedQuestions, EarningHistory, EarningSummary, LatestRewardsRedeemed } from '../components'
+import { AllMachines } from '../components/AllMachines'
 import { generatedMockedMachines } from '../components/AllMachines/mocks'
 import { MachineDetailsModal } from '../components/MachineDetailsModal'
 
@@ -20,6 +23,7 @@ const styles = () => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
+  daysShowing: ChartDaysShowing
   currentBalance?: number
   lifetimeBalance?: number
   totalChoppingHours?: number
@@ -43,6 +47,7 @@ interface Props extends WithStyles<typeof styles> {
 const _EarningSummaryPage: FC<Props> = ({
   classes,
   currentBalance,
+  daysShowing,
   lifetimeBalance,
   totalChoppingHours,
   redeemedRewards,
@@ -81,6 +86,26 @@ const _EarningSummaryPage: FC<Props> = ({
 
   const selectedMachine = generatedMockedMachines.find((machine) => machine.id === selectedMachineId)
 
+  // Mocked data for selected machine IDs
+  const [selectedMachineIds] = useState<Record<string, boolean>>({ 'id-1': true })
+
+  // Mocked data for earnings per machine
+  const mockEarningPerMachine: EarningPerMachine = {
+    'id-1': Array.from({ length: 30 }, (_, i) => ({
+      timestamp: moment().subtract(i, 'days'),
+      earnings: parseFloat((Math.random() * 1).toFixed(2)),
+    })).reverse(),
+  }
+
+  const earningPerSelectedMachines = Object.keys(selectedMachineIds)
+    .filter((id) => selectedMachineIds[id])
+    .reduce<EarningPerMachine>((acc, id) => {
+      if (mockEarningPerMachine[id]) {
+        acc[id] = mockEarningPerMachine[id]
+      }
+      return acc
+    }, {})
+
   return (
     <Scrollbar>
       <div className={classes.content}>
@@ -93,12 +118,14 @@ const _EarningSummaryPage: FC<Props> = ({
           redeemedRewardsCount={redeemedRewardsCount}
           totalChoppingHours={totalChoppingHours}
         />
+        <AllMachines machines={generatedMockedMachines} onMachineIdClick={setSelectedMachineId} />
         <EarningHistory
+          daysShowing={daysShowing}
+          earningPerSelectedMachines={earningPerSelectedMachines}
           viewLast24Hours={viewLast24Hours}
           viewLast7Days={viewLast7Days}
           viewLast30Days={viewLast30Days}
         />
-        {/* <AllMachines machines={generatedMockedMachines} onMachineIdClick={setSelectedMachineId} /> */}
         {selectedMachine && <MachineDetailsModal {...selectedMachine} onCloseClick={handleCloseMachineDetailsModal} />}
         <LatestRewardsRedeemed
           latestCompletedRedeemedRewards={latestCompletedRedeemedRewardsArray}
