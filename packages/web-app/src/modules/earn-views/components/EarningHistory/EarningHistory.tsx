@@ -60,7 +60,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties | Record<stri
 
 interface Props extends WithStyles<typeof styles> {
   daysShowing: ChartDaysShowing
-  earningPerSelectedMachines: EarningPerMachine
+  earningsPerMachine: EarningPerMachine
   viewLast24Hours: () => void
   viewLast7Days: () => void
   viewLast30Days: () => void
@@ -69,7 +69,7 @@ interface Props extends WithStyles<typeof styles> {
 const _EarningHistory = ({
   classes,
   daysShowing,
-  earningPerSelectedMachines,
+  earningsPerMachine,
   viewLast24Hours,
   viewLast7Days,
   viewLast30Days,
@@ -165,7 +165,7 @@ const _EarningHistory = ({
           {viewType === ViewType.Graph && (
             <EarningLineChart
               daysShowing={daysShowing}
-              earningsPerMachine={earningPerSelectedMachines}
+              earningsPerMachine={earningsPerMachine}
               viewData={viewData}
               setIsIndividualViewDataDisabled={setIsIndividualViewDataDisabled}
               setViewData={setViewData}
