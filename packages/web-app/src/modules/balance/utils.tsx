@@ -139,3 +139,6 @@ export const normalizeEarningHistory = (
     earningHistory: history,
   }
 }
+
+export const getMachineEarningRateEndpointPath = (machineId: string) =>
+  `/api/v2/machines/${machineId}/earnings/5-minutes`

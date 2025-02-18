@@ -11,11 +11,12 @@ import type {
   MachineEarningHistory,
 } from '../../api/machinesApiClient/generated/models'
 import { getMachinesApiClient } from '../../api/machinesApiClient/getMachinesApiClient'
-import type { ChartDaysShowing, EarningPerMachine, EarningWindow } from './models'
+import type { ChartDaysShowing, CurrentHourlyEarningRatesPerMachine, EarningPerMachine, EarningWindow } from './models'
 import {
   batchEarningsWindow,
   getBaseKeyAsGuid,
   getEarningWindowsGroupedByDay,
+  getMachineEarningRateEndpointPath,
   normalizeEarningHistory,
   normalizeEarningsPerMachine,
 } from './utils'
@@ -38,10 +39,25 @@ export class BalanceStore {
   public currentBalance: number = 0
 
   @observable
+  public currentHourlyEarningRatesPerMachine: CurrentHourlyEarningRatesPerMachine = {}
+
+  @observable
   public lifetimeBalance: number = 0
 
   @observable
   public machines: Machine[] | null = []
+
+  /** Total earnings for the last 24 hours */
+  @observable
+  public lastDayEarnings: number = 0
+
+  /** Total earnings for the last 7 days */
+  @observable
+  public lastWeekEarnings: number = 0
+
+  /** Total earnings for the last 30 days */
+  @observable
+  public lastMonthEarnings: number = 0
 
   @computed
   public get earningsHistory(): EarningWindow[] {
@@ -72,18 +88,6 @@ export class BalanceStore {
   viewLast30Days = () => {
     this.daysShowingEarnings = 30
   }
-
-  /** Total earnings for the last 24 hours */
-  @observable
-  public lastDayEarnings: number = 0
-
-  /** Total earnings for the last 7 days */
-  @observable
-  public lastWeekEarnings: number = 0
-
-  /** Total earnings for the last 30 days */
-  @observable
-  public lastMonthEarnings: number = 0
 
   private getMachines = async () => {
     try {
@@ -127,6 +131,58 @@ export class BalanceStore {
       console.error('BalanceStore.getEarningsPerMachine: ', error)
       return null
     }
+  }
+
+  public getCurrentEarningRatesPerMachine = async (machines: Machine[]) => {
+    try {
+      return (
+        await Promise.all(
+          machines
+            .filter((machine) => machine.machine_id)
+            .map((machine) => {
+              return this.axios.get(getMachineEarningRateEndpointPath(machine.machine_id?.toString() as string))
+            }),
+        )
+      ).reduce((currentEarningRatesPerMachine, response, index) => {
+        const machineId = machines[index]?.machine_id
+        if (machineId) {
+          return { ...currentEarningRatesPerMachine, [machineId.toString()]: response.data * 12 }
+        }
+        return currentEarningRatesPerMachine
+      }, {} as CurrentHourlyEarningRatesPerMachine)
+    } catch (error) {
+      console.error('BalanceStore.getCurrentEarningRatesPerMachine: ', error)
+      return null
+    }
+  }
+
+  @action
+  fetchCurrentEarningRatesPerMachine = () => {
+    this._latestEarningsPerMachineFetchMoment = moment()
+
+    this.getMachines()
+      .then((machines) => {
+        runInAction(() => {
+          this.machines = machines
+        })
+
+        if (machines === null) {
+          throw new Error('There is no machines')
+        }
+
+        return this.getCurrentEarningRatesPerMachine(machines)
+      })
+      .then((currentHourlyEarningRatesPerMachine) => {
+        if (currentHourlyEarningRatesPerMachine) {
+          return runInAction(() => {
+            this.currentHourlyEarningRatesPerMachine = currentHourlyEarningRatesPerMachine
+          })
+        }
+        throw new Error('There are no current earning rates per machine id')
+      })
+      .catch((error) => {
+        console.error('BalanceStore.fetchCurrentEarningRatesPerMachineId: ', error)
+      })
   }
 
   @action

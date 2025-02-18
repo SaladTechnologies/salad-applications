@@ -2,9 +2,10 @@ import type { FC } from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
+import type { Machine } from '../../../api/machinesApiClient/generated/models'
 import { Scrollbar } from '../../../components'
 import { withLogin } from '../../auth-views'
-import type { EarningPerMachine } from '../../balance/models'
+import type { CurrentHourlyEarningRatesPerMachine, EarningPerMachine } from '../../balance/models'
 import type { RedeemedReward } from '../../balance/models/RedeemedReward'
 import type { RewardVaultItem } from '../../vault/models'
 import {
@@ -14,8 +15,9 @@ import {
   LatestRewardsRedeemed,
 } from '../components'
 import { AllMachines } from '../components/AllMachines'
-import { generatedMockedMachines, mockEarningPerMachine } from '../components/AllMachines/mocks'
-import { MachineDetailsModal } from '../components/MachineDetailsModal'
+import { MachineDetailsModal } from '../components/AllMachines/MachineDetailsModal'
+import { mockEarningPerMachine } from '../components/AllMachines/mocks'
+import { getMachineDetailsList } from '../components/AllMachines/utils'
 
 const styles = () => ({
   content: {
@@ -36,6 +38,9 @@ interface Props extends WithStyles<typeof styles> {
   last7DayEarnings: number
   last30DayEarnings: number
   isLatestCompletedRedeemedRewardsLoading: boolean
+  machines: Machine[]
+  currentHourlyEarningRatesPerMachine: CurrentHourlyEarningRatesPerMachine
+  fetchCurrentEarningRatesPerMachineId: () => void
   startRedemptionsRefresh: () => void
   stopRedemptionsRefresh: () => void
   navigateToRewardVaultPage: () => void
@@ -55,6 +60,9 @@ const _EarningSummaryPage: FC<Props> = ({
   last7DayEarnings,
   last30DayEarnings,
   isLatestCompletedRedeemedRewardsLoading,
+  machines,
+  currentHourlyEarningRatesPerMachine,
+  fetchCurrentEarningRatesPerMachineId,
   startRedemptionsRefresh,
   stopRedemptionsRefresh,
   trackAndNavigateToRewardVaultPage,
@@ -73,6 +81,10 @@ const _EarningSummaryPage: FC<Props> = ({
   }, [])
 
   useEffect(() => {
+    fetchCurrentEarningRatesPerMachineId()
+  }, [fetchCurrentEarningRatesPerMachineId])
+
+  useEffect(() => {
     startRedemptionsRefresh()
     trackEarnPageViewed()
 
@@ -85,8 +97,6 @@ const _EarningSummaryPage: FC<Props> = ({
 
   const redeemedRewardsCount = redeemedRewards?.length ?? 0
 
-  const shownModalMachine = generatedMockedMachines.find((machine) => machine.id === detailsModalMachineId)
-
   const earningPerSelectedMachines = Object.keys(selectedMachineIds)
     .filter((id) => selectedMachineIds.includes(id))
     .reduce<EarningPerMachine>((acc, id) => {
@@ -96,6 +106,12 @@ const _EarningSummaryPage: FC<Props> = ({
       }
       return acc
     }, {})
+
+  const machineDetailsList = getMachineDetailsList({ machines, currentHourlyEarningRatesPerMachine })
+
+  const shownInModalMachineDetails = machineDetailsList.find(
+    (machineDetails) => machineDetails.id === detailsModalMachineId,
+  )
 
   return (
     <Scrollbar>
@@ -110,13 +126,16 @@ const _EarningSummaryPage: FC<Props> = ({
           totalChoppingHours={totalChoppingHours}
         />
         <AllMachines
-          machines={generatedMockedMachines}
+          machineDetailsList={machineDetailsList}
           onMachineIdClick={setDetailsModalMachineId}
           onSelectedMachineIdsChange={handleSelectedMachineIdsChange}
         />
         <EarningHistoryContainer earningsPerMachine={earningPerSelectedMachines} />
-        {shownModalMachine && (
-          <MachineDetailsModal {...shownModalMachine} onCloseClick={handleCloseMachineDetailsModal} />
+        {shownInModalMachineDetails && (
+          <MachineDetailsModal
+            machineDetails={shownInModalMachineDetails}
+            onCloseClick={handleCloseMachineDetailsModal}
+          />
         )}
         <LatestRewardsRedeemed
           latestCompletedRedeemedRewards={latestCompletedRedeemedRewardsArray}

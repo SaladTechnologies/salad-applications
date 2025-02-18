@@ -11,5 +11,8 @@ export interface EarningWindow {
 export interface EarningPerMachine {
   [key: string]: EarningWindow[]
 }
+export interface CurrentHourlyEarningRatesPerMachine {
+  [key: string]: number
+}
 
 export type ChartDaysShowing = 1 | 7 | 30

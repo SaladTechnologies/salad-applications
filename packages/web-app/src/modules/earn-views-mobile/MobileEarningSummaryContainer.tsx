@@ -11,6 +11,9 @@ const mapStoreToProps = (store: RootStore): any => ({
   last7DayEarnings: store.balance.lastWeekEarnings,
   last30DayEarnings: store.balance.lastMonthEarnings,
   earningHistory: store.balance.earningsHistory,
+  machines: store.balance.machines,
+  currentHourlyEarningRatesPerMachine: store.balance.currentHourlyEarningRatesPerMachine,
+  fetchCurrentEarningRatesPerMachine: store.balance.fetchCurrentEarningRatesPerMachine,
 })
 
 export const MobileEarningSummaryContainer = connect(mapStoreToProps, withLogin(MobileEarningSummary))
