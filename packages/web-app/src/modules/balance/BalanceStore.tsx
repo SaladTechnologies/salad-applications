@@ -181,7 +181,7 @@ export class BalanceStore {
         throw new Error('There are no current earning rates per machine id')
       })
       .catch((error) => {
-        console.error('BalanceStore.fetchCurrentEarningRatesPerMachineId: ', error)
+        console.error('BalanceStore.fetchCurrentEarningRatesPerMachine: ', error)
       })
   }
 

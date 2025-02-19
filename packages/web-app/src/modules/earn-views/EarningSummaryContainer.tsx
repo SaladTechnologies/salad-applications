@@ -30,7 +30,7 @@ const mapStoreToProps = (store: RootStore): any => {
     viewLast24Hours: store.balance.viewLast24Hours,
     viewLast7Days: store.balance.viewLast7Days,
     viewLast30Days: store.balance.viewLast30Days,
-    fetchCurrentEarningRatesPerMachineId: store.balance.fetchCurrentEarningRatesPerMachine,
+    fetchCurrentEarningRatesPerMachine: store.balance.fetchCurrentEarningRatesPerMachine,
   }
 }
 

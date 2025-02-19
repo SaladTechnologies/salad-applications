@@ -40,7 +40,7 @@ interface Props extends WithStyles<typeof styles> {
   isLatestCompletedRedeemedRewardsLoading: boolean
   machines: Machine[] | null
   currentHourlyEarningRatesPerMachine: CurrentHourlyEarningRatesPerMachine
-  fetchCurrentEarningRatesPerMachineId: () => void
+  fetchCurrentEarningRatesPerMachine: () => void
   startRedemptionsRefresh: () => void
   stopRedemptionsRefresh: () => void
   navigateToRewardVaultPage: () => void
@@ -62,7 +62,7 @@ const _EarningSummaryPage: FC<Props> = ({
   isLatestCompletedRedeemedRewardsLoading,
   machines,
   currentHourlyEarningRatesPerMachine,
-  fetchCurrentEarningRatesPerMachineId,
+  fetchCurrentEarningRatesPerMachine,
   startRedemptionsRefresh,
   stopRedemptionsRefresh,
   trackAndNavigateToRewardVaultPage,
@@ -81,8 +81,8 @@ const _EarningSummaryPage: FC<Props> = ({
   }, [])
 
   useEffect(() => {
-    fetchCurrentEarningRatesPerMachineId()
-  }, [fetchCurrentEarningRatesPerMachineId])
+    fetchCurrentEarningRatesPerMachine()
+  }, [fetchCurrentEarningRatesPerMachine])
 
   useEffect(() => {
     startRedemptionsRefresh()
