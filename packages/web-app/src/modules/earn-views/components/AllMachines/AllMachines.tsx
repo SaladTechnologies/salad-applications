@@ -89,6 +89,14 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     top: '32px',
     zIndex: 1,
   },
+  noDataWrapper: {
+    height: '100px',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: theme.lightGreen,
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -237,6 +245,11 @@ const _AllMachines = ({ classes, machineDetailsList, onMachineIdClick, onSelecte
       <EarnSectionHeader>All Machines</EarnSectionHeader>
       <div className={classes.tableWrapper}>
         <Table titles={getTitles()} rows={getRows()} />
+        {machineDetailsList.length === 0 && (
+          <div className={classes.noDataWrapper}>
+            <Text variant="baseM">No data to display</Text>
+          </div>
+        )}
         <Pagination
           itemsTotalAmount={machineDetailsList.length}
           itemsPerPageAmount={itemsPerPageAmount}
