@@ -105,8 +105,8 @@ export class BalanceStore {
         if (machines.length > 0) {
           runInAction(() => {
             this.machines = machines
-            return this.machines
           })
+          return this.machines
         }
       }
     } catch (error) {
