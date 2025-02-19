@@ -8,6 +8,7 @@ import { Table } from '../../../../components/Table'
 import type { TableRow } from '../../../../components/Table/types'
 import { type SaladTheme } from '../../../../SaladTheme'
 import type { ChartDaysShowing, EarningPerMachine } from '../../../balance/models'
+import { ViewData } from '../EarningHistory/constants'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   earningTableWrapper: {
@@ -16,7 +17,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     alignItems: 'flex-start',
     flexDirection: 'column',
     height: '500px',
-    width: '500px',
+    width: '100%',
     position: 'relative',
   },
   tableWrapper: {
@@ -26,7 +27,6 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     position: 'relative',
     height: '200px',
     width: '100%',
-    maxWidth: '700px',
   },
   tableCell: {
     padding: '4px',
@@ -39,6 +39,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row',
+    width: '80px',
   },
   tableCellCentered: {
     display: 'flex',
@@ -94,9 +95,10 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 interface Props extends WithStyles<typeof styles> {
   earningsPerMachine: EarningPerMachine
   daysShowing: ChartDaysShowing
+  viewData: ViewData
 }
 
-const _EarningTable = ({ classes, earningsPerMachine, daysShowing }: Props) => {
+const _EarningTable = ({ classes, earningsPerMachine, daysShowing, viewData }: Props) => {
   const {
     lowestItemNumberOnPage,
     highestItemNumberOnPage,
@@ -105,10 +107,16 @@ const _EarningTable = ({ classes, earningsPerMachine, daysShowing }: Props) => {
     setCurrentPageNumber,
   } = usePagination()
 
-  console.log('daysShowing ===> ', daysShowing)
-  console.log('earningsPerMachine ===> ', earningsPerMachine)
-
   const getTitles = () => {
+    const firstMachineEarnings = Object.values(earningsPerMachine)[0]
+    const earningTimeFrames: Array<string> = firstMachineEarnings
+      ? firstMachineEarnings?.map((earningTimeFrame) =>
+          daysShowing === 1
+            ? earningTimeFrame.timestamp.format('MMM D, h A')
+            : earningTimeFrame.timestamp.format('MMM D'),
+        )
+      : []
+
     return [
       <div className={classes.tableHeaderCell}>
         <Text variant="baseXS">Machine ID</Text>
@@ -116,54 +124,105 @@ const _EarningTable = ({ classes, earningsPerMachine, daysShowing }: Props) => {
       <div className={classes.tableHeaderCell}>
         <Text variant="baseXS">Average</Text>
       </div>,
+      ...earningTimeFrames.map((timeFrame) => (
+        <div className={classes.tableHeaderCell}>
+          <Text variant="baseXS">{timeFrame}</Text>
+        </div>
+      )),
     ]
   }
+
+  // const firstMachineEarnings = Object.values(earningsPerMachine)[0]
+
+  // const mockedEarningsPerMachine = Object.fromEntries(
+  //   Array(100)
+  //     .fill(null)
+  //     .map(() => [getRandomId(), firstMachineEarnings]),
+  // )
 
   const machineIds = Object.keys(earningsPerMachine)
   if (machineIds.length < 1) {
     return
   }
 
-  const getRows = (): Array<TableRow> => {
+  const getIndividualRowsData = (): Array<TableRow> => {
     return machineIds
       .filter((_machineId, index) => {
         const itemNumber = index + 1
         return itemNumber >= lowestItemNumberOnPage && itemNumber <= highestItemNumberOnPage
       })
       .map((machineId) => {
-        const machineEarnings = earningsPerMachine[machineId]
+        const machineEarningTimeFrames = earningsPerMachine[machineId]
 
-        if (!machineEarnings?.length) {
+        if (!machineEarningTimeFrames?.length) {
           return {
             id: machineId.substring(0, 8),
             averageEarnings: '-',
           }
         }
 
-        const machineEarningsTotal = machineId ? machineEarnings?.reduce((sum, item) => item.earnings + sum, 0) : 0
+        const machineEarningsTotal = machineId
+          ? machineEarningTimeFrames?.reduce((sum, item) => item.earnings + sum, 0)
+          : 0
 
-        const averageEarnings = machineEarningsTotal / machineEarnings?.length
+        const averageEarnings = machineEarningsTotal / machineEarningTimeFrames?.length
+
+        const machineEarningsPerTimeFrame = earningsPerMachine[machineId]
+          ? Object.values(earningsPerMachine[machineId]).map((machineEarning) => [
+              machineEarning.timestamp.toString(),
+              `$${machineEarning.earnings.toFixed(2)}`,
+            ])
+          : []
 
         return {
           id: machineId.substring(0, 8),
           averageEarnings: `$${averageEarnings.toFixed(2)}`,
+          ...Object.fromEntries(machineEarningsPerTimeFrame),
         }
       })
-      .map((machineRow) =>
-        Object.values(machineRow).map((machineRowItem) => {
-          return <div className={classes.tableCell}>{machineRowItem}</div>
-        }),
-      )
   }
+
+  const individualRows = getIndividualRowsData().map((machineRow) =>
+    Object.values(machineRow).map((machineRowItem) => {
+      return <div className={classes.tableCell}>{machineRowItem as string}</div>
+    }),
+  )
+
+  const firstMachineEarning = Object.values(earningsPerMachine)[0]
+
+  const aggregatedRowData: number[] = firstMachineEarning
+    ? Object.values(earningsPerMachine).reduce((aggregatedEarning, earningPerMachine) => {
+        return aggregatedEarning.map((rowItem, index) => {
+          if (earningPerMachine && earningPerMachine[index]) {
+            return (rowItem as number) + (earningPerMachine[index].earnings as number)
+          }
+          return rowItem
+        })
+      }, Array(firstMachineEarning.length).fill(0))
+    : []
+
+  const aggregatedRow = [
+    <div className={classes.tableCell}>{machineIds.length}</div>,
+    <div className={classes.tableCell}>
+      {`$${(
+        aggregatedRowData.reduce((sum, earningPerFrame) => earningPerFrame + sum, 0) / aggregatedRowData.length
+      ).toFixed(2)} `}
+    </div>,
+    ...aggregatedRowData.map((aggregatedRowItem) => (
+      <div className={classes.tableCell}>{`$${(aggregatedRowItem as number).toFixed(2)}`}</div>
+    )),
+  ]
+
+  const isIndividualViewData = viewData === ViewData.Individual
 
   return (
     <div className={classes.earningTableWrapper}>
       <div className={classes.tableWrapper}>
-        <Table titles={getTitles()} rows={getRows()} />
+        <Table titles={getTitles()} rows={isIndividualViewData ? individualRows : [aggregatedRow]} />
         <Pagination
-          itemsTotalAmount={machineIds.length}
-          itemsPerPageAmount={itemsPerPageAmount}
-          currentPageNumber={currentPageNumber}
+          itemsTotalAmount={isIndividualViewData ? machineIds.length : 1}
+          itemsPerPageAmount={isIndividualViewData ? itemsPerPageAmount : 1}
+          currentPageNumber={isIndividualViewData ? currentPageNumber : 1}
           onPageChange={(pageNumber: number) => setCurrentPageNumber(pageNumber)}
         />
       </div>
