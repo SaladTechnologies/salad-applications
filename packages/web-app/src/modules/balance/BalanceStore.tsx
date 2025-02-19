@@ -89,6 +89,7 @@ export class BalanceStore {
     this.daysShowingEarnings = 30
   }
 
+  @action
   private getMachines = async () => {
     try {
       const machinesResponse = await this.machinesApiClient?.v2.machines.get()
@@ -101,10 +102,13 @@ export class BalanceStore {
           return false
         })
 
-        return machines.length > 0 ? machines : null
+        if (machines.length > 0) {
+          runInAction(() => {
+            this.machines = machines
+            return this.machines
+          })
+        }
       }
-
-      return null
     } catch (error) {
       console.error('BalanceStore.getMultipleMachinesEarnings: ', error)
     }
@@ -162,10 +166,6 @@ export class BalanceStore {
 
     this.getMachines()
       .then((machines) => {
-        runInAction(() => {
-          this.machines = machines
-        })
-
         if (machines === null) {
           throw new Error('There is no machines')
         }
@@ -196,10 +196,6 @@ export class BalanceStore {
 
       this.getMachines()
         .then((machines) => {
-          runInAction(() => {
-            this.machines = machines
-          })
-
           if (machines === null) {
             throw new Error('There is no machines')
           }
