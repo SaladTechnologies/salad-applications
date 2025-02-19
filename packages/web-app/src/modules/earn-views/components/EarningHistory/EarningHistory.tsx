@@ -6,9 +6,9 @@ import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { Segments } from '../../../../components/elements/Segments'
 import type { ChartDaysShowing, EarningPerMachine } from '../../../balance/models'
-import { EarningTableContainer } from '../../EarningTableContainer'
 import { EarnSectionHeader } from '../EarnSectionHeader'
 import { EarningLineChart } from '../EarningLineChart'
+import { EarningTable } from '../EarningTable'
 import { ViewData, ViewRange, ViewType } from './constants'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties | Record<string, CSS.Properties>> = (
@@ -188,7 +188,9 @@ const _EarningHistory = ({
               setViewData={setViewData}
             />
           )}
-          {viewType === ViewType.Table && <EarningTableContainer />}
+          {viewType === ViewType.Table && (
+            <EarningTable daysShowing={daysShowing} earningsPerMachine={earningsPerMachine} />
+          )}
         </div>
         <div className={classes.descriptionWrapper}>
           <Text variant="baseXS">

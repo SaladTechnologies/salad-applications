@@ -1,9 +1,7 @@
 import { Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
-import { useEffect } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import type { Machine } from '../../../../api/machinesApiClient/generated/models'
 import { Pagination } from '../../../../components/Pagination'
 import { usePagination } from '../../../../components/Pagination/usePagination'
 import { Table } from '../../../../components/Table'
@@ -95,12 +93,10 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 
 interface Props extends WithStyles<typeof styles> {
   earningsPerMachine: EarningPerMachine
-  machines: Machine[] | null
   daysShowing: ChartDaysShowing
-  fetchEarningsPerMachine: () => void
 }
 
-const _EarningTable = ({ classes, machines, earningsPerMachine, daysShowing, fetchEarningsPerMachine }: Props) => {
+const _EarningTable = ({ classes, earningsPerMachine, daysShowing }: Props) => {
   const {
     lowestItemNumberOnPage,
     highestItemNumberOnPage,
@@ -111,10 +107,6 @@ const _EarningTable = ({ classes, machines, earningsPerMachine, daysShowing, fet
 
   console.log('daysShowing ===> ', daysShowing)
   console.log('earningsPerMachine ===> ', earningsPerMachine)
-
-  useEffect(() => {
-    fetchEarningsPerMachine()
-  }, [fetchEarningsPerMachine])
 
   const getTitles = () => {
     return [
@@ -127,33 +119,33 @@ const _EarningTable = ({ classes, machines, earningsPerMachine, daysShowing, fet
     ]
   }
 
-  if (!machines) {
+  const machineIds = Object.keys(earningsPerMachine)
+  if (!machineIds) {
     return
   }
 
   const getRows = (): Array<TableRow> => {
-    return machines
-      .filter((machine) => machine.machine_id)
-      .filter((_machine, index) => {
+    return machineIds
+      .filter((_machineId, index) => {
         const itemNumber = index + 1
         return itemNumber >= lowestItemNumberOnPage && itemNumber <= highestItemNumberOnPage
       })
-      .map((machine) => {
-        const machineEarnings = earningsPerMachine[machine.machine_id!.toString()]
+      .map((machineId) => {
+        const machineEarnings = earningsPerMachine[machineId]
 
         if (!machineEarnings?.length) {
           return {
-            id: machine.machine_id?.toString().substring(0, 8),
+            id: machineId.substring(0, 8),
             averageEarnings: '-',
           }
         }
 
-        const earningsSum = machine.machine_id ? machineEarnings?.reduce((sum, item) => item.earnings + sum, 0) : 0
+        const earningsSum = machineId ? machineEarnings?.reduce((sum, item) => item.earnings + sum, 0) : 0
 
         const averageEarnings = earningsSum / machineEarnings?.length
 
         return {
-          id: machine.machine_id?.toString().substring(0, 8),
+          id: machineId.substring(0, 8),
           averageEarnings: `$${averageEarnings.toFixed(2)}`,
         }
       })
@@ -169,7 +161,7 @@ const _EarningTable = ({ classes, machines, earningsPerMachine, daysShowing, fet
       <div className={classes.tableWrapper}>
         <Table titles={getTitles()} rows={getRows()} />
         <Pagination
-          itemsTotalAmount={machines.length}
+          itemsTotalAmount={machineIds.length}
           itemsPerPageAmount={itemsPerPageAmount}
           currentPageNumber={currentPageNumber}
           onPageChange={(pageNumber: number) => setCurrentPageNumber(pageNumber)}
