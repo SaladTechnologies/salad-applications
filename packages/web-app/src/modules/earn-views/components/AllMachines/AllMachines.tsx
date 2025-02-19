@@ -4,7 +4,7 @@ import { Checkbox, Text } from '@saladtechnologies/garden-components'
 import classNames from 'classnames'
 import type CSS from 'csstype'
 import { DateTime } from 'luxon'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { DropdownOption } from '../../../../components/Dropdown'
@@ -113,22 +113,25 @@ const _AllMachines = ({
   onMachineIdClick,
   onSelectedMachineIdsChange,
 }: Props) => {
-  const [selectedMachinesById, setSelectedMachinesById] = useState<Record<string, boolean>>(() => {
+  const [selectedMachinesById, setSelectedMachinesById] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries(machineDetailsList.map((machine) => [machine.id, false])),
+  )
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const memoizedMachineDetailsList = useMemo(() => [...machineDetailsList], [machineDetailsList.length])
+
+  useEffect(() => {
     const initialSelectedMachinesById = Object.fromEntries(
-      machineDetailsList.slice(0, initialSelectedMachinesAmount).map((machine) => {
+      memoizedMachineDetailsList.slice(0, initialSelectedMachinesAmount).map((machine) => {
         return [machine.id, true]
       }),
     )
 
-    return {
-      ...Object.fromEntries(
-        machineDetailsList.map((machine) => {
-          return [machine.id, false]
-        }),
-      ),
+    setSelectedMachinesById((previousSelectedMachinesById) => ({
+      ...previousSelectedMachinesById,
       ...initialSelectedMachinesById,
-    }
-  })
+    }))
+  }, [initialSelectedMachinesAmount, memoizedMachineDetailsList])
 
   useEffect(() => {
     onSelectedMachineIdsChange(Object.keys(selectedMachinesById).filter((machineId) => selectedMachinesById[machineId]))
