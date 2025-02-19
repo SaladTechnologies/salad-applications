@@ -120,7 +120,7 @@ const _EarningTable = ({ classes, earningsPerMachine, daysShowing }: Props) => {
   }
 
   const machineIds = Object.keys(earningsPerMachine)
-  if (!machineIds) {
+  if (machineIds.length < 1) {
     return
   }
 
