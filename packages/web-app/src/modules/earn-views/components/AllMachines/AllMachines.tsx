@@ -113,20 +113,22 @@ const _AllMachines = ({
   onMachineIdClick,
   onSelectedMachineIdsChange,
 }: Props) => {
-  const [selectedMachinesById, setSelectedMachinesById] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(machineDetailsList.map((machine) => [machine.id, false])),
-  )
+  const [selectedMachinesById, setSelectedMachinesById] = useState<Record<string, boolean>>(() => {
+    const initialSelectedMachinesById = Object.fromEntries(
+      machineDetailsList.slice(0, initialSelectedMachinesAmount).map((machine) => {
+        return [machine.id, true]
+      }),
+    )
 
-  useEffect(() => {
-    const updatedUnselectedMachinesById = machineDetailsList
-      .slice(0, initialSelectedMachinesAmount)
-      .reduce((acc, machine) => ({ ...acc, [machine.id]: true }), {})
-
-    setSelectedMachinesById((previousSelectedMachineIds) => ({
-      ...previousSelectedMachineIds,
-      ...updatedUnselectedMachinesById,
-    }))
-  }, [initialSelectedMachinesAmount, machineDetailsList, onSelectedMachineIdsChange])
+    return {
+      ...Object.fromEntries(
+        machineDetailsList.map((machine) => {
+          return [machine.id, false]
+        }),
+      ),
+      ...initialSelectedMachinesById,
+    }
+  })
 
   useEffect(() => {
     onSelectedMachineIdsChange(Object.keys(selectedMachinesById).filter((machineId) => selectedMachinesById[machineId]))
