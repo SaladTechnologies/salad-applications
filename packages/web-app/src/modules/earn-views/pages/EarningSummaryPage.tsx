@@ -101,7 +101,7 @@ const _EarningSummaryPage: FC<Props> = ({
 
   const redeemedRewardsCount = redeemedRewards?.length ?? 0
 
-  const earningPerSelectedMachines = selectedMachineIds.reduce<EarningPerMachine>((acc, id) => {
+  const earningsPerSelectedMachines = selectedMachineIds.reduce<EarningPerMachine>((acc, id) => {
     if (earningsPerMachine[id]) {
       acc[id] = earningsPerMachine[id]
     }
@@ -131,7 +131,7 @@ const _EarningSummaryPage: FC<Props> = ({
           onMachineIdClick={setDetailsModalMachineId}
           onSelectedMachineIdsChange={handleSelectedMachineIdsChange}
         />
-        <EarningHistoryContainer earningsPerMachine={earningPerSelectedMachines} />
+        <EarningHistoryContainer earningsPerMachine={earningsPerSelectedMachines} />
         {shownInModalMachineDetails && (
           <MachineDetailsModal
             machineDetails={shownInModalMachineDetails}
