@@ -1,1 +1,1 @@
-export * from './EarningHistory'
+export * from './EarningHistoryContainer'

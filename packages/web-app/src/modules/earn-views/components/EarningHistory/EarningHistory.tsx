@@ -64,6 +64,7 @@ interface Props extends WithStyles<typeof styles> {
   viewLast24Hours: () => void
   viewLast7Days: () => void
   viewLast30Days: () => void
+  trackEarningHistoryFilterClicked: (timeFilter: ViewRange, viewFilter: ViewType, aggregationFilter: ViewData) => void
 }
 
 const _EarningHistory = ({
@@ -73,6 +74,7 @@ const _EarningHistory = ({
   viewLast24Hours,
   viewLast7Days,
   viewLast30Days,
+  trackEarningHistoryFilterClicked,
 }: Props) => {
   const [viewType, setViewType] = useState<ViewType>(ViewType.Graph)
   const [viewRange, setViewRange] = useState<ViewRange>(ViewRange.Last24Hours)
@@ -80,9 +82,22 @@ const _EarningHistory = ({
 
   const [isIndividualViewDataDisabled, setIsIndividualViewDataDisabled] = useState<boolean>(false)
 
+  const handleViewChange = (newViewRange: ViewRange, newViewType: ViewType, newViewData: ViewData) => {
+    setViewRange(newViewRange)
+    setViewType(newViewType)
+    setViewData(newViewData)
+    trackEarningHistoryFilterClicked(newViewRange, newViewType, newViewData)
+  }
+
   const viewTypeOptions = [
-    { name: ViewType.Graph, action: () => setViewType(ViewType.Graph) },
-    { name: ViewType.Table, action: () => setViewType(ViewType.Table) },
+    {
+      name: ViewType.Graph,
+      action: () => handleViewChange(viewRange, ViewType.Graph, viewData),
+    },
+    {
+      name: ViewType.Table,
+      action: () => handleViewChange(viewRange, ViewType.Table, viewData),
+    },
   ]
 
   const viewRangeOptions = [
@@ -90,21 +105,21 @@ const _EarningHistory = ({
       name: ViewRange.Last24Hours,
       action: () => {
         viewLast24Hours()
-        setViewRange(ViewRange.Last24Hours)
+        handleViewChange(ViewRange.Last24Hours, viewType, viewData)
       },
     },
     {
       name: ViewRange.Last7Days,
       action: () => {
         viewLast7Days()
-        setViewRange(ViewRange.Last7Days)
+        handleViewChange(ViewRange.Last7Days, viewType, viewData)
       },
     },
     {
       name: ViewRange.Last30Days,
       action: () => {
         viewLast30Days()
-        setViewRange(ViewRange.Last30Days)
+        handleViewChange(ViewRange.Last30Days, viewType, viewData)
       },
     },
   ]
@@ -112,16 +127,18 @@ const _EarningHistory = ({
   const viewDataOptions = [
     {
       name: ViewData.Individual,
-      action: () => setViewData(ViewData.Individual),
+      action: () => handleViewChange(viewRange, viewType, ViewData.Individual),
       disabled: isIndividualViewDataDisabled,
     },
     {
       name: ViewData.Aggregate,
-      action: () => {
-        setViewData(ViewData.Aggregate)
-      },
+      action: () => handleViewChange(viewRange, viewType, ViewData.Aggregate),
     },
   ]
+
+  const handleTypeOptionChange = (name: ViewType) => {
+    viewTypeOptions.find((option) => option.name === name)?.action()
+  }
 
   const handleRangeOptionChange = (name: ViewRange) => {
     viewRangeOptions.find((option) => option.name === name)?.action()
@@ -140,7 +157,7 @@ const _EarningHistory = ({
             <p className={classes.subtitle}>View Type</p>
             <Segments
               options={viewTypeOptions}
-              onOptionChange={(name) => setViewType(name as ViewType)}
+              onOptionChange={(name) => handleTypeOptionChange(name as ViewType)}
               selectedOptionName={viewType}
             />
           </div>

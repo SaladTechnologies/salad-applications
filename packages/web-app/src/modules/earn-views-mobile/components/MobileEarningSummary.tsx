@@ -4,8 +4,8 @@ import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
 import { Divider, SectionHeader, StatElement } from '../../../components'
 import { formatBalance } from '../../../utils'
-import type { ChartDaysShowing, EarningPerMachine } from '../../balance/models'
-import { EarningHistory } from '../../earn-views/components'
+import type { EarningPerMachine } from '../../balance/models'
+import { EarningHistoryContainer } from '../../earn-views/components'
 import { AllMachines } from '../../earn-views/components/AllMachines'
 import { generatedMockedMachines, mockEarningPerMachine } from '../../earn-views/components/AllMachines/mocks'
 import { MachineDetailsModal } from '../../earn-views/components/MachineDetailsModal'
@@ -44,29 +44,21 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   currentBalance?: number
-  daysShowing: ChartDaysShowing
   last24HrEarnings: number
   last7DayEarnings: number
   last30DayEarnings: number
   lifetimeBalance?: number
   totalXp?: number
-  viewLast24Hours: () => void
-  viewLast7Days: () => void
-  viewLast30Days: () => void
 }
 
 const _MobileEarningSummary = ({
   classes,
   currentBalance,
-  daysShowing,
   last24HrEarnings,
   last7DayEarnings,
   last30DayEarnings,
   lifetimeBalance,
   totalXp,
-  viewLast24Hours,
-  viewLast7Days,
-  viewLast30Days,
 }: Props) => {
   const [detailsModalMachineId, setDetailsModalMachineId] = useState<string | null>(null)
   const [selectedMachineIds, setSelectedMachineIds] = useState<string[]>([])
@@ -142,13 +134,7 @@ const _MobileEarningSummary = ({
         onMachineIdClick={setDetailsModalMachineId}
         onSelectedMachineIdsChange={handleSelectedMachineIdsChange}
       />
-      <EarningHistory
-        daysShowing={daysShowing}
-        earningsPerMachine={earningPerSelectedMachines}
-        viewLast24Hours={viewLast24Hours}
-        viewLast7Days={viewLast7Days}
-        viewLast30Days={viewLast30Days}
-      />
+      <EarningHistoryContainer earningsPerMachine={earningPerSelectedMachines} />
       {shownModalMachine && (
         <MachineDetailsModal {...shownModalMachine} onCloseClick={handleCloseMachineDetailsModal} />
       )}

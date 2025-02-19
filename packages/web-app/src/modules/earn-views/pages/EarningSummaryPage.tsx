@@ -4,10 +4,15 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Scrollbar } from '../../../components'
 import { withLogin } from '../../auth-views'
-import type { ChartDaysShowing, EarningPerMachine } from '../../balance/models'
+import type { EarningPerMachine } from '../../balance/models'
 import type { RedeemedReward } from '../../balance/models/RedeemedReward'
 import type { RewardVaultItem } from '../../vault/models'
-import { EarningFrequentlyAskedQuestions, EarningHistory, EarningSummary, LatestRewardsRedeemed } from '../components'
+import {
+  EarningFrequentlyAskedQuestions,
+  EarningHistoryContainer,
+  EarningSummary,
+  LatestRewardsRedeemed,
+} from '../components'
 import { AllMachines } from '../components/AllMachines'
 import { generatedMockedMachines, mockEarningPerMachine } from '../components/AllMachines/mocks'
 import { MachineDetailsModal } from '../components/MachineDetailsModal'
@@ -22,7 +27,6 @@ const styles = () => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  daysShowing: ChartDaysShowing
   currentBalance?: number
   lifetimeBalance?: number
   totalChoppingHours?: number
@@ -38,15 +42,11 @@ interface Props extends WithStyles<typeof styles> {
   trackAndNavigateToRewardVaultPage: () => void
   trackEarnPageFAQLinkClicked: (faqLink: string) => void
   trackEarnPageViewed: () => void
-  viewLast24Hours: () => void
-  viewLast7Days: () => void
-  viewLast30Days: () => void
 }
 
 const _EarningSummaryPage: FC<Props> = ({
   classes,
   currentBalance,
-  daysShowing,
   lifetimeBalance,
   totalChoppingHours,
   redeemedRewards,
@@ -60,9 +60,6 @@ const _EarningSummaryPage: FC<Props> = ({
   trackAndNavigateToRewardVaultPage,
   trackEarnPageFAQLinkClicked,
   trackEarnPageViewed,
-  viewLast24Hours,
-  viewLast7Days,
-  viewLast30Days,
 }) => {
   const [detailsModalMachineId, setDetailsModalMachineId] = useState<string | null>(null)
   const [selectedMachineIds, setSelectedMachineIds] = useState<string[]>([])
@@ -117,13 +114,7 @@ const _EarningSummaryPage: FC<Props> = ({
           onMachineIdClick={setDetailsModalMachineId}
           onSelectedMachineIdsChange={handleSelectedMachineIdsChange}
         />
-        <EarningHistory
-          daysShowing={daysShowing}
-          earningsPerMachine={earningPerSelectedMachines}
-          viewLast24Hours={viewLast24Hours}
-          viewLast7Days={viewLast7Days}
-          viewLast30Days={viewLast30Days}
-        />
+        <EarningHistoryContainer earningsPerMachine={earningPerSelectedMachines} />
         {shownModalMachine && (
           <MachineDetailsModal {...shownModalMachine} onCloseClick={handleCloseMachineDetailsModal} />
         )}

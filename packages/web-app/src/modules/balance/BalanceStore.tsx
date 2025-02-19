@@ -4,7 +4,6 @@ import { DateTime } from 'luxon'
 import { action, computed, flow, observable, runInAction } from 'mobx'
 import type { Moment } from 'moment'
 import moment from 'moment'
-import type { RootStore } from '../../Store'
 import type { MachinesApiClient } from '../../api/machinesApiClient/generated/machinesApiClient'
 import type {
   EarningHistoryTimeframeEnum,
@@ -20,12 +19,6 @@ import {
   normalizeEarningHistory,
   normalizeEarningsPerMachine,
 } from './utils'
-
-enum EarningChartTimeFilter {
-  Last24Hour = '24 hour filter',
-  Last7Day = '7 day filter',
-  Last30Day = '30 day filter',
-}
 
 export class BalanceStore {
   private machinesApiClient: MachinesApiClient
@@ -67,28 +60,16 @@ export class BalanceStore {
 
   @action
   viewLast24Hours = () => {
-    if (this.daysShowingEarnings !== 1) {
-      this.store.analytics.trackEarnPageTimeFilterButtonClicked(EarningChartTimeFilter.Last24Hour)
-    }
-
     this.daysShowingEarnings = 1
   }
 
   @action
   viewLast7Days = () => {
-    if (this.daysShowingEarnings !== 7) {
-      this.store.analytics.trackEarnPageTimeFilterButtonClicked(EarningChartTimeFilter.Last7Day)
-    }
-
     this.daysShowingEarnings = 7
   }
 
   @action
   viewLast30Days = () => {
-    if (this.daysShowingEarnings !== 30) {
-      this.store.analytics.trackEarnPageTimeFilterButtonClicked(EarningChartTimeFilter.Last30Day)
-    }
-
     this.daysShowingEarnings = 30
   }
 
@@ -259,7 +240,7 @@ export class BalanceStore {
     return groupedByTheDayEarningWindows
   }
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
+  constructor(private readonly axios: AxiosInstance) {
     this.machinesApiClient = getMachinesApiClient(axios)
   }
 
