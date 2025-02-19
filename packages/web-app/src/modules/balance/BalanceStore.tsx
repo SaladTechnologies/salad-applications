@@ -162,8 +162,6 @@ export class BalanceStore {
 
   @action
   fetchCurrentEarningRatesPerMachine = () => {
-    this._latestEarningsPerMachineFetchMoment = moment()
-
     this.getMachines()
       .then((machines) => {
         if (machines === null) {
