@@ -5,6 +5,7 @@ import { MobileEarningSummary } from './components/MobileEarningSummary'
 
 const mapStoreToProps = (store: RootStore): any => ({
   currentBalance: store.balance.currentBalance,
+  earningsPerMachine: store.balance.earningsPerMachine,
   lifetimeBalance: store.balance.lifetimeBalance,
   totalXp: store.xp.currentXp,
   last24HrEarnings: store.balance.lastDayEarnings,
@@ -14,6 +15,7 @@ const mapStoreToProps = (store: RootStore): any => ({
   machines: store.balance.machines,
   currentHourlyEarningRatesPerMachine: store.balance.currentHourlyEarningRatesPerMachine,
   fetchCurrentEarningRatesPerMachine: store.balance.fetchCurrentEarningRatesPerMachine,
+  fetchEarningsPerMachine: store.balance.fetchEarningsPerMachine,
 })
 
 export const MobileEarningSummaryContainer = connect(mapStoreToProps, withLogin(MobileEarningSummary))

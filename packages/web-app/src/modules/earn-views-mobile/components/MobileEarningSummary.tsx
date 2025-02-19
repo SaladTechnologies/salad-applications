@@ -9,7 +9,6 @@ import type { CurrentHourlyEarningRatesPerMachine, EarningPerMachine } from '../
 import { EarningHistoryContainer } from '../../earn-views/components'
 import { AllMachines } from '../../earn-views/components/AllMachines'
 import { MachineDetailsModal } from '../../earn-views/components/AllMachines/MachineDetailsModal'
-import { mockEarningPerMachine } from '../../earn-views/components/AllMachines/mocks'
 import type { MachineDetails } from '../../earn-views/components/AllMachines/utils'
 import { getMachineDetailsList } from '../../earn-views/components/AllMachines/utils'
 
@@ -47,6 +46,7 @@ const styles = (theme: SaladTheme) => ({
 
 interface Props extends WithStyles<typeof styles> {
   currentBalance?: number
+  earningsPerMachine: EarningPerMachine
   last24HrEarnings: number
   last7DayEarnings: number
   last30DayEarnings: number
@@ -55,10 +55,12 @@ interface Props extends WithStyles<typeof styles> {
   machines: Machine[]
   currentHourlyEarningRatesPerMachine: CurrentHourlyEarningRatesPerMachine
   fetchCurrentEarningRatesPerMachine: () => void
+  fetchEarningsPerMachine: () => void
 }
 
 const _MobileEarningSummary = ({
   classes,
+  earningsPerMachine,
   currentBalance,
   last24HrEarnings,
   last7DayEarnings,
@@ -68,6 +70,7 @@ const _MobileEarningSummary = ({
   machines,
   currentHourlyEarningRatesPerMachine,
   fetchCurrentEarningRatesPerMachine,
+  fetchEarningsPerMachine,
 }: Props) => {
   const [detailsModalMachineId, setDetailsModalMachineId] = useState<string | null>(null)
   const [selectedMachineIds, setSelectedMachineIds] = useState<string[]>([])
@@ -78,21 +81,19 @@ const _MobileEarningSummary = ({
 
   useEffect(() => {
     fetchCurrentEarningRatesPerMachine()
-  }, [fetchCurrentEarningRatesPerMachine])
+    fetchEarningsPerMachine()
+  }, [fetchCurrentEarningRatesPerMachine, fetchEarningsPerMachine])
 
   const handleSelectedMachineIdsChange = useCallback((updatedSelectedMachineIds: string[]) => {
     setSelectedMachineIds(updatedSelectedMachineIds)
   }, [])
 
-  const earningPerSelectedMachines = Object.keys(selectedMachineIds)
-    .filter((id) => selectedMachineIds.includes(id))
-    .reduce<EarningPerMachine>((acc, id) => {
-      // Mocked data for earnings per machine
-      if (mockEarningPerMachine[id]) {
-        acc[id] = mockEarningPerMachine[id]
-      }
-      return acc
-    }, {})
+  const earningPerSelectedMachines = selectedMachineIds.reduce<EarningPerMachine>((acc, id) => {
+    if (earningsPerMachine[id]) {
+      acc[id] = earningsPerMachine[id]
+    }
+    return acc
+  }, {})
 
   const shownInModalMachineDetails = machines.find(
     (machine) => machine.machine_id?.toString() === detailsModalMachineId,
