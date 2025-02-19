@@ -11,6 +11,7 @@ const mapStoreToProps = (store: RootStore): any => {
 
   return {
     currentBalance: store.balance.currentBalance,
+    earningsPerMachine: store.balance.earningsPerMachine,
     lifetimeBalance: store.balance.lifetimeBalance,
     totalChoppingHours: store.xp.currentXp && getNumberWithCommas((store.xp.currentXp / 60).toFixed(0)),
     isLatestCompletedRedeemedRewardsLoading: store.vault.isLatestCompletedRedeemedRewardsLoading,
@@ -31,6 +32,7 @@ const mapStoreToProps = (store: RootStore): any => {
     viewLast7Days: store.balance.viewLast7Days,
     viewLast30Days: store.balance.viewLast30Days,
     fetchCurrentEarningRatesPerMachine: store.balance.fetchCurrentEarningRatesPerMachine,
+    fetchEarningsPerMachine: store.balance.fetchEarningsPerMachine,
   }
 }
 

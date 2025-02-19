@@ -16,7 +16,6 @@ import {
 } from '../components'
 import { AllMachines } from '../components/AllMachines'
 import { MachineDetailsModal } from '../components/AllMachines/MachineDetailsModal'
-import { mockEarningPerMachine } from '../components/AllMachines/mocks'
 import { getMachineDetailsList } from '../components/AllMachines/utils'
 
 const styles = () => ({
@@ -30,6 +29,7 @@ const styles = () => ({
 
 interface Props extends WithStyles<typeof styles> {
   currentBalance?: number
+  earningsPerMachine: EarningPerMachine
   lifetimeBalance?: number
   totalChoppingHours?: number
   redeemedRewards?: RewardVaultItem[]
@@ -41,6 +41,7 @@ interface Props extends WithStyles<typeof styles> {
   machines: Machine[] | null
   currentHourlyEarningRatesPerMachine: CurrentHourlyEarningRatesPerMachine
   fetchCurrentEarningRatesPerMachine: () => void
+  fetchEarningsPerMachine: () => void
   startRedemptionsRefresh: () => void
   stopRedemptionsRefresh: () => void
   navigateToRewardVaultPage: () => void
@@ -52,6 +53,7 @@ interface Props extends WithStyles<typeof styles> {
 const _EarningSummaryPage: FC<Props> = ({
   classes,
   currentBalance,
+  earningsPerMachine,
   lifetimeBalance,
   totalChoppingHours,
   redeemedRewards,
@@ -63,6 +65,7 @@ const _EarningSummaryPage: FC<Props> = ({
   machines,
   currentHourlyEarningRatesPerMachine,
   fetchCurrentEarningRatesPerMachine,
+  fetchEarningsPerMachine,
   startRedemptionsRefresh,
   stopRedemptionsRefresh,
   trackAndNavigateToRewardVaultPage,
@@ -82,7 +85,8 @@ const _EarningSummaryPage: FC<Props> = ({
 
   useEffect(() => {
     fetchCurrentEarningRatesPerMachine()
-  }, [fetchCurrentEarningRatesPerMachine])
+    fetchEarningsPerMachine()
+  }, [fetchCurrentEarningRatesPerMachine, fetchEarningsPerMachine])
 
   useEffect(() => {
     startRedemptionsRefresh()
@@ -97,15 +101,12 @@ const _EarningSummaryPage: FC<Props> = ({
 
   const redeemedRewardsCount = redeemedRewards?.length ?? 0
 
-  const earningPerSelectedMachines = Object.keys(selectedMachineIds)
-    .filter((id) => selectedMachineIds.includes(id))
-    .reduce<EarningPerMachine>((acc, id) => {
-      // Mocked data for earnings per machine
-      if (mockEarningPerMachine[id]) {
-        acc[id] = mockEarningPerMachine[id]
-      }
-      return acc
-    }, {})
+  const earningsPerSelectedMachines = selectedMachineIds.reduce<EarningPerMachine>((acc, id) => {
+    if (earningsPerMachine[id]) {
+      acc[id] = earningsPerMachine[id]
+    }
+    return acc
+  }, {})
 
   const machineDetailsList = machines ? getMachineDetailsList({ machines, currentHourlyEarningRatesPerMachine }) : []
 
@@ -130,7 +131,7 @@ const _EarningSummaryPage: FC<Props> = ({
           onMachineIdClick={setDetailsModalMachineId}
           onSelectedMachineIdsChange={handleSelectedMachineIdsChange}
         />
-        <EarningHistoryContainer earningsPerMachine={earningPerSelectedMachines} />
+        <EarningHistoryContainer earningsPerMachine={earningsPerSelectedMachines} />
         {shownInModalMachineDetails && (
           <MachineDetailsModal
             machineDetails={shownInModalMachineDetails}
