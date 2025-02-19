@@ -140,9 +140,9 @@ const _EarningTable = ({ classes, earningsPerMachine, daysShowing }: Props) => {
           }
         }
 
-        const earningsSum = machineId ? machineEarnings?.reduce((sum, item) => item.earnings + sum, 0) : 0
+        const machineEarningsTotal = machineId ? machineEarnings?.reduce((sum, item) => item.earnings + sum, 0) : 0
 
-        const averageEarnings = earningsSum / machineEarnings?.length
+        const averageEarnings = machineEarningsTotal / machineEarnings?.length
 
         return {
           id: machineId.substring(0, 8),
