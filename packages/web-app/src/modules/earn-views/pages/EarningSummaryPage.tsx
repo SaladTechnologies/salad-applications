@@ -38,7 +38,7 @@ interface Props extends WithStyles<typeof styles> {
   last7DayEarnings: number
   last30DayEarnings: number
   isLatestCompletedRedeemedRewardsLoading: boolean
-  machines: Machine[]
+  machines: Machine[] | null
   currentHourlyEarningRatesPerMachine: CurrentHourlyEarningRatesPerMachine
   fetchCurrentEarningRatesPerMachineId: () => void
   startRedemptionsRefresh: () => void
@@ -107,7 +107,7 @@ const _EarningSummaryPage: FC<Props> = ({
       return acc
     }, {})
 
-  const machineDetailsList = getMachineDetailsList({ machines, currentHourlyEarningRatesPerMachine })
+  const machineDetailsList = machines ? getMachineDetailsList({ machines, currentHourlyEarningRatesPerMachine }) : []
 
   const shownInModalMachineDetails = machineDetailsList.find(
     (machineDetails) => machineDetails.id === detailsModalMachineId,
