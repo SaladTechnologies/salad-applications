@@ -128,8 +128,6 @@ const _AllMachines = ({
     }))
   }, [initialSelectedMachinesAmount, machineDetailsList, onSelectedMachineIdsChange])
 
-  useEffect(() => {})
-
   useEffect(() => {
     onSelectedMachineIdsChange(Object.keys(selectedMachinesById).filter((machineId) => selectedMachinesById[machineId]))
   }, [onSelectedMachineIdsChange, selectedMachinesById])
