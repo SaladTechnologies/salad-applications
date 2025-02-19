@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { Machine } from '../../../api/machinesApiClient/generated/models'
@@ -107,7 +107,9 @@ const _EarningSummaryPage: FC<Props> = ({
       return acc
     }, {})
 
-  const machineDetailsList = machines ? getMachineDetailsList({ machines, currentHourlyEarningRatesPerMachine }) : []
+  const machineDetailsList = useMemo(() => {
+    return machines ? getMachineDetailsList({ machines, currentHourlyEarningRatesPerMachine }) : []
+  }, [machines, currentHourlyEarningRatesPerMachine])
 
   const shownInModalMachineDetails = machineDetailsList.find(
     (machineDetails) => machineDetails.id === detailsModalMachineId,

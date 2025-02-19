@@ -101,14 +101,34 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 
 interface Props extends WithStyles<typeof styles> {
   machineDetailsList: MachineDetails[]
+  initialSelectedMachinesAmount?: number
   onMachineIdClick: (machineId: string) => void
   onSelectedMachineIdsChange: (machineIds: string[]) => void
 }
 
-const _AllMachines = ({ classes, machineDetailsList, onMachineIdClick, onSelectedMachineIdsChange }: Props) => {
+const _AllMachines = ({
+  classes,
+  machineDetailsList,
+  initialSelectedMachinesAmount = 5,
+  onMachineIdClick,
+  onSelectedMachineIdsChange,
+}: Props) => {
   const [selectedMachinesById, setSelectedMachinesById] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(machineDetailsList.map((machine) => [machine.id, false])),
   )
+
+  useEffect(() => {
+    const updatedUnselectedMachinesById = machineDetailsList
+      .slice(0, initialSelectedMachinesAmount)
+      .reduce((acc, machine) => ({ ...acc, [machine.id]: true }), {})
+
+    setSelectedMachinesById((previousSelectedMachineIds) => ({
+      ...previousSelectedMachineIds,
+      ...updatedUnselectedMachinesById,
+    }))
+  }, [initialSelectedMachinesAmount, machineDetailsList, onSelectedMachineIdsChange])
+
+  useEffect(() => {})
 
   useEffect(() => {
     onSelectedMachineIdsChange(Object.keys(selectedMachinesById).filter((machineId) => selectedMachinesById[machineId]))
