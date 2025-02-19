@@ -1,14 +1,17 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
+import type { Machine } from '../../../api/machinesApiClient/generated/models'
 import { Divider, SectionHeader, StatElement } from '../../../components'
 import { formatBalance } from '../../../utils'
-import type { EarningPerMachine } from '../../balance/models'
+import type { CurrentHourlyEarningRatesPerMachine, EarningPerMachine } from '../../balance/models'
 import { EarningHistoryContainer } from '../../earn-views/components'
 import { AllMachines } from '../../earn-views/components/AllMachines'
-import { generatedMockedMachines, mockEarningPerMachine } from '../../earn-views/components/AllMachines/mocks'
-import { MachineDetailsModal } from '../../earn-views/components/MachineDetailsModal'
+import { MachineDetailsModal } from '../../earn-views/components/AllMachines/MachineDetailsModal'
+import { mockEarningPerMachine } from '../../earn-views/components/AllMachines/mocks'
+import type { MachineDetails } from '../../earn-views/components/AllMachines/utils'
+import { getMachineDetailsList } from '../../earn-views/components/AllMachines/utils'
 
 const styles = (theme: SaladTheme) => ({
   item: {
@@ -49,6 +52,9 @@ interface Props extends WithStyles<typeof styles> {
   last30DayEarnings: number
   lifetimeBalance?: number
   totalXp?: number
+  machines: Machine[]
+  currentHourlyEarningRatesPerMachine: CurrentHourlyEarningRatesPerMachine
+  fetchCurrentEarningRatesPerMachine: () => void
 }
 
 const _MobileEarningSummary = ({
@@ -59,6 +65,9 @@ const _MobileEarningSummary = ({
   last30DayEarnings,
   lifetimeBalance,
   totalXp,
+  machines,
+  currentHourlyEarningRatesPerMachine,
+  fetchCurrentEarningRatesPerMachine,
 }: Props) => {
   const [detailsModalMachineId, setDetailsModalMachineId] = useState<string | null>(null)
   const [selectedMachineIds, setSelectedMachineIds] = useState<string[]>([])
@@ -67,11 +76,13 @@ const _MobileEarningSummary = ({
     setDetailsModalMachineId(null)
   }
 
+  useEffect(() => {
+    fetchCurrentEarningRatesPerMachine()
+  }, [fetchCurrentEarningRatesPerMachine])
+
   const handleSelectedMachineIdsChange = useCallback((updatedSelectedMachineIds: string[]) => {
     setSelectedMachineIds(updatedSelectedMachineIds)
   }, [])
-
-  const shownModalMachine = generatedMockedMachines.find((machine) => machine.id === detailsModalMachineId)
 
   const earningPerSelectedMachines = Object.keys(selectedMachineIds)
     .filter((id) => selectedMachineIds.includes(id))
@@ -82,6 +93,10 @@ const _MobileEarningSummary = ({
       }
       return acc
     }, {})
+
+  const shownInModalMachineDetails = machines.find(
+    (machine) => machine.machine_id?.toString() === detailsModalMachineId,
+  )
 
   return (
     <>
@@ -130,13 +145,16 @@ const _MobileEarningSummary = ({
       </div>
       <Divider />
       <AllMachines
-        machines={generatedMockedMachines}
+        machineDetailsList={getMachineDetailsList({ machines, currentHourlyEarningRatesPerMachine })}
         onMachineIdClick={setDetailsModalMachineId}
         onSelectedMachineIdsChange={handleSelectedMachineIdsChange}
       />
       <EarningHistoryContainer earningsPerMachine={earningPerSelectedMachines} />
-      {shownModalMachine && (
-        <MachineDetailsModal {...shownModalMachine} onCloseClick={handleCloseMachineDetailsModal} />
+      {shownInModalMachineDetails && (
+        <MachineDetailsModal
+          machineDetails={shownInModalMachineDetails as MachineDetails}
+          onCloseClick={handleCloseMachineDetailsModal}
+        />
       )}
       <Divider />
     </>

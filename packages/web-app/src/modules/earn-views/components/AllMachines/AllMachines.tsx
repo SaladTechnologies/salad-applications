@@ -4,7 +4,7 @@ import { Checkbox, Text } from '@saladtechnologies/garden-components'
 import classNames from 'classnames'
 import type CSS from 'csstype'
 import { DateTime } from 'luxon'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { DropdownOption } from '../../../../components/Dropdown'
@@ -15,7 +15,7 @@ import { Table } from '../../../../components/Table'
 import type { TableRow } from '../../../../components/Table/types'
 import { DefaultTheme, type SaladTheme } from '../../../../SaladTheme'
 import { EarnSectionHeader } from '../EarnSectionHeader'
-import type { MachineState } from './mocks'
+import type { MachineDetails } from './utils'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   allMachinesWrapper: {
@@ -42,7 +42,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   tableHeaderCell: {
     position: 'relative',
     padding: '10px',
-    paddingLeft: '0px',
+    paddingLeft: '10px',
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
@@ -53,26 +53,6 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-  },
-  warningPillWrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: '6px',
-  },
-  warningPill: {
-    height: '23px',
-    padding: '0px 8px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    borderRadius: '16px',
-    backgroundColor: '#F6931D',
-    width: 'auto',
-    color: theme.darkBlue,
-    textDecoration: 'underline',
   },
   checkboxWrapper: {
     width: '22px',
@@ -109,18 +89,49 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     top: '32px',
     zIndex: 1,
   },
+  noDataWrapper: {
+    height: '100px',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: theme.lightGreen,
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
-  machines: MachineState[]
+  machineDetailsList: MachineDetails[]
+  initialSelectedMachinesAmount?: number
   onMachineIdClick: (machineId: string) => void
   onSelectedMachineIdsChange: (machineIds: string[]) => void
 }
 
-const _AllMachines = ({ classes, machines, onMachineIdClick, onSelectedMachineIdsChange }: Props) => {
+const _AllMachines = ({
+  classes,
+  machineDetailsList,
+  initialSelectedMachinesAmount = 5,
+  onMachineIdClick,
+  onSelectedMachineIdsChange,
+}: Props) => {
   const [selectedMachinesById, setSelectedMachinesById] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(machines.map((machine) => [machine.id, false])),
+    Object.fromEntries(machineDetailsList.map((machine) => [machine.id, false])),
   )
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const memoizedMachineDetailsList = useMemo(() => [...machineDetailsList], [machineDetailsList.length])
+
+  useEffect(() => {
+    const initialSelectedMachinesById = Object.fromEntries(
+      memoizedMachineDetailsList.slice(0, initialSelectedMachinesAmount).map((machine) => {
+        return [machine.id, true]
+      }),
+    )
+
+    setSelectedMachinesById((previousSelectedMachinesById) => ({
+      ...previousSelectedMachinesById,
+      ...initialSelectedMachinesById,
+    }))
+  }, [initialSelectedMachinesAmount, memoizedMachineDetailsList])
 
   useEffect(() => {
     onSelectedMachineIdsChange(Object.keys(selectedMachinesById).filter((machineId) => selectedMachinesById[machineId]))
@@ -141,12 +152,13 @@ const _AllMachines = ({ classes, machines, onMachineIdClick, onSelectedMachineId
   const dropdownOptions: DropdownOption<unknown>[] = [
     {
       displayName: 'Select All',
-      handler: () => setSelectedMachinesById(machines.reduce((acc, machine) => ({ ...acc, [machine.id]: true }), {})),
+      handler: () =>
+        setSelectedMachinesById(machineDetailsList.reduce((acc, machine) => ({ ...acc, [machine.id]: true }), {})),
     },
     {
       displayName: 'Select All in Page',
       handler: () => {
-        const updatedSelectedMachinesById = machines
+        const updatedSelectedMachinesById = machineDetailsList
           .slice(lowestItemNumberOnPage - 1, highestItemNumberOnPage)
           .reduce((acc, machine) => ({ ...acc, [machine.id]: true }), {})
 
@@ -163,7 +175,7 @@ const _AllMachines = ({ classes, machines, onMachineIdClick, onSelectedMachineId
     {
       displayName: 'Deselect All in Page',
       handler: () => {
-        const updatedUnselectedMachinesById = machines
+        const updatedUnselectedMachinesById = machineDetailsList
           .slice(lowestItemNumberOnPage - 1, highestItemNumberOnPage)
           .reduce((acc, machine) => ({ ...acc, [machine.id]: false }), {})
 
@@ -197,22 +209,16 @@ const _AllMachines = ({ classes, machines, onMachineIdClick, onSelectedMachineId
         </div>
       </div>,
       <div className={classes.tableHeaderCell}>
-        <Text variant="baseXS">Running Status</Text>
-      </div>,
-      <div className={classes.tableHeaderCell}>
         <Text variant="baseXS">Last Seen</Text>
       </div>,
       <div className={classNames(classes.tableHeaderCell, classes.tableCellCentered)}>
         <Text variant="baseXS">Current Earning Rate</Text>
       </div>,
-      <div className={classNames(classes.tableHeaderCell, classes.tableCellCentered)}>
-        <Text variant="baseXS">Warnings</Text>
-      </div>,
     ]
   }
 
   const getRows = (): Array<TableRow> => {
-    return machines
+    return machineDetailsList
       .filter((_machine, index) => {
         const itemNumber = index + 1
         return itemNumber >= lowestItemNumberOnPage && itemNumber <= highestItemNumberOnPage
@@ -234,26 +240,18 @@ const _AllMachines = ({ classes, machines, onMachineIdClick, onSelectedMachineId
               </div>
             </div>
           ),
-          ...machine,
           id: (
             <div
               className={classNames(classes.tableCell, classes.idWrapper)}
               onClick={() => onMachineIdClick(machine.id)}
             >
-              <Text variant="baseS">{machine.id}</Text>
+              <Text variant="baseS">{machine.id.substring(0, 8)}</Text>
             </div>
           ),
-          lastSeen: DateTime.fromJSDate(machine.lastSeen).toFormat('MMM d, yyyy'),
-          currentEarningRate: (
-            <div className={classNames(classes.tableCell, classes.tableCellCentered)}>{machine.currentEarningRate}</div>
-          ),
-          warnings: (
-            <div className={classes.warningPillWrapper}>
-              {machine.warnings.map((warningText) => (
-                <div className={classes.warningPill}>
-                  <Text variant="baseXS">{warningText}</Text>
-                </div>
-              ))}
+          lastSeen: machine.lastSeen ? DateTime.fromJSDate(machine.lastSeen).toRelative() : 'N/A',
+          currentHourlyEarningRate: (
+            <div className={classNames(classes.tableCell, classes.tableCellCentered)}>
+              {machine.currentHourlyEarningRate ? `$${machine.currentHourlyEarningRate.toFixed(3)} / Hour` : 'N/A'}
             </div>
           ),
         }
@@ -270,8 +268,13 @@ const _AllMachines = ({ classes, machines, onMachineIdClick, onSelectedMachineId
       <EarnSectionHeader>All Machines</EarnSectionHeader>
       <div className={classes.tableWrapper}>
         <Table titles={getTitles()} rows={getRows()} />
+        {machineDetailsList.length === 0 && (
+          <div className={classes.noDataWrapper}>
+            <Text variant="baseM">No data to display</Text>
+          </div>
+        )}
         <Pagination
-          itemsTotalAmount={machines.length}
+          itemsTotalAmount={machineDetailsList.length}
           itemsPerPageAmount={itemsPerPageAmount}
           currentPageNumber={currentPageNumber}
           onPageChange={(pageNumber: number) => setCurrentPageNumber(pageNumber)}

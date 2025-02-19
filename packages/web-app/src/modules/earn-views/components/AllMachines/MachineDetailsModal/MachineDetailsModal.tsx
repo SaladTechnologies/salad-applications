@@ -3,9 +3,9 @@ import type CSS from 'csstype'
 import { DateTime } from 'luxon'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import type { SaladTheme } from '../../../../SaladTheme'
-import { ModalWithOverlay } from '../../../../components/ModalWithOverlay'
-import type { RunningStatus } from '../AllMachines/mocks'
+import type { SaladTheme } from '../../../../../SaladTheme'
+import { ModalWithOverlay } from '../../../../../components/ModalWithOverlay'
+import type { MachineDetails } from '../utils'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   modalWrapper: {
@@ -26,21 +26,6 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   warningsWrapper: {
     color: theme.lightGreen,
   },
-  warningPills: {
-    display: 'flex',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    gap: '6px',
-    marginTop: '8px',
-  },
-  warningPill: {
-    padding: '5px 8px',
-    borderRadius: '16px',
-    backgroundColor: '#F6931D',
-    color: theme.darkBlue,
-    textDecoration: 'underline',
-  },
   detailsWrapper: {
     display: 'flex',
     flexDirection: 'row',
@@ -59,47 +44,33 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 })
 
 interface Props extends WithStyles<typeof styles> {
-  id: string
-  lastSeen: Date
-  status: RunningStatus
-  currentEarningRate: number
-  warnings: string[]
+  machineDetails: MachineDetails
   onCloseClick: () => void
 }
 
-const _MachineDetailsModal = ({ classes, id, lastSeen, status, currentEarningRate, warnings, onCloseClick }: Props) => {
+const _MachineDetailsModal = ({ classes, machineDetails, onCloseClick }: Props) => {
   return (
     <ModalWithOverlay onCloseClick={onCloseClick}>
       <div className={classes.modalWrapper}>
-        <Text variant="baseXL">Summary - {id}</Text>
+        <Text variant="baseXL">Summary - {machineDetails.id.substring(0, 8)}</Text>
         <div className={classes.detailsWrapper}>
           <div className={classes.detailsBlock}>
             <div className={classes.detailsBlockTitle}>
               <Text variant="baseXS">Last Seen</Text>
             </div>
-            <Text variant="baseL">{DateTime.fromJSDate(lastSeen).toFormat('MMM d, yyyy')}</Text>
-          </div>
-          <div className={classes.detailsBlock}>
-            <div className={classes.detailsBlockTitle}>
-              <Text variant="baseXS">Running Status</Text>
-            </div>
-            <Text variant="baseL">{status}</Text>
+            <Text variant="baseL">
+              {machineDetails.lastSeen ? DateTime.fromJSDate(machineDetails.lastSeen).toRelative() : 'N/A'}
+            </Text>
           </div>
           <div className={classes.detailsBlock}>
             <div className={classes.detailsBlockTitle}>
               <Text variant="baseXS">Current Earning Rate</Text>
             </div>
-            <Text variant="baseL">{currentEarningRate}</Text>
-          </div>
-        </div>
-        <div className={classes.warningsWrapper}>
-          <Text variant="baseXS">Warnings</Text>
-          <div className={classes.warningPills}>
-            {warnings.map((warningText) => (
-              <div key={warningText} className={classes.warningPill}>
-                <Text variant="baseM">{warningText}</Text>
-              </div>
-            ))}
+            <Text variant="baseL">
+              {machineDetails.currentHourlyEarningRate
+                ? `$${machineDetails.currentHourlyEarningRate.toFixed(3)} / Hour`
+                : 'N/A'}
+            </Text>
           </div>
         </div>
       </div>
