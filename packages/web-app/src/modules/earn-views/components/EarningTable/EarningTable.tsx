@@ -143,14 +143,6 @@ const _EarningTable = ({ classes, earningsPerMachine, daysShowing, viewData }: P
     ]
   }
 
-  // const firstMachineEarnings = Object.values(earningsPerMachine)[0]
-
-  // const mockedEarningsPerMachine = Object.fromEntries(
-  //   Array(100)
-  //     .fill(null)
-  //     .map(() => [getRandomId(), firstMachineEarnings]),
-  // )
-
   const machineIds = Object.keys(earningsPerMachine)
 
   if (machineIds.length < 1) {
