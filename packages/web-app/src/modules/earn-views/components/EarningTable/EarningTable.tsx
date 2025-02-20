@@ -118,8 +118,9 @@ const _EarningTable = ({ classes, earningsPerMachine, daysShowing, viewData }: P
 
   const isIndividualViewData = viewData === ViewData.Individual
 
+  const firstMachineEarnings = Object.values(earningsPerMachine)[0]
+
   const getTitles = () => {
-    const firstMachineEarnings = Object.values(earningsPerMachine)[0]
     const earningTimeFrames: Array<string> = firstMachineEarnings
       ? firstMachineEarnings?.map((earningTimeFrame) =>
           daysShowing === 1
@@ -196,9 +197,7 @@ const _EarningTable = ({ classes, earningsPerMachine, daysShowing, viewData }: P
     }),
   )
 
-  const firstMachineEarning = Object.values(earningsPerMachine)[0]
-
-  const aggregatedRowData: number[] = firstMachineEarning
+  const aggregatedRowData: number[] = firstMachineEarnings
     ? Object.values(earningsPerMachine).reduce((aggregatedEarning, earningPerMachine) => {
         return aggregatedEarning.map((rowItem, index) => {
           if (earningPerMachine && earningPerMachine[index]) {
@@ -206,7 +205,7 @@ const _EarningTable = ({ classes, earningsPerMachine, daysShowing, viewData }: P
           }
           return rowItem
         })
-      }, Array(firstMachineEarning.length).fill(0))
+      }, Array(firstMachineEarnings.length).fill(0))
     : []
 
   const aggregatedRow = [
