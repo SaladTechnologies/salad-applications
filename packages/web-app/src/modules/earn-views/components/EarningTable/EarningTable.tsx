@@ -208,13 +208,11 @@ const _EarningTable = ({ classes, earningsPerMachine, daysShowing, viewData }: P
       }, Array(firstMachineEarnings.length).fill(0))
     : []
 
+  const averageAggregatedEarning =
+    aggregatedRowData.reduce((sum, earningPerFrame) => earningPerFrame + sum, 0) / aggregatedRowData.length
   const aggregatedRow = [
     <div className={classes.tableCell}>{machineIds.length}</div>,
-    <div className={classes.tableCell}>
-      {`$${(
-        aggregatedRowData.reduce((sum, earningPerFrame) => earningPerFrame + sum, 0) / aggregatedRowData.length
-      ).toFixed(2)} `}
-    </div>,
+    <div className={classes.tableCell}>{`$${averageAggregatedEarning.toFixed(2)} `}</div>,
     ...aggregatedRowData.map((aggregatedRowItem) => (
       <div className={classes.tableCell}>{`$${(aggregatedRowItem as number).toFixed(2)}`}</div>
     )),
