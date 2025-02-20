@@ -116,6 +116,8 @@ const _EarningTable = ({ classes, earningsPerMachine, daysShowing, viewData }: P
     setCurrentPageNumber,
   } = usePagination()
 
+  const isIndividualViewData = viewData === ViewData.Individual
+
   const getTitles = () => {
     const firstMachineEarnings = Object.values(earningsPerMachine)[0]
     const earningTimeFrames: Array<string> = firstMachineEarnings
@@ -128,7 +130,7 @@ const _EarningTable = ({ classes, earningsPerMachine, daysShowing, viewData }: P
 
     return [
       <div className={classes.tableHeaderCell}>
-        <Text variant="baseXS">Machine ID</Text>
+        <Text variant="baseXS">{isIndividualViewData ? 'Machine ID' : 'Machines'}</Text>
       </div>,
       <div className={classes.tableHeaderCell}>
         <Text variant="baseXS">Average</Text>
