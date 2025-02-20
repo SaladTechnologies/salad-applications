@@ -1,6 +1,7 @@
 import { Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
 import { type FunctionComponent } from 'react'
+import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../SaladTheme'
@@ -12,13 +13,8 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     color: theme.lightGreen,
     fontSize: '14px',
     width: '100%',
-    '@media (max-width: 900px)': {
-      overflow: 'scroll',
-    },
-  },
-  tableContent: {
-    overflow: 'hidden',
-    boxSizing: 'border-box',
+    height: '100%',
+    paddingBottom: '14px',
   },
   table: {
     width: '100%',
@@ -36,12 +32,13 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 interface Props extends WithStyles<typeof styles> {
   titles: TableTitles
   rows: Array<TableRow>
+  autoHeightMax?: number | string
 }
 
-const _Table: FunctionComponent<Props> = ({ classes, titles, rows }) => {
+const _Table: FunctionComponent<Props> = ({ classes, titles, rows, autoHeightMax = '100%' }) => {
   return (
-    <div className={classes.tableWrapper}>
-      <div className={classes.tableContent}>
+    <Scrollbars style={{ width: '100%' }} autoHeight autoHeightMax={autoHeightMax}>
+      <div className={classes.tableWrapper}>
         <table className={classes.table}>
           <thead>
             <tr className={classes.tableHeaderRow}>
@@ -70,7 +67,7 @@ const _Table: FunctionComponent<Props> = ({ classes, titles, rows }) => {
           </tbody>
         </table>
       </div>
-    </div>
+    </Scrollbars>
   )
 }
 

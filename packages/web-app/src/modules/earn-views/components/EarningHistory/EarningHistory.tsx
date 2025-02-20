@@ -189,7 +189,7 @@ const _EarningHistory = ({
             />
           )}
           {viewType === ViewType.Table && (
-            <EarningTable daysShowing={daysShowing} earningsPerMachine={earningsPerMachine} />
+            <EarningTable daysShowing={daysShowing} earningsPerMachine={earningsPerMachine} viewData={viewData} />
           )}
         </div>
         <div className={classes.descriptionWrapper}>

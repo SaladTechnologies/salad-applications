@@ -21,14 +21,12 @@ export const getRandomId = (): string => {
 }
 
 const generateMockedMachines = () => {
-  return Array(100)
+  return Array(6)
     .fill(null)
     .map(() => ({
       id: getRandomId().toLocaleLowerCase(),
-      status: 'Idle',
       lastSeen: new Date(),
-      currentEarningRate: 0.018,
-      warnings: ['Wsl Update', 'Network Blocked'],
+      currentHourlyEarningRate: 0.018,
     }))
 }
 
