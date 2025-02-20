@@ -229,12 +229,14 @@ const _EarningTable = ({ classes, earningsPerMachine, daysShowing, viewData }: P
     )),
   ]
 
-  const isIndividualViewData = viewData === ViewData.Individual
-
   return (
     <div className={classes.earningTableWrapper}>
       <div className={classes.tableWrapper}>
-        <Table titles={getTitles()} rows={isIndividualViewData ? individualRows : [aggregatedRow]} />
+        <Table
+          titles={getTitles()}
+          rows={isIndividualViewData ? individualRows : [aggregatedRow]}
+          autoHeightMax={240}
+        />
         <Pagination
           itemsTotalAmount={isIndividualViewData ? machineIds.length : 1}
           itemsPerPageAmount={isIndividualViewData ? itemsPerPageAmount : 1}

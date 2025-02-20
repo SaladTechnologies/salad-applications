@@ -31,7 +31,6 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     flexDirection: 'column',
     flex: 1,
     position: 'relative',
-    height: '200px',
     width: '100%',
     maxWidth: '700px',
   },
@@ -267,7 +266,7 @@ const _AllMachines = ({
     <div className={classes.allMachinesWrapper}>
       <EarnSectionHeader>All Machines</EarnSectionHeader>
       <div className={classes.tableWrapper}>
-        <Table titles={getTitles()} rows={getRows()} />
+        <Table titles={getTitles()} rows={getRows()} autoHeightMax={800} />
         {machineDetailsList.length === 0 && (
           <div className={classes.noDataWrapper}>
             <Text variant="baseM">No data to display</Text>

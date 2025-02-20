@@ -31,12 +31,13 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 interface Props extends WithStyles<typeof styles> {
   titles: TableTitles
   rows: Array<TableRow>
+  autoHeightMax?: number | string
 }
 
-const _Table: FunctionComponent<Props> = ({ classes, titles, rows }) => {
+const _Table: FunctionComponent<Props> = ({ classes, titles, rows, autoHeightMax = '100%' }) => {
   return (
-    <div className={classes.tableWrapper}>
-      <Scrollbars style={{ width: '100%', height: '100%' }}>
+    <Scrollbars style={{ width: '100%' }} autoHeight autoHeightMax={autoHeightMax}>
+      <div className={classes.tableWrapper}>
         <table className={classes.table}>
           <thead>
             <tr className={classes.tableHeaderRow}>
@@ -64,8 +65,8 @@ const _Table: FunctionComponent<Props> = ({ classes, titles, rows }) => {
             })}
           </tbody>
         </table>
-      </Scrollbars>
-    </div>
+      </div>
+    </Scrollbars>
   )
 }
 
