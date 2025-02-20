@@ -14,6 +14,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     fontSize: '14px',
     width: '100%',
     height: '100%',
+    paddingBottom: '14px',
   },
   table: {
     width: '100%',
