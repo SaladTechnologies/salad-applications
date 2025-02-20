@@ -77,6 +77,15 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     border: `1px ${theme.lightGreen} solid`,
     transform: 'scale(0.8)',
   },
+  noDataWrapper: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    color: theme.lightGreen,
+  },
   questionIconWrapper: {
     marginLeft: '6px',
     backgroundColor: theme.lightGreen,
@@ -141,8 +150,13 @@ const _EarningTable = ({ classes, earningsPerMachine, daysShowing, viewData }: P
   // )
 
   const machineIds = Object.keys(earningsPerMachine)
+
   if (machineIds.length < 1) {
-    return
+    return (
+      <div className={classes.noDataWrapper}>
+        <Text variant="baseM">No data to display</Text>
+      </div>
+    )
   }
 
   const getIndividualRowsData = (): Array<TableRow> => {
