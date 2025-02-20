@@ -39,7 +39,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row',
-    width: '80px',
+    width: '85px',
   },
   tableCellCentered: {
     display: 'flex',
