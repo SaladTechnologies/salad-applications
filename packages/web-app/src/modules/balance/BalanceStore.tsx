@@ -160,19 +160,18 @@ export class BalanceStore {
 
   @action
   fetchCurrentEarningRatesPerMachine = (machineIds?: string[]) => {
-    const machineIdsPromise = machineIds
-      ? Promise.resolve(machineIds)
-      : this.getMachines().then((machines) => {
-          if (machines === null) {
-            throw new Error('There is no machines')
-          }
+    this.getMachines()
+      .then((machines) => {
+        if (machines === null) {
+          throw new Error('There is no machines')
+        }
 
-          return machines
-            .filter((machine) => machine.machine_id)
-            .map((machine) => machine.machine_id?.toString()) as string[]
-        })
-
-    machineIdsPromise
+        return machineIds
+          ? machineIds
+          : (machines
+              .filter((machine) => machine.machine_id)
+              .map((machine) => machine.machine_id?.toString()) as string[])
+      })
       .then((machinesIds) => {
         return this.getCurrentEarningRatesPerMachine(machinesIds)
       })
