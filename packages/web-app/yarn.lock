@@ -3501,7 +3501,7 @@ __metadata:
     "@storybook/builder-webpack5": "npm:6.5.16"
     "@storybook/manager-webpack5": "npm:6.5.16"
     "@storybook/node-logger": "npm:6.5.16"
-    "@storybook/preset-create-react-app": "npm:4.1.2"
+    "@storybook/preset-create-react-app": "npm:8.5.8"
     "@storybook/react": "npm:6.5.16"
     "@types/history": "npm:4.7.11"
     "@types/lodash": "npm:4.17.14"
@@ -4673,22 +4673,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/preset-create-react-app@npm:4.1.2":
-  version: 4.1.2
-  resolution: "@storybook/preset-create-react-app@npm:4.1.2"
+"@storybook/preset-create-react-app@npm:8.5.8":
+  version: 8.5.8
+  resolution: "@storybook/preset-create-react-app@npm:8.5.8"
   dependencies:
     "@pmmmwh/react-refresh-webpack-plugin": "npm:^0.5.1"
-    "@storybook/react-docgen-typescript-plugin": "npm:canary"
-    "@types/babel__core": "npm:^7.1.7"
-    babel-plugin-react-docgen: "npm:^4.1.0"
+    "@storybook/react-docgen-typescript-plugin": "npm:1.0.6--canary.9.0c3f3b7.0"
+    "@types/semver": "npm:^7.5.6"
     pnp-webpack-plugin: "npm:^1.7.0"
-    semver: "npm:^7.3.5"
+    semver: "npm:^7.5.4"
   peerDependencies:
-    "@babel/core": "*"
-    "@storybook/node-logger": "*"
-    "@storybook/react": ">=5.2"
     react-scripts: ">=5.0.0"
-  checksum: 10c0/d28d7c9c5ec6775f2818f831fee3b28c1e8f395bde18f43b665feb8e7f53e1dbaba4e6a783511702098f1bb45c3a7fa9cdbc0d9816aaefebfa4838a26a807406
+    storybook: ^8.5.8
+  checksum: 10c0/8772a1a029bbe3baccb05c3ab67bdb988b71234da0ce81e985ab34c42c6bf53739a2fdb32b9633664166419f8b7552a1e61f7d625cf9ca268dadceff2fee0ecb
   languageName: node
   linkType: hard
 
@@ -4737,21 +4734,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/react-docgen-typescript-plugin@npm:canary":
-  version: 1.0.2--canary.12.cf35881ff63bf958b8998e8dd1dfd5626ee868c2.0
-  resolution: "@storybook/react-docgen-typescript-plugin@npm:1.0.2--canary.12.cf35881ff63bf958b8998e8dd1dfd5626ee868c2.0"
+"@storybook/react-docgen-typescript-plugin@npm:1.0.6--canary.9.0c3f3b7.0":
+  version: 1.0.6--canary.9.0c3f3b7.0
+  resolution: "@storybook/react-docgen-typescript-plugin@npm:1.0.6--canary.9.0c3f3b7.0"
   dependencies:
     debug: "npm:^4.1.1"
     endent: "npm:^2.0.1"
     find-cache-dir: "npm:^3.3.1"
     flat-cache: "npm:^3.0.4"
     micromatch: "npm:^4.0.2"
-    react-docgen-typescript: "npm:^2.1.1"
+    react-docgen-typescript: "npm:^2.2.2"
     tslib: "npm:^2.0.0"
   peerDependencies:
     typescript: ">= 4.x"
     webpack: ">= 4"
-  checksum: 10c0/9c540a78b3969325503e3d5832728f3e060bf8f15614da90ef1e49e8989074711470423c8796567230b90da4fc98c8060817d8436d6e482cc85f7b1bb4edba5e
+  checksum: 10c0/505a728f36df3f519f4985bdf18f2078ea18a1a8f7f837fc831f971363fb7643a182f01a6857a9729ac5a1246d370526fca5a19017f82e7493af4ca945cb7235
   languageName: node
   linkType: hard
 
@@ -5147,7 +5144,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/babel__core@npm:^7.0.0, @types/babel__core@npm:^7.1.14, @types/babel__core@npm:^7.1.7":
+"@types/babel__core@npm:^7.0.0, @types/babel__core@npm:^7.1.14":
   version: 7.20.5
   resolution: "@types/babel__core@npm:7.20.5"
   dependencies:
@@ -5899,7 +5896,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/semver@npm:^7.1.0, @types/semver@npm:^7.3.12":
+"@types/semver@npm:^7.1.0, @types/semver@npm:^7.3.12, @types/semver@npm:^7.5.6":
   version: 7.5.8
   resolution: "@types/semver@npm:7.5.8"
   checksum: 10c0/8663ff927234d1c5fcc04b33062cb2b9fcfbe0f5f351ed26c4d1e1581657deebd506b41ff7fdf89e787e3d33ce05854bc01686379b89e9c49b564c4cfa988efa
@@ -7662,7 +7659,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-plugin-react-docgen@npm:^4.1.0, babel-plugin-react-docgen@npm:^4.2.1":
+"babel-plugin-react-docgen@npm:^4.2.1":
   version: 4.2.1
   resolution: "babel-plugin-react-docgen@npm:4.2.1"
   dependencies:
@@ -18845,7 +18842,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-docgen-typescript@npm:^2.1.1":
+"react-docgen-typescript@npm:^2.1.1, react-docgen-typescript@npm:^2.2.2":
   version: 2.2.2
   resolution: "react-docgen-typescript@npm:2.2.2"
   peerDependencies:
