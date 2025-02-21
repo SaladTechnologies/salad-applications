@@ -53,3 +53,5 @@ export const earningsChartColors = [
 
 export const MidnightHour = '00'
 export const NoonHour = '12'
+
+export const oneMinuteInMilliseconds = 1000 * 60

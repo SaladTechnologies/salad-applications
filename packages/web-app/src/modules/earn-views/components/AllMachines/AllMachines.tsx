@@ -103,6 +103,7 @@ interface Props extends WithStyles<typeof styles> {
   initialSelectedMachinesAmount?: number
   onMachineIdClick: (machineId: string) => void
   onSelectedMachineIdsChange: (machineIds: string[]) => void
+  onPageChange: (pageMachineIds: string[]) => void
 }
 
 const _AllMachines = ({
@@ -111,6 +112,7 @@ const _AllMachines = ({
   initialSelectedMachinesAmount = 5,
   onMachineIdClick,
   onSelectedMachineIdsChange,
+  onPageChange,
 }: Props) => {
   const [selectedMachinesById, setSelectedMachinesById] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(machineDetailsList.map((machine) => [machine.id, false])),
@@ -118,6 +120,14 @@ const _AllMachines = ({
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const memoizedMachineDetailsList = useMemo(() => [...machineDetailsList], [machineDetailsList.length])
+
+  const {
+    lowestItemNumberOnPage,
+    highestItemNumberOnPage,
+    currentPageNumber,
+    itemsPerPageAmount,
+    setCurrentPageNumber,
+  } = usePagination()
 
   useEffect(() => {
     const initialSelectedMachinesById = Object.fromEntries(
@@ -136,17 +146,22 @@ const _AllMachines = ({
     onSelectedMachineIdsChange(Object.keys(selectedMachinesById).filter((machineId) => selectedMachinesById[machineId]))
   }, [onSelectedMachineIdsChange, selectedMachinesById])
 
+  const pageMachineDetailsList = useMemo(
+    () =>
+      memoizedMachineDetailsList.filter((_machine, index) => {
+        const itemNumber = index + 1
+        return itemNumber >= lowestItemNumberOnPage && itemNumber <= highestItemNumberOnPage
+      }),
+    [highestItemNumberOnPage, lowestItemNumberOnPage, memoizedMachineDetailsList],
+  )
+
+  useEffect(() => {
+    onPageChange(pageMachineDetailsList.map((machineDetails) => machineDetails.id))
+  }, [onPageChange, pageMachineDetailsList])
+
   const handleMachineIdQuestionIconClick = () => {
     window.location.href = 'https://support.salad.com/article/414-how-to-find-your-salad-machine-id'
   }
-
-  const {
-    lowestItemNumberOnPage,
-    highestItemNumberOnPage,
-    currentPageNumber,
-    itemsPerPageAmount,
-    setCurrentPageNumber,
-  } = usePagination()
 
   const dropdownOptions: DropdownOption<unknown>[] = [
     {
@@ -217,11 +232,7 @@ const _AllMachines = ({
   }
 
   const getRows = (): Array<TableRow> => {
-    return machineDetailsList
-      .filter((_machine, index) => {
-        const itemNumber = index + 1
-        return itemNumber >= lowestItemNumberOnPage && itemNumber <= highestItemNumberOnPage
-      })
+    return pageMachineDetailsList
       .map((machine) => {
         return {
           checkbox: (
