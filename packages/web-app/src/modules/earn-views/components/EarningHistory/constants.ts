@@ -13,3 +13,5 @@ export enum ViewRange {
   Last7Days = '7 Days',
   Last30Days = '30 Days',
 }
+
+export const maximumMachinesForIndividualView = 10

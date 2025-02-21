@@ -1,6 +1,6 @@
 import { Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
@@ -9,7 +9,7 @@ import type { ChartDaysShowing, EarningPerMachine } from '../../../balance/model
 import { EarnSectionHeader } from '../EarnSectionHeader'
 import { EarningLineChart } from '../EarningLineChart'
 import { EarningTable } from '../EarningTable'
-import { ViewData, ViewRange, ViewType } from './constants'
+import { maximumMachinesForIndividualView, ViewData, ViewRange, ViewType } from './constants'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties | Record<string, CSS.Properties>> = (
   theme: SaladTheme,
@@ -81,6 +81,15 @@ const _EarningHistory = ({
   const [viewData, setViewData] = useState<ViewData>(ViewData.Individual)
 
   const [isIndividualViewDataDisabled, setIsIndividualViewDataDisabled] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (Object.values(earningsPerMachine).length > maximumMachinesForIndividualView) {
+      setViewData(ViewData.Aggregate)
+      setIsIndividualViewDataDisabled(true)
+    } else {
+      setIsIndividualViewDataDisabled(false)
+    }
+  }, [earningsPerMachine])
 
   const handleViewChange = (newViewRange: ViewRange, newViewType: ViewType, newViewData: ViewData) => {
     setViewRange(newViewRange)
@@ -180,13 +189,7 @@ const _EarningHistory = ({
         </div>
         <div className={classes.chartContainer}>
           {viewType === ViewType.Graph && (
-            <EarningLineChart
-              daysShowing={daysShowing}
-              earningsPerMachine={earningsPerMachine}
-              viewData={viewData}
-              setIsIndividualViewDataDisabled={setIsIndividualViewDataDisabled}
-              setViewData={setViewData}
-            />
+            <EarningLineChart daysShowing={daysShowing} earningsPerMachine={earningsPerMachine} viewData={viewData} />
           )}
           {viewType === ViewType.Table && (
             <EarningTable daysShowing={daysShowing} earningsPerMachine={earningsPerMachine} viewData={viewData} />
