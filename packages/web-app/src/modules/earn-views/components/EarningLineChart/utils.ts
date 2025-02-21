@@ -22,7 +22,7 @@ export const getAggregatedMachineEarningsValue = (earningsPerMachine: EarningPer
   Object.values(earningsPerMachine)
     .flat()
     .reduce((acc, earningWindow) => {
-      const existing = acc.find((item) => item.timestamp === earningWindow.timestamp)
+      const existing = acc.find((item) => item.timestamp.isSame(earningWindow.timestamp))
       if (existing) {
         existing.earnings += earningWindow.earnings
       } else {
