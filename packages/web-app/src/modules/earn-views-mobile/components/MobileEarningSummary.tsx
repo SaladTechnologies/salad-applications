@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
@@ -11,6 +11,7 @@ import { AllMachines } from '../../earn-views/components/AllMachines'
 import { MachineDetailsModal } from '../../earn-views/components/AllMachines/MachineDetailsModal'
 import type { MachineDetails } from '../../earn-views/components/AllMachines/utils'
 import { getMachineDetailsList } from '../../earn-views/components/AllMachines/utils'
+import { oneMinuteInMilliseconds } from '../../earn-views/pages/constants'
 
 const styles = (theme: SaladTheme) => ({
   item: {
@@ -54,7 +55,7 @@ interface Props extends WithStyles<typeof styles> {
   totalXp?: number
   machines: Machine[]
   currentHourlyEarningRatesPerMachine: CurrentHourlyEarningRatesPerMachine
-  fetchCurrentEarningRatesPerMachine: () => void
+  fetchCurrentEarningRatesPerMachine: (machineIds: string[]) => void
   fetchEarningsPerMachine: () => void
 }
 
@@ -74,15 +75,33 @@ const _MobileEarningSummary = ({
 }: Props) => {
   const [detailsModalMachineId, setDetailsModalMachineId] = useState<string | null>(null)
   const [selectedMachineIds, setSelectedMachineIds] = useState<string[]>([])
+  const [pageMachineIds, setPageMachineIds] = useState<string[]>([])
+  const updateTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   const handleCloseMachineDetailsModal = () => {
     setDetailsModalMachineId(null)
   }
 
+  const handlePageChange = useCallback((updatedPageMachineIds: string[]) => {
+    setPageMachineIds(updatedPageMachineIds)
+  }, [])
+
   useEffect(() => {
-    fetchCurrentEarningRatesPerMachine()
     fetchEarningsPerMachine()
-  }, [fetchCurrentEarningRatesPerMachine, fetchEarningsPerMachine])
+  }, [fetchEarningsPerMachine])
+
+  useEffect(() => {
+    fetchCurrentEarningRatesPerMachine(pageMachineIds)
+    updateTimerRef.current = setInterval(() => {
+      fetchCurrentEarningRatesPerMachine(pageMachineIds)
+    }, oneMinuteInMilliseconds)
+
+    return () => {
+      if (updateTimerRef.current) {
+        clearInterval(updateTimerRef.current)
+      }
+    }
+  }, [fetchCurrentEarningRatesPerMachine, pageMachineIds])
 
   const handleSelectedMachineIdsChange = useCallback((updatedSelectedMachineIds: string[]) => {
     setSelectedMachineIds(updatedSelectedMachineIds)
@@ -149,6 +168,7 @@ const _MobileEarningSummary = ({
         machineDetailsList={getMachineDetailsList({ machines, currentHourlyEarningRatesPerMachine })}
         onMachineIdClick={setDetailsModalMachineId}
         onSelectedMachineIdsChange={handleSelectedMachineIdsChange}
+        onPageChange={handlePageChange}
       />
       <EarningHistoryContainer earningsPerMachine={earningsPerSelectedMachines} />
       {shownInModalMachineDetails && (

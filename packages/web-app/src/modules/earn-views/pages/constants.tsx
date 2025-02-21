@@ -1,3 +1,4 @@
+import { convertMinToMilli } from '../../../utils'
 import BandwidthImage from '../assets/bandwidth.svg'
 import ContainerWorkloadsImage from '../assets/container-workloads.svg'
 import CPUImage from '../assets/cpu.svg'
@@ -53,3 +54,5 @@ export const earningsChartColors = [
 
 export const MidnightHour = '00'
 export const NoonHour = '12'
+
+export const oneMinuteInMilliseconds = convertMinToMilli(1)

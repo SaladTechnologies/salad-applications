@@ -137,22 +137,20 @@ export class BalanceStore {
     }
   }
 
-  public getCurrentEarningRatesPerMachine = async (machines: Machine[]) => {
+  public getCurrentEarningRatesPerMachine = async (machineIds: string[]) => {
     try {
       return (
         await Promise.all(
-          machines
-            .filter((machine) => machine.machine_id)
-            .map((machine) => {
-              return this.axios.get(getMachineEarningRateEndpointPath(machine.machine_id?.toString() as string))
-            }),
+          machineIds.map((machineId) => {
+            return this.axios.get(getMachineEarningRateEndpointPath(machineId))
+          }),
         )
-      ).reduce((currentEarningRatesPerMachine, response, index) => {
-        const machineId = machines[index]?.machine_id
+      ).reduce((currentHourlyEarningRatesPerMachine, response, index) => {
+        const machineId = machineIds[index]
         if (machineId) {
-          return { ...currentEarningRatesPerMachine, [machineId.toString()]: response.data * 12 }
+          return { ...currentHourlyEarningRatesPerMachine, [machineId.toString()]: response.data * 12 }
         }
-        return currentEarningRatesPerMachine
+        return currentHourlyEarningRatesPerMachine
       }, {} as CurrentHourlyEarningRatesPerMachine)
     } catch (error) {
       console.error('BalanceStore.getCurrentEarningRatesPerMachine: ', error)
@@ -161,19 +159,30 @@ export class BalanceStore {
   }
 
   @action
-  fetchCurrentEarningRatesPerMachine = () => {
-    this.getMachines()
-      .then((machines) => {
-        if (machines === null) {
-          throw new Error('There is no machines')
-        }
+  fetchCurrentEarningRatesPerMachine = (machineIds?: string[]) => {
+    const machineIdsPromise = machineIds
+      ? Promise.resolve(machineIds)
+      : this.getMachines().then((machines) => {
+          if (machines === null) {
+            throw new Error('There is no machines')
+          }
 
-        return this.getCurrentEarningRatesPerMachine(machines)
+          return machines
+            .filter((machine) => machine.machine_id)
+            .map((machine) => machine.machine_id?.toString()) as string[]
+        })
+
+    machineIdsPromise
+      .then((machinesIds) => {
+        return this.getCurrentEarningRatesPerMachine(machinesIds)
       })
       .then((currentHourlyEarningRatesPerMachine) => {
         if (currentHourlyEarningRatesPerMachine) {
           return runInAction(() => {
-            this.currentHourlyEarningRatesPerMachine = currentHourlyEarningRatesPerMachine
+            this.currentHourlyEarningRatesPerMachine = {
+              ...this.currentHourlyEarningRatesPerMachine,
+              ...currentHourlyEarningRatesPerMachine,
+            }
           })
         }
         throw new Error('There are no current earning rates per machine id')

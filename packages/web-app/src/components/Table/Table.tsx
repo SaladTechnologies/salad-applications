@@ -56,10 +56,14 @@ const _Table: FunctionComponent<Props> = ({ classes, titles, rows, autoHeightMax
             {rows.map((row, index) => {
               return (
                 <tr key={index} className={classes.tableRow}>
-                  {row.map((rowItem) => {
+                  {row.map((rowItem, index) => {
                     const rowItemJSX =
                       typeof rowItem === 'object' ? rowItem : <Text variant="baseXS">{rowItem.toString()}</Text>
-                    return <td className={classes.tableCell}>{rowItemJSX}</td>
+                    return (
+                      <td className={classes.tableCell} key={index}>
+                        {rowItemJSX}
+                      </td>
+                    )
                   })}
                 </tr>
               )
