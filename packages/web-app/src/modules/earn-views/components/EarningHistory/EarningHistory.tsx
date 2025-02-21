@@ -8,9 +8,8 @@ import { Segments } from '../../../../components/elements/Segments'
 import type { ChartDaysShowing, EarningPerMachine } from '../../../balance/models'
 import { EarnSectionHeader } from '../EarnSectionHeader'
 import { EarningLineChart } from '../EarningLineChart'
-import { maximumMachinesForIndividualView } from '../EarningLineChart/constants'
 import { EarningTable } from '../EarningTable'
-import { ViewData, ViewRange, ViewType } from './constants'
+import { maximumMachinesForIndividualView, ViewData, ViewRange, ViewType } from './constants'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties | Record<string, CSS.Properties>> = (
   theme: SaladTheme,
