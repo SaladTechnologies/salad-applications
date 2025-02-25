@@ -105,7 +105,7 @@
     "@storybook/builder-webpack5": "6.5.16",
     "@storybook/manager-webpack5": "6.5.16",
     "@storybook/node-logger": "6.5.16",
-    "@storybook/preset-create-react-app": "8.5.8",
+    "@storybook/preset-create-react-app": "8.6.0",
     "@storybook/react": "6.5.16",
     "@types/history": "4.7.11",
     "@types/lodash": "4.17.14",

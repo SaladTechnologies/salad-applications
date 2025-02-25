@@ -3501,7 +3501,7 @@ __metadata:
     "@storybook/builder-webpack5": "npm:6.5.16"
     "@storybook/manager-webpack5": "npm:6.5.16"
     "@storybook/node-logger": "npm:6.5.16"
-    "@storybook/preset-create-react-app": "npm:8.5.8"
+    "@storybook/preset-create-react-app": "npm:8.6.0"
     "@storybook/react": "npm:6.5.16"
     "@types/history": "npm:4.7.11"
     "@types/lodash": "npm:4.17.14"
@@ -4672,9 +4672,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/preset-create-react-app@npm:8.5.8":
-  version: 8.5.8
-  resolution: "@storybook/preset-create-react-app@npm:8.5.8"
+"@storybook/preset-create-react-app@npm:8.6.0":
+  version: 8.6.0
+  resolution: "@storybook/preset-create-react-app@npm:8.6.0"
   dependencies:
     "@pmmmwh/react-refresh-webpack-plugin": "npm:^0.5.1"
     "@storybook/react-docgen-typescript-plugin": "npm:1.0.6--canary.9.0c3f3b7.0"
@@ -4683,8 +4683,8 @@ __metadata:
     semver: "npm:^7.5.4"
   peerDependencies:
     react-scripts: ">=5.0.0"
-    storybook: ^8.5.8
-  checksum: 10c0/8772a1a029bbe3baccb05c3ab67bdb988b71234da0ce81e985ab34c42c6bf53739a2fdb32b9633664166419f8b7552a1e61f7d625cf9ca268dadceff2fee0ecb
+    storybook: ^8.6.0
+  checksum: 10c0/b25ffd8e5f4bfa51430c83250db9e278175a7c742a313898ff2672462e424de1c66302feff17e1399536ebc6b73068128d378f6bc938dd85423e37bae9bdb595
   languageName: node
   linkType: hard
 
