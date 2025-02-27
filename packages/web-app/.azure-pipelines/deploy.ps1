@@ -18,8 +18,8 @@ try {
     # Deploy to Netlify
     Show-LogSection -Content 'Deploying to Netlify...'
     if ($Context -eq 'production') {
-        Show-LogCommand -Content "netlify deploy --dir ${buildDirectory} --prodIfUnlocked"
-        & netlify deploy --dir $buildDirectory --prodIfUnlocked
+        Show-LogCommand -Content "netlify deploy --dir ${buildDirectory} --prod-if-unlocked"
+        & netlify deploy --dir $buildDirectory --prod-if-unlocked
         Assert-LastExitCodeSuccess -LastExecutableName 'netlify'
     }
     else {
