@@ -94,7 +94,7 @@
     "@microsoft/kiota-serialization-json": "1.0.0-preview.57",
     "@novu/notification-center": "0.24.2",
     "@novu/shared": "0.24.2",
-    "@saladtechnologies/garden-components": "1.5.8",
+    "@saladtechnologies/garden-components": "1.5.9",
     "@saladtechnologies/garden-fonts": "1.0.4",
     "@saladtechnologies/garden-icons": "1.0.30",
     "@storybook/addon-a11y": "6.5.16",
