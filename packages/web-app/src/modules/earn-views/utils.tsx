@@ -89,7 +89,7 @@ export const normalizeEarningsPerMachineData = (earningPerMachine: EarningWindow
       }
     } else {
       return {
-        timestamp: moment(earningPerMachine.timestamp).add(15, 'minute').format('D'),
+        timestamp: moment(earningPerMachine.timestamp).add(15, 'minute').format('D/M'),
         earnings: earningPerMachine.earnings,
       }
     }
