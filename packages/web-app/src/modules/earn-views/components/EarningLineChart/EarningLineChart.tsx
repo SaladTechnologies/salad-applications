@@ -138,7 +138,7 @@ const _EarningLineChart = ({ classes, earningsPerMachine, daysShowing, viewData 
                 tickMargin={0}
                 tickSize={15}
                 // @ts-ignore
-                tick={<CustomizedXAxisTick is24HoursChart={is24HoursChart} />}
+                tick={<CustomizedXAxisTick daysShowing={daysShowing} />}
               />
               <YAxis
                 axisLine={false}

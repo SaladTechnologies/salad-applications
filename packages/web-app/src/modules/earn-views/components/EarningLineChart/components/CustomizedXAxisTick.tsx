@@ -8,17 +8,26 @@ interface CustomizedXAxisTickProps {
     value: string
   }
   fill: string
-  is24HoursChart: boolean
+  daysShowing: number
 }
 
 export const CustomizedXAxisTick = (props: CustomizedXAxisTickProps) => {
-  const { x, y, fill, payload, is24HoursChart } = props
+  const { x, y, fill, payload, daysShowing } = props
+  const is24HoursChart = daysShowing === 1
+  const is30DaysChart = daysShowing === 30
+
   if (!payload.value || payload.value === '0') {
     return null
   }
 
-  const shouldShowAmPm = payload.value === NoonHour || payload.value === MidnightHour
-  const timestamp = is24HoursChart ? moment(payload.value, 'HH').format(shouldShowAmPm ? 'h A' : 'h') : payload.value
+
+  let timestamp = payload.value
+  if (is24HoursChart) {
+    const shouldShowAmPm = payload.value === NoonHour || payload.value === MidnightHour
+    timestamp = moment(payload.value, 'HH').format(shouldShowAmPm ? 'h A' : 'h')
+  } else if (is30DaysChart) {
+    timestamp = payload.value.split('/')[0] as string
+  }
 
   const lines = timestamp.split(' ')
 
