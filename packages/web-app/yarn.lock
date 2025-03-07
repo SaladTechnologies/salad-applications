@@ -3541,7 +3541,7 @@ __metadata:
     mobx: "npm:5.15.7"
     mobx-react: "npm:6.3.1"
     mobx-react-lite: "npm:2.2.2"
-    mobx-react-router: "npm:4.1.0"
+    mobx-react-router: "npm:6.1.0"
     moment: "npm:2.30.1"
     npm-run-all: "npm:4.1.5"
     prettier: "npm:2.8.8"
@@ -5683,6 +5683,15 @@ __metadata:
   version: 16.18.119
   resolution: "@types/node@npm:16.18.119"
   checksum: 10c0/d4bfd72982325f0421adc1115ec5dd0b92af2163526217d43151a32cf37c7219eebbf0913a18bb613a9628b83e543f66f7d18251ec23dad92418e87d3d8dafee
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^22.7.4":
+  version: 22.13.4
+  resolution: "@types/node@npm:22.13.4"
+  dependencies:
+    undici-types: "npm:~6.20.0"
+  checksum: 10c0/3a234fa7766a3efc382cf81f66f474c26cdab2f54f43f757634c81c0444eb2160c2dabbde9741e4983078a318a88515b65416b5f1ab5478548579d7b3ead1d95
   languageName: node
   linkType: hard
 
@@ -16150,13 +16159,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mobx-react-router@npm:4.1.0":
-  version: 4.1.0
-  resolution: "mobx-react-router@npm:4.1.0"
+"mobx-react-router@npm:6.1.0":
+  version: 6.1.0
+  resolution: "mobx-react-router@npm:6.1.0"
+  dependencies:
+    "@types/node": "npm:^22.7.4"
   peerDependencies:
-    mobx: ^3.0.0 || ^4.0.0 || ^5.0.0
-    react-router: ^4.0.0 || ^5.0.0
-  checksum: 10c0/5066c11b80e266f1586010fc9fbe65530f40d2e2e0c4ef959b641ad765a3ff57da3d710e009c9111b8aa5c8fdc405aa87bd30e2da93e016b9ba18d595444613c
+    mobx: ^6.3.2
+    react-router: ^6.14.2
+  checksum: 10c0/b27e8b1a1e5c714b22a6c040d0c02dc60ec229e804de09f3cd8d290c8b854447573cc8cf62f7ccc456db028f011fdccdb6eab6d604e2f94a7c0a7fb959703f44
   languageName: node
   linkType: hard
 
@@ -22409,6 +22420,13 @@ __metadata:
   version: 6.19.8
   resolution: "undici-types@npm:6.19.8"
   checksum: 10c0/078afa5990fba110f6824823ace86073b4638f1d5112ee26e790155f481f2a868cc3e0615505b6f4282bdf74a3d8caad715fd809e870c2bb0704e3ea6082f344
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~6.20.0":
+  version: 6.20.0
+  resolution: "undici-types@npm:6.20.0"
+  checksum: 10c0/68e659a98898d6a836a9a59e6adf14a5d799707f5ea629433e025ac90d239f75e408e2e5ff086afc3cace26f8b26ee52155293564593fbb4a2f666af57fc59bf
   languageName: node
   linkType: hard
 
