@@ -3490,7 +3490,7 @@ __metadata:
     "@microsoft/kiota-serialization-json": "npm:1.0.0-preview.57"
     "@novu/notification-center": "npm:0.24.2"
     "@novu/shared": "npm:0.24.2"
-    "@saladtechnologies/garden-components": "npm:1.5.8"
+    "@saladtechnologies/garden-components": "npm:1.5.9"
     "@saladtechnologies/garden-fonts": "npm:1.0.4"
     "@saladtechnologies/garden-icons": "npm:1.0.30"
     "@storybook/addon-a11y": "npm:6.5.16"
@@ -3588,9 +3588,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@saladtechnologies/garden-components@npm:1.5.8":
-  version: 1.5.8
-  resolution: "@saladtechnologies/garden-components@npm:1.5.8"
+"@saladtechnologies/garden-components@npm:1.5.9":
+  version: 1.5.9
+  resolution: "@saladtechnologies/garden-components@npm:1.5.9"
   peerDependencies:
     "@emotion/react": 11.x
     "@emotion/styled": 11.x
@@ -3605,7 +3605,7 @@ __metadata:
     react-intl: 6.x
     react-range: 1.x
     react-responsive: 9.x
-  checksum: 10c0/2294d4dc3a21666617e254012b75a1cfc5881d6af6ede3fac67242761a012cf03661fe1833bee12c334989a922d300f0f39538a4d6b5b1459e316278dcf6363c
+  checksum: 10c0/5f0f16003ba381f92f09f01c224e352c4868c07297fc04c5cf4fb87c3fc7544d7a60cbf2efe58aeb8c7d06a6ac40eaa85c21c089b506e74b8009e12c9a7f22f2
   languageName: node
   linkType: hard
 
