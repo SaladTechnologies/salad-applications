@@ -202,7 +202,7 @@ const _DemandMonitorTable: FunctionComponent<Props> = ({ classes, demandedHardwa
                         <Text className={classes.gpuName} variant="baseS">
                           {displayName}
                         </Text>
-                        {variantNames.length > 0 && <Text variant="baseXS">(Inc. Super Variant)</Text>}
+                        {variantNames.length > 0 && <Text variant="baseXS">(Incl. Super Variant)</Text>}
                       </div>
                       <Text variant="baseXS">HOURLY RATE</Text>
                       <Text variant="baseXS">
