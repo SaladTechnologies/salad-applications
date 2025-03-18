@@ -32,7 +32,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties | Record<stri
   },
   chartContainer: {
     display: 'flex',
-    height: '300px',
+    height: '328px',
     position: 'relative',
     flexDirection: 'column',
   },
