@@ -4,7 +4,9 @@ import { type FunctionComponent } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import type { SaladTheme } from '../../SaladTheme'
+import { useMediaQuery } from 'react-responsive'
+import { DefaultTheme, type SaladTheme } from '../../SaladTheme'
+import { mobileSize } from '../DeviceTypes'
 import type { TableRow, TableTitles } from './types'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
@@ -33,11 +35,77 @@ interface Props extends WithStyles<typeof styles> {
   titles: TableTitles
   rows: Array<TableRow>
   autoHeightMax?: number | string
+  trackBackgroundColor?: string
 }
 
-const _Table: FunctionComponent<Props> = ({ classes, titles, rows, autoHeightMax = '100%' }) => {
+const _Table: FunctionComponent<Props> = ({
+  classes,
+  titles,
+  rows,
+  autoHeightMax = '100%',
+  trackBackgroundColor = DefaultTheme.darkBlue,
+}) => {
+  const renderThumb: React.ComponentType<any> = ({ style, ...props }) => {
+    return (
+      <div
+        style={{ ...style, backgroundColor: DefaultTheme.lightGreen, borderRadius: 8, cursor: 'pointer ' }}
+        {...props}
+      />
+    )
+  }
+
+  const renderHorizontalTrack: React.ComponentType<any> = ({ style, ...props }) => {
+    return (
+      <div
+        style={{
+          position: 'absolute',
+          height: '18px',
+          right: '0px',
+          left: '0px',
+          bottom: '0px',
+          paddingTop: '6px',
+          paddingBottom: '6px',
+          paddingRight: '18px',
+          boxSizing: 'border-box',
+          backgroundColor: trackBackgroundColor,
+        }}
+        {...props}
+      />
+    )
+  }
+
+  const renderVerticalTrack: React.ComponentType<any> = ({ style, ...props }) => {
+    return (
+      <div
+        style={{
+          position: 'absolute',
+          width: '18px',
+          right: '0px',
+          bottom: '0px',
+          paddingBottom: '18px',
+          top: '0px',
+          paddingRight: '6px',
+          paddingLeft: '6px',
+          boxSizing: 'border-box',
+          backgroundColor: trackBackgroundColor,
+        }}
+        {...props}
+      />
+    )
+  }
+
+  const isMobile = useMediaQuery({ query: `(max-width: ${mobileSize}px)` })
+
   return (
-    <Scrollbars style={{ width: '100%' }} autoHeight autoHeightMax={autoHeightMax}>
+    <Scrollbars
+      style={{ width: '100%' }}
+      renderTrackHorizontal={isMobile ? undefined : renderHorizontalTrack}
+      renderTrackVertical={isMobile ? undefined : renderVerticalTrack}
+      renderThumbHorizontal={isMobile ? undefined : renderThumb}
+      renderThumbVertical={isMobile ? undefined : renderThumb}
+      autoHeight
+      autoHeightMax={autoHeightMax}
+    >
       <div className={classes.tableWrapper}>
         <table className={classes.table}>
           <thead>

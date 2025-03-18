@@ -224,7 +224,7 @@ const _EarningTable = ({ classes, earningsPerMachine, daysShowing, viewData }: P
         <Table
           titles={getTitles()}
           rows={isIndividualViewData ? individualRows : [aggregatedRow]}
-          autoHeightMax={240}
+          autoHeightMax={260}
         />
         <Pagination
           itemsTotalAmount={isIndividualViewData ? machineIds.length : 1}

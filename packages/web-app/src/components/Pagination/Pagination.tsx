@@ -17,6 +17,9 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     gap: '16px',
     padding: '16px',
     paddingLeft: '12px',
+    '@media (max-width: 812px)': {
+      padding: '16px 0px 16px 0px',
+    },
   },
   navigationButtonWrapper: {
     width: '100px',
@@ -30,6 +33,9 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     width: '250px',
     paddingLeft: '12px',
     paddingRight: '12px',
+    '@media (max-width: 812px)': {
+      width: '0px',
+    },
   },
   centralPagesWrapper: {
     display: 'flex',
