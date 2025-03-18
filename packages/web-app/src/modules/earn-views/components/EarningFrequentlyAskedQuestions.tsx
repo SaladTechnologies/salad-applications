@@ -42,23 +42,13 @@ interface Props extends WithStyles<typeof styles> {
 
 const _EarningFrequentlyAskedQuestions: FunctionComponent<Props> = ({ classes, trackFAQLinkClicked }) => {
   const navigateToSaladSupportPage = () => {
-    window.open('https://support.salad.com/', '_blank', 'noopener, noreferrer')
+    window.open('https://support.salad.com/collection/13-faq', '_blank', 'noopener, noreferrer')
   }
 
   return (
     <div className={classes.container}>
       <EarnSectionHeader>Have questions? Check out our FAQS</EarnSectionHeader>
       <div className={classes.questionsContainer}>
-        <a
-          className={classes.questionLink}
-          href="https://support.salad.com/article/59-faq-on-salad-swag"
-          onClick={() => trackFAQLinkClicked('https://support.salad.com/article/59-faq-on-salad-swag')}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Img className={classes.questionIcon} src={faqIcon} />
-          Common FAQs on Salad Swag
-        </a>
         <a
           className={classes.questionLink}
           href="https://support.salad.com/article/52-i-live-outside-the-us-can-i-still-redeem-rewards-with-salad"
