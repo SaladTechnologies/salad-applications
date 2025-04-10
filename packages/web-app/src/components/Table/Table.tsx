@@ -57,6 +57,7 @@ const _Table: FunctionComponent<Props> = ({
   const renderHorizontalTrack: React.ComponentType<any> = ({ style, ...props }) => {
     return (
       <div
+        className="customScrollbarHorizontalTrack"
         style={{
           position: 'absolute',
           height: '18px',
