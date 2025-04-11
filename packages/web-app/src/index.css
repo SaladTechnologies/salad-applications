@@ -12,32 +12,45 @@ body {
   box-shadow: none !important;
 }
 
+/* Hide the custom horizontal scrollbar track in Firefox */
+@-moz-document url-prefix() {
+  .customScrollbarHorizontalTrack {
+    visibility: hidden;
+  }
+}
+
 @font-face {
   font-family: 'SharpGrotesk-Book19';
-  src: url('../src/assets/fonts/SharpGrotesk-Book19.woff2') format('woff2'), url('../src/assets/fonts/SharpGrotesk-Book19.woff') format('woff');
+  src: url('../src/assets/fonts/SharpGrotesk-Book19.woff2') format('woff2'),
+    url('../src/assets/fonts/SharpGrotesk-Book19.woff') format('woff');
 }
 
 @font-face {
   font-family: 'SharpGrotesk-Book25';
-  src: url('../src/assets/fonts/SharpGrotesk-Book25.woff2') format('woff2'), url('../src/assets/fonts/SharpGrotesk-Book25.woff') format('woff');
+  src: url('../src/assets/fonts/SharpGrotesk-Book25.woff2') format('woff2'),
+    url('../src/assets/fonts/SharpGrotesk-Book25.woff') format('woff');
 }
 
 @font-face {
   font-family: 'SharpGrotesk-Light05';
-  src: url('../src/assets/fonts/SharpGrotesk-Light05.woff2') format('woff2'), url('../src/assets/fonts/SharpGrotesk-Light05.woff') format('woff');
+  src: url('../src/assets/fonts/SharpGrotesk-Light05.woff2') format('woff2'),
+    url('../src/assets/fonts/SharpGrotesk-Light05.woff') format('woff');
 }
 
 @font-face {
   font-family: 'SharpGrotesk-Light09';
-  src: url('../src/assets/fonts/SharpGrotesk-Light09.woff2') format('woff2'), url('../src/assets/fonts/SharpGrotesk-Light09.woff') format('woff');
+  src: url('../src/assets/fonts/SharpGrotesk-Light09.woff2') format('woff2'),
+    url('../src/assets/fonts/SharpGrotesk-Light09.woff') format('woff');
 }
 
 @font-face {
   font-family: 'SharpGrotesk-Light25';
-  src: url('../src/assets/fonts/SharpGrotesk-Light25.woff2') format('woff2'), url('../src/assets/fonts/SharpGrotesk-Light25.woff') format('woff');
+  src: url('../src/assets/fonts/SharpGrotesk-Light25.woff2') format('woff2'),
+    url('../src/assets/fonts/SharpGrotesk-Light25.woff') format('woff');
 }
 
 @font-face {
   font-family: 'SharpGrotesk-Medium25';
-  src: url('../src/assets/fonts/SharpGrotesk-Medium25.woff2') format('woff2'), url('../src/assets/fonts/SharpGrotesk-Medium25.woff') format('woff');
+  src: url('../src/assets/fonts/SharpGrotesk-Medium25.woff2') format('woff2'),
+    url('../src/assets/fonts/SharpGrotesk-Medium25.woff') format('woff');
 }
