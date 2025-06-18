@@ -149,14 +149,6 @@ const _ReviewAfterRedemption = ({ classes, reward, onCloseClick, onVaultLinkClic
               cols={30}
               rows={10}
             />
-            <Button
-              onClick={handleCopyClick}
-              label={isCopied ? 'Copied!' : 'Copy'}
-              variant="secondary"
-              leadingIcon={isCopied ? null : <Copy />}
-              width={90}
-              data-rh={'Keep chopping to discover this veggie'}
-            />
           </div>
         </div>
         <h3 className={classes.subtitle}>Review us on TrustPilot</h3>
@@ -167,6 +159,15 @@ const _ReviewAfterRedemption = ({ classes, reward, onCloseClick, onVaultLinkClic
           </a>{' '}
           to help our Kitchen grow.
         </p>
+        <Button
+              onClick={handleCopyClick}
+              label="Submit Your Review"
+              variant="secondary"
+              href="https://www.trustpilot.com/evaluate/salad.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              width={180}
+            />
         <Img className={classes.saladImage} src={saladBackgroundUrl} alt="salad-background" />
         <Img className={classes.starsImage} src={starsUrl} alt="stars" />
       </div>
