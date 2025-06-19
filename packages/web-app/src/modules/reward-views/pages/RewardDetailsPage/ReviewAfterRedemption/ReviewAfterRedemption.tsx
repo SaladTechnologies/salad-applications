@@ -1,8 +1,6 @@
 import { Button } from '@saladtechnologies/garden-components'
-import { Copy } from '@saladtechnologies/garden-icons'
 import type CSS from 'csstype'
-import type { ChangeEvent } from 'react'
-import { useState } from 'react'
+import { useCallback } from 'react'
 import { Img } from 'react-image'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
@@ -106,24 +104,10 @@ interface Props extends WithStyles<typeof styles> {
   onVaultLinkClick: () => void
 }
 
-const _ReviewAfterRedemption = ({ classes, reward, onCloseClick, onVaultLinkClick }: Props) => {
-  const [isCopied, setIsCopied] = useState(false)
-  const [referralText, setReferralText] = useState(
-    `I just got ${reward?.name} through Salad! Sign up to earn money with your gaming PC!  salad.com/download`,
-  )
-
-  const handleReferralTextChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setReferralText(event.target.value)
-  }
-
-  const handleCopyClick = () => {
-    // eslint-disable-next-line compat/compat
-    window.navigator.clipboard.writeText(referralText)
-    setIsCopied(true)
-    setTimeout(() => {
-      setIsCopied(false)
-    }, 2000)
-  }
+const _ReviewAfterRedemption = ({ classes, onCloseClick, onVaultLinkClick }: Props) => {
+  const goToTrustPilot = useCallback(() => {
+    window.open('https://www.trustpilot.com/evaluate/salad.com', '_blank', 'noopener, noreferrer')
+  }, [])
 
   return (
     <ModalWithOverlay onCloseClick={onCloseClick}>
@@ -139,26 +123,6 @@ const _ReviewAfterRedemption = ({ classes, reward, onCloseClick, onVaultLinkClic
           </span>{' '}
           or email for more details.
         </p>
-        <div>
-          <h3 className={classes.subtitle}>Let the World Know</h3>
-          <div className={classes.textareaContainer}>
-            <textarea
-              value={referralText}
-              onChange={handleReferralTextChange}
-              className={classes.textarea}
-              cols={30}
-              rows={10}
-            />
-            <Button
-              onClick={handleCopyClick}
-              label={isCopied ? 'Copied!' : 'Copy'}
-              variant="secondary"
-              leadingIcon={isCopied ? null : <Copy />}
-              width={90}
-              data-rh={'Keep chopping to discover this veggie'}
-            />
-          </div>
-        </div>
         <h3 className={classes.subtitle}>Review us on TrustPilot</h3>
         <p className={classes.description}>
           Having fun with Salad? Review us on{' '}
@@ -167,6 +131,9 @@ const _ReviewAfterRedemption = ({ classes, reward, onCloseClick, onVaultLinkClic
           </a>{' '}
           to help our Kitchen grow.
         </p>
+        <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '24px', width: '100%' }}>
+          <Button onClick={goToTrustPilot} label="Submit Your Review" variant="secondary" width={180} />
+        </div>
         <Img className={classes.saladImage} src={saladBackgroundUrl} alt="salad-background" />
         <Img className={classes.starsImage} src={starsUrl} alt="stars" />
       </div>
