@@ -105,7 +105,7 @@ interface Props extends WithStyles<typeof styles> {
 
 const _ReviewAfterRedemption = ({ classes, onCloseClick, onVaultLinkClick }: Props) => {
   const goToTrustPilot = () => {
-    window.open('https://www.trustpilot.com/evaluate/salad.com', '_blank')
+    window.open('https://www.trustpilot.com/evaluate/salad.com', '_blank', 'noopener, noreferrer')
   }
 
   return (
