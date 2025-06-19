@@ -1,5 +1,4 @@
 import { Button } from '@saladtechnologies/garden-components'
-import { Copy } from '@saladtechnologies/garden-icons'
 import type CSS from 'csstype'
 import type { ChangeEvent } from 'react'
 import { useState } from 'react'
@@ -107,7 +106,6 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const _ReviewAfterRedemption = ({ classes, reward, onCloseClick, onVaultLinkClick }: Props) => {
-  const [isCopied, setIsCopied] = useState(false)
   const [referralText, setReferralText] = useState(
     `I just got ${reward?.name} through Salad! Sign up to earn money with your gaming PC!  salad.com/download`,
   )
@@ -116,13 +114,8 @@ const _ReviewAfterRedemption = ({ classes, reward, onCloseClick, onVaultLinkClic
     setReferralText(event.target.value)
   }
 
-  const handleCopyClick = () => {
-    // eslint-disable-next-line compat/compat
-    window.navigator.clipboard.writeText(referralText)
-    setIsCopied(true)
-    setTimeout(() => {
-      setIsCopied(false)
-    }, 2000)
+  const goToTrustPilot = () => {
+    window.open('https://www.trustpilot.com/evaluate/salad.com', '_blank')
   }
 
   return (
@@ -159,15 +152,9 @@ const _ReviewAfterRedemption = ({ classes, reward, onCloseClick, onVaultLinkClic
           </a>{' '}
           to help our Kitchen grow.
         </p>
-        <Button
-              onClick={handleCopyClick}
-              label="Submit Your Review"
-              variant="secondary"
-              href="https://www.trustpilot.com/evaluate/salad.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              width={180}
-            />
+        <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '24px', width: '100%' }}>
+          <Button onClick={goToTrustPilot} label="Submit Your Review" variant="secondary" width={180} />
+        </div>
         <Img className={classes.saladImage} src={saladBackgroundUrl} alt="salad-background" />
         <Img className={classes.starsImage} src={starsUrl} alt="stars" />
       </div>
