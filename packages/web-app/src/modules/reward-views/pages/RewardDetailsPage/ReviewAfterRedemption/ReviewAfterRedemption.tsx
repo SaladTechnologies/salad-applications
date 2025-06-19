@@ -1,7 +1,5 @@
 import { Button } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
-import type { ChangeEvent } from 'react'
-import { useState } from 'react'
 import { Img } from 'react-image'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
@@ -105,15 +103,7 @@ interface Props extends WithStyles<typeof styles> {
   onVaultLinkClick: () => void
 }
 
-const _ReviewAfterRedemption = ({ classes, reward, onCloseClick, onVaultLinkClick }: Props) => {
-  const [referralText, setReferralText] = useState(
-    `I just got ${reward?.name} through Salad! Sign up to earn money with your gaming PC!  salad.com/download`,
-  )
-
-  const handleReferralTextChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setReferralText(event.target.value)
-  }
-
+const _ReviewAfterRedemption = ({ classes, onCloseClick, onVaultLinkClick }: Props) => {
   const goToTrustPilot = () => {
     window.open('https://www.trustpilot.com/evaluate/salad.com', '_blank')
   }
@@ -132,18 +122,6 @@ const _ReviewAfterRedemption = ({ classes, reward, onCloseClick, onVaultLinkClic
           </span>{' '}
           or email for more details.
         </p>
-        <div>
-          <h3 className={classes.subtitle}>Let the World Know</h3>
-          <div className={classes.textareaContainer}>
-            <textarea
-              value={referralText}
-              onChange={handleReferralTextChange}
-              className={classes.textarea}
-              cols={30}
-              rows={10}
-            />
-          </div>
-        </div>
         <h3 className={classes.subtitle}>Review us on TrustPilot</h3>
         <p className={classes.description}>
           Having fun with Salad? Review us on{' '}
