@@ -1,5 +1,6 @@
 import { Button } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
+import { useCallback } from 'react'
 import { Img } from 'react-image'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
@@ -104,9 +105,9 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const _ReviewAfterRedemption = ({ classes, onCloseClick, onVaultLinkClick }: Props) => {
-  const goToTrustPilot = () => {
+  const goToTrustPilot = useCallback(() => {
     window.open('https://www.trustpilot.com/evaluate/salad.com', '_blank', 'noopener, noreferrer')
-  }
+  }, [])
 
   return (
     <ModalWithOverlay onCloseClick={onCloseClick}>
