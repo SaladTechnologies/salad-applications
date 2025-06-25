@@ -58,6 +58,17 @@ export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBar
   const newsNotifications = bannerNotifications.filter((notification) => notification?.variant === 'news')
   const warningsNotifications = bannerNotifications.filter((notification) => notification?.variant === 'error')
 
+  const handleDismissAll = useCallback(() => {
+    if (unseenNovuNotificationsIds && unseenNovuNotificationsIds.length > 0) {
+      // Mark all as seen and read
+      markNotificationsAs({
+        messageId: unseenNovuNotificationsIds,
+        seen: true,
+        read: true,
+      })
+    }
+  }, [markNotificationsAs, unseenNovuNotificationsIds])
+
   const notifications = {
     ...props.notifications,
     news: newsNotifications,
