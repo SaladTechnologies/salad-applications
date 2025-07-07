@@ -3490,7 +3490,7 @@ __metadata:
     "@microsoft/kiota-serialization-json": "npm:1.0.0-preview.57"
     "@novu/notification-center": "npm:0.24.2"
     "@novu/shared": "npm:0.24.2"
-    "@saladtechnologies/garden-components": "npm:1.5.9"
+    "@saladtechnologies/garden-components": "npm:1.6.2"
     "@saladtechnologies/garden-fonts": "npm:1.0.4"
     "@saladtechnologies/garden-icons": "npm:1.0.30"
     "@storybook/addon-a11y": "npm:6.5.16"
@@ -3588,9 +3588,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@saladtechnologies/garden-components@npm:1.5.9":
-  version: 1.5.9
-  resolution: "@saladtechnologies/garden-components@npm:1.5.9"
+"@saladtechnologies/garden-components@npm:1.6.2":
+  version: 1.6.2
+  resolution: "@saladtechnologies/garden-components@npm:1.6.2"
   peerDependencies:
     "@emotion/react": 11.x
     "@emotion/styled": 11.x
@@ -3602,10 +3602,10 @@ __metadata:
     react-custom-scrollbars-2: 4.x
     react-dom: 18.x
     react-hook-form: 7.x
-    react-intl: 6.x
+    react-intl: 7.x
     react-range: 1.x
-    react-responsive: 9.x
-  checksum: 10c0/5f0f16003ba381f92f09f01c224e352c4868c07297fc04c5cf4fb87c3fc7544d7a60cbf2efe58aeb8c7d06a6ac40eaa85c21c089b506e74b8009e12c9a7f22f2
+    react-responsive: 10.x
+  checksum: 10c0/bc59aaf07b8db3567d7a150601c62824744c394d829a2e0b3caf786f607269714db2fe329a91021ed1499c6838ff8a2ef853bc22a6d9c6d3700827240fee18b3
   languageName: node
   linkType: hard
 

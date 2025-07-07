@@ -7,7 +7,13 @@ import { FeatureFlags, useFeatureManager } from '../../../FeatureManager'
 import { getConfiguredNovuBannerNotifications } from '../../notifications/utils'
 
 export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBarProps> = (props) => {
-  const { isNotificationsDrawerOpened, onOpenNotificationsDrawer, onCloseNotificationsDrawer } = props.notifications
+  const {
+    isNotificationsDrawerOpened,
+    onOpenNotificationsDrawer,
+    onCloseNotificationsDrawer,
+    handleDismissAllNews,
+    handleDismissAllWarnings,
+  } = props.notifications
 
   const featureManager = useFeatureManager()
   const isAchievementsFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.Achievements)
@@ -58,16 +64,68 @@ export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBar
   const newsNotifications = bannerNotifications.filter((notification) => notification?.variant === 'news')
   const warningsNotifications = bannerNotifications.filter((notification) => notification?.variant === 'error')
 
-  const handleDismissAll = useCallback(() => {
-    if (unseenNovuNotificationsIds && unseenNovuNotificationsIds.length > 0) {
-      // Mark all as seen and read
+  const unseenNewsNotificationIds = useMemo(() => {
+    if (!unreadNovuNotificationsWithoutStarChef) return []
+
+    // Get all banner notifications to establish the mapping
+    const allBannerNotifications = getConfiguredNovuBannerNotifications(
+      unreadNovuNotificationsWithoutStarChef,
+      () => {}, // Empty callback since we only need the mapping
+    )
+
+    // Filter original notifications that correspond to 'news' variant banners
+    const newsNotificationIndexes = allBannerNotifications
+      .map((notification, index) => (notification?.variant === 'news' ? index : -1))
+      .filter((index) => index !== -1)
+
+    // Get the IDs from the original notifications at those indexes
+    const newsNotificationIds = newsNotificationIndexes
+      .map((index) => unreadNovuNotificationsWithoutStarChef[index]?._id)
+      .filter(Boolean)
+
+    // Filter unseenNovuNotificationsIds to only include news notification IDs
+    return unseenNovuNotificationsIds?.filter((id) => newsNotificationIds.includes(id)) || []
+  }, [unreadNovuNotificationsWithoutStarChef, unseenNovuNotificationsIds])
+
+  // Similarly for warnings:
+  const unseenWarningsNotificationIds = useMemo(() => {
+    if (!unreadNovuNotificationsWithoutStarChef) return []
+
+    const allBannerNotifications = getConfiguredNovuBannerNotifications(
+      unreadNovuNotificationsWithoutStarChef,
+      () => {},
+    )
+
+    const warningsNotificationIndexes = allBannerNotifications
+      .map((notification, index) => (notification?.variant === 'error' ? index : -1))
+      .filter((index) => index !== -1)
+
+    const warningsNotificationIds = warningsNotificationIndexes
+      .map((index) => unreadNovuNotificationsWithoutStarChef[index]?._id)
+      .filter(Boolean)
+
+    return unseenNovuNotificationsIds?.filter((id) => warningsNotificationIds.includes(id)) || []
+  }, [unreadNovuNotificationsWithoutStarChef, unseenNovuNotificationsIds])
+
+  const handleDismissAllNewsCallback = useCallback(() => {
+    if (unseenNewsNotificationIds && unseenNewsNotificationIds.length > 0) {
       markNotificationsAs({
-        messageId: unseenNovuNotificationsIds,
+        messageId: unseenNewsNotificationIds,
         seen: true,
         read: true,
       })
     }
-  }, [markNotificationsAs, unseenNovuNotificationsIds])
+  }, [markNotificationsAs, unseenNewsNotificationIds])
+
+  const handleDismissAllWarningsCallback = useCallback(() => {
+    if (unseenWarningsNotificationIds && unseenWarningsNotificationIds.length > 0) {
+      markNotificationsAs({
+        messageId: unseenWarningsNotificationIds,
+        seen: true,
+        read: true,
+      })
+    }
+  }, [markNotificationsAs, unseenWarningsNotificationIds])
 
   const notifications = {
     ...props.notifications,
@@ -77,6 +135,8 @@ export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBar
     hasUnseenNotifications,
     onOpenNotificationsDrawer,
     onCloseNotificationsDrawer,
+    handleDismissAllNews: handleDismissAllNewsCallback,
+    handleDismissAllWarnings: handleDismissAllWarningsCallback,
   }
 
   return <NavigationBar {...props} notifications={notifications} />
