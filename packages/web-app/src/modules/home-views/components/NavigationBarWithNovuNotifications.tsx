@@ -7,13 +7,7 @@ import { FeatureFlags, useFeatureManager } from '../../../FeatureManager'
 import { getConfiguredNovuBannerNotifications } from '../../notifications/utils'
 
 export const NavigationBarWithNovuNotifications: FunctionComponent<NavigationBarProps> = (props) => {
-  const {
-    isNotificationsDrawerOpened,
-    onOpenNotificationsDrawer,
-    onCloseNotificationsDrawer,
-    handleDismissAllNews,
-    handleDismissAllWarnings,
-  } = props.notifications
+  const { isNotificationsDrawerOpened, onOpenNotificationsDrawer, onCloseNotificationsDrawer } = props.notifications
 
   const featureManager = useFeatureManager()
   const isAchievementsFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.Achievements)
