@@ -26,7 +26,6 @@ try {
             $Env:REACT_APP_MIXPANEL_TOKEN = '4b245bace4eed86ffdfa35efc3addf1d'
             $Env:REACT_APP_LOGIN_URL = 'https://preview.salad.com/login'
             $Env:REACT_APP_API_URL = 'https://app-api-testing.salad.com'
-            $Env:REACT_APP_PAYPAL_URL = 'https://www.sandbox.paypal.com/connect/?flowEntry=static&client_id=AYjYnvjB968mKTIhMqUtLlNa8CJuF9rg_Q4m0Oym5gFvBkZEMPPoooXcG94OjSCjih7kI1_KM25EgfDs&response_type=code&scope=openid%20email%20https%3A%2F%2Furi.paypal.com%2Fservices%2Fpaypalattributes&redirect_uri=https%253A%252F%252Fapp-api-testing.salad.com%252Fapi%252Fv2%252Fpaypal-account-callback'
             $Env:REACT_APP_PROHASHING_USERNAME = 'saladtest'
             $Env:REACT_APP_SEARCH_ENGINE = 'salad-rewards-test'
             $Env:REACT_APP_NOVU_APP_ID = 'MAiF4Q6JMQIU'

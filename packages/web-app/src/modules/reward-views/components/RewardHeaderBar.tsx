@@ -121,7 +121,6 @@ interface Props extends WithStyles<typeof styles> {
   onRedeem?: (reward?: Reward) => void
   isTargetReward?: boolean
   requiresMinecraftUsername: boolean
-  requiresPayPalAccount: boolean
   trackDisabledBuyNowClick: () => void
   onRemoveTargetRewardClick: () => void
   onTargetThisRewardClick: (reward: Reward) => void
@@ -156,7 +155,6 @@ class _RewardHeaderBar extends Component<Props> {
       authenticated,
       currentBalance,
       requiresMinecraftUsername,
-      requiresPayPalAccount,
       trackDisabledBuyNowClick,
       onRemoveTargetRewardClick,
       isTargetReward,
@@ -241,11 +239,6 @@ class _RewardHeaderBar extends Component<Props> {
               {requiresMinecraftUsername && authenticated && (
                 <div className={classnames(classes.priceText, classes.stockLabel, classes.insufficientBalanceLabel)}>
                   <SmartLink to="/account/summary">Add Minecraft Username</SmartLink>
-                </div>
-              )}
-              {requiresPayPalAccount && authenticated && (
-                <div className={classnames(classes.priceText, classes.stockLabel, classes.insufficientBalanceLabel)}>
-                  <SmartLink to="/account/summary">Add PayPal account</SmartLink>
                 </div>
               )}
             </div>

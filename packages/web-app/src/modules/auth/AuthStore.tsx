@@ -7,7 +7,6 @@ import { authenticationSessionsSudoEndpointPath } from './constants'
 
 export enum ChallengeSudoModeTrigger {
   GoogleSignIn = 'GoogleSignIn',
-  PayPalLogIn = 'PayPalLogIn',
   RewardRedeem = 'RewardRedeem',
 }
 
@@ -109,17 +108,6 @@ export class AuthStore {
       }
     } catch (error) {
       console.error('AuthStore -> signInWithGoogleChallengeSudoMode: ', error)
-    }
-  }
-
-  logInWithPayPalChallengeSudoMode = async (): Promise<void> => {
-    try {
-      const response = await this.challengeSudoMode(ChallengeSudoModeTrigger.PayPalLogIn)
-      if (response) {
-        window.location.href = config.paypalUrl
-      }
-    } catch (error) {
-      console.error('AuthStore -> logInWithPayPalChallengeSudoMode: ', error)
     }
   }
 

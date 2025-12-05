@@ -5,14 +5,11 @@ import * as Storage from '../../Storage'
 import type { RootStore } from '../../Store'
 import type { FormValues } from '../account-views/account-views/components/'
 import { NotificationMessageCategory } from '../notifications/models'
-import type { PaypalActionStatus } from './constants'
 import {
   authenticationExternalEndpointPath,
   avatarsEndpointPath,
   avatarsSelectedEndpointPath,
-  getPaypalNotification,
   novuSignaturesEndpointPath,
-  paypalUsersEndpointPath,
   profileEndpointPath,
   protectRewardsRedemptionEndpointPath,
 } from './constants'
@@ -21,7 +18,6 @@ import {
   ExternalAuthProviderLoginStatus,
   type Avatar,
   type ExternalAuthProvider,
-  type payPalResponse,
   type Profile,
 } from './models'
 
@@ -79,16 +75,10 @@ export class ProfileStore {
   }
 
   @observable
-  public payPalId?: string
-
-  @observable
   public connectedGoogleAccountEmail?: string
 
   @observable
   public isLoadConnectedGoogleAccountEmailError: boolean = false
-
-  @observable
-  public isPayPalIdDisconnectLoading: boolean = false
 
   @observable
   public isInstallReminderClosed: boolean = Storage.getItem(IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY) === 'true'
@@ -287,28 +277,6 @@ export class ProfileStore {
     this.isMinecraftUserNameSubmitSuccess = false
   }
 
-  @action
-  private showPaypalNotification = () => {
-    const urlSearchParams = new URLSearchParams(window.location.search)
-    const paypalActionStatus = urlSearchParams.get('paypalAction')
-
-    if (paypalActionStatus) {
-      this.store.routing.replace('/account/summary')
-      this.store.notifications.sendNotification(getPaypalNotification(paypalActionStatus as PaypalActionStatus))
-    }
-  }
-
-  @action.bound
-  loadPayPalId = flow(function* (this: ProfileStore) {
-    this.showPaypalNotification()
-    try {
-      const res: AxiosResponse<payPalResponse> = yield this.axios.get(paypalUsersEndpointPath) as payPalResponse
-      this.payPalId = res?.data?.email
-    } catch (err) {
-      console.log(err)
-    }
-  })
-
   @action.bound
   connectExternalAccountProvider = () => {
     const urlSearchParams = new URLSearchParams(window.location.search)
@@ -358,20 +326,6 @@ export class ProfileStore {
         message: 'Please try to refresh the page.',
         type: 'error',
       })
-    }
-  })
-
-  @action.bound
-  disconnectPayPalId = flow(function* (this: ProfileStore) {
-    this.isPayPalIdDisconnectLoading = true
-    try {
-      const res: AxiosResponse<payPalResponse> = yield this.axios.delete(paypalUsersEndpointPath)
-      this.payPalId = res?.data?.email
-      this.isPayPalIdDisconnectLoading = false
-      this.loadPayPalId()
-    } catch (err) {
-      console.log(err)
-      this.isPayPalIdDisconnectLoading = false
     }
   })
 

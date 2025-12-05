@@ -27,10 +27,6 @@ export interface AvatarForm {
   selected?: boolean
 }
 
-export interface payPalResponse {
-  email?: string
-}
-
 export enum ReferredStatus {
   CanEnter, //joined within the last week, could still enter a referral code
   Test, //Testing state

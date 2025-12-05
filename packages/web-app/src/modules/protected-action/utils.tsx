@@ -1,5 +1,4 @@
 import type { RootStore } from '../../Store'
-import { config } from '../../config'
 import { ChallengeSudoModeTrigger } from '../auth'
 import { authenticationSessionsSudoEndpointPath } from '../auth/constants'
 import { backupCodesEndpointPath } from '../backup-codes/constants'
@@ -21,9 +20,6 @@ const handleChallengeSudoModeTrigger = (store: RootStore) => {
   switch (store.auth.challengeSudoModeTrigger) {
     case ChallengeSudoModeTrigger.GoogleSignIn:
       store.routing.push('/account/summary', { isGoogleSignInFormTriggered: true })
-      break
-    case ChallengeSudoModeTrigger.PayPalLogIn:
-      window.location.href = config.paypalUrl
       break
     case ChallengeSudoModeTrigger.RewardRedeem:
       const pendingLastReward = store.rewards.getReward(store.rewards.lastRewardId)

@@ -18,19 +18,14 @@ const mapStoreToProps = (store: RootStore): any => ({
   isUserNameSubmitSuccess: store.profile.isUserNameSubmitSuccess,
   isMinecraftUserNameSubmitting: store.profile.isMinecraftUserNameSubmitting,
   isMinecraftUserNameSubmitSuccess: store.profile.isMinecraftUserNameSubmitSuccess,
-  payPalId: store.profile.payPalId,
-  loadPayPalId: store.profile.loadPayPalId,
   connectedGoogleAccountEmail: store.profile.connectedGoogleAccountEmail,
   isLoadConnectedGoogleAccountEmailError: store.profile.isLoadConnectedGoogleAccountEmailError,
   loadGoogleAccountConnection: store.profile.loadGoogleAccountConnection,
-  disconnectPayPalId: store.profile.disconnectPayPalId,
-  isPayPalIdDisconnectLoading: store.profile.isPayPalIdDisconnectLoading,
   isSubmitting: store.termsAndConditions.isSubmitting,
   isTermsAndConditionsAccepted: store.termsAndConditions.isTermsAndConditionsAccepted,
   onSubmitTermsAndConditions: store.termsAndConditions.submitTermsAndConditions,
   onToggleAcceptTermsAndConditions: store.termsAndConditions.toggleAcceptTermsAndConditions,
   signInWithGoogleChallengeSudoMode: store.auth.signInWithGoogleChallengeSudoMode,
-  logInWithPayPalChallengeSudoMode: store.auth.logInWithPayPalChallengeSudoMode,
 })
 
 export const AccountContainer = connect(mapStoreToProps, Account)
