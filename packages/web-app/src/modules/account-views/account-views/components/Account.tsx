@@ -1,4 +1,4 @@
-import { AvatarSelectionForm, Button, Layout, Text, TextField } from '@saladtechnologies/garden-components'
+import { AvatarSelectionForm, Layout, Text, TextField } from '@saladtechnologies/garden-components'
 import type { FC } from 'react'
 import { useEffect } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
@@ -6,7 +6,6 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { useLocation } from 'react-router'
 import type { SaladTheme } from '../../../../SaladTheme'
-import { DefaultTheme } from '../../../../SaladTheme'
 import { Head } from '../../../../components'
 import { withLogin } from '../../../auth-views'
 import { type Passkey } from '../../../passkey-setup'
@@ -14,7 +13,7 @@ import type { Avatar, Profile } from '../../../profile/models'
 import { AccountSecurityContainer } from './AccountSecurity/AccountSecurityContainer'
 import { AccountTermsAndConditionsUpdate } from './AccountTermsAndConditionsUpdate'
 import { GoogleSignInForm } from './GoogleSignInForm'
-import { PayPalLoginButton } from './PayPalLoginButton'
+//import { PayPalLoginButton } from './PayPalLoginButton'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -53,12 +52,12 @@ const styles = (theme: SaladTheme) => ({
   disconnectButtonContainer: {
     marginTop: 12,
   },
-  paypalIdContainer: {
+  /*  paypalIdContainer: {
     display: 'flex',
     justifyContent: 'space-between',
     overflowWrap: 'anywhere',
     alignItems: 'center',
-  },
+  },*/
   connectedGoogleAccountEmail: {
     maxWidth: 400,
     paddingTop: 5,
@@ -93,14 +92,14 @@ interface Props extends WithStyles<typeof styles> {
   isUserNameSubmitSuccess: boolean
   isMinecraftUserNameSubmitting: boolean
   isMinecraftUserNameSubmitSuccess: boolean
-  payPalId?: string
-  loadPayPalId: () => void
+  //payPalId?: string
+  //loadPayPalId: () => void
   connectedGoogleAccountEmail?: string
   isLoadConnectedGoogleAccountEmailError: boolean
   loadGoogleAccountConnection: () => void
   disconnectPayPalId: () => void
-  isPayPalIdDisconnectLoading: boolean
-  checkPayPalId: () => void
+  //isPayPalIdDisconnectLoading: boolean
+  //checkPayPalId: () => void
   isSubmitting: boolean
   isTermsAndConditionsAccepted: boolean
   passkeys: Passkey[]
@@ -109,7 +108,7 @@ interface Props extends WithStyles<typeof styles> {
   fetchPasskeys: () => void
   onAddPasskeyClick: () => void
   onDeletePasskeyClick: (passkeyId: string) => void
-  logInWithPayPalChallengeSudoMode: () => void
+  //logInWithPayPalChallengeSudoMode: () => void
   signInWithGoogleChallengeSudoMode: (signInWithGoogle: () => void) => void
 }
 
@@ -118,7 +117,7 @@ export type FormValues = {
 }
 
 const _Account: FC<Props> = ({
-  loadPayPalId,
+  //loadPayPalId,
   loadGoogleAccountConnection,
   profile,
   onUpdateUsername,
@@ -136,25 +135,25 @@ const _Account: FC<Props> = ({
   isUserNameSubmitSuccess,
   isMinecraftUserNameSubmitting,
   isMinecraftUserNameSubmitSuccess,
-  payPalId,
-  disconnectPayPalId,
+  //payPalId,
+  //disconnectPayPalId,
   connectedGoogleAccountEmail,
   isLoadConnectedGoogleAccountEmailError,
-  isPayPalIdDisconnectLoading,
+  //isPayPalIdDisconnectLoading,
   isSubmitting,
   isTermsAndConditionsAccepted,
   onSubmitTermsAndConditions,
   onToggleAcceptTermsAndConditions,
-  logInWithPayPalChallengeSudoMode,
+  //logInWithPayPalChallengeSudoMode,
   signInWithGoogleChallengeSudoMode,
 }) => {
   const location = useLocation<{ isGoogleSignInFormTriggered: string }>()
   const isGoogleSignInFormTriggered = !!location.state?.isGoogleSignInFormTriggered
 
   useEffect(() => {
-    loadPayPalId()
+    //loadPayPalId()
     loadGoogleAccountConnection()
-  }, [loadGoogleAccountConnection, loadPayPalId])
+  }, [loadGoogleAccountConnection]) // , loadPayPalId
 
   const shouldShowUpdateAccountTermsAndConditions = !!profile?.pendingTermsVersion
   const handleSubmitButtonReset = () => {
@@ -204,7 +203,7 @@ const _Account: FC<Props> = ({
           )}
           <div className={classes.accountConnectionsContainer}>
             <Text variant="baseXL">Account Connections</Text>
-            <div className={classes.accountConnectionItem}>
+            {/* <div className={classes.accountConnectionItem}>
               <div className={classes.subheadingContainer}>
                 <Text variant="baseL">PayPal</Text>
               </div>
@@ -234,7 +233,7 @@ const _Account: FC<Props> = ({
                   </>
                 )}
               </div>
-            </div>
+            </div> */}
             <div className={classes.accountConnectionItem}>
               <div className={classes.subheadingContainer}>
                 <Text variant="baseL">Google</Text>
