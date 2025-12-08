@@ -1,4 +1,4 @@
-import { AvatarSelectionForm, Button, Layout, Text, TextField } from '@saladtechnologies/garden-components'
+import { AvatarSelectionForm, Layout, Text, TextField } from '@saladtechnologies/garden-components'
 import type { FC } from 'react'
 import { useEffect } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
@@ -6,7 +6,6 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { useLocation } from 'react-router'
 import type { SaladTheme } from '../../../../SaladTheme'
-import { DefaultTheme } from '../../../../SaladTheme'
 import { Head } from '../../../../components'
 import { withLogin } from '../../../auth-views'
 import { type Passkey } from '../../../passkey-setup'
@@ -14,7 +13,6 @@ import type { Avatar, Profile } from '../../../profile/models'
 import { AccountSecurityContainer } from './AccountSecurity/AccountSecurityContainer'
 import { AccountTermsAndConditionsUpdate } from './AccountTermsAndConditionsUpdate'
 import { GoogleSignInForm } from './GoogleSignInForm'
-import { PayPalLoginButton } from './PayPalLoginButton'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -53,12 +51,6 @@ const styles = (theme: SaladTheme) => ({
   disconnectButtonContainer: {
     marginTop: 12,
   },
-  paypalIdContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    overflowWrap: 'anywhere',
-    alignItems: 'center',
-  },
   connectedGoogleAccountEmail: {
     maxWidth: 400,
     paddingTop: 5,
@@ -93,14 +85,9 @@ interface Props extends WithStyles<typeof styles> {
   isUserNameSubmitSuccess: boolean
   isMinecraftUserNameSubmitting: boolean
   isMinecraftUserNameSubmitSuccess: boolean
-  payPalId?: string
-  loadPayPalId: () => void
   connectedGoogleAccountEmail?: string
   isLoadConnectedGoogleAccountEmailError: boolean
   loadGoogleAccountConnection: () => void
-  disconnectPayPalId: () => void
-  isPayPalIdDisconnectLoading: boolean
-  checkPayPalId: () => void
   isSubmitting: boolean
   isTermsAndConditionsAccepted: boolean
   passkeys: Passkey[]
@@ -109,7 +96,6 @@ interface Props extends WithStyles<typeof styles> {
   fetchPasskeys: () => void
   onAddPasskeyClick: () => void
   onDeletePasskeyClick: (passkeyId: string) => void
-  logInWithPayPalChallengeSudoMode: () => void
   signInWithGoogleChallengeSudoMode: (signInWithGoogle: () => void) => void
 }
 
@@ -118,7 +104,6 @@ export type FormValues = {
 }
 
 const _Account: FC<Props> = ({
-  loadPayPalId,
   loadGoogleAccountConnection,
   profile,
   onUpdateUsername,
@@ -136,25 +121,20 @@ const _Account: FC<Props> = ({
   isUserNameSubmitSuccess,
   isMinecraftUserNameSubmitting,
   isMinecraftUserNameSubmitSuccess,
-  payPalId,
-  disconnectPayPalId,
   connectedGoogleAccountEmail,
   isLoadConnectedGoogleAccountEmailError,
-  isPayPalIdDisconnectLoading,
   isSubmitting,
   isTermsAndConditionsAccepted,
   onSubmitTermsAndConditions,
   onToggleAcceptTermsAndConditions,
-  logInWithPayPalChallengeSudoMode,
   signInWithGoogleChallengeSudoMode,
 }) => {
   const location = useLocation<{ isGoogleSignInFormTriggered: string }>()
   const isGoogleSignInFormTriggered = !!location.state?.isGoogleSignInFormTriggered
 
   useEffect(() => {
-    loadPayPalId()
     loadGoogleAccountConnection()
-  }, [loadGoogleAccountConnection, loadPayPalId])
+  }, [loadGoogleAccountConnection])
 
   const shouldShowUpdateAccountTermsAndConditions = !!profile?.pendingTermsVersion
   const handleSubmitButtonReset = () => {
@@ -204,37 +184,6 @@ const _Account: FC<Props> = ({
           )}
           <div className={classes.accountConnectionsContainer}>
             <Text variant="baseXL">Account Connections</Text>
-            <div className={classes.accountConnectionItem}>
-              <div className={classes.subheadingContainer}>
-                <Text variant="baseL">PayPal</Text>
-              </div>
-              <div className={classes.connectAccountButtonContainer}>
-                {payPalId ? (
-                  <Text variant="baseXL">
-                    <div className={classes.paypalIdContainer}>{payPalId}</div>
-                    <div className={classes.disconnectButtonContainer}>
-                      <Button
-                        onClick={disconnectPayPalId}
-                        isLoading={isPayPalIdDisconnectLoading}
-                        label={'Unlink PayPal Account'}
-                        outlineColor={DefaultTheme.darkBlue}
-                        variant={'outlined'}
-                      />
-                    </div>
-                  </Text>
-                ) : (
-                  <>
-                    <PayPalLoginButton logInWithPayPalChallengeSudoMode={logInWithPayPalChallengeSudoMode} />
-                    <div className={classes.connectAccountDescription}>
-                      <Text variant="baseS">
-                        Connect Salad to your PayPal account. A PayPal account is required to redeem all PayPal rewards.
-                        This enables transferring Salad Balance to your PayPal wallet.
-                      </Text>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
             <div className={classes.accountConnectionItem}>
               <div className={classes.subheadingContainer}>
                 <Text variant="baseL">Google</Text>

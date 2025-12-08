@@ -154,7 +154,6 @@ export class RootStore {
         this.referral.loadCurrentReferral(),
         this.referral.loadReferralCode(),
         this.refresh.refreshData(),
-        this.profile.loadPayPalId(),
         this.helpScout.login({
           name: profile.username,
           email: profile.email,

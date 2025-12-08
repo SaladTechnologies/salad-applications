@@ -15,11 +15,9 @@ const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ id: stri
   }
 
   const extensions = store.profile.currentProfile?.extensions
-  const hasPayPalAccount = store.profile.payPalId != null
   const reward = store.rewards.getReward(props.match.params.id)
   const requiresMinecraftUsername =
     reward?.tags?.includes('requires-minecraft-username') && !extensions?.minecraftUsername
-  const requiresPayPalAccount = reward?.tags?.includes('requires-paypal-account') && !hasPayPalAccount
   const isRewardSelectedAsTarget = store.rewards.selectedTargetReward?.id === reward?.id
 
   return {
@@ -35,7 +33,6 @@ const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ id: stri
     onRemoveTargetRewardClick: store.rewards.removeSelectedTargetReward,
     isTargetReward: isRewardSelectedAsTarget,
     requiresMinecraftUsername: requiresMinecraftUsername,
-    requiresPayPalAccount,
     trackDisabledBuyNowClick,
   }
 }

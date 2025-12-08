@@ -39,7 +39,6 @@ interface Props extends WithStyles<typeof styles> {
   currentBalance?: number
   authenticated?: boolean
   requiresMinecraftUsername: boolean
-  requiresPayPalAccount: boolean
   isTargetReward: boolean
   isReviewing: boolean
   loadReward?: (id?: string) => void
@@ -55,7 +54,6 @@ const _RewardDetailsPage: FC<Props> = ({
   rewardId,
   reward,
   requiresMinecraftUsername,
-  requiresPayPalAccount,
   isTargetReward,
   isReviewing,
   loadReward,
@@ -96,7 +94,6 @@ const _RewardDetailsPage: FC<Props> = ({
         onBack={onBack}
         onRedeem={onRedeem}
         requiresMinecraftUsername={requiresMinecraftUsername}
-        requiresPayPalAccount={requiresPayPalAccount}
         isTargetReward={isTargetReward}
         onTargetThisRewardClick={onTargetThisRewardClick}
         onRemoveTargetRewardClick={onRemoveTargetRewardClick}
