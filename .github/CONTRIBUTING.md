@@ -8,7 +8,7 @@ The following sections outline the different ways to contribute to the project.
 
 The easiest way to contribute to the project is by participating in discussions on the [SaladChefs Discord server](https://discord.gg/salad) or in the [SaladChefs Subreddit](https://www.reddit.com/r/SaladChefs/). The community often chimes in with helpful advice when you have a question, and you may also find yourself providing answers and helping others. Be sure to review the [code of conduct](./CODE_OF_CONDUCT.md) before participating.
 
-You can create a [support ticket](https://support.salad.com/article/216-how-to-create-a-support-ticket) if you have a specific question that should be answered by a team member.
+You can create a [support ticket](https://support.salad.com/contact) if you have a specific question that should be answered by a team member.
 
 _Please do not use GitHub issues to ask a question._ We will politely close a GitHub issue that asks a question and kindly refer you to one of the aforementioned avenues.
 
@@ -16,7 +16,7 @@ _Please do not use GitHub issues to ask a question._ We will politely close a Gi
 
 We're sorry if this happened to you! Consider jumping into the `#community-support` channel on the [SaladChefs Discord server](https://discord.gg/salad) or the "Community Support" category in the [SaladChefs Subreddit](https://www.reddit.com/r/SaladChefs/) first. The community may have already found a solution.
 
-You can create a [support ticket](https://support.salad.com/article/216-how-to-create-a-support-ticket) to report bugs or if you have a specific question that should be answered by a team member.
+You can create a [support ticket](https://support.salad.com/contact) to report bugs or if you have a specific question that should be answered by a team member.
 
 ## :sparkles: Requesting Features
 

@@ -87,7 +87,7 @@ export class RewardStore {
     private readonly store: RootStore,
     private readonly axios: AxiosInstance,
     private readonly profile: ProfileStore,
-  ) {}
+  ) { }
 
   fetchReward = flow(
     function* (this: RewardStore, rewardId?: string) {
@@ -113,7 +113,7 @@ export class RewardStore {
           this.store.analytics.trackRewardView(reward)
           this.store.storefront.checkRewardForUpdate(reward)
         }
-      } catch {}
+      } catch { }
     }.bind(this),
   )
 
@@ -333,7 +333,7 @@ export class RewardStore {
                     message:
                       "Sorry, Chef! It looks like you've reached your daily redemption limit. Click here to learn more about daily limits, and come back tomorrow.",
                     autoClose: false,
-                    onClick: () => window.open('https://support.salad.com/hc/en-us/articles/4405644006932', '_blank'),
+                    onClick: () => window.open('https://support.salad.com/faq/your-account/is-there-a-withdrawal-limit', '_blank'),
                     type: 'error',
                   }
                 } else if (data.type === 'redemptions:notEnoughXp') {
