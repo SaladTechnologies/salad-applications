@@ -341,7 +341,7 @@ class _VaultList extends Component<Props, State> {
                             {isCancelled && (
                               <SmartLink
                                 className={classes.getHelpLink}
-                                to="https://support.salad.com/hc/en-us/articles/360028479532-I-redeemed-an-item-and-haven-t-gotten-it-yet-What-s-going-on-"
+                                to="https://support.salad.com/rewards/rewards-faq/i-redeemed-an-item-and-havent-gotten-it-yet-whats-going-on"
                               >
                                 Get help
                               </SmartLink>

@@ -238,7 +238,7 @@ const _ProtectedActionPage: FC<Props> = ({
               <Text className={classes.description} variant="baseL">
                 This device does not support Passkeys. Please login on a device or browser that supports passkeys and
                 try again. Or see our&nbsp;
-                <a className={classes.link} href="https://support.salad.com/article/609-passkey-troubleshoot-guide">
+                <a className={classes.link} href="https://support.salad.com/troubleshooting/salad-app/passkey-troubleshoot-guide">
                   Passkey support guide
                 </a>
                 . There are devices that require extra setup steps to use Passkeys.

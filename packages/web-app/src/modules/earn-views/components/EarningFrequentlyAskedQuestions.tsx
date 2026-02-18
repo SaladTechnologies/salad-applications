@@ -42,7 +42,7 @@ interface Props extends WithStyles<typeof styles> {
 
 const _EarningFrequentlyAskedQuestions: FunctionComponent<Props> = ({ classes, trackFAQLinkClicked }) => {
   const navigateToSaladSupportPage = () => {
-    window.open('https://support.salad.com/collection/13-faq', '_blank', 'noopener, noreferrer')
+    window.open('https://support.salad.com/faq/jobs/why-do-i-earn-less-more-with-salad-than-whattomine', '_blank', 'noopener, noreferrer')
   }
 
   return (
@@ -51,10 +51,10 @@ const _EarningFrequentlyAskedQuestions: FunctionComponent<Props> = ({ classes, t
       <div className={classes.questionsContainer}>
         <a
           className={classes.questionLink}
-          href="https://support.salad.com/article/52-i-live-outside-the-us-can-i-still-redeem-rewards-with-salad"
+          href="https://support.salad.com/rewards/rewards-faq/i-live-outside-the-us-can-i-still-redeem-rewards-with-salad"
           onClick={() =>
             trackFAQLinkClicked(
-              'https://support.salad.com/article/52-i-live-outside-the-us-can-i-still-redeem-rewards-with-salad',
+              'https://support.salad.com/rewards/rewards-faq/i-live-outside-the-us-can-i-still-redeem-rewards-with-salad',
             )
           }
           target="_blank"
@@ -66,7 +66,7 @@ const _EarningFrequentlyAskedQuestions: FunctionComponent<Props> = ({ classes, t
         <a
           className={classes.questionLink}
           href="https://support.salad.com/category/40-rewards"
-          onClick={() => trackFAQLinkClicked('https://support.salad.com/category/40-rewards')}
+          onClick={() => trackFAQLinkClicked('https://support.salad.com/guides/using-salad/how-to-make-a-purchase')}
           target="_blank"
           rel="noopener noreferrer"
         >

@@ -160,7 +160,7 @@ const _AllMachines = ({
   }, [onPageChange, pageMachineDetailsList])
 
   const handleMachineIdQuestionIconClick = () => {
-    window.location.href = 'https://support.salad.com/article/414-how-to-find-your-salad-machine-id'
+    window.location.href = 'https://support.salad.com/guides/using-salad/how-to-find-your-salad-machine-id'
   }
 
   const dropdownOptions: DropdownOption<unknown>[] = [

@@ -99,7 +99,7 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> { }
 
 const _EarnInfoPage: FC<Props> = ({ classes }) => {
   return (
@@ -117,7 +117,7 @@ const _EarnInfoPage: FC<Props> = ({ classes }) => {
               </SmartLink>{' '}
               Salad Balance varies depending on the type of jobs performed on the Salad network, as well as the{' '}
               <SmartLink
-                to="https://support.salad.com/article/78-is-my-machine-compatible-with-salad"
+                to="https://support.salad.com/faq/compatibility/is-my-machine-compatible-with-salad"
                 color={DefaultTheme.green}
               >
                 quality
@@ -151,7 +151,7 @@ const _EarnInfoPage: FC<Props> = ({ classes }) => {
               All you have to do is download the Salad widget and start chopping! For more information on how to get
               started, check out this{' '}
               <SmartLink
-                to="https://support.salad.com/article/135-getting-started-with-salad-the-basics"
+                to="https://support.salad.com/guides/getting-started/getting-started-with-salad-the-basics"
                 color={DefaultTheme.green}
               >
                 guide
