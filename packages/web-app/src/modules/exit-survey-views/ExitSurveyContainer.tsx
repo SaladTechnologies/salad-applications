@@ -3,7 +3,6 @@ import type { RootStore } from '../../Store'
 import { ExitSurvey } from './components/ExitSurvey'
 
 const mapStoreToProps = (store: RootStore): any => ({
-  currentProfile: store.profile.currentProfile,
   trackUninstall: store.analytics.trackUninstall,
 })
 
