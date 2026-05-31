@@ -1,4 +1,3 @@
-import type { NotificationVariant } from '@saladtechnologies/garden-components/lib/components/NotificationBanner/NotificationBanner'
 
 export enum NotificationMessageCategory {
   AppUpdate = 'App Update',
@@ -73,7 +72,6 @@ export interface OpenLinkNotificationAction {
   link: string
 }
 
-/** A resource that represents an in-app notification action. */
 export interface NotificationAction {
   action?:
     | {
@@ -88,31 +86,4 @@ export interface NotificationAction {
         $case: 'openLink'
         openLink: OpenLinkNotificationAction
       }
-}
-
-export interface Notification {
-  /** The Novu resource identifier. */
-  novuId: string
-  /** The title. */
-  title: string
-  /** The body. */
-  body: string
-  /** The date and time of the notification. */
-  createdDate: Date | undefined
-  /** The list of actions. */
-  actions: NotificationAction[]
-  /** A value indicating whether the notification has been acknowledged. */
-  acknowledged: boolean
-  /** A value indicating whether the notification is os type. */
-  osNotification: boolean
-  /** A value indicating whether the notification is overlay type. */
-  overlay: boolean
-  /** A value indicating whether the notification has been seen. */
-  seen: boolean
-  /** A value indicating whether the notification has been read. */
-  read: boolean
-  /** A value indicating the absolute link to the badge image. */
-  badgeUrl: string
-  /** A value indicating the notification variant */
-  variant: NotificationVariant
 }

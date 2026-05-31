@@ -6,19 +6,18 @@ import type { RootStore } from '../../Store'
 import type { FormValues } from '../account-views/account-views/components/'
 import { NotificationMessageCategory } from '../notifications/models'
 import {
-  authenticationExternalEndpointPath,
-  avatarsEndpointPath,
-  avatarsSelectedEndpointPath,
-  novuSignaturesEndpointPath,
-  profileEndpointPath,
-  protectRewardsRedemptionEndpointPath,
+    authenticationExternalEndpointPath,
+    avatarsEndpointPath,
+    avatarsSelectedEndpointPath,
+    profileEndpointPath,
+    protectRewardsRedemptionEndpointPath,
 } from './constants'
 import {
-  ExternalAuthProviderLoginAction,
-  ExternalAuthProviderLoginStatus,
-  type Avatar,
-  type ExternalAuthProvider,
-  type Profile,
+    ExternalAuthProviderLoginAction,
+    ExternalAuthProviderLoginStatus,
+    type Avatar,
+    type ExternalAuthProvider,
+    type Profile,
 } from './models'
 
 export type ProtectRewardsRedemptionStatus = 'success' | 'failure' | 'loading' | 'unknown'
@@ -47,9 +46,6 @@ export class ProfileStore {
 
   @observable
   public currentProfile?: Profile
-
-  @observable
-  public novuSignature?: string
 
   @observable
   public submittingAvatar?: string
@@ -126,20 +122,6 @@ export class ProfileStore {
       this.store.errorBoundary.showErrorBoundary(new Error(`An error occurred: ${err}`))
     }
     return this.currentProfile
-  })
-
-  @action.bound
-  loadNovuSignature = flow(function* (this: ProfileStore) {
-    try {
-      if (this.novuSignature) {
-        return
-      }
-
-      const novuSignature = yield this.axios.post(novuSignaturesEndpointPath)
-      this.novuSignature = novuSignature.data.signature
-    } catch (_error) {
-      console.error('Failed to Load Novu Signature')
-    }
   })
 
   @action.bound

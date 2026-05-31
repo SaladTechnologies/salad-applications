@@ -25,8 +25,7 @@ import { SkeletonTheme } from 'react-loading-skeleton'
 import { Router } from 'react-router-dom'
 import { App } from './App'
 import { createClient } from './axiosFactory'
-import { Head, ErrorBoundary } from './components'
-import { NovuProviderWrapper } from './components/NovuProviderWrapper'
+import { ErrorBoundary, Head } from './components'
 import { config } from './config'
 import { FeatureManagerProvider, UnleashFeatureManager } from './FeatureManager'
 import { DefaultTheme as JSSTheme } from './SaladTheme'
@@ -93,9 +92,7 @@ setTimeout(() => {
                         ) : (
                           <>
                             <Tooltips />
-                            <NovuProviderWrapper>
-                              <App history={history} />
-                            </NovuProviderWrapper>
+                            <App history={history} />
                           </>
                         )
                       }}

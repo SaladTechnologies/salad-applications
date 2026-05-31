@@ -15,7 +15,6 @@ import { connect } from './connect'
 import { FeatureFlags, useFeatureManager } from './FeatureManager'
 import { MobileRoutes } from './MobileRoutes'
 import { NavigationBarContainer } from './modules/home-views'
-import { NovuNotificationBanner } from './modules/notifications-views/components'
 import { Routes } from './Routes'
 import type { SaladTheme } from './SaladTheme'
 import type { RootStore } from './Store'
@@ -109,7 +108,6 @@ interface AppProps extends WithStyles<typeof styles> {
   isAuthenticated: boolean
   setErrorBoundary: (errorBoundary: UseErrorBoundaryApi<Error>) => void
   withInstallReminder: boolean
-  novuSignature: string
   history: History
 }
 
@@ -118,13 +116,11 @@ export const _App = ({
   history,
   isAuthenticated,
   setErrorBoundary,
-  novuSignature,
   withInstallReminder,
 }: AppProps) => {
   const featureManager = useFeatureManager()
   const errorBoundary = useErrorBoundary()
 
-  const shouldShowNovuBanner = isAuthenticated && novuSignature
   const isNewChefDownloadFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.NewChefDownload)
 
   useEffect(() => {
@@ -133,7 +129,6 @@ export const _App = ({
 
   return (
     <>
-      {shouldShowNovuBanner && <NovuNotificationBanner />}
       <MobileDevice>
         <div className={classes.mobileMainWindow}>
           <div className={classes.mobileNavigationContainer}>
