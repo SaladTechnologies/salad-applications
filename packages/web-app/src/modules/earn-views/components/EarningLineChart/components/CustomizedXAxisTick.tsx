@@ -20,7 +20,6 @@ export const CustomizedXAxisTick = (props: CustomizedXAxisTickProps) => {
     return null
   }
 
-
   let timestamp = payload.value
   if (is24HoursChart) {
     const shouldShowAmPm = payload.value === NoonHour || payload.value === MidnightHour

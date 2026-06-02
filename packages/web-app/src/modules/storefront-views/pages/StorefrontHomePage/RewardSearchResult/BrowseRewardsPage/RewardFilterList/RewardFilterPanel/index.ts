@@ -1,2 +1,1 @@
-export * from './RewardFilterPanel';
-
+export * from './RewardFilterPanel'

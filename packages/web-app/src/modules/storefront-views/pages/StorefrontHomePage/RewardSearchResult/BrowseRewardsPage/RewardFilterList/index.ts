@@ -1,2 +1,1 @@
-export * from './RewardFilterList';
-
+export * from './RewardFilterList'

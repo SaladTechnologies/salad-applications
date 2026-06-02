@@ -42,7 +42,11 @@ interface Props extends WithStyles<typeof styles> {
 
 const _EarningFrequentlyAskedQuestions: FunctionComponent<Props> = ({ classes, trackFAQLinkClicked }) => {
   const navigateToSaladSupportPage = () => {
-    window.open('https://support.salad.com/faq/jobs/why-do-i-earn-less-more-with-salad-than-whattomine', '_blank', 'noopener, noreferrer')
+    window.open(
+      'https://support.salad.com/faq/jobs/why-do-i-earn-less-more-with-salad-than-whattomine',
+      '_blank',
+      'noopener, noreferrer',
+    )
   }
 
   return (

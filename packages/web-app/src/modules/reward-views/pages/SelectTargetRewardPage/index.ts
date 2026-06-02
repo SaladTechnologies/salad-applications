@@ -1,2 +1,1 @@
-export * from './SelectTargetRewardPage';
-
+export * from './SelectTargetRewardPage'

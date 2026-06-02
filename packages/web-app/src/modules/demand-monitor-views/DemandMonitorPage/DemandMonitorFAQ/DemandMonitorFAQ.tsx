@@ -42,7 +42,7 @@ export const styles = (theme: SaladTheme): Record<string, CSS.Properties> => ({
   },
 })
 
-interface Props extends WithStyles<typeof styles> { }
+interface Props extends WithStyles<typeof styles> {}
 
 const _DemandMonitorFAQ: FunctionComponent<Props> = ({ classes }) => {
   const handleAllFaqClick = () => {

@@ -99,7 +99,7 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
-interface Props extends WithStyles<typeof styles> { }
+interface Props extends WithStyles<typeof styles> {}
 
 const _EarnInfoPage: FC<Props> = ({ classes }) => {
   return (

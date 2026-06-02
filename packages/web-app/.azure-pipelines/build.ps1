@@ -28,7 +28,6 @@ try {
             $Env:REACT_APP_API_URL = 'https://app-api-testing.salad.com'
             $Env:REACT_APP_PROHASHING_USERNAME = 'saladtest'
             $Env:REACT_APP_SEARCH_ENGINE = 'salad-rewards-test'
-            $Env:REACT_APP_NOVU_APP_ID = 'MAiF4Q6JMQIU'
             $Env:REACT_APP_SEARCH_KEY = 'search-qced4ibef8m4s7xacm9hoqyk'
             $Env:REACT_APP_STRAPI_UPLOAD_URL = 'https://cms-api-testing.salad.io'
             $Env:REACT_APP_UNLEASH_API_KEY = 'zrujLzhnwVZkIOlS74oZZ0DK7ZXs3Ifo'

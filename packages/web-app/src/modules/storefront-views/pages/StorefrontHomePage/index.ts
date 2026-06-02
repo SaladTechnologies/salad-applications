@@ -1,2 +1,1 @@
-export * from './StorefrontHomePage';
-
+export * from './StorefrontHomePage'
