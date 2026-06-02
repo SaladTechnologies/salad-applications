@@ -1,4 +1,4 @@
-import { SubscribeToDemandAlertStatus } from "../../constants";
+import { SubscribeToDemandAlertStatus } from '../../constants'
 
 export const createNewSubscriptionErrorTexts: Partial<Record<SubscribeToDemandAlertStatus, string>> = {
   [SubscribeToDemandAlertStatus.Failure]: 'Something went wrong. Please try again later',

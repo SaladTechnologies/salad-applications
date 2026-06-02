@@ -17,4 +17,3 @@ const mapStoreToProps = (store: RootStore): any => ({
 })
 
 export const OldMobileEarningSummaryContainer = connect(mapStoreToProps, withLogin(OldMobileEarningSummary))
- 

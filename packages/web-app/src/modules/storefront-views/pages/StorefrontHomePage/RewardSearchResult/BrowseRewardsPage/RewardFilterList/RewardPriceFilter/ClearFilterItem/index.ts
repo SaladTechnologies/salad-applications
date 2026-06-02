@@ -1,2 +1,1 @@
-export * from './ClearFilterItem';
-
+export * from './ClearFilterItem'

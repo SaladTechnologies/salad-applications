@@ -1,4 +1,3 @@
-export const novuSignaturesEndpointPath = '/api/v2/novu-signatures'
 export const avatarsEndpointPath = '/api/v2/avatars'
 export const avatarsSelectedEndpointPath = '/api/v2/avatars/selected'
 export const profileEndpointPath = '/api/v1/profile'

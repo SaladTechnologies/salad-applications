@@ -3,17 +3,14 @@ import type { AccountNavigationMenuItem } from '@saladtechnologies/garden-compon
 import type { FunctionComponent } from 'react'
 import { FeatureFlags, useFeatureManager } from '../../../FeatureManager'
 import { InstallReminder } from './InstallReminder'
-import { NavigationBarWithNovuNotifications } from './NavigationBarWithNovuNotifications'
 
 export interface NavigationBarWithNotificationsProps extends NavigationBarProps {
-  novuSignature?: string
   withInstallReminder: boolean
   isUserReferralsEnabled: boolean
   onCloseInstallReminderClick: () => void
 }
 
 export const NavigationBarWithNotifications: FunctionComponent<NavigationBarWithNotificationsProps> = ({
-  novuSignature,
   withInstallReminder,
   isUserReferralsEnabled,
   onCloseInstallReminderClick,
@@ -65,7 +62,6 @@ export const NavigationBarWithNotifications: FunctionComponent<NavigationBarWith
     onOpenNotificationsDrawer: props.notifications.onOpenNotificationsDrawer,
     onCloseNotificationsDrawer: props.notifications.onCloseNotificationsDrawer,
   }
-  const shouldShowNavigationBarWithNovuNotifications = props.username !== undefined && novuSignature !== undefined
 
   const isNewChefDownloadFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.NewChefDownload)
   const headerBannerContent =
@@ -73,13 +69,7 @@ export const NavigationBarWithNotifications: FunctionComponent<NavigationBarWith
       <InstallReminder onCloseClick={onCloseInstallReminderClick} />
     ) : undefined
 
-  return shouldShowNavigationBarWithNovuNotifications ? (
-    <NavigationBarWithNovuNotifications
-      {...props}
-      accountNavigationMenuitems={accountNavigationMenuitems}
-      headerBannerContent={headerBannerContent}
-    />
-  ) : (
+  return (
     <NavigationBar
       {...props}
       notifications={notifications}

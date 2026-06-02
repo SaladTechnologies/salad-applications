@@ -1,2 +1,1 @@
-export * from './RewardDetailsPage';
-
+export * from './RewardDetailsPage'
