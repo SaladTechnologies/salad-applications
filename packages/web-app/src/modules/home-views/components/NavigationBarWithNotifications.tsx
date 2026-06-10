@@ -56,9 +56,10 @@ export const NavigationBarWithNotifications: FunctionComponent<NavigationBarWith
 
   const notifications = {
     ...props.notifications,
-    news: [],
-    warnings: [],
-    hasUnseenNotifications: false,
+    news: props.notifications.news ?? [],
+    warnings: props.notifications.warnings ?? [],
+    achievements: props.notifications.achievements ?? [],
+    hasUnseenNotifications: props.notifications.hasUnseenNotifications ?? false,
     onOpenNotificationsDrawer: props.notifications.onOpenNotificationsDrawer,
     onCloseNotificationsDrawer: props.notifications.onCloseNotificationsDrawer,
   }
