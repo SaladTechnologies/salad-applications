@@ -1,3 +1,4 @@
+import { getStore } from '../../Store'
 import type { SaladPayStore } from '../salad-pay/SaladPayStore'
 import { SaladPayOrderSummaryPage } from './components'
 import { connectSaladPay } from './connectSaladPay'
@@ -6,6 +7,7 @@ const mapStoreToProps = (store: SaladPayStore): any => ({
   availableBalance: store.currentBalance,
   processing: store.processing,
   request: store.currentRequestOptions,
+  reward: getStore().rewards.getReward(getStore().rewards.lastRewardId),
   onClose: () => {
     store.abort()
     store.goBackToReward()

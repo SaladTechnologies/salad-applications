@@ -1,4 +1,5 @@
 export * from '../../storefront-views/pages/StorefrontHomePage/RewardSearchBar/RewardSearchBar'
+export * from './RenderPriceQuote'
 export * from './RewardDescriptionPanel'
 export * from './RewardDisclaimers'
 export * from './RewardHeaderBar'

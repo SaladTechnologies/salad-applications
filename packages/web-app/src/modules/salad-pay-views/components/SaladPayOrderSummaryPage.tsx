@@ -7,6 +7,8 @@ import { SaladPayPage } from '.'
 import type { SaladTheme } from '../../../SaladTheme'
 import { SmartLink } from '../../../components'
 import { currencyFormatter } from '../../../formatters'
+import { RenderPriceQuoteContainer } from '../../reward-views/components/RenderPriceQuote'
+import type { Reward } from '../../reward/models'
 import type { SaladPaymentRequestOptions } from '../../salad-pay/models'
 import { SaladPayCheckoutButton } from './SaladPayCheckoutButton'
 
@@ -78,6 +80,7 @@ interface Props extends WithStyles<typeof styles> {
   availableBalance?: number
   processing?: boolean
   request?: SaladPaymentRequestOptions
+  reward?: Reward
   onConfirm: () => void
   onCloseClick: () => void
   onAbort: () => void
@@ -90,6 +93,7 @@ const _SaladPayOrderSummaryPage: FC<Props> = ({
   availableBalance,
   processing,
   request,
+  reward,
   onConfirm,
   onCloseClick,
   onAbort,
@@ -136,6 +140,7 @@ const _SaladPayOrderSummaryPage: FC<Props> = ({
               <div className={classes.leftText}>{request.total.label}</div>
               <div>{moneyFormat(request.total.amount)}</div>
             </div>
+            <RenderPriceQuoteContainer reward={reward} saladBalance={request.total.amount} variant="checkout" />
             <div className={classNames(classes.row, classes.balanceRow)}>
               <div className={classes.leftText}>
                 <div className={classes.title}>Available Balance</div>

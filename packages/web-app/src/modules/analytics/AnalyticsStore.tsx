@@ -184,6 +184,17 @@ export class AnalyticsStore {
     })
   }
 
+  /** Track when a RENDER price quote is viewed on a reward. */
+  public trackRenderPriceQuoteViewed = (reward: Reward, tokenAmount?: number, rate?: number) => {
+    this.track('Render Price Quote Viewed', {
+      RewardId: reward.id,
+      RewardName: reward.name,
+      RewardPrice: reward.price,
+      RenderTokenAmount: tokenAmount,
+      RenderUsdRate: rate,
+    })
+  }
+
   /** Track when a reward category is viewed */
   public trackRewardSearch = (searchTerm: string) => {
     this.track('Reward Search', {

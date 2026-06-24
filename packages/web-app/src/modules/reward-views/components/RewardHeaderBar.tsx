@@ -8,6 +8,7 @@ import type { SaladTheme } from '../../../SaladTheme'
 import type { Reward } from '../../reward/models'
 import { getPercentOff } from '../../reward/utils'
 import { IconArrowLeft } from './assets'
+import { RenderPriceQuoteContainer } from './RenderPriceQuote'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -241,6 +242,7 @@ class _RewardHeaderBar extends Component<Props> {
                   <SmartLink to="/account/summary">Add Minecraft Username</SmartLink>
                 </div>
               )}
+              <RenderPriceQuoteContainer reward={reward} variant="detail" />
             </div>
             {getTargetRewardControl()}
             <Button
