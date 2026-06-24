@@ -7,10 +7,12 @@ import { Button, Divider, LinkListUnstyled, MenuTitle, NoPageFound } from '.'
 import { FeatureFlags, useFeatureManager } from '../FeatureManager'
 import { AccountContainer } from '../modules/account-views/account-views'
 import { ReferralSettingsContainer } from '../modules/account-views/referral-views'
+import { SolanaWalletContainer } from '../modules/account-views/solana-wallet-views'
 import { AchievementPageContainer } from '../modules/achievements-views'
 import { BonusPageContainer } from '../modules/bonus-views'
 import { DemandAlertsPage } from '../modules/demand-alerts-views'
 import { IconArrowLeft } from '../modules/reward-views/components/assets'
+import { SOLANA_WALLET_FEATURE_ENABLED } from '../modules/solana-wallet'
 import { styles } from './SettingsPage.styles'
 
 export interface MenuItem {
@@ -75,6 +77,11 @@ const _Settings = ({ appBuild, classes, menuButtons, isUserReferralsEnabled, onC
       url: '/account/alerts',
       text: 'Demand Alerts',
       component: DemandAlertsPage,
+    },
+    SOLANA_WALLET_FEATURE_ENABLED && {
+      url: '/account/solana-wallet',
+      text: 'Solana Wallet',
+      component: SolanaWalletContainer,
     },
   ].filter((menuItem) => menuItem) as MenuItem[]
 
