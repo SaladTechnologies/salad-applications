@@ -1,23 +1,12 @@
 import type { AxiosInstance } from 'axios'
-import type { FeatureManager } from '../../FeatureManager'
 import { RenderStore } from './RenderStore'
-
-const makeFeatureManager = (enabled: boolean): FeatureManager => ({
-  getVariant: () => 'disabled',
-  handleLogin: () => {},
-  handleLogout: () => {},
-  isEnabled: () => enabled,
-  isEnabledCached: () => enabled,
-  start: () => Promise.resolve(),
-  setAnalyticsStore: () => {},
-})
 
 const makeAxios = (get: jest.Mock): AxiosInstance => ({ get } as unknown as AxiosInstance)
 
 describe('RenderStore', () => {
   it('does not fetch when the feature flag is off', async () => {
     const get = jest.fn()
-    const store = new RenderStore(makeAxios(get), makeFeatureManager(false))
+    const store = new RenderStore(makeAxios(get), false)
 
     await store.fetchExchangeRate()
 
@@ -28,7 +17,7 @@ describe('RenderStore', () => {
 
   it('does not poll when the feature flag is off', () => {
     const get = jest.fn()
-    const store = new RenderStore(makeAxios(get), makeFeatureManager(false))
+    const store = new RenderStore(makeAxios(get), false)
 
     store.startPollingExchangeRate()
 
@@ -39,7 +28,7 @@ describe('RenderStore', () => {
     const get = jest.fn().mockResolvedValue({
       data: { rate: 2.5, asOf: '2026-06-24T00:00:00.000Z', expiresAt: '2026-06-24T00:01:00.000Z' },
     })
-    const store = new RenderStore(makeAxios(get), makeFeatureManager(true))
+    const store = new RenderStore(makeAxios(get), true)
 
     await store.fetchExchangeRate()
 
@@ -51,7 +40,7 @@ describe('RenderStore', () => {
 
   it('flags an error and clears loading when the request fails', async () => {
     const get = jest.fn().mockRejectedValue(new Error('boom'))
-    const store = new RenderStore(makeAxios(get), makeFeatureManager(true))
+    const store = new RenderStore(makeAxios(get), true)
 
     await store.fetchExchangeRate()
 

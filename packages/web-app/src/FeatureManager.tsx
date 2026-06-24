@@ -9,7 +9,6 @@ export enum FeatureFlags {
   DemandMonitor = 'app_DemandMonitor',
   DemandNotifications = 'app_DemandNotifications',
   FleetDashboard = 'app_fleetdashboard',
-  RenderPriceQuotes = 'app_RenderPriceQuotes',
 }
 
 export interface FeatureManager {

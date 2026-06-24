@@ -1,16 +1,14 @@
 import type { AxiosInstance, AxiosResponse } from 'axios'
 import { action, flow, observable } from 'mobx'
-import type { FeatureManager } from '../../FeatureManager'
-import { FeatureFlags } from '../../FeatureManager'
-import { renderExchangeRateEndpointPath, renderExchangeRateRefreshRate } from './constants'
+import { renderExchangeRateEndpointPath, renderExchangeRateRefreshRate, renderPriceQuotesEnabled } from './constants'
 import type { RenderExchangeRate, RenderExchangeRateResource } from './models'
 import { isExchangeRateStale, renderExchangeRateFromResource } from './utils'
 
 /**
  * Owns the live RENDER/USD price quote that powers the price-quote feature.
  *
- * All fetching is gated behind the {@link FeatureFlags.RenderPriceQuotes} flag: when the flag is off the store never
- * touches the network and `exchangeRate` stays `undefined`.
+ * All fetching is gated behind the internal {@link renderPriceQuotesEnabled} flag: when the flag is off the store
+ * never touches the network and `exchangeRate` stays `undefined`.
  */
 export class RenderStore {
   @observable
@@ -25,11 +23,16 @@ export class RenderStore {
   private pollingHandle?: ReturnType<typeof setInterval>
   private activeViewers: number = 0
 
-  public constructor(private readonly axios: AxiosInstance, private readonly featureManager: FeatureManager) {}
+  /**
+   * @param axios The App API client.
+   * @param enabled Whether the price-quote feature is on. Defaults to the hard-coded {@link renderPriceQuotesEnabled}
+   *   flag; injectable so tests can exercise both the on and off paths.
+   */
+  public constructor(private readonly axios: AxiosInstance, private readonly enabled: boolean = renderPriceQuotesEnabled) {}
 
-  /** Whether the price-quote feature is enabled for the current user. */
+  /** Whether the price-quote feature is enabled. */
   public get isEnabled(): boolean {
-    return this.featureManager.isEnabled(FeatureFlags.RenderPriceQuotes)
+    return this.enabled
   }
 
   /** Whether the currently held quote should be treated as stale. */

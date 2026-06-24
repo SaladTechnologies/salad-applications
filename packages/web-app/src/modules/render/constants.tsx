@@ -1,4 +1,19 @@
-/** The App API endpoint that returns the current RENDER/USD price quote. */
+/**
+ * Internal, hard-coded feature flag that gates the entire RENDER price-quote feature.
+ *
+ * This is intentionally a compile-time constant rather than a remote/third-party flag (e.g. Unleash): the feature
+ * ships dark while this is `false` — no quote UI is rendered and no calls are made to the exchange-rate endpoint.
+ * Flip it to `true` and redeploy to turn the feature on.
+ */
+export const renderPriceQuotesEnabled = false
+
+/**
+ * The App API endpoint that returns the current RENDER/USD price quote.
+ *
+ * This endpoint is the single source of truth for the RENDER price: the rate is computed server-side and the web app
+ * never performs its own price discovery (no on-chain / Jupiter calls happen client-side). The only client-side math
+ * is converting a USD Salad Balance into a token amount via {@link computeRenderQuote}.
+ */
 export const renderExchangeRateEndpointPath = '/api/v2/render/exchange-rate'
 
 /**

@@ -1,9 +1,8 @@
 import { observer } from 'mobx-react'
 import type { FC } from 'react'
 import { useEffect } from 'react'
-import { FeatureFlags, useFeatureManager } from '../../../../FeatureManager'
 import { getStore } from '../../../../Store'
-import { computeRenderQuote, isRenderReward } from '../../../render'
+import { computeRenderQuote, isRenderReward, renderPriceQuotesEnabled } from '../../../render'
 import type { Reward } from '../../../reward/models'
 import { RenderPriceQuote } from './RenderPriceQuote'
 
@@ -19,13 +18,11 @@ export interface RenderPriceQuoteContainerProps {
 /**
  * Surfaces a live RENDER price quote for a reward.
  *
- * Renders nothing — and triggers no network activity — unless the {@link FeatureFlags.RenderPriceQuotes} flag is on
- * and the reward is a RENDER reward. While active it keeps the quote fresh via the {@link RenderStore} poll loop.
+ * Renders nothing — and triggers no network activity — unless the internal {@link renderPriceQuotesEnabled} flag is
+ * on and the reward is a RENDER reward. While active it keeps the quote fresh via the {@link RenderStore} poll loop.
  */
 const _RenderPriceQuoteContainer: FC<RenderPriceQuoteContainerProps> = ({ reward, saladBalance, variant }) => {
-  const featureManager = useFeatureManager()
-  const enabled = featureManager.isEnabled(FeatureFlags.RenderPriceQuotes)
-  const active = enabled && isRenderReward(reward)
+  const active = renderPriceQuotesEnabled && isRenderReward(reward)
   const store = getStore()
   const render = store.render
 
