@@ -7,7 +7,6 @@ import withStyles from 'react-jss'
 import { ErrorText } from '../../../../../components'
 import { SuccessText } from '../../../../../components/primitives/content/SuccessText'
 import type { SolanaWalletSubmitStatus } from '../../../../solana-wallet'
-import { solanaWalletAddressRegex } from '../../../../solana-wallet/constants'
 import type { FormValues } from '../Account'
 import { styles } from './SolanaWallet.styles'
 
@@ -87,8 +86,6 @@ const _SolanaWallet: FC<Props> = ({
                 <TextField
                   isSubmitting={isSubmitting}
                   isSubmitSuccess={isSubmitSuccess}
-                  validationRegex={solanaWalletAddressRegex}
-                  validationRegexErrorMessage="Enter a valid Solana wallet address (32 - 44 base58 characters)."
                   label="Solana Wallet Address"
                   onSubmit={handleSubmit}
                   onFocus={() => isSubmitFailure && setSubmitStatus('unknown')}
