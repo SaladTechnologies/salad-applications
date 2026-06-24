@@ -88,6 +88,8 @@ const _SolanaWallet: FC<Props> = ({
                   isSubmitSuccess={isSubmitSuccess}
                   label="Solana Wallet Address"
                   onSubmit={handleSubmit}
+                  validationRegex={/^[1-9A-HJ-NP-Za-km-z]{32,44}$/}
+                  validationRegexErrorMessage="Enter a valid Solana wallet address (32-44 base58 characters)."
                   onFocus={() => isSubmitFailure && setSubmitStatus('unknown')}
                   defaultValue={walletAddress}
                 />
