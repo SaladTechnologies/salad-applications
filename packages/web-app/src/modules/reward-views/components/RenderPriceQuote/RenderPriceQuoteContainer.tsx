@@ -1,0 +1,64 @@
+import { observer } from 'mobx-react'
+import type { FC } from 'react'
+import { useEffect } from 'react'
+import { getStore } from '../../../../Store'
+import { computeRenderQuote, isRenderReward, renderPriceQuotesEnabled } from '../../../render'
+import type { Reward } from '../../../reward/models'
+import { RenderPriceQuote } from './RenderPriceQuote'
+
+export interface RenderPriceQuoteContainerProps {
+  /** The RENDER reward the quote is being shown for. */
+  reward?: Reward
+  /** The Salad Balance amount (USD) to convert into RENDER tokens. Defaults to the reward's price. */
+  saladBalance?: number
+  /** Controls layout/labelling for the detail header vs. the checkout review surface. */
+  variant?: 'detail' | 'checkout'
+}
+
+/**
+ * Surfaces a live RENDER price quote for a reward.
+ *
+ * Renders nothing — and triggers no network activity — unless the internal {@link renderPriceQuotesEnabled} flag is
+ * on and the reward is a RENDER reward. While active it keeps the quote fresh via the {@link RenderStore} poll loop.
+ */
+const _RenderPriceQuoteContainer: FC<RenderPriceQuoteContainerProps> = ({ reward, saladBalance, variant }) => {
+  const active = renderPriceQuotesEnabled && isRenderReward(reward)
+  const store = getStore()
+  const render = store.render
+
+  useEffect(() => {
+    if (!active) {
+      return
+    }
+    render.startPollingExchangeRate()
+    return () => render.stopPollingExchangeRate()
+  }, [active, render])
+
+  const amount = saladBalance ?? reward?.price ?? 0
+  const tokenAmount = render.exchangeRate ? computeRenderQuote(amount, render.exchangeRate.rate) : undefined
+
+  useEffect(() => {
+    if (active && reward && tokenAmount !== undefined) {
+      store.analytics.trackRenderPriceQuoteViewed(reward, tokenAmount, render.exchangeRate?.rate)
+    }
+    // Fire once per reward + quote pairing.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active, reward?.id, tokenAmount])
+
+  if (!active) {
+    return null
+  }
+
+  return (
+    <RenderPriceQuote
+      loading={render.isLoadingExchangeRate}
+      error={render.hasExchangeRateError}
+      stale={render.isExchangeRateStale}
+      tokenAmount={tokenAmount}
+      asOf={render.exchangeRate?.asOf}
+      variant={variant}
+    />
+  )
+}
+
+export const RenderPriceQuoteContainer = observer(_RenderPriceQuoteContainer)

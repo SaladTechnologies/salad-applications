@@ -21,6 +21,7 @@ import { PasskeyStore } from './modules/passkey-setup'
 import { ProfileStore } from './modules/profile'
 import type { Profile } from './modules/profile/models'
 import { ReferralStore } from './modules/referral'
+import { RenderStore } from './modules/render'
 import { RewardStore } from './modules/reward'
 import { SolanaWalletStore } from './modules/solana-wallet'
 import { StartButtonUIStore } from './modules/start-button/StartButtonUIStore'
@@ -57,6 +58,7 @@ export class RootStore {
   public readonly routing: RouterStore
   public readonly xp: ExperienceStore
   public readonly rewards: RewardStore
+  public readonly render: RenderStore
   public readonly balance: BalanceStore
   public readonly profile: ProfileStore
   public readonly ui: UIStore
@@ -88,6 +90,7 @@ export class RootStore {
     this.profile = new ProfileStore(this, axios)
     this.termsAndConditions = new TermsAndConditionsStore(axios, this.profile)
     this.rewards = new RewardStore(this, axios, this.profile)
+    this.render = new RenderStore(axios)
     this.analytics = new AnalyticsStore(this.auth)
     this.balance = new BalanceStore(axios)
     this.ui = new UIStore(this)
