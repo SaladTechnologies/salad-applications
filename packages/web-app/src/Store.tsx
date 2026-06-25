@@ -22,6 +22,7 @@ import { ProfileStore } from './modules/profile'
 import type { Profile } from './modules/profile/models'
 import { ReferralStore } from './modules/referral'
 import { RewardStore } from './modules/reward'
+import { SolanaWalletStore } from './modules/solana-wallet'
 import { StartButtonUIStore } from './modules/start-button/StartButtonUIStore'
 import { StorefrontStore } from './modules/storefront/StorefrontStore'
 import { TermsAndConditionsStore } from './modules/terms-and-conditions'
@@ -75,6 +76,7 @@ export class RootStore {
   public readonly backupCodes: BackupCodesStore
   public readonly demandMonitor: DemandMonitorStore
   public readonly demandAlerts: DemandAlertsStore
+  public readonly solanaWallet: SolanaWalletStore
 
   constructor(axios: AxiosInstance, private readonly featureManager: FeatureManager) {
     this.routing = new RouterStore()
@@ -103,6 +105,7 @@ export class RootStore {
     this.errorBoundary = new ErrorBoundaryStore()
     this.demandMonitor = new DemandMonitorStore(axios)
     this.demandAlerts = new DemandAlertsStore(axios)
+    this.solanaWallet = new SolanaWalletStore(this, axios)
 
     // Pass AnalyticsStore to FeatureManager
     featureManager.setAnalyticsStore(this.analytics)
