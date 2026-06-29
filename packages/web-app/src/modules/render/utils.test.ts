@@ -79,6 +79,11 @@ describe('getRenderRewardPrice', () => {
     expect(getRenderRewardPrice(renderReward(undefined, 5), 2)).toBe(10)
   })
 
+  it('multiplies the price fallback by the rate rather than returning it verbatim', () => {
+    // Regression: a 1.0-token reward with no productValue at a $0.9997 rate must show $0.9997, not $1.00.
+    expect(getRenderRewardPrice(renderReward(undefined, 1), 0.9997)).toBe(0.9997)
+  })
+
   it('respects a custom decimal precision', () => {
     expect(getRenderRewardPrice(renderReward(1), 1 / 3, 2)).toBe(0.33)
   })

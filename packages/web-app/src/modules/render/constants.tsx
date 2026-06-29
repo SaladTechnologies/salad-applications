@@ -7,7 +7,7 @@
  * feature ships dark while this is `false` — no RENDER UI is rendered and no calls are made to the exchange-rate or
  * Solana wallet endpoints. Flip it to `true` and redeploy to turn the feature on.
  */
-export const renderRewardsEnabled = false
+export const renderRewardsEnabled = true
 
 /**
  * The App API endpoint that returns the current RENDER/USD price quote.
