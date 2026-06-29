@@ -20,10 +20,12 @@ export interface RenderPriceableReward {
 /**
  * Determines whether a reward pays out RENDER tokens.
  *
- * Reward tags are lower-cased when a reward is parsed from its API resource, so a case-insensitive match is not
- * required here.
+ * Reward tags are normally lower-cased when a reward is parsed from its API resource, but the live API serves them
+ * upper-cased (e.g. `"RENDER"`). The comparison is therefore done case-insensitively so the reward is recognized
+ * regardless of which flow produced it, rather than relying on upstream normalization.
  */
-export const isRenderReward = (reward?: { tags?: string[] }): boolean => !!reward?.tags?.includes(renderRewardTag)
+export const isRenderReward = (reward?: { tags?: string[] }): boolean =>
+  !!reward?.tags?.some((tag) => tag?.toLowerCase() === renderRewardTag)
 
 /**
  * Computes the Salad Balance price (USD) to display for a RENDER reward.
@@ -73,17 +75,34 @@ export const formatRenderRewardPrice = (
 ): string => `$${price.toFixed(decimals)}`
 
 /**
+ * Parses an ISO-8601 timestamp, returning `undefined` when the value is absent or cannot be parsed.
+ *
+ * The App API formats `quotedAt` with a `+00:00` offset and 7-digit fractional seconds
+ * (e.g. `2026-06-24T00:00:00.0000000+00:00`). `Date` handles this, but we still guard against an invalid result so a
+ * malformed timestamp never produces an `Invalid Date` (which would skew staleness checks).
+ */
+const parseTimestamp = (value: string | undefined): Date | undefined => {
+  if (!value) {
+    return undefined
+  }
+
+  const parsed = new Date(value)
+  return Number.isNaN(parsed.getTime()) ? undefined : parsed
+}
+
+/**
  * Converts a `GET /api/v2/render/exchange-rate` response into the internal {@link RenderExchangeRate} model.
  *
- * When the API omits `asOf`, the provided `receivedAt` time is used so that staleness can still be tracked.
+ * The API response uses `usdPrice` for the rate and `quotedAt` for the quote time. When `quotedAt` is missing or
+ * unparseable, the provided `receivedAt` time is used so that staleness can still be tracked.
  */
 export const renderExchangeRateFromResource = (
   resource: RenderExchangeRateResource,
   receivedAt: Date,
 ): RenderExchangeRate => ({
-  rate: resource.rate,
-  asOf: resource.asOf ? new Date(resource.asOf) : receivedAt,
-  expiresAt: resource.expiresAt ? new Date(resource.expiresAt) : undefined,
+  rate: resource.usdPrice,
+  asOf: parseTimestamp(resource.quotedAt) ?? receivedAt,
+  expiresAt: parseTimestamp(resource.expiresAt),
 })
 
 /**

@@ -51,6 +51,11 @@ describe('isRenderReward', () => {
     expect(isRenderReward(makeReward(['render', 'crypto']))).toBe(true)
   })
 
+  it('matches the render tag case-insensitively (live API serves uppercase tags)', () => {
+    expect(isRenderReward(makeReward(['RENDER']))).toBe(true)
+    expect(isRenderReward(makeReward(['Render', 'crypto']))).toBe(true)
+  })
+
   it('returns false when the reward has no render tag', () => {
     expect(isRenderReward(makeReward(['steam']))).toBe(false)
   })
@@ -117,10 +122,23 @@ describe('formatRenderRewardPrice', () => {
 })
 
 describe('renderExchangeRateFromResource', () => {
-  it('maps the API resource and parses timestamps', () => {
+  it('maps the live API resource (usdPrice -> rate, quotedAt -> asOf)', () => {
     const receivedAt = new Date('2026-06-24T00:00:30.000Z')
     const result = renderExchangeRateFromResource(
-      { rate: 2.5, asOf: '2026-06-24T00:00:00.000Z', expiresAt: '2026-06-24T00:01:00.000Z' },
+      { usdPrice: 0.9997050031114633, quotedAt: '2026-06-24T00:00:00.0000000+00:00' },
+      receivedAt,
+    )
+
+    // The mapped rate must equal usdPrice exactly so a 1.0-token reward shows $0.9997, not $1.00.
+    expect(result.rate).toBe(0.9997050031114633)
+    expect(result.asOf.toISOString()).toBe('2026-06-24T00:00:00.000Z')
+    expect(result.expiresAt).toBeUndefined()
+  })
+
+  it('maps an explicit expiresAt when present', () => {
+    const receivedAt = new Date('2026-06-24T00:00:30.000Z')
+    const result = renderExchangeRateFromResource(
+      { usdPrice: 2.5, quotedAt: '2026-06-24T00:00:00.000Z', expiresAt: '2026-06-24T00:01:00.000Z' },
       receivedAt,
     )
 
@@ -129,12 +147,11 @@ describe('renderExchangeRateFromResource', () => {
     expect(result.expiresAt?.toISOString()).toBe('2026-06-24T00:01:00.000Z')
   })
 
-  it('falls back to receivedAt when asOf is missing', () => {
+  it('falls back to receivedAt when quotedAt is missing or unparseable', () => {
     const receivedAt = new Date('2026-06-24T00:00:30.000Z')
-    const result = renderExchangeRateFromResource({ rate: 2.5 }, receivedAt)
 
-    expect(result.asOf).toBe(receivedAt)
-    expect(result.expiresAt).toBeUndefined()
+    expect(renderExchangeRateFromResource({ usdPrice: 2.5 }, receivedAt).asOf).toBe(receivedAt)
+    expect(renderExchangeRateFromResource({ usdPrice: 2.5, quotedAt: 'not-a-date' }, receivedAt).asOf).toBe(receivedAt)
   })
 })
 
