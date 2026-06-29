@@ -7,9 +7,12 @@ import { SaladPayPage } from '.'
 import type { SaladTheme } from '../../../SaladTheme'
 import { SmartLink } from '../../../components'
 import { currencyFormatter } from '../../../formatters'
+import { renderRewardsEnabled } from '../../render'
 import { RenderPriceQuoteContainer } from '../../reward-views/components/RenderPriceQuote'
+import { RewardPrice } from '../../reward-views/components/RewardPrice'
 import type { Reward } from '../../reward/models'
 import type { SaladPaymentRequestOptions } from '../../salad-pay/models'
+import { rewardRequiresSolanaAddress, solanaWalletAccountAnchor } from '../../solana-wallet'
 import { SaladPayCheckoutButton } from './SaladPayCheckoutButton'
 
 const styles = (theme: SaladTheme) => ({
@@ -74,6 +77,20 @@ const styles = (theme: SaladTheme) => ({
     textAlign: 'center',
     textTransform: 'uppercase',
   },
+  walletWarning: {
+    fontFamily: theme.fontGroteskBook19,
+    fontSize: 12,
+    color: theme.red,
+    border: `1px solid ${theme.red}`,
+    borderRadius: 4,
+    padding: '10px 12px',
+    marginTop: 16,
+  },
+  walletWarningLink: {
+    color: theme.red,
+    fontWeight: 'bold',
+    textDecoration: 'underline',
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -81,6 +98,12 @@ interface Props extends WithStyles<typeof styles> {
   processing?: boolean
   request?: SaladPaymentRequestOptions
   reward?: Reward
+  /** The Chef's saved Solana wallet address, if any. Used to warn before redeeming a wallet-required reward. */
+  solanaWalletAddress?: string
+  /** Whether the Solana wallet is still being loaded (suppresses the warning until we know). */
+  isSolanaWalletLoading?: boolean
+  /** Loads the Chef's Solana wallet so the missing-wallet warning can be evaluated. */
+  loadSolanaWallet?: () => void
   onConfirm: () => void
   onCloseClick: () => void
   onAbort: () => void
@@ -94,6 +117,9 @@ const _SaladPayOrderSummaryPage: FC<Props> = ({
   processing,
   request,
   reward,
+  solanaWalletAddress,
+  isSolanaWalletLoading,
+  loadSolanaWallet,
   onConfirm,
   onCloseClick,
   onAbort,
@@ -101,11 +127,23 @@ const _SaladPayOrderSummaryPage: FC<Props> = ({
   const hasEnoughBalance =
     availableBalance !== undefined && request !== undefined && availableBalance >= request.total.amount
 
+  // Warn (but do not hard-block) when redeeming a reward that needs a Solana wallet the Chef hasn't set yet.
+  const showMissingWalletWarning =
+    renderRewardsEnabled && rewardRequiresSolanaAddress(reward) && !isSolanaWalletLoading && !solanaWalletAddress
+
   const handleConfirmClick = () => {
     if (hasEnoughBalance) {
       onConfirm()
     }
   }
+
+  useEffect(() => {
+    if (renderRewardsEnabled && rewardRequiresSolanaAddress(reward)) {
+      loadSolanaWallet?.()
+    }
+    // Re-evaluate only when the reward changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadSolanaWallet, reward?.id])
 
   useEffect(() => {
     window.addEventListener('popstate', onAbort)
@@ -138,9 +176,20 @@ const _SaladPayOrderSummaryPage: FC<Props> = ({
             )}
             <div className={classNames(classes.row, classes.total)}>
               <div className={classes.leftText}>{request.total.label}</div>
-              <div>{moneyFormat(request.total.amount)}</div>
+              <div>
+                <RewardPrice reward={reward} fallback={moneyFormat(request.total.amount)} />
+              </div>
             </div>
             <RenderPriceQuoteContainer reward={reward} saladBalance={request.total.amount} variant="checkout" />
+            {showMissingWalletWarning && (
+              <div className={classes.walletWarning}>
+                You haven't added a Solana wallet address yet. RENDER token rewards are sent on-chain, so{' '}
+                <SmartLink className={classes.walletWarningLink} to={solanaWalletAccountAnchor}>
+                  add your Solana wallet address
+                </SmartLink>{' '}
+                before redeeming.
+              </div>
+            )}
             <div className={classNames(classes.row, classes.balanceRow)}>
               <div className={classes.leftText}>
                 <div className={classes.title}>Available Balance</div>

@@ -1,13 +1,13 @@
 import type { AxiosInstance, AxiosResponse } from 'axios'
 import { action, flow, observable } from 'mobx'
-import { renderExchangeRateEndpointPath, renderExchangeRateRefreshRate, renderPriceQuotesEnabled } from './constants'
+import { renderExchangeRateEndpointPath, renderExchangeRateRefreshRate, renderRewardsEnabled } from './constants'
 import type { RenderExchangeRate, RenderExchangeRateResource } from './models'
 import { isExchangeRateStale, renderExchangeRateFromResource } from './utils'
 
 /**
  * Owns the live RENDER/USD price quote that powers the price-quote feature.
  *
- * All fetching is gated behind the internal {@link renderPriceQuotesEnabled} flag: when the flag is off the store
+ * All fetching is gated behind the internal {@link renderRewardsEnabled} flag: when the flag is off the store
  * never touches the network and `exchangeRate` stays `undefined`.
  */
 export class RenderStore {
@@ -25,10 +25,10 @@ export class RenderStore {
 
   /**
    * @param axios The App API client.
-   * @param enabled Whether the price-quote feature is on. Defaults to the hard-coded {@link renderPriceQuotesEnabled}
+   * @param enabled Whether the RENDER feature is on. Defaults to the hard-coded {@link renderRewardsEnabled}
    *   flag; injectable so tests can exercise both the on and off paths.
    */
-  public constructor(private readonly axios: AxiosInstance, private readonly enabled: boolean = renderPriceQuotesEnabled) {}
+  public constructor(private readonly axios: AxiosInstance, private readonly enabled: boolean = renderRewardsEnabled) {}
 
   /** Whether the price-quote feature is enabled. */
   public get isEnabled(): boolean {

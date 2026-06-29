@@ -10,7 +10,7 @@ import { Head } from '../../../../components'
 import { withLogin } from '../../../auth-views'
 import { type Passkey } from '../../../passkey-setup'
 import type { Avatar, Profile } from '../../../profile/models'
-import { SOLANA_WALLET_ENABLED } from '../../../solana-wallet/constants'
+import { renderRewardsEnabled } from '../../../render'
 import { AccountSecurityContainer } from './AccountSecurity/AccountSecurityContainer'
 import { AccountTermsAndConditionsUpdate } from './AccountTermsAndConditionsUpdate'
 import { GoogleSignInForm } from './GoogleSignInForm'
@@ -248,7 +248,7 @@ const _Account: FC<Props> = ({
             </div>
           </div>
           <AccountSecurityContainer />
-          {SOLANA_WALLET_ENABLED && <SolanaWalletContainer />}
+          {renderRewardsEnabled && <SolanaWalletContainer />}
         </Layout>
       </Scrollbars>
     </div>

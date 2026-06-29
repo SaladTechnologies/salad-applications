@@ -9,6 +9,7 @@ import Skeleton from 'react-loading-skeleton'
 import { SmartLink } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
 import { RewardMissingImage } from '../../reward-views/components/RewardMissingImage'
+import { RewardPrice } from '../../reward-views/components/RewardPrice'
 import { getPercentOff } from '../../reward/utils'
 import type { StorefrontRewardItemProps } from '../../storefront/models'
 
@@ -157,7 +158,10 @@ class _StorefrontRewardItem extends Component<Props> {
                 <span className={classes.originalPrice}>{originalPrice}</span> {price}
               </div>
             ) : price ? (
-              <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}> {price} </div>
+              <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
+                {' '}
+                <RewardPrice reward={rewardData} fallback={price} />{' '}
+              </div>
             ) : (
               <Skeleton width={100} />
             )}

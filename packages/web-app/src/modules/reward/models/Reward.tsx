@@ -28,6 +28,12 @@ export interface Reward {
   /** Purchase price */
   price: number
 
+  /**
+   * The token/unit value the reward grants. For RENDER rewards this is the number of RENDER tokens the reward pays
+   * out, and the displayed Salad Balance price is `productValue * <RENDER/USD exchange rate>`.
+   */
+  productValue?: number
+
   /** MSRP of the reward */
   originalPrice?: number
 

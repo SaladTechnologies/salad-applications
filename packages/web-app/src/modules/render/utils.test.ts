@@ -3,6 +3,8 @@ import { renderExchangeRateDefaultTtl } from './constants'
 import type { RenderExchangeRate } from './models'
 import {
   computeRenderQuote,
+  formatRenderRewardPrice,
+  getRenderRewardPrice,
   isExchangeRateStale,
   isRenderReward,
   renderExchangeRateFromResource,
@@ -55,6 +57,57 @@ describe('isRenderReward', () => {
 
   it('returns false for an undefined reward', () => {
     expect(isRenderReward(undefined)).toBe(false)
+  })
+})
+
+describe('getRenderRewardPrice', () => {
+  const renderReward = (productValue?: number, price = 5): Reward => ({
+    id: '1',
+    name: 'r',
+    price,
+    productValue,
+    tags: ['render'],
+  })
+
+  it('prices a render reward as productValue * rate, rounded to 4 decimals', () => {
+    // 12 RENDER at $0.123456 = $1.481472 -> $1.4815
+    expect(getRenderRewardPrice(renderReward(12), 0.123456)).toBe(1.4815)
+  })
+
+  it('falls back to the reward price when productValue is absent', () => {
+    // 5 (price) * 2 = 10
+    expect(getRenderRewardPrice(renderReward(undefined, 5), 2)).toBe(10)
+  })
+
+  it('respects a custom decimal precision', () => {
+    expect(getRenderRewardPrice(renderReward(1), 1 / 3, 2)).toBe(0.33)
+  })
+
+  it('returns undefined for non-render rewards', () => {
+    const reward: Reward = { id: '1', name: 'r', price: 5, productValue: 12, tags: ['steam'] }
+    expect(getRenderRewardPrice(reward, 2)).toBeUndefined()
+  })
+
+  it('returns undefined when the rate is missing or invalid', () => {
+    expect(getRenderRewardPrice(renderReward(12), undefined)).toBeUndefined()
+    expect(getRenderRewardPrice(renderReward(12), 0)).toBeUndefined()
+    expect(getRenderRewardPrice(renderReward(12), -1)).toBeUndefined()
+  })
+
+  it('returns undefined when there is no usable token amount', () => {
+    const reward: Reward = { id: '1', name: 'r', price: NaN, tags: ['render'] }
+    expect(getRenderRewardPrice(reward, 2)).toBeUndefined()
+  })
+})
+
+describe('formatRenderRewardPrice', () => {
+  it('formats to four decimal places by default', () => {
+    expect(formatRenderRewardPrice(1.4815)).toBe('$1.4815')
+    expect(formatRenderRewardPrice(10)).toBe('$10.0000')
+  })
+
+  it('respects a custom precision', () => {
+    expect(formatRenderRewardPrice(1.5, 2)).toBe('$1.50')
   })
 })
 

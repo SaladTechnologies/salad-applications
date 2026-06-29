@@ -8,6 +8,9 @@ const mapStoreToProps = (store: SaladPayStore): any => ({
   processing: store.processing,
   request: store.currentRequestOptions,
   reward: getStore().rewards.getReward(getStore().rewards.lastRewardId),
+  solanaWalletAddress: getStore().solanaWallet.walletAddress,
+  isSolanaWalletLoading: getStore().solanaWallet.isLoading,
+  loadSolanaWallet: getStore().solanaWallet.loadWallet,
   onClose: () => {
     store.abort()
     store.goBackToReward()

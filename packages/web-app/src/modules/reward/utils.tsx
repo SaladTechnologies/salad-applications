@@ -19,6 +19,7 @@ export const rewardFromResource = (r: RewardResource): Reward => ({
   headline: r.headline,
   description: r.description,
   price: r.price,
+  productValue: r.productValue,
   originalPrice: r.originalPrice,
   coverImage: toFullImageUrl(r.coverImage),
   heroImage: toFullImageUrl(r.heroImage),

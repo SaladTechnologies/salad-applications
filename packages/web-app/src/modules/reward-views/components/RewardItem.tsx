@@ -10,6 +10,7 @@ import type { SaladTheme } from '../../../SaladTheme'
 import type { SearchResult } from '../../reward/models'
 import { getPercentOff } from '../../reward/utils'
 import { RewardMissingImage } from './RewardMissingImage'
+import { RewardPrice } from './RewardPrice'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -153,7 +154,11 @@ class _RewardItem extends Component<Props> {
               </div>
             ) : (
               <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
-                {reward ? reward?.price ? `$${reward?.price.toFixed(2)}` : 'FREE' : <Skeleton width={100} />}
+                {reward ? (
+                  <RewardPrice reward={reward} fallback={reward?.price ? `$${reward?.price.toFixed(2)}` : 'FREE'} />
+                ) : (
+                  <Skeleton width={100} />
+                )}
               </div>
             )}
             {outOfStock && (
