@@ -34,11 +34,11 @@ const _RenderPriceQuoteContainer: FC<RenderPriceQuoteContainerProps> = ({ reward
     return () => render.stopPollingExchangeRate()
   }, [active, render])
 
-  // The number of RENDER tokens the Chef receives is the reward's fixed grant — the same figure the displayed price is
-  // derived from (`grant * rate`). Converting the reward's RENDER price back through the rate yields exactly that grant
-  // and keeps the order-summary "you'll receive" line consistent with the per-RENDER rate and the line item/total.
-  // Dividing the raw Salad Balance price (`reward.price`) by the rate instead would reintroduce the rate and disagree
-  // with those figures (e.g. show 1.0003 RENDER for a $0.9997 / 1-token reward).
+  // The displayed quote now shows the per-RENDER USD rate (matching the detail page) rather than a tokens-received
+  // figure, but we still derive the token amount for analytics. The number of RENDER tokens the Chef receives is the
+  // reward's fixed grant — the same figure the displayed price is derived from (`grant * rate`). Converting the
+  // reward's RENDER price back through the rate yields exactly that grant. Dividing the raw Salad Balance price
+  // (`reward.price`) by the rate instead would reintroduce the rate and report a slightly different grant.
   const rate = render.exchangeRate?.rate
   const renderPrice = getRenderRewardPrice(reward, rate)
   const amount = renderPrice ?? saladBalance ?? reward?.price ?? 0
@@ -61,7 +61,6 @@ const _RenderPriceQuoteContainer: FC<RenderPriceQuoteContainerProps> = ({ reward
       loading={render.isLoadingExchangeRate}
       error={render.hasExchangeRateError}
       stale={render.isExchangeRateStale}
-      tokenAmount={tokenAmount}
       rate={render.exchangeRate?.rate}
       asOf={render.exchangeRate?.asOf}
       variant={variant}

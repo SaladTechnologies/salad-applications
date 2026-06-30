@@ -9,6 +9,7 @@ import {
   isRenderReward,
   normalizeRenderTags,
   renderExchangeRateFromResource,
+  rewardNameSuggestsRender,
   toRenderPriceableReward,
 } from './utils'
 
@@ -64,6 +65,26 @@ describe('isRenderReward', () => {
 
   it('returns false for an undefined reward', () => {
     expect(isRenderReward(undefined)).toBe(false)
+  })
+})
+
+describe('rewardNameSuggestsRender', () => {
+  it('matches reward names that contain RENDER as a word (the lean list payloads lack tags)', () => {
+    expect(rewardNameSuggestsRender('1 RENDER')).toBe(true)
+    expect(rewardNameSuggestsRender('$10 RENDER')).toBe(true)
+    expect(rewardNameSuggestsRender('5 in RENDER rewards')).toBe(true)
+    expect(rewardNameSuggestsRender('render')).toBe(true)
+  })
+
+  it('does not match names that merely contain the substring "render"', () => {
+    expect(rewardNameSuggestsRender('Rendering Masterclass')).toBe(false)
+    expect(rewardNameSuggestsRender('Surrender Pack')).toBe(false)
+  })
+
+  it('returns false for missing or unrelated names', () => {
+    expect(rewardNameSuggestsRender(undefined)).toBe(false)
+    expect(rewardNameSuggestsRender('')).toBe(false)
+    expect(rewardNameSuggestsRender('Steam Gift Card')).toBe(false)
   })
 })
 

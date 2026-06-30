@@ -161,7 +161,12 @@ class _StorefrontRewardItem extends Component<Props> {
             ) : price ? (
               <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
                 {' '}
-                <RewardPrice reward={toRenderPriceableReward(rewardData)} fallback={price} />{' '}
+                <RewardPrice
+                  reward={toRenderPriceableReward(rewardData)}
+                  rewardId={rewardData?.uuid}
+                  rewardName={rewardData?.name ?? name}
+                  fallback={price}
+                />{' '}
               </div>
             ) : (
               <Skeleton width={100} />

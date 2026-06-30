@@ -196,7 +196,12 @@ class _StorefrontHeroItem extends Component<Props> {
                     </div>
                   ) : (
                     <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
-                      <RewardPrice reward={toRenderPriceableReward(reward)} fallback={subheading} />
+                      <RewardPrice
+                        reward={toRenderPriceableReward(reward)}
+                        rewardId={reward?.uuid}
+                        rewardName={reward?.name ?? heading}
+                        fallback={subheading}
+                      />
                     </div>
                   )}
                   {outOfStock && (

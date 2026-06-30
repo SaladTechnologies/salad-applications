@@ -28,6 +28,18 @@ export const isRenderReward = (reward?: { tags?: string[] }): boolean =>
   !!reward?.tags?.some((tag) => tag?.toLowerCase() === renderRewardTag)
 
 /**
+ * A cheap, name-based heuristic for whether a reward *might* pay out RENDER tokens.
+ *
+ * The storefront (`/api/v2/storefront`) and search (Elastic App Search) payloads that back the list/card views are lean
+ * and omit `tags` entirely, so {@link isRenderReward} cannot detect a RENDER reward from them. This heuristic lets those
+ * call sites decide whether it is worth fetching the authoritative reward (which *does* carry tags) to confirm and price
+ * it. It is intentionally only a *gate*, never the source of truth: a name match merely triggers a confirming lookup,
+ * and the {@link renderRewardTag} tag on the fetched reward remains the final authority. Gating on the name means stores
+ * with no RENDER rewards (e.g. production, where the feature ships dark) issue no extra requests.
+ */
+export const rewardNameSuggestsRender = (name?: string): boolean => !!name && /\brender\b/i.test(name)
+
+/**
  * Normalizes a raw `tags` value into a lower-cased string array, regardless of the shape the source API uses.
  *
  * The reward-detail and search flows already hand us `string[]`, but the storefront (`/api/v2/storefront`) payload is

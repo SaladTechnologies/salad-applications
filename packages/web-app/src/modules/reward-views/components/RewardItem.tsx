@@ -158,6 +158,8 @@ class _RewardItem extends Component<Props> {
                 {reward ? (
                   <RewardPrice
                     reward={toRenderPriceableReward(reward)}
+                    rewardId={reward.id}
+                    rewardName={reward.name}
                     fallback={reward?.price ? `$${reward?.price.toFixed(2)}` : 'FREE'}
                   />
                 ) : (
