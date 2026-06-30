@@ -37,19 +37,33 @@ export const isRenderReward = (reward?: { tags?: string[] }): boolean =>
  * can be extracted so callers fall back to regular pricing.
  */
 export const normalizeRenderTags = (raw: unknown): string[] | undefined => {
+  const stringFrom = (record: Record<string, unknown>): string | undefined => {
+    const candidate = record.name ?? record.tag ?? record.value ?? record.label
+    return typeof candidate === 'string' ? candidate.toLowerCase() : undefined
+  }
+
   const fromTag = (tag: unknown): string | undefined => {
     if (typeof tag === 'string') {
       return tag.toLowerCase()
     }
     if (tag && typeof tag === 'object') {
-      const candidate =
-        (tag as Record<string, unknown>).name ??
-        (tag as Record<string, unknown>).tag ??
-        (tag as Record<string, unknown>).value ??
-        (tag as Record<string, unknown>).label
-      return typeof candidate === 'string' ? candidate.toLowerCase() : undefined
+      const record = tag as Record<string, unknown>
+      // Strapi serializes a relation as `{ id, attributes: { name } }`, so look inside `attributes` as well as at
+      // the top level before giving up on this tag.
+      return (
+        stringFrom(record) ??
+        (record.attributes && typeof record.attributes === 'object'
+          ? stringFrom(record.attributes as Record<string, unknown>)
+          : undefined)
+      )
     }
     return undefined
+  }
+
+  // Strapi v4 wraps a relation collection in `{ data: [...] }`; unwrap it so the storefront's RENDER rewards are
+  // detected the same way the detail/search flows' plain `string[]` tags are.
+  if (raw && typeof raw === 'object' && !Array.isArray(raw) && 'data' in (raw as Record<string, unknown>)) {
+    return normalizeRenderTags((raw as Record<string, unknown>).data)
   }
 
   if (Array.isArray(raw)) {

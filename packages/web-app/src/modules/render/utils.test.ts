@@ -80,11 +80,24 @@ describe('normalizeRenderTags', () => {
     expect(normalizeRenderTags('RENDER, crypto ')).toEqual(['render', 'crypto'])
   })
 
+  it('extracts tag names nested under a Strapi relation `attributes`', () => {
+    expect(normalizeRenderTags([{ attributes: { name: 'RENDER' } }, { attributes: { name: 'crypto' } }])).toEqual([
+      'render',
+      'crypto',
+    ])
+  })
+
+  it('unwraps a Strapi v4 `{ data: [...] }` relation collection', () => {
+    expect(normalizeRenderTags({ data: [{ id: 1, attributes: { name: 'RENDER' } }] })).toEqual(['render'])
+    expect(normalizeRenderTags({ data: ['RENDER', 'crypto'] })).toEqual(['render', 'crypto'])
+  })
+
   it('returns undefined for empty or unusable input', () => {
     expect(normalizeRenderTags(undefined)).toBeUndefined()
     expect(normalizeRenderTags([])).toBeUndefined()
     expect(normalizeRenderTags('')).toBeUndefined()
     expect(normalizeRenderTags([{ foo: 'bar' }])).toBeUndefined()
+    expect(normalizeRenderTags({ data: [] })).toBeUndefined()
   })
 })
 
@@ -99,6 +112,15 @@ describe('toRenderPriceableReward', () => {
   it('recognizes a RENDER reward whose tags are relation objects', () => {
     const reward = toRenderPriceableReward({ tags: [{ name: 'RENDER' }], price: 1 })
     expect(reward && isRenderReward(reward)).toBe(true)
+  })
+
+  it('recognizes a RENDER reward whose storefront tags use a Strapi v4 relation shape', () => {
+    const reward = toRenderPriceableReward({
+      tags: { data: [{ id: 1, attributes: { name: 'RENDER' } }] },
+      price: 1,
+    })
+    expect(reward && isRenderReward(reward)).toBe(true)
+    expect(getRenderRewardPrice(reward, 0.9997)).toBe(0.9997)
   })
 
   it('reads productValue from the snake_case product_value key', () => {

@@ -158,14 +158,16 @@ const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
     )
   }
 
-  // Detail header: render the live RENDER/USD rate with a "per RENDER" label placed directly below the price, keeping
-  // the freshness ("quoted Ns ago") on that same supporting line.
-  const subLabel = freshnessText ? `per RENDER · ${freshnessText}` : 'per RENDER'
+  // Detail header: a single supporting line beneath the reward price that folds the live RENDER/USD rate, the
+  // "per RENDER" label, and the freshness into one string — e.g. `$0.9997 per RENDER · quoted 9 seconds ago`. The
+  // standalone rate line was removed so the figure above (the reward price) is not duplicated; this line keeps the
+  // smaller freshness styling/font.
+  const rateLabel = `${renderRateFormatter.format(value)} per RENDER`
+  const detailText = freshnessText ? `${rateLabel} · ${freshnessText}` : rateLabel
 
   return (
     <div className={containerClass}>
-      <div className={amountClass}>{renderRateFormatter.format(value)}</div>
-      <div className={freshnessClass}>{subLabel}</div>
+      <div className={freshnessClass}>{detailText}</div>
     </div>
   )
 }
