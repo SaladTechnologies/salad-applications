@@ -2,7 +2,7 @@ import { observer } from 'mobx-react'
 import type { FC } from 'react'
 import { useEffect } from 'react'
 import { getStore } from '../../../../Store'
-import { computeRenderQuote, isRenderReward, renderRewardsEnabled } from '../../../render'
+import { computeRenderQuote, getRenderRewardPrice, isRenderReward, renderRewardsEnabled } from '../../../render'
 import type { Reward } from '../../../reward/models'
 import { RenderPriceQuote } from './RenderPriceQuote'
 
@@ -34,7 +34,14 @@ const _RenderPriceQuoteContainer: FC<RenderPriceQuoteContainerProps> = ({ reward
     return () => render.stopPollingExchangeRate()
   }, [active, render])
 
-  const amount = saladBalance ?? reward?.price ?? 0
+  // The number of RENDER tokens the Chef receives is the reward's fixed grant — the same figure the displayed price is
+  // derived from (`grant * rate`). Converting the reward's RENDER price back through the rate yields exactly that grant
+  // and keeps the order-summary "you'll receive" line consistent with the per-RENDER rate and the line item/total.
+  // Dividing the raw Salad Balance price (`reward.price`) by the rate instead would reintroduce the rate and disagree
+  // with those figures (e.g. show 1.0003 RENDER for a $0.9997 / 1-token reward).
+  const rate = render.exchangeRate?.rate
+  const renderPrice = getRenderRewardPrice(reward, rate)
+  const amount = renderPrice ?? saladBalance ?? reward?.price ?? 0
   const tokenAmount = render.exchangeRate ? computeRenderQuote(amount, render.exchangeRate.rate) : undefined
 
   useEffect(() => {

@@ -94,6 +94,11 @@ const styles = (theme: SaladTheme) => ({
   insufficientBalanceLabel: {
     color: theme.red,
   },
+  // When the missing-wallet warning is shown, give the quoted RENDER rate below it room to breathe so the two lines
+  // don't crowd together.
+  walletWarningSpacing: {
+    marginBottom: 8,
+  },
   lowQuanityLabel: {
     color: theme.darkBlue,
     backgroundColor: theme.green,
@@ -282,7 +287,14 @@ class _RewardHeaderBar extends Component<Props> {
                 </div>
               )}
               {missingRequiredWallet && (
-                <div className={classnames(classes.priceText, classes.stockLabel, classes.insufficientBalanceLabel)}>
+                <div
+                  className={classnames(
+                    classes.priceText,
+                    classes.stockLabel,
+                    classes.insufficientBalanceLabel,
+                    classes.walletWarningSpacing,
+                  )}
+                >
                   <SmartLink to={solanaWalletAccountAnchor}>Add Solana Wallet Address</SmartLink>
                 </div>
               )}

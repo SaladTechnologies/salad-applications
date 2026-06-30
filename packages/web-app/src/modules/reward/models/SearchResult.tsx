@@ -1,5 +1,6 @@
 import type { Reward } from '.'
 import { rewardRoute } from '../../../RouteUtils'
+import { normalizeRenderTags } from '../../render'
 
 export class SearchResult {
   /** The quantity of rewards remaining.
@@ -22,17 +23,6 @@ export class SearchResult {
     public readonly productValue?: number,
   ) {}
 
-  /** Normalizes the raw `tags` field from the search index into a lower-cased string array. */
-  private static parseTags = (raw: unknown): string[] | undefined => {
-    if (Array.isArray(raw)) {
-      return raw.map((tag) => String(tag).toLowerCase())
-    }
-    if (typeof raw === 'string' && raw.length > 0) {
-      return raw.split(',').map((tag) => tag.trim().toLowerCase())
-    }
-    return undefined
-  }
-
   public static parseSearchResult = (result: any): SearchResult => {
     const id = result['id'].raw
     const name = result['name'].raw
@@ -44,7 +34,10 @@ export class SearchResult {
     let quantity: number | undefined = parseInt(result['quantity']?.raw)
     const inStock = result['in_stock']?.raw === 'true'
     const url = rewardRoute(id)
-    const tags = SearchResult.parseTags(result['tags']?.raw)
+    // The search index may serve `tags` as a string array, a comma-separated string, or relation objects, so normalize
+    // through the shared RENDER tag normalizer (rather than a local parser) to reliably detect RENDER rewards here the
+    // same way the storefront/detail flows do.
+    const tags = normalizeRenderTags(result['tags']?.raw)
     const productValue: number | undefined =
       result['product_value']?.raw !== undefined ? parseFloat(result['product_value'].raw) : undefined
 

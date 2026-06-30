@@ -7,6 +7,7 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import Skeleton from 'react-loading-skeleton'
 import type { SaladTheme } from '../../../SaladTheme'
+import { toRenderPriceableReward } from '../../render'
 import type { SearchResult } from '../../reward/models'
 import { getPercentOff } from '../../reward/utils'
 import { RewardMissingImage } from './RewardMissingImage'
@@ -155,7 +156,10 @@ class _RewardItem extends Component<Props> {
             ) : (
               <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
                 {reward ? (
-                  <RewardPrice reward={reward} fallback={reward?.price ? `$${reward?.price.toFixed(2)}` : 'FREE'} />
+                  <RewardPrice
+                    reward={toRenderPriceableReward(reward)}
+                    fallback={reward?.price ? `$${reward?.price.toFixed(2)}` : 'FREE'}
+                  />
                 ) : (
                   <Skeleton width={100} />
                 )}

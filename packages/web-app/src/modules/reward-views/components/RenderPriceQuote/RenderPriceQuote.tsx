@@ -150,9 +150,11 @@ const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
   })
 
   if (isCheckout) {
+    // Label this explicitly as the tokens the Chef will receive so it isn't confused with the per-RENDER USD rate
+    // shown on the reward detail page (the two are reciprocals of each other).
     return (
       <div className={containerClass}>
-        <div className={amountClass}>≈ {renderTokenFormatter.format(value)} RENDER</div>
+        <div className={amountClass}>You'll receive ≈ {renderTokenFormatter.format(value)} RENDER</div>
         {freshnessText && <div className={freshnessClass}>{freshnessText}</div>}
       </div>
     )
