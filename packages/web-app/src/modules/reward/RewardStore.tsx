@@ -9,6 +9,7 @@ import { ChallengeSudoModeTrigger } from '../auth'
 import type { NotificationMessage } from '../notifications/models'
 import { NotificationMessageCategory } from '../notifications/models'
 import type { ProfileStore } from '../profile'
+import { isRenderReward } from '../render'
 import type { SaladPaymentResponse } from '../salad-pay'
 import { AbortError } from '../salad-pay'
 import { SaladPay } from '../salad-pay/SaladPay'
@@ -317,12 +318,28 @@ export class RewardStore {
               break
             case 409:
               this.clearRedemptionInfo()
-              notification = {
-                category: NotificationMessageCategory.Redemption,
-                title: `Thank you for ordering ${reward.name}!`,
-                message: 'Congrats on your pick! Your item is on its way. Check your reward vault for more details.',
-                onClick: () => this.store.routing.push('/store/vault'),
-                autoClose: false,
+              if (isRenderReward(reward)) {
+                // For a RENDER reward a 409 is a genuine failure (e.g. the user's wallet has no RENDER associated
+                // token account) rather than the idempotent "already redeemed" success it represents for other
+                // rewards. Surface it as an error and send the user back to the reward detail page.
+                notification = {
+                  category: NotificationMessageCategory.Error,
+                  // TODO: This copy is temporary; once the API returns a message for this case, surface that instead.
+                  title: 'Uh-oh! We could not complete your redemption.',
+                  message: 'No RENDER associated token account found for wallet you have provided',
+                  autoClose: false,
+                  onClick: () => this.store.routing.push(`/rewards/${reward.id}`),
+                  type: 'error',
+                }
+                this.store.routing.push(`/rewards/${reward.id}`)
+              } else {
+                notification = {
+                  category: NotificationMessageCategory.Redemption,
+                  title: `Thank you for ordering ${reward.name}!`,
+                  message: 'Congrats on your pick! Your item is on its way. Check your reward vault for more details.',
+                  onClick: () => this.store.routing.push('/store/vault'),
+                  autoClose: false,
+                }
               }
               break
             case 400:
