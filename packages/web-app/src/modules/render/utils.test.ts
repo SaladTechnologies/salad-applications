@@ -7,7 +7,9 @@ import {
   getRenderRewardPrice,
   isExchangeRateStale,
   isRenderReward,
+  normalizeRenderTags,
   renderExchangeRateFromResource,
+  toRenderPriceableReward,
 } from './utils'
 
 describe('computeRenderQuote', () => {
@@ -62,6 +64,58 @@ describe('isRenderReward', () => {
 
   it('returns false for an undefined reward', () => {
     expect(isRenderReward(undefined)).toBe(false)
+  })
+})
+
+describe('normalizeRenderTags', () => {
+  it('lower-cases an array of string tags', () => {
+    expect(normalizeRenderTags(['RENDER', 'Crypto'])).toEqual(['render', 'crypto'])
+  })
+
+  it('extracts tag names from an array of relation objects', () => {
+    expect(normalizeRenderTags([{ name: 'RENDER' }, { name: 'crypto' }])).toEqual(['render', 'crypto'])
+  })
+
+  it('splits and trims a comma-separated string', () => {
+    expect(normalizeRenderTags('RENDER, crypto ')).toEqual(['render', 'crypto'])
+  })
+
+  it('returns undefined for empty or unusable input', () => {
+    expect(normalizeRenderTags(undefined)).toBeUndefined()
+    expect(normalizeRenderTags([])).toBeUndefined()
+    expect(normalizeRenderTags('')).toBeUndefined()
+    expect(normalizeRenderTags([{ foo: 'bar' }])).toBeUndefined()
+  })
+})
+
+describe('toRenderPriceableReward', () => {
+  it('recognizes a RENDER reward whose storefront payload uses uppercase string tags', () => {
+    const reward = toRenderPriceableReward({ tags: ['RENDER'], price: 1, productValue: undefined })
+    expect(reward && isRenderReward(reward)).toBe(true)
+    // 1.0-token reward, no productValue, at a $0.9997 rate -> $0.9997 (not the raw $1.00).
+    expect(getRenderRewardPrice(reward, 0.9997)).toBe(0.9997)
+  })
+
+  it('recognizes a RENDER reward whose tags are relation objects', () => {
+    const reward = toRenderPriceableReward({ tags: [{ name: 'RENDER' }], price: 1 })
+    expect(reward && isRenderReward(reward)).toBe(true)
+  })
+
+  it('reads productValue from the snake_case product_value key', () => {
+    const reward = toRenderPriceableReward({ tags: ['render'], price: 5, product_value: 12 })
+    expect(reward?.productValue).toBe(12)
+    expect(getRenderRewardPrice(reward, 0.123456)).toBe(1.4815)
+  })
+
+  it('coerces numeric strings and drops non-finite values', () => {
+    const reward = toRenderPriceableReward({ tags: ['render'], price: '1.5', product_value: 'oops' })
+    expect(reward?.price).toBe(1.5)
+    expect(reward?.productValue).toBeUndefined()
+  })
+
+  it('returns undefined for nullish input', () => {
+    expect(toRenderPriceableReward(undefined)).toBeUndefined()
+    expect(toRenderPriceableReward(null)).toBeUndefined()
   })
 })
 

@@ -1,3 +1,4 @@
+import classnames from 'classnames'
 import { DateTime } from 'luxon'
 import type { FC } from 'react'
 import Skeleton from 'react-loading-skeleton'
@@ -14,20 +15,35 @@ const styles = (theme: SaladTheme) => ({
   },
   containerCheckout: {
     alignItems: 'flex-start',
+    paddingTop: 6,
   },
   amountText: {
-    color: theme.green,
-    fontFamily: theme.fontGroteskLight09,
+    // Book weight (rather than the thin Light09) and the header's light-green keep the token amount clearly legible
+    // against the dark reward-detail header.
+    color: theme.lightGreen,
+    fontFamily: theme.fontGroteskBook25,
     fontSize: 18,
     letterSpacing: 0.5,
   },
   freshnessText: {
     fontFamily: theme.fontGroteskBook25,
-    fontSize: 8,
+    fontSize: 10,
     letterSpacing: 1,
-    color: theme.green,
-    opacity: 0.7,
+    color: theme.lightGreen,
+    opacity: 0.85,
     textTransform: 'uppercase',
+  },
+  // Checkout (order summary) renders on a white modal, so the green used on the dark detail header is illegible there.
+  // A darker green and larger type keep the exchange-rate amount and "quoted at" line readable.
+  amountTextCheckout: {
+    color: theme.darkGreen,
+    fontFamily: theme.fontGroteskMedium25,
+    fontSize: 20,
+  },
+  freshnessTextCheckout: {
+    color: theme.darkGreen,
+    fontSize: 12,
+    opacity: 1,
   },
   staleText: {
     color: theme.orange,
@@ -37,8 +53,13 @@ const styles = (theme: SaladTheme) => ({
     fontFamily: theme.fontGroteskBook25,
     fontSize: 10,
     letterSpacing: 1,
-    color: theme.green,
-    opacity: 0.7,
+    color: theme.lightGreen,
+    opacity: 0.85,
+  },
+  errorTextCheckout: {
+    color: theme.darkGreen,
+    fontSize: 12,
+    opacity: 1,
   },
   skeleton: {
     width: 90,
@@ -74,8 +95,10 @@ const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
   asOf,
   variant = 'detail',
 }) => {
-  const containerClass =
-    variant === 'checkout' ? `${classes.container} ${classes.containerCheckout}` : classes.container
+  const isCheckout = variant === 'checkout'
+  const containerClass = isCheckout ? `${classes.container} ${classes.containerCheckout}` : classes.container
+  const amountClass = isCheckout ? `${classes.amountText} ${classes.amountTextCheckout}` : classes.amountText
+  const errorClass = isCheckout ? `${classes.errorText} ${classes.errorTextCheckout}` : classes.errorText
 
   if (loading && tokenAmount === undefined) {
     return (
@@ -90,7 +113,7 @@ const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
   if (error && tokenAmount === undefined) {
     return (
       <div className={containerClass}>
-        <div className={classes.errorText}>RENDER price unavailable</div>
+        <div className={errorClass}>RENDER price unavailable</div>
       </div>
     )
   }
@@ -106,14 +129,15 @@ const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
     ? `Quoted ${asOfLabel}`
     : undefined
 
+  const freshnessClass = classnames(classes.freshnessText, {
+    [classes.freshnessTextCheckout]: isCheckout,
+    [classes.staleText]: stale,
+  })
+
   return (
     <div className={containerClass}>
-      <div className={classes.amountText}>≈ {renderTokenFormatter.format(tokenAmount)} RENDER</div>
-      {freshnessText && (
-        <div className={stale ? `${classes.freshnessText} ${classes.staleText}` : classes.freshnessText}>
-          {freshnessText}
-        </div>
-      )}
+      <div className={amountClass}>≈ {renderTokenFormatter.format(tokenAmount)} RENDER</div>
+      {freshnessText && <div className={freshnessClass}>{freshnessText}</div>}
     </div>
   )
 }

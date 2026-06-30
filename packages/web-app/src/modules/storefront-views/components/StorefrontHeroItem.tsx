@@ -9,6 +9,7 @@ import withStyles from 'react-jss'
 import Skeleton from 'react-loading-skeleton'
 import { Button, SmartLink } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
+import { toRenderPriceableReward } from '../../render'
 import { RewardMissingImage } from '../../reward-views/components/RewardMissingImage'
 import { RewardPrice } from '../../reward-views/components/RewardPrice'
 import { getPercentOff } from '../../reward/utils'
@@ -195,7 +196,7 @@ class _StorefrontHeroItem extends Component<Props> {
                     </div>
                   ) : (
                     <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
-                      <RewardPrice reward={reward} fallback={subheading} />
+                      <RewardPrice reward={toRenderPriceableReward(reward)} fallback={subheading} />
                     </div>
                   )}
                   {outOfStock && (

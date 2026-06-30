@@ -11,6 +11,7 @@ import { withLogin } from '../../../auth-views'
 import { type Passkey } from '../../../passkey-setup'
 import type { Avatar, Profile } from '../../../profile/models'
 import { renderRewardsEnabled } from '../../../render'
+import { solanaWalletAnchorId } from '../../../solana-wallet'
 import { AccountSecurityContainer } from './AccountSecurity/AccountSecurityContainer'
 import { AccountTermsAndConditionsUpdate } from './AccountTermsAndConditionsUpdate'
 import { GoogleSignInForm } from './GoogleSignInForm'
@@ -137,6 +138,19 @@ const _Account: FC<Props> = ({
   useEffect(() => {
     loadGoogleAccountConnection()
   }, [loadGoogleAccountConnection])
+
+  // The account page scrolls inside a custom scrollbar container, so the browser's native `#hash` anchoring never
+  // fires. When deep-linked to the Solana wallet section (e.g. from the checkout "add your Solana wallet address"
+  // link), scroll that section into view explicitly once it has mounted.
+  useEffect(() => {
+    if (!renderRewardsEnabled || location.hash !== `#${solanaWalletAnchorId}`) {
+      return
+    }
+    const timeout = setTimeout(() => {
+      document.getElementById(solanaWalletAnchorId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 150)
+    return () => clearTimeout(timeout)
+  }, [location.hash])
 
   const shouldShowUpdateAccountTermsAndConditions = !!profile?.pendingTermsVersion
   const handleSubmitButtonReset = () => {

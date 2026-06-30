@@ -28,6 +28,77 @@ export const isRenderReward = (reward?: { tags?: string[] }): boolean =>
   !!reward?.tags?.some((tag) => tag?.toLowerCase() === renderRewardTag)
 
 /**
+ * Normalizes a raw `tags` value into a lower-cased string array, regardless of the shape the source API uses.
+ *
+ * The reward-detail and search flows already hand us `string[]`, but the storefront (`/api/v2/storefront`) payload is
+ * a lean, separately-serialized shape whose `tags` may arrive as a comma-separated string or as an array of relation
+ * objects (e.g. `[{ name: 'RENDER' }]`) rather than plain strings. Normalizing here means RENDER rewards are detected
+ * on the storefront listing no matter which of those shapes the API returns. Returns `undefined` when no usable tag
+ * can be extracted so callers fall back to regular pricing.
+ */
+export const normalizeRenderTags = (raw: unknown): string[] | undefined => {
+  const fromTag = (tag: unknown): string | undefined => {
+    if (typeof tag === 'string') {
+      return tag.toLowerCase()
+    }
+    if (tag && typeof tag === 'object') {
+      const candidate =
+        (tag as Record<string, unknown>).name ??
+        (tag as Record<string, unknown>).tag ??
+        (tag as Record<string, unknown>).value ??
+        (tag as Record<string, unknown>).label
+      return typeof candidate === 'string' ? candidate.toLowerCase() : undefined
+    }
+    return undefined
+  }
+
+  if (Array.isArray(raw)) {
+    const tags = raw.map(fromTag).filter((tag): tag is string => tag !== undefined)
+    return tags.length > 0 ? tags : undefined
+  }
+
+  if (typeof raw === 'string' && raw.length > 0) {
+    const tags = raw
+      .split(',')
+      .map((tag) => tag.trim().toLowerCase())
+      .filter((tag) => tag.length > 0)
+    return tags.length > 0 ? tags : undefined
+  }
+
+  return undefined
+}
+
+/**
+ * Builds a {@link RenderPriceableReward} from an arbitrary reward-shaped object, tolerating the loosely-typed payloads
+ * served by the storefront API.
+ *
+ * It normalizes `tags` via {@link normalizeRenderTags} and accepts the token amount under either the camelCase
+ * `productValue` or the snake_case `product_value` key (the storefront payload mixes the two casing conventions). This
+ * lets {@link isRenderReward}/{@link getRenderRewardPrice} resolve RENDER pricing on the storefront listing the same
+ * way they already do on the detail, search, and checkout flows.
+ */
+export const toRenderPriceableReward = (raw: unknown): RenderPriceableReward | undefined => {
+  if (!raw || typeof raw !== 'object') {
+    return undefined
+  }
+
+  const record = raw as Record<string, unknown>
+  const toFiniteNumber = (value: unknown): number | undefined => {
+    if (value === undefined || value === null) {
+      return undefined
+    }
+    const parsed = typeof value === 'number' ? value : Number(value)
+    return Number.isFinite(parsed) ? parsed : undefined
+  }
+
+  return {
+    tags: normalizeRenderTags(record.tags),
+    price: toFiniteNumber(record.price),
+    productValue: toFiniteNumber(record.productValue ?? record.product_value),
+  }
+}
+
+/**
  * Computes the Salad Balance price (USD) to display for a RENDER reward.
  *
  * This is the single source of truth for RENDER reward pricing across every flow (search, storefront listing, reward

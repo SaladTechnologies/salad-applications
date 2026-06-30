@@ -127,12 +127,15 @@ const _SaladPayOrderSummaryPage: FC<Props> = ({
   const hasEnoughBalance =
     availableBalance !== undefined && request !== undefined && availableBalance >= request.total.amount
 
-  // Warn (but do not hard-block) when redeeming a reward that needs a Solana wallet the Chef hasn't set yet.
-  const showMissingWalletWarning =
+  // Hard-block checkout when redeeming a reward that needs a Solana wallet the Chef hasn't set yet: RENDER token
+  // rewards are paid out on-chain, so without an address on file there is nowhere to send them.
+  const missingRequiredWallet =
     renderRewardsEnabled && rewardRequiresSolanaAddress(reward) && !isSolanaWalletLoading && !solanaWalletAddress
 
+  const canConfirm = hasEnoughBalance && !missingRequiredWallet
+
   const handleConfirmClick = () => {
-    if (hasEnoughBalance) {
+    if (canConfirm) {
       onConfirm()
     }
   }
@@ -187,9 +190,9 @@ const _SaladPayOrderSummaryPage: FC<Props> = ({
               </div>
             </div>
             <RenderPriceQuoteContainer reward={reward} saladBalance={request.total.amount} variant="checkout" />
-            {showMissingWalletWarning && (
+            {missingRequiredWallet && (
               <div className={classes.walletWarning}>
-                You haven't added a Solana wallet address yet. RENDER token rewards are sent on-chain, so{' '}
+                You can't redeem this reward yet. RENDER token rewards are sent on-chain, so you must{' '}
                 <SmartLink className={classes.walletWarningLink} to={solanaWalletAccountAnchor}>
                   add your Solana wallet address
                 </SmartLink>{' '}
@@ -213,7 +216,7 @@ const _SaladPayOrderSummaryPage: FC<Props> = ({
                 )}
               </div>
               <div>
-                <SaladPayCheckoutButton onClick={handleConfirmClick} loading={processing} enabled={hasEnoughBalance} />
+                <SaladPayCheckoutButton onClick={handleConfirmClick} loading={processing} enabled={canConfirm} />
                 <div className={classes.disclaimer}>Salad Plays for Keeps, No Refunds</div>
               </div>
             </div>
