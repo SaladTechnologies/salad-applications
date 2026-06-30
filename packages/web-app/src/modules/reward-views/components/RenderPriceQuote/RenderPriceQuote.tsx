@@ -71,6 +71,15 @@ const renderTokenFormatter = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: renderQuoteDisplayDecimals,
 })
 
+// The detail header shows the live RENDER/USD rate as a currency value (e.g. `$0.9997`), pinned to the same precision
+// used to price the reward so the two figures stay consistent.
+const renderRateFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  minimumFractionDigits: renderQuoteDisplayDecimals,
+  maximumFractionDigits: renderQuoteDisplayDecimals,
+})
+
 export interface RenderPriceQuoteProps extends WithStyles<typeof styles> {
   /** Whether a quote request is currently in flight and no quote is available yet. */
   loading?: boolean
@@ -78,8 +87,10 @@ export interface RenderPriceQuoteProps extends WithStyles<typeof styles> {
   error?: boolean
   /** Whether the currently displayed quote is stale. */
   stale?: boolean
-  /** The number of RENDER tokens the reward's Salad Balance value converts to. */
+  /** The number of RENDER tokens the reward's Salad Balance value converts to. Shown in the `checkout` variant. */
   tokenAmount?: number
+  /** The current price of a single RENDER token, in USD. Shown as the per-token rate in the `detail` variant. */
+  rate?: number
   /** When the displayed quote was generated. */
   asOf?: Date
   /** Controls layout/labelling for the detail header vs. the checkout review surface. */
@@ -92,6 +103,7 @@ const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
   error,
   stale,
   tokenAmount,
+  rate,
   asOf,
   variant = 'detail',
 }) => {
@@ -100,7 +112,10 @@ const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
   const amountClass = isCheckout ? `${classes.amountText} ${classes.amountTextCheckout}` : classes.amountText
   const errorClass = isCheckout ? `${classes.errorText} ${classes.errorTextCheckout}` : classes.errorText
 
-  if (loading && tokenAmount === undefined) {
+  // The checkout variant shows how many RENDER tokens the balance buys; the detail variant shows the per-token rate.
+  const value = isCheckout ? tokenAmount : rate
+
+  if (loading && value === undefined) {
     return (
       <div className={containerClass}>
         <div className={classes.skeleton}>
@@ -110,7 +125,7 @@ const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
     )
   }
 
-  if (error && tokenAmount === undefined) {
+  if (error && value === undefined) {
     return (
       <div className={containerClass}>
         <div className={errorClass}>RENDER price unavailable</div>
@@ -118,7 +133,7 @@ const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
     )
   }
 
-  if (tokenAmount === undefined) {
+  if (value === undefined) {
     return null
   }
 
@@ -134,10 +149,23 @@ const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
     [classes.staleText]: stale,
   })
 
+  if (isCheckout) {
+    return (
+      <div className={containerClass}>
+        <div className={amountClass}>≈ {renderTokenFormatter.format(value)} RENDER</div>
+        {freshnessText && <div className={freshnessClass}>{freshnessText}</div>}
+      </div>
+    )
+  }
+
+  // Detail header: render the live RENDER/USD rate with a "per RENDER" label placed directly below the price, keeping
+  // the freshness ("quoted Ns ago") on that same supporting line.
+  const subLabel = freshnessText ? `per RENDER · ${freshnessText}` : 'per RENDER'
+
   return (
     <div className={containerClass}>
-      <div className={amountClass}>≈ {renderTokenFormatter.format(tokenAmount)} RENDER</div>
-      {freshnessText && <div className={freshnessClass}>{freshnessText}</div>}
+      <div className={amountClass}>{renderRateFormatter.format(value)}</div>
+      <div className={freshnessClass}>{subLabel}</div>
     </div>
   )
 }

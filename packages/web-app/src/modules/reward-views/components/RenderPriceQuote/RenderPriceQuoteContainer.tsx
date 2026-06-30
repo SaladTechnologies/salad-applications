@@ -55,6 +55,7 @@ const _RenderPriceQuoteContainer: FC<RenderPriceQuoteContainerProps> = ({ reward
       error={render.hasExchangeRateError}
       stale={render.isExchangeRateStale}
       tokenAmount={tokenAmount}
+      rate={render.exchangeRate?.rate}
       asOf={render.exchangeRate?.asOf}
       variant={variant}
     />
