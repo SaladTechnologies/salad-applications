@@ -6,7 +6,7 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { ErrorText } from '../../../../../components'
 import { SuccessText } from '../../../../../components/primitives/content/SuccessText'
-import type { SolanaWalletSubmitStatus } from '../../../../solana-wallet'
+import { solanaWalletAnchorId, type SolanaWalletSubmitStatus } from '../../../../solana-wallet'
 import type { FormValues } from '../Account'
 import { styles } from './SolanaWallet.styles'
 
@@ -67,7 +67,7 @@ const _SolanaWallet: FC<Props> = ({
   const showForm = isEditing || !walletAddress
 
   return (
-    <div className={classes.solanaWalletWrapper}>
+    <div id={solanaWalletAnchorId} className={classes.solanaWalletWrapper}>
       <Text variant="baseXL">Solana Wallet</Text>
       <div className={classes.description}>
         <Text variant="baseS">

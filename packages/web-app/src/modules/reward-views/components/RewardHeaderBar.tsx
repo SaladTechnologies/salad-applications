@@ -5,10 +5,13 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Button, SmartLink } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
+import { renderRewardsEnabled } from '../../render'
 import type { Reward } from '../../reward/models'
 import { getPercentOff } from '../../reward/utils'
+import { rewardRequiresSolanaAddress, solanaWalletAccountAnchor } from '../../solana-wallet'
 import { IconArrowLeft } from './assets'
 import { RenderPriceQuoteContainer } from './RenderPriceQuote'
+import { RewardPrice } from './RewardPrice'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -91,6 +94,11 @@ const styles = (theme: SaladTheme) => ({
   insufficientBalanceLabel: {
     color: theme.red,
   },
+  // When the missing-wallet warning is shown, give the quoted RENDER rate below it room to breathe so the two lines
+  // don't crowd together.
+  walletWarningSpacing: {
+    marginBottom: 8,
+  },
   lowQuanityLabel: {
     color: theme.darkBlue,
     backgroundColor: theme.green,
@@ -122,12 +130,37 @@ interface Props extends WithStyles<typeof styles> {
   onRedeem?: (reward?: Reward) => void
   isTargetReward?: boolean
   requiresMinecraftUsername: boolean
+  /** The Chef's saved Solana wallet address, if any. Used to gate Buy Now for wallet-required rewards. */
+  solanaWalletAddress?: string
+  /** Whether the Solana wallet is still being loaded (suppresses the gate until we know). */
+  isSolanaWalletLoading?: boolean
+  /** Loads the Chef's Solana wallet so the missing-wallet gate can be evaluated. */
+  loadSolanaWallet?: () => void
   trackDisabledBuyNowClick: () => void
   onRemoveTargetRewardClick: () => void
   onTargetThisRewardClick: (reward: Reward) => void
 }
 
 class _RewardHeaderBar extends Component<Props> {
+  // RENDER token rewards are paid out on-chain, so they carry a `requires-solana-address` tag. Load the Chef's saved
+  // wallet (mirroring the order-summary flow) so Buy Now can be hard-blocked until an address is on file.
+  private maybeLoadSolanaWallet() {
+    const { reward, authenticated, loadSolanaWallet } = this.props
+    if (renderRewardsEnabled && authenticated && rewardRequiresSolanaAddress(reward)) {
+      loadSolanaWallet?.()
+    }
+  }
+
+  public override componentDidMount() {
+    this.maybeLoadSolanaWallet()
+  }
+
+  public override componentDidUpdate(prevProps: Props) {
+    if (prevProps.reward?.id !== this.props.reward?.id) {
+      this.maybeLoadSolanaWallet()
+    }
+  }
+
   handleRedeem = () => {
     const { reward, onRedeem } = this.props
     if (onRedeem) {
@@ -156,6 +189,8 @@ class _RewardHeaderBar extends Component<Props> {
       authenticated,
       currentBalance,
       requiresMinecraftUsername,
+      solanaWalletAddress,
+      isSolanaWalletLoading,
       trackDisabledBuyNowClick,
       onRemoveTargetRewardClick,
       isTargetReward,
@@ -172,7 +207,16 @@ class _RewardHeaderBar extends Component<Props> {
     const promoGame: boolean = reward ? reward?.price === 0 : false
     const hasBalance = reward ? reward?.price <= balance : false
 
-    const disabled = outOfStock || promoGame || (authenticated && !hasBalance)
+    // Hard-block Buy Now when redeeming a reward that needs a Solana wallet the Chef hasn't set yet: RENDER token
+    // rewards are paid out on-chain, so without an address on file there is nowhere to send them.
+    const missingRequiredWallet =
+      renderRewardsEnabled &&
+      !!authenticated &&
+      rewardRequiresSolanaAddress(reward) &&
+      !isSolanaWalletLoading &&
+      !solanaWalletAddress
+
+    const disabled = outOfStock || promoGame || (authenticated && !hasBalance) || missingRequiredWallet
 
     const getTargetRewardControl = () => {
       if (!reward) {
@@ -214,7 +258,7 @@ class _RewardHeaderBar extends Component<Props> {
                     [classes.outOfStockPrice]: outOfStock,
                   })}
                 >
-                  ${reward ? reward.price.toFixed(2) : '-'}
+                  <RewardPrice reward={reward} fallback={reward ? `$${reward.price.toFixed(2)}` : '-'} />
                 </div>
               )}
               {reward && reward.originalPrice && !outOfStock && (
@@ -240,6 +284,18 @@ class _RewardHeaderBar extends Component<Props> {
               {requiresMinecraftUsername && authenticated && (
                 <div className={classnames(classes.priceText, classes.stockLabel, classes.insufficientBalanceLabel)}>
                   <SmartLink to="/account/summary">Add Minecraft Username</SmartLink>
+                </div>
+              )}
+              {missingRequiredWallet && (
+                <div
+                  className={classnames(
+                    classes.priceText,
+                    classes.stockLabel,
+                    classes.insufficientBalanceLabel,
+                    classes.walletWarningSpacing,
+                  )}
+                >
+                  <SmartLink to={solanaWalletAccountAnchor}>Add Solana Wallet Address</SmartLink>
                 </div>
               )}
               <RenderPriceQuoteContainer reward={reward} variant="detail" />

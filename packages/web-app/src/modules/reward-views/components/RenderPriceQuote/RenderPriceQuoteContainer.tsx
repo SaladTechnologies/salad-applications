@@ -2,7 +2,7 @@ import { observer } from 'mobx-react'
 import type { FC } from 'react'
 import { useEffect } from 'react'
 import { getStore } from '../../../../Store'
-import { computeRenderQuote, isRenderReward, renderPriceQuotesEnabled } from '../../../render'
+import { computeRenderQuote, getRenderRewardPrice, isRenderReward, renderRewardsEnabled } from '../../../render'
 import type { Reward } from '../../../reward/models'
 import { RenderPriceQuote } from './RenderPriceQuote'
 
@@ -18,11 +18,11 @@ export interface RenderPriceQuoteContainerProps {
 /**
  * Surfaces a live RENDER price quote for a reward.
  *
- * Renders nothing — and triggers no network activity — unless the internal {@link renderPriceQuotesEnabled} flag is
+ * Renders nothing — and triggers no network activity — unless the internal {@link renderRewardsEnabled} flag is
  * on and the reward is a RENDER reward. While active it keeps the quote fresh via the {@link RenderStore} poll loop.
  */
 const _RenderPriceQuoteContainer: FC<RenderPriceQuoteContainerProps> = ({ reward, saladBalance, variant }) => {
-  const active = renderPriceQuotesEnabled && isRenderReward(reward)
+  const active = renderRewardsEnabled && isRenderReward(reward)
   const store = getStore()
   const render = store.render
 
@@ -34,7 +34,14 @@ const _RenderPriceQuoteContainer: FC<RenderPriceQuoteContainerProps> = ({ reward
     return () => render.stopPollingExchangeRate()
   }, [active, render])
 
-  const amount = saladBalance ?? reward?.price ?? 0
+  // The displayed quote now shows the per-RENDER USD rate (matching the detail page) rather than a tokens-received
+  // figure, but we still derive the token amount for analytics. The number of RENDER tokens the Chef receives is the
+  // reward's fixed grant — the same figure the displayed price is derived from (`grant * rate`). Converting the
+  // reward's RENDER price back through the rate yields exactly that grant. Dividing the raw Salad Balance price
+  // (`reward.price`) by the rate instead would reintroduce the rate and report a slightly different grant.
+  const rate = render.exchangeRate?.rate
+  const renderPrice = getRenderRewardPrice(reward, rate)
+  const amount = renderPrice ?? saladBalance ?? reward?.price ?? 0
   const tokenAmount = render.exchangeRate ? computeRenderQuote(amount, render.exchangeRate.rate) : undefined
 
   useEffect(() => {
@@ -54,7 +61,7 @@ const _RenderPriceQuoteContainer: FC<RenderPriceQuoteContainerProps> = ({ reward
       loading={render.isLoadingExchangeRate}
       error={render.hasExchangeRateError}
       stale={render.isExchangeRateStale}
-      tokenAmount={tokenAmount}
+      rate={render.exchangeRate?.rate}
       asOf={render.exchangeRate?.asOf}
       variant={variant}
     />

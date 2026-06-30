@@ -7,9 +7,12 @@ import { SaladPayPage } from '.'
 import type { SaladTheme } from '../../../SaladTheme'
 import { SmartLink } from '../../../components'
 import { currencyFormatter } from '../../../formatters'
+import { renderRewardsEnabled } from '../../render'
 import { RenderPriceQuoteContainer } from '../../reward-views/components/RenderPriceQuote'
+import { RewardPrice } from '../../reward-views/components/RewardPrice'
 import type { Reward } from '../../reward/models'
 import type { SaladPaymentRequestOptions } from '../../salad-pay/models'
+import { rewardRequiresSolanaAddress, solanaWalletAccountAnchor } from '../../solana-wallet'
 import { SaladPayCheckoutButton } from './SaladPayCheckoutButton'
 
 const styles = (theme: SaladTheme) => ({
@@ -74,6 +77,20 @@ const styles = (theme: SaladTheme) => ({
     textAlign: 'center',
     textTransform: 'uppercase',
   },
+  walletWarning: {
+    fontFamily: theme.fontGroteskBook19,
+    fontSize: 12,
+    color: theme.red,
+    border: `1px solid ${theme.red}`,
+    borderRadius: 4,
+    padding: '10px 12px',
+    marginTop: 16,
+  },
+  walletWarningLink: {
+    color: theme.red,
+    fontWeight: 'bold',
+    textDecoration: 'underline',
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -81,6 +98,12 @@ interface Props extends WithStyles<typeof styles> {
   processing?: boolean
   request?: SaladPaymentRequestOptions
   reward?: Reward
+  /** The Chef's saved Solana wallet address, if any. Used to warn before redeeming a wallet-required reward. */
+  solanaWalletAddress?: string
+  /** Whether the Solana wallet is still being loaded (suppresses the warning until we know). */
+  isSolanaWalletLoading?: boolean
+  /** Loads the Chef's Solana wallet so the missing-wallet warning can be evaluated. */
+  loadSolanaWallet?: () => void
   onConfirm: () => void
   onCloseClick: () => void
   onAbort: () => void
@@ -94,6 +117,9 @@ const _SaladPayOrderSummaryPage: FC<Props> = ({
   processing,
   request,
   reward,
+  solanaWalletAddress,
+  isSolanaWalletLoading,
+  loadSolanaWallet,
   onConfirm,
   onCloseClick,
   onAbort,
@@ -101,11 +127,26 @@ const _SaladPayOrderSummaryPage: FC<Props> = ({
   const hasEnoughBalance =
     availableBalance !== undefined && request !== undefined && availableBalance >= request.total.amount
 
+  // Hard-block checkout when redeeming a reward that needs a Solana wallet the Chef hasn't set yet: RENDER token
+  // rewards are paid out on-chain, so without an address on file there is nowhere to send them.
+  const missingRequiredWallet =
+    renderRewardsEnabled && rewardRequiresSolanaAddress(reward) && !isSolanaWalletLoading && !solanaWalletAddress
+
+  const canConfirm = hasEnoughBalance && !missingRequiredWallet
+
   const handleConfirmClick = () => {
-    if (hasEnoughBalance) {
+    if (canConfirm) {
       onConfirm()
     }
   }
+
+  useEffect(() => {
+    if (renderRewardsEnabled && rewardRequiresSolanaAddress(reward)) {
+      loadSolanaWallet?.()
+    }
+    // Re-evaluate only when the reward changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadSolanaWallet, reward?.id])
 
   useEffect(() => {
     window.addEventListener('popstate', onAbort)
@@ -131,16 +172,33 @@ const _SaladPayOrderSummaryPage: FC<Props> = ({
                 {request.displayItems.map((x, i) => (
                   <div key={i} className={classNames(classes.row, classes.item)}>
                     <div className={classes.leftText}>{x.label}</div>
-                    <div>{moneyFormat(x.amount)}</div>
+                    <div>
+                      {reward !== undefined && x.label === reward.name ? (
+                        <RewardPrice reward={reward} fallback={moneyFormat(x.amount)} />
+                      ) : (
+                        moneyFormat(x.amount)
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
             )}
             <div className={classNames(classes.row, classes.total)}>
               <div className={classes.leftText}>{request.total.label}</div>
-              <div>{moneyFormat(request.total.amount)}</div>
+              <div>
+                <RewardPrice reward={reward} fallback={moneyFormat(request.total.amount)} />
+              </div>
             </div>
             <RenderPriceQuoteContainer reward={reward} saladBalance={request.total.amount} variant="checkout" />
+            {missingRequiredWallet && (
+              <div className={classes.walletWarning}>
+                You can't redeem this reward yet. RENDER token rewards are sent on-chain, so you must{' '}
+                <SmartLink className={classes.walletWarningLink} to={solanaWalletAccountAnchor}>
+                  add your Solana wallet address
+                </SmartLink>{' '}
+                before redeeming.
+              </div>
+            )}
             <div className={classNames(classes.row, classes.balanceRow)}>
               <div className={classes.leftText}>
                 <div className={classes.title}>Available Balance</div>
@@ -158,7 +216,7 @@ const _SaladPayOrderSummaryPage: FC<Props> = ({
                 )}
               </div>
               <div>
-                <SaladPayCheckoutButton onClick={handleConfirmClick} loading={processing} enabled={hasEnoughBalance} />
+                <SaladPayCheckoutButton onClick={handleConfirmClick} loading={processing} enabled={canConfirm} />
                 <div className={classes.disclaimer}>Salad Plays for Keeps, No Refunds</div>
               </div>
             </div>

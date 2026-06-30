@@ -1,3 +1,4 @@
+import classnames from 'classnames'
 import { DateTime } from 'luxon'
 import type { FC } from 'react'
 import Skeleton from 'react-loading-skeleton'
@@ -14,20 +15,35 @@ const styles = (theme: SaladTheme) => ({
   },
   containerCheckout: {
     alignItems: 'flex-start',
+    paddingTop: 6,
   },
   amountText: {
-    color: theme.green,
-    fontFamily: theme.fontGroteskLight09,
+    // Book weight (rather than the thin Light09) and the header's light-green keep the token amount clearly legible
+    // against the dark reward-detail header.
+    color: theme.lightGreen,
+    fontFamily: theme.fontGroteskBook25,
     fontSize: 18,
     letterSpacing: 0.5,
   },
   freshnessText: {
     fontFamily: theme.fontGroteskBook25,
-    fontSize: 8,
+    fontSize: 10,
     letterSpacing: 1,
-    color: theme.green,
-    opacity: 0.7,
+    color: theme.lightGreen,
+    opacity: 0.85,
     textTransform: 'uppercase',
+  },
+  // Checkout (order summary) renders on a white modal, so the green used on the dark detail header is illegible there.
+  // A darker green and larger type keep the exchange-rate amount and "quoted at" line readable.
+  amountTextCheckout: {
+    color: theme.darkGreen,
+    fontFamily: theme.fontGroteskMedium25,
+    fontSize: 20,
+  },
+  freshnessTextCheckout: {
+    color: theme.darkGreen,
+    fontSize: 12,
+    opacity: 1,
   },
   staleText: {
     color: theme.orange,
@@ -37,16 +53,25 @@ const styles = (theme: SaladTheme) => ({
     fontFamily: theme.fontGroteskBook25,
     fontSize: 10,
     letterSpacing: 1,
-    color: theme.green,
-    opacity: 0.7,
+    color: theme.lightGreen,
+    opacity: 0.85,
+  },
+  errorTextCheckout: {
+    color: theme.darkGreen,
+    fontSize: 12,
+    opacity: 1,
   },
   skeleton: {
     width: 90,
   },
 })
 
-const renderTokenFormatter = new Intl.NumberFormat('en-US', {
-  minimumFractionDigits: 0,
+// Both the detail header and the checkout summary show the live RENDER/USD rate as a currency value (e.g. `$0.9997`),
+// pinned to the same precision used to price the reward so the figures stay consistent.
+const renderRateFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  minimumFractionDigits: renderQuoteDisplayDecimals,
   maximumFractionDigits: renderQuoteDisplayDecimals,
 })
 
@@ -57,8 +82,8 @@ export interface RenderPriceQuoteProps extends WithStyles<typeof styles> {
   error?: boolean
   /** Whether the currently displayed quote is stale. */
   stale?: boolean
-  /** The number of RENDER tokens the reward's Salad Balance value converts to. */
-  tokenAmount?: number
+  /** The current price of a single RENDER token, in USD. Shown as the per-token rate in both variants. */
+  rate?: number
   /** When the displayed quote was generated. */
   asOf?: Date
   /** Controls layout/labelling for the detail header vs. the checkout review surface. */
@@ -70,14 +95,19 @@ const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
   loading,
   error,
   stale,
-  tokenAmount,
+  rate,
   asOf,
   variant = 'detail',
 }) => {
-  const containerClass =
-    variant === 'checkout' ? `${classes.container} ${classes.containerCheckout}` : classes.container
+  const isCheckout = variant === 'checkout'
+  const containerClass = isCheckout ? `${classes.container} ${classes.containerCheckout}` : classes.container
+  const amountClass = isCheckout ? `${classes.amountText} ${classes.amountTextCheckout}` : classes.amountText
+  const errorClass = isCheckout ? `${classes.errorText} ${classes.errorTextCheckout}` : classes.errorText
 
-  if (loading && tokenAmount === undefined) {
+  // Both variants surface the live per-RENDER USD rate; only the layout/labelling differs.
+  const value = rate
+
+  if (loading && value === undefined) {
     return (
       <div className={containerClass}>
         <div className={classes.skeleton}>
@@ -87,15 +117,15 @@ const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
     )
   }
 
-  if (error && tokenAmount === undefined) {
+  if (error && value === undefined) {
     return (
       <div className={containerClass}>
-        <div className={classes.errorText}>RENDER price unavailable</div>
+        <div className={errorClass}>RENDER price unavailable</div>
       </div>
     )
   }
 
-  if (tokenAmount === undefined) {
+  if (value === undefined) {
     return null
   }
 
@@ -106,14 +136,35 @@ const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
     ? `Quoted ${asOfLabel}`
     : undefined
 
+  const freshnessClass = classnames(classes.freshnessText, {
+    [classes.freshnessTextCheckout]: isCheckout,
+    [classes.staleText]: stale,
+  })
+
+  // Both variants show the cost of a single RENDER token (e.g. `$0.9997 per RENDER`); the detail page derives the
+  // reward price from this same rate, so the figures stay consistent.
+  const rateLabel = `${renderRateFormatter.format(value)} per RENDER`
+
+  if (isCheckout) {
+    // Order summary: show what one RENDER token costs as the prominent figure, with the "quoted N seconds ago"
+    // freshness line directly below it (mirroring the line-item/total layout on the white checkout modal).
+    return (
+      <div className={containerClass}>
+        <div className={amountClass}>{rateLabel}</div>
+        {freshnessText && <div className={freshnessClass}>{freshnessText}</div>}
+      </div>
+    )
+  }
+
+  // Detail header: a single supporting line beneath the reward price that folds the live RENDER/USD rate, the
+  // "per RENDER" label, and the freshness into one string — e.g. `$0.9997 per RENDER · quoted 9 seconds ago`. The
+  // standalone rate line was removed so the figure above (the reward price) is not duplicated; this line keeps the
+  // smaller freshness styling/font.
+  const detailText = freshnessText ? `${rateLabel} · ${freshnessText}` : rateLabel
+
   return (
     <div className={containerClass}>
-      <div className={classes.amountText}>≈ {renderTokenFormatter.format(tokenAmount)} RENDER</div>
-      {freshnessText && (
-        <div className={stale ? `${classes.freshnessText} ${classes.staleText}` : classes.freshnessText}>
-          {freshnessText}
-        </div>
-      )}
+      <div className={freshnessClass}>{detailText}</div>
     </div>
   )
 }

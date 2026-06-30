@@ -33,6 +33,9 @@ const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ id: stri
     onRemoveTargetRewardClick: store.rewards.removeSelectedTargetReward,
     isTargetReward: isRewardSelectedAsTarget,
     requiresMinecraftUsername: requiresMinecraftUsername,
+    solanaWalletAddress: store.solanaWallet.walletAddress,
+    isSolanaWalletLoading: store.solanaWallet.isLoading,
+    loadSolanaWallet: store.solanaWallet.loadWallet,
     trackDisabledBuyNowClick,
   }
 }

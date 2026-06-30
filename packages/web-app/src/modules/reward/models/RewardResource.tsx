@@ -29,6 +29,9 @@ export interface RewardResource {
   /** Purchase price */
   price: number
 
+  /** The token/unit value the reward grants. For RENDER rewards this is the number of RENDER tokens paid out. */
+  productValue?: number
+
   /** MSRP of the reward */
   originalPrice?: number
 

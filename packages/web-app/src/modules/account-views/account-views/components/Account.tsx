@@ -1,6 +1,6 @@
 import { AvatarSelectionForm, Layout, Text, TextField } from '@saladtechnologies/garden-components'
 import type { FC } from 'react'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
@@ -10,7 +10,8 @@ import { Head } from '../../../../components'
 import { withLogin } from '../../../auth-views'
 import { type Passkey } from '../../../passkey-setup'
 import type { Avatar, Profile } from '../../../profile/models'
-import { SOLANA_WALLET_ENABLED } from '../../../solana-wallet/constants'
+import { renderRewardsEnabled } from '../../../render'
+import { solanaWalletAnchorId } from '../../../solana-wallet'
 import { AccountSecurityContainer } from './AccountSecurity/AccountSecurityContainer'
 import { AccountTermsAndConditionsUpdate } from './AccountTermsAndConditionsUpdate'
 import { GoogleSignInForm } from './GoogleSignInForm'
@@ -133,10 +134,49 @@ const _Account: FC<Props> = ({
 }) => {
   const location = useLocation<{ isGoogleSignInFormTriggered: string }>()
   const isGoogleSignInFormTriggered = !!location.state?.isGoogleSignInFormTriggered
+  const scrollbarsRef = useRef<Scrollbars>(null)
 
   useEffect(() => {
     loadGoogleAccountConnection()
   }, [loadGoogleAccountConnection])
+
+  // The account page scrolls inside a `react-custom-scrollbars-2` container whose outer element has `overflow: hidden`,
+  // so the browser's native `#hash` anchoring (and a plain `element.scrollIntoView()`) never moves it. When deep-linked
+  // to the Solana wallet section (e.g. from the detail page / checkout "Add Solana Wallet Address" link), scroll the
+  // custom scroll view to that section explicitly. The wallet panel mounts after its data loads, so poll briefly for
+  // the element before giving up.
+  useEffect(() => {
+    if (!renderRewardsEnabled || location.hash !== `#${solanaWalletAnchorId}`) {
+      return
+    }
+
+    let attempts = 0
+    let timeout: ReturnType<typeof setTimeout>
+
+    const tryScroll = () => {
+      const scrollbars = scrollbarsRef.current
+      const element = document.getElementById(solanaWalletAnchorId)
+      if (scrollbars && element) {
+        // `view` is the inner element that actually scrolls; scroll it (not the page) to the wallet section.
+        const view = (scrollbars as unknown as { view?: HTMLElement }).view
+        if (view) {
+          const top = element.getBoundingClientRect().top - view.getBoundingClientRect().top + view.scrollTop
+          view.scrollTo({ top, behavior: 'smooth' })
+        } else {
+          scrollbars.scrollTop(element.offsetTop)
+        }
+        return
+      }
+
+      if (attempts < 20) {
+        attempts += 1
+        timeout = setTimeout(tryScroll, 100)
+      }
+    }
+
+    timeout = setTimeout(tryScroll, 100)
+    return () => clearTimeout(timeout)
+  }, [location.hash])
 
   const shouldShowUpdateAccountTermsAndConditions = !!profile?.pendingTermsVersion
   const handleSubmitButtonReset = () => {
@@ -146,7 +186,7 @@ const _Account: FC<Props> = ({
 
   return (
     <div className={classes.container}>
-      <Scrollbars>
+      <Scrollbars ref={scrollbarsRef}>
         <Layout title="Profile">
           <Head title="Profile" />
           {shouldShowUpdateAccountTermsAndConditions && (
@@ -248,7 +288,7 @@ const _Account: FC<Props> = ({
             </div>
           </div>
           <AccountSecurityContainer />
-          {SOLANA_WALLET_ENABLED && <SolanaWalletContainer />}
+          {renderRewardsEnabled && <SolanaWalletContainer />}
         </Layout>
       </Scrollbars>
     </div>

@@ -1,5 +1,6 @@
 import type { Reward } from '.'
 import { rewardRoute } from '../../../RouteUtils'
+import { normalizeRenderTags } from '../../render'
 
 export class SearchResult {
   /** The quantity of rewards remaining.
@@ -16,6 +17,10 @@ export class SearchResult {
     public readonly description?: string,
     public readonly quantity?: number,
     public readonly originalPrice?: number,
+    /** The reward's tags (lower-cased), used to identify RENDER rewards for pricing. */
+    public readonly tags?: string[],
+    /** For RENDER rewards, the number of RENDER tokens granted; drives the displayed price. */
+    public readonly productValue?: number,
   ) {}
 
   public static parseSearchResult = (result: any): SearchResult => {
@@ -29,6 +34,12 @@ export class SearchResult {
     let quantity: number | undefined = parseInt(result['quantity']?.raw)
     const inStock = result['in_stock']?.raw === 'true'
     const url = rewardRoute(id)
+    // The search index may serve `tags` as a string array, a comma-separated string, or relation objects, so normalize
+    // through the shared RENDER tag normalizer (rather than a local parser) to reliably detect RENDER rewards here the
+    // same way the storefront/detail flows do.
+    const tags = normalizeRenderTags(result['tags']?.raw)
+    const productValue: number | undefined =
+      result['product_value']?.raw !== undefined ? parseFloat(result['product_value'].raw) : undefined
 
     if (!inStock) {
       quantity = 0
@@ -37,7 +48,19 @@ export class SearchResult {
       quantity = undefined
     }
 
-    return new SearchResult(id, name, price, url, image, undefined, undefined, quantity, originalPrice)
+    return new SearchResult(
+      id,
+      name,
+      price,
+      url,
+      image,
+      undefined,
+      undefined,
+      quantity,
+      originalPrice,
+      tags,
+      Number.isFinite(productValue as number) ? productValue : undefined,
+    )
   }
 
   public static fromReward = (reward: Reward): SearchResult => {
@@ -51,6 +74,8 @@ export class SearchResult {
       reward.headline,
       reward.quantity,
       reward.originalPrice,
+      reward.tags,
+      reward.productValue,
     )
   }
 }

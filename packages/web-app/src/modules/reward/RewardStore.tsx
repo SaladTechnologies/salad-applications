@@ -122,6 +122,29 @@ export class RewardStore {
     return this.rewards.get(id)
   }
 
+  /**
+   * The set of reward ids with an in-flight {@link ensureRewardLoaded} fetch, used to dedupe concurrent requests.
+   */
+  private loadingRewardIds = new Set<string>()
+
+  /**
+   * Lazily loads a reward's full data into the shared {@link rewards} cache when it is not already present.
+   *
+   * The list/card views (storefront, search) only have lean reward payloads that omit `tags`, so they cannot tell a
+   * RENDER reward from a regular one or price it. This lets those views fetch the authoritative reward — the same data
+   * the detail page uses — to resolve RENDER pricing. It is a no-op when the reward is already cached or a fetch for it
+   * is already in flight, and it swallows errors so a failed lookup simply leaves the view on its fallback price.
+   */
+  ensureRewardLoaded = (id?: string): void => {
+    if (!id || this.rewards.has(id) || this.loadingRewardIds.has(id)) {
+      return
+    }
+    this.loadingRewardIds.add(id)
+    Promise.resolve(this.fetchReward(id))
+      .catch(() => {})
+      .finally(() => this.loadingRewardIds.delete(id))
+  }
+
   @computed
   public get selectedTargetReward(): Reward | undefined {
     if (this.selectedTargetRewardId) {
