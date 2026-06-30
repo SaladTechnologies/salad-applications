@@ -169,7 +169,13 @@ const _SaladPayOrderSummaryPage: FC<Props> = ({
                 {request.displayItems.map((x, i) => (
                   <div key={i} className={classNames(classes.row, classes.item)}>
                     <div className={classes.leftText}>{x.label}</div>
-                    <div>{moneyFormat(x.amount)}</div>
+                    <div>
+                      {reward !== undefined && x.label === reward.name ? (
+                        <RewardPrice reward={reward} fallback={moneyFormat(x.amount)} />
+                      ) : (
+                        moneyFormat(x.amount)
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
