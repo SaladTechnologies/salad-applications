@@ -90,7 +90,11 @@ const _SolanaWallet: FC<Props> = ({
                   onSubmit={handleSubmit}
                   validationRegex={/^[1-9A-HJ-NP-Za-km-z]{32,44}$/}
                   validationRegexErrorMessage="Enter a valid Solana wallet address (32-44 base58 characters)."
-                  onFocus={() => isSubmitFailure && setSubmitStatus('unknown')}
+                  // Reset any settled submit status (success *or* failure) when the field is refocused so a freshly
+                  // shown add form is never left locked in the previous mutation's state. This matters most right after
+                  // a successful removal: clearing the wallet leaves `submitStatus === 'success'`, which would otherwise
+                  // keep this re-shown add form's TextField stuck in its success state and prevent a new submit.
+                  onFocus={() => (isSubmitSuccess || isSubmitFailure) && setSubmitStatus('unknown')}
                   defaultValue={walletAddress}
                 />
                 {isEditing && walletAddress && (
