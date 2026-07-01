@@ -30,9 +30,9 @@ const timeoutMessage = 'request-timeout'
  * prerequisite (e.g. a RENDER associated token account or a configured Solana wallet). The API returns these as
  * RFC 7807 problem responses carrying a human-readable message, so we surface that message rather than hardcoding
  * copy. Each prerequisite code is handled in its own branch (consistent with the other problem-type branches);
- * any new `redemptions:requires:*` code must be added here explicitly. When the API omits a `title` we fall back to
- * a problem-specific title rather than generic copy, and the Solana case directs the user to the account page's
- * Solana wallet address input so they can resolve the issue.
+ * any new `redemptions:requires:*` code must be added here explicitly. When the API omits a `title` or `detail` we
+ * fall back to problem-specific copy rather than generic copy, and the Solana case directs the user to the account
+ * page's Solana wallet address input so they can resolve the issue.
  */
 export const renderTokenAccountRequiredProblemType = 'redemptions:requires:renderTokenAccount'
 export const solanaWalletRequiredProblemType = 'redemptions:requires:solanaWallet'
@@ -371,7 +371,7 @@ export class RewardStore {
                   notification = {
                     category: NotificationMessageCategory.Error,
                     title: title ?? 'RENDER token account required',
-                    message: detail ?? error.message ?? 'Please try again later',
+                    message: detail ?? 'A render token account is required',
                     autoClose: false,
                     onClick: () => this.store.routing.push(`/rewards/${reward.id}`),
                     type: 'error',
@@ -387,7 +387,7 @@ export class RewardStore {
                   notification = {
                     category: NotificationMessageCategory.Error,
                     title: title ?? 'Solana wallet required',
-                    message: detail ?? error.message ?? 'Please try again later',
+                    message: detail ?? 'You need to add a solana wallet in order to purchase this reward',
                     autoClose: false,
                     onClick: () => this.store.routing.push(solanaWalletAccountAnchor),
                     type: 'error',

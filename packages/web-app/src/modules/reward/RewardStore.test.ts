@@ -148,6 +148,19 @@ describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
     expect(notification.title).not.toBe('Uh-oh! We could not complete your redemption.')
   })
 
+  it('falls back to a RENDER-specific message when the API omits the detail for renderTokenAccount', async () => {
+    const post = jest
+      .fn()
+      .mockRejectedValue(makeAxiosError(400, { type: renderTokenAccountRequiredProblemType, status: 400 }))
+    const { store, sendNotification } = setup(post)
+    const reward = makeReward({ id: 'render-1', name: 'RENDER Tokens' })
+
+    await store.redeemReward(reward)
+
+    const notification = sendNotification.mock.calls[0][0] as NotificationMessage
+    expect(notification.message).toBe('A render token account is required')
+  })
+
   it('surfaces the API message and points the user to the wallet input for solanaWallet', async () => {
     const apiTitle = 'Solana wallet address required'
     const apiDetail = 'The account has no configured Solana wallet.'
@@ -199,6 +212,19 @@ describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
     const notification = sendNotification.mock.calls[0][0] as NotificationMessage
     expect(notification.title).toBe('Solana wallet required')
     expect(notification.title).not.toBe('Uh-oh! We could not complete your redemption.')
+  })
+
+  it('falls back to a Solana-specific message when the API omits the detail for solanaWallet', async () => {
+    const post = jest
+      .fn()
+      .mockRejectedValue(makeAxiosError(400, { type: solanaWalletRequiredProblemType, status: 400 }))
+    const { store, sendNotification } = setup(post)
+    const reward = makeReward({ id: 'solana-1', name: 'RENDER Tokens' })
+
+    await store.redeemReward(reward)
+
+    const notification = sendNotification.mock.calls[0][0] as NotificationMessage
+    expect(notification.message).toBe('You need to add a solana wallet in order to purchase this reward')
   })
 
   it('applies the existing 400 handling (no navigation) for an unrelated problem code', async () => {
