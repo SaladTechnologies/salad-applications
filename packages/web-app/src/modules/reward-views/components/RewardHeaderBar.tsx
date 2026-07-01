@@ -11,7 +11,6 @@ import { getPercentOff } from '../../reward/utils'
 import { rewardRequiresSolanaAddress, solanaWalletAccountAnchor } from '../../solana-wallet'
 import { IconArrowLeft } from './assets'
 import { RenderPriceQuoteContainer } from './RenderPriceQuote'
-import { RewardPrice } from './RewardPrice'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -258,7 +257,7 @@ class _RewardHeaderBar extends Component<Props> {
                     [classes.outOfStockPrice]: outOfStock,
                   })}
                 >
-                  <RewardPrice reward={reward} fallback={reward ? `$${reward.price.toFixed(2)}` : '-'} />
+                  {reward ? `$${reward.price.toFixed(2)}` : '-'}
                 </div>
               )}
               {reward && reward.originalPrice && !outOfStock && (

@@ -29,8 +29,9 @@ export interface Reward {
   price: number
 
   /**
-   * The token/unit value the reward grants. For RENDER rewards this is the number of RENDER tokens the reward pays
-   * out, and the displayed Salad Balance price is `productValue * <RENDER/USD exchange rate>`.
+   * The token/unit value the reward grants. A RENDER reward's Salad Balance cost is always its plain {@link price}
+   * (shown like any other reward); the number of RENDER tokens a Chef receives for that cost is derived at display
+   * time from the live RENDER/USD exchange rate (`price / rate`), not from this field.
    */
   productValue?: number
 

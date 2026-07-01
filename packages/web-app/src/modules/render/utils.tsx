@@ -2,22 +2,6 @@ import { renderExchangeRateDefaultTtl, renderQuoteDisplayDecimals, renderRewardT
 import type { RenderExchangeRate, RenderExchangeRateResource } from './models'
 
 /**
- * The minimal shape needed to price a RENDER reward.
- *
- * Intentionally narrower than the full {@link import('../reward/models').Reward} so that the same pricing logic can be
- * applied to the leaner reward shapes used by the storefront ({@link import('../storefront/models').StorefrontRewardItemProps})
- * and search ({@link import('../reward/models').SearchResult}) flows.
- */
-export interface RenderPriceableReward {
-  /** The reward's tags. RENDER rewards carry the {@link renderRewardTag} tag. */
-  tags?: string[]
-  /** The reward's Salad Balance purchase price (USD). Used as a fallback when `productValue` is absent. */
-  price?: number
-  /** The number of RENDER tokens the reward grants. The displayed price is `productValue * rate`. */
-  productValue?: number
-}
-
-/**
  * Determines whether a reward pays out RENDER tokens.
  *
  * Reward tags are normally lower-cased when a reward is parsed from its API resource, but the live API serves them
@@ -26,18 +10,6 @@ export interface RenderPriceableReward {
  */
 export const isRenderReward = (reward?: { tags?: string[] }): boolean =>
   !!reward?.tags?.some((tag) => tag?.toLowerCase() === renderRewardTag)
-
-/**
- * A cheap, name-based heuristic for whether a reward *might* pay out RENDER tokens.
- *
- * The storefront (`/api/v2/storefront`) and search (Elastic App Search) payloads that back the list/card views are lean
- * and omit `tags` entirely, so {@link isRenderReward} cannot detect a RENDER reward from them. This heuristic lets those
- * call sites decide whether it is worth fetching the authoritative reward (which *does* carry tags) to confirm and price
- * it. It is intentionally only a *gate*, never the source of truth: a name match merely triggers a confirming lookup,
- * and the {@link renderRewardTag} tag on the fetched reward remains the final authority. Gating on the name means stores
- * with no RENDER rewards (e.g. production, where the feature ships dark) issue no extra requests.
- */
-export const rewardNameSuggestsRender = (name?: string): boolean => !!name && /\brender\b/i.test(name)
 
 /**
  * Normalizes a raw `tags` value into a lower-cased string array, regardless of the shape the source API uses.
@@ -95,83 +67,6 @@ export const normalizeRenderTags = (raw: unknown): string[] | undefined => {
 }
 
 /**
- * Builds a {@link RenderPriceableReward} from an arbitrary reward-shaped object, tolerating the loosely-typed payloads
- * served by the storefront API.
- *
- * It normalizes `tags` via {@link normalizeRenderTags} and accepts the token amount under either the camelCase
- * `productValue` or the snake_case `product_value` key (the storefront payload mixes the two casing conventions). This
- * lets {@link isRenderReward}/{@link getRenderRewardPrice} resolve RENDER pricing on the storefront listing the same
- * way they already do on the detail, search, and checkout flows.
- */
-export const toRenderPriceableReward = (raw: unknown): RenderPriceableReward | undefined => {
-  if (!raw || typeof raw !== 'object') {
-    return undefined
-  }
-
-  const record = raw as Record<string, unknown>
-  const toFiniteNumber = (value: unknown): number | undefined => {
-    if (value === undefined || value === null) {
-      return undefined
-    }
-    const parsed = typeof value === 'number' ? value : Number(value)
-    return Number.isFinite(parsed) ? parsed : undefined
-  }
-
-  return {
-    tags: normalizeRenderTags(record.tags),
-    price: toFiniteNumber(record.price),
-    productValue: toFiniteNumber(record.productValue ?? record.product_value),
-  }
-}
-
-/**
- * Computes the Salad Balance price (USD) to display for a RENDER reward.
- *
- * This is the single source of truth for RENDER reward pricing across every flow (search, storefront listing, reward
- * detail, and SaladPay checkout). The displayed price is the number of RENDER tokens the reward grants multiplied by
- * the current RENDER/USD exchange rate, rounded to {@link renderQuoteDisplayDecimals} fractional digits. When a reward
- * does not declare a `productValue`, its existing `price` is used as the token amount.
- *
- * Returns `undefined` — meaning "fall back to the reward's normal price" — when the reward is not a RENDER reward, the
- * rate is not (yet) available, or the inputs cannot produce a meaningful figure. Non-RENDER rewards are never affected.
- *
- * @param reward The reward being priced.
- * @param rate The current price of a single RENDER token, in USD.
- * @param decimals The number of fractional digits to round to. Defaults to the display precision.
- */
-export const getRenderRewardPrice = (
-  reward: RenderPriceableReward | undefined,
-  rate: number | undefined,
-  decimals: number = renderQuoteDisplayDecimals,
-): number | undefined => {
-  if (!isRenderReward(reward) || rate === undefined || !Number.isFinite(rate) || rate <= 0) {
-    return undefined
-  }
-
-  const tokenAmount = reward?.productValue ?? reward?.price
-  if (tokenAmount === undefined || !Number.isFinite(tokenAmount) || tokenAmount < 0) {
-    return undefined
-  }
-
-  const price = tokenAmount * rate
-  const factor = Math.pow(10, decimals)
-
-  // Normalize through Number.EPSILON to keep rounding of values such as 1.00005 predictable.
-  return Math.round((price + Number.EPSILON) * factor) / factor
-}
-
-/**
- * Formats a RENDER reward price (as produced by {@link getRenderRewardPrice}) for display.
- *
- * RENDER rewards are shown to {@link renderQuoteDisplayDecimals} decimal places, distinct from the two-decimal
- * formatting used for regular rewards.
- */
-export const formatRenderRewardPrice = (
-  price: number,
-  decimals: number = renderQuoteDisplayDecimals,
-): string => `$${price.toFixed(decimals)}`
-
-/**
  * Parses an ISO-8601 timestamp, returning `undefined` when the value is absent or cannot be parsed.
  *
  * The App API formats `quotedAt` with a `+00:00` offset and 7-digit fractional seconds
@@ -205,6 +100,11 @@ export const renderExchangeRateFromResource = (
 /**
  * Computes how many RENDER tokens a given amount of Salad Balance (USD) converts to at the supplied price.
  *
+ * This is the single source of truth for the "you'll receive ≈ N RENDER" figure shown on the reward detail header and
+ * SaladPay order summary. It is deliberately *not* used to compute a reward's displayed cost: a RENDER reward's
+ * Salad Balance cost is its plain `price` (shown like any other reward), and this only derives the token amount the
+ * Chef receives for that cost.
+ *
  * @param saladBalance The amount of Salad Balance to convert, in USD.
  * @param rate The price of a single RENDER token, in USD.
  * @param decimals The number of fractional digits to round the result to. Defaults to the display precision.
@@ -222,7 +122,7 @@ export const computeRenderQuote = (
   const tokens = saladBalance / rate
   const factor = Math.pow(10, decimals)
 
-  // Math.round can drift on values such as 1.005; normalize through a string round-trip to keep precision predictable.
+  // Math.round can drift on values such as 1.005; normalize through Number.EPSILON to keep precision predictable.
   return Math.round((tokens + Number.EPSILON) * factor) / factor
 }
 

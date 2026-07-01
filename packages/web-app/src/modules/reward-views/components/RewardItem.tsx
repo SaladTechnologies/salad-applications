@@ -7,11 +7,9 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import Skeleton from 'react-loading-skeleton'
 import type { SaladTheme } from '../../../SaladTheme'
-import { toRenderPriceableReward } from '../../render'
 import type { SearchResult } from '../../reward/models'
 import { getPercentOff } from '../../reward/utils'
 import { RewardMissingImage } from './RewardMissingImage'
-import { RewardPrice } from './RewardPrice'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -156,12 +154,11 @@ class _RewardItem extends Component<Props> {
             ) : (
               <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
                 {reward ? (
-                  <RewardPrice
-                    reward={toRenderPriceableReward(reward)}
-                    rewardId={reward.id}
-                    rewardName={reward.name}
-                    fallback={reward?.price ? `$${reward?.price.toFixed(2)}` : 'FREE'}
-                  />
+                  reward?.price ? (
+                    `$${reward?.price.toFixed(2)}`
+                  ) : (
+                    'FREE'
+                  )
                 ) : (
                   <Skeleton width={100} />
                 )}
