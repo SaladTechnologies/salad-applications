@@ -23,6 +23,7 @@ import type { RootStore } from '../../Store'
 import type { NotificationMessage } from '../notifications/models'
 import { NotificationMessageCategory } from '../notifications/models'
 import type { ProfileStore } from '../profile'
+import { solanaWalletAccountAnchor } from '../solana-wallet'
 import type { Reward } from './models/Reward'
 import {
   RewardStore,
@@ -92,15 +93,19 @@ const setup = (postImpl: jest.Mock): Harness => {
 }
 
 describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
-  it.each([
-    ['renderTokenAccount', renderTokenAccountRequiredProblemType],
-    ['solanaWallet', solanaWalletRequiredProblemType],
-  ])('surfaces the API message and returns to the reward detail page for %s', async (_label, type) => {
-    const apiTitle = 'Uh-oh! We could not complete your redemption.'
-    const apiDetail = 'The account is missing a prerequisite for this reward.'
+  it('surfaces the API message and returns to the reward detail page for renderTokenAccount', async () => {
+    const apiTitle = 'RENDER associated token account required'
+    const apiDetail = 'The account is missing a RENDER associated token account.'
     const post = jest
       .fn()
-      .mockRejectedValue(makeAxiosError(400, { type, status: 400, title: apiTitle, detail: apiDetail }))
+      .mockRejectedValue(
+        makeAxiosError(400, {
+          type: renderTokenAccountRequiredProblemType,
+          status: 400,
+          title: apiTitle,
+          detail: apiDetail,
+        }),
+      )
     const { store, push, sendNotification, addRewardToRedemptionsList } = setup(post)
     const reward = makeReward({ id: 'render-1', name: 'RENDER Tokens' })
 
@@ -118,8 +123,82 @@ describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
     expect(notification.title).toBe(apiTitle)
     expect(notification.message).toBe(apiDetail)
 
+    // The notification's onClick returns the user to the reward detail page.
+    notification.onClick?.()
+    expect(push).toHaveBeenCalledWith('/rewards/render-1')
+
     // User is sent back to the reward detail page.
     expect(push).toHaveBeenCalledWith('/rewards/render-1')
+  })
+
+  it('falls back to a RENDER-specific title when the API omits the title for renderTokenAccount', async () => {
+    const apiDetail = 'The account is missing a RENDER associated token account.'
+    const post = jest
+      .fn()
+      .mockRejectedValue(
+        makeAxiosError(400, { type: renderTokenAccountRequiredProblemType, status: 400, detail: apiDetail }),
+      )
+    const { store, sendNotification } = setup(post)
+    const reward = makeReward({ id: 'render-1', name: 'RENDER Tokens' })
+
+    await store.redeemReward(reward)
+
+    const notification = sendNotification.mock.calls[0][0] as NotificationMessage
+    expect(notification.title).toBe('RENDER token account required')
+    expect(notification.title).not.toBe('Uh-oh! We could not complete your redemption.')
+  })
+
+  it('surfaces the API message and points the user to the wallet input for solanaWallet', async () => {
+    const apiTitle = 'Solana wallet address required'
+    const apiDetail = 'The account has no configured Solana wallet.'
+    const post = jest
+      .fn()
+      .mockRejectedValue(
+        makeAxiosError(400, {
+          type: solanaWalletRequiredProblemType,
+          status: 400,
+          title: apiTitle,
+          detail: apiDetail,
+        }),
+      )
+    const { store, push, sendNotification, addRewardToRedemptionsList } = setup(post)
+    const reward = makeReward({ id: 'solana-1', name: 'RENDER Tokens' })
+
+    await store.redeemReward(reward)
+
+    // Success side effects must not fire.
+    expect(addRewardToRedemptionsList).not.toHaveBeenCalled()
+    expect(store.isReviewing).toBe(false)
+
+    // Error notification carries the message from the API response.
+    expect(sendNotification).toHaveBeenCalledTimes(1)
+    const notification = sendNotification.mock.calls[0][0] as NotificationMessage
+    expect(notification.category).toBe(NotificationMessageCategory.Error)
+    expect(notification.type).toBe('error')
+    expect(notification.title).toBe(apiTitle)
+    expect(notification.message).toBe(apiDetail)
+
+    // The notification's onClick navigates to the account page's Solana wallet address input.
+    notification.onClick?.()
+    expect(push).toHaveBeenCalledWith(solanaWalletAccountAnchor)
+
+    // User is sent back to the reward detail page.
+    expect(push).toHaveBeenCalledWith('/rewards/solana-1')
+  })
+
+  it('falls back to a Solana-specific title when the API omits the title for solanaWallet', async () => {
+    const apiDetail = 'The account has no configured Solana wallet.'
+    const post = jest
+      .fn()
+      .mockRejectedValue(makeAxiosError(400, { type: solanaWalletRequiredProblemType, status: 400, detail: apiDetail }))
+    const { store, sendNotification } = setup(post)
+    const reward = makeReward({ id: 'solana-1', name: 'RENDER Tokens' })
+
+    await store.redeemReward(reward)
+
+    const notification = sendNotification.mock.calls[0][0] as NotificationMessage
+    expect(notification.title).toBe('Solana wallet required')
+    expect(notification.title).not.toBe('Uh-oh! We could not complete your redemption.')
   })
 
   it('applies the existing 400 handling (no navigation) for an unrelated problem code', async () => {

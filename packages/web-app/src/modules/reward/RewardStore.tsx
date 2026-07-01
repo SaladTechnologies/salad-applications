@@ -12,6 +12,7 @@ import type { ProfileStore } from '../profile'
 import type { SaladPaymentResponse } from '../salad-pay'
 import { AbortError } from '../salad-pay'
 import { SaladPay } from '../salad-pay/SaladPay'
+import { solanaWalletAccountAnchor } from '../solana-wallet'
 import {
   redemptionsEndpointPath,
   rewardsEndpointPath,
@@ -28,8 +29,10 @@ const timeoutMessage = 'request-timeout'
  * Problem `type` codes returned on a `400` when a redemption is rejected because the account is missing a
  * prerequisite (e.g. a RENDER associated token account or a configured Solana wallet). The API returns these as
  * RFC 7807 problem responses carrying a human-readable message, so we surface that message rather than hardcoding
- * copy. We match the known prerequisite codes explicitly (consistent with the other problem-type branches);
- * any new `redemptions:requires:*` code must be added here explicitly.
+ * copy. Each prerequisite code is handled in its own branch (consistent with the other problem-type branches);
+ * any new `redemptions:requires:*` code must be added here explicitly. When the API omits a `title` we fall back to
+ * a problem-specific title rather than generic copy, and the Solana case directs the user to the account page's
+ * Solana wallet address input so they can resolve the issue.
  */
 export const renderTokenAccountRequiredProblemType = 'redemptions:requires:renderTokenAccount'
 export const solanaWalletRequiredProblemType = 'redemptions:requires:solanaWallet'
@@ -359,22 +362,34 @@ export class RewardStore {
                     onClick: () => this.store.routing.push('/account/summary'),
                     type: 'error',
                   }
-                } else if (
-                  data.type === renderTokenAccountRequiredProblemType ||
-                  data.type === solanaWalletRequiredProblemType
-                ) {
-                  // The redemption was rejected because the account is missing a known prerequisite (a RENDER
-                  // associated token account or a configured Solana wallet). The API returns a human-readable
-                  // message in the problem body, so surface that instead of hardcoding copy, and send the user
-                  // back to the reward detail page to resolve the issue.
+                } else if (data.type === renderTokenAccountRequiredProblemType) {
+                  // The redemption was rejected because the account is missing a RENDER associated token account.
+                  // The API returns a human-readable message in the problem body, so surface that instead of
+                  // hardcoding copy, and send the user back to the reward detail page to resolve the issue.
                   const title = typeof data.title === 'string' && data.title ? data.title : undefined
                   const detail = typeof data.detail === 'string' && data.detail ? data.detail : undefined
                   notification = {
                     category: NotificationMessageCategory.Error,
-                    title: title ?? 'Uh-oh! We could not complete your redemption.',
+                    title: title ?? 'RENDER token account required',
                     message: detail ?? error.message ?? 'Please try again later',
                     autoClose: false,
                     onClick: () => this.store.routing.push(`/rewards/${reward.id}`),
+                    type: 'error',
+                  }
+                  this.store.routing.push(`/rewards/${reward.id}`)
+                } else if (data.type === solanaWalletRequiredProblemType) {
+                  // The redemption was rejected because the account has no configured Solana wallet. The API
+                  // returns a human-readable message in the problem body, so surface that instead of hardcoding
+                  // copy. Send the user back to the reward detail page, and point the notification's onClick at the
+                  // account page's Solana wallet address input so they can add a wallet to resolve the issue.
+                  const title = typeof data.title === 'string' && data.title ? data.title : undefined
+                  const detail = typeof data.detail === 'string' && data.detail ? data.detail : undefined
+                  notification = {
+                    category: NotificationMessageCategory.Error,
+                    title: title ?? 'Solana wallet required',
+                    message: detail ?? error.message ?? 'Please try again later',
+                    autoClose: false,
+                    onClick: () => this.store.routing.push(solanaWalletAccountAnchor),
                     type: 'error',
                   }
                   this.store.routing.push(`/rewards/${reward.id}`)
