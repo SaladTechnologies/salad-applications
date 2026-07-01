@@ -9,7 +9,6 @@ import { ChallengeSudoModeTrigger } from '../auth'
 import type { NotificationMessage } from '../notifications/models'
 import { NotificationMessageCategory } from '../notifications/models'
 import type { ProfileStore } from '../profile'
-import { isRenderReward } from '../render'
 import type { SaladPaymentResponse } from '../salad-pay'
 import { AbortError } from '../salad-pay'
 import { SaladPay } from '../salad-pay/SaladPay'
@@ -24,6 +23,16 @@ import type { RewardResource } from './models/RewardResource'
 import { rewardFromResource } from './utils'
 
 const timeoutMessage = 'request-timeout'
+
+/**
+ * Problem `type` codes returned on a `400` when a redemption is rejected because the account is missing a
+ * prerequisite (e.g. a RENDER associated token account or a configured Solana wallet). The API returns these as
+ * RFC 7807 problem responses carrying a human-readable message, so we surface that message rather than hardcoding
+ * copy. Matching is done on the `redemptions:requires:` family prefix so new prerequisites are covered automatically.
+ */
+export const renderTokenAccountRequiredProblemType = 'redemptions:requires:renderTokenAccount'
+export const solanaWalletRequiredProblemType = 'redemptions:requires:solanaWallet'
+const redemptionRequiresProblemTypePrefix = 'redemptions:requires:'
 
 export class RewardStore {
   private readonly saladPay = new SaladPay('43e8e26fa9077bb9c932d1849f52ef68e89c3ca39287c949275e0f18be6d074b')
@@ -318,28 +327,12 @@ export class RewardStore {
               break
             case 409:
               this.clearRedemptionInfo()
-              if (isRenderReward(reward)) {
-                // For a RENDER reward a 409 is a genuine failure (e.g. the user's wallet has no RENDER associated
-                // token account) rather than the idempotent "already redeemed" success it represents for other
-                // rewards. Surface it as an error and send the user back to the reward detail page.
-                notification = {
-                  category: NotificationMessageCategory.Error,
-                  // TODO: This copy is temporary; once the API returns a message for this case, surface that instead.
-                  title: 'Uh-oh! We could not complete your redemption.',
-                  message: 'No RENDER associated token account found for wallet you have provided',
-                  autoClose: false,
-                  onClick: () => this.store.routing.push(`/rewards/${reward.id}`),
-                  type: 'error',
-                }
-                this.store.routing.push(`/rewards/${reward.id}`)
-              } else {
-                notification = {
-                  category: NotificationMessageCategory.Redemption,
-                  title: `Thank you for ordering ${reward.name}!`,
-                  message: 'Congrats on your pick! Your item is on its way. Check your reward vault for more details.',
-                  onClick: () => this.store.routing.push('/store/vault'),
-                  autoClose: false,
-                }
+              notification = {
+                category: NotificationMessageCategory.Redemption,
+                title: `Thank you for ordering ${reward.name}!`,
+                message: 'Congrats on your pick! Your item is on its way. Check your reward vault for more details.',
+                onClick: () => this.store.routing.push('/store/vault'),
+                autoClose: false,
               }
               break
             case 400:
@@ -366,6 +359,22 @@ export class RewardStore {
                     onClick: () => this.store.routing.push('/account/summary'),
                     type: 'error',
                   }
+                } else if (data.type.startsWith(redemptionRequiresProblemTypePrefix)) {
+                  // The redemption was rejected because the account is missing a prerequisite (e.g. a RENDER
+                  // associated token account or a configured Solana wallet). The API returns a human-readable
+                  // message in the problem body, so surface that instead of hardcoding copy, and send the user
+                  // back to the reward detail page to resolve the issue.
+                  const title = typeof data.title === 'string' && data.title ? data.title : undefined
+                  const detail = typeof data.detail === 'string' && data.detail ? data.detail : undefined
+                  notification = {
+                    category: NotificationMessageCategory.Error,
+                    title: title ?? 'Uh-oh! We could not complete your redemption.',
+                    message: detail ?? error.message ?? 'Please try again later',
+                    autoClose: false,
+                    onClick: () => this.store.routing.push(`/rewards/${reward.id}`),
+                    type: 'error',
+                  }
+                  this.store.routing.push(`/rewards/${reward.id}`)
                 } else if (data.type === 'redemptions:dailySpendLimitExceeded') {
                   notification = {
                     category: NotificationMessageCategory.Error,

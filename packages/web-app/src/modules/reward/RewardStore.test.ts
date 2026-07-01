@@ -1,7 +1,6 @@
 /**
  * These mocks keep the test from pulling in the full RootStore dependency graph (and ESM-only
- * packages such as `axios`/`query-string`) that `RewardStore`'s transitive imports would otherwise
- * load. The real `../render` module is intentionally NOT mocked so `isRenderReward` is exercised for real.
+ * packages such as `axios`/`query-string`) that `RewardStore`'s transitive imports would otherwise load.
  */
 jest.mock('axios', () => ({
   __esModule: true,
@@ -24,15 +23,18 @@ import type { RootStore } from '../../Store'
 import type { NotificationMessage } from '../notifications/models'
 import { NotificationMessageCategory } from '../notifications/models'
 import type { ProfileStore } from '../profile'
-import { renderRewardTag } from '../render'
 import type { Reward } from './models/Reward'
-import { RewardStore } from './RewardStore'
+import {
+  RewardStore,
+  renderTokenAccountRequiredProblemType,
+  solanaWalletRequiredProblemType,
+} from './RewardStore'
 
 /** Builds a minimal axios-style error that the mocked `Axios.isAxiosError` recognizes. */
-const makeAxiosError = (status: number) => ({
+const makeAxiosError = (status: number, data: unknown = {}) => ({
   isAxiosError: true,
   message: `Request failed with status code ${status}`,
-  response: { status, data: {} },
+  response: { status, data },
 })
 
 const makeReward = (overrides: Partial<Reward> = {}): Reward => ({
@@ -89,11 +91,18 @@ const setup = (postImpl: jest.Mock): Harness => {
   return { store, push, sendNotification, addRewardToRedemptionsList, complete }
 }
 
-describe('RewardStore.redeemReward 409 handling', () => {
-  it('treats a 409 on a RENDER reward as an error and returns to the reward detail page', async () => {
-    const post = jest.fn().mockRejectedValue(makeAxiosError(409))
+describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
+  it.each([
+    ['renderTokenAccount', renderTokenAccountRequiredProblemType],
+    ['solanaWallet', solanaWalletRequiredProblemType],
+  ])('surfaces the API message and returns to the reward detail page for %s', async (_label, type) => {
+    const apiTitle = 'Uh-oh! We could not complete your redemption.'
+    const apiDetail = 'The account is missing a prerequisite for this reward.'
+    const post = jest
+      .fn()
+      .mockRejectedValue(makeAxiosError(400, { type, status: 400, title: apiTitle, detail: apiDetail }))
     const { store, push, sendNotification, addRewardToRedemptionsList } = setup(post)
-    const reward = makeReward({ id: 'render-1', name: 'RENDER Tokens', tags: [renderRewardTag] })
+    const reward = makeReward({ id: 'render-1', name: 'RENDER Tokens' })
 
     await store.redeemReward(reward)
 
@@ -101,18 +110,38 @@ describe('RewardStore.redeemReward 409 handling', () => {
     expect(addRewardToRedemptionsList).not.toHaveBeenCalled()
     expect(store.isReviewing).toBe(false)
 
-    // Error notification with the exact copy.
+    // Error notification carries the message from the API response.
     expect(sendNotification).toHaveBeenCalledTimes(1)
     const notification = sendNotification.mock.calls[0][0] as NotificationMessage
     expect(notification.category).toBe(NotificationMessageCategory.Error)
     expect(notification.type).toBe('error')
-    expect(notification.message).toBe('No RENDER associated token account found for wallet you have provided')
+    expect(notification.title).toBe(apiTitle)
+    expect(notification.message).toBe(apiDetail)
 
     // User is sent back to the reward detail page.
     expect(push).toHaveBeenCalledWith('/rewards/render-1')
   })
 
-  it('treats a 409 on a non-RENDER reward as the existing redemption success message', async () => {
+  it('applies the existing 400 handling (no navigation) for an unrelated problem code', async () => {
+    const post = jest
+      .fn()
+      .mockRejectedValue(
+        makeAxiosError(400, { type: 'redemptions:notEnoughXp', status: 400, title: 'Nope', detail: 'Too new' }),
+      )
+    const { store, push, sendNotification } = setup(post)
+    const reward = makeReward({ id: 'reward-2', name: 'Some Game' })
+
+    await store.redeemReward(reward)
+
+    expect(sendNotification).toHaveBeenCalledTimes(1)
+    const notification = sendNotification.mock.calls[0][0] as NotificationMessage
+    expect(notification.title).toBe('Redemption Error')
+    expect(push).not.toHaveBeenCalled()
+  })
+})
+
+describe('RewardStore.redeemReward other statuses', () => {
+  it('treats a 409 as the redemption success message (regression guard)', async () => {
     const post = jest.fn().mockRejectedValue(makeAxiosError(409))
     const { store, push, sendNotification } = setup(post)
     const reward = makeReward({ id: 'reward-2', name: 'Some Game' })
@@ -123,19 +152,19 @@ describe('RewardStore.redeemReward 409 handling', () => {
     const notification = sendNotification.mock.calls[0][0] as NotificationMessage
     expect(notification.category).toBe(NotificationMessageCategory.Redemption)
     expect(notification.title).toContain('Thank you for ordering')
-    expect(push).not.toHaveBeenCalledWith('/rewards/reward-2')
+    expect(push).not.toHaveBeenCalled()
   })
 
-  it('does not apply the RENDER 409 handling to other error statuses', async () => {
+  it('does not apply the requires-prerequisite handling to other error statuses', async () => {
     const post = jest.fn().mockRejectedValue(makeAxiosError(500))
     const { store, push, sendNotification } = setup(post)
-    const reward = makeReward({ id: 'render-1', name: 'RENDER Tokens', tags: [renderRewardTag] })
+    const reward = makeReward({ id: 'render-1', name: 'RENDER Tokens' })
 
     await store.redeemReward(reward)
 
     expect(sendNotification).toHaveBeenCalledTimes(1)
     const notification = sendNotification.mock.calls[0][0] as NotificationMessage
-    expect(notification.message).not.toBe('No RENDER associated token account found for wallet you have provided')
+    expect(notification.category).toBe(NotificationMessageCategory.Error)
     expect(push).not.toHaveBeenCalled()
   })
 })
