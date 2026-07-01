@@ -28,11 +28,11 @@ const timeoutMessage = 'request-timeout'
  * Problem `type` codes returned on a `400` when a redemption is rejected because the account is missing a
  * prerequisite (e.g. a RENDER associated token account or a configured Solana wallet). The API returns these as
  * RFC 7807 problem responses carrying a human-readable message, so we surface that message rather than hardcoding
- * copy. Matching is done on the `redemptions:requires:` family prefix so new prerequisites are covered automatically.
+ * copy. We match the known prerequisite codes explicitly (consistent with the other problem-type branches);
+ * any new `redemptions:requires:*` code must be added here explicitly.
  */
 export const renderTokenAccountRequiredProblemType = 'redemptions:requires:renderTokenAccount'
 export const solanaWalletRequiredProblemType = 'redemptions:requires:solanaWallet'
-const redemptionRequiresProblemTypePrefix = 'redemptions:requires:'
 
 export class RewardStore {
   private readonly saladPay = new SaladPay('43e8e26fa9077bb9c932d1849f52ef68e89c3ca39287c949275e0f18be6d074b')
@@ -359,8 +359,11 @@ export class RewardStore {
                     onClick: () => this.store.routing.push('/account/summary'),
                     type: 'error',
                   }
-                } else if (data.type.startsWith(redemptionRequiresProblemTypePrefix)) {
-                  // The redemption was rejected because the account is missing a prerequisite (e.g. a RENDER
+                } else if (
+                  data.type === renderTokenAccountRequiredProblemType ||
+                  data.type === solanaWalletRequiredProblemType
+                ) {
+                  // The redemption was rejected because the account is missing a known prerequisite (a RENDER
                   // associated token account or a configured Solana wallet). The API returns a human-readable
                   // message in the problem body, so surface that instead of hardcoding copy, and send the user
                   // back to the reward detail page to resolve the issue.
