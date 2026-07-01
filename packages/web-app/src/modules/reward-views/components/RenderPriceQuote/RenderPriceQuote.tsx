@@ -66,12 +66,11 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
-// Both the detail header and the checkout summary show the live RENDER/USD rate as a currency value (e.g. `$0.9997`),
-// pinned to the same precision used to price the reward so the figures stay consistent.
-const renderRateFormatter = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-  minimumFractionDigits: renderQuoteDisplayDecimals,
+// Both variants show how many RENDER tokens the reward's Salad Balance cost converts to (e.g. `≈ 1.0003 RENDER`),
+// rounded to the display precision. RENDER carries more on-chain precision than is useful to show, so the amount is
+// rounded and a trailing-zero-free format keeps whole amounts tidy (e.g. `≈ 5 RENDER`).
+const renderTokenFormatter = new Intl.NumberFormat('en-US', {
+  minimumFractionDigits: 0,
   maximumFractionDigits: renderQuoteDisplayDecimals,
 })
 
@@ -82,8 +81,8 @@ export interface RenderPriceQuoteProps extends WithStyles<typeof styles> {
   error?: boolean
   /** Whether the currently displayed quote is stale. */
   stale?: boolean
-  /** The current price of a single RENDER token, in USD. Shown as the per-token rate in both variants. */
-  rate?: number
+  /** The number of RENDER tokens the reward's Salad Balance cost converts to. */
+  tokenAmount?: number
   /** When the displayed quote was generated. */
   asOf?: Date
   /** Controls layout/labelling for the detail header vs. the checkout review surface. */
@@ -95,7 +94,7 @@ const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
   loading,
   error,
   stale,
-  rate,
+  tokenAmount,
   asOf,
   variant = 'detail',
 }) => {
@@ -104,10 +103,7 @@ const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
   const amountClass = isCheckout ? `${classes.amountText} ${classes.amountTextCheckout}` : classes.amountText
   const errorClass = isCheckout ? `${classes.errorText} ${classes.errorTextCheckout}` : classes.errorText
 
-  // Both variants surface the live per-RENDER USD rate; only the layout/labelling differs.
-  const value = rate
-
-  if (loading && value === undefined) {
+  if (loading && tokenAmount === undefined) {
     return (
       <div className={containerClass}>
         <div className={classes.skeleton}>
@@ -117,7 +113,7 @@ const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
     )
   }
 
-  if (error && value === undefined) {
+  if (error && tokenAmount === undefined) {
     return (
       <div className={containerClass}>
         <div className={errorClass}>RENDER price unavailable</div>
@@ -125,7 +121,7 @@ const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
     )
   }
 
-  if (value === undefined) {
+  if (tokenAmount === undefined) {
     return null
   }
 
@@ -141,30 +137,15 @@ const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
     [classes.staleText]: stale,
   })
 
-  // Both variants show the cost of a single RENDER token (e.g. `$0.9997 per RENDER`); the detail page derives the
-  // reward price from this same rate, so the figures stay consistent.
-  const rateLabel = `${renderRateFormatter.format(value)} per RENDER`
-
-  if (isCheckout) {
-    // Order summary: show what one RENDER token costs as the prominent figure, with the "quoted N seconds ago"
-    // freshness line directly below it (mirroring the line-item/total layout on the white checkout modal).
-    return (
-      <div className={containerClass}>
-        <div className={amountClass}>{rateLabel}</div>
-        {freshnessText && <div className={freshnessClass}>{freshnessText}</div>}
-      </div>
-    )
-  }
-
-  // Detail header: a single supporting line beneath the reward price that folds the live RENDER/USD rate, the
-  // "per RENDER" label, and the freshness into one string — e.g. `$0.9997 per RENDER · quoted 9 seconds ago`. The
-  // standalone rate line was removed so the figure above (the reward price) is not duplicated; this line keeps the
-  // smaller freshness styling/font.
-  const detailText = freshnessText ? `${rateLabel} · ${freshnessText}` : rateLabel
+  // Both variants surface how much RENDER the Chef will receive for the reward's Salad Balance cost, with a smaller
+  // freshness line ("quoted N seconds ago" / a stale warning) directly beneath it. Only the layout/styling differs
+  // between the dark detail header and the white checkout modal.
+  const receiveLabel = `You'll receive ≈ ${renderTokenFormatter.format(tokenAmount)} RENDER`
 
   return (
     <div className={containerClass}>
-      <div className={freshnessClass}>{detailText}</div>
+      <div className={amountClass}>{receiveLabel}</div>
+      {freshnessText && <div className={freshnessClass}>{freshnessText}</div>}
     </div>
   )
 }

@@ -2,7 +2,7 @@ import { observer } from 'mobx-react'
 import type { FC } from 'react'
 import { useEffect } from 'react'
 import { getStore } from '../../../../Store'
-import { computeRenderQuote, getRenderRewardPrice, isRenderReward, renderRewardsEnabled } from '../../../render'
+import { computeRenderQuote, isRenderReward, renderRewardsEnabled } from '../../../render'
 import type { Reward } from '../../../reward/models'
 import { RenderPriceQuote } from './RenderPriceQuote'
 
@@ -34,15 +34,11 @@ const _RenderPriceQuoteContainer: FC<RenderPriceQuoteContainerProps> = ({ reward
     return () => render.stopPollingExchangeRate()
   }, [active, render])
 
-  // The displayed quote now shows the per-RENDER USD rate (matching the detail page) rather than a tokens-received
-  // figure, but we still derive the token amount for analytics. The number of RENDER tokens the Chef receives is the
-  // reward's fixed grant — the same figure the displayed price is derived from (`grant * rate`). Converting the
-  // reward's RENDER price back through the rate yields exactly that grant. Dividing the raw Salad Balance price
-  // (`reward.price`) by the rate instead would reintroduce the rate and report a slightly different grant.
+  // A RENDER reward's Salad Balance cost is its plain `price` (shown like any other reward). The quote shows how many
+  // RENDER tokens that cost converts to at the live rate — i.e. `cost / rate` — so the Chef sees what they'll receive.
   const rate = render.exchangeRate?.rate
-  const renderPrice = getRenderRewardPrice(reward, rate)
-  const amount = renderPrice ?? saladBalance ?? reward?.price ?? 0
-  const tokenAmount = render.exchangeRate ? computeRenderQuote(amount, render.exchangeRate.rate) : undefined
+  const saladBalanceCost = saladBalance ?? reward?.price ?? 0
+  const tokenAmount = rate !== undefined ? computeRenderQuote(saladBalanceCost, rate) : undefined
 
   useEffect(() => {
     if (active && reward && tokenAmount !== undefined) {
@@ -61,7 +57,7 @@ const _RenderPriceQuoteContainer: FC<RenderPriceQuoteContainerProps> = ({ reward
       loading={render.isLoadingExchangeRate}
       error={render.hasExchangeRateError}
       stale={render.isExchangeRateStale}
-      rate={render.exchangeRate?.rate}
+      tokenAmount={tokenAmount}
       asOf={render.exchangeRate?.asOf}
       variant={variant}
     />

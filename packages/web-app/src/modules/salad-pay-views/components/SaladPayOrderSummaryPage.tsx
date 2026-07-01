@@ -9,7 +9,6 @@ import { SmartLink } from '../../../components'
 import { currencyFormatter } from '../../../formatters'
 import { renderRewardsEnabled } from '../../render'
 import { RenderPriceQuoteContainer } from '../../reward-views/components/RenderPriceQuote'
-import { RewardPrice } from '../../reward-views/components/RewardPrice'
 import type { Reward } from '../../reward/models'
 import type { SaladPaymentRequestOptions } from '../../salad-pay/models'
 import { rewardRequiresSolanaAddress, solanaWalletAccountAnchor } from '../../solana-wallet'
@@ -172,22 +171,14 @@ const _SaladPayOrderSummaryPage: FC<Props> = ({
                 {request.displayItems.map((x, i) => (
                   <div key={i} className={classNames(classes.row, classes.item)}>
                     <div className={classes.leftText}>{x.label}</div>
-                    <div>
-                      {reward !== undefined && x.label === reward.name ? (
-                        <RewardPrice reward={reward} fallback={moneyFormat(x.amount)} />
-                      ) : (
-                        moneyFormat(x.amount)
-                      )}
-                    </div>
+                    <div>{moneyFormat(x.amount)}</div>
                   </div>
                 ))}
               </div>
             )}
             <div className={classNames(classes.row, classes.total)}>
               <div className={classes.leftText}>{request.total.label}</div>
-              <div>
-                <RewardPrice reward={reward} fallback={moneyFormat(request.total.amount)} />
-              </div>
+              <div>{moneyFormat(request.total.amount)}</div>
             </div>
             <RenderPriceQuoteContainer reward={reward} saladBalance={request.total.amount} variant="checkout" />
             {missingRequiredWallet && (
