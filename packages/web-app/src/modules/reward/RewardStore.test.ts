@@ -27,6 +27,8 @@ import { solanaWalletAccountAnchor } from '../solana-wallet'
 import type { Reward } from './models/Reward'
 import {
   RewardStore,
+  renderExchangeRateDriftProblemType,
+  renderExchangeRateRequiredProblemType,
   renderTokenAccountRequiredProblemType,
   solanaWalletRequiredProblemType,
 } from './RewardStore'
@@ -54,7 +56,7 @@ interface Harness {
   complete: jest.Mock
 }
 
-const setup = (postImpl: jest.Mock): Harness => {
+const setup = (postImpl: jest.Mock, exchangeRate?: number): Harness => {
   const push = jest.fn()
   const sendNotification = jest.fn()
   const addRewardToRedemptionsList = jest.fn()
@@ -75,6 +77,7 @@ const setup = (postImpl: jest.Mock): Harness => {
       refreshBalanceHistory: jest.fn().mockResolvedValue(undefined),
     },
     vault: { addRewardToRedemptionsList },
+    render: { exchangeRate: exchangeRate !== undefined ? { rate: exchangeRate } : undefined },
   } as unknown as RootStore
 
   const profile = { currentProfile: { redemptionTfaEnabled: false } } as unknown as ProfileStore
@@ -271,5 +274,117 @@ describe('RewardStore.redeemReward other statuses', () => {
     const notification = sendNotification.mock.calls[0][0] as NotificationMessage
     expect(notification.category).toBe(NotificationMessageCategory.Error)
     expect(push).not.toHaveBeenCalled()
+  })
+})
+
+describe('RewardStore.redeemReward RENDER quoted exchange rate', () => {
+  it('attaches the quoted exchange rate held in state to a RENDER redemption request', async () => {
+    const post = jest.fn().mockResolvedValue({ data: { timestamp: '2026-07-02T00:00:00.000Z' } })
+    const { store } = setup(post, 0.9997)
+    const reward = makeReward({ id: 'render-1', name: 'RENDER Tokens', tags: ['render'] })
+
+    await store.redeemReward(reward)
+
+    expect(post).toHaveBeenCalledTimes(1)
+    const body = post.mock.calls[0][1]
+    expect(body).toMatchObject({ rewardId: 'render-1', price: 10, quotedExchangeRate: 0.9997 })
+  })
+
+  it('does not attach a quoted exchange rate for a non-RENDER redemption request', async () => {
+    const post = jest.fn().mockResolvedValue({ data: { timestamp: '2026-07-02T00:00:00.000Z' } })
+    const { store } = setup(post, 0.9997)
+    const reward = makeReward({ id: 'reward-2', name: 'Some Game', tags: [] })
+
+    await store.redeemReward(reward)
+
+    const body = post.mock.calls[0][1]
+    expect(body).not.toHaveProperty('quotedExchangeRate')
+  })
+
+  it('omits the quoted exchange rate when no live rate is held for a RENDER reward', async () => {
+    const post = jest.fn().mockResolvedValue({ data: { timestamp: '2026-07-02T00:00:00.000Z' } })
+    const { store } = setup(post)
+    const reward = makeReward({ id: 'render-1', name: 'RENDER Tokens', tags: ['render'] })
+
+    await store.redeemReward(reward)
+
+    const body = post.mock.calls[0][1]
+    expect(body).not.toHaveProperty('quotedExchangeRate')
+  })
+
+  it('shows a stale-quote toast and returns to the reward detail page on exchangeRateDrift', async () => {
+    const post = jest
+      .fn()
+      .mockRejectedValue(makeAxiosError(400, { type: renderExchangeRateDriftProblemType, status: 400 }))
+    const { store, push, sendNotification, addRewardToRedemptionsList } = setup(post, 0.5)
+    const reward = makeReward({ id: 'render-1', name: 'RENDER Tokens', tags: ['render'] })
+
+    await store.redeemReward(reward)
+
+    // Success side effects must not fire.
+    expect(addRewardToRedemptionsList).not.toHaveBeenCalled()
+    expect(store.isReviewing).toBe(false)
+
+    // A user-facing toast explains the quote changed.
+    expect(sendNotification).toHaveBeenCalledTimes(1)
+    const notification = sendNotification.mock.calls[0][0] as NotificationMessage
+    expect(notification.category).toBe(NotificationMessageCategory.Error)
+    expect(notification.type).toBe('error')
+    expect(notification.title).toBe('Uh-oh! The RENDER exchange rate has changed.')
+
+    // User is sent back to the reward detail page, where quote polling refreshes the displayed rate.
+    expect(push).toHaveBeenCalledWith('/rewards/render-1')
+    notification.onClick?.()
+    expect(push).toHaveBeenCalledWith('/rewards/render-1')
+  })
+
+  it('surfaces the API message for exchangeRateDrift when provided', async () => {
+    const apiTitle = 'The RENDER quote expired'
+    const apiDetail = 'The rate moved by more than the allowed tolerance.'
+    const post = jest
+      .fn()
+      .mockRejectedValue(
+        makeAxiosError(400, {
+          type: renderExchangeRateDriftProblemType,
+          status: 400,
+          title: apiTitle,
+          detail: apiDetail,
+        }),
+      )
+    const { store, sendNotification } = setup(post, 0.5)
+    const reward = makeReward({ id: 'render-1', name: 'RENDER Tokens', tags: ['render'] })
+
+    await store.redeemReward(reward)
+
+    const notification = sendNotification.mock.calls[0][0] as NotificationMessage
+    expect(notification.title).toBe(apiTitle)
+    expect(notification.message).toBe(apiDetail)
+  })
+
+  it('shows a generic error toast, logs, and returns to the reward detail page on exchangeRateRequired', async () => {
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+    const post = jest
+      .fn()
+      .mockRejectedValue(makeAxiosError(400, { type: renderExchangeRateRequiredProblemType, status: 400 }))
+    const { store, push, sendNotification, addRewardToRedemptionsList } = setup(post, 0.5)
+    const reward = makeReward({ id: 'render-1', name: 'RENDER Tokens', tags: ['render'] })
+
+    await store.redeemReward(reward)
+
+    // Success side effects must not fire.
+    expect(addRewardToRedemptionsList).not.toHaveBeenCalled()
+    expect(store.isReviewing).toBe(false)
+
+    // A generic error toast is shown.
+    expect(sendNotification).toHaveBeenCalledTimes(1)
+    const notification = sendNotification.mock.calls[0][0] as NotificationMessage
+    expect(notification.category).toBe(NotificationMessageCategory.Error)
+    expect(notification.title).toBe('Uh-oh! We could not complete your redemption.')
+
+    // The integration issue is logged and the user is routed back to the reward detail page.
+    expect(errorSpy).toHaveBeenCalled()
+    expect(push).toHaveBeenCalledWith('/rewards/render-1')
+
+    errorSpy.mockRestore()
   })
 })
