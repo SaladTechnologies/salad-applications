@@ -9,6 +9,7 @@ import { ChallengeSudoModeTrigger } from '../auth'
 import type { NotificationMessage } from '../notifications/models'
 import { NotificationMessageCategory } from '../notifications/models'
 import type { ProfileStore } from '../profile'
+import { isRenderReward } from '../render'
 import type { SaladPaymentResponse } from '../salad-pay'
 import { AbortError } from '../salad-pay'
 import { SaladPay } from '../salad-pay/SaladPay'
@@ -36,6 +37,21 @@ const timeoutMessage = 'request-timeout'
  */
 export const renderTokenAccountRequiredProblemType = 'redemptions:requires:renderTokenAccount'
 export const solanaWalletRequiredProblemType = 'redemptions:requires:solanaWallet'
+
+/**
+ * Problem `type` codes returned on a `400` when a RENDER redemption is rejected because of a problem with the
+ * quoted exchange rate that the client attached to the request.
+ *
+ * - `exchangeRateDrift` means the RENDER/USD price the Chef was quoted has moved too far from the live rate for the
+ *   redemption to honor it. This is user-facing and expected to happen occasionally (quotes are time-sensitive): we
+ *   show the Chef a toast explaining the quote changed and send them back to the reward detail page, where the
+ *   price-quote polling re-fetches and displays the updated quote so they can review and try again.
+ * - `exchangeRateRequired` means the request reached the API without a `quotedExchangeRate`. Since the web app always
+ *   attaches the rate for RENDER redemptions, this is a defensive/dev-facing code that should never occur in practice;
+ *   we fail gracefully with a generic error toast + the same navigate-back behavior and log it for diagnosis.
+ */
+export const renderExchangeRateDriftProblemType = 'redemptions:invalid:exchangeRateDrift'
+export const renderExchangeRateRequiredProblemType = 'redemptions:invalid:exchangeRateRequired'
 
 export class RewardStore {
   private readonly saladPay = new SaladPay('43e8e26fa9077bb9c932d1849f52ef68e89c3ca39287c949275e0f18be6d074b')
@@ -286,9 +302,20 @@ export class RewardStore {
 
       console.log(`Completed SaladPay transaction ${response?.details.transactionToken}`)
 
+      // RENDER redemptions are priced against a live, time-sensitive RENDER/USD quote. Attach the exact rate the Chef
+      // was shown (the value the store is already holding and rendering the "you'll receive X RENDER" figure from) so
+      // the API can honor that quote or reject it with `exchangeRateDrift` if the live rate has moved too far. We reuse
+      // the state value rather than re-fetching so the quoted rate matches what the user actually saw.
+      const quotedExchangeRate = isRenderReward(reward) ? this.store.render.exchangeRate?.rate : undefined
+
       const newRedemption = yield this.axios.post(
         redemptionsEndpointPath,
-        { id: this.lastRedemptionId, price: reward.price, rewardId: reward.id },
+        {
+          id: this.lastRedemptionId,
+          price: reward.price,
+          rewardId: reward.id,
+          ...(quotedExchangeRate !== undefined ? { quotedExchangeRate } : {}),
+        },
         { timeoutErrorMessage: timeoutMessage },
       )
 
@@ -353,6 +380,41 @@ export class RewardStore {
                     onClick: () => this.store.routing.push(`/rewards/${reward.id}`),
                     type: 'error',
                   }
+                } else if (data.type === renderExchangeRateDriftProblemType) {
+                  // The RENDER/USD quote the Chef was shown has drifted too far from the live rate for the API to
+                  // honor it. Send them back to the reward detail page, where the price-quote polling re-fetches and
+                  // displays the updated quote so they can review the new amount and try again. The API returns a
+                  // human-readable message in the problem body, so surface that when present.
+                  const title = typeof data.title === 'string' && data.title ? data.title : undefined
+                  const detail = typeof data.detail === 'string' && data.detail ? data.detail : undefined
+                  notification = {
+                    category: NotificationMessageCategory.Error,
+                    title: title ?? 'Uh-oh! The RENDER exchange rate has changed.',
+                    message:
+                      detail ??
+                      'The RENDER price moved while you were checking out. Please review the updated quote and try again.',
+                    autoClose: false,
+                    onClick: () => this.store.routing.push(`/rewards/${reward.id}`),
+                    type: 'error',
+                  }
+                  this.store.routing.push(`/rewards/${reward.id}`)
+                } else if (data.type === renderExchangeRateRequiredProblemType) {
+                  // Defensive: the web app always attaches `quotedExchangeRate` for RENDER redemptions, so a missing
+                  // rate points at an integration bug rather than normal user flow. Fail gracefully with a generic
+                  // error toast + the same navigate-back behavior, and log it so the integration issue is diagnosable.
+                  console.error(
+                    'RewardStore -> redeemReward: RENDER redemption rejected for missing quotedExchangeRate',
+                    data,
+                  )
+                  notification = {
+                    category: NotificationMessageCategory.Error,
+                    title: 'Uh-oh! We could not complete your redemption.',
+                    message: 'Something went wrong with the RENDER quote. Please return to the reward and try again.',
+                    autoClose: false,
+                    onClick: () => this.store.routing.push(`/rewards/${reward.id}`),
+                    type: 'error',
+                  }
+                  this.store.routing.push(`/rewards/${reward.id}`)
                 } else if (data.type === 'redemptions:requires:minecraftUsername') {
                   notification = {
                     category: NotificationMessageCategory.FurtherActionRequired,
