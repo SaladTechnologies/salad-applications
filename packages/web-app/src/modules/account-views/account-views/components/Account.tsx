@@ -10,7 +10,6 @@ import { Head } from '../../../../components'
 import { withLogin } from '../../../auth-views'
 import { type Passkey } from '../../../passkey-setup'
 import type { Avatar, Profile } from '../../../profile/models'
-import { renderRewardsEnabled } from '../../../render'
 import { solanaWalletAnchorId } from '../../../solana-wallet'
 import { AccountSecurityContainer } from './AccountSecurity/AccountSecurityContainer'
 import { AccountTermsAndConditionsUpdate } from './AccountTermsAndConditionsUpdate'
@@ -146,7 +145,7 @@ const _Account: FC<Props> = ({
   // custom scroll view to that section explicitly. The wallet panel mounts after its data loads, so poll briefly for
   // the element before giving up.
   useEffect(() => {
-    if (!renderRewardsEnabled || location.hash !== `#${solanaWalletAnchorId}`) {
+    if (location.hash !== `#${solanaWalletAnchorId}`) {
       return
     }
 
@@ -288,7 +287,7 @@ const _Account: FC<Props> = ({
             </div>
           </div>
           <AccountSecurityContainer />
-          {renderRewardsEnabled && <SolanaWalletContainer />}
+          <SolanaWalletContainer />
         </Layout>
       </Scrollbars>
     </div>
