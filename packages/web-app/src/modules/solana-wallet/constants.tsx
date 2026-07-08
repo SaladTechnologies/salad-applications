@@ -1,8 +1,5 @@
 /**
  * Endpoint used to get/set/clear the authenticated user's Solana wallet address.
- *
- * Note: the Solana wallet UI is gated behind the single RENDER feature flag
- * (`renderRewardsEnabled` in the `render` module), so there is no separate flag here.
  */
 export const solanaWalletEndpointPath = '/api/v2/solana/wallet'
 

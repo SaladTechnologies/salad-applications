@@ -7,7 +7,6 @@ import { SaladPayPage } from '.'
 import type { SaladTheme } from '../../../SaladTheme'
 import { SmartLink } from '../../../components'
 import { currencyFormatter } from '../../../formatters'
-import { renderRewardsEnabled } from '../../render'
 import { RenderPriceQuoteContainer } from '../../reward-views/components/RenderPriceQuote'
 import type { Reward } from '../../reward/models'
 import type { SaladPaymentRequestOptions } from '../../salad-pay/models'
@@ -129,7 +128,7 @@ const _SaladPayOrderSummaryPage: FC<Props> = ({
   // Hard-block checkout when redeeming a reward that needs a Solana wallet the Chef hasn't set yet: RENDER token
   // rewards are paid out on-chain, so without an address on file there is nowhere to send them.
   const missingRequiredWallet =
-    renderRewardsEnabled && rewardRequiresSolanaAddress(reward) && !isSolanaWalletLoading && !solanaWalletAddress
+    rewardRequiresSolanaAddress(reward) && !isSolanaWalletLoading && !solanaWalletAddress
 
   const canConfirm = hasEnoughBalance && !missingRequiredWallet
 
@@ -140,7 +139,7 @@ const _SaladPayOrderSummaryPage: FC<Props> = ({
   }
 
   useEffect(() => {
-    if (renderRewardsEnabled && rewardRequiresSolanaAddress(reward)) {
+    if (rewardRequiresSolanaAddress(reward)) {
       loadSolanaWallet?.()
     }
     // Re-evaluate only when the reward changes.

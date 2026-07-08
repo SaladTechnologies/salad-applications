@@ -5,7 +5,6 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Button, SmartLink } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
-import { renderRewardsEnabled } from '../../render'
 import type { Reward } from '../../reward/models'
 import { getPercentOff } from '../../reward/utils'
 import { rewardRequiresSolanaAddress, solanaWalletAccountAnchor } from '../../solana-wallet'
@@ -145,7 +144,7 @@ class _RewardHeaderBar extends Component<Props> {
   // wallet (mirroring the order-summary flow) so Buy Now can be hard-blocked until an address is on file.
   private maybeLoadSolanaWallet() {
     const { reward, authenticated, loadSolanaWallet } = this.props
-    if (renderRewardsEnabled && authenticated && rewardRequiresSolanaAddress(reward)) {
+    if (authenticated && rewardRequiresSolanaAddress(reward)) {
       loadSolanaWallet?.()
     }
   }
@@ -209,11 +208,7 @@ class _RewardHeaderBar extends Component<Props> {
     // Hard-block Buy Now when redeeming a reward that needs a Solana wallet the Chef hasn't set yet: RENDER token
     // rewards are paid out on-chain, so without an address on file there is nowhere to send them.
     const missingRequiredWallet =
-      renderRewardsEnabled &&
-      !!authenticated &&
-      rewardRequiresSolanaAddress(reward) &&
-      !isSolanaWalletLoading &&
-      !solanaWalletAddress
+      !!authenticated && rewardRequiresSolanaAddress(reward) && !isSolanaWalletLoading && !solanaWalletAddress
 
     const disabled = outOfStock || promoGame || (authenticated && !hasBalance) || missingRequiredWallet
 

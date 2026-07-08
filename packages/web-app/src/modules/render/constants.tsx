@@ -1,15 +1,4 @@
 /**
- * Internal, hard-coded feature flag that gates the entire RENDER token integration.
- *
- * This is the single source of truth for every RENDER workflow: the price-quote UI, the RENDER reward pricing shown
- * across the storefront/search/detail/checkout flows, and the Solana wallet account panel are all gated behind this
- * one flag. It is intentionally a compile-time constant rather than a remote/third-party flag (e.g. Unleash): the
- * feature ships dark while this is `false` — no RENDER UI is rendered and no calls are made to the exchange-rate or
- * Solana wallet endpoints. Flip it to `true` and redeploy to turn the feature on.
- */
-export const renderRewardsEnabled = true
-
-/**
  * The App API endpoint that returns the current RENDER/USD price quote.
  *
  * This endpoint is the single source of truth for the RENDER price: the rate is computed server-side and the web app
