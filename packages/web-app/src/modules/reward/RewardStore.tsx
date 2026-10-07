@@ -14,6 +14,7 @@ import type { SaladPaymentResponse } from '../salad-pay'
 import { AbortError } from '../salad-pay'
 import { SaladPay } from '../salad-pay/SaladPay'
 import { solanaWalletAccountAnchor } from '../solana-wallet'
+import { RewardVaultStatus } from '../vault/models'
 import {
   redemptionsEndpointPath,
   rewardsEndpointPath,
@@ -318,6 +319,22 @@ export class RewardStore {
         },
         { timeoutErrorMessage: timeoutMessage },
       )
+
+      // The API can accept the request and still refuse the redemption: it answers 200 with a `failed` item, nothing
+      // charged, and no reason given. Treat that as a failure, not an order.
+      if (newRedemption?.data?.status === RewardVaultStatus.FAILED) {
+        response?.complete('fail')
+        this.clearRedemptionInfo()
+        this.store.notifications.sendNotification({
+          category: NotificationMessageCategory.Error,
+          title: "Sorry, Chef! We couldn't complete this redemption.",
+          message: "Your balance wasn't charged. Please contact support if this keeps happening.",
+          autoClose: false,
+          onClick: () => window.open('https://support.salad.com', '_blank'),
+          type: 'error',
+        })
+        return
+      }
 
       if (newRedemption) {
         const reward = newRedemption.data
