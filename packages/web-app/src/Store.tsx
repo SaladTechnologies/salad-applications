@@ -9,6 +9,7 @@ import { AuthStore } from './modules/auth'
 import { BackupCodesStore } from './modules/backup-codes'
 import { BalanceStore } from './modules/balance'
 import { BonusStore } from './modules/bonus'
+import { CoinbaseEmailStore } from './modules/coinbase'
 import { RefreshService } from './modules/data-refresh'
 import { DemandAlertsStore } from './modules/demand-alerts-views/DemandAlertsStore'
 import { DemandMonitorStore } from './modules/demand-monitor-views/DemandMonitorStore'
@@ -79,6 +80,7 @@ export class RootStore {
   public readonly demandMonitor: DemandMonitorStore
   public readonly demandAlerts: DemandAlertsStore
   public readonly solanaWallet: SolanaWalletStore
+  public readonly coinbaseEmail: CoinbaseEmailStore
 
   constructor(axios: AxiosInstance, private readonly featureManager: FeatureManager) {
     this.routing = new RouterStore()
@@ -109,6 +111,7 @@ export class RootStore {
     this.demandMonitor = new DemandMonitorStore(axios)
     this.demandAlerts = new DemandAlertsStore(axios)
     this.solanaWallet = new SolanaWalletStore(this, axios)
+    this.coinbaseEmail = new CoinbaseEmailStore(this, axios)
 
     // Pass AnalyticsStore to FeatureManager
     featureManager.setAnalyticsStore(this.analytics)

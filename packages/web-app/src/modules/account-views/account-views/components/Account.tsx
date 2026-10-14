@@ -8,11 +8,13 @@ import { useLocation } from 'react-router'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { Head } from '../../../../components'
 import { withLogin } from '../../../auth-views'
+import { COINBASE_CASHOUT_ENABLED } from '../../../coinbase'
 import { type Passkey } from '../../../passkey-setup'
 import type { Avatar, Profile } from '../../../profile/models'
 import { solanaWalletAnchorId } from '../../../solana-wallet'
 import { AccountSecurityContainer } from './AccountSecurity/AccountSecurityContainer'
 import { AccountTermsAndConditionsUpdate } from './AccountTermsAndConditionsUpdate'
+import { CoinbaseEmailContainer } from './CoinbaseEmail'
 import { GoogleSignInForm } from './GoogleSignInForm'
 import { SolanaWalletContainer } from './SolanaWallet'
 
@@ -288,6 +290,7 @@ const _Account: FC<Props> = ({
           </div>
           <AccountSecurityContainer />
           <SolanaWalletContainer />
+          {COINBASE_CASHOUT_ENABLED && <CoinbaseEmailContainer />}
         </Layout>
       </Scrollbars>
     </div>
