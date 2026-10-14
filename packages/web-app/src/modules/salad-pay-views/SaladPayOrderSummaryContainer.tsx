@@ -11,6 +11,10 @@ const mapStoreToProps = (store: SaladPayStore): any => ({
   solanaWalletAddress: getStore().solanaWallet.walletAddress,
   isSolanaWalletLoading: getStore().solanaWallet.isLoading,
   loadSolanaWallet: getStore().solanaWallet.loadWallet,
+  coinbaseEmail: getStore().coinbaseEmail.email,
+  isCoinbaseEmailLoading: getStore().coinbaseEmail.isLoading,
+  isCoinbaseEmailLoadError: getStore().coinbaseEmail.isLoadError,
+  loadCoinbaseEmail: getStore().coinbaseEmail.loadEmail,
   onClose: () => {
     store.abort()
     store.goBackToReward()

@@ -6,7 +6,11 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { ErrorText } from '../../../../../components'
 import { SuccessText } from '../../../../../components/primitives/content/SuccessText'
-import type { CoinbaseEmailSubmitError, CoinbaseEmailSubmitStatus } from '../../../../coinbase'
+import {
+  coinbaseEmailAnchorId,
+  type CoinbaseEmailSubmitError,
+  type CoinbaseEmailSubmitStatus,
+} from '../../../../coinbase'
 import type { FormValues } from '../Account'
 import { styles } from './CoinbaseEmail.styles'
 import { CoinbaseEmailConfirmModal } from './CoinbaseEmailConfirmModal'
@@ -79,7 +83,7 @@ const _CoinbaseEmail: FC<Props> = ({
   const showForm = isEditing || !email
 
   return (
-    <div className={classes.coinbaseEmailWrapper}>
+    <div id={coinbaseEmailAnchorId} className={classes.coinbaseEmailWrapper}>
       <Text variant="baseXL">Coinbase Email</Text>
       <div className={classes.description}>
         <Text variant="baseS">

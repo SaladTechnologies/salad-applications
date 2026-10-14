@@ -7,6 +7,7 @@ import { SaladPayPage } from '.'
 import type { SaladTheme } from '../../../SaladTheme'
 import { SmartLink } from '../../../components'
 import { currencyFormatter } from '../../../formatters'
+import { coinbaseEmailAccountAnchor, rewardRequiresCoinbaseEmail } from '../../coinbase'
 import { RenderPriceQuoteContainer } from '../../reward-views/components/RenderPriceQuote'
 import type { Reward } from '../../reward/models'
 import type { SaladPaymentRequestOptions } from '../../salad-pay/models'
@@ -89,6 +90,20 @@ const styles = (theme: SaladTheme) => ({
     fontWeight: 'bold',
     textDecoration: 'underline',
   },
+  // Where a Coinbase reward will be sent, on the white checkout modal.
+  coinbaseEmailNotice: {
+    fontFamily: theme.fontGroteskBook19,
+    fontSize: 12,
+    color: theme.darkBlue,
+    border: `1px solid ${theme.darkBlue}`,
+    borderRadius: 4,
+    padding: '10px 12px',
+    marginTop: 16,
+    overflowWrap: 'anywhere',
+  },
+  coinbaseEmailNoticeEmail: {
+    fontWeight: 'bold',
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -102,6 +117,14 @@ interface Props extends WithStyles<typeof styles> {
   isSolanaWalletLoading?: boolean
   /** Loads the Chef's Solana wallet so the missing-wallet warning can be evaluated. */
   loadSolanaWallet?: () => void
+  /** The Chef's saved Coinbase email, if any. Used to block, or show the destination of, a Coinbase reward. */
+  coinbaseEmail?: string
+  /** Whether the Coinbase email is still being loaded (suppresses the warning until we know). */
+  isCoinbaseEmailLoading?: boolean
+  /** Whether loading the Coinbase email failed. */
+  isCoinbaseEmailLoadError?: boolean
+  /** Loads the Chef's Coinbase email so the missing-email warning can be evaluated. */
+  loadCoinbaseEmail?: () => void
   onConfirm: () => void
   onCloseClick: () => void
   onAbort: () => void
@@ -118,6 +141,10 @@ const _SaladPayOrderSummaryPage: FC<Props> = ({
   solanaWalletAddress,
   isSolanaWalletLoading,
   loadSolanaWallet,
+  coinbaseEmail,
+  isCoinbaseEmailLoading,
+  isCoinbaseEmailLoadError,
+  loadCoinbaseEmail,
   onConfirm,
   onCloseClick,
   onAbort,
@@ -127,10 +154,14 @@ const _SaladPayOrderSummaryPage: FC<Props> = ({
 
   // Hard-block checkout when redeeming a reward that needs a Solana wallet the Chef hasn't set yet: RENDER token
   // rewards are paid out on-chain, so without an address on file there is nowhere to send them.
-  const missingRequiredWallet =
-    rewardRequiresSolanaAddress(reward) && !isSolanaWalletLoading && !solanaWalletAddress
+  const missingRequiredWallet = rewardRequiresSolanaAddress(reward) && !isSolanaWalletLoading && !solanaWalletAddress
 
-  const canConfirm = hasEnoughBalance && !missingRequiredWallet
+  // Hard-block checkout for a Coinbase reward until the Chef's Coinbase email is known: it is sent to that email, so
+  // without one there is nowhere to send it. Always false while the Coinbase feature flag is off.
+  const requiresCoinbaseEmail = rewardRequiresCoinbaseEmail(reward)
+  const missingCoinbaseEmail = requiresCoinbaseEmail && !isCoinbaseEmailLoading && !coinbaseEmail
+
+  const canConfirm = hasEnoughBalance && !missingRequiredWallet && !missingCoinbaseEmail
 
   const handleConfirmClick = () => {
     if (canConfirm) {
@@ -145,6 +176,14 @@ const _SaladPayOrderSummaryPage: FC<Props> = ({
     // Re-evaluate only when the reward changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadSolanaWallet, reward?.id])
+
+  useEffect(() => {
+    if (rewardRequiresCoinbaseEmail(reward)) {
+      loadCoinbaseEmail?.()
+    }
+    // Re-evaluate only when the reward changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadCoinbaseEmail, reward?.id])
 
   useEffect(() => {
     window.addEventListener('popstate', onAbort)
@@ -187,6 +226,35 @@ const _SaladPayOrderSummaryPage: FC<Props> = ({
                   add your Solana wallet address
                 </SmartLink>{' '}
                 before redeeming.
+              </div>
+            )}
+            {missingCoinbaseEmail && (
+              <div className={classes.walletWarning}>
+                {isCoinbaseEmailLoadError ? (
+                  <>
+                    We couldn't load your Coinbase email, so you can't redeem this reward right now.{' '}
+                    <SmartLink className={classes.walletWarningLink} to={coinbaseEmailAccountAnchor}>
+                      Check your Coinbase email
+                    </SmartLink>{' '}
+                    and try again.
+                  </>
+                ) : (
+                  <>
+                    You can't redeem this reward yet. It is sent to your Coinbase account, so you must{' '}
+                    <SmartLink className={classes.walletWarningLink} to={coinbaseEmailAccountAnchor}>
+                      add your Coinbase email
+                    </SmartLink>{' '}
+                    before redeeming.
+                  </>
+                )}
+              </div>
+            )}
+            {requiresCoinbaseEmail && coinbaseEmail && (
+              <div className={classes.coinbaseEmailNotice}>
+                This reward will be sent to the Coinbase account for{' '}
+                <span className={classes.coinbaseEmailNoticeEmail}>{coinbaseEmail}</span>. Make sure this is your own
+                Coinbase account. Salad cannot recover, reverse or refund rewards sent to a wrong email.{' '}
+                <SmartLink to={coinbaseEmailAccountAnchor}>Change it</SmartLink>
               </div>
             )}
             <div className={classNames(classes.row, classes.balanceRow)}>
