@@ -6,6 +6,7 @@ import withStyles from 'react-jss'
 import { Button, SmartLink } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
 import type { Reward } from '../../reward/models'
+import { coinbaseEmailAccountAnchor, rewardRequiresCoinbaseEmail } from '../../coinbase'
 import { getPercentOff } from '../../reward/utils'
 import { rewardRequiresSolanaAddress, solanaWalletAccountAnchor } from '../../solana-wallet'
 import { IconArrowLeft } from './assets'
@@ -97,6 +98,19 @@ const styles = (theme: SaladTheme) => ({
   walletWarningSpacing: {
     marginBottom: 8,
   },
+  // The Coinbase email a Coinbase reward will be sent to, shown so the Chef can check it before buying.
+  coinbaseEmailText: {
+    fontFamily: theme.fontGroteskBook25,
+    fontSize: 10,
+    letterSpacing: 1,
+    color: theme.lightGreen,
+    marginRight: 10,
+    marginBottom: 4,
+    maxWidth: 320,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
   lowQuanityLabel: {
     color: theme.darkBlue,
     backgroundColor: theme.green,
@@ -134,6 +148,14 @@ interface Props extends WithStyles<typeof styles> {
   isSolanaWalletLoading?: boolean
   /** Loads the Chef's Solana wallet so the missing-wallet gate can be evaluated. */
   loadSolanaWallet?: () => void
+  /** The Chef's saved Coinbase email, if any. Used to gate Buy Now for Coinbase rewards. */
+  coinbaseEmail?: string
+  /** Whether the Coinbase email is still being loaded (suppresses the gate until we know). */
+  isCoinbaseEmailLoading?: boolean
+  /** Whether loading the Coinbase email failed. */
+  isCoinbaseEmailLoadError?: boolean
+  /** Loads the Chef's Coinbase email so the missing-email gate can be evaluated. */
+  loadCoinbaseEmail?: () => void
   trackDisabledBuyNowClick: () => void
   onRemoveTargetRewardClick: () => void
   onTargetThisRewardClick: (reward: Reward) => void
@@ -149,13 +171,24 @@ class _RewardHeaderBar extends Component<Props> {
     }
   }
 
+  // Coinbase rewards are sent to the Chef's Coinbase email, so load it the same way to gate Buy Now and show where the
+  // reward will go. `rewardRequiresCoinbaseEmail` is always false while the Coinbase feature flag is off.
+  private maybeLoadCoinbaseEmail() {
+    const { reward, authenticated, loadCoinbaseEmail } = this.props
+    if (authenticated && rewardRequiresCoinbaseEmail(reward)) {
+      loadCoinbaseEmail?.()
+    }
+  }
+
   public override componentDidMount() {
     this.maybeLoadSolanaWallet()
+    this.maybeLoadCoinbaseEmail()
   }
 
   public override componentDidUpdate(prevProps: Props) {
     if (prevProps.reward?.id !== this.props.reward?.id) {
       this.maybeLoadSolanaWallet()
+      this.maybeLoadCoinbaseEmail()
     }
   }
 
@@ -189,6 +222,9 @@ class _RewardHeaderBar extends Component<Props> {
       requiresMinecraftUsername,
       solanaWalletAddress,
       isSolanaWalletLoading,
+      coinbaseEmail,
+      isCoinbaseEmailLoading,
+      isCoinbaseEmailLoadError,
       trackDisabledBuyNowClick,
       onRemoveTargetRewardClick,
       isTargetReward,
@@ -210,7 +246,13 @@ class _RewardHeaderBar extends Component<Props> {
     const missingRequiredWallet =
       !!authenticated && rewardRequiresSolanaAddress(reward) && !isSolanaWalletLoading && !solanaWalletAddress
 
-    const disabled = outOfStock || promoGame || (authenticated && !hasBalance) || missingRequiredWallet
+    // Hard-block Buy Now for a Coinbase reward until the Chef's Coinbase email is known: without it there is nowhere to
+    // send the reward. A failed load also blocks, since we can't show where the reward would go.
+    const requiresCoinbaseEmail = !!authenticated && rewardRequiresCoinbaseEmail(reward)
+    const missingCoinbaseEmail = requiresCoinbaseEmail && !isCoinbaseEmailLoading && !coinbaseEmail
+
+    const disabled =
+      outOfStock || promoGame || (authenticated && !hasBalance) || missingRequiredWallet || missingCoinbaseEmail
 
     const getTargetRewardControl = () => {
       if (!reward) {
@@ -290,6 +332,25 @@ class _RewardHeaderBar extends Component<Props> {
                   )}
                 >
                   <SmartLink to={solanaWalletAccountAnchor}>Add Solana Wallet Address</SmartLink>
+                </div>
+              )}
+              {missingCoinbaseEmail && (
+                <div
+                  className={classnames(
+                    classes.priceText,
+                    classes.stockLabel,
+                    classes.insufficientBalanceLabel,
+                    classes.walletWarningSpacing,
+                  )}
+                >
+                  <SmartLink to={coinbaseEmailAccountAnchor}>
+                    {isCoinbaseEmailLoadError ? 'Check Coinbase Email' : 'Add Coinbase Email'}
+                  </SmartLink>
+                </div>
+              )}
+              {requiresCoinbaseEmail && coinbaseEmail && (
+                <div className={classes.coinbaseEmailText} title={coinbaseEmail}>
+                  Sends to Coinbase: {coinbaseEmail}
                 </div>
               )}
               <RenderPriceQuoteContainer reward={reward} variant="detail" />

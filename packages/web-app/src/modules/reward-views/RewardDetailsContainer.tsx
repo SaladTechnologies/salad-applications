@@ -36,6 +36,10 @@ const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ id: stri
     solanaWalletAddress: store.solanaWallet.walletAddress,
     isSolanaWalletLoading: store.solanaWallet.isLoading,
     loadSolanaWallet: store.solanaWallet.loadWallet,
+    coinbaseEmail: store.coinbaseEmail.email,
+    isCoinbaseEmailLoading: store.coinbaseEmail.isLoading,
+    isCoinbaseEmailLoadError: store.coinbaseEmail.isLoadError,
+    loadCoinbaseEmail: store.coinbaseEmail.loadEmail,
     trackDisabledBuyNowClick,
   }
 }

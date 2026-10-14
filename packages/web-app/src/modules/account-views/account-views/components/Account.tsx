@@ -8,7 +8,7 @@ import { useLocation } from 'react-router'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { Head } from '../../../../components'
 import { withLogin } from '../../../auth-views'
-import { COINBASE_CASHOUT_ENABLED } from '../../../coinbase'
+import { COINBASE_CASHOUT_ENABLED, coinbaseEmailAnchorId } from '../../../coinbase'
 import { type Passkey } from '../../../passkey-setup'
 import type { Avatar, Profile } from '../../../profile/models'
 import { solanaWalletAnchorId } from '../../../solana-wallet'
@@ -143,11 +143,12 @@ const _Account: FC<Props> = ({
 
   // The account page scrolls inside a `react-custom-scrollbars-2` container whose outer element has `overflow: hidden`,
   // so the browser's native `#hash` anchoring (and a plain `element.scrollIntoView()`) never moves it. When deep-linked
-  // to the Solana wallet section (e.g. from the detail page / checkout "Add Solana Wallet Address" link), scroll the
-  // custom scroll view to that section explicitly. The wallet panel mounts after its data loads, so poll briefly for
-  // the element before giving up.
+  // to the Solana wallet or Coinbase email section (e.g. from the detail page / checkout "Add Solana Wallet Address" or
+  // "Add Coinbase Email" link), scroll the custom scroll view to that section explicitly. The panel mounts after its
+  // data loads, so poll briefly for the element before giving up.
   useEffect(() => {
-    if (location.hash !== `#${solanaWalletAnchorId}`) {
+    const anchorId = [solanaWalletAnchorId, coinbaseEmailAnchorId].find((id) => location.hash === `#${id}`)
+    if (!anchorId) {
       return
     }
 
@@ -156,7 +157,7 @@ const _Account: FC<Props> = ({
 
     const tryScroll = () => {
       const scrollbars = scrollbarsRef.current
-      const element = document.getElementById(solanaWalletAnchorId)
+      const element = document.getElementById(anchorId)
       if (scrollbars && element) {
         // `view` is the inner element that actually scrolls; scroll it (not the page) to the wallet section.
         const view = (scrollbars as unknown as { view?: HTMLElement }).view
