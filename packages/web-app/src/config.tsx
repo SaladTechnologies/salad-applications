@@ -34,7 +34,7 @@ const requiredString = (name: string, defaultValue?: string): string => {
   return v
 }
 
-export class Config {
+class Config {
   public readonly appBuild: string = requiredString('REACT_APP_BUILD')
   public readonly dataRefreshRate: number = numberOrDefault('REACT_APP_DATA_REFRESH_RATE', convertMinToMilli(5))
   public readonly mixpanelToken?: string = optionalString('REACT_APP_MIXPANEL_TOKEN')
@@ -68,24 +68,6 @@ export class Config {
       return override
     } else {
       return requiredString('REACT_APP_SEARCH_ENGINE')
-    }
-  }
-
-  public get unleashApiKey(): string {
-    const override = Storage.getItem('OVERRIDE_UNLEASH_API_KEY')
-    if (override != null) {
-      return override
-    } else {
-      return requiredString('REACT_APP_UNLEASH_API_KEY')
-    }
-  }
-
-  public get unleashUrl(): string {
-    const override = Storage.getItem('OVERRIDE_UNLEASH_URL')
-    if (override != null) {
-      return override
-    } else {
-      return requiredString('REACT_APP_UNLEASH_URL')
     }
   }
 }

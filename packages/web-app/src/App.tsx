@@ -12,7 +12,6 @@ import { ToastContainer } from 'react-toastify'
 import { MobileDevice, NotMobile } from './components'
 import { config } from './config'
 import { connect } from './connect'
-import { FeatureFlags, useFeatureManager } from './FeatureManager'
 import { MobileRoutes } from './MobileRoutes'
 import { NavigationBarContainer } from './modules/home-views'
 import { Routes } from './Routes'
@@ -112,10 +111,7 @@ interface AppProps extends WithStyles<typeof styles> {
 }
 
 export const _App = ({ classes, history, isAuthenticated, setErrorBoundary, withInstallReminder }: AppProps) => {
-  const featureManager = useFeatureManager()
   const errorBoundary = useErrorBoundary()
-
-  const isNewChefDownloadFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.NewChefDownload)
 
   useEffect(() => {
     setErrorBoundary(errorBoundary)
@@ -139,12 +135,7 @@ export const _App = ({ classes, history, isAuthenticated, setErrorBoundary, with
         <div className={classes.mainWindow}>
           <NavigationBarContainer />
           <div className={classes.container}>
-            <div
-              className={classNames(
-                classes.content,
-                isNewChefDownloadFeatureFlagEnabled && withInstallReminder && classes.withBanner,
-              )}
-            >
+            <div className={classNames(classes.content, withInstallReminder && classes.withBanner)}>
               <SearchProvider
                 config={{
                   ...searchConfig,

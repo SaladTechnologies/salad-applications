@@ -1,7 +1,6 @@
 import type { AxiosInstance } from 'axios'
 import { action, autorun, configure, flow, observable } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
-import type { FeatureManager } from './FeatureManager'
 import { UIStore } from './UIStore'
 import { AchievementsStore } from './modules/achievements'
 import { AnalyticsStore } from './modules/analytics'
@@ -40,8 +39,8 @@ configure({
 
 let sharedStore: RootStore
 
-export const createStore = (axios: AxiosInstance, featureManager: FeatureManager): RootStore => {
-  sharedStore = new RootStore(axios, featureManager)
+export const createStore = (axios: AxiosInstance): RootStore => {
+  sharedStore = new RootStore(axios)
   return sharedStore
 }
 
@@ -82,7 +81,7 @@ export class RootStore {
   public readonly solanaWallet: SolanaWalletStore
   public readonly coinbaseEmail: CoinbaseEmailStore
 
-  constructor(axios: AxiosInstance, private readonly featureManager: FeatureManager) {
+  constructor(axios: AxiosInstance) {
     this.routing = new RouterStore()
     this.auth = new AuthStore(this, axios)
     this.notifications = new NotificationStore(this)
@@ -112,9 +111,6 @@ export class RootStore {
     this.demandAlerts = new DemandAlertsStore(axios)
     this.solanaWallet = new SolanaWalletStore(this, axios)
     this.coinbaseEmail = new CoinbaseEmailStore(this, axios)
-
-    // Pass AnalyticsStore to FeatureManager
-    featureManager.setAnalyticsStore(this.analytics)
 
     // Start refreshing data
     this.refresh.start()
@@ -156,8 +152,6 @@ export class RootStore {
         return
       }
 
-      this.featureManager.handleLogin(profile.id)
-
       yield Promise.allSettled([
         this.analytics.start(profile),
         this.referral.loadCurrentReferral(),
@@ -188,7 +182,6 @@ export class RootStore {
     this.analytics.trackLogout()
     this.helpScout.logout()
 
-    this.featureManager.handleLogout()
     this.finishInitialLoading()
   }
 }
