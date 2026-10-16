@@ -30,8 +30,6 @@ try {
             $Env:REACT_APP_SEARCH_ENGINE = 'salad-rewards-test'
             $Env:REACT_APP_SEARCH_KEY = 'search-qced4ibef8m4s7xacm9hoqyk'
             $Env:REACT_APP_STRAPI_UPLOAD_URL = 'https://cms-api-testing.salad.io'
-            $Env:REACT_APP_UNLEASH_API_KEY = 'zrujLzhnwVZkIOlS74oZZ0DK7ZXs3Ifo'
-            $Env:REACT_APP_UNLEASH_URL = 'https://features-testing.salad.com/proxy'
         }
         else {
             $Env:REACT_APP_MIXPANEL_TOKEN = '68db9194f229525012624f3cf368921f'
