@@ -2,12 +2,10 @@ import type { Location } from 'history'
 import type { RouteComponentProps } from 'react-router'
 import { Redirect, Route, Switch, withRouter } from 'react-router'
 import { NoPageFound } from './components'
-import { FeatureFlags, useFeatureManager } from './FeatureManager'
 import { BackupCodesPageContainer } from './modules/backup-codes/BackupCodesPageContainer'
 import { ReplaceBonusModalContainer } from './modules/bonus-views'
 import { DemandMonitorPageContainer } from './modules/demand-monitor-views/DemandMonitorPage'
 import { EarnInfoPage, EarningSummaryContainer } from './modules/earn-views'
-import { OldEarningSummaryContainer } from './modules/earn-views/OldEarningSummaryContainer'
 import { ExitSurveyContainer } from './modules/exit-survey-views'
 import { PasskeyDeletePageContainer } from './modules/passkey-delete'
 import { ProtectedActionPageContainer } from './modules/protected-action'
@@ -22,10 +20,6 @@ interface Props extends RouteComponentProps {
 }
 
 const _Routes = ({ location, isAuthenticated }: Props) => {
-  const featureManager = useFeatureManager()
-  const isDemandMonitorFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.DemandMonitor)
-  const isFleetDashboardFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.FleetDashboard)
-
   const currentLocation =
     (location.state as { currentLocation: Location | undefined } | undefined)?.currentLocation || location
 
@@ -51,11 +45,8 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
       <Route path="/protected-action" component={ProtectedActionPageContainer} />
       {/* Earn Pages */}
       {isAuthenticated && <Redirect exact from="/earn" to="/earn/summary" />}
-      <Route
-        path="/earn/summary"
-        component={isFleetDashboardFeatureFlagEnabled ? EarningSummaryContainer : OldEarningSummaryContainer}
-      />
-      {isDemandMonitorFeatureFlagEnabled && <Route path="/earn/demand" exact component={DemandMonitorPageContainer} />}
+      <Route path="/earn/summary" component={EarningSummaryContainer} />
+      <Route path="/earn/demand" exact component={DemandMonitorPageContainer} />
       <Route path="/earn" component={EarnInfoPage} />
       <Route
         exact

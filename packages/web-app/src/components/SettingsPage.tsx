@@ -4,7 +4,6 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Route, Switch } from 'react-router'
 import { Button, Divider, LinkListUnstyled, MenuTitle, NoPageFound } from '.'
-import { FeatureFlags, useFeatureManager } from '../FeatureManager'
 import { AccountContainer } from '../modules/account-views/account-views'
 import { ReferralSettingsContainer } from '../modules/account-views/referral-views'
 import { AchievementPageContainer } from '../modules/achievements-views'
@@ -38,10 +37,6 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const _Settings = ({ appBuild, classes, menuButtons, isUserReferralsEnabled, onClose }: Props) => {
-  const featureManager = useFeatureManager()
-  const isAchievementsFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.Achievements)
-  const isDemandNotificationsFeatureFlagEnabled = featureManager.isEnabled(FeatureFlags.DemandNotifications)
-
   const handleCloseClicked = () => {
     onClose?.()
   }
@@ -66,12 +61,12 @@ const _Settings = ({ appBuild, classes, menuButtons, isUserReferralsEnabled, onC
     { url: '/account/summary', text: 'Account', component: AccountContainer },
     isUserReferralsEnabled && { url: '/account/referrals', text: 'Referrals', component: ReferralSettingsContainer },
     { url: '/account/bonuses', text: 'Bonuses', component: BonusPageContainer },
-    isAchievementsFeatureFlagEnabled && {
+    {
       url: '/account/achievements',
       text: 'Achievements',
       component: AchievementPageContainer,
     },
-    isDemandNotificationsFeatureFlagEnabled && {
+    {
       url: '/account/alerts',
       text: 'Demand Alerts',
       component: DemandAlertsPage,
