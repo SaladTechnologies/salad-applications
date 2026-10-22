@@ -18,6 +18,7 @@ storiesOf('Modules/Account/AccountViews/components/CoinbaseEmail', module)
     return (
       <div style={{ backgroundColor: '#0A2133', padding: 24 }}>
         <CoinbaseEmail
+          isEnabled={boolean('isEnabled', true)}
           email={email}
           isLoading={boolean('isLoading', false)}
           isLoadError={boolean('isLoadError', false)}

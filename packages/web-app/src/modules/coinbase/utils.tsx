@@ -1,15 +1,11 @@
-import { COINBASE_CASHOUT_ENABLED, coinbaseEmailRequiredTag } from './constants'
+import { coinbaseEmailRequiredTag } from './constants'
 
 /**
  * Determines whether a reward is paid out to the Chef's Coinbase account email, so it needs one saved before it can be
- * redeemed.
+ * redeemed. The tag comparison is case-insensitive, like the Solana wallet tag.
  *
- * Always `false` while the {@link COINBASE_CASHOUT_ENABLED} flag is off, so none of the Coinbase reward UI renders and
- * the Coinbase email is never loaded. The tag comparison is case-insensitive, like the Solana wallet tag.
- *
- * @param enabled Whether the Coinbase cash-out feature is on. Injectable so tests can exercise both paths.
+ * This doesn't check whether Coinbase cash-out is available to the Chef: the server only returns a Coinbase reward to
+ * Chefs it's available to, and won't save a Coinbase email for anyone else, so for them Buy Now stays blocked.
  */
-export const rewardRequiresCoinbaseEmail = (
-  reward?: { tags?: string[] },
-  enabled: boolean = COINBASE_CASHOUT_ENABLED,
-): boolean => enabled && !!reward?.tags?.some((tag) => tag?.toLowerCase() === coinbaseEmailRequiredTag)
+export const rewardRequiresCoinbaseEmail = (reward?: { tags?: string[] }): boolean =>
+  !!reward?.tags?.some((tag) => tag?.toLowerCase() === coinbaseEmailRequiredTag)

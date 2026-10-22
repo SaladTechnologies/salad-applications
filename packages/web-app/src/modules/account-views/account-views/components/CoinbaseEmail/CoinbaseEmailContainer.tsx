@@ -3,6 +3,7 @@ import type { RootStore } from '../../../../../Store'
 import { CoinbaseEmail } from './CoinbaseEmail'
 
 const mapStoreToProps = (store: RootStore): any => ({
+  isEnabled: store.coinbaseEmail.isEnabled,
   email: store.coinbaseEmail.email,
   isLoading: store.coinbaseEmail.isLoading,
   isLoadError: store.coinbaseEmail.isLoadError,

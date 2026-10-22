@@ -172,7 +172,7 @@ class _RewardHeaderBar extends Component<Props> {
   }
 
   // Coinbase rewards are sent to the Chef's Coinbase email, so load it the same way to gate Buy Now and show where the
-  // reward will go. `rewardRequiresCoinbaseEmail` is always false while the Coinbase feature flag is off.
+  // reward will go. The server only returns a Coinbase reward to Chefs Coinbase cash-out is available to.
   private maybeLoadCoinbaseEmail() {
     const { reward, authenticated, loadCoinbaseEmail } = this.props
     if (authenticated && rewardRequiresCoinbaseEmail(reward)) {
