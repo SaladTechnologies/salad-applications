@@ -157,7 +157,7 @@ const _SaladPayOrderSummaryPage: FC<Props> = ({
   const missingRequiredWallet = rewardRequiresSolanaAddress(reward) && !isSolanaWalletLoading && !solanaWalletAddress
 
   // Hard-block checkout for a Coinbase reward until the Chef's Coinbase email is known: it is sent to that email, so
-  // without one there is nowhere to send it. Always false while the Coinbase feature flag is off.
+  // without one there is nowhere to send it. A Chef the feature isn't available to can't save one, so stays blocked.
   const requiresCoinbaseEmail = rewardRequiresCoinbaseEmail(reward)
   const missingCoinbaseEmail = requiresCoinbaseEmail && !isCoinbaseEmailLoading && !coinbaseEmail
 

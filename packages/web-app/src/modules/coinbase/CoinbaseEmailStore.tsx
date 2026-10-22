@@ -6,7 +6,6 @@ import { SaladError } from '../../axiosFactory'
 import { isProblemDetail } from '../../utils'
 import { NotificationMessageCategory } from '../notifications/models'
 import {
-  COINBASE_CASHOUT_ENABLED,
   coinbaseEmailDisabledProblemType,
   coinbaseEmailEndpointPath,
   coinbaseEmailInvalidProblemType,
@@ -35,13 +34,18 @@ const getProblemType = (err: unknown): string | undefined => {
 /**
  * Owns the Coinbase account email the Chef has entered for Coinbase cash-outs.
  *
- * All requests are gated behind the internal {@link COINBASE_CASHOUT_ENABLED} flag: when the flag is off the store
- * never touches the network and `email` stays `undefined`.
+ * Whether Coinbase cash-out is available to this Chef comes from the server with the email, in `enabled`. Until the
+ * email has loaded, or if loading fails, the feature counts as unavailable and saving or clearing the email does
+ * nothing.
  */
 export class CoinbaseEmailStore {
   /** The Chef's currently saved Coinbase account email, if any, as returned by the server. */
   @observable
   public email?: string
+
+  /** Whether Coinbase cash-out is available to this Chef, as the server last said. */
+  @observable
+  public isEnabled: boolean = false
 
   /** Whether the initial `GET` of the email is in flight. */
   @observable
@@ -62,19 +66,8 @@ export class CoinbaseEmailStore {
   /**
    * @param store The root store.
    * @param axios The App API client.
-   * @param enabled Whether the Coinbase cash-out feature is on. Defaults to the hard-coded
-   *   {@link COINBASE_CASHOUT_ENABLED} flag; injectable so tests can exercise both the on and off paths.
    */
-  constructor(
-    private readonly store: RootStore,
-    private readonly axios: AxiosInstance,
-    private readonly enabled: boolean = COINBASE_CASHOUT_ENABLED,
-  ) {}
-
-  /** Whether the Coinbase cash-out feature is enabled. */
-  public get isEnabled(): boolean {
-    return this.enabled
-  }
+  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
 
   @computed
   public get hasEmail(): boolean {
@@ -89,27 +82,25 @@ export class CoinbaseEmailStore {
     }
   }
 
-  /** Fetches the saved email. No-ops while the feature flag is disabled. */
+  /** Fetches the saved email and whether Coinbase cash-out is available to this Chef. */
   @action.bound
   public loadEmail = flow(function* (this: CoinbaseEmailStore) {
-    if (!this.isEnabled) {
-      return
-    }
-
     this.isLoading = true
     this.isLoadError = false
     try {
       const response: AxiosResponse<CoinbaseEmail> = yield this.axios.get(coinbaseEmailEndpointPath)
       this.email = response.data?.email || undefined
+      this.isEnabled = response.data?.enabled === true
     } catch (err) {
       this.isLoadError = true
       this.email = undefined
+      this.isEnabled = false
     } finally {
       this.isLoading = false
     }
   })
 
-  /** Sets or changes the saved email. No-ops while the feature flag is disabled. */
+  /** Sets or changes the saved email. No-ops unless Coinbase cash-out is available to this Chef. */
   @action.bound
   public setEmail = flow(function* (this: CoinbaseEmailStore, email: string) {
     if (!this.isEnabled || this.submitStatus === 'loading') {
@@ -156,7 +147,7 @@ export class CoinbaseEmailStore {
     }
   })
 
-  /** Clears the saved email. No-ops while the feature flag is disabled. */
+  /** Clears the saved email. No-ops unless Coinbase cash-out is available to this Chef. */
   @action.bound
   public clearEmail = flow(function* (this: CoinbaseEmailStore) {
     if (!this.isEnabled || this.submitStatus === 'loading') {

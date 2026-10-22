@@ -14,4 +14,10 @@ export interface CoinbaseEmail {
 
   /** When the email was last set or changed (ISO 8601). Absent when no email is saved. */
   updatedAt?: string
+
+  /**
+   * Whether Coinbase cash-out is available to this Chef. Treated as `false` when absent, e.g. from an older server, so
+   * the feature stays hidden.
+   */
+  enabled?: boolean
 }

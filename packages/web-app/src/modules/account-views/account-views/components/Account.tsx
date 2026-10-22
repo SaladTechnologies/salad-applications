@@ -8,7 +8,7 @@ import { useLocation } from 'react-router'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { Head } from '../../../../components'
 import { withLogin } from '../../../auth-views'
-import { COINBASE_CASHOUT_ENABLED, coinbaseEmailAnchorId } from '../../../coinbase'
+import { coinbaseEmailAnchorId } from '../../../coinbase'
 import { type Passkey } from '../../../passkey-setup'
 import type { Avatar, Profile } from '../../../profile/models'
 import { solanaWalletAnchorId } from '../../../solana-wallet'
@@ -291,7 +291,8 @@ const _Account: FC<Props> = ({
           </div>
           <AccountSecurityContainer />
           <SolanaWalletContainer />
-          {COINBASE_CASHOUT_ENABLED && <CoinbaseEmailContainer />}
+          {/* Renders nothing unless the server says Coinbase cash-out is available to this Chef. */}
+          <CoinbaseEmailContainer />
         </Layout>
       </Scrollbars>
     </div>

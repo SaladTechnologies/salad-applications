@@ -5,12 +5,6 @@ import { coinbaseEmailRequiredTag } from '../../coinbase/constants'
 import type { Reward } from '../../reward/models'
 import { RewardHeaderBar } from './RewardHeaderBar'
 
-// The Coinbase reward UI only renders with the feature flag on, which ships off.
-jest.mock('../../coinbase/constants', () => ({
-  ...jest.requireActual('../../coinbase/constants'),
-  COINBASE_CASHOUT_ENABLED: true,
-}))
-
 // The module barrels also export stores, which pull in the root store and ESM-only `axios`. The header only needs the
 // constants and tag helpers, so serve those alone.
 jest.mock('../../coinbase', () => ({

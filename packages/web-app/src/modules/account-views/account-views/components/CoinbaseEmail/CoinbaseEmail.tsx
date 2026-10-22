@@ -16,6 +16,8 @@ import { styles } from './CoinbaseEmail.styles'
 import { CoinbaseEmailConfirmModal } from './CoinbaseEmailConfirmModal'
 
 interface Props extends WithStyles<typeof styles> {
+  /** Whether Coinbase cash-out is available to this Chef. The section renders nothing until the server says it is. */
+  isEnabled: boolean
   email?: string
   isLoading: boolean
   isLoadError: boolean
@@ -35,6 +37,7 @@ const submitErrorMessages: Record<CoinbaseEmailSubmitError, string> = {
 
 const _CoinbaseEmail: FC<Props> = ({
   classes,
+  isEnabled,
   email,
   isLoading,
   isLoadError,
@@ -78,6 +81,11 @@ const _CoinbaseEmail: FC<Props> = ({
       setEmail(pendingEmail)
     }
     setPendingEmail(undefined)
+  }
+
+  // Loading on mount (above) is what tells us whether to show anything at all.
+  if (!isEnabled) {
+    return null
   }
 
   const showForm = isEditing || !email
