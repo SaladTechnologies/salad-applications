@@ -1,6 +1,6 @@
-import { Button, Checkbox, Text } from '@saladtechnologies/garden-components'
+import { Button, Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
-import { useState, type FC } from 'react'
+import type { FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../../SaladTheme'
@@ -58,9 +58,6 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     fontSize: '18px',
     margin: '0px 0px 8px 0px',
   },
-  acknowledgement: {
-    marginTop: '24px',
-  },
   buttonRow: {
     marginTop: '24px',
     display: 'flex',
@@ -77,12 +74,10 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 /**
- * Shown every time a Chef adds or changes their Coinbase email, before anything is sent to the API. The Chef must
- * tick the acknowledgement before the save button is enabled; cancelling (or clicking outside) sends nothing.
+ * Shown every time a Chef adds or changes their Coinbase email, before anything is sent to the API. Saving is the
+ * confirmation; cancelling (or clicking outside) sends nothing.
  */
 const _CoinbaseEmailConfirmModal: FC<Props> = ({ classes, email, onConfirm, onCancel }) => {
-  const [isAcknowledged, setIsAcknowledged] = useState(false)
-
   return (
     <ModalWithOverlay onCloseClick={onCancel}>
       <div className={classes.modalContent} role="dialog" aria-modal="true" aria-labelledby="coinbase-email-confirm">
@@ -103,21 +98,8 @@ const _CoinbaseEmailConfirmModal: FC<Props> = ({ classes, email, onConfirm, onCa
             Salad cannot help you get them back.
           </Text>
         </div>
-        <div className={classes.acknowledgement}>
-          <Checkbox checked={isAcknowledged} onChange={setIsAcknowledged}>
-            <Text variant="baseS">
-              This is the email of my own Coinbase account, and I understand Salad cannot recover, reverse or refund
-              rewards sent to a wrong email.
-            </Text>
-          </Checkbox>
-        </div>
         <div className={classes.buttonRow}>
-          <Button
-            variant="secondary"
-            label="Save Coinbase Email"
-            disabled={!isAcknowledged}
-            onClick={() => isAcknowledged && onConfirm()}
-          />
+          <Button variant="secondary" label="Save Coinbase Email" onClick={onConfirm} />
           <Button variant="outlined" label="Cancel" onClick={onCancel} />
         </div>
       </div>
