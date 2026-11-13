@@ -73,6 +73,9 @@ const styles = (theme: SaladTheme) => ({
       opacity: 0.75,
     },
   },
+  copied: {
+    marginLeft: '0.5rem',
+  },
   incompleteItem: {
     opacity: 0.5,
   },
@@ -152,6 +155,8 @@ interface Props extends WithStyles<typeof styles> {
 
 interface State {
   redemptions: RewardVaultItem[]
+  /** The vault item whose code was just copied, to confirm the copy next to its button. */
+  copiedId?: string
   dropdown: {
     name: {
       active: boolean
@@ -245,6 +250,17 @@ class _VaultList extends Component<Props, State> {
     this.updateActiveDropdown('status')
   }
 
+  private copiedTimer?: ReturnType<typeof setTimeout>
+
+  private handleCopy = (id: string) => {
+    if (this.copiedTimer) {
+      clearTimeout(this.copiedTimer)
+    }
+
+    this.setState({ copiedId: id })
+    this.copiedTimer = setTimeout(() => this.setState({ copiedId: undefined }), 2000)
+  }
+
   /** Rewards already asked for, so a reward that can't be loaded isn't asked for again on every vault refresh. */
   private requestedRewardIds = new Set<string>()
 
@@ -267,6 +283,9 @@ class _VaultList extends Component<Props, State> {
   public override componentWillUnmount = () => {
     const { stopRefresh } = this.props
     stopRefresh?.()
+    if (this.copiedTimer) {
+      clearTimeout(this.copiedTimer)
+    }
   }
 
   public override componentDidUpdate(prevProps: Props) {
@@ -280,7 +299,7 @@ class _VaultList extends Component<Props, State> {
 
   public override render(): ReactNode {
     const { classes, coinbaseRewardIds } = this.props
-    const { dropdown, redemptions } = this.state
+    const { dropdown, redemptions, copiedId } = this.state
     return (
       <div className={classes.container}>
         <Head title="Reward Vault" />
@@ -336,9 +355,10 @@ class _VaultList extends Component<Props, State> {
                               <P>
                                 {coinbaseRewardIds?.includes(rewardId) && 'Coinbase transaction ID: '}
                                 {code}
-                                <CopyToClipboard text={code}>
+                                <CopyToClipboard text={code} onCopy={() => this.handleCopy(id)}>
                                   <FontAwesomeIcon className={classes.iconButton} icon={faClipboard} size={'lg'} />
                                 </CopyToClipboard>
+                                {copiedId === id && <span className={classes.copied}>Copied!</span>}
                               </P>
                             )}
                             {code && code.startsWith('https') && (
