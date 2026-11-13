@@ -9,6 +9,7 @@ import { BackupCodesStore } from './modules/backup-codes'
 import { BalanceStore } from './modules/balance'
 import { BonusStore } from './modules/bonus'
 import { CoinbaseEmailStore } from './modules/coinbase'
+import { DedicatedNodesStore } from './modules/dedicated-nodes'
 import { RefreshService } from './modules/data-refresh'
 import { DemandAlertsStore } from './modules/demand-alerts-views/DemandAlertsStore'
 import { DemandMonitorStore } from './modules/demand-monitor-views/DemandMonitorStore'
@@ -80,6 +81,7 @@ export class RootStore {
   public readonly demandAlerts: DemandAlertsStore
   public readonly solanaWallet: SolanaWalletStore
   public readonly coinbaseEmail: CoinbaseEmailStore
+  public readonly dedicatedNodes: DedicatedNodesStore
 
   constructor(axios: AxiosInstance) {
     this.routing = new RouterStore()
@@ -111,6 +113,7 @@ export class RootStore {
     this.demandAlerts = new DemandAlertsStore(axios)
     this.solanaWallet = new SolanaWalletStore(this, axios)
     this.coinbaseEmail = new CoinbaseEmailStore(this, axios)
+    this.dedicatedNodes = new DedicatedNodesStore(axios)
 
     // Start refreshing data
     this.refresh.start()
@@ -157,6 +160,7 @@ export class RootStore {
         this.referral.loadCurrentReferral(),
         this.referral.loadReferralCode(),
         this.refresh.refreshData(),
+        this.dedicatedNodes.loadEnrollment(),
         this.helpScout.login({
           name: profile.username,
           email: profile.email,
@@ -178,6 +182,7 @@ export class RootStore {
   onLogout = (): void => {
     this.referral.currentReferral = undefined
     this.referral.referralCode = ''
+    this.dedicatedNodes.reset()
 
     this.analytics.trackLogout()
     this.helpScout.logout()

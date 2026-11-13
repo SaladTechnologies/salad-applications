@@ -3,6 +3,8 @@ import type { RouteComponentProps } from 'react-router'
 import { Redirect, Route, Switch, withRouter } from 'react-router'
 import { NoPageFound } from './components'
 import { BackupCodesPageContainer } from './modules/backup-codes/BackupCodesPageContainer'
+import { dedicatedNodesPagePath } from './modules/dedicated-nodes'
+import { DedicatedNodesPageContainer } from './modules/dedicated-nodes-views'
 import { ReplaceBonusModalContainer } from './modules/bonus-views'
 import { DemandMonitorPageContainer } from './modules/demand-monitor-views/DemandMonitorPage'
 import { EarnInfoPage, EarningSummaryContainer } from './modules/earn-views'
@@ -17,9 +19,11 @@ import { VaultListContainer } from './modules/vault-views'
 
 interface Props extends RouteComponentProps {
   isAuthenticated: boolean
+  /** Whether the dedicated nodes feature flag is on, so the page's route exists. */
+  isDedicatedNodesRouted: boolean
 }
 
-const _Routes = ({ location, isAuthenticated }: Props) => {
+const _Routes = ({ location, isAuthenticated, isDedicatedNodesRouted }: Props) => {
   const currentLocation =
     (location.state as { currentLocation: Location | undefined } | undefined)?.currentLocation || location
 
@@ -47,6 +51,7 @@ const _Routes = ({ location, isAuthenticated }: Props) => {
       {isAuthenticated && <Redirect exact from="/earn" to="/earn/summary" />}
       <Route path="/earn/summary" component={EarningSummaryContainer} />
       <Route path="/earn/demand" exact component={DemandMonitorPageContainer} />
+      {isDedicatedNodesRouted && <Route path={dedicatedNodesPagePath} exact component={DedicatedNodesPageContainer} />}
       <Route path="/earn" component={EarnInfoPage} />
       <Route
         exact

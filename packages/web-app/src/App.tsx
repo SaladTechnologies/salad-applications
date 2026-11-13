@@ -105,12 +105,20 @@ const searchConfig = {
 
 interface AppProps extends WithStyles<typeof styles> {
   isAuthenticated: boolean
+  isDedicatedNodesRouted: boolean
   setErrorBoundary: (errorBoundary: UseErrorBoundaryApi<Error>) => void
   withInstallReminder: boolean
   history: History
 }
 
-export const _App = ({ classes, history, isAuthenticated, setErrorBoundary, withInstallReminder }: AppProps) => {
+export const _App = ({
+  classes,
+  history,
+  isAuthenticated,
+  isDedicatedNodesRouted,
+  setErrorBoundary,
+  withInstallReminder,
+}: AppProps) => {
   const errorBoundary = useErrorBoundary()
 
   useEffect(() => {
@@ -142,7 +150,7 @@ export const _App = ({ classes, history, isAuthenticated, setErrorBoundary, with
                   history: history,
                 }}
               >
-                <Routes isAuthenticated={isAuthenticated} />
+                <Routes isAuthenticated={isAuthenticated} isDedicatedNodesRouted={isDedicatedNodesRouted} />
               </SearchProvider>
             </div>
             <ToastContainer />
@@ -156,6 +164,7 @@ export const _App = ({ classes, history, isAuthenticated, setErrorBoundary, with
 const mapStoreToProps = (store: RootStore, props: AppProps): any => ({
   ...props,
   isAuthenticated: store.auth.isAuthenticated,
+  isDedicatedNodesRouted: store.dedicatedNodes.isFeatureEnabled,
   setErrorBoundary: store.errorBoundary.setErrorBoundary,
   withInstallReminder: store.profile.withInstallReminder,
 })
