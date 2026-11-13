@@ -137,8 +137,15 @@ const styles = (theme: SaladTheme) => ({
   },
 })
 
+// A Coinbase transaction id. Only items whose code looks like one have their reward loaded to check its tags.
+const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
 interface Props extends WithStyles<typeof styles> {
   redemptions: RewardVaultItem[]
+  /** Ids of the redeemed rewards known to be Coinbase cash-outs, whose code is the Coinbase transaction id. */
+  coinbaseRewardIds?: string[]
+  /** Loads a reward's details (tags included) if they are not loaded yet. */
+  loadReward?: (rewardId: string) => void
   startRefresh?: () => void
   stopRefresh?: () => void
 }
@@ -238,9 +245,23 @@ class _VaultList extends Component<Props, State> {
     this.updateActiveDropdown('status')
   }
 
+  /** Rewards already asked for, so a reward that can't be loaded isn't asked for again on every vault refresh. */
+  private requestedRewardIds = new Set<string>()
+
+  private loadCoinbaseCandidates = () => {
+    const { redemptions, loadReward } = this.props
+    redemptions?.forEach(({ rewardId, code }) => {
+      if (code && uuidPattern.test(code) && !this.requestedRewardIds.has(rewardId)) {
+        this.requestedRewardIds.add(rewardId)
+        loadReward?.(rewardId)
+      }
+    })
+  }
+
   public override componentDidMount = () => {
     const { startRefresh } = this.props
     startRefresh?.()
+    this.loadCoinbaseCandidates()
   }
 
   public override componentWillUnmount = () => {
@@ -253,11 +274,12 @@ class _VaultList extends Component<Props, State> {
       this.setState({
         redemptions: sort(this.state.dropdown, this.props.redemptions),
       })
+      this.loadCoinbaseCandidates()
     }
   }
 
   public override render(): ReactNode {
-    const { classes } = this.props
+    const { classes, coinbaseRewardIds } = this.props
     const { dropdown, redemptions } = this.state
     return (
       <div className={classes.container}>
@@ -297,7 +319,7 @@ class _VaultList extends Component<Props, State> {
                 </div>
 
                 {redemptions.map((reward) => {
-                  const { id, name, price, timestamp, code, status } = reward
+                  const { id, name, price, timestamp, code, status, rewardId } = reward
                   const incompleteItem = status === RewardVaultStatus.FAILED
                   const isPending = status === RewardVaultStatus.CREATED
                   const isCancelled = status === RewardVaultStatus.FAILED
@@ -312,6 +334,7 @@ class _VaultList extends Component<Props, State> {
                             </div>
                             {code && !code.startsWith('https') && (
                               <P>
+                                {coinbaseRewardIds?.includes(rewardId) && 'Coinbase transaction ID: '}
                                 {code}
                                 <CopyToClipboard text={code}>
                                   <FontAwesomeIcon className={classes.iconButton} icon={faClipboard} size={'lg'} />
