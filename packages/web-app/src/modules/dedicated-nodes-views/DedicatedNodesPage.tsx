@@ -42,7 +42,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     display: 'flex',
     flexDirection: 'column',
     gap: '20px',
-    maxWidth: '650px',
+    maxWidth: '820px',
     paddingBottom: '40px',
   },
   nodes: {

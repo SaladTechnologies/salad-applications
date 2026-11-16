@@ -38,6 +38,10 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = () => ({
     fontFamily: 'monospace',
     overflowWrap: 'anywhere',
   },
+  status: {
+    flexShrink: 0,
+    whiteSpace: 'nowrap',
+  },
   buttonRow: {
     display: 'flex',
     flexDirection: 'row',
@@ -121,7 +125,9 @@ const _DedicatedNodeRow: FC<Props> = ({
             Node {shortenHexId(node.node_id)}
           </Text>
         </div>
-        <StatusPill status={standing.label} backgroundColor={standing.color} />
+        <div className={classes.status}>
+          <StatusPill status={standing.label} backgroundColor={standing.color} />
+        </div>
       </div>
 
       {openForm === undefined && (
