@@ -5,6 +5,7 @@ import withStyles from 'react-jss'
 import type { Machine } from '../../../api/machinesApiClient/generated/models'
 import { Scrollbar } from '../../../components'
 import { withLogin } from '../../auth-views'
+import { DedicatedNodesLink } from '../../dedicated-nodes-views/DedicatedNodesLink'
 import type { CurrentHourlyEarningRatesPerMachine, EarningPerMachine } from '../../balance/models'
 import type { RedeemedReward } from '../../balance/models/RedeemedReward'
 import type { RewardVaultItem } from '../../vault/models'
@@ -151,6 +152,7 @@ const _EarningSummaryPage: FC<Props> = ({
           onSelectedMachineIdsChange={handleSelectedMachineIdsChange}
           onPageChange={handlePageChange}
         />
+        <DedicatedNodesLink />
         <EarningHistoryContainer earningsPerMachine={earningsPerSelectedMachines} />
         {shownInModalMachineDetails && (
           <MachineDetailsModal

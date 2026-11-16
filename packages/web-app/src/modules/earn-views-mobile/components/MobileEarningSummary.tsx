@@ -6,6 +6,7 @@ import type { Machine } from '../../../api/machinesApiClient/generated/models'
 import { Divider, SectionHeader, StatElement } from '../../../components'
 import { formatBalance } from '../../../utils'
 import type { CurrentHourlyEarningRatesPerMachine, EarningPerMachine } from '../../balance/models'
+import { DedicatedNodesLink } from '../../dedicated-nodes-views/DedicatedNodesLink'
 import { EarningHistoryContainer } from '../../earn-views/components'
 import { AllMachines } from '../../earn-views/components/AllMachines'
 import { MachineDetailsModal } from '../../earn-views/components/AllMachines/MachineDetailsModal'
@@ -170,6 +171,7 @@ const _MobileEarningSummary = ({
         onSelectedMachineIdsChange={handleSelectedMachineIdsChange}
         onPageChange={handlePageChange}
       />
+      <DedicatedNodesLink />
       <EarningHistoryContainer earningsPerMachine={earningsPerSelectedMachines} />
       {shownInModalMachineDetails && (
         <MachineDetailsModal
