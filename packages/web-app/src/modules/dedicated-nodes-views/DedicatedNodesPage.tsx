@@ -164,9 +164,9 @@ const _DedicatedNodesPage: FC<DedicatedNodesPageProps> = ({
         <div className={classes.nodes}>
           <Text variant="baseXL">Your machines</Text>
           <Text variant="baseS">
-            Machines installed with your token wait here for your approval. Match each one by the EK hash shown on its
-            screen, then approve it with its confirmation code. You can paste the text of the machine's QR code below to
-            find it.
+            Machines installed with your token wait here for your approval. Match each one by the hash of its
+            endorsement key (EK hash) shown on its screen, then approve it with its confirmation code. You can paste the
+            text of the machine's QR code below to find it.
           </Text>
           <input
             className={classes.filterInput}
