@@ -117,7 +117,7 @@ const _DedicatedNodeRow: FC<Props> = ({
     <div className={classes.row}>
       <div className={classes.summary}>
         <div className={classes.identity}>
-          <Text variant="baseS">Endorsement key (EK) hash</Text>
+          <Text variant="baseS">EK hash</Text>
           <Text variant="baseM" className={classes.hash}>
             {node.ek_sha256}
           </Text>
