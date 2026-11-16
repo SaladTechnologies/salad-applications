@@ -5,7 +5,6 @@ import {
   dedicatedNodeEnrollmentEndpointPath,
   dedicatedNodeProblemTitles,
   dedicatedNodesEndpointPath,
-  dedicatedNodesFeatureFlagEndpointPath,
 } from './constants'
 import type { DedicatedNode, DedicatedNodeEnrollment, DedicatedNodeList } from './models'
 import { getRequestProblem, mergeDedicatedNodes } from './utils'
@@ -36,18 +35,11 @@ const listErrorFromStatus = (status: number | undefined): DedicatedNodesListErro
  *
  * Only accounts that were given an enrollment token can use dedicated nodes; every other account gets `404` on every
  * endpoint. `hasAccess` gates the page and turns `true` only once the enrollment token has loaded.
- *
- * The page is also behind the `app_dedicated_nodes` feature flag: until it is on for the user, the store never calls
- * the dedicated nodes API and `hasAccess` stays `false`.
  */
 export class DedicatedNodesStore {
   /** Whether the account has an enrollment token, so the dedicated nodes page should be shown. */
   @observable
   public hasAccess: boolean = false
-
-  /** Whether the `app_dedicated_nodes` feature flag is on for the user, so the page's route exists. */
-  @observable
-  public isFeatureEnabled: boolean = false
 
   /** The account's enrollment token. It is a secret, so never log or track it. */
   @observable
@@ -93,10 +85,7 @@ export class DedicatedNodesStore {
   /** @param axios The App API client. */
   constructor(private readonly axios: AxiosInstance) {}
 
-  /**
-   * Checks the feature flag, then fetches the enrollment token, which decides whether the account can use dedicated
-   * nodes. With the flag off, or if it can't be read, the enrollment token is not asked for.
-   */
+  /** Fetches the enrollment token, which decides whether the account can use dedicated nodes. */
   @action.bound
   public loadEnrollment = flow(function* (this: DedicatedNodesStore) {
     if (this.isEnrollmentLoading) {
@@ -105,14 +94,6 @@ export class DedicatedNodesStore {
     this.isEnrollmentLoading = true
     this.isEnrollmentLoadError = false
     try {
-      if (!this.isFeatureEnabled) {
-        this.isFeatureEnabled = yield this.isFeatureFlagOn()
-        if (!this.isFeatureEnabled) {
-          this.enrollment = undefined
-          this.hasAccess = false
-          return
-        }
-      }
       const response: AxiosResponse<DedicatedNodeEnrollment> = yield this.axios.get(dedicatedNodeEnrollmentEndpointPath)
       this.enrollment = response.data
       this.hasAccess = !!response.data?.token
@@ -198,7 +179,6 @@ export class DedicatedNodesStore {
   @action.bound
   public reset = (): void => {
     this.hasAccess = false
-    this.isFeatureEnabled = false
     this.enrollment = undefined
     this.isEnrollmentChecked = false
     this.isEnrollmentLoadError = false
@@ -210,27 +190,10 @@ export class DedicatedNodesStore {
     this.actionError = undefined
   }
 
-  /**
-   * Forgets the account's token and nodes after the server says it has no token any more. Keeps the feature flag, so
-   * the page stays routed and says dedicated nodes are not set up instead of disappearing.
-   */
+  /** Forgets the account's token and nodes after the server says it has no token any more. */
   private dropAccess = (): void => {
-    const isFeatureEnabled = this.isFeatureEnabled
     this.reset()
-    this.isFeatureEnabled = isFeatureEnabled
     this.isEnrollmentChecked = true
-  }
-
-  /** Whether the feature flag is on. Fails closed: `false` for an unknown flag or any error. */
-  private isFeatureFlagOn = async (): Promise<boolean> => {
-    try {
-      const response = await this.axios.post<{ value?: unknown }>(dedicatedNodesFeatureFlagEndpointPath, {
-        context: {},
-      })
-      return response.data?.value === true
-    } catch {
-      return false
-    }
   }
 
   private fetchPage = flow(function* (this: DedicatedNodesStore, continuationToken: string | undefined) {

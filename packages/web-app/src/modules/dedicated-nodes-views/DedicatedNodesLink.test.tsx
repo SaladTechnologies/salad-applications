@@ -37,23 +37,19 @@ describe('DedicatedNodesLink', () => {
     container.remove()
   })
 
-  const render = (isFeatureEnabled: boolean, hasAccess: boolean) => {
+  const render = (hasAccess: boolean) => {
     act(() => {
-      root.render(<_DedicatedNodesLink isFeatureEnabled={isFeatureEnabled} hasAccess={hasAccess} />)
+      root.render(<_DedicatedNodesLink hasAccess={hasAccess} />)
     })
     return container.querySelector('a')
   }
 
-  it('links to the dedicated nodes page when the flag is on and the account has a token', () => {
-    expect(render(true, true)?.getAttribute('href')).toBe('/earn/dedicated-nodes')
+  it('links to the dedicated nodes page when the account has a token', () => {
+    expect(render(true)?.getAttribute('href')).toBe('/earn/dedicated-nodes')
   })
 
-  it.each([
-    ['the flag is off', false, true],
-    ['the account has no token', true, false],
-    ['both', false, false],
-  ])('renders nothing when %s', (_, isFeatureEnabled, hasAccess) => {
-    expect(render(isFeatureEnabled, hasAccess)).toBeNull()
+  it('renders nothing when the account has no token', () => {
+    expect(render(false)).toBeNull()
     expect(container.innerHTML).toBe('')
   })
 })

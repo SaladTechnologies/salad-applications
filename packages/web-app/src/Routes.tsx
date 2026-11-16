@@ -19,11 +19,9 @@ import { VaultListContainer } from './modules/vault-views'
 
 interface Props extends RouteComponentProps {
   isAuthenticated: boolean
-  /** Whether the dedicated nodes feature flag is on, so the page's route exists. */
-  isDedicatedNodesRouted: boolean
 }
 
-const _Routes = ({ location, isAuthenticated, isDedicatedNodesRouted }: Props) => {
+const _Routes = ({ location, isAuthenticated }: Props) => {
   const currentLocation =
     (location.state as { currentLocation: Location | undefined } | undefined)?.currentLocation || location
 
@@ -51,7 +49,7 @@ const _Routes = ({ location, isAuthenticated, isDedicatedNodesRouted }: Props) =
       {isAuthenticated && <Redirect exact from="/earn" to="/earn/summary" />}
       <Route path="/earn/summary" component={EarningSummaryContainer} />
       <Route path="/earn/demand" exact component={DemandMonitorPageContainer} />
-      {isDedicatedNodesRouted && <Route path={dedicatedNodesPagePath} exact component={DedicatedNodesPageContainer} />}
+      <Route path={dedicatedNodesPagePath} exact component={DedicatedNodesPageContainer} />
       <Route path="/earn" component={EarnInfoPage} />
       <Route
         exact
