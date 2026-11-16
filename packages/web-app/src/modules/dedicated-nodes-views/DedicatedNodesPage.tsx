@@ -164,15 +164,15 @@ const _DedicatedNodesPage: FC<DedicatedNodesPageProps> = ({
         <div className={classes.nodes}>
           <Text variant="baseXL">Your machines</Text>
           <Text variant="baseS">
-            Machines installed with your token wait here for your approval. Match each one by the hash of its
-            endorsement key (EK hash) shown on its screen, then approve it with its confirmation code. You can paste the
-            text of the machine's QR code below to find it.
+            Machines installed with your token wait here for your approval. Match each one by the serial number and
+            Endorsement Key Identifier shown on its screen, and approve it once its confirmation code matches. You can
+            paste the text of the machine's QR code below to find it.
           </Text>
           <input
             className={classes.filterInput}
             type="search"
-            aria-label="Find a machine by its EK hash"
-            placeholder="Find by EK hash or QR code text"
+            aria-label="Find a machine by its Endorsement Key Identifier"
+            placeholder="Find by Endorsement Key Identifier or QR code text"
             value={filterText}
             onChange={(event) => setFilterText(event.target.value)}
             autoComplete="off"
@@ -202,7 +202,8 @@ const _DedicatedNodesPage: FC<DedicatedNodesPageProps> = ({
 
           {nodes.length > 0 && visibleNodes.length === 0 && (
             <Text variant="baseS">
-              No machine{hasMoreNodes ? ' listed so far' : ''} has an EK hash that starts with {ekFilter || 'that'}.
+              No machine{hasMoreNodes ? ' listed so far' : ''} has an Endorsement Key Identifier that starts with{' '}
+              {ekFilter || 'that'}.
             </Text>
           )}
 

@@ -191,7 +191,19 @@ describe('DedicatedNodesStore', () => {
       expect(store.actionError).toBeUndefined()
     })
 
-    it('reports a wrong code without reloading the list', async () => {
+    it('keeps the fields the approve response leaves out, such as the serial number', async () => {
+      const axios = makeAxios({
+        get: jest.fn().mockResolvedValue({ data: { items: [{ ...node(1), product_serial: 'SN-1' }] } }),
+        post: jest.fn().mockResolvedValue({ data: node(1, 'approved') }),
+      })
+      const store = await loadedStore(axios)
+
+      await store.approveNode(nodeId(1), 'PEND01')
+
+      expect(store.nodes[0]).toMatchObject({ standing: 'approved', product_serial: 'SN-1' })
+    })
+
+    it('reports a wrong code and reloads the list, so the current code shows', async () => {
       const axios = makeAxios({
         get: jest.fn().mockResolvedValue({ data: { items: [node(1)] } }),
         post: jest.fn().mockRejectedValue(problem(400, dedicatedNodeProblemTitles.wrongCode)),
@@ -202,7 +214,7 @@ describe('DedicatedNodesStore', () => {
 
       expect(result).toBe(false)
       expect(store.actionError).toEqual({ nodeId: nodeId(1), action: 'approve', error: 'wrong-code' })
-      expect(axios.get).toHaveBeenCalledTimes(1)
+      expect(axios.get).toHaveBeenCalledTimes(2)
       expect(store.nodes[0].standing).toBe('pending')
     })
 

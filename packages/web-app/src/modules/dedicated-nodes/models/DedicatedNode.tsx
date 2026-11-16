@@ -7,8 +7,7 @@ export type DedicatedNodeStanding = 'pending' | 'approved' | 'refused'
 /**
  * Represents a machine enrolled with the account's enrollment token.
  *
- * Mirrors an item of `GET /api/v2/dedicated-nodes`. The confirmation code is never returned: it must be read from the
- * machine's console.
+ * Mirrors an item of `GET /api/v2/dedicated-nodes`.
  */
 export interface DedicatedNode {
   /** The node's attestation key name as 68 lower-case hex characters. */
@@ -21,6 +20,18 @@ export interface DedicatedNode {
    * machine on screen with the one in front of them.
    */
   ek_sha256: string
+
+  /**
+   * The machine's serial number as SaladOS reported it when it enrolled, the same one printed on the machine's console.
+   * Absent when the node service doesn't report it.
+   */
+  product_serial?: string | null
+
+  /**
+   * The confirmation code SaladOS printed on the machine's console while it waits for approval. The user compares it
+   * with the one on the screen before approving. Absent when the node service doesn't report it.
+   */
+  confirmation_code?: string | null
 }
 
 /** Mirrors the payload returned by `GET /api/v2/dedicated-nodes`. */

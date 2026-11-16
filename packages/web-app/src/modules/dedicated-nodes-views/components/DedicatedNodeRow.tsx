@@ -38,6 +38,11 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = () => ({
     fontFamily: 'monospace',
     overflowWrap: 'anywhere',
   },
+  code: {
+    fontFamily: 'monospace',
+    fontWeight: 'bold',
+    letterSpacing: '1px',
+  },
   status: {
     flexShrink: 0,
     whiteSpace: 'nowrap',
@@ -110,6 +115,8 @@ const _DedicatedNodeRow: FC<Props> = ({
   }
 
   const canApprove = node.standing === 'pending' || node.standing === 'refused'
+  /** The code to approve with, compared by eye with the machine's screen. Without it the user types the code in. */
+  const confirmationCode = canApprove ? node.confirmation_code?.trim() || undefined : undefined
   const canRefuse = node.standing === 'pending'
   const canRevoke = node.standing === 'approved'
 
@@ -117,7 +124,15 @@ const _DedicatedNodeRow: FC<Props> = ({
     <div className={classes.row}>
       <div className={classes.summary}>
         <div className={classes.identity}>
-          <Text variant="baseS">EK hash</Text>
+          {node.product_serial?.trim() && (
+            <>
+              <Text variant="baseS">Serial number</Text>
+              <Text variant="baseM" className={classes.hash}>
+                {node.product_serial}
+              </Text>
+            </>
+          )}
+          <Text variant="baseS">Endorsement Key Identifier</Text>
           <Text variant="baseM" className={classes.hash}>
             {node.ek_sha256}
           </Text>
@@ -129,6 +144,12 @@ const _DedicatedNodeRow: FC<Props> = ({
           <StatusPill status={standing.label} backgroundColor={standing.color} />
         </div>
       </div>
+
+      {confirmationCode && (
+        <Text variant="baseS">
+          Confirmation code: <span className={classes.code}>{confirmationCode}</span>
+        </Text>
+      )}
 
       {openForm === undefined && (
         <div className={classes.buttonRow}>
@@ -144,7 +165,25 @@ const _DedicatedNodeRow: FC<Props> = ({
         </div>
       )}
 
-      {openForm === 'approve' && canApprove && (
+      {openForm === 'approve' && canApprove && confirmationCode && (
+        <>
+          <Text variant="baseS">
+            Approve this machine only if the confirmation code above matches the one on its screen.
+          </Text>
+          <div className={classes.buttonRow}>
+            <Button
+              variant="primary"
+              size="small"
+              label="Yes, approve"
+              isLoading={pendingAction === 'approve'}
+              onClick={() => run(() => onApprove(node.node_id, confirmationCode))}
+            />
+            <Button variant="secondary" size="small" label="Cancel" onClick={() => open(undefined)} />
+          </div>
+        </>
+      )}
+
+      {openForm === 'approve' && canApprove && !confirmationCode && (
         <div className={classes.fieldContainer}>
           <Text variant="baseS">Enter the 6-character confirmation code shown on this machine's screen.</Text>
           <TextField
@@ -200,7 +239,13 @@ const _DedicatedNodeRow: FC<Props> = ({
         </>
       )}
 
-      {actionError && <ErrorText>{actionErrorMessages[actionError]}</ErrorText>}
+      {actionError && (
+        <ErrorText>
+          {actionError === 'wrong-code' && confirmationCode
+            ? 'That code no longer matches this machine. The list has been refreshed, so compare the code again.'
+            : actionErrorMessages[actionError]}
+        </ErrorText>
+      )}
     </div>
   )
 }
