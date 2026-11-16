@@ -1,10 +1,4 @@
 /**
- * Endpoint that evaluates the `app_dedicated_nodes` feature flag for the signed-in user over OFREP. The page stays
- * hidden, and the dedicated nodes API is never called, unless it answers `true`.
- */
-export const dedicatedNodesFeatureFlagEndpointPath = '/api/v2/ofrep/v1/evaluate/flags/app_dedicated_nodes'
-
-/**
  * Endpoint that returns the account's dedicated node enrollment token.
  *
  * It answers `404` when the account has no enrollment token, so it also gates the dedicated nodes page: the page is

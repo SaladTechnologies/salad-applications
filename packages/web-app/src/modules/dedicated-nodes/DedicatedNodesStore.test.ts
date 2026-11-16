@@ -15,9 +15,6 @@ const makeAxios = (overrides: Partial<MockAxios> = {}): MockAxios & AxiosInstanc
     ...overrides,
   } as unknown as MockAxios & AxiosInstance)
 
-/** The OFREP answer for the dedicated nodes feature flag. */
-const flag = (value: boolean) => jest.fn().mockResolvedValue({ data: { key: 'app_dedicated_nodes', value } })
-
 /** A failed request shaped like the App API client's `SaladError`. */
 const problem = (status: number | undefined, title?: string) => Object.assign(new Error(title ?? ''), { status, title })
 
@@ -33,15 +30,12 @@ describe('DedicatedNodesStore', () => {
     it('grants access when the account has a token', async () => {
       const axios = makeAxios({
         get: jest.fn().mockResolvedValue({ data: { token: 'secret', expires_at: '2027-01-01T00:00:00Z' } }),
-        post: flag(true),
       })
       const store = new DedicatedNodesStore(axios)
 
       await store.loadEnrollment()
 
-      expect(axios.post).toHaveBeenCalledWith('/api/v2/ofrep/v1/evaluate/flags/app_dedicated_nodes', { context: {} })
       expect(axios.get).toHaveBeenCalledWith('/api/v2/dedicated-nodes/enrollment')
-      expect(store.isFeatureEnabled).toBe(true)
       expect(store.hasAccess).toBe(true)
       expect(store.enrollment?.expires_at).toBe('2027-01-01T00:00:00Z')
       expect(store.isEnrollmentLoadError).toBe(false)
@@ -51,7 +45,6 @@ describe('DedicatedNodesStore', () => {
     it('treats 404 as no access, not an error', async () => {
       const axios = makeAxios({
         get: jest.fn().mockRejectedValue(problem(404, dedicatedNodeProblemTitles.noEnrollmentToken)),
-        post: flag(true),
       })
       const store = new DedicatedNodesStore(axios)
 
@@ -64,7 +57,6 @@ describe('DedicatedNodesStore', () => {
     it('reads the status from an Axios error without a problem type', async () => {
       const axios = makeAxios({
         get: jest.fn().mockRejectedValue({ response: { status: 404, data: {} } }),
-        post: flag(true),
       })
       const store = new DedicatedNodesStore(axios)
 
@@ -74,52 +66,13 @@ describe('DedicatedNodesStore', () => {
     })
 
     it('flags other failures and denies access', async () => {
-      const axios = makeAxios({ get: jest.fn().mockRejectedValue(problem(500)), post: flag(true) })
+      const axios = makeAxios({ get: jest.fn().mockRejectedValue(problem(500)) })
       const store = new DedicatedNodesStore(axios)
 
       await store.loadEnrollment()
 
       expect(store.hasAccess).toBe(false)
       expect(store.isEnrollmentLoadError).toBe(true)
-    })
-
-    it('never asks for the token while the feature flag is off', async () => {
-      const axios = makeAxios({ post: flag(false) })
-      const store = new DedicatedNodesStore(axios)
-
-      await store.loadEnrollment()
-
-      expect(axios.get).not.toHaveBeenCalled()
-      expect(store.isFeatureEnabled).toBe(false)
-      expect(store.hasAccess).toBe(false)
-      expect(store.isEnrollmentChecked).toBe(true)
-      expect(store.isEnrollmentLoadError).toBe(false)
-    })
-
-    it.each([
-      ['an unknown flag', problem(404)],
-      ['a failure', problem(500)],
-    ])('keeps the page hidden on %s reading the feature flag', async (_, error) => {
-      const axios = makeAxios({ post: jest.fn().mockRejectedValue(error) })
-      const store = new DedicatedNodesStore(axios)
-
-      await store.loadEnrollment()
-
-      expect(axios.get).not.toHaveBeenCalled()
-      expect(store.isFeatureEnabled).toBe(false)
-      expect(store.hasAccess).toBe(false)
-      expect(store.isEnrollmentLoadError).toBe(false)
-    })
-
-    it('reads the feature flag once, then only the token', async () => {
-      const axios = makeAxios({ get: jest.fn().mockResolvedValue({ data: { token: 'secret' } }), post: flag(true) })
-      const store = new DedicatedNodesStore(axios)
-
-      await store.loadEnrollment()
-      await store.loadEnrollment()
-
-      expect(axios.post).toHaveBeenCalledTimes(1)
-      expect(axios.get).toHaveBeenCalledTimes(2)
     })
   })
 
@@ -202,14 +155,13 @@ describe('DedicatedNodesStore', () => {
         .fn()
         .mockResolvedValueOnce({ data: { token: 'secret' } })
         .mockRejectedValueOnce(problem(404, dedicatedNodeProblemTitles.noEnrollmentToken))
-      const store = new DedicatedNodesStore(makeAxios({ get, post: flag(true) }))
+      const store = new DedicatedNodesStore(makeAxios({ get }))
 
       await store.loadEnrollment()
       await store.loadNodes()
 
       expect(store.hasAccess).toBe(false)
       expect(store.enrollment).toBeUndefined()
-      expect(store.isFeatureEnabled).toBe(true)
       expect(store.isEnrollmentChecked).toBe(true)
     })
   })
@@ -333,13 +285,12 @@ describe('DedicatedNodesStore', () => {
       .fn()
       .mockResolvedValueOnce({ data: { token: 'secret' } })
       .mockResolvedValueOnce({ data: { items: [node(1)], continuation_token: 'next' } })
-    const store = new DedicatedNodesStore(makeAxios({ get, post: flag(true) }))
+    const store = new DedicatedNodesStore(makeAxios({ get }))
     await store.loadEnrollment()
     await store.loadNodes()
 
     store.reset()
 
-    expect(store.isFeatureEnabled).toBe(false)
     expect(store.hasAccess).toBe(false)
     expect(store.enrollment).toBeUndefined()
     expect(store.nodes).toEqual([])
