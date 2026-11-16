@@ -273,8 +273,9 @@ export class DedicatedNodesStore {
 
       if (status === 404 && title === dedicatedNodeProblemTitles.noEnrollmentToken) {
         this.dropAccess()
-      } else if (error === 'conflict' || error === 'not-found' || error === 'timeout') {
-        // The node changed elsewhere, or the action may have been applied before the timeout: show the real standing.
+      } else if (error === 'conflict' || error === 'not-found' || error === 'timeout' || error === 'wrong-code') {
+        // The node changed elsewhere, the action may have been applied before the timeout, or the listed confirmation
+        // code is out of date: show the node as it is now.
         yield this.loadNodes()
       }
       return undefined
@@ -285,7 +286,7 @@ export class DedicatedNodesStore {
 
   private replaceNode(nodeId: string, node: DedicatedNode | undefined, standing: DedicatedNode['standing']): void {
     this.nodes = this.nodes.map((existing) =>
-      existing.node_id === nodeId ? node ?? { ...existing, standing } : existing,
+      existing.node_id === nodeId ? { ...existing, ...(node ?? { standing }) } : existing,
     )
   }
 }
