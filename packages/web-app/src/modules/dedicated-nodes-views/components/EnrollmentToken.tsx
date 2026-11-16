@@ -79,7 +79,7 @@ const _EnrollmentToken: FC<Props> = ({ classes, enrollment }) => {
         Install your dedicated machines with this token. Anyone who has it can enroll machines into your account, so
         keep it private. Each machine still needs your approval below.
       </Text>
-      <div className={classes.token}>{isRevealed ? enrollment.token : '•'.repeat(24)}</div>
+      <div className={classes.token}>{isRevealed ? enrollment.token : '•'.repeat(16)}</div>
       <div className={classes.buttonRow}>
         <Button
           variant="primary"

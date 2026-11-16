@@ -2,6 +2,7 @@ import { Text } from '@saladtechnologies/garden-components'
 import type { FC } from 'react'
 import { SmartLink } from '../../components'
 import { connect } from '../../connect'
+import { DefaultTheme } from '../../SaladTheme'
 import type { RootStore } from '../../Store'
 import { dedicatedNodesPagePath } from '../dedicated-nodes'
 
@@ -16,7 +17,9 @@ interface Props {
 export const _DedicatedNodesLink: FC<Props> = ({ isFeatureEnabled, hasAccess }) =>
   isFeatureEnabled && hasAccess ? (
     <Text variant="baseM">
-      <SmartLink to={dedicatedNodesPagePath}>Manage your dedicated nodes</SmartLink>
+      <SmartLink to={dedicatedNodesPagePath} color={DefaultTheme.green}>
+        Manage your dedicated nodes
+      </SmartLink>
     </Text>
   ) : null
 
