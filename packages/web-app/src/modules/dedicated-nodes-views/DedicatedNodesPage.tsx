@@ -25,6 +25,13 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
     fontFamily: theme.fontMallory,
     height: '100%',
     width: '100%',
+    // The Layout headline is sized for short titles; "Dedicated" alone is wider than a phone screen.
+    '@media (max-width: 812px)': {
+      '& h1': {
+        fontSize: '48px',
+        lineHeight: '52px',
+      },
+    },
   },
   description: {
     display: 'block',
