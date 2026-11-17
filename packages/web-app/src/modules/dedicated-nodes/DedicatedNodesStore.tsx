@@ -156,7 +156,7 @@ export class DedicatedNodesStore {
   })
 
   /**
-   * Revokes an approved node. This is permanent and the node leaves the list, so confirm with the user first.
+   * Revokes an approved or refused node. This is permanent and the node leaves the list, so confirm with the user first.
    * @returns `true` if the node was revoked.
    */
   @action.bound
