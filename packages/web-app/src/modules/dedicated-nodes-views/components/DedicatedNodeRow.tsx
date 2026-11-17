@@ -8,6 +8,7 @@ import type { SaladTheme } from '../../../SaladTheme'
 import { DefaultTheme } from '../../../SaladTheme'
 import { shortenHexId, type DedicatedNodeAction, type DedicatedNodeActionError } from '../../dedicated-nodes'
 import type { DedicatedNode, DedicatedNodeStanding } from '../../dedicated-nodes/models'
+import { ConfirmNodeActionModal } from './ConfirmNodeActionModal'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = () => ({
   row: {
@@ -121,7 +122,7 @@ const _DedicatedNodeRow: FC<Props> = ({
    */
   const confirmationCode = canApprove ? node.confirmation_code?.trim() || undefined : undefined
   const canRefuse = node.standing === 'pending'
-  const canRevoke = node.standing === 'approved'
+  const canRevoke = node.standing === 'approved' || node.standing === 'refused'
 
   return (
     <div className={classes.row}>
@@ -161,7 +162,7 @@ const _DedicatedNodeRow: FC<Props> = ({
               variant="primary"
               size="small"
               label="Approve"
-              disabled={isBusy}
+              disabled={isBusy || (pendingAction !== undefined && pendingAction !== 'approve')}
               isLoading={pendingAction === 'approve'}
               onClick={() => {
                 if (confirmationCode) {
@@ -214,40 +215,33 @@ const _DedicatedNodeRow: FC<Props> = ({
       )}
 
       {openForm === 'refuse' && canRefuse && (
-        <>
-          <Text variant="baseS">
-            Refuse this machine if you don't recognize it. It stays in the list, and you can still approve it later with
-            its code.
-          </Text>
-          <div className={classes.buttonRow}>
-            <Button
-              variant="primary"
-              size="small"
-              label="Yes, refuse"
-              isLoading={pendingAction === 'refuse'}
-              onClick={() => run(() => onRefuse(node.node_id))}
-            />
-            <Button variant="secondary" size="small" label="Cancel" onClick={() => open(undefined)} />
-          </div>
-        </>
+        <ConfirmNodeActionModal
+          title="Refuse this machine?"
+          body="Refuse this machine if you don't recognize it. It stays in the list, and you can still approve it later with its code."
+          confirmLabel="Refuse machine"
+          isSubmitting={pendingAction === 'refuse'}
+          onConfirm={async () => {
+            // Close on failure too, so the error shows on the row.
+            await onRefuse(node.node_id)
+            setOpenForm(undefined)
+          }}
+          onCancel={() => open(undefined)}
+        />
       )}
 
       {openForm === 'revoke' && canRevoke && (
-        <>
-          <Text variant="baseS">
-            Revoking is permanent. This machine stops working for your account and can never be approved again.
-          </Text>
-          <div className={classes.buttonRow}>
-            <Button
-              variant="primary"
-              size="small"
-              label="Yes, revoke permanently"
-              isLoading={pendingAction === 'revoke'}
-              onClick={() => run(() => onRevoke(node.node_id))}
-            />
-            <Button variant="secondary" size="small" label="Cancel" onClick={() => open(undefined)} />
-          </div>
-        </>
+        <ConfirmNodeActionModal
+          title="Revoke this machine?"
+          body="This is permanent. The machine is cut off right away, its disk keys are destroyed, and it can't be approved again. To use this machine again, it has to be reinstalled and approved as a new machine."
+          confirmLabel="Revoke machine"
+          isSubmitting={pendingAction === 'revoke'}
+          onConfirm={async () => {
+            // Close on failure too, so the error shows on the row. On success the node leaves the list.
+            await onRevoke(node.node_id)
+            setOpenForm(undefined)
+          }}
+          onCancel={() => open(undefined)}
+        />
       )}
 
       {actionError && (
