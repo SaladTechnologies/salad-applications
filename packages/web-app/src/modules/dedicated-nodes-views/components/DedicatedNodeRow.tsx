@@ -115,7 +115,10 @@ const _DedicatedNodeRow: FC<Props> = ({
   }
 
   const canApprove = node.standing === 'pending' || node.standing === 'refused'
-  /** The code to approve with, compared by eye with the machine's screen. Without it the user types the code in. */
+  /**
+   * The code shown for the user to compare by eye with the machine's screen. Approve sends it, so the user never types
+   * it. Without it the user types the code in.
+   */
   const confirmationCode = canApprove ? node.confirmation_code?.trim() || undefined : undefined
   const canRefuse = node.standing === 'pending'
   const canRevoke = node.standing === 'approved'
@@ -154,33 +157,41 @@ const _DedicatedNodeRow: FC<Props> = ({
       {openForm === undefined && (
         <div className={classes.buttonRow}>
           {canApprove && (
-            <Button variant="primary" size="small" label="Approve" disabled={isBusy} onClick={() => open('approve')} />
-          )}
-          {canRefuse && (
-            <Button variant="secondary" size="small" label="Refuse" disabled={isBusy} onClick={() => open('refuse')} />
-          )}
-          {canRevoke && (
-            <Button variant="secondary" size="small" label="Revoke" disabled={isBusy} onClick={() => open('revoke')} />
-          )}
-        </div>
-      )}
-
-      {openForm === 'approve' && canApprove && confirmationCode && (
-        <>
-          <Text variant="baseS">
-            Approve this machine only if the confirmation code above matches the one on its screen.
-          </Text>
-          <div className={classes.buttonRow}>
             <Button
               variant="primary"
               size="small"
-              label="Yes, approve"
+              label="Approve"
+              disabled={isBusy}
               isLoading={pendingAction === 'approve'}
-              onClick={() => run(() => onApprove(node.node_id, confirmationCode))}
+              onClick={() => {
+                if (confirmationCode) {
+                  onClearError()
+                  void onApprove(node.node_id, confirmationCode)
+                } else {
+                  open('approve')
+                }
+              }}
             />
-            <Button variant="secondary" size="small" label="Cancel" onClick={() => open(undefined)} />
-          </div>
-        </>
+          )}
+          {canRefuse && (
+            <Button
+              variant="secondary"
+              size="small"
+              label="Refuse"
+              disabled={isBusy || pendingAction !== undefined}
+              onClick={() => open('refuse')}
+            />
+          )}
+          {canRevoke && (
+            <Button
+              variant="secondary"
+              size="small"
+              label="Revoke"
+              disabled={isBusy || pendingAction !== undefined}
+              onClick={() => open('revoke')}
+            />
+          )}
+        </div>
       )}
 
       {openForm === 'approve' && canApprove && !confirmationCode && (
