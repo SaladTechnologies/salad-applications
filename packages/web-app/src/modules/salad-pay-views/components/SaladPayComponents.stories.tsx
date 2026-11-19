@@ -33,9 +33,7 @@ export const requestWithoutItems: SaladPaymentRequestOptions = {
   },
 }
 
-/**
- * SaladPayPage
- */
+/** SaladPayPage */
 storiesOf('Salad Pay/Components/Salad Pay Page', module)
   .add('blank page', () => {
     return <SaladPayPage onClose={action('close')} />
@@ -55,9 +53,7 @@ storiesOf('Salad Pay/Components/Salad Pay Page', module)
     )
   })
 
-/**
- * SaladPayOrderSummaryPage
- */
+/** SaladPayOrderSummaryPage */
 storiesOf('Salad Pay/Components/Order Summary Page', module)
   .add('invalid request', () => {
     return <SaladPayOrderSummaryPage onClose={action('close')} />
@@ -104,9 +100,7 @@ storiesOf('Salad Pay/Components/Order Summary Page', module)
     )
   })
 
-/**
- * SaladPayCheckoutButton
- */
+/** SaladPayCheckoutButton */
 storiesOf('Salad Pay/Components/Checkout Button', module)
   .addDecorator((storyFn) => <div style={{ backgroundColor: 'white' }}>{storyFn()}</div>)
   .add('default', () => {

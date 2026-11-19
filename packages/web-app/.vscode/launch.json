@@ -4,9 +4,7 @@
     {
       "name": "Launch & Debug (Chrome)",
       "request": "launch",
-      "runtimeArgs": [
-        "--disable-web-security"
-      ],
+      "runtimeArgs": ["--disable-web-security"],
       "type": "chrome",
       "url": "http://localhost:3000",
       "webRoot": "${workspaceRoot}/src"

@@ -25,7 +25,7 @@ interface Props extends WithStyles<typeof styles> {
   list: {
     url: string
     text: string
-    /**Should a divider be drawn before this item */
+    /** Should a divider be drawn before this item */
     divider?: boolean
     /** Is the item clickable */
     enabled?: boolean

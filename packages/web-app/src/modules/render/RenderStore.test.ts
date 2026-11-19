@@ -3,7 +3,7 @@ import type { Mock } from 'vitest'
 import type { AxiosInstance } from 'axios'
 import { RenderStore } from './RenderStore'
 
-const makeAxios = (get: Mock): AxiosInstance => ({ get } as unknown as AxiosInstance)
+const makeAxios = (get: Mock): AxiosInstance => ({ get }) as unknown as AxiosInstance
 
 describe('RenderStore', () => {
   it('fetches and stores the quote', async () => {

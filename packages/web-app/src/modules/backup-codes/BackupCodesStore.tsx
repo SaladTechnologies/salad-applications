@@ -10,7 +10,10 @@ export interface BackupCodes {
 }
 
 export class BackupCodesStore {
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
+  constructor(
+    private readonly store: RootStore,
+    private readonly axios: AxiosInstance,
+  ) {}
 
   @observable
   public backupCodes?: BackupCodes

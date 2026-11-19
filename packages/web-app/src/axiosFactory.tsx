@@ -5,14 +5,13 @@ import isRetryAllowed from 'is-retry-allowed'
 import { getStore } from './Store'
 import { config } from './config'
 
-/**
- * The list of safe HTTP request methods. HTTP requests using these methods may be retried.
- */
+/** The list of safe HTTP request methods. HTTP requests using these methods may be retried. */
 const SAFE_HTTP_METHODS: ReadonlyArray<string> = ['get', 'head', 'options']
 
 /**
  * Determines whether a HTTP request may be retried. HTTP requests may be retried on network errors. HTTP requests using
  * safe methods (GET, HEAD, and OPTIONS) may be retried after a HTTP response with status codes 408 or 500-599.
+ *
  * @param error The error.
  * @returns `true` if the HTTP request may be retried; otherwise, `false`.
  */

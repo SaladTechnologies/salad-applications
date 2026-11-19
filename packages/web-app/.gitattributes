@@ -1,0 +1,17 @@
+*.cjs text eol=lf
+*.css text eol=lf diff=css
+*.cts text eol=lf
+*.html text eol=lf diff=html
+*.js text eol=lf
+*.json text eol=lf
+*.jsonc text eol=lf
+*.jsx text eol=lf
+*.md text eol=lf
+*.mdx text eol=lf
+*.mjs text eol=lf
+*.mts text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+package-lock.json text eol=lf linguist-generated

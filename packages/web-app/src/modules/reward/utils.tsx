@@ -100,8 +100,8 @@ export const getRewardAvailability = (reward?: Partial<Reward>): 'Out of Stock' 
   return reward?.quantity === 0
     ? 'Out of Stock'
     : reward?.quantity !== undefined && reward?.quantity > 0
-    ? 'Low Quantity'
-    : 'In Stock'
+      ? 'Low Quantity'
+      : 'In Stock'
 }
 
 export const getPercentOff = (originalPrice: number, newPrice: number) => {

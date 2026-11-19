@@ -36,7 +36,10 @@ export class ReferralStore {
   @observable
   public errorMessage?: string = undefined
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
+  constructor(
+    private readonly store: RootStore,
+    private readonly axios: AxiosInstance,
+  ) {}
 
   /** (Re)Loads all referrals */
   @action.bound

@@ -17,12 +17,12 @@ const makeAxios = (overrides: Partial<MockAxios> = {}): AxiosInstance =>
     post: vi.fn().mockResolvedValue({ data: {} }),
     delete: vi.fn().mockResolvedValue({ data: {} }),
     ...overrides,
-  } as unknown as AxiosInstance)
+  }) as unknown as AxiosInstance
 
 const makeRootStore = () =>
   ({
     notifications: { sendNotification: vi.fn() },
-  } as unknown as RootStore)
+  }) as unknown as RootStore
 
 const ADDRESS = '5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1'
 const NEW_ADDRESS = '7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU'

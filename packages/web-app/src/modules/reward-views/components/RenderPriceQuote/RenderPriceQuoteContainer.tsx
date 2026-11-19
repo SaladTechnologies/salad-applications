@@ -18,8 +18,8 @@ export interface RenderPriceQuoteContainerProps {
 /**
  * Surfaces a live RENDER price quote for a reward.
  *
- * Renders nothing — and triggers no network activity — unless the reward is a RENDER reward. While active it keeps
- * the quote fresh via the {@link RenderStore} poll loop.
+ * Renders nothing — and triggers no network activity — unless the reward is a RENDER reward. While active it keeps the
+ * quote fresh via the {@link RenderStore} poll loop.
  */
 const _RenderPriceQuoteContainer: FC<RenderPriceQuoteContainerProps> = ({ reward, saladBalance, variant }) => {
   const active = isRenderReward(reward)

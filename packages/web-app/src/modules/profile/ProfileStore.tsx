@@ -84,7 +84,10 @@ export class ProfileStore {
 
   private protectRewardsRedemptionStatusTimeout: NodeJS.Timeout | null = null
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
+  constructor(
+    private readonly store: RootStore,
+    private readonly axios: AxiosInstance,
+  ) {}
 
   @computed
   public get withInstallReminder(): boolean {

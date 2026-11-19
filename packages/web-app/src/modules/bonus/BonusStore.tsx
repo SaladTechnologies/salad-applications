@@ -30,7 +30,10 @@ export class BonusStore {
     return this.unclaimedBonuses.length > 0 ? this.unclaimedBonuses[0] : undefined
   }
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
+  constructor(
+    private readonly store: RootStore,
+    private readonly axios: AxiosInstance,
+  ) {}
 
   /** (Re)Loads the current active bonuses */
   loadBonuses = () => {

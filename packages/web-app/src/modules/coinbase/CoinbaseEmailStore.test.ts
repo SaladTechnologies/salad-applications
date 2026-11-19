@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
 import type { Mock } from 'vitest'
 /**
- * These mocks keep the test from pulling in the full RootStore dependency graph (and ESM-only packages such as
- * `axios`) that `CoinbaseEmailStore`'s transitive imports would otherwise load.
+ * These mocks keep the test from pulling in the full RootStore dependency graph (and ESM-only packages such as `axios`)
+ * that `CoinbaseEmailStore`'s transitive imports would otherwise load.
  */
 vi.mock('axios', () => ({
   __esModule: true,
@@ -43,12 +43,12 @@ const makeAxios = (overrides: Partial<MockAxios> = {}): AxiosInstance =>
     put: vi.fn().mockResolvedValue({ data: {} }),
     delete: vi.fn().mockResolvedValue({ data: {} }),
     ...overrides,
-  } as unknown as AxiosInstance)
+  }) as unknown as AxiosInstance
 
 const makeRootStore = () =>
   ({
     notifications: { sendNotification: vi.fn() },
-  } as unknown as RootStore)
+  }) as unknown as RootStore
 
 /** A store the server has already said Coinbase cash-out is available to, as after a load returning `enabled: true`. */
 const makeEnabledStore = (rootStore: RootStore, axios: AxiosInstance) => {

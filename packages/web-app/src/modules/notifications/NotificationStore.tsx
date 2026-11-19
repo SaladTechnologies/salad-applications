@@ -22,6 +22,7 @@ export class NotificationStore {
 
   /**
    * Shows a notification to the user
+   *
    * @param message The notification message
    */
   sendNotification = (message: NotificationMessage) => {

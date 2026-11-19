@@ -66,9 +66,9 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 })
 
 enum SubscriptionStep {
-  'SelectGpu' = 'SelectGpu',
-  'Subscribe' = 'Subscribe',
-  'Inactive' = 'Inactive',
+  SelectGpu = 'SelectGpu',
+  Subscribe = 'Subscribe',
+  Inactive = 'Inactive',
 }
 
 export interface Props extends WithStyles<typeof styles> {

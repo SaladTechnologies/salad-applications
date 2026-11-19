@@ -36,9 +36,7 @@ declare module '@elastic/react-search-ui' {
   type func = (...args: any[]) => any
   type renderFunc = (...args: any[]) => JSX.Element
 
-  /**
-   * FIELDS
-   */
+  /** FIELDS */
   export type FieldValue = string | number | boolean | Array<string | number | boolean>
 
   export interface FieldValueWrapper {
@@ -51,9 +49,7 @@ declare module '@elastic/react-search-ui' {
     snippet?: string
   }
 
-  /**
-   * FACETS
-   */
+  /** FACETS */
   export type FacetType = 'range' | 'value'
 
   export interface FacetValue {
@@ -72,9 +68,7 @@ declare module '@elastic/react-search-ui' {
     type: FacetType
   }
 
-  /**
-   * FILTERS
-   */
+  /** FILTERS */
   export interface Filter {
     field: string
     values: FilterValue[]
@@ -96,9 +90,7 @@ declare module '@elastic/react-search-ui' {
 
   export type FilterValue = FilterValueRange | FilterValueValue
 
-  /**
-   * RESULTS
-   */
+  /** RESULTS */
   // Typically an object where keys are the field names, and values are field values.
   // Also could be literally any other arbitrary value depending on the particular Search API response.
   // Default views in Search UI know what to do with FieldValueWrapper values, but not arbitrary values, so it
@@ -112,9 +104,7 @@ declare module '@elastic/react-search-ui' {
     [key: string]: FieldValueWrapper
   }
 
-  /**
-   * SORTING
-   */
+  /** SORTING */
 
   export type SortDirection = 'asc' | 'desc'
 
@@ -137,9 +127,7 @@ declare module '@elastic/react-search-ui' {
     sectionTitle?: string
   }
 
-  /**
-   * CONTAINERS
-   */
+  /** CONTAINERS */
   interface ErrorBoundaryProps {
     // Props
     children: JSX.Element
@@ -326,12 +314,8 @@ declare module '@elastic/react-search-ui' {
 
   export class Sorting extends Component<SortingProps> {}
 
-  /**
-   * SEARCH
-   */
-  /**
-   * Context
-   */
+  /** SEARCH */
+  /** Context */
   export interface Context {
     // Search State
 

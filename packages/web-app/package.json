@@ -27,6 +27,10 @@
     "start": "vite",
     "test": "vitest run"
   },
+  "allowScripts": {
+    "core-js": false,
+    "file:../../libs/elastic-search-ui-1.17.1+salad.tgz": false
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -115,7 +119,6 @@
     "mobx-react-lite": "2.2.2",
     "mobx-react-router": "4.1.0",
     "moment": "2.30.1",
-    "prettier": "2.8.8",
     "promise.allsettled": "1.0.7",
     "prop-types": "15.8.1",
     "query-string": "8.2.0",
@@ -157,6 +160,9 @@
   "devDependencies": {
     "@vitejs/plugin-react": "6.3.0",
     "jsdom": "28.1.0",
+    "prettier": "3.9.10",
+    "prettier-plugin-jsdoc": "1.8.1",
+    "prettier-plugin-packagejson": "3.0.3",
     "vite": "8.3.8",
     "vitest": "5.1.0"
   },
@@ -171,8 +177,5 @@
       "version": ">=26.13.0",
       "onFail": "error"
     }
-  },
-  "allowScripts": {
-    "core-js": false
   }
 }

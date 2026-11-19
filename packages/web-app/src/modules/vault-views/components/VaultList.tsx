@@ -206,27 +206,30 @@ class _VaultList extends Component<Props, State> {
   updateActiveDropdown = (activeDropdown: keyof State['dropdown']): void => {
     this.setState((state, props) => {
       const currentDropdown = state.dropdown
-      const nextDropdown = Object.keys(currentDropdown).reduce((nextDropdown, filter) => {
-        switch (filter) {
-          case activeDropdown:
-            nextDropdown[filter] = {
-              active: true,
-              reverse: currentDropdown[filter].active ? !currentDropdown[filter].reverse : false,
-            }
-            break
-          case 'name':
-          case 'price':
-          case 'status':
-          case 'redeemDate':
-            nextDropdown[filter] = {
-              active: false,
-              reverse: false,
-            }
-            break
-        }
+      const nextDropdown = Object.keys(currentDropdown).reduce(
+        (nextDropdown, filter) => {
+          switch (filter) {
+            case activeDropdown:
+              nextDropdown[filter] = {
+                active: true,
+                reverse: currentDropdown[filter].active ? !currentDropdown[filter].reverse : false,
+              }
+              break
+            case 'name':
+            case 'price':
+            case 'status':
+            case 'redeemDate':
+              nextDropdown[filter] = {
+                active: false,
+                reverse: false,
+              }
+              break
+          }
 
-        return nextDropdown
-      }, {} as State['dropdown'])
+          return nextDropdown
+        },
+        {} as State['dropdown'],
+      )
       return {
         dropdown: nextDropdown,
         redemptions: sort(nextDropdown, props.redemptions),

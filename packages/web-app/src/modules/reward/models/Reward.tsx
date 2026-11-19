@@ -30,8 +30,8 @@ export interface Reward {
 
   /**
    * The token/unit value the reward grants. A RENDER reward's Salad Balance cost is always its plain {@link price}
-   * (shown like any other reward); the number of RENDER tokens a Chef receives for that cost is derived at display
-   * time from the live RENDER/USD exchange rate (`price / rate`), not from this field.
+   * (shown like any other reward); the number of RENDER tokens a Chef receives for that cost is derived at display time
+   * from the live RENDER/USD exchange rate (`price / rate`), not from this field.
    */
   productValue?: number
 
@@ -58,9 +58,7 @@ export interface Reward {
   checkoutTerms?: string[]
   tags: string[]
 
-  /** The quantity of rewards remaining.
-   *  A value means stock is getting low.
-   *  Undefined means we have "significant" stock */
+  /** The quantity of rewards remaining. A value means stock is getting low. Undefined means we have "significant" stock */
   quantity?: number
 
   /** Requirements to utilize the reward */

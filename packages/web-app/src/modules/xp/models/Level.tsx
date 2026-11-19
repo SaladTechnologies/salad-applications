@@ -1,6 +1,4 @@
-/**
- * Represents a level/veggie
- */
+/** Represents a level/veggie */
 export class Level {
   constructor(
     /** The unique key, must be valid url (ex. red-onion) */

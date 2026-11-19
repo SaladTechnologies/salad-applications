@@ -7,8 +7,8 @@ export interface SolanaWallet {
   /**
    * The Solana wallet address (base58 encoded public key).
    *
-   * Optional because a Chef may not have set a wallet address yet, in which
-   * case `GET /api/v2/solana/wallet` returns no address.
+   * Optional because a Chef may not have set a wallet address yet, in which case `GET /api/v2/solana/wallet` returns no
+   * address.
    */
   walletAddress?: string
 }

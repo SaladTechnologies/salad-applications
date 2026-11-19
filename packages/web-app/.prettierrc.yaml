@@ -1,8 +1,12 @@
-endOfLine: auto
+endOfLine: "auto"
+plugins:
+  - prettier-plugin-jsdoc
+  - prettier-plugin-packagejson
 printWidth: 120
+proseWrap: "always"
 semi: false
 singleQuote: true
-trailingComma: all
+trailingComma: "all"
 overrides:
   - files:
       - "*.yaml"

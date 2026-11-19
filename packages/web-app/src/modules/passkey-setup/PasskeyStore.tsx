@@ -42,7 +42,10 @@ export class PasskeyStore {
 
   private registerPasskeyStatusTimeout: NodeJS.Timeout | null = null
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
+  constructor(
+    private readonly store: RootStore,
+    private readonly axios: AxiosInstance,
+  ) {
     this.setIsPasskeySupported()
   }
 

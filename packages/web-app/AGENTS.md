@@ -1,9 +1,9 @@
 # Salad Web App: Agent Instructions
 
 Formatting, linting, and testing come from the typescript template in SaladTechnologies/salad-platform
-`devops/templates`, last applied from commit `2b9ee65c1c`. Run `just fmt` after editing, and `just ci` before calling the
-work done. While the template is adopted in steps (below), some recipes and files named here do not exist yet; run the
-ones `just --list` shows.
+`devops/templates`, last applied from commit `2b9ee65c1c`. Run `just fmt` after editing, and `just ci` before calling
+the work done. While the template is adopted in steps (below), some recipes and files named here do not exist yet; run
+the ones `just --list` shows.
 
 ## Template adoption (web app rebuild)
 
@@ -11,14 +11,16 @@ The web app rebuild (feature branch `web-app-rebuild`) adopts the template in st
 lands, the recipes the rules below name may not exist yet; run the ones the justfile has.
 
 1. Done: npm (from Yarn PnP), Node.js and npm through mise, just, and CI running `just ci` and `just build` through
-   mise. `lint-typescript` runs `tsc` with the old `tsconfig.json` and the template's install-script and license
-   checks; `test-typescript` is the template's.
-2. Next: Prettier 3 with the template's settings (`fmt-typescript`, `fmt-check-typescript`, and `fmt-check` in `ci`).
-3. Then: TypeScript 7 with the template's `tsconfig.*.json` projects, and `"type": "module"` in `package.json`. The
-   app's own files are ES modules then, and Vite applies Node's CommonJS interop to them: a default import of a
-   CommonJS package (`react-responsive`, `react-custom-scrollbars-2`, and others) becomes `module.exports` instead of
-   its `default` export, which broke every page when it was tried in step 1. Those imports change in the same PR.
-   Code the rebuild has not rewritten yet type checks in a separate, looser project, removed area by area.
+   mise. `lint-typescript` runs `tsc` with the old `tsconfig.json` and the template's install-script and license checks;
+   `test-typescript` is the template's.
+2. Done: Prettier 3 with the template's settings (`fmt-typescript`, `fmt-check-typescript`, and `fmt-check` in `ci`).
+   Kiota's generated Machines API client (`src/api/machinesApiClient/generated/`) is in `.prettierignore`, with the
+   reason. The template's tsgo and oxc editor settings come with steps 3 and 4.
+3. Next: TypeScript 7 with the template's `tsconfig.*.json` projects, and `"type": "module"` in `package.json`. The
+   app's own files are ES modules then, and Vite applies Node's CommonJS interop to them: a default import of a CommonJS
+   package (`react-responsive`, `react-custom-scrollbars-2`, and others) becomes `module.exports` instead of its
+   `default` export, which broke every page when it was tried in step 1. Those imports change in the same PR. Code the
+   rebuild has not rewritten yet type checks in a separate, looser project, removed area by area.
 4. Then: oxlint, knip, and `npm audit` (the rest of the template's `lint-typescript`), with the folders the rebuild has
    not rewritten yet in oxlint's `ignorePatterns`, each removed as its area is rewritten.
 
@@ -30,9 +32,11 @@ lands, the recipes the rules below name may not exist yet; run the ones the just
     6.8.9 and 9.0.2, as it did on Yarn, which did not enforce peers. Upgrading either is a separate change.
   - `mobx-react` 6, `mobx-react-lite` 2, and `react-html-parser` 2 ask for React 16; the app runs React 18, as it did on
     Yarn. MobX and its bindings are removed by the rebuild.
-- `package.json` `overrides` carried over from Yarn's `resolutions`: the patched `@elastic/search-ui` from `libs/`
-  and the Kiota preview versions. (The `trim-newlines` and `trim` pins went with Storybook, which brought them in.)
-- `allowScripts` denies `core-js`, whose install script only prints a funding message.
+- `package.json` `overrides` carried over from Yarn's `resolutions`: the patched `@elastic/search-ui` from `libs/` and
+  the Kiota preview versions. (The `trim-newlines` and `trim` pins went with Storybook, which brought them in.)
+- `allowScripts` denies `core-js`, whose install script only prints a funding message, and the patched
+  `@elastic/search-ui` tarball in `libs/`, whose `prepare` script builds it from source the tarball does not include (it
+  ships the built `lib/`). npm matches that entry by its `file:` spec, so the key is the relative path.
 - The justfile allows the `MIT-0` license and lists `typescript-reviewed-packages`, exact versions whose license was
   read by hand. The reasons are next to them.
 - Storybook's packages were removed: Storybook 6's preset needs Create React App, which the rebuild removed, and its
