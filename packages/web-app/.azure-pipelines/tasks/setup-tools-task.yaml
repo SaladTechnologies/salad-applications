@@ -1,0 +1,14 @@
+parameters:
+  - name: projectDirectory
+    type: string
+    default: ""
+
+steps:
+  # Node.js, npm, and just at the versions in mise.toml.
+  - bash: bash .azure-pipelines/setup-mise.sh
+    displayName: Install mise and the tools
+    workingDirectory: ${{ parameters.projectDirectory }}
+  - task: npmAuthenticate@0
+    displayName: Login to Azure Artifacts (npm)
+    inputs:
+      workingFile: ${{ parameters.projectDirectory }}/.npmrc

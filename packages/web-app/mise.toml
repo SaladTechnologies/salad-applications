@@ -1,0 +1,6 @@
+[tools]
+just = "1.59.0"
+# Out of order on purpose: mise puts the first tool's programs first in PATH, and Node.js ships its own, older npm.
+# devEngines in package.json fails every npm command if that npm wins anyway.
+"npm:npm" = "12.2.1"
+node = "26.13.0"

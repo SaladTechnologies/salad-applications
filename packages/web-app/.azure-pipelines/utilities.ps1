@@ -18,30 +18,6 @@ function Assert-LastExitCodeSuccess {
     }
 }
 
-function Compare-NodeVersion {
-    [CmdletBinding()]
-    [OutputType([int])]
-    param(
-        # The first version to compare.
-        [Parameter(Mandatory = $true)]
-        [ValidateNotNullOrEmpty()]
-        [string]
-        $FirstVersion,
-
-        # The second version to compare.
-        [Parameter(Mandatory = $true)]
-        [ValidateNotNullOrEmpty()]
-        [string]
-        $SecondVersion
-    )
-
-    process {
-        $FirstVersion = [System.Management.Automation.SemanticVersion]::new($FirstVersion.TrimStart('v'))
-        $SecondVersion = [System.Management.Automation.SemanticVersion]::new($SecondVersion.TrimStart('v'))
-        $FirstVersion.CompareTo($SecondVersion)
-    }
-}
-
 function Get-NetlifyVersion {
     [CmdletBinding()]
     [OutputType([string])]
@@ -145,33 +121,6 @@ function Get-NpmVersion {
     }
 }
 
-function Get-NvmrcVersion {
-    [CmdletBinding()]
-    [OutputType([string])]
-    param()
-
-    process {
-        $projectRoot = Split-Path -Path $PSScriptRoot -Parent
-        try {
-            $version = Get-Content -Path (Join-Path -Path $projectRoot -ChildPath '.nvmrc') -Raw -Encoding utf8
-            if ([string]::IsNullOrWhiteSpace($version)) {
-                $version = $null
-            }
-            else {
-                $version = $version.Trim()
-                if (-not $version.StartsWith('v', [System.StringComparison]::Ordinal)) {
-                    $version = "v${version}"
-                }
-            }
-        }
-        catch {
-            $version = $null
-        }
-
-        $version
-    }
-}
-
 function Get-ToolVersion {
     [CmdletBinding()]
     [OutputType([string])]
@@ -198,38 +147,6 @@ function Get-ToolVersion {
         }
 
         $version
-    }
-}
-
-function Get-WorkspacePackages {
-    [CmdletBinding()]
-    [OutputType([string[]])]
-    param()
-
-    process {
-        $projectRoot = Split-Path -Path $PSScriptRoot -Parent
-        Push-Location -Path $projectRoot
-        try {
-            & yarn workspaces list --verbose --json | `
-                    ConvertFrom-Json | `
-                    ForEach-Object -Process { Join-Path -Path $projectRoot -ChildPath $_.location -Resolve } | `
-                    Where-Object -FilterScript { (Test-Path -Path (Join-Path -Path $_ -ChildPath 'buf.yaml')) -and (Test-Path -Path (Join-Path -Path $_ -ChildPath 'buf.gen.yaml')) }
-            Assert-LastExitCodeSuccess -LastExecutableName 'yarn'
-        }
-        finally {
-            Pop-Location
-        }
-    }
-}
-
-function Get-YarnVersion {
-    [CmdletBinding()]
-    [OutputType([string])]
-    param()
-
-    process {
-        Get-ToolVersion -ScriptBlock { & yarn --version }
-        Assert-LastExitCodeSuccess -LastExecutableName 'yarn'
     }
 }
 

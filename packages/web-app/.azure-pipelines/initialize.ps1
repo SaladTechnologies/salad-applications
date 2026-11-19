@@ -13,17 +13,13 @@ try {
     $buildDirectory = Join-Path -Path $projectRoot -ChildPath 'build'
     $srcDirectory = Join-Path -Path $projectRoot -ChildPath 'src'
 
-    # Verify Node.js and npm
-    Show-LogSection -Content 'Verifying Node.js, npm, and Yarn...'
+    # Verify Node.js and npm (setup-tools-task installs the versions in mise.toml; devEngines in package.json fails npm
+    # commands run with older ones)
+    Show-LogSection -Content 'Verifying Node.js and npm...'
 
     $nodeVersion = Get-NodeVersion
     if ($null -eq $nodeVersion) {
         Write-Error -Message 'Node.js is not installed'
-    }
-
-    $nvmrcVersion = Get-NvmrcVersion
-    if ($null -eq $nvmrcVersion -or 0 -ne (Compare-NodeVersion -FirstVersion $nodeVersion -SecondVersion $nvmrcVersion)) {
-        Write-Error -Message "Node.js ${nvmrcVersion} is not installed (found ${nodeVersion})"
     }
 
     Show-LogInfo -Content "Node.js ${nodeVersion} is installed"
@@ -35,19 +31,12 @@ try {
 
     Show-LogInfo -Content "npm ${npmVersion} is installed"
 
-    $yarnVersion = Get-YarnVersion
-    if ($null -eq $yarnVersion) {
-        Write-Error -Message 'Yarn is not installed'
-    }
-
-    Show-LogInfo -Content "Yarn ${yarnVersion} is installed"
-
     # Install dependencies
     Show-LogSection -Content 'Installing dependencies...'
 
-    Show-LogCommand -Content 'yarn install'
-    & yarn install
-    Assert-LastExitCodeSuccess -LastExecutableName 'yarn'
+    Show-LogCommand -Content 'npm ci'
+    & npm ci
+    Assert-LastExitCodeSuccess -LastExecutableName 'npm'
 
     $netlifyVersion = $null
     & npm list netlify-cli --global --depth 0 | Out-Null

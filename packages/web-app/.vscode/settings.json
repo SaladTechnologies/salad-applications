@@ -5,14 +5,6 @@
   "editor.rulers": [
     120
   ],
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "html",
-    "typescript",
-    "typescriptreact"
-  ],
-  "eslint.nodePath": ".yarn/sdks",
   "files.associations": {
     "**/.azure-pipelines/**/*.yaml": "azure-pipelines",
     ".env.development.local": "properties",
@@ -28,20 +20,17 @@
   ],
   "javascript.format.enable": false,
   "javascript.validate.enable": false,
-  "npm.packageManager": "yarn",
-  "prettier.prettierPath": ".yarn/sdks/prettier/index.js",
+  "npm.packageManager": "npm",
   "search.exclude": {
     "node_modules": true,
     "scripts": true,
-    "**/.yarn": true,
-    "**/.pnp.*": true,
     "**/npm-debug.log*": true,
     "**/yarn-debug.log*": true,
     "**/yarn-error.log*": true
   },
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.format.enable": false,
-  "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "typescript.tsdk": "node_modules/typescript/lib",
   "[typescript]": {
     "editor.codeActionsOnSave": {
       "source.organizeImports": "explicit"
