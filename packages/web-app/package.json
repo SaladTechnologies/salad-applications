@@ -28,7 +28,8 @@
     "test": "vitest run"
   },
   "allowScripts": {
-    "core-js": false
+    "core-js": false,
+    "file:../../libs/elastic-search-ui-1.17.1+salad.tgz": false
   },
   "browserslist": {
     "production": [

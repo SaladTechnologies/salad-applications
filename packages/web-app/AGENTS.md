@@ -14,8 +14,8 @@ lands, the recipes the rules below name may not exist yet; run the ones the just
    mise. `lint-typescript` runs `tsc` with the old `tsconfig.json` and the template's install-script and license checks;
    `test-typescript` is the template's.
 2. Done: Prettier 3 with the template's settings (`fmt-typescript`, `fmt-check-typescript`, and `fmt-check` in `ci`).
-   Kiota's generated Machines API client (`src/api/machinesApiClient/generated/`) is in `.prettierignore`: it is
-   replaced wholesale on each regeneration.
+   Kiota's generated Machines API client (`src/api/machinesApiClient/generated/`) is in `.prettierignore`, with the
+   reason. The template's tsgo and oxc editor settings come with steps 3 and 4.
 3. Next: TypeScript 7 with the template's `tsconfig.*.json` projects, and `"type": "module"` in `package.json`. The
    app's own files are ES modules then, and Vite applies Node's CommonJS interop to them: a default import of a CommonJS
    package (`react-responsive`, `react-custom-scrollbars-2`, and others) becomes `module.exports` instead of its
@@ -34,7 +34,9 @@ lands, the recipes the rules below name may not exist yet; run the ones the just
     Yarn. MobX and its bindings are removed by the rebuild.
 - `package.json` `overrides` carried over from Yarn's `resolutions`: the patched `@elastic/search-ui` from `libs/` and
   the Kiota preview versions. (The `trim-newlines` and `trim` pins went with Storybook, which brought them in.)
-- `allowScripts` denies `core-js`, whose install script only prints a funding message.
+- `allowScripts` denies `core-js`, whose install script only prints a funding message, and the patched
+  `@elastic/search-ui` tarball in `libs/`, whose `prepare` script builds it from source the tarball does not include (it
+  ships the built `lib/`). npm matches that entry by its `file:` spec, so the key is the relative path.
 - The justfile allows the `MIT-0` license and lists `typescript-reviewed-packages`, exact versions whose license was
   read by hand. The reasons are next to them.
 - Storybook's packages were removed: Storybook 6's preset needs Create React App, which the rebuild removed, and its
