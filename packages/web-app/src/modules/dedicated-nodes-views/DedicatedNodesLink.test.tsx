@@ -1,18 +1,19 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { ReactNode } from 'react'
 import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { _DedicatedNodesLink } from './DedicatedNodesLink'
 
 // The barrels pull in the root store and ESM-only `axios`; the link only needs the page path and an inert link.
-jest.mock('../dedicated-nodes', () => jest.requireActual('../dedicated-nodes/constants'))
-jest.mock('../../components', () => ({
+vi.mock('../dedicated-nodes', () => vi.importActual('../dedicated-nodes/constants'))
+vi.mock('../../components', () => ({
   SmartLink: ({ to, children }: { to: string; children?: ReactNode }) => <a href={to}>{children}</a>,
 }))
 // Garden's Text needs the theme provider; the test only checks whether the link renders.
-jest.mock('@saladtechnologies/garden-components', () => ({
+vi.mock('@saladtechnologies/garden-components', () => ({
   Text: ({ children }: { children?: ReactNode }) => <span>{children}</span>,
 }))
-jest.mock('../../connect', () => ({
+vi.mock('../../connect', () => ({
   connect: (_: unknown, component: unknown) => component,
 }))
 

@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { ReactNode } from 'react'
 import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
@@ -7,21 +8,21 @@ import { SaladPayOrderSummaryPage } from './SaladPayOrderSummaryPage'
 
 // The module barrels also export stores, which pull in the root store and ESM-only `axios`. The page only needs the
 // constants and tag helpers, so serve those alone.
-jest.mock('../../coinbase', () => ({
-  ...jest.requireActual('../../coinbase/constants'),
-  ...jest.requireActual('../../coinbase/utils'),
+vi.mock('../../coinbase', async () => ({
+  ...(await vi.importActual<object>('../../coinbase/constants')),
+  ...(await vi.importActual<object>('../../coinbase/utils')),
 }))
-jest.mock('../../solana-wallet', () => ({
-  ...jest.requireActual('../../solana-wallet/constants'),
-  ...jest.requireActual('../../solana-wallet/utils'),
+vi.mock('../../solana-wallet', async () => ({
+  ...(await vi.importActual<object>('../../solana-wallet/constants')),
+  ...(await vi.importActual<object>('../../solana-wallet/utils')),
 }))
 
 // These pull in the root store; the tests only need their output to be inert.
-jest.mock('../../../components', () => ({
+vi.mock('../../../components', () => ({
   SmartLink: ({ to, children }: { to: string; children?: ReactNode }) => <a href={to}>{children}</a>,
   ModalPage: ({ children }: { children?: ReactNode }) => <div>{children}</div>,
 }))
-jest.mock('../../reward-views/components/RenderPriceQuote', () => ({
+vi.mock('../../reward-views/components/RenderPriceQuote', () => ({
   RenderPriceQuoteContainer: () => null,
 }))
 
@@ -59,8 +60,8 @@ describe('SaladPayOrderSummaryPage with a Coinbase reward', () => {
   })
 
   const renderPage = (props: Record<string, unknown>) => {
-    const onConfirm = jest.fn()
-    const loadCoinbaseEmail = jest.fn()
+    const onConfirm = vi.fn()
+    const loadCoinbaseEmail = vi.fn()
     act(() => {
       root.render(
         <SaladPayOrderSummaryPage
@@ -68,8 +69,8 @@ describe('SaladPayOrderSummaryPage with a Coinbase reward', () => {
           request={request}
           reward={coinbaseReward}
           onConfirm={onConfirm}
-          onCloseClick={jest.fn()}
-          onAbort={jest.fn()}
+          onCloseClick={vi.fn()}
+          onAbort={vi.fn()}
           loadCoinbaseEmail={loadCoinbaseEmail}
           {...props}
         />,

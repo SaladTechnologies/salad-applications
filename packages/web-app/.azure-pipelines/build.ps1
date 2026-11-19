@@ -36,6 +36,17 @@ try {
         }
     }
 
+    # Check types and run tests.
+    Show-LogSection -Content 'Checking types...'
+    Show-LogCommand -Content "yarn run lint-ts"
+    & yarn run lint-ts
+    Assert-LastExitCodeSuccess -LastExecutableName 'yarn'
+
+    Show-LogSection -Content 'Running tests...'
+    Show-LogCommand -Content "yarn run test"
+    & yarn run test
+    Assert-LastExitCodeSuccess -LastExecutableName 'yarn'
+
     # Build projects.
     Show-LogSection -Content 'Building projects...'
     Show-LogCommand -Content "yarn run build "

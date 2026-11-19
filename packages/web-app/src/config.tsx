@@ -11,8 +11,22 @@ declare global {
   }
 }
 
+// Vite replaces `import.meta.env.X` at build time only when `X` is written out, so every variable is listed here.
+const env: ProcessEnv = {
+  REACT_APP_API_URL: import.meta.env.REACT_APP_API_URL,
+  REACT_APP_BUILD: import.meta.env.REACT_APP_BUILD,
+  REACT_APP_DATA_REFRESH_RATE: import.meta.env.REACT_APP_DATA_REFRESH_RATE,
+  REACT_APP_LOGIN_URL: import.meta.env.REACT_APP_LOGIN_URL,
+  REACT_APP_MIXPANEL_TOKEN: import.meta.env.REACT_APP_MIXPANEL_TOKEN,
+  REACT_APP_REWARD_REFRESH_RATE: import.meta.env.REACT_APP_REWARD_REFRESH_RATE,
+  REACT_APP_SEARCH_ENGINE: import.meta.env.REACT_APP_SEARCH_ENGINE,
+  REACT_APP_SEARCH_KEY: import.meta.env.REACT_APP_SEARCH_KEY,
+  REACT_APP_SEARCH_URL: import.meta.env.REACT_APP_SEARCH_URL,
+  REACT_APP_STRAPI_UPLOAD_URL: import.meta.env.REACT_APP_STRAPI_UPLOAD_URL,
+}
+
 const numberOrDefault = (name: string, defaultValue: number): number => {
-  let v = Number(process.env[name])
+  let v = Number(env[name])
 
   if (isNaN(v)) return defaultValue
 
@@ -20,11 +34,11 @@ const numberOrDefault = (name: string, defaultValue: number): number => {
 }
 
 const optionalString = (name: string): string | undefined => {
-  return process.env[name]
+  return env[name]
 }
 
 const requiredString = (name: string, defaultValue?: string): string => {
-  let v = process.env[name]
+  let v = env[name]
 
   if (!v) {
     if (defaultValue) return defaultValue

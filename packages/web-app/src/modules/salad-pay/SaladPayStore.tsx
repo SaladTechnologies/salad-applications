@@ -1,4 +1,4 @@
-import { action, computed, observable } from 'mobx'
+import { action, computed, observable, runInAction } from 'mobx'
 import { getStore } from '../../Store'
 import type { SaladAppPaymentRequest } from './handlers'
 import type { SaladPaymentRequestOptions } from './models'
@@ -8,7 +8,8 @@ let sharedStore: SaladPayStore
 /** Gets the instance of the SaladPay store */
 export const getSaladPayStore = (): SaladPayStore => {
   if (!sharedStore) {
-    sharedStore = new SaladPayStore()
+    // Field initializers are writes; `enforceActions: 'always'` only allows them inside an action (see createStore).
+    sharedStore = runInAction(() => new SaladPayStore())
   }
 
   return sharedStore
