@@ -4,21 +4,24 @@ The Salad web app is the primary web-based UI that allows users to interact with
 
 ## Getting Started
 
+[mise](https://mise.jdx.dev) installs the Node.js, npm, and [just](https://github.com/casey/just) versions in `mise.toml`. Once mise is installed, run the following from this directory:
+
+```sh
+mise install
+just ci
+```
+
+`just ci` installs the dependencies (`npm ci`) when `node_modules` does not match `package-lock.json`, then runs the checks CI runs. `just` lists every recipe.
+
 To run the web app in development mode, run the following:
 
 ```sh
-yarn start
+npm start
 ```
 
 The web app will be available at <http://localhost:3000/> and automatically refresh when changes are detected. Debugging from Visual Studio Code is available if you run via one of the `Launch & Debug` tasks.
 
-To run Storybook for UI component development, run the following:
-
-```sh
-yarn storybook
-```
-
-Storybook will be available at <http://localhost:9001/> and automatically refresh when any changes are detected.
+Storybook is not installed: its packages were removed during the web app rebuild, and the `*.stories.tsx` files are kept until it is decided whether to bring it back.
 
 ## Architecture
 
@@ -44,6 +47,6 @@ Do the following steps to run the web-app with latest updated Kiota Machines API
 1. Generate TypeScript client code - [find instruction here](https://github.com/SaladTechnologies/salad-platform/tree/master/backend/src/OpenAPI/MachinesAPI)
 2. `output` folder (`salad-platform\backend\src\OpenAPI\MachinesAPI\output`) contains all the generate Machines API Client files
 3. copy files from the `output` folder and paste (replace everything) in the web-app project here `salad-applications\packages\web-ap\src\api\machinesApiClient\generated`
-4. try to run the project with `yarn start`, there probably will be errors
+4. try to run the project with `npm start`, there probably will be errors
 5. resolve all errors manually
-6. `yarn start`
+6. `npm start`

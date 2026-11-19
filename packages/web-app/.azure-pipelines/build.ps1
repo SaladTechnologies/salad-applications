@@ -36,22 +36,17 @@ try {
         }
     }
 
-    # Check types and run tests.
-    Show-LogSection -Content 'Checking types...'
-    Show-LogCommand -Content "yarn run lint-ts"
-    & yarn run lint-ts
-    Assert-LastExitCodeSuccess -LastExecutableName 'yarn'
-
-    Show-LogSection -Content 'Running tests...'
-    Show-LogCommand -Content "yarn run test"
-    & yarn run test
-    Assert-LastExitCodeSuccess -LastExecutableName 'yarn'
+    # Lint and test, as a local `just ci` does.
+    Show-LogSection -Content 'Running checks...'
+    Show-LogCommand -Content 'just ci'
+    & just ci
+    Assert-LastExitCodeSuccess -LastExecutableName 'just'
 
     # Build projects.
     Show-LogSection -Content 'Building projects...'
-    Show-LogCommand -Content "yarn run build "
-    & yarn run build
-    Assert-LastExitCodeSuccess -LastExecutableName 'yarn'
+    Show-LogCommand -Content 'just build'
+    & just build
+    Assert-LastExitCodeSuccess -LastExecutableName 'just'
 }
 catch {
     if (($null -ne $_.ErrorDetails) -and ($null -ne $_.ErrorDetails.Message)) {
