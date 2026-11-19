@@ -1,17 +1,19 @@
+import { describe, expect, it, vi } from 'vitest'
+import type { Mock } from 'vitest'
 import type { AxiosInstance } from 'axios'
 import { DedicatedNodesStore } from './DedicatedNodesStore'
 import { dedicatedNodeProblemTitles } from './constants'
 import type { DedicatedNode } from './models'
 
 interface MockAxios {
-  get: jest.Mock
-  post: jest.Mock
+  get: Mock
+  post: Mock
 }
 
 const makeAxios = (overrides: Partial<MockAxios> = {}): MockAxios & AxiosInstance =>
   ({
-    get: jest.fn().mockResolvedValue({ data: {} }),
-    post: jest.fn().mockResolvedValue({ data: '' }),
+    get: vi.fn().mockResolvedValue({ data: {} }),
+    post: vi.fn().mockResolvedValue({ data: '' }),
     ...overrides,
   } as unknown as MockAxios & AxiosInstance)
 
@@ -29,7 +31,7 @@ describe('DedicatedNodesStore', () => {
   describe('loadEnrollment', () => {
     it('grants access when the account has a token', async () => {
       const axios = makeAxios({
-        get: jest.fn().mockResolvedValue({ data: { token: 'secret', expires_at: '2027-01-01T00:00:00Z' } }),
+        get: vi.fn().mockResolvedValue({ data: { token: 'secret', expires_at: '2027-01-01T00:00:00Z' } }),
       })
       const store = new DedicatedNodesStore(axios)
 
@@ -44,7 +46,7 @@ describe('DedicatedNodesStore', () => {
 
     it('treats 404 as no access, not an error', async () => {
       const axios = makeAxios({
-        get: jest.fn().mockRejectedValue(problem(404, dedicatedNodeProblemTitles.noEnrollmentToken)),
+        get: vi.fn().mockRejectedValue(problem(404, dedicatedNodeProblemTitles.noEnrollmentToken)),
       })
       const store = new DedicatedNodesStore(axios)
 
@@ -56,7 +58,7 @@ describe('DedicatedNodesStore', () => {
 
     it('reads the status from an Axios error without a problem type', async () => {
       const axios = makeAxios({
-        get: jest.fn().mockRejectedValue({ response: { status: 404, data: {} } }),
+        get: vi.fn().mockRejectedValue({ response: { status: 404, data: {} } }),
       })
       const store = new DedicatedNodesStore(axios)
 
@@ -66,7 +68,7 @@ describe('DedicatedNodesStore', () => {
     })
 
     it('flags other failures and denies access', async () => {
-      const axios = makeAxios({ get: jest.fn().mockRejectedValue(problem(500)) })
+      const axios = makeAxios({ get: vi.fn().mockRejectedValue(problem(500)) })
       const store = new DedicatedNodesStore(axios)
 
       await store.loadEnrollment()
@@ -79,7 +81,7 @@ describe('DedicatedNodesStore', () => {
   describe('loadNodes and loadMoreNodes', () => {
     it('loads the first page and keeps the continuation token', async () => {
       const axios = makeAxios({
-        get: jest.fn().mockResolvedValue({ data: { items: [node(1), node(2)], continuation_token: 'next' } }),
+        get: vi.fn().mockResolvedValue({ data: { items: [node(1), node(2)], continuation_token: 'next' } }),
       })
       const store = new DedicatedNodesStore(axios)
 
@@ -93,7 +95,7 @@ describe('DedicatedNodesStore', () => {
     })
 
     it('appends the next page and shows each node once', async () => {
-      const get = jest
+      const get = vi
         .fn()
         .mockResolvedValueOnce({ data: { items: [node(1), node(2)], continuation_token: 'next' } })
         .mockResolvedValueOnce({ data: { items: [node(2, 'approved'), node(3)], continuation_token: null } })
@@ -112,7 +114,7 @@ describe('DedicatedNodesStore', () => {
     })
 
     it('does nothing on the last page', async () => {
-      const get = jest.fn().mockResolvedValue({ data: { items: [node(1)] } })
+      const get = vi.fn().mockResolvedValue({ data: { items: [node(1)] } })
       const store = new DedicatedNodesStore(makeAxios({ get }))
 
       await store.loadNodes()
@@ -122,7 +124,7 @@ describe('DedicatedNodesStore', () => {
     })
 
     it('starts again from the first page when the continuation token is refused', async () => {
-      const get = jest
+      const get = vi
         .fn()
         .mockResolvedValueOnce({ data: { items: [node(1)], continuation_token: 'stale' } })
         .mockRejectedValueOnce(problem(400, dedicatedNodeProblemTitles.invalidRequest))
@@ -142,7 +144,7 @@ describe('DedicatedNodesStore', () => {
       [504, 'timeout'],
       [500, 'unknown'],
     ])('maps a %i to the %s list error', async (status, expected) => {
-      const store = new DedicatedNodesStore(makeAxios({ get: jest.fn().mockRejectedValue(problem(status)) }))
+      const store = new DedicatedNodesStore(makeAxios({ get: vi.fn().mockRejectedValue(problem(status)) }))
 
       await store.loadNodes()
 
@@ -151,7 +153,7 @@ describe('DedicatedNodesStore', () => {
     })
 
     it('drops access when the account has no token any more', async () => {
-      const get = jest
+      const get = vi
         .fn()
         .mockResolvedValueOnce({ data: { token: 'secret' } })
         .mockRejectedValueOnce(problem(404, dedicatedNodeProblemTitles.noEnrollmentToken))
@@ -175,8 +177,8 @@ describe('DedicatedNodesStore', () => {
 
     it('approves with the trimmed code and shows the returned node', async () => {
       const axios = makeAxios({
-        get: jest.fn().mockResolvedValue({ data: { items: [node(1)] } }),
-        post: jest.fn().mockResolvedValue({ data: node(1, 'approved') }),
+        get: vi.fn().mockResolvedValue({ data: { items: [node(1)] } }),
+        post: vi.fn().mockResolvedValue({ data: node(1, 'approved') }),
       })
       const store = await loadedStore(axios)
 
@@ -193,8 +195,8 @@ describe('DedicatedNodesStore', () => {
 
     it('keeps the fields the approve response leaves out, such as the serial number', async () => {
       const axios = makeAxios({
-        get: jest.fn().mockResolvedValue({ data: { items: [{ ...node(1), product_serial: 'SN-1' }] } }),
-        post: jest.fn().mockResolvedValue({ data: node(1, 'approved') }),
+        get: vi.fn().mockResolvedValue({ data: { items: [{ ...node(1), product_serial: 'SN-1' }] } }),
+        post: vi.fn().mockResolvedValue({ data: node(1, 'approved') }),
       })
       const store = await loadedStore(axios)
 
@@ -205,8 +207,8 @@ describe('DedicatedNodesStore', () => {
 
     it('reports a wrong code and reloads the list, so the current code shows', async () => {
       const axios = makeAxios({
-        get: jest.fn().mockResolvedValue({ data: { items: [node(1)] } }),
-        post: jest.fn().mockRejectedValue(problem(400, dedicatedNodeProblemTitles.wrongCode)),
+        get: vi.fn().mockResolvedValue({ data: { items: [node(1)] } }),
+        post: vi.fn().mockRejectedValue(problem(400, dedicatedNodeProblemTitles.wrongCode)),
       })
       const store = await loadedStore(axios)
 
@@ -219,7 +221,7 @@ describe('DedicatedNodesStore', () => {
     })
 
     it('refuses with a note and keeps the node listed as refused', async () => {
-      const axios = makeAxios({ get: jest.fn().mockResolvedValue({ data: { items: [node(1)] } }) })
+      const axios = makeAxios({ get: vi.fn().mockResolvedValue({ data: { items: [node(1)] } }) })
       const store = await loadedStore(axios)
 
       const result = await store.refuseNode(nodeId(1), ' not mine ')
@@ -230,7 +232,7 @@ describe('DedicatedNodesStore', () => {
     })
 
     it('revokes without a note and removes the node', async () => {
-      const axios = makeAxios({ get: jest.fn().mockResolvedValue({ data: { items: [node(1, 'approved'), node(2)] } }) })
+      const axios = makeAxios({ get: vi.fn().mockResolvedValue({ data: { items: [node(1, 'approved'), node(2)] } }) })
       const store = await loadedStore(axios)
 
       const result = await store.revokeNode(nodeId(1))
@@ -246,11 +248,11 @@ describe('DedicatedNodesStore', () => {
       [404, dedicatedNodeProblemTitles.nodeNotEnrolled, 'not-found'],
       [504, undefined, 'timeout'],
     ])('reloads the list after a %i', async (status, title, expected) => {
-      const get = jest
+      const get = vi
         .fn()
         .mockResolvedValueOnce({ data: { items: [node(1)] } })
         .mockResolvedValueOnce({ data: { items: [node(1, 'approved')] } })
-      const axios = makeAxios({ get, post: jest.fn().mockRejectedValue(problem(status, title)) })
+      const axios = makeAxios({ get, post: vi.fn().mockRejectedValue(problem(status, title)) })
       const store = await loadedStore(axios)
 
       const result = await store.approveNode(nodeId(1), 'PEND01')
@@ -263,8 +265,8 @@ describe('DedicatedNodesStore', () => {
 
     it('reports a node service failure without reloading', async () => {
       const axios = makeAxios({
-        get: jest.fn().mockResolvedValue({ data: { items: [node(1)] } }),
-        post: jest.fn().mockRejectedValue(problem(502)),
+        get: vi.fn().mockResolvedValue({ data: { items: [node(1)] } }),
+        post: vi.fn().mockRejectedValue(problem(502)),
       })
       const store = await loadedStore(axios)
 
@@ -277,8 +279,8 @@ describe('DedicatedNodesStore', () => {
     it('ignores a second action while one is in flight', async () => {
       let resolve: (value: unknown) => void = () => {}
       const axios = makeAxios({
-        get: jest.fn().mockResolvedValue({ data: { items: [node(1), node(2)] } }),
-        post: jest.fn().mockReturnValue(new Promise((r) => (resolve = r))),
+        get: vi.fn().mockResolvedValue({ data: { items: [node(1), node(2)] } }),
+        post: vi.fn().mockReturnValue(new Promise((r) => (resolve = r))),
       })
       const store = await loadedStore(axios)
 
@@ -293,7 +295,7 @@ describe('DedicatedNodesStore', () => {
   })
 
   it('forgets everything on reset', async () => {
-    const get = jest
+    const get = vi
       .fn()
       .mockResolvedValueOnce({ data: { token: 'secret' } })
       .mockResolvedValueOnce({ data: { items: [node(1)], continuation_token: 'next' } })

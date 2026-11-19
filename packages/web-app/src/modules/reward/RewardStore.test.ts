@@ -1,22 +1,24 @@
+import { describe, expect, it, vi } from 'vitest'
+import type { Mock } from 'vitest'
 /**
  * These mocks keep the test from pulling in the full RootStore dependency graph (and ESM-only
  * packages such as `axios`/`query-string`) that `RewardStore`'s transitive imports would otherwise load.
  */
-jest.mock('axios', () => ({
+vi.mock('axios', () => ({
   __esModule: true,
   default: { isAxiosError: (error: any) => !!(error && error.isAxiosError) },
 }))
-jest.mock('../../axiosFactory', () => ({ SaladError: class SaladError extends Error {} }))
-jest.mock('../salad-pay', () => ({ AbortError: class AbortError extends Error {} }))
-jest.mock('../salad-pay/SaladPay', () => ({
+vi.mock('../../axiosFactory', () => ({ SaladError: class SaladError extends Error {} }))
+vi.mock('../salad-pay', () => ({ AbortError: class AbortError extends Error {} }))
+vi.mock('../salad-pay/SaladPay', () => ({
   SaladPay: class SaladPay {
     paymentRequest() {
       return { show: async () => ({}) }
     }
   },
 }))
-jest.mock('../auth', () => ({ ChallengeSudoModeTrigger: { RewardRedeem: 'RewardRedeem' } }))
-jest.mock('./utils', () => ({ rewardFromResource: jest.fn() }))
+vi.mock('../auth', () => ({ ChallengeSudoModeTrigger: { RewardRedeem: 'RewardRedeem' } }))
+vi.mock('./utils', () => ({ rewardFromResource: vi.fn() }))
 
 import type { AxiosInstance } from 'axios'
 import type { RootStore } from '../../Store'
@@ -50,31 +52,31 @@ const makeReward = (overrides: Partial<Reward> = {}): Reward => ({
 
 interface Harness {
   store: RewardStore
-  push: jest.Mock
-  sendNotification: jest.Mock
-  addRewardToRedemptionsList: jest.Mock
-  complete: jest.Mock
+  push: Mock
+  sendNotification: Mock
+  addRewardToRedemptionsList: Mock
+  complete: Mock
 }
 
-const setup = (postImpl: jest.Mock, exchangeRate?: number): Harness => {
-  const push = jest.fn()
-  const sendNotification = jest.fn()
-  const addRewardToRedemptionsList = jest.fn()
-  const complete = jest.fn()
+const setup = (postImpl: Mock, exchangeRate?: number): Harness => {
+  const push = vi.fn()
+  const sendNotification = vi.fn()
+  const addRewardToRedemptionsList = vi.fn()
+  const complete = vi.fn()
 
   const rootStore = {
     auth: {
-      login: jest.fn().mockResolvedValue(undefined),
-      challengeSudoMode: jest.fn(),
+      login: vi.fn().mockResolvedValue(undefined),
+      challengeSudoMode: vi.fn(),
       pendingProtectedAction: undefined,
     },
     profile: { currentProfile: { redemptionTfaEnabled: false } },
-    analytics: { trackSaladPayOpened: jest.fn() },
+    analytics: { trackSaladPayOpened: vi.fn() },
     notifications: { sendNotification },
     routing: { push },
     balance: {
-      refreshBalance: jest.fn().mockResolvedValue(undefined),
-      refreshBalanceHistory: jest.fn().mockResolvedValue(undefined),
+      refreshBalance: vi.fn().mockResolvedValue(undefined),
+      refreshBalanceHistory: vi.fn().mockResolvedValue(undefined),
     },
     vault: { addRewardToRedemptionsList },
     render: { exchangeRate: exchangeRate !== undefined ? { rate: exchangeRate } : undefined },
@@ -88,7 +90,7 @@ const setup = (postImpl: jest.Mock, exchangeRate?: number): Harness => {
   // Replace the SaladPay instance with a stub that immediately resolves a payment response.
   ;(store as any).saladPay = {
     paymentRequest: () => ({
-      show: jest.fn().mockResolvedValue({ details: { transactionToken: 'tok' }, complete }),
+      show: vi.fn().mockResolvedValue({ details: { transactionToken: 'tok' }, complete }),
     }),
   }
 
@@ -99,7 +101,7 @@ describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
   it('surfaces the API message and returns to the reward detail page for renderTokenAccount', async () => {
     const apiTitle = 'RENDER associated token account required'
     const apiDetail = 'The account is missing a RENDER associated token account.'
-    const post = jest
+    const post = vi
       .fn()
       .mockRejectedValue(
         makeAxiosError(400, {
@@ -136,7 +138,7 @@ describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
 
   it('falls back to a RENDER-specific title when the API omits the title for renderTokenAccount', async () => {
     const apiDetail = 'The account is missing a RENDER associated token account.'
-    const post = jest
+    const post = vi
       .fn()
       .mockRejectedValue(
         makeAxiosError(400, { type: renderTokenAccountRequiredProblemType, status: 400, detail: apiDetail }),
@@ -152,7 +154,7 @@ describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
   })
 
   it('falls back to a RENDER-specific message when the API omits the detail for renderTokenAccount', async () => {
-    const post = jest
+    const post = vi
       .fn()
       .mockRejectedValue(makeAxiosError(400, { type: renderTokenAccountRequiredProblemType, status: 400 }))
     const { store, sendNotification } = setup(post)
@@ -167,7 +169,7 @@ describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
   it('surfaces the API message and points the user to the wallet input for solanaWallet', async () => {
     const apiTitle = 'Solana wallet address required'
     const apiDetail = 'The account has no configured Solana wallet.'
-    const post = jest
+    const post = vi
       .fn()
       .mockRejectedValue(
         makeAxiosError(400, {
@@ -204,7 +206,7 @@ describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
 
   it('falls back to a Solana-specific title when the API omits the title for solanaWallet', async () => {
     const apiDetail = 'The account has no configured Solana wallet.'
-    const post = jest
+    const post = vi
       .fn()
       .mockRejectedValue(makeAxiosError(400, { type: solanaWalletRequiredProblemType, status: 400, detail: apiDetail }))
     const { store, sendNotification } = setup(post)
@@ -218,7 +220,7 @@ describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
   })
 
   it('falls back to a Solana-specific message when the API omits the detail for solanaWallet', async () => {
-    const post = jest
+    const post = vi
       .fn()
       .mockRejectedValue(makeAxiosError(400, { type: solanaWalletRequiredProblemType, status: 400 }))
     const { store, sendNotification } = setup(post)
@@ -231,7 +233,7 @@ describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
   })
 
   it('applies the existing 400 handling (no navigation) for an unrelated problem code', async () => {
-    const post = jest
+    const post = vi
       .fn()
       .mockRejectedValue(
         makeAxiosError(400, { type: 'redemptions:notEnoughXp', status: 400, title: 'Nope', detail: 'Too new' }),
@@ -250,7 +252,7 @@ describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
 
 describe('RewardStore.redeemReward other statuses', () => {
   it('treats a 409 as the redemption success message (regression guard)', async () => {
-    const post = jest.fn().mockRejectedValue(makeAxiosError(409))
+    const post = vi.fn().mockRejectedValue(makeAxiosError(409))
     const { store, push, sendNotification } = setup(post)
     const reward = makeReward({ id: 'reward-2', name: 'Some Game' })
 
@@ -264,7 +266,7 @@ describe('RewardStore.redeemReward other statuses', () => {
   })
 
   it('does not apply the requires-prerequisite handling to other error statuses', async () => {
-    const post = jest.fn().mockRejectedValue(makeAxiosError(500))
+    const post = vi.fn().mockRejectedValue(makeAxiosError(500))
     const { store, push, sendNotification } = setup(post)
     const reward = makeReward({ id: 'render-1', name: 'RENDER Tokens' })
 
@@ -279,7 +281,7 @@ describe('RewardStore.redeemReward other statuses', () => {
 
 describe('RewardStore.redeemReward RENDER quoted exchange rate', () => {
   it('attaches the quoted exchange rate held in state to a RENDER redemption request', async () => {
-    const post = jest.fn().mockResolvedValue({ data: { timestamp: '2026-07-02T00:00:00.000Z' } })
+    const post = vi.fn().mockResolvedValue({ data: { timestamp: '2026-07-02T00:00:00.000Z' } })
     const { store } = setup(post, 0.9997)
     const reward = makeReward({ id: 'render-1', name: 'RENDER Tokens', tags: ['render'] })
 
@@ -291,7 +293,7 @@ describe('RewardStore.redeemReward RENDER quoted exchange rate', () => {
   })
 
   it('does not attach a quoted exchange rate for a non-RENDER redemption request', async () => {
-    const post = jest.fn().mockResolvedValue({ data: { timestamp: '2026-07-02T00:00:00.000Z' } })
+    const post = vi.fn().mockResolvedValue({ data: { timestamp: '2026-07-02T00:00:00.000Z' } })
     const { store } = setup(post, 0.9997)
     const reward = makeReward({ id: 'reward-2', name: 'Some Game', tags: [] })
 
@@ -302,7 +304,7 @@ describe('RewardStore.redeemReward RENDER quoted exchange rate', () => {
   })
 
   it('omits the quoted exchange rate when no live rate is held for a RENDER reward', async () => {
-    const post = jest.fn().mockResolvedValue({ data: { timestamp: '2026-07-02T00:00:00.000Z' } })
+    const post = vi.fn().mockResolvedValue({ data: { timestamp: '2026-07-02T00:00:00.000Z' } })
     const { store } = setup(post)
     const reward = makeReward({ id: 'render-1', name: 'RENDER Tokens', tags: ['render'] })
 
@@ -313,7 +315,7 @@ describe('RewardStore.redeemReward RENDER quoted exchange rate', () => {
   })
 
   it('shows a stale-quote toast and returns to the reward detail page on exchangeRateDrift', async () => {
-    const post = jest
+    const post = vi
       .fn()
       .mockRejectedValue(makeAxiosError(400, { type: renderExchangeRateDriftProblemType, status: 400 }))
     const { store, push, sendNotification, addRewardToRedemptionsList } = setup(post, 0.5)
@@ -341,7 +343,7 @@ describe('RewardStore.redeemReward RENDER quoted exchange rate', () => {
   it('surfaces the API message for exchangeRateDrift when provided', async () => {
     const apiTitle = 'The RENDER quote expired'
     const apiDetail = 'The rate moved by more than the allowed tolerance.'
-    const post = jest
+    const post = vi
       .fn()
       .mockRejectedValue(
         makeAxiosError(400, {
@@ -362,8 +364,8 @@ describe('RewardStore.redeemReward RENDER quoted exchange rate', () => {
   })
 
   it('shows a generic error toast, logs, and returns to the reward detail page on exchangeRateRequired', async () => {
-    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
-    const post = jest
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const post = vi
       .fn()
       .mockRejectedValue(makeAxiosError(400, { type: renderExchangeRateRequiredProblemType, status: 400 }))
     const { store, push, sendNotification, addRewardToRedemptionsList } = setup(post, 0.5)

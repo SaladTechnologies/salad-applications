@@ -33,7 +33,10 @@ import { ExperienceStore } from './modules/xp'
 
 configure({
   // computedRequiresReaction: process.env.NODE_ENV === 'development',
-  enforceActions: 'always',
+  // 'observed', not 'always': Vite compiles decorators the TypeScript way, so a store's field initializers are plain
+  // writes in its constructor. 'always' rejects even those first writes; 'observed' still rejects writes to anything
+  // a component or reaction is watching. CRA's Babel set initial values without a write, which hid this.
+  enforceActions: 'observed',
   // observableRequiresReaction: process.env.NODE_ENV === 'development',
   // reactionRequiresObservable: process.env.NODE_ENV === 'development',
 })

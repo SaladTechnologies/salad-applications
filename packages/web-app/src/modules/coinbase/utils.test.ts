@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { coinbaseEmailRequiredTag } from './constants'
 import { rewardRequiresCoinbaseEmail } from './utils'
 

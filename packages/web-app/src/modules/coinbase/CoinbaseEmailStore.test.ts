@@ -1,12 +1,14 @@
+import { describe, expect, it, vi } from 'vitest'
+import type { Mock } from 'vitest'
 /**
  * These mocks keep the test from pulling in the full RootStore dependency graph (and ESM-only packages such as
  * `axios`) that `CoinbaseEmailStore`'s transitive imports would otherwise load.
  */
-jest.mock('axios', () => ({
+vi.mock('axios', () => ({
   __esModule: true,
   default: { isAxiosError: (error: any) => !!(error && error.isAxiosError) },
 }))
-jest.mock('../../axiosFactory', () => ({
+vi.mock('../../axiosFactory', () => ({
   SaladError: class SaladError extends Error {
     status: number
     type: string
@@ -30,22 +32,22 @@ import {
 } from './constants'
 
 interface MockAxios {
-  get: jest.Mock
-  put: jest.Mock
-  delete: jest.Mock
+  get: Mock
+  put: Mock
+  delete: Mock
 }
 
 const makeAxios = (overrides: Partial<MockAxios> = {}): AxiosInstance =>
   ({
-    get: jest.fn().mockResolvedValue({ data: {} }),
-    put: jest.fn().mockResolvedValue({ data: {} }),
-    delete: jest.fn().mockResolvedValue({ data: {} }),
+    get: vi.fn().mockResolvedValue({ data: {} }),
+    put: vi.fn().mockResolvedValue({ data: {} }),
+    delete: vi.fn().mockResolvedValue({ data: {} }),
     ...overrides,
   } as unknown as AxiosInstance)
 
 const makeRootStore = () =>
   ({
-    notifications: { sendNotification: jest.fn() },
+    notifications: { sendNotification: vi.fn() },
   } as unknown as RootStore)
 
 /** A store the server has already said Coinbase cash-out is available to, as after a load returning `enabled: true`. */
@@ -74,7 +76,7 @@ describe('CoinbaseEmailStore', () => {
 
   it('loads the saved email and that the feature is available', async () => {
     const axios = makeAxios({
-      get: jest.fn().mockResolvedValue({ data: { email: EMAIL, updatedAt: '2026-10-01T00:00:00Z', enabled: true } }),
+      get: vi.fn().mockResolvedValue({ data: { email: EMAIL, updatedAt: '2026-10-01T00:00:00Z', enabled: true } }),
     })
     const store = new CoinbaseEmailStore(makeRootStore(), axios)
 
@@ -89,7 +91,7 @@ describe('CoinbaseEmailStore', () => {
 
   it('treats a missing or false enabled as unavailable', async () => {
     for (const data of [{}, { enabled: false }, { email: EMAIL }]) {
-      const store = new CoinbaseEmailStore(makeRootStore(), makeAxios({ get: jest.fn().mockResolvedValue({ data }) }))
+      const store = new CoinbaseEmailStore(makeRootStore(), makeAxios({ get: vi.fn().mockResolvedValue({ data }) }))
 
       await store.loadEmail()
 
@@ -98,7 +100,7 @@ describe('CoinbaseEmailStore', () => {
   })
 
   it('treats a failed load as unavailable', async () => {
-    const store = makeEnabledStore(makeRootStore(), makeAxios({ get: jest.fn().mockRejectedValue(new Error('boom')) }))
+    const store = makeEnabledStore(makeRootStore(), makeAxios({ get: vi.fn().mockRejectedValue(new Error('boom')) }))
 
     await store.loadEmail()
 
@@ -118,7 +120,7 @@ describe('CoinbaseEmailStore', () => {
   })
 
   it('saves an email and shows what the server returned', async () => {
-    const axios = makeAxios({ put: jest.fn().mockResolvedValue({ data: { email: EMAIL } }) })
+    const axios = makeAxios({ put: vi.fn().mockResolvedValue({ data: { email: EMAIL } }) })
     const store = makeEnabledStore(makeRootStore(), axios)
 
     await store.setEmail(` ${EMAIL} `)
@@ -143,7 +145,7 @@ describe('CoinbaseEmailStore', () => {
 
   // A successful delete leaves `submitStatus === 'success'`; a following save must not be blocked by the in-flight guard.
   it('allows setting a new email right after a successful delete', async () => {
-    const put = jest.fn().mockResolvedValue({ data: { email: NEW_EMAIL } })
+    const put = vi.fn().mockResolvedValue({ data: { email: NEW_EMAIL } })
     const store = makeEnabledStore(makeRootStore(), makeAxios({ put }))
     store.email = EMAIL
 
@@ -157,7 +159,7 @@ describe('CoinbaseEmailStore', () => {
 
   it('flags a disabled error and notifies when the server refuses the feature', async () => {
     const rootStore = makeRootStore()
-    const put = jest.fn().mockRejectedValue(new SaladError(403, coinbaseEmailDisabledProblemType))
+    const put = vi.fn().mockRejectedValue(new SaladError(403, coinbaseEmailDisabledProblemType))
     const store = makeEnabledStore(rootStore, makeAxios({ put }))
 
     await store.setEmail(EMAIL)
@@ -169,7 +171,7 @@ describe('CoinbaseEmailStore', () => {
   })
 
   it('flags an invalid error when the server rejects the format', async () => {
-    const put = jest.fn().mockRejectedValue(new SaladError(400, coinbaseEmailInvalidProblemType))
+    const put = vi.fn().mockRejectedValue(new SaladError(400, coinbaseEmailInvalidProblemType))
     const store = makeEnabledStore(makeRootStore(), makeAxios({ put }))
 
     await store.setEmail('not-an-email')
@@ -180,7 +182,7 @@ describe('CoinbaseEmailStore', () => {
 
   it('flags an unknown error and keeps the saved email when saving fails', async () => {
     const rootStore = makeRootStore()
-    const store = makeEnabledStore(rootStore, makeAxios({ put: jest.fn().mockRejectedValue(new Error('boom')) }))
+    const store = makeEnabledStore(rootStore, makeAxios({ put: vi.fn().mockRejectedValue(new Error('boom')) }))
     store.email = EMAIL
 
     await store.setEmail(NEW_EMAIL)

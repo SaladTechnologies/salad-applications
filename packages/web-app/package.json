@@ -19,14 +19,16 @@
     "url": "https://salad.com"
   },
   "scripts": {
-    "build": "react-scripts build",
+    "build": "vite build",
     "build-storybook": "build-storybook -c .storybook -o storybook-build --quiet",
     "lint": "npm-run-all --continue-on-error lint-ts lint-ts-unused",
     "lint-ts": "tsc",
     "lint-ts-unused": "ts-unused-exports ./tsconfig.json",
     "list-browsers": "npx browserslist",
-    "start": "react-scripts start",
-    "storybook": "start-storybook -p 9009"
+    "preview": "vite preview",
+    "start": "vite",
+    "storybook": "start-storybook -p 9009",
+    "test": "vitest run"
   },
   "browserslist": {
     "production": [
@@ -75,8 +77,6 @@
   },
   "dependencies": {
     "@babel/core": "7.26.0",
-    "@babel/plugin-syntax-flow": "7.26.0",
-    "@babel/plugin-transform-react-jsx": "7.25.9",
     "@babel/runtime": "7.26.0",
     "@elastic/react-search-ui": "1.17.1",
     "@elastic/search-ui-app-search-connector": "1.17.1",
@@ -172,7 +172,6 @@
     "react-responsive": "9.0.2",
     "react-router": "5.3.4",
     "react-router-dom": "5.3.4",
-    "react-scripts": "5.0.1",
     "react-select": "5.10.0",
     "react-tabs": "6.1.0",
     "react-toastify": "7.0.4",
@@ -187,5 +186,11 @@
     "webpack": "5.98.0",
     "whatwg-fetch": "3.6.20"
   },
-  "packageManager": "yarn@4.6.0"
+  "packageManager": "yarn@4.6.0",
+  "devDependencies": {
+    "@vitejs/plugin-react": "6.3.0",
+    "jsdom": "28.1.0",
+    "vite": "8.3.8",
+    "vitest": "5.1.0"
+  }
 }
