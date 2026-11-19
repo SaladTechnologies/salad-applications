@@ -15,11 +15,30 @@ typescript-allowed-licenses := "0BSD,Apache-2.0,BlueOak-1.0.0,BSD-2-Clause,BSD-3
 # - css-mediaquery: its LICENSE file is the 3-clause BSD license (it declares only "BSD"). From react-responsive.
 typescript-reviewed-packages := "@saladtechnologies/garden-components@1.6.2,@saladtechnologies/garden-fonts@1.0.4,@saladtechnologies/garden-icons@1.0.30,css-mediaquery@0.1.2"
 
+# List of every file Prettier formats. Skips files git ignores.
+typescript-prettier-files := 'git ls-files -z --cached --others --exclude-standard | while IFS= read -r -d "" f; do case "$f" in testdata/* | */testdata/*) ;; *) if [ -f "$f" ]; then printf "%s\0" "$f"; fi ;; esac; done'
+
+# Format TypeScript, JavaScript, and every other file Prettier formats (CSS, HTML, JSON, Markdown, YAML).
+fmt-typescript: _npm-ci
+    {{ typescript-prettier-files }} | xargs -0 node_modules/.bin/prettier --write --ignore-unknown --log-level=warn
+
+# Check formatting of TypeScript, JavaScript, and every other file Prettier formats, and fail on differences.
+fmt-check-typescript: _npm-ci
+    files="$({{ typescript-prettier-files }} | xargs -0 sh -c \
+        'node_modules/.bin/prettier --list-different --ignore-unknown "$@" || [ "$?" -eq 1 ]' prettier)"; \
+        if [ -z "$files" ]; then exit 0; fi; \
+        while IFS= read -r f; do \
+            node_modules/.bin/prettier --stdin-filepath "$f" <"$f" \
+                | diff -u --label "a/$f" --label "b/$f" -- "$f" - || true; \
+        done <<<"$files"; \
+        echo "fix: just fmt-typescript"; \
+        exit 1
+
 # Lint TypeScript types and dependencies.
 #
-# Interim: the web app rebuild adopts the template in steps. Prettier 3 (fmt-typescript, fmt-check-typescript), the
-# template's TypeScript projects (tsc --build, _lint-typescript-projects), oxlint, knip, and npm audit arrive in the
-# next PRs into web-app-rebuild, which replace this recipe with the template's.
+# Interim: the web app rebuild adopts the template in steps. The template's TypeScript projects (tsc --build,
+# _lint-typescript-projects), oxlint, knip, and npm audit arrive in the next PRs into web-app-rebuild, which replace
+# this recipe with the template's.
 lint-typescript: _npm-ci && _lint-typescript-dependencies
     node_modules/.bin/tsc
 
@@ -96,11 +115,17 @@ build: _npm-ci
 default:
     @just --justfile {{ justfile() }} --list
 
+# Format every file.
+fmt: fmt-typescript
+
+# Check formatting of every file and fail on differences.
+fmt-check: fmt-check-typescript
+
 # Lint every file.
 lint: lint-typescript
 
 # Run every test.
 test: test-typescript
 
-# Lint and test, as CI does. Formatting (fmt-check) joins with Prettier 3.
-ci: lint test
+# Check formatting, lint, and test, as CI does.
+ci: fmt-check lint test
