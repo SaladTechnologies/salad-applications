@@ -1,5 +1,5 @@
 import type { AxiosInstance } from 'axios'
-import { action, autorun, configure, flow, observable } from 'mobx'
+import { action, autorun, configure, flow, observable, runInAction } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
 import { UIStore } from './UIStore'
 import { AchievementsStore } from './modules/achievements'
@@ -33,10 +33,7 @@ import { ExperienceStore } from './modules/xp'
 
 configure({
   // computedRequiresReaction: process.env.NODE_ENV === 'development',
-  // 'observed', not 'always': Vite compiles decorators the TypeScript way, so a store's field initializers are plain
-  // writes in its constructor. 'always' rejects even those first writes; 'observed' still rejects writes to anything
-  // a component or reaction is watching. CRA's Babel set initial values without a write, which hid this.
-  enforceActions: 'observed',
+  enforceActions: 'always',
   // observableRequiresReaction: process.env.NODE_ENV === 'development',
   // reactionRequiresObservable: process.env.NODE_ENV === 'development',
 })
@@ -44,7 +41,10 @@ configure({
 let sharedStore: RootStore
 
 export const createStore = (axios: AxiosInstance): RootStore => {
-  sharedStore = new RootStore(axios)
+  // Vite compiles decorators the TypeScript way, so each store's field initializers are writes in its constructor.
+  // `enforceActions: 'always'` rejects writes outside an action, so construct inside one. (CRA's Babel set initial
+  // values without a write.)
+  sharedStore = runInAction(() => new RootStore(axios))
   return sharedStore
 }
 
