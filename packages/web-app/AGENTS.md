@@ -13,8 +13,10 @@ lands, the recipes the rules below name may not exist yet; run the ones the just
 1. Done: npm (from Yarn PnP), Node.js and npm through mise, just, and CI running `just ci` and `just build` through
    mise. `lint-typescript` runs `tsc` with the old `tsconfig.json` and the template's install-script and license checks;
    `test-typescript` is the template's.
-2. Next: Prettier 3 with the template's settings (`fmt-typescript`, `fmt-check-typescript`, and `fmt-check` in `ci`).
-3. Then: TypeScript 7 with the template's `tsconfig.*.json` projects, and `"type": "module"` in `package.json`. The
+2. Done: Prettier 3 with the template's settings (`fmt-typescript`, `fmt-check-typescript`, and `fmt-check` in `ci`).
+   Kiota's generated Machines API client (`src/api/machinesApiClient/generated/`) is in `.prettierignore`: it is
+   replaced wholesale on each regeneration.
+3. Next: TypeScript 7 with the template's `tsconfig.*.json` projects, and `"type": "module"` in `package.json`. The
    app's own files are ES modules then, and Vite applies Node's CommonJS interop to them: a default import of a CommonJS
    package (`react-responsive`, `react-custom-scrollbars-2`, and others) becomes `module.exports` instead of its
    `default` export, which broke every page when it was tried in step 1. Those imports change in the same PR. Code the
