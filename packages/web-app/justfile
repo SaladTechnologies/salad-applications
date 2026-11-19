@@ -8,7 +8,10 @@ typescript-allowed-licenses := "0BSD,Apache-2.0,BlueOak-1.0.0,BSD-2-Clause,BSD-3
 
 # Project-specific: package versions whose license was read by hand because package.json does not declare it as an
 # SPDX identifier. Each entry names an exact version, so an upgrade is reviewed again.
-# - @saladtechnologies/garden-*: Salad's own packages.
+# - @saladtechnologies/garden-components and garden-icons: Salad's own packages, published from salad-platform garden/.
+# - @saladtechnologies/garden-fonts: also published from salad-platform garden/, but its LICENSE.md is the Frere-Jones
+#   Type web font EULA (a commercial license with a monthly page-view cap) for the fonts it bundles. The app already
+#   ships these fonts; check the license terms before changing how they are used.
 # - css-mediaquery: its LICENSE file is the 3-clause BSD license (it declares only "BSD"). From react-responsive.
 typescript-reviewed-packages := "@saladtechnologies/garden-components@1.6.2,@saladtechnologies/garden-fonts@1.0.4,@saladtechnologies/garden-icons@1.0.30,css-mediaquery@0.1.2"
 

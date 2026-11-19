@@ -37,7 +37,9 @@ mise install
 
 # Each task.prependpath puts its directory in front of the ones before it, so the paths go in reverse: the first tool in
 # mise.toml must end up first in PATH (npm ahead of the older npm that ships with Node.js, see mise.toml).
-mapfile -t paths < <(mise bin-paths)
+# A command substitution, not `< <(...)`, so set -e stops the step when mise bin-paths fails.
+bin_paths="$(mise bin-paths)"
+mapfile -t paths <<<"${bin_paths}"
 for ((i = ${#paths[@]} - 1; i >= 0; i--)); do
   echo "##vso[task.prependpath]${paths[i]}"
 done

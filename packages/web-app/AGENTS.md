@@ -2,7 +2,8 @@
 
 Formatting, linting, and testing come from the typescript template in SaladTechnologies/salad-platform
 `devops/templates`, last applied from commit `2b9ee65c1c`. Run `just fmt` after editing, and `just ci` before calling the
-work done.
+work done. While the template is adopted in steps (below), some recipes and files named here do not exist yet; run the
+ones `just --list` shows.
 
 ## Template adoption (web app rebuild)
 
