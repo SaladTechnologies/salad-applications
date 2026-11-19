@@ -1,5 +1,8 @@
 import type { ReactNode } from 'react'
-import MediaQuery from 'react-responsive'
+import MediaQueryImport from 'react-responsive'
+import { cjsDefault } from '../cjsDefault.ts'
+
+const MediaQuery = cjsDefault(MediaQueryImport)
 
 interface Props {
   orientation?: 'portrait' | 'landscape'

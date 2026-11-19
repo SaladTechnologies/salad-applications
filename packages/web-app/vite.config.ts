@@ -5,7 +5,7 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig(({ mode }) => {
   // CRA served the app from `PUBLIC_URL` (shell first, then the `.env*` files) and from `/` otherwise: production
   // builds set `/app`, deploy previews and local dev use `/`. Keep the same rule.
-  const publicUrl = loadEnv(mode, process.cwd(), 'PUBLIC_URL').PUBLIC_URL?.replace(/\/+$/, '')
+  const publicUrl = loadEnv(mode, process.cwd(), 'PUBLIC_URL')['PUBLIC_URL']?.replace(/\/+$/, '')
 
   return {
     base: publicUrl ? `${publicUrl}/` : '/',

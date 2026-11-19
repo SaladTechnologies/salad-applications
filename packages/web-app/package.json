@@ -18,10 +18,10 @@
     "email": "dev@salad.com",
     "url": "https://salad.com"
   },
+  "type": "module",
   "scripts": {
     "build": "vite build",
-    "lint-ts": "tsc",
-    "lint-ts-unused": "ts-unused-exports ./tsconfig.json",
+    "lint-ts": "tsc --build",
     "list-browsers": "npx browserslist",
     "preview": "vite preview",
     "start": "vite",
@@ -46,6 +46,9 @@
   },
   "overrides": {
     "@elastic/search-ui": "file:../../libs/elastic-search-ui-1.17.1+salad.tgz",
+    "@formatjs/intl": {
+      "typescript": "$typescript"
+    },
     "@microsoft/kiota-abstractions": "1.0.0-preview.57",
     "@microsoft/kiota-http-fetchlibrary": "1.0.0-preview.56",
     "@microsoft/kiota-serialization-json": "1.0.0-preview.57",
@@ -151,8 +154,6 @@
     "recharts": "2.15.1",
     "require-from-string": "2.0.2",
     "string_decoder": "1.3.0",
-    "ts-unused-exports": "10.1.0",
-    "typescript": "5.7.3",
     "url-polyfill": "1.1.13",
     "uuid": "9.0.1",
     "whatwg-fetch": "3.6.20"
@@ -163,6 +164,7 @@
     "prettier": "3.9.10",
     "prettier-plugin-jsdoc": "1.8.1",
     "prettier-plugin-packagejson": "3.0.3",
+    "typescript": "7.0.2",
     "vite": "8.3.8",
     "vitest": "5.1.0"
   },

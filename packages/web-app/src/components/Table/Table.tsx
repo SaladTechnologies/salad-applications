@@ -1,7 +1,7 @@
 import { Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
 import { type FunctionComponent } from 'react'
-import Scrollbars from 'react-custom-scrollbars-2'
+import { Scrollbars } from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { useMediaQuery } from 'react-responsive'

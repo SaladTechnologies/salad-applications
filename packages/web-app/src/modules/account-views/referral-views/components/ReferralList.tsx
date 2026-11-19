@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import Scrollbars from 'react-custom-scrollbars-2'
+import { Scrollbars } from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { P, SectionHeader } from '../../../../components'

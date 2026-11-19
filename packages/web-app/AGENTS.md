@@ -11,18 +11,41 @@ The web app rebuild (feature branch `web-app-rebuild`) adopts the template in st
 lands, the recipes the rules below name may not exist yet; run the ones the justfile has.
 
 1. Done: npm (from Yarn PnP), Node.js and npm through mise, just, and CI running `just ci` and `just build` through
-   mise. `lint-typescript` runs `tsc` with the old `tsconfig.json` and the template's install-script and license checks;
+   mise. `lint-typescript` ran `tsc` with the old `tsconfig.json` and the template's install-script and license checks;
    `test-typescript` is the template's.
 2. Done: Prettier 3 with the template's settings (`fmt-typescript`, `fmt-check-typescript`, and `fmt-check` in `ci`).
    Kiota's generated Machines API client (`src/api/machinesApiClient/generated/`) is in `.prettierignore`, with the
-   reason. The template's tsgo and oxc editor settings come with steps 3 and 4.
-3. Next: TypeScript 7 with the template's `tsconfig.*.json` projects, and `"type": "module"` in `package.json`. The
-   app's own files are ES modules then, and Vite applies Node's CommonJS interop to them: a default import of a CommonJS
-   package (`react-responsive`, `react-custom-scrollbars-2`, and others) becomes `module.exports` instead of its
-   `default` export, which broke every page when it was tried in step 1. Those imports change in the same PR. Code the
-   rebuild has not rewritten yet type checks in a separate, looser project, removed area by area.
-4. Then: oxlint, knip, and `npm audit` (the rest of the template's `lint-typescript`), with the folders the rebuild has
-   not rewritten yet in oxlint's `ignorePatterns`, each removed as its area is rewritten.
+   reason. The template's tsgo editor settings came with step 3; oxc's come with step 4.
+3. Done: TypeScript 7 with the template's `tsconfig.*.json` projects (`lint-typescript` runs `tsc --build`), and
+   `"type": "module"` in `package.json`. See "TypeScript projects" and "CommonJS default imports" below.
+4. Next: oxlint, knip, `npm audit`, and `_lint-typescript-projects` (the rest of the template's `lint-typescript`), with
+   the folders the rebuild has not rewritten yet in oxlint's `ignorePatterns`, each removed as its area is rewritten. It
+   needs a decision on Storybook first: the `*.stories.tsx` files are in no TypeScript project, because Storybook is not
+   installed.
+
+### TypeScript projects
+
+- `tsconfig.browser.json` (the template's) holds code the rebuild has written or rewritten. New code goes there.
+- `tsconfig.legacy.json` holds the code the rebuild has not rewritten yet: the browser project's settings plus
+  `experimentalDecorators` and `useDefineForClassFields: false` for MobX, with `erasableSyntaxOnly`,
+  `exactOptionalPropertyTypes`, and `noPropertyAccessFromIndexSignature` off (about 850 findings in the old code). Its
+  `include` lists the folders and files of the old code; when an area is rewritten, its entry moves out of this list
+  (and out of `exclude` in `tsconfig.browser.json`). The list only shrinks: never add new code to it.
+- `tsconfig.generated.json` holds Kiota's generated Machines API client, with `verbatimModuleSyntax` off; the reason is
+  in the file.
+- `tsconfig.node.json` (the template's) holds `vite.config.ts`.
+- Vite reads these settings too (through the references in `tsconfig.json`), so they change the build, not only the type
+  check: decorators in the old code compile only because the legacy project turns them on.
+
+### CommonJS default imports
+
+The package is `"type": "module"`, so Vite (and Vitest) import CommonJS the way Node does: a default import of a
+CommonJS package is its whole `module.exports`. For a package compiled from ES modules (it sets `__esModule` and puts
+the component under `default`) that is the wrong value, and the page fails with React error 130. Import such a package's
+default through `cjsDefault` (`src/cjsDefault.ts`), as `react-responsive`, `react-multi-carousel`, `react-html-parser`,
+and `react-aspect-ratio` are; prefer a named export when the package has one that is the same value, as
+`react-custom-scrollbars-2`'s `Scrollbars` is. A package whose `module.exports` is the value itself (`classnames`,
+`moment`) imports as before.
 
 ### Project-specific settings
 
@@ -32,6 +55,8 @@ lands, the recipes the rules below name may not exist yet; run the ones the just
     6.8.9 and 9.0.2, as it did on Yarn, which did not enforce peers. Upgrading either is a separate change.
   - `mobx-react` 6, `mobx-react-lite` 2, and `react-html-parser` 2 ask for React 16; the app runs React 18, as it did on
     Yarn. MobX and its bindings are removed by the rebuild.
+  - `@formatjs/intl` 2 (under `react-intl` 6) has an optional peer on TypeScript 4 or 5; the app type checks with
+    TypeScript 7, which it does not use at runtime.
 - `package.json` `overrides` carried over from Yarn's `resolutions`: the patched `@elastic/search-ui` from `libs/` and
   the Kiota preview versions. (The `trim-newlines` and `trim` pins went with Storybook, which brought them in.)
 - `allowScripts` denies `core-js`, whose install script only prints a funding message, and the patched
