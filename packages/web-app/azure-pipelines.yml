@@ -19,6 +19,8 @@ pr:
   branches:
     include:
       - master
+      # Long-lived feature branch for the web app rebuild: task PRs into it get a build and a Netlify preview.
+      - web-app-rebuild
   paths:
     include:
       - packages/web-app
