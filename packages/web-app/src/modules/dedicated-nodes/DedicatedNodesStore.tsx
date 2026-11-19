@@ -125,6 +125,7 @@ export class DedicatedNodesStore {
 
   /**
    * Approves a pending or refused node with the confirmation code from its console.
+   *
    * @returns `true` if the node was approved.
    */
   @action.bound
@@ -143,6 +144,7 @@ export class DedicatedNodesStore {
 
   /**
    * Refuses a pending node the account owner does not recognize. It stays listed as `refused`.
+   *
    * @returns `true` if the node was refused.
    */
   @action.bound
@@ -156,7 +158,9 @@ export class DedicatedNodesStore {
   })
 
   /**
-   * Revokes an approved or refused node. This is permanent and the node leaves the list, so confirm with the user first.
+   * Revokes an approved or refused node. This is permanent and the node leaves the list, so confirm with the user
+   * first.
+   *
    * @returns `true` if the node was revoked.
    */
   @action.bound
@@ -233,6 +237,7 @@ export class DedicatedNodesStore {
 
   /**
    * Posts an action and records why it failed, if it did.
+   *
    * @returns The response body (or `true` for an empty one) on success; otherwise, `undefined`.
    */
   private runAction = flow(function* (

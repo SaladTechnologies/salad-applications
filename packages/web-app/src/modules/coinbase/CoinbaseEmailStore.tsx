@@ -67,7 +67,10 @@ export class CoinbaseEmailStore {
    * @param store The root store.
    * @param axios The App API client.
    */
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
+  constructor(
+    private readonly store: RootStore,
+    private readonly axios: AxiosInstance,
+  ) {}
 
   @computed
   public get hasEmail(): boolean {

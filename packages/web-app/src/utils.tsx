@@ -5,6 +5,7 @@ export const convertMinToMilli = (minutes: number): number => minutes * 60000
 
 /**
  * Checks to see if the email is formatted correctly
+ *
  * @param email The email address to check
  */
 export const isEmailFormat = (email: string): boolean => /\S+@\S+\.\S+/.test(email.trim())
@@ -26,8 +27,8 @@ export const formatBalance = (balance?: number): string => {
 }
 
 /**
- * Takes path and determines route action based on
- * whether the route is internal or external.
+ * Takes path and determines route action based on whether the route is internal or external.
+ *
  * @param store The routing store
  * @param path The url path
  */

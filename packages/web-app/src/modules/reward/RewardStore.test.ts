@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
 import type { Mock } from 'vitest'
 /**
- * These mocks keep the test from pulling in the full RootStore dependency graph (and ESM-only
- * packages such as `axios`/`query-string`) that `RewardStore`'s transitive imports would otherwise load.
+ * These mocks keep the test from pulling in the full RootStore dependency graph (and ESM-only packages such as
+ * `axios`/`query-string`) that `RewardStore`'s transitive imports would otherwise load.
  */
 vi.mock('axios', () => ({
   __esModule: true,
@@ -101,16 +101,14 @@ describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
   it('surfaces the API message and returns to the reward detail page for renderTokenAccount', async () => {
     const apiTitle = 'RENDER associated token account required'
     const apiDetail = 'The account is missing a RENDER associated token account.'
-    const post = vi
-      .fn()
-      .mockRejectedValue(
-        makeAxiosError(400, {
-          type: renderTokenAccountRequiredProblemType,
-          status: 400,
-          title: apiTitle,
-          detail: apiDetail,
-        }),
-      )
+    const post = vi.fn().mockRejectedValue(
+      makeAxiosError(400, {
+        type: renderTokenAccountRequiredProblemType,
+        status: 400,
+        title: apiTitle,
+        detail: apiDetail,
+      }),
+    )
     const { store, push, sendNotification, addRewardToRedemptionsList } = setup(post)
     const reward = makeReward({ id: 'render-1', name: 'RENDER Tokens' })
 
@@ -169,16 +167,14 @@ describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
   it('surfaces the API message and points the user to the wallet input for solanaWallet', async () => {
     const apiTitle = 'Solana wallet address required'
     const apiDetail = 'The account has no configured Solana wallet.'
-    const post = vi
-      .fn()
-      .mockRejectedValue(
-        makeAxiosError(400, {
-          type: solanaWalletRequiredProblemType,
-          status: 400,
-          title: apiTitle,
-          detail: apiDetail,
-        }),
-      )
+    const post = vi.fn().mockRejectedValue(
+      makeAxiosError(400, {
+        type: solanaWalletRequiredProblemType,
+        status: 400,
+        title: apiTitle,
+        detail: apiDetail,
+      }),
+    )
     const { store, push, sendNotification, addRewardToRedemptionsList } = setup(post)
     const reward = makeReward({ id: 'solana-1', name: 'RENDER Tokens' })
 
@@ -220,9 +216,7 @@ describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
   })
 
   it('falls back to a Solana-specific message when the API omits the detail for solanaWallet', async () => {
-    const post = vi
-      .fn()
-      .mockRejectedValue(makeAxiosError(400, { type: solanaWalletRequiredProblemType, status: 400 }))
+    const post = vi.fn().mockRejectedValue(makeAxiosError(400, { type: solanaWalletRequiredProblemType, status: 400 }))
     const { store, sendNotification } = setup(post)
     const reward = makeReward({ id: 'solana-1', name: 'RENDER Tokens' })
 
@@ -343,16 +337,14 @@ describe('RewardStore.redeemReward RENDER quoted exchange rate', () => {
   it('surfaces the API message for exchangeRateDrift when provided', async () => {
     const apiTitle = 'The RENDER quote expired'
     const apiDetail = 'The rate moved by more than the allowed tolerance.'
-    const post = vi
-      .fn()
-      .mockRejectedValue(
-        makeAxiosError(400, {
-          type: renderExchangeRateDriftProblemType,
-          status: 400,
-          title: apiTitle,
-          detail: apiDetail,
-        }),
-      )
+    const post = vi.fn().mockRejectedValue(
+      makeAxiosError(400, {
+        type: renderExchangeRateDriftProblemType,
+        status: 400,
+        title: apiTitle,
+        detail: apiDetail,
+      }),
+    )
     const { store, sendNotification } = setup(post, 0.5)
     const reward = makeReward({ id: 'render-1', name: 'RENDER Tokens', tags: ['render'] })
 

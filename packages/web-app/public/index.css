@@ -1,58 +1,61 @@
-html, body {
-	background-color: #0a2133;
-	margin: 0;
-	padding: 0;
-	font-family: 'Mallory', sans-serif;
+html,
+body {
+  background-color: #0a2133;
+  margin: 0;
+  padding: 0;
+  font-family: 'Mallory', sans-serif;
 }
 
 #pan {
-	bottom: 110px;
-	font-size: 24px;
-	left: 33px;
-	position: absolute;
+  bottom: 110px;
+  font-size: 24px;
+  left: 33px;
+  position: absolute;
 }
 
 .pan-separator:before {
-	content: " ";
+  content: ' ';
 }
 
 #expiry:before {
-	content: "Exp Date: ";
-	font-size: 14px;
+  content: 'Exp Date: ';
+  font-size: 14px;
 }
 
 #expiry {
-	bottom: 50px;
-	font-size: 0;
-	left: 33px;
-	position: absolute;
+  bottom: 50px;
+  font-size: 0;
+  left: 33px;
+  position: absolute;
 }
 
 #month {
-	font-size: 14px;
+  font-size: 14px;
 }
 
 #separator {
-	font-size: 14px;
+  font-size: 14px;
 }
 
 #year {
-	font-size: 14px;
+  font-size: 14px;
 }
 
 #cvv:before {
-	content: "Security Code: ";
+  content: 'Security Code: ';
 }
 
 #cvv {
-	bottom: 20px;
-	left: 33px;
-	position: absolute;
+  bottom: 20px;
+  left: 33px;
+  position: absolute;
 }
 
 @font-face {
   font-family: 'Mallory';
-  src: url('../src/assets/fonts/Mallory-BoldItalic.woff2') format('woff2'), url('../src/assets/fonts/Mallory-BoldItalic.woff') format('woff');
+  src:
+    url('../src/assets/fonts/Mallory-BoldItalic.woff2') format('woff2'),
+    url('../src/assets/fonts/Mallory-BoldItalic.woff') format('woff');
   font-weight: 700;
   font-style: italic;
   font-display: swap;
@@ -60,7 +63,9 @@ html, body {
 
 @font-face {
   font-family: 'Mallory';
-  src: url('../src/assets/fonts/Mallory-Book.woff2') format('woff2'), url('../src/assets/fonts/Mallory-Book.woff') format('woff');
+  src:
+    url('../src/assets/fonts/Mallory-Book.woff2') format('woff2'),
+    url('../src/assets/fonts/Mallory-Book.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -68,7 +73,9 @@ html, body {
 
 @font-face {
   font-family: 'Mallory';
-  src: url('../src/assets/fonts/Mallory-Medium.woff2') format('woff2'), url('../src/assets/fonts/Mallory-Medium.woff') format('woff');
+  src:
+    url('../src/assets/fonts/Mallory-Medium.woff2') format('woff2'),
+    url('../src/assets/fonts/Mallory-Medium.woff') format('woff');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -76,7 +83,9 @@ html, body {
 
 @font-face {
   font-family: 'Mallory';
-  src: url('../src/assets/fonts/Mallory-Bold.woff2') format('woff2'), url('../src/assets/fonts/Mallory-Bold.woff') format('woff');
+  src:
+    url('../src/assets/fonts/Mallory-Bold.woff2') format('woff2'),
+    url('../src/assets/fonts/Mallory-Bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -84,7 +93,9 @@ html, body {
 
 @font-face {
   font-family: 'Mallory';
-  src: url('../src/assets/fonts/Mallory-BookItalic.woff2') format('woff2'), url('../src/assets/fonts/Mallory-BookItalic.woff') format('woff');
+  src:
+    url('../src/assets/fonts/Mallory-BookItalic.woff2') format('woff2'),
+    url('../src/assets/fonts/Mallory-BookItalic.woff') format('woff');
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -92,7 +103,9 @@ html, body {
 
 @font-face {
   font-family: 'Mallory';
-  src: url('../src/assets/fonts/Mallory-MediumItalic.woff2') format('woff2'), url('../src/assets/fonts/Mallory-MediumItalic.woff') format('woff');
+  src:
+    url('../src/assets/fonts/Mallory-MediumItalic.woff2') format('woff2'),
+    url('../src/assets/fonts/Mallory-MediumItalic.woff') format('woff');
   font-weight: 500;
   font-style: italic;
   font-display: swap;
@@ -100,7 +113,9 @@ html, body {
 
 @font-face {
   font-family: 'Mallory';
-  src: url('../src/assets/fonts/Mallory-Ultra.woff2') format('woff2'), url('../src/assets/fonts/Mallory-Ultra.woff') format('woff');
+  src:
+    url('../src/assets/fonts/Mallory-Ultra.woff2') format('woff2'),
+    url('../src/assets/fonts/Mallory-Ultra.woff') format('woff');
   font-weight: 900;
   font-style: normal;
   font-display: swap;

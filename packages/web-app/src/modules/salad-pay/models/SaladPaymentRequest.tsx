@@ -11,6 +11,6 @@ export interface SaladPaymentRequest {
   /** Causes the user agent to end the payment request and to remove any user interface that might be shown. */
   abort: () => void
 
-  /** Listen for specific payment actions  */
+  /** Listen for specific payment actions */
   on: (event: SaladPaymentRequestEvents, callback: () => void) => void
 }

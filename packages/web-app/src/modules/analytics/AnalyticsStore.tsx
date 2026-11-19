@@ -120,6 +120,7 @@ export class AnalyticsStore {
 
   /**
    * Tracks when mining stops
+   *
    * @param reason Why did mining stop
    * @param totalTime Total time between start and stop (ms)
    * @param choppingTime Total time in the chopping state (ms)
@@ -359,7 +360,10 @@ export class AnalyticsStore {
     })
   }
 
-  /** Track a user as they go through the onboarding flow. Types will only be used if there are different variations of pages that can be shown e.g. different AV guides. */
+  /**
+   * Track a user as they go through the onboarding flow. Types will only be used if there are different variations of
+   * pages that can be shown e.g. different AV guides.
+   */
   public trackOnboardingPageViewed = (page: string, order: number, type?: string) => {
     const currentPath = window && window.location.pathname
     this.track('Onboarding', {

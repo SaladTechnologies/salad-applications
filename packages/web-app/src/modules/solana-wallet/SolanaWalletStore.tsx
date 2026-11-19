@@ -24,7 +24,10 @@ export class SolanaWalletStore {
   @observable
   public submitStatus: SolanaWalletSubmitStatus = 'unknown'
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {}
+  constructor(
+    private readonly store: RootStore,
+    private readonly axios: AxiosInstance,
+  ) {}
 
   @computed
   public get hasWallet(): boolean {

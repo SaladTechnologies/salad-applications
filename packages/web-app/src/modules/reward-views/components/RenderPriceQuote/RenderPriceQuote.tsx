@@ -126,11 +126,7 @@ const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
   }
 
   const asOfLabel = asOf ? DateTime.fromJSDate(asOf).toRelative() : undefined
-  const freshnessText = stale
-    ? 'Price may be out of date'
-    : asOfLabel
-    ? `Quoted ${asOfLabel}`
-    : undefined
+  const freshnessText = stale ? 'Price may be out of date' : asOfLabel ? `Quoted ${asOfLabel}` : undefined
 
   const freshnessClass = classnames(classes.freshnessText, {
     [classes.freshnessTextCheckout]: isCheckout,

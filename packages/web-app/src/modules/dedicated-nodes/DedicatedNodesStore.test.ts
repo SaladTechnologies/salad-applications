@@ -15,7 +15,7 @@ const makeAxios = (overrides: Partial<MockAxios> = {}): MockAxios & AxiosInstanc
     get: vi.fn().mockResolvedValue({ data: {} }),
     post: vi.fn().mockResolvedValue({ data: '' }),
     ...overrides,
-  } as unknown as MockAxios & AxiosInstance)
+  }) as unknown as MockAxios & AxiosInstance
 
 /** A failed request shaped like the App API client's `SaladError`. */
 const problem = (status: number | undefined, title?: string) => Object.assign(new Error(title ?? ''), { status, title })

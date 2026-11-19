@@ -1,6 +1,4 @@
-/**
- * Endpoint used to get/set/clear the authenticated user's Solana wallet address.
- */
+/** Endpoint used to get/set/clear the authenticated user's Solana wallet address. */
 export const solanaWalletEndpointPath = '/api/v2/solana/wallet'
 
 /**

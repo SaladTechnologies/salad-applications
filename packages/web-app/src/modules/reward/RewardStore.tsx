@@ -28,20 +28,20 @@ import { rewardFromResource } from './utils'
 const timeoutMessage = 'request-timeout'
 
 /**
- * Problem `type` codes returned on a `400` when a redemption is rejected because the account is missing a
- * prerequisite (e.g. a RENDER associated token account or a configured Solana wallet). The API returns these as
- * RFC 7807 problem responses carrying a human-readable message, so we surface that message rather than hardcoding
- * copy. Each prerequisite code is handled in its own branch (consistent with the other problem-type branches);
- * any new `redemptions:requires:*` code must be added here explicitly. When the API omits a `title` or `detail` we
- * fall back to problem-specific copy rather than generic copy, and the Solana case directs the user to the account
- * page's Solana wallet address input so they can resolve the issue.
+ * Problem `type` codes returned on a `400` when a redemption is rejected because the account is missing a prerequisite
+ * (e.g. a RENDER associated token account or a configured Solana wallet). The API returns these as RFC 7807 problem
+ * responses carrying a human-readable message, so we surface that message rather than hardcoding copy. Each
+ * prerequisite code is handled in its own branch (consistent with the other problem-type branches); any new
+ * `redemptions:requires:*` code must be added here explicitly. When the API omits a `title` or `detail` we fall back to
+ * problem-specific copy rather than generic copy, and the Solana case directs the user to the account page's Solana
+ * wallet address input so they can resolve the issue.
  */
 export const renderTokenAccountRequiredProblemType = 'redemptions:requires:renderTokenAccount'
 export const solanaWalletRequiredProblemType = 'redemptions:requires:solanaWallet'
 
 /**
- * Problem `type` codes returned on a `400` when a RENDER redemption is rejected because of a problem with the
- * quoted exchange rate that the client attached to the request.
+ * Problem `type` codes returned on a `400` when a RENDER redemption is rejected because of a problem with the quoted
+ * exchange rate that the client attached to the request.
  *
  * - `exchangeRateDrift` means the RENDER/USD price the Chef was quoted has moved too far from the live rate for the
  *   redemption to honor it. This is user-facing and expected to happen occasionally (quotes are time-sensitive): we
@@ -152,9 +152,7 @@ export class RewardStore {
     return this.rewards.get(id)
   }
 
-  /**
-   * The set of reward ids with an in-flight {@link ensureRewardLoaded} fetch, used to dedupe concurrent requests.
-   */
+  /** The set of reward ids with an in-flight {@link ensureRewardLoaded} fetch, used to dedupe concurrent requests. */
   private loadingRewardIds = new Set<string>()
 
   /**

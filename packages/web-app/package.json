@@ -27,6 +27,9 @@
     "start": "vite",
     "test": "vitest run"
   },
+  "allowScripts": {
+    "core-js": false
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -173,8 +176,5 @@
       "version": ">=26.13.0",
       "onFail": "error"
     }
-  },
-  "allowScripts": {
-    "core-js": false
   }
 }

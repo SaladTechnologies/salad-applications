@@ -5,7 +5,9 @@ parameters:
 
 stages:
   - stage: DeployDev
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(variables['Build.Reason'], 'PullRequest'))
+    condition:
+      and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(variables['Build.Reason'],
+      'PullRequest'))
     displayName: Deploy to Test Site
     jobs:
       - deployment: DeployDev

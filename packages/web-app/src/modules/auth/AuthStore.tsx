@@ -27,7 +27,10 @@ export class AuthStore {
   @observable
   public pendingProtectedAction?: PendingProtectedAction
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
+  constructor(
+    private readonly store: RootStore,
+    private readonly axios: AxiosInstance,
+  ) {
     this.axios
       .get('/api/v1/profile')
       .then(() => runInAction(() => (this.isAuthenticated = true)))

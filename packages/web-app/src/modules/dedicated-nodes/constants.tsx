@@ -13,9 +13,7 @@ export const dedicatedNodesEndpointPath = '/api/v2/dedicated-nodes'
 export const dedicatedNodeActionEndpointPath = (nodeId: string, action: 'approve' | 'refuse' | 'revoke'): string =>
   `${dedicatedNodesEndpointPath}/${encodeURIComponent(nodeId)}/${action}`
 
-/**
- * Problem `title`s the dedicated nodes API returns, which tell apart errors that share a status code.
- */
+/** Problem `title`s the dedicated nodes API returns, which tell apart errors that share a status code. */
 export const dedicatedNodeProblemTitles = {
   /** `400` on approve with a wrong confirmation code. */
   wrongCode: 'The confirmation code does not match.',

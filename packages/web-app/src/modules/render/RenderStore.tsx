@@ -4,9 +4,7 @@ import { renderExchangeRateEndpointPath, renderExchangeRateRefreshRate } from '.
 import type { RenderExchangeRate, RenderExchangeRateResource } from './models'
 import { isExchangeRateStale, renderExchangeRateFromResource } from './utils'
 
-/**
- * Owns the live RENDER/USD price quote that powers the price-quote feature.
- */
+/** Owns the live RENDER/USD price quote that powers the price-quote feature. */
 export class RenderStore {
   @observable
   public exchangeRate?: RenderExchangeRate = undefined
@@ -20,9 +18,7 @@ export class RenderStore {
   private pollingHandle?: ReturnType<typeof setInterval>
   private activeViewers: number = 0
 
-  /**
-   * @param axios The App API client.
-   */
+  /** @param axios The App API client. */
   public constructor(private readonly axios: AxiosInstance) {}
 
   /** Whether the currently held quote should be treated as stale. */

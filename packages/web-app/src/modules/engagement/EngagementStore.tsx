@@ -22,7 +22,10 @@ export class EngagementStore {
   /** A flag indicating if the initial notification has already been sent */
   private showedInitialNotification = false
 
-  constructor(private readonly store: RootStore, private readonly axios: AxiosInstance) {
+  constructor(
+    private readonly store: RootStore,
+    private readonly axios: AxiosInstance,
+  ) {
     this.loadChangelogMetadata()
     autorun(() => {
       if (this.showedInitialNotification) {

@@ -7,8 +7,8 @@ export interface CoinbaseEmail {
   /**
    * The Coinbase account email, as normalized by the server.
    *
-   * Optional because a Chef may not have entered an email yet, in which case
-   * `GET /api/v2/coinbase-account/email` returns an empty object.
+   * Optional because a Chef may not have entered an email yet, in which case `GET /api/v2/coinbase-account/email`
+   * returns an empty object.
    */
   email?: string
 

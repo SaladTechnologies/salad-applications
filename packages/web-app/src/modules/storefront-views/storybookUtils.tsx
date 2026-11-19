@@ -1,8 +1,8 @@
 import type { StorefrontBlockComponent } from '../storefront/models'
 
 /**
- * Returns mock Strapi Block data based on block type
- * requested.
+ * Returns mock Strapi Block data based on block type requested.
+ *
  * @param blockType The Strapi Storefront Block Type
  */
 export const getMockStrapiBlockData = (blockType: StorefrontBlockComponent): {} | undefined => {

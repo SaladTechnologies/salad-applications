@@ -2,9 +2,7 @@
   "editor.formatOnSave": true,
   "editor.minimap.maxColumn": 120,
   "editor.renderWhitespace": "all",
-  "editor.rulers": [
-    120
-  ],
+  "editor.rulers": [120],
   "files.associations": {
     "**/.azure-pipelines/**/*.yaml": "azure-pipelines",
     ".env.development.local": "properties",
@@ -15,9 +13,7 @@
     ".env.test": "properties",
     ".env": "properties"
   },
-  "git.branchProtection": [
-    "master"
-  ],
+  "git.branchProtection": ["master"],
   "javascript.format.enable": false,
   "javascript.validate.enable": false,
   "npm.packageManager": "npm",

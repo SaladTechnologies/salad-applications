@@ -26,14 +26,14 @@ export const getRequestProblem = (err: unknown): RequestProblem => {
     typeof error.status === 'number'
       ? error.status
       : typeof error.response?.status === 'number'
-      ? error.response.status
-      : undefined
+        ? error.response.status
+        : undefined
   const title =
     typeof error.title === 'string'
       ? error.title
       : typeof error.response?.data?.title === 'string'
-      ? error.response.data.title
-      : undefined
+        ? error.response.data.title
+        : undefined
 
   return { status, title }
 }

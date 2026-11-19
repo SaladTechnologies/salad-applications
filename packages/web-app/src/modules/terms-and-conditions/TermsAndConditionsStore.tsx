@@ -12,7 +12,10 @@ export class TermsAndConditionsStore {
   @observable
   public isTermsAndConditionsAccepted: boolean = false
 
-  constructor(private readonly axios: AxiosInstance, private readonly profile: ProfileStore) {}
+  constructor(
+    private readonly axios: AxiosInstance,
+    private readonly profile: ProfileStore,
+  ) {}
 
   @action.bound
   public submitTermsAndConditions = flow(function* (this: TermsAndConditionsStore) {
