@@ -15,7 +15,8 @@ export const sortHardwareDemandPerformance = ({
   if (!sortRule) {
     return demandedHardwarePerformanceList
   }
-  const sortedList = demandedHardwarePerformanceList.sort(sortRule)
+  // Sorts a copy: the list is the query's cached data, which the alerts page and the modal also read.
+  const sortedList = [...demandedHardwarePerformanceList].sort(sortRule)
   return sortOrder === 'ascending' ? sortedList.reverse() : sortedList
 }
 

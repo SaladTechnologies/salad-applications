@@ -102,13 +102,16 @@ const _DemandAlertsPage = ({
 const DemandAlertsPage = withStyles(styles)(_DemandAlertsPage)
 
 /** The status that a failed subscribe shows: the App API's problem type, or a plain failure. */
-const subscribeStatusFromError = (error: any): SubscribeToDemandAlertStatus => {
+const subscribeStatusFromError = (error: unknown): SubscribeToDemandAlertStatus => {
   if (!error || typeof error !== 'object') return SubscribeToDemandAlertStatus.Failure
 
-  const errorResponse = error.response?.data
+  // A problem response arrives as a SaladError, which keeps the response, as an axios error does.
+  const response: unknown = Reflect.get(error, 'response')
+  const data: unknown = typeof response === 'object' && response !== null ? Reflect.get(response, 'data') : undefined
+  const type: unknown = typeof data === 'object' && data !== null ? Reflect.get(data, 'type') : undefined
 
   return (
-    subscribeToDemandAlertStatusByErrorType[errorResponse?.type as SubscribeToDemandAlertErrorType] ??
+    subscribeToDemandAlertStatusByErrorType[type as SubscribeToDemandAlertErrorType] ??
     SubscribeToDemandAlertStatus.Failure
   )
 }

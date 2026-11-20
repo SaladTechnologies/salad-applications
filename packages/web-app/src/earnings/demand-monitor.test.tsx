@@ -201,7 +201,7 @@ describe('demand alerts', () => {
     expect([countOf(requests, 'get', gpusPath), countOf(requests, 'get', subscriptionsPath)]).toStrictEqual([2, 2])
   })
 
-  it('subscribes and unsubscribes through the App API, and reloads the subscriptions the page shows', async () => {
+  it('subscribes and unsubscribes through the App API, and reloads the subscriptions', async () => {
     expect.hasAssertions()
     const queryClient = createQueryClient()
     const { http, requests } = fakeApi({

@@ -77,4 +77,16 @@ describe('banner', () => {
     expect(kept).toStrictEqual(banner)
     expect(queryClient.getQueryData(['app', 'banner'])).toBeNull()
   })
+
+  it('gives each load a new banner, so the page checks its dates again', async () => {
+    expect.hasAssertions()
+    const queryClient = createQueryClient()
+    const { http } = fakeApi(banner, { ...banner })
+
+    await loadBanner(queryClient, http)
+    const first: unknown = queryClient.getQueryData(['app', 'banner'])
+    await loadBanner(queryClient, http)
+
+    expect(queryClient.getQueryData(['app', 'banner'])).not.toBe(first)
+  })
 })

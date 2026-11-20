@@ -38,6 +38,9 @@ export const loadBanner = async (queryClient: QueryClient, http: AxiosInstance):
     queryFn: bannerFetcher(http),
     staleTime: 0,
     gcTime: Number.POSITIVE_INFINITY,
+    // A new object on each load, even when unchanged, re-renders the banner, which checks its date window against the
+    // clock as it renders, as the store's new object on each refresh did.
+    structuralSharing: false,
   })
 }
 
