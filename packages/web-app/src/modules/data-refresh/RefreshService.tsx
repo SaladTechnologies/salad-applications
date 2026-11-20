@@ -12,13 +12,8 @@ export class RefreshService {
       this.refreshData()
     }, config.dataRefreshRate)
 
-    setInterval(() => {
-      this.store.storefront.refreshStorefront()
-    }, config.rewardRefreshRate)
-
     //Do the initial data pull
     this.refreshData()
-    this.store.storefront.refreshStorefront()
 
     if (this.store.auth.isAuthenticated) {
       this.store.vault.loadVault()

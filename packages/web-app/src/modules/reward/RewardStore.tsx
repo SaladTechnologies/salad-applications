@@ -133,19 +133,11 @@ export class RewardStore {
     }.bind(this),
   )
 
-  fetchAndTrackReward = flow(
-    function* (this: RewardStore, rewardId?: string) {
-      try {
-        yield this.fetchReward(rewardId)
-        const reward = this.getReward(rewardId)
-
-        if (reward) {
-          this.store.analytics.trackRewardView(reward)
-          this.store.storefront.checkRewardForUpdate(reward)
-        }
-      } catch {}
-    }.bind(this),
-  )
+  /** Puts a reward the reward page fetched into the cache, which redemption, SaladPay, and the vault read. */
+  @action
+  setReward = (reward: Reward): void => {
+    this.rewards.set(reward.id, reward)
+  }
 
   getReward = (id?: string): Reward | undefined => {
     if (id === undefined) return undefined
