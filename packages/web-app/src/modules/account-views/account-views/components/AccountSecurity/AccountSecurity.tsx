@@ -144,8 +144,6 @@ interface Props extends WithStyles<typeof styles> {
   onDeletePasskeyClick: (passkeyId: string) => void
   onSetProtectRewardsRedemptionChange: (isProtectRewardsRedemptionEnabled: boolean) => void
   onViewBackupCodesClick: () => void
-  fetchPasskeys: () => void
-  loadProfile: () => void
   setRegisterPasskeyStatus: (registerPasskeyStatus: RegisterPasskeyStatus) => void
 }
 
@@ -161,8 +159,6 @@ const _AccountSecurity: FC<Props> = ({
   onDeletePasskeyClick,
   onSetProtectRewardsRedemptionChange,
   onViewBackupCodesClick,
-  fetchPasskeys,
-  loadProfile,
   setRegisterPasskeyStatus,
 }) => {
   const [editPasskeyId, setEditPasskeyId] = useState<string | null>(null)
@@ -203,11 +199,10 @@ const _AccountSecurity: FC<Props> = ({
     }
   }, [isEditPasskeyNameSuccess, isEditPasskeyNameInactive])
 
+  // The account summary's container loads the passkeys and the profile each time the page opens.
   useEffect(() => {
-    fetchPasskeys()
-    loadProfile()
     return () => setRegisterPasskeyStatus('unknown')
-  }, [fetchPasskeys, loadProfile, setRegisterPasskeyStatus])
+  }, [setRegisterPasskeyStatus])
 
   return (
     <div className={classes.accountSecurityWrapper}>

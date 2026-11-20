@@ -1,5 +1,7 @@
+import { useAccountSecurityLoads, useGoogleConnectionLoad } from '../../../account/account-security.ts'
 import { connect } from '../../../connect'
 import type { RootStore } from '../../../Store'
+import { getStore } from '../../../Store'
 import { Account } from './components'
 
 const mapStoreToProps = (store: RootStore): any => ({
@@ -20,7 +22,6 @@ const mapStoreToProps = (store: RootStore): any => ({
   isMinecraftUserNameSubmitSuccess: store.profile.isMinecraftUserNameSubmitSuccess,
   connectedGoogleAccountEmail: store.profile.connectedGoogleAccountEmail,
   isLoadConnectedGoogleAccountEmailError: store.profile.isLoadConnectedGoogleAccountEmailError,
-  loadGoogleAccountConnection: store.profile.loadGoogleAccountConnection,
   isSubmitting: store.termsAndConditions.isSubmitting,
   isTermsAndConditionsAccepted: store.termsAndConditions.isTermsAndConditionsAccepted,
   onSubmitTermsAndConditions: store.termsAndConditions.submitTermsAndConditions,
@@ -28,4 +29,15 @@ const mapStoreToProps = (store: RootStore): any => ({
   signInWithGoogleChallengeSudoMode: store.auth.signInWithGoogleChallengeSudoMode,
 })
 
-export const AccountContainer = connect(mapStoreToProps, Account)
+const ConnectedAccount = connect(mapStoreToProps, Account)
+
+/**
+ * The desktop account summary. Each time it opens it loads the passkeys, then the profile (its account security
+ * section), then the connected Google account, in the order the page's effects ran them; the data stays in the stores.
+ */
+export const AccountContainer = () => {
+  const store = getStore()
+  useAccountSecurityLoads(store.passkey.fetchPasskeys, store.profile.loadProfile)
+  useGoogleConnectionLoad(store.profile.loadGoogleAccountConnection)
+  return <ConnectedAccount />
+}

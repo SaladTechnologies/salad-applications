@@ -9,8 +9,6 @@ const mapStoreToProps = (store: RootStore): any => ({
   protectRewardsRedemptionStatus: store.profile.protectRewardsRedemptionStatus,
   registerPasskeyStatus: store.passkey.registerPasskeyStatus,
   editPasskeyName: store.passkey.editPasskeyName,
-  fetchPasskeys: store.passkey.fetchPasskeys,
-  loadProfile: store.profile.loadProfile,
   onAddPasskeyClick: store.passkey.registerPasskey,
   onDeletePasskeyClick: (passkeyId: string) => store.routing.push(`/account/passkey/delete/${passkeyId}`),
   onSetProtectRewardsRedemptionChange: store.profile.setProtectRewardsRedemption,
