@@ -7,7 +7,7 @@ import { ErrorText } from '../../../../components'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { DefaultTheme } from '../../../../SaladTheme'
 import { demandScenario, UnsubscribeFromDemandAlertStatus } from '../../constants'
-import type { DemandedSubscription } from '../../DemandAlertsStore'
+import type { DemandedSubscription } from '../../../../earnings/demand-monitor.ts'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   container: {
@@ -51,7 +51,7 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 })
 
 interface Props extends WithStyles<typeof styles> {
-  demandAlertSubscriptionList: DemandedSubscription[]
+  demandAlertSubscriptionList: readonly DemandedSubscription[]
   setUnsubscribeFromDemandAlertStatus: (unsubscribeFromDemandAlertStatus: UnsubscribeFromDemandAlertStatus) => void
   unsubscribeFromDemandAlert: (subscriptionId: string) => void
   unsubscribeFromDemandAlertStatus: UnsubscribeFromDemandAlertStatus
@@ -66,7 +66,7 @@ const _DemandAlertsList: FunctionComponent<Props> = ({
 }) => {
   const [currentDemandedSubscriptionId, setCurrentDemandedSubscriptionId] = useState<string | null>(null)
 
-  const sortedDemandAlertSubscriptionList = demandAlertSubscriptionList.sort(
+  const sortedDemandAlertSubscriptionList = [...demandAlertSubscriptionList].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   )
 

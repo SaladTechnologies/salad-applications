@@ -6,7 +6,7 @@ import type { SaladTheme } from '../../../../SaladTheme'
 import { ModalWithOverlay } from '../../../../components/ModalWithOverlay'
 import type { SelectOption } from '../../../../components/Select'
 import { SelectLight } from '../../../../components/Select'
-import type { DemandedHardwarePerformance } from '../../DemandMonitorStore'
+import type { DemandedHardwarePerformance } from '../../../../earnings/demand-monitor.ts'
 import saladBackgroundUrl from '../assets/background.png'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({

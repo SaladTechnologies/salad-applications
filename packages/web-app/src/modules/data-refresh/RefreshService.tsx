@@ -11,7 +11,7 @@ export class RefreshService {
   refreshData = () => {
     // Load unauthenticated data
     try {
-      this.store.home.loadBannerInfo()
+      this.store.loadBanner()
     } catch (error) {
       console.error(error)
     }

@@ -1,9 +1,10 @@
 import type { FC } from 'react'
 import { connect } from '../../../connect'
-import { useDemandMonitorRefresh } from '../../../earnings/demand-monitor.ts'
+import { useHttp } from '../../../data/http-context.ts'
+import type { DemandedHardwarePerformance } from '../../../earnings/demand-monitor.ts'
+import { useDemandMonitorGpus } from '../../../earnings/demand-monitor.ts'
 import { useNavigation } from '../../../routing/navigation-context.ts'
 import type { RootStore } from '../../../Store'
-import { getStore } from '../../../Store'
 import { DemandMonitorPage, type Props as DemandMonitorPageProps } from './DemandMonitorPage'
 
 const _DemandMonitorPageContainer: FC<DemandMonitorPageProps> = ({ isAuthenticated, ...props }) => {
@@ -12,6 +13,7 @@ const _DemandMonitorPageContainer: FC<DemandMonitorPageProps> = ({ isAuthenticat
 
 interface OwnProps {
   onNavigateToDemandAlerts: () => void
+  demandedHardwarePerformanceList: DemandedHardwarePerformance[] | undefined
 }
 
 const mapStoreToProps = (store: RootStore, props: OwnProps): any => ({
@@ -21,18 +23,19 @@ const mapStoreToProps = (store: RootStore, props: OwnProps): any => ({
   },
   navigateToDemandAlerts: props.onNavigateToDemandAlerts,
   isAuthenticated: store.auth.isAuthenticated,
-  demandedHardwarePerformanceList: store.demandMonitor.demandedHardwarePerformanceList,
+  demandedHardwarePerformanceList: props.demandedHardwarePerformanceList,
 })
 
 const ConnectedDemandMonitorPage = connect(mapStoreToProps, _DemandMonitorPageContainer)
 
-/**
- * The demand monitor page. It loads the GPUs and their demand when it opens and every hour while it is open. The GPUs
- * stay in the store, which the page reads.
- */
+/** The demand monitor page. It loads the GPUs and their demand when it opens and every hour while it is open. */
 export const DemandMonitorPageContainer = () => {
-  const store = getStore()
   const navigation = useNavigation()
-  useDemandMonitorRefresh(store.demandMonitor.fetchDemandedHardwarePerformanceList)
-  return <ConnectedDemandMonitorPage onNavigateToDemandAlerts={() => navigation.push('/account/alerts')} />
+  const demandedHardwarePerformanceList = useDemandMonitorGpus(useHttp())
+  return (
+    <ConnectedDemandMonitorPage
+      demandedHardwarePerformanceList={demandedHardwarePerformanceList}
+      onNavigateToDemandAlerts={() => navigation.push('/account/alerts')}
+    />
+  )
 }

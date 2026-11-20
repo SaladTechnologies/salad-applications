@@ -2,13 +2,27 @@ import { Layout, Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
+import { useQueryClient } from '@tanstack/react-query'
+import { useCallback, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import { Head, mobileSize, Scrollbar } from '../../../components'
-import { useDemandAlertsLoads } from '../../../earnings/demand-monitor.ts'
-import { getStore } from '../../../Store'
+import { useHttp } from '../../../data/http-context.ts'
+import type { DemandedHardwarePerformance, DemandedSubscription, DemandTier } from '../../../earnings/demand-monitor.ts'
+import {
+  reloadDemandAlertSubscriptions,
+  subscribeToDemandAlert,
+  unsubscribeFromDemandAlert,
+  useDemandAlertsData,
+} from '../../../earnings/demand-monitor.ts'
 import type { SaladTheme } from '../../../SaladTheme'
-import { DemandAlertsListContainer } from './DemandAlertsList'
-import { DemandAlertsSetUpContainer } from './DemandAlertsSetUp'
+import type { SubscribeToDemandAlertErrorType } from '../constants'
+import {
+  SubscribeToDemandAlertStatus,
+  subscribeToDemandAlertStatusByErrorType,
+  UnsubscribeFromDemandAlertStatus,
+} from '../constants'
+import { DemandAlertsList } from './DemandAlertsList'
+import { DemandAlertsSetUp } from './DemandAlertsSetUp'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   page: {
@@ -30,9 +44,28 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
   },
 })
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  demandedHardwarePerformanceList?: DemandedHardwarePerformance[]
+  demandAlertSubscriptionList: readonly DemandedSubscription[]
+  subscribeToDemandAlert: (gpuName: string, demandTier: DemandTier) => void
+  subscribeToDemandAlertStatus: SubscribeToDemandAlertStatus
+  setSubscribeToDemandAlertStatus: (status: SubscribeToDemandAlertStatus) => void
+  unsubscribeFromDemandAlert: (subscriptionId: string) => void
+  unsubscribeFromDemandAlertStatus: UnsubscribeFromDemandAlertStatus
+  setUnsubscribeFromDemandAlertStatus: (status: UnsubscribeFromDemandAlertStatus) => void
+}
 
-const _DemandAlertsPage = ({ classes }: Props) => {
+const _DemandAlertsPage = ({
+  classes,
+  demandedHardwarePerformanceList,
+  demandAlertSubscriptionList,
+  subscribeToDemandAlert,
+  subscribeToDemandAlertStatus,
+  setSubscribeToDemandAlertStatus,
+  unsubscribeFromDemandAlert,
+  unsubscribeFromDemandAlertStatus,
+  setUnsubscribeFromDemandAlertStatus,
+}: Props) => {
   const isTabletOrMobile = useMediaQuery({ query: `(max-width: ${mobileSize}px)` })
 
   const getPageContent = () => (
@@ -43,8 +76,18 @@ const _DemandAlertsPage = ({ classes }: Props) => {
         payout tier. When that scenario arrives we will notify you through email and an in-app message.
       </Text>
       <div className={classes.demandContentContainer}>
-        <DemandAlertsSetUpContainer />
-        <DemandAlertsListContainer />
+        <DemandAlertsSetUp
+          demandedHardwarePerformanceList={demandedHardwarePerformanceList}
+          setSubscribeToDemandAlertStatus={setSubscribeToDemandAlertStatus}
+          subscribeToDemandAlert={subscribeToDemandAlert}
+          subscribeToDemandAlertStatus={subscribeToDemandAlertStatus}
+        />
+        <DemandAlertsList
+          demandAlertSubscriptionList={demandAlertSubscriptionList}
+          setUnsubscribeFromDemandAlertStatus={setUnsubscribeFromDemandAlertStatus}
+          unsubscribeFromDemandAlert={unsubscribeFromDemandAlert}
+          unsubscribeFromDemandAlertStatus={unsubscribeFromDemandAlertStatus}
+        />
       </div>
     </Layout>
   )
@@ -58,15 +101,70 @@ const _DemandAlertsPage = ({ classes }: Props) => {
 
 const DemandAlertsPage = withStyles(styles)(_DemandAlertsPage)
 
+/** The status that a failed subscribe shows: the App API's problem type, or a plain failure. */
+const subscribeStatusFromError = (error: any): SubscribeToDemandAlertStatus => {
+  if (!error || typeof error !== 'object') return SubscribeToDemandAlertStatus.Failure
+
+  const errorResponse = error.response?.data
+
+  return (
+    subscribeToDemandAlertStatusByErrorType[errorResponse?.type as SubscribeToDemandAlertErrorType] ??
+    SubscribeToDemandAlertStatus.Failure
+  )
+}
+
 /**
- * The demand alerts page. It loads the GPUs to set an alert for and the account's alerts each time it opens. The data
- * stays in the stores, which the page's sections read.
+ * The demand alerts page. It loads the GPUs to set an alert for and the account's alerts each time it opens, and holds
+ * the subscribe and unsubscribe statuses, which the demand alerts store held. A subscribe or unsubscribe that succeeds
+ * loads the alerts again, without waiting, then shows success, as the store did.
  */
 export const DemandAlertsPageContainer = () => {
-  const store = getStore()
-  useDemandAlertsLoads(
-    store.demandMonitor.fetchDemandedHardwarePerformanceList,
-    store.demandAlerts.fetchDemandAlertSubscriptionList,
+  const http = useHttp()
+  const queryClient = useQueryClient()
+  const { gpus, subscriptions } = useDemandAlertsData(http)
+  const [subscribeStatus, setSubscribeStatus] = useState(SubscribeToDemandAlertStatus.Unknown)
+  const [unsubscribeStatus, setUnsubscribeStatus] = useState(UnsubscribeFromDemandAlertStatus.Unknown)
+
+  const subscribe = useCallback(
+    async (gpuName: string, demandTier: DemandTier) => {
+      try {
+        setSubscribeStatus(SubscribeToDemandAlertStatus.Submitting)
+        await subscribeToDemandAlert(http, gpuName, demandTier)
+        void reloadDemandAlertSubscriptions(queryClient)
+        setSubscribeStatus(SubscribeToDemandAlertStatus.Success)
+      } catch (error) {
+        setSubscribeStatus(subscribeStatusFromError(error))
+        console.error('DemandAlertsPageContainer -> subscribeToDemandAlert: ', error)
+      }
+    },
+    [http, queryClient],
   )
-  return <DemandAlertsPage />
+
+  const unsubscribe = useCallback(
+    async (subscriptionId: string) => {
+      try {
+        setUnsubscribeStatus(UnsubscribeFromDemandAlertStatus.Submitting)
+        await unsubscribeFromDemandAlert(http, subscriptionId)
+        void reloadDemandAlertSubscriptions(queryClient)
+        setUnsubscribeStatus(UnsubscribeFromDemandAlertStatus.Success)
+      } catch (error) {
+        setUnsubscribeStatus(UnsubscribeFromDemandAlertStatus.Failure)
+        console.error('DemandAlertsPageContainer -> unsubscribeFromDemandAlert: ', error)
+      }
+    },
+    [http, queryClient],
+  )
+
+  return (
+    <DemandAlertsPage
+      demandedHardwarePerformanceList={gpus}
+      demandAlertSubscriptionList={subscriptions}
+      subscribeToDemandAlert={subscribe}
+      subscribeToDemandAlertStatus={subscribeStatus}
+      setSubscribeToDemandAlertStatus={setSubscribeStatus}
+      unsubscribeFromDemandAlert={unsubscribe}
+      unsubscribeFromDemandAlertStatus={unsubscribeStatus}
+      setUnsubscribeFromDemandAlertStatus={setUnsubscribeStatus}
+    />
+  )
 }

@@ -10,12 +10,9 @@ import { BonusStore } from './modules/bonus'
 import { CoinbaseEmailStore } from './modules/coinbase'
 import { DedicatedNodesStore } from './modules/dedicated-nodes'
 import { RefreshService } from './modules/data-refresh'
-import { DemandAlertsStore } from './modules/demand-alerts-views/DemandAlertsStore'
-import { DemandMonitorStore } from './modules/demand-monitor-views/DemandMonitorStore'
 import { EngagementStore } from './modules/engagement'
 import { ErrorBoundaryStore } from './modules/error-boundary'
 import { HelpScoutStore } from './modules/helpscout/HelpScoutStore'
-import { HomeStore } from './modules/home/HomeStore'
 import { NotificationStore } from './modules/notifications'
 import { PasskeyStore } from './modules/passkey-setup'
 import { ProfileStore } from './modules/profile'
@@ -42,11 +39,12 @@ export const createStore = (
   axios: AxiosInstance,
   setSession: (session: 'yes' | 'no') => void,
   navigation: Navigation,
+  loadBanner: () => void,
 ): RootStore => {
   // Vite compiles decorators the TypeScript way, so each store's field initializers are writes in its constructor.
   // `enforceActions: 'always'` rejects writes outside an action, so construct inside one. (CRA's Babel set initial
   // values without a write.)
-  sharedStore = runInAction(() => new RootStore(axios, setSession, navigation))
+  sharedStore = runInAction(() => new RootStore(axios, setSession, navigation, loadBanner))
   return sharedStore
 }
 
@@ -69,7 +67,6 @@ export class RootStore {
   public readonly profile: ProfileStore
   public readonly ui: UIStore
   public readonly referral: ReferralStore
-  public readonly home: HomeStore
   public readonly refresh: RefreshService
   public readonly notifications: NotificationStore
   public readonly vault: VaultStore
@@ -80,14 +77,21 @@ export class RootStore {
   public readonly errorBoundary: ErrorBoundaryStore
   public readonly passkey: PasskeyStore
   public readonly backupCodes: BackupCodesStore
-  public readonly demandMonitor: DemandMonitorStore
-  public readonly demandAlerts: DemandAlertsStore
   public readonly solanaWallet: SolanaWalletStore
   public readonly coinbaseEmail: CoinbaseEmailStore
   public readonly dedicatedNodes: DedicatedNodesStore
 
-  constructor(axios: AxiosInstance, setSession: (session: 'yes' | 'no') => void, navigation: Navigation) {
+  /** Loads the notification banner (src/app/banner.ts), which the app-wide refresh runs signed in or not. */
+  public readonly loadBanner: () => void
+
+  constructor(
+    axios: AxiosInstance,
+    setSession: (session: 'yes' | 'no') => void,
+    navigation: Navigation,
+    loadBanner: () => void,
+  ) {
     this.routing = navigation
+    this.loadBanner = loadBanner
     this.auth = new AuthStore(this, axios, setSession)
     this.notifications = new NotificationStore(this)
     this.xp = new ExperienceStore(axios)
@@ -100,7 +104,6 @@ export class RootStore {
     this.balance = new BalanceStore(axios)
     this.ui = new UIStore(this)
     this.referral = new ReferralStore(this, axios)
-    this.home = new HomeStore(axios)
     this.refresh = new RefreshService(this)
     this.vault = new VaultStore(axios, this.balance, this.rewards)
     this.engagement = new EngagementStore(this, axios)
@@ -110,8 +113,6 @@ export class RootStore {
     this.backupCodes = new BackupCodesStore(this, axios)
     this.startButtonUI = new StartButtonUIStore(this)
     this.errorBoundary = new ErrorBoundaryStore()
-    this.demandMonitor = new DemandMonitorStore(axios)
-    this.demandAlerts = new DemandAlertsStore(axios)
     this.solanaWallet = new SolanaWalletStore(this, axios)
     this.coinbaseEmail = new CoinbaseEmailStore(this, axios)
     this.dedicatedNodes = new DedicatedNodesStore(axios)
@@ -123,7 +124,6 @@ export class RootStore {
    */
   userDataStores = () => [
     this.auth,
-    this.demandAlerts,
     this.termsAndConditions,
     this.balance,
     this.bonuses,
