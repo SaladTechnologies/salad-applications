@@ -3,18 +3,20 @@ import { usePasskeysState } from '../../../../../account/passkeys.ts'
 import type { Profile } from '../../../../../account/profile.ts'
 import { useProfile } from '../../../../../account/profile.ts'
 import { connect } from '../../../../../connect'
+import type { ProfileState } from '../../../../../account/profile-state.ts'
+import { useProfileState } from '../../../../../account/profile-state.ts'
 import type { RootStore } from '../../../../../Store'
 import { getStore } from '../../../../../Store'
 import { AccountSecurity } from './AccountSecurity'
 
 const mapStoreToProps = (
   store: RootStore,
-  props: { passkeysState: PasskeysState; profile: Profile | undefined },
+  props: { passkeysState: PasskeysState; profile: Profile | undefined; profileState: ProfileState },
 ): any => ({
   editPasskeyNameStatus: props.passkeysState.editPasskeyNameStatus,
   isProtectRewardsRedemptionEnabled: props.profile?.redemptionTfaEnabled,
   passkeys: props.passkeysState.passkeys,
-  protectRewardsRedemptionStatus: store.profile.protectRewardsRedemptionStatus,
+  protectRewardsRedemptionStatus: props.profileState.protectRewardsRedemptionStatus,
   registerPasskeyStatus: props.passkeysState.registerPasskeyStatus,
   editPasskeyName: store.passkey.editPasskeyName,
   onAddPasskeyClick: store.passkey.registerPasskey,
@@ -27,10 +29,14 @@ const mapStoreToProps = (
 const ConnectedAccountSecurity = connect(mapStoreToProps, AccountSecurity)
 
 /**
- * The account summary's security section (desktop and mobile). It reads the passkeys and the profile itself, as the
- * connected section read their stores: it was a nested container before they left MobX, and stays one until the account
- * pages are rebuilt.
+ * The account summary's security section (desktop and mobile). It reads the passkeys, the profile, and the profile's
+ * state itself, as the connected section read their stores: it was a nested container before they left MobX, and stays
+ * one until the account pages are rebuilt.
  */
 export const AccountSecurityContainer = () => (
-  <ConnectedAccountSecurity passkeysState={usePasskeysState(getStore().passkey)} profile={useProfile()} />
+  <ConnectedAccountSecurity
+    passkeysState={usePasskeysState(getStore().passkey)}
+    profile={useProfile()}
+    profileState={useProfileState(getStore().profile)}
+  />
 )

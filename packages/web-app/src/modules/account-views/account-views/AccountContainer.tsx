@@ -5,14 +5,19 @@ import type { TermsState } from '../../../account/terms.ts'
 import { useTermsState } from '../../../account/terms.ts'
 import { usePayoutDestinationLoads } from '../../../account/wallets.ts'
 import { connect } from '../../../connect'
+import type { ProfileState } from '../../../account/profile-state.ts'
+import { useProfileState } from '../../../account/profile-state.ts'
 import type { RootStore } from '../../../Store'
 import { getStore } from '../../../Store'
 import { Account } from './components'
 
-const mapStoreToProps = (store: RootStore, props: { terms: TermsState; profile: Profile | undefined }): any => ({
-  avatarError: store.profile.avatarError,
-  avatars: store.profile.avatars,
-  submittingAvatar: store.profile.submittingAvatar,
+const mapStoreToProps = (
+  store: RootStore,
+  props: { terms: TermsState; profile: Profile | undefined; profileState: ProfileState },
+): any => ({
+  avatarError: props.profileState.avatarError,
+  avatars: props.profileState.avatars,
+  submittingAvatar: props.profileState.submittingAvatar,
   onClearAvatarError: store.profile.clearAvatarError,
   onSelectAvatar: store.profile.selectAvatar,
   onUpdateMinecraftUsername: store.profile.updateMinecraftUsername,
@@ -20,13 +25,13 @@ const mapStoreToProps = (store: RootStore, props: { terms: TermsState; profile: 
   onResetUsernameSuccess: store.profile.resetUsernameSuccess,
   onResetMinecraftUsernameSuccess: store.profile.resetMinecraftUsernameSuccess,
   profile: props.profile,
-  selectedAvatar: store.profile.selectedAvatar,
-  isUserNameSubmitting: store.profile.isUserNameSubmitting,
-  isUserNameSubmitSuccess: store.profile.isUserNameSubmitSuccess,
-  isMinecraftUserNameSubmitting: store.profile.isMinecraftUserNameSubmitting,
-  isMinecraftUserNameSubmitSuccess: store.profile.isMinecraftUserNameSubmitSuccess,
-  connectedGoogleAccountEmail: store.profile.connectedGoogleAccountEmail,
-  isLoadConnectedGoogleAccountEmailError: store.profile.isLoadConnectedGoogleAccountEmailError,
+  selectedAvatar: props.profileState.selectedAvatar,
+  isUserNameSubmitting: props.profileState.isUserNameSubmitting,
+  isUserNameSubmitSuccess: props.profileState.isUserNameSubmitSuccess,
+  isMinecraftUserNameSubmitting: props.profileState.isMinecraftUserNameSubmitting,
+  isMinecraftUserNameSubmitSuccess: props.profileState.isMinecraftUserNameSubmitSuccess,
+  connectedGoogleAccountEmail: props.profileState.connectedGoogleAccountEmail,
+  isLoadConnectedGoogleAccountEmailError: props.profileState.isLoadConnectedGoogleAccountEmailError,
   isSubmitting: props.terms.submitting,
   isTermsAndConditionsAccepted: props.terms.accepted,
   onSubmitTermsAndConditions: store.terms.submit,
@@ -48,5 +53,5 @@ export const AccountContainer = () => {
   useGoogleConnectionLoad(store.profile.loadGoogleAccountConnection)
   // The terms' acceptance is shared with sign-in, which submits it while ticked (src/account/terms.ts).
   const terms = useTermsState(store.terms)
-  return <ConnectedAccount terms={terms} profile={useProfile()} />
+  return <ConnectedAccount terms={terms} profile={useProfile()} profileState={useProfileState(store.profile)} />
 }

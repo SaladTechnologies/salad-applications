@@ -1,4 +1,5 @@
 import { useProfile } from './account/profile.ts'
+import { useProfileState } from './account/profile-state.ts'
 import { useReferralCode } from './account/referrals.ts'
 import { useAppRefresh } from './app/app-refresh.ts'
 import { config } from './config'
@@ -83,6 +84,7 @@ const Root = () => {
   const { history } = useRouter()
   const searchHistory = useMemo(() => createSearchHistory(store.routing, history), [store.routing, history])
   const profile = useProfile()
+  const { isInstallReminderClosed } = useProfileState(store.profile)
   return (
     <NavigationContext.Provider value={store.routing}>
       <ErrorBoundary>
@@ -96,7 +98,11 @@ const Root = () => {
               ) : (
                 <>
                   <Tooltips />
-                  <App searchHistory={searchHistory} profile={profile} />
+                  <App
+                    searchHistory={searchHistory}
+                    profile={profile}
+                    isInstallReminderClosed={isInstallReminderClosed}
+                  />
                 </>
               )
             }

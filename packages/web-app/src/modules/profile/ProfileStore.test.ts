@@ -34,6 +34,9 @@ const setUp = (http: Partial<AxiosInstance>, kept: Profile | undefined) => {
   const store = {
     engagement: { checkWhatsNew },
     errorBoundary: { showErrorBoundary, resetErrorBoundary },
+    auth: { isAuthenticated: true },
+    routing: { replace: vi.fn<(path: string) => void>() },
+    notifications: { sendNotification: vi.fn<(message: unknown) => void>() },
   } as unknown as RootStore
   return {
     profileStore: new ProfileStore(store, http as AxiosInstance, profiles),
@@ -71,5 +74,145 @@ describe('ProfileStore', () => {
     expect(holder.profile).not.toBe(profile)
     expect(holder.profile).toStrictEqual({ ...profile, redemptionTfaEnabled: true })
     expect(profile.redemptionTfaEnabled).toBe(false)
+  })
+
+  it('shows a selected avatar at once, then the one the App API selected, and tells its readers', async () => {
+    const patch = vi.fn().mockResolvedValue({ data: { id: 'b' } })
+    const { profileStore } = setUp(
+      { get: vi.fn().mockResolvedValue({ data: [{ id: 'a' }, { id: 'b' }] }), patch },
+      profile,
+    )
+    await profileStore.loadAvatars()
+    const listener = vi.fn<() => void>()
+    profileStore.subscribe(listener)
+
+    const selecting = profileStore.selectAvatar('b')
+    const whileSelecting = profileStore.getState()
+    await selecting
+
+    expect(whileSelecting).toMatchObject({ selectedAvatar: 'b', submittingAvatar: 'b' })
+    expect(profileStore.getState()).toMatchObject({
+      currentSelectedAvatar: 'b',
+      selectedAvatar: 'b',
+      submittingAvatar: undefined,
+    })
+    expect(patch).toHaveBeenCalledExactlyOnceWith('/api/v2/avatars/selected', { avatarId: 'b' })
+    expect(listener).toHaveBeenCalled()
+  })
+
+  it('shows the avatar error and the last selected avatar when a selection fails', async () => {
+    const patch = vi.fn().mockRejectedValue(new Error('down'))
+    const get = vi
+      .fn()
+      .mockResolvedValueOnce({ data: [{ id: 'a' }, { id: 'b' }] })
+      .mockResolvedValueOnce({ data: { id: 'a' } })
+    const { profileStore } = setUp({ get, patch }, profile)
+    await profileStore.loadAvatars()
+    await profileStore.loadSelectedAvatar()
+
+    await profileStore.selectAvatar('b')
+
+    expect(profileStore.getState()).toMatchObject({
+      avatarError: { avatar: 'b', message: 'Unable to select avatar' },
+      selectedAvatar: 'a',
+      submittingAvatar: undefined,
+    })
+  })
+
+  it('shows the install reminder only while it is not closed', () => {
+    const { profileStore } = setUp({}, undefined)
+    const newChef = { ...profile, createdAt: '2026-01-01T00:00:00Z' }
+
+    expect(profileStore.withInstallReminder(newChef, false)).toBe(true)
+    expect(profileStore.withInstallReminder(newChef, true)).toBe(false)
+  })
+
+  it('tells its readers when the install reminder is closed, and stores it', () => {
+    const { profileStore } = setUp({}, undefined)
+    const listener = vi.fn<() => void>()
+    profileStore.subscribe(listener)
+    const before = profileStore.getState().isInstallReminderClosed
+
+    profileStore.setIsInstallReminderClosed(true)
+
+    expect(before).toBe(false)
+    expect(profileStore.getState().isInstallReminderClosed).toBe(true)
+    expect(listener).toHaveBeenCalled()
+    // Stored, so the reminder stays closed after a reload.
+    expect(localStorage.getItem('SALAD_IS_INSTALL_REMINDER_CLOSED')).toBe('true')
+  })
+
+  it('shows the protect-redemption status while it saves, then clears it six seconds later', async () => {
+    vi.useFakeTimers()
+    const post = vi.fn().mockResolvedValue({})
+    const { profileStore } = setUp({ post, get: vi.fn().mockResolvedValue({ data: profile }) }, profile)
+
+    const saving = profileStore.setProtectRewardsRedemption(true)
+    const whileSaving = profileStore.getState().protectRewardsRedemptionStatus
+    await saving
+    await vi.advanceTimersByTimeAsync(5999)
+    const justBefore = profileStore.getState().protectRewardsRedemptionStatus
+    await vi.advanceTimersByTimeAsync(1)
+    vi.useRealTimers()
+
+    expect(whileSaving).toBe('loading')
+    expect(justBefore).toBe('success')
+    expect(profileStore.getState().protectRewardsRedemptionStatus).toBe('unknown')
+  })
+
+  it('stops the last six-second clear when another change starts', async () => {
+    vi.useFakeTimers()
+    const post = vi
+      .fn()
+      .mockResolvedValueOnce({})
+      .mockReturnValueOnce(new Promise(() => undefined))
+    const { profileStore } = setUp({ post, get: vi.fn().mockResolvedValue({ data: profile }) }, profile)
+
+    await profileStore.setProtectRewardsRedemption(true)
+    await vi.advanceTimersByTimeAsync(3000)
+    void profileStore.setProtectRewardsRedemption(false)
+    await vi.advanceTimersByTimeAsync(3000)
+    vi.useRealTimers()
+
+    expect(profileStore.getState().protectRewardsRedemptionStatus).toBe('loading')
+  })
+
+  it('checks for what is new after a username or Minecraft username change', async () => {
+    const patch = vi.fn().mockResolvedValue({ data: profile })
+    const username = setUp({ patch }, profile)
+    const minecraft = setUp({ patch }, profile)
+
+    await username.profileStore.updateUsername({ input: 'new-chef' })
+    await minecraft.profileStore.updateMinecraftUsername({ input: 'steve' })
+
+    expect(username.checkWhatsNew).toHaveBeenCalledTimes(1)
+    expect(minecraft.checkWhatsNew).toHaveBeenCalledTimes(1)
+  })
+
+  it('forgets the selected avatar, the connected Google account and the protect status on sign-out', async () => {
+    const get = vi
+      .fn()
+      .mockResolvedValueOnce({ data: { id: 'a' } })
+      .mockResolvedValueOnce({ data: [{ loginProvider: 'Google', email: 'me@gmail.com' }] })
+    const { profileStore } = setUp({ get }, profile)
+    await profileStore.loadSelectedAvatar()
+    await profileStore.loadGoogleAccountConnection()
+    profileStore.setProtectRewardsRedemptionStatus('failure')
+    const signedIn = profileStore.getState()
+
+    profileStore.resetUserData()
+
+    expect(signedIn).toMatchObject({
+      connectedGoogleAccountEmail: 'me@gmail.com',
+      currentSelectedAvatar: 'a',
+      selectedAvatar: 'a',
+      protectRewardsRedemptionStatus: 'failure',
+    })
+    expect(profileStore.getState()).toMatchObject({
+      connectedGoogleAccountEmail: undefined,
+      currentSelectedAvatar: undefined,
+      selectedAvatar: undefined,
+      protectRewardsRedemptionStatus: 'unknown',
+    })
   })
 })
