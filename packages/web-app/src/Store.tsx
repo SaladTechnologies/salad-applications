@@ -1,7 +1,11 @@
 import type { AxiosInstance } from 'axios'
+import type { BackupCodesStore } from './account/backup-codes.ts'
+import { createBackupCodes } from './account/backup-codes.ts'
 import { action, configure, flow, observable, runInAction } from 'mobx'
 import type { Bonus, Bonuses, BonusesOptions } from './account/bonuses.ts'
 import { bonusTypes } from './account/bonuses.ts'
+import type { Passkeys } from './account/passkeys.ts'
+import { createPasskeys } from './account/passkeys.ts'
 import type { Terms } from './account/terms.ts'
 import { createTerms } from './account/terms.ts'
 import { ErrorBoundaryBridge } from './app/error-boundary.ts'
@@ -10,7 +14,6 @@ import { createToasts } from './app/toasts.ts'
 import type { Navigation } from './routing/navigation.ts'
 import { AnalyticsStore } from './modules/analytics'
 import { AuthStore } from './modules/auth'
-import { BackupCodesStore } from './modules/backup-codes'
 import { BalanceStore } from './modules/balance'
 import { CoinbaseEmailStore } from './modules/coinbase'
 import { DedicatedNodesStore } from './modules/dedicated-nodes'
@@ -20,7 +23,14 @@ import { HelpScoutStore } from './modules/helpscout/HelpScoutStore'
 import type { NotificationMessage } from './modules/notifications/models'
 import { NotificationMessageCategory } from './modules/notifications/models'
 import { NotificationToast } from './modules/notifications-views/components'
-import { PasskeyStore } from './modules/passkey-setup'
+import {
+  assertionBody,
+  getIsPasskeySupported,
+  getPasskeyCredential,
+  registerPasskeyCredential,
+  registrationBody,
+} from './modules/passkey-setup/utils'
+import { handlePendingProtectedAction } from './modules/protected-action/utils'
 import { ProfileStore } from './modules/profile'
 import type { Profile } from './modules/profile/models'
 import { RenderStore } from './modules/render'
@@ -137,7 +147,9 @@ export class RootStore {
   public readonly bonuses: Bonuses
   /** Shows or resets the app's error page from outside React. */
   public readonly errorBoundary: ErrorBoundaryBridge
-  public readonly passkey: PasskeyStore
+  /** The signed-in user's passkeys (src/account/passkeys.ts), and the passkey actions. */
+  public readonly passkey: Passkeys
+  /** The signed-in user's backup codes (src/account/backup-codes.ts), and the backup code actions. */
   public readonly backupCodes: BackupCodesStore
   public readonly solanaWallet: SolanaWalletStore
   public readonly coinbaseEmail: CoinbaseEmailStore
@@ -199,12 +211,41 @@ export class RootStore {
         }),
       refreshData: () => this.refresh.refreshData(),
     })
-    this.passkey = new PasskeyStore(this, axios)
-    this.backupCodes = new BackupCodesStore(this, axios)
+    this.passkey = createPasskeys({
+      http: axios,
+      webAuthn: {
+        isSupported: getIsPasskeySupported,
+        createCredential: async (options) =>
+          await registerPasskeyCredential(options as Parameters<typeof registerPasskeyCredential>[0]),
+        registrationBody,
+        getAssertion: async (options) =>
+          await getPasskeyCredential(options as Parameters<typeof getPasskeyCredential>[0]),
+        assertionBody,
+      },
+      onFirstPasskeyAdded: () => {
+        this.analytics.trackPasskeyAdded(true)
+        this.routing.push('/account/backup-codes', { isFirstPasskeyAdded: true })
+      },
+      onLastPasskeyRemoved: () => {
+        this.analytics.trackPasskeyAdded(false)
+      },
+      onVerified: this.runPendingProtectedAction,
+    })
+    this.backupCodes = createBackupCodes({ http: axios, onVerified: this.runPendingProtectedAction })
     this.errorBoundary = new ErrorBoundaryBridge()
     this.solanaWallet = new SolanaWalletStore(this, axios)
     this.coinbaseEmail = new CoinbaseEmailStore(this, axios)
     this.dedicatedNodes = new DedicatedNodesStore(axios)
+  }
+
+  /**
+   * Runs the protected action waiting for sudo mode, once the user verified. It runs in one MobX action, as it ran
+   * inside the passkey and backup code stores' flows, so its MobX changes notify observers together, as before.
+   */
+  runPendingProtectedAction = (): void => {
+    runInAction(() => {
+      handlePendingProtectedAction(this)
+    })
   }
 
   /**

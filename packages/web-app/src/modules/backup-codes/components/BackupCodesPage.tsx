@@ -9,7 +9,7 @@ import withStyles from 'react-jss'
 import { useLocation } from '@tanstack/react-router'
 import type { SaladTheme } from '../../../SaladTheme'
 import Referrals from '../../../assets/Referrals.svg'
-import type { BackupCodes } from '../BackupCodesStore'
+import type { BackupCodes } from '../../../account/backup-codes.ts'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   pageWrapper: {
