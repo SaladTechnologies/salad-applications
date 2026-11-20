@@ -15,6 +15,8 @@ import { useNavigation } from '../../routing/navigation-context.ts'
 import type { RootStore } from '../../Store'
 import { getStore } from '../../Store'
 import type { Reward } from '../reward/models'
+import type { RewardState } from '../reward'
+import { selectedTargetRewardOf } from '../reward'
 import type { RewardResource } from '../reward/models/RewardResource'
 import type { RewardVaultItem } from '../vault/models'
 import { rewardFromResource } from '../reward/utils'
@@ -35,6 +37,8 @@ interface OwnProps {
   currentBalance: number
   /** The latest redemption, which the review after a redemption shows. */
   lastRedemption: RewardVaultItem | undefined
+  /** The reward cache, the target reward and whether the review is open. */
+  rewards: RewardState
 }
 
 const mapStoreToProps = (store: RootStore, props: OwnProps): any => {
@@ -49,17 +53,17 @@ const mapStoreToProps = (store: RootStore, props: OwnProps): any => {
 
   const extensions = props.profile?.extensions
   // The store's copy, which the query fills: redemption, SaladPay, and the target-reward refresh share it.
-  const reward = store.rewards.getReward(props.match.params.id)
+  const reward = props.rewards.rewards.get(props.match.params.id)
   const requiresMinecraftUsername =
     reward?.tags?.includes('requires-minecraft-username') && !extensions?.minecraftUsername
-  const isRewardSelectedAsTarget = store.rewards.selectedTargetReward?.id === reward?.id
+  const isRewardSelectedAsTarget = selectedTargetRewardOf(props.rewards)?.id === reward?.id
 
   return {
     authenticated: props.isAuthenticated,
     rewardId: props.match.params.id,
     currentBalance: props.currentBalance,
     reward: reward,
-    isReviewing: store.rewards.isReviewing,
+    isReviewing: props.rewards.isReviewing,
     lastRedemption: props.lastRedemption,
     onBack: props.onBack,
     onRedeem,
@@ -120,6 +124,7 @@ export const RewardDetailsContainer = ({
       coinbaseEmail={useCoinbaseEmailState(getStore().coinbaseEmail)}
       currentBalance={useExternalState(getStore().balance.state).currentBalance}
       lastRedemption={useExternalState(getStore().vault.state).redemptions.at(-1)}
+      rewards={useExternalState(getStore().rewards.state)}
     />
   )
 }

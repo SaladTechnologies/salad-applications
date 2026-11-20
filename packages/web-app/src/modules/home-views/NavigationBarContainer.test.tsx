@@ -20,7 +20,9 @@ const fake = vi.hoisted(() => ({
   login: vi.fn<() => Promise<void>>(),
   bars: [] as Bar[],
   balance: undefined as unknown as ReturnType<typeof createExternalState<{ currentBalance: number }>>,
-  target: undefined as { id: string; name: string; price: number } | undefined,
+  rewards: undefined as unknown as ReturnType<
+    typeof createExternalState<{ rewards: Map<string, object>; selectedTargetRewardId: string | undefined }>
+  >,
 }))
 
 vi.mock('../../Store', () => {
@@ -30,12 +32,7 @@ vi.mock('../../Store', () => {
       auth: { login: fake.login, logout: vi.fn() },
       analytics: { trackButtonClicked: vi.fn() },
       balance,
-      rewards: {
-        get selectedTargetReward() {
-          return fake.target
-        },
-        removeSelectedTargetReward: vi.fn(),
-      },
+      rewards: { state: fake.rewards, removeSelectedTargetReward: vi.fn() },
       profile: { withInstallReminder: () => false, setIsInstallReminderClosed: vi.fn() },
       routing: { push: vi.fn() },
       bonuses: { claim: vi.fn() },
@@ -68,6 +65,10 @@ vi.mock('./components/NavigationBarWithNotifications', () => ({
 }))
 
 fake.balance = createExternalState({ currentBalance: 5 })
+fake.rewards = createExternalState<{ rewards: Map<string, object>; selectedTargetRewardId: string | undefined }>({
+  rewards: new Map(),
+  selectedTargetRewardId: undefined,
+})
 const { NavigationBarContainer } = await import('./NavigationBarContainer')
 
 /** Returns what the bar shows for the user, without its functions. */
@@ -81,7 +82,10 @@ const shown = (bar: Bar | undefined) => ({
 describe('NavigationBarContainer', () => {
   it('shows the balance, and whether the target reward can be bought, as the balance changes', () => {
     Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', true)
-    fake.target = { id: 'target', name: 'Target', price: 4 }
+    fake.rewards.update({
+      rewards: new Map([['target', { id: 'target', name: 'Target', price: 4 }]]),
+      selectedTargetRewardId: 'target',
+    })
     const root = createRoot(document.createElement('div'))
     act(() => {
       root.render(
@@ -99,11 +103,39 @@ describe('NavigationBarContainer', () => {
     act(() => {
       root.unmount()
     })
-    fake.target = undefined
+    fake.rewards.update({ selectedTargetRewardId: undefined })
     fake.balance.update({ currentBalance: 5 })
 
     expect([before?.balance, before?.targetReward?.canBeRedeemed]).toStrictEqual([5, true])
     expect([after?.balance, after?.targetReward?.canBeRedeemed]).toStrictEqual([3.5, false])
+  })
+
+  it('shows the target reward once it loads after the bar is shown', () => {
+    Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', true)
+    const root = createRoot(document.createElement('div'))
+    act(() => {
+      root.render(
+        <SessionContext.Provider value="yes">
+          <NavigationBarContainer />
+        </SessionContext.Provider>,
+      )
+    })
+    const before = fake.bars.at(-1)
+
+    act(() => {
+      fake.rewards.update({
+        rewards: new Map([['target', { id: 'target', name: 'Target', price: 4 }]]),
+        selectedTargetRewardId: 'target',
+      })
+    })
+    const after = fake.bars.at(-1)
+    act(() => {
+      root.unmount()
+    })
+    fake.rewards.update({ selectedTargetRewardId: undefined })
+
+    expect(before?.targetReward).toBeNull()
+    expect(after?.targetReward).toMatchObject({ canBeRedeemed: true })
   })
 
   it('follows the session: Login while unknown or signed out, the balance and name while signed in, and back on sign-out', () => {

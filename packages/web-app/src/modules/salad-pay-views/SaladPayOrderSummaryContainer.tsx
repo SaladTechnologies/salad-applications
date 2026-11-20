@@ -4,7 +4,9 @@ import type { SolanaWalletState } from '../../account/solana-wallet.ts'
 import { useSolanaWalletState } from '../../account/solana-wallet.ts'
 import { useExternalState } from '../../app/external-state.ts'
 import { getStore } from '../../Store'
-import type { SaladPayStore } from '../salad-pay/SaladPayStore'
+import type { RewardState } from '../reward'
+import type { SaladPayState, SaladPayStore } from '../salad-pay'
+import { getSaladPayStore } from '../salad-pay'
 import { SaladPayOrderSummaryPage } from './components'
 import { connectSaladPay } from './connectSaladPay'
 
@@ -14,13 +16,17 @@ interface OwnProps {
   coinbaseEmail: CoinbaseEmailState
   /** The balance the user can spend. */
   currentBalance: number
+  /** The order shown, and whether it is being redeemed. */
+  order: SaladPayState
+  /** The reward cache and the reward being redeemed. */
+  rewards: RewardState
 }
 
 const mapStoreToProps = (store: SaladPayStore, props: OwnProps): any => ({
   availableBalance: props.currentBalance,
-  processing: store.processing,
-  request: store.currentRequestOptions,
-  reward: getStore().rewards.getReward(getStore().rewards.lastRewardId),
+  processing: props.order.processing,
+  request: props.order.currentRequestOptions,
+  reward: props.rewards.lastRewardId === undefined ? undefined : props.rewards.rewards.get(props.rewards.lastRewardId),
   solanaWalletAddress: props.solanaWallet.walletAddress,
   isSolanaWalletLoading: props.solanaWallet.isLoading,
   loadSolanaWallet: getStore().solanaWallet.loadWallet,
@@ -46,6 +52,8 @@ export const SaladPayOrderSummaryContainer = () => {
       solanaWallet={useSolanaWalletState(store.solanaWallet)}
       coinbaseEmail={useCoinbaseEmailState(store.coinbaseEmail)}
       currentBalance={useExternalState(store.balance.state).currentBalance}
+      order={useExternalState(getSaladPayStore().state)}
+      rewards={useExternalState(store.rewards.state)}
     />
   )
 }

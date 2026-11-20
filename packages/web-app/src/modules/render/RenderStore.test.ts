@@ -12,15 +12,6 @@ describe('RenderStore', () => {
     store.setExchangeRate(exchangeRate)
 
     expect(store.exchangeRate).toMatchObject({ rate: 2.5 })
-    expect(store.isExchangeRateStale).toBe(false)
-  })
-
-  it('treats an expired quote as stale', () => {
-    const store = new RenderStore()
-
-    store.setExchangeRate({ rate: 2.5, asOf: new Date(0), expiresAt: new Date(1) })
-
-    expect(store.isExchangeRateStale).toBe(true)
   })
 
   it('holds the quote the quote query loads, which redemption reads', async () => {

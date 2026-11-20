@@ -14,6 +14,8 @@ import { useExternalState } from '../../app/external-state.ts'
 import { isSignedIn, useSession } from '../../data/session.ts'
 import type { ProfileState } from '../../account/profile-state.ts'
 import { profileAvatarOf, useProfileState } from '../../account/profile-state.ts'
+import type { Reward } from '../reward/models'
+import { selectedTargetRewardOf } from '../reward'
 import { NavigationBarWithNotifications } from './components/NavigationBarWithNotifications'
 
 /** The notifications drawer's state, which the navigation bar container holds, and whether referrals are enabled. */
@@ -33,6 +35,8 @@ interface DrawerProps {
   isAuthenticated: boolean | undefined
   /** The balance the user can spend. */
   currentBalance: number
+  /** The target reward, if the user has one. */
+  selectedTargetReward: Reward | undefined
 }
 
 const mapStoreToProps = (store: RootStore, drawer: DrawerProps): any => {
@@ -52,13 +56,14 @@ const mapStoreToProps = (store: RootStore, drawer: DrawerProps): any => {
 
   const startButton = startButtonFor(isAuthenticated, handleLogin)
 
-  const targetReward: TargetRewardInfo | null = store.rewards.selectedTargetReward
+  const { selectedTargetReward } = drawer
+  const targetReward: TargetRewardInfo | null = selectedTargetReward
     ? {
-        id: store.rewards.selectedTargetReward.id,
-        label: store.rewards.selectedTargetReward.name,
-        imageSrc: store.rewards.selectedTargetReward.coverImage ?? '',
-        price: store.rewards.selectedTargetReward.price,
-        canBeRedeemed: drawer.currentBalance >= store.rewards.selectedTargetReward?.price,
+        id: selectedTargetReward.id,
+        label: selectedTargetReward.name,
+        imageSrc: selectedTargetReward.coverImage ?? '',
+        price: selectedTargetReward.price,
+        canBeRedeemed: drawer.currentBalance >= selectedTargetReward?.price,
       }
     : null
   const notifications = {
@@ -145,6 +150,7 @@ export const NavigationBarContainer = () => {
       profileState={useProfileState(getStore().profile)}
       isAuthenticated={isSignedIn(useSession())}
       currentBalance={useExternalState(getStore().balance.state).currentBalance}
+      selectedTargetReward={selectedTargetRewardOf(useExternalState(getStore().rewards.state))}
     />
   )
 }
