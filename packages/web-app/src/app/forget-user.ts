@@ -9,15 +9,14 @@ interface UserDataStore {
 
 /**
  * Forgets the data of a user who signed out, so a different user who signs in later in the same tab never sees it: each
- * store's copy, and the earnings histories' freshness, which would otherwise skip the next user's load for up to an
- * hour. Public data (the storefront, the reward catalog) and the session stay.
+ * store's copy, and the earnings histories' query, whose freshness would otherwise skip the next user's load for up to
+ * an hour. Public data (the storefront, the reward catalog) and the session stay.
  */
 export const forgetSignedOutUser = (stores: readonly UserDataStore[], queryClient: QueryClient): void => {
   for (const store of stores) {
     store.resetUserData()
   }
-  // Marks the histories stale without loading them now: the next earnings page that opens loads the new user's.
-  for (const query of queryClient.getQueryCache().findAll({ queryKey: machineEarningsHistoryQueryKey })) {
-    query.invalidate()
-  }
+  // Removes the histories' query without loading it now, so the next earnings page that opens loads the new user's. A
+  // load still running when the user signed out settles on the removed query, so its freshness cannot skip that load.
+  queryClient.removeQueries({ queryKey: machineEarningsHistoryQueryKey })
 }

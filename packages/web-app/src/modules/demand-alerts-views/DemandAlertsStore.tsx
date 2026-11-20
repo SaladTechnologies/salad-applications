@@ -88,4 +88,10 @@ export class DemandAlertsStore {
   setUnsubscribeFromDemandAlertStatus = (unsubscribeFromDemandAlertStatus: UnsubscribeFromDemandAlertStatus) => {
     this.unsubscribeFromDemandAlertStatus = unsubscribeFromDemandAlertStatus
   }
+
+  /** Forgets the demand alert subscriptions of the user who signed out, so the next user never sees them. */
+  @action.bound
+  resetUserData() {
+    this.demandAlertSubscriptionList = []
+  }
 }

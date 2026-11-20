@@ -107,9 +107,13 @@ export class ReferralStore {
     }
   })
 
-  /** Forgets the referrals report of the user who signed out, so the next user never sees them. */
+  /**
+   * Forgets the referrals report and whether referrals are enabled for the user who signed out, so the next user never
+   * sees them.
+   */
   @action.bound
   resetUserData() {
     this.referralsReport = undefined
+    this.isUserReferralsEnabled = false
   }
 }

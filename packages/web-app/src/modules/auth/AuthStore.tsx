@@ -119,4 +119,15 @@ export class AuthStore {
   setPendingProtectedAction = (updatedPendingProtectedAction?: PendingProtectedAction) => {
     this.pendingProtectedAction = updatedPendingProtectedAction
   }
+
+  /**
+   * Forgets the protected action waiting for sudo mode, and its trigger, of the user who signed out, so the next user's
+   * verification never runs it as them. A sudo 401 never signs out, so this never drops a waiting action of a user who
+   * is still signed in.
+   */
+  @action.bound
+  resetUserData() {
+    this.pendingProtectedAction = undefined
+    this.challengeSudoModeTrigger = undefined
+  }
 }

@@ -45,4 +45,13 @@ export class TermsAndConditionsStore {
   public toggleAcceptTermsAndConditions = (accepted: boolean) => {
     this.isTermsAndConditionsAccepted = accepted
   }
+
+  /**
+   * Forgets whether the user who signed out ticked acceptance of the terms, so sign-in never submits it for the next
+   * user.
+   */
+  @action.bound
+  resetUserData() {
+    this.isTermsAndConditionsAccepted = false
+  }
 }

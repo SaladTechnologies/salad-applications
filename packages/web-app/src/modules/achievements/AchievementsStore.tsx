@@ -26,4 +26,10 @@ export class AchievementsStore {
       console.error('Achievements error: ', error)
     }
   }
+
+  /** Forgets the achievements of the user who signed out, so the next user never sees them. */
+  @action.bound
+  resetUserData() {
+    this.achievements = undefined
+  }
 }

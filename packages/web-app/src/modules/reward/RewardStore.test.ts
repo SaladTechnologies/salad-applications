@@ -531,3 +531,30 @@ describe('RewardStore.redeemReward SaladPay order', () => {
     expect(complete).toHaveBeenLastCalledWith('success')
   })
 })
+
+describe('RewardStore.resetUserData', () => {
+  it('keeps the redemption id and reward while a redemption is in progress', async () => {
+    const { store, open } = setup(vi.fn().mockResolvedValue({ data: { status: 'complete' } }))
+
+    await open(makeReward())
+    const id = redemptionIdOf(store)
+    store.resetUserData()
+
+    expect(id).toBeDefined()
+    expect(redemptionIdOf(store)).toBe(id)
+    expect(store.lastRewardId).toBe('reward-1')
+    expect(store.isRedeeming).toBe(true)
+  })
+
+  it('forgets the redemption id and reward when no redemption is in progress', async () => {
+    const { store, open, handlers } = setup(vi.fn().mockResolvedValue({ data: { status: 'complete' } }))
+
+    await open(makeReward())
+    await handlers()?.abort()
+    store.resetUserData()
+
+    expect(redemptionIdOf(store)).toBeUndefined()
+    expect(store.lastRewardId).toBeUndefined()
+    expect(store.isRedeeming).toBe(false)
+  })
+})

@@ -120,8 +120,15 @@ export class RootStore {
     this.dedicatedNodes = new DedicatedNodesStore(axios)
   }
 
-  /** The stores that hold data of the signed-in user, which sign-out forgets (src/app/forget-user.ts). */
+  /**
+   * The stores that hold data or intent of the signed-in user, which sign-out forgets (src/app/forget-user.ts). The
+   * dedicated nodes store is reset by `onLogout` itself.
+   */
   userDataStores = () => [
+    this.auth,
+    this.achievements,
+    this.demandAlerts,
+    this.termsAndConditions,
     this.balance,
     this.bonuses,
     this.xp,

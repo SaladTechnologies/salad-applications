@@ -550,11 +550,17 @@ export class RewardStore {
   }
 
   /**
-   * Forgets the target reward (not the reward cache, which is public, nor a redemption in progress) of the user who
-   * signed out, so the next user never sees them.
+   * Forgets the target reward, the recommended rewards, and the last redemption's id and reward of the user who signed
+   * out, so the next user never sees or reuses them. The server keys a redemption by its id across all users, so the
+   * next user's redemption of the same reward must not send the last user's id. A redemption in progress keeps its id
+   * (and `isRedeeming`), as its order or request still uses them. The reward cache is public and stays.
    */
   @action.bound
   resetUserData() {
     this.selectedTargetRewardId = undefined
+    this.recommendedRewards = []
+    if (!this.isRedeeming) {
+      this.clearRedemptionInfo()
+    }
   }
 }

@@ -364,5 +364,6 @@ export class ProfileStore {
     this.currentSelectedAvatar = undefined
     this.selectedAvatar = undefined
     this.connectedGoogleAccountEmail = undefined
+    this.protectRewardsRedemptionStatus = 'unknown'
   }
 }
