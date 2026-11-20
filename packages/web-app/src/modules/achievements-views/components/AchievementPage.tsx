@@ -1,6 +1,5 @@
 import { LoadingSpinner } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
-import { useEffect } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars-2'
 import type { IntlShape } from 'react-intl'
 import { injectIntl } from 'react-intl'
@@ -45,15 +44,10 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 
 interface Props extends WithStyles<typeof styles> {
   intl: IntlShape
-  getAchievements: () => void
   achievements: Achievement[] | undefined
 }
 
-const _AchievementPage = ({ classes, achievements, getAchievements }: Props) => {
-  useEffect(() => {
-    getAchievements()
-  }, [getAchievements])
-
+const _AchievementPage = ({ classes, achievements }: Props) => {
   return (
     <Scrollbars>
       <div className={classes.achievementPageWrapper}>
