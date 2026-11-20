@@ -11,7 +11,10 @@ export class EngagementStore {
   @observable
   public whatsNewVersion?: string
 
-  /** Whether the profile last saw an older version than the changelog's. The profile is not a MobX value: read it now. */
+  /**
+   * Whether the profile last saw a different version than the changelog's. The profile is not a MobX value: read it
+   * now.
+   */
   public get showWhatsNew(): boolean {
     const show =
       this.whatsNewVersion !== undefined &&

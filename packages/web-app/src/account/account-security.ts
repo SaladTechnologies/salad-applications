@@ -10,8 +10,8 @@ const backupCodesQueryKey = ['account', 'backup-codes'] as const
 
 /**
  * Runs `fetchPasskeys`, then `loadProfile`, each time an account summary page (desktop or mobile) opens, as its account
- * security section did. The passkeys and the profile stay in their stores, which the pages read. Both loads handle
- * their own errors.
+ * security section did. The passkeys stay in their store and the profile in its query, which the pages read. Both loads
+ * handle their own errors.
  */
 export const useAccountSecurityLoads = (
   fetchPasskeys: () => Promise<unknown>,
