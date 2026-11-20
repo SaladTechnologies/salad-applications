@@ -37,7 +37,9 @@ const handleClickTracking = (to?: string, trackingInfo?: any) => {
 const _SmartLink = ({ to, children, classes, className, trackingInfo }: Props) => {
   const isTextChild = typeof children === 'string'
   const finalClassName = classnames(classes.link, className, { [classes.hideUnderline]: !isTextChild })
-  if (to === undefined || to.startsWith('http')) {
+  // Only an app path navigates in the app. Anything else (an http or mailto link from the CMS, or a relative one) is a
+  // plain link the browser follows.
+  if (to === undefined || !to.startsWith('/')) {
     return (
       <a
         className={finalClassName}

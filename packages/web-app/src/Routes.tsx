@@ -1,5 +1,5 @@
 import { LoadingScreen } from '@saladtechnologies/garden-components'
-import type { ErrorComponentProps, RouterHistory } from '@tanstack/react-router'
+import type { RouterHistory } from '@tanstack/react-router'
 import {
   createRootRoute,
   createRoute,
@@ -99,12 +99,7 @@ const Root = () => {
   )
 }
 
-/** A page's render error goes up to the app's error boundary (in Root), as it did before the router caught them. */
-const rethrow = ({ error }: ErrorComponentProps): ReactNode => {
-  throw error
-}
-
-const rootRoute = createRootRoute({ component: Root, errorComponent: rethrow })
+const rootRoute = createRootRoute({ component: Root })
 
 /** The settings page around the page, except at `/account` itself, which redirects to the first page. */
 const Settings = () =>
@@ -232,4 +227,7 @@ export const createAppRouter = (history: RouterHistory) =>
     // Elastic search-ui owns the store search's query string; the router leaves it as written.
     parseSearch,
     stringifySearch,
+    // No route has an error component, so a page's render error reaches the app's error boundary in Root, and an
+    // error above that takes down the app, as before the router: no router boundary catches either.
+    disableGlobalCatchBoundary: true,
   })

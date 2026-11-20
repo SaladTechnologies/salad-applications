@@ -85,9 +85,10 @@ describe('app link', () => {
       </>,
     )
 
-    const classes = [...host.querySelectorAll('a')].map((link) => link.className)
+    const links = [...host.querySelectorAll('a')]
 
-    expect(classes).toStrictEqual(['item active', 'item'])
+    expect(links.map((link) => link.className)).toStrictEqual(['item active', 'item'])
+    expect(links.map((link) => link.getAttribute('aria-current'))).toStrictEqual(['page', null])
   })
 })
 

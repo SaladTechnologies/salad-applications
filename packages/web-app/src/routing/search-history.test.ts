@@ -32,4 +32,14 @@ describe('createSearchHistory', () => {
 
     expect(history).toHaveLength(2)
   })
+
+  it('leaves an empty query string out of the URL', () => {
+    const history = createMemoryHistory({ initialEntries: ['/store/search?q=gift'] })
+    const searchHistory = createSearchHistory(createNavigation(history), history)
+    const { push } = searchHistory
+
+    push({ pathname: '/store/search', search: '?' })
+
+    expect(history.location.href).toBe('/store/search')
+  })
 })

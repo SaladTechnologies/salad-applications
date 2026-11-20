@@ -47,7 +47,12 @@ export const AppLink = ({ to, className, activeClassName, onClick, children }: A
   }
 
   return (
-    <a href={to} className={classes === '' ? undefined : classes} onClick={handleClick}>
+    <a
+      href={to}
+      className={classes === '' ? undefined : classes}
+      aria-current={active ? 'page' : undefined}
+      onClick={handleClick}
+    >
       {children}
     </a>
   )

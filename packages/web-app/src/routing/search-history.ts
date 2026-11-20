@@ -21,6 +21,9 @@ export interface SearchHistory {
   listen: (listener: (location: { readonly search: string }) => void) => () => void
 }
 
+/** Returns the query string to put in the URL: none for an empty one (`?`), as history v4 left it out. */
+const queryOf = (search: string): string => (search === '?' ? '' : search)
+
 /**
  * Creates the history search-ui reads and writes the search's query string through. Its pushes go through the app's
  * {@link Navigation}, so a repeated push adds no history entry.
@@ -30,10 +33,10 @@ export const createSearchHistory = (navigation: Navigation, history: RouterHisto
     return { search: history.location.search }
   },
   push: ({ pathname, search }) => {
-    navigation.push(pathname + search)
+    navigation.push(pathname + queryOf(search))
   },
   replace: ({ pathname, search }) => {
-    navigation.replace(pathname + search)
+    navigation.replace(pathname + queryOf(search))
   },
   listen: (listener) =>
     history.subscribe(({ location }) => {
