@@ -19,7 +19,6 @@
     "src/hooks/**/*",
     "src/index.css",
     "src/index.tsx",
-    "src/MobileRoutes.tsx",
     "src/modules/**/*",
     "src/otherTypes.d.ts",
     "src/Routes.tsx",

@@ -1,21 +1,15 @@
 import classnames from 'classnames'
-import { useCallback, useEffect, type ComponentType } from 'react'
+import { useCallback, useEffect } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { Route, Switch } from 'react-router'
-import { Button, Divider, LinkListUnstyled, MenuTitle, NoPageFound } from '.'
-import { AccountContainer } from '../modules/account-views/account-views'
-import { ReferralSettingsContainer } from '../modules/account-views/referral-views'
-import { AchievementPageContainer } from '../modules/achievements-views'
-import { BonusPageContainer } from '../modules/bonus-views'
-import { DemandAlertsPage } from '../modules/demand-alerts-views'
+import { Outlet } from '@tanstack/react-router'
+import { Button, Divider, LinkListUnstyled, MenuTitle } from '.'
 import { IconArrowLeft } from '../modules/reward-views/components/assets'
 import { styles } from './SettingsPage.styles'
 
 interface MenuItem {
   url: string
   text: string
-  component?: ComponentType<any>
   /** Should a divider be drawn before this item */
   divider?: boolean
   /** Is the item clickable */
@@ -58,19 +52,11 @@ const _Settings = ({ appBuild, classes, menuButtons, isUserReferralsEnabled, onC
   }, [handleCloseKeyPress])
 
   const menuItems: MenuItem[] = [
-    { url: '/account/summary', text: 'Account', component: AccountContainer },
-    isUserReferralsEnabled && { url: '/account/referrals', text: 'Referrals', component: ReferralSettingsContainer },
-    { url: '/account/bonuses', text: 'Bonuses', component: BonusPageContainer },
-    {
-      url: '/account/achievements',
-      text: 'Achievements',
-      component: AchievementPageContainer,
-    },
-    {
-      url: '/account/alerts',
-      text: 'Demand Alerts',
-      component: DemandAlertsPage,
-    },
+    { url: '/account/summary', text: 'Account' },
+    isUserReferralsEnabled && { url: '/account/referrals', text: 'Referrals' },
+    { url: '/account/bonuses', text: 'Bonuses' },
+    { url: '/account/achievements', text: 'Achievements' },
+    { url: '/account/alerts', text: 'Demand Alerts' },
   ].filter((menuItem) => menuItem) as MenuItem[]
 
   return (
@@ -97,12 +83,8 @@ const _Settings = ({ appBuild, classes, menuButtons, isUserReferralsEnabled, onC
         </div>
       </div>
       <div className={classnames(classes.settings)}>
-        <Switch>
-          {menuItems?.map((menuItem) => (
-            <Route key={menuItem.url} exact path={menuItem.url} component={menuItem.component} />
-          ))}
-          <Route component={NoPageFound} />
-        </Switch>
+        {/* The page: the route tree (src/Routes.tsx) has a route for each menu item, and "not found" for any other */}
+        <Outlet />
       </div>
     </div>
   )

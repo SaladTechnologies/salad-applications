@@ -2,11 +2,9 @@ import type { ReactNode } from 'react'
 import { Component } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { Route, Switch } from 'react-router'
+import { Outlet } from '@tanstack/react-router'
 import type { SaladTheme } from '../../../../SaladTheme'
-import { StorefrontPageContainer } from '../../StorefrontPageContainer'
 import { RewardSearchBarContainer } from './RewardSearchBar/RewardSearchBarContainer'
-import { RewardSearchResultContainer } from './RewardSearchResult/RewardSearchResultContainer'
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -49,10 +47,8 @@ class _StorefrontHomePage extends Component<WithStyles<typeof styles>> {
         <div className={classes.appContainer}>
           <RewardSearchBarContainer />
           <div className={classes.main}>
-            <Switch>
-              <Route exact path="/store" component={StorefrontPageContainer} />
-              <Route exact path="/store/search" component={RewardSearchResultContainer} />
-            </Switch>
+            {/* The store's home page or its search results (src/Routes.tsx) */}
+            <Outlet />
           </div>
         </div>
       </div>

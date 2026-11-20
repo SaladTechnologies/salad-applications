@@ -1,7 +1,6 @@
 import { SearchProvider } from '@elastic/react-search-ui'
 import AppSearchAPIConnector from '@elastic/search-ui-app-search-connector'
 import classNames from 'classnames'
-import type { History } from 'history'
 import { useEffect } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars-2'
 import type { UseErrorBoundaryApi } from 'react-error-boundary'
@@ -9,12 +8,12 @@ import { useErrorBoundary } from 'react-error-boundary'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { ToastContainer } from 'react-toastify'
+import { Outlet } from '@tanstack/react-router'
 import { MobileDevice, NotMobile } from './components'
 import { config } from './config'
 import { connect } from './connect'
-import { MobileRoutes } from './MobileRoutes'
 import { NavigationBarContainer } from './modules/home-views'
-import { Routes } from './Routes'
+import type { SearchHistory } from './routing/search-history.ts'
 import type { SaladTheme } from './SaladTheme'
 import type { RootStore } from './Store'
 
@@ -104,13 +103,12 @@ const searchConfig = {
 }
 
 interface AppProps extends WithStyles<typeof styles> {
-  isAuthenticated: boolean
   setErrorBoundary: (errorBoundary: UseErrorBoundaryApi<Error>) => void
   withInstallReminder: boolean
-  history: History
+  searchHistory: SearchHistory
 }
 
-const _App = ({ classes, history, isAuthenticated, setErrorBoundary, withInstallReminder }: AppProps) => {
+const _App = ({ classes, searchHistory, setErrorBoundary, withInstallReminder }: AppProps) => {
   const errorBoundary = useErrorBoundary()
 
   useEffect(() => {
@@ -126,7 +124,7 @@ const _App = ({ classes, history, isAuthenticated, setErrorBoundary, withInstall
           </div>
           <Scrollbars>
             <div className={classes.mobileContent}>
-              <MobileRoutes />
+              <Outlet />
             </div>
           </Scrollbars>
         </div>
@@ -139,10 +137,10 @@ const _App = ({ classes, history, isAuthenticated, setErrorBoundary, withInstall
               <SearchProvider
                 config={{
                   ...searchConfig,
-                  history: history,
+                  history: searchHistory,
                 }}
               >
-                <Routes isAuthenticated={isAuthenticated} />
+                <Outlet />
               </SearchProvider>
             </div>
             <ToastContainer />
@@ -155,7 +153,6 @@ const _App = ({ classes, history, isAuthenticated, setErrorBoundary, withInstall
 
 const mapStoreToProps = (store: RootStore, props: AppProps): any => ({
   ...props,
-  isAuthenticated: store.auth.isAuthenticated,
   setErrorBoundary: store.errorBoundary.setErrorBoundary,
   withInstallReminder: store.profile.withInstallReminder,
 })

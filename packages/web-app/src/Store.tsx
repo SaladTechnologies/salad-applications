@@ -1,7 +1,7 @@
 import type { AxiosInstance } from 'axios'
 import { action, configure, flow, observable, runInAction } from 'mobx'
-import { RouterStore } from 'mobx-react-router'
 import { UIStore } from './UIStore'
+import type { Navigation } from './routing/navigation.ts'
 import { AchievementsStore } from './modules/achievements'
 import { AnalyticsStore } from './modules/analytics'
 import { AuthStore } from './modules/auth'
@@ -40,11 +40,15 @@ configure({
 
 let sharedStore: RootStore
 
-export const createStore = (axios: AxiosInstance, setSession: (session: 'yes' | 'no') => void): RootStore => {
+export const createStore = (
+  axios: AxiosInstance,
+  setSession: (session: 'yes' | 'no') => void,
+  navigation: Navigation,
+): RootStore => {
   // Vite compiles decorators the TypeScript way, so each store's field initializers are writes in its constructor.
   // `enforceActions: 'always'` rejects writes outside an action, so construct inside one. (CRA's Babel set initial
   // values without a write.)
-  sharedStore = runInAction(() => new RootStore(axios, setSession))
+  sharedStore = runInAction(() => new RootStore(axios, setSession, navigation))
   return sharedStore
 }
 
@@ -59,7 +63,7 @@ export class RootStore {
   public readonly auth: AuthStore
   public readonly termsAndConditions: TermsAndConditionsStore
   public readonly analytics: AnalyticsStore
-  public readonly routing: RouterStore
+  public readonly routing: Navigation
   public readonly xp: ExperienceStore
   public readonly rewards: RewardStore
   public readonly render: RenderStore
@@ -86,8 +90,8 @@ export class RootStore {
   public readonly coinbaseEmail: CoinbaseEmailStore
   public readonly dedicatedNodes: DedicatedNodesStore
 
-  constructor(axios: AxiosInstance, setSession: (session: 'yes' | 'no') => void) {
-    this.routing = new RouterStore()
+  constructor(axios: AxiosInstance, setSession: (session: 'yes' | 'no') => void, navigation: Navigation) {
+    this.routing = navigation
     this.auth = new AuthStore(this, axios, setSession)
     this.notifications = new NotificationStore(this)
     this.xp = new ExperienceStore(axios)

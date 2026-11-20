@@ -6,7 +6,6 @@ import withStyles from 'react-jss'
 import { useMediaQuery } from 'react-responsive'
 import { ErrorText, Head, mobileSize, Scrollbar } from '../../components'
 import type { SaladTheme } from '../../SaladTheme'
-import { withLogin } from '../auth-views'
 import {
   filterNodesByEk,
   parseEkFilter,
@@ -257,4 +256,4 @@ const _DedicatedNodesPage: FC<DedicatedNodesPageProps> = ({
   )
 }
 
-export const DedicatedNodesPage = withLogin(withStyles(styles)(_DedicatedNodesPage))
+export const DedicatedNodesPage = withStyles(styles)(_DedicatedNodesPage)

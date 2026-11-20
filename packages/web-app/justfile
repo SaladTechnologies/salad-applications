@@ -3,8 +3,9 @@ set shell := ["bash", "-euo", "pipefail", "-c"]
 
 # List of allowed licenses for dependencies: the go template's list, plus 0BSD, BlueOak-1.0.0, CC0-1.0, PSF-2.0,
 # and Python-2.0, which are as permissive, and CC-BY-4.0, the license of caniuse-lite's browser data. This project adds
-# MIT-0 (MIT without the notice requirement, so more permissive), used by @csstools packages under jsdom.
-typescript-allowed-licenses := "0BSD,Apache-2.0,BlueOak-1.0.0,BSD-2-Clause,BSD-3-Clause,CC-BY-4.0,CC0-1.0,ISC,MIT,MIT-0,MPL-2.0,PSF-2.0,Python-2.0,Unicode-3.0,Zlib"
+# MIT-0 (MIT without the notice requirement, so more permissive), used by @csstools packages under jsdom, and Unlicense
+# (a public-domain dedication, like CC0-1.0), used by isbot under @tanstack/react-router.
+typescript-allowed-licenses := "0BSD,Apache-2.0,BlueOak-1.0.0,BSD-2-Clause,BSD-3-Clause,CC-BY-4.0,CC0-1.0,ISC,MIT,MIT-0,MPL-2.0,PSF-2.0,Python-2.0,Unicode-3.0,Unlicense,Zlib"
 
 # Project-specific: package versions whose license was read by hand because package.json does not declare it as an
 # SPDX identifier. Each entry names an exact version, so an upgrade is reviewed again.

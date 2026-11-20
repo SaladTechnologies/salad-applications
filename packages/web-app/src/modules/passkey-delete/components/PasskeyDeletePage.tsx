@@ -9,7 +9,6 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
 import Referrals from '../../../assets/Referrals.svg'
-import { withLogin } from '../../auth-views'
 import type { Passkey } from '../../passkey-setup'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
@@ -150,4 +149,4 @@ const _PasskeyDeletePage: FC<Props> = ({ classes, passkey, isLastPasskey, onDele
   )
 }
 
-export const PasskeyDeletePage = withLogin(withStyles(styles)(_PasskeyDeletePage))
+export const PasskeyDeletePage = withStyles(styles)(_PasskeyDeletePage)

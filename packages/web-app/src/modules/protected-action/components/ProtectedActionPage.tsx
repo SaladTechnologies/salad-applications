@@ -10,7 +10,6 @@ import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
 import Referrals from '../../../assets/Referrals.svg'
 import { TextField } from '../../../components'
-import { withLogin } from '../../auth-views'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   pageWrapper: {
@@ -294,4 +293,4 @@ const _ProtectedActionPage: FC<Props> = ({
   )
 }
 
-export const ProtectedActionPage = withLogin(withStyles(styles)(_ProtectedActionPage))
+export const ProtectedActionPage = withStyles(styles)(_ProtectedActionPage)
