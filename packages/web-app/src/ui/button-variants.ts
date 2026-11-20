@@ -3,8 +3,8 @@ import { cva } from 'class-variance-authority'
 /**
  * The button's classes for each variant and size (shadcn/ui's Button). Without Tailwind's Preflight (see tailwind.css),
  * the base classes reset what the browser's button and link styles set: border, background, margin, padding, font, box
- * sizing, and underline. The font reset names its type (`family-name`): tailwind-merge reads a bare `font-[...]` as a
- * weight, so `font-medium` would drop it.
+ * sizing, and underline. The font reset names its type (`family-name`): tailwind-merge reads an arbitrary font value
+ * without one as a weight, so `font-medium` would drop it.
  */
 export const buttonVariants = cva(
   [

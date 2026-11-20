@@ -21,6 +21,7 @@ describe('button', () => {
 
     expect(classes).toContain('bg-primary')
     expect(classes).toContain('h-9')
+    expect(classes).not.toContain('bg-transparent')
   })
 
   it('keeps the resets for the browser button and link styles', () => {
