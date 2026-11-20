@@ -106,6 +106,7 @@ export class ProfileStore {
   @action
   setProfileData = (profileData: Profile) => {
     this.currentProfile = profileData
+    this.store.engagement.checkWhatsNew()
   }
 
   @action
@@ -124,6 +125,7 @@ export class ProfileStore {
       this.currentProfile = undefined
       this.store.errorBoundary.showErrorBoundary(new Error(`An error occurred: ${err}`))
     }
+    this.store.engagement.checkWhatsNew()
     return this.currentProfile
   })
 
@@ -211,6 +213,7 @@ export class ProfileStore {
       this.isUserNameSubmitting = false
       this.isUserNameSubmitSuccess = true
       this.currentProfile = profile
+      this.store.engagement.checkWhatsNew()
     } catch (err) {
       this.isUserNameSubmitting = false
     }
@@ -244,6 +247,7 @@ export class ProfileStore {
       this.isMinecraftUserNameSubmitting = false
       this.isMinecraftUserNameSubmitSuccess = true
       this.currentProfile = profile
+      this.store.engagement.checkWhatsNew()
     } catch (error) {
       this.store.notifications.sendNotification({
         category: NotificationMessageCategory.FurtherActionRequired,

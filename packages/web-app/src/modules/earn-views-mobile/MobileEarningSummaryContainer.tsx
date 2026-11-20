@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { connect } from '../../connect'
+import { useXp } from '../../account/xp.ts'
 import { useMachineEarningRates, useMachineEarningsHistory } from '../../earnings/machine-earnings.ts'
 import type { RootStore } from '../../Store'
 import { getStore } from '../../Store'
 import { MobileEarningSummary } from './components/MobileEarningSummary'
 
 interface OwnProps {
+  xp: number
   onPageMachineIdsChange: (machineIds: string[]) => void
 }
 
@@ -13,7 +15,7 @@ const mapStoreToProps = (store: RootStore, props: OwnProps): any => ({
   currentBalance: store.balance.currentBalance,
   earningsPerMachine: store.balance.earningsPerMachine,
   lifetimeBalance: store.balance.lifetimeBalance,
-  totalXp: store.xp.currentXp,
+  totalXp: props.xp,
   last24HrEarnings: store.balance.lastDayEarnings,
   last7DayEarnings: store.balance.lastWeekEarnings,
   last30DayEarnings: store.balance.lastMonthEarnings,
@@ -34,5 +36,6 @@ export const MobileEarningSummaryContainer = () => {
   const [pageMachineIds, setPageMachineIds] = useState<string[]>([])
   useMachineEarningsHistory(store.balance.loadEarningsPerMachine)
   useMachineEarningRates(pageMachineIds, store.balance.loadCurrentEarningRatesPerMachine)
-  return <ConnectedMobileEarningSummary onPageMachineIdsChange={setPageMachineIds} />
+  const xp = useXp()
+  return <ConnectedMobileEarningSummary xp={xp} onPageMachineIdsChange={setPageMachineIds} />
 }
