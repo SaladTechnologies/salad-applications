@@ -3,11 +3,15 @@ import type { RootStore } from '../../Store'
 import { SettingsPage } from '../../components'
 import { config } from '../../config'
 import { connect } from '../../connect'
+import { useSession } from '../../data/session.ts'
 
-const mapStoreToProps = (store: RootStore, props: { isUserReferralsEnabled: boolean }): any => {
+const mapStoreToProps = (
+  store: RootStore,
+  props: { isUserReferralsEnabled: boolean; isAuthenticated: boolean },
+): any => {
   return {
     appBuild: config.appBuild,
-    menuButtons: store.auth.isAuthenticated
+    menuButtons: props.isAuthenticated
       ? [
           {
             text: 'Log out',
@@ -29,4 +33,6 @@ const mapStoreToProps = (store: RootStore, props: { isUserReferralsEnabled: bool
 const ConnectedSettings = connect(mapStoreToProps, SettingsPage)
 
 /** The settings page around the account pages. Its menu shows the referrals page only while referrals are enabled. */
-export const SettingsContainer = () => <ConnectedSettings isUserReferralsEnabled={useReferralCode().enabled} />
+export const SettingsContainer = () => (
+  <ConnectedSettings isUserReferralsEnabled={useReferralCode().enabled} isAuthenticated={useSession() === 'yes'} />
+)

@@ -10,6 +10,7 @@ import { startButton as startButtonFor } from '../../app/start-button.ts'
 import type { RootStore } from '../../Store'
 import { getStore } from '../../Store'
 import { connect } from '../../connect'
+import { isSignedIn, useSession } from '../../data/session.ts'
 import type { ProfileState } from '../../account/profile-state.ts'
 import { profileAvatarOf, useProfileState } from '../../account/profile-state.ts'
 import { NavigationBarWithNotifications } from './components/NavigationBarWithNotifications'
@@ -27,10 +28,12 @@ interface DrawerProps {
   profile: Profile | undefined
   /** The profile store's state: the selected avatar, and whether the install reminder was closed. */
   profileState: ProfileState
+  /** Whether the user is signed in: `undefined` until it is known. */
+  isAuthenticated: boolean | undefined
 }
 
 const mapStoreToProps = (store: RootStore, drawer: DrawerProps): any => {
-  const isAuthenticated = store.auth.isAuthenticated
+  const { isAuthenticated } = drawer
   const handleLogin = () => {
     store.analytics.trackButtonClicked('login_button', 'Log In Button', 'enabled')
     store.auth.login()
@@ -111,7 +114,11 @@ const mapStoreToProps = (store: RootStore, drawer: DrawerProps): any => {
     username: isAuthenticated ? drawer.profile?.username : undefined,
     targetReward,
     notifications,
-    withInstallReminder: store.profile.withInstallReminder(drawer.profile, drawer.profileState.isInstallReminderClosed),
+    withInstallReminder: store.profile.withInstallReminder(
+      drawer.profile,
+      drawer.profileState.isInstallReminderClosed,
+      isAuthenticated,
+    ),
     isUserReferralsEnabled: drawer.isUserReferralsEnabled,
   }
 }
@@ -133,6 +140,7 @@ export const NavigationBarContainer = () => {
       bonusClaims={bonusClaims}
       profile={useProfile()}
       profileState={useProfileState(getStore().profile)}
+      isAuthenticated={isSignedIn(useSession())}
     />
   )
 }

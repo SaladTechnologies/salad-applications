@@ -1,13 +1,16 @@
 import { connect } from '../../connect'
+import { isSignedIn, useSession } from '../../data/session.ts'
 import type { RootStore } from '../../Store'
 import { LoginPanel } from './components/LoginPanel'
 
 interface Props {
   text?: string
+  /** Whether the user is signed in: `undefined` until it is known. */
+  authenticated: boolean | undefined
 }
 
 const mapStoreToProps = (store: RootStore, props: Props): any => ({
-  authenticated: store.auth.isAuthenticated,
+  authenticated: props.authenticated,
   // TODO:
   // canLogin: !store.auth.isAuthenticationPending,
   canLogin: true,
@@ -16,4 +19,9 @@ const mapStoreToProps = (store: RootStore, props: Props): any => ({
   text: props.text,
 })
 
-export const LoginPanelContainer = connect(mapStoreToProps, LoginPanel)
+const ConnectedLoginPanel = connect(mapStoreToProps, LoginPanel)
+
+/** The login panel. It reads the session, which says whether the user is signed in. */
+export const LoginPanelContainer = ({ text }: { text?: string }) => (
+  <ConnectedLoginPanel text={text} authenticated={isSignedIn(useSession())} />
+)

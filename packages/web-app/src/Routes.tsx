@@ -19,7 +19,7 @@ import type { ReactNode } from 'react'
 import { useMemo, useState } from 'react'
 import { App } from './App'
 import { ByDevice, ErrorBoundary, Head, MobilePageNotFound, NoPageFound } from './components'
-import { useSession } from './data/session.ts'
+import { isSignedIn, useSession } from './data/session.ts'
 import { MobileAccountSummaryContainer } from './modules/account-views-mobile'
 import { AccountContainer } from './modules/account-views/account-views'
 import { ReferralSettingsContainer } from './modules/account-views/referral-views'
@@ -85,6 +85,7 @@ const Root = () => {
   const searchHistory = useMemo(() => createSearchHistory(store.routing, history), [store.routing, history])
   const profile = useProfile()
   const { isInstallReminderClosed } = useProfileState(store.profile)
+  const isAuthenticated = isSignedIn(useSession())
   return (
     <NavigationContext.Provider value={store.routing}>
       <ErrorBoundary>
@@ -102,6 +103,7 @@ const Root = () => {
                     searchHistory={searchHistory}
                     profile={profile}
                     isInstallReminderClosed={isInstallReminderClosed}
+                    isAuthenticated={isAuthenticated}
                   />
                 </>
               )

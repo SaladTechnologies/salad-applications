@@ -1,5 +1,5 @@
 import type { AxiosInstance, AxiosResponse } from 'axios'
-import type { AuthStore } from '../auth'
+import type { Auth } from '../../account/auth.ts'
 import type { HelpScoutIdentifyUser } from './models/interfaces'
 
 const defaultHelpScoutBeaconId = '29fdaae4-715f-48dc-b93e-5552ef031abc'
@@ -7,14 +7,14 @@ const defaultHelpScoutBeaconId = '29fdaae4-715f-48dc-b93e-5552ef031abc'
 export class HelpScoutStore {
   constructor(
     private readonly axios: AxiosInstance,
-    private readonly auth: AuthStore,
+    private readonly auth: Auth,
   ) {
     this.inject()
   }
 
   private async getSignature(beaconId: string): Promise<string | undefined> {
     let signature: string | null | undefined
-    if (this.auth.isAuthenticated) {
+    if (this.auth.isAuthenticated()) {
       let response = await this.axios.post<never, AxiosResponse<{ signature: string | null | undefined }>>(
         `/api/v2/help-scout-signatures?beaconId=${beaconId}`,
       )

@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 import { connect } from '../../../connect'
 import { useHttp } from '../../../data/http-context.ts'
+import { isSignedIn, useSession } from '../../../data/session.ts'
 import type { DemandedHardwarePerformance } from '../../../earnings/demand-monitor.ts'
 import { useDemandMonitorGpus } from '../../../earnings/demand-monitor.ts'
 import { useNavigation } from '../../../routing/navigation-context.ts'
@@ -14,6 +15,8 @@ const _DemandMonitorPageContainer: FC<DemandMonitorPageProps> = ({ isAuthenticat
 interface OwnProps {
   onNavigateToDemandAlerts: () => void
   demandedHardwarePerformanceList: DemandedHardwarePerformance[] | undefined
+  /** Whether the user is signed in: `undefined` until it is known. */
+  isAuthenticated: boolean | undefined
 }
 
 const mapStoreToProps = (store: RootStore, props: OwnProps): any => ({
@@ -22,7 +25,7 @@ const mapStoreToProps = (store: RootStore, props: OwnProps): any => ({
     store.auth.login('/account/alerts')
   },
   navigateToDemandAlerts: props.onNavigateToDemandAlerts,
-  isAuthenticated: store.auth.isAuthenticated,
+  isAuthenticated: props.isAuthenticated,
   demandedHardwarePerformanceList: props.demandedHardwarePerformanceList,
 })
 
@@ -36,6 +39,7 @@ export const DemandMonitorPageContainer = () => {
     <ConnectedDemandMonitorPage
       demandedHardwarePerformanceList={demandedHardwarePerformanceList}
       onNavigateToDemandAlerts={() => navigation.push('/account/alerts')}
+      isAuthenticated={isSignedIn(useSession())}
     />
   )
 }

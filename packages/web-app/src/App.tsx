@@ -111,6 +111,8 @@ interface AppProps extends WithStyles<typeof styles> {
   profile: Profile | undefined
   /** Whether the user closed the install reminder. */
   isInstallReminderClosed: boolean
+  /** Whether the user is signed in: `undefined` until it is known. */
+  isAuthenticated: boolean | undefined
 }
 
 const _App = ({ classes, searchHistory, setErrorBoundary, withInstallReminder }: AppProps) => {
@@ -159,7 +161,11 @@ const _App = ({ classes, searchHistory, setErrorBoundary, withInstallReminder }:
 const mapStoreToProps = (store: RootStore, props: AppProps): any => ({
   ...props,
   setErrorBoundary: store.errorBoundary.setErrorBoundary,
-  withInstallReminder: store.profile.withInstallReminder(props.profile, props.isInstallReminderClosed),
+  withInstallReminder: store.profile.withInstallReminder(
+    props.profile,
+    props.isInstallReminderClosed,
+    props.isAuthenticated,
+  ),
 })
 
 export const App = connect(mapStoreToProps, withStyles(styles)(_App))

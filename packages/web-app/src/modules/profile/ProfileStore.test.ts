@@ -31,12 +31,12 @@ const setUp = (http: Partial<AxiosInstance>, kept: Profile | undefined) => {
   const checkWhatsNew = vi.fn<() => void>()
   const showErrorBoundary = vi.fn<(error: Error) => void>()
   const resetErrorBoundary = vi.fn<() => void>()
+  const sendNotification = vi.fn<(message: unknown) => void>()
   const store = {
     engagement: { checkWhatsNew },
     errorBoundary: { showErrorBoundary, resetErrorBoundary },
-    auth: { isAuthenticated: true },
     routing: { replace: vi.fn<(path: string) => void>() },
-    notifications: { sendNotification: vi.fn<(message: unknown) => void>() },
+    notifications: { sendNotification },
   } as unknown as RootStore
   return {
     profileStore: new ProfileStore(store, http as AxiosInstance, profiles),
@@ -44,6 +44,7 @@ const setUp = (http: Partial<AxiosInstance>, kept: Profile | undefined) => {
     checkWhatsNew,
     showErrorBoundary,
     resetErrorBoundary,
+    sendNotification,
   }
 }
 
@@ -119,12 +120,44 @@ describe('ProfileStore', () => {
     })
   })
 
-  it('shows the install reminder only while it is not closed', () => {
+  it.each([
+    [
+      'Success',
+      {
+        category: 'Success',
+        title: 'Your Accounts were Successfully Linked',
+        message: 'Your Salad account and Google account are now connected.',
+      },
+    ],
+    [
+      'Failed',
+      {
+        category: 'Error',
+        title: 'Account Connection Failed',
+        message: `We're having trouble connecting your account. Please try again.`,
+        type: 'error',
+      },
+    ],
+  ])('shows the Google connection toast when the connection ends with %s', (status, toast) => {
+    const { profileStore, sendNotification } = setUp({}, undefined)
+    vi.stubGlobal('window', {
+      location: { search: `?external-login-status=${status}&external-login-action=OneTimeCodeFlow` },
+    })
+
+    profileStore.connectExternalAccountProvider()
+    vi.unstubAllGlobals()
+
+    expect(sendNotification).toHaveBeenCalledExactlyOnceWith(toast)
+  })
+
+  it('shows the install reminder only while it is not closed and the user is signed in', () => {
     const { profileStore } = setUp({}, undefined)
     const newChef = { ...profile, createdAt: '2026-01-01T00:00:00Z' }
 
-    expect(profileStore.withInstallReminder(newChef, false)).toBe(true)
-    expect(profileStore.withInstallReminder(newChef, true)).toBe(false)
+    expect(profileStore.withInstallReminder(newChef, false, true)).toBe(true)
+    expect(profileStore.withInstallReminder(newChef, true, true)).toBe(false)
+    expect(profileStore.withInstallReminder(newChef, false, false)).toBe(false)
+    expect(profileStore.withInstallReminder(newChef, false, undefined)).toBe(false)
   })
 
   it('tells its readers when the install reminder is closed, and stores it', () => {

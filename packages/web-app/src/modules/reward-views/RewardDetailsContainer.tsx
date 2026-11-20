@@ -3,6 +3,7 @@ import type { Profile } from '../../account/profile.ts'
 import { useProfile } from '../../account/profile.ts'
 import { connect } from '../../connect'
 import { useHttp } from '../../data/http-context.ts'
+import { isSignedIn, useSession } from '../../data/session.ts'
 import { fetchRewardResource, rewardQueryKey } from '../../rewards/reward.ts'
 import { isStorefrontOutdated, storefrontQueryKey } from '../../rewards/storefront.ts'
 import { useNavigation } from '../../routing/navigation-context.ts'
@@ -18,6 +19,8 @@ interface OwnProps {
   onBack: () => void
   /** The signed-in user's profile, which says whether a Minecraft reward still needs a username. */
   profile: Profile | undefined
+  /** Whether the user is signed in: `undefined` until it is known. */
+  isAuthenticated: boolean | undefined
 }
 
 const mapStoreToProps = (store: RootStore, props: OwnProps): any => {
@@ -38,7 +41,7 @@ const mapStoreToProps = (store: RootStore, props: OwnProps): any => {
   const isRewardSelectedAsTarget = store.rewards.selectedTargetReward?.id === reward?.id
 
   return {
-    authenticated: store.auth.isAuthenticated,
+    authenticated: props.isAuthenticated,
     rewardId: props.match.params.id,
     currentBalance: store.balance.currentBalance,
     reward: reward,
@@ -93,6 +96,11 @@ export const RewardDetailsContainer = ({
     enabled: id !== '',
   })
   return (
-    <ConnectedRewardDetails match={match} onBack={() => navigation.goBackOr(backFallback)} profile={useProfile()} />
+    <ConnectedRewardDetails
+      match={match}
+      onBack={() => navigation.goBackOr(backFallback)}
+      profile={useProfile()}
+      isAuthenticated={isSignedIn(useSession())}
+    />
   )
 }

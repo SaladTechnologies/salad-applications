@@ -76,10 +76,14 @@ export class ProfileStore {
   }
 
   /**
-   * Whether the app shows the install reminder for the profile, read with the profile and the reminder's closed state a
-   * component shows (`useProfile`, `useProfileState`).
+   * Whether the app shows the install reminder for the profile, read with the profile, the reminder's closed state and
+   * the session a component shows (`useProfile`, `useProfileState`, `useSession`).
    */
-  public withInstallReminder(profile: Profile | undefined, isInstallReminderClosed: boolean): boolean {
+  public withInstallReminder(
+    profile: Profile | undefined,
+    isInstallReminderClosed: boolean,
+    isAuthenticated: boolean | undefined,
+  ): boolean {
     const isProfileCreatedAfterInstallReminderReleaseDate = profile?.createdAt
       ? new Date(profile?.createdAt) > installReminderFeatureReleaseDate
       : false
@@ -88,7 +92,7 @@ export class ProfileStore {
       isProfileCreatedAfterInstallReminderReleaseDate &&
       !isInstallReminderClosed &&
       !profile?.saladBowlFirstLoginAt &&
-      !!this.store.auth.isAuthenticated
+      !!isAuthenticated
     )
   }
 
@@ -259,11 +263,20 @@ export class ProfileStore {
       externalAuthProviderLoginAction === ExternalAuthProviderLoginAction.WithMessageConfirmation
     ) {
       if (externalAuthProviderLoginStatus === ExternalAuthProviderLoginStatus.Success) {
-        this.store.auth.successfulExternalProviderConnection()
+        this.store.notifications.sendNotification({
+          category: NotificationMessageCategory.Success,
+          title: 'Your Accounts were Successfully Linked',
+          message: 'Your Salad account and Google account are now connected.',
+        })
       }
 
       if (externalAuthProviderLoginStatus === ExternalAuthProviderLoginStatus.Failed) {
-        this.store.auth.failedExternalProviderConnection()
+        this.store.notifications.sendNotification({
+          category: NotificationMessageCategory.Error,
+          title: 'Account Connection Failed',
+          message: `We're having trouble connecting your account. Please try again.`,
+          type: 'error',
+        })
       }
     }
   }

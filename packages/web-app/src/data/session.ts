@@ -31,3 +31,7 @@ export const SessionContext = createContext<Session>('unknown')
 
 /** Returns whether the user is signed in. */
 export const useSession = (): Session => useContext(SessionContext)
+
+/** Returns whether the user is signed in, `undefined` until it is known. */
+export const isSignedIn = (session: Session): boolean | undefined =>
+  session === 'unknown' ? undefined : session === 'yes'

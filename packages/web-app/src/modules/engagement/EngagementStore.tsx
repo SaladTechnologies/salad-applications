@@ -31,7 +31,7 @@ export class EngagementStore {
    */
   private readonly showWhatsNewOnce = onceWhen(
     () =>
-      this.whatsNewVersion !== undefined && !!this.store.auth.isAuthenticated && !!this.store.profile?.currentProfile,
+      this.whatsNewVersion !== undefined && !!this.store.auth.isAuthenticated() && !!this.store.profile?.currentProfile,
     () => {
       //Check to see if we should add the What's New notification
       if (this.showWhatsNew) {

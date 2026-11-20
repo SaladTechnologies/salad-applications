@@ -16,7 +16,7 @@ export class RefreshService {
       console.error(error)
     }
 
-    if (!this.store.auth.isAuthenticated) {
+    if (!this.store.auth.isAuthenticated()) {
       return
     }
 
