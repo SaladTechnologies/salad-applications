@@ -1,7 +1,6 @@
 import type { ExternalState } from '../../app/external-state.ts'
 import { createExternalState } from '../../app/external-state.ts'
 import type { RenderExchangeRate } from './models'
-import { isExchangeRateStale } from './utils'
 
 /** The RENDER/USD quote held, which the quote reads with `useExternalState`. */
 export interface RenderState {
@@ -20,11 +19,6 @@ export class RenderStore {
   /** The quote held now, which redemption sends. */
   public get exchangeRate(): RenderExchangeRate | undefined {
     return this.state.get().exchangeRate
-  }
-
-  /** Whether the currently held quote should be treated as stale. */
-  public get isExchangeRateStale(): boolean {
-    return isExchangeRateStale(this.exchangeRate)
   }
 
   /** Holds a newly fetched quote. */
