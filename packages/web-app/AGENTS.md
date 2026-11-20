@@ -31,15 +31,17 @@ justfile's `lint-typescript` is now the template's.
 
 - `tsconfig.browser.json` (the template's) holds code the rebuild has written or rewritten. New code goes there.
 - `tsconfig.legacy.json` holds the code the rebuild has not rewritten yet: the browser project's settings plus
-  `experimentalDecorators` and `useDefineForClassFields: false` for MobX, with `erasableSyntaxOnly`,
-  `exactOptionalPropertyTypes`, and `noPropertyAccessFromIndexSignature` off (about 850 findings in the old code). Its
-  `include` lists the folders and files of the old code; when an area is rewritten, its entry moves out of this list
-  (and out of `exclude` in `tsconfig.browser.json`). The list only shrinks: never add new code to it.
+  `useDefineForClassFields: false` (the old classes' field initializers read constructor parameters), with
+  `erasableSyntaxOnly`, `exactOptionalPropertyTypes`, and `noPropertyAccessFromIndexSignature` off (about 850 findings
+  in the old code). Its `include` lists the folders and files of the old code; when an area is rewritten, its entry
+  moves out of this list (and out of `exclude` in `tsconfig.browser.json`). The list only shrinks: never add new code to
+  it.
 - `tsconfig.generated.json` holds Kiota's generated Machines API client, with `verbatimModuleSyntax` off; the reason is
   in the file.
 - `tsconfig.node.json` (the template's) holds `vite.config.ts`.
 - Vite reads these settings too (through the references in `tsconfig.json`), so they change the build, not only the type
-  check: decorators in the old code compile only because the legacy project turns them on.
+  check: the old classes' fields keep their initialization order only because the legacy project sets
+  `useDefineForClassFields: false`.
 
 ### CommonJS default imports
 
@@ -57,8 +59,7 @@ and `react-aspect-ratio` are; prefer a named export when the package has one tha
   comments in `package.json`, so the reasons are here. Each goes away with the package that needs it:
   - `@saladtechnologies/garden-components` 1.6.2 asks for `react-intl` 7 and `react-responsive` 10; the app ships with
     6.8.9 and 9.0.2, as it did on Yarn, which did not enforce peers. Upgrading either is a separate change.
-  - `mobx-react` 6, `mobx-react-lite` 2, and `react-html-parser` 2 ask for React 16; the app runs React 18, as it did on
-    Yarn. MobX and its bindings are removed by the rebuild.
+  - `react-html-parser` 2 asks for React 16; the app runs React 18, as it did on Yarn.
 - `package.json` `overrides` `typescript`: `react-intl` 6 and its `@formatjs/intl` have an optional peer on TypeScript 4
   or 5, and npm reaches them through more than one path (the app, and garden-components' peer), so a per-package
   override does not cover them all. The app type checks with TypeScript 7 and uses no TypeScript at runtime.
@@ -133,6 +134,6 @@ and `react-aspect-ratio` are; prefer a named export when the package has one tha
   safe requests, and nothing else is safe to repeat. A query that should refresh says so itself (`refetchInterval`,
   `staleTime`).
 - Whether the user is signed in is the session query: `useSession()` (`src/data/session.ts`) is `unknown`, `yes`, or
-  `no`. Change it with `setSession` after a sign-in or sign-out, never by refetching. Until MobX is gone,
+  `no`. Change it with `setSession` after a sign-in or sign-out, never by refetching. Until the root store is gone,
   `SessionProvider` mirrors it into `isAuthenticated()` (`src/account/auth.ts`) and runs the root store's login and
   logout work.
