@@ -7,8 +7,8 @@ the ones `just --list` shows.
 
 ## Template adoption (web app rebuild)
 
-The web app rebuild (feature branch `web-app-rebuild`) adopts the template in steps, one PR each. Until the last one
-lands, the recipes the rules below name may not exist yet; run the ones the justfile has.
+The web app rebuild (feature branch `web-app-rebuild`) adopted the template in the steps below, one PR each. The
+justfile's `lint-typescript` is now the template's.
 
 1. Done: npm (from Yarn PnP), Node.js and npm through mise, just, and CI running `just ci` and `just build` through
    mise. `lint-typescript` ran `tsc` with the old `tsconfig.json` and the template's install-script and license checks;
@@ -20,11 +20,12 @@ lands, the recipes the rules below name may not exist yet; run the ones the just
    `"type": "module"` in `package.json`. See "TypeScript projects" and "CommonJS default imports" below.
 4. Done: the rest of the template's `lint-typescript` (oxlint, knip, `npm audit signatures`, and
    `_lint-typescript-projects`) and the template's oxc editor settings. The code the rebuild has not rewritten yet is in
-   oxlint's `ignorePatterns`, the same list as `tsconfig.legacy.json`'s `include`, each entry removed as its area is
-   rewritten. knip runs on everything; what it found unused was deleted, Storybook with it (stories, `.storybook/`, and
-   their dependencies: nobody could run them since Create React App went, and the redesign replaces the components).
-5. Next: `npm audit`, with the dependency upgrades its findings need (axios, lodash, moment, `@babel/runtime`, and uuid,
-   which Kiota's preview packages also use).
+   oxlint's `ignorePatterns`, the same list as `tsconfig.legacy.json`'s `include` without `src/vite-env.d.ts` (which the
+   browser project shares), each entry removed as its area is rewritten. knip runs on everything; what it found unused
+   was deleted, Storybook with it (stories, `.storybook/`, and their dependencies: nobody could run them since Create
+   React App went, and the redesign replaces the components).
+5. Done: `npm audit`, with the upgrades its findings needed: axios 1.8.1 → 1.21.1, lodash 4.17.21 → 4.18.1, moment
+   2.30.1 → 2.31.0, `@babel/runtime` 7.26.0 → 7.29.14, and uuid 9.0.1 → 11.1.1 (the app and Kiota use only `v4`).
 
 ### TypeScript projects
 
@@ -62,7 +63,9 @@ and `react-aspect-ratio` are; prefer a named export when the package has one tha
   or 5, and npm reaches them through more than one path (the app, and garden-components' peer), so a per-package
   override does not cover them all. The app type checks with TypeScript 7 and uses no TypeScript at runtime.
 - `package.json` `overrides` carried over from Yarn's `resolutions`: the patched `@elastic/search-ui` from `libs/` and
-  the Kiota preview versions. (The `trim-newlines` and `trim` pins went with Storybook, which brought them in.)
+  the Kiota preview versions. (The `trim-newlines` and `trim` pins went with Storybook, which brought them in.) The
+  `@microsoft/kiota-abstractions` entry also points its `uuid` (it asks for 10) at the app's 11.1.1, which fixes an
+  advisory `npm audit` fails on; Kiota only calls `uuid`'s `v4`, which 11 keeps.
 - `allowScripts` denies `core-js`, whose install script only prints a funding message, and the patched
   `@elastic/search-ui` tarball in `libs/`, whose `prepare` script builds it from source the tarball does not include (it
   ships the built `lib/`). npm matches that entry by its `file:` spec, so the key is the relative path.
