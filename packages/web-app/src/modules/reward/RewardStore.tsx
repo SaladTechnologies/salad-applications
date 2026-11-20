@@ -10,9 +10,8 @@ import type { NotificationMessage } from '../notifications/models'
 import { NotificationMessageCategory } from '../notifications/models'
 import type { ProfileStore } from '../profile'
 import { isRenderReward } from '../render'
-import type { SaladPaymentResponse } from '../salad-pay'
-import { AbortError } from '../salad-pay'
-import { SaladPay } from '../salad-pay/SaladPay'
+import type { SaladPayOrderHandlers, SaladPaymentRequestOptions } from '../salad-pay'
+import { getSaladPayStore } from '../salad-pay'
 import { solanaWalletAccountAnchor } from '../solana-wallet'
 import { RewardVaultStatus } from '../vault/models'
 import {
@@ -55,7 +54,16 @@ export const renderExchangeRateDriftProblemType = 'redemptions:invalid:exchangeR
 export const renderExchangeRateRequiredProblemType = 'redemptions:invalid:exchangeRateRequired'
 
 export class RewardStore {
-  private readonly saladPay = new SaladPay('43e8e26fa9077bb9c932d1849f52ef68e89c3ca39287c949275e0f18be6d074b')
+  /** The SaladPay order summary, which `redeemReward` opens. Tests replace it. */
+  private saladPayCheckout?: {
+    open: (options: SaladPaymentRequestOptions, handlers: SaladPayOrderHandlers) => void
+    show: () => void
+    complete: (reason: 'success' | 'fail', isProtectedActionVerifyRequired?: boolean) => void
+  }
+
+  private get checkout() {
+    return this.saladPayCheckout ?? getSaladPayStore()
+  }
 
   @observable
   private rewards: Map<string, Reward> = new Map<string, Reward>()
@@ -269,11 +277,10 @@ export class RewardStore {
 
     this.isRedeeming = true
 
-    let response: SaladPaymentResponse | undefined
-
-    try {
-      //Creates a new SaladPay payment request
-      let request = this.saladPay.paymentRequest({
+    //Opens a SaladPay order for the reward. The order summary page confirms it (finishRedemption) or the Chef leaves it
+    //(endRedemption); either way the redemption ends there.
+    this.checkout.open(
+      {
         total: {
           label: 'Total',
           amount: reward.price,
@@ -284,13 +291,36 @@ export class RewardStore {
             amount: reward.price,
           },
         ],
-      })
+      },
+      {
+        confirm: () => this.finishRedemption(reward),
+        abort: () => this.endRedemption(),
+      },
+    )
 
-      this.store.analytics.trackSaladPayOpened(reward)
+    this.store.analytics.trackSaladPayOpened(reward)
 
-      //Shows the SaladPay UI
-      response = yield request.show()
+    //Shows the SaladPay UI
+    this.checkout.show()
+  })
 
+  /** Ends a redemption whose order the Chef left without confirming. */
+  private endRedemption = flow(function* (this: RewardStore) {
+    yield this.store.balance.refreshBalance()
+    yield this.store.balance.refreshBalanceHistory()
+    this.isRedeeming = false
+    console.error('Cleared isRedeeming flag')
+  })
+
+  /** Redeems the reward whose order the Chef confirmed, and ends the redemption. */
+  private finishRedemption = flow(function* (this: RewardStore, reward: Reward) {
+    const response = {
+      details: { transactionToken: 'hello' },
+      complete: (...args: [reason: 'success' | 'fail', isProtectedActionVerifyRequired?: boolean]) =>
+        this.checkout.complete(...args),
+    }
+
+    try {
       console.log(`Completed SaladPay transaction ${response?.details.transactionToken}`)
 
       // RENDER redemptions are priced against a live, time-sensitive RENDER/USD quote. Attach the exact rate the Chef
@@ -339,7 +369,7 @@ export class RewardStore {
 
       this.isReviewing = true
     } catch (error) {
-      if (!(error instanceof AbortError) && (Axios.isAxiosError(error) || error instanceof SaladError)) {
+      if (Axios.isAxiosError(error) || error instanceof SaladError) {
         const errorResponse = error.response
         const isProtectedActionVerifyRequired =
           errorResponse?.status === 401 && !!this.store.auth.pendingProtectedAction
