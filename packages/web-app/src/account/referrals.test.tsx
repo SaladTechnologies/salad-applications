@@ -141,4 +141,35 @@ describe('referrals', () => {
       ),
     ).toStrictEqual([undefined, undefined, undefined])
   })
+
+  it('clears what a page still showing it shows on sign-out', async () => {
+    expect.hasAssertions()
+    Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', true)
+    notifyManager.setScheduler((notify) => {
+      notify()
+    })
+    const queryClient = createQueryClient()
+    const http = fakeApi({ data: { code: 'MINE', userReferralsEnabled: true } }, { data: referral }, { data: report })
+    const host = document.createElement('div')
+    act(() => {
+      createRoot(host).render(
+        <QueryClientProvider client={queryClient}>
+          <ShowReferrals />
+        </QueryClientProvider>,
+      )
+    })
+    await act(async () => {
+      await loadReferralCode(queryClient, http)
+      await loadCurrentReferral(queryClient, http)
+      await loadReferralsReport(queryClient, http)
+    })
+    const signedIn = host.textContent
+
+    act(() => {
+      forgetSignedOutUser([], queryClient)
+    })
+
+    expect(signedIn).toBe('MINE|true|FRIEND|2')
+    expect(host.textContent).toBe('|false|none|none')
+  })
 })

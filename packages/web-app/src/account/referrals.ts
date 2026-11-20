@@ -53,9 +53,11 @@ export interface ReferralCode {
   enabled: boolean
 }
 
-/** The query keys of the signed-in user's referral data. Sign-out removes them. */
+/** The query key of the signed-in user's referrals report. Sign-out resets it. */
 export const referralsReportQueryKey = ['account', 'referrals', 'report'] as const
+/** The query key of the signed-in user's referral code, which says whether referrals are enabled. Sign-out resets it. */
 export const referralCodeQueryKey = ['account', 'referrals', 'code'] as const
+/** The query key of the referral the signed-in user signed up with. Sign-out resets it. */
 export const currentReferralQueryKey = ['account', 'referrals', 'current'] as const
 
 /** The referral code before it has loaded, as the referral store started. */

@@ -21,16 +21,18 @@ export const forgetSignedOutUser = (stores: readonly UserDataStore[], queryClien
   for (const store of stores) {
     store.resetUserData()
   }
-  // Removes the histories' query without loading it now, so the next earnings page that opens loads the new user's. A
-  // load still running when the user signed out settles on the removed query, so its freshness cannot skip that load.
-  queryClient.removeQueries({ queryKey: machineEarningsHistoryQueryKey })
-  // The achievements live in their query, kept for the session: removing it is how they are forgotten.
-  queryClient.removeQueries({ queryKey: achievementsQueryKey })
-  // So do the demand alert subscriptions and the XP.
-  queryClient.removeQueries({ queryKey: demandAlertSubscriptionsQueryKey })
-  queryClient.removeQueries({ queryKey: xpQueryKey })
-  // And the referral data: the report, the code (which also says whether referrals are enabled) and the user's referral.
-  queryClient.removeQueries({ queryKey: referralsReportQueryKey })
-  queryClient.removeQueries({ queryKey: referralCodeQueryKey })
-  queryClient.removeQueries({ queryKey: currentReferralQueryKey })
+  // Resetting a query cancels a load still running and empties it, and tells every component still showing it, so none
+  // keeps the old user's data (the settings menu's referrals link, for one); removing it would leave them showing it. It
+  // loads nothing now; the next page that opens loads the new user's data, histories included.
+  for (const queryKey of [
+    machineEarningsHistoryQueryKey,
+    achievementsQueryKey,
+    demandAlertSubscriptionsQueryKey,
+    xpQueryKey,
+    referralsReportQueryKey,
+    referralCodeQueryKey,
+    currentReferralQueryKey,
+  ]) {
+    queryClient.getQueryCache().find({ queryKey })?.reset()
+  }
 }
