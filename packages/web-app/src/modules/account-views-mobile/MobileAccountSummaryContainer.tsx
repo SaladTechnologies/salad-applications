@@ -1,6 +1,5 @@
 import { connect } from '../../connect'
 import type { RootStore } from '../../Store'
-import { withLogin } from '../auth-views'
 import { MobileAccountSummary } from './components'
 
 const mapStoreToProps = (store: RootStore): any => ({
@@ -8,4 +7,4 @@ const mapStoreToProps = (store: RootStore): any => ({
   onLogout: store.auth.logout,
 })
 
-export const MobileAccountSummaryContainer = connect(mapStoreToProps, withLogin(MobileAccountSummary))
+export const MobileAccountSummaryContainer = connect(mapStoreToProps, MobileAccountSummary)

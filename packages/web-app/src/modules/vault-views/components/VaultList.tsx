@@ -8,7 +8,6 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Divider, Head, InfoButton, P, SmartLink } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
-import { withLogin } from '../../auth-views'
 import type { RewardVaultItem } from '../../vault/models'
 import { RewardVaultStatus } from '../../vault/models'
 import { VaultListHeaderItem } from './VaultListHeaderItem'
@@ -422,7 +421,7 @@ class _VaultList extends Component<Props, State> {
   }
 }
 
-export const VaultList = withLogin(withStyles(styles)(_VaultList))
+export const VaultList = withStyles(styles)(_VaultList)
 
 function sort(dropdown: State['dropdown'], redemptions: RewardVaultItem[]): RewardVaultItem[] {
   let sortBy: (a: RewardVaultItem, b: RewardVaultItem) => number

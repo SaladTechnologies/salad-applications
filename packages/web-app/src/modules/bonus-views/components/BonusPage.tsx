@@ -8,7 +8,6 @@ import { injectIntl } from 'react-intl'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Head } from '../../../components'
-import { withLogin } from '../../auth-views'
 import type { Bonus } from '../../bonus/models'
 
 const styles = () => ({
@@ -73,4 +72,4 @@ class _BonusPage extends Component<Props> {
   }
 }
 
-export const BonusPage = withLogin(withStyles(styles)(injectIntl(_BonusPage)))
+export const BonusPage = withStyles(styles)(injectIntl(_BonusPage))

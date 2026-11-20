@@ -5,7 +5,6 @@ import withStyles from 'react-jss'
 import { useMediaQuery } from 'react-responsive'
 import { Head, mobileSize, Scrollbar } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
-import { withLogin } from '../../auth-views'
 import { DemandAlertsListContainer } from './DemandAlertsList'
 import { DemandAlertsSetUpContainer } from './DemandAlertsSetUp'
 
@@ -55,4 +54,4 @@ const _DemandAlertsPage = ({ classes }: Props) => {
   )
 }
 
-export const DemandAlertsPage = withLogin(withStyles(styles)(_DemandAlertsPage))
+export const DemandAlertsPage = withStyles(styles)(_DemandAlertsPage)

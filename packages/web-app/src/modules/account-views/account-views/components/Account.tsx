@@ -4,10 +4,9 @@ import { useEffect, useRef } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { useLocation } from 'react-router'
+import { useLocation } from '@tanstack/react-router'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { Head } from '../../../../components'
-import { withLogin } from '../../../auth-views'
 import { coinbaseEmailAnchorId } from '../../../coinbase'
 import { type Passkey } from '../../../passkey-setup'
 import type { Avatar, Profile } from '../../../profile/models'
@@ -133,8 +132,9 @@ const _Account: FC<Props> = ({
   onToggleAcceptTermsAndConditions,
   signInWithGoogleChallengeSudoMode,
 }) => {
-  const location = useLocation<{ isGoogleSignInFormTriggered: string }>()
-  const isGoogleSignInFormTriggered = !!location.state?.isGoogleSignInFormTriggered
+  const location = useLocation()
+  const isGoogleSignInFormTriggered = !!(location.state as { isGoogleSignInFormTriggered?: boolean })
+    .isGoogleSignInFormTriggered
   const scrollbarsRef = useRef<Scrollbars>(null)
 
   useEffect(() => {
@@ -147,7 +147,7 @@ const _Account: FC<Props> = ({
   // "Add Coinbase Email" link), scroll the custom scroll view to that section explicitly. The panel mounts after its
   // data loads, so poll briefly for the element before giving up.
   useEffect(() => {
-    const anchorId = [solanaWalletAnchorId, coinbaseEmailAnchorId].find((id) => location.hash === `#${id}`)
+    const anchorId = [solanaWalletAnchorId, coinbaseEmailAnchorId].find((id) => location.hash === id)
     if (!anchorId) {
       return
     }
@@ -299,4 +299,4 @@ const _Account: FC<Props> = ({
   )
 }
 
-export const Account = withLogin(withStyles(styles)(_Account))
+export const Account = withStyles(styles)(_Account)

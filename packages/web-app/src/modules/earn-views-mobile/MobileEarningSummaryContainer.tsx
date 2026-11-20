@@ -1,6 +1,5 @@
 import { connect } from '../../connect'
 import type { RootStore } from '../../Store'
-import { withLogin } from '../auth-views'
 import { MobileEarningSummary } from './components/MobileEarningSummary'
 
 const mapStoreToProps = (store: RootStore): any => ({
@@ -18,4 +17,4 @@ const mapStoreToProps = (store: RootStore): any => ({
   fetchEarningsPerMachine: store.balance.fetchEarningsPerMachine,
 })
 
-export const MobileEarningSummaryContainer = connect(mapStoreToProps, withLogin(MobileEarningSummary))
+export const MobileEarningSummaryContainer = connect(mapStoreToProps, MobileEarningSummary)

@@ -6,10 +6,9 @@ import { useEffect, useState, type FC } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { useLocation } from 'react-router'
+import { useLocation } from '@tanstack/react-router'
 import type { SaladTheme } from '../../../SaladTheme'
 import Referrals from '../../../assets/Referrals.svg'
-import { withLogin } from '../../auth-views'
 import type { BackupCodes } from '../BackupCodesStore'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
@@ -123,8 +122,8 @@ const _BackupCodesPage: FC<Props> = ({
   getBackupCodes,
 }) => {
   const [isCopied, setIsCopied] = useState(false)
-  const location = useLocation<{ isFirstPasskeyAdded: string }>()
-  const isFirstPasskeyAdded = location.state?.isFirstPasskeyAdded
+  const location = useLocation()
+  const isFirstPasskeyAdded = (location.state as { isFirstPasskeyAdded?: boolean }).isFirstPasskeyAdded
 
   const handleCopyClick = () => {
     // eslint-disable-next-line compat/compat
@@ -217,4 +216,4 @@ const _BackupCodesPage: FC<Props> = ({
   )
 }
 
-export const BackupCodesPage = withLogin(withStyles(styles)(_BackupCodesPage))
+export const BackupCodesPage = withStyles(styles)(_BackupCodesPage)

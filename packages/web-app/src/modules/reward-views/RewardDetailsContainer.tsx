@@ -1,10 +1,9 @@
-import type { RouteComponentProps } from 'react-router-dom'
 import { connect } from '../../connect'
 import type { RootStore } from '../../Store'
 import type { Reward } from '../reward/models'
 import { RewardDetailsPage } from './pages'
 
-const mapStoreToProps = (store: RootStore, props: RouteComponentProps<{ id: string }>): any => {
+const mapStoreToProps = (store: RootStore, props: { match: { params: { id: string } } }): any => {
   const onRedeem = (reward: Reward) => {
     store.analytics.trackButtonClicked('buy_now', 'Buy Now', 'enabled')
     store.rewards.redeemReward(reward)

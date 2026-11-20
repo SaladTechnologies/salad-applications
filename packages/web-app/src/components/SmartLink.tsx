@@ -2,7 +2,7 @@ import classnames from 'classnames'
 import type { ReactNode } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { Link } from 'react-router-dom'
+import { AppLink } from '../routing/app-link.tsx'
 import type { RootStore } from '../Store'
 import { getStore } from '../Store'
 import type { LinkTrackingInfo } from '../modules/analytics/models'
@@ -50,13 +50,13 @@ const _SmartLink = ({ to, children, classes, className, trackingInfo }: Props) =
     )
   } else {
     return (
-      <Link
+      <AppLink
         to={to}
         className={finalClassName}
         onClick={trackingInfo ? () => handleClickTracking(to, trackingInfo) : undefined}
       >
         {children}
-      </Link>
+      </AppLink>
     )
   }
 }

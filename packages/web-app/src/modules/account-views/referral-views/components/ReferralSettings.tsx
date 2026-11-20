@@ -3,7 +3,6 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../../SaladTheme'
 import { Divider, Head, SectionHeader } from '../../../../components'
-import { withLogin } from '../../../auth-views'
 import type { Referral } from '../../../referral/models'
 import { ReferralCodeContainer } from '../ReferralCodeContainer'
 import { ReferralListContainer } from '../ReferralListContainer'
@@ -63,4 +62,4 @@ const _ReferralSettings = ({ classes, referral }: Props) => (
   </div>
 )
 
-export const ReferralSettings = withLogin(withStyles(styles)(_ReferralSettings))
+export const ReferralSettings = withStyles(styles)(_ReferralSettings)

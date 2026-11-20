@@ -4,7 +4,6 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { Machine } from '../../../api/machinesApiClient/generated/models'
 import { Scrollbar } from '../../../components'
-import { withLogin } from '../../auth-views'
 import { DedicatedNodesLink } from '../../dedicated-nodes-views/DedicatedNodesLink'
 import type { CurrentHourlyEarningRatesPerMachine, EarningPerMachine } from '../../balance/models'
 import type { RedeemedReward } from '../../balance/models/RedeemedReward'
@@ -171,4 +170,4 @@ const _EarningSummaryPage: FC<Props> = ({
   )
 }
 
-export const EarningSummaryPage = withLogin(withStyles(styles)(_EarningSummaryPage))
+export const EarningSummaryPage = withStyles(styles)(_EarningSummaryPage)

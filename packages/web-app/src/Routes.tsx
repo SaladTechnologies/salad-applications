@@ -1,73 +1,235 @@
-import type { Location } from 'history'
-import type { RouteComponentProps } from 'react-router'
-import { Redirect, Route, Switch, withRouter } from 'react-router'
-import { NoPageFound } from './components'
+import { LoadingScreen } from '@saladtechnologies/garden-components'
+import type { ErrorComponentProps, RouterHistory } from '@tanstack/react-router'
+import {
+  createRootRoute,
+  createRoute,
+  createRouter,
+  Outlet,
+  useLocation,
+  useParams,
+  useRouter,
+} from '@tanstack/react-router'
+import { Observer } from 'mobx-react'
+import type { ReactNode } from 'react'
+import { useMemo } from 'react'
+import { App } from './App'
+import { ByDevice, ErrorBoundary, Head, MobilePageNotFound, NoPageFound } from './components'
+import { connect } from './connect'
+import { useSession } from './data/session.ts'
+import { MobileAccountSummaryContainer } from './modules/account-views-mobile'
+import { AccountContainer } from './modules/account-views/account-views'
+import { ReferralSettingsContainer } from './modules/account-views/referral-views'
+import { AchievementPageContainer } from './modules/achievements-views'
+import { RequireSession } from './modules/auth-views'
 import { BackupCodesPageContainer } from './modules/backup-codes/BackupCodesPageContainer'
+import { BonusPageContainer, ReplaceBonusModalContainer } from './modules/bonus-views'
 import { dedicatedNodesPagePath } from './modules/dedicated-nodes'
 import { DedicatedNodesPageContainer } from './modules/dedicated-nodes-views'
-import { ReplaceBonusModalContainer } from './modules/bonus-views'
-import { DemandMonitorPageContainer } from './modules/demand-monitor-views/DemandMonitorPage'
+import { DemandAlertsPage } from './modules/demand-alerts-views'
+import { DemandMonitorPageContainer } from './modules/demand-monitor-views'
 import { EarnInfoPage, EarningSummaryContainer } from './modules/earn-views'
+import { MobileEarningSummaryContainer } from './modules/earn-views-mobile'
 import { ExitSurveyContainer } from './modules/exit-survey-views'
 import { PasskeyDeletePageContainer } from './modules/passkey-delete'
 import { ProtectedActionPageContainer } from './modules/protected-action'
 import { RewardDetailsContainer, SelectTargetRewardContainer } from './modules/reward-views'
 import { SaladPayOrderSummaryContainer } from './modules/salad-pay-views'
 import { SettingsContainer } from './modules/settings-views'
+import { StorefrontPageContainer } from './modules/storefront-views/StorefrontPageContainer'
 import { StorefrontHomePage } from './modules/storefront-views/pages/StorefrontHomePage'
+import { RewardSearchResultContainer } from './modules/storefront-views/pages/StorefrontHomePage/RewardSearchResult/RewardSearchResultContainer'
 import { VaultListContainer } from './modules/vault-views'
+import { NavigationContext, useQueryAndHash } from './routing/navigation-context.ts'
+import { parseSearch, stringifySearch } from './routing/raw-search.ts'
+import { Redirect } from './routing/redirect.tsx'
+import { createSearchHistory } from './routing/search-history.ts'
+import { getStore } from './Store'
+import { Tooltips } from './Tooltips'
 
-interface Props extends RouteComponentProps {
-  isAuthenticated: boolean
+// The app's pages. Each page renders its desktop or its mobile version (`ByDevice`), the way the desktop and mobile
+// route lists did under react-router 5; a page that only exists on desktop renders the mobile "not found" page on a
+// phone. A path that react-router 5 matched as a prefix (no `exact`) is a `$` route, which also matches the path itself
+// with an empty `_splat`: the router ranks `x/$` above `x` for the URL `x`, so the two can't be separate routes.
+
+/** A page that only exists on desktop. */
+const desktopOnly = (page: ReactNode) => () => <ByDevice desktop={page} mobile={<MobilePageNotFound />} />
+
+/** A page for signed-in users: anyone else gets the login panel in its place. */
+const signedIn = (page: ReactNode) => <RequireSession>{page}</RequireSession>
+
+/** The `$id` of the current route, in the `match` prop the containers read it from. */
+const useMatchId = () => {
+  const { id } = useParams({ strict: false })
+  return { params: { id: id ?? '' } }
 }
 
-const _Routes = ({ location, isAuthenticated }: Props) => {
-  const currentLocation =
-    (location.state as { currentLocation: Location | undefined } | undefined)?.currentLocation || location
+/** The rest of the path below a `$` route: empty when the URL is the route's own path. */
+const useSplat = () => useParams({ strict: false })._splat ?? ''
 
+const RewardDetails = () => <RewardDetailsContainer match={useMatchId()} />
+
+const PasskeyDelete = () => signedIn(<PasskeyDeletePageContainer match={useMatchId()} />)
+
+/** The app around every page: the providers, the loading screen, the navigation bar, and the page. */
+const Root = () => {
+  const store = getStore()
+  const { history } = useRouter()
+  const searchHistory = useMemo(() => createSearchHistory(store.routing, history), [store.routing, history])
   return (
-    <Switch location={currentLocation}>
-      {/* Store Pages */}
-      <Route path={['/store', '/store/search']} exact render={() => <StorefrontHomePage />} />
-      <Route path="/store/rewards/:id" exact component={RewardDetailsContainer} />
-      <Route path="/store/vault" exact component={VaultListContainer} />
-      {/* Recommended Target Rewards Page */}
-      <Route path="/store/select-target-reward" exact component={SelectTargetRewardContainer} />
-      {/* Modals */}
-      {/* SaladPay: This is stand in until we figure out iFrames, popups... */}
-      <Route exact path="/salad-pay/order-summary" component={SaladPayOrderSummaryContainer} />
-      <Route exact path="/bonuses/replace-bonus" component={ReplaceBonusModalContainer} />
-      {/* Account */}
-      <Redirect exact from="/account" to="/account/summary" />
-      <Route path="/account/exit-survey" component={ExitSurveyContainer} />
-      <Route path="/account/passkey/delete/:id" exact component={PasskeyDeletePageContainer} />
-      <Route path="/account/backup-codes" exact component={BackupCodesPageContainer} />
-      <Route path="/account" component={SettingsContainer} />
-      {/* Protected Action */}
-      <Route path="/protected-action" component={ProtectedActionPageContainer} />
-      {/* Earn Pages */}
-      {isAuthenticated && <Redirect exact from="/earn" to="/earn/summary" />}
-      <Route path="/earn/summary" component={EarningSummaryContainer} />
-      <Route path="/earn/demand" exact component={DemandMonitorPageContainer} />
-      <Route path={dedicatedNodesPagePath} exact component={DedicatedNodesPageContainer} />
-      <Route path="/earn" component={EarnInfoPage} />
-      <Route
-        exact
-        path="/search"
-        component={({ location }: RouteComponentProps) => (
-          <Redirect
-            to={{
-              ...location,
-              pathname: `/store${location.pathname}`,
-            }}
-          />
-        )}
-      />
-      <Redirect exact from="/rewards/:id" to="/store/rewards/:id" />
-      <Redirect exact from="/" to="/store" />
-      <Route component={NoPageFound} />
-    </Switch>
+    <NavigationContext.Provider value={store.routing}>
+      <ErrorBoundary>
+        {/* Default page title for any page that doesn't specify one */}
+        <Head title="Salad Technologies" />
+        <div>
+          <Observer>
+            {() =>
+              store.appLoading ? (
+                <LoadingScreen />
+              ) : (
+                <>
+                  <Tooltips />
+                  <App searchHistory={searchHistory} />
+                </>
+              )
+            }
+          </Observer>
+        </div>
+      </ErrorBoundary>
+    </NavigationContext.Provider>
   )
 }
 
-export const Routes = withRouter(_Routes)
+/** A page's render error goes up to the app's error boundary (in Root), as it did before the router caught them. */
+const rethrow = ({ error }: ErrorComponentProps): ReactNode => {
+  throw error
+}
+
+const rootRoute = createRootRoute({ component: Root, errorComponent: rethrow })
+
+/** The settings page around the page, except at `/account` itself, which redirects to the first page. */
+const Settings = () =>
+  ['/account', '/account/'].includes(useLocation().pathname.toLowerCase()) ? (
+    <Redirect to="/account/summary" />
+  ) : (
+    <SettingsContainer />
+  )
+
+// Account settings: on desktop, the settings page with the menu around the page
+const settingsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  id: 'settings',
+  component: () => <ByDevice desktop={<Settings />} mobile={<Outlet />} />,
+})
+
+const page = (path: string, component: () => ReactNode, parent: typeof rootRoute | typeof settingsRoute = rootRoute) =>
+  createRoute({ getParentRoute: () => parent, path, component })
+
+// Store: on desktop, the store's home page with the search bar around the page
+const storefrontRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  id: 'storefront',
+  component: desktopOnly(<StorefrontHomePage />),
+})
+const storefrontPages = [
+  createRoute({ getParentRoute: () => storefrontRoute, path: 'store', component: () => <StorefrontPageContainer /> }),
+  createRoute({
+    getParentRoute: () => storefrontRoute,
+    path: 'store/search',
+    component: () => <RewardSearchResultContainer />,
+  }),
+]
+
+/** The referrals page, which exists only while referrals are enabled for the user. */
+const Referrals = connect(
+  (store) => ({ enabled: store.referral.isUserReferralsEnabled }),
+  ({ enabled }: { enabled: boolean }) => (enabled ? signedIn(<ReferralSettingsContainer />) : <NoPageFound />),
+)
+
+const settingsPages = [
+  page('account/summary/$', () => <AccountSummary />, settingsRoute),
+  page('account/referrals', desktopOnly(<Referrals />), settingsRoute),
+  page('account/bonuses', desktopOnly(signedIn(<BonusPageContainer />)), settingsRoute),
+  page('account/achievements', desktopOnly(signedIn(<AchievementPageContainer />)), settingsRoute),
+  page('account/alerts', () => signedIn(<DemandAlertsPage />), settingsRoute),
+  page('account/$', desktopOnly(<NoPageFound />), settingsRoute),
+]
+
+/** `/account/summary`, and on a phone anything below it too. */
+const AccountSummary = () => (
+  <ByDevice
+    desktop={useSplat() === '' ? signedIn(<AccountContainer />) : <NoPageFound />}
+    mobile={signedIn(<MobileAccountSummaryContainer />)}
+  />
+)
+
+/** `/protected-action`, and on desktop anything below it too. */
+const ProtectedAction = () => (
+  <ByDevice
+    desktop={signedIn(<ProtectedActionPageContainer />)}
+    mobile={useSplat() === '' ? signedIn(<ProtectedActionPageContainer />) : <MobilePageNotFound />}
+  />
+)
+
+/** `/earn/summary`, and on desktop anything below it too. */
+const EarningSummary = () => (
+  <ByDevice
+    desktop={signedIn(<EarningSummaryContainer />)}
+    mobile={useSplat() === '' ? signedIn(<MobileEarningSummaryContainer />) : <MobilePageNotFound />}
+  />
+)
+
+/**
+ * `/earn` and anything below it that has no page of its own: what Salad pays for, except that `/earn` itself goes to
+ * the earnings summary for a signed-in user.
+ */
+const Earn = () => {
+  const isEarn = useSplat() === ''
+  const session = useSession()
+  return isEarn && session === 'yes' ? <Redirect to="/earn/summary" /> : <EarnInfoPage />
+}
+
+/** `/search`: the store's search, keeping the query string and hash. */
+const SearchRedirect = () => <Redirect to={`/store/search${useQueryAndHash()}`} />
+
+/** `/rewards/$id`: the reward's page, which is at `/store/rewards/$id` on desktop. */
+const LegacyRewardRoute = () => {
+  const { params } = useMatchId()
+  return <ByDevice desktop={<Redirect to={`/store/rewards/${params.id}`} />} mobile={<RewardDetails />} />
+}
+
+const routeTree = rootRoute.addChildren([
+  page('/', () => <ByDevice desktop={<Redirect to="/store" />} mobile={<MobilePageNotFound />} />),
+  storefrontRoute.addChildren(storefrontPages),
+  page('store/rewards/$id', desktopOnly(<RewardDetails />)),
+  page('store/vault', desktopOnly(signedIn(<VaultListContainer />))),
+  page('store/select-target-reward', desktopOnly(<SelectTargetRewardContainer />)),
+  // Modals. SaladPay: this is a stand-in until we figure out iFrames, popups...
+  page('salad-pay/order-summary', desktopOnly(<SaladPayOrderSummaryContainer />)),
+  page('bonuses/replace-bonus', desktopOnly(<ReplaceBonusModalContainer />)),
+  // Account
+  page('account/exit-survey/$', desktopOnly(<ExitSurveyContainer />)),
+  page('account/passkey/delete/$id', () => <PasskeyDelete />),
+  page('account/backup-codes', () => signedIn(<BackupCodesPageContainer />)),
+  settingsRoute.addChildren(settingsPages),
+  // Protected action
+  page('protected-action/$', () => <ProtectedAction />),
+  // Earn
+  page('earn/summary/$', () => <EarningSummary />),
+  page('earn/demand', () => <DemandMonitorPageContainer />),
+  page(dedicatedNodesPagePath.slice(1), () => signedIn(<DedicatedNodesPageContainer />)),
+  page('earn/$', desktopOnly(<Earn />)),
+  // Old links
+  page('search', desktopOnly(<SearchRedirect />)),
+  page('rewards/$id', () => <LegacyRewardRoute />),
+  page('$', () => <ByDevice desktop={<NoPageFound />} mobile={<MobilePageNotFound />} />),
+])
+
+/** Creates the app's router over the browser history. */
+export const createAppRouter = (history: RouterHistory) =>
+  createRouter({
+    routeTree,
+    history,
+    // Elastic search-ui owns the store search's query string; the router leaves it as written.
+    parseSearch,
+    stringifySearch,
+  })
