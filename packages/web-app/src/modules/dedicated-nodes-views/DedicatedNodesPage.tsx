@@ -3,6 +3,7 @@ import type CSS from 'csstype'
 import { useEffect, useState, type FC } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
+import { useLocation } from 'react-router'
 import { useMediaQuery } from 'react-responsive'
 import { ErrorText, Head, mobileSize, Scrollbar } from '../../components'
 import type { SaladTheme } from '../../SaladTheme'
@@ -121,7 +122,14 @@ const _DedicatedNodesPage: FC<DedicatedNodesPageProps> = ({
   clearActionError,
 }) => {
   const isTabletOrMobile = useMediaQuery({ query: `(max-width: ${mobileSize}px)` })
-  const [filterText, setFilterText] = useState('')
+  // A link from a machine's screen names it with `?ek=<hash>`: start the list filtered to that machine.
+  const ekParam = new URLSearchParams(useLocation().search).get('ek') ?? ''
+  const [filterText, setFilterText] = useState(ekParam)
+
+  // Follow the link when it changes while the page is open, including to one without `?ek=`.
+  useEffect(() => {
+    setFilterText(ekParam)
+  }, [ekParam])
 
   // Opened from a bookmark before the login flow asked for the token: ask now.
   useEffect(() => {
