@@ -6,6 +6,8 @@ import type { Bonus, Bonuses, BonusesOptions } from './account/bonuses.ts'
 import { bonusTypes } from './account/bonuses.ts'
 import type { Passkeys } from './account/passkeys.ts'
 import { createPasskeys } from './account/passkeys.ts'
+import type { Sudo } from './account/sudo.ts'
+import { createSudo } from './account/sudo.ts'
 import type { Terms } from './account/terms.ts'
 import { createTerms } from './account/terms.ts'
 import { ErrorBoundaryBridge } from './app/error-boundary.ts'
@@ -149,6 +151,8 @@ export class RootStore {
   public readonly errorBoundary: ErrorBoundaryBridge
   /** The signed-in user's passkeys (src/account/passkeys.ts), and the passkey actions. */
   public readonly passkey: Passkeys
+  /** The user's sudo mode: the action waiting for verification, and the sudo challenge. */
+  public readonly sudo: Sudo
   /** The signed-in user's backup codes (src/account/backup-codes.ts), and the backup code actions. */
   public readonly backupCodes: BackupCodesStore
   public readonly solanaWallet: SolanaWalletStore
@@ -175,6 +179,7 @@ export class RootStore {
     this.xp = xp
     this.referrals = referrals
     this.auth = new AuthStore(this, axios, setSession)
+    this.sudo = createSudo({ http: axios })
     this.notifications = createToasts<NotificationMessage>({
       render: (message, onClick) => (
         <NotificationToast {...message} isError={message.type === 'error'} onClick={onClick} />
@@ -253,7 +258,7 @@ export class RootStore {
    * dedicated nodes store is reset by `onLogout` itself.
    */
   userDataStores = () => [
-    this.auth,
+    this.sudo,
     this.terms,
     this.balance,
     this.bonuses,

@@ -1,31 +1,19 @@
 import type { AxiosInstance } from 'axios'
-import { action, flow, observable } from 'mobx'
+import { action, observable } from 'mobx'
+import type { SudoTrigger } from '../../account/sudo.ts'
+import { sudoTriggers } from '../../account/sudo.ts'
 import type { RootStore } from '../../Store'
 import { config } from '../../config'
 import { NotificationMessageCategory } from '../notifications/models'
-import { authenticationSessionsSudoEndpointPath } from './constants'
 
-export enum ChallengeSudoModeTrigger {
-  GoogleSignIn = 'GoogleSignIn',
-  RewardRedeem = 'RewardRedeem',
-}
-
-interface PendingProtectedAction {
-  method: string
-  url: string
-  data?: Record<string, any>
-}
+/** What asked for sudo mode before an action. The sudo state lives in `store.sudo` (src/account/sudo.ts). */
+export const ChallengeSudoModeTrigger = sudoTriggers
+export type ChallengeSudoModeTrigger = SudoTrigger
 
 export class AuthStore {
   /** A value indicating whether the user is authenticated. */
   @observable
   public isAuthenticated?: boolean = undefined
-
-  @observable
-  public challengeSudoModeTrigger?: ChallengeSudoModeTrigger
-
-  @observable
-  public pendingProtectedAction?: PendingProtectedAction
 
   constructor(
     private readonly store: RootStore,
@@ -85,49 +73,5 @@ export class AuthStore {
   @action
   public setIsAuthenticated = (isAuthenticated: boolean) => {
     this.isAuthenticated = isAuthenticated
-  }
-
-  @action.bound
-  challengeSudoMode = flow(function* (this: AuthStore, challengeSudoModeTrigger: ChallengeSudoModeTrigger) {
-    try {
-      const response = yield this.axios.post(authenticationSessionsSudoEndpointPath)
-      return response
-    } catch (error) {
-      this.challengeSudoModeTrigger = challengeSudoModeTrigger
-      console.error('AuthStore -> challengeSudoMode: ', error)
-      return null
-    }
-  })
-
-  signInWithGoogleChallengeSudoMode = async (signInWithGoogle: () => void): Promise<void> => {
-    try {
-      const response = await this.challengeSudoMode(ChallengeSudoModeTrigger.GoogleSignIn)
-      if (response) {
-        signInWithGoogle()
-      }
-    } catch (error) {
-      console.error('AuthStore -> signInWithGoogleChallengeSudoMode: ', error)
-    }
-  }
-
-  @action.bound
-  setChallengeSudoModeTrigger = (updatedChallengeSudoModeTrigger?: ChallengeSudoModeTrigger) => {
-    this.challengeSudoModeTrigger = updatedChallengeSudoModeTrigger
-  }
-
-  @action.bound
-  setPendingProtectedAction = (updatedPendingProtectedAction?: PendingProtectedAction) => {
-    this.pendingProtectedAction = updatedPendingProtectedAction
-  }
-
-  /**
-   * Forgets the protected action waiting for sudo mode, and its trigger, of the user who signed out, so the next user's
-   * verification never runs it as them. A sudo 401 never signs out, so this never drops a waiting action of a user who
-   * is still signed in.
-   */
-  @action.bound
-  resetUserData() {
-    this.pendingProtectedAction = undefined
-    this.challengeSudoModeTrigger = undefined
   }
 }
