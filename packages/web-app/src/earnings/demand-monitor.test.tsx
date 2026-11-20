@@ -1,5 +1,5 @@
 import type { QueryClient } from '@tanstack/react-query'
-import { notifyManager, QueryClientProvider } from '@tanstack/react-query'
+import { focusManager, notifyManager, QueryClientProvider } from '@tanstack/react-query'
 import type { ReactElement } from 'react'
 import { act } from 'react'
 import type { Root } from 'react-dom/client'
@@ -70,6 +70,23 @@ describe('demand monitor', () => {
 
     expect(beforeAnHour).toBe(1)
     expect(afterAnHour).toBe(2)
+    expect(load).toHaveBeenCalledTimes(2)
+  })
+
+  it('keeps loading the demand monitor every hour in a background tab', async () => {
+    expect.hasAssertions()
+    vi.useFakeTimers()
+    focusManager.setFocused(false)
+    const load = vi.fn<() => Promise<unknown>>().mockResolvedValue(null)
+    const close = await open(createQueryClient(), <DemandMonitor load={load} />)
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(anHour)
+    })
+    close()
+    focusManager.setFocused(undefined)
+    vi.useRealTimers()
+
     expect(load).toHaveBeenCalledTimes(2)
   })
 
