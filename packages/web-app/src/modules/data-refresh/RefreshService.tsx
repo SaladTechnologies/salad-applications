@@ -1,25 +1,13 @@
-import { config } from '../../config'
 import type { RootStore } from '../../Store'
 
 export class RefreshService {
   constructor(private store: RootStore) {}
 
-  start() {
-    console.log('Starting refresh service')
-
-    //Start a timer to poll for data
-    setInterval(() => {
-      this.refreshData()
-    }, config.dataRefreshRate)
-
-    //Do the initial data pull
-    this.refreshData()
-
-    if (this.store.auth.isAuthenticated) {
-      this.store.vault.loadVault()
-    }
-  }
-
+  /**
+   * Reloads the banner, and the signed-in user's balance, target reward, referrals, vault, XP, avatars and bonuses. The
+   * root route runs it when the app opens and every `config.dataRefreshRate` (`useAppRefresh`); sign-in and a claimed
+   * bonus run it too.
+   */
   refreshData = () => {
     // Load unauthenticated data
     try {

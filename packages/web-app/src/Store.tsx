@@ -118,9 +118,6 @@ export class RootStore {
     this.solanaWallet = new SolanaWalletStore(this, axios)
     this.coinbaseEmail = new CoinbaseEmailStore(this, axios)
     this.dedicatedNodes = new DedicatedNodesStore(axios)
-
-    // Start refreshing data
-    this.refresh.start()
   }
 
   /** Mirrors the session (src/data/session.ts) into the stores: called when it becomes known and when it changes. */

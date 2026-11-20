@@ -1,3 +1,5 @@
+import { useAppRefresh } from './app/app-refresh.ts'
+import { config } from './config'
 import { LoadingScreen } from '@saladtechnologies/garden-components'
 import type { RouterHistory } from '@tanstack/react-router'
 import {
@@ -76,6 +78,7 @@ const PasskeyDelete = () => signedIn(<PasskeyDeletePageContainer match={useMatch
 /** The app around every page: the providers, the loading screen, the navigation bar, and the page. */
 const Root = () => {
   const store = getStore()
+  useAppRefresh(store.refresh.refreshData, config.dataRefreshRate)
   const { history } = useRouter()
   const searchHistory = useMemo(() => createSearchHistory(store.routing, history), [store.routing, history])
   return (
