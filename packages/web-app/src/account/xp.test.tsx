@@ -75,4 +75,27 @@ describe('xp', () => {
     expect(kept).toBe(180)
     expect(currentXp(queryClient)).toBe(0)
   })
+
+  it('sends a new request for a load while an older one is still running, as the store did', async () => {
+    expect.hasAssertions()
+    const requests: string[] = []
+    let answered = false
+    // An adapter that holds every request until the test lets them all answer.
+    const adapter: AxiosAdapter = async (config) => {
+      requests.push(String(config.url))
+      await vi.waitUntil(() => answered)
+      return { data: { lifetimeXp: 1 }, status: 200, statusText: '', headers: new AxiosHeaders(), config }
+    }
+    const queryClient = createQueryClient()
+    const http = create({ adapter })
+
+    const older = loadXp(queryClient, http)
+    await vi.waitUntil(() => requests.length === 1)
+    const newer = loadXp(queryClient, http)
+    await vi.waitUntil(() => requests.length === 2)
+    answered = true
+    await Promise.all([older, newer])
+
+    expect(requests).toHaveLength(2)
+  })
 })

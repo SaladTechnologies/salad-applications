@@ -14,12 +14,12 @@ import {
   useParams,
   useRouter,
 } from '@tanstack/react-router'
-import { Observer } from 'mobx-react'
 import type { ReactNode } from 'react'
 import { useMemo, useState } from 'react'
 import { App } from './App'
 import { ByDevice, ErrorBoundary, Head, MobilePageNotFound, NoPageFound } from './components'
 import { isSignedIn, useSession } from './data/session.ts'
+import { useExternalState } from './app/external-state.ts'
 import { MobileAccountSummaryContainer } from './modules/account-views-mobile'
 import { AccountContainer } from './modules/account-views/account-views'
 import { ReferralSettingsContainer } from './modules/account-views/referral-views'
@@ -86,29 +86,26 @@ const Root = () => {
   const profile = useProfile()
   const { isInstallReminderClosed } = useProfileState(store.profile)
   const isAuthenticated = isSignedIn(useSession())
+  const { appLoading } = useExternalState(store.loading)
   return (
     <NavigationContext.Provider value={store.routing}>
       <ErrorBoundary>
         {/* Default page title for any page that doesn't specify one */}
         <Head title="Salad Technologies" />
         <div>
-          <Observer>
-            {() =>
-              store.appLoading ? (
-                <LoadingScreen />
-              ) : (
-                <>
-                  <Tooltips />
-                  <App
-                    searchHistory={searchHistory}
-                    profile={profile}
-                    isInstallReminderClosed={isInstallReminderClosed}
-                    isAuthenticated={isAuthenticated}
-                  />
-                </>
-              )
-            }
-          </Observer>
+          {appLoading ? (
+            <LoadingScreen />
+          ) : (
+            <>
+              <Tooltips />
+              <App
+                searchHistory={searchHistory}
+                profile={profile}
+                isInstallReminderClosed={isInstallReminderClosed}
+                isAuthenticated={isAuthenticated}
+              />
+            </>
+          )}
         </div>
       </ErrorBoundary>
     </NavigationContext.Provider>

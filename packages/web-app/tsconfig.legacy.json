@@ -1,7 +1,6 @@
 {
   "extends": "./tsconfig.browser.json",
   "compilerOptions": {
-    "experimentalDecorators": true,
     "useDefineForClassFields": false,
     "erasableSyntaxOnly": false,
     "exactOptionalPropertyTypes": false,

@@ -1,5 +1,4 @@
 import type { AxiosInstance } from 'axios'
-import { runInAction } from 'mobx'
 import type { ReactElement } from 'react'
 import { act, useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -119,9 +118,7 @@ const replay = async ({
   })
   if (run) {
     await act(async () => {
-      runInAction(() => {
-        handlePendingProtectedAction(fake.store as Parameters<typeof handlePendingProtectedAction>[0])
-      })
+      handlePendingProtectedAction(fake.store as Parameters<typeof handlePendingProtectedAction>[0])
       await Promise.resolve()
     })
   }

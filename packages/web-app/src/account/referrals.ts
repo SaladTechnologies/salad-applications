@@ -63,13 +63,17 @@ export const currentReferralQueryKey = ['account', 'referrals', 'current'] as co
 /** The referral code before it has loaded, as the referral store started. */
 const noReferralCode: ReferralCode = { code: '', enabled: false }
 
-/** Loads a query now and keeps it for the session. A failed load keeps the last data, as the referral store did. */
+/**
+ * Loads a query now and keeps it for the session. A load already running is cancelled first, so each load sends its own
+ * request, as the referral store's did. A failed load keeps the last data, as the store did.
+ */
 const load = async <Data>(
   queryClient: QueryClient,
   queryKey: readonly string[],
   queryFn: () => Promise<Data>,
 ): Promise<void> => {
   try {
+    await queryClient.cancelQueries({ queryKey, exact: true })
     await queryClient.query({ queryKey, queryFn, staleTime: 0, gcTime: Number.POSITIVE_INFINITY })
   } catch {
     // The last data stays, as the store kept it.

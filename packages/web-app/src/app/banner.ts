@@ -30,18 +30,24 @@ const bannerFetcher = (http: AxiosInstance) => async (): Promise<BannerInfo | nu
 
 /**
  * Loads the notification banner now, and keeps it for the session. The app-wide refresh runs this (when the app opens,
- * every refresh, on sign-in, and after a claimed bonus), signed in or not, as it ran the home store's load.
+ * every refresh, on sign-in, and after a claimed bonus), signed in or not, as it ran the home store's load. A load
+ * already running is cancelled first, so each refresh sends its own request, as the store's did.
  */
 export const loadBanner = async (queryClient: QueryClient, http: AxiosInstance): Promise<void> => {
-  await queryClient.query({
-    queryKey: bannerQueryKey,
-    queryFn: bannerFetcher(http),
-    staleTime: 0,
-    gcTime: Number.POSITIVE_INFINITY,
-    // A new object on each load, even when unchanged, re-renders the banner, which checks its date window against the
-    // clock as it renders, as the store's new object on each refresh did.
-    structuralSharing: false,
-  })
+  await queryClient.cancelQueries({ queryKey: bannerQueryKey, exact: true })
+  try {
+    await queryClient.query({
+      queryKey: bannerQueryKey,
+      queryFn: bannerFetcher(http),
+      staleTime: 0,
+      gcTime: Number.POSITIVE_INFINITY,
+      // A new object on each load, even when unchanged, re-renders the banner, which checks its date window against the
+      // clock as it renders, as the store's new object on each refresh did.
+      structuralSharing: false,
+    })
+  } catch {
+    // The fetcher answers a failed request with no banner, so only a load cancelled by a newer one ends here.
+  }
 }
 
 /** Returns the notification banner, or `undefined` while there is none. It never loads it: `loadBanner` does. */

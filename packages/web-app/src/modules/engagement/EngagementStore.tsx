@@ -1,5 +1,4 @@
 import type { AxiosInstance } from 'axios'
-import { action, flow, observable } from 'mobx'
 import { onceWhen } from '../../app/once-when.ts'
 import type { RootStore } from '../../Store'
 import { NotificationMessageCategory } from '../notifications/models'
@@ -8,13 +7,9 @@ import type { ChangelogMetadata } from './models/ChangelogMetadata'
 export class EngagementStore {
   public static readonly CHANGELOG_URL = 'https://salad.com/whats-new'
 
-  @observable
   public whatsNewVersion?: string
 
-  /**
-   * Whether the profile last saw a different version than the changelog's. The profile is not a MobX value: read it
-   * now.
-   */
+  /** Whether the profile last saw a different version than the changelog's, read now. */
   public get showWhatsNew(): boolean {
     const show =
       this.whatsNewVersion !== undefined &&
@@ -62,14 +57,13 @@ export class EngagementStore {
     this.showWhatsNewOnce()
   }
 
-  @action.bound
-  loadChangelogMetadata = flow(function* (this: EngagementStore) {
+  loadChangelogMetadata = async (): Promise<void> => {
     try {
-      const response = yield this.axios.get<ChangelogMetadata>('/api/v2/changelog')
+      const response = await this.axios.get<ChangelogMetadata>('/api/v2/changelog')
       this.whatsNewVersion = (response.data as ChangelogMetadata).lastUpdated
       this.checkWhatsNew()
     } catch (err) {
       console.log(err)
     }
-  })
+  }
 }

@@ -17,10 +17,12 @@ const xpFetcher = (http: AxiosInstance) => async (): Promise<number> => {
 
 /**
  * Loads the signed-in user's lifetime XP now, and keeps it for the session. The app-wide refresh runs this while signed
- * in, as it ran the XP store's load. A failed load keeps the last XP, as the store did.
+ * in, as it ran the XP store's load. A load already running is cancelled first, so each refresh sends its own request,
+ * as the store's did. A failed load keeps the last XP, as the store did.
  */
 export const loadXp = async (queryClient: QueryClient, http: AxiosInstance): Promise<void> => {
   try {
+    await queryClient.cancelQueries({ queryKey: xpQueryKey, exact: true })
     await queryClient.query({
       queryKey: xpQueryKey,
       queryFn: xpFetcher(http),

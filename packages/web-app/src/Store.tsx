@@ -7,7 +7,6 @@ import type { CoinbaseEmail } from './account/coinbase-email.ts'
 import { createCoinbaseEmail } from './account/coinbase-email.ts'
 import type { SolanaWallet, WalletProblem } from './account/solana-wallet.ts'
 import { createSolanaWallet } from './account/solana-wallet.ts'
-import { action, configure, flow, observable, runInAction } from 'mobx'
 import type { Bonus, Bonuses, BonusesOptions } from './account/bonuses.ts'
 import { bonusTypes } from './account/bonuses.ts'
 import type { Passkeys } from './account/passkeys.ts'
@@ -17,6 +16,8 @@ import { createSudo } from './account/sudo.ts'
 import type { Terms } from './account/terms.ts'
 import { createTerms } from './account/terms.ts'
 import { ErrorBoundaryBridge } from './app/error-boundary.ts'
+import type { ExternalState } from './app/external-state.ts'
+import { createExternalState } from './app/external-state.ts'
 import type { Toasts } from './app/toasts.ts'
 import { createToasts } from './app/toasts.ts'
 import { config } from './config'
@@ -44,13 +45,6 @@ import type { Profile } from './modules/profile/models'
 import { RenderStore } from './modules/render'
 import { RewardStore } from './modules/reward'
 import { VaultStore } from './modules/vault'
-
-configure({
-  // computedRequiresReaction: process.env.NODE_ENV === 'development',
-  enforceActions: 'always',
-  // observableRequiresReaction: process.env.NODE_ENV === 'development',
-  // reactionRequiresObservable: process.env.NODE_ENV === 'development',
-})
 
 /** Loads the signed-in user's referral data (src/account/referrals.ts). */
 interface ReferralsAccess {
@@ -119,12 +113,7 @@ export const createStore = (
   bonuses: CreateBonuses,
   profiles: ProfileAccess,
 ): RootStore => {
-  // Vite compiles decorators the TypeScript way, so each store's field initializers are writes in its constructor.
-  // `enforceActions: 'always'` rejects writes outside an action, so construct inside one. (CRA's Babel set initial
-  // values without a write.)
-  sharedStore = runInAction(
-    () => new RootStore(axios, setSession, navigation, loadBanner, xp, referrals, bonuses, profiles),
-  )
+  sharedStore = new RootStore(axios, setSession, navigation, loadBanner, xp, referrals, bonuses, profiles)
   return sharedStore
 }
 
@@ -133,8 +122,10 @@ export const createStore = (
 export const getStore = (): RootStore => sharedStore
 
 export class RootStore {
-  @observable
-  public appLoading: boolean = true
+  /** Whether the loading screen shows: until the first sign-in or sign-out has finished, at least 2 seconds in. */
+  public readonly loading: ExternalState<{ appLoading: boolean }> = createExternalState<{ appLoading: boolean }>({
+    appLoading: true,
+  })
   public appStartTime: Date = new Date()
   /** Signs the user in and out (src/account/auth.ts), and keeps whether they are signed in for the stores. */
   public readonly auth: Auth
@@ -273,14 +264,9 @@ export class RootStore {
     this.dedicatedNodes = new DedicatedNodesStore(axios)
   }
 
-  /**
-   * Runs the protected action waiting for sudo mode, once the user verified. It runs in one MobX action, as it ran
-   * inside the passkey and backup code stores' flows, so its MobX changes notify observers together, as before.
-   */
+  /** Runs the protected action waiting for sudo mode, once the user verified. */
   runPendingProtectedAction = (): void => {
-    runInAction(() => {
-      handlePendingProtectedAction(this)
-    })
+    handlePendingProtectedAction(this)
   }
 
   /**
@@ -314,12 +300,10 @@ export class RootStore {
     }
   }
 
-  @action
   setAppLoadedStateFalse = () => {
-    this.appLoading = false
+    this.loading.update({ appLoading: false })
   }
 
-  @action
   finishInitialLoading = () => {
     const appLoadFinishedTime = new Date()
     const timeToLoadApp = +appLoadFinishedTime - +this.appStartTime
@@ -332,38 +316,35 @@ export class RootStore {
     }
   }
 
-  onLogin = flow(
-    function* (this: RootStore) {
-      var profile: Profile = yield this.profile.loadProfile()
-      if (!profile) {
-        this.auth.logout()
-        return
-      }
+  onLogin = async (): Promise<void> => {
+    const profile = await this.profile.loadProfile()
+    if (!profile) {
+      this.auth.logout()
+      return
+    }
 
-      yield Promise.allSettled([
-        this.analytics.start(profile),
-        this.referrals.loadCurrent(),
-        this.referrals.loadCode(),
-        this.refresh.refreshData(),
-        this.dedicatedNodes.loadEnrollment(),
-        this.helpScout.login({
-          name: profile.username,
-          email: profile.email,
-          lifetimeXP: this.xp.current(),
-        }),
-      ])
+    await Promise.allSettled([
+      this.analytics.start(profile),
+      this.referrals.loadCurrent(),
+      this.referrals.loadCode(),
+      this.refresh.refreshData(),
+      this.dedicatedNodes.loadEnrollment(),
+      this.helpScout.login({
+        name: profile.username,
+        email: profile.email,
+        lifetimeXP: this.xp.current(),
+      }),
+    ])
 
-      const isTermsAndConditionsAccepted = this.terms.get().accepted
+    const isTermsAndConditionsAccepted = this.terms.get().accepted
 
-      if (profile.pendingTermsVersion && isTermsAndConditionsAccepted) {
-        yield this.terms.submit()
-      }
+    if (profile.pendingTermsVersion && isTermsAndConditionsAccepted) {
+      await this.terms.submit()
+    }
 
-      this.finishInitialLoading()
-    }.bind(this),
-  )
+    this.finishInitialLoading()
+  }
 
-  @action
   onLogout = (): void => {
     // The referral code and the user's referral, which this cleared, are forgotten with the rest of the user's data
     // (src/app/forget-user.ts), right after.

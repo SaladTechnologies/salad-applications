@@ -1,5 +1,4 @@
 import { BonusCard, Layout, Text } from '@saladtechnologies/garden-components'
-import { Observer } from 'mobx-react'
 import type { ReactNode } from 'react'
 import { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars-2'
@@ -41,27 +40,20 @@ class _BonusPage extends Component<Props> {
             {hasBonuses && (
               <div className={classes.cardContainer}>
                 {unclaimedBonuses?.map((x) => (
-                  <Observer>
-                    {() => {
-                      let pending = pendingBonuses?.has(x.id)
-                      return (
-                        <div className={classes.cardWraper} key={x.id}>
-                          <BonusCard
-                            key={x.id}
-                            buttonLabel="Claim"
-                            description={`Expires on ${intl.formatDate(x.expiresAt)}`}
-                            header={x.reason || ''}
-                            image={x.iconImageUrl || ''}
-                            imageAlt={x.name || 'bonus image'}
-                            onClick={() => claimBonus?.(x.id)}
-                            title={x.name || ''}
-                            variant="large"
-                            isLoading={pending}
-                          />
-                        </div>
-                      )
-                    }}
-                  </Observer>
+                  <div className={classes.cardWraper} key={x.id}>
+                    <BonusCard
+                      key={x.id}
+                      buttonLabel="Claim"
+                      description={`Expires on ${intl.formatDate(x.expiresAt)}`}
+                      header={x.reason || ''}
+                      image={x.iconImageUrl || ''}
+                      imageAlt={x.name || 'bonus image'}
+                      onClick={() => claimBonus?.(x.id)}
+                      title={x.name || ''}
+                      variant="large"
+                      isLoading={pendingBonuses?.has(x.id)}
+                    />
+                  </div>
                 ))}
               </div>
             )}
