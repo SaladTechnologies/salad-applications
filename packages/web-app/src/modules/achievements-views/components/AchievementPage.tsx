@@ -6,7 +6,7 @@ import { injectIntl } from 'react-intl'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
-import type { Achievement } from '../../achievements/models/Achievement'
+import type { Achievement } from '../../../account/achievements.ts'
 import { AchievementCard } from './AchievementCard'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({

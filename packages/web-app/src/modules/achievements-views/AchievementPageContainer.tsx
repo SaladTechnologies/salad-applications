@@ -1,17 +1,10 @@
-import { useAchievementsLoad } from '../../account/achievements.ts'
-import { connect } from '../../connect'
-import type { RootStore } from '../../Store'
-import { getStore } from '../../Store'
+import { useAchievements } from '../../account/achievements.ts'
+import { config } from '../../config'
+import { useHttp } from '../../data/http-context.ts'
 import { AchievementPage } from './components/AchievementPage'
 
-const mapStoreToProps = (store: RootStore): any => ({
-  achievements: store.achievements.achievements,
-})
-
-const ConnectedAchievementPage = connect(mapStoreToProps, AchievementPage)
-
-/** The achievements page. It loads the account's achievements each time it opens; they stay in the store. */
+/** The achievements page. It loads the account's achievements each time it opens, and passes them to the page. */
 export const AchievementPageContainer = () => {
-  useAchievementsLoad(getStore().achievements.getAchievements)
-  return <ConnectedAchievementPage />
+  const achievements = useAchievements(useHttp(), config.apiBaseUrl)
+  return <AchievementPage achievements={achievements} />
 }
