@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { connect } from '../../connect'
+import type { BonusEarningRate } from '../../account/bonuses.ts'
+import { useEarningRateBonus } from '../../account/bonuses.ts'
 import { useXp } from '../../account/xp.ts'
 import { useMachineEarningRates, useMachineEarningsHistory } from '../../earnings/machine-earnings.ts'
 import { useVaultRefresh } from '../../rewards/vault.ts'
@@ -11,6 +13,7 @@ import { getNumberWithCommas } from './utils'
 
 interface OwnProps {
   xp: number
+  bonusEarningRate: BonusEarningRate | undefined
   onNavigateToVault: () => void
   onPageMachineIdsChange: (machineIds: string[]) => void
 }
@@ -32,7 +35,7 @@ const mapStoreToProps = (store: RootStore, props: OwnProps): any => {
     last24HrEarnings: store.balance.lastDayEarnings,
     last7DayEarnings: store.balance.lastWeekEarnings,
     last30DayEarnings: store.balance.lastMonthEarnings,
-    bonusEarningRate: store.bonuses.currentEarningBonus,
+    bonusEarningRate: props.bonusEarningRate,
     machines: store.balance.machines,
     currentHourlyEarningRatesPerMachine: store.balance.currentHourlyEarningRatesPerMachine,
     trackEarnPageFAQLinkClicked: store.analytics.trackEarnPageFAQLinkClicked,
@@ -60,9 +63,11 @@ export const EarningSummaryContainer = () => {
   useMachineEarningRates(pageMachineIds, store.balance.loadCurrentEarningRatesPerMachine)
   useVaultRefresh(store.vault.refresh)
   const xp = useXp()
+  const bonusEarningRate = useEarningRateBonus()
   return (
     <ConnectedEarningSummary
       xp={xp}
+      bonusEarningRate={bonusEarningRate}
       onNavigateToVault={() => navigation.push('/store/vault')}
       onPageMachineIdsChange={setPageMachineIds}
     />

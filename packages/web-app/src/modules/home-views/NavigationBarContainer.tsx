@@ -1,9 +1,12 @@
 import { Avatar, AvatarDefault, BonusCard } from '@saladtechnologies/garden-components'
 import type { TargetRewardInfo } from '@saladtechnologies/garden-components/lib/components/NavigationBar/components/DesktopNavigationBar/TargetRewardStatus'
 import { useState } from 'react'
+import type { Bonus, BonusClaims } from '../../account/bonuses.ts'
+import { useBonusClaims, useUnclaimedBonuses } from '../../account/bonuses.ts'
 import { useReferralCode } from '../../account/referrals.ts'
 import { startButton as startButtonFor } from '../../app/start-button.ts'
 import type { RootStore } from '../../Store'
+import { getStore } from '../../Store'
 import { connect } from '../../connect'
 import { NavigationBarWithNotifications } from './components/NavigationBarWithNotifications'
 
@@ -12,6 +15,10 @@ interface DrawerProps {
   isNotificationsDrawerOpened: boolean
   setIsNotificationsDrawerOpened: (isOpened: boolean) => void
   isUserReferralsEnabled: boolean
+  /** The first unclaimed bonus to expire, which the bonus card shows. */
+  bonus: Bonus | undefined
+  /** The bonus claims under way. */
+  bonusClaims: BonusClaims
 }
 
 const mapStoreToProps = (store: RootStore, drawer: DrawerProps): any => {
@@ -25,7 +32,7 @@ const mapStoreToProps = (store: RootStore, drawer: DrawerProps): any => {
     store.profile.setIsInstallReminderClosed(true)
   }
 
-  const bonus = store.bonuses.firstExpiringUnclaimedBonus
+  const { bonus } = drawer
 
   const selectedAvatar = store.profile.profileAvatar
 
@@ -67,10 +74,10 @@ const mapStoreToProps = (store: RootStore, drawer: DrawerProps): any => {
         header={bonus.reason || ''}
         image={bonus.iconImageUrl || ''}
         imageAlt={bonus.name || 'bonus image'}
-        onClick={() => store.bonuses.claimBonus(bonus.id)}
+        onClick={() => store.bonuses.claim(bonus.id)}
         title={bonus.name || ''}
         variant="small"
-        isLoading={store.bonuses.pendingBonuses?.has(bonus.id)}
+        isLoading={drawer.bonusClaims.pending.has(bonus.id)}
       />
     ) : undefined,
     onClickAvatar: goToAccount,
@@ -107,11 +114,15 @@ const ConnectedNavigationBar = connect(mapStoreToProps, NavigationBarWithNotific
 export const NavigationBarContainer = () => {
   const [isNotificationsDrawerOpened, setIsNotificationsDrawerOpened] = useState(false)
   const { enabled: isUserReferralsEnabled } = useReferralCode()
+  const [bonus] = useUnclaimedBonuses()
+  const bonusClaims = useBonusClaims(getStore().bonuses)
   return (
     <ConnectedNavigationBar
       isNotificationsDrawerOpened={isNotificationsDrawerOpened}
       setIsNotificationsDrawerOpened={setIsNotificationsDrawerOpened}
       isUserReferralsEnabled={isUserReferralsEnabled}
+      bonus={bonus}
+      bonusClaims={bonusClaims}
     />
   )
 }

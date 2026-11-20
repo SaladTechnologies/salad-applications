@@ -8,7 +8,7 @@ import { injectIntl } from 'react-intl'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Head } from '../../../components'
-import type { Bonus } from '../../bonus/models'
+import type { Bonus } from '../../../account/bonuses.ts'
 
 const styles = () => ({
   cardContainer: {
@@ -21,8 +21,8 @@ const styles = () => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  unclaimedBonuses?: Bonus[]
-  pendingBonuses?: Set<string>
+  unclaimedBonuses?: readonly Bonus[]
+  pendingBonuses?: ReadonlySet<string>
   claimBonus?: (id: string) => void
   intl: IntlShape
 }

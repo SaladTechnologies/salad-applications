@@ -1,5 +1,7 @@
 import type { AxiosInstance } from 'axios'
 import { action, configure, flow, observable, runInAction } from 'mobx'
+import type { Bonus, Bonuses, BonusesOptions } from './account/bonuses.ts'
+import { bonusTypes } from './account/bonuses.ts'
 import type { Terms } from './account/terms.ts'
 import { createTerms } from './account/terms.ts'
 import { ErrorBoundaryBridge } from './app/error-boundary.ts'
@@ -10,13 +12,13 @@ import { AnalyticsStore } from './modules/analytics'
 import { AuthStore } from './modules/auth'
 import { BackupCodesStore } from './modules/backup-codes'
 import { BalanceStore } from './modules/balance'
-import { BonusStore } from './modules/bonus'
 import { CoinbaseEmailStore } from './modules/coinbase'
 import { DedicatedNodesStore } from './modules/dedicated-nodes'
 import { RefreshService } from './modules/data-refresh'
 import { EngagementStore } from './modules/engagement'
 import { HelpScoutStore } from './modules/helpscout/HelpScoutStore'
 import type { NotificationMessage } from './modules/notifications/models'
+import { NotificationMessageCategory } from './modules/notifications/models'
 import { NotificationToast } from './modules/notifications-views/components'
 import { PasskeyStore } from './modules/passkey-setup'
 import { ProfileStore } from './modules/profile'
@@ -51,6 +53,43 @@ interface XpAccess {
   current: () => number
 }
 
+/** Creates the signed-in user's bonuses (src/account/bonuses.ts), given what the root store tells them. */
+type CreateBonuses = (
+  options: Pick<BonusesOptions, 'openReplaceModal' | 'onClaimed' | 'onClaimFailed' | 'refreshData'>,
+) => Bonuses
+
+/** The toast that says a bonus is claimed, and where clicking it goes, by the kind of bonus, as the bonus store had it. */
+const bonusClaimedNotification = (bonus: Bonus, navigation: Navigation): NotificationMessage => {
+  const notification: NotificationMessage = {
+    category: NotificationMessageCategory.BonusClaimedSuccess,
+    title: `Claimed ${bonus?.name}!`,
+    message: 'Congrats on your new bonus!',
+    onClick: () => navigation.push('/account/bonuses'),
+    autoClose: false,
+  }
+
+  switch (bonus?.blockType) {
+    case bonusTypes.avatar:
+      notification.message = 'Congrats on your new bonus! Your item is on its way. Check your profile for more details.'
+      notification.onClick = () => navigation.push('/account/summary')
+      break
+    case bonusTypes.balance:
+      break
+    case bonusTypes.earningRate:
+      notification.message = 'Your bonus earning rate is now active. Check your earnings for more details.'
+      notification.onClick = () => navigation.push('/earn/summary')
+      break
+    case bonusTypes.reward:
+      // NOTE: These should be kept in sync with the notification for successful reward redemptions
+      notification.message = 'Congrats on your pick! Your item is on its way. Check your reward vault for more details.'
+      notification.onClick = () => navigation.push('/store/vault')
+      break
+    case bonusTypes.xp:
+      break
+  }
+  return notification
+}
+
 let sharedStore: RootStore
 
 export const createStore = (
@@ -60,11 +99,12 @@ export const createStore = (
   loadBanner: () => void,
   xp: XpAccess,
   referrals: ReferralsAccess,
+  bonuses: CreateBonuses,
 ): RootStore => {
   // Vite compiles decorators the TypeScript way, so each store's field initializers are writes in its constructor.
   // `enforceActions: 'always'` rejects writes outside an action, so construct inside one. (CRA's Babel set initial
   // values without a write.)
-  sharedStore = runInAction(() => new RootStore(axios, setSession, navigation, loadBanner, xp, referrals))
+  sharedStore = runInAction(() => new RootStore(axios, setSession, navigation, loadBanner, xp, referrals, bonuses))
   return sharedStore
 }
 
@@ -93,7 +133,8 @@ export class RootStore {
   public readonly vault: VaultStore
   public readonly engagement: EngagementStore
   public readonly helpScout: HelpScoutStore
-  public readonly bonuses: BonusStore
+  /** The signed-in user's bonuses (src/account/bonuses.ts): their loads, their claims, and the claims' state. */
+  public readonly bonuses: Bonuses
   /** Shows or resets the app's error page from outside React. */
   public readonly errorBoundary: ErrorBoundaryBridge
   public readonly passkey: PasskeyStore
@@ -115,6 +156,7 @@ export class RootStore {
     loadBanner: () => void,
     xp: XpAccess,
     referrals: ReferralsAccess,
+    bonuses: CreateBonuses,
   ) {
     this.routing = navigation
     this.loadBanner = loadBanner
@@ -144,7 +186,19 @@ export class RootStore {
     this.vault = new VaultStore(axios, this.balance, this.rewards)
     this.engagement = new EngagementStore(this, axios)
     this.helpScout = new HelpScoutStore(axios, this.auth)
-    this.bonuses = new BonusStore(this, axios)
+    this.bonuses = bonuses({
+      openReplaceModal: () => this.routing.push('/bonuses/replace-bonus'),
+      onClaimed: (bonus) => this.notifications.sendNotification(bonusClaimedNotification(bonus, this.routing)),
+      onClaimFailed: () =>
+        this.notifications.sendNotification({
+          category: NotificationMessageCategory.BonusClaimedError,
+          title: `Uh Oh. Something went wrong.`,
+          message: 'Please try to claim the bonus again later',
+          autoClose: false,
+          type: 'error',
+        }),
+      refreshData: () => this.refresh.refreshData(),
+    })
     this.passkey = new PasskeyStore(this, axios)
     this.backupCodes = new BackupCodesStore(this, axios)
     this.errorBoundary = new ErrorBoundaryBridge()
