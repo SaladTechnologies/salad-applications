@@ -269,7 +269,7 @@ export class RewardStore {
 
     const isProtectRewardsRedemptionEnabled = this.store.profile.currentProfile?.redemptionTfaEnabled
     if (isProtectRewardsRedemptionEnabled) {
-      const challengeSudoModeResponse = yield this.store.auth.challengeSudoMode(ChallengeSudoModeTrigger.RewardRedeem)
+      const challengeSudoModeResponse = yield this.store.sudo.challengeSudoMode(ChallengeSudoModeTrigger.RewardRedeem)
       if (challengeSudoModeResponse === null) {
         return
       }
@@ -372,7 +372,7 @@ export class RewardStore {
       if (Axios.isAxiosError(error) || error instanceof SaladError) {
         const errorResponse = error.response
         const isProtectedActionVerifyRequired =
-          errorResponse?.status === 401 && !!this.store.auth.pendingProtectedAction
+          errorResponse?.status === 401 && !!this.store.sudo.get().pendingProtectedAction
 
         response?.complete('fail', isProtectedActionVerifyRequired)
         if (isProtectedActionVerifyRequired) {

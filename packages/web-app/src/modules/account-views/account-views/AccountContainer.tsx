@@ -29,7 +29,7 @@ const mapStoreToProps = (store: RootStore, props: { terms: TermsState }): any =>
   isTermsAndConditionsAccepted: props.terms.accepted,
   onSubmitTermsAndConditions: store.terms.submit,
   onToggleAcceptTermsAndConditions: store.terms.setAccepted,
-  signInWithGoogleChallengeSudoMode: store.auth.signInWithGoogleChallengeSudoMode,
+  signInWithGoogleChallengeSudoMode: store.sudo.signInWithGoogleChallengeSudoMode,
 })
 
 const ConnectedAccount = connect(mapStoreToProps, Account)

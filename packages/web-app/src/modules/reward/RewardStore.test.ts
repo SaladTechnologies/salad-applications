@@ -77,11 +77,14 @@ const setup = (postImpl: Mock, exchangeRate?: number): Harness => {
   const addRewardToRedemptionsList = vi.fn()
   const complete = vi.fn()
 
+  const sudoState: { pendingProtectedAction: unknown } = { pendingProtectedAction: undefined }
   const rootStore = {
     auth: {
       login: vi.fn().mockResolvedValue(undefined),
+    },
+    sudo: {
       challengeSudoMode: vi.fn(),
-      pendingProtectedAction: undefined,
+      get: () => sudoState,
     },
     profile: { currentProfile: { redemptionTfaEnabled: false } },
     analytics: { trackSaladPayOpened: vi.fn() },
@@ -513,7 +516,10 @@ describe('RewardStore.redeemReward SaladPay order', () => {
       .mockRejectedValueOnce(makeAxiosError(401))
       .mockResolvedValue({ data: { status: 'complete', timestamp: '2026-11-20T00:00:00.000Z' } })
     const { redeem, complete, sendNotification, store, rootStore } = setup(post)
-    ;(rootStore.auth as { pendingProtectedAction?: unknown }).pendingProtectedAction = { method: 'post', url: '/x' }
+    ;(rootStore.sudo.get() as { pendingProtectedAction?: unknown }).pendingProtectedAction = {
+      method: 'post',
+      url: '/x',
+    }
     const reward = makeReward()
 
     await redeem(reward)

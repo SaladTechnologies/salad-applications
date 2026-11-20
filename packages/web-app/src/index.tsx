@@ -53,7 +53,7 @@ const client = createHttpClient({
   baseURL: config.apiBaseUrl,
   onUnauthorized: () => setSession(queryClient, 'no'),
   onSudoRequired: (action) => {
-    store?.auth.setPendingProtectedAction(action)
+    store?.sudo.setPendingProtectedAction(action)
     navigation.push('/protected-action')
   },
 })

@@ -4,19 +4,31 @@ import type { RootStore } from '../../Store'
 import { getStore } from '../../Store'
 import { ProtectedActionPage } from './components'
 
-/** What the page reads from the passkeys and the backup codes. */
+/** What the page reads from sudo mode, the passkeys and the backup codes. */
 interface VerificationState {
+  withPendingProtectedAction: boolean
   isPasskeySupported: boolean
   hasVerifyWithPasskeyFailed: boolean
   hasVerifyWithBackupCodeFailed: boolean
 }
 
+/** Whether the user is still on the protected-action page. */
+const isOnProtectedActionPage = (pathname: string): boolean => pathname.toLowerCase().startsWith('/protected-action')
+
 const mapStoreToProps = (store: RootStore, props: VerificationState): any => ({
   isPasskeySupported: props.isPasskeySupported,
-  withPendingProtectedAction: !!store.auth.pendingProtectedAction,
+  withPendingProtectedAction: props.withPendingProtectedAction,
   hasVerifyWithBackupCodeFailed: props.hasVerifyWithBackupCodeFailed,
   hasVerifyWithPasskeyFailed: props.hasVerifyWithPasskeyFailed,
-  backToAccount: () => store.routing.push('/account'),
+  // The page sends the user to their account when it shows with no action waiting. A replayed action clears the action
+  // after it navigated to its own page, and the page can show once more before that navigation renders: going to the
+  // account then would undo the replay's navigation. So it goes only while the user is still on this page, which is
+  // when it went before (an action that waited for nothing, or a replay that navigates later, as a redemption does).
+  backToAccount: () => {
+    if (isOnProtectedActionPage(store.routing.location.pathname)) {
+      store.routing.push('/account')
+    }
+  },
   setHasVerifyWithBackupCodeFailed: store.backupCodes.setHasVerifyWithBackupCodeFailed,
   setHasVerifyWithPasskeyFailed: store.passkey.setHasVerifyWithPasskeyFailed,
   verifyWithBackupCode: store.backupCodes.verifyWithBackupCode,
@@ -25,15 +37,15 @@ const mapStoreToProps = (store: RootStore, props: VerificationState): any => ({
 
 const ConnectedProtectedActionPage = connect(mapStoreToProps, ProtectedActionPage)
 
-/**
- * The page that verifies the user for a protected action. It reads only the fields it shows, as the page observed only
- * them in the MobX stores: a replayed action changes others (the backup codes, when it generates them), and a re-render
- * then, before its navigation renders, would find the action cleared and send the user to their account instead.
- */
+/** The page that verifies the user for a protected action. It reads only the fields it shows. */
 export const ProtectedActionPageContainer = () => {
-  const { passkey, backupCodes } = getStore()
+  const { sudo, passkey, backupCodes } = getStore()
   return (
     <ConnectedProtectedActionPage
+      withPendingProtectedAction={useSyncExternalStore(
+        sudo.subscribe,
+        () => sudo.get().pendingProtectedAction !== undefined,
+      )}
       isPasskeySupported={useSyncExternalStore(passkey.subscribe, () => passkey.get().isPasskeySupported)}
       hasVerifyWithPasskeyFailed={useSyncExternalStore(
         passkey.subscribe,
