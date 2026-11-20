@@ -7,7 +7,8 @@
   // through tsconfig and nothing imports.
   "entry": ["src/modules/helpscout/models/HelpScout.tsx"],
   // Project-specific: Kiota's generated Machines API client, replaced wholesale on each regeneration (README.md).
-  "ignore": ["src/api/machinesApiClient/generated/**"],
+  // Project-specific: public/ is served as is at its URL (CSS and images other sites or apps may load), not imported.
+  "ignore": ["src/api/machinesApiClient/generated/**", "public/**"],
   // Run from the justfile. oxlint-tsgolint is the program oxlint runs for type-aware rules.
   // Project-specific: htmlparser2 (under react-html-parser) imports the Node built-ins buffer, events, and
   // string_decoder; in the browser the bundler resolves those names to these packages.

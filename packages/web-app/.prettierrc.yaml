@@ -2,6 +2,8 @@ endOfLine: "auto"
 plugins:
   - prettier-plugin-jsdoc
   - prettier-plugin-packagejson
+  # Project-specific: sorts Tailwind classes in the rebuilt UI, using its stylesheet for the custom tokens.
+  - prettier-plugin-tailwindcss
 printWidth: 120
 proseWrap: "always"
 semi: false
@@ -13,3 +15,7 @@ overrides:
       - "*.yml"
     options:
       singleQuote: false
+tailwindStylesheet: ./src/ui/tailwind.css
+tailwindFunctions:
+  - cn
+  - cva

@@ -1,3 +1,4 @@
+import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { loadEnv } from 'vite'
 import { defineConfig } from 'vitest/config'
@@ -11,7 +12,7 @@ export default defineConfig(({ mode }) => {
     base: publicUrl === undefined || publicUrl === '' ? '/' : `${publicUrl}/`,
     // The app and the pipeline (`.azure-pipelines/build.ps1`) still use CRA's `REACT_APP_` names.
     envPrefix: 'REACT_APP_',
-    plugins: [react()],
+    plugins: [react(), tailwindcss()],
     build: {
       // `.azure-pipelines/deploy.ps1` deploys `build/`.
       outDir: 'build',
