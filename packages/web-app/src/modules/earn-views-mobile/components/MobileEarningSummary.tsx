@@ -50,6 +50,8 @@ interface Props extends WithStyles<typeof styles> {
   earningsPerMachine: EarningPerMachine
   /** How many days the earning chart shows. */
   daysShowing: ChartDaysShowing
+  /** Whether the account can use dedicated nodes, so the link to them is shown. */
+  hasDedicatedNodesAccess: boolean
   last24HrEarnings: number
   last7DayEarnings: number
   last30DayEarnings: number
@@ -64,6 +66,7 @@ const _MobileEarningSummary = ({
   classes,
   earningsPerMachine,
   daysShowing,
+  hasDedicatedNodesAccess,
   currentBalance,
   last24HrEarnings,
   last7DayEarnings,
@@ -148,7 +151,7 @@ const _MobileEarningSummary = ({
         onSelectedMachineIdsChange={handleSelectedMachineIdsChange}
         onPageChange={onPageMachineIdsChange}
       />
-      <DedicatedNodesLink />
+      <DedicatedNodesLink hasAccess={hasDedicatedNodesAccess} />
       <EarningHistoryContainer earningsPerMachine={earningsPerSelectedMachines} daysShowing={daysShowing} />
       {shownInModalMachineDetails && (
         <MachineDetailsModal

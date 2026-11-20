@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { ReactNode } from 'react'
 import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
-import { _DedicatedNodesLink } from './DedicatedNodesLink'
+import { DedicatedNodesLink } from './DedicatedNodesLink'
 
 // The barrels pull in the root store and ESM-only `axios`; the link only needs the page path and an inert link.
 vi.mock('../dedicated-nodes', () => vi.importActual('../dedicated-nodes/constants'))
@@ -40,7 +40,7 @@ describe('DedicatedNodesLink', () => {
 
   const render = (hasAccess: boolean) => {
     act(() => {
-      root.render(<_DedicatedNodesLink hasAccess={hasAccess} />)
+      root.render(<DedicatedNodesLink hasAccess={hasAccess} />)
     })
     return container.querySelector('a')
   }
