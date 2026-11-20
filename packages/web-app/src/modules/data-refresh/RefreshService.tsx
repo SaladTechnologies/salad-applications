@@ -26,7 +26,7 @@ export class RefreshService {
       this.store.rewards.fetchSelectedTargetReward()
       this.store.referral.loadReferrals()
       this.store.vault.loadVault()
-      this.store.xp.refreshXp()
+      this.store.xp.load()
       this.store.profile.loadAvatars()
       this.store.profile.loadSelectedAvatar()
       this.store.bonuses.loadBonuses()

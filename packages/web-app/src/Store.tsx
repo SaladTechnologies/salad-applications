@@ -25,7 +25,6 @@ import { RewardStore } from './modules/reward'
 import { SolanaWalletStore } from './modules/solana-wallet'
 import { TermsAndConditionsStore } from './modules/terms-and-conditions'
 import { VaultStore } from './modules/vault'
-import { ExperienceStore } from './modules/xp'
 
 configure({
   // computedRequiresReaction: process.env.NODE_ENV === 'development',
@@ -34,6 +33,14 @@ configure({
   // reactionRequiresObservable: process.env.NODE_ENV === 'development',
 })
 
+/** Loads and reads the signed-in user's lifetime XP (src/account/xp.ts). */
+interface XpAccess {
+  /** Loads it now. */
+  load: () => void
+  /** Returns it, or 0 before it has loaded. */
+  current: () => number
+}
+
 let sharedStore: RootStore
 
 export const createStore = (
@@ -41,11 +48,12 @@ export const createStore = (
   setSession: (session: 'yes' | 'no') => void,
   navigation: Navigation,
   loadBanner: () => void,
+  xp: XpAccess,
 ): RootStore => {
   // Vite compiles decorators the TypeScript way, so each store's field initializers are writes in its constructor.
   // `enforceActions: 'always'` rejects writes outside an action, so construct inside one. (CRA's Babel set initial
   // values without a write.)
-  sharedStore = runInAction(() => new RootStore(axios, setSession, navigation, loadBanner))
+  sharedStore = runInAction(() => new RootStore(axios, setSession, navigation, loadBanner, xp))
   return sharedStore
 }
 
@@ -61,7 +69,6 @@ export class RootStore {
   public readonly termsAndConditions: TermsAndConditionsStore
   public readonly analytics: AnalyticsStore
   public readonly routing: Navigation
-  public readonly xp: ExperienceStore
   public readonly rewards: RewardStore
   public readonly render: RenderStore
   public readonly balance: BalanceStore
@@ -85,14 +92,19 @@ export class RootStore {
   /** Loads the notification banner (src/app/banner.ts), which the app-wide refresh runs signed in or not. */
   public readonly loadBanner: () => void
 
+  /** The signed-in user's lifetime XP (src/account/xp.ts): the app-wide refresh loads it, and sign-in reads it. */
+  public readonly xp: XpAccess
+
   constructor(
     axios: AxiosInstance,
     setSession: (session: 'yes' | 'no') => void,
     navigation: Navigation,
     loadBanner: () => void,
+    xp: XpAccess,
   ) {
     this.routing = navigation
     this.loadBanner = loadBanner
+    this.xp = xp
     this.auth = new AuthStore(this, axios, setSession)
     this.notifications = createToasts<NotificationMessage>({
       render: (message, onClick) => (
@@ -102,7 +114,6 @@ export class RootStore {
       onClicked: (message) => this.analytics.trackToastNotificationClicked(message),
       onClosed: (message) => this.analytics.trackToastNotificationClosed(message),
     })
-    this.xp = new ExperienceStore(axios)
 
     this.profile = new ProfileStore(this, axios)
     this.termsAndConditions = new TermsAndConditionsStore(axios, this.profile)
@@ -133,7 +144,6 @@ export class RootStore {
     this.termsAndConditions,
     this.balance,
     this.bonuses,
-    this.xp,
     this.vault,
     this.referral,
     this.profile,
@@ -147,6 +157,9 @@ export class RootStore {
   /** Mirrors the session (src/data/session.ts) into the stores: called when it becomes known and when it changes. */
   onSessionChange = (session: 'yes' | 'no'): void => {
     this.auth.setIsAuthenticated(session === 'yes')
+    // Where the analytics `when` and the engagement `autorun` reacted to sign-in.
+    this.analytics.checkMarketingTouchpoint()
+    this.engagement.checkWhatsNew()
     if (session === 'yes') {
       this.onLogin()
     } else {
@@ -189,7 +202,7 @@ export class RootStore {
         this.helpScout.login({
           name: profile.username,
           email: profile.email,
-          lifetimeXP: this.xp.currentXp,
+          lifetimeXP: this.xp.current(),
         }),
       ])
 

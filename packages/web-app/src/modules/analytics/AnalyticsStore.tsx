@@ -1,5 +1,6 @@
 import mixpanel from 'mixpanel-browser'
-import { observable, runInAction, when } from 'mobx'
+import { observable, runInAction } from 'mobx'
+import { onceWhen } from '../../app/once-when.ts'
 import { config } from '../../config'
 import type { AuthStore } from '../auth'
 import type { ViewData, ViewRange, ViewType } from '../earn-views/components/EarningHistory/constants'
@@ -29,10 +30,9 @@ export class AnalyticsStore {
         runInAction(() => {
           this.mixpanelInitialized = true
         })
+        this.checkMarketingTouchpoint()
       },
     })
-
-    this.trackMarketingTouchpoint()
   }
 
   public start = (profile: Profile) => {
@@ -419,20 +419,27 @@ export class AnalyticsStore {
     this.track('Uninstall')
   }
 
-  /** Tracks marketing touchpoint data when available from cookies and local storage. */
-  public trackMarketingTouchpoint = () => {
-    when(
-      () => !!this.auth.isAuthenticated && this.mixpanelInitialized,
-      () => {
-        const marketingTouchpointTimestamp = localStorage.getItem('marketingTouchpointTimestamp')
-        const utmTags = getUtmTagsFromCookie()
+  /**
+   * Tracks marketing touchpoint data when available from cookies and local storage, once, the first time the user is
+   * signed in and Mixpanel has loaded. It ran as a `when` on those two; now `checkMarketingTouchpoint` runs it right
+   * after each changes: Mixpanel's load here, and the session change in the root store.
+   */
+  private readonly trackMarketingTouchpointOnce = onceWhen(
+    () => !!this.auth.isAuthenticated && this.mixpanelInitialized,
+    () => {
+      const marketingTouchpointTimestamp = localStorage.getItem('marketingTouchpointTimestamp')
+      const utmTags = getUtmTagsFromCookie()
 
-        if (marketingTouchpointTimestamp && Object.keys(utmTags).length > 0) {
-          localStorage.removeItem('marketingTouchpointTimestamp')
-          this.track('Marketing Touchpoint', { OriginalTimestamp: marketingTouchpointTimestamp, ...utmTags })
-        }
-      },
-    )
+      if (marketingTouchpointTimestamp && Object.keys(utmTags).length > 0) {
+        localStorage.removeItem('marketingTouchpointTimestamp')
+        this.track('Marketing Touchpoint', { OriginalTimestamp: marketingTouchpointTimestamp, ...utmTags })
+      }
+    },
+  )
+
+  /** Tracks the marketing touchpoint if it is due and has not been tracked: see `trackMarketingTouchpointOnce`. */
+  public checkMarketingTouchpoint = (): void => {
+    this.trackMarketingTouchpointOnce()
   }
 
   private track = (event: string, properties?: { [key: string]: any }) => {

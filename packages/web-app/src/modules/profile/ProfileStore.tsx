@@ -106,6 +106,7 @@ export class ProfileStore {
   @action
   setProfileData = (profileData: Profile) => {
     this.currentProfile = profileData
+    this.store.engagement.checkWhatsNew()
   }
 
   @action
@@ -124,6 +125,7 @@ export class ProfileStore {
       this.currentProfile = undefined
       this.store.errorBoundary.showErrorBoundary(new Error(`An error occurred: ${err}`))
     }
+    this.store.engagement.checkWhatsNew()
     return this.currentProfile
   })
 
