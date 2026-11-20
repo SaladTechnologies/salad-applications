@@ -2,7 +2,6 @@ import { describe, expect, it, vi } from 'vitest'
 // The store module reads the root store only in getSaladPayStore; the tests build the store directly.
 vi.mock('../../Store', () => ({ getStore: vi.fn() }))
 
-import { runInAction } from 'mobx'
 import type { SaladPayOrderHandlers } from './SaladPayStore'
 import { SaladPayStore } from './SaladPayStore'
 
@@ -11,7 +10,7 @@ const options = { total: { label: 'Total', amount: 5 }, displayItems: [{ label: 
 /** A store with spies for its navigation, and an open order whose handlers are spies. */
 const setUp = (lastRewardId?: string) => {
   const routing = { push: vi.fn(), replace: vi.fn(), goBackOr: vi.fn() }
-  const store = runInAction(() => new SaladPayStore(routing, { lastRewardId }))
+  const store = new SaladPayStore(routing, { lastRewardId })
   const handlers = { confirm: vi.fn<() => void>(), abort: vi.fn<() => void>() } satisfies SaladPayOrderHandlers
   store.open(options, handlers)
   return { store, routing, handlers }
@@ -70,5 +69,21 @@ describe('SaladPayStore', () => {
     store.complete('success')
     expect(routing.replace).toHaveBeenCalledWith('/rewards/reward-1')
     expect(store.processing).toBe(false)
+  })
+
+  it('shows the order as processing from confirmation until the redemption completes, and not on a new order', () => {
+    const { store } = setUp('reward-1')
+    const states: boolean[] = []
+    store.state.subscribe(() => states.push(store.state.get().processing))
+
+    store.confirmPayment()
+    const confirmed = store.processing
+    store.complete('success')
+    const completed = store.processing
+    store.confirmPayment()
+    store.open(options, { confirm: vi.fn(), abort: vi.fn() })
+
+    expect([confirmed, completed, store.processing]).toStrictEqual([true, false, false])
+    expect(states.at(-1)).toBe(false)
   })
 })

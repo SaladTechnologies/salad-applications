@@ -1,7 +1,8 @@
 import type { AxiosInstance, AxiosResponse } from 'axios'
 import Axios from 'axios'
-import { action, computed, flow, observable } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
+import type { ExternalState } from '../../app/external-state.ts'
+import { createExternalState } from '../../app/external-state.ts'
 import type { RootStore } from '../../Store'
 import { SaladError } from '../../data/salad-error.ts'
 import { isProblemDetail } from '../../utils'
@@ -53,6 +54,32 @@ export const solanaWalletRequiredProblemType = 'redemptions:requires:solanaWalle
 export const renderExchangeRateDriftProblemType = 'redemptions:invalid:exchangeRateDrift'
 export const renderExchangeRateRequiredProblemType = 'redemptions:invalid:exchangeRateRequired'
 
+/** The reward cache, the target reward, and the redemption's progress, which pages read with `useExternalState`. */
+export interface RewardState {
+  /** The rewards fetched so far, by id. */
+  rewards: Map<string, Reward>
+  /** The target reward's id, if the user has one. */
+  selectedTargetRewardId: string | undefined
+  /** The rewards recommended as a target. */
+  recommendedRewards: Reward[]
+  /** Whether a redemption is under way. */
+  isRedeeming: boolean
+  /** Whether the review after a redemption is open. */
+  isReviewing: boolean
+  /** Whether the target reward is being changed. */
+  isSelecting: boolean
+  /** The reward of the redemption under way or last attempted. */
+  lastRewardId: string | undefined
+}
+
+/** Returns the target reward from `state`, if the user has one and it is cached. */
+export const selectedTargetRewardOf = ({ rewards, selectedTargetRewardId }: RewardState): Reward | undefined =>
+  selectedTargetRewardId ? rewards.get(selectedTargetRewardId) : undefined
+
+/**
+ * Rewards and redemption. The state is held outside MobX (`state`), which pages read with `useExternalState`; the
+ * actions keep the MobX store's steps and order.
+ */
 export class RewardStore {
   /** The SaladPay order summary, which `redeemReward` opens. Tests replace it. */
   private saladPayCheckout?: {
@@ -65,39 +92,49 @@ export class RewardStore {
     return this.saladPayCheckout ?? getSaladPayStore()
   }
 
-  @observable
-  private rewards: Map<string, Reward> = new Map<string, Reward>()
+  /** The rewards, the target reward and the redemption's progress. A change makes a new state. */
+  public readonly state: ExternalState<RewardState> = createExternalState<RewardState>({
+    rewards: new Map<string, Reward>(),
+    selectedTargetRewardId: undefined,
+    recommendedRewards: [],
+    isRedeeming: false,
+    isReviewing: false,
+    isSelecting: false,
+    lastRewardId: undefined,
+  })
 
-  @observable
-  private selectedTargetRewardId?: string
-
-  @observable
   private requiresFurtherAction: boolean = false
-
-  @observable
-  public recommendedRewards: Array<Reward> = []
-
-  @observable
-  public isRedeeming: boolean = false
-
-  @observable
-  public isReviewing: boolean = false
-
-  @observable
-  public isLoading: boolean = false
-
-  @observable
-  public isSelecting: boolean = false
-
-  @observable
-  public lastRewardId?: string = undefined
 
   private lastRedemptionId?: string = undefined
 
-  @computed get choppingCart(): Reward[] | undefined {
-    const selectedTargetReward = this.getReward(this.selectedTargetRewardId)
-    if (selectedTargetReward === undefined) return undefined
-    return [selectedTargetReward]
+  /** The rewards recommended as a target. */
+  get recommendedRewards(): Reward[] {
+    return this.state.get().recommendedRewards
+  }
+
+  /** Whether a redemption is under way. */
+  get isRedeeming(): boolean {
+    return this.state.get().isRedeeming
+  }
+
+  /** Whether the review after a redemption is open. */
+  get isReviewing(): boolean {
+    return this.state.get().isReviewing
+  }
+
+  /** Whether the target reward is being changed. */
+  get isSelecting(): boolean {
+    return this.state.get().isSelecting
+  }
+
+  /** The reward of the redemption under way or last attempted. */
+  get lastRewardId(): string | undefined {
+    return this.state.get().lastRewardId
+  }
+
+  /** Caches `reward`, replacing the cached copy. */
+  private cacheReward(reward: Reward): void {
+    this.state.update({ rewards: new Map(this.state.get().rewards).set(reward.id, reward) })
   }
 
   get currentRedemptionId(): string | undefined {
@@ -121,35 +158,34 @@ export class RewardStore {
     }
   }
 
-  constructor(
-    private readonly store: RootStore,
-    private readonly axios: AxiosInstance,
-    private readonly profile: ProfileStore,
-  ) {}
+  private readonly store: RootStore
 
-  fetchReward = flow(
-    function* (this: RewardStore, rewardId?: string) {
-      try {
-        if (rewardId) {
-          const res: AxiosResponse<RewardResource> = yield this.axios.get(`${rewardsEndpointPath}/${rewardId}`)
-          const reward: Reward = rewardFromResource(res.data)
-          this.rewards.set(reward.id, reward)
-        }
-      } catch (err) {
-        throw err
-      }
-    }.bind(this),
-  )
+  private readonly axios: AxiosInstance
+
+  private readonly profile: ProfileStore
+
+  constructor(store: RootStore, axios: AxiosInstance, profile: ProfileStore) {
+    this.store = store
+    this.axios = axios
+    this.profile = profile
+  }
+
+  fetchReward = async (rewardId?: string): Promise<void> => {
+    if (rewardId) {
+      const res: AxiosResponse<RewardResource> = await this.axios.get(`${rewardsEndpointPath}/${rewardId}`)
+      const reward: Reward = rewardFromResource(res.data)
+      this.cacheReward(reward)
+    }
+  }
 
   /** Puts a reward the reward page fetched into the cache, which redemption, SaladPay, and the vault read. */
-  @action
   setReward = (reward: Reward): void => {
-    this.rewards.set(reward.id, reward)
+    this.cacheReward(reward)
   }
 
   getReward = (id?: string): Reward | undefined => {
     if (id === undefined) return undefined
-    return this.rewards.get(id)
+    return this.state.get().rewards.get(id)
   }
 
   /** The set of reward ids with an in-flight {@link ensureRewardLoaded} fetch, used to dedupe concurrent requests. */
@@ -164,7 +200,7 @@ export class RewardStore {
    * is already in flight, and it swallows errors so a failed lookup simply leaves the view on its fallback price.
    */
   ensureRewardLoaded = (id?: string): void => {
-    if (!id || this.rewards.has(id) || this.loadingRewardIds.has(id)) {
+    if (!id || this.state.get().rewards.has(id) || this.loadingRewardIds.has(id)) {
       return
     }
     this.loadingRewardIds.add(id)
@@ -173,26 +209,20 @@ export class RewardStore {
       .finally(() => this.loadingRewardIds.delete(id))
   }
 
-  @computed
   public get selectedTargetReward(): Reward | undefined {
-    if (this.selectedTargetRewardId) {
-      return this.rewards.get(this.selectedTargetRewardId)
-    }
-    return undefined
+    return selectedTargetRewardOf(this.state.get())
   }
 
-  @action.bound
-  fetchSelectedTargetReward = flow(function* (this: RewardStore) {
-    const res = yield this.axios.get(selectedRewardEndpointPath)
-    yield this.fetchReward(res.data.rewardId)
-    this.selectedTargetRewardId = res.data.rewardId
-  })
+  fetchSelectedTargetReward = async (): Promise<void> => {
+    const res = await this.axios.get(selectedRewardEndpointPath)
+    await this.fetchReward(res.data.rewardId)
+    this.state.update({ selectedTargetRewardId: res.data.rewardId })
+  }
 
-  @action.bound
-  setSelectedTargetReward = flow(function* (this: RewardStore, reward: Reward) {
+  setSelectedTargetReward = async (reward: Reward): Promise<void> => {
     //Ensures that the user is logged in
     try {
-      yield this.store.auth.login()
+      await this.store.auth.login()
     } catch {
       return
     }
@@ -201,50 +231,47 @@ export class RewardStore {
       rewardId: reward.id,
     }
 
-    this.isSelecting = true
+    this.state.update({ isSelecting: true })
 
     try {
-      const res = yield this.axios.patch(selectedRewardEndpointPath, request)
-      this.selectedTargetRewardId = res.data.rewardId
-      this.rewards.set(reward.id, reward)
+      const res = await this.axios.patch(selectedRewardEndpointPath, request)
+      this.state.update({ selectedTargetRewardId: res.data.rewardId })
+      this.cacheReward(reward)
       if (reward) this.store.analytics.trackSelectedReward(reward)
     } catch (error) {
       console.error(error)
     } finally {
-      this.isSelecting = false
+      this.state.update({ isSelecting: false })
     }
-  })
+  }
 
-  @action.bound
-  removeSelectedTargetReward = flow(function* (this: RewardStore) {
+  removeSelectedTargetReward = async (): Promise<void> => {
     const request = {
       rewardId: undefined,
     }
 
-    this.isSelecting = true
+    this.state.update({ isSelecting: true })
 
     try {
-      const res = yield this.axios.patch(selectedRewardEndpointPath, request)
-      this.selectedTargetRewardId = res.data.rewardId
+      const res = await this.axios.patch(selectedRewardEndpointPath, request)
+      this.state.update({ selectedTargetRewardId: res.data.rewardId })
     } catch (error) {
       console.error(error)
     } finally {
-      this.isSelecting = false
+      this.state.update({ isSelecting: false })
     }
-  })
+  }
 
-  @action.bound
-  fetchRecommendedRewards = flow(function* (this: RewardStore) {
+  fetchRecommendedRewards = async (): Promise<void> => {
     try {
-      const res = yield this.axios.get(rewardsRecommendationsEndpointPath)
-      this.recommendedRewards = res.data.map(rewardFromResource)
+      const res = await this.axios.get(rewardsRecommendationsEndpointPath)
+      this.state.update({ recommendedRewards: res.data.map(rewardFromResource) })
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
-  @action.bound
-  redeemReward = flow(function* (this: RewardStore, reward: Reward) {
+  redeemReward = async (reward: Reward): Promise<void> => {
     this.checkIfFurtherActionIsRequired(reward)
     if (this.requiresFurtherAction) {
       this.requiresFurtherAction = false
@@ -253,7 +280,7 @@ export class RewardStore {
 
     if (this.lastRedemptionId === undefined || this.lastRewardId !== reward.id) {
       this.lastRedemptionId = uuidv4()
-      this.lastRewardId = reward.id
+      this.state.update({ lastRewardId: reward.id })
     }
 
     if (this.isRedeeming) {
@@ -262,20 +289,20 @@ export class RewardStore {
     }
     //Ensures that the user is logged in
     try {
-      yield this.store.auth.login()
+      await this.store.auth.login()
     } catch {
       return
     }
 
     const isProtectRewardsRedemptionEnabled = this.store.profile.currentProfile?.redemptionTfaEnabled
     if (isProtectRewardsRedemptionEnabled) {
-      const challengeSudoModeResponse = yield this.store.sudo.challengeSudoMode(ChallengeSudoModeTrigger.RewardRedeem)
+      const challengeSudoModeResponse = await this.store.sudo.challengeSudoMode(ChallengeSudoModeTrigger.RewardRedeem)
       if (challengeSudoModeResponse === null) {
         return
       }
     }
 
-    this.isRedeeming = true
+    this.state.update({ isRedeeming: true })
 
     //Opens a SaladPay order for the reward. The order summary page confirms it (finishRedemption) or the Chef leaves it
     //(endRedemption); either way the redemption ends there.
@@ -302,18 +329,18 @@ export class RewardStore {
 
     //Shows the SaladPay UI
     this.checkout.show()
-  })
+  }
 
   /** Ends a redemption whose order the Chef left without confirming. */
-  private endRedemption = flow(function* (this: RewardStore) {
-    yield this.store.balance.refreshBalance()
-    yield this.store.balance.refreshBalanceHistory()
-    this.isRedeeming = false
+  private endRedemption = async (): Promise<void> => {
+    await this.store.balance.refreshBalance()
+    await this.store.balance.refreshBalanceHistory()
+    this.state.update({ isRedeeming: false })
     console.error('Cleared isRedeeming flag')
-  })
+  }
 
   /** Redeems the reward whose order the Chef confirmed, and ends the redemption. */
-  private finishRedemption = flow(function* (this: RewardStore, reward: Reward) {
+  private finishRedemption = async (reward: Reward): Promise<void> => {
     const response = {
       details: { transactionToken: 'hello' },
       complete: (...args: [reason: 'success' | 'fail', isProtectedActionVerifyRequired?: boolean]) =>
@@ -329,7 +356,7 @@ export class RewardStore {
       // the state value rather than re-fetching so the quoted rate matches what the user actually saw.
       const quotedExchangeRate = isRenderReward(reward) ? this.store.render.exchangeRate?.rate : undefined
 
-      const newRedemption = yield this.axios.post(
+      const newRedemption = await this.axios.post(
         redemptionsEndpointPath,
         {
           id: this.lastRedemptionId,
@@ -367,7 +394,7 @@ export class RewardStore {
       response?.complete('success')
       this.clearRedemptionInfo()
 
-      this.isReviewing = true
+      this.state.update({ isReviewing: true })
     } catch (error) {
       if (Axios.isAxiosError(error) || error instanceof SaladError) {
         const errorResponse = error.response
@@ -531,31 +558,27 @@ export class RewardStore {
         }
       }
     } finally {
-      yield this.store.balance.refreshBalance()
-      yield this.store.balance.refreshBalanceHistory()
-      this.isRedeeming = false
+      await this.store.balance.refreshBalance()
+      await this.store.balance.refreshBalanceHistory()
+      this.state.update({ isRedeeming: false })
       console.error('Cleared isRedeeming flag')
     }
-  })
-
-  @action
-  clearRedemptionInfo() {
-    this.lastRedemptionId = undefined
-    this.lastRewardId = undefined
   }
 
-  @action.bound
-  finishReview() {
-    this.isReviewing = false
+  clearRedemptionInfo = (): void => {
+    this.lastRedemptionId = undefined
+    this.state.update({ lastRewardId: undefined })
+  }
+
+  finishReview = (): void => {
+    this.state.update({ isReviewing: false })
   }
 
   /**
    * Forgets the target reward and the recommended rewards of the user who signed out. The last redemption's id and
    * reward are left as they were; who may reuse them is a separate decision. The reward cache is public and stays.
    */
-  @action.bound
-  resetUserData() {
-    this.selectedTargetRewardId = undefined
-    this.recommendedRewards = []
+  resetUserData = (): void => {
+    this.state.update({ selectedTargetRewardId: undefined, recommendedRewards: [] })
   }
 }

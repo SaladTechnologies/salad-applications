@@ -12,6 +12,9 @@ interface Page {
   coinbaseEmail: string | undefined
   currentBalance: number
   lastRedemption: { id: string } | undefined
+  reward: { id: string } | undefined
+  isReviewing: boolean
+  isTargetReward: boolean
 }
 
 /** The pages the container rendered, and the saved wallet and email, which the test changes. */
@@ -21,6 +24,7 @@ const fake = vi.hoisted(() => ({
   email: undefined as unknown as ReturnType<typeof createExternalState<{ email: string | undefined }>>,
   balance: undefined as unknown as ReturnType<typeof createExternalState<{ currentBalance: number }>>,
   vault: undefined as unknown as ReturnType<typeof createExternalState<{ redemptions: { id: string }[] }>>,
+  rewards: undefined as unknown as ReturnType<typeof createExternalState<object>>,
 }))
 
 vi.mock('../../Store', () => {
@@ -32,9 +36,7 @@ vi.mock('../../Store', () => {
       balance,
       vault,
       rewards: {
-        getReward: () => undefined,
-        selectedTargetReward: undefined,
-        isReviewing: false,
+        state: fake.rewards,
         setSelectedTargetReward: vi.fn(),
         removeSelectedTargetReward: vi.fn(),
       },
@@ -60,6 +62,15 @@ vi.mock('./pages', () => ({
 fake.wallet = createExternalState<{ walletAddress: string | undefined }>({ walletAddress: undefined })
 fake.email = createExternalState<{ email: string | undefined }>({ email: undefined })
 fake.balance = createExternalState({ currentBalance: 5 })
+fake.rewards = createExternalState({
+  rewards: new Map(),
+  selectedTargetRewardId: undefined,
+  recommendedRewards: [],
+  isRedeeming: false,
+  isReviewing: false,
+  isSelecting: false,
+  lastRewardId: undefined,
+})
 fake.vault = createExternalState<{ redemptions: { id: string }[] }>({ redemptions: [] })
 const { RewardDetailsContainer } = await import('./RewardDetailsContainer')
 
@@ -109,6 +120,30 @@ describe('RewardDetailsContainer', () => {
 
     expect([before?.currentBalance, before?.lastRedemption]).toStrictEqual([5, undefined])
     expect([after?.currentBalance, after?.lastRedemption]).toStrictEqual([2.5, { id: 'latest' }])
+  })
+
+  it('shows the page the reward, whether it is the target, and the review as the rewards change', () => {
+    Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', true)
+    const root = createRoot(document.createElement('div'))
+    act(() => {
+      root.render(<RewardDetailsContainer match={{ params: { id: 'reward' } }} backFallback="/store" />)
+    })
+    const before = fake.pages.at(-1)
+
+    act(() => {
+      fake.rewards.update({
+        rewards: new Map([['reward', { id: 'reward' }]]),
+        selectedTargetRewardId: 'reward',
+        isReviewing: true,
+      })
+    })
+    const after = fake.pages.at(-1)
+    act(() => {
+      root.unmount()
+    })
+
+    expect([before?.reward, before?.isTargetReward, before?.isReviewing]).toStrictEqual([undefined, true, false])
+    expect([after?.reward, after?.isTargetReward, after?.isReviewing]).toStrictEqual([{ id: 'reward' }, true, true])
   })
 
   it('shows the page the saved wallet and email as soon as they load', () => {

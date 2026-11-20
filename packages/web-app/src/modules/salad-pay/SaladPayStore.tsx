@@ -1,4 +1,5 @@
-import { action, observable, runInAction } from 'mobx'
+import type { ExternalState } from '../../app/external-state.ts'
+import { createExternalState } from '../../app/external-state.ts'
 import { getStore } from '../../Store'
 import type { SaladPaymentRequestOptions } from './models'
 
@@ -8,8 +9,7 @@ let sharedStore: SaladPayStore
 export const getSaladPayStore = (): SaladPayStore => {
   if (!sharedStore) {
     const { routing, rewards } = getStore()
-    // Field initializers are writes; `enforceActions: 'always'` only allows them inside an action (see createStore).
-    sharedStore = runInAction(() => new SaladPayStore(routing, rewards))
+    sharedStore = new SaladPayStore(routing, rewards)
   }
 
   return sharedStore
@@ -35,6 +35,14 @@ interface SaladPayRouting {
   goBackOr: (fallback: string) => void
 }
 
+/** The order the summary shows, which it reads with `useExternalState`. */
+export interface SaladPayState {
+  /** The open order's total and items, or none. */
+  currentRequestOptions: SaladPaymentRequestOptions | undefined
+  /** Whether a confirmed order is being redeemed. */
+  processing: boolean
+}
+
 /**
  * The SaladPay order summary (`/salad-pay/order-summary`). A redemption opens an order (`open`, then `show`), and the
  * page's confirm and abort call back into that redemption through the order's handlers. Nothing waits on a promise
@@ -43,34 +51,40 @@ interface SaladPayRouting {
 export class SaladPayStore {
   private currentOrder?: SaladPayOrder
 
-  @observable
-  public currentRequestOptions?: SaladPaymentRequestOptions
-
-  /** Is a payment request currently being processed */
-  @observable
-  public processing: boolean = false
+  /** The order shown. A change makes a new state. */
+  public readonly state: ExternalState<SaladPayState> = createExternalState<SaladPayState>({
+    currentRequestOptions: undefined,
+    processing: false,
+  })
 
   private readonly routing: SaladPayRouting
-  private readonly rewards: { lastRewardId?: string }
+  private readonly rewards: { lastRewardId?: string | undefined }
 
-  constructor(routing: SaladPayRouting, rewards: { lastRewardId?: string }) {
+  constructor(routing: SaladPayRouting, rewards: { lastRewardId?: string | undefined }) {
     this.routing = routing
     this.rewards = rewards
   }
 
+  /** The open order's total and items, or none. */
+  get currentRequestOptions(): SaladPaymentRequestOptions | undefined {
+    return this.state.get().currentRequestOptions
+  }
+
+  /** Is a payment request currently being processed */
+  get processing(): boolean {
+    return this.state.get().processing
+  }
+
   /** Opens an order for the summary to show. An order still waiting for the Chef is aborted first. */
-  @action
   open = (options: SaladPaymentRequestOptions, handlers: SaladPayOrderHandlers) => {
     if (this.currentOrder?.handlers) {
       this.abort()
     }
     console.log('Updating request options')
     this.currentOrder = { handlers }
-    this.currentRequestOptions = options
-    this.processing = false
+    this.state.update({ currentRequestOptions: options, processing: false })
   }
 
-  @action
   show = () => {
     if (this.currentRequestOptions === undefined) {
       console.warn('No order, unable to show salad pay UI')
@@ -81,16 +95,15 @@ export class SaladPayStore {
     this.routing.push('/salad-pay/order-summary')
   }
 
-  @action
   abort = () => {
     console.log('Aborting request')
 
-    this.processing = false
+    this.state.update({ processing: false })
     if (this.currentOrder) {
       const order = this.currentOrder
 
       this.currentOrder = undefined
-      this.currentRequestOptions = undefined
+      this.state.update({ currentRequestOptions: undefined })
 
       const handlers = order.handlers
       order.handlers = undefined
@@ -112,18 +125,16 @@ export class SaladPayStore {
    * Called by the redemption when it is done with a confirmed order. It returns to the reward, unless the App API asked
    * for sudo mode (the HTTP client has already gone to `/protected-action`).
    */
-  @action
   complete = (_reason: 'success' | 'fail', isProtectedActionVerifyRequired?: boolean) => {
     console.log('SaladPay "complete" called')
     !isProtectedActionVerifyRequired && this.goBackToReward()
-    this.processing = false
+    this.state.update({ processing: false })
   }
 
-  @action
   confirmPayment = () => {
     console.log('User confirmed order, do magic here')
 
-    this.processing = true
+    this.state.update({ processing: true })
 
     // An order is confirmed at most once: a second click, or a click after leaving it, does nothing.
     const handlers = this.currentOrder?.handlers
