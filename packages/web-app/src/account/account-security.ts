@@ -1,22 +1,10 @@
-import { useQuery } from '@tanstack/react-query'
+import { useLoadOnOpen } from './load-on-open.ts'
 
 /** The query keys of the account security loads. */
 const passkeysQueryKey = ['account', 'passkeys'] as const
 const profileQueryKey = ['account', 'profile'] as const
 const googleConnectionQueryKey = ['account', 'google-connection'] as const
 const backupCodesQueryKey = ['account', 'backup-codes'] as const
-
-/** Runs `load` each time a page that calls it opens. The data stays in the store; the query only schedules the load. */
-const useLoadOnOpen = (queryKey: readonly string[], load: () => Promise<unknown>): void => {
-  useQuery({
-    queryKey,
-    queryFn: async () => {
-      await load()
-      return null
-    },
-    staleTime: 0,
-  })
-}
 
 /**
  * Runs `fetchPasskeys`, then `loadProfile`, each time an account summary page (desktop or mobile) opens, as its account

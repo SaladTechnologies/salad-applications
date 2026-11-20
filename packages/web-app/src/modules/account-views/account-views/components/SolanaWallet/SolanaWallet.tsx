@@ -15,7 +15,6 @@ interface Props extends WithStyles<typeof styles> {
   isLoading: boolean
   isLoadError: boolean
   submitStatus: SolanaWalletSubmitStatus
-  loadWallet: () => void
   setWallet: (walletAddress: string) => void
   clearWallet: () => void
   setSubmitStatus: (submitStatus: SolanaWalletSubmitStatus) => void
@@ -27,7 +26,6 @@ const _SolanaWallet: FC<Props> = ({
   isLoading,
   isLoadError,
   submitStatus,
-  loadWallet,
   setWallet,
   clearWallet,
   setSubmitStatus,
@@ -39,10 +37,10 @@ const _SolanaWallet: FC<Props> = ({
   const isSubmitSuccess = submitStatus === 'success'
   const isSubmitFailure = submitStatus === 'failure'
 
+  // The account summary's container loads the wallet when the page opens.
   useEffect(() => {
-    loadWallet()
     return () => setSubmitStatus('unknown')
-  }, [loadWallet, setSubmitStatus])
+  }, [setSubmitStatus])
 
   // Once a save/clear succeeds, drop out of the edit/confirm states.
   useEffect(() => {

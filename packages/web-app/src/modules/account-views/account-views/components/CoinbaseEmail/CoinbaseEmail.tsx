@@ -23,7 +23,6 @@ interface Props extends WithStyles<typeof styles> {
   isLoadError: boolean
   submitStatus: CoinbaseEmailSubmitStatus
   submitError?: CoinbaseEmailSubmitError
-  loadEmail: () => void
   setEmail: (email: string) => void
   clearEmail: () => void
   setSubmitStatus: (submitStatus: CoinbaseEmailSubmitStatus) => void
@@ -43,7 +42,6 @@ const _CoinbaseEmail: FC<Props> = ({
   isLoadError,
   submitStatus,
   submitError,
-  loadEmail,
   setEmail,
   clearEmail,
   setSubmitStatus,
@@ -57,10 +55,10 @@ const _CoinbaseEmail: FC<Props> = ({
   const isSubmitSuccess = submitStatus === 'success'
   const isSubmitFailure = submitStatus === 'failure'
 
+  // The account summary's container loads the email when the page opens.
   useEffect(() => {
-    loadEmail()
     return () => setSubmitStatus('unknown')
-  }, [loadEmail, setSubmitStatus])
+  }, [setSubmitStatus])
 
   // Once a save/clear succeeds, drop out of the edit/confirm states.
   useEffect(() => {

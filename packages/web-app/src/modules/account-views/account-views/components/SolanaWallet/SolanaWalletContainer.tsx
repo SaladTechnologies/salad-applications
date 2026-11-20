@@ -7,7 +7,6 @@ const mapStoreToProps = (store: RootStore): any => ({
   isLoading: store.solanaWallet.isLoading,
   isLoadError: store.solanaWallet.isLoadError,
   submitStatus: store.solanaWallet.submitStatus,
-  loadWallet: store.solanaWallet.loadWallet,
   setWallet: store.solanaWallet.setWallet,
   clearWallet: store.solanaWallet.clearWallet,
   setSubmitStatus: store.solanaWallet.setSubmitStatus,
