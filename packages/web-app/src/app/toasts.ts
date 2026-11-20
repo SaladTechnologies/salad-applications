@@ -4,9 +4,12 @@ import { toast } from 'react-toastify'
 
 /** What a toast needs from a notification message. */
 export interface ToastMessage {
-  /** The toast's id. A message with the id of a toast that is still showing replaces that toast. */
+  /** The toast's id. A message with the id of a toast that is still showing replaces that toast, unless the id is 0. */
   id?: number | undefined
-  /** The delay in milliseconds before the toast closes itself, or `false` to keep it open. */
+  /**
+   * The delay in milliseconds before the toast closes itself, `false` to keep it open, or none (or 0) for the
+   * container's default delay.
+   */
   autoClose?: number | false | undefined
   /** Called when the toast is clicked. */
   onClick?: (() => void) | undefined
@@ -20,13 +23,13 @@ export interface ToastsOptions<Message extends ToastMessage> {
   onShown: (message: Message) => void
   /** Called when a toast that has an `onClick` is clicked, before `onClick` runs. */
   onClicked: (message: Message) => void
-  /** Called when a toast that doesn't close itself is closed. */
+  /** Called when a toast without a delay of its own (`autoClose` `false`, 0, or none) is closed. */
   onClosed: (message: Message) => void
 }
 
 /** Shows notifications as toasts. */
 export interface Toasts<Message extends ToastMessage> {
-  /** Shows the message as a toast at the bottom left, or replaces the showing toast with the same id. */
+  /** Shows the message as a toast at the bottom left, or replaces the showing toast with the same id (other than 0). */
   sendNotification: (message: Message) => void
 }
 
@@ -62,10 +65,9 @@ export const createToasts = <Message extends ToastMessage>(options: ToastsOption
     const content = options.render(message, handleClick)
     // An id of 0 never replaces a toast, as before.
     if (message.id !== undefined && message.id !== 0 && toast.isActive(message.id)) {
-      const update: UpdateOptions = { ...settings, render: content }
-      // An update keeps the shown toast's options it doesn't name, so a message without a delay names it as undefined,
-      // which gives the toast the container's default delay, as before.
-      Reflect.set(update, 'autoClose', message.autoClose)
+      // An update keeps the shown toast's options it doesn't name, so a message without a delay names it as null, which,
+      // like the undefined the store passed, gives the toast the container's default delay.
+      const update: UpdateOptions = { ...settings, render: content, autoClose: message.autoClose ?? null }
       toast.update(message.id, update)
     } else {
       toast(content, settings)

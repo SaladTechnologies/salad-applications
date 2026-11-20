@@ -101,6 +101,24 @@ describe('createToasts', () => {
     expect(toastify.update.mock.calls[0]?.[1]).toHaveProperty('autoClose')
   })
 
+  it('never replaces a toast for id 0', () => {
+    const { send } = setUp(true)
+
+    send({ title: 'Zero', id: 0 })
+
+    expect(toastify.update).not.toHaveBeenCalled()
+    expect(lastOptions()).toMatchObject({ toastId: 0 })
+  })
+
+  it('reports a close for a toast with the default delay', () => {
+    const { send, closed } = setUp()
+
+    send({ title: 'Default' })
+    lastOptions().onClose?.()
+
+    expect(closed).toHaveBeenCalledExactlyOnceWith({ title: 'Default' })
+  })
+
   it('reports a toast shown, and closed only when it does not close itself', () => {
     const autoClosing = setUp()
     autoClosing.send({ title: 'Auto', autoClose: 5000 })
