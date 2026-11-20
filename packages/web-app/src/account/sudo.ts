@@ -23,11 +23,11 @@ export interface PendingProtectedAction {
   data?: Readonly<Record<string, unknown>> | undefined
 }
 
-/** The sudo mode state the protected-action page reads. */
+/** The sudo mode state: the protected-action page reads the waiting action, and its replay reads both. */
 interface SudoState {
   /** The request waiting for the user to be verified, if any. */
   pendingProtectedAction: PendingProtectedAction | undefined
-  /** What asked for sudo mode when the sudo challenge itself needed verifying, if anything. */
+  /** What asked for sudo mode when the sudo challenge failed (needed verifying, or any other error), if anything. */
   challengeSudoModeTrigger: SudoTrigger | undefined
 }
 
@@ -42,8 +42,9 @@ export interface Sudo {
   /** Records what asked for sudo mode, or nothing. */
   setChallengeSudoModeTrigger: (trigger?: SudoTrigger) => void
   /**
-   * Asks the App API for sudo mode. Returns its response, or `null` when it refused: then `trigger` is recorded, so the
-   * action that asked can run again once the user is verified.
+   * Asks the App API for sudo mode. Returns its response, or `null` when the request failed for any reason (most often
+   * because the user must be verified first): then `trigger` is recorded, so the action that asked can run again once
+   * the user is verified.
    */
   challengeSudoMode: (trigger: SudoTrigger) => Promise<AxiosResponse | null>
   /** Starts Google sign-in, which connects a Google account, once sudo mode is granted. */
@@ -56,8 +57,8 @@ export interface Sudo {
   resetUserData: () => void
 }
 
-/** The App API's endpoint that grants sudo mode. */
-const sudoEndpointPath = '/api/v2/authentication-sessions/sudo'
+/** The App API's endpoint that grants sudo mode. The protected-action replay matches a waiting request against it. */
+export const sudoEndpointPath = '/api/v2/authentication-sessions/sudo'
 
 /** Creates the user's sudo mode, with nothing waiting. */
 export const createSudo = ({ http }: { http: AxiosInstance }): Sudo => {

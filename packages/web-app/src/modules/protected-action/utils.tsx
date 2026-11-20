@@ -1,6 +1,6 @@
 import type { RootStore } from '../../Store'
 import { ChallengeSudoModeTrigger } from '../auth'
-import { authenticationSessionsSudoEndpointPath } from '../auth/constants'
+import { sudoEndpointPath } from '../../account/sudo.ts'
 import { backupCodesEndpointPath } from '../backup-codes/constants'
 import { passkeysCredentialsOptionsEndpointPath, passkeysEndpointPath } from '../passkey-setup/constants'
 import { protectRewardsRedemptionEndpointPath } from '../profile/constants'
@@ -13,7 +13,7 @@ enum PendingProtectedActionTrigger {
   DeletePasskey = `delete:${passkeysEndpointPath}`,
   ProtectRewardsRedemption = `post:${protectRewardsRedemptionEndpointPath}`,
   RewardRedemption = `post:${redemptionsEndpointPath}`,
-  ChallengeSudoMode = `post:${authenticationSessionsSudoEndpointPath}`,
+  ChallengeSudoMode = `post:${sudoEndpointPath}`,
 }
 
 const handleChallengeSudoModeTrigger = (store: RootStore) => {
