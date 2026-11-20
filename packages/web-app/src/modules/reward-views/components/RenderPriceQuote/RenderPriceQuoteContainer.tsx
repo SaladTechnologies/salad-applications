@@ -3,14 +3,9 @@ import { observer } from 'mobx-react'
 import type { FC } from 'react'
 import { useEffect } from 'react'
 import { useHttp } from '../../../../data/http-context.ts'
-import {
-  fetchRenderExchangeRate,
-  renderExchangeRateQueryKey,
-  renderExchangeRateRefreshRate,
-} from '../../../../rewards/render.ts'
+import { renderExchangeRateQueryKey, renderExchangeRateRefreshRate } from '../../../../rewards/render.ts'
 import { getStore } from '../../../../Store'
-import type { RenderExchangeRate, RenderExchangeRateResource } from '../../../render'
-import { computeRenderQuote, isRenderReward, renderExchangeRateFromResource } from '../../../render'
+import { computeRenderQuote, isRenderReward, loadRenderExchangeRate } from '../../../render'
 import type { Reward } from '../../../reward/models'
 import { RenderPriceQuote } from './RenderPriceQuote'
 
@@ -37,12 +32,7 @@ const _RenderPriceQuoteContainer: FC<RenderPriceQuoteContainerProps> = ({ reward
   const http = useHttp()
   const quote = useQuery({
     queryKey: renderExchangeRateQueryKey,
-    queryFn: async (): Promise<RenderExchangeRate> => {
-      const resource = (await fetchRenderExchangeRate(http)) as RenderExchangeRateResource
-      const exchangeRate = renderExchangeRateFromResource(resource, new Date())
-      render.setExchangeRate(exchangeRate)
-      return exchangeRate
-    },
+    queryFn: () => loadRenderExchangeRate(http, render),
     enabled: active,
     staleTime: 0,
     refetchInterval: renderExchangeRateRefreshRate,
