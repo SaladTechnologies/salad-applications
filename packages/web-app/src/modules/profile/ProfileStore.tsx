@@ -213,6 +213,7 @@ export class ProfileStore {
       this.isUserNameSubmitting = false
       this.isUserNameSubmitSuccess = true
       this.currentProfile = profile
+      this.store.engagement.checkWhatsNew()
     } catch (err) {
       this.isUserNameSubmitting = false
     }
@@ -246,6 +247,7 @@ export class ProfileStore {
       this.isMinecraftUserNameSubmitting = false
       this.isMinecraftUserNameSubmitSuccess = true
       this.currentProfile = profile
+      this.store.engagement.checkWhatsNew()
     } catch (error) {
       this.store.notifications.sendNotification({
         category: NotificationMessageCategory.FurtherActionRequired,
