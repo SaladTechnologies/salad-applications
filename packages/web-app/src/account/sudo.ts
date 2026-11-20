@@ -23,7 +23,7 @@ export interface PendingProtectedAction {
   data?: Readonly<Record<string, unknown>> | undefined
 }
 
-/** The sudo mode state: the protected-action page reads the waiting action, and its replay reads both. */
+/** The sudo mode state, which the protected-action page, its replay, and redemption read. */
 interface SudoState {
   /** The request waiting for the user to be verified, if any. */
   pendingProtectedAction: PendingProtectedAction | undefined
