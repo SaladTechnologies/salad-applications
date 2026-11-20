@@ -5,12 +5,12 @@ import { ReplaceBonusModal } from './components/ReplaceBonusModal'
 const mapStoreToProps = (store: RootStore): any => {
   const replaceCurrentEarningRate = () => {
     store.bonuses.replaceCurrentEarningRate()
-    store.ui.hideModal('/account/bonuses')
+    store.routing.goBackOr('/account/bonuses')
   }
 
   const handleClose = () => {
     store.bonuses.clearReplacementEarningRateBonusId()
-    store.ui.hideModal('/account/bonuses')
+    store.routing.goBackOr('/account/bonuses')
   }
 
   return {

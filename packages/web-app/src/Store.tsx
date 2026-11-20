@@ -1,6 +1,8 @@
 import type { AxiosInstance } from 'axios'
 import { action, configure, flow, observable, runInAction } from 'mobx'
-import { UIStore } from './UIStore'
+import { ErrorBoundaryBridge } from './app/error-boundary.ts'
+import type { Toasts } from './app/toasts.ts'
+import { createToasts } from './app/toasts.ts'
 import type { Navigation } from './routing/navigation.ts'
 import { AnalyticsStore } from './modules/analytics'
 import { AuthStore } from './modules/auth'
@@ -11,9 +13,9 @@ import { CoinbaseEmailStore } from './modules/coinbase'
 import { DedicatedNodesStore } from './modules/dedicated-nodes'
 import { RefreshService } from './modules/data-refresh'
 import { EngagementStore } from './modules/engagement'
-import { ErrorBoundaryStore } from './modules/error-boundary'
 import { HelpScoutStore } from './modules/helpscout/HelpScoutStore'
-import { NotificationStore } from './modules/notifications'
+import type { NotificationMessage } from './modules/notifications/models'
+import { NotificationToast } from './modules/notifications-views/components'
 import { PasskeyStore } from './modules/passkey-setup'
 import { ProfileStore } from './modules/profile'
 import type { Profile } from './modules/profile/models'
@@ -21,7 +23,6 @@ import { ReferralStore } from './modules/referral'
 import { RenderStore } from './modules/render'
 import { RewardStore } from './modules/reward'
 import { SolanaWalletStore } from './modules/solana-wallet'
-import { StartButtonUIStore } from './modules/start-button/StartButtonUIStore'
 import { TermsAndConditionsStore } from './modules/terms-and-conditions'
 import { VaultStore } from './modules/vault'
 import { ExperienceStore } from './modules/xp'
@@ -65,16 +66,16 @@ export class RootStore {
   public readonly render: RenderStore
   public readonly balance: BalanceStore
   public readonly profile: ProfileStore
-  public readonly ui: UIStore
   public readonly referral: ReferralStore
   public readonly refresh: RefreshService
-  public readonly notifications: NotificationStore
+  /** Shows notifications as toasts. */
+  public readonly notifications: Toasts<NotificationMessage>
   public readonly vault: VaultStore
   public readonly engagement: EngagementStore
   public readonly helpScout: HelpScoutStore
   public readonly bonuses: BonusStore
-  public readonly startButtonUI: StartButtonUIStore
-  public readonly errorBoundary: ErrorBoundaryStore
+  /** Shows or resets the app's error page from outside React. */
+  public readonly errorBoundary: ErrorBoundaryBridge
   public readonly passkey: PasskeyStore
   public readonly backupCodes: BackupCodesStore
   public readonly solanaWallet: SolanaWalletStore
@@ -93,7 +94,14 @@ export class RootStore {
     this.routing = navigation
     this.loadBanner = loadBanner
     this.auth = new AuthStore(this, axios, setSession)
-    this.notifications = new NotificationStore(this)
+    this.notifications = createToasts<NotificationMessage>({
+      render: (message, onClick) => (
+        <NotificationToast {...message} isError={message.type === 'error'} onClick={onClick} />
+      ),
+      onShown: (message) => this.analytics.trackToastNotificationShown(message),
+      onClicked: (message) => this.analytics.trackToastNotificationClicked(message),
+      onClosed: (message) => this.analytics.trackToastNotificationClosed(message),
+    })
     this.xp = new ExperienceStore(axios)
 
     this.profile = new ProfileStore(this, axios)
@@ -102,7 +110,6 @@ export class RootStore {
     this.render = new RenderStore()
     this.analytics = new AnalyticsStore(this.auth)
     this.balance = new BalanceStore(axios)
-    this.ui = new UIStore(this)
     this.referral = new ReferralStore(this, axios)
     this.refresh = new RefreshService(this)
     this.vault = new VaultStore(axios, this.balance, this.rewards)
@@ -111,8 +118,7 @@ export class RootStore {
     this.bonuses = new BonusStore(this, axios)
     this.passkey = new PasskeyStore(this, axios)
     this.backupCodes = new BackupCodesStore(this, axios)
-    this.startButtonUI = new StartButtonUIStore(this)
-    this.errorBoundary = new ErrorBoundaryStore()
+    this.errorBoundary = new ErrorBoundaryBridge()
     this.solanaWallet = new SolanaWalletStore(this, axios)
     this.coinbaseEmail = new CoinbaseEmailStore(this, axios)
     this.dedicatedNodes = new DedicatedNodesStore(axios)
