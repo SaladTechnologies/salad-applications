@@ -1,4 +1,4 @@
-import type { DemandedHardwarePerformance } from '../../DemandMonitorStore'
+import type { DemandedHardwarePerformance } from '../../../../earnings/demand-monitor.ts'
 
 export type DemandMonitorTableSortRule = (
   hardwareA: DemandedHardwarePerformance,

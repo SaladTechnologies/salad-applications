@@ -1,1 +1,1 @@
-export * from './DemandAlertsListContainer'
+export * from './DemandAlertsList'

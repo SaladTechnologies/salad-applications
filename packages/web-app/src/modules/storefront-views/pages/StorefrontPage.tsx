@@ -1,7 +1,8 @@
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Head, Scrollbar } from '../../../components'
-import { NotificationBannerContainer } from '../../home-views/NotificationBannerContainer'
+import type { BannerInfo } from '../../../app/banner.ts'
+import { NotificationBanner } from '../../home-views/components/NotificationBanner'
 import type {
   StorefrontCommunityChallengeProps,
   StorefrontContentBlockProps,
@@ -28,14 +29,15 @@ const styles = {
 
 interface Props extends WithStyles<typeof styles> {
   data: StorefrontPageProps
+  bannerInfo: BannerInfo | undefined
 }
 
-const _StorefrontPage = ({ data, classes }: Props) => {
+const _StorefrontPage = ({ data, bannerInfo, classes }: Props) => {
   return (
     <Scrollbar>
       <Head title="Official Store" />
       <div className={classes.content}>
-        <NotificationBannerContainer />
+        <NotificationBanner bannerInfo={bannerInfo} />
         {data?.blocks.length > 0 ? (
           data?.blocks?.map((block, index) => {
             switch (block.__component) {

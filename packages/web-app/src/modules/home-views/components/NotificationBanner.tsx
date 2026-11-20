@@ -3,7 +3,7 @@ import { Component } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
-import type { BannerInfo } from '../../home/models/BannerInfo'
+import type { BannerInfo } from '../../../app/banner.ts'
 
 const styles = (theme: SaladTheme) => ({
   container: {
