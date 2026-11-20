@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react'
 import type { ComponentType, ReactNode } from 'react'
 import { Component } from 'react'
 import type { RootStore } from './Store'
@@ -8,7 +7,6 @@ export const connect = <T extends {}>(
   mapStoreToProps: (store: RootStore, ownProps?: any) => T,
   WrappedComponent: ComponentType<T>,
 ) => {
-  @observer
   class ConnectedComponent extends Component<Partial<T>> {
     public static displayName = `connect(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`
     public override render(): ReactNode {

@@ -1,5 +1,4 @@
 import mixpanel from 'mixpanel-browser'
-import { observable, runInAction } from 'mobx'
 import { onceWhen } from '../../app/once-when.ts'
 import { config } from '../../config'
 import type { Auth } from '../../account/auth.ts'
@@ -13,7 +12,6 @@ import { getUtmTagsFromCookie } from './util'
 export class AnalyticsStore {
   private started = false
 
-  @observable
   private mixpanelInitialized = false
 
   constructor(private readonly auth: Auth) {
@@ -27,9 +25,7 @@ export class AnalyticsStore {
       ignore_dnt: true,
       secure_cookie: true,
       loaded: () => {
-        runInAction(() => {
-          this.mixpanelInitialized = true
-        })
+        this.mixpanelInitialized = true
         this.checkMarketingTouchpoint()
       },
     })
