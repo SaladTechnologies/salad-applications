@@ -3,6 +3,8 @@ import type { TargetRewardInfo } from '@saladtechnologies/garden-components/lib/
 import { useState } from 'react'
 import type { Bonus, BonusClaims } from '../../account/bonuses.ts'
 import { useBonusClaims, useUnclaimedBonuses } from '../../account/bonuses.ts'
+import type { Profile } from '../../account/profile.ts'
+import { useProfile } from '../../account/profile.ts'
 import { useReferralCode } from '../../account/referrals.ts'
 import { startButton as startButtonFor } from '../../app/start-button.ts'
 import type { RootStore } from '../../Store'
@@ -19,6 +21,8 @@ interface DrawerProps {
   bonus: Bonus | undefined
   /** The bonus claims under way. */
   bonusClaims: BonusClaims
+  /** The signed-in user's profile, or `undefined` before it has loaded. */
+  profile: Profile | undefined
 }
 
 const mapStoreToProps = (store: RootStore, drawer: DrawerProps): any => {
@@ -100,10 +104,10 @@ const mapStoreToProps = (store: RootStore, drawer: DrawerProps): any => {
     startButtonRunningTime: undefined,
     startButtonToolTip: undefined,
     startButtonToolTipError: undefined,
-    username: isAuthenticated ? store.profile.currentProfile?.username : undefined,
+    username: isAuthenticated ? drawer.profile?.username : undefined,
     targetReward,
     notifications,
-    withInstallReminder: store.profile.withInstallReminder,
+    withInstallReminder: store.profile.withInstallReminder(drawer.profile),
     isUserReferralsEnabled: drawer.isUserReferralsEnabled,
   }
 }
@@ -123,6 +127,7 @@ export const NavigationBarContainer = () => {
       isUserReferralsEnabled={isUserReferralsEnabled}
       bonus={bonus}
       bonusClaims={bonusClaims}
+      profile={useProfile()}
     />
   )
 }

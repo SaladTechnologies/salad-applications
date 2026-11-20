@@ -11,6 +11,7 @@ import { ToastContainer } from 'react-toastify'
 import { Outlet } from '@tanstack/react-router'
 import { MobileDevice, NotMobile } from './components'
 import { config } from './config'
+import type { Profile } from './account/profile.ts'
 import { connect } from './connect'
 import { NavigationBarContainer } from './modules/home-views'
 import type { SearchHistory } from './routing/search-history.ts'
@@ -106,6 +107,8 @@ interface AppProps extends WithStyles<typeof styles> {
   setErrorBoundary: (errorBoundary: UseErrorBoundaryApi<Error>) => void
   withInstallReminder: boolean
   searchHistory: SearchHistory
+  /** The signed-in user's profile, which says whether the install reminder shows. */
+  profile: Profile | undefined
 }
 
 const _App = ({ classes, searchHistory, setErrorBoundary, withInstallReminder }: AppProps) => {
@@ -154,7 +157,7 @@ const _App = ({ classes, searchHistory, setErrorBoundary, withInstallReminder }:
 const mapStoreToProps = (store: RootStore, props: AppProps): any => ({
   ...props,
   setErrorBoundary: store.errorBoundary.setErrorBoundary,
-  withInstallReminder: store.profile.withInstallReminder,
+  withInstallReminder: store.profile.withInstallReminder(props.profile),
 })
 
 export const App = connect(mapStoreToProps, withStyles(styles)(_App))

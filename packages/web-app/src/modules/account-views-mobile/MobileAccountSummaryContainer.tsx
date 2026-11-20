@@ -1,11 +1,13 @@
 import { useAccountSecurityLoads } from '../../account/account-security.ts'
+import type { Profile } from '../../account/profile.ts'
+import { useProfile } from '../../account/profile.ts'
 import { connect } from '../../connect'
 import type { RootStore } from '../../Store'
 import { getStore } from '../../Store'
 import { MobileAccountSummary } from './components'
 
-const mapStoreToProps = (store: RootStore): any => ({
-  username: store.profile.currentProfile?.username,
+const mapStoreToProps = (store: RootStore, props: { profile: Profile | undefined }): any => ({
+  username: props.profile?.username,
   onLogout: store.auth.logout,
 })
 
@@ -18,5 +20,5 @@ const ConnectedMobileAccountSummary = connect(mapStoreToProps, MobileAccountSumm
 export const MobileAccountSummaryContainer = () => {
   const store = getStore()
   useAccountSecurityLoads(store.passkey.fetchPasskeys, store.profile.loadProfile)
-  return <ConnectedMobileAccountSummary />
+  return <ConnectedMobileAccountSummary profile={useProfile()} />
 }

@@ -1,16 +1,4 @@
-export interface Profile {
-  id: string
-  username: string
-  email: string
-  extensions?: {
-    minecraftUsername?: string
-  }
-  lastSeenApplicationVersion: string | undefined
-  redemptionTfaEnabled: boolean
-  saladBowlFirstLoginAt: string | undefined | null
-  createdAt: string | undefined
-  pendingTermsVersion: string | undefined
-}
+export type { Profile } from '../../../account/profile.ts'
 
 export interface Avatar {
   name: string

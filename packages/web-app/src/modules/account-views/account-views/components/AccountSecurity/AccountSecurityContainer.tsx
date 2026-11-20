@@ -1,13 +1,18 @@
 import type { PasskeysState } from '../../../../../account/passkeys.ts'
 import { usePasskeysState } from '../../../../../account/passkeys.ts'
+import type { Profile } from '../../../../../account/profile.ts'
+import { useProfile } from '../../../../../account/profile.ts'
 import { connect } from '../../../../../connect'
 import type { RootStore } from '../../../../../Store'
 import { getStore } from '../../../../../Store'
 import { AccountSecurity } from './AccountSecurity'
 
-const mapStoreToProps = (store: RootStore, props: { passkeysState: PasskeysState }): any => ({
+const mapStoreToProps = (
+  store: RootStore,
+  props: { passkeysState: PasskeysState; profile: Profile | undefined },
+): any => ({
   editPasskeyNameStatus: props.passkeysState.editPasskeyNameStatus,
-  isProtectRewardsRedemptionEnabled: store.profile.currentProfile?.redemptionTfaEnabled,
+  isProtectRewardsRedemptionEnabled: props.profile?.redemptionTfaEnabled,
   passkeys: props.passkeysState.passkeys,
   protectRewardsRedemptionStatus: store.profile.protectRewardsRedemptionStatus,
   registerPasskeyStatus: props.passkeysState.registerPasskeyStatus,
@@ -22,10 +27,10 @@ const mapStoreToProps = (store: RootStore, props: { passkeysState: PasskeysState
 const ConnectedAccountSecurity = connect(mapStoreToProps, AccountSecurity)
 
 /**
- * The account summary's security section (desktop and mobile). It reads the passkeys itself, as the connected section
- * read the passkey store: it was a nested container before the passkeys left MobX, and stays one until the account
+ * The account summary's security section (desktop and mobile). It reads the passkeys and the profile itself, as the
+ * connected section read their stores: it was a nested container before they left MobX, and stays one until the account
  * pages are rebuilt.
  */
 export const AccountSecurityContainer = () => (
-  <ConnectedAccountSecurity passkeysState={usePasskeysState(getStore().passkey)} />
+  <ConnectedAccountSecurity passkeysState={usePasskeysState(getStore().passkey)} profile={useProfile()} />
 )

@@ -31,6 +31,16 @@ const SaladDefaultAvatar: Avatar = {
 const installReminderFeatureReleaseDate = new Date('2023-12-21T17:10:47.324Z')
 const IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY = 'IS_INSTALL_REMINDER_CLOSED'
 
+/** Where the signed-in user's profile is kept (src/account/profile.ts): the one copy every reader shows. */
+export interface ProfileAccess {
+  /** Returns the profile, or `undefined` before it has loaded. */
+  get: () => Profile | undefined
+  /** Keeps the profile. */
+  set: (profile: Profile) => void
+  /** Forgets the profile. */
+  forget: () => void
+}
+
 export class ProfileStore {
   @observable
   public currentSelectedAvatar?: string
@@ -43,9 +53,6 @@ export class ProfileStore {
 
   @observable
   public avatars?: Avatar[]
-
-  @observable
-  public currentProfile?: Profile
 
   @observable
   public submittingAvatar?: string
@@ -84,28 +91,41 @@ export class ProfileStore {
 
   private protectRewardsRedemptionStatusTimeout: NodeJS.Timeout | null = null
 
+  private readonly profiles: ProfileAccess
+
   constructor(
     private readonly store: RootStore,
     private readonly axios: AxiosInstance,
-  ) {}
+    profiles: ProfileAccess,
+  ) {
+    this.profiles = profiles
+  }
 
-  @computed
-  public get withInstallReminder(): boolean {
-    const isProfileCreatedAfterInstallReminderReleaseDate = this.currentProfile?.createdAt
-      ? new Date(this.currentProfile?.createdAt) > installReminderFeatureReleaseDate
+  /**
+   * The signed-in user's profile, or `undefined` before it has loaded. It lives in its query (src/account/profile.ts),
+   * not in this store: components read it with `useProfile`, which re-renders them when it changes; this reads it now.
+   */
+  public get currentProfile(): Profile | undefined {
+    return this.profiles.get()
+  }
+
+  /** Whether the app shows the install reminder for the profile: read with the profile a component shows. */
+  public withInstallReminder(profile: Profile | undefined): boolean {
+    const isProfileCreatedAfterInstallReminderReleaseDate = profile?.createdAt
+      ? new Date(profile?.createdAt) > installReminderFeatureReleaseDate
       : false
 
     return (
       isProfileCreatedAfterInstallReminderReleaseDate &&
       !this.isInstallReminderClosed &&
-      !this.currentProfile?.saladBowlFirstLoginAt &&
+      !profile?.saladBowlFirstLoginAt &&
       !!this.store.auth.isAuthenticated
     )
   }
 
   @action
   setProfileData = (profileData: Profile) => {
-    this.currentProfile = profileData
+    this.profiles.set(profileData)
     this.store.engagement.checkWhatsNew()
   }
 
@@ -119,10 +139,10 @@ export class ProfileStore {
   loadProfile = flow(function* (this: ProfileStore) {
     try {
       const profile = yield this.axios.get(profileEndpointPath)
-      this.currentProfile = profile.data
+      this.profiles.set(profile.data)
       this.store.errorBoundary.resetErrorBoundary()
     } catch (err) {
-      this.currentProfile = undefined
+      this.profiles.forget()
       this.store.errorBoundary.showErrorBoundary(new Error(`An error occurred: ${err}`))
     }
     this.store.engagement.checkWhatsNew()
@@ -164,7 +184,7 @@ export class ProfileStore {
         lastSeenApplicationVersion: whatsNewVersion,
       })
 
-      this.currentProfile = response.data
+      this.profiles.set(response.data)
       this.store.analytics.trackWhatsNew(whatsNewVersion)
     } catch (err) {}
   })
@@ -212,7 +232,7 @@ export class ProfileStore {
       const profile = patch.data
       this.isUserNameSubmitting = false
       this.isUserNameSubmitSuccess = true
-      this.currentProfile = profile
+      this.profiles.set(profile)
       this.store.engagement.checkWhatsNew()
     } catch (err) {
       this.isUserNameSubmitting = false
@@ -246,7 +266,7 @@ export class ProfileStore {
       const profile = patch.data
       this.isMinecraftUserNameSubmitting = false
       this.isMinecraftUserNameSubmitSuccess = true
-      this.currentProfile = profile
+      this.profiles.set(profile)
       this.store.engagement.checkWhatsNew()
     } catch (error) {
       this.store.notifications.sendNotification({
@@ -320,8 +340,10 @@ export class ProfileStore {
 
   @action.bound
   setProtectRewardsRedemption = flow(function* (this: ProfileStore, isProtectRewardsRedemptionEnabled: boolean) {
-    if (this.currentProfile) {
-      this.currentProfile.redemptionTfaEnabled = isProtectRewardsRedemptionEnabled
+    const profile = this.currentProfile
+    if (profile) {
+      // A copy, so the components showing the profile see the change, as they saw the store's field change.
+      this.profiles.set({ ...profile, redemptionTfaEnabled: isProtectRewardsRedemptionEnabled })
     }
 
     if (this.protectRewardsRedemptionStatus === 'loading') {
@@ -359,12 +381,11 @@ export class ProfileStore {
   }
 
   /**
-   * Forgets the profile, selected avatar, and connected Google account of the user who signed out, so the next user
-   * never sees them.
+   * Forgets the selected avatar and connected Google account of the user who signed out, so the next user never sees
+   * them. Sign-out resets the profile's query (src/app/forget-user.ts).
    */
   @action.bound
   resetUserData() {
-    this.currentProfile = undefined
     this.currentSelectedAvatar = undefined
     this.selectedAvatar = undefined
     this.connectedGoogleAccountEmail = undefined

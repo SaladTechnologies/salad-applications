@@ -1,4 +1,6 @@
 import { useAccountSecurityLoads, useGoogleConnectionLoad } from '../../../account/account-security.ts'
+import type { Profile } from '../../../account/profile.ts'
+import { useProfile } from '../../../account/profile.ts'
 import type { TermsState } from '../../../account/terms.ts'
 import { useTermsState } from '../../../account/terms.ts'
 import { usePayoutDestinationLoads } from '../../../account/wallets.ts'
@@ -7,7 +9,7 @@ import type { RootStore } from '../../../Store'
 import { getStore } from '../../../Store'
 import { Account } from './components'
 
-const mapStoreToProps = (store: RootStore, props: { terms: TermsState }): any => ({
+const mapStoreToProps = (store: RootStore, props: { terms: TermsState; profile: Profile | undefined }): any => ({
   avatarError: store.profile.avatarError,
   avatars: store.profile.avatars,
   submittingAvatar: store.profile.submittingAvatar,
@@ -17,7 +19,7 @@ const mapStoreToProps = (store: RootStore, props: { terms: TermsState }): any =>
   onUpdateUsername: store.profile.updateUsername,
   onResetUsernameSuccess: store.profile.resetUsernameSuccess,
   onResetMinecraftUsernameSuccess: store.profile.resetMinecraftUsernameSuccess,
-  profile: store.profile.currentProfile,
+  profile: props.profile,
   selectedAvatar: store.profile.selectedAvatar,
   isUserNameSubmitting: store.profile.isUserNameSubmitting,
   isUserNameSubmitSuccess: store.profile.isUserNameSubmitSuccess,
@@ -46,5 +48,5 @@ export const AccountContainer = () => {
   useGoogleConnectionLoad(store.profile.loadGoogleAccountConnection)
   // The terms' acceptance is shared with sign-in, which submits it while ticked (src/account/terms.ts).
   const terms = useTermsState(store.terms)
-  return <ConnectedAccount terms={terms} />
+  return <ConnectedAccount terms={terms} profile={useProfile()} />
 }
