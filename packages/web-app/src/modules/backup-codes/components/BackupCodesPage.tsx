@@ -2,7 +2,7 @@ import { Button, LoadingSpinner, Text } from '@saladtechnologies/garden-componen
 import { Copy } from '@saladtechnologies/garden-icons'
 import type CSS from 'csstype'
 import moment from 'moment'
-import { useEffect, useState, type FC } from 'react'
+import { useState, type FC } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
@@ -111,16 +111,9 @@ interface Props extends WithStyles<typeof styles> {
   backupCodes: BackupCodes
   onBackToProfileClick: () => void
   onGenerateNewBackupCodesClick: () => void
-  getBackupCodes: () => void
 }
 
-const _BackupCodesPage: FC<Props> = ({
-  classes,
-  backupCodes,
-  onBackToProfileClick,
-  onGenerateNewBackupCodesClick,
-  getBackupCodes,
-}) => {
+const _BackupCodesPage: FC<Props> = ({ classes, backupCodes, onBackToProfileClick, onGenerateNewBackupCodesClick }) => {
   const [isCopied, setIsCopied] = useState(false)
   const location = useLocation()
   const isFirstPasskeyAdded = (location.state as { isFirstPasskeyAdded?: boolean }).isFirstPasskeyAdded
@@ -133,10 +126,6 @@ const _BackupCodesPage: FC<Props> = ({
       setIsCopied(false)
     }, 2000)
   }
-
-  useEffect(() => {
-    getBackupCodes()
-  }, [getBackupCodes])
 
   return (
     <div className={classes.pageWrapper}>

@@ -90,7 +90,6 @@ interface Props extends WithStyles<typeof styles> {
   isMinecraftUserNameSubmitSuccess: boolean
   connectedGoogleAccountEmail?: string
   isLoadConnectedGoogleAccountEmailError: boolean
-  loadGoogleAccountConnection: () => void
   isSubmitting: boolean
   isTermsAndConditionsAccepted: boolean
   passkeys: Passkey[]
@@ -107,7 +106,6 @@ export type FormValues = {
 }
 
 const _Account: FC<Props> = ({
-  loadGoogleAccountConnection,
   profile,
   onUpdateUsername,
   avatarError,
@@ -136,10 +134,6 @@ const _Account: FC<Props> = ({
   const isGoogleSignInFormTriggered = !!(location.state as { isGoogleSignInFormTriggered?: boolean })
     .isGoogleSignInFormTriggered
   const scrollbarsRef = useRef<Scrollbars>(null)
-
-  useEffect(() => {
-    loadGoogleAccountConnection()
-  }, [loadGoogleAccountConnection])
 
   // The account page scrolls inside a `react-custom-scrollbars-2` container whose outer element has `overflow: hidden`,
   // so the browser's native `#hash` anchoring (and a plain `element.scrollIntoView()`) never moves it. When deep-linked
