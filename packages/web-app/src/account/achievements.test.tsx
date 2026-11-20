@@ -97,7 +97,7 @@ describe('achievements', () => {
     expect(achievements).toStrictEqual([{ ...achievement('first'), badgeImageUrl: `${apiBaseUrl}/badges/first.png` }])
   })
 
-  it('loads each time the page opens, showing the last ones while it does, with no timer', async () => {
+  it('loads each time the page opens, with no timer', async () => {
     expect.hasAssertions()
     vi.useFakeTimers({ shouldAdvanceTime: true })
     const queryClient = createQueryClient()
