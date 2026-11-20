@@ -147,9 +147,9 @@ describe('the Solana wallet', () => {
     const { wallet } = setUp({ GET: { walletAddress: address } })
     await wallet.loadWallet()
 
-    wallet.setSubmitStatus('unknown')
+    wallet.setSubmitStatus('success')
     wallet.resetUserData()
 
-    expect(wallet.get()).toMatchObject({ walletAddress: undefined, submitStatus: 'unknown' })
+    expect(wallet.get()).toMatchObject({ walletAddress: undefined, submitStatus: 'success' })
   })
 })
