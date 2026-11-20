@@ -2,7 +2,6 @@ import type { AxiosInstance } from 'axios'
 import { action, configure, flow, observable, runInAction } from 'mobx'
 import { UIStore } from './UIStore'
 import type { Navigation } from './routing/navigation.ts'
-import { AchievementsStore } from './modules/achievements'
 import { AnalyticsStore } from './modules/analytics'
 import { AuthStore } from './modules/auth'
 import { BackupCodesStore } from './modules/backup-codes'
@@ -77,7 +76,6 @@ export class RootStore {
   public readonly engagement: EngagementStore
   public readonly helpScout: HelpScoutStore
   public readonly bonuses: BonusStore
-  public readonly achievements: AchievementsStore
   public readonly startButtonUI: StartButtonUIStore
   public readonly errorBoundary: ErrorBoundaryStore
   public readonly passkey: PasskeyStore
@@ -94,7 +92,6 @@ export class RootStore {
     this.notifications = new NotificationStore(this)
     this.xp = new ExperienceStore(axios)
 
-    this.achievements = new AchievementsStore(axios)
     this.profile = new ProfileStore(this, axios)
     this.termsAndConditions = new TermsAndConditionsStore(axios, this.profile)
     this.rewards = new RewardStore(this, axios, this.profile)
@@ -126,7 +123,6 @@ export class RootStore {
    */
   userDataStores = () => [
     this.auth,
-    this.achievements,
     this.demandAlerts,
     this.termsAndConditions,
     this.balance,
