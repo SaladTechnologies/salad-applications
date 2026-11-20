@@ -127,7 +127,7 @@ describe('ProfileStore', () => {
     expect(profileStore.withInstallReminder(newChef, true)).toBe(false)
   })
 
-  it('tells its readers when the install reminder is closed', () => {
+  it('tells its readers when the install reminder is closed, and stores it', () => {
     const { profileStore } = setUp({}, undefined)
     const listener = vi.fn<() => void>()
     profileStore.subscribe(listener)
@@ -138,6 +138,8 @@ describe('ProfileStore', () => {
     expect(before).toBe(false)
     expect(profileStore.getState().isInstallReminderClosed).toBe(true)
     expect(listener).toHaveBeenCalled()
+    // Stored, so the reminder stays closed after a reload.
+    expect(localStorage.getItem('SALAD_IS_INSTALL_REMINDER_CLOSED')).toBe('true')
   })
 
   it('shows the protect-redemption status while it saves, then clears it six seconds later', async () => {
