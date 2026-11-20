@@ -40,9 +40,12 @@ export class AuthStore {
     try {
       await this.axios.get('/api/v1/profile').then(() => runInAction(() => (this.isAuthenticated = true)))
     } catch {
-      const routeWithoutTrailingSlash = redirectUri ?? this.store.routing.location.pathname.slice(1)
+      // Keep the query string so the user comes back to the same view, e.g. a filtered page. Encoded so its `&`s stay
+      // part of `redirect_uri` instead of becoming the login page's own parameters.
+      const { pathname, search } = this.store.routing.location
+      const route = redirectUri ?? pathname.slice(1) + search
 
-      window.location.assign(`${config.loginUrl}?redirect_uri=${routeWithoutTrailingSlash}`)
+      window.location.assign(`${config.loginUrl}?redirect_uri=${encodeURIComponent(route)}`)
     }
   }
 
