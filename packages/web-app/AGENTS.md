@@ -134,4 +134,5 @@ and `react-aspect-ratio` are; prefer a named export when the package has one tha
   `staleTime`).
 - Whether the user is signed in is the session query: `useSession()` (`src/data/session.ts`) is `unknown`, `yes`, or
   `no`. Change it with `setSession` after a sign-in or sign-out, never by refetching. Until MobX is gone,
-  `SessionProvider` mirrors it into `AuthStore.isAuthenticated` and runs the root store's login and logout work.
+  `SessionProvider` mirrors it into `isAuthenticated()` (`src/account/auth.ts`) and runs the root store's login and
+  logout work.

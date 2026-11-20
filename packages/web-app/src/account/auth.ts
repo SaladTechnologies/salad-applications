@@ -55,7 +55,7 @@ export const createAuth = ({ http, setSession, navigation, loginUrl, assign }: A
       try {
         await http.post('/api/v2/authentication-sessions/logout')
       } catch (error) {
-        // oxlint-disable-next-line eslint/no-console -- the auth store logged a failed sign-out; the user is signed out anyway
+        // oxlint-disable-next-line eslint/no-console -- a failed sign-out is only logged, as before; the user is signed out anyway
         console.error(error)
       }
       setSession('no')
