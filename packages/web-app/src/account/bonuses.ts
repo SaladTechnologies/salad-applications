@@ -120,13 +120,18 @@ const byExpiry = (a: Bonus, b: Bonus): number => {
   return hasName(a.name) && hasName(b.name) ? a.name.localeCompare(b.name) : 0
 }
 
-/** Loads a query now and keeps it for the session. A failed load keeps the last data, as the bonus store did. */
+/**
+ * Loads a query with a new request, and keeps it for the session. A failed load keeps the last data, as the bonus store
+ * did. A load already running is cancelled first: reusing it, as a query otherwise would, could keep an answer from
+ * before a claim (the claimed bonus, or no active earning rate, which would skip the replace modal next time).
+ */
 const load = async <Data>(
   queryClient: QueryClient,
   queryKey: readonly string[],
   queryFn: () => Promise<Data>,
 ): Promise<void> => {
   try {
+    await queryClient.cancelQueries({ queryKey, exact: true })
     await queryClient.query({ queryKey, queryFn, staleTime: 0, gcTime: Number.POSITIVE_INFINITY })
   } catch {
     // The last data stays, as the store kept it.

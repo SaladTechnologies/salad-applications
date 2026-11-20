@@ -252,4 +252,40 @@ describe('bonuses', () => {
     expect(host.textContent).toBe('|undefined|')
     expect(setup.bonuses.get().replacementEarningRateBonusId).toBeUndefined()
   })
+
+  it('sends a new request for a load while an older one is still running, so a claim never keeps its answer', async () => {
+    expect.hasAssertions()
+    const requests: string[] = []
+    const answers = new Map<number, unknown>()
+    // An adapter that holds each request until the test answers it, by the order it was sent in.
+    const adapter: AxiosAdapter = async (config) => {
+      const index = requests.push(String(config.url)) - 1
+      await vi.waitUntil(() => answers.has(index))
+      return { data: answers.get(index), status: 200, statusText: '', headers: new AxiosHeaders(), config }
+    }
+    const queryClient = createQueryClient()
+    const bonuses = createBonuses({
+      queryClient,
+      http: create({ adapter }),
+      openReplaceModal: vi.fn<() => void>(),
+      onClaimed: vi.fn<(bonus: Bonus) => void>(),
+      onClaimFailed: vi.fn<() => void>(),
+      refreshData: vi.fn<() => void>(),
+    })
+
+    const beforeClaim = bonuses.load()
+    await vi.waitUntil(() => requests.length === 2)
+    const afterClaim = bonuses.load()
+    await vi.waitUntil(() => requests.length === 4)
+    answers.set(0, null)
+    answers.set(1, [])
+    answers.set(2, { id: 'rate-after-claim' })
+    answers.set(3, [])
+    await Promise.all([beforeClaim, afterClaim])
+
+    expect(requests).toStrictEqual([earningRateUrl, unclaimedUrl, earningRateUrl, unclaimedUrl])
+    expect(queryClient.getQueryData(['account', 'bonuses', 'earning-rate'])).toStrictEqual({
+      rate: { id: 'rate-after-claim' },
+    })
+  })
 })
