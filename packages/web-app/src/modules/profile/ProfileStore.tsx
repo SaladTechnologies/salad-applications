@@ -1,6 +1,8 @@
 import SaladDefaultAvatarSrc from '@saladtechnologies/garden-components/lib/components/Avatar/assets/SaladAvatar.png'
 import type { AxiosInstance, AxiosResponse } from 'axios'
-import { action, computed, flow, observable, runInAction } from 'mobx'
+import { useSyncExternalStore } from 'react'
+import type { ExternalState } from '../../app/external-state.ts'
+import { createExternalState } from '../../app/external-state.ts'
 import * as Storage from '../../Storage'
 import type { RootStore } from '../../Store'
 import type { FormValues } from '../account-views/account-views/components/'
@@ -41,65 +43,81 @@ export interface ProfileAccess {
   forget: () => void
 }
 
+/** The account page's state around the profile: avatars, the forms' statuses, the Google account, and the reminder. */
+export interface ProfileState {
+  /** The avatar the App API has selected for the user. */
+  currentSelectedAvatar: string | undefined
+  /** The avatar whose selection failed, and why. */
+  avatarError: { avatar: string; message: string } | undefined
+  /** The avatars the user can pick, the default first. */
+  avatars: Avatar[] | undefined
+  /** The avatar being selected. */
+  submittingAvatar: string | undefined
+  /** The avatar the page shows as selected, which a selection shows before the App API answers. */
+  selectedAvatar: string | undefined
+  /** Whether a username change is being saved. */
+  isUserNameSubmitting: boolean
+  /** Whether the last username change was saved. */
+  isUserNameSubmitSuccess: boolean
+  /** Whether a Minecraft username change is being saved. */
+  isMinecraftUserNameSubmitting: boolean
+  /** Whether the last Minecraft username change was saved. */
+  isMinecraftUserNameSubmitSuccess: boolean
+  /** The email of the user's connected Google account. */
+  connectedGoogleAccountEmail: string | undefined
+  /** Whether loading the connected Google account failed. */
+  isLoadConnectedGoogleAccountEmailError: boolean
+  /** Whether the user closed the install reminder, which the browser remembers. */
+  isInstallReminderClosed: boolean
+  /** How the last protect-redemption change went. */
+  protectRewardsRedemptionStatus: ProtectRewardsRedemptionStatus
+}
+
+/** The avatar the user has selected, or `undefined` before the avatars have loaded. */
+export const profileAvatarOf = (state: ProfileState): Avatar | undefined =>
+  state.avatars?.find((avatar) => avatar.id === state.currentSelectedAvatar)
+
+/** Returns the profile store's state, and re-renders when it changes. Call it in a container. */
+export const useProfileState = (profileStore: ProfileStore): ProfileState =>
+  useSyncExternalStore(profileStore.subscribe, profileStore.getState)
+
+/**
+ * The profile's actions and the account page's state around it. The profile itself lives in its query
+ * (src/account/profile.ts); this state lives outside MobX, and containers read it with `useProfileState`.
+ */
 export class ProfileStore {
-  @observable
-  public currentSelectedAvatar?: string
-
-  @observable
-  public avatarError?: {
-    avatar: string
-    message: string
-  }
-
-  @observable
-  public avatars?: Avatar[]
-
-  @observable
-  public submittingAvatar?: string
-
-  @observable
-  public selectedAvatar?: string
-
-  @observable
-  public isUserNameSubmitting: boolean = false
-
-  @observable
-  public isUserNameSubmitSuccess: boolean = false
-
-  @observable
-  public isMinecraftUserNameSubmitting: boolean = false
-
-  @observable
-  public isMinecraftUserNameSubmitSuccess: boolean = false
-
-  @computed
-  get profileAvatar(): Avatar | undefined {
-    return this.avatars?.find((avatar) => avatar.id === this.currentSelectedAvatar)
-  }
-
-  @observable
-  public connectedGoogleAccountEmail?: string
-
-  @observable
-  public isLoadConnectedGoogleAccountEmailError: boolean = false
-
-  @observable
-  public isInstallReminderClosed: boolean = Storage.getItem(IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY) === 'true'
-
-  @observable
-  public protectRewardsRedemptionStatus: ProtectRewardsRedemptionStatus = 'unknown'
-
-  private protectRewardsRedemptionStatusTimeout: NodeJS.Timeout | null = null
-
+  private readonly store: RootStore
+  private readonly axios: AxiosInstance
   private readonly profiles: ProfileAccess
+  private readonly state: ExternalState<ProfileState>
+  private protectRewardsRedemptionStatusTimeout: ReturnType<typeof setTimeout> | null = null
 
-  constructor(
-    private readonly store: RootStore,
-    private readonly axios: AxiosInstance,
-    profiles: ProfileAccess,
-  ) {
+  constructor(store: RootStore, axios: AxiosInstance, profiles: ProfileAccess) {
+    this.store = store
+    this.axios = axios
     this.profiles = profiles
+    this.state = createExternalState<ProfileState>({
+      currentSelectedAvatar: undefined,
+      avatarError: undefined,
+      avatars: undefined,
+      submittingAvatar: undefined,
+      selectedAvatar: undefined,
+      isUserNameSubmitting: false,
+      isUserNameSubmitSuccess: false,
+      isMinecraftUserNameSubmitting: false,
+      isMinecraftUserNameSubmitSuccess: false,
+      connectedGoogleAccountEmail: undefined,
+      isLoadConnectedGoogleAccountEmailError: false,
+      isInstallReminderClosed: Storage.getItem(IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY) === 'true',
+      protectRewardsRedemptionStatus: 'unknown',
+    })
   }
+
+  /** Returns the current state. */
+  public getState = (): ProfileState => this.state.get()
+
+  /** Calls `listener` after each change, and returns a function that stops that. */
+  public subscribe = (listener: () => void): (() => void) => this.state.subscribe(listener)
 
   /**
    * The signed-in user's profile, or `undefined` before it has loaded. It lives in its query (src/account/profile.ts),
@@ -109,36 +127,36 @@ export class ProfileStore {
     return this.profiles.get()
   }
 
-  /** Whether the app shows the install reminder for the profile: read with the profile a component shows. */
-  public withInstallReminder(profile: Profile | undefined): boolean {
+  /**
+   * Whether the app shows the install reminder for the profile, read with the profile and the reminder's closed state a
+   * component shows (`useProfile`, `useProfileState`).
+   */
+  public withInstallReminder(profile: Profile | undefined, isInstallReminderClosed: boolean): boolean {
     const isProfileCreatedAfterInstallReminderReleaseDate = profile?.createdAt
       ? new Date(profile?.createdAt) > installReminderFeatureReleaseDate
       : false
 
     return (
       isProfileCreatedAfterInstallReminderReleaseDate &&
-      !this.isInstallReminderClosed &&
+      !isInstallReminderClosed &&
       !profile?.saladBowlFirstLoginAt &&
       !!this.store.auth.isAuthenticated
     )
   }
 
-  @action
   setProfileData = (profileData: Profile) => {
     this.profiles.set(profileData)
     this.store.engagement.checkWhatsNew()
   }
 
-  @action
   setIsInstallReminderClosed = (isInstallReminderClosed: boolean) => {
-    this.isInstallReminderClosed = isInstallReminderClosed
+    this.state.update({ isInstallReminderClosed })
     Storage.setItem(IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY, JSON.stringify(isInstallReminderClosed))
   }
 
-  @action.bound
-  loadProfile = flow(function* (this: ProfileStore) {
+  loadProfile = async (): Promise<Profile | undefined> => {
     try {
-      const profile = yield this.axios.get(profileEndpointPath)
+      const profile = await this.axios.get(profileEndpointPath)
       this.profiles.set(profile.data)
       this.store.errorBoundary.resetErrorBoundary()
     } catch (err) {
@@ -147,29 +165,28 @@ export class ProfileStore {
     }
     this.store.engagement.checkWhatsNew()
     return this.currentProfile
-  })
+  }
 
-  @action.bound
-  loadAvatars = flow(function* (this: ProfileStore) {
+  loadAvatars = async (): Promise<void> => {
     try {
-      const avatar = yield this.axios.get(avatarsEndpointPath)
-      this.avatars = avatar.data
-      this.avatars?.unshift(SaladDefaultAvatar)
+      const avatar = await this.axios.get(avatarsEndpointPath)
+      const avatars: Avatar[] | undefined = avatar.data
+      avatars?.unshift(SaladDefaultAvatar)
+      this.state.update({ avatars })
     } catch (err) {}
-  })
+  }
 
-  @action.bound
-  loadSelectedAvatar = flow(function* (this: ProfileStore) {
+  loadSelectedAvatar = async (): Promise<void> => {
     try {
-      const selectedAvatar = yield this.axios.get(avatarsSelectedEndpointPath)
-      this.currentSelectedAvatar = this.selectedAvatar = selectedAvatar.data?.id
+      const selectedAvatar = await this.axios.get(avatarsSelectedEndpointPath)
+      const id: string | undefined = selectedAvatar.data?.id
+      this.state.update({ currentSelectedAvatar: id, selectedAvatar: id })
     } catch (err) {
-      this.currentSelectedAvatar = this.selectedAvatar = SaladDefaultAvatar.id
+      this.state.update({ currentSelectedAvatar: SaladDefaultAvatar.id, selectedAvatar: SaladDefaultAvatar.id })
     }
-  })
+  }
 
-  @action.bound
-  setWhatsNewViewed = flow(function* (this: ProfileStore) {
+  setWhatsNewViewed = async (): Promise<void> => {
     if (this.currentProfile === undefined) {
       return
     }
@@ -180,92 +197,89 @@ export class ProfileStore {
     }
 
     try {
-      const response = yield this.axios.patch(profileEndpointPath, {
+      const response = await this.axios.patch(profileEndpointPath, {
         lastSeenApplicationVersion: whatsNewVersion,
       })
 
       this.profiles.set(response.data)
       this.store.analytics.trackWhatsNew(whatsNewVersion)
     } catch (err) {}
-  })
+  }
 
-  @action.bound
-  selectAvatar = flow(function* (this: ProfileStore, id: string) {
-    if (this.submittingAvatar !== undefined || !this.avatars || this.selectedAvatar === id) {
+  selectAvatar = async (id: string): Promise<void> => {
+    const { avatars, submittingAvatar, selectedAvatar } = this.state.get()
+    if (submittingAvatar !== undefined || !avatars || selectedAvatar === id) {
       return
     }
-    this.avatarError = undefined
+    this.state.update({ avatarError: undefined })
     let avatarId: string | undefined
     if (id === '00000000-0000-0000-0000-000000000000') {
-      this.selectedAvatar = this.submittingAvatar = SaladDefaultAvatar.id
+      this.state.update({ selectedAvatar: SaladDefaultAvatar.id, submittingAvatar: SaladDefaultAvatar.id })
       avatarId = '00000000-0000-0000-0000-000000000000'
     } else {
-      this.selectedAvatar = this.submittingAvatar = this.avatars.find((avatar) => avatar.id === id)?.id
+      const found = avatars.find((avatar) => avatar.id === id)?.id
+      this.state.update({ selectedAvatar: found, submittingAvatar: found })
       avatarId = id
     }
     try {
-      const patch = yield this.axios.patch(avatarsSelectedEndpointPath, { avatarId })
-      this.currentSelectedAvatar = this.selectedAvatar = patch.data?.id
+      const patch = await this.axios.patch(avatarsSelectedEndpointPath, { avatarId })
+      const selected: string | undefined = patch.data?.id
+      this.state.update({ currentSelectedAvatar: selected, selectedAvatar: selected })
     } catch (err) {
-      this.avatarError = {
-        avatar: id,
-        message: 'Unable to select avatar',
-      }
-      this.selectedAvatar = this.currentSelectedAvatar
+      this.state.update({
+        avatarError: {
+          avatar: id,
+          message: 'Unable to select avatar',
+        },
+        selectedAvatar: this.state.get().currentSelectedAvatar,
+      })
     } finally {
-      this.submittingAvatar = undefined
+      this.state.update({ submittingAvatar: undefined })
     }
-  })
-
-  @action
-  clearAvatarError = () => {
-    this.avatarError = undefined
   }
 
-  @action.bound
-  updateUsername = flow(function* (this: ProfileStore, username: FormValues) {
+  clearAvatarError = () => {
+    this.state.update({ avatarError: undefined })
+  }
+
+  updateUsername = async (username: FormValues): Promise<void> => {
     if (this.currentProfile === undefined) return
-    this.isUserNameSubmitting = true
-    this.isUserNameSubmitSuccess = false
+    this.state.update({ isUserNameSubmitting: true, isUserNameSubmitSuccess: false })
     try {
-      const patch = yield this.axios.patch(profileEndpointPath, { username: username.input })
+      const patch = await this.axios.patch(profileEndpointPath, { username: username.input })
       const profile = patch.data
-      this.isUserNameSubmitting = false
-      this.isUserNameSubmitSuccess = true
+      this.state.update({ isUserNameSubmitting: false, isUserNameSubmitSuccess: true })
       this.profiles.set(profile)
       this.store.engagement.checkWhatsNew()
     } catch (err) {
-      this.isUserNameSubmitting = false
+      this.state.update({ isUserNameSubmitting: false })
     }
-  })
-
-  @action.bound
-  resetUsernameSuccess = () => {
-    this.isUserNameSubmitSuccess = false
   }
 
-  @action.bound
-  updateMinecraftUsername = flow(function* (this: ProfileStore, minecraftUsername: FormValues) {
-    if (this.currentProfile === undefined) {
+  resetUsernameSuccess = () => {
+    this.state.update({ isUserNameSubmitSuccess: false })
+  }
+
+  updateMinecraftUsername = async (minecraftUsername: FormValues): Promise<void> => {
+    const current = this.currentProfile
+    if (current === undefined) {
       return
     }
-    this.isMinecraftUserNameSubmitting = true
-    this.isMinecraftUserNameSubmitSuccess = false
+    this.state.update({ isMinecraftUserNameSubmitting: true, isMinecraftUserNameSubmitSuccess: false })
     try {
-      const patch = yield this.axios.patch(profileEndpointPath, {
+      const patch = await this.axios.patch(profileEndpointPath, {
         extensions:
-          this.currentProfile.extensions === undefined
+          current.extensions === undefined
             ? {
                 minecraftUsername: minecraftUsername.input,
               }
             : {
-                ...this.currentProfile.extensions,
+                ...current.extensions,
                 minecraftUsername: minecraftUsername.input,
               },
       })
       const profile = patch.data
-      this.isMinecraftUserNameSubmitting = false
-      this.isMinecraftUserNameSubmitSuccess = true
+      this.state.update({ isMinecraftUserNameSubmitting: false, isMinecraftUserNameSubmitSuccess: true })
       this.profiles.set(profile)
       this.store.engagement.checkWhatsNew()
     } catch (error) {
@@ -277,16 +291,14 @@ export class ProfileStore {
         type: 'error',
       })
 
-      this.isMinecraftUserNameSubmitting = false
+      this.state.update({ isMinecraftUserNameSubmitting: false })
     }
-  })
-
-  @action.bound
-  resetMinecraftUsernameSuccess = () => {
-    this.isMinecraftUserNameSubmitSuccess = false
   }
 
-  @action.bound
+  resetMinecraftUsernameSuccess = () => {
+    this.state.update({ isMinecraftUserNameSubmitSuccess: false })
+  }
+
   connectExternalAccountProvider = () => {
     const urlSearchParams = new URLSearchParams(window.location.search)
     const externalAuthProviderLoginStatus = urlSearchParams.get('external-login-status')
@@ -308,13 +320,12 @@ export class ProfileStore {
     }
   }
 
-  @action.bound
-  loadGoogleAccountConnection = flow(function* (this: ProfileStore) {
+  loadGoogleAccountConnection = async (): Promise<void> => {
     try {
-      this.isLoadConnectedGoogleAccountEmailError = false
+      this.state.update({ isLoadConnectedGoogleAccountEmailError: false })
       this.connectExternalAccountProvider()
 
-      const authProviderConnections: AxiosResponse<ExternalAuthProvider[]> = yield this.axios.get(
+      const authProviderConnections: AxiosResponse<ExternalAuthProvider[]> = await this.axios.get(
         authenticationExternalEndpointPath,
       )
 
@@ -324,11 +335,11 @@ export class ProfileStore {
         )
 
         if (connectedGoogleAccount) {
-          this.connectedGoogleAccountEmail = connectedGoogleAccount.email
+          this.state.update({ connectedGoogleAccountEmail: connectedGoogleAccount.email })
         }
       }
     } catch (err) {
-      this.isLoadConnectedGoogleAccountEmailError = true
+      this.state.update({ isLoadConnectedGoogleAccountEmailError: true })
       this.store.notifications.sendNotification({
         category: NotificationMessageCategory.Error,
         title: 'Unable to fetch connected Google Account.',
@@ -336,59 +347,56 @@ export class ProfileStore {
         type: 'error',
       })
     }
-  })
+  }
 
-  @action.bound
-  setProtectRewardsRedemption = flow(function* (this: ProfileStore, isProtectRewardsRedemptionEnabled: boolean) {
+  setProtectRewardsRedemption = async (isProtectRewardsRedemptionEnabled: boolean): Promise<void> => {
     const profile = this.currentProfile
     if (profile) {
       // A copy, so the components showing the profile see the change, as they saw the store's field change.
       this.profiles.set({ ...profile, redemptionTfaEnabled: isProtectRewardsRedemptionEnabled })
     }
 
-    if (this.protectRewardsRedemptionStatus === 'loading') {
+    if (this.state.get().protectRewardsRedemptionStatus === 'loading') {
       return
     }
 
     if (this.protectRewardsRedemptionStatusTimeout) {
-      this.protectRewardsRedemptionStatus = 'unknown'
+      this.state.update({ protectRewardsRedemptionStatus: 'unknown' })
       clearTimeout(this.protectRewardsRedemptionStatusTimeout)
     }
 
     try {
-      this.protectRewardsRedemptionStatus = 'loading'
-      yield this.axios.post(protectRewardsRedemptionEndpointPath, {
+      this.state.update({ protectRewardsRedemptionStatus: 'loading' })
+      await this.axios.post(protectRewardsRedemptionEndpointPath, {
         redemptionsTfaEnabled: isProtectRewardsRedemptionEnabled,
       })
-      this.loadProfile()
-      this.protectRewardsRedemptionStatus = 'success'
+      void this.loadProfile()
+      this.state.update({ protectRewardsRedemptionStatus: 'success' })
     } catch (error) {
-      this.loadProfile()
-      this.protectRewardsRedemptionStatus = 'failure'
+      void this.loadProfile()
+      this.state.update({ protectRewardsRedemptionStatus: 'failure' })
       console.error('ProfileStore -> setProtectRewardsRedemption: ', error)
     }
 
     this.protectRewardsRedemptionStatusTimeout = setTimeout(() => {
-      runInAction(() => {
-        this.protectRewardsRedemptionStatus = 'unknown'
-      })
+      this.state.update({ protectRewardsRedemptionStatus: 'unknown' })
     }, 6000)
-  })
+  }
 
-  @action.bound
   setProtectRewardsRedemptionStatus = (protectRewardsRedemptionStatus: ProtectRewardsRedemptionStatus) => {
-    this.protectRewardsRedemptionStatus = protectRewardsRedemptionStatus
+    this.state.update({ protectRewardsRedemptionStatus })
   }
 
   /**
    * Forgets the selected avatar and connected Google account of the user who signed out, so the next user never sees
    * them. Sign-out resets the profile's query (src/app/forget-user.ts).
    */
-  @action.bound
-  resetUserData() {
-    this.currentSelectedAvatar = undefined
-    this.selectedAvatar = undefined
-    this.connectedGoogleAccountEmail = undefined
-    this.protectRewardsRedemptionStatus = 'unknown'
+  resetUserData = () => {
+    this.state.update({
+      currentSelectedAvatar: undefined,
+      selectedAvatar: undefined,
+      connectedGoogleAccountEmail: undefined,
+      protectRewardsRedemptionStatus: 'unknown',
+    })
   }
 }
