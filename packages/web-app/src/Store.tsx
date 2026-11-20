@@ -215,9 +215,11 @@ export class RootStore {
       http: axios,
       webAuthn: {
         isSupported: getIsPasskeySupported,
-        createCredential: async (options) => await registerPasskeyCredential(options as any),
+        createCredential: async (options) =>
+          await registerPasskeyCredential(options as Parameters<typeof registerPasskeyCredential>[0]),
         registrationBody,
-        getAssertion: async (options) => await getPasskeyCredential(options as any),
+        getAssertion: async (options) =>
+          await getPasskeyCredential(options as Parameters<typeof getPasskeyCredential>[0]),
         assertionBody,
       },
       onFirstPasskeyAdded: () => {

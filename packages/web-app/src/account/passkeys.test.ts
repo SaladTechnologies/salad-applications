@@ -146,13 +146,16 @@ describe('passkeys', () => {
     await passkeys.registerPasskey()
     await vi.advanceTimersByTimeAsync(3000)
     createCredential.mockResolvedValue(null)
-    await passkeys.registerPasskey()
+    const second = passkeys.registerPasskey()
+    const whenTheSecondStarts = passkeys.get().registerPasskeyStatus
+    await second
 
     await vi.advanceTimersByTimeAsync(3500)
     const afterTheFirstTimer = passkeys.get().registerPasskeyStatus
     await vi.advanceTimersByTimeAsync(3000)
     vi.useRealTimers()
 
+    expect(whenTheSecondStarts).toBe('unknown')
     expect(afterTheFirstTimer).toBe('failure')
     expect(passkeys.get().registerPasskeyStatus).toBe('unknown')
   })
