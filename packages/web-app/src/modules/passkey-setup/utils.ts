@@ -23,7 +23,7 @@ export const getIsPasskeySupported = async (): Promise<boolean> => {
   return false
 }
 
-export const coerceToBase64Url = (input: ArrayBuffer | Uint8Array | Array<any>) => {
+const coerceToBase64Url = (input: ArrayBuffer | Uint8Array | Array<any>) => {
   let base65Url
 
   // Array or ArrayBuffer to Uint8Array
@@ -199,3 +199,38 @@ export const getPasskeyCredential = async (
 
   return credential
 }
+
+/** The App API body that registers a passkey the browser created, as the passkey store built it. */
+export const registrationBody = (credential: CredentialResponse) => {
+  const attestationObject = new Uint8Array(credential.response.attestationObject)
+  const clientDataJSON = new Uint8Array(credential.response.clientDataJSON)
+  const rawId = new Uint8Array(credential.rawId)
+
+  return {
+    id: credential.id,
+    rawId: coerceToBase64Url(rawId),
+    type: credential.type,
+    extensions: credential.getClientExtensionResults(),
+    response: {
+      attestationObject: coerceToBase64Url(attestationObject),
+      clientDataJSON: coerceToBase64Url(clientDataJSON),
+      transports: credential.response.getTransports(),
+    },
+  }
+}
+
+/** The App API body that verifies an assertion the browser signed with a passkey, as the passkey store built it. */
+export const assertionBody = (credential: AssertedCredentialResponse) => ({
+  assertion: {
+    id: credential.id,
+    type: credential.type,
+    authenticatorAttachment: credential.authenticatorAttachment,
+    rawId: coerceToBase64Url(credential.rawId),
+    response: {
+      authenticatorData: coerceToBase64Url(credential.response.authenticatorData),
+      clientDataJSON: coerceToBase64Url(credential.response.clientDataJSON),
+      signature: coerceToBase64Url(credential.response.signature),
+      userHandle: coerceToBase64Url(credential.response.userHandle as ArrayBuffer),
+    },
+  },
+})
