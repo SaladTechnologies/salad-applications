@@ -32,6 +32,8 @@ interface Props extends WithStyles<typeof styles> {
   earningsPerMachine: EarningPerMachine
   /** How many days the earning chart shows. */
   daysShowing: ChartDaysShowing
+  /** Whether the account can use dedicated nodes, so the link to them is shown. */
+  hasDedicatedNodesAccess: boolean
   lifetimeBalance?: number
   totalChoppingHours?: number
   redeemedRewards?: RewardVaultItem[]
@@ -54,6 +56,7 @@ const _EarningSummaryPage: FC<Props> = ({
   currentBalance,
   earningsPerMachine,
   daysShowing,
+  hasDedicatedNodesAccess,
   lifetimeBalance,
   totalChoppingHours,
   redeemedRewards,
@@ -119,7 +122,7 @@ const _EarningSummaryPage: FC<Props> = ({
           onSelectedMachineIdsChange={handleSelectedMachineIdsChange}
           onPageChange={onPageMachineIdsChange}
         />
-        <DedicatedNodesLink />
+        <DedicatedNodesLink hasAccess={hasDedicatedNodesAccess} />
         <EarningHistoryContainer earningsPerMachine={earningsPerSelectedMachines} daysShowing={daysShowing} />
         {shownInModalMachineDetails && (
           <MachineDetailsModal

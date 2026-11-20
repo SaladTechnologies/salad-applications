@@ -25,6 +25,8 @@ interface OwnProps {
   balance: BalanceState
   /** Each machine's earning windows for the chart range. */
   earningsPerMachine: EarningPerMachine
+  /** Whether the account can use dedicated nodes. */
+  hasDedicatedNodesAccess: boolean
   /** The vault and its latest completed rewards. */
   vault: VaultState
 }
@@ -50,6 +52,7 @@ const mapStoreToProps = (store: RootStore, props: OwnProps): any => {
     machines: props.balance.machines,
     currentHourlyEarningRatesPerMachine: props.balance.currentHourlyEarningRatesPerMachine,
     daysShowing: props.balance.daysShowingEarnings,
+    hasDedicatedNodesAccess: props.hasDedicatedNodesAccess,
     trackEarnPageFAQLinkClicked: store.analytics.trackEarnPageFAQLinkClicked,
     trackEarnPageViewed: store.analytics.trackEarnPageViewed,
     trackAndNavigateToRewardVaultPage,
@@ -91,6 +94,7 @@ export const EarningSummaryContainer = () => {
       onPageMachineIdsChange={setPageMachineIds}
       balance={balance}
       earningsPerMachine={earningsPerMachine}
+      hasDedicatedNodesAccess={useExternalState(store.dedicatedNodes.state).hasAccess}
       vault={useExternalState(store.vault.state)}
     />
   )

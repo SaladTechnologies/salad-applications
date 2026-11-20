@@ -17,6 +17,8 @@ interface OwnProps {
   balance: BalanceState
   /** Each machine's earning windows for the chart range. */
   earningsPerMachine: EarningPerMachine
+  /** Whether the account can use dedicated nodes. */
+  hasDedicatedNodesAccess: boolean
 }
 
 const mapStoreToProps = (_store: RootStore, props: OwnProps): any => ({
@@ -30,6 +32,7 @@ const mapStoreToProps = (_store: RootStore, props: OwnProps): any => ({
   machines: props.balance.machines,
   currentHourlyEarningRatesPerMachine: props.balance.currentHourlyEarningRatesPerMachine,
   daysShowing: props.balance.daysShowingEarnings,
+  hasDedicatedNodesAccess: props.hasDedicatedNodesAccess,
   onPageMachineIdsChange: props.onPageMachineIdsChange,
 })
 
@@ -58,6 +61,7 @@ export const MobileEarningSummaryContainer = () => {
       onPageMachineIdsChange={setPageMachineIds}
       balance={balance}
       earningsPerMachine={earningsPerMachine}
+      hasDedicatedNodesAccess={useExternalState(store.dedicatedNodes.state).hasAccess}
     />
   )
 }
