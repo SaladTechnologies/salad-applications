@@ -13,7 +13,6 @@
     "src/api/**/*",
     "src/App.tsx",
     "src/assets/**/*",
-    "src/axiosFactory.tsx",
     "src/components/**/*",
     "src/config.tsx",
     "src/connect.tsx",

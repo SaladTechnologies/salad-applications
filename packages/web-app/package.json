@@ -69,6 +69,7 @@
     "@saladtechnologies/garden-components": "1.6.2",
     "@saladtechnologies/garden-fonts": "1.0.4",
     "@saladtechnologies/garden-icons": "1.0.30",
+    "@tanstack/react-query": "5.107.1",
     "@types/history": "4.7.11",
     "@types/lodash": "4.17.14",
     "@types/luxon": "3.4.2",

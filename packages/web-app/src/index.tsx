@@ -23,12 +23,17 @@ import { createRoot } from 'react-dom/client'
 import { createIntl, createIntlCache, RawIntlProvider } from 'react-intl'
 import { ThemeProvider as JSSThemeProvider } from 'react-jss'
 import { SkeletonTheme } from 'react-loading-skeleton'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { Router } from 'react-router-dom'
 import { App } from './App'
-import { createClient } from './axiosFactory'
 import { ErrorBoundary, Head } from './components'
 import { config } from './config'
+import { createHttpClient } from './data/http-client.ts'
+import { createQueryClient } from './data/query-client.ts'
+import { setSession } from './data/session.ts'
+import { SessionProvider } from './data/session-provider.tsx'
 import { DefaultTheme as JSSTheme } from './SaladTheme'
+import type { RootStore } from './Store'
 import { createStore } from './Store'
 import { Tooltips } from './Tooltips'
 
@@ -36,10 +41,21 @@ allSettled.shim()
 
 console.log(`Running web app build: ${config.appBuild}`)
 
-const client = createClient()
+const queryClient = createQueryClient()
+// Assigned below, before anything renders or sends a request; the HTTP client's handlers only run after a request.
+let store: RootStore | undefined
+const client = createHttpClient({
+  baseURL: config.apiBaseUrl,
+  onUnauthorized: () => setSession(queryClient, 'no'),
+  onSudoRequired: (action) => {
+    store?.auth.setPendingProtectedAction(action)
+    store?.routing.push('/protected-action')
+  },
+})
 
 setTimeout(() => {
-  const rootStore = createStore(client)
+  const rootStore = createStore(client, (session) => setSession(queryClient, session))
+  store = rootStore
   const routerHistory = createBrowserHistory({
     basename: '/',
   })
@@ -74,33 +90,37 @@ setTimeout(() => {
 
   const container = createRoot(document.getElementById('root') as HTMLDivElement)
   container.render(
-    <Router history={history}>
-      <RawIntlProvider value={intl}>
-        <EmotionThemeProvider theme={EmotionTheme}>
-          <JSSThemeProvider theme={JSSTheme}>
-            <SkeletonTheme baseColor="#172E40" highlightColor="#304759">
-              <ErrorBoundary>
-                {/* Default page title for any page that doesn't specify one */}
-                <Head title="Salad Technologies" />
-                <div>
-                  <Observer>
-                    {() => {
-                      return rootStore.appLoading ? (
-                        <LoadingScreen />
-                      ) : (
-                        <>
-                          <Tooltips />
-                          <App history={history} />
-                        </>
-                      )
-                    }}
-                  </Observer>
-                </div>
-              </ErrorBoundary>
-            </SkeletonTheme>
-          </JSSThemeProvider>
-        </EmotionThemeProvider>
-      </RawIntlProvider>
-    </Router>,
+    <QueryClientProvider client={queryClient}>
+      <SessionProvider http={client} onChange={rootStore.onSessionChange}>
+        <Router history={history}>
+          <RawIntlProvider value={intl}>
+            <EmotionThemeProvider theme={EmotionTheme}>
+              <JSSThemeProvider theme={JSSTheme}>
+                <SkeletonTheme baseColor="#172E40" highlightColor="#304759">
+                  <ErrorBoundary>
+                    {/* Default page title for any page that doesn't specify one */}
+                    <Head title="Salad Technologies" />
+                    <div>
+                      <Observer>
+                        {() => {
+                          return rootStore.appLoading ? (
+                            <LoadingScreen />
+                          ) : (
+                            <>
+                              <Tooltips />
+                              <App history={history} />
+                            </>
+                          )
+                        }}
+                      </Observer>
+                    </div>
+                  </ErrorBoundary>
+                </SkeletonTheme>
+              </JSSThemeProvider>
+            </EmotionThemeProvider>
+          </RawIntlProvider>
+        </Router>
+      </SessionProvider>
+    </QueryClientProvider>,
   )
 }, 0)

@@ -121,3 +121,17 @@ and `react-aspect-ratio` are; prefer a named export when the package has one tha
 - Add a shadcn/ui component by copying its source from ui.shadcn.com into `src/ui/` and adapting it to these rules
   (named exports, the resets above, our tokens), not with the shadcn CLI. Its Radix dependency is pre-approved.
 - Prettier sorts Tailwind classes (`prettier-plugin-tailwindcss`), including inside `cn(...)` and `cva(...)`.
+
+## Data
+
+- The App API client is `createHttpClient` (`src/data/http-client.ts`); `src/index.tsx` creates the one the app uses. It
+  knows nothing about the stores: a 401 calls `onUnauthorized` (the session ends) and a 401 that asks for sudo mode
+  calls `onSudoRequired` with the request to replay. A problem response rejects with `SaladError`
+  (`src/data/salad-error.ts`), whose message is the one to show the user.
+- New code reads and writes App API data with TanStack Query, through that client. The query client
+  (`src/data/query-client.ts`) never refetches on focus or reconnect and never retries: the HTTP client already retries
+  safe requests, and nothing else is safe to repeat. A query that should refresh says so itself (`refetchInterval`,
+  `staleTime`).
+- Whether the user is signed in is the session query: `useSession()` (`src/data/session.ts`) is `unknown`, `yes`, or
+  `no`. Change it with `setSession` after a sign-in or sign-out, never by refetching. Until MobX is gone,
+  `SessionProvider` mirrors it into `AuthStore.isAuthenticated` and runs the root store's login and logout work.
