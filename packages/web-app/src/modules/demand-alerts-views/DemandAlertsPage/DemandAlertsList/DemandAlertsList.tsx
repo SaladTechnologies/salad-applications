@@ -52,7 +52,6 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 
 interface Props extends WithStyles<typeof styles> {
   demandAlertSubscriptionList: DemandedSubscription[]
-  fetchDemandAlertSubscriptionList: () => void
   setUnsubscribeFromDemandAlertStatus: (unsubscribeFromDemandAlertStatus: UnsubscribeFromDemandAlertStatus) => void
   unsubscribeFromDemandAlert: (subscriptionId: string) => void
   unsubscribeFromDemandAlertStatus: UnsubscribeFromDemandAlertStatus
@@ -61,7 +60,6 @@ interface Props extends WithStyles<typeof styles> {
 const _DemandAlertsList: FunctionComponent<Props> = ({
   classes,
   demandAlertSubscriptionList,
-  fetchDemandAlertSubscriptionList,
   setUnsubscribeFromDemandAlertStatus,
   unsubscribeFromDemandAlert,
   unsubscribeFromDemandAlertStatus,
@@ -73,11 +71,10 @@ const _DemandAlertsList: FunctionComponent<Props> = ({
   )
 
   useEffect(() => {
-    fetchDemandAlertSubscriptionList()
     return () => {
       setUnsubscribeFromDemandAlertStatus(UnsubscribeFromDemandAlertStatus.Unknown)
     }
-  }, [fetchDemandAlertSubscriptionList, setUnsubscribeFromDemandAlertStatus])
+  }, [setUnsubscribeFromDemandAlertStatus])
 
   const handleCancelSubscription = (demandedSubscriptionId: string) => {
     unsubscribeFromDemandAlert(demandedSubscriptionId)

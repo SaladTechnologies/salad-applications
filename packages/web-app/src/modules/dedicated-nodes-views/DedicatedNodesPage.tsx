@@ -124,17 +124,8 @@ const _DedicatedNodesPage: FC<DedicatedNodesPageProps> = ({
 
   // Opened from a bookmark before the login flow asked for the token: ask now.
   useEffect(() => {
-    if (!isEnrollmentChecked) {
-      loadEnrollment()
-    }
-  }, [isEnrollmentChecked, loadEnrollment])
-
-  useEffect(() => {
-    if (hasAccess) {
-      loadNodes()
-    }
     return () => clearActionError()
-  }, [hasAccess, loadNodes, clearActionError])
+  }, [hasAccess, clearActionError])
 
   const ekFilter = parseEkFilter(filterText)
   const visibleNodes = filterNodesByEk(nodes, ekFilter)
