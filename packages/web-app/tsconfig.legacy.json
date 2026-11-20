@@ -27,7 +27,6 @@
     "src/Storage.tsx",
     "src/Store.tsx",
     "src/Tooltips.tsx",
-    "src/UIStore.tsx",
     "src/utils.tsx",
     "src/vite-env.d.ts"
   ],

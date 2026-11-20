@@ -110,7 +110,7 @@ export class BonusStore {
         !this.replaceEarningRate
       ) {
         this.replacementEarningRateBonusId = bonus.id
-        this.store.ui.showModal('/bonuses/replace-bonus')
+        this.store.routing.push('/bonuses/replace-bonus')
         return
       }
 
