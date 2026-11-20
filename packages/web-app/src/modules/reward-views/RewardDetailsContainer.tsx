@@ -3,7 +3,7 @@ import type { RootStore } from '../../Store'
 import type { Reward } from '../reward/models'
 import { RewardDetailsPage } from './pages'
 
-const mapStoreToProps = (store: RootStore, props: { match: { params: { id: string } } }): any => {
+const mapStoreToProps = (store: RootStore, props: { match: { params: { id: string } }; backFallback: string }): any => {
   const onRedeem = (reward: Reward) => {
     store.analytics.trackButtonClicked('buy_now', 'Buy Now', 'enabled')
     store.rewards.redeemReward(reward)
@@ -26,7 +26,7 @@ const mapStoreToProps = (store: RootStore, props: { match: { params: { id: strin
     currentBalance: store.balance.currentBalance,
     reward: reward,
     isReviewing: store.rewards.isReviewing,
-    onBack: () => store.routing.goBackOr('/store'),
+    onBack: () => store.routing.goBackOr(props.backFallback),
     onRedeem,
     onTargetThisRewardClick: store.rewards.setSelectedTargetReward,
     onRemoveTargetRewardClick: store.rewards.removeSelectedTargetReward,
