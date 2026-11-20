@@ -1,15 +1,17 @@
 import { Avatar, AvatarDefault, BonusCard } from '@saladtechnologies/garden-components'
 import type { TargetRewardInfo } from '@saladtechnologies/garden-components/lib/components/NavigationBar/components/DesktopNavigationBar/TargetRewardStatus'
 import { useState } from 'react'
+import { useReferralCode } from '../../account/referrals.ts'
 import { startButton as startButtonFor } from '../../app/start-button.ts'
 import type { RootStore } from '../../Store'
 import { connect } from '../../connect'
 import { NavigationBarWithNotifications } from './components/NavigationBarWithNotifications'
 
-/** The notifications drawer's state, which the navigation bar container holds. */
+/** The notifications drawer's state, which the navigation bar container holds, and whether referrals are enabled. */
 interface DrawerProps {
   isNotificationsDrawerOpened: boolean
   setIsNotificationsDrawerOpened: (isOpened: boolean) => void
+  isUserReferralsEnabled: boolean
 }
 
 const mapStoreToProps = (store: RootStore, drawer: DrawerProps): any => {
@@ -95,7 +97,7 @@ const mapStoreToProps = (store: RootStore, drawer: DrawerProps): any => {
     targetReward,
     notifications,
     withInstallReminder: store.profile.withInstallReminder,
-    isUserReferralsEnabled: store.referral.isUserReferralsEnabled,
+    isUserReferralsEnabled: drawer.isUserReferralsEnabled,
   }
 }
 
@@ -104,10 +106,12 @@ const ConnectedNavigationBar = connect(mapStoreToProps, NavigationBarWithNotific
 /** The navigation bar. It holds whether the notifications drawer is open, which the notification store held. */
 export const NavigationBarContainer = () => {
   const [isNotificationsDrawerOpened, setIsNotificationsDrawerOpened] = useState(false)
+  const { enabled: isUserReferralsEnabled } = useReferralCode()
   return (
     <ConnectedNavigationBar
       isNotificationsDrawerOpened={isNotificationsDrawerOpened}
       setIsNotificationsDrawerOpened={setIsNotificationsDrawerOpened}
+      isUserReferralsEnabled={isUserReferralsEnabled}
     />
   )
 }

@@ -1,5 +1,6 @@
 import type { QueryClient } from '@tanstack/react-query'
 import { achievementsQueryKey } from '../account/achievements.ts'
+import { currentReferralQueryKey, referralCodeQueryKey, referralsReportQueryKey } from '../account/referrals.ts'
 import { xpQueryKey } from '../account/xp.ts'
 import { demandAlertSubscriptionsQueryKey } from '../earnings/demand-monitor.ts'
 import { machineEarningsHistoryQueryKey } from '../earnings/machine-earnings.ts'
@@ -12,9 +13,9 @@ interface UserDataStore {
 
 /**
  * Forgets the data of a user who signed out, so a different user who signs in later in the same tab never sees it: each
- * store's copy; the achievements', demand alert subscriptions' and XP's queries, which hold them; and the earnings
- * histories' query, whose freshness would otherwise skip the next user's load for up to an hour. Public data (the
- * storefront, the reward catalog) and the session stay.
+ * store's copy; the achievements', demand alert subscriptions', XP's and referrals' queries, which hold them; and the
+ * earnings histories' query, whose freshness would otherwise skip the next user's load for up to an hour. Public data
+ * (the storefront, the reward catalog) and the session stay.
  */
 export const forgetSignedOutUser = (stores: readonly UserDataStore[], queryClient: QueryClient): void => {
   for (const store of stores) {
@@ -28,4 +29,8 @@ export const forgetSignedOutUser = (stores: readonly UserDataStore[], queryClien
   // So do the demand alert subscriptions and the XP.
   queryClient.removeQueries({ queryKey: demandAlertSubscriptionsQueryKey })
   queryClient.removeQueries({ queryKey: xpQueryKey })
+  // And the referral data: the report, the code (which also says whether referrals are enabled) and the user's referral.
+  queryClient.removeQueries({ queryKey: referralsReportQueryKey })
+  queryClient.removeQueries({ queryKey: referralCodeQueryKey })
+  queryClient.removeQueries({ queryKey: currentReferralQueryKey })
 }

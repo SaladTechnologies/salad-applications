@@ -1,11 +1,13 @@
 import { useAccountSecurityLoads, useGoogleConnectionLoad } from '../../../account/account-security.ts'
+import type { TermsState } from '../../../account/terms.ts'
+import { useTermsState } from '../../../account/terms.ts'
 import { usePayoutDestinationLoads } from '../../../account/wallets.ts'
 import { connect } from '../../../connect'
 import type { RootStore } from '../../../Store'
 import { getStore } from '../../../Store'
 import { Account } from './components'
 
-const mapStoreToProps = (store: RootStore): any => ({
+const mapStoreToProps = (store: RootStore, props: { terms: TermsState }): any => ({
   avatarError: store.profile.avatarError,
   avatars: store.profile.avatars,
   submittingAvatar: store.profile.submittingAvatar,
@@ -23,10 +25,10 @@ const mapStoreToProps = (store: RootStore): any => ({
   isMinecraftUserNameSubmitSuccess: store.profile.isMinecraftUserNameSubmitSuccess,
   connectedGoogleAccountEmail: store.profile.connectedGoogleAccountEmail,
   isLoadConnectedGoogleAccountEmailError: store.profile.isLoadConnectedGoogleAccountEmailError,
-  isSubmitting: store.termsAndConditions.isSubmitting,
-  isTermsAndConditionsAccepted: store.termsAndConditions.isTermsAndConditionsAccepted,
-  onSubmitTermsAndConditions: store.termsAndConditions.submitTermsAndConditions,
-  onToggleAcceptTermsAndConditions: store.termsAndConditions.toggleAcceptTermsAndConditions,
+  isSubmitting: props.terms.submitting,
+  isTermsAndConditionsAccepted: props.terms.accepted,
+  onSubmitTermsAndConditions: store.terms.submit,
+  onToggleAcceptTermsAndConditions: store.terms.setAccepted,
   signInWithGoogleChallengeSudoMode: store.auth.signInWithGoogleChallengeSudoMode,
 })
 
@@ -42,5 +44,7 @@ export const AccountContainer = () => {
   usePayoutDestinationLoads(store.solanaWallet.loadWallet, store.coinbaseEmail.loadEmail)
   useAccountSecurityLoads(store.passkey.fetchPasskeys, store.profile.loadProfile)
   useGoogleConnectionLoad(store.profile.loadGoogleAccountConnection)
-  return <ConnectedAccount />
+  // The terms' acceptance is shared with sign-in, which submits it while ticked (src/account/terms.ts).
+  const terms = useTermsState(store.terms)
+  return <ConnectedAccount terms={terms} />
 }
