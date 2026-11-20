@@ -2,7 +2,7 @@ import type { AxiosInstance, AxiosResponse } from 'axios'
 import Axios from 'axios'
 import { action, computed, flow, observable } from 'mobx'
 import type { RootStore } from '../../Store'
-import { SaladError } from '../../axiosFactory'
+import { SaladError } from '../../data/salad-error.ts'
 import { isProblemDetail } from '../../utils'
 import { NotificationMessageCategory } from '../notifications/models'
 import {

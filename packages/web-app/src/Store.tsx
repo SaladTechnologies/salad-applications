@@ -1,5 +1,5 @@
 import type { AxiosInstance } from 'axios'
-import { action, autorun, configure, flow, observable, runInAction } from 'mobx'
+import { action, configure, flow, observable, runInAction } from 'mobx'
 import { RouterStore } from 'mobx-react-router'
 import { UIStore } from './UIStore'
 import { AchievementsStore } from './modules/achievements'
@@ -40,11 +40,11 @@ configure({
 
 let sharedStore: RootStore
 
-export const createStore = (axios: AxiosInstance): RootStore => {
+export const createStore = (axios: AxiosInstance, setSession: (session: 'yes' | 'no') => void): RootStore => {
   // Vite compiles decorators the TypeScript way, so each store's field initializers are writes in its constructor.
   // `enforceActions: 'always'` rejects writes outside an action, so construct inside one. (CRA's Babel set initial
   // values without a write.)
-  sharedStore = runInAction(() => new RootStore(axios))
+  sharedStore = runInAction(() => new RootStore(axios, setSession))
   return sharedStore
 }
 
@@ -86,9 +86,9 @@ export class RootStore {
   public readonly coinbaseEmail: CoinbaseEmailStore
   public readonly dedicatedNodes: DedicatedNodesStore
 
-  constructor(axios: AxiosInstance) {
+  constructor(axios: AxiosInstance, setSession: (session: 'yes' | 'no') => void) {
     this.routing = new RouterStore()
-    this.auth = new AuthStore(this, axios)
+    this.auth = new AuthStore(this, axios, setSession)
     this.notifications = new NotificationStore(this)
     this.xp = new ExperienceStore(axios)
 
@@ -120,16 +120,16 @@ export class RootStore {
 
     // Start refreshing data
     this.refresh.start()
+  }
 
-    autorun(() => {
-      if (this.auth.isAuthenticated === undefined) {
-        return
-      } else if (this.auth.isAuthenticated) {
-        this.onLogin()
-      } else {
-        this.onLogout()
-      }
-    })
+  /** Mirrors the session (src/data/session.ts) into the stores: called when it becomes known and when it changes. */
+  onSessionChange = (session: 'yes' | 'no'): void => {
+    this.auth.setIsAuthenticated(session === 'yes')
+    if (session === 'yes') {
+      this.onLogin()
+    } else {
+      this.onLogout()
+    }
   }
 
   @action

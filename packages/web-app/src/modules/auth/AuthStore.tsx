@@ -1,5 +1,5 @@
 import type { AxiosInstance } from 'axios'
-import { action, flow, observable, runInAction } from 'mobx'
+import { action, flow, observable } from 'mobx'
 import type { RootStore } from '../../Store'
 import { config } from '../../config'
 import { NotificationMessageCategory } from '../notifications/models'
@@ -30,18 +30,16 @@ export class AuthStore {
   constructor(
     private readonly store: RootStore,
     private readonly axios: AxiosInstance,
-  ) {
-    this.axios
-      .get('/api/v1/profile')
-      .then(() => runInAction(() => (this.isAuthenticated = true)))
-      .catch(() => runInAction(() => (this.isAuthenticated = false)))
-  }
+    /** Records a sign-in or sign-out in the session query (src/data/session.ts), which sets `isAuthenticated`. */
+    private readonly setSession: (session: 'yes' | 'no') => void,
+  ) {}
 
   @action
   public login = async (redirectUri?: string): Promise<void> => {
     // Don't do anything if we are already logged in
     try {
-      await this.axios.get('/api/v1/profile').then(() => runInAction(() => (this.isAuthenticated = true)))
+      await this.axios.get('/api/v1/profile')
+      this.setSession('yes')
     } catch {
       const routeWithoutTrailingSlash = redirectUri ?? this.store.routing.location.pathname.slice(1)
 
@@ -57,9 +55,7 @@ export class AuthStore {
       console.error(error)
     }
 
-    runInAction(() => {
-      this.isAuthenticated = false
-    })
+    this.setSession('no')
 
     if (this.store.routing.location.pathname.includes('onboarding')) {
       this.store.routing.replace('/store')
@@ -85,7 +81,7 @@ export class AuthStore {
     })
   }
 
-  /** Called for changing isAuthenticated status */
+  /** Mirrors the session query (src/data/session.ts); call setSession to change it. */
   @action
   public setIsAuthenticated = (isAuthenticated: boolean) => {
     this.isAuthenticated = isAuthenticated

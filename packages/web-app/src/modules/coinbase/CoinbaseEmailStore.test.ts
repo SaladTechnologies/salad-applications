@@ -8,22 +8,10 @@ vi.mock('axios', () => ({
   __esModule: true,
   default: { isAxiosError: (error: any) => !!(error && error.isAxiosError) },
 }))
-vi.mock('../../axiosFactory', () => ({
-  SaladError: class SaladError extends Error {
-    status: number
-    type: string
-
-    constructor(status: number, type: string) {
-      super(type)
-      this.status = status
-      this.type = type
-    }
-  },
-}))
 
 import type { AxiosInstance } from 'axios'
 import type { RootStore } from '../../Store'
-import { SaladError } from '../../axiosFactory'
+import { SaladError } from '../../data/salad-error.ts'
 import { CoinbaseEmailStore } from './CoinbaseEmailStore'
 import {
   coinbaseEmailDisabledProblemType,
@@ -159,7 +147,7 @@ describe('CoinbaseEmailStore', () => {
 
   it('flags a disabled error and notifies when the server refuses the feature', async () => {
     const rootStore = makeRootStore()
-    const put = vi.fn().mockRejectedValue(new SaladError(403, coinbaseEmailDisabledProblemType))
+    const put = vi.fn().mockRejectedValue(new SaladError({ status: 403, type: coinbaseEmailDisabledProblemType }))
     const store = makeEnabledStore(rootStore, makeAxios({ put }))
 
     await store.setEmail(EMAIL)
@@ -171,7 +159,7 @@ describe('CoinbaseEmailStore', () => {
   })
 
   it('flags an invalid error when the server rejects the format', async () => {
-    const put = vi.fn().mockRejectedValue(new SaladError(400, coinbaseEmailInvalidProblemType))
+    const put = vi.fn().mockRejectedValue(new SaladError({ status: 400, type: coinbaseEmailInvalidProblemType }))
     const store = makeEnabledStore(makeRootStore(), makeAxios({ put }))
 
     await store.setEmail('not-an-email')

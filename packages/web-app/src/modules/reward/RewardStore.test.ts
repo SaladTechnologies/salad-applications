@@ -8,7 +8,6 @@ vi.mock('axios', () => ({
   __esModule: true,
   default: { isAxiosError: (error: any) => !!(error && error.isAxiosError) },
 }))
-vi.mock('../../axiosFactory', () => ({ SaladError: class SaladError extends Error {} }))
 vi.mock('../salad-pay', () => ({ AbortError: class AbortError extends Error {} }))
 vi.mock('../salad-pay/SaladPay', () => ({
   SaladPay: class SaladPay {
