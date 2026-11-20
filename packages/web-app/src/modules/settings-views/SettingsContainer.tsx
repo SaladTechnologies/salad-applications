@@ -1,9 +1,10 @@
+import { useReferralCode } from '../../account/referrals.ts'
 import type { RootStore } from '../../Store'
 import { SettingsPage } from '../../components'
 import { config } from '../../config'
 import { connect } from '../../connect'
 
-const mapStoreToProps = (store: RootStore): any => {
+const mapStoreToProps = (store: RootStore, props: { isUserReferralsEnabled: boolean }): any => {
   return {
     appBuild: config.appBuild,
     menuButtons: store.auth.isAuthenticated
@@ -17,7 +18,7 @@ const mapStoreToProps = (store: RootStore): any => {
           },
         ]
       : [],
-    isUserReferralsEnabled: store.referral.isUserReferralsEnabled,
+    isUserReferralsEnabled: props.isUserReferralsEnabled,
     onClose: () => {
       store.analytics.trackSmartLink('/store', 'Back')
       store.routing.goBackOr('/store')
@@ -25,4 +26,7 @@ const mapStoreToProps = (store: RootStore): any => {
   }
 }
 
-export const SettingsContainer = connect(mapStoreToProps, SettingsPage)
+const ConnectedSettings = connect(mapStoreToProps, SettingsPage)
+
+/** The settings page around the account pages. Its menu shows the referrals page only while referrals are enabled. */
+export const SettingsContainer = () => <ConnectedSettings isUserReferralsEnabled={useReferralCode().enabled} />

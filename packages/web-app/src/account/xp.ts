@@ -2,7 +2,7 @@ import type { QueryClient } from '@tanstack/react-query'
 import { skipToken, useQuery } from '@tanstack/react-query'
 import type { AxiosInstance } from 'axios'
 
-/** The query key of the signed-in user's lifetime XP (minutes chopped). Sign-out removes it. */
+/** The query key of the signed-in user's lifetime XP (minutes chopped). Sign-out resets it. */
 export const xpQueryKey = ['account', 'xp'] as const
 
 /** Returns a function that fetches the signed-in user's lifetime XP. */

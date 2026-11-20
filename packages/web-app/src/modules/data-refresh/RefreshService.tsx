@@ -24,7 +24,7 @@ export class RefreshService {
     try {
       this.store.balance.refreshBalanceAndHistory()
       this.store.rewards.fetchSelectedTargetReward()
-      this.store.referral.loadReferrals()
+      this.store.referrals.loadReport()
       this.store.vault.loadVault()
       this.store.xp.load()
       this.store.profile.loadAvatars()

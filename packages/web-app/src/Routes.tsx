@@ -1,3 +1,4 @@
+import { useReferralCode } from './account/referrals.ts'
 import { useAppRefresh } from './app/app-refresh.ts'
 import { config } from './config'
 import { LoadingScreen } from '@saladtechnologies/garden-components'
@@ -16,7 +17,6 @@ import type { ReactNode } from 'react'
 import { useMemo, useState } from 'react'
 import { App } from './App'
 import { ByDevice, ErrorBoundary, Head, MobilePageNotFound, NoPageFound } from './components'
-import { connect } from './connect'
 import { useSession } from './data/session.ts'
 import { MobileAccountSummaryContainer } from './modules/account-views-mobile'
 import { AccountContainer } from './modules/account-views/account-views'
@@ -141,10 +141,7 @@ const storefrontPages = [
 ]
 
 /** The referrals page, which exists only while referrals are enabled for the user. */
-const Referrals = connect(
-  (store) => ({ enabled: store.referral.isUserReferralsEnabled }),
-  ({ enabled }: { enabled: boolean }) => (enabled ? signedIn(<ReferralSettingsContainer />) : <NoPageFound />),
-)
+const Referrals = () => (useReferralCode().enabled ? signedIn(<ReferralSettingsContainer />) : <NoPageFound />)
 
 const settingsPages = [
   page('account/summary/$', () => <AccountSummary />, settingsRoute),

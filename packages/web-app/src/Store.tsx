@@ -1,5 +1,7 @@
 import type { AxiosInstance } from 'axios'
 import { action, configure, flow, observable, runInAction } from 'mobx'
+import type { Terms } from './account/terms.ts'
+import { createTerms } from './account/terms.ts'
 import { ErrorBoundaryBridge } from './app/error-boundary.ts'
 import type { Toasts } from './app/toasts.ts'
 import { createToasts } from './app/toasts.ts'
@@ -19,11 +21,9 @@ import { NotificationToast } from './modules/notifications-views/components'
 import { PasskeyStore } from './modules/passkey-setup'
 import { ProfileStore } from './modules/profile'
 import type { Profile } from './modules/profile/models'
-import { ReferralStore } from './modules/referral'
 import { RenderStore } from './modules/render'
 import { RewardStore } from './modules/reward'
 import { SolanaWalletStore } from './modules/solana-wallet'
-import { TermsAndConditionsStore } from './modules/terms-and-conditions'
 import { VaultStore } from './modules/vault'
 
 configure({
@@ -32,6 +32,16 @@ configure({
   // observableRequiresReaction: process.env.NODE_ENV === 'development',
   // reactionRequiresObservable: process.env.NODE_ENV === 'development',
 })
+
+/** Loads the signed-in user's referral data (src/account/referrals.ts). */
+interface ReferralsAccess {
+  /** Loads the referrals report now. */
+  loadReport: () => void
+  /** Loads the referral code, and whether referrals are enabled, now. */
+  loadCode: () => Promise<void>
+  /** Loads the referral the user signed up with now. */
+  loadCurrent: () => Promise<void>
+}
 
 /** Loads and reads the signed-in user's lifetime XP (src/account/xp.ts). */
 interface XpAccess {
@@ -49,11 +59,12 @@ export const createStore = (
   navigation: Navigation,
   loadBanner: () => void,
   xp: XpAccess,
+  referrals: ReferralsAccess,
 ): RootStore => {
   // Vite compiles decorators the TypeScript way, so each store's field initializers are writes in its constructor.
   // `enforceActions: 'always'` rejects writes outside an action, so construct inside one. (CRA's Babel set initial
   // values without a write.)
-  sharedStore = runInAction(() => new RootStore(axios, setSession, navigation, loadBanner, xp))
+  sharedStore = runInAction(() => new RootStore(axios, setSession, navigation, loadBanner, xp, referrals))
   return sharedStore
 }
 
@@ -66,14 +77,16 @@ export class RootStore {
   public appLoading: boolean = true
   public appStartTime: Date = new Date()
   public readonly auth: AuthStore
-  public readonly termsAndConditions: TermsAndConditionsStore
+  /** The acceptance of the terms and conditions (src/account/terms.ts), which the account page and sign-in share. */
+  public readonly terms: Terms
   public readonly analytics: AnalyticsStore
   public readonly routing: Navigation
   public readonly rewards: RewardStore
   public readonly render: RenderStore
   public readonly balance: BalanceStore
   public readonly profile: ProfileStore
-  public readonly referral: ReferralStore
+  /** Loads the signed-in user's referral data (src/account/referrals.ts): sign-in and the app-wide refresh run it. */
+  public readonly referrals: ReferralsAccess
   public readonly refresh: RefreshService
   /** Shows notifications as toasts. */
   public readonly notifications: Toasts<NotificationMessage>
@@ -101,10 +114,12 @@ export class RootStore {
     navigation: Navigation,
     loadBanner: () => void,
     xp: XpAccess,
+    referrals: ReferralsAccess,
   ) {
     this.routing = navigation
     this.loadBanner = loadBanner
     this.xp = xp
+    this.referrals = referrals
     this.auth = new AuthStore(this, axios, setSession)
     this.notifications = createToasts<NotificationMessage>({
       render: (message, onClick) => (
@@ -116,12 +131,15 @@ export class RootStore {
     })
 
     this.profile = new ProfileStore(this, axios)
-    this.termsAndConditions = new TermsAndConditionsStore(axios, this.profile)
+    this.terms = createTerms({
+      http: axios,
+      pendingVersion: () => this.profile.currentProfile?.pendingTermsVersion,
+      onAccepted: (profile) => this.profile.setProfileData(profile as Profile),
+    })
     this.rewards = new RewardStore(this, axios, this.profile)
     this.render = new RenderStore()
     this.analytics = new AnalyticsStore(this.auth)
     this.balance = new BalanceStore(axios)
-    this.referral = new ReferralStore(this, axios)
     this.refresh = new RefreshService(this)
     this.vault = new VaultStore(axios, this.balance, this.rewards)
     this.engagement = new EngagementStore(this, axios)
@@ -141,11 +159,10 @@ export class RootStore {
    */
   userDataStores = () => [
     this.auth,
-    this.termsAndConditions,
+    this.terms,
     this.balance,
     this.bonuses,
     this.vault,
-    this.referral,
     this.profile,
     this.rewards,
     this.solanaWallet,
@@ -195,8 +212,8 @@ export class RootStore {
 
       yield Promise.allSettled([
         this.analytics.start(profile),
-        this.referral.loadCurrentReferral(),
-        this.referral.loadReferralCode(),
+        this.referrals.loadCurrent(),
+        this.referrals.loadCode(),
         this.refresh.refreshData(),
         this.dedicatedNodes.loadEnrollment(),
         this.helpScout.login({
@@ -206,10 +223,10 @@ export class RootStore {
         }),
       ])
 
-      const isTermsAndConditionsAccepted = this.termsAndConditions.isTermsAndConditionsAccepted
+      const isTermsAndConditionsAccepted = this.terms.get().accepted
 
       if (profile.pendingTermsVersion && isTermsAndConditionsAccepted) {
-        yield this.termsAndConditions.submitTermsAndConditions()
+        yield this.terms.submit()
       }
 
       this.finishInitialLoading()
@@ -218,8 +235,8 @@ export class RootStore {
 
   @action
   onLogout = (): void => {
-    this.referral.currentReferral = undefined
-    this.referral.referralCode = ''
+    // The referral code and the user's referral, which this cleared, are forgotten with the rest of the user's data
+    // (src/app/forget-user.ts), right after.
     this.dedicatedNodes.reset()
 
     this.analytics.trackLogout()
