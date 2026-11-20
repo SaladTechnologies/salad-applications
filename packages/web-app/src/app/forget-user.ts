@@ -23,7 +23,8 @@ export const forgetSignedOutUser = (stores: readonly UserDataStore[], queryClien
   }
   // Resetting a query cancels a load still running and empties it, and tells every component still showing it, so none
   // keeps the old user's data (the settings menu's referrals link, for one); removing it would leave them showing it. It
-  // loads nothing now; the next page that opens loads the new user's data, histories included.
+  // loads nothing now: the pages that load these (histories, achievements, subscriptions) load the new user's when they
+  // open, and sign-in and the app-wide refresh load the XP and referral data.
   for (const queryKey of [
     machineEarningsHistoryQueryKey,
     achievementsQueryKey,

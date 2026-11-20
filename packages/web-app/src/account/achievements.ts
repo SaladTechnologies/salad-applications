@@ -15,7 +15,7 @@ export interface Achievement {
   name: string
 }
 
-/** The query key of the account's achievements, which the achievements page shows. Sign-out removes it. */
+/** The query key of the account's achievements, which the achievements page shows. Sign-out resets it. */
 export const achievementsQueryKey = ['account', 'achievements'] as const
 
 /**
