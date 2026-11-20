@@ -8,5 +8,5 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "types": ["node"]
   },
-  "include": ["*.config.ts"]
+  "include": ["*.config.ts", "scripts/**/*"]
 }
