@@ -109,10 +109,11 @@ and `react-aspect-ratio` are; prefer a named export when the package has one tha
   until their area is rebuilt; never mix Tailwind classes into an old component.
 - `src/ui/tailwind.css` loads Tailwind's theme and utilities, not its Preflight reset, so the old pages look exactly as
   before. Without Preflight, a component resets what the browser's own styles set (a button's border, background,
-  margin, and font: see `button-variants.ts`). The layered utilities lose to the old unlayered CSS, so a Tailwind class
-  never changes an old element.
-- Tailwind scans only `src/ui/` (`@source` in `tailwind.css`). A rebuilt area that moves out of `src/ui/` adds its
-  folder there.
+  margin, padding, font, box sizing, and underline: see `button-variants.ts`). The layered utilities lose to the old
+  unlayered CSS wherever both set the same property.
+- Tailwind scans only `src/ui/`, minus tests (`@source` in `tailwind.css`). It turns every word of a scanned file that
+  names a utility into a global class, so a plain word that is not meant as a class (`container`, `outline`) goes in the
+  `@source not inline(...)` list. A rebuilt area that moves out of `src/ui/` adds its folder there.
 - Use the theme's tokens, not raw values: `salad-*` colors, font sizes (`text-salad-small`), and fonts, which match
   `SaladTheme`, and shadcn's semantic colors (`bg-primary`, `text-foreground`, `border-border`). Add a token to `@theme`
   in `tailwind.css`; a new `salad-*` font size also goes in `cn.ts`, or `cn` reads it as a color.

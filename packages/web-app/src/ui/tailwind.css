@@ -1,7 +1,7 @@
 /*
- * Tailwind for the rebuilt UI. It runs next to the react-jss and Emotion (garden) styles of the code the rebuild has not
- * rewritten yet, so it leaves Preflight out: Tailwind's reset would restyle every existing page. Components in this
- * folder reset the browser defaults they rely on themselves (see button.tsx).
+ * Tailwind for the rebuilt UI. It runs next to the react-jss and Emotion (garden) styles of the code the rebuild has
+ * not rewritten yet, so it leaves Preflight out: Tailwind's reset would restyle every existing page. Components in
+ * this folder reset the browser defaults they rely on themselves (see button-variants.ts).
  *
  * Tailwind's layers lose to unlayered CSS, so the existing react-jss and global styles keep winning where they meet.
  */
@@ -10,10 +10,14 @@
 @import 'tailwindcss/theme.css' layer(theme);
 /*
  * Scan only the rebuilt code (this folder) for class names. The old code uses plain class names (`container`,
- * `hidden`, ...) that would otherwise turn into Tailwind utilities and restyle it.
+ * `hidden`, ...) that would otherwise turn into Tailwind utilities and restyle it. Tailwind reads every word of a
+ * scanned file, so tests are left out, and so are plain words this folder uses that are not meant as classes (the
+ * `outline` variant's name): each would become a global class that could match an old element or CMS HTML.
  */
 @import 'tailwindcss/utilities.css' layer(utilities) source(none);
 @source './**/*.{ts,tsx}';
+@source not './**/*.test.{ts,tsx}';
+@source not inline('container outline');
 
 /* SaladTheme (src/SaladTheme.tsx), as `salad-` tokens: bg-salad-dark-blue, text-salad-small, font-salad-mallory. */
 @theme {

@@ -2,8 +2,8 @@ import type { ClassValue } from 'clsx'
 import { clsx } from 'clsx'
 import { extendTailwindMerge } from 'tailwind-merge'
 
-// The tailwind-merge package only knows Tailwind's own font sizes. Without these, it reads `text-salad-small` as a color and drops
-// it when a `text-salad-*` color follows (src/ui/tailwind.css defines both).
+// The tailwind-merge package only knows Tailwind's own font sizes. Without these, it reads `text-salad-small` as a
+// color and drops it when a `text-salad-*` color follows (src/ui/tailwind.css defines both).
 const twMerge = extendTailwindMerge({
   extend: {
     theme: {

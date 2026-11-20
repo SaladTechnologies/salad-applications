@@ -2,11 +2,14 @@ import { cva } from 'class-variance-authority'
 
 /**
  * The button's classes for each variant and size (shadcn/ui's Button). Without Tailwind's Preflight (see tailwind.css),
- * the base classes reset what the browser's button style sets: border, background, margin, and font.
+ * the base classes reset what the browser's button and link styles set: border, background, margin, padding, font, box
+ * sizing, and underline. The font reset names its type (`family-name`): tailwind-merge reads a bare `font-[...]` as a
+ * weight, so `font-medium` would drop it.
  */
 export const buttonVariants = cva(
   [
-    'm-0 inline-flex cursor-pointer items-center justify-center gap-2 border-0 border-solid bg-transparent font-[inherit]',
+    'm-0 box-border inline-flex cursor-pointer items-center justify-center gap-2 border-0 border-solid bg-transparent p-0',
+    'font-[family-name:inherit] no-underline',
     'rounded-md text-salad-medium font-medium whitespace-nowrap transition-colors outline-none',
     'focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
   ],
