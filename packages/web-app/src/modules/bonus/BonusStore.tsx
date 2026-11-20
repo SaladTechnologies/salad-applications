@@ -179,6 +179,8 @@ export class BonusStore {
     if (this.replacementEarningRateBonusId) {
       this.replaceEarningRate = true
       this.claimBonus(this.replacementEarningRateBonusId)
+      // The modal closes now; a stale ID would let forward reopen it with nothing to replace.
+      this.replacementEarningRateBonusId = undefined
     }
   }
 }

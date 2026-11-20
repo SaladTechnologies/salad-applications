@@ -25,6 +25,11 @@ export interface Navigation {
   replace: (path: string, state?: Readonly<Record<string, unknown>>) => void
   /** Goes back one history entry. */
   goBack: () => void
+  /**
+   * Goes back one history entry when the app has one to go back to, and otherwise replaces this entry with the
+   * fallback. So closing a page opened by a link from another site, or by a refresh of that page, stays in the app.
+   */
+  goBackOr: (fallback: string) => void
 }
 
 /** Returns the path and query string of a path that may carry a query string and hash. */
@@ -57,6 +62,15 @@ export const createNavigation = (history: RouterHistory): Navigation => {
     },
     goBack: () => {
       history.back()
+    },
+    goBackOr: (fallback) => {
+      // The router numbers the app's history entries from 0, the page the app started on, and keeps the number on a
+      // refresh. Before that page, the history (if any) belongs to another site.
+      if (history.canGoBack()) {
+        history.back()
+      } else {
+        history.replace(fallback)
+      }
     },
   }
 }

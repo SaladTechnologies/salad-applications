@@ -9,12 +9,13 @@ export class UIStore {
     this.store.routing.push(url)
   }
 
+  /** Closes the modal page: back to where the user came from, or to the fallback when they opened it directly. */
   @action
-  hideModal = (trackModalClosed?: boolean) => {
+  hideModal = (fallback: string, trackModalClosed?: boolean) => {
     if (trackModalClosed) {
       this.store.analytics.trackButtonClicked('modal_close_button', 'Modal Close Button', 'enabled')
     }
 
-    this.store.routing.goBack()
+    this.store.routing.goBackOr(fallback)
   }
 }

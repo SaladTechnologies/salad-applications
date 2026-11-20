@@ -11,7 +11,7 @@ import {
 } from '@tanstack/react-router'
 import { Observer } from 'mobx-react'
 import type { ReactNode } from 'react'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { App } from './App'
 import { ByDevice, ErrorBoundary, Head, MobilePageNotFound, NoPageFound } from './components'
 import { connect } from './connect'
@@ -66,7 +66,10 @@ const useMatchId = () => {
 /** The rest of the path below a `$` route: empty when the URL is the route's own path. */
 const useSplat = () => useParams({ strict: false })._splat ?? ''
 
-const RewardDetails = () => <RewardDetailsContainer match={useMatchId()} />
+/** A reward's page. Its back button goes to `backFallback` when the page was opened directly. */
+const RewardDetails = ({ backFallback }: { backFallback: string }) => (
+  <RewardDetailsContainer match={useMatchId()} backFallback={backFallback} />
+)
 
 const PasskeyDelete = () => signedIn(<PasskeyDeletePageContainer match={useMatchId()} />)
 
@@ -183,24 +186,39 @@ const Earn = () => {
   return isEarn && session === 'yes' ? <Redirect to="/earn/summary" /> : <EarnInfoPage />
 }
 
+/**
+ * The replace-bonus modal, while a claimed bonus waits to replace the current one. Opened without one (a refresh, a
+ * link, or forward again after closing or confirming it), it has nothing to replace, so it goes to the bonuses page
+ * instead. It checks once, when it opens: closing or confirming it clears the bonus, and must not redirect.
+ */
+const ReplaceBonus = () => {
+  const [hasBonus] = useState(() => getStore().bonuses.replacementEarningRateBonusId !== undefined)
+  return hasBonus ? <ReplaceBonusModalContainer /> : <Redirect to="/account/bonuses" />
+}
+
 /** `/search`: the store's search, keeping the query string and hash. */
 const SearchRedirect = () => <Redirect to={`/store/search${useQueryAndHash()}`} />
 
 /** `/rewards/$id`: the reward's page, which is at `/store/rewards/$id` on desktop. */
 const LegacyRewardRoute = () => {
   const { params } = useMatchId()
-  return <ByDevice desktop={<Redirect to={`/store/rewards/${params.id}`} />} mobile={<RewardDetails />} />
+  return (
+    <ByDevice
+      desktop={<Redirect to={`/store/rewards/${params.id}`} />}
+      mobile={<RewardDetails backFallback="/account/summary" />}
+    />
+  )
 }
 
 const routeTree = rootRoute.addChildren([
   page('/', () => <ByDevice desktop={<Redirect to="/store" />} mobile={<MobilePageNotFound />} />),
   storefrontRoute.addChildren(storefrontPages),
-  page('store/rewards/$id', desktopOnly(<RewardDetails />)),
+  page('store/rewards/$id', desktopOnly(<RewardDetails backFallback="/store" />)),
   page('store/vault', desktopOnly(signedIn(<VaultListContainer />))),
   page('store/select-target-reward', desktopOnly(<SelectTargetRewardContainer />)),
   // Modals. SaladPay: this is a stand-in until we figure out iFrames, popups...
   page('salad-pay/order-summary', desktopOnly(<SaladPayOrderSummaryContainer />)),
-  page('bonuses/replace-bonus', desktopOnly(<ReplaceBonusModalContainer />)),
+  page('bonuses/replace-bonus', desktopOnly(<ReplaceBonus />)),
   // Account
   page('account/exit-survey/$', desktopOnly(<ExitSurveyContainer />)),
   page('account/passkey/delete/$id', () => <PasskeyDelete />),
