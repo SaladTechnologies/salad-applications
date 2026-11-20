@@ -532,29 +532,33 @@ describe('RewardStore.redeemReward SaladPay order', () => {
   })
 })
 
-describe('RewardStore.resetUserData', () => {
-  it('keeps the redemption id and reward while a redemption is in progress', async () => {
-    const { store, open } = setup(vi.fn().mockResolvedValue({ data: { status: 'complete' } }))
+describe('RewardStore redemption id', () => {
+  it('is reused to retry the same reward for the same user, also after sign-out', async () => {
+    const { store, open, handlers, rootStore } = setup(vi.fn().mockResolvedValue({ data: { status: 'complete' } }))
+    Reflect.set(rootStore.profile, 'currentProfile', { id: 'chef-a', redemptionTfaEnabled: false })
 
     await open(makeReward())
-    const id = redemptionIdOf(store)
-    store.resetUserData()
-
-    expect(id).toBeDefined()
-    expect(redemptionIdOf(store)).toBe(id)
-    expect(store.lastRewardId).toBe('reward-1')
-    expect(store.isRedeeming).toBe(true)
-  })
-
-  it('forgets the redemption id and reward when no redemption is in progress', async () => {
-    const { store, open, handlers } = setup(vi.fn().mockResolvedValue({ data: { status: 'complete' } }))
-
-    await open(makeReward())
+    const first = redemptionIdOf(store)
     await handlers()?.abort()
     store.resetUserData()
+    await open(makeReward())
 
-    expect(redemptionIdOf(store)).toBeUndefined()
-    expect(store.lastRewardId).toBeUndefined()
-    expect(store.isRedeeming).toBe(false)
+    expect(first).toBeDefined()
+    expect(redemptionIdOf(store)).toBe(first)
+  })
+
+  it('is never reused for another user', async () => {
+    const { store, open, handlers, rootStore } = setup(vi.fn().mockResolvedValue({ data: { status: 'complete' } }))
+    Reflect.set(rootStore.profile, 'currentProfile', { id: 'chef-a', redemptionTfaEnabled: false })
+
+    await open(makeReward())
+    const first = redemptionIdOf(store)
+    await handlers()?.abort()
+    store.resetUserData()
+    Reflect.set(rootStore.profile, 'currentProfile', { id: 'chef-b', redemptionTfaEnabled: false })
+    await open(makeReward())
+
+    expect(redemptionIdOf(store)).toBeDefined()
+    expect(redemptionIdOf(store)).not.toBe(first)
   })
 })
