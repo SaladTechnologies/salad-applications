@@ -187,7 +187,7 @@ export class BalanceStore {
         throw new Error('There are no current earning rates per machine id')
       })
       .catch((error) => {
-        console.error('BalanceStore.fetchCurrentEarningRatesPerMachine: ', error)
+        console.error('BalanceStore.loadCurrentEarningRatesPerMachine: ', error)
       })
 
   /**
@@ -212,7 +212,7 @@ export class BalanceStore {
         throw new Error('There are no earning per machines')
       })
       .catch((error) => {
-        console.error('BalanceStore.getMultipleMachinesEarnings: ', error)
+        console.error('BalanceStore.loadEarningsPerMachine: ', error)
       })
 
   private getEarningWindowsPerMachine = (chartsDaysShowing: ChartDaysShowing): EarningPerMachine => {

@@ -96,7 +96,7 @@ describe('machine earnings', () => {
     expect(loadHistory.mock.calls).toStrictEqual([[]])
   })
 
-  it('reuses the histories for an hour when a page opens again, but loads the rates again', async () => {
+  it('reuses the histories when a page opens again, but loads the rates again', async () => {
     expect.hasAssertions()
     const queryClient = createQueryClient()
     const loadHistory = vi.fn<() => Promise<unknown>>().mockResolvedValue(null)
