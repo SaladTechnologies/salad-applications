@@ -43,8 +43,6 @@ interface Props extends WithStyles<typeof styles> {
   currentHourlyEarningRatesPerMachine: CurrentHourlyEarningRatesPerMachine
   fetchCurrentEarningRatesPerMachine: (machineIds?: string[]) => void
   fetchEarningsPerMachine: () => void
-  startRedemptionsRefresh: () => void
-  stopRedemptionsRefresh: () => void
   navigateToRewardVaultPage: () => void
   trackAndNavigateToRewardVaultPage: () => void
   trackEarnPageFAQLinkClicked: (faqLink: string) => void
@@ -67,8 +65,6 @@ const _EarningSummaryPage: FC<Props> = ({
   currentHourlyEarningRatesPerMachine,
   fetchCurrentEarningRatesPerMachine,
   fetchEarningsPerMachine,
-  startRedemptionsRefresh,
-  stopRedemptionsRefresh,
   trackAndNavigateToRewardVaultPage,
   trackEarnPageFAQLinkClicked,
   trackEarnPageViewed,
@@ -108,13 +104,8 @@ const _EarningSummaryPage: FC<Props> = ({
   }, [fetchCurrentEarningRatesPerMachine, pageMachineIds])
 
   useEffect(() => {
-    startRedemptionsRefresh()
     trackEarnPageViewed()
-
-    return () => {
-      stopRedemptionsRefresh()
-    }
-  }, [startRedemptionsRefresh, stopRedemptionsRefresh, trackEarnPageViewed])
+  }, [trackEarnPageViewed])
 
   const latestCompletedRedeemedRewardsArray: RedeemedReward[] = Array.from(latestCompletedRedeemedRewards.values())
 

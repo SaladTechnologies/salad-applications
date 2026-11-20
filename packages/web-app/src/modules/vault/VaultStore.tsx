@@ -1,6 +1,6 @@
 import type { AxiosInstance, AxiosResponse } from 'axios'
 import { action, flow, observable } from 'mobx'
-import { convertMinToMilli } from '../../utils'
+import { fetchVault } from '../../rewards/vault.ts'
 import type { BalanceStore } from '../balance'
 import type { RedeemedReward } from '../balance/models/RedeemedReward'
 import type { RewardStore } from '../reward'
@@ -10,8 +10,6 @@ import type { RewardVaultItem, RewardVaultResource } from './models'
 import { RewardVaultStatus } from './models'
 
 export class VaultStore {
-  private refreshTimer?: NodeJS.Timeout
-
   @observable
   public redemptions: RewardVaultItem[] = []
 
@@ -30,9 +28,9 @@ export class VaultStore {
   @action.bound
   loadVault = flow(function* (this: VaultStore) {
     try {
-      var response = yield this.axios.get<RewardVaultResource[]>('/api/v1/reward-vault')
+      const resources: RewardVaultResource[] = yield fetchVault(this.axios)
 
-      this.redemptions = response.data.map(this.rewardVaultFromResource)
+      this.redemptions = resources.map(this.rewardVaultFromResource)
       this.checkForCurrentRedemption(this.redemptions)
     } catch {}
   })
@@ -91,36 +89,16 @@ export class VaultStore {
     timestamp: new Date(rewardVaultItem.timestamp),
   })
 
+  /**
+   * Refreshes what the vault and earnings pages show: the latest completed rewards (from the vault as it was), then the
+   * vault, then the balance. `useVaultRefresh` runs it when such a page opens and every 2 minutes while it is open.
+   */
   @action.bound
-  startRefresh = flow(function* (this: VaultStore) {
-    //Reload completed redeemed rewards
+  refresh = flow(function* (this: VaultStore) {
     yield this.loadLatestCompletedRedeemedRewards()
-
-    //Reload the vault
     yield this.loadVault()
-
-    // Reload balance
     yield this.balance.refreshBalance()
-
-    // Start a timer to keep the vault refreshed
-    this.refreshTimer = setInterval(async () => {
-      await this.loadLatestCompletedRedeemedRewards()
-      await this.loadVault()
-      await this.balance.refreshBalance()
-    }, convertMinToMilli(2))
-
-    console.log('Started reward vault and balance refresh')
   })
-
-  @action
-  stopRefresh = () => {
-    console.log('Stopping reward vault and balance refresh')
-
-    if (this.refreshTimer) {
-      clearInterval(this.refreshTimer)
-      this.refreshTimer = undefined
-    }
-  }
 
   @action
   addRewardToRedemptionsList = (reward: RewardVaultItem) => {

@@ -1,33 +1,22 @@
-import { describe, expect, it, vi } from 'vitest'
-import type { Mock } from 'vitest'
-import type { AxiosInstance } from 'axios'
+import { describe, expect, it } from 'vitest'
 import { RenderStore } from './RenderStore'
 
-const makeAxios = (get: Mock): AxiosInstance => ({ get }) as unknown as AxiosInstance
-
 describe('RenderStore', () => {
-  it('fetches and stores the quote', async () => {
-    const get = vi.fn().mockResolvedValue({
-      data: { usdPrice: 2.5, quotedAt: '2026-06-24T00:00:00.000Z', expiresAt: '2026-06-24T00:01:00.000Z' },
-    })
-    const store = new RenderStore(makeAxios(get))
+  it('holds the quote it is given', () => {
+    const store = new RenderStore()
+    const exchangeRate = { rate: 2.5, asOf: new Date(), expiresAt: new Date(Date.now() + 60_000) }
 
-    await store.fetchExchangeRate()
+    store.setExchangeRate(exchangeRate)
 
-    expect(get).toHaveBeenCalledWith('/api/v2/render/exchange-rate')
-    expect(store.exchangeRate?.rate).toBe(2.5)
-    expect(store.hasExchangeRateError).toBe(false)
-    expect(store.isLoadingExchangeRate).toBe(false)
+    expect(store.exchangeRate).toMatchObject({ rate: 2.5 })
+    expect(store.isExchangeRateStale).toBe(false)
   })
 
-  it('flags an error and clears loading when the request fails', async () => {
-    const get = vi.fn().mockRejectedValue(new Error('boom'))
-    const store = new RenderStore(makeAxios(get))
+  it('treats an expired quote as stale', () => {
+    const store = new RenderStore()
 
-    await store.fetchExchangeRate()
+    store.setExchangeRate({ rate: 2.5, asOf: new Date(0), expiresAt: new Date(1) })
 
-    expect(store.hasExchangeRateError).toBe(true)
-    expect(store.exchangeRate).toBeUndefined()
-    expect(store.isLoadingExchangeRate).toBe(false)
+    expect(store.isExchangeRateStale).toBe(true)
   })
 })
