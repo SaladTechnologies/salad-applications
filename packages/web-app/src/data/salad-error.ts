@@ -1,17 +1,20 @@
 import type { AxiosResponse } from 'axios'
 
 /** The message to show for each App API problem type (the server's `ErrorTypes.cs`). */
-const messages: Readonly<Record<string, string>> = {
-  'general:unknown': 'Unknown Error',
-  'redemptions:insufficientBalance': `Must construct additional pylons ...just kidding! You balance isn't enough to redeem this reward, try again after you’ve earned some more`,
-  'redemptions:disabled': 'Redemptions are currently disabled, please try again later.',
-  'rewards:notFound': 'Reward not found',
-  'rewards:outOfStock': 'This reward has run out. Check back later!',
-  'users:notFound': 'User not found',
-}
+const messages: ReadonlyMap<string, string> = new Map([
+  ['general:unknown', 'Unknown Error'],
+  [
+    'redemptions:insufficientBalance',
+    `Must construct additional pylons ...just kidding! You balance isn't enough to redeem this reward, try again after you’ve earned some more`,
+  ],
+  ['redemptions:disabled', 'Redemptions are currently disabled, please try again later.'],
+  ['rewards:notFound', 'Reward not found'],
+  ['rewards:outOfStock', 'This reward has run out. Check back later!'],
+  ['users:notFound', 'User not found'],
+])
 
 /** Returns the message to show for an App API problem type. */
-const messageOf = (type: string): string => (type === '' ? 'Unknown Error' : (messages[type] ?? 'Unknown error'))
+const messageOf = (type: string): string => (type === '' ? 'Unknown Error' : (messages.get(type) ?? 'Unknown error'))
 
 /** The problem a {@link SaladError} reports. */
 export interface Problem {

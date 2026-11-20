@@ -122,7 +122,7 @@ export class RootStore {
     this.refresh.start()
   }
 
-  /** Mirrors the session (src/data/session.tsx) into the stores: called when it becomes known and when it changes. */
+  /** Mirrors the session (src/data/session.ts) into the stores: called when it becomes known and when it changes. */
   onSessionChange = (session: 'yes' | 'no'): void => {
     this.auth.setIsAuthenticated(session === 'yes')
     if (session === 'yes') {

@@ -7,7 +7,7 @@ import { SaladError } from './salad-error.ts'
 
 const baseURL = 'https://app-api.test'
 
-/** A response the fake App API sends: a status, a body, and headers. */
+/** A response the fake App API sends: a status (0 for no response), a body, and headers. */
 interface Reply {
   status: number
   data?: unknown
@@ -29,6 +29,9 @@ const setUp = (...replies: Reply[]): Setup => {
   const adapter: AxiosAdapter = async (config) => {
     requests.push(config)
     const reply = replies.shift() ?? { status: 200 }
+    if (reply.status === 0) {
+      throw new AxiosError('Network Error', AxiosError.ERR_NETWORK, config)
+    }
     const response = {
       data: reply.data ?? {},
       status: reply.status,
@@ -109,6 +112,18 @@ describe('createHttpClient', () => {
       title: 'Out of stock',
       message: 'This reward has run out. Check back later!',
     })
+  })
+
+  it('passes a request that got no response through unchanged', async () => {
+    expect.hasAssertions()
+    const { client, onUnauthorized, onSudoRequired } = setUp({ status: 0 })
+    await expect(client.post('/api/v2/redemptions')).rejects.toMatchObject({
+      name: 'AxiosError',
+      code: AxiosError.ERR_NETWORK,
+    })
+
+    expect(onUnauthorized).not.toHaveBeenCalled()
+    expect(onSudoRequired).not.toHaveBeenCalled()
   })
 
   it('retries a GET that failed on the server, but not a POST', async () => {

@@ -1,12 +1,13 @@
 import type { QueryClient } from '@tanstack/react-query'
 import { notifyManager, QueryClientProvider } from '@tanstack/react-query'
-import type { AxiosAdapter } from 'axios'
+import type { AxiosAdapter, AxiosInstance } from 'axios'
 import { AxiosError, AxiosHeaders, create } from 'axios'
 import type { ReactElement } from 'react'
 import { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import type { Mock } from 'vitest'
 import { describe, expect, it, vi } from 'vitest'
+import { createHttpClient } from './http-client.ts'
 import { createQueryClient } from './query-client.ts'
 import { SessionProvider } from './session-provider.tsx'
 import { sessionQueryKey, setSession, useSession } from './session.ts'
@@ -21,8 +22,14 @@ interface Rendered {
   queryClient: QueryClient
 }
 
-/** Renders the provider around ShowSession, with a profile endpoint that answers the status, and waits for it. */
-const renderSession = async (status: number): Promise<Rendered> => {
+/**
+ * Renders the provider around ShowSession, with a profile endpoint that answers the status, and waits for it. The
+ * provider uses a plain client, or the one `httpOf` makes from the adapter and query client.
+ */
+const renderSession = async (
+  status: number,
+  httpOf: (adapter: AxiosAdapter, queryClient: QueryClient) => AxiosInstance = (adapter) => create({ adapter }),
+): Promise<Rendered> => {
   // oxlint-disable-next-line eslint/require-await, typescript/require-await -- an adapter returns a promise; this one answers at once
   const adapter: AxiosAdapter = async (config) => {
     const response = { data: {}, status, statusText: '', headers: new AxiosHeaders(), config }
@@ -44,7 +51,7 @@ const renderSession = async (status: number): Promise<Rendered> => {
   act(() => {
     createRoot(host).render(
       <QueryClientProvider client={queryClient}>
-        <SessionProvider http={create({ adapter })} onChange={onChange}>
+        <SessionProvider http={httpOf(adapter, queryClient)} onChange={onChange}>
           <ShowSession />
         </SessionProvider>
       </QueryClientProvider>,
@@ -71,6 +78,24 @@ describe('session provider', () => {
   it('is no when the App API refuses', async () => {
     expect.hasAssertions()
     const { host, onChange } = await renderSession(401)
+
+    expect(host.textContent).toBe('no')
+    expect(onChange).toHaveBeenCalledExactlyOnceWith('no')
+  })
+
+  it('is no once when a 401 from the app client also records a sign-out while the session loads', async () => {
+    expect.hasAssertions()
+    const { host, onChange } = await renderSession(401, (adapter, queryClient) => {
+      const http = createHttpClient({
+        baseURL: 'https://app-api.test',
+        onUnauthorized: () => {
+          setSession(queryClient, 'no')
+        },
+        onSudoRequired: vi.fn<() => void>(),
+      })
+      http.defaults.adapter = adapter
+      return http
+    })
 
     expect(host.textContent).toBe('no')
     expect(onChange).toHaveBeenCalledExactlyOnceWith('no')

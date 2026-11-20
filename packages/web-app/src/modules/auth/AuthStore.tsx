@@ -30,7 +30,7 @@ export class AuthStore {
   constructor(
     private readonly store: RootStore,
     private readonly axios: AxiosInstance,
-    /** Records a sign-in or sign-out in the session query (src/data/session.tsx), which sets `isAuthenticated`. */
+    /** Records a sign-in or sign-out in the session query (src/data/session.ts), which sets `isAuthenticated`. */
     private readonly setSession: (session: 'yes' | 'no') => void,
   ) {}
 
@@ -81,7 +81,7 @@ export class AuthStore {
     })
   }
 
-  /** Mirrors the session query (src/data/session.tsx); call setSession to change it. */
+  /** Mirrors the session query (src/data/session.ts); call setSession to change it. */
   @action
   public setIsAuthenticated = (isAuthenticated: boolean) => {
     this.isAuthenticated = isAuthenticated
