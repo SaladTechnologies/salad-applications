@@ -10,6 +10,8 @@ interface Page {
   authenticated: boolean | undefined
   solanaWalletAddress: string | undefined
   coinbaseEmail: string | undefined
+  currentBalance: number
+  lastRedemption: { id: string } | undefined
 }
 
 /** The pages the container rendered, and the saved wallet and email, which the test changes. */
@@ -17,23 +19,30 @@ const fake = vi.hoisted(() => ({
   pages: [] as Page[],
   wallet: undefined as unknown as ReturnType<typeof createExternalState<{ walletAddress: string | undefined }>>,
   email: undefined as unknown as ReturnType<typeof createExternalState<{ email: string | undefined }>>,
+  balance: undefined as unknown as ReturnType<typeof createExternalState<{ currentBalance: number }>>,
+  vault: undefined as unknown as ReturnType<typeof createExternalState<{ redemptions: { id: string }[] }>>,
 }))
 
-vi.mock('../../Store', () => ({
-  getStore: () => ({
-    analytics: { trackButtonClicked: vi.fn() },
-    balance: { currentBalance: 5 },
-    rewards: {
-      getReward: () => undefined,
-      selectedTargetReward: undefined,
-      isReviewing: false,
-      setSelectedTargetReward: vi.fn(),
-      removeSelectedTargetReward: vi.fn(),
-    },
-    solanaWallet: { ...fake.wallet, loadWallet: vi.fn() },
-    coinbaseEmail: { ...fake.email, loadEmail: vi.fn() },
-  }),
-}))
+vi.mock('../../Store', () => {
+  const balance = { state: fake.balance }
+  const vault = { state: fake.vault }
+  return {
+    getStore: () => ({
+      analytics: { trackButtonClicked: vi.fn() },
+      balance,
+      vault,
+      rewards: {
+        getReward: () => undefined,
+        selectedTargetReward: undefined,
+        isReviewing: false,
+        setSelectedTargetReward: vi.fn(),
+        removeSelectedTargetReward: vi.fn(),
+      },
+      solanaWallet: { ...fake.wallet, loadWallet: vi.fn() },
+      coinbaseEmail: { ...fake.email, loadEmail: vi.fn() },
+    }),
+  }
+})
 
 vi.mock('@tanstack/react-query', () => ({ useQuery: () => ({}), useQueryClient: () => ({}) }))
 vi.mock('../../data/http-context.ts', () => ({ useHttp: () => ({}) }))
@@ -50,6 +59,8 @@ vi.mock('./pages', () => ({
 
 fake.wallet = createExternalState<{ walletAddress: string | undefined }>({ walletAddress: undefined })
 fake.email = createExternalState<{ email: string | undefined }>({ email: undefined })
+fake.balance = createExternalState({ currentBalance: 5 })
+fake.vault = createExternalState<{ redemptions: { id: string }[] }>({ redemptions: [] })
 const { RewardDetailsContainer } = await import('./RewardDetailsContainer')
 
 describe('RewardDetailsContainer', () => {
@@ -77,6 +88,27 @@ describe('RewardDetailsContainer', () => {
     expect(unknown).toBeUndefined()
     expect(signedOut).toBe(false)
     expect(signedIn).toBe(true)
+  })
+
+  it('shows the page the balance and the latest redemption as they change', () => {
+    Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', true)
+    const root = createRoot(document.createElement('div'))
+    act(() => {
+      root.render(<RewardDetailsContainer match={{ params: { id: 'reward' } }} backFallback="/store" />)
+    })
+    const before = fake.pages.at(-1)
+
+    act(() => {
+      fake.balance.update({ currentBalance: 2.5 })
+      fake.vault.update({ redemptions: [{ id: 'older' }, { id: 'latest' }] })
+    })
+    const after = fake.pages.at(-1)
+    act(() => {
+      root.unmount()
+    })
+
+    expect([before?.currentBalance, before?.lastRedemption]).toStrictEqual([5, undefined])
+    expect([after?.currentBalance, after?.lastRedemption]).toStrictEqual([2.5, { id: 'latest' }])
   })
 
   it('shows the page the saved wallet and email as soon as they load', () => {

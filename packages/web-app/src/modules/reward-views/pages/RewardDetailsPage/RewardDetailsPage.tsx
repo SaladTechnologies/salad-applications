@@ -7,6 +7,7 @@ import { Head, Scrollbar } from '../../../../components'
 import { useAddOgMetaTags } from '../../../../hooks/useAddOgMetaTags'
 import type { SaladTheme } from '../../../../SaladTheme'
 import type { Reward } from '../../../reward/models'
+import type { RewardVaultItem } from '../../../vault/models'
 import {
   RewardDescriptionPanel,
   RewardDisclaimers,
@@ -41,6 +42,8 @@ interface Props extends WithStyles<typeof styles> {
   requiresMinecraftUsername: boolean
   isTargetReward: boolean
   isReviewing: boolean
+  /** The latest redemption, which the review after a redemption shows. */
+  lastRedemption?: RewardVaultItem
   loadReward?: (id?: string) => void
   onRedeem?: (reward?: Reward) => void
   onBack?: () => void
@@ -56,6 +59,7 @@ const _RewardDetailsPage: FC<Props> = ({
   requiresMinecraftUsername,
   isTargetReward,
   isReviewing,
+  lastRedemption,
   loadReward,
   onRedeem,
   onBack,
@@ -80,7 +84,7 @@ const _RewardDetailsPage: FC<Props> = ({
 
   return (
     <div className={classes.container}>
-      {isReviewing && <ReviewAfterRedemptionContainer />}
+      {isReviewing && <ReviewAfterRedemptionContainer reward={lastRedemption} />}
       <Helmet>
         <title>My Title</title>
         <meta

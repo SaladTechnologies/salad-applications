@@ -9,6 +9,7 @@ interface Page {
   isSolanaWalletLoading: boolean
   coinbaseEmail: string | undefined
   isCoinbaseEmailLoadError: boolean
+  availableBalance: number
 }
 
 /** The pages the container rendered, and the saved wallet and email, which the test changes. */
@@ -17,18 +18,23 @@ const fake = vi.hoisted(() => ({
   wallet: undefined as unknown as ReturnType<
     typeof createExternalState<{ walletAddress: string | undefined; isLoading: boolean }>
   >,
+  balance: undefined as unknown as ReturnType<typeof createExternalState<{ currentBalance: number }>>,
   email: undefined as unknown as ReturnType<
     typeof createExternalState<{ email: string | undefined; isLoading: boolean; isLoadError: boolean }>
   >,
 }))
 
-vi.mock('../../Store', () => ({
-  getStore: () => ({
-    rewards: { getReward: () => undefined, lastRewardId: undefined },
-    solanaWallet: { ...fake.wallet, loadWallet: vi.fn() },
-    coinbaseEmail: { ...fake.email, loadEmail: vi.fn() },
-  }),
-}))
+vi.mock('../../Store', () => {
+  const balance = { state: fake.balance }
+  return {
+    getStore: () => ({
+      rewards: { getReward: () => undefined, lastRewardId: undefined },
+      balance,
+      solanaWallet: { ...fake.wallet, loadWallet: vi.fn() },
+      coinbaseEmail: { ...fake.email, loadEmail: vi.fn() },
+    }),
+  }
+})
 
 vi.mock('../salad-pay', () => ({ getSaladPayStore: () => ({ abort: vi.fn(), confirmPayment: vi.fn() }) }))
 
@@ -49,6 +55,7 @@ fake.email = createExternalState<{ email: string | undefined; isLoading: boolean
   isLoading: true,
   isLoadError: false,
 })
+fake.balance = createExternalState({ currentBalance: 5 })
 const { SaladPayOrderSummaryContainer } = await import('./SaladPayOrderSummaryContainer')
 
 /** Returns what the page was told about the payout destinations. */
@@ -57,6 +64,7 @@ const shown = (page: Page | undefined) => ({
   isSolanaWalletLoading: page?.isSolanaWalletLoading,
   coinbaseEmail: page?.coinbaseEmail,
   isCoinbaseEmailLoadError: page?.isCoinbaseEmailLoadError,
+  availableBalance: page?.availableBalance,
 })
 
 describe('SaladPayOrderSummaryContainer', () => {
@@ -71,6 +79,7 @@ describe('SaladPayOrderSummaryContainer', () => {
     act(() => {
       fake.wallet.update({ walletAddress: 'wallet', isLoading: false })
       fake.email.update({ isLoading: false, isLoadError: true })
+      fake.balance.update({ currentBalance: 1.25 })
     })
     const loaded = shown(fake.pages.at(-1))
     act(() => {
@@ -82,12 +91,14 @@ describe('SaladPayOrderSummaryContainer', () => {
       isSolanaWalletLoading: true,
       coinbaseEmail: undefined,
       isCoinbaseEmailLoadError: false,
+      availableBalance: 5,
     })
     expect(loaded).toStrictEqual({
       solanaWalletAddress: 'wallet',
       isSolanaWalletLoading: false,
       coinbaseEmail: undefined,
       isCoinbaseEmailLoadError: true,
+      availableBalance: 1.25,
     })
   })
 })

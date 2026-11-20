@@ -1,6 +1,7 @@
 import { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import { describe, expect, it, vi } from 'vitest'
+import { createExternalState } from '../../app/external-state.ts'
 import type { Session } from '../../data/session.ts'
 import { SessionContext } from '../../data/session.ts'
 
@@ -11,25 +12,36 @@ interface Bar {
   rightSideButtonLabel: string | undefined
   rightSideButtonClick: (() => void) | undefined
   startButtonLabel: string
+  targetReward: { canBeRedeemed: boolean } | null
 }
 
 /** The store the container reads, with only what it uses, and the bars it rendered. */
 const fake = vi.hoisted(() => ({
   login: vi.fn<() => Promise<void>>(),
   bars: [] as Bar[],
+  balance: undefined as unknown as ReturnType<typeof createExternalState<{ currentBalance: number }>>,
+  target: undefined as { id: string; name: string; price: number } | undefined,
 }))
 
-vi.mock('../../Store', () => ({
-  getStore: () => ({
-    auth: { login: fake.login, logout: vi.fn() },
-    analytics: { trackButtonClicked: vi.fn() },
-    balance: { currentBalance: 5 },
-    rewards: { selectedTargetReward: undefined, removeSelectedTargetReward: vi.fn() },
-    profile: { withInstallReminder: () => false, setIsInstallReminderClosed: vi.fn() },
-    routing: { push: vi.fn() },
-    bonuses: { claim: vi.fn() },
-  }),
-}))
+vi.mock('../../Store', () => {
+  const balance = { state: fake.balance }
+  return {
+    getStore: () => ({
+      auth: { login: fake.login, logout: vi.fn() },
+      analytics: { trackButtonClicked: vi.fn() },
+      balance,
+      rewards: {
+        get selectedTargetReward() {
+          return fake.target
+        },
+        removeSelectedTargetReward: vi.fn(),
+      },
+      profile: { withInstallReminder: () => false, setIsInstallReminderClosed: vi.fn() },
+      routing: { push: vi.fn() },
+      bonuses: { claim: vi.fn() },
+    }),
+  }
+})
 
 vi.mock('../../account/referrals.ts', () => ({ useReferralCode: () => ({ enabled: false }) }))
 vi.mock('../../account/bonuses.ts', () => ({
@@ -55,6 +67,7 @@ vi.mock('./components/NavigationBarWithNotifications', () => ({
   },
 }))
 
+fake.balance = createExternalState({ currentBalance: 5 })
 const { NavigationBarContainer } = await import('./NavigationBarContainer')
 
 /** Returns what the bar shows for the user, without its functions. */
@@ -66,6 +79,33 @@ const shown = (bar: Bar | undefined) => ({
 })
 
 describe('NavigationBarContainer', () => {
+  it('shows the balance, and whether the target reward can be bought, as the balance changes', () => {
+    Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', true)
+    fake.target = { id: 'target', name: 'Target', price: 4 }
+    const root = createRoot(document.createElement('div'))
+    act(() => {
+      root.render(
+        <SessionContext.Provider value="yes">
+          <NavigationBarContainer />
+        </SessionContext.Provider>,
+      )
+    })
+    const before = fake.bars.at(-1)
+
+    act(() => {
+      fake.balance.update({ currentBalance: 3.5 })
+    })
+    const after = fake.bars.at(-1)
+    act(() => {
+      root.unmount()
+    })
+    fake.target = undefined
+    fake.balance.update({ currentBalance: 5 })
+
+    expect([before?.balance, before?.targetReward?.canBeRedeemed]).toStrictEqual([5, true])
+    expect([after?.balance, after?.targetReward?.canBeRedeemed]).toStrictEqual([3.5, false])
+  })
+
   it('follows the session: Login while unknown or signed out, the balance and name while signed in, and back on sign-out', () => {
     Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', true)
     const root = createRoot(document.createElement('div'))

@@ -5,7 +5,7 @@ import withStyles from 'react-jss'
 import type { Machine } from '../../../api/machinesApiClient/generated/models'
 import { Scrollbar } from '../../../components'
 import { DedicatedNodesLink } from '../../dedicated-nodes-views/DedicatedNodesLink'
-import type { CurrentHourlyEarningRatesPerMachine, EarningPerMachine } from '../../balance/models'
+import type { ChartDaysShowing, CurrentHourlyEarningRatesPerMachine, EarningPerMachine } from '../../balance/models'
 import type { RedeemedReward } from '../../balance/models/RedeemedReward'
 import type { RewardVaultItem } from '../../vault/models'
 import {
@@ -30,6 +30,8 @@ const styles = () => ({
 interface Props extends WithStyles<typeof styles> {
   currentBalance?: number
   earningsPerMachine: EarningPerMachine
+  /** How many days the earning chart shows. */
+  daysShowing: ChartDaysShowing
   lifetimeBalance?: number
   totalChoppingHours?: number
   redeemedRewards?: RewardVaultItem[]
@@ -51,6 +53,7 @@ const _EarningSummaryPage: FC<Props> = ({
   classes,
   currentBalance,
   earningsPerMachine,
+  daysShowing,
   lifetimeBalance,
   totalChoppingHours,
   redeemedRewards,
@@ -117,7 +120,7 @@ const _EarningSummaryPage: FC<Props> = ({
           onPageChange={onPageMachineIdsChange}
         />
         <DedicatedNodesLink />
-        <EarningHistoryContainer earningsPerMachine={earningsPerSelectedMachines} />
+        <EarningHistoryContainer earningsPerMachine={earningsPerSelectedMachines} daysShowing={daysShowing} />
         {shownInModalMachineDetails && (
           <MachineDetailsModal
             machineDetails={shownInModalMachineDetails}

@@ -1,9 +1,15 @@
 import { connect } from '../../../../../connect'
 import type { RootStore } from '../../../../../Store'
+import type { RewardVaultItem } from '../../../../vault/models'
 import { ReviewAfterRedemption } from './ReviewAfterRedemption'
 
-const mapStoreToProps = (store: RootStore): any => ({
-  reward: store.vault.redemptions[store.vault.redemptions.length - 1],
+/** The latest redemption, which the reward page's container reads from the vault. */
+interface OwnProps {
+  reward: RewardVaultItem | undefined
+}
+
+const mapStoreToProps = (store: RootStore, props: OwnProps): any => ({
+  reward: props.reward,
   onCloseClick: store.rewards.finishReview,
   onVaultLinkClick: () => store.routing.push('/store/vault'),
 })

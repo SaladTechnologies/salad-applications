@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { useExternalState } from '../../app/external-state.ts'
 import { connect } from '../../connect'
 import type { BonusEarningRate } from '../../account/bonuses.ts'
 import { useEarningRateBonus } from '../../account/bonuses.ts'
@@ -7,6 +8,10 @@ import { useMachineEarningRates, useMachineEarningsHistory } from '../../earning
 import { useVaultRefresh } from '../../rewards/vault.ts'
 import { useNavigation } from '../../routing/navigation-context.ts'
 import type { RootStore } from '../../Store'
+import type { BalanceState } from '../balance'
+import { earningsPerMachineOf } from '../balance'
+import type { EarningPerMachine } from '../balance/models'
+import type { VaultState } from '../vault'
 import { getStore } from '../../Store'
 import { EarningSummaryPage } from './pages/EarningSummaryPage'
 import { getNumberWithCommas } from './utils'
@@ -16,6 +21,12 @@ interface OwnProps {
   bonusEarningRate: BonusEarningRate | undefined
   onNavigateToVault: () => void
   onPageMachineIdsChange: (machineIds: string[]) => void
+  /** The balance, earnings and machines. */
+  balance: BalanceState
+  /** Each machine's earning windows for the chart range. */
+  earningsPerMachine: EarningPerMachine
+  /** The vault and its latest completed rewards. */
+  vault: VaultState
 }
 
 const mapStoreToProps = (store: RootStore, props: OwnProps): any => {
@@ -25,19 +36,20 @@ const mapStoreToProps = (store: RootStore, props: OwnProps): any => {
   }
 
   return {
-    currentBalance: store.balance.currentBalance,
-    earningsPerMachine: store.balance.earningsPerMachine,
-    lifetimeBalance: store.balance.lifetimeBalance,
+    currentBalance: props.balance.currentBalance,
+    earningsPerMachine: props.earningsPerMachine,
+    lifetimeBalance: props.balance.lifetimeBalance,
     totalChoppingHours: props.xp && getNumberWithCommas((props.xp / 60).toFixed(0)),
-    isLatestCompletedRedeemedRewardsLoading: store.vault.isLatestCompletedRedeemedRewardsLoading,
-    redeemedRewards: store.vault.redemptions,
-    latestCompletedRedeemedRewards: store.vault.latestCompletedRedeemedRewards,
-    last24HrEarnings: store.balance.lastDayEarnings,
-    last7DayEarnings: store.balance.lastWeekEarnings,
-    last30DayEarnings: store.balance.lastMonthEarnings,
+    isLatestCompletedRedeemedRewardsLoading: props.vault.isLatestCompletedRedeemedRewardsLoading,
+    redeemedRewards: props.vault.redemptions,
+    latestCompletedRedeemedRewards: props.vault.latestCompletedRedeemedRewards,
+    last24HrEarnings: props.balance.lastDayEarnings,
+    last7DayEarnings: props.balance.lastWeekEarnings,
+    last30DayEarnings: props.balance.lastMonthEarnings,
     bonusEarningRate: props.bonusEarningRate,
-    machines: store.balance.machines,
-    currentHourlyEarningRatesPerMachine: store.balance.currentHourlyEarningRatesPerMachine,
+    machines: props.balance.machines,
+    currentHourlyEarningRatesPerMachine: props.balance.currentHourlyEarningRatesPerMachine,
+    daysShowing: props.balance.daysShowingEarnings,
     trackEarnPageFAQLinkClicked: store.analytics.trackEarnPageFAQLinkClicked,
     trackEarnPageViewed: store.analytics.trackEarnPageViewed,
     trackAndNavigateToRewardVaultPage,
@@ -64,12 +76,22 @@ export const EarningSummaryContainer = () => {
   useVaultRefresh(store.vault.refresh)
   const xp = useXp()
   const bonusEarningRate = useEarningRateBonus()
+  const balance = useExternalState(store.balance.state)
+  const { loadedEarningsPerMachine, daysShowingEarnings } = balance
+  // Charting every machine's history is costly, so it runs again only when the history or the chart range changes.
+  const earningsPerMachine = useMemo(
+    () => earningsPerMachineOf(loadedEarningsPerMachine, daysShowingEarnings),
+    [loadedEarningsPerMachine, daysShowingEarnings],
+  )
   return (
     <ConnectedEarningSummary
       xp={xp}
       bonusEarningRate={bonusEarningRate}
       onNavigateToVault={() => navigation.push('/store/vault')}
       onPageMachineIdsChange={setPageMachineIds}
+      balance={balance}
+      earningsPerMachine={earningsPerMachine}
+      vault={useExternalState(store.vault.state)}
     />
   )
 }

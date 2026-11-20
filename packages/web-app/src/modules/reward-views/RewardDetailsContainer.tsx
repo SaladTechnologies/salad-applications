@@ -5,6 +5,7 @@ import type { Profile } from '../../account/profile.ts'
 import type { SolanaWalletState } from '../../account/solana-wallet.ts'
 import { useSolanaWalletState } from '../../account/solana-wallet.ts'
 import { useProfile } from '../../account/profile.ts'
+import { useExternalState } from '../../app/external-state.ts'
 import { connect } from '../../connect'
 import { useHttp } from '../../data/http-context.ts'
 import { isSignedIn, useSession } from '../../data/session.ts'
@@ -15,6 +16,7 @@ import type { RootStore } from '../../Store'
 import { getStore } from '../../Store'
 import type { Reward } from '../reward/models'
 import type { RewardResource } from '../reward/models/RewardResource'
+import type { RewardVaultItem } from '../vault/models'
 import { rewardFromResource } from '../reward/utils'
 import { RewardDetailsPage } from './pages'
 
@@ -29,6 +31,10 @@ interface OwnProps {
   solanaWallet: SolanaWalletState
   /** The saved Coinbase email, which a Coinbase reward needs before it can be redeemed. */
   coinbaseEmail: CoinbaseEmailState
+  /** The balance the user can spend, which decides whether the reward can be bought. */
+  currentBalance: number
+  /** The latest redemption, which the review after a redemption shows. */
+  lastRedemption: RewardVaultItem | undefined
 }
 
 const mapStoreToProps = (store: RootStore, props: OwnProps): any => {
@@ -51,9 +57,10 @@ const mapStoreToProps = (store: RootStore, props: OwnProps): any => {
   return {
     authenticated: props.isAuthenticated,
     rewardId: props.match.params.id,
-    currentBalance: store.balance.currentBalance,
+    currentBalance: props.currentBalance,
     reward: reward,
     isReviewing: store.rewards.isReviewing,
+    lastRedemption: props.lastRedemption,
     onBack: props.onBack,
     onRedeem,
     onTargetThisRewardClick: store.rewards.setSelectedTargetReward,
@@ -111,6 +118,8 @@ export const RewardDetailsContainer = ({
       isAuthenticated={isSignedIn(useSession())}
       solanaWallet={useSolanaWalletState(getStore().solanaWallet)}
       coinbaseEmail={useCoinbaseEmailState(getStore().coinbaseEmail)}
+      currentBalance={useExternalState(getStore().balance.state).currentBalance}
+      lastRedemption={useExternalState(getStore().vault.state).redemptions.at(-1)}
     />
   )
 }

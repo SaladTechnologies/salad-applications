@@ -10,6 +10,7 @@ import { startButton as startButtonFor } from '../../app/start-button.ts'
 import type { RootStore } from '../../Store'
 import { getStore } from '../../Store'
 import { connect } from '../../connect'
+import { useExternalState } from '../../app/external-state.ts'
 import { isSignedIn, useSession } from '../../data/session.ts'
 import type { ProfileState } from '../../account/profile-state.ts'
 import { profileAvatarOf, useProfileState } from '../../account/profile-state.ts'
@@ -30,6 +31,8 @@ interface DrawerProps {
   profileState: ProfileState
   /** Whether the user is signed in: `undefined` until it is known. */
   isAuthenticated: boolean | undefined
+  /** The balance the user can spend. */
+  currentBalance: number
 }
 
 const mapStoreToProps = (store: RootStore, drawer: DrawerProps): any => {
@@ -55,7 +58,7 @@ const mapStoreToProps = (store: RootStore, drawer: DrawerProps): any => {
         label: store.rewards.selectedTargetReward.name,
         imageSrc: store.rewards.selectedTargetReward.coverImage ?? '',
         price: store.rewards.selectedTargetReward.price,
-        canBeRedeemed: store.balance.currentBalance >= store.rewards.selectedTargetReward?.price,
+        canBeRedeemed: drawer.currentBalance >= store.rewards.selectedTargetReward?.price,
       }
     : null
   const notifications = {
@@ -76,7 +79,7 @@ const mapStoreToProps = (store: RootStore, drawer: DrawerProps): any => {
         <AvatarDefault variant="highlighted" />
       )
     ) : undefined,
-    balance: isAuthenticated ? store.balance.currentBalance : undefined,
+    balance: isAuthenticated ? drawer.currentBalance : undefined,
     bonusCard: bonus ? (
       <BonusCard
         key={bonus.id}
@@ -141,6 +144,7 @@ export const NavigationBarContainer = () => {
       profile={useProfile()}
       profileState={useProfileState(getStore().profile)}
       isAuthenticated={isSignedIn(useSession())}
+      currentBalance={useExternalState(getStore().balance.state).currentBalance}
     />
   )
 }
