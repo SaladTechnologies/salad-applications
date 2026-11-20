@@ -11,7 +11,7 @@ import {
 } from '@tanstack/react-router'
 import { Observer } from 'mobx-react'
 import type { ReactNode } from 'react'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { App } from './App'
 import { ByDevice, ErrorBoundary, Head, MobilePageNotFound, NoPageFound } from './components'
 import { connect } from './connect'
@@ -184,6 +184,16 @@ const Earn = () => {
 }
 
 /** `/search`: the store's search, keeping the query string and hash. */
+/**
+ * The replace-bonus modal, while a claimed bonus waits to replace the current one. Opened without one (a refresh, a
+ * link, or forward again after closing it), it has nothing to replace, so it goes to the bonuses page instead. It
+ * checks once, when it opens: closing it clears the bonus, and must not redirect.
+ */
+const ReplaceBonus = () => {
+  const [hasBonus] = useState(() => getStore().bonuses.replacementEarningRateBonusId !== undefined)
+  return hasBonus ? <ReplaceBonusModalContainer /> : <Redirect to="/account/bonuses" />
+}
+
 const SearchRedirect = () => <Redirect to={`/store/search${useQueryAndHash()}`} />
 
 /** `/rewards/$id`: the reward's page, which is at `/store/rewards/$id` on desktop. */
@@ -200,7 +210,7 @@ const routeTree = rootRoute.addChildren([
   page('store/select-target-reward', desktopOnly(<SelectTargetRewardContainer />)),
   // Modals. SaladPay: this is a stand-in until we figure out iFrames, popups...
   page('salad-pay/order-summary', desktopOnly(<SaladPayOrderSummaryContainer />)),
-  page('bonuses/replace-bonus', desktopOnly(<ReplaceBonusModalContainer />)),
+  page('bonuses/replace-bonus', desktopOnly(<ReplaceBonus />)),
   // Account
   page('account/exit-survey/$', desktopOnly(<ExitSurveyContainer />)),
   page('account/passkey/delete/$id', () => <PasskeyDelete />),

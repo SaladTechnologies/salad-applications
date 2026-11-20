@@ -63,4 +63,24 @@ describe('createNavigation', () => {
     expect(navigation.location.pathname).toBe('/store')
     expect(history).toHaveLength(2)
   })
+
+  it('goes back when the app has an entry to go back to', () => {
+    const history = createMemoryHistory({ initialEntries: ['/store'] })
+    const navigation = createNavigation(history)
+
+    navigation.push('/account/summary')
+    navigation.goBackOr('/somewhere-else')
+
+    expect(navigation.location.pathname).toBe('/store')
+  })
+
+  it('replaces the page with the fallback when it is the first page the app loaded', () => {
+    const history = createMemoryHistory({ initialEntries: ['/account/summary'] })
+    const navigation = createNavigation(history)
+
+    navigation.goBackOr('/store')
+
+    expect(navigation.location.pathname).toBe('/store')
+    expect(history).toHaveLength(1)
+  })
 })

@@ -26,7 +26,7 @@ const mapStoreToProps = (store: RootStore, props: { match: { params: { id: strin
     currentBalance: store.balance.currentBalance,
     reward: reward,
     isReviewing: store.rewards.isReviewing,
-    onBack: store.routing.goBack,
+    onBack: () => store.routing.goBackOr('/store'),
     onRedeem,
     onTargetThisRewardClick: store.rewards.setSelectedTargetReward,
     onRemoveTargetRewardClick: store.rewards.removeSelectedTargetReward,
