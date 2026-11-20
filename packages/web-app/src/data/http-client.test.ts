@@ -114,6 +114,13 @@ describe('createHttpClient', () => {
     })
   })
 
+  it('gives an unknown problem type the generic message', async () => {
+    expect.hasAssertions()
+    const { client } = setUp({ status: 400, data: { status: 400, type: 'constructor' } })
+
+    await expect(client.post('/api/v2/redemptions')).rejects.toMatchObject({ message: 'Unknown error' })
+  })
+
   it('passes a request that got no response through unchanged', async () => {
     expect.hasAssertions()
     const { client, onUnauthorized, onSudoRequired } = setUp({ status: 0 })

@@ -60,7 +60,7 @@ const renderSession = async (
   expect(host.textContent).toBe('unknown')
   await act(async () => {
     await vi.waitFor(() => {
-      expect(queryClient.getQueryState(sessionQueryKey)?.status).toBe('success')
+      expect(queryClient.getQueryState(sessionQueryKey)).toMatchObject({ status: 'success', fetchStatus: 'idle' })
     })
   })
   return { host, onChange, queryClient }
@@ -85,18 +85,21 @@ describe('session provider', () => {
 
   it('is no once when a 401 from the app client also records a sign-out while the session loads', async () => {
     expect.hasAssertions()
+    const onUnauthorized = vi.fn<() => void>()
     const { host, onChange } = await renderSession(401, (adapter, queryClient) => {
+      onUnauthorized.mockImplementation(() => {
+        setSession(queryClient, 'no')
+      })
       const http = createHttpClient({
         baseURL: 'https://app-api.test',
-        onUnauthorized: () => {
-          setSession(queryClient, 'no')
-        },
+        onUnauthorized,
         onSudoRequired: vi.fn<() => void>(),
       })
       http.defaults.adapter = adapter
       return http
     })
 
+    expect(onUnauthorized).toHaveBeenCalledExactlyOnceWith()
     expect(host.textContent).toBe('no')
     expect(onChange).toHaveBeenCalledExactlyOnceWith('no')
   })
