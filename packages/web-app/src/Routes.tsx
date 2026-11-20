@@ -192,7 +192,7 @@ const Earn = () => {
  * instead. It checks once, when it opens: closing or confirming it clears the bonus, and must not redirect.
  */
 const ReplaceBonus = () => {
-  const [hasBonus] = useState(() => getStore().bonuses.replacementEarningRateBonusId !== undefined)
+  const [hasBonus] = useState(() => getStore().bonuses.get().replacementEarningRateBonusId !== undefined)
   return hasBonus ? <ReplaceBonusModalContainer /> : <Redirect to="/account/bonuses" />
 }
 

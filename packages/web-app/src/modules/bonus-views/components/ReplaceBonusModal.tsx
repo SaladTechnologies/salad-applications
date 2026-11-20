@@ -32,7 +32,7 @@ const styles = (theme: SaladTheme) => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  currentEarningBonus: number
+  currentEarningBonus: number | undefined
   onCloseClicked: () => void
   onReplaceCurrentBonus: () => void
 }

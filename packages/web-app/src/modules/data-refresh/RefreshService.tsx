@@ -29,7 +29,7 @@ export class RefreshService {
       this.store.xp.load()
       this.store.profile.loadAvatars()
       this.store.profile.loadSelectedAvatar()
-      this.store.bonuses.loadBonuses()
+      this.store.bonuses.load()
     } catch (error) {
       console.error(error)
     }
