@@ -55,8 +55,8 @@ export const createToasts = <Message extends ToastMessage>(options: ToastsOption
         options.onShown(message)
       },
       onClose: (): void => {
-        // Reported only for a message without a delay of its own, as before: one with `false`, or none (which closes after
-        // the container's default delay).
+        // Reported only for a message without a delay of its own, as before: one with `false`, or 0 or none (which close
+        // after the container's default delay).
         if (message.autoClose === undefined || message.autoClose === false || message.autoClose === 0) {
           options.onClosed(message)
         }
