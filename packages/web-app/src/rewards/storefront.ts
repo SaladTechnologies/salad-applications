@@ -9,6 +9,31 @@ export const fetchStorefront = async (http: AxiosInstance): Promise<unknown> => 
   return response.data
 }
 
+/** The options of the storefront query. */
+interface StorefrontQuery {
+  queryKey: typeof storefrontQueryKey
+  queryFn: () => Promise<unknown>
+  staleTime: number
+  gcTime: number
+  refetchInterval: number
+}
+
+/**
+ * The storefront query, as the storefront store fetched it: once when the app starts (`src/index.tsx` prefetches it),
+ * and again every `refreshRate` milliseconds while the page shows, or when the page shows after that long. It is kept
+ * for the whole session, as the store kept it, so the page never shows its skeleton again.
+ */
+export const storefrontQuery = (http: AxiosInstance, refreshRate: number): StorefrontQuery => ({
+  queryKey: storefrontQueryKey,
+  queryFn: async () => {
+    const storefront = await fetchStorefront(http)
+    return storefront
+  },
+  staleTime: refreshRate,
+  gcTime: Number.POSITIVE_INFINITY,
+  refetchInterval: refreshRate,
+})
+
 /** The price and quantity the storefront shows for a reward. */
 interface ShownReward {
   price: unknown

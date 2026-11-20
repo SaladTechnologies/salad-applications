@@ -27,7 +27,7 @@ import { createHttpClient } from './data/http-client.ts'
 import { createQueryClient } from './data/query-client.ts'
 import { setSession } from './data/session.ts'
 import { HttpContext } from './data/http-context.ts'
-import { storefrontQuery } from './modules/storefront/storefrontQuery'
+import { storefrontQuery } from './rewards/storefront.ts'
 import { SessionProvider } from './data/session-provider.tsx'
 import { createNavigation } from './routing/navigation.ts'
 import { createAppRouter } from './Routes'
@@ -55,7 +55,7 @@ const client = createHttpClient({
 
 setTimeout(() => {
   // The storefront store fetched the storefront when the app started; its query does too, so the page shows it at once.
-  void queryClient.prefetchQuery(storefrontQuery(client))
+  void queryClient.prefetchQuery(storefrontQuery(client, config.rewardRefreshRate))
   const rootStore = createStore(client, (session) => setSession(queryClient, session), navigation)
   store = rootStore
   const router = createAppRouter(history)

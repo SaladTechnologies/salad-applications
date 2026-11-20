@@ -13,7 +13,6 @@ import { RewardDetailsPage } from './pages'
 
 interface OwnProps {
   match: { params: { id: string } }
-  reward?: Reward
   onBack: () => void
 }
 
@@ -28,7 +27,8 @@ const mapStoreToProps = (store: RootStore, props: OwnProps): any => {
   }
 
   const extensions = store.profile.currentProfile?.extensions
-  const reward = props.reward ?? store.rewards.getReward(props.match.params.id)
+  // The store's copy, which the query fills: redemption, SaladPay, and the target-reward refresh share it.
+  const reward = store.rewards.getReward(props.match.params.id)
   const requiresMinecraftUsername =
     reward?.tags?.includes('requires-minecraft-username') && !extensions?.minecraftUsername
   const isRewardSelectedAsTarget = store.rewards.selectedTargetReward?.id === reward?.id
@@ -74,7 +74,7 @@ export const RewardDetailsContainer = ({
   const queryClient = useQueryClient()
   const navigation = useNavigation()
   const { id } = match.params
-  const { data: reward } = useQuery({
+  useQuery({
     queryKey: rewardQueryKey(id),
     queryFn: async (): Promise<Reward> => {
       const loaded = rewardFromResource((await fetchRewardResource(http, id)) as RewardResource)
@@ -88,5 +88,5 @@ export const RewardDetailsContainer = ({
     },
     enabled: id !== '',
   })
-  return <ConnectedRewardDetails match={match} reward={reward} onBack={() => navigation.goBackOr(backFallback)} />
+  return <ConnectedRewardDetails match={match} onBack={() => navigation.goBackOr(backFallback)} />
 }
