@@ -62,14 +62,6 @@ export class AnalyticsStore {
     }
   }
 
-  public trackDesktopVersion = (version: string) => {
-    if (!this.mixpanelInitialized) return
-
-    mixpanel.register({
-      $app_version_string: version,
-    })
-  }
-
   public trackLogout = () => {
     if (!this.started) return
 
@@ -90,70 +82,6 @@ export class AnalyticsStore {
     })
     mixpanel.people.set({
       'Whats New Version': version,
-    })
-  }
-
-  /** Track when mining starts */
-  public trackStart = (
-    reason: string,
-    gpuEnabled: boolean,
-    cpuEnabled: boolean,
-    gpuNames: string[],
-    cpuName: string,
-    gpuOverridden: boolean,
-    cpuOverridden: boolean,
-  ) => {
-    this.track('Start', {
-      Reason: reason,
-      GpuEnabled: gpuEnabled,
-      CpuEnabled: cpuEnabled,
-      GPUNames: gpuNames,
-      CPUName: cpuName,
-      GPUOverridden: gpuOverridden,
-      CPUOverridden: cpuOverridden,
-    })
-  }
-
-  /**
-   * Tracks when mining stops
-   *
-   * @param reason Why did mining stop
-   * @param totalTime Total time between start and stop (ms)
-   * @param choppingTime Total time in the chopping state (ms)
-   */
-  public trackStop = (reason: string, totalTime: number, choppingTime: number) => {
-    this.track('Stop', {
-      Reason: reason,
-      TotalTime: totalTime,
-      ChoppingTime: choppingTime,
-    })
-  }
-
-  public trackAutoStart = (enabled: boolean) => {
-    if (!this.mixpanelInitialized) return
-
-    this.track('AutoStart', {
-      Enabled: enabled,
-    })
-    mixpanel.people.set({
-      AutoStart: enabled,
-    })
-  }
-
-  /** Track when a machine goes to the earning state */
-  public trackMiningError = (type: string, errorCode: number) => {
-    this.track('Mining Error', { ErrorType: type, ErrorCode: errorCode })
-  }
-
-  /** Track when a reward is clicked */
-  public trackClickedReward = (reward: Partial<Reward>) => {
-    const availability = getRewardAvailability(reward)
-    this.track('Reward Clicked', {
-      Availability: availability,
-      RewardId: reward.id,
-      RewardName: reward.name,
-      RewardPrice: reward.price,
-      RewardCategory: reward.tags,
     })
   }
 
@@ -192,30 +120,10 @@ export class AnalyticsStore {
     })
   }
 
-  /** Track when a reward category is viewed */
-  public trackRewardSearch = (searchTerm: string) => {
-    this.track('Reward Search', {
-      Term: searchTerm,
-    })
-  }
-
   /** Track when a SaladPay is opened for a reward */
   public trackSaladPayOpened = (reward: Reward) => {
     const availability = getRewardAvailability(reward)
     this.track('SaladPay Opened', {
-      Availability: availability,
-      RewardId: reward.id,
-      RewardName: reward.name,
-      RewardPrice: reward.price,
-      RewardCategory: reward.tags,
-    })
-  }
-
-  /** Track when a reward is redeemed */
-  public trackRewardRedeemed = (reward: Reward, inProcess?: boolean) => {
-    const trackingEvent = inProcess ? 'Reward Redemption In Process' : 'Reward Redeemed'
-    const availability = getRewardAvailability(reward)
-    this.track(trackingEvent, {
       Availability: availability,
       RewardId: reward.id,
       RewardName: reward.name,
@@ -271,16 +179,6 @@ export class AnalyticsStore {
     }
   }
 
-  /** Track when an element is clicked */
-  public trackElementClicked = (id: string, label: string) => {
-    const currentPath = window && window.location.pathname
-    this.track('Element Clicked', {
-      CurrentPath: currentPath,
-      Id: id,
-      Label: label,
-    })
-  }
-
   /** Track when a button is clicked */
   public trackButtonClicked = (id: string, label: string, state: 'enabled' | 'disabled') => {
     const currentPath = window && window.location.pathname
@@ -289,28 +187,6 @@ export class AnalyticsStore {
       Id: id,
       Label: label,
       State: state,
-    })
-  }
-
-  /** Track when a switch is toggled */
-  public trackSwitchToggle = (id: string, label: string, checked: boolean) => {
-    const currentPath = window && window.location.pathname
-    this.track('Switch Toggled', {
-      CurrentPath: currentPath,
-      Id: id,
-      Label: label,
-      Checked: checked,
-    })
-  }
-
-  /** Track when the close app button is clicked */
-  public trackCloseAppClicked = (minimizeToTray: 'enabled' | 'disabled') => {
-    const currentPath = window && window.location.pathname
-    this.track('Close App Button Clicked', {
-      CurrentPath: currentPath,
-      Id: 'close_app_button_clicked',
-      Label: 'Closed App',
-      MinimizeToTray: minimizeToTray,
     })
   }
 
@@ -344,29 +220,6 @@ export class AnalyticsStore {
       Title: message.title,
       Message: message.message,
       Type: type,
-    })
-  }
-
-  /** Track when an Error Page is viewed by the user */
-  public trackErrorPageViewed = (name: string) => {
-    const currentPath = window && window.location.pathname
-    this.track('Error Page Viewed', {
-      CurrentPath: currentPath,
-      ErrorPage: name,
-    })
-  }
-
-  /**
-   * Track a user as they go through the onboarding flow. Types will only be used if there are different variations of
-   * pages that can be shown e.g. different AV guides.
-   */
-  public trackOnboardingPageViewed = (page: string, order: number, type?: string) => {
-    const currentPath = window && window.location.pathname
-    this.track('Onboarding', {
-      CurrentPath: currentPath,
-      page: page,
-      order: order,
-      type: type,
     })
   }
 
