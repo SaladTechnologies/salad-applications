@@ -127,7 +127,20 @@ describe('ProfileStore', () => {
     expect(profileStore.withInstallReminder(newChef, true)).toBe(false)
   })
 
-  it('shows the protect-redemption status while it saves, then clears it after six seconds', async () => {
+  it('tells its readers when the install reminder is closed', () => {
+    const { profileStore } = setUp({}, undefined)
+    const listener = vi.fn<() => void>()
+    profileStore.subscribe(listener)
+    const before = profileStore.getState().isInstallReminderClosed
+
+    profileStore.setIsInstallReminderClosed(true)
+
+    expect(before).toBe(false)
+    expect(profileStore.getState().isInstallReminderClosed).toBe(true)
+    expect(listener).toHaveBeenCalled()
+  })
+
+  it('shows the protect-redemption status while it saves, then clears it six seconds later', async () => {
     vi.useFakeTimers()
     const post = vi.fn().mockResolvedValue({})
     const { profileStore } = setUp({ post, get: vi.fn().mockResolvedValue({ data: profile }) }, profile)
@@ -135,26 +148,64 @@ describe('ProfileStore', () => {
     const saving = profileStore.setProtectRewardsRedemption(true)
     const whileSaving = profileStore.getState().protectRewardsRedemptionStatus
     await saving
-    const saved = profileStore.getState().protectRewardsRedemptionStatus
-    await vi.advanceTimersByTimeAsync(6000)
+    await vi.advanceTimersByTimeAsync(5999)
+    const justBefore = profileStore.getState().protectRewardsRedemptionStatus
+    await vi.advanceTimersByTimeAsync(1)
     vi.useRealTimers()
 
     expect(whileSaving).toBe('loading')
-    expect(saved).toBe('success')
+    expect(justBefore).toBe('success')
     expect(profileStore.getState().protectRewardsRedemptionStatus).toBe('unknown')
   })
 
-  it('forgets the selected avatar and the connected Google account on sign-out', async () => {
-    const { profileStore } = setUp(
-      { get: vi.fn().mockResolvedValue({ data: [{ loginProvider: 'Google', email: 'me@gmail.com' }] }) },
-      profile,
-    )
+  it('stops the last six-second clear when another change starts', async () => {
+    vi.useFakeTimers()
+    const post = vi
+      .fn()
+      .mockResolvedValueOnce({})
+      .mockReturnValueOnce(new Promise(() => undefined))
+    const { profileStore } = setUp({ post, get: vi.fn().mockResolvedValue({ data: profile }) }, profile)
+
+    await profileStore.setProtectRewardsRedemption(true)
+    await vi.advanceTimersByTimeAsync(3000)
+    void profileStore.setProtectRewardsRedemption(false)
+    await vi.advanceTimersByTimeAsync(3000)
+    vi.useRealTimers()
+
+    expect(profileStore.getState().protectRewardsRedemptionStatus).toBe('loading')
+  })
+
+  it('checks for what is new after a username or Minecraft username change', async () => {
+    const patch = vi.fn().mockResolvedValue({ data: profile })
+    const username = setUp({ patch }, profile)
+    const minecraft = setUp({ patch }, profile)
+
+    await username.profileStore.updateUsername({ input: 'new-chef' })
+    await minecraft.profileStore.updateMinecraftUsername({ input: 'steve' })
+
+    expect(username.checkWhatsNew).toHaveBeenCalledTimes(1)
+    expect(minecraft.checkWhatsNew).toHaveBeenCalledTimes(1)
+  })
+
+  it('forgets the selected avatar, the connected Google account and the protect status on sign-out', async () => {
+    const get = vi
+      .fn()
+      .mockResolvedValueOnce({ data: { id: 'a' } })
+      .mockResolvedValueOnce({ data: [{ loginProvider: 'Google', email: 'me@gmail.com' }] })
+    const { profileStore } = setUp({ get }, profile)
+    await profileStore.loadSelectedAvatar()
     await profileStore.loadGoogleAccountConnection()
-    const connected = profileStore.getState().connectedGoogleAccountEmail
+    profileStore.setProtectRewardsRedemptionStatus('failure')
+    const signedIn = profileStore.getState()
 
     profileStore.resetUserData()
 
-    expect(connected).toBe('me@gmail.com')
+    expect(signedIn).toMatchObject({
+      connectedGoogleAccountEmail: 'me@gmail.com',
+      currentSelectedAvatar: 'a',
+      selectedAvatar: 'a',
+      protectRewardsRedemptionStatus: 'failure',
+    })
     expect(profileStore.getState()).toMatchObject({
       connectedGoogleAccountEmail: undefined,
       currentSelectedAvatar: undefined,

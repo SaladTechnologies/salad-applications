@@ -1,5 +1,5 @@
 import { useProfile } from './account/profile.ts'
-import { useProfileState } from './modules/profile/ProfileStore'
+import { useProfileState } from './account/profile-state.ts'
 import { useReferralCode } from './account/referrals.ts'
 import { useAppRefresh } from './app/app-refresh.ts'
 import { config } from './config'

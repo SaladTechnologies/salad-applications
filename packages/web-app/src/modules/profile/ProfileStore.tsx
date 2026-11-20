@@ -1,8 +1,8 @@
 import SaladDefaultAvatarSrc from '@saladtechnologies/garden-components/lib/components/Avatar/assets/SaladAvatar.png'
 import type { AxiosInstance, AxiosResponse } from 'axios'
-import { useSyncExternalStore } from 'react'
+import type { ProfileState, ProtectRewardsRedemptionStatus } from '../../account/profile-state.ts'
+import { createProfileState } from '../../account/profile-state.ts'
 import type { ExternalState } from '../../app/external-state.ts'
-import { createExternalState } from '../../app/external-state.ts'
 import * as Storage from '../../Storage'
 import type { RootStore } from '../../Store'
 import type { FormValues } from '../account-views/account-views/components/'
@@ -22,7 +22,7 @@ import {
   type Profile,
 } from './models'
 
-export type ProtectRewardsRedemptionStatus = 'success' | 'failure' | 'loading' | 'unknown'
+export type { ProtectRewardsRedemptionStatus } from '../../account/profile-state.ts'
 
 const SaladDefaultAvatar: Avatar = {
   name: 'Default',
@@ -43,44 +43,6 @@ export interface ProfileAccess {
   forget: () => void
 }
 
-/** The account page's state around the profile: avatars, the forms' statuses, the Google account, and the reminder. */
-export interface ProfileState {
-  /** The avatar the App API has selected for the user. */
-  currentSelectedAvatar: string | undefined
-  /** The avatar whose selection failed, and why. */
-  avatarError: { avatar: string; message: string } | undefined
-  /** The avatars the user can pick, the default first. */
-  avatars: Avatar[] | undefined
-  /** The avatar being selected. */
-  submittingAvatar: string | undefined
-  /** The avatar the page shows as selected, which a selection shows before the App API answers. */
-  selectedAvatar: string | undefined
-  /** Whether a username change is being saved. */
-  isUserNameSubmitting: boolean
-  /** Whether the last username change was saved. */
-  isUserNameSubmitSuccess: boolean
-  /** Whether a Minecraft username change is being saved. */
-  isMinecraftUserNameSubmitting: boolean
-  /** Whether the last Minecraft username change was saved. */
-  isMinecraftUserNameSubmitSuccess: boolean
-  /** The email of the user's connected Google account. */
-  connectedGoogleAccountEmail: string | undefined
-  /** Whether loading the connected Google account failed. */
-  isLoadConnectedGoogleAccountEmailError: boolean
-  /** Whether the user closed the install reminder, which the browser remembers. */
-  isInstallReminderClosed: boolean
-  /** How the last protect-redemption change went. */
-  protectRewardsRedemptionStatus: ProtectRewardsRedemptionStatus
-}
-
-/** The avatar the user has selected, or `undefined` before the avatars have loaded. */
-export const profileAvatarOf = (state: ProfileState): Avatar | undefined =>
-  state.avatars?.find((avatar) => avatar.id === state.currentSelectedAvatar)
-
-/** Returns the profile store's state, and re-renders when it changes. Call it in a container. */
-export const useProfileState = (profileStore: ProfileStore): ProfileState =>
-  useSyncExternalStore(profileStore.subscribe, profileStore.getState)
-
 /**
  * The profile's actions and the account page's state around it. The profile itself lives in its query
  * (src/account/profile.ts); this state lives outside MobX, and containers read it with `useProfileState`.
@@ -96,21 +58,7 @@ export class ProfileStore {
     this.store = store
     this.axios = axios
     this.profiles = profiles
-    this.state = createExternalState<ProfileState>({
-      currentSelectedAvatar: undefined,
-      avatarError: undefined,
-      avatars: undefined,
-      submittingAvatar: undefined,
-      selectedAvatar: undefined,
-      isUserNameSubmitting: false,
-      isUserNameSubmitSuccess: false,
-      isMinecraftUserNameSubmitting: false,
-      isMinecraftUserNameSubmitSuccess: false,
-      connectedGoogleAccountEmail: undefined,
-      isLoadConnectedGoogleAccountEmailError: false,
-      isInstallReminderClosed: Storage.getItem(IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY) === 'true',
-      protectRewardsRedemptionStatus: 'unknown',
-    })
+    this.state = createProfileState(Storage.getItem(IS_INSTALL_REMINDER_CLOSED_STORAGE_KEY) === 'true')
   }
 
   /** Returns the current state. */

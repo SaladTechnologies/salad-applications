@@ -10,8 +10,8 @@ import { startButton as startButtonFor } from '../../app/start-button.ts'
 import type { RootStore } from '../../Store'
 import { getStore } from '../../Store'
 import { connect } from '../../connect'
-import type { ProfileState } from '../profile/ProfileStore'
-import { profileAvatarOf, useProfileState } from '../profile/ProfileStore'
+import type { ProfileState } from '../../account/profile-state.ts'
+import { profileAvatarOf, useProfileState } from '../../account/profile-state.ts'
 import { NavigationBarWithNotifications } from './components/NavigationBarWithNotifications'
 
 /** The notifications drawer's state, which the navigation bar container holds, and whether referrals are enabled. */
