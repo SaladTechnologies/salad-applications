@@ -41,7 +41,9 @@ describe('protected action page', () => {
     expect.hasAssertions()
     Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', true)
     const pushes: string[] = []
-    // The router renders a navigation as a normal update, after a store's synchronous one, as the app's router does.
+    // A stand-in router that renders a navigation as a normal update. The bug it guards is a synchronous store update
+    // re-rendering the page before any navigation, which happens whatever the router; the app's own router (which
+    // commits a navigation later, in a transition) was checked in a real build.
     const router = { navigate: (_path: string): void => undefined }
     const App = (): ReactElement | null => {
       const [path, setPath] = useState('/protected-action')
