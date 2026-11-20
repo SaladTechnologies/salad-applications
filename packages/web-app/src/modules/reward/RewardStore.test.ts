@@ -445,6 +445,7 @@ describe('RewardStore.redeemReward SaladPay order', () => {
     expect(store.isRedeeming).toBe(false)
     expect(redemptionIdOf(store)).toBeUndefined()
     expect(rootStore.balance.refreshBalance).toHaveBeenCalledTimes(1)
+    expect(rootStore.balance.refreshBalanceHistory).toHaveBeenCalledTimes(1)
   })
 
   it('on abort posts nothing, refreshes the balance, ends the redemption, and keeps its id for a retry', async () => {
@@ -458,6 +459,7 @@ describe('RewardStore.redeemReward SaladPay order', () => {
     expect(post).not.toHaveBeenCalled()
     expect(complete).not.toHaveBeenCalled()
     expect(rootStore.balance.refreshBalance).toHaveBeenCalledTimes(1)
+    expect(rootStore.balance.refreshBalanceHistory).toHaveBeenCalledTimes(1)
     expect(store.isRedeeming).toBe(false)
     expect(redemptionIdOf(store)).toBe(id)
   })

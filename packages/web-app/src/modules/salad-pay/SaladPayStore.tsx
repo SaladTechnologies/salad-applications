@@ -50,11 +50,15 @@ export class SaladPayStore {
   @observable
   public processing: boolean = false
 
-  constructor(
-    private readonly routing: SaladPayRouting,
-    private readonly balance: { currentBalance: number },
-    private readonly rewards: { lastRewardId?: string },
-  ) {}
+  private readonly routing: SaladPayRouting
+  private readonly balance: { currentBalance: number }
+  private readonly rewards: { lastRewardId?: string }
+
+  constructor(routing: SaladPayRouting, balance: { currentBalance: number }, rewards: { lastRewardId?: string }) {
+    this.routing = routing
+    this.balance = balance
+    this.rewards = rewards
+  }
 
   @computed
   get currentBalance(): number {
