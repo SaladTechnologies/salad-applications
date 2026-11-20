@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { Machine } from '../../../api/machinesApiClient/generated/models'
@@ -17,7 +17,6 @@ import {
 import { AllMachines } from '../components/AllMachines'
 import { MachineDetailsModal } from '../components/AllMachines/MachineDetailsModal'
 import { getMachineDetailsList } from '../components/AllMachines/utils'
-import { oneMinuteInMilliseconds } from './constants'
 
 const styles = () => ({
   content: {
@@ -41,8 +40,7 @@ interface Props extends WithStyles<typeof styles> {
   isLatestCompletedRedeemedRewardsLoading: boolean
   machines: Machine[] | null
   currentHourlyEarningRatesPerMachine: CurrentHourlyEarningRatesPerMachine
-  fetchCurrentEarningRatesPerMachine: (machineIds?: string[]) => void
-  fetchEarningsPerMachine: () => void
+  onPageMachineIdsChange: (machineIds: string[]) => void
   navigateToRewardVaultPage: () => void
   trackAndNavigateToRewardVaultPage: () => void
   trackEarnPageFAQLinkClicked: (faqLink: string) => void
@@ -63,16 +61,13 @@ const _EarningSummaryPage: FC<Props> = ({
   isLatestCompletedRedeemedRewardsLoading,
   machines,
   currentHourlyEarningRatesPerMachine,
-  fetchCurrentEarningRatesPerMachine,
-  fetchEarningsPerMachine,
+  onPageMachineIdsChange,
   trackAndNavigateToRewardVaultPage,
   trackEarnPageFAQLinkClicked,
   trackEarnPageViewed,
 }) => {
   const [detailsModalMachineId, setDetailsModalMachineId] = useState<string | null>(null)
   const [selectedMachineIds, setSelectedMachineIds] = useState<string[]>([])
-  const [pageMachineIds, setPageMachineIds] = useState<string[]>([])
-  const updateTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   const handleCloseMachineDetailsModal = () => {
     setDetailsModalMachineId(null)
@@ -81,27 +76,6 @@ const _EarningSummaryPage: FC<Props> = ({
   const handleSelectedMachineIdsChange = useCallback((updatedSelectedMachineIds: string[]) => {
     setSelectedMachineIds(updatedSelectedMachineIds)
   }, [])
-
-  const handlePageChange = useCallback((updatedPageMachineIds: string[]) => {
-    setPageMachineIds(updatedPageMachineIds)
-  }, [])
-
-  useEffect(() => {
-    fetchEarningsPerMachine()
-  }, [fetchEarningsPerMachine])
-
-  useEffect(() => {
-    fetchCurrentEarningRatesPerMachine(pageMachineIds)
-    updateTimerRef.current = setInterval(() => {
-      fetchCurrentEarningRatesPerMachine(pageMachineIds)
-    }, oneMinuteInMilliseconds)
-
-    return () => {
-      if (updateTimerRef.current) {
-        clearInterval(updateTimerRef.current)
-      }
-    }
-  }, [fetchCurrentEarningRatesPerMachine, pageMachineIds])
 
   useEffect(() => {
     trackEarnPageViewed()
@@ -140,7 +114,7 @@ const _EarningSummaryPage: FC<Props> = ({
           machineDetailsList={machineDetailsList}
           onMachineIdClick={setDetailsModalMachineId}
           onSelectedMachineIdsChange={handleSelectedMachineIdsChange}
-          onPageChange={handlePageChange}
+          onPageChange={onPageMachineIdsChange}
         />
         <DedicatedNodesLink />
         <EarningHistoryContainer earningsPerMachine={earningsPerSelectedMachines} />

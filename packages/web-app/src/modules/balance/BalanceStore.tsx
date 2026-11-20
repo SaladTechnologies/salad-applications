@@ -2,7 +2,6 @@ import type { AxiosInstance } from 'axios'
 import type { Guid } from 'guid-typescript'
 import { DateTime } from 'luxon'
 import { action, computed, flow, observable, runInAction } from 'mobx'
-import type { Moment } from 'moment'
 import moment from 'moment'
 import type { MachinesApiClient } from '../../api/machinesApiClient/generated/machinesApiClient'
 import type {
@@ -23,8 +22,6 @@ import {
 
 export class BalanceStore {
   private machinesApiClient: MachinesApiClient
-
-  private _latestEarningsPerMachineFetchMoment: Moment | null = null
 
   @observable
   private _earningsHistory: Map<number, number> = new Map()
@@ -158,8 +155,11 @@ export class BalanceStore {
     }
   }
 
-  @action
-  fetchCurrentEarningRatesPerMachine = (machineIds?: string[]) => {
+  /**
+   * Loads the machines and the current hourly earning rates of `machineIds` (all machines when omitted) into the store.
+   * The earnings pages' rates query (`src/earnings/machine-earnings.ts`) runs it. Errors are logged, not thrown.
+   */
+  loadCurrentEarningRatesPerMachine = (machineIds?: string[]): Promise<void> =>
     this.getMachines()
       .then((machines) => {
         if (machines === null) {
@@ -187,40 +187,33 @@ export class BalanceStore {
         throw new Error('There are no current earning rates per machine id')
       })
       .catch((error) => {
-        console.error('BalanceStore.fetchCurrentEarningRatesPerMachine: ', error)
+        console.error('BalanceStore.loadCurrentEarningRatesPerMachine: ', error)
       })
-  }
 
-  @action
-  fetchEarningsPerMachine = () => {
-    const shouldFetch =
-      this._latestEarningsPerMachineFetchMoment === null ||
-      moment().diff(this._latestEarningsPerMachineFetchMoment, 'hours') > 0
+  /**
+   * Loads the machines and their 30-day earning histories into the store. The earnings pages' history query
+   * (`src/earnings/machine-earnings.ts`) runs it, at most once an hour. Errors are logged, not thrown.
+   */
+  loadEarningsPerMachine = (): Promise<void> =>
+    this.getMachines()
+      .then((machines) => {
+        if (machines === null) {
+          throw new Error('There is no machines')
+        }
 
-    if (shouldFetch) {
-      this._latestEarningsPerMachineFetchMoment = moment()
-
-      this.getMachines()
-        .then((machines) => {
-          if (machines === null) {
-            throw new Error('There is no machines')
-          }
-
-          return this.getEarningsPerMachine(machines, 30)
-        })
-        .then((earningsPerMachine) => {
-          if (earningsPerMachine) {
-            return runInAction(() => {
-              this._earningsPerMachine = normalizeEarningsPerMachine(earningsPerMachine)
-            })
-          }
-          throw new Error('There are no earning per machines')
-        })
-        .catch((error) => {
-          console.error('BalanceStore.getMultipleMachinesEarnings: ', error)
-        })
-    }
-  }
+        return this.getEarningsPerMachine(machines, 30)
+      })
+      .then((earningsPerMachine) => {
+        if (earningsPerMachine) {
+          return runInAction(() => {
+            this._earningsPerMachine = normalizeEarningsPerMachine(earningsPerMachine)
+          })
+        }
+        throw new Error('There are no earning per machines')
+      })
+      .catch((error) => {
+        console.error('BalanceStore.loadEarningsPerMachine: ', error)
+      })
 
   private getEarningWindowsPerMachine = (chartsDaysShowing: ChartDaysShowing): EarningPerMachine => {
     if (this._earningsPerMachine === null) {
