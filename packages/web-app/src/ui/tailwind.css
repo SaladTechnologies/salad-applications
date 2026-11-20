@@ -1,0 +1,63 @@
+/*
+ * Tailwind for the rebuilt UI. It runs next to the react-jss and Emotion (garden) styles of the code the rebuild has not
+ * rewritten yet, so it leaves Preflight out: Tailwind's reset would restyle every existing page. Components in this
+ * folder reset the browser defaults they rely on themselves (see button.tsx).
+ *
+ * Tailwind's layers lose to unlayered CSS, so the existing react-jss and global styles keep winning where they meet.
+ */
+@layer theme, base, components, utilities;
+
+@import 'tailwindcss/theme.css' layer(theme);
+/*
+ * Scan only the rebuilt code (this folder) for class names. The old code uses plain class names (`container`,
+ * `hidden`, ...) that would otherwise turn into Tailwind utilities and restyle it.
+ */
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+@source './**/*.{ts,tsx}';
+
+/* SaladTheme (src/SaladTheme.tsx), as `salad-` tokens: bg-salad-dark-blue, text-salad-small, font-salad-mallory. */
+@theme {
+  --color-salad-dark-blue: #0a2133;
+  --color-salad-dark-green: #1f4f22;
+  --color-salad-medium-green: #53a626;
+  --color-salad-green: #b2d530;
+  --color-salad-light-green: #dbf1c1;
+  --color-salad-red: #ef502a;
+  --color-salad-dark-red: #d61f28;
+  --color-salad-orange: #f6931d;
+  --color-salad-purple: #6600cc;
+  --color-salad-cyan: #33cccc;
+  --color-salad-white: #ffffff;
+
+  --text-salad-xx-small: 0.375rem;
+  --text-salad-x-small: 0.5rem;
+  --text-salad-small: 0.75rem;
+  --text-salad-medium: 0.875rem;
+  --text-salad-medium-large: 1.125rem;
+  --text-salad-large: 1.5rem;
+  --text-salad-single-large: 2.375rem;
+  --text-salad-double-large: 2.5rem;
+  --text-salad-triple-large: 2.625rem;
+  --text-salad-x-large: 3rem;
+  --text-salad-xx-large: 5rem;
+
+  --font-salad-grotesk-book-19: 'SharpGrotesk-Book19';
+  --font-salad-grotesk-book-25: 'SharpGrotesk-Book25';
+  --font-salad-grotesk-light-05: 'SharpGrotesk-Light05';
+  --font-salad-grotesk-light-09: 'SharpGrotesk-Light09';
+  --font-salad-grotesk-light-25: 'SharpGrotesk-Light25';
+  --font-salad-grotesk-medium-25: 'SharpGrotesk-Medium25';
+  --font-salad-mallory: 'Mallory';
+
+  /* shadcn/ui's semantic tokens, in Salad colors until the redesign sets its own. */
+  --color-background: var(--color-salad-dark-blue);
+  --color-foreground: var(--color-salad-white);
+  --color-primary: var(--color-salad-green);
+  --color-primary-foreground: var(--color-salad-dark-blue);
+  --color-secondary: var(--color-salad-dark-green);
+  --color-secondary-foreground: var(--color-salad-white);
+  --color-destructive: var(--color-salad-red);
+  --color-destructive-foreground: var(--color-salad-white);
+  --color-border: var(--color-salad-light-green);
+  --color-ring: var(--color-salad-light-green);
+}

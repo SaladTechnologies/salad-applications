@@ -102,3 +102,21 @@ and `react-aspect-ratio` are; prefer a named export when the package has one tha
 - A script sets `process.exitCode` instead of calling `process.exit()`, so pending output and cleanup finish.
 - Tests use Vitest, in `<name>.test.ts` next to the code they test, and import `describe`, `it`, and `expect` from
   `vitest`. They run in random order and never use `.only`. A flaky test is a finding: fix it, never retry it.
+
+## Styling
+
+- New UI uses Tailwind 4 and shadcn/ui components in `src/ui/`. The old pages keep react-jss and garden's Emotion styles
+  until their area is rebuilt; never mix Tailwind classes into an old component.
+- `src/ui/tailwind.css` loads Tailwind's theme and utilities, not its Preflight reset, so the old pages look exactly as
+  before. Without Preflight, a component resets what the browser's own styles set (a button's border, background,
+  margin, and font: see `button-variants.ts`). The layered utilities lose to the old unlayered CSS, so a Tailwind class
+  never changes an old element.
+- Tailwind scans only `src/ui/` (`@source` in `tailwind.css`). A rebuilt area that moves out of `src/ui/` adds its
+  folder there.
+- Use the theme's tokens, not raw values: `salad-*` colors, font sizes (`text-salad-small`), and fonts, which match
+  `SaladTheme`, and shadcn's semantic colors (`bg-primary`, `text-foreground`, `border-border`). Add a token to `@theme`
+  in `tailwind.css`; a new `salad-*` font size also goes in `cn.ts`, or `cn` reads it as a color.
+- Join classes with `cn` (`src/ui/cn.ts`), so a later class wins over a conflicting earlier one.
+- Add a shadcn/ui component by copying its source from ui.shadcn.com into `src/ui/` and adapting it to these rules
+  (named exports, the resets above, our tokens), not with the shadcn CLI. Its Radix dependency is pre-approved.
+- Prettier sorts Tailwind classes (`prettier-plugin-tailwindcss`), including inside `cn(...)` and `cva(...)`.
