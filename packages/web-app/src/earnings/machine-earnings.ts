@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 
 /** The query key of the machines' 30-day earning histories, which the earnings pages chart. */
-const machineEarningsHistoryQueryKey = ['earnings', 'machine-history'] as const
+export const machineEarningsHistoryQueryKey = ['earnings', 'machine-history'] as const
 
 /** The query key of the current hourly earning rates of the machines on the shown page of the machine list. */
 const machineEarningRatesQueryKey = (machineIds: readonly string[]) =>

@@ -548,4 +548,14 @@ export class RewardStore {
   finishReview() {
     this.isReviewing = false
   }
+
+  /**
+   * Forgets the target reward and the recommended rewards of the user who signed out. The last redemption's id and
+   * reward are left as they were; who may reuse them is a separate decision. The reward cache is public and stays.
+   */
+  @action.bound
+  resetUserData() {
+    this.selectedTargetRewardId = undefined
+    this.recommendedRewards = []
+  }
 }

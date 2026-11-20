@@ -353,4 +353,17 @@ export class ProfileStore {
   setProtectRewardsRedemptionStatus = (protectRewardsRedemptionStatus: ProtectRewardsRedemptionStatus) => {
     this.protectRewardsRedemptionStatus = protectRewardsRedemptionStatus
   }
+
+  /**
+   * Forgets the profile, selected avatar, and connected Google account of the user who signed out, so the next user
+   * never sees them.
+   */
+  @action.bound
+  resetUserData() {
+    this.currentProfile = undefined
+    this.currentSelectedAvatar = undefined
+    this.selectedAvatar = undefined
+    this.connectedGoogleAccountEmail = undefined
+    this.protectRewardsRedemptionStatus = 'unknown'
+  }
 }

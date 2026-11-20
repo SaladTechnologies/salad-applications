@@ -174,4 +174,14 @@ export class CoinbaseEmailStore {
       })
     }
   })
+
+  /**
+   * Forgets the Coinbase email and whether cash-out is enabled of the user who signed out, so the next user never sees
+   * them.
+   */
+  @action.bound
+  resetUserData() {
+    this.email = undefined
+    this.isEnabled = false
+  }
 }

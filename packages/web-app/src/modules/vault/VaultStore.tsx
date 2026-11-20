@@ -112,4 +112,11 @@ export class VaultStore {
       this.rewards.clearRedemptionInfo()
     }
   }
+
+  /** Forgets the vault of the user who signed out, so the next user never sees them. */
+  @action.bound
+  resetUserData() {
+    this.redemptions = []
+    this.latestCompletedRedeemedRewards.clear()
+  }
 }
