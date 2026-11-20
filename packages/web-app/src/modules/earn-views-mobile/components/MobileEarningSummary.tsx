@@ -5,7 +5,7 @@ import type { SaladTheme } from '../../../SaladTheme'
 import type { Machine } from '../../../api/machinesApiClient/generated/models'
 import { Divider, SectionHeader, StatElement } from '../../../components'
 import { formatBalance } from '../../../utils'
-import type { CurrentHourlyEarningRatesPerMachine, EarningPerMachine } from '../../balance/models'
+import type { ChartDaysShowing, CurrentHourlyEarningRatesPerMachine, EarningPerMachine } from '../../balance/models'
 import { DedicatedNodesLink } from '../../dedicated-nodes-views/DedicatedNodesLink'
 import { EarningHistoryContainer } from '../../earn-views/components'
 import { AllMachines } from '../../earn-views/components/AllMachines'
@@ -48,6 +48,8 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   currentBalance?: number
   earningsPerMachine: EarningPerMachine
+  /** How many days the earning chart shows. */
+  daysShowing: ChartDaysShowing
   last24HrEarnings: number
   last7DayEarnings: number
   last30DayEarnings: number
@@ -61,6 +63,7 @@ interface Props extends WithStyles<typeof styles> {
 const _MobileEarningSummary = ({
   classes,
   earningsPerMachine,
+  daysShowing,
   currentBalance,
   last24HrEarnings,
   last7DayEarnings,
@@ -146,7 +149,7 @@ const _MobileEarningSummary = ({
         onPageChange={onPageMachineIdsChange}
       />
       <DedicatedNodesLink />
-      <EarningHistoryContainer earningsPerMachine={earningsPerSelectedMachines} />
+      <EarningHistoryContainer earningsPerMachine={earningsPerSelectedMachines} daysShowing={daysShowing} />
       {shownInModalMachineDetails && (
         <MachineDetailsModal
           machineDetails={shownInModalMachineDetails as MachineDetails}

@@ -1,16 +1,17 @@
 import { connect } from '../../../../connect'
 import type { RootStore } from '../../../../Store'
-import type { EarningPerMachine } from '../../../balance/models'
+import type { ChartDaysShowing, EarningPerMachine } from '../../../balance/models'
 import { EarningHistory } from './EarningHistory'
 
 interface EarningHistoryContainerProps {
   earningsPerMachine: EarningPerMachine
+  /** How many days the chart shows, which the page's container reads. */
+  daysShowing: ChartDaysShowing
 }
 
 const mapStoreToProps = (store: RootStore, props: EarningHistoryContainerProps): any => {
   return {
     ...props,
-    daysShowing: store.balance.getDaysShowingEarnings,
     trackEarningHistoryFilterClicked: store.analytics.trackEarningHistoryFilterClicked,
     viewLast24Hours: store.balance.viewLast24Hours,
     viewLast30Days: store.balance.viewLast30Days,

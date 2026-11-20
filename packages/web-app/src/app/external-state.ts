@@ -1,3 +1,5 @@
+import { useSyncExternalStore } from 'react'
+
 /** State held outside React and MobX, which components read with `useSyncExternalStore`. */
 export interface ExternalState<State> {
   /** Returns the current state. A change makes a new state, so it can be compared by reference. */
@@ -28,3 +30,7 @@ export const createExternalState = <State extends object>(initial: State): Exter
     },
   }
 }
+
+/** Returns `state`'s current value, and re-renders when it changes. */
+export const useExternalState = <State extends object>(state: ExternalState<State>): State =>
+  useSyncExternalStore(state.subscribe, state.get)

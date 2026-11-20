@@ -2,6 +2,7 @@ import type { CoinbaseEmailState } from '../../account/coinbase-email.ts'
 import { useCoinbaseEmailState } from '../../account/coinbase-email.ts'
 import type { SolanaWalletState } from '../../account/solana-wallet.ts'
 import { useSolanaWalletState } from '../../account/solana-wallet.ts'
+import { useExternalState } from '../../app/external-state.ts'
 import { getStore } from '../../Store'
 import type { SaladPayStore } from '../salad-pay/SaladPayStore'
 import { SaladPayOrderSummaryPage } from './components'
@@ -11,10 +12,12 @@ import { connectSaladPay } from './connectSaladPay'
 interface OwnProps {
   solanaWallet: SolanaWalletState
   coinbaseEmail: CoinbaseEmailState
+  /** The balance the user can spend. */
+  currentBalance: number
 }
 
 const mapStoreToProps = (store: SaladPayStore, props: OwnProps): any => ({
-  availableBalance: store.currentBalance,
+  availableBalance: props.currentBalance,
   processing: store.processing,
   request: store.currentRequestOptions,
   reward: getStore().rewards.getReward(getStore().rewards.lastRewardId),
@@ -42,6 +45,7 @@ export const SaladPayOrderSummaryContainer = () => {
     <ConnectedSaladPayOrderSummary
       solanaWallet={useSolanaWalletState(store.solanaWallet)}
       coinbaseEmail={useCoinbaseEmailState(store.coinbaseEmail)}
+      currentBalance={useExternalState(store.balance.state).currentBalance}
     />
   )
 }
