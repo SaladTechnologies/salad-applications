@@ -1,6 +1,6 @@
 import type { RootStore } from '../../Store'
 import { ChallengeSudoModeTrigger } from '../auth'
-import { authenticationSessionsSudoEndpointPath } from '../auth/constants'
+import { sudoEndpointPath } from '../../account/sudo.ts'
 import { backupCodesEndpointPath } from '../backup-codes/constants'
 import { passkeysCredentialsOptionsEndpointPath, passkeysEndpointPath } from '../passkey-setup/constants'
 import { protectRewardsRedemptionEndpointPath } from '../profile/constants'
@@ -13,11 +13,11 @@ enum PendingProtectedActionTrigger {
   DeletePasskey = `delete:${passkeysEndpointPath}`,
   ProtectRewardsRedemption = `post:${protectRewardsRedemptionEndpointPath}`,
   RewardRedemption = `post:${redemptionsEndpointPath}`,
-  ChallengeSudoMode = `post:${authenticationSessionsSudoEndpointPath}`,
+  ChallengeSudoMode = `post:${sudoEndpointPath}`,
 }
 
 const handleChallengeSudoModeTrigger = (store: RootStore) => {
-  switch (store.auth.challengeSudoModeTrigger) {
+  switch (store.sudo.get().challengeSudoModeTrigger) {
     case ChallengeSudoModeTrigger.GoogleSignIn:
       store.routing.push('/account/summary', { isGoogleSignInFormTriggered: true })
       break
@@ -30,11 +30,12 @@ const handleChallengeSudoModeTrigger = (store: RootStore) => {
       }
       break
   }
-  store.auth.setChallengeSudoModeTrigger(undefined)
+  store.sudo.setChallengeSudoModeTrigger(undefined)
 }
 
 export const handlePendingProtectedAction = (store: RootStore) => {
-  const pendingProtectedActionKey = `${store.auth.pendingProtectedAction?.method}:${store.auth.pendingProtectedAction?.url}`
+  const { pendingProtectedAction } = store.sudo.get()
+  const pendingProtectedActionKey = `${pendingProtectedAction?.method}:${pendingProtectedAction?.url}`
   switch (true) {
     case pendingProtectedActionKey?.includes(PendingProtectedActionTrigger.GetBackupCodes):
       store.routing.push('/account/backup-codes')
@@ -48,15 +49,16 @@ export const handlePendingProtectedAction = (store: RootStore) => {
       store.routing.push('/account/backup-codes')
       break
     case pendingProtectedActionKey?.includes(PendingProtectedActionTrigger.DeletePasskey):
-      const passkeyId = store.auth.pendingProtectedAction?.url.split('/').pop()
+      const passkeyId = pendingProtectedAction?.url.split('/').pop()
       if (passkeyId) {
         store.passkey.deletePasskey(passkeyId)
       }
       store.routing.push('/account/summary')
       break
     case pendingProtectedActionKey?.includes(PendingProtectedActionTrigger.ProtectRewardsRedemption):
-      const protectRewardsRedemptionData = store.auth.pendingProtectedAction?.data
-      const isRedemptionsTfaEnabled = protectRewardsRedemptionData?.redemptionsTfaEnabled
+      const protectRewardsRedemptionData = pendingProtectedAction?.data
+      // The body the app sends holds a boolean.
+      const isRedemptionsTfaEnabled = protectRewardsRedemptionData?.redemptionsTfaEnabled === true
 
       if (isRedemptionsTfaEnabled) {
         store.profile.setProtectRewardsRedemption(isRedemptionsTfaEnabled)
@@ -79,5 +81,5 @@ export const handlePendingProtectedAction = (store: RootStore) => {
     default:
       store.routing.push('/')
   }
-  store.auth.setPendingProtectedAction(undefined)
+  store.sudo.setPendingProtectedAction(undefined)
 }

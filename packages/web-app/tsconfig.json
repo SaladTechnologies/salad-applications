@@ -1,31 +1,17 @@
 {
-  "compilerOptions": {
-    "allowJs": true,
-    "allowUnreachableCode": false,
-    "allowSyntheticDefaultImports": true,
-    "allowUnusedLabels": false,
-    "assumeChangesOnlyAffectDirectDependencies": true,
-    "downlevelIteration": true,
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "module": "esnext",
-    "moduleResolution": "node",
-    "noEmit": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitOverride": true,
-    "noImplicitReturns": true,
-    "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "target": "es5"
-  },
-  "include": ["src"],
-  "exclude": ["**/*.stories.ts", "**/*.stories.tsx", "**/*.test.ts", "**/*.test.tsx"]
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.browser.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.legacy.json"
+    },
+    {
+      "path": "./tsconfig.generated.json"
+    }
+  ]
 }

@@ -2,7 +2,7 @@ import classnames from 'classnames'
 import type { ReactNode } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { Link } from 'react-router-dom'
+import { AppLink } from '../routing/app-link.tsx'
 import type { RootStore } from '../Store'
 import { getStore } from '../Store'
 import type { LinkTrackingInfo } from '../modules/analytics/models'
@@ -37,7 +37,9 @@ const handleClickTracking = (to?: string, trackingInfo?: any) => {
 const _SmartLink = ({ to, children, classes, className, trackingInfo }: Props) => {
   const isTextChild = typeof children === 'string'
   const finalClassName = classnames(classes.link, className, { [classes.hideUnderline]: !isTextChild })
-  if (to === undefined || to.startsWith('http')) {
+  // Only an app path navigates in the app. Anything else (an http or mailto link from the CMS, or a relative one) is a
+  // plain link the browser follows.
+  if (to === undefined || !to.startsWith('/')) {
     return (
       <a
         className={finalClassName}
@@ -50,13 +52,13 @@ const _SmartLink = ({ to, children, classes, className, trackingInfo }: Props) =
     )
   } else {
     return (
-      <Link
+      <AppLink
         to={to}
         className={finalClassName}
         onClick={trackingInfo ? () => handleClickTracking(to, trackingInfo) : undefined}
       >
         {children}
-      </Link>
+      </AppLink>
     )
   }
 }

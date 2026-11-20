@@ -1,0 +1,12 @@
+{
+  // Kiota's generated Machines API client (src/api/machinesApiClient/generated/), replaced wholesale on each
+  // regeneration (README.md). It imports a type alias (EarningHistoryTimeframeEnum) as a value, behind `// @ts-ignore`,
+  // so with verbatimModuleSyntax the bundler keeps that import and the build fails on a missing export.
+  "extends": "./tsconfig.legacy.json",
+  "compilerOptions": {
+    "verbatimModuleSyntax": false,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.generated.tsbuildinfo"
+  },
+  "include": ["src/api/machinesApiClient/generated/**/*", "src/vite-env.d.ts"],
+  "exclude": []
+}

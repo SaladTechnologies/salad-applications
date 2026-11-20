@@ -1,35 +1,49 @@
 import type { AxiosInstance } from 'axios'
-import { action, autorun, configure, flow, observable } from 'mobx'
-import { RouterStore } from 'mobx-react-router'
-import { UIStore } from './UIStore'
-import { AchievementsStore } from './modules/achievements'
+import type { Auth } from './account/auth.ts'
+import { createAuth } from './account/auth.ts'
+import type { BackupCodesStore } from './account/backup-codes.ts'
+import { createBackupCodes } from './account/backup-codes.ts'
+import type { CoinbaseEmail } from './account/coinbase-email.ts'
+import { createCoinbaseEmail } from './account/coinbase-email.ts'
+import type { SolanaWallet, WalletProblem } from './account/solana-wallet.ts'
+import { createSolanaWallet } from './account/solana-wallet.ts'
+import { action, configure, flow, observable, runInAction } from 'mobx'
+import type { Bonus, Bonuses, BonusesOptions } from './account/bonuses.ts'
+import { bonusTypes } from './account/bonuses.ts'
+import type { Passkeys } from './account/passkeys.ts'
+import { createPasskeys } from './account/passkeys.ts'
+import type { Sudo } from './account/sudo.ts'
+import { createSudo } from './account/sudo.ts'
+import type { Terms } from './account/terms.ts'
+import { createTerms } from './account/terms.ts'
+import { ErrorBoundaryBridge } from './app/error-boundary.ts'
+import type { Toasts } from './app/toasts.ts'
+import { createToasts } from './app/toasts.ts'
+import { config } from './config'
+import type { Navigation } from './routing/navigation.ts'
 import { AnalyticsStore } from './modules/analytics'
-import { AuthStore } from './modules/auth'
-import { BackupCodesStore } from './modules/backup-codes'
 import { BalanceStore } from './modules/balance'
-import { BonusStore } from './modules/bonus'
-import { CoinbaseEmailStore } from './modules/coinbase'
 import { DedicatedNodesStore } from './modules/dedicated-nodes'
 import { RefreshService } from './modules/data-refresh'
-import { DemandAlertsStore } from './modules/demand-alerts-views/DemandAlertsStore'
-import { DemandMonitorStore } from './modules/demand-monitor-views/DemandMonitorStore'
 import { EngagementStore } from './modules/engagement'
-import { ErrorBoundaryStore } from './modules/error-boundary'
 import { HelpScoutStore } from './modules/helpscout/HelpScoutStore'
-import { HomeStore } from './modules/home/HomeStore'
-import { NotificationStore } from './modules/notifications'
-import { PasskeyStore } from './modules/passkey-setup'
+import type { NotificationMessage } from './modules/notifications/models'
+import { NotificationMessageCategory } from './modules/notifications/models'
+import { NotificationToast } from './modules/notifications-views/components'
+import {
+  assertionBody,
+  getIsPasskeySupported,
+  getPasskeyCredential,
+  registerPasskeyCredential,
+  registrationBody,
+} from './modules/passkey-setup/utils'
+import { handlePendingProtectedAction } from './modules/protected-action/utils'
 import { ProfileStore } from './modules/profile'
+import type { ProfileAccess } from './modules/profile/ProfileStore'
 import type { Profile } from './modules/profile/models'
-import { ReferralStore } from './modules/referral'
 import { RenderStore } from './modules/render'
 import { RewardStore } from './modules/reward'
-import { SolanaWalletStore } from './modules/solana-wallet'
-import { StartButtonUIStore } from './modules/start-button/StartButtonUIStore'
-import { StorefrontStore } from './modules/storefront/StorefrontStore'
-import { TermsAndConditionsStore } from './modules/terms-and-conditions'
 import { VaultStore } from './modules/vault'
-import { ExperienceStore } from './modules/xp'
 
 configure({
   // computedRequiresReaction: process.env.NODE_ENV === 'development',
@@ -38,10 +52,79 @@ configure({
   // reactionRequiresObservable: process.env.NODE_ENV === 'development',
 })
 
+/** Loads the signed-in user's referral data (src/account/referrals.ts). */
+interface ReferralsAccess {
+  /** Loads the referrals report now. */
+  loadReport: () => void
+  /** Loads the referral code, and whether referrals are enabled, now. */
+  loadCode: () => Promise<void>
+  /** Loads the referral the user signed up with now. */
+  loadCurrent: () => Promise<void>
+}
+
+/** Loads and reads the signed-in user's lifetime XP (src/account/xp.ts). */
+interface XpAccess {
+  /** Loads it now. */
+  load: () => void
+  /** Returns it, or 0 before it has loaded. */
+  current: () => number
+}
+
+/** Creates the signed-in user's bonuses (src/account/bonuses.ts), given what the root store tells them. */
+type CreateBonuses = (
+  options: Pick<BonusesOptions, 'openReplaceModal' | 'onClaimed' | 'onClaimFailed' | 'refreshData'>,
+) => Bonuses
+
+/** The toast that says a bonus is claimed, and where clicking it goes, by the kind of bonus, as the bonus store had it. */
+const bonusClaimedNotification = (bonus: Bonus, navigation: Navigation): NotificationMessage => {
+  const notification: NotificationMessage = {
+    category: NotificationMessageCategory.BonusClaimedSuccess,
+    title: `Claimed ${bonus?.name}!`,
+    message: 'Congrats on your new bonus!',
+    onClick: () => navigation.push('/account/bonuses'),
+    autoClose: false,
+  }
+
+  switch (bonus?.blockType) {
+    case bonusTypes.avatar:
+      notification.message = 'Congrats on your new bonus! Your item is on its way. Check your profile for more details.'
+      notification.onClick = () => navigation.push('/account/summary')
+      break
+    case bonusTypes.balance:
+      break
+    case bonusTypes.earningRate:
+      notification.message = 'Your bonus earning rate is now active. Check your earnings for more details.'
+      notification.onClick = () => navigation.push('/earn/summary')
+      break
+    case bonusTypes.reward:
+      // NOTE: These should be kept in sync with the notification for successful reward redemptions
+      notification.message = 'Congrats on your pick! Your item is on its way. Check your reward vault for more details.'
+      notification.onClick = () => navigation.push('/store/vault')
+      break
+    case bonusTypes.xp:
+      break
+  }
+  return notification
+}
+
 let sharedStore: RootStore
 
-export const createStore = (axios: AxiosInstance): RootStore => {
-  sharedStore = new RootStore(axios)
+export const createStore = (
+  axios: AxiosInstance,
+  setSession: (session: 'yes' | 'no') => void,
+  navigation: Navigation,
+  loadBanner: () => void,
+  xp: XpAccess,
+  referrals: ReferralsAccess,
+  bonuses: CreateBonuses,
+  profiles: ProfileAccess,
+): RootStore => {
+  // Vite compiles decorators the TypeScript way, so each store's field initializers are writes in its constructor.
+  // `enforceActions: 'always'` rejects writes outside an action, so construct inside one. (CRA's Babel set initial
+  // values without a write.)
+  sharedStore = runInAction(
+    () => new RootStore(axios, setSession, navigation, loadBanner, xp, referrals, bonuses, profiles),
+  )
   return sharedStore
 }
 
@@ -53,80 +136,182 @@ export class RootStore {
   @observable
   public appLoading: boolean = true
   public appStartTime: Date = new Date()
-  public readonly auth: AuthStore
-  public readonly termsAndConditions: TermsAndConditionsStore
+  /** Signs the user in and out (src/account/auth.ts), and keeps whether they are signed in for the stores. */
+  public readonly auth: Auth
+  /** The acceptance of the terms and conditions (src/account/terms.ts), which the account page and sign-in share. */
+  public readonly terms: Terms
   public readonly analytics: AnalyticsStore
-  public readonly routing: RouterStore
-  public readonly xp: ExperienceStore
+  public readonly routing: Navigation
   public readonly rewards: RewardStore
   public readonly render: RenderStore
   public readonly balance: BalanceStore
   public readonly profile: ProfileStore
-  public readonly ui: UIStore
-  public readonly referral: ReferralStore
-  public readonly home: HomeStore
+  /** Loads the signed-in user's referral data (src/account/referrals.ts): sign-in and the app-wide refresh run it. */
+  public readonly referrals: ReferralsAccess
   public readonly refresh: RefreshService
-  public readonly notifications: NotificationStore
+  /** Shows notifications as toasts. */
+  public readonly notifications: Toasts<NotificationMessage>
   public readonly vault: VaultStore
   public readonly engagement: EngagementStore
   public readonly helpScout: HelpScoutStore
-  public readonly storefront: StorefrontStore
-  public readonly bonuses: BonusStore
-  public readonly achievements: AchievementsStore
-  public readonly startButtonUI: StartButtonUIStore
-  public readonly errorBoundary: ErrorBoundaryStore
-  public readonly passkey: PasskeyStore
+  /** The signed-in user's bonuses (src/account/bonuses.ts): their loads, their claims, and the claims' state. */
+  public readonly bonuses: Bonuses
+  /** Shows or resets the app's error page from outside React. */
+  public readonly errorBoundary: ErrorBoundaryBridge
+  /** The signed-in user's passkeys (src/account/passkeys.ts), and the passkey actions. */
+  public readonly passkey: Passkeys
+  /** The user's sudo mode: the action waiting for verification, and the sudo challenge. */
+  public readonly sudo: Sudo
+  /** The signed-in user's backup codes (src/account/backup-codes.ts), and the backup code actions. */
   public readonly backupCodes: BackupCodesStore
-  public readonly demandMonitor: DemandMonitorStore
-  public readonly demandAlerts: DemandAlertsStore
-  public readonly solanaWallet: SolanaWalletStore
-  public readonly coinbaseEmail: CoinbaseEmailStore
+  /** The signed-in user's Solana wallet address (src/account/solana-wallet.ts), and the actions on it. */
+  public readonly solanaWallet: SolanaWallet
+  /** The signed-in user's Coinbase email (src/account/coinbase-email.ts), and the actions on it. */
+  public readonly coinbaseEmail: CoinbaseEmail
   public readonly dedicatedNodes: DedicatedNodesStore
 
-  constructor(axios: AxiosInstance) {
-    this.routing = new RouterStore()
-    this.auth = new AuthStore(this, axios)
-    this.notifications = new NotificationStore(this)
-    this.xp = new ExperienceStore(axios)
+  /** Loads the notification banner (src/app/banner.ts), which the app-wide refresh runs signed in or not. */
+  public readonly loadBanner: () => void
 
-    this.achievements = new AchievementsStore(axios)
-    this.profile = new ProfileStore(this, axios)
-    this.termsAndConditions = new TermsAndConditionsStore(axios, this.profile)
+  /** The signed-in user's lifetime XP (src/account/xp.ts): the app-wide refresh loads it, and sign-in reads it. */
+  public readonly xp: XpAccess
+
+  constructor(
+    axios: AxiosInstance,
+    setSession: (session: 'yes' | 'no') => void,
+    navigation: Navigation,
+    loadBanner: () => void,
+    xp: XpAccess,
+    referrals: ReferralsAccess,
+    bonuses: CreateBonuses,
+    profiles: ProfileAccess,
+  ) {
+    this.routing = navigation
+    this.loadBanner = loadBanner
+    this.xp = xp
+    this.referrals = referrals
+    this.auth = createAuth({
+      http: axios,
+      setSession,
+      navigation,
+      loginUrl: config.loginUrl,
+      assign: (url) => {
+        window.location.assign(url)
+      },
+    })
+    this.sudo = createSudo({ http: axios })
+    this.notifications = createToasts<NotificationMessage>({
+      render: (message, onClick) => (
+        <NotificationToast {...message} isError={message.type === 'error'} onClick={onClick} />
+      ),
+      onShown: (message) => this.analytics.trackToastNotificationShown(message),
+      onClicked: (message) => this.analytics.trackToastNotificationClicked(message),
+      onClosed: (message) => this.analytics.trackToastNotificationClosed(message),
+    })
+
+    this.profile = new ProfileStore(this, axios, profiles)
+    this.terms = createTerms({
+      http: axios,
+      pendingVersion: () => this.profile.currentProfile?.pendingTermsVersion,
+      onAccepted: (profile) => this.profile.setProfileData(profile as Profile),
+    })
     this.rewards = new RewardStore(this, axios, this.profile)
-    this.render = new RenderStore(axios)
+    this.render = new RenderStore()
     this.analytics = new AnalyticsStore(this.auth)
     this.balance = new BalanceStore(axios)
-    this.ui = new UIStore(this)
-    this.referral = new ReferralStore(this, axios)
-    this.home = new HomeStore(axios)
     this.refresh = new RefreshService(this)
     this.vault = new VaultStore(axios, this.balance, this.rewards)
     this.engagement = new EngagementStore(this, axios)
     this.helpScout = new HelpScoutStore(axios, this.auth)
-    this.storefront = new StorefrontStore(axios)
-    this.bonuses = new BonusStore(this, axios)
-    this.passkey = new PasskeyStore(this, axios)
-    this.backupCodes = new BackupCodesStore(this, axios)
-    this.startButtonUI = new StartButtonUIStore(this)
-    this.errorBoundary = new ErrorBoundaryStore()
-    this.demandMonitor = new DemandMonitorStore(axios)
-    this.demandAlerts = new DemandAlertsStore(axios)
-    this.solanaWallet = new SolanaWalletStore(this, axios)
-    this.coinbaseEmail = new CoinbaseEmailStore(this, axios)
-    this.dedicatedNodes = new DedicatedNodesStore(axios)
-
-    // Start refreshing data
-    this.refresh.start()
-
-    autorun(() => {
-      if (this.auth.isAuthenticated === undefined) {
-        return
-      } else if (this.auth.isAuthenticated) {
-        this.onLogin()
-      } else {
-        this.onLogout()
-      }
+    this.bonuses = bonuses({
+      openReplaceModal: () => this.routing.push('/bonuses/replace-bonus'),
+      onClaimed: (bonus) => this.notifications.sendNotification(bonusClaimedNotification(bonus, this.routing)),
+      onClaimFailed: () =>
+        this.notifications.sendNotification({
+          category: NotificationMessageCategory.BonusClaimedError,
+          title: `Uh Oh. Something went wrong.`,
+          message: 'Please try to claim the bonus again later',
+          autoClose: false,
+          type: 'error',
+        }),
+      refreshData: () => this.refresh.refreshData(),
     })
+    this.passkey = createPasskeys({
+      http: axios,
+      webAuthn: {
+        isSupported: getIsPasskeySupported,
+        createCredential: async (options) =>
+          await registerPasskeyCredential(options as Parameters<typeof registerPasskeyCredential>[0]),
+        registrationBody,
+        getAssertion: async (options) =>
+          await getPasskeyCredential(options as Parameters<typeof getPasskeyCredential>[0]),
+        assertionBody,
+      },
+      onFirstPasskeyAdded: () => {
+        this.analytics.trackPasskeyAdded(true)
+        this.routing.push('/account/backup-codes', { isFirstPasskeyAdded: true })
+      },
+      onLastPasskeyRemoved: () => {
+        this.analytics.trackPasskeyAdded(false)
+      },
+      onVerified: this.runPendingProtectedAction,
+    })
+    this.backupCodes = createBackupCodes({ http: axios, onVerified: this.runPendingProtectedAction })
+    this.errorBoundary = new ErrorBoundaryBridge()
+    /** Shows a failed wallet or email save as the stores did: an error toast that stays until closed. */
+    const notifyWalletProblem = ({ title, message }: WalletProblem): void => {
+      this.notifications.sendNotification({
+        category: NotificationMessageCategory.FurtherActionRequired,
+        title,
+        message,
+        autoClose: false,
+        type: 'error',
+      })
+    }
+    this.solanaWallet = createSolanaWallet({ http: axios, notify: notifyWalletProblem })
+    this.coinbaseEmail = createCoinbaseEmail({ http: axios, notify: notifyWalletProblem })
+    this.dedicatedNodes = new DedicatedNodesStore(axios)
+  }
+
+  /**
+   * Runs the protected action waiting for sudo mode, once the user verified. It runs in one MobX action, as it ran
+   * inside the passkey and backup code stores' flows, so its MobX changes notify observers together, as before.
+   */
+  runPendingProtectedAction = (): void => {
+    runInAction(() => {
+      handlePendingProtectedAction(this)
+    })
+  }
+
+  /**
+   * The stores that hold data or intent of the signed-in user, which sign-out forgets (src/app/forget-user.ts). The
+   * dedicated nodes store is reset by `onLogout` itself.
+   */
+  userDataStores = () => [
+    this.sudo,
+    this.terms,
+    this.balance,
+    this.bonuses,
+    this.vault,
+    this.profile,
+    this.rewards,
+    this.solanaWallet,
+    this.coinbaseEmail,
+    this.passkey,
+    this.backupCodes,
+  ]
+
+  /** Mirrors the session (src/data/session.ts) into the stores: called when it becomes known and when it changes. */
+  onSessionChange = (session: 'yes' | 'no'): void => {
+    this.auth.setIsAuthenticated(session === 'yes')
+    // Where the analytics `when` and the engagement `autorun` reacted to sign-in.
+    this.analytics.checkMarketingTouchpoint()
+    this.engagement.checkWhatsNew()
+    if (session === 'yes') {
+      this.onLogin()
+    } else {
+      this.onLogout()
+    }
   }
 
   @action
@@ -157,21 +342,21 @@ export class RootStore {
 
       yield Promise.allSettled([
         this.analytics.start(profile),
-        this.referral.loadCurrentReferral(),
-        this.referral.loadReferralCode(),
+        this.referrals.loadCurrent(),
+        this.referrals.loadCode(),
         this.refresh.refreshData(),
         this.dedicatedNodes.loadEnrollment(),
         this.helpScout.login({
           name: profile.username,
           email: profile.email,
-          lifetimeXP: this.xp.currentXp,
+          lifetimeXP: this.xp.current(),
         }),
       ])
 
-      const isTermsAndConditionsAccepted = this.termsAndConditions.isTermsAndConditionsAccepted
+      const isTermsAndConditionsAccepted = this.terms.get().accepted
 
       if (profile.pendingTermsVersion && isTermsAndConditionsAccepted) {
-        yield this.termsAndConditions.submitTermsAndConditions()
+        yield this.terms.submit()
       }
 
       this.finishInitialLoading()
@@ -180,8 +365,8 @@ export class RootStore {
 
   @action
   onLogout = (): void => {
-    this.referral.currentReferral = undefined
-    this.referral.referralCode = ''
+    // The referral code and the user's referral, which this cleared, are forgotten with the rest of the user's data
+    // (src/app/forget-user.ts), right after.
     this.dedicatedNodes.reset()
 
     this.analytics.trackLogout()

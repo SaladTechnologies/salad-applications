@@ -19,6 +19,8 @@ pr:
   branches:
     include:
       - master
+      # Long-lived feature branch for the web app rebuild: task PRs into it get a build and a Netlify preview.
+      - web-app-rebuild
   paths:
     include:
       - packages/web-app
@@ -32,12 +34,14 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-  - ${{ if or(ne(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.Reason'], 'PullRequest')) }}:
-      - template: .azure-pipelines/stages/deploy-preview-stage.yaml
+  - ? ${{ if or(ne(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.Reason'], 'PullRequest'))
+      }}
+    : - template: .azure-pipelines/stages/deploy-preview-stage.yaml
         parameters:
           workingDirectory: $(Build.Repository.LocalPath)/$(workingDirectory)
-  - ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(variables['Build.Reason'], 'PullRequest')) }}:
-      - template: .azure-pipelines/stages/deploy-test-stage.yaml
+  - ? ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(variables['Build.Reason'], 'PullRequest'))
+      }}
+    : - template: .azure-pipelines/stages/deploy-test-stage.yaml
         parameters:
           workingDirectory: $(Build.Repository.LocalPath)/$(workingDirectory)
       - template: .azure-pipelines/stages/deploy-prod-stage.yaml

@@ -1,9 +1,7 @@
 import { Text } from '@saladtechnologies/garden-components'
 import type { FC } from 'react'
 import { SmartLink } from '../../components'
-import { connect } from '../../connect'
 import { DefaultTheme } from '../../SaladTheme'
-import type { RootStore } from '../../Store'
 import { dedicatedNodesPagePath } from '../dedicated-nodes'
 
 interface Props {
@@ -12,7 +10,7 @@ interface Props {
 }
 
 /** Links the Earn page's machines view to the dedicated nodes page, for accounts that can use it. */
-export const _DedicatedNodesLink: FC<Props> = ({ hasAccess }) =>
+export const DedicatedNodesLink: FC<Props> = ({ hasAccess }) =>
   hasAccess ? (
     <Text variant="baseM">
       <SmartLink to={dedicatedNodesPagePath} color={DefaultTheme.green}>
@@ -20,8 +18,3 @@ export const _DedicatedNodesLink: FC<Props> = ({ hasAccess }) =>
       </SmartLink>
     </Text>
   ) : null
-
-export const DedicatedNodesLink = connect(
-  (store: RootStore): Props => ({ hasAccess: store.dedicatedNodes.hasAccess }),
-  _DedicatedNodesLink,
-)

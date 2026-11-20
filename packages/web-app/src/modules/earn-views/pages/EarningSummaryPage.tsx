@@ -1,12 +1,11 @@
 import type { FC } from 'react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { Machine } from '../../../api/machinesApiClient/generated/models'
 import { Scrollbar } from '../../../components'
-import { withLogin } from '../../auth-views'
 import { DedicatedNodesLink } from '../../dedicated-nodes-views/DedicatedNodesLink'
-import type { CurrentHourlyEarningRatesPerMachine, EarningPerMachine } from '../../balance/models'
+import type { ChartDaysShowing, CurrentHourlyEarningRatesPerMachine, EarningPerMachine } from '../../balance/models'
 import type { RedeemedReward } from '../../balance/models/RedeemedReward'
 import type { RewardVaultItem } from '../../vault/models'
 import {
@@ -18,7 +17,6 @@ import {
 import { AllMachines } from '../components/AllMachines'
 import { MachineDetailsModal } from '../components/AllMachines/MachineDetailsModal'
 import { getMachineDetailsList } from '../components/AllMachines/utils'
-import { oneMinuteInMilliseconds } from './constants'
 
 const styles = () => ({
   content: {
@@ -32,6 +30,10 @@ const styles = () => ({
 interface Props extends WithStyles<typeof styles> {
   currentBalance?: number
   earningsPerMachine: EarningPerMachine
+  /** How many days the earning chart shows. */
+  daysShowing: ChartDaysShowing
+  /** Whether the account can use dedicated nodes, so the link to them is shown. */
+  hasDedicatedNodesAccess: boolean
   lifetimeBalance?: number
   totalChoppingHours?: number
   redeemedRewards?: RewardVaultItem[]
@@ -42,10 +44,7 @@ interface Props extends WithStyles<typeof styles> {
   isLatestCompletedRedeemedRewardsLoading: boolean
   machines: Machine[] | null
   currentHourlyEarningRatesPerMachine: CurrentHourlyEarningRatesPerMachine
-  fetchCurrentEarningRatesPerMachine: (machineIds?: string[]) => void
-  fetchEarningsPerMachine: () => void
-  startRedemptionsRefresh: () => void
-  stopRedemptionsRefresh: () => void
+  onPageMachineIdsChange: (machineIds: string[]) => void
   navigateToRewardVaultPage: () => void
   trackAndNavigateToRewardVaultPage: () => void
   trackEarnPageFAQLinkClicked: (faqLink: string) => void
@@ -56,6 +55,8 @@ const _EarningSummaryPage: FC<Props> = ({
   classes,
   currentBalance,
   earningsPerMachine,
+  daysShowing,
+  hasDedicatedNodesAccess,
   lifetimeBalance,
   totalChoppingHours,
   redeemedRewards,
@@ -66,18 +67,13 @@ const _EarningSummaryPage: FC<Props> = ({
   isLatestCompletedRedeemedRewardsLoading,
   machines,
   currentHourlyEarningRatesPerMachine,
-  fetchCurrentEarningRatesPerMachine,
-  fetchEarningsPerMachine,
-  startRedemptionsRefresh,
-  stopRedemptionsRefresh,
+  onPageMachineIdsChange,
   trackAndNavigateToRewardVaultPage,
   trackEarnPageFAQLinkClicked,
   trackEarnPageViewed,
 }) => {
   const [detailsModalMachineId, setDetailsModalMachineId] = useState<string | null>(null)
   const [selectedMachineIds, setSelectedMachineIds] = useState<string[]>([])
-  const [pageMachineIds, setPageMachineIds] = useState<string[]>([])
-  const updateTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   const handleCloseMachineDetailsModal = () => {
     setDetailsModalMachineId(null)
@@ -87,35 +83,9 @@ const _EarningSummaryPage: FC<Props> = ({
     setSelectedMachineIds(updatedSelectedMachineIds)
   }, [])
 
-  const handlePageChange = useCallback((updatedPageMachineIds: string[]) => {
-    setPageMachineIds(updatedPageMachineIds)
-  }, [])
-
   useEffect(() => {
-    fetchEarningsPerMachine()
-  }, [fetchEarningsPerMachine])
-
-  useEffect(() => {
-    fetchCurrentEarningRatesPerMachine(pageMachineIds)
-    updateTimerRef.current = setInterval(() => {
-      fetchCurrentEarningRatesPerMachine(pageMachineIds)
-    }, oneMinuteInMilliseconds)
-
-    return () => {
-      if (updateTimerRef.current) {
-        clearInterval(updateTimerRef.current)
-      }
-    }
-  }, [fetchCurrentEarningRatesPerMachine, pageMachineIds])
-
-  useEffect(() => {
-    startRedemptionsRefresh()
     trackEarnPageViewed()
-
-    return () => {
-      stopRedemptionsRefresh()
-    }
-  }, [startRedemptionsRefresh, stopRedemptionsRefresh, trackEarnPageViewed])
+  }, [trackEarnPageViewed])
 
   const latestCompletedRedeemedRewardsArray: RedeemedReward[] = Array.from(latestCompletedRedeemedRewards.values())
 
@@ -150,10 +120,10 @@ const _EarningSummaryPage: FC<Props> = ({
           machineDetailsList={machineDetailsList}
           onMachineIdClick={setDetailsModalMachineId}
           onSelectedMachineIdsChange={handleSelectedMachineIdsChange}
-          onPageChange={handlePageChange}
+          onPageChange={onPageMachineIdsChange}
         />
-        <DedicatedNodesLink />
-        <EarningHistoryContainer earningsPerMachine={earningsPerSelectedMachines} />
+        <DedicatedNodesLink hasAccess={hasDedicatedNodesAccess} />
+        <EarningHistoryContainer earningsPerMachine={earningsPerSelectedMachines} daysShowing={daysShowing} />
         {shownInModalMachineDetails && (
           <MachineDetailsModal
             machineDetails={shownInModalMachineDetails}
@@ -171,4 +141,4 @@ const _EarningSummaryPage: FC<Props> = ({
   )
 }
 
-export const EarningSummaryPage = withLogin(withStyles(styles)(_EarningSummaryPage))
+export const EarningSummaryPage = withStyles(styles)(_EarningSummaryPage)

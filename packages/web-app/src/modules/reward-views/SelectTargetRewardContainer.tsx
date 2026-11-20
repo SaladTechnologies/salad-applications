@@ -1,12 +1,16 @@
+import { useExternalState } from '../../app/external-state.ts'
 import { connect } from '../../connect'
 import type { RootStore } from '../../Store'
+import { getStore } from '../../Store'
+import type { RewardState } from '../reward'
+import { selectedTargetRewardOf } from '../reward'
 import { SelectTargetRewardPage } from './pages'
 
-const mapStoreToProps = (store: RootStore): any => {
+const mapStoreToProps = (store: RootStore, props: { rewards: RewardState }): any => {
   const navigateToStorePage = () => store.routing.push(`/store`)
   return {
-    recommendedRewards: store.rewards.recommendedRewards,
-    targetReward: store.rewards.selectedTargetReward,
+    recommendedRewards: props.rewards.recommendedRewards,
+    targetReward: selectedTargetRewardOf(props.rewards),
     onConfirmTargetReward: store.rewards.setSelectedTargetReward,
     onSelectDifferentReward: store.rewards.removeSelectedTargetReward,
     fetchRecommendedRewards: store.rewards.fetchRecommendedRewards,
@@ -14,4 +18,9 @@ const mapStoreToProps = (store: RootStore): any => {
   }
 }
 
-export const SelectTargetRewardContainer = connect(mapStoreToProps, SelectTargetRewardPage)
+const ConnectedSelectTargetRewardPage = connect(mapStoreToProps, SelectTargetRewardPage)
+
+/** The page for choosing a target reward. It reads the recommended and target rewards and passes them down. */
+export const SelectTargetRewardContainer = () => (
+  <ConnectedSelectTargetRewardPage rewards={useExternalState(getStore().rewards.state)} />
+)

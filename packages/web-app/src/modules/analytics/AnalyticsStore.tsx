@@ -1,7 +1,8 @@
 import mixpanel from 'mixpanel-browser'
-import { observable, runInAction, when } from 'mobx'
+import { observable, runInAction } from 'mobx'
+import { onceWhen } from '../../app/once-when.ts'
 import { config } from '../../config'
-import type { AuthStore } from '../auth'
+import type { Auth } from '../../account/auth.ts'
 import type { ViewData, ViewRange, ViewType } from '../earn-views/components/EarningHistory/constants'
 import type { NotificationMessage } from '../notifications/models'
 import type { Profile } from '../profile/models'
@@ -15,7 +16,7 @@ export class AnalyticsStore {
   @observable
   private mixpanelInitialized = false
 
-  constructor(private readonly auth: AuthStore) {
+  constructor(private readonly auth: Auth) {
     const token = config.mixpanelToken
     if (!token) {
       return
@@ -29,10 +30,9 @@ export class AnalyticsStore {
         runInAction(() => {
           this.mixpanelInitialized = true
         })
+        this.checkMarketingTouchpoint()
       },
     })
-
-    this.trackMarketingTouchpoint()
   }
 
   public start = (profile: Profile) => {
@@ -120,6 +120,7 @@ export class AnalyticsStore {
 
   /**
    * Tracks when mining stops
+   *
    * @param reason Why did mining stop
    * @param totalTime Total time between start and stop (ms)
    * @param choppingTime Total time in the chopping state (ms)
@@ -359,7 +360,10 @@ export class AnalyticsStore {
     })
   }
 
-  /** Track a user as they go through the onboarding flow. Types will only be used if there are different variations of pages that can be shown e.g. different AV guides. */
+  /**
+   * Track a user as they go through the onboarding flow. Types will only be used if there are different variations of
+   * pages that can be shown e.g. different AV guides.
+   */
   public trackOnboardingPageViewed = (page: string, order: number, type?: string) => {
     const currentPath = window && window.location.pathname
     this.track('Onboarding', {
@@ -415,20 +419,27 @@ export class AnalyticsStore {
     this.track('Uninstall')
   }
 
-  /** Tracks marketing touchpoint data when available from cookies and local storage. */
-  public trackMarketingTouchpoint = () => {
-    when(
-      () => !!this.auth.isAuthenticated && this.mixpanelInitialized,
-      () => {
-        const marketingTouchpointTimestamp = localStorage.getItem('marketingTouchpointTimestamp')
-        const utmTags = getUtmTagsFromCookie()
+  /**
+   * Tracks marketing touchpoint data when available from cookies and local storage, once, the first time the user is
+   * signed in and Mixpanel has loaded. It ran as a `when` on those two; now `checkMarketingTouchpoint` runs it right
+   * after each changes: Mixpanel's load here, and the session change in the root store.
+   */
+  private readonly trackMarketingTouchpointOnce = onceWhen(
+    () => !!this.auth.isAuthenticated() && this.mixpanelInitialized,
+    () => {
+      const marketingTouchpointTimestamp = localStorage.getItem('marketingTouchpointTimestamp')
+      const utmTags = getUtmTagsFromCookie()
 
-        if (marketingTouchpointTimestamp && Object.keys(utmTags).length > 0) {
-          localStorage.removeItem('marketingTouchpointTimestamp')
-          this.track('Marketing Touchpoint', { OriginalTimestamp: marketingTouchpointTimestamp, ...utmTags })
-        }
-      },
-    )
+      if (marketingTouchpointTimestamp && Object.keys(utmTags).length > 0) {
+        localStorage.removeItem('marketingTouchpointTimestamp')
+        this.track('Marketing Touchpoint', { OriginalTimestamp: marketingTouchpointTimestamp, ...utmTags })
+      }
+    },
+  )
+
+  /** Tracks the marketing touchpoint if it is due and has not been tracked: see `trackMarketingTouchpointOnce`. */
+  public checkMarketingTouchpoint = (): void => {
+    this.trackMarketingTouchpointOnce()
   }
 
   private track = (event: string, properties?: { [key: string]: any }) => {

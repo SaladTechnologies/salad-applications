@@ -1,23 +1,24 @@
-import { connect } from '../../connect'
-import type { RootStore } from '../../Store'
+import { useEarningRateBonus } from '../../account/bonuses.ts'
+import { useNavigation } from '../../routing/navigation-context.ts'
+import { getStore } from '../../Store'
 import { ReplaceBonusModal } from './components/ReplaceBonusModal'
 
-const mapStoreToProps = (store: RootStore): any => {
-  const replaceCurrentEarningRate = () => {
-    store.bonuses.replaceCurrentEarningRate()
-    store.ui.hideModal()
-  }
-
-  const handleClose = () => {
-    store.bonuses.clearReplacementEarningRateBonusId()
-    store.ui.hideModal()
-  }
-
-  return {
-    currentEarningBonus: store.bonuses.currentEarningBonus?.multiplier,
-    onCloseClicked: () => handleClose(),
-    onReplaceCurrentBonus: () => replaceCurrentEarningRate(),
-  }
+/** The replace-bonus modal: it replaces the active earning rate bonus with the waiting one, or closes without. */
+export const ReplaceBonusModalContainer = () => {
+  const { bonuses } = getStore()
+  const navigation = useNavigation()
+  const currentEarningBonus = useEarningRateBonus()
+  return (
+    <ReplaceBonusModal
+      currentEarningBonus={currentEarningBonus?.multiplier}
+      onReplaceCurrentBonus={() => {
+        void bonuses.replaceCurrentEarningRate()
+        navigation.goBackOr('/account/bonuses')
+      }}
+      onCloseClicked={() => {
+        bonuses.clearReplacementEarningRateBonusId()
+        navigation.goBackOr('/account/bonuses')
+      }}
+    />
+  )
 }
-
-export const ReplaceBonusModalContainer = connect(mapStoreToProps, ReplaceBonusModal)

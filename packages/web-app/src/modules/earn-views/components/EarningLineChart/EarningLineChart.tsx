@@ -79,7 +79,7 @@ const _EarningLineChart = ({ classes, earningsPerMachine, daysShowing, viewData 
             ...prevMachineOptions[machineId],
             isChecked: !prevMachineOptions[machineId]?.isChecked,
           },
-        } as MachineOptions),
+        }) as MachineOptions,
     )
   }
 

@@ -1,4 +1,4 @@
-import type { DemandedHardwarePerformance } from '../../DemandMonitorStore'
+import type { DemandedHardwarePerformance } from '../../../../earnings/demand-monitor.ts'
 import type { DemandMonitorTableColumn } from './types'
 import {
   sortByAvgEarningRate,
@@ -55,5 +55,3 @@ export const demandMonitorTableColumns: Record<DemandMonitorTableColumn['key'], 
     sortRule: sortByTop25PctEarningRate,
   },
 }
-
-export const oneHourInMilliseconds = 1000 * 60 * 60

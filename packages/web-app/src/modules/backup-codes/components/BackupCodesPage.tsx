@@ -2,15 +2,14 @@ import { Button, LoadingSpinner, Text } from '@saladtechnologies/garden-componen
 import { Copy } from '@saladtechnologies/garden-icons'
 import type CSS from 'csstype'
 import moment from 'moment'
-import { useEffect, useState, type FC } from 'react'
-import Scrollbars from 'react-custom-scrollbars-2'
+import { useState, type FC } from 'react'
+import { Scrollbars } from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { useLocation } from 'react-router'
+import { useLocation } from '@tanstack/react-router'
 import type { SaladTheme } from '../../../SaladTheme'
 import Referrals from '../../../assets/Referrals.svg'
-import { withLogin } from '../../auth-views'
-import type { BackupCodes } from '../BackupCodesStore'
+import type { BackupCodes } from '../../../account/backup-codes.ts'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   pageWrapper: {
@@ -112,19 +111,12 @@ interface Props extends WithStyles<typeof styles> {
   backupCodes: BackupCodes
   onBackToProfileClick: () => void
   onGenerateNewBackupCodesClick: () => void
-  getBackupCodes: () => void
 }
 
-const _BackupCodesPage: FC<Props> = ({
-  classes,
-  backupCodes,
-  onBackToProfileClick,
-  onGenerateNewBackupCodesClick,
-  getBackupCodes,
-}) => {
+const _BackupCodesPage: FC<Props> = ({ classes, backupCodes, onBackToProfileClick, onGenerateNewBackupCodesClick }) => {
   const [isCopied, setIsCopied] = useState(false)
-  const location = useLocation<{ isFirstPasskeyAdded: string }>()
-  const isFirstPasskeyAdded = location.state?.isFirstPasskeyAdded
+  const location = useLocation()
+  const isFirstPasskeyAdded = (location.state as { isFirstPasskeyAdded?: boolean }).isFirstPasskeyAdded
 
   const handleCopyClick = () => {
     // eslint-disable-next-line compat/compat
@@ -134,10 +126,6 @@ const _BackupCodesPage: FC<Props> = ({
       setIsCopied(false)
     }, 2000)
   }
-
-  useEffect(() => {
-    getBackupCodes()
-  }, [getBackupCodes])
 
   return (
     <div className={classes.pageWrapper}>
@@ -217,4 +205,4 @@ const _BackupCodesPage: FC<Props> = ({
   )
 }
 
-export const BackupCodesPage = withLogin(withStyles(styles)(_BackupCodesPage))
+export const BackupCodesPage = withStyles(styles)(_BackupCodesPage)

@@ -3,9 +3,7 @@ import { rewardRoute } from '../../../RouteUtils'
 import { normalizeRenderTags } from '../../render'
 
 export class SearchResult {
-  /** The quantity of rewards remaining.
-   *  A value means stock is getting low.
-   *  Undefined means we have "significant" stock */
+  /** The quantity of rewards remaining. A value means stock is getting low. Undefined means we have "significant" stock */
 
   constructor(
     public readonly id: string,

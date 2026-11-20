@@ -1,5 +1,8 @@
 import type { ReactNode } from 'react'
-import MediaQuery from 'react-responsive'
+import MediaQueryImport from 'react-responsive'
+import { cjsDefault } from '../cjs-default.ts'
+
+const MediaQuery = cjsDefault(MediaQueryImport)
 
 interface Props {
   orientation?: 'portrait' | 'landscape'
@@ -15,3 +18,11 @@ export const MobileDevice = ({ orientation, children }: Props) => (
 )
 
 export const NotMobile = ({ children }: Props) => <MediaQuery minWidth={mobileSize + 1}>{children}</MediaQuery>
+
+/** Renders `mobile` on a phone-sized screen and `desktop` otherwise, deciding again as the window resizes. */
+export const ByDevice = ({ desktop, mobile }: { desktop: ReactNode; mobile: ReactNode }) => (
+  <>
+    <MobileDevice>{mobile}</MobileDevice>
+    <NotMobile>{desktop}</NotMobile>
+  </>
+)

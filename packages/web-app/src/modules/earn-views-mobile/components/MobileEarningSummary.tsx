@@ -1,18 +1,17 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useState } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
 import type { Machine } from '../../../api/machinesApiClient/generated/models'
 import { Divider, SectionHeader, StatElement } from '../../../components'
 import { formatBalance } from '../../../utils'
-import type { CurrentHourlyEarningRatesPerMachine, EarningPerMachine } from '../../balance/models'
+import type { ChartDaysShowing, CurrentHourlyEarningRatesPerMachine, EarningPerMachine } from '../../balance/models'
 import { DedicatedNodesLink } from '../../dedicated-nodes-views/DedicatedNodesLink'
 import { EarningHistoryContainer } from '../../earn-views/components'
 import { AllMachines } from '../../earn-views/components/AllMachines'
 import { MachineDetailsModal } from '../../earn-views/components/AllMachines/MachineDetailsModal'
 import type { MachineDetails } from '../../earn-views/components/AllMachines/utils'
 import { getMachineDetailsList } from '../../earn-views/components/AllMachines/utils'
-import { oneMinuteInMilliseconds } from '../../earn-views/pages/constants'
 
 const styles = (theme: SaladTheme) => ({
   item: {
@@ -49,6 +48,10 @@ const styles = (theme: SaladTheme) => ({
 interface Props extends WithStyles<typeof styles> {
   currentBalance?: number
   earningsPerMachine: EarningPerMachine
+  /** How many days the earning chart shows. */
+  daysShowing: ChartDaysShowing
+  /** Whether the account can use dedicated nodes, so the link to them is shown. */
+  hasDedicatedNodesAccess: boolean
   last24HrEarnings: number
   last7DayEarnings: number
   last30DayEarnings: number
@@ -56,13 +59,14 @@ interface Props extends WithStyles<typeof styles> {
   totalXp?: number
   machines: Machine[]
   currentHourlyEarningRatesPerMachine: CurrentHourlyEarningRatesPerMachine
-  fetchCurrentEarningRatesPerMachine: (machineIds: string[]) => void
-  fetchEarningsPerMachine: () => void
+  onPageMachineIdsChange: (machineIds: string[]) => void
 }
 
 const _MobileEarningSummary = ({
   classes,
   earningsPerMachine,
+  daysShowing,
+  hasDedicatedNodesAccess,
   currentBalance,
   last24HrEarnings,
   last7DayEarnings,
@@ -71,38 +75,14 @@ const _MobileEarningSummary = ({
   totalXp,
   machines,
   currentHourlyEarningRatesPerMachine,
-  fetchCurrentEarningRatesPerMachine,
-  fetchEarningsPerMachine,
+  onPageMachineIdsChange,
 }: Props) => {
   const [detailsModalMachineId, setDetailsModalMachineId] = useState<string | null>(null)
   const [selectedMachineIds, setSelectedMachineIds] = useState<string[]>([])
-  const [pageMachineIds, setPageMachineIds] = useState<string[]>([])
-  const updateTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   const handleCloseMachineDetailsModal = () => {
     setDetailsModalMachineId(null)
   }
-
-  const handlePageChange = useCallback((updatedPageMachineIds: string[]) => {
-    setPageMachineIds(updatedPageMachineIds)
-  }, [])
-
-  useEffect(() => {
-    fetchEarningsPerMachine()
-  }, [fetchEarningsPerMachine])
-
-  useEffect(() => {
-    fetchCurrentEarningRatesPerMachine(pageMachineIds)
-    updateTimerRef.current = setInterval(() => {
-      fetchCurrentEarningRatesPerMachine(pageMachineIds)
-    }, oneMinuteInMilliseconds)
-
-    return () => {
-      if (updateTimerRef.current) {
-        clearInterval(updateTimerRef.current)
-      }
-    }
-  }, [fetchCurrentEarningRatesPerMachine, pageMachineIds])
 
   const handleSelectedMachineIdsChange = useCallback((updatedSelectedMachineIds: string[]) => {
     setSelectedMachineIds(updatedSelectedMachineIds)
@@ -169,10 +149,10 @@ const _MobileEarningSummary = ({
         machineDetailsList={getMachineDetailsList({ machines, currentHourlyEarningRatesPerMachine })}
         onMachineIdClick={setDetailsModalMachineId}
         onSelectedMachineIdsChange={handleSelectedMachineIdsChange}
-        onPageChange={handlePageChange}
+        onPageChange={onPageMachineIdsChange}
       />
-      <DedicatedNodesLink />
-      <EarningHistoryContainer earningsPerMachine={earningsPerSelectedMachines} />
+      <DedicatedNodesLink hasAccess={hasDedicatedNodesAccess} />
+      <EarningHistoryContainer earningsPerMachine={earningsPerSelectedMachines} daysShowing={daysShowing} />
       {shownInModalMachineDetails && (
         <MachineDetailsModal
           machineDetails={shownInModalMachineDetails as MachineDetails}

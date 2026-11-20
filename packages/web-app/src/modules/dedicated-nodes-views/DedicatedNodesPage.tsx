@@ -6,7 +6,6 @@ import withStyles from 'react-jss'
 import { useMediaQuery } from 'react-responsive'
 import { ErrorText, Head, mobileSize, Scrollbar } from '../../components'
 import type { SaladTheme } from '../../SaladTheme'
-import { withLogin } from '../auth-views'
 import {
   filterNodesByEk,
   parseEkFilter,
@@ -123,19 +122,10 @@ const _DedicatedNodesPage: FC<DedicatedNodesPageProps> = ({
   const isTabletOrMobile = useMediaQuery({ query: `(max-width: ${mobileSize}px)` })
   const [filterText, setFilterText] = useState('')
 
-  // Opened from a bookmark before the login flow asked for the token: ask now.
+  // Clear a stale action error when access changes or the page closes.
   useEffect(() => {
-    if (!isEnrollmentChecked) {
-      loadEnrollment()
-    }
-  }, [isEnrollmentChecked, loadEnrollment])
-
-  useEffect(() => {
-    if (hasAccess) {
-      loadNodes()
-    }
     return () => clearActionError()
-  }, [hasAccess, loadNodes, clearActionError])
+  }, [hasAccess, clearActionError])
 
   const ekFilter = parseEkFilter(filterText)
   const visibleNodes = filterNodesByEk(nodes, ekFilter)
@@ -257,4 +247,4 @@ const _DedicatedNodesPage: FC<DedicatedNodesPageProps> = ({
   )
 }
 
-export const DedicatedNodesPage = withLogin(withStyles(styles)(_DedicatedNodesPage))
+export const DedicatedNodesPage = withStyles(styles)(_DedicatedNodesPage)

@@ -1,19 +1,23 @@
+import { useExternalState } from '../../app/external-state.ts'
 import { connect } from '../../connect'
+import { useDedicatedNodesLoads } from '../../earnings/dedicated-nodes.ts'
 import type { RootStore } from '../../Store'
+import { getStore } from '../../Store'
+import type { DedicatedNodesState } from '../dedicated-nodes'
 import { DedicatedNodesPage } from './DedicatedNodesPage'
 
-const mapStoreToProps = (store: RootStore): any => ({
-  hasAccess: store.dedicatedNodes.hasAccess,
-  isEnrollmentChecked: store.dedicatedNodes.isEnrollmentChecked,
-  isEnrollmentLoadError: store.dedicatedNodes.isEnrollmentLoadError,
-  enrollment: store.dedicatedNodes.enrollment,
-  nodes: store.dedicatedNodes.nodes,
-  hasMoreNodes: !!store.dedicatedNodes.continuationToken,
-  isListLoaded: store.dedicatedNodes.isListLoaded,
-  isListLoading: store.dedicatedNodes.isListLoading,
-  listError: store.dedicatedNodes.listError,
-  pendingAction: store.dedicatedNodes.pendingAction,
-  actionError: store.dedicatedNodes.actionError,
+const mapStoreToProps = (store: RootStore, props: { nodes: DedicatedNodesState }): any => ({
+  hasAccess: props.nodes.hasAccess,
+  isEnrollmentChecked: props.nodes.isEnrollmentChecked,
+  isEnrollmentLoadError: props.nodes.isEnrollmentLoadError,
+  enrollment: props.nodes.enrollment,
+  nodes: props.nodes.nodes,
+  hasMoreNodes: !!props.nodes.continuationToken,
+  isListLoaded: props.nodes.isListLoaded,
+  isListLoading: props.nodes.isListLoading,
+  listError: props.nodes.listError,
+  pendingAction: props.nodes.pendingAction,
+  actionError: props.nodes.actionError,
   loadEnrollment: store.dedicatedNodes.loadEnrollment,
   loadNodes: store.dedicatedNodes.loadNodes,
   loadMoreNodes: store.dedicatedNodes.loadMoreNodes,
@@ -23,4 +27,20 @@ const mapStoreToProps = (store: RootStore): any => ({
   clearActionError: store.dedicatedNodes.clearActionError,
 })
 
-export const DedicatedNodesPageContainer = connect(mapStoreToProps, DedicatedNodesPage)
+const ConnectedDedicatedNodesPage = connect(mapStoreToProps, DedicatedNodesPage)
+
+/**
+ * The dedicated nodes page. It loads the enrollment token while it has not been asked for since the last reset, and the
+ * first page of nodes when it opens with access or gains access. It reads the store's state and passes it down.
+ */
+export const DedicatedNodesPageContainer = () => {
+  const { dedicatedNodes } = getStore()
+  const nodes = useExternalState(dedicatedNodes.state)
+  useDedicatedNodesLoads({
+    isEnrollmentChecked: nodes.isEnrollmentChecked,
+    hasAccess: nodes.hasAccess,
+    loadEnrollment: dedicatedNodes.loadEnrollment,
+    loadNodes: dedicatedNodes.loadNodes,
+  })
+  return <ConnectedDedicatedNodesPage nodes={nodes} />
+}

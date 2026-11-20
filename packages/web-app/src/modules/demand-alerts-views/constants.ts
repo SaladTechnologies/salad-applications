@@ -1,6 +1,4 @@
-import type { DemandTier } from '../demand-monitor-views/DemandMonitorStore'
-
-export const demandSubscriptionsPath = '/api/v2/demand-monitor/subscriptions'
+import type { DemandTier } from '../../earnings/demand-monitor.ts'
 
 export interface DemandScenarioDropdownOption {
   label: string

@@ -4,10 +4,13 @@ import { Component } from 'react'
 import { Img } from 'react-image'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import Carousel from 'react-multi-carousel'
+import CarouselImport from 'react-multi-carousel'
 import { Divider } from '../../../components'
 import type { Reward } from '../../reward/models'
 import { RewardImageDot } from './RewardImageDot'
+import { cjsDefault } from '../../../cjs-default.ts'
+
+const Carousel = cjsDefault(CarouselImport)
 
 const styles = {
   container: {

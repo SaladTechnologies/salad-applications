@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/knip/schema-jsonc.json",
+  // Project-specific: the template's `"entry": ["scripts/*.{cjs,js,mjs,ts}"]` is left out while the project has no
+  // scripts/ directory, because a pattern that matches nothing fails (treatConfigHintsAsErrors). Add it back with the
+  // first script.
+  // Project-specific: a file that only declares global types (the Help Scout Beacon on `window`), which tsc loads
+  // through tsconfig and nothing imports.
+  "entry": ["src/modules/helpscout/models/HelpScout.tsx"],
+  // Project-specific: Kiota's generated Machines API client, replaced wholesale on each regeneration (README.md).
+  // Project-specific: public/ is served as is at its URL (CSS and images other sites or apps may load), not imported.
+  "ignore": ["src/api/machinesApiClient/generated/**", "public/**"],
+  // Run from the justfile. oxlint-tsgolint is the program oxlint runs for type-aware rules.
+  // Project-specific: htmlparser2 (under react-html-parser) imports the Node built-ins buffer, events, and
+  // string_decoder; in the browser the bundler resolves those names to these packages.
+  "ignoreDependencies": ["oxlint", "oxlint-tsgolint", "buffer", "events", "string_decoder"],
+  // Off by default: exports only reached through a namespace import (`import * as ns`). Cycles are import/no-cycle's.
+  "include": ["nsExports", "nsTypes"],
+  // A setting that no longer matches anything fails, as an unused suppression does.
+  "treatConfigHintsAsErrors": true,
+}

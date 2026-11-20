@@ -1,0 +1,34 @@
+{
+  "extends": "./tsconfig.browser.json",
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "erasableSyntaxOnly": false,
+    "exactOptionalPropertyTypes": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.legacy.tsbuildinfo"
+  },
+  "include": [
+    "src/api/**/*",
+    "src/App.tsx",
+    "src/assets/**/*",
+    "src/components/**/*",
+    "src/config.tsx",
+    "src/connect.tsx",
+    "src/formatters.tsx",
+    "src/hooks/**/*",
+    "src/index.css",
+    "src/index.tsx",
+    "src/modules/**/*",
+    "src/otherTypes.d.ts",
+    "src/Routes.tsx",
+    "src/RouteUtils.tsx",
+    "src/SaladTheme.tsx",
+    "src/Storage.tsx",
+    "src/Store.tsx",
+    "src/Tooltips.tsx",
+    "src/utils.tsx",
+    "src/vite-env.d.ts"
+  ],
+  "exclude": ["src/api/machinesApiClient/generated/**/*"]
+}

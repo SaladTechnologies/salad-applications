@@ -1,11 +1,46 @@
 import { Avatar, AvatarDefault, BonusCard } from '@saladtechnologies/garden-components'
 import type { TargetRewardInfo } from '@saladtechnologies/garden-components/lib/components/NavigationBar/components/DesktopNavigationBar/TargetRewardStatus'
+import { useState } from 'react'
+import type { Bonus, BonusClaims } from '../../account/bonuses.ts'
+import { useBonusClaims, useUnclaimedBonuses } from '../../account/bonuses.ts'
+import type { Profile } from '../../account/profile.ts'
+import { useProfile } from '../../account/profile.ts'
+import { useReferralCode } from '../../account/referrals.ts'
+import { startButton as startButtonFor } from '../../app/start-button.ts'
 import type { RootStore } from '../../Store'
+import { getStore } from '../../Store'
 import { connect } from '../../connect'
+import { useExternalState } from '../../app/external-state.ts'
+import { isSignedIn, useSession } from '../../data/session.ts'
+import type { ProfileState } from '../../account/profile-state.ts'
+import { profileAvatarOf, useProfileState } from '../../account/profile-state.ts'
+import type { Reward } from '../reward/models'
+import { selectedTargetRewardOf } from '../reward'
 import { NavigationBarWithNotifications } from './components/NavigationBarWithNotifications'
 
-const mapStoreToProps = (store: RootStore): any => {
-  const isAuthenticated = store.auth.isAuthenticated
+/** The notifications drawer's state, which the navigation bar container holds, and whether referrals are enabled. */
+interface DrawerProps {
+  isNotificationsDrawerOpened: boolean
+  setIsNotificationsDrawerOpened: (isOpened: boolean) => void
+  isUserReferralsEnabled: boolean
+  /** The first unclaimed bonus to expire, which the bonus card shows. */
+  bonus: Bonus | undefined
+  /** The bonus claims under way. */
+  bonusClaims: BonusClaims
+  /** The signed-in user's profile, or `undefined` before it has loaded. */
+  profile: Profile | undefined
+  /** The profile store's state: the selected avatar, and whether the install reminder was closed. */
+  profileState: ProfileState
+  /** Whether the user is signed in: `undefined` until it is known. */
+  isAuthenticated: boolean | undefined
+  /** The balance the user can spend. */
+  currentBalance: number
+  /** The target reward, if the user has one. */
+  selectedTargetReward: Reward | undefined
+}
+
+const mapStoreToProps = (store: RootStore, drawer: DrawerProps): any => {
+  const { isAuthenticated } = drawer
   const handleLogin = () => {
     store.analytics.trackButtonClicked('login_button', 'Log In Button', 'enabled')
     store.auth.login()
@@ -15,26 +50,26 @@ const mapStoreToProps = (store: RootStore): any => {
     store.profile.setIsInstallReminderClosed(true)
   }
 
-  const bonus = store.bonuses.firstExpiringUnclaimedBonus
+  const { bonus } = drawer
 
-  const selectedAvatar = store.profile.profileAvatar
+  const selectedAvatar = profileAvatarOf(drawer.profileState)
 
-  const startButton = store.startButtonUI.properties
+  const startButton = startButtonFor(isAuthenticated, handleLogin)
 
-  const targetReward: TargetRewardInfo | null = store.rewards.selectedTargetReward
+  const { selectedTargetReward } = drawer
+  const targetReward: TargetRewardInfo | null = selectedTargetReward
     ? {
-        id: store.rewards.selectedTargetReward.id,
-        label: store.rewards.selectedTargetReward.name,
-        imageSrc: store.rewards.selectedTargetReward.coverImage ?? '',
-        price: store.rewards.selectedTargetReward.price,
-        canBeRedeemed: store.balance.currentBalance >= store.rewards.selectedTargetReward?.price,
+        id: selectedTargetReward.id,
+        label: selectedTargetReward.name,
+        imageSrc: selectedTargetReward.coverImage ?? '',
+        price: selectedTargetReward.price,
+        canBeRedeemed: drawer.currentBalance >= selectedTargetReward?.price,
       }
     : null
-  const isNotificationsDrawerOpened = store.notifications.isNotificationsDrawerOpened
   const notifications = {
-    isNotificationsDrawerOpened,
-    onOpenNotificationsDrawer: store.notifications.openNotificationsDrawer,
-    onCloseNotificationsDrawer: store.notifications.closeNotificationsDrawer,
+    isNotificationsDrawerOpened: drawer.isNotificationsDrawerOpened,
+    onOpenNotificationsDrawer: () => drawer.setIsNotificationsDrawerOpened(true),
+    onCloseNotificationsDrawer: () => drawer.setIsNotificationsDrawerOpened(false),
   }
 
   const goToAccount = () => store.routing.push('/account/summary')
@@ -49,7 +84,7 @@ const mapStoreToProps = (store: RootStore): any => {
         <AvatarDefault variant="highlighted" />
       )
     ) : undefined,
-    balance: isAuthenticated ? store.balance.currentBalance : undefined,
+    balance: isAuthenticated ? drawer.currentBalance : undefined,
     bonusCard: bonus ? (
       <BonusCard
         key={bonus.id}
@@ -58,10 +93,10 @@ const mapStoreToProps = (store: RootStore): any => {
         header={bonus.reason || ''}
         image={bonus.iconImageUrl || ''}
         imageAlt={bonus.name || 'bonus image'}
-        onClick={() => store.bonuses.claimBonus(bonus.id)}
+        onClick={() => store.bonuses.claim(bonus.id)}
         title={bonus.name || ''}
         variant="small"
-        isLoading={store.bonuses.pendingBonuses?.has(bonus.id)}
+        isLoading={drawer.bonusClaims.pending.has(bonus.id)}
       />
     ) : undefined,
     onClickAvatar: goToAccount,
@@ -75,21 +110,47 @@ const mapStoreToProps = (store: RootStore): any => {
     startButtonLabel: startButton.label,
     startButtonClick: startButton.onClick,
     startButtonHoverLabel: undefined,
-    startButtonErrorClick: startButton.onClickWithError,
+    startButtonErrorClick: undefined,
     onRemoveTargetRewardClick: store.rewards.removeSelectedTargetReward,
     onSelectTargetRewardClick: goToSelectTargetRewardPage,
     onOpenTargetRewardClick: goToTargetRewardPage,
     onCloseInstallReminderClick: handleCloseInstallReminderClick,
-    startButtonProgress: startButton.progress,
-    startButtonRunningTime: startButton.runningTime,
-    startButtonToolTip: startButton.toolTip,
-    startButtonToolTipError: startButton.toolTipError,
-    username: isAuthenticated ? store.profile.currentProfile?.username : undefined,
+    startButtonProgress: undefined,
+    startButtonRunningTime: undefined,
+    startButtonToolTip: undefined,
+    startButtonToolTipError: undefined,
+    username: isAuthenticated ? drawer.profile?.username : undefined,
     targetReward,
     notifications,
-    withInstallReminder: store.profile.withInstallReminder,
-    isUserReferralsEnabled: store.referral.isUserReferralsEnabled,
+    withInstallReminder: store.profile.withInstallReminder(
+      drawer.profile,
+      drawer.profileState.isInstallReminderClosed,
+      isAuthenticated,
+    ),
+    isUserReferralsEnabled: drawer.isUserReferralsEnabled,
   }
 }
 
-export const NavigationBarContainer = connect(mapStoreToProps, NavigationBarWithNotifications)
+const ConnectedNavigationBar = connect(mapStoreToProps, NavigationBarWithNotifications)
+
+/** The navigation bar. It holds whether the notifications drawer is open, which the notification store held. */
+export const NavigationBarContainer = () => {
+  const [isNotificationsDrawerOpened, setIsNotificationsDrawerOpened] = useState(false)
+  const { enabled: isUserReferralsEnabled } = useReferralCode()
+  const [bonus] = useUnclaimedBonuses()
+  const bonusClaims = useBonusClaims(getStore().bonuses)
+  return (
+    <ConnectedNavigationBar
+      isNotificationsDrawerOpened={isNotificationsDrawerOpened}
+      setIsNotificationsDrawerOpened={setIsNotificationsDrawerOpened}
+      isUserReferralsEnabled={isUserReferralsEnabled}
+      bonus={bonus}
+      bonusClaims={bonusClaims}
+      profile={useProfile()}
+      profileState={useProfileState(getStore().profile)}
+      isAuthenticated={isSignedIn(useSession())}
+      currentBalance={useExternalState(getStore().balance.state).currentBalance}
+      selectedTargetReward={selectedTargetRewardOf(useExternalState(getStore().rewards.state))}
+    />
+  )
+}

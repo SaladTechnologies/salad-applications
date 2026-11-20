@@ -1,12 +1,15 @@
 import type { ReactElement, ReactNode } from 'react'
 import { Component } from 'react'
-import ReactHtmlParser from 'react-html-parser'
+import ReactHtmlParserImport from 'react-html-parser'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { SmartLink } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
 import type { Reward } from '../../reward/models'
 import { RewardDetailsContentPanel } from './RewardDetailsContentPanel'
+import { cjsDefault } from '../../../cjs-default.ts'
+
+const ReactHtmlParser = cjsDefault(ReactHtmlParserImport)
 
 const styles = (theme: SaladTheme) => ({
   titleText: {

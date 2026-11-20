@@ -3,14 +3,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Text } from '@saladtechnologies/garden-components'
 import type CSS from 'csstype'
 import { useEffect, type FC } from 'react'
-import Scrollbars from 'react-custom-scrollbars-2'
+import { Scrollbars } from 'react-custom-scrollbars-2'
 import { Field, Form } from 'react-final-form'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import type { SaladTheme } from '../../../SaladTheme'
 import Referrals from '../../../assets/Referrals.svg'
 import { TextField } from '../../../components'
-import { withLogin } from '../../auth-views'
 
 const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: SaladTheme) => ({
   pageWrapper: {
@@ -294,4 +293,4 @@ const _ProtectedActionPage: FC<Props> = ({
   )
 }
 
-export const ProtectedActionPage = withLogin(withStyles(styles)(_ProtectedActionPage))
+export const ProtectedActionPage = withStyles(styles)(_ProtectedActionPage)

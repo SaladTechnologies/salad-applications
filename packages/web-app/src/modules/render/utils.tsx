@@ -1,3 +1,5 @@
+import type { AxiosInstance } from 'axios'
+import { fetchRenderExchangeRate } from '../../rewards/render.ts'
 import { renderExchangeRateDefaultTtl, renderQuoteDisplayDecimals, renderRewardTag } from './constants'
 import type { RenderExchangeRate, RenderExchangeRateResource } from './models'
 
@@ -14,11 +16,11 @@ export const isRenderReward = (reward?: { tags?: string[] }): boolean =>
 /**
  * Normalizes a raw `tags` value into a lower-cased string array, regardless of the shape the source API uses.
  *
- * The reward-detail and search flows already hand us `string[]`, but the storefront (`/api/v2/storefront`) payload is
- * a lean, separately-serialized shape whose `tags` may arrive as a comma-separated string or as an array of relation
+ * The reward-detail and search flows already hand us `string[]`, but the storefront (`/api/v2/storefront`) payload is a
+ * lean, separately-serialized shape whose `tags` may arrive as a comma-separated string or as an array of relation
  * objects (e.g. `[{ name: 'RENDER' }]`) rather than plain strings. Normalizing here means RENDER rewards are detected
- * on the storefront listing no matter which of those shapes the API returns. Returns `undefined` when no usable tag
- * can be extracted so callers fall back to regular pricing.
+ * on the storefront listing no matter which of those shapes the API returns. Returns `undefined` when no usable tag can
+ * be extracted so callers fall back to regular pricing.
  */
 export const normalizeRenderTags = (raw: unknown): string[] | undefined => {
   const stringFrom = (record: Record<string, unknown>): string | undefined => {
@@ -69,8 +71,8 @@ export const normalizeRenderTags = (raw: unknown): string[] | undefined => {
 /**
  * Parses an ISO-8601 timestamp, returning `undefined` when the value is absent or cannot be parsed.
  *
- * The App API formats `quotedAt` with a `+00:00` offset and 7-digit fractional seconds
- * (e.g. `2026-06-24T00:00:00.0000000+00:00`). `Date` handles this, but we still guard against an invalid result so a
+ * The App API formats `quotedAt` with a `+00:00` offset and 7-digit fractional seconds (e.g.
+ * `2026-06-24T00:00:00.0000000+00:00`). `Date` handles this, but we still guard against an invalid result so a
  * malformed timestamp never produces an `Invalid Date` (which would skew staleness checks).
  */
 const parseTimestamp = (value: string | undefined): Date | undefined => {
@@ -98,12 +100,27 @@ export const renderExchangeRateFromResource = (
 })
 
 /**
+ * Fetches the RENDER quote and puts it in `render` (the store's `render`, which redemption reads), so the quote shown
+ * and the quote redemption sends are the same. The quote query in `RenderPriceQuoteContainer` runs this.
+ */
+export const loadRenderExchangeRate = async (
+  http: AxiosInstance,
+  render: { setExchangeRate: (exchangeRate: RenderExchangeRate) => void },
+  receivedAt: () => Date = () => new Date(),
+): Promise<RenderExchangeRate> => {
+  const resource = (await fetchRenderExchangeRate(http)) as RenderExchangeRateResource
+  const exchangeRate = renderExchangeRateFromResource(resource, receivedAt())
+  render.setExchangeRate(exchangeRate)
+  return exchangeRate
+}
+
+/**
  * Computes how many RENDER tokens a given amount of Salad Balance (USD) converts to at the supplied price.
  *
  * This is the single source of truth for the "you'll receive ≈ N RENDER" figure shown on the reward detail header and
- * SaladPay order summary. It is deliberately *not* used to compute a reward's displayed cost: a RENDER reward's
- * Salad Balance cost is its plain `price` (shown like any other reward), and this only derives the token amount the
- * Chef receives for that cost.
+ * SaladPay order summary. It is deliberately _not_ used to compute a reward's displayed cost: a RENDER reward's Salad
+ * Balance cost is its plain `price` (shown like any other reward), and this only derives the token amount the Chef
+ * receives for that cost.
  *
  * @param saladBalance The amount of Salad Balance to convert, in USD.
  * @param rate The price of a single RENDER token, in USD.

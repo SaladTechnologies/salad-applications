@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import type { Reward } from '../reward/models'
 import { renderExchangeRateDefaultTtl } from './constants'
 import type { RenderExchangeRate } from './models'

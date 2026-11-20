@@ -1,7 +1,7 @@
 import classnames from 'classnames'
 import type { ReactNode } from 'react'
 import { Component } from 'react'
-import AspectRatio from 'react-aspect-ratio'
+import AspectRatioImport from 'react-aspect-ratio'
 import { Img } from 'react-image'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
@@ -11,6 +11,9 @@ import type { SaladTheme } from '../../../SaladTheme'
 import { RewardMissingImage } from '../../reward-views/components/RewardMissingImage'
 import { getPercentOff } from '../../reward/utils'
 import type { StorefrontRewardItemProps } from '../../storefront/models'
+import { cjsDefault } from '../../../cjs-default.ts'
+
+const AspectRatio = cjsDefault(AspectRatioImport)
 
 const styles = (theme: SaladTheme) => ({
   container: {
@@ -157,10 +160,7 @@ class _StorefrontRewardItem extends Component<Props> {
                 <span className={classes.originalPrice}>{originalPrice}</span> {price}
               </div>
             ) : price ? (
-              <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}>
-                {' '}
-                {price}{' '}
-              </div>
+              <div className={classnames(classes.priceText, { [classes.outOfStockPrice]: outOfStock })}> {price} </div>
             ) : (
               <Skeleton width={100} />
             )}

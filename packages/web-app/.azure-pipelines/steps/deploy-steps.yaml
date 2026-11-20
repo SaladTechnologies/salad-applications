@@ -15,7 +15,7 @@ parameters:
 steps:
   - download: none
   - checkout: self
-  - template: ../tasks/install-node-task.yaml
+  - template: ../tasks/setup-tools-task.yaml
     parameters:
       projectDirectory: ${{ parameters.workingDirectory }}
   - template: ../tasks/pwsh-task.yaml

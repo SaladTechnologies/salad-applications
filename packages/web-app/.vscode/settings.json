@@ -2,17 +2,7 @@
   "editor.formatOnSave": true,
   "editor.minimap.maxColumn": 120,
   "editor.renderWhitespace": "all",
-  "editor.rulers": [
-    120
-  ],
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "html",
-    "typescript",
-    "typescriptreact"
-  ],
-  "eslint.nodePath": ".yarn/sdks",
+  "editor.rulers": [120],
   "files.associations": {
     "**/.azure-pipelines/**/*.yaml": "azure-pipelines",
     ".env.development.local": "properties",
@@ -23,38 +13,60 @@
     ".env.test": "properties",
     ".env": "properties"
   },
-  "git.branchProtection": [
-    "master"
-  ],
-  "javascript.format.enable": false,
+  "git.branchProtection": ["master"],
   "javascript.validate.enable": false,
-  "npm.packageManager": "yarn",
-  "prettier.prettierPath": ".yarn/sdks/prettier/index.js",
+  "js/ts.experimental.useTsgo": true,
+  "js/ts.format.enabled": false,
+  "js/ts.tsdk.path": "./node_modules/typescript",
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+  "npm.packageManager": "npm",
   "search.exclude": {
     "node_modules": true,
     "scripts": true,
-    "**/.yarn": true,
-    "**/.pnp.*": true,
     "**/npm-debug.log*": true,
     "**/yarn-debug.log*": true,
     "**/yarn-error.log*": true
   },
-  "typescript.enablePromptUseWorkspaceTsdk": true,
-  "typescript.format.enable": false,
-  "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "[typescript]": {
     "editor.codeActionsOnSave": {
       "source.organizeImports": "explicit"
-    }
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescriptreact]": {
     "editor.codeActionsOnSave": {
       "source.organizeImports": "explicit"
-    }
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "[typescript][typescriptreact]": {
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit"
-    }
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }

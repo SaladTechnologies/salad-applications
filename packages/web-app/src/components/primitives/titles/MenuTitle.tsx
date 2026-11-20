@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import { Component } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import { NavLink } from 'react-router-dom'
+import { AppLink } from '../../../routing/app-link.tsx'
 import type { LinkTrackingInfo } from '../../../modules/analytics/models'
 import type { SaladTheme } from '../../../SaladTheme'
 import { getStore } from '../../../Store'
@@ -85,13 +85,13 @@ class _MenuTitle extends Component<Props, State> {
             {children}
           </SmartLink>
         ) : enabled !== false ? (
-          <NavLink
+          <AppLink
             to={path}
             activeClassName="active"
             onClick={trackingInfo ? () => handleClickTracking(path, trackingInfo) : undefined}
           >
             {children}
-          </NavLink>
+          </AppLink>
         ) : (
           <p>{children}</p>
         )}

@@ -1,9 +1,4 @@
 /**
- * Endpoint used to get/set/clear the authenticated user's Solana wallet address.
- */
-export const solanaWalletEndpointPath = '/api/v2/solana/wallet'
-
-/**
  * The tag used to identify a reward that requires the Chef to have a Solana wallet address on file before it can be
  * redeemed (e.g. RENDER token rewards, which are paid out on-chain).
  *

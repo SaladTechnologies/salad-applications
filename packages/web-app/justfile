@@ -1,0 +1,156 @@
+# Bash is required. If the target already sets a shell, keep whichever is stricter.
+set shell := ["bash", "-euo", "pipefail", "-c"]
+
+# List of allowed licenses for dependencies: the go template's list, plus 0BSD, BlueOak-1.0.0, CC0-1.0, PSF-2.0,
+# and Python-2.0, which are as permissive, and CC-BY-4.0, the license of caniuse-lite's browser data. This project adds
+# MIT-0 (MIT without the notice requirement, so more permissive), used by @csstools packages under jsdom, and Unlicense
+# (a public-domain dedication, like CC0-1.0), used by isbot under @tanstack/react-router.
+typescript-allowed-licenses := "0BSD,Apache-2.0,BlueOak-1.0.0,BSD-2-Clause,BSD-3-Clause,CC-BY-4.0,CC0-1.0,ISC,MIT,MIT-0,MPL-2.0,PSF-2.0,Python-2.0,Unicode-3.0,Unlicense,Zlib"
+
+# Project-specific: package versions whose license was read by hand because package.json does not declare it as an
+# SPDX identifier. Each entry names an exact version, so an upgrade is reviewed again.
+# - @saladtechnologies/garden-components and garden-icons: Salad's own packages, published from salad-platform garden/.
+# - @saladtechnologies/garden-fonts: also published from salad-platform garden/, but its LICENSE.md is the Frere-Jones
+#   Type web font EULA (a commercial license with a monthly page-view cap) for the fonts it bundles. The app already
+#   ships these fonts; check the license terms before changing how they are used.
+# - css-mediaquery: its LICENSE file is the 3-clause BSD license (it declares only "BSD"). From react-responsive.
+typescript-reviewed-packages := "@saladtechnologies/garden-components@1.6.2,@saladtechnologies/garden-fonts@1.0.4,@saladtechnologies/garden-icons@1.0.30,css-mediaquery@0.1.2"
+
+# List of every file Prettier formats. Skips files git ignores.
+typescript-prettier-files := 'git ls-files -z --cached --others --exclude-standard | while IFS= read -r -d "" f; do case "$f" in testdata/* | */testdata/*) ;; *) if [ -f "$f" ]; then printf "%s\0" "$f"; fi ;; esac; done'
+
+# Format TypeScript, JavaScript, and every other file Prettier formats (CSS, HTML, JSON, Markdown, YAML).
+fmt-typescript: _npm-ci
+    {{ typescript-prettier-files }} | xargs -0 node_modules/.bin/prettier --write --ignore-unknown --log-level=warn
+
+# Check formatting of TypeScript, JavaScript, and every other file Prettier formats, and fail on differences.
+fmt-check-typescript: _npm-ci
+    files="$({{ typescript-prettier-files }} | xargs -0 sh -c \
+        'node_modules/.bin/prettier --list-different --ignore-unknown "$@" || [ "$?" -eq 1 ]' prettier)"; \
+        if [ -z "$files" ]; then exit 0; fi; \
+        while IFS= read -r f; do \
+            node_modules/.bin/prettier --stdin-filepath "$f" <"$f" \
+                | diff -u --label "a/$f" --label "b/$f" -- "$f" - || true; \
+        done <<<"$files"; \
+        echo "fix: just fmt-typescript"; \
+        exit 1
+
+# Lint TypeScript and JavaScript files, types, and dependencies, and check every such file is in a TypeScript project.
+lint-typescript: _npm-ci && _lint-typescript-projects _lint-typescript-dependencies
+    node_modules/.bin/oxlint
+    node_modules/.bin/tsc --build
+    node_modules/.bin/knip
+    npm audit
+    npm audit signatures
+
+# Fail on a TypeScript or JavaScript file that no project in tsconfig.json includes, which nothing would type check.
+[extension('.mjs')]
+[private]
+[script('node')]
+_lint-typescript-projects:
+    import { execFileSync } from 'node:child_process'
+    import { readFileSync } from 'node:fs'
+    import { relative, sep } from 'node:path'
+    const run = (file, args) => execFileSync(file, args, { encoding: 'utf8' }).split('\n').filter(Boolean)
+    const tsc = (args) => run(process.execPath, ['node_modules/typescript/bin/tsc', ...args])
+    const checked = new Set(
+      JSON.parse(readFileSync('tsconfig.json', 'utf8'))
+        .references.flatMap(({ path }) => tsc(['--project', path, '--listFilesOnly']))
+        .map((file) => relative('.', file).replaceAll(sep, '/')),
+    )
+    const files = ['*.cjs', '*.cts', '*.js', '*.jsx', '*.mjs', '*.mts', '*.ts', '*.tsx']
+    const unchecked = run('git', ['ls-files', '--cached', '--others', '--exclude-standard', '--', ...files])
+      .filter((file) => !/(^|\/)testdata\//.test(file) && !checked.has(file))
+    if (unchecked.length > 0) {
+      for (const file of unchecked) console.log(`not in a TypeScript project: ${file}`)
+      console.log('fix: add it to an `include` in tsconfig.browser.json or tsconfig.node.json')
+      process.exitCode = 1
+    }
+
+# Fail on a dependency whose install script nobody reviewed, or whose license is not on the allowlist.
+[extension('.mjs')]
+[private]
+[script('node')]
+_lint-typescript-dependencies:
+    import { execSync } from 'node:child_process'
+    import { readFileSync } from 'node:fs'
+    // npm skips the install scripts that package.json's `allowScripts` does not approve, and the dependency may not
+    // work without them. Each one is approved or denied on purpose.
+    const pending = JSON.parse(execSync('npm install-scripts ls --json', { encoding: 'utf8' }))
+      .allowScripts.flatMap(({ changes }) => changes.filter(({ change }) => change === 'pending').map(({ key }) => key))
+    for (const key of pending) console.log(`install script not reviewed: ${key}`)
+    if (pending.length > 0) {
+      console.log('fix: read the script, then npm install-scripts approve <pkg> or npm install-scripts deny <pkg>')
+      process.exitCode = 1
+    }
+    const allowed = new Set('{{ typescript-allowed-licenses }}'.split(','))
+    // An SPDX expression passes when either side of an OR passes and both sides of an AND do. An exception (`WITH`)
+    // only adds permissions, so it is ignored.
+    const passes = (expression) => {
+      const tokens = expression.replaceAll(/\s+WITH\s+[^\s()]+/g, '').match(/[()]|[^\s()]+/g) ?? []
+      let i = 0
+      const term = () => {
+        const token = tokens[i++]
+        if (token !== '(') return allowed.has(token)
+        const result = or()
+        i++
+        return result
+      }
+      const and = () => {
+        let result = term()
+        while (tokens[i] === 'AND') { i++; const next = term(); result &&= next }
+        return result
+      }
+      const or = () => {
+        let result = and()
+        while (tokens[i] === 'OR') { i++; const next = and(); result ||= next }
+        return result
+      }
+      return or() && i === tokens.length
+    }
+    const { packages } = JSON.parse(readFileSync('package-lock.json', 'utf8'))
+    // Project-specific: skips the exact versions in typescript-reviewed-packages.
+    const reviewed = new Set('{{ typescript-reviewed-packages }}'.split(','))
+    const nameAt = (path, entry) => `${path.replace(/^.*node_modules\//, '')}@${entry.version}`
+    const bad = Object.entries(packages)
+      .filter(([path, entry]) => path !== '' && !entry.link && !passes(entry.license ?? ''))
+      .filter(([path, entry]) => !reviewed.has(nameAt(path, entry)))
+      .map(([path, entry]) => `license not allowed: ${path.replace(/^.*node_modules\//, '')}@${entry.version} ` +
+        `(${entry.license ?? 'none declared'})`)
+    for (const line of new Set(bad)) console.log(line)
+    if (bad.length > 0) {
+      console.log('fix: replace the dependency, or add its license to typescript-allowed-licenses in the justfile')
+      process.exitCode = 1
+    }
+
+# Test TypeScript and JavaScript files, in random order.
+test-typescript: _npm-ci
+    node_modules/.bin/vitest run --passWithNoTests --sequence.shuffle --allowOnly=false
+
+# Install the dependencies package-lock.json pins, when node_modules does not match it.
+[private]
+_npm-ci:
+    if ! npm ls --all >/dev/null 2>&1; then npm ci; fi
+
+# Build the site into build/.
+build: _npm-ci
+    node_modules/.bin/vite build
+
+[private]
+default:
+    @just --justfile {{ justfile() }} --list
+
+# Format every file.
+fmt: fmt-typescript
+
+# Check formatting of every file and fail on differences.
+fmt-check: fmt-check-typescript
+
+# Lint every file.
+lint: lint-typescript
+
+# Run every test.
+test: test-typescript
+
+# Check formatting, lint, and test, as CI does.
+ci: fmt-check lint test

@@ -18,138 +18,90 @@
     "email": "dev@salad.com",
     "url": "https://salad.com"
   },
+  "type": "module",
   "scripts": {
-    "build": "react-scripts build",
-    "build-storybook": "build-storybook -c .storybook -o storybook-build --quiet",
-    "lint": "npm-run-all --continue-on-error lint-ts lint-ts-unused",
-    "lint-ts": "tsc",
-    "lint-ts-unused": "ts-unused-exports ./tsconfig.json",
-    "list-browsers": "npx browserslist",
-    "start": "react-scripts start",
-    "storybook": "start-storybook -p 9009"
+    "build": "vite build",
+    "lint-ts": "tsc --build",
+    "preview": "vite preview",
+    "start": "vite",
+    "test": "vitest run"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not ie <= 11",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "allowScripts": {
+    "core-js": false,
+    "file:../../libs/elastic-search-ui-1.17.1+salad.tgz": false
   },
-  "eslintConfig": {
-    "settings": {
-      "polyfills": [
-        "fetch",
-        "Object.values",
-        "Promise.allSettled",
-        "URL.href"
-      ]
-    },
-    "extends": [
-      "react-app",
-      "plugin:compat/recommended"
-    ],
-    "overrides": [
-      {
-        "files": [
-          "**/*.ts?(x)"
-        ],
-        "rules": {
-          "@typescript-eslint/consistent-type-imports": "error"
-        }
-      }
-    ]
-  },
-  "resolutions": {
+  "overrides": {
     "@elastic/search-ui": "file:../../libs/elastic-search-ui-1.17.1+salad.tgz",
-    "meow@npm:3.7.0/trim-newlines": "3.0.1",
-    "remark-parse@npm:8.0.3/trim": "0.0.3",
-    "@microsoft/kiota-abstractions": "1.0.0-preview.57",
+    "@microsoft/kiota-abstractions": {
+      ".": "1.0.0-preview.57",
+      "uuid": "$uuid"
+    },
     "@microsoft/kiota-http-fetchlibrary": "1.0.0-preview.56",
-    "@microsoft/kiota-serialization-json": "1.0.0-preview.57"
+    "@microsoft/kiota-serialization-json": "1.0.0-preview.57",
+    "@saladtechnologies/garden-components": {
+      "react-intl": "$react-intl",
+      "react-responsive": "$react-responsive"
+    },
+    "mobx-react": {
+      "react": "$react"
+    },
+    "mobx-react-lite": {
+      "react": "$react"
+    },
+    "react-html-parser": {
+      "react": "$react"
+    },
+    "typescript": "$typescript"
   },
   "dependencies": {
-    "@babel/core": "7.26.0",
-    "@babel/plugin-syntax-flow": "7.26.0",
-    "@babel/plugin-transform-react-jsx": "7.25.9",
-    "@babel/runtime": "7.26.0",
+    "@babel/runtime": "7.29.14",
     "@elastic/react-search-ui": "1.17.1",
     "@elastic/search-ui-app-search-connector": "1.17.1",
-    "@emotion/cache": "11.14.0",
     "@emotion/react": "11.14.0",
-    "@emotion/serialize": "1.3.3",
     "@emotion/styled": "11.14.0",
-    "@emotion/utils": "1.4.2",
     "@fortawesome/fontawesome-svg-core": "6.7.2",
-    "@fortawesome/free-regular-svg-icons": "6.7.2",
     "@fortawesome/free-solid-svg-icons": "6.7.2",
     "@fortawesome/react-fontawesome": "0.2.2",
     "@microsoft/kiota-abstractions": "1.0.0-preview.57",
     "@microsoft/kiota-http-fetchlibrary": "1.0.0-preview.56",
     "@microsoft/kiota-serialization-json": "1.0.0-preview.57",
+    "@radix-ui/react-slot": "1.5.0",
     "@saladtechnologies/garden-components": "1.6.2",
     "@saladtechnologies/garden-fonts": "1.0.4",
     "@saladtechnologies/garden-icons": "1.0.30",
-    "@storybook/addon-a11y": "6.5.16",
-    "@storybook/addon-actions": "6.5.16",
-    "@storybook/addon-essentials": "6.5.16",
-    "@storybook/addon-links": "6.5.16",
-    "@storybook/addon-viewport": "6.5.16",
-    "@storybook/builder-webpack5": "6.5.16",
-    "@storybook/manager-webpack5": "6.5.16",
-    "@storybook/node-logger": "6.5.16",
-    "@storybook/preset-create-react-app": "8.6.0",
-    "@storybook/react": "6.5.16",
-    "@types/history": "4.7.11",
+    "@tanstack/react-query": "5.107.1",
+    "@tanstack/react-router": "1.170.46",
     "@types/lodash": "4.17.14",
     "@types/luxon": "3.4.2",
     "@types/mixpanel-browser": "2.51.0",
-    "@types/node": "18.19.71",
+    "@types/node": "26.6.5",
     "@types/promise.allsettled": "1.0.6",
     "@types/react": "18.3.18",
     "@types/react-copy-to-clipboard": "5.0.7",
     "@types/react-dom": "18.3.5",
     "@types/react-helmet": "6.1.11",
     "@types/react-html-parser": "2.0.6",
-    "@types/react-router": "5.1.20",
-    "@types/react-router-dom": "5.3.3",
-    "@types/react-transition-group": "4.4.12",
     "@types/uuid": "9.0.8",
-    "@yarnpkg/sdks": "2.7.4",
     "abortcontroller-polyfill": "1.7.8",
-    "acorn": "8.14.0",
-    "axios": "1.8.1",
+    "axios": "1.21.1",
     "axios-retry": "3.9.1",
     "buffer": "6.0.3",
+    "class-variance-authority": "0.7.1",
     "classnames": "2.5.1",
+    "clsx": "2.1.1",
     "csstype": "3.1.3",
-    "eslint": "8.57.1",
-    "eslint-config-react-app": "7.0.1",
-    "eslint-plugin-compat": "4.2.0",
     "events": "3.3.0",
     "final-form": "4.20.10",
     "guid-typescript": "1.0.9",
-    "history": "4.10.1",
     "is-retry-allowed": "3.0.0",
-    "lodash": "4.17.21",
-    "lorem-ipsum": "2.0.8",
+    "lodash": "4.18.1",
     "luxon": "3.5.0",
     "mixpanel-browser": "2.60.0",
     "mobx": "5.15.7",
     "mobx-react": "6.3.1",
-    "mobx-react-lite": "2.2.2",
-    "mobx-react-router": "4.1.0",
-    "moment": "2.30.1",
-    "npm-run-all": "4.1.5",
-    "prettier": "2.8.8",
+    "moment": "2.31.0",
     "promise.allsettled": "1.0.7",
     "prop-types": "15.8.1",
-    "query-string": "8.2.0",
     "react": "18.3.1",
     "react-app-polyfill": "3.0.0",
     "react-aspect-ratio": "1.1.9",
@@ -170,22 +122,42 @@
     "react-range": "1.10.0",
     "react-remark": "2.1.0",
     "react-responsive": "9.0.2",
-    "react-router": "5.3.4",
-    "react-router-dom": "5.3.4",
-    "react-scripts": "5.0.1",
     "react-select": "5.10.0",
     "react-tabs": "6.1.0",
     "react-toastify": "7.0.4",
-    "react-transition-group": "4.4.5",
     "recharts": "2.15.1",
-    "require-from-string": "2.0.2",
     "string_decoder": "1.3.0",
-    "ts-unused-exports": "10.1.0",
-    "typescript": "5.7.3",
+    "tailwind-merge": "3.7.0",
     "url-polyfill": "1.1.13",
-    "uuid": "9.0.1",
-    "webpack": "5.98.0",
+    "uuid": "11.1.1",
     "whatwg-fetch": "3.6.20"
   },
-  "packageManager": "yarn@4.6.0"
+  "devDependencies": {
+    "@tailwindcss/vite": "4.3.5",
+    "@vitejs/plugin-react": "6.3.0",
+    "jsdom": "28.1.0",
+    "knip": "6.43.0",
+    "oxlint": "1.89.0",
+    "oxlint-tsgolint": "7.0.2005",
+    "prettier": "3.9.10",
+    "prettier-plugin-jsdoc": "1.8.1",
+    "prettier-plugin-packagejson": "3.0.3",
+    "prettier-plugin-tailwindcss": "0.8.1",
+    "tailwindcss": "4.3.5",
+    "typescript": "7.0.2",
+    "vite": "8.3.8",
+    "vitest": "5.1.0"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "npm",
+      "version": ">=12.2.1",
+      "onFail": "error"
+    },
+    "runtime": {
+      "name": "node",
+      "version": ">=26.13.0",
+      "onFail": "error"
+    }
+  }
 }

@@ -1,11 +1,11 @@
-import { connect } from '../../connect'
-import type { RootStore } from '../../Store'
+import { useBonusClaims, useUnclaimedBonuses } from '../../account/bonuses.ts'
+import { getStore } from '../../Store'
 import { BonusPage } from './components/BonusPage'
 
-const mapStoreToProps = (store: RootStore): any => ({
-  unclaimedBonuses: store.bonuses.unclaimedBonuses,
-  pendingBonuses: store.bonuses.pendingBonuses,
-  claimBonus: store.bonuses.claimBonus,
-})
-
-export const BonusPageContainer = connect(mapStoreToProps, BonusPage)
+/** The bonuses page: the unclaimed bonuses, which the app-wide refresh loads, and their claims. */
+export const BonusPageContainer = () => {
+  const { bonuses } = getStore()
+  const unclaimedBonuses = useUnclaimedBonuses()
+  const { pending } = useBonusClaims(bonuses)
+  return <BonusPage unclaimedBonuses={unclaimedBonuses} pendingBonuses={pending} claimBonus={bonuses.claim} />
+}

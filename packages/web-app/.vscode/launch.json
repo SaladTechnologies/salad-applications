@@ -5,9 +5,6 @@
       "name": "Launch & Debug (Chrome)",
       "request": "launch",
       "runtimeArgs": ["--disable-web-security"],
-      "sourceMapPathOverrides": {
-        "webpack:///src/*": "${webRoot}/*"
-      },
       "type": "chrome",
       "url": "http://localhost:3000",
       "webRoot": "${workspaceRoot}/src"

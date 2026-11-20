@@ -1,16 +1,15 @@
 import { Button, Text } from '@saladtechnologies/garden-components'
 import { Bell } from '@saladtechnologies/garden-icons'
 import type CSS from 'csstype'
-import { useEffect, useRef, useState, type FunctionComponent } from 'react'
+import { useEffect, useState, type FunctionComponent } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { useMediaQuery } from 'react-responsive'
 import { mobileSize, Scrollbar } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
-import type { DemandedHardwarePerformance } from '../DemandMonitorStore'
+import type { DemandedHardwarePerformance } from '../../../earnings/demand-monitor.ts'
 import { DemandMonitorFAQ } from './DemandMonitorFAQ'
 import { DemandMonitorTable } from './DemandMonitorTable'
-import { oneHourInMilliseconds } from './DemandMonitorTable/constants'
 import { GetNotifiedDemandChangesModal } from './GetNotifiedDemandChangesModal/GetNotifiedDemandChangesModal'
 import { SubscriptionDemandChangesModal } from './SubscriptionDemandChangesModal/SubscriptionDemandChangesModal'
 
@@ -66,9 +65,9 @@ const styles: (theme: SaladTheme) => Record<string, CSS.Properties> = (theme: Sa
 })
 
 enum SubscriptionStep {
-  'SelectGpu' = 'SelectGpu',
-  'Subscribe' = 'Subscribe',
-  'Inactive' = 'Inactive',
+  SelectGpu = 'SelectGpu',
+  Subscribe = 'Subscribe',
+  Inactive = 'Inactive',
 }
 
 export interface Props extends WithStyles<typeof styles> {
@@ -76,7 +75,6 @@ export interface Props extends WithStyles<typeof styles> {
   isAuthenticated: boolean
   withGetNotifiedButton: boolean
   navigateToDemandAlerts: () => void
-  fetchDemandedHardwarePerformanceList: () => void
   onLoginClick: () => void
 }
 
@@ -86,7 +84,6 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
   withGetNotifiedButton,
   classes,
   navigateToDemandAlerts,
-  fetchDemandedHardwarePerformanceList,
   onLoginClick,
 }) => {
   const [currentSubscriptionStep, setCurrentSubscriptionStep] = useState<SubscriptionStep>(SubscriptionStep.Inactive)
@@ -98,19 +95,6 @@ const _DemandMonitorPage: FunctionComponent<Props> = ({
   useEffect(() => {
     setSelectedDemandedHardwareName(initialSelectedDemandedHardwareName)
   }, [initialSelectedDemandedHardwareName])
-
-  const updateTimerRef = useRef<NodeJS.Timeout | null>(null)
-
-  useEffect(() => {
-    fetchDemandedHardwarePerformanceList()
-    updateTimerRef.current = setInterval(fetchDemandedHardwarePerformanceList, oneHourInMilliseconds)
-
-    return () => {
-      if (updateTimerRef.current) {
-        clearInterval(updateTimerRef.current)
-      }
-    }
-  }, [fetchDemandedHardwarePerformanceList])
 
   const handleGetNotifiedButtonClick = () => {
     if (isAuthenticated) {

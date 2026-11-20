@@ -8,7 +8,6 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { Divider, Head, InfoButton, P, SmartLink } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
-import { withLogin } from '../../auth-views'
 import type { RewardVaultItem } from '../../vault/models'
 import { RewardVaultStatus } from '../../vault/models'
 import { VaultListHeaderItem } from './VaultListHeaderItem'
@@ -149,8 +148,6 @@ interface Props extends WithStyles<typeof styles> {
   coinbaseRewardIds?: string[]
   /** Loads a reward's details (tags included) if they are not loaded yet. */
   loadReward?: (rewardId: string) => void
-  startRefresh?: () => void
-  stopRefresh?: () => void
 }
 
 interface State {
@@ -206,27 +203,30 @@ class _VaultList extends Component<Props, State> {
   updateActiveDropdown = (activeDropdown: keyof State['dropdown']): void => {
     this.setState((state, props) => {
       const currentDropdown = state.dropdown
-      const nextDropdown = Object.keys(currentDropdown).reduce((nextDropdown, filter) => {
-        switch (filter) {
-          case activeDropdown:
-            nextDropdown[filter] = {
-              active: true,
-              reverse: currentDropdown[filter].active ? !currentDropdown[filter].reverse : false,
-            }
-            break
-          case 'name':
-          case 'price':
-          case 'status':
-          case 'redeemDate':
-            nextDropdown[filter] = {
-              active: false,
-              reverse: false,
-            }
-            break
-        }
+      const nextDropdown = Object.keys(currentDropdown).reduce(
+        (nextDropdown, filter) => {
+          switch (filter) {
+            case activeDropdown:
+              nextDropdown[filter] = {
+                active: true,
+                reverse: currentDropdown[filter].active ? !currentDropdown[filter].reverse : false,
+              }
+              break
+            case 'name':
+            case 'price':
+            case 'status':
+            case 'redeemDate':
+              nextDropdown[filter] = {
+                active: false,
+                reverse: false,
+              }
+              break
+          }
 
-        return nextDropdown
-      }, {} as State['dropdown'])
+          return nextDropdown
+        },
+        {} as State['dropdown'],
+      )
       return {
         dropdown: nextDropdown,
         redemptions: sort(nextDropdown, props.redemptions),
@@ -275,14 +275,10 @@ class _VaultList extends Component<Props, State> {
   }
 
   public override componentDidMount = () => {
-    const { startRefresh } = this.props
-    startRefresh?.()
     this.loadCoinbaseCandidates()
   }
 
   public override componentWillUnmount = () => {
-    const { stopRefresh } = this.props
-    stopRefresh?.()
     if (this.copiedTimer) {
       clearTimeout(this.copiedTimer)
     }
@@ -419,7 +415,7 @@ class _VaultList extends Component<Props, State> {
   }
 }
 
-export const VaultList = withLogin(withStyles(styles)(_VaultList))
+export const VaultList = withStyles(styles)(_VaultList)
 
 function sort(dropdown: State['dropdown'], redemptions: RewardVaultItem[]): RewardVaultItem[] {
   let sortBy: (a: RewardVaultItem, b: RewardVaultItem) => number

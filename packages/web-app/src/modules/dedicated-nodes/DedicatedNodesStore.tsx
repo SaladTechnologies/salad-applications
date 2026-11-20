@@ -1,5 +1,6 @@
 import type { AxiosInstance, AxiosResponse } from 'axios'
-import { action, flow, observable } from 'mobx'
+import type { ExternalState } from '../../app/external-state.ts'
+import { createExternalState } from '../../app/external-state.ts'
 import {
   dedicatedNodeActionEndpointPath,
   dedicatedNodeEnrollmentEndpointPath,
@@ -29,6 +30,34 @@ export type DedicatedNodeActionError = 'wrong-code' | 'conflict' | 'not-found' |
 const listErrorFromStatus = (status: number | undefined): DedicatedNodesListError =>
   status === 502 ? 'unavailable' : status === 504 ? 'timeout' : 'unknown'
 
+/** The enrollment token, the nodes and the actions' progress, which the pages read with `useExternalState`. */
+export interface DedicatedNodesState {
+  /** Whether the account has an enrollment token, so the dedicated nodes page should be shown. */
+  hasAccess: boolean
+  /** The account's enrollment token. It is a secret, so never log or track it. */
+  enrollment: DedicatedNodeEnrollment | undefined
+  /** Whether the enrollment token is loading. */
+  isEnrollmentLoading: boolean
+  /** Whether the enrollment token has been asked for since the last reset, so `hasAccess` can be trusted. */
+  isEnrollmentChecked: boolean
+  /** Whether loading the enrollment token failed for a reason other than the account having none. */
+  isEnrollmentLoadError: boolean
+  /** The nodes listed so far, each once, in the order the server listed them. */
+  nodes: DedicatedNode[]
+  /** The token for the next page, if there is one. */
+  continuationToken: string | undefined
+  /** Whether the list has loaded at least once since the last reset. */
+  isListLoaded: boolean
+  /** Whether a page of the list is loading. */
+  isListLoading: boolean
+  /** Why loading the list failed, if it did. */
+  listError: DedicatedNodesListError | undefined
+  /** The node whose action is in flight, if any. */
+  pendingAction: { nodeId: string; action: DedicatedNodeAction } | undefined
+  /** Why the most recent action failed, if it did. */
+  actionError: { nodeId: string; action: DedicatedNodeAction; error: DedicatedNodeActionError } | undefined
+}
+
 /**
  * Owns the account's dedicated nodes: its enrollment token, the machines enrolled with it, and approving, refusing and
  * revoking them.
@@ -37,99 +66,126 @@ const listErrorFromStatus = (status: number | undefined): DedicatedNodesListErro
  * endpoint. `hasAccess` gates the page and turns `true` only once the enrollment token has loaded.
  */
 export class DedicatedNodesStore {
-  /** Whether the account has an enrollment token, so the dedicated nodes page should be shown. */
-  @observable
-  public hasAccess: boolean = false
+  /** The enrollment token, the nodes and the actions' progress. A change makes a new state. */
+  public readonly state: ExternalState<DedicatedNodesState> = createExternalState<DedicatedNodesState>({
+    hasAccess: false,
+    enrollment: undefined,
+    isEnrollmentLoading: false,
+    isEnrollmentChecked: false,
+    isEnrollmentLoadError: false,
+    nodes: [],
+    continuationToken: undefined,
+    isListLoaded: false,
+    isListLoading: false,
+    listError: undefined,
+    pendingAction: undefined,
+    actionError: undefined,
+  })
 
-  /** The account's enrollment token. It is a secret, so never log or track it. */
-  @observable
-  public enrollment?: DedicatedNodeEnrollment
+  private readonly axios: AxiosInstance
 
-  @observable
-  public isEnrollmentLoading: boolean = false
+  /** See {@link DedicatedNodesState.hasAccess}. */
+  get hasAccess(): boolean {
+    return this.state.get().hasAccess
+  }
 
-  /** Whether the enrollment token has been asked for since the last reset, so `hasAccess` can be trusted. */
-  @observable
-  public isEnrollmentChecked: boolean = false
+  /** See {@link DedicatedNodesState.enrollment}. */
+  get enrollment(): DedicatedNodeEnrollment | undefined {
+    return this.state.get().enrollment
+  }
 
-  /** Whether loading the enrollment token failed for a reason other than the account having none. */
-  @observable
-  public isEnrollmentLoadError: boolean = false
+  /** See {@link DedicatedNodesState.isEnrollmentLoading}. */
+  get isEnrollmentLoading(): boolean {
+    return this.state.get().isEnrollmentLoading
+  }
 
-  /** The nodes listed so far, each once, in the order the server listed them. */
-  @observable
-  public nodes: DedicatedNode[] = []
+  /** See {@link DedicatedNodesState.isEnrollmentChecked}. */
+  get isEnrollmentChecked(): boolean {
+    return this.state.get().isEnrollmentChecked
+  }
 
-  /** The token for the next page, if there is one. */
-  @observable
-  public continuationToken?: string
+  /** See {@link DedicatedNodesState.isEnrollmentLoadError}. */
+  get isEnrollmentLoadError(): boolean {
+    return this.state.get().isEnrollmentLoadError
+  }
 
-  /** Whether the list has loaded at least once since the last reset. */
-  @observable
-  public isListLoaded: boolean = false
+  /** See {@link DedicatedNodesState.nodes}. */
+  get nodes(): DedicatedNode[] {
+    return this.state.get().nodes
+  }
 
-  @observable
-  public isListLoading: boolean = false
+  /** See {@link DedicatedNodesState.continuationToken}. */
+  get continuationToken(): string | undefined {
+    return this.state.get().continuationToken
+  }
 
-  @observable
-  public listError?: DedicatedNodesListError
+  /** See {@link DedicatedNodesState.isListLoaded}. */
+  get isListLoaded(): boolean {
+    return this.state.get().isListLoaded
+  }
 
-  /** The node whose action is in flight, if any. */
-  @observable
-  public pendingAction?: { nodeId: string; action: DedicatedNodeAction }
+  /** See {@link DedicatedNodesState.isListLoading}. */
+  get isListLoading(): boolean {
+    return this.state.get().isListLoading
+  }
 
-  /** Why the most recent action failed, if it did. */
-  @observable
-  public actionError?: { nodeId: string; action: DedicatedNodeAction; error: DedicatedNodeActionError }
+  /** See {@link DedicatedNodesState.listError}. */
+  get listError(): DedicatedNodesListError | undefined {
+    return this.state.get().listError
+  }
+
+  /** See {@link DedicatedNodesState.pendingAction}. */
+  get pendingAction(): DedicatedNodesState['pendingAction'] {
+    return this.state.get().pendingAction
+  }
+
+  /** See {@link DedicatedNodesState.actionError}. */
+  get actionError(): DedicatedNodesState['actionError'] {
+    return this.state.get().actionError
+  }
 
   /** @param axios The App API client. */
-  constructor(private readonly axios: AxiosInstance) {}
+  constructor(axios: AxiosInstance) {
+    this.axios = axios
+  }
 
   /** Fetches the enrollment token, which decides whether the account can use dedicated nodes. */
-  @action.bound
-  public loadEnrollment = flow(function* (this: DedicatedNodesStore) {
+  public loadEnrollment = async () => {
     if (this.isEnrollmentLoading) {
       return
     }
-    this.isEnrollmentLoading = true
-    this.isEnrollmentLoadError = false
+    this.state.update({ isEnrollmentLoading: true, isEnrollmentLoadError: false })
     try {
-      const response: AxiosResponse<DedicatedNodeEnrollment> = yield this.axios.get(dedicatedNodeEnrollmentEndpointPath)
-      this.enrollment = response.data
-      this.hasAccess = !!response.data?.token
+      const response: AxiosResponse<DedicatedNodeEnrollment> = await this.axios.get(dedicatedNodeEnrollmentEndpointPath)
+      this.state.update({ enrollment: response.data, hasAccess: !!response.data?.token })
     } catch (err) {
       const { status } = getRequestProblem(err)
-      this.enrollment = undefined
-      this.hasAccess = false
-      this.isEnrollmentLoadError = status !== 404
+      this.state.update({ enrollment: undefined, hasAccess: false, isEnrollmentLoadError: status !== 404 })
     } finally {
-      this.isEnrollmentLoading = false
-      this.isEnrollmentChecked = true
+      this.state.update({ isEnrollmentLoading: false, isEnrollmentChecked: true })
     }
-  })
+  }
 
   /** Fetches the first page of nodes, replacing the nodes listed so far. */
-  @action.bound
-  public loadNodes = flow(function* (this: DedicatedNodesStore) {
-    yield this.fetchPage(undefined)
-  })
+  public loadNodes = async () => {
+    await this.fetchPage(undefined)
+  }
 
   /** Fetches the next page of nodes and appends it. No-ops on the last page or while a page is loading. */
-  @action.bound
-  public loadMoreNodes = flow(function* (this: DedicatedNodesStore) {
+  public loadMoreNodes = async () => {
     if (!this.continuationToken || this.isListLoading) {
       return
     }
-    yield this.fetchPage(this.continuationToken)
-  })
+    await this.fetchPage(this.continuationToken)
+  }
 
   /**
    * Approves a pending or refused node with the confirmation code from its console.
+   *
    * @returns `true` if the node was approved.
    */
-  @action.bound
-  public approveNode = flow(function* (this: DedicatedNodesStore, nodeId: string, confirmationCode: string) {
-    const approved: unknown = yield this.runAction(nodeId, 'approve', {
+  public approveNode = async (nodeId: string, confirmationCode: string) => {
+    const approved: unknown = await this.runAction(nodeId, 'approve', {
       confirmation_code: confirmationCode.trim(),
     })
     if (approved) {
@@ -139,77 +195,79 @@ export class DedicatedNodesStore {
       return true
     }
     return false
-  })
+  }
 
   /**
    * Refuses a pending node the account owner does not recognize. It stays listed as `refused`.
+   *
    * @returns `true` if the node was refused.
    */
-  @action.bound
-  public refuseNode = flow(function* (this: DedicatedNodesStore, nodeId: string, note?: string) {
-    const refused: unknown = yield this.runAction(nodeId, 'refuse', note?.trim() ? { note: note.trim() } : {})
+  public refuseNode = async (nodeId: string, note?: string) => {
+    const refused: unknown = await this.runAction(nodeId, 'refuse', note?.trim() ? { note: note.trim() } : {})
     if (refused) {
       this.replaceNode(nodeId, undefined, 'refused')
       return true
     }
     return false
-  })
+  }
 
   /**
-   * Revokes an approved or refused node. This is permanent and the node leaves the list, so confirm with the user first.
+   * Revokes an approved or refused node. This is permanent and the node leaves the list, so confirm with the user
+   * first.
+   *
    * @returns `true` if the node was revoked.
    */
-  @action.bound
-  public revokeNode = flow(function* (this: DedicatedNodesStore, nodeId: string, note?: string) {
-    const revoked: unknown = yield this.runAction(nodeId, 'revoke', note?.trim() ? { note: note.trim() } : {})
+  public revokeNode = async (nodeId: string, note?: string) => {
+    const revoked: unknown = await this.runAction(nodeId, 'revoke', note?.trim() ? { note: note.trim() } : {})
     if (revoked) {
-      this.nodes = this.nodes.filter((node) => node.node_id !== nodeId)
+      this.state.update({ nodes: this.nodes.filter((node) => node.node_id !== nodeId) })
       return true
     }
     return false
-  })
+  }
 
   /** Clears the error of the most recent action, e.g. when its dialog closes. */
-  @action.bound
   public clearActionError = (): void => {
-    this.actionError = undefined
+    this.state.update({ actionError: undefined })
   }
 
   /** Forgets everything, e.g. on logout. */
-  @action.bound
   public reset = (): void => {
-    this.hasAccess = false
-    this.enrollment = undefined
-    this.isEnrollmentChecked = false
-    this.isEnrollmentLoadError = false
-    this.nodes = []
-    this.continuationToken = undefined
-    this.isListLoaded = false
-    this.listError = undefined
-    this.pendingAction = undefined
-    this.actionError = undefined
+    this.state.update({
+      hasAccess: false,
+      enrollment: undefined,
+      isEnrollmentChecked: false,
+      isEnrollmentLoadError: false,
+      nodes: [],
+      continuationToken: undefined,
+      isListLoaded: false,
+      listError: undefined,
+      pendingAction: undefined,
+      actionError: undefined,
+    })
   }
 
   /** Forgets the account's token and nodes after the server says it has no token any more. */
   private dropAccess = (): void => {
     this.reset()
-    this.isEnrollmentChecked = true
+    this.state.update({ isEnrollmentChecked: true })
   }
 
-  private fetchPage = flow(function* (this: DedicatedNodesStore, continuationToken: string | undefined) {
-    this.isListLoading = true
-    this.listError = undefined
+  private fetchPage = async (continuationToken: string | undefined) => {
+    this.state.update({ isListLoading: true, listError: undefined })
     let token = continuationToken
     try {
       while (true) {
         try {
-          const response: AxiosResponse<DedicatedNodeList> = yield this.axios.get(dedicatedNodesEndpointPath, {
+          const response: AxiosResponse<DedicatedNodeList> = await this.axios.get(dedicatedNodesEndpointPath, {
             params: token ? { continuation_token: token } : undefined,
           })
           const items = response.data?.items ?? []
-          this.nodes = mergeDedicatedNodes(token ? this.nodes : [], items)
-          this.continuationToken = response.data?.continuation_token || undefined
-          this.isListLoaded = true
+          this.state.update({
+            nodes: mergeDedicatedNodes(token ? this.nodes : [], items),
+            continuationToken: response.data?.continuation_token || undefined,
+            isListLoaded: true,
+          })
           return
         } catch (err) {
           const { status, title } = getRequestProblem(err)
@@ -221,33 +279,28 @@ export class DedicatedNodesStore {
           if (status === 404 && title === dedicatedNodeProblemTitles.noEnrollmentToken) {
             this.dropAccess()
           } else {
-            this.listError = listErrorFromStatus(status)
+            this.state.update({ listError: listErrorFromStatus(status) })
           }
           return
         }
       }
     } finally {
-      this.isListLoading = false
+      this.state.update({ isListLoading: false })
     }
-  })
+  }
 
   /**
    * Posts an action and records why it failed, if it did.
+   *
    * @returns The response body (or `true` for an empty one) on success; otherwise, `undefined`.
    */
-  private runAction = flow(function* (
-    this: DedicatedNodesStore,
-    nodeId: string,
-    nodeAction: DedicatedNodeAction,
-    body: object,
-  ) {
+  private runAction = async (nodeId: string, nodeAction: DedicatedNodeAction, body: object) => {
     if (this.pendingAction) {
       return undefined
     }
-    this.pendingAction = { nodeId, action: nodeAction }
-    this.actionError = undefined
+    this.state.update({ pendingAction: { nodeId, action: nodeAction }, actionError: undefined })
     try {
-      const response: AxiosResponse<unknown> = yield this.axios.post(
+      const response: AxiosResponse<unknown> = await this.axios.post(
         dedicatedNodeActionEndpointPath(nodeId, nodeAction),
         body,
       )
@@ -269,24 +322,26 @@ export class DedicatedNodesStore {
       } else {
         error = 'unknown'
       }
-      this.actionError = { nodeId, action: nodeAction, error }
+      this.state.update({ actionError: { nodeId, action: nodeAction, error } })
 
       if (status === 404 && title === dedicatedNodeProblemTitles.noEnrollmentToken) {
         this.dropAccess()
       } else if (error === 'conflict' || error === 'not-found' || error === 'timeout' || error === 'wrong-code') {
         // The node changed elsewhere, the action may have been applied before the timeout, or the listed confirmation
         // code is out of date: show the node as it is now.
-        yield this.loadNodes()
+        await this.loadNodes()
       }
       return undefined
     } finally {
-      this.pendingAction = undefined
+      this.state.update({ pendingAction: undefined })
     }
-  })
+  }
 
   private replaceNode(nodeId: string, node: DedicatedNode | undefined, standing: DedicatedNode['standing']): void {
-    this.nodes = this.nodes.map((existing) =>
-      existing.node_id === nodeId ? { ...existing, ...(node ?? { standing }) } : existing,
-    )
+    this.state.update({
+      nodes: this.nodes.map((existing) =>
+        existing.node_id === nodeId ? { ...existing, ...(node ?? { standing }) } : existing,
+      ),
+    })
   }
 }

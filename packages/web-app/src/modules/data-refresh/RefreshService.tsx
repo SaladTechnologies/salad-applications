@@ -1,39 +1,22 @@
-import { config } from '../../config'
 import type { RootStore } from '../../Store'
 
 export class RefreshService {
   constructor(private store: RootStore) {}
 
-  start() {
-    console.log('Starting refresh service')
-
-    //Start a timer to poll for data
-    setInterval(() => {
-      this.refreshData()
-    }, config.dataRefreshRate)
-
-    setInterval(() => {
-      this.store.storefront.refreshStorefront()
-    }, config.rewardRefreshRate)
-
-    //Do the initial data pull
-    this.refreshData()
-    this.store.storefront.refreshStorefront()
-
-    if (this.store.auth.isAuthenticated) {
-      this.store.vault.loadVault()
-    }
-  }
-
+  /**
+   * Reloads the banner, and the signed-in user's balance, target reward, referrals, vault, XP, avatars and bonuses. The
+   * root route runs it when the app opens and every `config.dataRefreshRate` (`useAppRefresh`); sign-in and a claimed
+   * bonus run it too.
+   */
   refreshData = () => {
     // Load unauthenticated data
     try {
-      this.store.home.loadBannerInfo()
+      this.store.loadBanner()
     } catch (error) {
       console.error(error)
     }
 
-    if (!this.store.auth.isAuthenticated) {
+    if (!this.store.auth.isAuthenticated()) {
       return
     }
 
@@ -41,12 +24,12 @@ export class RefreshService {
     try {
       this.store.balance.refreshBalanceAndHistory()
       this.store.rewards.fetchSelectedTargetReward()
-      this.store.referral.loadReferrals()
+      this.store.referrals.loadReport()
       this.store.vault.loadVault()
-      this.store.xp.refreshXp()
+      this.store.xp.load()
       this.store.profile.loadAvatars()
       this.store.profile.loadSelectedAvatar()
-      this.store.bonuses.loadBonuses()
+      this.store.bonuses.load()
     } catch (error) {
       console.error(error)
     }
