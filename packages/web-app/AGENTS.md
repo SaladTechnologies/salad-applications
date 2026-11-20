@@ -18,10 +18,13 @@ lands, the recipes the rules below name may not exist yet; run the ones the just
    reason. The template's tsgo editor settings came with step 3; oxc's come with step 4.
 3. Done: TypeScript 7 with the template's `tsconfig.*.json` projects (`lint-typescript` runs `tsc --build`), and
    `"type": "module"` in `package.json`. See "TypeScript projects" and "CommonJS default imports" below.
-4. Next: oxlint, knip, `npm audit`, and `_lint-typescript-projects` (the rest of the template's `lint-typescript`), with
-   the folders the rebuild has not rewritten yet in oxlint's `ignorePatterns`, each removed as its area is rewritten. It
-   needs a decision on Storybook first: the `*.stories.tsx` files are in no TypeScript project, because Storybook is not
-   installed.
+4. Done: the rest of the template's `lint-typescript` (oxlint, knip, `npm audit signatures`, and
+   `_lint-typescript-projects`) and the template's oxc editor settings. The code the rebuild has not rewritten yet is in
+   oxlint's `ignorePatterns`, the same list as `tsconfig.legacy.json`'s `include`, each entry removed as its area is
+   rewritten. knip runs on everything; what it found unused was deleted, Storybook with it (stories, `.storybook/`, and
+   their dependencies: nobody could run them since Create React App went, and the redesign replaces the components).
+5. Next: `npm audit`, with the dependency upgrades its findings need (axios, lodash, moment, `@babel/runtime`, and uuid,
+   which Kiota's preview packages also use).
 
 ### TypeScript projects
 
@@ -42,7 +45,7 @@ lands, the recipes the rules below name may not exist yet; run the ones the just
 The package is `"type": "module"`, so Vite (and Vitest) import CommonJS the way Node does: a default import of a
 CommonJS package is its whole `module.exports`. For a package compiled from ES modules (it sets `__esModule` and puts
 the component under `default`) that is the wrong value, and the page fails with React error 130. Import such a package's
-default through `cjsDefault` (`src/cjsDefault.ts`), as `react-responsive`, `react-multi-carousel`, `react-html-parser`,
+default through `cjsDefault` (`src/cjs-default.ts`), as `react-responsive`, `react-multi-carousel`, `react-html-parser`,
 and `react-aspect-ratio` are; prefer a named export when the package has one that is the same value, as
 `react-custom-scrollbars-2`'s `Scrollbars` is. A package whose `module.exports` is the value itself (`classnames`,
 `moment`) imports as before.
@@ -55,8 +58,9 @@ and `react-aspect-ratio` are; prefer a named export when the package has one tha
     6.8.9 and 9.0.2, as it did on Yarn, which did not enforce peers. Upgrading either is a separate change.
   - `mobx-react` 6, `mobx-react-lite` 2, and `react-html-parser` 2 ask for React 16; the app runs React 18, as it did on
     Yarn. MobX and its bindings are removed by the rebuild.
-  - `@formatjs/intl` 2 (under `react-intl` 6) has an optional peer on TypeScript 4 or 5; the app type checks with
-    TypeScript 7, which it does not use at runtime.
+- `package.json` `overrides` `typescript`: `react-intl` 6 and its `@formatjs/intl` have an optional peer on TypeScript 4
+  or 5, and npm reaches them through more than one path (the app, and garden-components' peer), so a per-package
+  override does not cover them all. The app type checks with TypeScript 7 and uses no TypeScript at runtime.
 - `package.json` `overrides` carried over from Yarn's `resolutions`: the patched `@elastic/search-ui` from `libs/` and
   the Kiota preview versions. (The `trim-newlines` and `trim` pins went with Storybook, which brought them in.)
 - `allowScripts` denies `core-js`, whose install script only prints a funding message, and the patched
@@ -64,9 +68,7 @@ and `react-aspect-ratio` are; prefer a named export when the package has one tha
   ships the built `lib/`). npm matches that entry by its `file:` spec, so the key is the relative path.
 - The justfile allows the `MIT-0` license and lists `typescript-reviewed-packages`, exact versions whose license was
   read by hand. The reasons are next to them.
-- Storybook's packages were removed: Storybook 6's preset needs Create React App, which the rebuild removed, and its
-  peers fail npm's strict install. The `*.stories.tsx` files and `.storybook/` stay until it is decided whether to bring
-  Storybook back.
+- `knip.jsonc` and `.oxlintrc.json` carry their project-specific settings next to them, each with its reason.
 
 ## TypeScript
 

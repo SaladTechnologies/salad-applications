@@ -52,7 +52,7 @@ export interface GoogleSignInFormProps extends WithStyles<typeof styles> {
   isGoogleSignInFormTriggered: boolean
   signInWithGoogleChallengeSudoMode: (signInWithGoogle: () => void) => void
 }
-export const _GoogleSignInForm: FunctionComponent<GoogleSignInFormProps> = ({
+const _GoogleSignInForm: FunctionComponent<GoogleSignInFormProps> = ({
   classes,
   isTermsAndConditionsAccepted,
   isTermsAndConditionsRequired,

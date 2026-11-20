@@ -12,7 +12,7 @@ import { DemandAlertsPage } from '../modules/demand-alerts-views'
 import { IconArrowLeft } from '../modules/reward-views/components/assets'
 import { styles } from './SettingsPage.styles'
 
-export interface MenuItem {
+interface MenuItem {
   url: string
   text: string
   component?: ComponentType<any>
@@ -24,7 +24,7 @@ export interface MenuItem {
   externalLink?: boolean
 }
 
-export interface MenuButton {
+interface MenuButton {
   text: string
   onClick: () => void
 }

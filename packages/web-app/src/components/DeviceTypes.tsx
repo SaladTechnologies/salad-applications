@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import MediaQueryImport from 'react-responsive'
-import { cjsDefault } from '../cjsDefault.ts'
+import { cjsDefault } from '../cjs-default.ts'
 
 const MediaQuery = cjsDefault(MediaQueryImport)
 

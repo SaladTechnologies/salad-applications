@@ -2,6 +2,7 @@
   "recommendations": [
     "editorconfig.editorconfig",
     "esbenp.prettier-vscode",
+    "oxc.oxc-vscode",
     "typescriptteam.native-preview",
     "vitest.explorer",
     "wayou.vscode-todo-highlight"

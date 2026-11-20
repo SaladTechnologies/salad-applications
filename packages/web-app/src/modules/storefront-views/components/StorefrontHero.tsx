@@ -7,7 +7,7 @@ import CarouselImport from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
 import type { SaladTheme } from '../../../SaladTheme'
 import { StorefrontHeroButtonGroup } from './StorefrontHeroButtonGroup'
-import { cjsDefault } from '../../../cjsDefault.ts'
+import { cjsDefault } from '../../../cjs-default.ts'
 
 const Carousel = cjsDefault(CarouselImport)
 

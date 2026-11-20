@@ -7,7 +7,7 @@ import { DefaultTheme } from '../../../../SaladTheme'
 
 import type { SaladTheme } from '../../../../SaladTheme'
 
-export const styles = (theme: SaladTheme): Record<string, CSS.Properties> => ({
+const styles = (theme: SaladTheme): Record<string, CSS.Properties> => ({
   header: {
     margin: 0,
     fontFamily: theme.fontGroteskLight09,

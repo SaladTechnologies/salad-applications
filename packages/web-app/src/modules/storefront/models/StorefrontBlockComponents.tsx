@@ -1,6 +1,6 @@
 import type { StorefrontHeroItemProps, StorefrontImageProps, StorefrontRewardItemProps } from './index'
 
-export interface StrapiBlock {
+interface StrapiBlock {
   __component: string
   id: number
   title: string

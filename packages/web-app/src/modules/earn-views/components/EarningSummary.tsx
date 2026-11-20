@@ -35,7 +35,7 @@ interface Props extends WithStyles<typeof styles> {
   redeemedRewardsCount: number
 }
 
-export const EarningSummaryRaw: FC<Props> = ({
+const EarningSummaryRaw: FC<Props> = ({
   classes,
   currentBalance,
   last24HrEarnings,

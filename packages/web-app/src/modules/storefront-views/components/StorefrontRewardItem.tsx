@@ -11,7 +11,7 @@ import type { SaladTheme } from '../../../SaladTheme'
 import { RewardMissingImage } from '../../reward-views/components/RewardMissingImage'
 import { getPercentOff } from '../../reward/utils'
 import type { StorefrontRewardItemProps } from '../../storefront/models'
-import { cjsDefault } from '../../../cjsDefault.ts'
+import { cjsDefault } from '../../../cjs-default.ts'
 
 const AspectRatio = cjsDefault(AspectRatioImport)
 

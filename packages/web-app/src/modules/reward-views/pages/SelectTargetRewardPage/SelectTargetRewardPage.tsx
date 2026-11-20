@@ -14,7 +14,7 @@ import { RewardMissingImage } from '../../components/RewardMissingImage'
 import SaladBackgroundURL from '../assets/saladBackground.png'
 import { RewardsList } from './RewardsList'
 
-export const styles = (theme: SaladTheme) => ({
+const styles = (theme: SaladTheme) => ({
   pageWrapper: {
     display: 'flex',
     height: '100%',

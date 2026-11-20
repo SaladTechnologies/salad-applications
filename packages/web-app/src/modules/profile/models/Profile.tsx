@@ -19,25 +19,6 @@ export interface Avatar {
   imageUrl: string
 }
 
-export interface AvatarForm {
-  alt: string
-  src: string
-  id: string
-  errorMessage?: string
-  selected?: boolean
-}
-
-export enum ReferredStatus {
-  CanEnter, //joined within the last week, could still enter a referral code
-  Test, //Testing state
-  NotReferred, //They didn't enter a code and don't have option anymore
-  Referred,
-}
-
-export interface ProfileExtensions {
-  minecraftUsername: string
-}
-
 export interface ExternalAuthProvider {
   email: string
   loginProvider: string
@@ -45,10 +26,8 @@ export interface ExternalAuthProvider {
 }
 
 export enum ExternalAuthProviderLoginAction {
-  None = 'None',
   OneTimeCodeFlow = 'OneTimeCodeFlow',
   WithMessageConfirmation = 'WithMessageConfirmation',
-  WithoutMessageConfirmation = 'WithoutMessageConfirmation',
 }
 
 export enum ExternalAuthProviderLoginStatus {

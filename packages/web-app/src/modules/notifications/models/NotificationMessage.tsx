@@ -1,17 +1,11 @@
 export enum NotificationMessageCategory {
   AppUpdate = 'App Update',
-  AutoStart = 'Auto Start',
   Error = 'Error',
   FurtherActionRequired = 'Further Action Required',
-  Incentive = 'Incentive',
-  MachineIncompatible = 'Machine Incompatible',
   Redemption = 'Redemption',
   Success = 'Success',
   BonusClaimedSuccess = 'Bonus Claimed Success',
   BonusClaimedError = 'Bonus Claimed Error',
-  ReferralCodeInvalid = 'Referral Code Invalid',
-  ReferralCodeDoesNotExist = 'Referral Code Does Not Exist',
-  ReferralCodeError = 'Referral Code Error',
 }
 
 export interface NotificationMessage {
@@ -44,36 +38,6 @@ export interface NotificationMessage {
 }
 
 /** A resource that represents an action that acknowledges a notification. */
-export interface AcknowledgeNotificationAction {
-  /** The title. */
-  title: string
-}
 /** A resource that represents an action that dismisses a notification. */
-export interface DismissNotificationAction {
-  /** The title. */
-  title: string
-}
 /** A resource that represents an action that opens a link in the default browser. */
-export interface OpenLinkNotificationAction {
-  /** The title. */
-  title: string
-  /** The link. */
-  link: string
-}
-
 /** A resource that represents an in-app notification action. */
-export interface NotificationAction {
-  action?:
-    | {
-        $case: 'acknowledge'
-        acknowledge: AcknowledgeNotificationAction
-      }
-    | {
-        $case: 'dismiss'
-        dismiss: DismissNotificationAction
-      }
-    | {
-        $case: 'openLink'
-        openLink: OpenLinkNotificationAction
-      }
-}

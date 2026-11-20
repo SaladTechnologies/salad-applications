@@ -26,9 +26,6 @@ npm start
 The web app will be available at <http://localhost:3000/> and automatically refresh when changes are detected. Debugging
 from Visual Studio Code is available if you run via one of the `Launch & Debug` tasks.
 
-Storybook is not installed: its packages were removed during the web app rebuild, and the `*.stories.tsx` files are kept
-until it is decided whether to bring it back.
-
 ## Architecture
 
 Each feature is broken into 2 (or more) separate modules, 1 for the UI components and 1 for the business logic and API
@@ -48,7 +45,6 @@ submitted.
   interfaces.
 - [MobX](https://mobx.js.org/) - Simple, scalable state management.
 - [Axios](https://github.com/axios/axios) - Promise based HTTP client for the browser and node.js
-- [Storybook](https://storybook.js.org/) - Storybook is a development environment for UI components.
 - [JSS](https://cssinjs.org) - JSS is an authoring tool for CSS which allows you to use JavaScript to describe styles in
   a declarative, conflict-free and reusable way.
 - [Typescript](https://www.typescriptlang.org/) - A language for application-scale JavaScript.

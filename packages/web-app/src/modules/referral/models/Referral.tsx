@@ -1,4 +1,4 @@
-export interface ReferralDefinition {
+interface ReferralDefinition {
   balanceThreshold: number
   bonusRate: number
   referrerBonus: number
