@@ -81,7 +81,7 @@ const _CoinbaseEmail: FC<Props> = ({
     setPendingEmail(undefined)
   }
 
-  // Loading on mount (above) is what tells us whether to show anything at all.
+  // The load when the summary opens (in AccountContainer) is what tells us whether to show anything at all.
   if (!isEnabled) {
     return null
   }
