@@ -148,8 +148,6 @@ interface Props extends WithStyles<typeof styles> {
   coinbaseRewardIds?: string[]
   /** Loads a reward's details (tags included) if they are not loaded yet. */
   loadReward?: (rewardId: string) => void
-  startRefresh?: () => void
-  stopRefresh?: () => void
 }
 
 interface State {
@@ -277,14 +275,10 @@ class _VaultList extends Component<Props, State> {
   }
 
   public override componentDidMount = () => {
-    const { startRefresh } = this.props
-    startRefresh?.()
     this.loadCoinbaseCandidates()
   }
 
   public override componentWillUnmount = () => {
-    const { stopRefresh } = this.props
-    stopRefresh?.()
     if (this.copiedTimer) {
       clearTimeout(this.copiedTimer)
     }

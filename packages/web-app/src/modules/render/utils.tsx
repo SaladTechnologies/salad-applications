@@ -1,3 +1,5 @@
+import type { AxiosInstance } from 'axios'
+import { fetchRenderExchangeRate } from '../../rewards/render.ts'
 import { renderExchangeRateDefaultTtl, renderQuoteDisplayDecimals, renderRewardTag } from './constants'
 import type { RenderExchangeRate, RenderExchangeRateResource } from './models'
 
@@ -96,6 +98,21 @@ export const renderExchangeRateFromResource = (
   asOf: parseTimestamp(resource.quotedAt) ?? receivedAt,
   expiresAt: parseTimestamp(resource.expiresAt),
 })
+
+/**
+ * Fetches the RENDER quote and puts it in `render` (the store's `render`, which redemption reads), so the quote shown
+ * and the quote redemption sends are the same. The quote query in `RenderPriceQuoteContainer` runs this.
+ */
+export const loadRenderExchangeRate = async (
+  http: AxiosInstance,
+  render: { setExchangeRate: (exchangeRate: RenderExchangeRate) => void },
+  receivedAt: () => Date = () => new Date(),
+): Promise<RenderExchangeRate> => {
+  const resource = (await fetchRenderExchangeRate(http)) as RenderExchangeRateResource
+  const exchangeRate = renderExchangeRateFromResource(resource, receivedAt())
+  render.setExchangeRate(exchangeRate)
+  return exchangeRate
+}
 
 /**
  * Computes how many RENDER tokens a given amount of Salad Balance (USD) converts to at the supplied price.

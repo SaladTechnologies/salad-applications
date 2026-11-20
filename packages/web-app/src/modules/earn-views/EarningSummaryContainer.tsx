@@ -1,5 +1,7 @@
 import { connect } from '../../connect'
 import type { RootStore } from '../../Store'
+import { useVaultRefresh } from '../../rewards/vault.ts'
+import { getStore } from '../../Store'
 import { EarningSummaryPage } from './pages/EarningSummaryPage'
 import { getNumberWithCommas } from './utils'
 
@@ -23,8 +25,6 @@ const mapStoreToProps = (store: RootStore): any => {
     bonusEarningRate: store.bonuses.currentEarningBonus,
     machines: store.balance.machines,
     currentHourlyEarningRatesPerMachine: store.balance.currentHourlyEarningRatesPerMachine,
-    startRedemptionsRefresh: store.vault.startRefresh,
-    stopRedemptionsRefresh: store.vault.stopRefresh,
     trackEarnPageFAQLinkClicked: store.analytics.trackEarnPageFAQLinkClicked,
     trackEarnPageViewed: store.analytics.trackEarnPageViewed,
     trackAndNavigateToRewardVaultPage,
@@ -36,4 +36,10 @@ const mapStoreToProps = (store: RootStore): any => {
   }
 }
 
-export const EarningSummaryContainer = connect(mapStoreToProps, EarningSummaryPage)
+const ConnectedEarningSummary = connect(mapStoreToProps, EarningSummaryPage)
+
+/** The earnings summary page, whose redeemed rewards and balance refresh while it is open. */
+export const EarningSummaryContainer = () => {
+  useVaultRefresh(getStore().vault.refresh)
+  return <ConnectedEarningSummary />
+}
