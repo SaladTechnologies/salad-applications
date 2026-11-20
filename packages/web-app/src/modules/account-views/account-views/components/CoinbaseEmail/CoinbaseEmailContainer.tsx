@@ -1,17 +1,22 @@
-import { connect } from '../../../../../connect'
-import type { RootStore } from '../../../../../Store'
+import { useCoinbaseEmailState } from '../../../../../account/coinbase-email.ts'
+import { getStore } from '../../../../../Store'
 import { CoinbaseEmail } from './CoinbaseEmail'
 
-const mapStoreToProps = (store: RootStore): any => ({
-  isEnabled: store.coinbaseEmail.isEnabled,
-  email: store.coinbaseEmail.email,
-  isLoading: store.coinbaseEmail.isLoading,
-  isLoadError: store.coinbaseEmail.isLoadError,
-  submitStatus: store.coinbaseEmail.submitStatus,
-  submitError: store.coinbaseEmail.submitError,
-  setEmail: store.coinbaseEmail.setEmail,
-  clearEmail: store.coinbaseEmail.clearEmail,
-  setSubmitStatus: store.coinbaseEmail.setSubmitStatus,
-})
-
-export const CoinbaseEmailContainer = connect(mapStoreToProps, CoinbaseEmail)
+/** The account page's Coinbase email section. It reads the saved email and passes it down. */
+export const CoinbaseEmailContainer = () => {
+  const { coinbaseEmail } = getStore()
+  const { isEnabled, email, isLoading, isLoadError, submitStatus, submitError } = useCoinbaseEmailState(coinbaseEmail)
+  return (
+    <CoinbaseEmail
+      isEnabled={isEnabled}
+      email={email}
+      isLoading={isLoading}
+      isLoadError={isLoadError}
+      submitStatus={submitStatus}
+      submitError={submitError}
+      setEmail={coinbaseEmail.setEmail}
+      clearEmail={coinbaseEmail.clearEmail}
+      setSubmitStatus={coinbaseEmail.setSubmitStatus}
+    />
+  )
+}

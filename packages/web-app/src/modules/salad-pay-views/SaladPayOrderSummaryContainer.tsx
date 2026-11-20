@@ -1,19 +1,29 @@
+import type { CoinbaseEmailState } from '../../account/coinbase-email.ts'
+import { useCoinbaseEmailState } from '../../account/coinbase-email.ts'
+import type { SolanaWalletState } from '../../account/solana-wallet.ts'
+import { useSolanaWalletState } from '../../account/solana-wallet.ts'
 import { getStore } from '../../Store'
 import type { SaladPayStore } from '../salad-pay/SaladPayStore'
 import { SaladPayOrderSummaryPage } from './components'
 import { connectSaladPay } from './connectSaladPay'
 
-const mapStoreToProps = (store: SaladPayStore): any => ({
+/** What the order summary is given: the payout destinations, which a RENDER or Coinbase reward needs. */
+interface OwnProps {
+  solanaWallet: SolanaWalletState
+  coinbaseEmail: CoinbaseEmailState
+}
+
+const mapStoreToProps = (store: SaladPayStore, props: OwnProps): any => ({
   availableBalance: store.currentBalance,
   processing: store.processing,
   request: store.currentRequestOptions,
   reward: getStore().rewards.getReward(getStore().rewards.lastRewardId),
-  solanaWalletAddress: getStore().solanaWallet.walletAddress,
-  isSolanaWalletLoading: getStore().solanaWallet.isLoading,
+  solanaWalletAddress: props.solanaWallet.walletAddress,
+  isSolanaWalletLoading: props.solanaWallet.isLoading,
   loadSolanaWallet: getStore().solanaWallet.loadWallet,
-  coinbaseEmail: getStore().coinbaseEmail.email,
-  isCoinbaseEmailLoading: getStore().coinbaseEmail.isLoading,
-  isCoinbaseEmailLoadError: getStore().coinbaseEmail.isLoadError,
+  coinbaseEmail: props.coinbaseEmail.email,
+  isCoinbaseEmailLoading: props.coinbaseEmail.isLoading,
+  isCoinbaseEmailLoadError: props.coinbaseEmail.isLoadError,
   loadCoinbaseEmail: getStore().coinbaseEmail.loadEmail,
   onClose: () => {
     store.abort()
@@ -23,4 +33,15 @@ const mapStoreToProps = (store: SaladPayStore): any => ({
   onConfirm: store.confirmPayment,
 })
 
-export const SaladPayOrderSummaryContainer = connectSaladPay(mapStoreToProps, SaladPayOrderSummaryPage)
+const ConnectedSaladPayOrderSummary = connectSaladPay(mapStoreToProps, SaladPayOrderSummaryPage)
+
+/** The SaladPay order summary. It reads the saved Solana wallet and Coinbase email and passes them down. */
+export const SaladPayOrderSummaryContainer = () => {
+  const store = getStore()
+  return (
+    <ConnectedSaladPayOrderSummary
+      solanaWallet={useSolanaWalletState(store.solanaWallet)}
+      coinbaseEmail={useCoinbaseEmailState(store.coinbaseEmail)}
+    />
+  )
+}
