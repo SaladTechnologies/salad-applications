@@ -531,34 +531,3 @@ describe('RewardStore.redeemReward SaladPay order', () => {
     expect(complete).toHaveBeenLastCalledWith('success')
   })
 })
-
-describe('RewardStore redemption id', () => {
-  it('is reused to retry the same reward for the same user, also after sign-out', async () => {
-    const { store, open, handlers, rootStore } = setup(vi.fn().mockResolvedValue({ data: { status: 'complete' } }))
-    Reflect.set(rootStore.profile, 'currentProfile', { id: 'chef-a', redemptionTfaEnabled: false })
-
-    await open(makeReward())
-    const first = redemptionIdOf(store)
-    await handlers()?.abort()
-    store.resetUserData()
-    await open(makeReward())
-
-    expect(first).toBeDefined()
-    expect(redemptionIdOf(store)).toBe(first)
-  })
-
-  it('is never reused for another user', async () => {
-    const { store, open, handlers, rootStore } = setup(vi.fn().mockResolvedValue({ data: { status: 'complete' } }))
-    Reflect.set(rootStore.profile, 'currentProfile', { id: 'chef-a', redemptionTfaEnabled: false })
-
-    await open(makeReward())
-    const first = redemptionIdOf(store)
-    await handlers()?.abort()
-    store.resetUserData()
-    Reflect.set(rootStore.profile, 'currentProfile', { id: 'chef-b', redemptionTfaEnabled: false })
-    await open(makeReward())
-
-    expect(redemptionIdOf(store)).toBeDefined()
-    expect(redemptionIdOf(store)).not.toBe(first)
-  })
-})

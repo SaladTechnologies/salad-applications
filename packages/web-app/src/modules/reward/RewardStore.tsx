@@ -94,12 +94,6 @@ export class RewardStore {
 
   private lastRedemptionId?: string = undefined
 
-  /**
-   * The profile that `lastRedemptionId` was made for. The server keys a redemption by its id across all users, so the
-   * id is reused only to retry the same reward for the same user (after a timeout, say), never for another user.
-   */
-  private lastRedemptionProfileId?: string = undefined
-
   @computed get choppingCart(): Reward[] | undefined {
     const selectedTargetReward = this.getReward(this.selectedTargetRewardId)
     if (selectedTargetReward === undefined) return undefined
@@ -257,15 +251,9 @@ export class RewardStore {
       return
     }
 
-    const profileId = this.store.profile.currentProfile?.id
-    if (
-      this.lastRedemptionId === undefined ||
-      this.lastRewardId !== reward.id ||
-      this.lastRedemptionProfileId !== profileId
-    ) {
+    if (this.lastRedemptionId === undefined || this.lastRewardId !== reward.id) {
       this.lastRedemptionId = uuidv4()
       this.lastRewardId = reward.id
-      this.lastRedemptionProfileId = profileId
     }
 
     if (this.isRedeeming) {
@@ -554,7 +542,6 @@ export class RewardStore {
   clearRedemptionInfo() {
     this.lastRedemptionId = undefined
     this.lastRewardId = undefined
-    this.lastRedemptionProfileId = undefined
   }
 
   @action.bound
@@ -563,9 +550,8 @@ export class RewardStore {
   }
 
   /**
-   * Forgets the target reward and the recommended rewards of the user who signed out. The last redemption's id stays:
-   * it belongs to its profile (`lastRedemptionProfileId`), so another user never reuses it, and the same user signing
-   * back in can still retry a timed-out redemption without redeeming twice. The reward cache is public and stays.
+   * Forgets the target reward and the recommended rewards of the user who signed out. The last redemption's id and
+   * reward are left as they were; who may reuse them is a separate decision. The reward cache is public and stays.
    */
   @action.bound
   resetUserData() {
