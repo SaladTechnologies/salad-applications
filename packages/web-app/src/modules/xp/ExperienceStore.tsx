@@ -56,4 +56,10 @@ export class ExperienceStore {
       this.updateXp(newXp)
     } catch {}
   })
+
+  /** Forgets the XP of the user who signed out, so the next user never sees them. */
+  @action.bound
+  resetUserData() {
+    this.currentXp = 0
+  }
 }

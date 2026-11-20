@@ -62,4 +62,10 @@ export class BackupCodesStore {
       console.error('BackupCodesStore -> getBackupCodes: ', error)
     }
   })
+
+  /** Forgets the backup codes of the user who signed out, so the next user never sees them. */
+  @action.bound
+  resetUserData() {
+    this.backupCodes = undefined
+  }
 }

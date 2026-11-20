@@ -209,4 +209,10 @@ export class PasskeyStore {
       console.error('PasskeyStore -> editPasskeyName: ', error)
     }
   })
+
+  /** Forgets the passkeys of the user who signed out, so the next user never sees them. */
+  @action.bound
+  resetUserData() {
+    this.passkeys = []
+  }
 }

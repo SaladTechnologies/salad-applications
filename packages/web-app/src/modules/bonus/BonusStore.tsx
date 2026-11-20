@@ -183,4 +183,12 @@ export class BonusStore {
       this.replacementEarningRateBonusId = undefined
     }
   }
+
+  /** Forgets the bonuses of the user who signed out, so the next user never sees them. */
+  @action.bound
+  resetUserData() {
+    this.unclaimedBonuses = []
+    this.currentEarningBonus = undefined
+    this.replacementEarningRateBonusId = undefined
+  }
 }

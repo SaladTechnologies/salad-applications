@@ -548,4 +548,13 @@ export class RewardStore {
   finishReview() {
     this.isReviewing = false
   }
+
+  /**
+   * Forgets the target reward (not the reward cache, which is public, nor a redemption in progress) of the user who
+   * signed out, so the next user never sees them.
+   */
+  @action.bound
+  resetUserData() {
+    this.selectedTargetRewardId = undefined
+  }
 }

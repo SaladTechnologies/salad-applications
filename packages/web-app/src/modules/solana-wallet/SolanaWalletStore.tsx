@@ -97,4 +97,10 @@ export class SolanaWalletStore {
       })
     }
   })
+
+  /** Forgets the Solana wallet address of the user who signed out, so the next user never sees them. */
+  @action.bound
+  resetUserData() {
+    this.walletAddress = undefined
+  }
 }

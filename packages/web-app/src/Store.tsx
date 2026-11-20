@@ -120,6 +120,21 @@ export class RootStore {
     this.dedicatedNodes = new DedicatedNodesStore(axios)
   }
 
+  /** The stores that hold data of the signed-in user, which sign-out forgets (src/app/forget-user.ts). */
+  userDataStores = () => [
+    this.balance,
+    this.bonuses,
+    this.xp,
+    this.vault,
+    this.referral,
+    this.profile,
+    this.rewards,
+    this.solanaWallet,
+    this.coinbaseEmail,
+    this.passkey,
+    this.backupCodes,
+  ]
+
   /** Mirrors the session (src/data/session.ts) into the stores: called when it becomes known and when it changes. */
   onSessionChange = (session: 'yes' | 'no'): void => {
     this.auth.setIsAuthenticated(session === 'yes')

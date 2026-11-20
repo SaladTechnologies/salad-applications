@@ -331,4 +331,18 @@ export class BalanceStore {
       console.error(error)
     }
   })
+
+  /** Forgets the balance and earnings of the user who signed out, so the next user never sees them. */
+  @action.bound
+  resetUserData() {
+    this.currentBalance = 0
+    this.lifetimeBalance = 0
+    this.lastDayEarnings = 0
+    this.lastWeekEarnings = 0
+    this.lastMonthEarnings = 0
+    this._earningsHistory = new Map()
+    this._earningsPerMachine = {}
+    this.currentHourlyEarningRatesPerMachine = {}
+    this.machines = []
+  }
 }

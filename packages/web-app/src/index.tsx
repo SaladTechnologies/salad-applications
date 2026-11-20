@@ -29,6 +29,7 @@ import { setSession } from './data/session.ts'
 import { HttpContext } from './data/http-context.ts'
 import { storefrontQuery } from './rewards/storefront.ts'
 import { SessionProvider } from './data/session-provider.tsx'
+import { forgetSignedOutUser } from './app/forget-user.ts'
 import { createNavigation } from './routing/navigation.ts'
 import { createAppRouter } from './Routes'
 import { DefaultTheme as JSSTheme } from './SaladTheme'
@@ -57,6 +58,13 @@ setTimeout(() => {
   // The storefront store fetched the storefront when the app started; its query does too, so the page shows it at once.
   void queryClient.prefetchQuery(storefrontQuery(client, config.rewardRefreshRate))
   const rootStore = createStore(client, (session) => setSession(queryClient, session), navigation)
+  // After the stores' sign-out work, sign-out forgets the user's data.
+  const onSessionChange = (session: 'yes' | 'no') => {
+    rootStore.onSessionChange(session)
+    if (session === 'no') {
+      forgetSignedOutUser(rootStore.userDataStores(), queryClient)
+    }
+  }
   store = rootStore
   const router = createAppRouter(history)
 
@@ -73,7 +81,7 @@ setTimeout(() => {
   container.render(
     <QueryClientProvider client={queryClient}>
       <HttpContext.Provider value={client}>
-        <SessionProvider http={client} onChange={rootStore.onSessionChange}>
+        <SessionProvider http={client} onChange={onSessionChange}>
           <RawIntlProvider value={intl}>
             <EmotionThemeProvider theme={EmotionTheme}>
               <JSSThemeProvider theme={JSSTheme}>
