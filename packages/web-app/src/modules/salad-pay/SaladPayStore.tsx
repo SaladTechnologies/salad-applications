@@ -1,4 +1,4 @@
-import { action, computed, observable, runInAction } from 'mobx'
+import { action, observable, runInAction } from 'mobx'
 import { getStore } from '../../Store'
 import type { SaladPaymentRequestOptions } from './models'
 
@@ -7,9 +7,9 @@ let sharedStore: SaladPayStore
 /** Gets the instance of the SaladPay store */
 export const getSaladPayStore = (): SaladPayStore => {
   if (!sharedStore) {
-    const { routing, balance, rewards } = getStore()
+    const { routing, rewards } = getStore()
     // Field initializers are writes; `enforceActions: 'always'` only allows them inside an action (see createStore).
-    sharedStore = runInAction(() => new SaladPayStore(routing, balance, rewards))
+    sharedStore = runInAction(() => new SaladPayStore(routing, rewards))
   }
 
   return sharedStore
@@ -51,18 +51,11 @@ export class SaladPayStore {
   public processing: boolean = false
 
   private readonly routing: SaladPayRouting
-  private readonly balance: { currentBalance: number }
   private readonly rewards: { lastRewardId?: string }
 
-  constructor(routing: SaladPayRouting, balance: { currentBalance: number }, rewards: { lastRewardId?: string }) {
+  constructor(routing: SaladPayRouting, rewards: { lastRewardId?: string }) {
     this.routing = routing
-    this.balance = balance
     this.rewards = rewards
-  }
-
-  @computed
-  get currentBalance(): number {
-    return this.balance.currentBalance
   }
 
   /** Opens an order for the summary to show. An order still waiting for the Chef is aborted first. */

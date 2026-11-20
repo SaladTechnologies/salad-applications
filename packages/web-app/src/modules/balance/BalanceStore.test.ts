@@ -60,7 +60,6 @@ describe('BalanceStore', () => {
 
     expect(states).toHaveLength(1)
     expect(balance.state.get()).toMatchObject({ currentBalance: 12.5, lifetimeBalance: 99 })
-    expect(balance.currentBalance).toBe(12.5)
   })
 
   it('loads the balance and the earning totals together', async () => {

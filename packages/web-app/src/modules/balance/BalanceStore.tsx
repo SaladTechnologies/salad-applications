@@ -152,11 +152,6 @@ export class BalanceStore {
     this.machinesApiClient = getMachinesApiClient(axios)
   }
 
-  /** The balance the user can spend, now. Components read it with `useExternalState(state)` instead. */
-  get currentBalance(): number {
-    return this.state.get().currentBalance
-  }
-
   viewLast24Hours = () => {
     this.state.update({ daysShowingEarnings: 1 })
   }

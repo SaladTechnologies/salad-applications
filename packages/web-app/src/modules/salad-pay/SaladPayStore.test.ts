@@ -11,7 +11,7 @@ const options = { total: { label: 'Total', amount: 5 }, displayItems: [{ label: 
 /** A store with spies for its navigation, and an open order whose handlers are spies. */
 const setUp = (lastRewardId?: string) => {
   const routing = { push: vi.fn(), replace: vi.fn(), goBackOr: vi.fn() }
-  const store = runInAction(() => new SaladPayStore(routing, { currentBalance: 100 }, { lastRewardId }))
+  const store = runInAction(() => new SaladPayStore(routing, { lastRewardId }))
   const handlers = { confirm: vi.fn<() => void>(), abort: vi.fn<() => void>() } satisfies SaladPayOrderHandlers
   store.open(options, handlers)
   return { store, routing, handlers }
