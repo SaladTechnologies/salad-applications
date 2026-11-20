@@ -36,8 +36,3 @@ export interface NotificationMessage {
   /** Callback when the notification is clicked on in the salad app `Default: close the notification` */
   onClick?: () => void
 }
-
-/** A resource that represents an action that acknowledges a notification. */
-/** A resource that represents an action that dismisses a notification. */
-/** A resource that represents an action that opens a link in the default browser. */
-/** A resource that represents an in-app notification action. */

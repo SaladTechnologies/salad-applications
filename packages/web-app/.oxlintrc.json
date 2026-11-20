@@ -20,7 +20,8 @@
   "ignorePatterns": [
     "**/testdata/**",
     // Project-specific: the code the web app rebuild has not rewritten yet, the same list as tsconfig.legacy.json's
-    // `include` (see AGENTS.md). An entry is removed when its area is rewritten; the list only shrinks.
+    // `include` without src/vite-env.d.ts, which the browser project shares (see AGENTS.md). An entry is removed when
+    // its area is rewritten; the list only shrinks.
     "src/api/**/*",
     "src/App.tsx",
     "src/assets/**/*",
