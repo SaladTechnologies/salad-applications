@@ -1,4 +1,5 @@
 import { useAccountSecurityLoads, useGoogleConnectionLoad } from '../../../account/account-security.ts'
+import { usePayoutDestinationLoads } from '../../../account/wallets.ts'
 import { connect } from '../../../connect'
 import type { RootStore } from '../../../Store'
 import { getStore } from '../../../Store'
@@ -32,11 +33,13 @@ const mapStoreToProps = (store: RootStore): any => ({
 const ConnectedAccount = connect(mapStoreToProps, Account)
 
 /**
- * The desktop account summary. Each time it opens it loads the passkeys, then the profile (its account security
- * section), then the connected Google account, in the order the page's effects ran them; the data stays in the stores.
+ * The desktop account summary. Each time it opens it loads the Solana wallet, then the Coinbase email (its payout
+ * sections), then the passkeys, then the profile (its account security section), then the connected Google account, in
+ * the order the page's effects ran them; the data stays in the stores.
  */
 export const AccountContainer = () => {
   const store = getStore()
+  usePayoutDestinationLoads(store.solanaWallet.loadWallet, store.coinbaseEmail.loadEmail)
   useAccountSecurityLoads(store.passkey.fetchPasskeys, store.profile.loadProfile)
   useGoogleConnectionLoad(store.profile.loadGoogleAccountConnection)
   return <ConnectedAccount />
