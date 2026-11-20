@@ -1,10 +1,12 @@
-import { connect } from '../../connect'
-import type { RootStore } from '../../Store'
+import { useQuery } from '@tanstack/react-query'
+import { useHttp } from '../../data/http-context.ts'
+import type { StorefrontPageProps } from '../storefront/models'
+import { storefrontQuery } from '../storefront/storefrontQuery'
 import { StorefrontPage } from './pages/StorefrontPage'
 
-const mapStoreToProps = (store: RootStore): any => ({
-  data: store.storefront.data,
-  isLoading: store.storefront.isLoading,
-})
-
-export const StorefrontPageContainer = connect(mapStoreToProps, StorefrontPage)
+/** The storefront page. */
+export const StorefrontPageContainer = () => {
+  const http = useHttp()
+  const { data } = useQuery(storefrontQuery(http))
+  return <StorefrontPage data={data as StorefrontPageProps} />
+}

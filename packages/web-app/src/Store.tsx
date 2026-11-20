@@ -26,7 +26,6 @@ import { RenderStore } from './modules/render'
 import { RewardStore } from './modules/reward'
 import { SolanaWalletStore } from './modules/solana-wallet'
 import { StartButtonUIStore } from './modules/start-button/StartButtonUIStore'
-import { StorefrontStore } from './modules/storefront/StorefrontStore'
 import { TermsAndConditionsStore } from './modules/terms-and-conditions'
 import { VaultStore } from './modules/vault'
 import { ExperienceStore } from './modules/xp'
@@ -77,7 +76,6 @@ export class RootStore {
   public readonly vault: VaultStore
   public readonly engagement: EngagementStore
   public readonly helpScout: HelpScoutStore
-  public readonly storefront: StorefrontStore
   public readonly bonuses: BonusStore
   public readonly achievements: AchievementsStore
   public readonly startButtonUI: StartButtonUIStore
@@ -110,7 +108,6 @@ export class RootStore {
     this.vault = new VaultStore(axios, this.balance, this.rewards)
     this.engagement = new EngagementStore(this, axios)
     this.helpScout = new HelpScoutStore(axios, this.auth)
-    this.storefront = new StorefrontStore(axios)
     this.bonuses = new BonusStore(this, axios)
     this.passkey = new PasskeyStore(this, axios)
     this.backupCodes = new BackupCodesStore(this, axios)

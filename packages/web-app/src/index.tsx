@@ -26,6 +26,8 @@ import { config } from './config'
 import { createHttpClient } from './data/http-client.ts'
 import { createQueryClient } from './data/query-client.ts'
 import { setSession } from './data/session.ts'
+import { HttpContext } from './data/http-context.ts'
+import { storefrontQuery } from './modules/storefront/storefrontQuery'
 import { SessionProvider } from './data/session-provider.tsx'
 import { createNavigation } from './routing/navigation.ts'
 import { createAppRouter } from './Routes'
@@ -52,6 +54,8 @@ const client = createHttpClient({
 })
 
 setTimeout(() => {
+  // The storefront store fetched the storefront when the app started; its query does too, so the page shows it at once.
+  void queryClient.prefetchQuery(storefrontQuery(client))
   const rootStore = createStore(client, (session) => setSession(queryClient, session), navigation)
   store = rootStore
   const router = createAppRouter(history)
@@ -68,17 +72,19 @@ setTimeout(() => {
   const container = createRoot(document.getElementById('root') as HTMLDivElement)
   container.render(
     <QueryClientProvider client={queryClient}>
-      <SessionProvider http={client} onChange={rootStore.onSessionChange}>
-        <RawIntlProvider value={intl}>
-          <EmotionThemeProvider theme={EmotionTheme}>
-            <JSSThemeProvider theme={JSSTheme}>
-              <SkeletonTheme baseColor="#172E40" highlightColor="#304759">
-                <RouterProvider router={router} />
-              </SkeletonTheme>
-            </JSSThemeProvider>
-          </EmotionThemeProvider>
-        </RawIntlProvider>
-      </SessionProvider>
+      <HttpContext.Provider value={client}>
+        <SessionProvider http={client} onChange={rootStore.onSessionChange}>
+          <RawIntlProvider value={intl}>
+            <EmotionThemeProvider theme={EmotionTheme}>
+              <JSSThemeProvider theme={JSSTheme}>
+                <SkeletonTheme baseColor="#172E40" highlightColor="#304759">
+                  <RouterProvider router={router} />
+                </SkeletonTheme>
+              </JSSThemeProvider>
+            </EmotionThemeProvider>
+          </RawIntlProvider>
+        </SessionProvider>
+      </HttpContext.Provider>
     </QueryClientProvider>,
   )
 }, 0)

@@ -1,9 +1,23 @@
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { connect } from '../../connect'
+import { useHttp } from '../../data/http-context.ts'
+import { fetchRewardResource, rewardQueryKey } from '../../rewards/reward.ts'
+import { isStorefrontOutdated, storefrontQueryKey } from '../../rewards/storefront.ts'
+import { useNavigation } from '../../routing/navigation-context.ts'
 import type { RootStore } from '../../Store'
+import { getStore } from '../../Store'
 import type { Reward } from '../reward/models'
+import type { RewardResource } from '../reward/models/RewardResource'
+import { rewardFromResource } from '../reward/utils'
 import { RewardDetailsPage } from './pages'
 
-const mapStoreToProps = (store: RootStore, props: { match: { params: { id: string } }; backFallback: string }): any => {
+interface OwnProps {
+  match: { params: { id: string } }
+  reward?: Reward
+  onBack: () => void
+}
+
+const mapStoreToProps = (store: RootStore, props: OwnProps): any => {
   const onRedeem = (reward: Reward) => {
     store.analytics.trackButtonClicked('buy_now', 'Buy Now', 'enabled')
     store.rewards.redeemReward(reward)
@@ -14,19 +28,18 @@ const mapStoreToProps = (store: RootStore, props: { match: { params: { id: strin
   }
 
   const extensions = store.profile.currentProfile?.extensions
-  const reward = store.rewards.getReward(props.match.params.id)
+  const reward = props.reward ?? store.rewards.getReward(props.match.params.id)
   const requiresMinecraftUsername =
     reward?.tags?.includes('requires-minecraft-username') && !extensions?.minecraftUsername
   const isRewardSelectedAsTarget = store.rewards.selectedTargetReward?.id === reward?.id
 
   return {
-    loadReward: store.rewards.fetchAndTrackReward,
     authenticated: store.auth.isAuthenticated,
     rewardId: props.match.params.id,
     currentBalance: store.balance.currentBalance,
     reward: reward,
     isReviewing: store.rewards.isReviewing,
-    onBack: () => store.routing.goBackOr(props.backFallback),
+    onBack: props.onBack,
     onRedeem,
     onTargetThisRewardClick: store.rewards.setSelectedTargetReward,
     onRemoveTargetRewardClick: store.rewards.removeSelectedTargetReward,
@@ -43,4 +56,37 @@ const mapStoreToProps = (store: RootStore, props: { match: { params: { id: strin
   }
 }
 
-export const RewardDetailsContainer = connect(mapStoreToProps, RewardDetailsPage)
+const ConnectedRewardDetails = connect(mapStoreToProps, RewardDetailsPage)
+
+/**
+ * A reward's page. It fetches the reward on each visit and tracks the view, as the page did through the store. The
+ * fetched reward also goes into the store's reward cache, which redemption and SaladPay read, and a storefront that
+ * shows a different price or quantity is fetched again.
+ */
+export const RewardDetailsContainer = ({
+  match,
+  backFallback,
+}: {
+  match: { params: { id: string } }
+  backFallback: string
+}) => {
+  const http = useHttp()
+  const queryClient = useQueryClient()
+  const navigation = useNavigation()
+  const { id } = match.params
+  const { data: reward } = useQuery({
+    queryKey: rewardQueryKey(id),
+    queryFn: async (): Promise<Reward> => {
+      const loaded = rewardFromResource((await fetchRewardResource(http, id)) as RewardResource)
+      const store = getStore()
+      store.rewards.setReward(loaded)
+      store.analytics.trackRewardView(loaded)
+      if (isStorefrontOutdated(queryClient.getQueryData(storefrontQueryKey), loaded)) {
+        void queryClient.invalidateQueries({ queryKey: storefrontQueryKey })
+      }
+      return loaded
+    },
+    enabled: id !== '',
+  })
+  return <ConnectedRewardDetails match={match} reward={reward} onBack={() => navigation.goBackOr(backFallback)} />
+}
