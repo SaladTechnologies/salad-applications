@@ -2,7 +2,7 @@ import mixpanel from 'mixpanel-browser'
 import { observable, runInAction } from 'mobx'
 import { onceWhen } from '../../app/once-when.ts'
 import { config } from '../../config'
-import type { AuthStore } from '../auth'
+import type { Auth } from '../../account/auth.ts'
 import type { ViewData, ViewRange, ViewType } from '../earn-views/components/EarningHistory/constants'
 import type { NotificationMessage } from '../notifications/models'
 import type { Profile } from '../profile/models'
@@ -16,7 +16,7 @@ export class AnalyticsStore {
   @observable
   private mixpanelInitialized = false
 
-  constructor(private readonly auth: AuthStore) {
+  constructor(private readonly auth: Auth) {
     const token = config.mixpanelToken
     if (!token) {
       return
@@ -425,7 +425,7 @@ export class AnalyticsStore {
    * after each changes: Mixpanel's load here, and the session change in the root store.
    */
   private readonly trackMarketingTouchpointOnce = onceWhen(
-    () => !!this.auth.isAuthenticated && this.mixpanelInitialized,
+    () => !!this.auth.isAuthenticated() && this.mixpanelInitialized,
     () => {
       const marketingTouchpointTimestamp = localStorage.getItem('marketingTouchpointTimestamp')
       const utmTags = getUtmTagsFromCookie()

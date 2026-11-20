@@ -1,4 +1,6 @@
 import type { AxiosInstance } from 'axios'
+import type { Auth } from './account/auth.ts'
+import { createAuth } from './account/auth.ts'
 import type { BackupCodesStore } from './account/backup-codes.ts'
 import { createBackupCodes } from './account/backup-codes.ts'
 import { action, configure, flow, observable, runInAction } from 'mobx'
@@ -13,9 +15,9 @@ import { createTerms } from './account/terms.ts'
 import { ErrorBoundaryBridge } from './app/error-boundary.ts'
 import type { Toasts } from './app/toasts.ts'
 import { createToasts } from './app/toasts.ts'
+import { config } from './config'
 import type { Navigation } from './routing/navigation.ts'
 import { AnalyticsStore } from './modules/analytics'
-import { AuthStore } from './modules/auth'
 import { BalanceStore } from './modules/balance'
 import { CoinbaseEmailStore } from './modules/coinbase'
 import { DedicatedNodesStore } from './modules/dedicated-nodes'
@@ -132,7 +134,8 @@ export class RootStore {
   @observable
   public appLoading: boolean = true
   public appStartTime: Date = new Date()
-  public readonly auth: AuthStore
+  /** Signs the user in and out (src/account/auth.ts), and keeps whether they are signed in for the stores. */
+  public readonly auth: Auth
   /** The acceptance of the terms and conditions (src/account/terms.ts), which the account page and sign-in share. */
   public readonly terms: Terms
   public readonly analytics: AnalyticsStore
@@ -183,7 +186,15 @@ export class RootStore {
     this.loadBanner = loadBanner
     this.xp = xp
     this.referrals = referrals
-    this.auth = new AuthStore(this, axios, setSession)
+    this.auth = createAuth({
+      http: axios,
+      setSession,
+      navigation,
+      loginUrl: config.loginUrl,
+      assign: (url) => {
+        window.location.assign(url)
+      },
+    })
     this.sudo = createSudo({ http: axios })
     this.notifications = createToasts<NotificationMessage>({
       render: (message, onClick) => (

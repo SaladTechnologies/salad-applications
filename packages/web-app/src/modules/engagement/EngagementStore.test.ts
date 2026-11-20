@@ -7,8 +7,9 @@ import { EngagementStore } from './EngagementStore'
 const setUp = (lastSeenApplicationVersion: string) => {
   const sendNotification = vi.fn()
   const setWhatsNewViewed = vi.fn()
+  let isAuthenticated: boolean | undefined
   const root = {
-    auth: { isAuthenticated: undefined as boolean | undefined },
+    auth: { isAuthenticated: () => isAuthenticated },
     profile: {
       currentProfile: undefined as { lastSeenApplicationVersion: string } | undefined,
       setWhatsNewViewed,
@@ -18,7 +19,7 @@ const setUp = (lastSeenApplicationVersion: string) => {
   const axios = { get: vi.fn().mockResolvedValue({ data: { lastUpdated: '2026.11' } }) }
   const store = new EngagementStore(root as unknown as RootStore, axios as unknown as AxiosInstance)
   const signIn = (): void => {
-    root.auth.isAuthenticated = true
+    isAuthenticated = true
     root.profile.currentProfile = { lastSeenApplicationVersion }
   }
   return { store, signIn, sendNotification, setWhatsNewViewed }
