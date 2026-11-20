@@ -34,6 +34,7 @@ import {
 } from './modules/passkey-setup/utils'
 import { handlePendingProtectedAction } from './modules/protected-action/utils'
 import { ProfileStore } from './modules/profile'
+import type { ProfileAccess } from './modules/profile/ProfileStore'
 import type { Profile } from './modules/profile/models'
 import { RenderStore } from './modules/render'
 import { RewardStore } from './modules/reward'
@@ -112,11 +113,14 @@ export const createStore = (
   xp: XpAccess,
   referrals: ReferralsAccess,
   bonuses: CreateBonuses,
+  profiles: ProfileAccess,
 ): RootStore => {
   // Vite compiles decorators the TypeScript way, so each store's field initializers are writes in its constructor.
   // `enforceActions: 'always'` rejects writes outside an action, so construct inside one. (CRA's Babel set initial
   // values without a write.)
-  sharedStore = runInAction(() => new RootStore(axios, setSession, navigation, loadBanner, xp, referrals, bonuses))
+  sharedStore = runInAction(
+    () => new RootStore(axios, setSession, navigation, loadBanner, xp, referrals, bonuses, profiles),
+  )
   return sharedStore
 }
 
@@ -173,6 +177,7 @@ export class RootStore {
     xp: XpAccess,
     referrals: ReferralsAccess,
     bonuses: CreateBonuses,
+    profiles: ProfileAccess,
   ) {
     this.routing = navigation
     this.loadBanner = loadBanner
@@ -189,7 +194,7 @@ export class RootStore {
       onClosed: (message) => this.analytics.trackToastNotificationClosed(message),
     })
 
-    this.profile = new ProfileStore(this, axios)
+    this.profile = new ProfileStore(this, axios, profiles)
     this.terms = createTerms({
       http: axios,
       pendingVersion: () => this.profile.currentProfile?.pendingTermsVersion,

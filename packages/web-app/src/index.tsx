@@ -31,6 +31,7 @@ import { storefrontQuery } from './rewards/storefront.ts'
 import { SessionProvider } from './data/session-provider.tsx'
 import { forgetSignedOutUser } from './app/forget-user.ts'
 import { createBonuses } from './account/bonuses.ts'
+import { currentProfile, forgetProfile, setProfile } from './account/profile.ts'
 import { loadCurrentReferral, loadReferralCode, loadReferralsReport } from './account/referrals.ts'
 import { currentXp, loadXp } from './account/xp.ts'
 import { loadBanner } from './app/banner.ts'
@@ -73,6 +74,11 @@ setTimeout(() => {
       loadCurrent: async () => await loadCurrentReferral(queryClient, client),
     },
     (options) => createBonuses({ queryClient, http: client, ...options }),
+    {
+      get: () => currentProfile(queryClient),
+      set: (profile) => setProfile(queryClient, profile),
+      forget: () => forgetProfile(queryClient),
+    },
   )
   // After the stores' sign-out work, sign-out forgets the user's data.
   const onSessionChange = (session: 'yes' | 'no') => {

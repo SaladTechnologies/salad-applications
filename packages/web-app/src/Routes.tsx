@@ -1,3 +1,4 @@
+import { useProfile } from './account/profile.ts'
 import { useReferralCode } from './account/referrals.ts'
 import { useAppRefresh } from './app/app-refresh.ts'
 import { config } from './config'
@@ -81,6 +82,7 @@ const Root = () => {
   useAppRefresh(store.refresh.refreshData, config.dataRefreshRate)
   const { history } = useRouter()
   const searchHistory = useMemo(() => createSearchHistory(store.routing, history), [store.routing, history])
+  const profile = useProfile()
   return (
     <NavigationContext.Provider value={store.routing}>
       <ErrorBoundary>
@@ -94,7 +96,7 @@ const Root = () => {
               ) : (
                 <>
                   <Tooltips />
-                  <App searchHistory={searchHistory} />
+                  <App searchHistory={searchHistory} profile={profile} />
                 </>
               )
             }

@@ -1,5 +1,5 @@
 import type { AxiosInstance } from 'axios'
-import { action, computed, flow, observable } from 'mobx'
+import { action, flow, observable } from 'mobx'
 import { onceWhen } from '../../app/once-when.ts'
 import type { RootStore } from '../../Store'
 import { NotificationMessageCategory } from '../notifications/models'
@@ -11,7 +11,10 @@ export class EngagementStore {
   @observable
   public whatsNewVersion?: string
 
-  @computed
+  /**
+   * Whether the profile last saw a different version than the changelog's. The profile is not a MobX value: read it
+   * now.
+   */
   public get showWhatsNew(): boolean {
     const show =
       this.whatsNewVersion !== undefined &&

@@ -2,21 +2,23 @@ import { useLoadOnOpen } from './load-on-open.ts'
 
 /** The query keys of the account security loads. */
 const passkeysQueryKey = ['account', 'passkeys'] as const
-const profileQueryKey = ['account', 'profile'] as const
+// Not the profile's own key (src/account/profile.ts): this query's data is only the load's `null`, which would replace
+// the profile.
+const profileLoadQueryKey = ['account', 'profile-load'] as const
 const googleConnectionQueryKey = ['account', 'google-connection'] as const
 const backupCodesQueryKey = ['account', 'backup-codes'] as const
 
 /**
  * Runs `fetchPasskeys`, then `loadProfile`, each time an account summary page (desktop or mobile) opens, as its account
- * security section did. The passkeys and the profile stay in their stores, which the pages read. Both loads handle
- * their own errors.
+ * security section did. The passkeys stay in their store and the profile in its query, which the pages read. Both loads
+ * handle their own errors.
  */
 export const useAccountSecurityLoads = (
   fetchPasskeys: () => Promise<unknown>,
   loadProfile: () => Promise<unknown>,
 ): void => {
   useLoadOnOpen(passkeysQueryKey, fetchPasskeys)
-  useLoadOnOpen(profileQueryKey, loadProfile)
+  useLoadOnOpen(profileLoadQueryKey, loadProfile)
 }
 
 /**

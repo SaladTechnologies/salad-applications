@@ -1,4 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import type { Profile } from '../../account/profile.ts'
+import { useProfile } from '../../account/profile.ts'
 import { connect } from '../../connect'
 import { useHttp } from '../../data/http-context.ts'
 import { fetchRewardResource, rewardQueryKey } from '../../rewards/reward.ts'
@@ -14,6 +16,8 @@ import { RewardDetailsPage } from './pages'
 interface OwnProps {
   match: { params: { id: string } }
   onBack: () => void
+  /** The signed-in user's profile, which says whether a Minecraft reward still needs a username. */
+  profile: Profile | undefined
 }
 
 const mapStoreToProps = (store: RootStore, props: OwnProps): any => {
@@ -26,7 +30,7 @@ const mapStoreToProps = (store: RootStore, props: OwnProps): any => {
     store.analytics.trackButtonClicked('buy_now', 'Buy Now', 'disabled')
   }
 
-  const extensions = store.profile.currentProfile?.extensions
+  const extensions = props.profile?.extensions
   // The store's copy, which the query fills: redemption, SaladPay, and the target-reward refresh share it.
   const reward = store.rewards.getReward(props.match.params.id)
   const requiresMinecraftUsername =
@@ -88,5 +92,7 @@ export const RewardDetailsContainer = ({
     },
     enabled: id !== '',
   })
-  return <ConnectedRewardDetails match={match} onBack={() => navigation.goBackOr(backFallback)} />
+  return (
+    <ConnectedRewardDetails match={match} onBack={() => navigation.goBackOr(backFallback)} profile={useProfile()} />
+  )
 }
