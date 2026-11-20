@@ -42,7 +42,6 @@ const styles: () => Record<string, CSS.Properties> = () => ({
 
 interface Props extends WithStyles<typeof styles> {
   demandedHardwarePerformanceList?: DemandedHardwarePerformance[]
-  fetchDemandedHardwarePerformanceList: () => void
   setSubscribeToDemandAlertStatus: (subscribeToDemandAlertStatus: SubscribeToDemandAlertStatus) => void
   subscribeToDemandAlert: (gpuName: string, demandTier: DemandTier) => void
   subscribeToDemandAlertStatus: SubscribeToDemandAlertStatus
@@ -51,7 +50,6 @@ interface Props extends WithStyles<typeof styles> {
 const _DemandAlertsSetUp: FunctionComponent<Props> = ({
   classes,
   demandedHardwarePerformanceList,
-  fetchDemandedHardwarePerformanceList,
   setSubscribeToDemandAlertStatus,
   subscribeToDemandAlert,
   subscribeToDemandAlertStatus,
@@ -74,12 +72,11 @@ const _DemandAlertsSetUp: FunctionComponent<Props> = ({
   )
 
   useEffect(() => {
-    fetchDemandedHardwarePerformanceList()
     setSelectedDemandHardwareValue(initialSelectedDemandHardwareValue)
     return () => {
       setSubscribeToDemandAlertStatus(SubscribeToDemandAlertStatus.Unknown)
     }
-  }, [initialSelectedDemandHardwareValue, fetchDemandedHardwarePerformanceList, setSubscribeToDemandAlertStatus])
+  }, [initialSelectedDemandHardwareValue, setSubscribeToDemandAlertStatus])
 
   const handleDemandHardwareOptionChange = (demandHardwareOption: SelectOption) => {
     setSelectedDemandHardwareValue(demandHardwareOption.value)

@@ -4,6 +4,8 @@ import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { useMediaQuery } from 'react-responsive'
 import { Head, mobileSize, Scrollbar } from '../../../components'
+import { useDemandAlertsLoads } from '../../../earnings/demand-monitor.ts'
+import { getStore } from '../../../Store'
 import type { SaladTheme } from '../../../SaladTheme'
 import { DemandAlertsListContainer } from './DemandAlertsList'
 import { DemandAlertsSetUpContainer } from './DemandAlertsSetUp'
@@ -54,4 +56,17 @@ const _DemandAlertsPage = ({ classes }: Props) => {
   )
 }
 
-export const DemandAlertsPage = withStyles(styles)(_DemandAlertsPage)
+const DemandAlertsPage = withStyles(styles)(_DemandAlertsPage)
+
+/**
+ * The demand alerts page. It loads the GPUs to set an alert for and the account's alerts each time it opens. The data
+ * stays in the stores, which the page's sections read.
+ */
+export const DemandAlertsPageContainer = () => {
+  const store = getStore()
+  useDemandAlertsLoads(
+    store.demandMonitor.fetchDemandedHardwarePerformanceList,
+    store.demandAlerts.fetchDemandAlertSubscriptionList,
+  )
+  return <DemandAlertsPage />
+}

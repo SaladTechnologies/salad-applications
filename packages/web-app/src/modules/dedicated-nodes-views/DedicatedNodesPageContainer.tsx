@@ -1,5 +1,8 @@
+import { observer } from 'mobx-react'
 import { connect } from '../../connect'
+import { useDedicatedNodesLoads } from '../../earnings/dedicated-nodes.ts'
 import type { RootStore } from '../../Store'
+import { getStore } from '../../Store'
 import { DedicatedNodesPage } from './DedicatedNodesPage'
 
 const mapStoreToProps = (store: RootStore): any => ({
@@ -23,4 +26,19 @@ const mapStoreToProps = (store: RootStore): any => ({
   clearActionError: store.dedicatedNodes.clearActionError,
 })
 
-export const DedicatedNodesPageContainer = connect(mapStoreToProps, DedicatedNodesPage)
+const ConnectedDedicatedNodesPage = connect(mapStoreToProps, DedicatedNodesPage)
+
+/**
+ * The dedicated nodes page. It loads the enrollment token while it has not been asked for since the last reset, and the
+ * first page of nodes when it opens with access or gains access. The data stays in the store, which the page reads.
+ */
+export const DedicatedNodesPageContainer = observer(() => {
+  const { dedicatedNodes } = getStore()
+  useDedicatedNodesLoads({
+    isEnrollmentChecked: dedicatedNodes.isEnrollmentChecked,
+    hasAccess: dedicatedNodes.hasAccess,
+    loadEnrollment: dedicatedNodes.loadEnrollment,
+    loadNodes: dedicatedNodes.loadNodes,
+  })
+  return <ConnectedDedicatedNodesPage />
+})

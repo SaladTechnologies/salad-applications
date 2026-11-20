@@ -122,19 +122,10 @@ const _DedicatedNodesPage: FC<DedicatedNodesPageProps> = ({
   const isTabletOrMobile = useMediaQuery({ query: `(max-width: ${mobileSize}px)` })
   const [filterText, setFilterText] = useState('')
 
-  // Opened from a bookmark before the login flow asked for the token: ask now.
+  // Clear a stale action error when access changes or the page closes.
   useEffect(() => {
-    if (!isEnrollmentChecked) {
-      loadEnrollment()
-    }
-  }, [isEnrollmentChecked, loadEnrollment])
-
-  useEffect(() => {
-    if (hasAccess) {
-      loadNodes()
-    }
     return () => clearActionError()
-  }, [hasAccess, loadNodes, clearActionError])
+  }, [hasAccess, clearActionError])
 
   const ekFilter = parseEkFilter(filterText)
   const visibleNodes = filterNodesByEk(nodes, ekFilter)

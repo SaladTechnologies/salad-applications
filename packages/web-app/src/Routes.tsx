@@ -25,7 +25,7 @@ import { BackupCodesPageContainer } from './modules/backup-codes/BackupCodesPage
 import { BonusPageContainer, ReplaceBonusModalContainer } from './modules/bonus-views'
 import { dedicatedNodesPagePath } from './modules/dedicated-nodes'
 import { DedicatedNodesPageContainer } from './modules/dedicated-nodes-views'
-import { DemandAlertsPage } from './modules/demand-alerts-views'
+import { DemandAlertsPageContainer } from './modules/demand-alerts-views'
 import { DemandMonitorPageContainer } from './modules/demand-monitor-views'
 import { EarnInfoPage, EarningSummaryContainer } from './modules/earn-views'
 import { MobileEarningSummaryContainer } from './modules/earn-views-mobile'
@@ -148,7 +148,7 @@ const settingsPages = [
   page('account/referrals', desktopOnly(<Referrals />), settingsRoute),
   page('account/bonuses', desktopOnly(signedIn(<BonusPageContainer />)), settingsRoute),
   page('account/achievements', desktopOnly(signedIn(<AchievementPageContainer />)), settingsRoute),
-  page('account/alerts', () => signedIn(<DemandAlertsPage />), settingsRoute),
+  page('account/alerts', () => signedIn(<DemandAlertsPageContainer />), settingsRoute),
   page('account/$', desktopOnly(<NoPageFound />), settingsRoute),
 ]
 
