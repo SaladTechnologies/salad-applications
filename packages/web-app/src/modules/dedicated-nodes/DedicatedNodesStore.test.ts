@@ -188,7 +188,7 @@ describe('DedicatedNodesStore', () => {
       expect(axios.post).toHaveBeenCalledWith(`/api/v2/dedicated-nodes/${nodeId(1)}/approve`, {
         confirmation_code: 'pend01',
       })
-      expect(store.nodes[0].standing).toBe('approved')
+      expect(store.nodes[0]?.standing).toBe('approved')
       expect(store.pendingAction).toBeUndefined()
       expect(store.actionError).toBeUndefined()
     })
@@ -217,7 +217,7 @@ describe('DedicatedNodesStore', () => {
       expect(result).toBe(false)
       expect(store.actionError).toEqual({ nodeId: nodeId(1), action: 'approve', error: 'wrong-code' })
       expect(axios.get).toHaveBeenCalledTimes(2)
-      expect(store.nodes[0].standing).toBe('pending')
+      expect(store.nodes[0]?.standing).toBe('pending')
     })
 
     it('refuses with a note and keeps the node listed as refused', async () => {
@@ -228,7 +228,7 @@ describe('DedicatedNodesStore', () => {
 
       expect(result).toBe(true)
       expect(axios.post).toHaveBeenCalledWith(`/api/v2/dedicated-nodes/${nodeId(1)}/refuse`, { note: 'not mine' })
-      expect(store.nodes[0].standing).toBe('refused')
+      expect(store.nodes[0]?.standing).toBe('refused')
     })
 
     it('revokes without a note and removes the node', async () => {
@@ -260,7 +260,7 @@ describe('DedicatedNodesStore', () => {
       expect(result).toBe(false)
       expect(store.actionError?.error).toBe(expected)
       expect(get).toHaveBeenCalledTimes(2)
-      expect(store.nodes[0].standing).toBe('approved')
+      expect(store.nodes[0]?.standing).toBe('approved')
     })
 
     it('reports a node service failure without reloading', async () => {

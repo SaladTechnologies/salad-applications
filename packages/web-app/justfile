@@ -36,11 +36,10 @@ fmt-check-typescript: _npm-ci
 
 # Lint TypeScript types and dependencies.
 #
-# Interim: the web app rebuild adopts the template in steps. The template's TypeScript projects (tsc --build,
-# _lint-typescript-projects), oxlint, knip, and npm audit arrive in the next PRs into web-app-rebuild, which replace
-# this recipe with the template's.
+# Interim: the web app rebuild adopts the template in steps. oxlint, knip, npm audit, and _lint-typescript-projects
+# arrive in the next PR into web-app-rebuild, which replaces this recipe with the template's.
 lint-typescript: _npm-ci && _lint-typescript-dependencies
-    node_modules/.bin/tsc
+    node_modules/.bin/tsc --build
 
 # Fail on a dependency whose install script nobody reviewed, or whose license is not on the allowlist.
 [extension('.mjs')]

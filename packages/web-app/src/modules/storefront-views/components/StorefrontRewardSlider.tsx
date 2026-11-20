@@ -2,12 +2,15 @@ import type { ReactNode } from 'react'
 import { Component } from 'react'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
-import Carousel from 'react-multi-carousel'
+import CarouselImport from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
 import { SmartLink } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
 import { IconArrowRight } from '../../reward-views/components/assets'
 import { RewardSliderButton } from '../../reward-views/components/RewardSliderButton'
+import { cjsDefault } from '../../../cjsDefault.ts'
+
+const Carousel = cjsDefault(CarouselImport)
 
 const styles = (theme: SaladTheme) => ({
   container: {

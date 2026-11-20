@@ -14,8 +14,11 @@
     ".env": "properties"
   },
   "git.branchProtection": ["master"],
-  "javascript.format.enable": false,
   "javascript.validate.enable": false,
+  "js/ts.experimental.useTsgo": true,
+  "js/ts.format.enabled": false,
+  "js/ts.tsdk.path": "./node_modules/typescript",
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true,
   "npm.packageManager": "npm",
   "search.exclude": {
     "node_modules": true,
@@ -24,9 +27,6 @@
     "**/yarn-debug.log*": true,
     "**/yarn-error.log*": true
   },
-  "typescript.enablePromptUseWorkspaceTsdk": true,
-  "typescript.format.enable": false,
-  "typescript.tsdk": "node_modules/typescript/lib",
   "[css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },

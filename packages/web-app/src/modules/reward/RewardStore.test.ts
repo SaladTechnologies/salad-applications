@@ -120,7 +120,7 @@ describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
 
     // Error notification carries the message from the API response.
     expect(sendNotification).toHaveBeenCalledTimes(1)
-    const notification = sendNotification.mock.calls[0][0] as NotificationMessage
+    const notification = sendNotification.mock.calls[0]?.[0] as NotificationMessage
     expect(notification.category).toBe(NotificationMessageCategory.Error)
     expect(notification.type).toBe('error')
     expect(notification.title).toBe(apiTitle)
@@ -146,7 +146,7 @@ describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
 
     await store.redeemReward(reward)
 
-    const notification = sendNotification.mock.calls[0][0] as NotificationMessage
+    const notification = sendNotification.mock.calls[0]?.[0] as NotificationMessage
     expect(notification.title).toBe('RENDER token account required')
     expect(notification.title).not.toBe('Uh-oh! We could not complete your redemption.')
   })
@@ -160,7 +160,7 @@ describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
 
     await store.redeemReward(reward)
 
-    const notification = sendNotification.mock.calls[0][0] as NotificationMessage
+    const notification = sendNotification.mock.calls[0]?.[0] as NotificationMessage
     expect(notification.message).toBe('A render token account is required')
   })
 
@@ -186,7 +186,7 @@ describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
 
     // Error notification carries the message from the API response.
     expect(sendNotification).toHaveBeenCalledTimes(1)
-    const notification = sendNotification.mock.calls[0][0] as NotificationMessage
+    const notification = sendNotification.mock.calls[0]?.[0] as NotificationMessage
     expect(notification.category).toBe(NotificationMessageCategory.Error)
     expect(notification.type).toBe('error')
     expect(notification.title).toBe(apiTitle)
@@ -210,7 +210,7 @@ describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
 
     await store.redeemReward(reward)
 
-    const notification = sendNotification.mock.calls[0][0] as NotificationMessage
+    const notification = sendNotification.mock.calls[0]?.[0] as NotificationMessage
     expect(notification.title).toBe('Solana wallet required')
     expect(notification.title).not.toBe('Uh-oh! We could not complete your redemption.')
   })
@@ -222,7 +222,7 @@ describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
 
     await store.redeemReward(reward)
 
-    const notification = sendNotification.mock.calls[0][0] as NotificationMessage
+    const notification = sendNotification.mock.calls[0]?.[0] as NotificationMessage
     expect(notification.message).toBe('You need to add a solana wallet in order to purchase this reward')
   })
 
@@ -238,7 +238,7 @@ describe('RewardStore.redeemReward 400 redemptions:requires:* handling', () => {
     await store.redeemReward(reward)
 
     expect(sendNotification).toHaveBeenCalledTimes(1)
-    const notification = sendNotification.mock.calls[0][0] as NotificationMessage
+    const notification = sendNotification.mock.calls[0]?.[0] as NotificationMessage
     expect(notification.title).toBe('Redemption Error')
     expect(push).not.toHaveBeenCalled()
   })
@@ -253,7 +253,7 @@ describe('RewardStore.redeemReward other statuses', () => {
     await store.redeemReward(reward)
 
     expect(sendNotification).toHaveBeenCalledTimes(1)
-    const notification = sendNotification.mock.calls[0][0] as NotificationMessage
+    const notification = sendNotification.mock.calls[0]?.[0] as NotificationMessage
     expect(notification.category).toBe(NotificationMessageCategory.Redemption)
     expect(notification.title).toContain('Thank you for ordering')
     expect(push).not.toHaveBeenCalled()
@@ -267,7 +267,7 @@ describe('RewardStore.redeemReward other statuses', () => {
     await store.redeemReward(reward)
 
     expect(sendNotification).toHaveBeenCalledTimes(1)
-    const notification = sendNotification.mock.calls[0][0] as NotificationMessage
+    const notification = sendNotification.mock.calls[0]?.[0] as NotificationMessage
     expect(notification.category).toBe(NotificationMessageCategory.Error)
     expect(push).not.toHaveBeenCalled()
   })
@@ -282,7 +282,7 @@ describe('RewardStore.redeemReward RENDER quoted exchange rate', () => {
     await store.redeemReward(reward)
 
     expect(post).toHaveBeenCalledTimes(1)
-    const body = post.mock.calls[0][1]
+    const body = post.mock.calls[0]?.[1]
     expect(body).toMatchObject({ rewardId: 'render-1', price: 10, quotedExchangeRate: 0.9997 })
   })
 
@@ -293,7 +293,7 @@ describe('RewardStore.redeemReward RENDER quoted exchange rate', () => {
 
     await store.redeemReward(reward)
 
-    const body = post.mock.calls[0][1]
+    const body = post.mock.calls[0]?.[1]
     expect(body).not.toHaveProperty('quotedExchangeRate')
   })
 
@@ -304,7 +304,7 @@ describe('RewardStore.redeemReward RENDER quoted exchange rate', () => {
 
     await store.redeemReward(reward)
 
-    const body = post.mock.calls[0][1]
+    const body = post.mock.calls[0]?.[1]
     expect(body).not.toHaveProperty('quotedExchangeRate')
   })
 
@@ -323,7 +323,7 @@ describe('RewardStore.redeemReward RENDER quoted exchange rate', () => {
 
     // A user-facing toast explains the quote changed.
     expect(sendNotification).toHaveBeenCalledTimes(1)
-    const notification = sendNotification.mock.calls[0][0] as NotificationMessage
+    const notification = sendNotification.mock.calls[0]?.[0] as NotificationMessage
     expect(notification.category).toBe(NotificationMessageCategory.Error)
     expect(notification.type).toBe('error')
     expect(notification.title).toBe('Uh-oh! The RENDER exchange rate has changed.')
@@ -350,7 +350,7 @@ describe('RewardStore.redeemReward RENDER quoted exchange rate', () => {
 
     await store.redeemReward(reward)
 
-    const notification = sendNotification.mock.calls[0][0] as NotificationMessage
+    const notification = sendNotification.mock.calls[0]?.[0] as NotificationMessage
     expect(notification.title).toBe(apiTitle)
     expect(notification.message).toBe(apiDetail)
   })
@@ -371,7 +371,7 @@ describe('RewardStore.redeemReward RENDER quoted exchange rate', () => {
 
     // A generic error toast is shown.
     expect(sendNotification).toHaveBeenCalledTimes(1)
-    const notification = sendNotification.mock.calls[0][0] as NotificationMessage
+    const notification = sendNotification.mock.calls[0]?.[0] as NotificationMessage
     expect(notification.category).toBe(NotificationMessageCategory.Error)
     expect(notification.title).toBe('Uh-oh! We could not complete your redemption.')
 

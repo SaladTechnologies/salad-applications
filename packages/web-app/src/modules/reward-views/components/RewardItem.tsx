@@ -1,7 +1,7 @@
 import classnames from 'classnames'
 import type { ReactNode } from 'react'
 import { Component } from 'react'
-import AspectRatio from 'react-aspect-ratio'
+import AspectRatioImport from 'react-aspect-ratio'
 import { Img } from 'react-image'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
@@ -10,6 +10,9 @@ import type { SaladTheme } from '../../../SaladTheme'
 import type { SearchResult } from '../../reward/models'
 import { getPercentOff } from '../../reward/utils'
 import { RewardMissingImage } from './RewardMissingImage'
+import { cjsDefault } from '../../../cjsDefault.ts'
+
+const AspectRatio = cjsDefault(AspectRatioImport)
 
 const styles = (theme: SaladTheme) => ({
   container: {

@@ -1,7 +1,7 @@
 import { AvatarSelectionForm, Layout, Text, TextField } from '@saladtechnologies/garden-components'
 import type { FC } from 'react'
 import { useEffect, useRef } from 'react'
-import Scrollbars from 'react-custom-scrollbars-2'
+import { Scrollbars } from 'react-custom-scrollbars-2'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
 import { useLocation } from 'react-router'
