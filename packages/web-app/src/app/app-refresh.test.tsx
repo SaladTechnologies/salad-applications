@@ -8,14 +8,21 @@ import { useAppRefresh } from './app-refresh.ts'
 
 const fiveMinutes = 5 * 60 * 1000
 
-/** Runs the app's refresh. */
-const App = ({ refresh }: { refresh: () => void }): ReactElement | null => {
+/** Runs the app's refresh, and calls `onRender` each time it renders. */
+const App = ({
+  refresh,
+  onRender,
+}: {
+  refresh: () => void
+  onRender?: (() => void) | undefined
+}): ReactElement | null => {
   useAppRefresh(refresh, fiveMinutes)
+  onRender?.()
   return null
 }
 
 /** Opens the app with the refresh, and returns how to close it. */
-const open = async (refresh: () => void): Promise<() => void> => {
+const open = async (refresh: () => void, onRender?: () => void): Promise<() => void> => {
   // React only runs act() without warnings when the environment says it is a test.
   Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', true)
   // TanStack Query tells components about a change in a later task by default. Telling them at once keeps each update
@@ -27,7 +34,7 @@ const open = async (refresh: () => void): Promise<() => void> => {
   await act(async () => {
     root.render(
       <QueryClientProvider client={createQueryClient()}>
-        <App refresh={refresh} />
+        <App refresh={refresh} onRender={onRender} />
       </QueryClientProvider>,
     )
     await Promise.resolve()
@@ -81,5 +88,19 @@ describe('app refresh', () => {
     vi.useRealTimers()
 
     expect(refresh).toHaveBeenCalledTimes(3)
+  })
+
+  it('never re-renders the app when it refreshes', async () => {
+    expect.hasAssertions()
+    vi.useFakeTimers()
+    const onRender = vi.fn<() => void>()
+    const close = await open(vi.fn<() => void>(), onRender)
+    const afterOpen = onRender.mock.calls.length
+
+    await advance(3 * fiveMinutes)
+    close()
+    vi.useRealTimers()
+
+    expect(onRender).toHaveBeenCalledTimes(afterOpen)
   })
 })
