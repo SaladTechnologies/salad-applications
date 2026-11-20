@@ -1,16 +1,23 @@
 import { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import { describe, expect, it, vi } from 'vitest'
+import { createExternalState } from '../../app/external-state.ts'
 import type { Session } from '../../data/session.ts'
 import { SessionContext } from '../../data/session.ts'
 
 /** What the page was told about the user. */
 interface Page {
   authenticated: boolean | undefined
+  solanaWalletAddress: string | undefined
+  coinbaseEmail: string | undefined
 }
 
-/** The pages the container rendered. */
-const fake = vi.hoisted(() => ({ pages: [] as Page[] }))
+/** The pages the container rendered, and the saved wallet and email, which the test changes. */
+const fake = vi.hoisted(() => ({
+  pages: [] as Page[],
+  wallet: undefined as unknown as ReturnType<typeof createExternalState<{ walletAddress: string | undefined }>>,
+  email: undefined as unknown as ReturnType<typeof createExternalState<{ email: string | undefined }>>,
+}))
 
 vi.mock('../../Store', () => ({
   getStore: () => ({
@@ -23,8 +30,8 @@ vi.mock('../../Store', () => ({
       setSelectedTargetReward: vi.fn(),
       removeSelectedTargetReward: vi.fn(),
     },
-    solanaWallet: { walletAddress: undefined, isLoading: false, loadWallet: vi.fn() },
-    coinbaseEmail: { email: undefined, isLoading: false, isLoadError: false, loadEmail: vi.fn() },
+    solanaWallet: { ...fake.wallet, loadWallet: vi.fn() },
+    coinbaseEmail: { ...fake.email, loadEmail: vi.fn() },
   }),
 }))
 
@@ -41,6 +48,8 @@ vi.mock('./pages', () => ({
   },
 }))
 
+fake.wallet = createExternalState<{ walletAddress: string | undefined }>({ walletAddress: undefined })
+fake.email = createExternalState<{ email: string | undefined }>({ email: undefined })
 const { RewardDetailsContainer } = await import('./RewardDetailsContainer')
 
 describe('RewardDetailsContainer', () => {
@@ -68,5 +77,26 @@ describe('RewardDetailsContainer', () => {
     expect(unknown).toBeUndefined()
     expect(signedOut).toBe(false)
     expect(signedIn).toBe(true)
+  })
+
+  it('shows the page the saved wallet and email as soon as they load', () => {
+    Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', true)
+    const root = createRoot(document.createElement('div'))
+    act(() => {
+      root.render(<RewardDetailsContainer match={{ params: { id: 'reward' } }} backFallback="/store" />)
+    })
+    const before = fake.pages.at(-1)
+
+    act(() => {
+      fake.wallet.update({ walletAddress: 'wallet' })
+      fake.email.update({ email: 'chef@example.com' })
+    })
+    const after = fake.pages.at(-1)
+    act(() => {
+      root.unmount()
+    })
+
+    expect([before?.solanaWalletAddress, before?.coinbaseEmail]).toStrictEqual([undefined, undefined])
+    expect([after?.solanaWalletAddress, after?.coinbaseEmail]).toStrictEqual(['wallet', 'chef@example.com'])
   })
 })

@@ -1,5 +1,9 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import type { CoinbaseEmailState } from '../../account/coinbase-email.ts'
+import { useCoinbaseEmailState } from '../../account/coinbase-email.ts'
 import type { Profile } from '../../account/profile.ts'
+import type { SolanaWalletState } from '../../account/solana-wallet.ts'
+import { useSolanaWalletState } from '../../account/solana-wallet.ts'
 import { useProfile } from '../../account/profile.ts'
 import { connect } from '../../connect'
 import { useHttp } from '../../data/http-context.ts'
@@ -21,6 +25,10 @@ interface OwnProps {
   profile: Profile | undefined
   /** Whether the user is signed in: `undefined` until it is known. */
   isAuthenticated: boolean | undefined
+  /** The saved Solana wallet address, which a RENDER reward needs before it can be redeemed. */
+  solanaWallet: SolanaWalletState
+  /** The saved Coinbase email, which a Coinbase reward needs before it can be redeemed. */
+  coinbaseEmail: CoinbaseEmailState
 }
 
 const mapStoreToProps = (store: RootStore, props: OwnProps): any => {
@@ -52,12 +60,12 @@ const mapStoreToProps = (store: RootStore, props: OwnProps): any => {
     onRemoveTargetRewardClick: store.rewards.removeSelectedTargetReward,
     isTargetReward: isRewardSelectedAsTarget,
     requiresMinecraftUsername: requiresMinecraftUsername,
-    solanaWalletAddress: store.solanaWallet.walletAddress,
-    isSolanaWalletLoading: store.solanaWallet.isLoading,
+    solanaWalletAddress: props.solanaWallet.walletAddress,
+    isSolanaWalletLoading: props.solanaWallet.isLoading,
     loadSolanaWallet: store.solanaWallet.loadWallet,
-    coinbaseEmail: store.coinbaseEmail.email,
-    isCoinbaseEmailLoading: store.coinbaseEmail.isLoading,
-    isCoinbaseEmailLoadError: store.coinbaseEmail.isLoadError,
+    coinbaseEmail: props.coinbaseEmail.email,
+    isCoinbaseEmailLoading: props.coinbaseEmail.isLoading,
+    isCoinbaseEmailLoadError: props.coinbaseEmail.isLoadError,
     loadCoinbaseEmail: store.coinbaseEmail.loadEmail,
     trackDisabledBuyNowClick,
   }
@@ -101,6 +109,8 @@ export const RewardDetailsContainer = ({
       onBack={() => navigation.goBackOr(backFallback)}
       profile={useProfile()}
       isAuthenticated={isSignedIn(useSession())}
+      solanaWallet={useSolanaWalletState(getStore().solanaWallet)}
+      coinbaseEmail={useCoinbaseEmailState(getStore().coinbaseEmail)}
     />
   )
 }

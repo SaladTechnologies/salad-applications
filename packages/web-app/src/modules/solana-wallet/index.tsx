@@ -1,3 +1,3 @@
 export * from './constants'
-export * from './SolanaWalletStore'
+export type { SolanaWalletSubmitStatus } from '../../account/solana-wallet.ts'
 export * from './utils'

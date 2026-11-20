@@ -3,6 +3,10 @@ import type { Auth } from './account/auth.ts'
 import { createAuth } from './account/auth.ts'
 import type { BackupCodesStore } from './account/backup-codes.ts'
 import { createBackupCodes } from './account/backup-codes.ts'
+import type { CoinbaseEmail } from './account/coinbase-email.ts'
+import { createCoinbaseEmail } from './account/coinbase-email.ts'
+import type { SolanaWallet, WalletProblem } from './account/solana-wallet.ts'
+import { createSolanaWallet } from './account/solana-wallet.ts'
 import { action, configure, flow, observable, runInAction } from 'mobx'
 import type { Bonus, Bonuses, BonusesOptions } from './account/bonuses.ts'
 import { bonusTypes } from './account/bonuses.ts'
@@ -19,7 +23,6 @@ import { config } from './config'
 import type { Navigation } from './routing/navigation.ts'
 import { AnalyticsStore } from './modules/analytics'
 import { BalanceStore } from './modules/balance'
-import { CoinbaseEmailStore } from './modules/coinbase'
 import { DedicatedNodesStore } from './modules/dedicated-nodes'
 import { RefreshService } from './modules/data-refresh'
 import { EngagementStore } from './modules/engagement'
@@ -40,7 +43,6 @@ import type { ProfileAccess } from './modules/profile/ProfileStore'
 import type { Profile } from './modules/profile/models'
 import { RenderStore } from './modules/render'
 import { RewardStore } from './modules/reward'
-import { SolanaWalletStore } from './modules/solana-wallet'
 import { VaultStore } from './modules/vault'
 
 configure({
@@ -162,8 +164,10 @@ export class RootStore {
   public readonly sudo: Sudo
   /** The signed-in user's backup codes (src/account/backup-codes.ts), and the backup code actions. */
   public readonly backupCodes: BackupCodesStore
-  public readonly solanaWallet: SolanaWalletStore
-  public readonly coinbaseEmail: CoinbaseEmailStore
+  /** The signed-in user's Solana wallet address (src/account/solana-wallet.ts), and the actions on it. */
+  public readonly solanaWallet: SolanaWallet
+  /** The signed-in user's Coinbase email (src/account/coinbase-email.ts), and the actions on it. */
+  public readonly coinbaseEmail: CoinbaseEmail
   public readonly dedicatedNodes: DedicatedNodesStore
 
   /** Loads the notification banner (src/app/banner.ts), which the app-wide refresh runs signed in or not. */
@@ -254,8 +258,18 @@ export class RootStore {
     })
     this.backupCodes = createBackupCodes({ http: axios, onVerified: this.runPendingProtectedAction })
     this.errorBoundary = new ErrorBoundaryBridge()
-    this.solanaWallet = new SolanaWalletStore(this, axios)
-    this.coinbaseEmail = new CoinbaseEmailStore(this, axios)
+    /** Shows a failed wallet or email save as the stores did: an error toast that stays until closed. */
+    const notifyWalletProblem = ({ title, message }: WalletProblem): void => {
+      this.notifications.sendNotification({
+        category: NotificationMessageCategory.FurtherActionRequired,
+        title,
+        message,
+        autoClose: false,
+        type: 'error',
+      })
+    }
+    this.solanaWallet = createSolanaWallet({ http: axios, notify: notifyWalletProblem })
+    this.coinbaseEmail = createCoinbaseEmail({ http: axios, notify: notifyWalletProblem })
     this.dedicatedNodes = new DedicatedNodesStore(axios)
   }
 
