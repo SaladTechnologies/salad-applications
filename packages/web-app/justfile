@@ -39,7 +39,7 @@ lint-typescript: _npm-ci && _lint-typescript-projects _lint-typescript-dependenc
     node_modules/.bin/oxlint
     node_modules/.bin/tsc --build
     node_modules/.bin/knip
-    # Interim: `npm audit` joins in the next PR into web-app-rebuild, with the dependency upgrades its findings need.
+    npm audit
     npm audit signatures
 
 # Fail on a TypeScript or JavaScript file that no project in tsconfig.json includes, which nothing would type check.
