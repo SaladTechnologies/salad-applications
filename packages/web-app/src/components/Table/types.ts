@@ -1,4 +1,4 @@
-export type TableRowItem = string | number | JSX.Element
+type TableRowItem = string | number | JSX.Element
 
 export type TableRow = Array<TableRowItem>
 

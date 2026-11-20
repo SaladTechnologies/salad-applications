@@ -33,5 +33,5 @@
     "src/utils.tsx",
     "src/vite-env.d.ts"
   ],
-  "exclude": ["src/**/*.stories.tsx", "src/api/machinesApiClient/generated/**/*"]
+  "exclude": ["src/api/machinesApiClient/generated/**/*"]
 }

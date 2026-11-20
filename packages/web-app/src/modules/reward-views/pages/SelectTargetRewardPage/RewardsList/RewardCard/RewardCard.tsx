@@ -10,7 +10,7 @@ import { DefaultTheme } from '../../../../../../SaladTheme'
 import type { Reward } from '../../../../../reward/models'
 import { RewardMissingImage } from '../../../../components/RewardMissingImage'
 
-export const styles = (theme: SaladTheme) => ({
+const styles = (theme: SaladTheme) => ({
   selected: {},
   imageOverlay: {
     display: 'none',

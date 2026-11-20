@@ -7,7 +7,7 @@ import { SmartLink } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
 import type { Reward } from '../../reward/models'
 import { RewardDetailsContentPanel } from './RewardDetailsContentPanel'
-import { cjsDefault } from '../../../cjsDefault.ts'
+import { cjsDefault } from '../../../cjs-default.ts'
 
 const ReactHtmlParser = cjsDefault(ReactHtmlParserImport)
 

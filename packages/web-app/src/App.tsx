@@ -110,7 +110,7 @@ interface AppProps extends WithStyles<typeof styles> {
   history: History
 }
 
-export const _App = ({ classes, history, isAuthenticated, setErrorBoundary, withInstallReminder }: AppProps) => {
+const _App = ({ classes, history, isAuthenticated, setErrorBoundary, withInstallReminder }: AppProps) => {
   const errorBoundary = useErrorBoundary()
 
   useEffect(() => {

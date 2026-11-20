@@ -8,7 +8,7 @@ import CarouselImport from 'react-multi-carousel'
 import { Divider } from '../../../components'
 import type { Reward } from '../../reward/models'
 import { RewardImageDot } from './RewardImageDot'
-import { cjsDefault } from '../../../cjsDefault.ts'
+import { cjsDefault } from '../../../cjs-default.ts'
 
 const Carousel = cjsDefault(CarouselImport)
 

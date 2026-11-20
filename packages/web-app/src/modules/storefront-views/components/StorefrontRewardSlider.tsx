@@ -8,7 +8,7 @@ import { SmartLink } from '../../../components'
 import type { SaladTheme } from '../../../SaladTheme'
 import { IconArrowRight } from '../../reward-views/components/assets'
 import { RewardSliderButton } from '../../reward-views/components/RewardSliderButton'
-import { cjsDefault } from '../../../cjsDefault.ts'
+import { cjsDefault } from '../../../cjs-default.ts'
 
 const Carousel = cjsDefault(CarouselImport)
 

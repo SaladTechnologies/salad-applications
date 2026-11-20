@@ -11,7 +11,9 @@
  */
 export const cjsDefault = <T>(imported: T): T => {
   if (typeof imported === 'object' && imported !== null && '__esModule' in imported && 'default' in imported) {
-    // The declared type is the default export's, which is what `default` holds.
+    // The import's declared type is the default export's, which is what `default` holds; nothing at runtime can check
+    // it.
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- see the comment above
     return imported.default as T
   }
   return imported

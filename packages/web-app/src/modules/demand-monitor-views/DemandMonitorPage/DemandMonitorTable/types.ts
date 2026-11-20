@@ -1,14 +1,5 @@
 import type { DemandedHardwarePerformance } from '../../DemandMonitorStore'
 
-export interface DemandMonitorItem {
-  gpu: string
-  hourlyRate: string
-  recommendedSpecs: { ram: string; storage: string }
-  demand: DemandedHardwarePerformance['demandTierName']
-  avgEarnings: string
-  avgRunningTime: string
-}
-
 export type DemandMonitorTableSortRule = (
   hardwareA: DemandedHardwarePerformance,
   hardwareB: DemandedHardwarePerformance,

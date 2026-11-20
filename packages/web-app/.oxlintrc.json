@@ -1,0 +1,149 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  // Every plugin a web app's code can use. vitest is enabled for test files only, in `overrides`: its rules otherwise
+  // report top-level code in every file.
+  "plugins": ["eslint", "import", "jsdoc", "jsx-a11y", "node", "oxc", "promise", "react", "typescript", "unicorn"],
+  // Every category but nursery: rules still in development, some with known false positives.
+  "categories": {
+    "correctness": "error",
+    "pedantic": "error",
+    "perf": "error",
+    "restriction": "error",
+    "style": "error",
+    "suspicious": "error"
+  },
+  "options": {
+    "denyWarnings": true,
+    "reportUnusedDisableDirectives": "error",
+    "typeAware": true
+  },
+  "ignorePatterns": [
+    "**/testdata/**",
+    // Project-specific: the code the web app rebuild has not rewritten yet, the same list as tsconfig.legacy.json's
+    // `include` without src/vite-env.d.ts, which the browser project shares (see AGENTS.md). An entry is removed when
+    // its area is rewritten; the list only shrinks.
+    "src/api/**/*",
+    "src/App.tsx",
+    "src/assets/**/*",
+    "src/axiosFactory.tsx",
+    "src/components/**/*",
+    "src/config.tsx",
+    "src/connect.tsx",
+    "src/formatters.tsx",
+    "src/hooks/**/*",
+    "src/index.css",
+    "src/index.tsx",
+    "src/MobileRoutes.tsx",
+    "src/modules/**/*",
+    "src/otherTypes.d.ts",
+    "src/Routes.tsx",
+    "src/RouteUtils.tsx",
+    "src/SaladTheme.tsx",
+    "src/Storage.tsx",
+    "src/Store.tsx",
+    "src/Tooltips.tsx",
+    "src/UIStore.tsx",
+    "src/utils.tsx"
+  ],
+  "rules": {
+    // Contradicts a rule kept on.
+    "import/no-named-export": "off", // import/no-default-export
+    "import/prefer-default-export": "off", // import/no-default-export
+    "typescript/non-nullable-type-assertion-style": "off", // asks for `x!`, which typescript/no-non-null-assertion bans
+    "default-case": "off", // typescript/switch-exhaustiveness-check: a `default` hides a new union member
+    "no-undefined": "off", // `undefined` is TypeScript's absent value, and its replacement, `void 0`, breaks no-void
+    "max-statements": "off", // max-lines-per-function bounds size; hook-heavy components hit a statement count first
+
+    // Bans a language feature every supported runtime has.
+    "node/no-top-level-await": "off",
+    "oxc/no-async-await": "off",
+    "oxc/no-optional-chaining": "off",
+    "oxc/no-rest-spread-properties": "off",
+
+    // Made redundant by TypeScript.
+    "import/unambiguous": "off", // `"type": "module"` and `moduleDetection: force` make every file a module
+    "jsdoc/require-param-type": "off", // types come from the signature; checkJs types JavaScript files
+    "jsdoc/require-returns-type": "off",
+    "jsdoc/require-throws-type": "off",
+    "jsdoc/require-yields-type": "off",
+    "react/react-in-jsx-scope": "off", // the automatic runtime (`jsx: react-jsx`) imports what JSX needs
+
+    // A comment describes what a function does; TypeScript documents its parameters and result.
+    "jsdoc/require-param": "off",
+    "jsdoc/require-param-description": "off",
+    "jsdoc/require-returns": "off",
+    "jsdoc/require-returns-description": "off",
+
+    // A style with no better answer, or one that fails more good code than it improves.
+    "eslint/id-length": "off", // short names in small scopes (`i`, `x`, `_`) read best
+    "eslint/init-declarations": "off", // a `let` assigned in each branch is clearer than a dummy initial value
+    "eslint/no-continue": "off", // `continue` keeps a loop body flat
+    "eslint/no-magic-numbers": "off", // flags every literal: indexes, sizes, HTTP statuses, CSS values
+    "eslint/no-ternary": "off",
+    "eslint/sort-imports": "off", // the editor organizes imports (see .vscode/settings.json), in another order
+    "eslint/sort-keys": "off", // key order carries meaning: options, props, JSON shapes
+    "import/exports-last": "off", // an export stays next to its declaration
+    "import/group-exports": "off",
+    "import/max-dependencies": "off", // a count is not a design problem; import/no-cycle catches the tangles
+    "import/no-relative-parent-imports": "off", // forbids `../`, so every nested directory would need a path alias
+    "node/no-process-env": "off", // environment variables are how Node scripts and config files take settings
+    "node/no-sync": "off", // synchronous calls are the simple choice in build scripts, and browser code has no fs
+    "eslint/no-await-in-loop": "off", // flags intended sequential work (ordering, rate limits) as often as mistakes
+    "react/forbid-component-props": "off", // components take `className` and `style` for layout
+    "react/jsx-max-depth": "off", // markup nests as deep as the layout does
+    "react/jsx-no-literals": "off", // requires all JSX text to come from variables; a translated app turns it on
+    "react/jsx-props-no-spreading": "off", // wrappers pass props through to the element they wrap
+    "react/no-multi-comp": "off", // a small private component belongs next to the one that uses it
+    "typescript/explicit-member-accessibility": "off", // members are public unless `#private`; no keyword needed
+    "typescript/prefer-readonly-parameter-types": "off", // flags DOM and library types no code can make readonly
+    "unicorn/no-null": "off", // DOM and React APIs take and return null
+
+    // Browser-only, enabled for `src/**` in `overrides`.
+    "eslint/no-console": "off", // Node scripts write their output with console
+    "import/no-nodejs-modules": "off",
+    "react/only-export-components": "off",
+
+    // Configured.
+    "eslint/capitalized-comments": ["error", "always", { "ignoreConsecutiveComments": true }],
+    "eslint/max-lines": ["error", { "max": 1000, "skipBlankLines": true, "skipComments": true }],
+    "eslint/max-lines-per-function": ["error", { "skipBlankLines": true, "skipComments": true }],
+    "eslint/no-duplicate-imports": ["error", { "allowSeparateTypeImports": true }],
+    "eslint/one-var": ["error", "never"],
+    "import/extensions": ["error", "always", { "ignorePackages": true }], // `./app.tsx`: the file name, as Node runs it
+    "react/function-component-definition": [
+      "error",
+      { "namedComponents": "arrow-function", "unnamedComponents": "arrow-function" }
+    ],
+    "react/jsx-filename-extension": ["error", { "extensions": [".jsx", ".tsx"] }]
+  },
+  "overrides": [
+    {
+      // Config files for tools that load their default export.
+      "files": ["*.config.*"],
+      "rules": {
+        "import/no-default-export": "off"
+      }
+    },
+    {
+      // Browser code: no Node modules, no console, and fast refresh works on every component file.
+      "files": ["src/**"],
+      "rules": {
+        "eslint/no-console": "error",
+        "import/no-nodejs-modules": "error",
+        "react/only-export-components": "error"
+      }
+    },
+    {
+      "files": ["**/*.test.*"],
+      "plugins": ["vitest"],
+      "rules": {
+        "eslint/max-lines-per-function": "off", // a `describe` callback holds every test of a unit
+        "vitest/no-importing-vitest-globals": "off", // vitest/prefer-importing-vitest-globals: no global test types
+        "vitest/prefer-describe-function-title": "off", // vitest/valid-title requires a string title
+        // An `expect` in a synchronous test always runs; an async test may finish before its callbacks do.
+        "vitest/prefer-expect-assertions": ["error", { "onlyFunctionsWithAsyncKeyword": true }],
+        "vitest/require-test-timeout": "off" // Vitest's default timeout applies to every test
+      }
+    }
+  ]
+}

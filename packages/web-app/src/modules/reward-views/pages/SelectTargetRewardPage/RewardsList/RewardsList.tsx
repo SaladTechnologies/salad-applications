@@ -5,7 +5,7 @@ import withStyles from 'react-jss'
 import type { Reward } from '../../../../reward/models'
 import { RewardCard } from './RewardCard'
 
-export const styles = {
+const styles = {
   rewards: {
     display: 'flex',
     gap: '32px',

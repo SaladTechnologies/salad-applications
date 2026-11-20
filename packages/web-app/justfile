@@ -34,12 +34,37 @@ fmt-check-typescript: _npm-ci
         echo "fix: just fmt-typescript"; \
         exit 1
 
-# Lint TypeScript types and dependencies.
-#
-# Interim: the web app rebuild adopts the template in steps. oxlint, knip, npm audit, and _lint-typescript-projects
-# arrive in the next PR into web-app-rebuild, which replaces this recipe with the template's.
-lint-typescript: _npm-ci && _lint-typescript-dependencies
+# Lint TypeScript and JavaScript files, types, and dependencies, and check every such file is in a TypeScript project.
+lint-typescript: _npm-ci && _lint-typescript-projects _lint-typescript-dependencies
+    node_modules/.bin/oxlint
     node_modules/.bin/tsc --build
+    node_modules/.bin/knip
+    # Interim: `npm audit` joins in the next PR into web-app-rebuild, with the dependency upgrades its findings need.
+    npm audit signatures
+
+# Fail on a TypeScript or JavaScript file that no project in tsconfig.json includes, which nothing would type check.
+[extension('.mjs')]
+[private]
+[script('node')]
+_lint-typescript-projects:
+    import { execFileSync } from 'node:child_process'
+    import { readFileSync } from 'node:fs'
+    import { relative, sep } from 'node:path'
+    const run = (file, args) => execFileSync(file, args, { encoding: 'utf8' }).split('\n').filter(Boolean)
+    const tsc = (args) => run(process.execPath, ['node_modules/typescript/bin/tsc', ...args])
+    const checked = new Set(
+      JSON.parse(readFileSync('tsconfig.json', 'utf8'))
+        .references.flatMap(({ path }) => tsc(['--project', path, '--listFilesOnly']))
+        .map((file) => relative('.', file).replaceAll(sep, '/')),
+    )
+    const files = ['*.cjs', '*.cts', '*.js', '*.jsx', '*.mjs', '*.mts', '*.ts', '*.tsx']
+    const unchecked = run('git', ['ls-files', '--cached', '--others', '--exclude-standard', '--', ...files])
+      .filter((file) => !/(^|\/)testdata\//.test(file) && !checked.has(file))
+    if (unchecked.length > 0) {
+      for (const file of unchecked) console.log(`not in a TypeScript project: ${file}`)
+      console.log('fix: add it to an `include` in tsconfig.browser.json or tsconfig.node.json')
+      process.exitCode = 1
+    }
 
 # Fail on a dependency whose install script nobody reviewed, or whose license is not on the allowlist.
 [extension('.mjs')]

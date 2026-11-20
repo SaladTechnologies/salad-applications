@@ -60,7 +60,7 @@ interface Props extends WithStyles<typeof styles> {
   progress?: number
 }
 
-export const _StorefrontCommunityChallengePanel = ({ body, title, progress, classes }: Props) => {
+const _StorefrontCommunityChallengePanel = ({ body, title, progress, classes }: Props) => {
   progress = Math.min(1, Math.max(0, progress || 0))
 
   return (
