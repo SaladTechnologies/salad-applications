@@ -1,10 +1,10 @@
 import { useSolanaWalletState } from '../../../../../account/solana-wallet.ts'
-import { getStore } from '../../../../../Store'
+import { useStore } from '../../../../../Store'
 import { SolanaWallet } from './SolanaWallet'
 
 /** The account page's Solana wallet section. It reads the saved address and passes it down. */
 export const SolanaWalletContainer = () => {
-  const { solanaWallet } = getStore()
+  const { solanaWallet } = useStore()
   const { walletAddress, isLoading, isLoadError, submitStatus } = useSolanaWalletState(solanaWallet)
   return (
     <SolanaWallet

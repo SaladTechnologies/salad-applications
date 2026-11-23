@@ -1,6 +1,4 @@
 import { describe, expect, it, vi } from 'vitest'
-// The store module reads the root store only in getSaladPayStore; the tests build the store directly.
-vi.mock('../../Store', () => ({ getStore: vi.fn() }))
 
 import type { SaladPayOrderHandlers } from './SaladPayStore'
 import { SaladPayStore } from './SaladPayStore'

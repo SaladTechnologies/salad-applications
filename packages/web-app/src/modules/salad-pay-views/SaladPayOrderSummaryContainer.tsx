@@ -7,7 +7,6 @@ import type { RootStore } from '../../Store'
 import { useStore } from '../../Store'
 import type { RewardState } from '../reward'
 import type { SaladPayState, SaladPayStore } from '../salad-pay'
-import { getSaladPayStore } from '../salad-pay'
 import { SaladPayOrderSummaryPage } from './components'
 
 /** What the order summary is given: the payout destinations, which a RENDER or Coinbase reward needs. */
@@ -45,7 +44,7 @@ const mapStoreToProps = (rootStore: RootStore, store: SaladPayStore, props: OwnP
 /** The SaladPay order summary. It reads the saved Solana wallet and Coinbase email and passes them down. */
 export const SaladPayOrderSummaryContainer = () => {
   const store = useStore()
-  const saladPay = getSaladPayStore()
+  const { saladPay } = store
   return (
     <SaladPayOrderSummaryPage
       {...mapStoreToProps(store, saladPay, {

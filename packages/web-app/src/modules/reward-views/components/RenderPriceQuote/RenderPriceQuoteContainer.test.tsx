@@ -19,7 +19,7 @@ const fake = vi.hoisted(() => ({
 
 vi.mock('../../../../Store', () => {
   const store = { render: { state: fake.render }, analytics: { trackRenderPriceQuoteViewed: vi.fn() } }
-  return { getStore: () => store }
+  return { useStore: () => store }
 })
 vi.mock('@tanstack/react-query', () => ({ useQuery: () => ({ isFetching: false, isError: false }) }))
 vi.mock('../../../../data/http-context.ts', () => ({ useHttp: () => ({}) }))

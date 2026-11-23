@@ -1,19 +1,6 @@
 import type { ExternalState } from '../../app/external-state.ts'
 import { createExternalState } from '../../app/external-state.ts'
-import { getStore } from '../../Store'
 import type { SaladPaymentRequestOptions } from './models'
-
-let sharedStore: SaladPayStore
-
-/** Gets the instance of the SaladPay store */
-export const getSaladPayStore = (): SaladPayStore => {
-  if (!sharedStore) {
-    const { routing, rewards } = getStore()
-    sharedStore = new SaladPayStore(routing, rewards)
-  }
-
-  return sharedStore
-}
 
 /** What the order summary does when the Chef confirms or leaves the order. The redemption that opens it supplies them. */
 export interface SaladPayOrderHandlers {

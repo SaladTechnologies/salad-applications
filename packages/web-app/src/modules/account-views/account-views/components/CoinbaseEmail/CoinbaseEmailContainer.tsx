@@ -1,10 +1,10 @@
 import { useCoinbaseEmailState } from '../../../../../account/coinbase-email.ts'
-import { getStore } from '../../../../../Store'
+import { useStore } from '../../../../../Store'
 import { CoinbaseEmail } from './CoinbaseEmail'
 
 /** The account page's Coinbase email section. It reads the saved email and passes it down. */
 export const CoinbaseEmailContainer = () => {
-  const { coinbaseEmail } = getStore()
+  const { coinbaseEmail } = useStore()
   const { isEnabled, email, isLoading, isLoadError, submitStatus, submitError } = useCoinbaseEmailState(coinbaseEmail)
   return (
     <CoinbaseEmail

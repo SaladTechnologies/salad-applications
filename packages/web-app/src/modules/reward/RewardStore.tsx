@@ -12,7 +12,6 @@ import { NotificationMessageCategory } from '../notifications/models'
 import type { ProfileStore } from '../profile'
 import { isRenderReward } from '../render'
 import type { SaladPayOrderHandlers, SaladPaymentRequestOptions } from '../salad-pay'
-import { getSaladPayStore } from '../salad-pay'
 import { solanaWalletAccountAnchor } from '../solana-wallet'
 import { RewardVaultStatus } from '../vault/models'
 import {
@@ -89,7 +88,7 @@ export class RewardStore {
   }
 
   private get checkout() {
-    return this.saladPayCheckout ?? getSaladPayStore()
+    return this.saladPayCheckout ?? this.store.saladPay
   }
 
   /** The rewards, the target reward and the redemption's progress. A change makes a new state. */

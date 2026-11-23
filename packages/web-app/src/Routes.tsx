@@ -47,7 +47,7 @@ import { NavigationContext, useQueryAndHash } from './routing/navigation-context
 import { parseSearch, stringifySearch } from './routing/raw-search.ts'
 import { Redirect } from './routing/redirect.tsx'
 import { createSearchHistory } from './routing/search-history.ts'
-import { getStore, useStore } from './Store'
+import { useStore } from './Store'
 import { Tooltips } from './Tooltips'
 
 // The app's pages. Each page renders its desktop or its mobile version (`ByDevice`), the way the desktop and mobile
@@ -199,7 +199,8 @@ const Earn = () => {
  * instead. It checks once, when it opens: closing or confirming it clears the bonus, and must not redirect.
  */
 const ReplaceBonus = () => {
-  const [hasBonus] = useState(() => getStore().bonuses.get().replacementEarningRateBonusId !== undefined)
+  const { bonuses } = useStore()
+  const [hasBonus] = useState(() => bonuses.get().replacementEarningRateBonusId !== undefined)
   return hasBonus ? <ReplaceBonusModalContainer /> : <Redirect to="/account/bonuses" />
 }
 

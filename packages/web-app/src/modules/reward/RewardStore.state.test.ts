@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
 
-vi.mock('../salad-pay', () => ({ getSaladPayStore: () => ({}) }))
 vi.mock('../auth', () => ({ ChallengeSudoModeTrigger: { RewardRedeem: 'RewardRedeem' } }))
 vi.mock('./utils', () => ({ rewardFromResource: (resource: object) => ({ ...resource }) }))
 

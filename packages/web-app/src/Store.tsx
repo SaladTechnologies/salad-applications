@@ -45,6 +45,7 @@ import type { ProfileAccess } from './modules/profile/ProfileStore'
 import type { Profile } from './modules/profile/models'
 import { RenderStore } from './modules/render'
 import { RewardStore } from './modules/reward'
+import { SaladPayStore } from './modules/salad-pay'
 import { VaultStore } from './modules/vault'
 
 /** Loads the signed-in user's referral data (src/account/referrals.ts). */
@@ -118,7 +119,10 @@ export const createStore = (
   return sharedStore
 }
 
-/** Gets the instance of the store, for code outside components. Components use {@link useStore}. */
+/**
+ * Gets the root store outside rendering. Only the click tracking of the shared `SmartLink` and `MenuTitle` uses it:
+ * they are used everywhere, so no container passes them the store. Components read the store with {@link useStore}.
+ */
 export const getStore = (): RootStore => sharedStore
 
 /** The root store, for components. The app's entry point provides it around the router. */
@@ -147,6 +151,8 @@ export class RootStore {
   public readonly routing: Navigation
   public readonly rewards: RewardStore
   public readonly render: RenderStore
+  /** The SaladPay order summary, which a redemption opens. */
+  public readonly saladPay: SaladPayStore
   public readonly balance: BalanceStore
   public readonly profile: ProfileStore
   /** Loads the signed-in user's referral data (src/account/referrals.ts): sign-in and the app-wide refresh run it. */
@@ -219,6 +225,7 @@ export class RootStore {
       onAccepted: (profile) => this.profile.setProfileData(profile as Profile),
     })
     this.rewards = new RewardStore(this, axios, this.profile)
+    this.saladPay = new SaladPayStore(this.routing, this.rewards)
     this.render = new RenderStore()
     this.analytics = new AnalyticsStore(this.auth)
     this.balance = new BalanceStore(axios)

@@ -31,19 +31,16 @@ const fake = vi.hoisted(() => ({
 
 vi.mock('../../Store', () => {
   const balance = { state: fake.balance }
+  const saladPay = { abort: vi.fn(), confirmPayment: vi.fn(), state: fake.order }
   return {
     useStore: () => ({
       rewards: { state: fake.rewards },
       balance,
+      saladPay,
       solanaWallet: { ...fake.wallet, loadWallet: vi.fn() },
       coinbaseEmail: { ...fake.email, loadEmail: vi.fn() },
     }),
   }
-})
-
-vi.mock('../salad-pay', () => {
-  const saladPay = { abort: vi.fn(), confirmPayment: vi.fn(), state: fake.order }
-  return { getSaladPayStore: () => saladPay }
 })
 
 /** Stands in for the page: it records what it is given, so the test needs no styles or garden components. */

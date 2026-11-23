@@ -5,7 +5,7 @@ import { useExternalState } from '../../../../app/external-state.ts'
 import { useHttp } from '../../../../data/http-context.ts'
 import { isExchangeRateStale } from '../../../render/utils'
 import { renderExchangeRateQueryKey, renderExchangeRateRefreshRate } from '../../../../rewards/render.ts'
-import { getStore } from '../../../../Store'
+import { useStore } from '../../../../Store'
 import { computeRenderQuote, isRenderReward, loadRenderExchangeRate } from '../../../render'
 import type { Reward } from '../../../reward/models'
 import { RenderPriceQuote } from './RenderPriceQuote'
@@ -28,7 +28,7 @@ interface RenderPriceQuoteContainerProps {
  */
 const _RenderPriceQuoteContainer: FC<RenderPriceQuoteContainerProps> = ({ reward, saladBalance, variant }) => {
   const active = isRenderReward(reward)
-  const store = getStore()
+  const store = useStore()
   const render = store.render
   const { exchangeRate } = useExternalState(render.state)
   const http = useHttp()
