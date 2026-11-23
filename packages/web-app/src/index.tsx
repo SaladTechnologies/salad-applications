@@ -39,7 +39,7 @@ import { createNavigation } from './routing/navigation.ts'
 import { createAppRouter } from './Routes'
 import { DefaultTheme as JSSTheme } from './SaladTheme'
 import type { RootStore } from './Store'
-import { createStore } from './Store'
+import { StoreContext, createStore } from './Store'
 
 allSettled.shim()
 
@@ -108,7 +108,9 @@ setTimeout(() => {
             <EmotionThemeProvider theme={EmotionTheme}>
               <JSSThemeProvider theme={JSSTheme}>
                 <SkeletonTheme baseColor="#172E40" highlightColor="#304759">
-                  <RouterProvider router={router} />
+                  <StoreContext.Provider value={rootStore}>
+                    <RouterProvider router={router} />
+                  </StoreContext.Provider>
                 </SkeletonTheme>
               </JSSThemeProvider>
             </EmotionThemeProvider>

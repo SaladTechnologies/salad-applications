@@ -1,5 +1,5 @@
-import { connect } from '../../../../../connect'
 import type { RootStore } from '../../../../../Store'
+import { useStore } from '../../../../../Store'
 import type { RewardVaultItem } from '../../../../vault/models'
 import { ReviewAfterRedemption } from './ReviewAfterRedemption'
 
@@ -14,4 +14,7 @@ const mapStoreToProps = (store: RootStore, props: OwnProps): any => ({
   onVaultLinkClick: () => store.routing.push('/store/vault'),
 })
 
-export const ReviewAfterRedemptionContainer = connect(mapStoreToProps, ReviewAfterRedemption)
+/** The review after a redemption, which closes the review or goes to the vault. */
+export const ReviewAfterRedemptionContainer = (props: OwnProps) => (
+  <ReviewAfterRedemption {...mapStoreToProps(useStore(), props)} />
+)

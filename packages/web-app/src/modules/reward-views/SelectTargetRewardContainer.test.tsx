@@ -25,7 +25,7 @@ vi.mock('../../Store', () => {
       fetchRecommendedRewards: vi.fn(),
     },
   }
-  return { getStore: () => store }
+  return { useStore: () => store }
 })
 
 /** Stands in for the page: it records what it is given, so the test needs no styles. */

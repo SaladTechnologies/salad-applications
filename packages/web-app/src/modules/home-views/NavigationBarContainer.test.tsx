@@ -28,7 +28,7 @@ const fake = vi.hoisted(() => ({
 vi.mock('../../Store', () => {
   const balance = { state: fake.balance }
   return {
-    getStore: () => ({
+    useStore: () => ({
       auth: { login: fake.login, logout: vi.fn() },
       analytics: { trackButtonClicked: vi.fn() },
       balance,

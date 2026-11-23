@@ -1,14 +1,11 @@
 import { withSearch } from '@elastic/react-search-ui'
-import { connect } from '../../../../../connect'
 import { RewardSearchBar } from '../../../../reward-views/components'
 
-const mapStoreToProps = (): any => ({})
+const SearchingRewardSearchBar = withSearch(({ searchTerm, setSearchTerm, error }) => ({
+  error,
+  searchTerm,
+  setSearchTerm,
+}))(RewardSearchBar)
 
-export const RewardSearchBarContainer = connect(
-  mapStoreToProps,
-  withSearch(({ searchTerm, setSearchTerm, error }) => ({
-    error,
-    searchTerm,
-    setSearchTerm,
-  }))(RewardSearchBar),
-)
+/** The storefront's search bar, which reads and sets the search term. */
+export const RewardSearchBarContainer = () => <SearchingRewardSearchBar />

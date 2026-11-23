@@ -1,5 +1,5 @@
-import { connect } from '../../../../connect'
 import type { RootStore } from '../../../../Store'
+import { useStore } from '../../../../Store'
 import type { ChartDaysShowing, EarningPerMachine } from '../../../balance/models'
 import { EarningHistory } from './EarningHistory'
 
@@ -19,4 +19,7 @@ const mapStoreToProps = (store: RootStore, props: EarningHistoryContainerProps):
   }
 }
 
-export const EarningHistoryContainer = connect(mapStoreToProps, EarningHistory)
+/** The earnings chart, with the store's range actions. */
+export const EarningHistoryContainer = (props: EarningHistoryContainerProps) => (
+  <EarningHistory {...mapStoreToProps(useStore(), props)} />
+)

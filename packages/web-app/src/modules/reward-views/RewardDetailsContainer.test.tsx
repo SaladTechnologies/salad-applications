@@ -31,7 +31,7 @@ vi.mock('../../Store', () => {
   const balance = { state: fake.balance }
   const vault = { state: fake.vault }
   return {
-    getStore: () => ({
+    useStore: () => ({
       analytics: { trackButtonClicked: vi.fn() },
       balance,
       vault,

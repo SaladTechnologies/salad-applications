@@ -1,8 +1,7 @@
 import { useExternalState } from '../../app/external-state.ts'
-import { connect } from '../../connect'
 import { useDedicatedNodesLoads } from '../../earnings/dedicated-nodes.ts'
 import type { RootStore } from '../../Store'
-import { getStore } from '../../Store'
+import { useStore } from '../../Store'
 import type { DedicatedNodesState } from '../dedicated-nodes'
 import { DedicatedNodesPage } from './DedicatedNodesPage'
 
@@ -27,14 +26,13 @@ const mapStoreToProps = (store: RootStore, props: { nodes: DedicatedNodesState }
   clearActionError: store.dedicatedNodes.clearActionError,
 })
 
-const ConnectedDedicatedNodesPage = connect(mapStoreToProps, DedicatedNodesPage)
-
 /**
  * The dedicated nodes page. It loads the enrollment token while it has not been asked for since the last reset, and the
  * first page of nodes when it opens with access or gains access. It reads the store's state and passes it down.
  */
 export const DedicatedNodesPageContainer = () => {
-  const { dedicatedNodes } = getStore()
+  const store = useStore()
+  const { dedicatedNodes } = store
   const nodes = useExternalState(dedicatedNodes.state)
   useDedicatedNodesLoads({
     isEnrollmentChecked: nodes.isEnrollmentChecked,
@@ -42,5 +40,5 @@ export const DedicatedNodesPageContainer = () => {
     loadEnrollment: dedicatedNodes.loadEnrollment,
     loadNodes: dedicatedNodes.loadNodes,
   })
-  return <ConnectedDedicatedNodesPage nodes={nodes} />
+  return <DedicatedNodesPage {...mapStoreToProps(store, { nodes })} />
 }

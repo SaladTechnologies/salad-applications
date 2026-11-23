@@ -1,7 +1,6 @@
 import { useSyncExternalStore } from 'react'
-import { connect } from '../../connect'
 import type { RootStore } from '../../Store'
-import { getStore } from '../../Store'
+import { useStore } from '../../Store'
 import { ProtectedActionPage } from './components'
 
 /** What the page reads from sudo mode, the passkeys and the backup codes. */
@@ -35,26 +34,27 @@ const mapStoreToProps = (store: RootStore, props: VerificationState): any => ({
   verifyWithPasskey: store.passkey.verifyWithPasskey,
 })
 
-const ConnectedProtectedActionPage = connect(mapStoreToProps, ProtectedActionPage)
-
 /** The page that verifies the user for a protected action. It reads only the fields it shows. */
 export const ProtectedActionPageContainer = () => {
-  const { sudo, passkey, backupCodes } = getStore()
+  const store = useStore()
+  const { sudo, passkey, backupCodes } = store
   return (
-    <ConnectedProtectedActionPage
-      withPendingProtectedAction={useSyncExternalStore(
-        sudo.subscribe,
-        () => sudo.get().pendingProtectedAction !== undefined,
-      )}
-      isPasskeySupported={useSyncExternalStore(passkey.subscribe, () => passkey.get().isPasskeySupported)}
-      hasVerifyWithPasskeyFailed={useSyncExternalStore(
-        passkey.subscribe,
-        () => passkey.get().hasVerifyWithPasskeyFailed,
-      )}
-      hasVerifyWithBackupCodeFailed={useSyncExternalStore(
-        backupCodes.subscribe,
-        () => backupCodes.get().hasVerifyWithBackupCodeFailed,
-      )}
+    <ProtectedActionPage
+      {...mapStoreToProps(store, {
+        withPendingProtectedAction: useSyncExternalStore(
+          sudo.subscribe,
+          () => sudo.get().pendingProtectedAction !== undefined,
+        ),
+        isPasskeySupported: useSyncExternalStore(passkey.subscribe, () => passkey.get().isPasskeySupported),
+        hasVerifyWithPasskeyFailed: useSyncExternalStore(
+          passkey.subscribe,
+          () => passkey.get().hasVerifyWithPasskeyFailed,
+        ),
+        hasVerifyWithBackupCodeFailed: useSyncExternalStore(
+          backupCodes.subscribe,
+          () => backupCodes.get().hasVerifyWithBackupCodeFailed,
+        ),
+      })}
     />
   )
 }

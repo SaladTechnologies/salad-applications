@@ -4,11 +4,10 @@ import { useProfile } from '../../../account/profile.ts'
 import type { TermsState } from '../../../account/terms.ts'
 import { useTermsState } from '../../../account/terms.ts'
 import { usePayoutDestinationLoads } from '../../../account/wallets.ts'
-import { connect } from '../../../connect'
 import type { ProfileState } from '../../../account/profile-state.ts'
 import { useProfileState } from '../../../account/profile-state.ts'
 import type { RootStore } from '../../../Store'
-import { getStore } from '../../../Store'
+import { useStore } from '../../../Store'
 import { Account } from './components'
 
 const mapStoreToProps = (
@@ -39,19 +38,21 @@ const mapStoreToProps = (
   signInWithGoogleChallengeSudoMode: store.sudo.signInWithGoogleChallengeSudoMode,
 })
 
-const ConnectedAccount = connect(mapStoreToProps, Account)
-
 /**
  * The desktop account summary. Each time it opens it loads the Solana wallet, then the Coinbase email (its payout
  * sections), then the passkeys, then the profile (its account security section), then the connected Google account, in
  * the order the page's effects ran them; the data stays in the stores.
  */
 export const AccountContainer = () => {
-  const store = getStore()
+  const store = useStore()
   usePayoutDestinationLoads(store.solanaWallet.loadWallet, store.coinbaseEmail.loadEmail)
   useAccountSecurityLoads(store.passkey.fetchPasskeys, store.profile.loadProfile)
   useGoogleConnectionLoad(store.profile.loadGoogleAccountConnection)
   // The terms' acceptance is shared with sign-in, which submits it while ticked (src/account/terms.ts).
   const terms = useTermsState(store.terms)
-  return <ConnectedAccount terms={terms} profile={useProfile()} profileState={useProfileState(store.profile)} />
+  return (
+    <Account
+      {...mapStoreToProps(store, { terms, profile: useProfile(), profileState: useProfileState(store.profile) })}
+    />
+  )
 }

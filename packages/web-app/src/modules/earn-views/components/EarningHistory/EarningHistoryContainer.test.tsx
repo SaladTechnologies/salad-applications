@@ -10,7 +10,7 @@ vi.mock('../../../../Store', () => {
     analytics: { trackEarningHistoryFilterClicked: vi.fn() },
     balance: { viewLast24Hours: vi.fn(), viewLast7Days: vi.fn(), viewLast30Days: vi.fn() },
   }
-  return { getStore: () => store }
+  return { useStore: () => store }
 })
 
 /** Stands in for the chart: it records what it is given, so the test needs no styles or chart library. */

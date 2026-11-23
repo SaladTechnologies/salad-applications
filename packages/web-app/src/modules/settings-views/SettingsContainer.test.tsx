@@ -11,7 +11,7 @@ const fake = vi.hoisted(() => ({
 }))
 
 vi.mock('../../Store', () => ({
-  getStore: () => ({
+  useStore: () => ({
     auth: { logout: fake.logout },
     analytics: { trackButtonClicked: vi.fn(), trackSmartLink: vi.fn() },
     routing: { goBackOr: vi.fn() },

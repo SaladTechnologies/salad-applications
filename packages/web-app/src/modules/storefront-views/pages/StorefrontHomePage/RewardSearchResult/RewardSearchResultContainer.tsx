@@ -1,6 +1,6 @@
 import { withSearch } from '@elastic/react-search-ui'
-import { connect } from '../../../../../connect'
 import type { RootStore } from '../../../../../Store'
+import { useStore } from '../../../../../Store'
 import { routeLink } from '../../../../../utils'
 import { RewardSearchResult } from './RewardSearchResult'
 
@@ -19,11 +19,11 @@ const mapStoreToProps = (store: RootStore): any => {
   }
 }
 
-export const RewardSearchResultContainer = connect(
-  mapStoreToProps,
-  withSearch(({ error, results, clearFilters }) => ({
-    error,
-    results,
-    clearFilters,
-  }))(RewardSearchResult),
-)
+const SearchingRewardSearchResult = withSearch(({ error, results, clearFilters }) => ({
+  error,
+  results,
+  clearFilters,
+}))(RewardSearchResult)
+
+/** The search results page, which opens a reward or goes back to the storefront. */
+export const RewardSearchResultContainer = () => <SearchingRewardSearchResult {...mapStoreToProps(useStore())} />

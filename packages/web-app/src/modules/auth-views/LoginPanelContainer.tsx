@@ -1,6 +1,6 @@
-import { connect } from '../../connect'
 import { isSignedIn, useSession } from '../../data/session.ts'
 import type { RootStore } from '../../Store'
+import { useStore } from '../../Store'
 import { LoginPanel } from './components/LoginPanel'
 
 interface Props {
@@ -19,9 +19,7 @@ const mapStoreToProps = (store: RootStore, props: Props): any => ({
   text: props.text,
 })
 
-const ConnectedLoginPanel = connect(mapStoreToProps, LoginPanel)
-
 /** The login panel. It reads the session, which says whether the user is signed in. */
 export const LoginPanelContainer = ({ text }: { text?: string }) => (
-  <ConnectedLoginPanel text={text} authenticated={isSignedIn(useSession())} />
+  <LoginPanel {...mapStoreToProps(useStore(), { text, authenticated: isSignedIn(useSession()) })} />
 )

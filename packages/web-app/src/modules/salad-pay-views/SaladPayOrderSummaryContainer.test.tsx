@@ -32,7 +32,7 @@ const fake = vi.hoisted(() => ({
 vi.mock('../../Store', () => {
   const balance = { state: fake.balance }
   return {
-    getStore: () => ({
+    useStore: () => ({
       rewards: { state: fake.rewards },
       balance,
       solanaWallet: { ...fake.wallet, loadWallet: vi.fn() },
