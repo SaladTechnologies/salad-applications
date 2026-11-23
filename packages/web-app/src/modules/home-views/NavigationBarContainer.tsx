@@ -9,6 +9,8 @@ import { useReferralCode } from '../../account/referrals.ts'
 import { startButton as startButtonFor } from '../../app/start-button.ts'
 import type { RootStore } from '../../Store'
 import { useStore } from '../../Store'
+import type { Navigation } from '../../routing/navigation.ts'
+import { useNavigation } from '../../routing/navigation-context.ts'
 import { useExternalState } from '../../app/external-state.ts'
 import { isSignedIn, useSession } from '../../data/session.ts'
 import type { ProfileState } from '../../account/profile-state.ts'
@@ -38,7 +40,7 @@ interface DrawerProps {
   selectedTargetReward: Reward | undefined
 }
 
-const mapStoreToProps = (store: RootStore, drawer: DrawerProps): any => {
+const mapStoreToProps = (store: RootStore, navigation: Navigation, drawer: DrawerProps): any => {
   const { isAuthenticated } = drawer
   const handleLogin = () => {
     store.analytics.trackButtonClicked('login_button', 'Log In Button', 'enabled')
@@ -71,9 +73,9 @@ const mapStoreToProps = (store: RootStore, drawer: DrawerProps): any => {
     onCloseNotificationsDrawer: () => drawer.setIsNotificationsDrawerOpened(false),
   }
 
-  const goToAccount = () => store.routing.push('/account/summary')
-  const goToSelectTargetRewardPage = () => store.routing.push('/store/select-target-reward')
-  const goToTargetRewardPage = () => store.routing.push(`/store/rewards/${targetReward?.id}`)
+  const goToAccount = () => navigation.push('/account/summary')
+  const goToSelectTargetRewardPage = () => navigation.push('/store/select-target-reward')
+  const goToTargetRewardPage = () => navigation.push(`/store/rewards/${targetReward?.id}`)
 
   return {
     avatar: isAuthenticated ? (
@@ -100,8 +102,8 @@ const mapStoreToProps = (store: RootStore, drawer: DrawerProps): any => {
     ) : undefined,
     onClickAvatar: goToAccount,
     onClickUsername: goToAccount,
-    onClickViewAllBonuses: () => store.routing.push('/account/bonuses'),
-    onInternalRoute: (path: string) => store.routing.push(path),
+    onClickViewAllBonuses: () => navigation.push('/account/bonuses'),
+    onInternalRoute: (path: string) => navigation.push(path),
     onLogOut: store.auth.logout,
     onLogin: handleLogin,
     rightSideButtonLabel: isAuthenticated ? undefined : 'Login',
@@ -139,7 +141,7 @@ export const NavigationBarContainer = () => {
   const bonusClaims = useBonusClaims(store.bonuses)
   return (
     <NavigationBarWithNotifications
-      {...mapStoreToProps(store, {
+      {...mapStoreToProps(store, useNavigation(), {
         isNotificationsDrawerOpened,
         setIsNotificationsDrawerOpened,
         isUserReferralsEnabled,

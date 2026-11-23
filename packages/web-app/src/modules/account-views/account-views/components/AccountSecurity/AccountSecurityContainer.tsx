@@ -6,10 +6,13 @@ import type { ProfileState } from '../../../../../account/profile-state.ts'
 import { useProfileState } from '../../../../../account/profile-state.ts'
 import type { RootStore } from '../../../../../Store'
 import { useStore } from '../../../../../Store'
+import type { Navigation } from '../../../../../routing/navigation.ts'
+import { useNavigation } from '../../../../../routing/navigation-context.ts'
 import { AccountSecurity } from './AccountSecurity'
 
 const mapStoreToProps = (
   store: RootStore,
+  navigation: Navigation,
   props: { passkeysState: PasskeysState; profile: Profile | undefined; profileState: ProfileState },
 ): any => ({
   editPasskeyNameStatus: props.passkeysState.editPasskeyNameStatus,
@@ -19,9 +22,9 @@ const mapStoreToProps = (
   registerPasskeyStatus: props.passkeysState.registerPasskeyStatus,
   editPasskeyName: store.passkey.editPasskeyName,
   onAddPasskeyClick: store.passkey.registerPasskey,
-  onDeletePasskeyClick: (passkeyId: string) => store.routing.push(`/account/passkey/delete/${passkeyId}`),
+  onDeletePasskeyClick: (passkeyId: string) => navigation.push(`/account/passkey/delete/${passkeyId}`),
   onSetProtectRewardsRedemptionChange: store.profile.setProtectRewardsRedemption,
-  onViewBackupCodesClick: () => store.routing.push('/account/backup-codes'),
+  onViewBackupCodesClick: () => navigation.push('/account/backup-codes'),
   setRegisterPasskeyStatus: store.passkey.setRegisterPasskeyStatus,
 })
 
@@ -34,7 +37,7 @@ export const AccountSecurityContainer = () => {
   const store = useStore()
   return (
     <AccountSecurity
-      {...mapStoreToProps(store, {
+      {...mapStoreToProps(store, useNavigation(), {
         passkeysState: usePasskeysState(store.passkey),
         profile: useProfile(),
         profileState: useProfileState(store.profile),

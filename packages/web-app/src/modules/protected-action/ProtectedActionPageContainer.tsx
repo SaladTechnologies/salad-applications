@@ -1,6 +1,8 @@
 import { useSyncExternalStore } from 'react'
 import type { RootStore } from '../../Store'
 import { useStore } from '../../Store'
+import type { Navigation } from '../../routing/navigation.ts'
+import { useNavigation } from '../../routing/navigation-context.ts'
 import { ProtectedActionPage } from './components'
 
 /** What the page reads from sudo mode, the passkeys and the backup codes. */
@@ -14,7 +16,7 @@ interface VerificationState {
 /** Whether the user is still on the protected-action page. */
 const isOnProtectedActionPage = (pathname: string): boolean => pathname.toLowerCase().startsWith('/protected-action')
 
-const mapStoreToProps = (store: RootStore, props: VerificationState): any => ({
+const mapStoreToProps = (store: RootStore, navigation: Navigation, props: VerificationState): any => ({
   isPasskeySupported: props.isPasskeySupported,
   withPendingProtectedAction: props.withPendingProtectedAction,
   hasVerifyWithBackupCodeFailed: props.hasVerifyWithBackupCodeFailed,
@@ -24,8 +26,8 @@ const mapStoreToProps = (store: RootStore, props: VerificationState): any => ({
   // account then would undo the replay's navigation. So it goes only while the user is still on this page, which is
   // when it went before (an action that waited for nothing, or a replay that navigates later, as a redemption does).
   backToAccount: () => {
-    if (isOnProtectedActionPage(store.routing.location.pathname)) {
-      store.routing.push('/account')
+    if (isOnProtectedActionPage(navigation.location.pathname)) {
+      navigation.push('/account')
     }
   },
   setHasVerifyWithBackupCodeFailed: store.backupCodes.setHasVerifyWithBackupCodeFailed,
@@ -40,7 +42,7 @@ export const ProtectedActionPageContainer = () => {
   const { sudo, passkey, backupCodes } = store
   return (
     <ProtectedActionPage
-      {...mapStoreToProps(store, {
+      {...mapStoreToProps(store, useNavigation(), {
         withPendingProtectedAction: useSyncExternalStore(
           sudo.subscribe,
           () => sudo.get().pendingProtectedAction !== undefined,

@@ -12,12 +12,18 @@ interface Bar {
   rightSideButtonLabel: string | undefined
   rightSideButtonClick: (() => void) | undefined
   startButtonLabel: string
+  onClickAvatar: () => void
+  onClickViewAllBonuses: () => void
+  onInternalRoute: (path: string) => void
+  onSelectTargetRewardClick: () => void
+  onOpenTargetRewardClick: () => void
   targetReward: { canBeRedeemed: boolean } | null
 }
 
 /** The store the container reads, with only what it uses, and the bars it rendered. */
 const fake = vi.hoisted(() => ({
   login: vi.fn<() => Promise<void>>(),
+  push: vi.fn<(path: string) => void>(),
   bars: [] as Bar[],
   balance: undefined as unknown as ReturnType<typeof createExternalState<{ currentBalance: number }>>,
   rewards: undefined as unknown as ReturnType<
@@ -34,12 +40,12 @@ vi.mock('../../Store', () => {
       balance,
       rewards: { state: fake.rewards, removeSelectedTargetReward: vi.fn() },
       profile: { withInstallReminder: () => false, setIsInstallReminderClosed: vi.fn() },
-      routing: { push: vi.fn() },
       bonuses: { claim: vi.fn() },
     }),
   }
 })
 
+vi.mock('../../routing/navigation-context.ts', () => ({ useNavigation: () => ({ push: fake.push }) }))
 vi.mock('../../account/referrals.ts', () => ({ useReferralCode: () => ({ enabled: false }) }))
 vi.mock('../../account/bonuses.ts', () => ({
   useUnclaimedBonuses: () => [undefined],
@@ -177,5 +183,41 @@ describe('NavigationBarContainer', () => {
       startButtonLabel: 'Download',
     })
     expect(shown(signedOutAgain)).toStrictEqual(loggedOutBar)
+  })
+
+  it('goes to the account, the bonuses, the target reward and the links it is given', () => {
+    Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', true)
+    fake.rewards.update({
+      rewards: new Map([['target', { id: 'target', name: 'Target', price: 4 }]]),
+      selectedTargetRewardId: 'target',
+    })
+    const root = createRoot(document.createElement('div'))
+    act(() => {
+      root.render(
+        <SessionContext.Provider value="yes">
+          <NavigationBarContainer />
+        </SessionContext.Provider>,
+      )
+    })
+    const bar = fake.bars.at(-1)
+    act(() => {
+      root.unmount()
+    })
+    fake.rewards.update({ selectedTargetRewardId: undefined })
+    fake.push.mockClear()
+
+    bar?.onClickAvatar()
+    bar?.onClickViewAllBonuses()
+    bar?.onSelectTargetRewardClick()
+    bar?.onOpenTargetRewardClick()
+    bar?.onInternalRoute('/earn/summary')
+
+    expect(fake.push.mock.calls).toStrictEqual([
+      ['/account/summary'],
+      ['/account/bonuses'],
+      ['/store/select-target-reward'],
+      ['/store/rewards/target'],
+      ['/earn/summary'],
+    ])
   })
 })
