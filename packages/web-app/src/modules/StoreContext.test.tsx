@@ -5,11 +5,7 @@ import { describe, expect, it, vi } from 'vitest'
 import type { RootStore } from '../Store'
 import { StoreContext, useStore } from '../Store'
 
-declare global {
-  // eslint-disable-next-line no-var
-  var IS_REACT_ACT_ENVIRONMENT: boolean
-}
-globalThis.IS_REACT_ACT_ENVIRONMENT = true
+Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', true)
 
 /** Renders a component that reads the store, inside the provider when given a store, and returns what it read. */
 const read = (provided?: RootStore): RootStore[] => {
