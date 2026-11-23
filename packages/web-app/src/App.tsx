@@ -12,11 +12,11 @@ import { Outlet } from '@tanstack/react-router'
 import { MobileDevice, NotMobile } from './components'
 import { config } from './config'
 import type { Profile } from './account/profile.ts'
-import { connect } from './connect'
 import { NavigationBarContainer } from './modules/home-views'
 import type { SearchHistory } from './routing/search-history.ts'
 import type { SaladTheme } from './SaladTheme'
 import type { RootStore } from './Store'
+import { useStore } from './Store'
 
 const styles = (theme: SaladTheme) => ({
   mainWindow: {
@@ -168,4 +168,9 @@ const mapStoreToProps = (store: RootStore, props: AppProps): any => ({
   ),
 })
 
-export const App = connect(mapStoreToProps, withStyles(styles)(_App))
+const StyledApp = withStyles(styles)(_App)
+
+/** The app's frame: the navigation bar, the page, and the install reminder's space. */
+export const App = (props: Omit<AppProps, 'classes' | 'setErrorBoundary' | 'withInstallReminder'>) => (
+  <StyledApp {...mapStoreToProps(useStore(), props as AppProps)} />
+)

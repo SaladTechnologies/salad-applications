@@ -1,8 +1,8 @@
 import { useReferralCode } from '../../account/referrals.ts'
 import type { RootStore } from '../../Store'
+import { useStore } from '../../Store'
 import { SettingsPage } from '../../components'
 import { config } from '../../config'
-import { connect } from '../../connect'
 import { useSession } from '../../data/session.ts'
 
 const mapStoreToProps = (
@@ -30,9 +30,12 @@ const mapStoreToProps = (
   }
 }
 
-const ConnectedSettings = connect(mapStoreToProps, SettingsPage)
-
 /** The settings page around the account pages. Its menu shows the referrals page only while referrals are enabled. */
 export const SettingsContainer = () => (
-  <ConnectedSettings isUserReferralsEnabled={useReferralCode().enabled} isAuthenticated={useSession() === 'yes'} />
+  <SettingsPage
+    {...mapStoreToProps(useStore(), {
+      isUserReferralsEnabled: useReferralCode().enabled,
+      isAuthenticated: useSession() === 'yes',
+    })}
+  />
 )

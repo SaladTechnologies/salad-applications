@@ -19,7 +19,7 @@ const fake = vi.hoisted(() => ({
 
 vi.mock('../../Store', () => {
   const store = { dedicatedNodes: { state: fake.nodes } }
-  return { getStore: () => store }
+  return { useStore: () => store }
 })
 vi.mock('../../earnings/dedicated-nodes.ts', () => ({
   useDedicatedNodesLoads: ({ hasAccess }: { hasAccess: boolean }) => {

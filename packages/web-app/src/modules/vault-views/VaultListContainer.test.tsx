@@ -16,7 +16,7 @@ vi.mock('../../Store', () => {
     vault: { state: fake.vault, refresh: vi.fn() },
     rewards: { state: fake.rewards, ensureRewardLoaded: vi.fn() },
   }
-  return { getStore: () => store }
+  return { useStore: () => store }
 })
 vi.mock('../../rewards/vault.ts', () => ({ useVaultRefresh: () => {} }))
 

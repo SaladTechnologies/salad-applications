@@ -1,12 +1,11 @@
 import { useExternalState } from '../../app/external-state.ts'
-import { connect } from '../../connect'
 import type { RootStore } from '../../Store'
 import { rewardRequiresCoinbaseEmail } from '../coinbase'
 import type { RewardState } from '../reward'
 import type { RewardVaultItem } from '../vault/models'
 import { VaultList } from './components/VaultList'
 import { useVaultRefresh } from '../../rewards/vault.ts'
-import { getStore } from '../../Store'
+import { useStore } from '../../Store'
 
 const mapStoreToProps = (store: RootStore, props: { redemptions: RewardVaultItem[]; rewards: RewardState }): any => ({
   redemptions: props.redemptions,
@@ -17,16 +16,17 @@ const mapStoreToProps = (store: RootStore, props: { redemptions: RewardVaultItem
   loadReward: store.rewards.ensureRewardLoaded,
 })
 
-const ConnectedVaultList = connect(mapStoreToProps, VaultList)
-
 /** The reward vault page, refreshed while it is open. */
 export const VaultListContainer = () => {
-  const { vault, rewards } = getStore()
+  const store = useStore()
+  const { vault, rewards } = store
   useVaultRefresh(vault.refresh)
   return (
-    <ConnectedVaultList
-      redemptions={useExternalState(vault.state).redemptions}
-      rewards={useExternalState(rewards.state)}
+    <VaultList
+      {...mapStoreToProps(store, {
+        redemptions: useExternalState(vault.state).redemptions,
+        rewards: useExternalState(rewards.state),
+      })}
     />
   )
 }

@@ -13,9 +13,6 @@ vi.mock('../../components', () => ({
 vi.mock('@saladtechnologies/garden-components', () => ({
   Text: ({ children }: { children?: ReactNode }) => <span>{children}</span>,
 }))
-vi.mock('../../connect', () => ({
-  connect: (_: unknown, component: unknown) => component,
-}))
 
 declare global {
   // eslint-disable-next-line no-var

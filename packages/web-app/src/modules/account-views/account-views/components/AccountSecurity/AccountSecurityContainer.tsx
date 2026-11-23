@@ -2,11 +2,10 @@ import type { PasskeysState } from '../../../../../account/passkeys.ts'
 import { usePasskeysState } from '../../../../../account/passkeys.ts'
 import type { Profile } from '../../../../../account/profile.ts'
 import { useProfile } from '../../../../../account/profile.ts'
-import { connect } from '../../../../../connect'
 import type { ProfileState } from '../../../../../account/profile-state.ts'
 import { useProfileState } from '../../../../../account/profile-state.ts'
 import type { RootStore } from '../../../../../Store'
-import { getStore } from '../../../../../Store'
+import { useStore } from '../../../../../Store'
 import { AccountSecurity } from './AccountSecurity'
 
 const mapStoreToProps = (
@@ -26,17 +25,20 @@ const mapStoreToProps = (
   setRegisterPasskeyStatus: store.passkey.setRegisterPasskeyStatus,
 })
 
-const ConnectedAccountSecurity = connect(mapStoreToProps, AccountSecurity)
-
 /**
  * The account summary's security section (desktop and mobile). It reads the passkeys, the profile, and the profile's
  * state itself, as the connected section read their stores: it was a nested container before they left MobX, and stays
  * one until the account pages are rebuilt.
  */
-export const AccountSecurityContainer = () => (
-  <ConnectedAccountSecurity
-    passkeysState={usePasskeysState(getStore().passkey)}
-    profile={useProfile()}
-    profileState={useProfileState(getStore().profile)}
-  />
-)
+export const AccountSecurityContainer = () => {
+  const store = useStore()
+  return (
+    <AccountSecurity
+      {...mapStoreToProps(store, {
+        passkeysState: usePasskeysState(store.passkey),
+        profile: useProfile(),
+        profileState: useProfileState(store.profile),
+      })}
+    />
+  )
+}

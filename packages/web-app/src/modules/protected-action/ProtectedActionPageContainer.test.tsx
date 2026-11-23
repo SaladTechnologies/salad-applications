@@ -12,7 +12,7 @@ import { handlePendingProtectedAction } from './utils'
 /** The store the container and the replay read, with only what they use. */
 const fake = vi.hoisted(() => ({ store: undefined as unknown }))
 
-vi.mock('../../Store', () => ({ getStore: () => fake.store }))
+vi.mock('../../Store', () => ({ useStore: () => fake.store }))
 
 /**
  * Stands in for the page: it keeps only the page's own redirect, which sends the user to their account when it renders

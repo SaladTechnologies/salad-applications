@@ -8,8 +8,7 @@ import { useProfile } from '../../account/profile.ts'
 import { useReferralCode } from '../../account/referrals.ts'
 import { startButton as startButtonFor } from '../../app/start-button.ts'
 import type { RootStore } from '../../Store'
-import { getStore } from '../../Store'
-import { connect } from '../../connect'
+import { useStore } from '../../Store'
 import { useExternalState } from '../../app/external-state.ts'
 import { isSignedIn, useSession } from '../../data/session.ts'
 import type { ProfileState } from '../../account/profile-state.ts'
@@ -131,26 +130,27 @@ const mapStoreToProps = (store: RootStore, drawer: DrawerProps): any => {
   }
 }
 
-const ConnectedNavigationBar = connect(mapStoreToProps, NavigationBarWithNotifications)
-
 /** The navigation bar. It holds whether the notifications drawer is open, which the notification store held. */
 export const NavigationBarContainer = () => {
+  const store = useStore()
   const [isNotificationsDrawerOpened, setIsNotificationsDrawerOpened] = useState(false)
   const { enabled: isUserReferralsEnabled } = useReferralCode()
   const [bonus] = useUnclaimedBonuses()
-  const bonusClaims = useBonusClaims(getStore().bonuses)
+  const bonusClaims = useBonusClaims(store.bonuses)
   return (
-    <ConnectedNavigationBar
-      isNotificationsDrawerOpened={isNotificationsDrawerOpened}
-      setIsNotificationsDrawerOpened={setIsNotificationsDrawerOpened}
-      isUserReferralsEnabled={isUserReferralsEnabled}
-      bonus={bonus}
-      bonusClaims={bonusClaims}
-      profile={useProfile()}
-      profileState={useProfileState(getStore().profile)}
-      isAuthenticated={isSignedIn(useSession())}
-      currentBalance={useExternalState(getStore().balance.state).currentBalance}
-      selectedTargetReward={selectedTargetRewardOf(useExternalState(getStore().rewards.state))}
+    <NavigationBarWithNotifications
+      {...mapStoreToProps(store, {
+        isNotificationsDrawerOpened,
+        setIsNotificationsDrawerOpened,
+        isUserReferralsEnabled,
+        bonus,
+        bonusClaims,
+        profile: useProfile(),
+        profileState: useProfileState(store.profile),
+        isAuthenticated: isSignedIn(useSession()),
+        currentBalance: useExternalState(store.balance.state).currentBalance,
+        selectedTargetReward: selectedTargetRewardOf(useExternalState(store.rewards.state)),
+      })}
     />
   )
 }

@@ -1,13 +1,12 @@
 import { useMemo, useState } from 'react'
 import { useExternalState } from '../../app/external-state.ts'
-import { connect } from '../../connect'
 import { useXp } from '../../account/xp.ts'
 import { useMachineEarningRates, useMachineEarningsHistory } from '../../earnings/machine-earnings.ts'
 import type { RootStore } from '../../Store'
 import type { BalanceState } from '../balance'
 import { earningsPerMachineOf } from '../balance'
 import type { EarningPerMachine } from '../balance/models'
-import { getStore } from '../../Store'
+import { useStore } from '../../Store'
 import { MobileEarningSummary } from './components/MobileEarningSummary'
 
 interface OwnProps {
@@ -36,14 +35,12 @@ const mapStoreToProps = (_store: RootStore, props: OwnProps): any => ({
   onPageMachineIdsChange: props.onPageMachineIdsChange,
 })
 
-const ConnectedMobileEarningSummary = connect(mapStoreToProps, MobileEarningSummary)
-
 /**
  * The mobile earnings summary. While it is open it loads the machines' earning histories (at most once an hour) and the
  * current earning rates of the machines on the shown page of the machine list (every minute), into the store.
  */
 export const MobileEarningSummaryContainer = () => {
-  const store = getStore()
+  const store = useStore()
   const [pageMachineIds, setPageMachineIds] = useState<string[]>([])
   useMachineEarningsHistory(store.balance.loadEarningsPerMachine)
   useMachineEarningRates(pageMachineIds, store.balance.loadCurrentEarningRatesPerMachine)
@@ -56,12 +53,14 @@ export const MobileEarningSummaryContainer = () => {
     [loadedEarningsPerMachine, daysShowingEarnings],
   )
   return (
-    <ConnectedMobileEarningSummary
-      xp={xp}
-      onPageMachineIdsChange={setPageMachineIds}
-      balance={balance}
-      earningsPerMachine={earningsPerMachine}
-      hasDedicatedNodesAccess={useExternalState(store.dedicatedNodes.state).hasAccess}
+    <MobileEarningSummary
+      {...mapStoreToProps(store, {
+        xp,
+        onPageMachineIdsChange: setPageMachineIds,
+        balance,
+        earningsPerMachine,
+        hasDedicatedNodesAccess: useExternalState(store.dedicatedNodes.state).hasAccess,
+      })}
     />
   )
 }

@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react'
 import { useExternalState } from '../../app/external-state.ts'
-import { connect } from '../../connect'
 import type { BonusEarningRate } from '../../account/bonuses.ts'
 import { useEarningRateBonus } from '../../account/bonuses.ts'
 import { useXp } from '../../account/xp.ts'
@@ -12,7 +11,7 @@ import type { BalanceState } from '../balance'
 import { earningsPerMachineOf } from '../balance'
 import type { EarningPerMachine } from '../balance/models'
 import type { VaultState } from '../vault'
-import { getStore } from '../../Store'
+import { useStore } from '../../Store'
 import { EarningSummaryPage } from './pages/EarningSummaryPage'
 import { getNumberWithCommas } from './utils'
 
@@ -63,15 +62,13 @@ const mapStoreToProps = (store: RootStore, props: OwnProps): any => {
   }
 }
 
-const ConnectedEarningSummary = connect(mapStoreToProps, EarningSummaryPage)
-
 /**
  * The earnings summary page. While it is open it loads the machines' earning histories (at most once an hour), the
  * current earning rates of the machines on the shown page of the machine list (every minute), and the redeemed rewards
  * and balance (every 2 minutes). The data stays in the stores, which the page reads.
  */
 export const EarningSummaryContainer = () => {
-  const store = getStore()
+  const store = useStore()
   const navigation = useNavigation()
   const [pageMachineIds, setPageMachineIds] = useState<string[]>([])
   useMachineEarningsHistory(store.balance.loadEarningsPerMachine)
@@ -87,15 +84,17 @@ export const EarningSummaryContainer = () => {
     [loadedEarningsPerMachine, daysShowingEarnings],
   )
   return (
-    <ConnectedEarningSummary
-      xp={xp}
-      bonusEarningRate={bonusEarningRate}
-      onNavigateToVault={() => navigation.push('/store/vault')}
-      onPageMachineIdsChange={setPageMachineIds}
-      balance={balance}
-      earningsPerMachine={earningsPerMachine}
-      hasDedicatedNodesAccess={useExternalState(store.dedicatedNodes.state).hasAccess}
-      vault={useExternalState(store.vault.state)}
+    <EarningSummaryPage
+      {...mapStoreToProps(store, {
+        xp,
+        bonusEarningRate,
+        onNavigateToVault: () => navigation.push('/store/vault'),
+        onPageMachineIdsChange: setPageMachineIds,
+        balance,
+        earningsPerMachine,
+        hasDedicatedNodesAccess: useExternalState(store.dedicatedNodes.state).hasAccess,
+        vault: useExternalState(store.vault.state),
+      })}
     />
   )
 }

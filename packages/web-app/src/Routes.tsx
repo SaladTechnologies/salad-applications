@@ -47,7 +47,7 @@ import { NavigationContext, useQueryAndHash } from './routing/navigation-context
 import { parseSearch, stringifySearch } from './routing/raw-search.ts'
 import { Redirect } from './routing/redirect.tsx'
 import { createSearchHistory } from './routing/search-history.ts'
-import { getStore } from './Store'
+import { getStore, useStore } from './Store'
 import { Tooltips } from './Tooltips'
 
 // The app's pages. Each page renders its desktop or its mobile version (`ByDevice`), the way the desktop and mobile
@@ -79,7 +79,7 @@ const PasskeyDelete = () => signedIn(<PasskeyDeletePageContainer match={useMatch
 
 /** The app around every page: the providers, the loading screen, the navigation bar, and the page. */
 const Root = () => {
-  const store = getStore()
+  const store = useStore()
   useAppRefresh(store.refresh.refreshData, config.dataRefreshRate)
   const { history } = useRouter()
   const searchHistory = useMemo(() => createSearchHistory(store.routing, history), [store.routing, history])

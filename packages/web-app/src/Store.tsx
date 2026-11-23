@@ -1,4 +1,5 @@
 import type { AxiosInstance } from 'axios'
+import { createContext, useContext } from 'react'
 import type { Auth } from './account/auth.ts'
 import { createAuth } from './account/auth.ts'
 import type { BackupCodesStore } from './account/backup-codes.ts'
@@ -117,9 +118,20 @@ export const createStore = (
   return sharedStore
 }
 
-/** Gets the instance of the store */
-//NOTE: Switch this to useContext instead of the singleton
+/** Gets the instance of the store, for code outside components. Components use {@link useStore}. */
 export const getStore = (): RootStore => sharedStore
+
+/** The root store, for components. The app's entry point provides it around the router. */
+export const StoreContext = createContext<RootStore | undefined>(undefined)
+
+/** Returns the root store. Throws outside {@link StoreContext}'s provider. */
+export const useStore = (): RootStore => {
+  const store = useContext(StoreContext)
+  if (store === undefined) {
+    throw new Error('useStore must be used inside StoreContext.Provider, which the app provides around the router.')
+  }
+  return store
+}
 
 export class RootStore {
   /** Whether the loading screen shows: until the first sign-in or sign-out has finished, at least 2 seconds in. */

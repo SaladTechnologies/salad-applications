@@ -13,7 +13,6 @@
     "src/assets/**/*",
     "src/components/**/*",
     "src/config.tsx",
-    "src/connect.tsx",
     "src/formatters.tsx",
     "src/hooks/**/*",
     "src/index.css",

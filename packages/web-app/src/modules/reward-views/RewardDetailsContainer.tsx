@@ -6,14 +6,13 @@ import type { SolanaWalletState } from '../../account/solana-wallet.ts'
 import { useSolanaWalletState } from '../../account/solana-wallet.ts'
 import { useProfile } from '../../account/profile.ts'
 import { useExternalState } from '../../app/external-state.ts'
-import { connect } from '../../connect'
 import { useHttp } from '../../data/http-context.ts'
 import { isSignedIn, useSession } from '../../data/session.ts'
 import { fetchRewardResource, rewardQueryKey } from '../../rewards/reward.ts'
 import { isStorefrontOutdated, storefrontQueryKey } from '../../rewards/storefront.ts'
 import { useNavigation } from '../../routing/navigation-context.ts'
 import type { RootStore } from '../../Store'
-import { getStore } from '../../Store'
+import { useStore } from '../../Store'
 import type { Reward } from '../reward/models'
 import type { RewardState } from '../reward'
 import { selectedTargetRewardOf } from '../reward'
@@ -82,8 +81,6 @@ const mapStoreToProps = (store: RootStore, props: OwnProps): any => {
   }
 }
 
-const ConnectedRewardDetails = connect(mapStoreToProps, RewardDetailsPage)
-
 /**
  * A reward's page. It fetches the reward on each visit and tracks the view, as the page did through the store. The
  * fetched reward also goes into the store's reward cache, which redemption and SaladPay read, and a storefront that
@@ -96,6 +93,7 @@ export const RewardDetailsContainer = ({
   match: { params: { id: string } }
   backFallback: string
 }) => {
+  const store = useStore()
   const http = useHttp()
   const queryClient = useQueryClient()
   const navigation = useNavigation()
@@ -104,7 +102,6 @@ export const RewardDetailsContainer = ({
     queryKey: rewardQueryKey(id),
     queryFn: async (): Promise<Reward> => {
       const loaded = rewardFromResource((await fetchRewardResource(http, id)) as RewardResource)
-      const store = getStore()
       store.rewards.setReward(loaded)
       store.analytics.trackRewardView(loaded)
       if (isStorefrontOutdated(queryClient.getQueryData(storefrontQueryKey), loaded)) {
@@ -115,16 +112,18 @@ export const RewardDetailsContainer = ({
     enabled: id !== '',
   })
   return (
-    <ConnectedRewardDetails
-      match={match}
-      onBack={() => navigation.goBackOr(backFallback)}
-      profile={useProfile()}
-      isAuthenticated={isSignedIn(useSession())}
-      solanaWallet={useSolanaWalletState(getStore().solanaWallet)}
-      coinbaseEmail={useCoinbaseEmailState(getStore().coinbaseEmail)}
-      currentBalance={useExternalState(getStore().balance.state).currentBalance}
-      lastRedemption={useExternalState(getStore().vault.state).redemptions.at(-1)}
-      rewards={useExternalState(getStore().rewards.state)}
+    <RewardDetailsPage
+      {...mapStoreToProps(store, {
+        match,
+        onBack: () => navigation.goBackOr(backFallback),
+        profile: useProfile(),
+        isAuthenticated: isSignedIn(useSession()),
+        solanaWallet: useSolanaWalletState(store.solanaWallet),
+        coinbaseEmail: useCoinbaseEmailState(store.coinbaseEmail),
+        currentBalance: useExternalState(store.balance.state).currentBalance,
+        lastRedemption: useExternalState(store.vault.state).redemptions.at(-1),
+        rewards: useExternalState(store.rewards.state),
+      })}
     />
   )
 }

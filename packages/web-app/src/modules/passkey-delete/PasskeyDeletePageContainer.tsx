@@ -1,8 +1,7 @@
 import type { PasskeysState } from '../../account/passkeys.ts'
 import { usePasskeysState } from '../../account/passkeys.ts'
-import { connect } from '../../connect'
 import type { RootStore } from '../../Store'
-import { getStore } from '../../Store'
+import { useStore } from '../../Store'
 import { PasskeyDeletePage } from './components'
 
 const mapStoreToProps = (
@@ -21,9 +20,12 @@ const mapStoreToProps = (
   }
 }
 
-const ConnectedPasskeyDeletePage = connect(mapStoreToProps, PasskeyDeletePage)
-
 /** The page that deletes a passkey. It reads the passkeys and passes them down. */
-export const PasskeyDeletePageContainer = (props: { match: { params: { id: string } } }) => (
-  <ConnectedPasskeyDeletePage match={props.match} passkeysState={usePasskeysState(getStore().passkey)} />
-)
+export const PasskeyDeletePageContainer = (props: { match: { params: { id: string } } }) => {
+  const store = useStore()
+  return (
+    <PasskeyDeletePage
+      {...mapStoreToProps(store, { match: props.match, passkeysState: usePasskeysState(store.passkey) })}
+    />
+  )
+}

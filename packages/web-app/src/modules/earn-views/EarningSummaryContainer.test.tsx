@@ -32,7 +32,7 @@ vi.mock('../../Store', () => {
     vault: { state: fake.vault },
     dedicatedNodes: { state: fake.nodes },
   }
-  return { getStore: () => store }
+  return { useStore: () => store }
 })
 
 vi.mock('../balance', () => ({
