@@ -2,10 +2,13 @@ import type { PasskeysState } from '../../account/passkeys.ts'
 import { usePasskeysState } from '../../account/passkeys.ts'
 import type { RootStore } from '../../Store'
 import { useStore } from '../../Store'
+import type { Navigation } from '../../routing/navigation.ts'
+import { useNavigation } from '../../routing/navigation-context.ts'
 import { PasskeyDeletePage } from './components'
 
 const mapStoreToProps = (
   store: RootStore,
+  navigation: Navigation,
   props: { match: { params: { id: string } }; passkeysState: PasskeysState },
 ): any => {
   const passkeyId = props.match.params.id
@@ -16,7 +19,7 @@ const mapStoreToProps = (
     isLastPasskey,
     passkey,
     onDeletePasskeyClick: () => store.passkey.deletePasskey(passkeyId),
-    backToProfile: () => store.routing.push('/account/summary'),
+    backToProfile: () => navigation.push('/account/summary'),
   }
 }
 
@@ -25,7 +28,10 @@ export const PasskeyDeletePageContainer = (props: { match: { params: { id: strin
   const store = useStore()
   return (
     <PasskeyDeletePage
-      {...mapStoreToProps(store, { match: props.match, passkeysState: usePasskeysState(store.passkey) })}
+      {...mapStoreToProps(store, useNavigation(), {
+        match: props.match,
+        passkeysState: usePasskeysState(store.passkey),
+      })}
     />
   )
 }

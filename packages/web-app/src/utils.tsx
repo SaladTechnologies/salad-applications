@@ -1,4 +1,4 @@
-import type { RootStore } from './Store'
+import type { Navigation } from './routing/navigation.ts'
 
 /** Convert minutes to ms */
 export const convertMinToMilli = (minutes: number): number => minutes * 60000
@@ -29,14 +29,14 @@ export const formatBalance = (balance?: number): string => {
 /**
  * Takes path and determines route action based on whether the route is internal or external.
  *
- * @param store The routing store
+ * @param navigation The app's navigation, for an internal path
  * @param path The url path
  */
-export const routeLink = (store: RootStore, path: string) => {
+export const routeLink = (navigation: Pick<Navigation, 'push'>, path: string) => {
   if (path.startsWith('http') && typeof window !== 'undefined') {
     window.open(path)
   } else {
-    store.routing.push(path)
+    navigation.push(path)
   }
 }
 

@@ -1,12 +1,14 @@
 import { useExternalState } from '../../app/external-state.ts'
 import type { RootStore } from '../../Store'
 import { useStore } from '../../Store'
+import type { Navigation } from '../../routing/navigation.ts'
+import { useNavigation } from '../../routing/navigation-context.ts'
 import type { RewardState } from '../reward'
 import { selectedTargetRewardOf } from '../reward'
 import { SelectTargetRewardPage } from './pages'
 
-const mapStoreToProps = (store: RootStore, props: { rewards: RewardState }): any => {
-  const navigateToStorePage = () => store.routing.push(`/store`)
+const mapStoreToProps = (store: RootStore, navigation: Navigation, props: { rewards: RewardState }): any => {
+  const navigateToStorePage = () => navigation.push(`/store`)
   return {
     recommendedRewards: props.rewards.recommendedRewards,
     targetReward: selectedTargetRewardOf(props.rewards),
@@ -20,5 +22,9 @@ const mapStoreToProps = (store: RootStore, props: { rewards: RewardState }): any
 /** The page for choosing a target reward. It reads the recommended and target rewards and passes them down. */
 export const SelectTargetRewardContainer = () => {
   const store = useStore()
-  return <SelectTargetRewardPage {...mapStoreToProps(store, { rewards: useExternalState(store.rewards.state) })} />
+  return (
+    <SelectTargetRewardPage
+      {...mapStoreToProps(store, useNavigation(), { rewards: useExternalState(store.rewards.state) })}
+    />
+  )
 }

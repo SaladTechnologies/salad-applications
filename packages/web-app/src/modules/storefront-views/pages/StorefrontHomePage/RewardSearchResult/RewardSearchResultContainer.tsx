@@ -1,20 +1,20 @@
 import { withSearch } from '@elastic/react-search-ui'
-import type { RootStore } from '../../../../../Store'
-import { useStore } from '../../../../../Store'
+import type { Navigation } from '../../../../../routing/navigation.ts'
+import { useNavigation } from '../../../../../routing/navigation-context.ts'
 import { routeLink } from '../../../../../utils'
 import { RewardSearchResult } from './RewardSearchResult'
 
-const mapStoreToProps = (store: RootStore): any => {
+const mapStoreToProps = (navigation: Navigation): any => {
   const onClickReward = (to: string, action?: any) => {
     if (action) {
       action()
-      routeLink(store, to)
+      routeLink(navigation, to)
     } else {
-      routeLink(store, to)
+      routeLink(navigation, to)
     }
   }
   return {
-    onBack: () => store.routing.push('/store'),
+    onBack: () => navigation.push('/store'),
     onClickReward,
   }
 }
@@ -26,4 +26,4 @@ const SearchingRewardSearchResult = withSearch(({ error, results, clearFilters }
 }))(RewardSearchResult)
 
 /** The search results page, which opens a reward or goes back to the storefront. */
-export const RewardSearchResultContainer = () => <SearchingRewardSearchResult {...mapStoreToProps(useStore())} />
+export const RewardSearchResultContainer = () => <SearchingRewardSearchResult {...mapStoreToProps(useNavigation())} />

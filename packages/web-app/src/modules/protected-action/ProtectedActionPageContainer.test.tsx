@@ -13,6 +13,10 @@ import { handlePendingProtectedAction } from './utils'
 const fake = vi.hoisted(() => ({ store: undefined as unknown }))
 
 vi.mock('../../Store', () => ({ useStore: () => fake.store }))
+// The page and the replay navigate with the same navigation, as the app's root route provides the store's.
+vi.mock('../../routing/navigation-context.ts', () => ({
+  useNavigation: () => Reflect.get(fake.store as object, 'routing'),
+}))
 
 /**
  * Stands in for the page: it keeps only the page's own redirect, which sends the user to their account when it renders
