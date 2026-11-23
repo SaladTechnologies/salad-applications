@@ -8,11 +8,6 @@ vi.mock('axios', () => ({
   __esModule: true,
   default: { isAxiosError: (error: any) => !!(error && error.isAxiosError) },
 }))
-vi.mock('../salad-pay', () => ({
-  getSaladPayStore: () => {
-    throw new Error('The tests open orders through the stub checkout')
-  },
-}))
 vi.mock('../auth', () => ({ ChallengeSudoModeTrigger: { RewardRedeem: 'RewardRedeem' } }))
 vi.mock('./utils', () => ({ rewardFromResource: vi.fn() }))
 

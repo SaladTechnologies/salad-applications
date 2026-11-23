@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useCurrentReferral, useReferralCode, useReferralsReport } from '../../../account/referrals.ts'
 import { useHttp } from '../../../data/http-context.ts'
-import { getStore } from '../../../Store'
+import { useStore } from '../../../Store'
 import { ReferralSettings } from './components/ReferralSettings'
 
 /**
@@ -9,6 +9,7 @@ import { ReferralSettings } from './components/ReferralSettings'
  * the way the referral store did: sending while the request runs, then tracking it when it succeeds.
  */
 export const ReferralSettingsContainer = () => {
+  const { analytics } = useStore()
   const http = useHttp()
   const referral = useCurrentReferral()
   const { code } = useReferralCode()
@@ -20,7 +21,7 @@ export const ReferralSettingsContainer = () => {
     setSending(true)
     try {
       await http.post('/api/v1/profile/referrals', { email })
-      getStore().analytics.trackReferralSent()
+      analytics.trackReferralSent()
     } catch (error) {
       console.error(error)
       throw error

@@ -1,11 +1,11 @@
 import { useEarningRateBonus } from '../../account/bonuses.ts'
 import { useNavigation } from '../../routing/navigation-context.ts'
-import { getStore } from '../../Store'
+import { useStore } from '../../Store'
 import { ReplaceBonusModal } from './components/ReplaceBonusModal'
 
 /** The replace-bonus modal: it replaces the active earning rate bonus with the waiting one, or closes without. */
 export const ReplaceBonusModalContainer = () => {
-  const { bonuses } = getStore()
+  const { bonuses } = useStore()
   const navigation = useNavigation()
   const currentEarningBonus = useEarningRateBonus()
   return (
