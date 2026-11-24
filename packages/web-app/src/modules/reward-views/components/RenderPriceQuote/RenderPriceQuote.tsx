@@ -1,6 +1,7 @@
 import classnames from 'classnames'
 import { DateTime } from 'luxon'
 import type { FC } from 'react'
+import { useEffect, useState } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import type { WithStyles } from 'react-jss'
 import withStyles from 'react-jss'
@@ -89,6 +90,25 @@ export interface RenderPriceQuoteProps extends WithStyles<typeof styles> {
   variant?: 'detail' | 'checkout'
 }
 
+/** How often (ms) the "Quoted N seconds ago" line is re-rendered, so it keeps counting up between quote refreshes. */
+const renderQuoteAgeTickRate = 1000
+
+/** The current time, updated every {@link renderQuoteAgeTickRate} while `enabled`. */
+const useNow = (enabled: boolean): number => {
+  const [now, setNow] = useState(() => Date.now())
+
+  useEffect(() => {
+    if (!enabled) {
+      return
+    }
+    setNow(Date.now())
+    const handle = setInterval(() => setNow(Date.now()), renderQuoteAgeTickRate)
+    return () => clearInterval(handle)
+  }, [enabled])
+
+  return now
+}
+
 const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
   classes,
   loading,
@@ -102,6 +122,8 @@ const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
   const containerClass = isCheckout ? `${classes.container} ${classes.containerCheckout}` : classes.container
   const amountClass = isCheckout ? `${classes.amountText} ${classes.amountTextCheckout}` : classes.amountText
   const errorClass = isCheckout ? `${classes.errorText} ${classes.errorTextCheckout}` : classes.errorText
+  // Ticks only while a quote time is shown; hooks must run before the early returns below.
+  const now = useNow(asOf !== undefined && tokenAmount !== undefined)
 
   if (loading && tokenAmount === undefined) {
     return (
@@ -125,12 +147,14 @@ const _RenderPriceQuote: FC<RenderPriceQuoteProps> = ({
     return null
   }
 
-  const asOfLabel = asOf ? DateTime.fromJSDate(asOf).toRelative() : undefined
-  const freshnessText = stale
-    ? 'Price may be out of date'
-    : asOfLabel
-    ? `Quoted ${asOfLabel}`
+  // Measured against the ticking `now`. Under a second (or a server clock slightly ahead of the browser's) reads
+  // "just now" rather than Luxon's "in 0 seconds" / "in 2 seconds".
+  const asOfLabel = asOf
+    ? now - asOf.getTime() < 1000
+      ? 'just now'
+      : DateTime.fromJSDate(asOf).toRelative({ base: DateTime.fromMillis(now) })
     : undefined
+  const freshnessText = stale ? 'Price may be out of date' : asOfLabel ? `Quoted ${asOfLabel}` : undefined
 
   const freshnessClass = classnames(classes.freshnessText, {
     [classes.freshnessTextCheckout]: isCheckout,
